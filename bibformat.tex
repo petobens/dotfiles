@@ -1,0 +1,389 @@
+%===============================================================================
+%          File: bibformat.tex
+%        Author: Pedro Ferrari
+%       Created: 19 mar 2013
+% Last Modified: 02 ene 2014
+%   Description: Modifications to biblatex's authoryear-comp style
+%===============================================================================
+
+% Package options
+\ExecuteBibliographyOptions{%
+firstinits=true,uniquename=init,maxbibnames=99,useprefix=true,sortcites=true,
+isbn=false,url=false}
+
+% Custom field formats
+\DeclareFieldFormat[article,inbook,incollection,inproceedings,report,thesis,
+unpublished]{title}{\mkbibquote{#1\isdot}}
+\DeclareFieldFormat[article]{journaltitle}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[article]{volume}{\mkbibemph{#1}}
+\DeclareFieldFormat[article]{number}{(#1)}
+\DeclareFieldFormat[article]{pages}{#1}
+\DeclareFieldFormat[incollection]{volume}{%
+  \mkbibemph{\bibstring{volume}\addspace\RN{#1}}}
+
+% Modifications to punctuation and font
+\renewcommand*{\bibnamedash}{\rule[3pt]{3em}{0.6pt}\addspace}
+\renewcommand*{\bibinitdelim}{\addnbthinspace}
+\renewcommand*{\intitlepunct}{\addspace}
+\renewcommand*{\newunitpunct}{\addcomma\addspace}
+\renewcommand*{\labelnamepunct}{\newunitpunct}
+\renewcommand*{\finalnamedelim}{\addspace\bibstring{and}\space}
+\renewcommand*{\finentrypunct}{}
+\renewcommand*{\bibfont}{\small}
+
+% Modify the name format: use last-first/first-last for sorting and small caps
+% for names and surnames of authors
+\DeclareNameAlias{sortname}{last-first/first-last}
+\DeclareNameAlias{default}{first-last}  % Editor
+\DeclareNameAlias{bookauthor}{first-last}
+
+\AtBeginDocument{\renewcommand*{\mkbibnameprefix}[1]{\MakeCapital{#1}}}
+
+\AtBeginBibliography{%
+  \def\ifmknamesc{%
+    \ifboolexpr{ test {\ifcurrentname{labelname}}
+    or test {\ifcurrentname{author}}
+    or ( test {\ifnameundef{author}} and test {\ifcurrentname{editor}} ) }}
+
+\renewcommand*{\mkbibnamefirst}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+\renewcommand*{\mkbibnamelast}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+\renewcommand*{\mkbibnameprefix}[1]{%
+  \ifmknamesc{\textsc{\MakeCapital{#1}}}{\MakeCapital{#1}}}
+\renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+\renewcommand*{\finalnamedelim}{\ifmknamesc{%
+  \addspace\textsc{\bibstring{and}}\space}{\addspace\bibstring{and}\space}}
+}
+
+% Also use small caps for authors when the 'smartand' counter is activated when
+% writing in spanish
+\catcode`\&3\relax%
+\catcode`\@11\relax%
+\DeclareNameFormat{last-first/first-last:smartend}{%
+  \def\lbx@es@smartand@e##1&{\endgroup \textsc{e}\nobreakspace}%
+  \def\lbx@es@smartand@y##1&{\endgroup \textsc{y}\nobreakspace}%
+  \ifnumequal{\value{listcount}}{1}
+    {\iffirstinits
+       {\usebibmacro{name:last-first}{#1}{#4}{#5}{#7}}
+       {\usebibmacro{name:last-first}{#1}{#3}{#5}{#7}}%
+     \ifblank{#3#5}
+       {}
+       {\usebibmacro{name:revsdelim}}}
+    {\iffirstinits
+       {\usebibmacro{name:first-last}{#1}{#4}{#5}{#7}}
+       {\usebibmacro{name:first-last}{#1}{#3}{#5}{#7}}}%
+  \usebibmacro{name:andothers}}
+\AtBeginBibliography{%
+   \DeclareNameAlias{author}{last-first/first-last:smartend}%
+ }
+\catcode`\&4\relax%
+\catcode`\@12\relax%
+
+% Bibliography macros
+\renewbibmacro*{in:}{%
+  \ifentrytype{article}{}{%
+  \printtext{\bibstring{in}\intitlepunct}}}
+
+\newbibmacro*{mypageref}{%
+\addperiod
+  \iflistundef{pageref}
+    {}
+    {\printtext[brackets]{%
+       \ifnumgreater{\value{pageref}}{1}
+         {\bibstring{backrefpages}\ppspace}
+    {\bibstring{backrefpage}\ppspace}%
+       \printlist[pageref][-\value{listtotal}]{pageref}}}}
+\renewbibmacro{pageref}{}
+
+\renewbibmacro{finentry}{%
+  \setunit{\bibpagerefpunct}\newblock
+  \usebibmacro{mypageref}%
+  \finentry}
+
+\newbibmacro{related:reprintas}[1]{
+  \entrydata{#1}{
+    \printfield{title}
+    \mkbibparens{\printdate}
+    \setunit{\addcomma\addspace}
+    \clearfield{date}
+    \usebibmacro{publisher+location+date}
+  }
+}
+
+\newbibmacro{related:reprintof}[1]{
+  \entrydata{#1}{
+    \printfield{title}
+    \mkbibparens{\printdate}
+    \setunit{\addcomma\addspace}
+    \clearfield{date}
+    \usebibmacro{publisher+location+date}
+  }
+}
+
+\renewbibmacro*{volume+number+eid}{%
+  \printfield{volume}%
+  \setunit*{}%
+  \printfield{number}%
+  \setunit{\addcomma\addspace}%
+  \printfield{eid}}
+
+% Bibliography drivers (place volume, edition, etc. before editor and translator)
+\DeclareBibliographyDriver{incollection}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \usebibmacro{author/translator+others}%
+  \setunit{\labelnamepunct}\newblock
+  \usebibmacro{title}%
+  \newunit
+  \printlist{language}%
+  \newunit\newblock
+  \usebibmacro{byauthor}%
+  \newunit\newblock
+  \usebibmacro{in:}%
+  \usebibmacro{maintitle+booktitle}%
+  \newunit\newblock
+  \printfield{edition}%
+  \newunit
+  \iffieldundef{maintitle}
+    {\printfield{volume}%
+     \printfield{part}}%
+    {}%
+  \newunit
+  \printfield{volumes}%
+  \newunit\newblock
+  \usebibmacro{series+number}%
+  \newunit\newblock
+  \usebibmacro{byeditor+others}%
+  \newunit\newblock
+  \printfield{note}%
+  \newunit\newblock
+  \usebibmacro{publisher+location+date}%
+  \newunit\newblock
+  \usebibmacro{chapter+pages}%
+  \newunit\newblock
+  \iftoggle{bbx:isbn}
+    {\printfield{isbn}}
+    {}%
+  \newunit\newblock
+  \usebibmacro{doi+eprint+url}%
+  \newunit\newblock
+  \usebibmacro{addendum+pubstate}%
+  \setunit{\bibpagerefpunct}\newblock
+  \usebibmacro{pageref}%
+  \newunit\newblock
+  \usebibmacro{related}%
+  \usebibmacro{finentry}}
+
+\DeclareBibliographyDriver{book}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \usebibmacro{author/editor+others/translator+others}%
+  \setunit{\labelnamepunct}\newblock
+  \usebibmacro{maintitle+title}%
+  \newunit
+  \printlist{language}%
+  \newunit\newblock
+  \usebibmacro{byauthor}%
+  \newunit\newblock
+  \printfield{edition}%
+  \newunit
+  \iffieldundef{maintitle}
+    {\printfield{volume}%
+     \printfield{part}}
+    {}%
+  \newunit
+  \printfield{volumes}%
+  \newunit\newblock
+  \usebibmacro{series+number}%
+  \newunit\newblock
+  \usebibmacro{byeditor+others}%
+  \newunit\newblock
+  \printfield{note}%
+  \newunit\newblock
+  \usebibmacro{publisher+location+date}%
+  \newunit\newblock
+  \usebibmacro{chapter+pages}%
+  \newunit
+  \printfield{pagetotal}%
+  \newunit\newblock
+  \iftoggle{bbx:isbn}
+    {\printfield{isbn}}
+    {}%
+  \newunit\newblock
+  \usebibmacro{doi+eprint+url}%
+  \newunit\newblock
+  \usebibmacro{addendum+pubstate}%
+  \setunit{\bibpagerefpunct}\newblock
+  \usebibmacro{pageref}%
+  \newunit\newblock
+  \usebibmacro{related}%
+  \usebibmacro{finentry}}
+
+% Set bibliography headings for each class
+% Article
+\defbibheading{bibarticle}[\refname]{%
+  \setcounter{secnumdepth}{0}%
+  \bookmarksetup{startatroot}%
+  \section{#1}}
+
+% Book
+% Bibliography at the end:
+% Save the current reference segment number so appendix heading title is correct
+\newcounter{lastmainsegment}
+\setcounter{lastmainsegment}{1000}
+\appto{\appendix}{\setcounter{lastmainsegment}{\value{refsection}}}
+
+% Define language specific command
+\newcommand{\langcommand}[3]{%
+  \newcommand{#1}{%
+    \iflanguage{english}{#2}{%
+    \iflanguage{spanish}{#3}{}
+    }%
+  }%
+}
+\langcommand{\bibfor}{for}{del}
+
+\defbibheading{bibbook}[\bibname]{\chapter{#1}}
+\defbibheading{subbib}[\refname\space\bibfor\ifnumgreater{\therefsection}%
+  {\value{lastmainsegment}}{\appendixname}{\chaptername}\space%
+  \ref*{refsection:\therefsection}]{%
+  \setcounter{secnumdepth}{0}%
+  \section{#1}}
+
+% Bibliography per chapter
+\defbibheading{subbibperchap}[\refname]{%
+  \section*{#1}%
+	\sectionmark{#1}%
+	\addcontentsline{toc}{section}{#1}
+}
+
+% Bibliography strings and extras
+% Spanish
+\DefineBibliographyStrings{spanish}{%
+  page         = {p\adddot},
+  pages        = {pp\adddot},
+  backrefpage  = {Vea p\adddot},
+  backrefpages = {Vea pp\adddot},
+  andothers    = {et al.},
+  phdthesis    = {Tesis Doctoral},
+  reprintof    = {reimpreso en},
+  reprintas    = {reimpreso como},
+  langrussian  = {ruso},
+  fromrussian  = {del ruso}}
+\DefineBibliographyExtras{spanish}{%
+  \renewcommand*{\bibrangedash}{\textendash}}
+% English
+\DefineBibliographyStrings{english}{%
+  phdthesis      = {Ph.D. Thesis},
+  backrefpage    = {See p\adddot},
+  backrefpages   = {See pp\adddot},
+  fromenglish    = {from English},
+  fromamerican   = {from American},
+  frombrazilian  = {from Brazilian},
+  fromcroatian   = {from Croatian},
+  fromdanish     = {from Danish},
+  fromdutch      = {from Dutch},
+  fromenglish    = {from English},
+  fromfinnish    = {from Finnish},
+  fromfrench     = {from French},
+  fromgerman     = {from German},
+  fromgreek      = {from Greek},
+  fromitalian    = {from Italian},
+  fromlatin      = {from Latin},
+  fromnorwegian  = {from Norwegian},
+  fromportuguese = {from Portuguese},
+  fromrussian    = {from Russian},
+  fromspanish    = {from Spanish},
+  fromswedish    = {from Swedish}}
+\DefineBibliographyExtras{english}{\uspunctuation}
+
+%===============================================================================
+% Hyperlink name of authors with authoryear-comp style (requires xpatch package)
+%===============================================================================
+
+% Combine label and labelyear links
+\xpatchbibmacro{cite}
+  {\usebibmacro{cite:label}%
+   \setunit{\addspace}%
+   \usebibmacro{cite:labelyear+extrayear}}
+  {\printtext[bibhyperref]{%
+     \DeclareFieldAlias{bibhyperref}{default}%
+     \usebibmacro{cite:label}%
+     \setunit{\addspace}%
+     \usebibmacro{cite:labelyear+extrayear}}}{}{}
+
+% Include labelname in labelyear link
+\xpatchbibmacro{cite}
+  {\printnames{labelname}%
+   \setunit{\nameyeardelim}%
+   \usebibmacro{cite:labelyear+extrayear}}
+  {\printtext[bibhyperref]{%
+     \DeclareFieldAlias{bibhyperref}{default}%
+     \printnames{labelname}%
+     \setunit{\nameyeardelim}%
+     \usebibmacro{cite:labelyear+extrayear}}}{}{}
+
+% Access hyperref's citation link start/end commands
+\makeatletter
+\protected\def\blx@imc@biblinkstart{%
+  \@ifnextchar[%]
+    {\blx@biblinkstart}
+    {\blx@biblinkstart[\abx@field@entrykey]}}
+\def\blx@biblinkstart[#1]{%
+  \blx@sfsave\hyper@natlinkstart{\the\c@refsection @#1}\blx@sfrest}
+\protected\def\blx@imc@biblinkend{%
+  \blx@sfsave\hyper@natlinkend\blx@sfrest}
+\blx@regimcs{\biblinkstart \biblinkend}
+\makeatother
+
+\newbool{cbx:link}
+
+% Include parentheses around labelyear in \textcite only in
+% single citations without pre- and postnotes
+\def\iflinkparens{%
+  \ifboolexpr{ test {\ifnumequal{\value{multicitetotal}}{0}} and
+               test {\ifnumequal{\value{citetotal}}{1}} and
+               test {\iffieldundef{prenote}} and
+               test {\iffieldundef{postnote}} }}
+
+\xpatchbibmacro{textcite}
+  {\printnames{labelname}}
+  {\iflinkparens
+     {\DeclareFieldAlias{bibhyperref}{default}%
+      \global\booltrue{cbx:link}\biblinkstart%
+      \printnames{labelname}}
+     {\printtext[bibhyperref]{\printnames{labelname}}}}{}{}
+
+\xpatchbibmacro{textcite}
+  {\usebibmacro{cite:label}}
+  {\iflinkparens
+     {\DeclareFieldAlias{bibhyperref}{default}%
+      \global\booltrue{cbx:link}\biblinkstart%
+      \usebibmacro{cite:label}}
+     {\usebibmacro{cite:label}}}{}{}
+
+\xpretobibmacro{textcite:postnote}
+  {\ifbool{cbx:link}% patch 2.7+
+     {\ifbool{cbx:parens}
+        {\bibcloseparen\global\boolfalse{cbx:parens}}
+        {}%
+         \biblinkend\global\boolfalse{cbx:link}}
+        {}}
+  {}
+  {\xpatchbibmacro{textcite}% patch earlier releases
+     {\setunit{%
+        \ifbool{cbx:parens}
+          {\bibcloseparen\global\boolfalse{cbx:parens}}
+          {}%
+        \multicitedelim}}
+     {\ifbool{cbx:link}
+        {\ifbool{cbx:parens}
+           {\bibcloseparen\global\boolfalse{cbx:parens}}
+           {}%
+         \biblinkend\global\boolfalse{cbx:link}}
+        {}%
+      \setunit{%
+        \ifbool{cbx:parens}
+          {\bibcloseparen\global\boolfalse{cbx:parens}}
+          {}%
+        \multicitedelim}}
+     {}{}}

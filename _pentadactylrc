@@ -1,0 +1,167 @@
+"===============================================================================
+"          File: _pentadactylrc
+"        Author: Pedro Ferrari
+"       Created: 24 sep 2013
+" Last Modified: 16 May 2014
+"   Description: My pentadactylrc
+"===============================================================================
+" TODO: Learn caret mode where one can use linewise ($) maps "
+map , <Leader>
+
+" Appearance {{{
+
+colorscheme molokai
+
+set visualbell
+
+" Highlight all search matches, not just the first
+set hlfind
+" Clear search highlighting and normal highlighting
+nmap -builtin <Leader><space> <esc>:noh<CR>
+
+set guioptions=Csn
+" FIXME: Navigation is not longer a toolbar option in latest version "
+nmap -builtin <Leader>nb  :toolbartoggle Navigation Toolbar<CR>
+
+" }}}
+" Bookmarks/Quickmarks {{{
+
+nmap -builtin <Leader>bm :emenu Bookmarks.Show All Bookmarks<CR>
+nmap -builtin <Leader>ab :emenu Bookmarks.Bookmark This Page<CR>
+nmap -builtin <Leader>bb :toolbartoggle Bookmarks Toolbar<CR>
+
+nmap -builtin <Leader>qm :qmarks<CR>
+
+" Use ' to jump to quickmarks in current tab and " in new tab
+nmap -builtin "'" go
+nmap -builtin '"' gn
+
+" Define qmarks
+silent qmark h www.google.com.ar
+silent qmark m www.gmail.com
+" silent qmark y www.yahoo.com/mail
+silent qmark y www.youtube.com
+silent qmark f www.facebook.com
+silent qmark l www.lanacion.com.ar
+silent qmark i www.infobae.com.ar
+silent qmark p thepiratebay.se
+silent qmark e extratorrent.cc
+silent qmark s www.subdivx.com
+silent qmark 9 9gag.com
+silent qmark t tex.stackexchange.com
+silent qmark g www.github.com
+silent qmark b www.bitbucket.com
+silent qmark c www.utdt.edu/campusvirtual
+silent qmark u www.alumnos.econ.uba.ar
+" silent qmark m www.mercadolibre.com.ar
+silent qmark 1 www.translate.google.com.ar
+
+" }}}
+" Navigation and tab handling {{{
+
+" Keys used for hints (front row)
+set hintkeys=asdfghjkl
+
+" Faster navigation
+nmap -builtin j 3j
+nmap -builtin k 3k
+
+" Show tabline when there are multiple tabs
+set showtabline=multitab
+
+" New tab
+nmap -builtin  <Leader>nt :tabopen about:newtab<CR>
+nmap -builtin  <C-t> :tabopen about:newtab<CR>
+
+" TODO: Differentiate between window delete and buffer delete? "
+" Close tab (also with d; close with <leader>c since we yank with C-c)
+nmap -builtin  <Leader>wd :bd<CR>
+nmap -builtin  <Leader>bd :bd<CR>
+" nmap -builtin  <C-w> :bd<CR>
+
+" Switch tabs as buffers in vim
+nmap -builtin <C-TAB> :tn<CR>
+nmap -builtin <S-TAB> :tp<CR>
+
+" Move the current tab
+nmap -builtin <A-h> :tabmove! -1<CR>
+nmap -builtin <A-l> :tabmove! +1<CR>
+
+" TODO: Movement between tiles "
+nmap -builtin  <Leader>vs :emenu Tile.New Layout.2 Tabs - Vertical<CR>
+nmap -builtin  <Leader>vd :emenu Tile.Tile Duplicate Tab.Right<CR>
+nmap -builtin  <Leader>sp :emenu Tile.New Layout.2 Tabs - Horizontal<CR>
+nmap -builtin  <Leader>sd :emenu Tile.Tile Duplicate Tab.Below<CR>
+" Untile layout (close window without closing buffer)
+nmap -builtin  <C-c> :emenu Tile.Untile Tab<CR>
+" Close Layout (make that window the only window)
+nmap -builtin <A-o> :emenu Tile.Close All Layouts<CR>
+
+" }}}
+" Insert mode {{{
+
+" Exit insert mode with jj
+imap -builtin jj <Esc>
+
+" Focus on first input field fast (note that i gets into caret mode)
+nmap -builtin I gi
+" Go to the second input field (useful for skipping over search fields)
+nmap -builtin gI 2gi
+
+" Move left and write like in normal mode
+imap -builtin <C-l> <Right>
+imap -builtin <C-h> <Left>
+
+" Yank and  paste in insert mode with C-c and C-v
+imap -builtin <C-c> <C-v><C-c>
+imap -builtin <C-v> <S-Ins>
+
+" }}}
+" Command mode {{{
+
+" Make ; work like : to enter command mode (; is used to enter extended hints)
+nmap -builtin ; :
+
+" Number of items to display in command mode
+set maxitems=12
+
+" Change wildmenu map
+cmap -builtin <C-j> <TAB>
+cmap -builtin <C-k> <S-TAB>
+
+" Paste in command mode
+cmap -builtin <A-p> <S-Ins>
+
+" }}}
+" Convenient mappings {{{
+
+" Yank and paste with C-c (yank with Y) and C-v
+" nmap -builtin <C-c> <C-v><C-c>
+nmap -builtin <C-v> <C-v><C-v>
+
+" Kill firefox
+nmap -builtin  KK :qall<CR>
+" Restart firefox
+nmap -builtin  <Leader>rs :restart<CR>
+" Restore previous session
+nmap -builtin  <Leader>ps :emenu History.Restore Previous Session<CR>
+" History
+nmap -builtin <Leader>hs :history<CR>
+
+" Downloads
+nmap -builtin <Leader>dl :dialog downloads<CR>
+
+" Search in google for highlighted words (in a new tab)
+nmap -builtin <Leader>sg YS<S-Ins><CR>
+" Search in google word in clipboard
+nmap -builtin <Leader>sc S<S-Ins><CR>
+" Search wikipedia
+nmap -builtin <Leader>sw :open wikipedia-en<space>
+" Search pirate bay
+nmap -builtin <Leader>sb :open the-pirate-bay<space>
+" Search youtube
+nmap -builtin <Leader>sy :open youtube-video-search<space>
+" Search mercado libre
+nmap -builtin <Leader>sm :open mercadolibre-argentina<space>
+
+" }}}

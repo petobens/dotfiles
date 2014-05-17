@@ -1,0 +1,11 @@
+[user]
+	name = petobens
+	email = ferrari_pedro@yahoo.com
+[push]
+	default = simple
+[core]
+	editor = vim
+[web]
+	browser = firefox
+[credential]
+	helper = !'C:\\Users\\Pedro\\AppData\\Roaming\\GitCredStore\\git-credential-winstore.exe'

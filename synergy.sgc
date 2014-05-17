@@ -1,0 +1,38 @@
+section: screens
+	Pedro-Acer:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		switchCorners = none
+		switchCornerSize = 0
+	pedro-lubuntu:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		switchCorners = none
+		switchCornerSize = 0
+end
+
+section: aliases
+end
+
+section: links
+    # Make the screens wrap in order to use one hotkey to switch between them
+	Pedro-Acer:
+		right = pedro-lubuntu
+		left = pedro-lubuntu
+	pedro-lubuntu:
+		left = Pedro-Acer
+		right = Pedro-Acer
+end
+
+section: options
+	relativeMouseMoves = false
+	screenSaverSync = true
+	win32KeepForeground = false
+	switchCorners = none
+	switchCornerSize = 0
+    keystroke(alt+`) = switchInDirection(right)
+end
