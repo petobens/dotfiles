@@ -142,7 +142,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 }
 ^#i:: RoA("Pentadactyl", "C:\Program Files (x86)\Mozilla Firefox\firefox.exe")
 ^#m:: RoA("Mozilla Thunderbird", "thunderbird")
-^#v:: RoA("GVIM", "gvim", "C:\OD\Users\Pedro")
+^#v:: RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
 ^#s:: RoA("Skype", "C:\Program Files (x86)\Skype\Phone\Skype.exe",,"")
 ^#e:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
