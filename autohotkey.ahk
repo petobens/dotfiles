@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 17 May 2014
+; Last Modified: 18 May 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -195,6 +195,8 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ; Close applications Unix/Mac style
 ^q:: Send !{F4}
 
+; Show recycle bin
+#b:: Run ::{645ff040-5081-101b-9f08-00aa002f954e}
 ; Empty recycle bin
 ^#b::
     Msgbox, 4,, Do you want to empty the recycle bin?

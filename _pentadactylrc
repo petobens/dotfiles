@@ -2,10 +2,11 @@
 "          File: _pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 16 May 2014
+" Last Modified: 17 May 2014
 "   Description: My pentadactylrc
 "===============================================================================
 " TODO: Learn caret mode where one can use linewise ($) maps "
+" TODO: Is it possible to center search "
 map , <Leader>
 
 " Appearance {{{
