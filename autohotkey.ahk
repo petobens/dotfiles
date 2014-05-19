@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 18 May 2014
+; Last Modified: 19 May 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -141,6 +141,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     }
 }
 ^#i:: RoA("Pentadactyl", "C:\Program Files (x86)\Mozilla Firefox\firefox.exe")
+^#u:: RoA("Vuze", "C:\Program Files\Vuze\Azureus.exe")
 ^#m:: RoA("Mozilla Thunderbird", "thunderbird")
 ^#v:: RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
 ^#s:: RoA("Skype", "C:\Program Files (x86)\Skype\Phone\Skype.exe",,"")
