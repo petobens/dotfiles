@@ -2,7 +2,7 @@
 "          File: _pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 17 May 2014
+" Last Modified: 19 May 2014
 "   Description: My pentadactylrc
 "===============================================================================
 " TODO: Learn caret mode where one can use linewise ($) maps "
@@ -75,7 +75,8 @@ nmap -builtin  <Leader>nt :tabopen about:newtab<CR>
 nmap -builtin  <C-t> :tabopen about:newtab<CR>
 
 " TODO: Differentiate between window delete and buffer delete? "
-" Close tab (also with d; close with <leader>c since we yank with C-c)
+" Close/delete tabs/buffers (don't do this with d)
+nmap -builtin d <Nop>
 nmap -builtin  <Leader>wd :bd<CR>
 nmap -builtin  <Leader>bd :bd<CR>
 " nmap -builtin  <C-w> :bd<CR>
