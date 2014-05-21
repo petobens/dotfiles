@@ -2,7 +2,7 @@
 "          File: _pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 19 May 2014
+" Last Modified: 21 May 2014
 "   Description: My pentadactylrc
 "===============================================================================
 " TODO: Learn caret mode where one can use linewise ($) maps "
@@ -149,6 +149,8 @@ nmap -builtin  <Leader>rs :restart<CR>
 nmap -builtin  <Leader>ps :emenu History.Restore Previous Session<CR>
 " History
 nmap -builtin <Leader>hs :history<CR>
+" Clear history
+nmap -builtin <Leader>ch <C-S-Del>
 
 " Downloads
 nmap -builtin <Leader>dl :dialog downloads<CR>

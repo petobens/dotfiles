@@ -150,7 +150,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#t:: RoA("cmd.exe", "cmd",,"")
 ^#p:: RoA("Paint", "mspaint",,"")
 
-; Kill active window process (useful to close apps like Skype)
+; Kill active window process (useful to close apps like Skype or Vuze)
 ; FIXME: Doesn't close system tray icon ;
 ^#k::
     WinGet, PID, PID, % "ahk_id " WinExist("A")
