@@ -1,5 +1,5 @@
 "===============================================================================
-"          File: _pentadactylrc
+"          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
 " Last Modified: 21 May 2014
@@ -48,7 +48,6 @@ silent qmark i www.infobae.com.ar
 silent qmark p thepiratebay.se
 silent qmark e extratorrent.cc
 silent qmark s www.subdivx.com
-silent qmark 9 9gag.com
 silent qmark t tex.stackexchange.com
 silent qmark g www.github.com
 silent qmark b www.bitbucket.com
@@ -56,6 +55,8 @@ silent qmark c www.utdt.edu/campusvirtual
 silent qmark u www.alumnos.econ.uba.ar
 " silent qmark m www.mercadolibre.com.ar
 silent qmark 1 www.translate.google.com.ar
+silent qmark 8 www.8tracks.com
+silent qmark 9 9gag.com
 
 " }}}
 " Navigation and tab handling {{{
