@@ -76,8 +76,9 @@ nmap -builtin  <Leader>nt :tabopen about:newtab<CR>
 nmap -builtin  <C-t> :tabopen about:newtab<CR>
 
 " TODO: Differentiate between window delete and buffer delete? "
-" Close/delete tabs/buffers (don't do this with d)
+" Close/delete tabs/buffers (don't do this with d or D)
 nmap -builtin d <Nop>
+nmap -builtin D <Nop>
 nmap -builtin  <Leader>wd :bd<CR>
 nmap -builtin  <Leader>bd :bd<CR>
 " nmap -builtin  <C-w> :bd<CR>
