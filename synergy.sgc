@@ -30,7 +30,7 @@ end
 
 section: options
 	relativeMouseMoves = false
-	screenSaverSync = true
+	screenSaverSync = false
 	win32KeepForeground = false
 	switchCorners = none
 	switchCornerSize = 0
