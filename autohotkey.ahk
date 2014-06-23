@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 22 May 2014
+; Last Modified: 22 Jun 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -157,6 +157,12 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     Process, Close, %PID%
     Return
 
+; Restart (G)vim
+^#g::
+    Send KK
+    Sleep 100
+    RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
+    Return
 
 ; }}}
 ; Toggle hidden files {{{
