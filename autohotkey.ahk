@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 22 Jun 2014
+; Last Modified: 25 Jun 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -12,8 +12,8 @@
 SendMode Input
 SetTitleMatchMode, 2   ; Window title can contain WinTitle anywhere
 
-; Reload this script
-^#r::
+; Reload (a)utohotkey script
+^#a::
     Msgbox, 4,, Do you want to reload autohotkey script?
     IfMsgBox Yes
     {
@@ -142,12 +142,11 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 }
 ^#i:: RoA("Pentadactyl", "C:\Program Files (x86)\Mozilla Firefox\firefox.exe")
 ^#u:: RoA("Vuze", "C:\Program Files\Vuze\Azureus.exe")
-^#m:: RoA("Mozilla Thunderbird", "thunderbird")
-^#v:: RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
+^#t:: RoA("Mozilla Thunderbird", "thunderbird")
 ^#s:: RoA("Skype", "C:\Program Files (x86)\Skype\Phone\Skype.exe",,"")
 ^#e:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
-^#t:: RoA("cmd.exe", "cmd",,"")
+^#c:: RoA("cmd.exe", "cmd",,"")
 ^#p:: RoA("Paint", "mspaint",,"")
 
 ; Kill active window process (useful to close apps like Skype or Vuze)
@@ -157,12 +156,24 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     Process, Close, %PID%
     Return
 
-; Restart (G)vim
-^#g::
+; }}}
+; Vim specific {{{
+
+; Run or activate gvim
+^#v:: RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
+
+; Restart gvim and load previous session
+^#r::
+    Send :wall!{Enter}
     Send KK
     Sleep 100
     RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
+    Sleep 150
+    Send {,}ps
     Return
+
+; Source minimal vimrc and edit it
+^#m:: Run, gvim -u C:/OD/Users/Pedro/vimfiles/vimrc_min C:/OD/Users/Pedro/vimfiles/vimrc_min, C:/OD/Users/Pedro/vimfiles, max
 
 ; }}}
 ; Toggle hidden files {{{
