@@ -6,6 +6,6 @@
 [core]
 	editor = vim
 [web]
-	browser = firefox
+	browser = start
 [credential]
 	helper = !'C:\\Users\\Pedro\\AppData\\Roaming\\GitCredStore\\git-credential-winstore.exe'
