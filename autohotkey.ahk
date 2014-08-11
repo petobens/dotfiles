@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 02 Aug 2014
+; Last Modified: 10 Aug 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -166,7 +166,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#r::
     Send :wall!{Enter}
     Send KK
-    Sleep 150
+    Sleep 250
     RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
     Sleep 150
     Send {,}ps
