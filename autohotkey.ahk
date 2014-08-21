@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 10 Aug 2014
+; Last Modified: 21 Aug 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -147,7 +147,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#e:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
 ^#c:: RoA("cmd.exe", "cmd",,"")
-^#p:: RoA("Paint", "mspaint",,"")
+^#p:: RoA("SumatraPDF", "SumatraPDF")
 
 ; Kill active window process (useful to close apps like Skype or Vuze)
 ; FIXME: Doesn't close system tray icon ;
