@@ -227,7 +227,20 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 
 ; Shutdown and reboot (using Win+shift combination) (note: we can do this in two
 ; steps with Alt-F4 and Ctrl-q)
-#+p:: Shutdown, 8
-#+r:: Shutdown, 2
+#+p::
+    Msgbox, 4,, Do you want to shutdown your computer?
+    IfMsgBox Yes
+    {
+        Shutdown, 8
+    }
+    Return
+
+#+r::
+    Msgbox, 4,, Do you want to restart your computer?
+    IfMsgBox Yes
+    {
+        Shutdown, 2
+    }
+    Return
 
 ; }}}
