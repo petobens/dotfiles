@@ -228,7 +228,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ; Toggle Synergy scroll lock
 ^#l::
     Send #+l
-    MsgBox, Cursor is now locked (unlocked) to (from) this screen.
+    MsgBox, Cursor should  now be locked (unlocked) to (from) this screen.`nIn case this didn't work type 'WinKey+Shift+l'.
     Return
 
 ; Shutdown and reboot (using Win+shift combination) (note: we can do this in two
