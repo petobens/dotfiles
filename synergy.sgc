@@ -35,4 +35,6 @@ section: options
 	switchCorners = none
 	switchCornerSize = 0
     keystroke(alt+`) = switchInDirection(right)
+    # Toggle lock screen
+    keystroke(super+shift+l) = lockCursorToScreen(toggle)
 end
