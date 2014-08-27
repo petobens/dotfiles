@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 22 Aug 2014
+; Last Modified: 27 Aug 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -172,8 +172,8 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     Send {,}ps
     Return
 
-; Source minimal vimrc and edit it
-^#m:: Run, gvim -u C:/OD/Users/Pedro/vimfiles/vimrc_min C:/OD/Users/Pedro/vimfiles/vimrc_min, C:/OD/Users/Pedro/vimfiles, max
+; Open Gvim sourcing the minimal vimrc
+^#m:: Run, gvim -u C:/OD/Users/Pedro/vimfiles/vimrc_min, C:/OD/Users/Pedro/vimfiles, max
 
 ; }}}
 ; Toggle hidden files {{{
