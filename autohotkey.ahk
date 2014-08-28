@@ -166,7 +166,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#r::
     Send :wall!{Enter}
     Send KK
-    Sleep 250
+    Sleep 150
     RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
     Sleep 150
     Send {,}ps
