@@ -58,6 +58,7 @@ silent qmark u www.alumnos.econ.uba.ar
 " silent qmark m www.mercadolibre.com.ar
 silent qmark 1 www.translate.google.com.ar
 silent qmark 2 https://mail.google.com/tasks/canvas
+silent qmark 3 https://www.google.com/calendar
 silent qmark 8 www.8tracks.com
 silent qmark 9 9gag.com
 
