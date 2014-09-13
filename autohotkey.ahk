@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 27 Aug 2014
+; Last Modified: 13 Sep 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -144,6 +144,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#u:: RoA("Vuze", "C:\Program Files\Vuze\Azureus.exe")
 ^#t:: RoA("Mozilla Thunderbird", "thunderbird")
 ^#s:: RoA("Skype", "C:\Program Files (x86)\Skype\Phone\Skype.exe",,"")
+^#g:: RoA("GifCam", "C:\OD\apps\GifCam.exe",,"")
 ^#e:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
 ^#c:: RoA("cmd.exe", "cmd",,"")
