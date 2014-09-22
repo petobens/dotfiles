@@ -2,16 +2,19 @@
 %          File: bibformat.tex
 %        Author: Pedro Ferrari
 %       Created: 19 mar 2013
-% Last Modified: 02 ene 2014
+% Last Modified: 22 Sep 2014
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
-
-% Package options
+%-----------------+
+% Package options |
+%-----------------+
 \ExecuteBibliographyOptions{%
 firstinits=true,uniquename=init,maxbibnames=99,useprefix=true,sortcites=true,
 isbn=false,url=false}
 
-% Custom field formats
+%----------------------+
+% Custom field formats |
+%----------------------+
 \DeclareFieldFormat[article,inbook,incollection,inproceedings,report,thesis,
 unpublished]{title}{\mkbibquote{#1\isdot}}
 \DeclareFieldFormat[article]{journaltitle}{\mkbibemph{#1}\addcomma}
@@ -21,7 +24,9 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \DeclareFieldFormat[incollection]{volume}{%
   \mkbibemph{\bibstring{volume}\addspace\RN{#1}}}
 
-% Modifications to punctuation and font
+%---------------------------------------+
+% Modifications to punctuation and font |
+%---------------------------------------+
 \renewcommand*{\bibnamedash}{\rule[3pt]{3em}{0.6pt}\addspace}
 \renewcommand*{\bibinitdelim}{\addnbthinspace}
 \renewcommand*{\intitlepunct}{\addspace}
@@ -29,8 +34,12 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \renewcommand*{\labelnamepunct}{\newunitpunct}
 \renewcommand*{\finalnamedelim}{\addspace\bibstring{and}\space}
 \renewcommand*{\finentrypunct}{}
+\renewcommand*{\bibpagerefpunct}{\addperiod\space}
 \renewcommand*{\bibfont}{\small}
 
+%-----------------+
+% Name formatting |
+%-----------------+
 % Modify the name format: use last-first/first-last for sorting and small caps
 % for names and surnames of authors
 \DeclareNameAlias{sortname}{last-first/first-last}
@@ -78,26 +87,55 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \catcode`\&4\relax%
 \catcode`\@12\relax%
 
-% Bibliography macros
+%-----------------------------------+
+% Beamer/fullcite specific settings |
+%-----------------------------------+
+% Add period and change default sorter in fullcite
+\DeclareCiteCommand{\fullcite}
+  {\usebibmacro{prenote}}
+  {\usedriver
+     {\DeclareNameAlias{sortname}{last-first/first-last}}
+     {\thefield{entrytype}}\addperiod}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+% Use small caps for authors names also in the text (since we use fullcite)
+\makeatletter
+\@ifclassloaded{beamer}{%
+\renewcommand*{\bibfont}{\footnotesize}
+\renewcommand*{\citesetup}{\footnotesize}
+\AtBeginDocument{%
+  \def\ifmknamesc{%
+    \ifboolexpr{ test {\ifcurrentname{labelname}}
+    or test {\ifcurrentname{author}}
+    or ( test {\ifnameundef{author}} and test {\ifcurrentname{editor}} ) }}
+
+\renewcommand*{\mkbibnamefirst}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+\renewcommand*{\mkbibnamelast}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+\renewcommand*{\mkbibnameprefix}[1]{%
+  \ifmknamesc{\textsc{\MakeCapital{#1}}}{\MakeCapital{#1}}}
+\renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+\renewcommand*{\finalnamedelim}{\ifmknamesc{%
+  \addspace\textsc{\bibstring{and}}\space}{\addspace\bibstring{and}\space}}
+}%
+}{}%
+\makeatother
+
+%---------------------+
+% Bibliography macros |
+%---------------------+
 \renewbibmacro*{in:}{%
   \ifentrytype{article}{}{%
   \printtext{\bibstring{in}\intitlepunct}}}
 
-\newbibmacro*{mypageref}{%
-\addperiod
+\renewbibmacro*{pageref}{%
   \iflistundef{pageref}
     {}
     {\printtext[brackets]{%
        \ifnumgreater{\value{pageref}}{1}
          {\bibstring{backrefpages}\ppspace}
-    {\bibstring{backrefpage}\ppspace}%
+         {\bibstring{backrefpage}\ppspace}%
        \printlist[pageref][-\value{listtotal}]{pageref}}}}
-\renewbibmacro{pageref}{}
-
-\renewbibmacro{finentry}{%
-  \setunit{\bibpagerefpunct}\newblock
-  \usebibmacro{mypageref}%
-  \finentry}
 
 \newbibmacro{related:reprintas}[1]{
   \entrydata{#1}{
@@ -126,7 +164,9 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   \setunit{\addcomma\addspace}%
   \printfield{eid}}
 
-% Bibliography drivers (place volume, edition, etc. before editor and translator)
+%-------------------------------------------------------------------------------
+% Bibliography drivers (place volume, edition, etc before editor and translator)
+%-------------------------------------------------------------------------------
 \DeclareBibliographyDriver{incollection}{%
   \usebibmacro{bibindex}%
   \usebibmacro{begentry}%
@@ -218,7 +258,9 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   \usebibmacro{related}%
   \usebibmacro{finentry}}
 
-% Set bibliography headings for each class
+%---------------------------------+
+% Bibliography headings per class |
+%---------------------------------+
 % Article
 \defbibheading{bibarticle}[\refname]{%
   \setcounter{secnumdepth}{0}%
@@ -256,7 +298,9 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 	\addcontentsline{toc}{section}{#1}
 }
 
-% Bibliography strings and extras
+%---------------------------------+
+% Bibliography strings and extras |
+%---------------------------------+
 % Spanish
 \DefineBibliographyStrings{spanish}{%
   page         = {p\adddot},
@@ -271,6 +315,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   fromrussian  = {del ruso}}
 \DefineBibliographyExtras{spanish}{%
   \renewcommand*{\bibrangedash}{\textendash}}
+
 % English
 \DefineBibliographyStrings{english}{%
   phdthesis      = {Ph.D. Thesis},
@@ -296,10 +341,10 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   fromswedish    = {from Swedish}}
 \DefineBibliographyExtras{english}{\uspunctuation}
 
-%===============================================================================
-% Hyperlink name of authors with authoryear-comp style (requires xpatch package)
-%===============================================================================
 
+%-------------------------------------------------------------------------------
+% Hyperlink name of authors with authoryear-comp style (requires xpatch package)
+%-------------------------------------------------------------------------------
 % Combine label and labelyear links
 \xpatchbibmacro{cite}
   {\usebibmacro{cite:label}%
