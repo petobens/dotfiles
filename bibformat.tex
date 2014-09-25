@@ -346,6 +346,10 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 %-------------------------------------------------------------------------------
 % Hyperlink name of authors with authoryear-comp style (requires xpatch package)
 %-------------------------------------------------------------------------------
+\makeatletter
+\@ifpackageloaded{xpatch}{}{\usepackage{xpatch}}
+\makeatother
+
 % Combine label and labelyear links
 \xpatchbibmacro{cite}
   {\usebibmacro{cite:label}%
