@@ -2,7 +2,7 @@
 %          File: bibformat.tex
 %        Author: Pedro Ferrari
 %       Created: 19 mar 2013
-% Last Modified: 22 Sep 2014
+% Last Modified: 25 Sep 2014
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
 %-----------------+
@@ -99,7 +99,8 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   {\multicitedelim}
   {\usebibmacro{postnote}}
 
-% Use small caps for authors names also in the text (since we use fullcite)
+% Use upper case since Latin Modern Sans doesn't have small caps for authors
+% names and also do this text (since we use fullcite)
 \makeatletter
 \@ifclassloaded{beamer}{%
 \renewcommand*{\bibfont}{\footnotesize}
@@ -110,13 +111,13 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
     or test {\ifcurrentname{author}}
     or ( test {\ifnameundef{author}} and test {\ifcurrentname{editor}} ) }}
 
-\renewcommand*{\mkbibnamefirst}[1]{\ifmknamesc{\textsc{#1}}{#1}}
-\renewcommand*{\mkbibnamelast}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+\renewcommand*{\mkbibnamefirst}[1]{\ifmknamesc{\MakeUppercase{#1}}{#1}}
+\renewcommand*{\mkbibnamelast}[1]{\ifmknamesc{\MakeUppercase{#1}}{#1}}
 \renewcommand*{\mkbibnameprefix}[1]{%
-  \ifmknamesc{\textsc{\MakeCapital{#1}}}{\MakeCapital{#1}}}
-\renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+  \ifmknamesc{\MakeUppercase{\MakeCapital{#1}}}{\MakeCapital{#1}}}
+\renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\MakeUppercase{#1}}{#1}}
 \renewcommand*{\finalnamedelim}{\ifmknamesc{%
-  \addspace\textsc{\bibstring{and}}\space}{\addspace\bibstring{and}\space}}
+\addspace{\bibstring{and}}\space}{\addspace\bibstring{and}\space}}
 }%
 }{}%
 \makeatother
