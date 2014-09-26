@@ -43,7 +43,6 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \renewcommand*{\finalnamedelim}{\addspace\bibstring{and}\space}
 \renewcommand*{\finentrypunct}{}
 \renewcommand*{\bibpagerefpunct}{\addperiod\space}
-\renewcommand*{\bibfont}{\small}
 
 %-----------------+
 % Name formatting |
@@ -53,12 +52,8 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \DeclareNameAlias{default}{first-last}  % Editor
 \DeclareNameAlias{bookauthor}{first-last}
 
-% Capital letter for Von, Del, etc
-\AtBeginDocument{\renewcommand*{\mkbibnameprefix}[1]{\MakeCapital{#1}}}
-
-% Use small caps for names and surnames of authors
-% In beamer use upper case since Latin Modern Sans doesn't have small caps and
-% reduce the font size
+% Reduce font size and use small caps for names and surnames of authors
+% In beamer use upper case since Latin Modern Sans doesn't have small caps
 \makeatletter
 \@ifclassloaded{beamer}{%
   \newcommand*{\changefont}[1]{\MakeUppercase{#1}}
@@ -70,6 +65,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   \AtBeginDocument{%
     \DeclareNameAlias{author}{last-first/first-last:smartend}%
   }
+  \renewcommand*{\bibfont}{\small}
   }
 \makeatother
 
@@ -89,6 +85,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   \iftoggle{textcite}{#1}{\changefont{#1}}}{#1}}
 \renewcommand*{\mkbibnameprefix}[1]{%
   \ifmknamesc{\changefont{\MakeCapital{#1}}}{\MakeCapital{#1}}}
+\renewcommand*{\mkbibnameprefix}[1]{\MakeCapital{#1}}
 \renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\changefont{#1}}{#1}}
 \renewcommand*{\finalnamedelim}{\ifmknamesc{\addspace\iftoggle{textcite}{%
   \bibstring{and}}{\changefont{\bibstring{and}}}\space}{%
