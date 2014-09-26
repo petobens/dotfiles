@@ -2,7 +2,7 @@
 %          File: bibformat.tex
 %        Author: Pedro Ferrari
 %       Created: 19 mar 2013
-% Last Modified: 25 Sep 2014
+% Last Modified: 26 Sep 2014
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
 %-----------------+
@@ -40,27 +40,41 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 %-----------------+
 % Name formatting |
 %-----------------+
-% Modify the name format: use last-first/first-last for sorting and small caps
-% for names and surnames of authors
+% Use last-first/first-last for sorting
 \DeclareNameAlias{sortname}{last-first/first-last}
 \DeclareNameAlias{default}{first-last}  % Editor
 \DeclareNameAlias{bookauthor}{first-last}
 
+% Capital letter for Von, Del, etc
 \AtBeginDocument{\renewcommand*{\mkbibnameprefix}[1]{\MakeCapital{#1}}}
 
-\AtBeginBibliography{%
+% Use small caps for names and surnames of authors in the bibliography.
+% In beamer use upper case since Latin Modern Sans doesn't have small caps,
+% apply this for the whole text and reduce font size
+\makeatletter
+\@ifclassloaded{beamer}{%
+  \newcommand*{\changefont}[1]{\MakeUppercase{#1}}
+  \newcommand*{\CondBeg}[1]{\AtBeginDocument{#1}}
+  \renewcommand*{\bibfont}{\footnotesize}
+  \renewcommand*{\citesetup}{\footnotesize}
+  }{%
+  \newcommand*{\changefont}[1]{\textsc{#1}}
+  \newcommand*{\CondBeg}[1]{\AtBeginBibliography{#1}}
+  }
+\makeatother
+
+\CondBeg{%
   \def\ifmknamesc{%
     \ifboolexpr{ test {\ifcurrentname{labelname}}
     or test {\ifcurrentname{author}}
     or ( test {\ifnameundef{author}} and test {\ifcurrentname{editor}} ) }}
-
-\renewcommand*{\mkbibnamefirst}[1]{\ifmknamesc{\textsc{#1}}{#1}}
-\renewcommand*{\mkbibnamelast}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+\renewcommand*{\mkbibnamefirst}[1]{\ifmknamesc{\changefont{#1}}{#1}}
+\renewcommand*{\mkbibnamelast}[1]{\ifmknamesc{\changefont{#1}}{#1}}
 \renewcommand*{\mkbibnameprefix}[1]{%
-  \ifmknamesc{\textsc{\MakeCapital{#1}}}{\MakeCapital{#1}}}
-\renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\textsc{#1}}{#1}}
+  \ifmknamesc{\changefont{\MakeCapital{#1}}}{\MakeCapital{#1}}}
+\renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\changefont{#1}}{#1}}
 \renewcommand*{\finalnamedelim}{\ifmknamesc{%
-  \addspace\textsc{\bibstring{and}}\space}{\addspace\bibstring{and}\space}}
+  \addspace\changefont{\bibstring{and}}\space}{\addspace\bibstring{and}\space}}
 }
 
 % Also use small caps for authors when the 'smartand' counter is activated when
@@ -87,9 +101,9 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \catcode`\&4\relax%
 \catcode`\@12\relax%
 
-%-----------------------------------+
-% Beamer/fullcite specific settings |
-%-----------------------------------+
+%-----------------------+
+% Cite command settings |
+%-----------------------+
 % Add period and change default sorter in fullcite
 \DeclareCiteCommand{\fullcite}
   {\usebibmacro{prenote}}
@@ -98,29 +112,6 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
      {\thefield{entrytype}}\addperiod}
   {\multicitedelim}
   {\usebibmacro{postnote}}
-
-% Use upper case since Latin Modern Sans doesn't have small caps for authors
-% names and also do this text (since we use fullcite)
-\makeatletter
-\@ifclassloaded{beamer}{%
-\renewcommand*{\bibfont}{\footnotesize}
-\renewcommand*{\citesetup}{\footnotesize}
-\AtBeginDocument{%
-  \def\ifmknamesc{%
-    \ifboolexpr{ test {\ifcurrentname{labelname}}
-    or test {\ifcurrentname{author}}
-    or ( test {\ifnameundef{author}} and test {\ifcurrentname{editor}} ) }}
-
-\renewcommand*{\mkbibnamefirst}[1]{\ifmknamesc{\MakeUppercase{#1}}{#1}}
-\renewcommand*{\mkbibnamelast}[1]{\ifmknamesc{\MakeUppercase{#1}}{#1}}
-\renewcommand*{\mkbibnameprefix}[1]{%
-  \ifmknamesc{\MakeUppercase{\MakeCapital{#1}}}{\MakeCapital{#1}}}
-\renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\MakeUppercase{#1}}{#1}}
-\renewcommand*{\finalnamedelim}{\ifmknamesc{%
-\addspace{\bibstring{and}}\space}{\addspace\bibstring{and}\space}}
-}%
-}{}%
-\makeatother
 
 %---------------------+
 % Bibliography macros |
@@ -295,8 +286,8 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 % Bibliography per chapter
 \defbibheading{subbibperchap}[\refname]{%
   \section*{#1}%
-	\sectionmark{#1}%
-	\addcontentsline{toc}{section}{#1}
+  \sectionmark{#1}%
+  \addcontentsline{toc}{section}{#1}
 }
 
 %---------------------------------+
@@ -348,6 +339,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 %-------------------------------------------------------------------------------
 \makeatletter
 \@ifpackageloaded{xpatch}{}{\usepackage{xpatch}}
+\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}
 \makeatother
 
 % Combine label and labelyear links
