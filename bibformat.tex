@@ -60,6 +60,10 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   }{%
   \newcommand*{\changefont}[1]{\textsc{#1}}
   \newcommand*{\CondBeg}[1]{\AtBeginBibliography{#1}}
+  % Use small caps for smartand (define below) in the bibliography
+  \AtBeginBibliography{%
+    \DeclareNameAlias{author}{last-first/first-last:smartend}%
+  }
   }
 \makeatother
 
@@ -77,8 +81,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   \addspace\changefont{\bibstring{and}}\space}{\addspace\bibstring{and}\space}}
 }
 
-% Also use small caps for authors when the 'smartand' counter is activated when
-% writing in spanish
+% Declare smartand format to use small caps in the bibliography
 \catcode`\&3\relax%
 \catcode`\@11\relax%
 \DeclareNameFormat{last-first/first-last:smartend}{%
@@ -95,9 +98,6 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
        {\usebibmacro{name:first-last}{#1}{#4}{#5}{#7}}
        {\usebibmacro{name:first-last}{#1}{#3}{#5}{#7}}}%
   \usebibmacro{name:andothers}}
-\AtBeginBibliography{%
-   \DeclareNameAlias{author}{last-first/first-last:smartend}%
- }
 \catcode`\&4\relax%
 \catcode`\@12\relax%
 
