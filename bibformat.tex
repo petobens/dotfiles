@@ -56,7 +56,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 % In beamer use upper case since Latin Modern Sans doesn't have small caps
 \makeatletter
 \@ifclassloaded{beamer}{%
-  \newcommand*{\changefont}[1]{\MakeUppercase{#1}}
+  \newcommand*{\changefont}[1]{\scriptsize{\MakeUppercase{#1}}}
   \renewcommand*{\bibfont}{\footnotesize}
   \renewcommand*{\citesetup}{\footnotesize}
   }{%
