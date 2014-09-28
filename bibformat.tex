@@ -2,7 +2,7 @@
 %          File: bibformat.tex
 %        Author: Pedro Ferrari
 %       Created: 19 mar 2013
-% Last Modified: 26 Sep 2014
+% Last Modified: 27 Sep 2014
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
 %--------------------------+
@@ -56,9 +56,10 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 % In beamer use upper case since Latin Modern Sans doesn't have small caps
 \makeatletter
 \@ifclassloaded{beamer}{%
-  \newcommand*{\changefont}[1]{\scriptsize{\MakeUppercase{#1}}}
+  \newcommand*{\changefont}[1]{{\MakeUppercase{#1}}}
   \renewcommand*{\bibfont}{\footnotesize}
-  \renewcommand*{\citesetup}{\footnotesize}
+  \setlength{\bibitemsep}{0.7\itemsep}
+  % \renewcommand*{\citesetup}{\footnotesize}
   }{%
   \newcommand*{\changefont}[1]{\textsc{#1}}
   % Use small caps also for smartand (defined below)
