@@ -1,8 +1,8 @@
 %===============================================================================
 %          File: bibformat.tex
 %        Author: Pedro Ferrari
-%       Created: 19 mar 2013
-% Last Modified: 01 Oct 2014
+%       Created: 19 Mar 2013
+% Last Modified: 02 Oct 2014
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
 %--------------------------+
@@ -10,7 +10,9 @@
 %--------------------------+
 \makeatletter
 \@ifpackageloaded{xpatch}{}{\usepackage{xpatch}}
-% \@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}
+% FIXME: This doesn't quite work (if hyperref is not included it will throw
+% errors probably because the code to color hyperlinks appears before loading)
+% \AtEndPreamble{\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}}
 \makeatother
 
 %-----------------+
@@ -396,6 +398,9 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
                test {\iffieldundef{prenote}} and
                test {\iffieldundef{postnote}} }}
 
+%  FIXME: The following part of the code fails in beamer hence we remove it
+\makeatletter
+\@ifclassloaded{beamer}{}{%
 \xpatchbibmacro{textcite}
   {\printnames{labelname}}
   {\iflinkparens
@@ -403,6 +408,8 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
       \global\booltrue{cbx:link}\biblinkstart%
       \printnames{labelname}}
      {\printtext[bibhyperref]{\printnames{labelname}}}}{}{}
+}
+\makeatother
 
 \xpatchbibmacro{textcite}
   {\usebibmacro{cite:label}}
