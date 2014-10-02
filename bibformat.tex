@@ -34,9 +34,9 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \DeclareFieldFormat[incollection]{volume}{%
   \mkbibemph{\bibstring{volume}\addspace\RN{#1}}}
 
-%---------------------------------------+
-% Modifications to punctuation and font |
-%---------------------------------------+
+%---------------------------------------------------+
+% Modifications to punctuation, font and separation |
+%---------------------------------------------------+
 \renewcommand*{\bibnamedash}{\rule[3pt]{3em}{0.6pt}\addspace}
 \renewcommand*{\bibinitdelim}{\addnbthinspace}
 \renewcommand*{\intitlepunct}{\addspace}
@@ -45,6 +45,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \renewcommand*{\finalnamedelim}{\addspace\bibstring{and}\space}
 \renewcommand*{\finentrypunct}{}
 \renewcommand*{\bibpagerefpunct}{\addperiod\space}
+\setlength{\bibitemsep}{0.7\itemsep}
 
 %-----------------+
 % Name formatting |
@@ -60,7 +61,6 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \@ifclassloaded{beamer}{%
   \newcommand*{\changefont}[1]{{\MakeUppercase{#1}}}
   \renewcommand*{\bibfont}{\footnotesize}
-  \setlength{\bibitemsep}{0.7\itemsep}
   % \renewcommand*{\citesetup}{\footnotesize}
   }{%
   \newcommand*{\changefont}[1]{\textsc{#1}}
