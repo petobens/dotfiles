@@ -2,7 +2,7 @@
 %          File: bibformat.tex
 %        Author: Pedro Ferrari
 %       Created: 19 Mar 2013
-% Last Modified: 02 Oct 2014
+% Last Modified: 03 Oct 2014
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
 %--------------------------+
@@ -61,9 +61,10 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \@ifclassloaded{beamer}{%
   \newcommand*{\changefont}[1]{{\MakeUppercase{#1}}}
   \renewcommand*{\bibfont}{\footnotesize}
-  % \renewcommand*{\citesetup}{\footnotesize}
+  \newcommand*{\bibandcase}{\bibstring{and}}
   }{%
   \newcommand*{\changefont}[1]{\textsc{#1}}
+  \newcommand*{\bibandcase}{\changefont{\bibstring{and}}}
   % Use small caps also for smartand (defined below)
   \AtBeginDocument{%
     \DeclareNameAlias{author}{last-first/first-last:smartend}%
@@ -91,7 +92,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \renewcommand*{\mkbibnameprefix}[1]{\MakeCapital{#1}}
 \renewcommand*{\mkbibnameaffix}[1]{\ifmknamesc{\changefont{#1}}{#1}}
 \renewcommand*{\finalnamedelim}{\ifmknamesc{\addspace\iftoggle{textcite}{%
-  \bibstring{and}}{\changefont{\bibstring{and}}}\space}{%
+  \bibstring{and}}{\bibandcase}\space}{%
   \addspace\bibstring{and}\space}}
 }
 
