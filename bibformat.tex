@@ -2,9 +2,10 @@
 %          File: bibformat.tex
 %        Author: Pedro Ferrari
 %       Created: 19 Mar 2013
-% Last Modified: 03 Oct 2014
+% Last Modified: 04 Oct 2014
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
+% \RequireCitationStyle{authoryear-comp}
 %--------------------------+
 % Load xpatch and hyperref |
 %--------------------------+
@@ -12,7 +13,9 @@
 \@ifpackageloaded{xpatch}{}{\usepackage{xpatch}}
 % FIXME: This doesn't quite work (if hyperref is not included it will throw
 % errors probably because the code to color hyperlinks appears before loading)
-% \AtEndPreamble{\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}}
+% Also see tex question: apptocmd into a conditional
+\AtEndPreamble{\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}}
+% \@ifpackageloaded{hyperref}{}{\AtEndPreamble{\usepackage{hyperref}}}
 \makeatother
 
 %-----------------+
@@ -45,7 +48,6 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 \renewcommand*{\finalnamedelim}{\addspace\bibstring{and}\space}
 \renewcommand*{\finentrypunct}{}
 \renewcommand*{\bibpagerefpunct}{\addperiod\space}
-\setlength{\bibitemsep}{0.7\itemsep}
 
 %-----------------+
 % Name formatting |
@@ -62,6 +64,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   \newcommand*{\changefont}[1]{{\MakeUppercase{#1}}}
   \renewcommand*{\bibfont}{\footnotesize}
   \newcommand*{\bibandcase}{\bibstring{and}}
+  \setlength{\bibitemsep}{0.7\itemsep}
   }{%
   \newcommand*{\changefont}[1]{\textsc{#1}}
   \newcommand*{\bibandcase}{\changefont{\bibstring{and}}}
@@ -349,7 +352,6 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
   fromspanish    = {from Spanish},
   fromswedish    = {from Swedish}}
 \DefineBibliographyExtras{english}{\uspunctuation}
-
 
 %-------------------------------------------------------------------------------
 % Hyperlink name of authors with authoryear-comp style (requires xpatch package)
