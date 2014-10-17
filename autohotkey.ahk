@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 13 Sep 2014
+; Last Modified: 17 Oct 2014
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -148,6 +148,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#e:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
 ^#c:: RoA("cmd.exe", "cmd",,"")
+^#d:: RoA("Downloads", "C:\Users\Pedro\Downloads",,"")
 ^#p:: RoA("SumatraPDF", "SumatraPDF")
 
 ; Kill active window process (useful to close apps like Skype or Vuze)
