@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 09 Sep 2014
+" Last Modified: 11 Nov 2014
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
@@ -59,6 +59,7 @@ silent qmark u www.alumnos.econ.uba.ar
 silent qmark 1 www.translate.google.com.ar
 silent qmark 2 https://mail.google.com/tasks/canvas
 silent qmark 3 https://www.google.com/calendar
+silent qmark 5 https://mail.localhost.net.ar/
 silent qmark 8 www.8tracks.com
 silent qmark 9 9gag.com
 
