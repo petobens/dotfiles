@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 16 Dec 2014
+" Last Modified: 17 Dec 2014
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
@@ -41,8 +41,8 @@ nmap -builtin '"' gn
 " Define qmarks
 silent qmark h www.google.com.ar
 silent qmark m www.gmail.com
-" silent qmark y www.yahoo.com/mail
-silent qmark y www.youtube.com
+silent qmark y www.yahoo.com/mail
+" silent qmark y www.youtube.com
 silent qmark f www.facebook.com
 silent qmark l www.lanacion.com.ar
 silent qmark i www.infobae.com.ar
