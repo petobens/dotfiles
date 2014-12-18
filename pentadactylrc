@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 17 Dec 2014
+" Last Modified: 18 Dec 2014
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
@@ -39,26 +39,26 @@ nmap -builtin "'" go
 nmap -builtin '"' gn
 
 " Define qmarks
-silent qmark h www.google.com.ar
-silent qmark m www.gmail.com
-silent qmark y www.yahoo.com/mail
-" silent qmark y www.youtube.com
-silent qmark f www.facebook.com
-silent qmark l www.lanacion.com.ar
-silent qmark i www.infobae.com.ar
-silent qmark p http://pirateproxy.net
-silent qmark k www.keep.google.com
+silent qmark b www.bitbucket.com
+silent qmark c www.utdt.edu/campusvirtual
+silent qmark d http://distancia.econ.uba.ar/
 silent qmark e extratorrent.cc
+silent qmark f www.facebook.com
+silent qmark g www.github.com
+silent qmark h www.google.com.ar
+silent qmark i www.infobae.com.ar
+silent qmark k www.keep.google.com
+silent qmark l www.lanacion.com.ar
+silent qmark m www.gmail.com
+" silent qmark m www.mercadolibre.com.ar
+silent qmark n www.netflix.com
+silent qmark p http://pirateproxy.net
 silent qmark s www.subdivx.com
 silent qmark t tex.stackexchange.com
-silent qmark g www.github.com
-silent qmark n www.netflix.com
-silent qmark b www.bitbucket.com
-silent qmark v http://virtual.econ.uba.ar/
-silent qmark d http://distancia.econ.uba.ar/
-silent qmark c www.utdt.edu/campusvirtual
 silent qmark u www.alumnos.econ.uba.ar
-" silent qmark m www.mercadolibre.com.ar
+silent qmark v http://virtual.econ.uba.ar/
+silent qmark y www.yahoo.com/mail
+" silent qmark y www.youtube.com
 silent qmark 1 www.translate.google.com.ar
 silent qmark 2 https://mail.google.com/tasks/canvas
 silent qmark 3 https://www.google.com/calendar
