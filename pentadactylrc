@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 29 Dec 2014
+" Last Modified: 21 Jan 2015
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
@@ -172,11 +172,15 @@ nmap -builtin <Leader>sg YS<S-Ins><CR>
 nmap -builtin <Leader>sc S<S-Ins><CR>
 " Search wikipedia
 nmap -builtin <Leader>sw :open wikipedia-en<space>
+nmap -builtin <Leader>Sw :tabopen wikipedia-en<space>
 " Search pirate bay
 nmap -builtin <Leader>sb :open the-pirate-bay<space>
+nmap -builtin <Leader>Sb :tabopen the-pirate-bay<space>
 " Search youtube
 nmap -builtin <Leader>sy :open youtube-video-search<space>
+nmap -builtin <Leader>Sy :tabopen youtube-video-search<space>
 " Search mercado libre
 nmap -builtin <Leader>sm :open mercadolibre-argentina<space>
+nmap -builtin <Leader>Sm :tabopen mercadolibre-argentina<space>
 
 " }}}
