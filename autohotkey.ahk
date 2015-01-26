@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 17 Oct 2014
+; Last Modified: 26 Jan 2015
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -231,6 +231,23 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#l::
     Send #+l
     MsgBox, Cursor should  now be locked (unlocked) to (from) this screen.`nIn case this didn't work type 'WinKey+Shift+l'.
+    Return
+
+; Wireless properties
+#w::
+    Run ::{7007acc7-3202-11d1-aad2-00805fc1270e},, max
+    WinWaitActive, Network Connections
+    Send {Space}
+    Send w
+    Send {AppsKey}
+    Sleep 250
+    Send {Down 9}
+    Send {Enter}
+    ; WinWaitActive, Wi-Fi Fijo Properties
+    ; FIXME: Move down to Ip4
+    ; Send {Space}
+    ; Send iii
+    ; WinClose, Network Connections
     Return
 
 ; Shutdown and reboot (using Win+shift combination) (note: we can do this in two
