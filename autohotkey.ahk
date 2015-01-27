@@ -149,6 +149,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#w:: RoA("Word", "winword")
 ^#c:: RoA("cmd.exe", "cmd",,"")
 ^#d:: RoA("Downloads", "C:\Users\Pedro\Downloads",,"")
+^#f:: RoA("Downloads", "C:\Users\Pedro\Favorites",,"")
 ^#p:: RoA("SumatraPDF", "SumatraPDF")
 
 ; Kill active window process (useful to close apps like Skype or Vuze)
