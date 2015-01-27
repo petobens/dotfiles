@@ -6,6 +6,7 @@
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
+
 " TODO: Learn caret mode where one can use linewise ($) maps "
 " TODO: Is it possible to center search "
 map , <Leader>
@@ -84,13 +85,13 @@ set showtabline=multitab
 nmap -builtin  <Leader>nt :tabopen about:newtab<CR>
 nmap -builtin  <C-t> :tabopen about:newtab<CR>
 
-" TODO: Differentiate between window delete and buffer delete? "
 " Close/delete tabs/buffers (don't do this with d or D)
 nmap -builtin d <Nop>
+" We cannot delete a buffer (tab) and preserve the window/tile layout so wd and
+" bd do the same thing
 nmap -builtin D <Nop>
 nmap -builtin  <Leader>wd :bd<CR>
 nmap -builtin  <Leader>bd :bd<CR>
-" nmap -builtin  <C-w> :bd<CR>
 
 " Switch tabs as buffers in vim
 nmap -builtin <C-TAB> :tn<CR>
@@ -105,7 +106,7 @@ nmap -builtin  <Leader>vs :emenu Tile.New Layout.2 Tabs - Vertical<CR>
 nmap -builtin  <Leader>vd :emenu Tile.Tile Duplicate Tab.Right<CR>
 nmap -builtin  <Leader>sp :emenu Tile.New Layout.2 Tabs - Horizontal<CR>
 nmap -builtin  <Leader>sd :emenu Tile.Tile Duplicate Tab.Below<CR>
-" Untile layout (close window without closing buffer)
+" Untile layout (closes the window without deleting buffer)
 nmap -builtin  <C-c> :emenu Tile.Untile Tab<CR>
 " Close Layout (make that window the only window)
 nmap -builtin <A-o> :emenu Tile.Close All Layouts<CR>
