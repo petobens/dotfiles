@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 26 Jan 2015
+; Last Modified: 27 Jan 2015
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -210,6 +210,51 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     Return
 
 ; }}}
+; Wireless/internet connections {{{
+
+; Show Wireless IP4 properties
+#w::
+    Run ::{7007acc7-3202-11d1-aad2-00805fc1270e},, max
+    WinWaitActive, Network Connections
+    MiddleWindow()
+    Send {Space}w{AppsKey}
+    Sleep 250
+    Send {Down 9}{Enter}
+    WinWaitActive, Wi-Fi Fijo Properties
+    Sleep 300
+    Send {Down 9}
+    ControlClick, P&roperties,,,,3
+    Return
+
+; Automatically set Network settings (requires running autohotkey as admin)
+^#n::
+    {
+    SetTimer, ChangeButtonNames, 50
+    Msgbox, 4, Static or Automatic IP Address, Do you want to use a static IP address?
+    IfMsgBox Yes
+    {
+    Run, %comspec% /c netsh interface ip set address "Wi-Fi Fijo" source=static address=192.168.50.130 mask=255.255.255.0 gateway=192.168.50.1
+    Run, %comspec% /c netsh interface ip set dnsservers "Wi-Fi Fijo" source=static address=192.168.50.3 primary
+    }
+	else
+    {
+    Run, %comspec% /c netsh interface ip set address "Wi-Fi Fijo" source=dhcp
+    Run, %comspec% /c netsh interface ip set dnsservers "Wi-Fi Fijo" source=dhcp
+    }
+    }
+    Return
+
+; Helper function to change button names
+ChangeButtonNames:
+    IfWinNotExist, Static or Automatic IP Address
+        Return
+    SetTimer, ChangeButtonNames, off
+    WinActivate
+    ControlSetText, Button1, &Static (AF)
+    ControlSetText, Button2, &Automatic
+    Return
+
+; }}}
 ; Miscellaneous {{{
 
 ; Close applications Unix/Mac style
@@ -233,27 +278,10 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     MsgBox, Cursor should  now be locked (unlocked) to (from) this screen.`nIn case this didn't work type 'WinKey+Shift+l'.
     Return
 
-; Wireless properties
-#w::
-    Run ::{7007acc7-3202-11d1-aad2-00805fc1270e},, max
-    WinWaitActive, Network Connections
-    Send {Space}
-    Send w
-    Send {AppsKey}
-    Sleep 250
-    Send {Down 9}
-    Send {Enter}
-    ; WinWaitActive, Wi-Fi Fijo Properties
-    ; FIXME: Move down to Ip4
-    ; Send {Space}
-    ; Send iii
-    ; WinClose, Network Connections
-    Return
-
 ; Shutdown and reboot (using Win+shift combination) (note: we can do this in two
 ; steps with Alt-F4 and Ctrl-q)
 #+p::
-    Msgbox, 4,, Do you want to shutdown your computer?
+    Msgbox, 4, Shutdown option, Do you want to shutdown your computer?
     IfMsgBox Yes
     {
         Shutdown, 8
@@ -261,7 +289,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     Return
 
 #+r::
-    Msgbox, 4,, Do you want to restart your computer?
+    Msgbox, 4, Reboot option, Do you want to restart your computer?
     IfMsgBox Yes
     {
         Shutdown, 2
