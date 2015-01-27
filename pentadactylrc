@@ -166,6 +166,9 @@ nmap -builtin <Leader>ch <C-S-Del>
 " Downloads
 nmap -builtin <Leader>dl :dialog downloads<CR>
 
+" Addons
+nmap -builtin <Leader>ad :dialog addons<CR>
+
 " Search in google for highlighted words (in a new tab)
 nmap -builtin <Leader>sg YS<S-Ins><CR>
 " Search in google word in clipboard
