@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 21 Jan 2015
+" Last Modified: 27 Jan 2015
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
@@ -22,8 +22,8 @@ set hlfind
 nmap -builtin <Leader><space> <esc>:noh<CR>
 
 set guioptions=Csn
-" FIXME: Navigation is not longer a toolbar option in latest version "
-nmap -builtin <Leader>nb  :toolbartoggle Navigation Toolbar<CR>
+" Toggle navigation bar
+nmap -builtin <Leader>nb  :set guioptions!=T<CR>
 
 " }}}
 " Bookmarks/Quickmarks {{{
