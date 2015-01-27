@@ -101,7 +101,18 @@ nmap -builtin <S-TAB> :tp<CR>
 nmap -builtin <A-h> :tabmove! -1<CR>
 nmap -builtin <A-l> :tabmove! +1<CR>
 
-" TODO: Movement between tiles "
+" Movement between tiles/splits
+nmap -builtin  <Leader>1 :buffer 1<CR>
+nmap -builtin  <Leader>2 :buffer 2<CR>
+nmap -builtin  <Leader>3 :buffer 3<CR>
+nmap -builtin  <Leader>4 :buffer 4<CR>
+nmap -builtin  <Leader>5 :buffer 5<CR>
+nmap -builtin  <Leader>6 :buffer 6<CR>
+nmap -builtin  <Leader>7 :buffer 7<CR>
+nmap -builtin  <Leader>8 :buffer 8<CR>
+nmap -builtin  <Leader>9 :buffer 9<CR>
+
+" Tiles (similar to splits)
 nmap -builtin  <Leader>vs :emenu Tile.New Layout.2 Tabs - Vertical<CR>
 nmap -builtin  <Leader>vd :emenu Tile.Tile Duplicate Tab.Right<CR>
 nmap -builtin  <Leader>sp :emenu Tile.New Layout.2 Tabs - Horizontal<CR>
