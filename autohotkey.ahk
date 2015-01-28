@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 27 Jan 2015
+; Last Modified: 28 Jan 2015
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -149,7 +149,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#w:: RoA("Word", "winword")
 ^#c:: RoA("cmd.exe", "cmd",,"")
 ^#d:: RoA("Downloads", "C:\Users\Pedro\Downloads",,"")
-^#f:: RoA("Downloads", "C:\Users\Pedro\Favorites",,"")
+^#f:: RoA("Links", "C:\Users\Pedro\Links",,"")
 ^#p:: RoA("SumatraPDF", "SumatraPDF")
 
 ; Kill active window process (useful to close apps like Skype or Vuze)
@@ -228,6 +228,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     Return
 
 ; Automatically set Network settings (requires running autohotkey as admin)
+; FIXME: If run as admin startup script is not executed
 ^#n::
     {
     SetTimer, ChangeButtonNames, 50
