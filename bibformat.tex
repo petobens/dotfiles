@@ -2,7 +2,7 @@
 %          File: bibformat.tex
 %        Author: Pedro Ferrari
 %       Created: 19 Mar 2013
-% Last Modified: 04 Oct 2014
+% Last Modified: 27 Mar 2015
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
 % \RequireCitationStyle{authoryear-comp}
@@ -429,22 +429,4 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
         {}%
          \biblinkend\global\boolfalse{cbx:link}}
         {}}
-  {}
-  {\xpatchbibmacro{textcite}% patch earlier releases
-     {\setunit{%
-        \ifbool{cbx:parens}
-          {\bibcloseparen\global\boolfalse{cbx:parens}}
-          {}%
-        \multicitedelim}}
-     {\ifbool{cbx:link}
-        {\ifbool{cbx:parens}
-           {\bibcloseparen\global\boolfalse{cbx:parens}}
-           {}%
-         \biblinkend\global\boolfalse{cbx:link}}
-        {}%
-      \setunit{%
-        \ifbool{cbx:parens}
-          {\bibcloseparen\global\boolfalse{cbx:parens}}
-          {}%
-        \multicitedelim}}
-     {}{}}
+  {}{}
