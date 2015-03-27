@@ -432,7 +432,7 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
 %---------------+
 % We need to do this here after patching
 \makeatletter
-\AtEndPreamble{\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}}
+% \AtEndPreamble{\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}}
 %  FIXME: The former doesn't always work and we need this directly:
-% \@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}
+\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}
 \makeatother
