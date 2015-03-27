@@ -6,16 +6,12 @@
 %   Description: Modifications to biblatex's authoryear-comp style
 %===============================================================================
 % \RequireCitationStyle{authoryear-comp}
-%--------------------------+
-% Load xpatch and hyperref |
-%--------------------------+
+
+%-------------+
+% Load xpatch |
+%-------------+
 \makeatletter
 \@ifpackageloaded{xpatch}{}{\usepackage{xpatch}}
-% FIXME: This doesn't quite work (if hyperref is not included it will throw
-% errors probably because the code to color hyperlinks appears before loading)
-% Also see tex question: apptocmd into a conditional
-\AtEndPreamble{\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}}
-% \@ifpackageloaded{hyperref}{}{\AtEndPreamble{\usepackage{hyperref}}}
 \makeatother
 
 %-----------------+
@@ -429,4 +425,12 @@ unpublished]{title}{\mkbibquote{#1\isdot}}
         {}%
          \biblinkend\global\boolfalse{cbx:link}}
         {}}
-  {}{}
+  {}{}%
+
+%---------------+
+% Load hyperref |
+%---------------+
+% We need to do this here after patching
+\makeatletter
+\AtEndPreamble{\@ifpackageloaded{hyperref}{}{\usepackage{hyperref}}}
+\makeatother
