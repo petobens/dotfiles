@@ -8,7 +8,7 @@
 " Note: We use Tile Tabs and Auto Reload addons
 
 " TODO: Learn caret mode where one can use linewise ($) maps "
-" TODO: Is it possible to center search "
+" TODO: Is it possible to center search?
 map , <Leader>
 
 " Appearance {{{
