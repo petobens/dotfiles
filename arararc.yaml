@@ -1,0 +1,14 @@
+!config
+preambles:
+    minimize_runs: |
+        % arara: pdflatex: {interaction: batchmode, synctex: yes,
+        % arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+        % arara: biber if found('log', 'Please \\(re\\)run Biber on the file')
+        % arara: --> && found('bcf', 'citekey')
+        % arara: pdflatex: {interaction: batchmode, synctex: yes,
+        % arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+        % arara: --> if found('log', 'Please \\(re\\)run Biber on the file')
+        % arara: --> && found('bcf', 'citekey')
+        % arara: pdflatex: {interaction: batchmode, synctex: yes,
+        % arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+        % arara: --> if found('log', '(undefined references|Please rerun|Rerun to get)')
