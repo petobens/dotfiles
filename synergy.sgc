@@ -1,3 +1,10 @@
+#===============================================================================
+#          File: synergy.sgc
+#        Author: Pedro Ferrari
+#       Created: 01 Apr 2015
+# Last Modified: 01 Apr 2015
+#   Description: My synergy configuration file
+#===============================================================================
 section: screens
 	Pedro-Acer:
 		halfDuplexCapsLock = false
