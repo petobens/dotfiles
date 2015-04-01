@@ -8,7 +8,7 @@
 !config
 
 # Define key to minimize number of runs.
-# Note that we always use batchmode since Arara sees pdftex exit code and stops
+# Note that we always use batchmode since arara sees pdftex exit code and stops
 # without executing further directives only if the exit code of the command was
 # not zero (independent of the visibility on the console).
 preambles:
