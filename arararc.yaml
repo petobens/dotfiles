@@ -1,3 +1,10 @@
+#===============================================================================
+#          File: arararc.yaml
+#        Author: Pedro Ferrari
+#       Created: 01 Apr 2015
+# Last Modified: 01 Apr 2015
+#   Description: Configuration file for arara 4
+#===============================================================================
 !config
 
 # Define key to minimize number of runs.
