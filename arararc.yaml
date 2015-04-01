@@ -1,4 +1,9 @@
 !config
+
+# Define key to minimize number of runs.
+# Note that we always use batchmode since Arara sees pdftex exit code and stops
+# without executing further directives only if the exit code of the command was
+# not zero (independent of the visibility on the console).
 preambles:
     minimize_runs: |
         % arara: pdflatex: {interaction: batchmode, synctex: yes,
