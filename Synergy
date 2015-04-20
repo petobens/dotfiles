@@ -3,9 +3,9 @@
 
 # Note in order for this to work we need to place this file in
 # /Library/StartupItems/Synergy and give the proper permissions:
+# sudo chown -R root:wheel /Library/StartupItems/
+# sudo chmod -R 755 /Library/StartupItems/
 # sudo chmod -R 755 /Library/StartupItems/Synergy/Synergy
-# sudo chown -R root:wheel /Library/StartupItems
-# sudo chmod -R 755 /Library/StartupItems
 
 # First find ip of server
 server_ip=`smbutil lookup pedro-acer|grep response |awk '{print $4}'`
