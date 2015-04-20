@@ -2,7 +2,7 @@
 #          File: synergy.sgc
 #        Author: Pedro Ferrari
 #       Created: 01 Apr 2015
-# Last Modified: 01 Apr 2015
+# Last Modified: 20 Apr 2015
 #   Description: My synergy configuration file
 #===============================================================================
 section: screens
@@ -20,6 +20,13 @@ section: screens
 		xtestIsXineramaUnaware = false
 		switchCorners = none
 		switchCornerSize = 0
+	pedro-macbook:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		switchCorners = none
+		switchCornerSize = 0
 end
 
 section: aliases
@@ -29,10 +36,13 @@ section: links
     # Make the screens wrap in order to use one hotkey to switch between them
 	Pedro-Acer:
 		right = pedro-lubuntu
-		left = pedro-lubuntu
+        left = pedro-macbook
 	pedro-lubuntu:
-		left = Pedro-Acer
-		right = Pedro-Acer
+        right = pedro-macbook
+        left = Pedro-Acer
+	pedro-macbook:
+        left = pedro-lubuntu
+        right = Pedro-Acer
 end
 
 section: options
