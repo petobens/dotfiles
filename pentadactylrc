@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 27 Jan 2015
+" Last Modified: 22 Apr 2015
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
@@ -173,7 +173,7 @@ nmap -builtin  <Leader>ps :emenu History.Restore Previous Session<CR>
 " History
 nmap -builtin <Leader>hs :history<CR>
 " Clear history
-nmap -builtin <Leader>ch <C-S-Del>
+nmap -builtin <Leader>ch :emenu History.Clear Recent History…<CR>
 
 " Downloads
 nmap -builtin <Leader>dl :dialog downloads<CR>
