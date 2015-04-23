@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 22 Apr 2015
+" Last Modified: 23 Apr 2015
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
@@ -164,8 +164,8 @@ cmap -builtin <A-p> <S-Ins>
 " nmap -builtin <C-c> <C-v><C-c>
 nmap -builtin <C-v> <C-v><C-v>
 
-" Kill firefox
-nmap -builtin  KK :qall<CR>
+" Kill firefox (save first the current session and then quit)
+nmap -builtin  KK :xall<CR>
 " Restart firefox
 nmap -builtin  <Leader>rs :restart<CR>
 " Restore previous session
