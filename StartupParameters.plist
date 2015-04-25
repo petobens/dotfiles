@@ -1,6 +1,0 @@
-{
-    Description      = "Synergy Client";
-    Provides         = ("Synergy");
-    Requires         = ("Network");
-    OrderPreference  = "None";
-}
