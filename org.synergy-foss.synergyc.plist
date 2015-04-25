@@ -4,10 +4,8 @@
 <dict>
     <key>Label</key>
     <string>org.synergy-foss.synergyc</string>
-    <key>ProgramArguments</key>
-    <array>
+    <key>Program</key>
     <string>/Users/Pedro/Documents/AppleScripts/autostart_synergy.sh</string>
-    </array>
     <key>KeepAlive</key>
     <true/>
 </dict>
