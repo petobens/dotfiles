@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 28 Jan 2015
+; Last Modified: 23 Jun 2015
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -119,11 +119,12 @@ MiddleWindow()
 ^#Right:: RightHalfWindow() ; Default in Windows 8 is #Right
 ^#Up::   TopHalfWindow()
 ^#Down:: BottomHalfWindow()
-^#1:: TopLeftQuarterfWindow()
-^#2:: BottomLeftQuarterfWindow()
-^#3:: TopRightQuarterfWindow()
-^#4:: BottomRightQuarterfWindow()
-^#5:: MiddleWindow()
+; ; FIXME: If I use windows key (#) instead of shift(+) it doesn't work
+^+1:: TopLeftQuarterfWindow()
+^+2:: BottomLeftQuarterfWindow()
+^+3:: TopRightQuarterfWindow()
+^+4:: BottomRightQuarterfWindow()
+^+5:: MiddleWindow()
 
 ; }}}
 ; Run or activate app and kill process {{{
