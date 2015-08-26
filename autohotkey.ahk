@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 13 Aug 2015
+; Last Modified: 26 Aug 2015
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -263,8 +263,8 @@ ChangeButtonNames:
 ; Close applications Unix/Mac style
 ^q:: Send !{F4}
 
-; Show recycle bin (use control + alt)
-^!b:: Run ::{645ff040-5081-101b-9f08-00aa002f954e}
+; Show recycle bin
+#b:: Run ::{645ff040-5081-101b-9f08-00aa002f954e}
 ; Empty recycle bin
 ^#b::
     Msgbox, 4,, Do you want to empty the recycle bin?
