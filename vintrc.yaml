@@ -1,0 +1,11 @@
+#===============================================================================
+#          File: vintrc.yaml
+#        Author: Pedro Ferrari
+#       Created: 23 Sep 2015
+# Last Modified: 23 Sep 2015
+#   Description: Configuration file for vint linter
+#===============================================================================
+# Disable `Make the scope explicit` warning
+policies:
+  ProhibitImplicitScopeVariable:
+      enabled: false
