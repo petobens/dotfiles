@@ -2,12 +2,13 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 25 Aug 2015
+# Last Modified: 06 Sep 2015
 #   Description: My python requirements file (for winpython)
 # ==============================================================================
 # To install the packages in this file run `pip install -r /path/to/thisfile`
 
 autopep8
+email_validator
 flake8
 quantecon
 vim-vint
