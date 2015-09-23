@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 23 Apr 2015
+" Last Modified: 13 Sep 2015
 "   Description: My pentadactylrc
 "===============================================================================
 " Note: We use Tile Tabs and Auto Reload addons
@@ -43,7 +43,7 @@ nmap -builtin '"' gn
 silent qmark b www.bitbucket.com
 silent qmark c www.utdt.edu/campusvirtual
 silent qmark d http://distancia.econ.uba.ar/
-silent qmark e extratorrent.cc
+silent qmark e https://extratorrent.unblocked.pw/hot_torrents/2/XVID+DIVX.html
 silent qmark f www.facebook.com
 silent qmark g www.github.com
 silent qmark h www.google.com.ar
@@ -165,7 +165,7 @@ cmap -builtin <A-p> <S-Ins>
 nmap -builtin <C-v> <C-v><C-v>
 
 " Kill firefox (save first the current session and then quit)
-nmap -builtin  KK :xall<CR>
+nmap -builtin  <Leader>kv :xall<CR>
 " Restart firefox
 nmap -builtin  <Leader>rs :restart<CR>
 " Restore previous session
