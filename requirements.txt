@@ -11,7 +11,7 @@
 # First the following packages must be manually installed doing `pip install
 # {wheel}` after downloading the wheel package from:
 #  http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python
-# TODO: Do this with pipwin
+# TODO: Do this with pipwin and a requirement file
 # numpy
 # blosc
 # bottleneck
@@ -27,7 +27,6 @@
 
 # pywin32 must be installed from
 #  http://sourceforge.net/projects/pywin32/files/pywin32/
-#
 
 # Finally to install the next packages simply run `pip install -r /.../thisfile`
 ansicolor
