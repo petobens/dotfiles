@@ -1,16 +1,72 @@
-# ==============================================================================
+#===============================================================================
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 06 Sep 2015
-#   Description: My python requirements file (for winpython)
-# ==============================================================================
-# To install the packages in this file run `pip install -r /path/to/thisfile`
+# Last Modified: 02 Nov 2015
+#   Description: Requirement file to use with the official Python distribution
+#===============================================================================
+# Until Winpython add Python 3.5 support we will use the official Python
+# distribution.
 
+# First the following packages must be manually installed doing `pip install
+# {wheel}` after downloading the wheel package from:
+#  http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python
+# TODO: Do this with pipwin
+# numpy
+# blosc
+# bottleneck
+# llvmlite
+# lxml
+# numba
+# numexpr
+# pyqt4
+# PyYAML
+# scipy
+# statsmodels
+# tables
+
+# pywin32 must be installed from
+#  http://sourceforge.net/projects/pywin32/files/pywin32/
+#
+
+# Finally to install the next packages simply run `pip install -r /.../thisfile`
+ansicolor
 autopep8
-email_validator
+beautifulsoup4
+chardet
+comtypes
+cycler
+Cython
+decorator
+dnspython3
+email-validator
+enum34
 flake8
+idna
+jdcal
+jedi
+matplotlib
+mccabe
+nose
+openpyxl
+pandas
+pandas-datareader
+pathlib
+patsy
+pep8
+Pillow
+pyflakes
+Pygments
+pyparsing
+python-dateutil
+pytz
 quantecon
+six
+SQLAlchemy
+sympy
+tornado
 vim-vint
 wbdata
+xlrd
+XlsxWriter
 xlwings
