@@ -76,6 +76,7 @@ patsy
 pep8
 pickleshare
 Pillow
+pip
 prettytable
 pyflakes
 Pygments
@@ -86,6 +87,7 @@ pyzmq
 qtconsole
 quantecon
 requests
+setuptools
 simplegeneric
 six
 SQLAlchemy
