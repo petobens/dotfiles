@@ -7,12 +7,15 @@
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
 # {wheel}` after downloading the wheel package from:
-#  http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python
+#  http://www.lfd.uci.edu/~gohlke/pythonlibs/
 # TODO: Do this with pipwin and a requirement file
 # TODO install rpy2 and pywin32 from Gohlke (once they are ready)
 # numpy
 # blosc
 # bottleneck
+# cvxopt
+# cx-freeze
+# cyordereddict
 # llvmlite
 # lxml
 # numba
@@ -32,12 +35,15 @@ ansicolor
 autopep8
 beautifulsoup4
 blaze
+bqplot
 chardet
+colorama
 comtypes
 cycler
 Cython
 datashape
 decorator
+dill
 dnspython3
 email-validator
 enum34
@@ -57,6 +63,7 @@ jupyter
 jupyter-client
 jupyter-console
 jupyter-core
+lmfit
 MarkupSafe
 matplotlib
 mccabe
@@ -78,9 +85,12 @@ pickleshare
 Pillow
 pip
 prettytable
+py
 pyflakes
 Pygments
 pyparsing
+pyreadline
+pytest
 python-dateutil
 pytz
 pyzmq
