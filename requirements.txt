@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 02 Nov 2015
+# Last Modified: 03 Nov 2015
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # Until Winpython add Python 3.5 support we will use the official Python
@@ -12,6 +12,7 @@
 # {wheel}` after downloading the wheel package from:
 #  http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python
 # TODO: Do this with pipwin and a requirement file
+# TODO install rpy2 and pywin32 from Gohlke
 # numpy
 # blosc
 # bottleneck
@@ -42,28 +43,50 @@ email-validator
 enum34
 flake8
 idna
+ipykernel
+ipyparallel
+ipython
+ipython-genutils
+ipywidgets
 jdcal
 jedi
+Jinja2
+jsonschema
+jupyter
+jupyter-client
+jupyter-console
+jupyter-core
+MarkupSafe
 matplotlib
 mccabe
+mistune
+nbconvert
+nbformat
 nose
+notebook
 openpyxl
 pandas
 pandas-datareader
+path.py
 pathlib
 patsy
 pep8
+pickleshare
 Pillow
 pyflakes
 Pygments
 pyparsing
 python-dateutil
 pytz
+pyzmq
+qtconsole
 quantecon
+simplegeneric
 six
 SQLAlchemy
 sympy
 tornado
+traitlets
 vim-vint
 wbdata
 xlrd
