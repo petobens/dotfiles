@@ -41,6 +41,7 @@ colorama
 comtypes
 cycler
 Cython
+dask
 datashape
 decorator
 dill
@@ -112,3 +113,4 @@ wheel
 xlrd
 XlsxWriter
 xlwings
+xray
