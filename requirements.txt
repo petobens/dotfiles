@@ -5,14 +5,11 @@
 # Last Modified: 03 Nov 2015
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
-# Until Winpython add Python 3.5 support we will use the official Python
-# distribution.
-
 # First the following packages must be manually installed doing `pip install
 # {wheel}` after downloading the wheel package from:
 #  http://www.lfd.uci.edu/~gohlke/pythonlibs/#mysql-python
 # TODO: Do this with pipwin and a requirement file
-# TODO install rpy2 and pywin32 from Gohlke
+# TODO install rpy2 and pywin32 from Gohlke (once they are ready)
 # numpy
 # blosc
 # bottleneck
@@ -20,6 +17,7 @@
 # lxml
 # numba
 # numexpr
+# psutil
 # pyqt4
 # PyYAML
 # scipy
@@ -33,10 +31,12 @@
 ansicolor
 autopep8
 beautifulsoup4
+blaze
 chardet
 comtypes
 cycler
 Cython
+datashape
 decorator
 dnspython3
 email-validator
@@ -47,6 +47,7 @@ ipykernel
 ipyparallel
 ipython
 ipython-genutils
+ipython-sql
 ipywidgets
 jdcal
 jedi
@@ -60,8 +61,10 @@ MarkupSafe
 matplotlib
 mccabe
 mistune
+multipledispatch
 nbconvert
 nbformat
+networkx
 nose
 notebook
 openpyxl
@@ -73,6 +76,7 @@ patsy
 pep8
 pickleshare
 Pillow
+prettytable
 pyflakes
 Pygments
 pyparsing
@@ -81,14 +85,18 @@ pytz
 pyzmq
 qtconsole
 quantecon
+requests
 simplegeneric
 six
 SQLAlchemy
+sqlparse
 sympy
+toolz
 tornado
 traitlets
 vim-vint
 wbdata
+wheel
 xlrd
 XlsxWriter
 xlwings
