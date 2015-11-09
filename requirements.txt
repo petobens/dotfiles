@@ -2,39 +2,43 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 03 Nov 2015
+# Last Modified: 09 Nov 2015
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
 # {wheel}` after downloading the wheel package from:
 #  http://www.lfd.uci.edu/~gohlke/pythonlibs/
 # TODO: Do this with pipwin and a requirement file
-# TODO install rpy2 and pywin32 from Gohlke (once they are ready)
+# TODO install pywin32 from Gohlke (once they are ready)
 # numpy
+# llvmlite
+# numexpr
 # blosc
-# bottleneck
+# bottleneck # numpy
 # cvxopt
 # cx-freeze
 # cyordereddict
-# llvmlite
+# enum34
 # lxml
-# numba
-# numexpr
+# numba  # numpy and llvmlite
 # psutil
 # pyqt4
 # PyYAML
+# rpy2
 # scipy
-# statsmodels
-# tables
+# statsmodels # patsy and six
+# tables  # numpy and numexpr
 
 # pywin32 must be installed from
 #  http://sourceforge.net/projects/pywin32/files/pywin32/
 
 # Finally to install the next packages simply run `pip install -r /.../thisfile`
+# Note: we list dependencies of important packages as a comment after each package
 ansicolor
 autopep8
 beautifulsoup4
 blaze
+boto
 bqplot
 chardet
 colorama
@@ -52,7 +56,7 @@ flake8
 idna
 ipykernel
 ipyparallel
-ipython
+ipython # setuptools, pyzmq, tornado, pygments, markupsafe, jinja2, mistune, rpy2, matplotlib and pyqt4
 ipython-genutils
 ipython-sql
 ipywidgets
@@ -60,13 +64,13 @@ jdcal
 jedi
 Jinja2
 jsonschema
-jupyter
+jupyter # ipykernel, ipyparallel, ipython-genutils, ipywidgets, jupyter-client, jupyter-console, jupyter-core, nbconvert, nbformat, notebook, qtconsole and traitlets
 jupyter-client
 jupyter-console
 jupyter-core
 lmfit
 MarkupSafe
-matplotlib
+matplotlib # numpy, dateutil, pytz, pyparsing, cycler, setuptools, pillow, tornado and pyqt4
 mccabe
 mistune
 multipledispatch
@@ -76,7 +80,7 @@ networkx
 nose
 notebook
 openpyxl
-pandas
+pandas #  numpy, dateutil, pytz, setuptools, numexpr, bottleneck, scipy, matplotlib, pytables, lxml, statsmodels, sqlalchemy, cython, tables, xlrd, XlsxWriter, blosc, pyqt4, beautifulsoup4, lxml and boto
 pandas-datareader
 path.py
 pathlib
