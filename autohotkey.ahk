@@ -201,8 +201,8 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#Printscreen::
     FormatTime,CurrentTime,%A_Now%,dd-MM-yyyy_HH-mm-ss
     image_name=%A_desktop%\screenshot-%CurrentTime%.png
-    Send !{Printscreen}
     ; Alt-Print takes screenshot of active window in W >= 8.1
+    Send !{Printscreen}
     RoA("Paint", "mspaint","")
     Send ^v
     Send ^s
