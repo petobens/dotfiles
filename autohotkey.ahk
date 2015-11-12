@@ -196,6 +196,8 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ; }}}
 ; Active window screenshot {{{
 
+; Note that for this to work we need first to resize the default paint image
+; size to something small (for instance 100x100 pixels)
 ^#Printscreen::
     FormatTime,CurrentTime,%A_Now%,dd-MM-yyyy_HH-mm-ss
     image_name=%A_desktop%\screenshot-%CurrentTime%.png
