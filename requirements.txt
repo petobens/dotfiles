@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 09 Nov 2015
+# Last Modified: 13 Nov 2015
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
@@ -32,8 +32,10 @@
 # pywin32 must be installed from
 #  http://sourceforge.net/projects/pywin32/files/pywin32/
 
-# Finally to install the next packages simply run `pip install -r /.../thisfile`
-# Note: we list dependencies of important packages as a comment after each package
+# To install the next packages simply run `pip install -r # requirements.txt`
+# To update package run `pip install --upgrade -r requirements.txt`
+# Note: we list dependencies of important packages as a comment after each
+# package
 ansicolor
 autopep8
 beautifulsoup4
@@ -51,7 +53,7 @@ decorator
 dill
 dnspython3
 email-validator
-enum34
+et-xmlfile
 flake8
 idna
 ipykernel
@@ -79,6 +81,7 @@ nbformat
 networkx
 nose
 notebook
+odo
 openpyxl
 pandas #  numpy, dateutil, pytz, setuptools, numexpr, bottleneck, scipy, matplotlib, pytables, lxml, statsmodels, sqlalchemy, cython, tables, xlrd, XlsxWriter, blosc, pyqt4, beautifulsoup4, lxml and boto
 pandas-datareader
