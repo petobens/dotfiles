@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 12 Nov 2015
+; Last Modified: 14 Nov 2015
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -145,7 +145,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#u:: RoA("Vuze", "C:\Program Files\Vuze\Azureus.exe")
 ^#t:: RoA("Mozilla Thunderbird", "thunderbird")
 ^#s:: RoA("Skype", "C:\Program Files (x86)\Skype\Phone\Skype.exe",,"")
-^#g:: RoA("GifCam", "C:\OD\apps\GifCam.exe",,"")
+^#g:: RoA("GifCam", "C:\OD\OneDrive\apps\GifCam.exe",,"")
 ^#e:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
 ^#c:: RoA("cmd.exe", "cmd",,"")
@@ -164,20 +164,20 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ; Vim specific {{{
 
 ; Run or activate gvim
-^#v:: RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
+^#v:: RoA("GVIM", "gvim", "C:\OD\OneDrive\Users\Pedro\vimfiles")
 
 ; Restart gvim and load previous session
 ^#r::
     Send :wall!{Enter}
     Send KK
     Sleep 150
-    RoA("GVIM", "gvim", "C:\OD\Users\Pedro\vimfiles")
+    RoA("GVIM", "gvim", "C:\OD\OneDrive\Users\Pedro\vimfiles")
     Sleep 150
     Send {,}ps
     Return
 
 ; Open Gvim sourcing the minimal vimrc
-^#m:: Run, gvim -u C:/OD/Users/Pedro/vimfiles/vimrc_min, C:/OD/Users/Pedro/vimfiles, max
+^#m:: Run, gvim -u C:/OD/OneDrive/Users/Pedro/vimfiles/vimrc_min, C:/OD/OneDrive/Users/Pedro/vimfiles, max
 
 ; }}}
 ; Toggle hidden files {{{
