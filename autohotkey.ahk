@@ -115,11 +115,10 @@ MiddleWindow()
 }
 
 ; Mapppings
-^#Left::  LeftHalfWindow()  ; Default in Windows 8 is #Left
-^#Right:: RightHalfWindow() ; Default in Windows 8 is #Right
+^#Left::  LeftHalfWindow()  ; Default in Windows 10 is #Left
+^#Right:: RightHalfWindow() ; Default in Windows 10 is #Right
 ^#Up::   TopHalfWindow()
 ^#Down:: BottomHalfWindow()
-; ; FIXME: If I use windows key (#) instead of shift(+) it doesn't work
 ^#1:: TopLeftQuarterfWindow()
 ^#2:: BottomLeftQuarterfWindow()
 ^#3:: TopRightQuarterfWindow()
