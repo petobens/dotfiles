@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 14 Nov 2015
+; Last Modified: 17 Nov 2015
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -264,6 +264,10 @@ ChangeButtonNames:
 
 ; Close applications Unix/Mac style
 ^q:: Send !{F4}
+
+; Make Capslock a Tab key (but allow to retain Capslock with Shift+Capslock)
++Capslock::Capslock
+Capslock::Tab
 
 ; Show recycle bin
 #b:: Run ::{645ff040-5081-101b-9f08-00aa002f954e}
