@@ -5,8 +5,8 @@
 #  Last Modified: 23 Oct 2015
 #    Description: My R profile file
 # ==============================================================================
-# Set default CRAN mirror to Argentina
-options(repos = "http://mirror.fcaglp.unlp.edu.ar/CRAN/")
+# Set default CRAN mirror to USA
+options(repos = "http://cran.us.r-project.org")
 
 # Prompt similar to Python REPL
 options(prompt=">>> ")
