@@ -2,14 +2,16 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 15 Nov 2015
+# Last Modified: 08 Dec 2015
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
 # {wheel}` after downloading the wheel package from:
 #  http://www.lfd.uci.edu/~gohlke/pythonlibs/
+# Note: we list dependencies of important packages as a comment after each
+# package
 # TODO: Do this with pipwin and a requirement file
-# TODO install pywin32 from Gohlke (once they are ready)
+
 # numpy
 # llvmlite
 # numexpr
@@ -24,18 +26,14 @@
 # psutil
 # pyqt4
 # PyYAML
+# pywin32
 # rpy2
 # scipy
 # statsmodels # patsy and six
 # tables  # numpy and numexpr
 
-# pywin32 must be installed from
-#  http://sourceforge.net/projects/pywin32/files/pywin32/
-
 # To install the next packages simply run `pip install -r requirements.txt`
 # To update package run `pip install --upgrade -r requirements.txt`
-# Note: we list dependencies of important packages as a comment after each
-# package
 ansicolor
 autopep8
 beautifulsoup4
