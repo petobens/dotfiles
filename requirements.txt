@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 08 Dec 2015
+# Last Modified: 22 Dec 2015
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
@@ -113,7 +113,6 @@ toolz
 tornado
 traitlets
 vim-vint
-wbdata
 wheel
 xlrd
 XlsxWriter
