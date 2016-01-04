@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 27 Dec 2015
+# Last Modified: 04 Jan 2016
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
@@ -111,8 +111,7 @@ sympy
 toolz
 tornado
 traitlets
-# FIXME: vim-vint fails with enum34; do we need enum34 with python 3.5?
-# vim-vint
+vim-vint
 wheel
 xlrd
 XlsxWriter
