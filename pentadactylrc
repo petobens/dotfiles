@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 01 Jan 2016
+" Last Modified: 04 Jan 2016
 "   Description: My pentadactylrc
 "===============================================================================
 " If nightly builds are not available we use releases from the following fork:
@@ -45,7 +45,7 @@ nmap -builtin '"' gn
 silent qmark b www.bitbucket.com
 silent qmark c www.utdt.edu/campusvirtual
 silent qmark d http://distancia.econ.uba.ar/
-silent qmark e https://extratorrent.unblocked.pw/hot_torrents/2/XVID+DIVX.html
+silent qmark e https://extratorrent.unblockme.co/hot_torrents/2/XVID+DIVX.html
 silent qmark f www.facebook.com
 silent qmark g www.github.com
 silent qmark h www.google.com.ar
