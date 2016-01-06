@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 04 Jan 2016
+# Last Modified: 06 Jan 2016
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
@@ -28,6 +28,8 @@
 # pywin32
 # rpy2
 # scipy
+# Note that until there is a  new release look here for a dev version (0.8.0) of
+# statsmodels: https://github.com/statsmodels/statsmodels/issues/2751#issuecomment-169336126
 # statsmodels # patsy and six
 # tables  # numpy and numexpr
 
