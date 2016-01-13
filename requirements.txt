@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 06 Jan 2016
+# Last Modified: 13 Jan 2016
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
@@ -26,6 +26,7 @@
 # pyqt4
 # PyYAML
 # pywin32
+# pyzmq
 # rpy2
 # scipy
 # Note that until there is a  new release look here for a dev version (0.8.0) of
@@ -100,7 +101,6 @@ pyreadline
 pytest
 python-dateutil
 pytz
-pyzmq
 qtconsole
 quantecon
 requests
