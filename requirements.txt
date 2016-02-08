@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 13 Jan 2016
+# Last Modified: 08 Feb 2016
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
@@ -40,7 +40,7 @@ ansicolor
 autopep8
 beautifulsoup4
 blaze
-boto
+boto3
 bqplot
 chardet
 colorama
