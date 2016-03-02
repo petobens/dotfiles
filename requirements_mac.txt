@@ -1,0 +1,28 @@
+================================================================================
+          File: requirements_mac.txt
+        Author: Pedro Ferrari
+       Created: 02 Mar 2016
+ Last Modified: 02 Mar 2016
+   Description: Requirements file for Mac
+================================================================================
+The idea is to use conda (since it contains most binaries). Here we list the
+packages we install, omitting their dependencies which are automatically
+installed (using `conda install package`):
+numpy
+numba
+pandas
+pandas-datareader
+scipy
+matplotlib
+statsmodels
+jupyter
+scikit-learn
+cython
+flake8
+anaconda-client (maybe not needed)
+xlwings
+jedi
+
+Using pip we install the following:
+autopep8
+vim-vint
