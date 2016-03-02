@@ -23,6 +23,7 @@ anaconda-client (maybe not needed)
 xlwings
 jedi
 
-Using pip we install the following:
+Using pip (`pip install package`) we install the following:
 autopep8
 vim-vint
+pyhive
