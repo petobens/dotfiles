@@ -73,6 +73,7 @@ silent qmark 9 9gag.com
 " For jampp
 silent qmark j http://app.jampp.com/
 silent qmark a http://airpal.jampp.com/
+silent qmark q http://emr.jampp.com:8889/
 
 " }}}
 " Navigation and tab handling {{{
