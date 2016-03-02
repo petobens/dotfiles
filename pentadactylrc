@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 04 Jan 2016
+" Last Modified: 02 Mar 2016
 "   Description: My pentadactylrc
 "===============================================================================
 " If nightly builds are not available we use releases from the following fork:
@@ -69,6 +69,10 @@ silent qmark 3 https://www.google.com/calendar
 silent qmark 5 https://mail.localhost.net.ar/
 silent qmark 8 www.8tracks.com
 silent qmark 9 9gag.com
+
+" For jampp
+silent qmark j http://app.jampp.com/
+silent qmark a http://airpal.jampp.com/
 
 " }}}
 " Navigation and tab handling {{{
