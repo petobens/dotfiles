@@ -27,3 +27,4 @@ Using pip (`pip install package`) we install the following:
 autopep8
 vim-vint
 pyhive
+powerline-status
