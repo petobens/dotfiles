@@ -19,9 +19,10 @@ options(stringsAsFactors=FALSE)
 options(show.signif.stars=FALSE)
 
 # Change plot window defaults
-setHook(packageEvent("grDevices", "onLoad"), function(...) {
-            grDevices::windows.options(width=6.5, height=5.5, xpos=-500,
-                                       ypos=-700)})
+#  FIXME: The following seems to conflic on mac
+# setHook(packageEvent("grDevices", "onLoad"), function(...) {
+            # grDevices::windows.options(width=6.5, height=5.5, xpos=-500,
+                                       # ypos=-700)})
 # Give warnings on partial matches
 # options(warnPartialMatchAttr = TRUE, warnPartialMatchDollar = TRUE,
         # warnPartialMatchArgs = TRUE)
