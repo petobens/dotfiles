@@ -7,7 +7,7 @@ alias python='python3'
 alias vim='mvim'
 
 # # Better colors in iterm?
-# export CLICOLOR=1
+export CLICOLOR=1
 
 # Set english utf-8 locale
 export LC_ALL=en_US.UTF-8
