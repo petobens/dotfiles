@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 25 Aug 2015
-# Last Modified: 01 Mar 2016
+# Last Modified: 03 Mar 2016
 #   Description: Requirement file to use with the official Python distribution
 #===============================================================================
 # First the following packages must be manually installed doing `pip install
@@ -12,7 +12,7 @@
 # package
 # TODO: Do this with pipwin and a requirement file
 # numpy
-# llvmlite  # This fails on mac
+# llvmlite
 # numexpr
 # blosc
 # bottleneck # numpy
@@ -22,17 +22,17 @@
 # enum34   # Not needed?
 # lxml
 # numba  # numpy and llvmlite  This fails on mac since llvmlite fails
-# psutil # This fails on mac
-# pyqt4 # Not found for mac
+# psutil
+# pyqt4
 # PyYAML
 # pywin32
 # pyzmq
-# rpy2 # R is needed to be installed on mac
+# rpy2
 # scipy
 # Note that until there is a  new release look here for a dev version (0.8.0) of
 # statsmodels: https://github.com/statsmodels/statsmodels/issues/2751#issuecomment-169336126
 # statsmodels # patsy and six
-# tables  # numpy and numexpr  # Fails on mac
+# tables  # numpy and numexpr
 
 # To install the next packages simply run `pip install -r requirements.txt`
 # To update package run `pip install --upgrade -r requirements.txt`
