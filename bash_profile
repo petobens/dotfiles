@@ -13,6 +13,7 @@ export MANPATH="/Library/TeX/Distributions/.DefaultTeX/Contents/Man:$MANPATH"
 # Alias
 alias python='python3'
 alias vim='mvim'
+alias mvrc='mvim -u ~/.vim/vimrc_min'
 
 # Set english utf-8 locale
 export LC_ALL=en_US.UTF-8
