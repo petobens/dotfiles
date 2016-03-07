@@ -1,14 +1,15 @@
 # Path settings
 PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # homebrew
-export PATH="/usr/texbin:$PATH"  # basictex
+export PATH="/Users/Pedro/prog-tools/arara4/:$PATH" # arara
+export PATH="/Library/TeX/texbin:$PATH" # basictex
 export PATH="/Users/Pedro/miniconda3/bin:$PATH" # miniconda
 
 # Symlink cask apps to Applications folder
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 # For basictex manual
-export MANPATH="/Library/TeX/Distributions/.DefaultTeX/Contents/Man:$MANPATH"
+# export MANPATH="/Library/TeX/Distributions/.DefaultTeX/Contents/Man:$MANPATH"
 
 # Alias
 alias python='python3'
@@ -27,3 +28,9 @@ POWERLINE_BASH_SELECT=1
 
 # Set vi mode
 set -o vi
+
+# SSH and Tmux: connect to ssh and then start tmux creating a new session called
+# pedrof or attaching to an existing one with that name
+alias emr-tmux='ssh prd-emr-master -t tmux new -A -s pedrof'
+# Presto command line
+alias presto='ssh prd-emr-master -t tmux new -A -s pedrof "presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
