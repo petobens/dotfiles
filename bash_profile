@@ -13,7 +13,7 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 # Alias
 alias python='python3'
-alias vim='mvim'
+# alias vim='mvim'
 alias mvrc='mvim -u ~/.vim/vimrc_min'
 
 # Set english utf-8 locale
