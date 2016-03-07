@@ -8,9 +8,6 @@ export PATH="/Users/Pedro/miniconda3/bin:$PATH" # miniconda
 # Symlink cask apps to Applications folder
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
-# For basictex manual
-# export MANPATH="/Library/TeX/Distributions/.DefaultTeX/Contents/Man:$MANPATH"
-
 # Alias
 alias python='python3'
 # alias vim='mvim'
