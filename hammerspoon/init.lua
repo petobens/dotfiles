@@ -5,7 +5,6 @@
 -- Last Modified: 14 Mar 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
--- -- TODO: Replace hyperswitch
 -- See https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations
 -- for configuration examples
 
@@ -115,8 +114,11 @@ function focusNextScreen()
     end
 
     -- Also move the mouse to center of screen
+    -- TODO: Move mouse down and then back to center to activate dock
     local center = hs.geometry.rectMidPoint(next_screen:fullFrame())
+    -- local bottom = hs.geometry.rectMidPoint(next_screen:fullFrame()) - 1
     hs.mouse.setAbsolutePosition(center)
+    -- hs.mouse.setAbsolutePosition(hs.geometry.rect(1,1, 0.5, 1))
 end
 hs.hotkey.bind({"alt"}, "§", focusNextScreen)
 hs.hotkey.bind({"alt"}, "`", focusNextScreen)
@@ -143,9 +145,14 @@ hs.hotkey.bind(cmd_ctrl, "e", function()
                 hs.application.launchOrFocus("Finder") end)
 hs.hotkey.bind(cmd_ctrl, "t", function()
                 hs.application.launchOrFocus("Thunderbird") end)
--- hs.hotkey.bind(cmd_ctrl, "d", function()
-                -- hs.application.launchOrFocus("Downloads") end)
+hs.hotkey.bind(cmd_ctrl, "d", function()
+                hs.execute("open /Users/Pedro/Downloads/") end)
 
+-- Windows hints (kind of deprecates Hyperswitch)
+hs.hints.hintChars = {"A", "S", "D", "F", "G", "H", "J", "K" , "L"}
+hs.hints.fontSize = 12
+hs.hints.showTitleThresh = 7
+hs.hotkey.bind(cmd_ctrl, "h", function() hs.hints.windowHints() end)
 
 -- TODO: Shutdown, restart and clear bin, also toggle hidden files
 hs.hotkey.bind({"shift", "cmd"}, "r", function()
