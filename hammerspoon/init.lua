@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 14 Mar 2016
+-- Last Modified: 16 Mar 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- See https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations
@@ -99,9 +99,10 @@ function windowInScreen(screen, win) -- Check if a window belongs to a screen
     return win:screen() == screen
 end
 function focusNextScreen()
+    -- Get next screen using current mouse position
+    -- local next_screen = hs.window.focusedWindow():screen():next()
+    local next_screen = hs.mouse.getCurrentScreen():next()
     -- Get windows within next screen, ordered from front to back.
-    -- FIXME: if I minimize a window and switch back this gives an error
-    local next_screen = hs.window.focusedWindow():screen():next()
     windows = hs.fnutils.filter(hs.window.orderedWindows(),
                                 hs.fnutils.partial(windowInScreen, next_screen))
     -- If no windows exist, bring focus to desktop. Otherwise, set focus on
@@ -113,12 +114,9 @@ function focusNextScreen()
         hs.window.desktop():focus()
     end
 
-    -- Also move the mouse to center of screen
-    -- TODO: Move mouse down and then back to center to activate dock
+    -- Also move the mouse to center of next screen
     local center = hs.geometry.rectMidPoint(next_screen:fullFrame())
-    -- local bottom = hs.geometry.rectMidPoint(next_screen:fullFrame()) - 1
     hs.mouse.setAbsolutePosition(center)
-    -- hs.mouse.setAbsolutePosition(hs.geometry.rect(1,1, 0.5, 1))
 end
 hs.hotkey.bind({"alt"}, "§", focusNextScreen)
 hs.hotkey.bind({"alt"}, "`", focusNextScreen)
