@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 16 Mar 2016
+-- Last Modified: 17 Mar 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- See https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations
@@ -24,7 +24,7 @@ hs.window.animationDuration = 0
 -- unplugged:
 local screens = hs.screen.allScreens()
 local screenwatcher = hs.screen.watcher.new(function()
-                                            screens = hs.screen.allScreens()
+                                                screens = hs.screen.allScreens()
                                             end)
 screenwatcher:start()
 
@@ -87,6 +87,10 @@ function moveToMonitor(x)
 		x = x - 1
 	end
 	win:moveToScreen(newScreen)
+
+    -- Also move the mouse to center of next screen
+    local center = hs.geometry.rectMidPoint(newScreen:fullFrame())
+    hs.mouse.setAbsolutePosition(center)
 end
 hs.hotkey.bind(cmd_ctrl,"right", function() moveToMonitor(2) end)
 hs.hotkey.bind(cmd_ctrl,"left", function() moveToMonitor(1) end)
@@ -125,9 +129,9 @@ hs.hotkey.bind({"alt"}, "`", focusNextScreen)
 -- Run or activate applications (this deprecates Apptivate)
 hs.hotkey.bind(cmd_ctrl, "v", function()
                 hs.application.launchOrFocus("Macvim") end)
-hs.hotkey.bind(cmd_ctrl, "i", function()
+hs.hotkey.bind(cmd_ctrl, "c", function()
                 hs.application.launchOrFocus("Iterm") end)
-hs.hotkey.bind(cmd_ctrl, "f", function()
+hs.hotkey.bind(cmd_ctrl, "i", function()
                 hs.application.launchOrFocus("Firefox") end)
 hs.hotkey.bind(cmd_ctrl, "x", function()
                 hs.application.launchOrFocus("Microsoft Excel") end)
@@ -153,7 +157,25 @@ hs.hints.showTitleThresh = 7
 hs.hotkey.bind(cmd_ctrl, "h", function() hs.hints.windowHints() end)
 
 -- TODO: Shutdown, restart and clear bin, also toggle hidden files
-hs.hotkey.bind({"shift", "cmd"}, "r", function()
-                hs.caffeinate.restartSystem() end)
+-- hs.hotkey.bind({"shift", "cmd"}, "r", function()
+                -- hs.caffeinate.restartSystem() end)
 hs.hotkey.bind({"shift", "cmd"}, "p", function()
                 hs.caffeinate.shutdownSystem() end)
+
+
+
+function YesNoDialogBox(ActionFunc)
+	test = hs.chooser.new(ActionFunc)
+    test:rows(2)
+    test:choices({{["text"] = "Yes", ["subText"] = "", ["id"] = "yes"},
+                {["text"] = "No", ["subText"] = "", ["id"] = "no"}})
+    test:show()
+end
+function RebootIfChoice(input)
+    if input.id == "yes" then
+        hs.alert("Your choice was: yes")
+    else
+        hs.alert("Your choice was: no")
+    end
+end
+hs.hotkey.bind({"shift", "cmd"}, "r", function() YesNoDialogBox(RebootIfChoice) end)
