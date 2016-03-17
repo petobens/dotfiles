@@ -103,14 +103,14 @@ function windowInScreen(screen, win) -- Check if a window belongs to a screen
     return win:screen() == screen
 end
 function focusNextScreen()
-    -- Get next screen using current mouse position
+    -- Get next screen using current mouse position and windows within this next
+    -- screen, ordered from front to back.
     -- local next_screen = hs.window.focusedWindow():screen():next()
     local next_screen = hs.mouse.getCurrentScreen():next()
-    -- Get windows within next screen, ordered from front to back.
     windows = hs.fnutils.filter(hs.window.orderedWindows(),
                                 hs.fnutils.partial(windowInScreen, next_screen))
-    -- If no windows exist, bring focus to desktop. Otherwise, set focus on
-    -- front-most application window.
+    --  Set focus on front-most application window or bring focus to desktop if
+    --  no windows exists.
     if #windows > 0 then
         windows[1]:focus()
     else
@@ -161,7 +161,6 @@ hs.hotkey.bind(cmd_ctrl, "h", function() hs.hints.windowHints() end)
                 -- hs.caffeinate.restartSystem() end)
 hs.hotkey.bind({"shift", "cmd"}, "p", function()
                 hs.caffeinate.shutdownSystem() end)
-
 
 
 function YesNoDialogBox(ActionFunc)
