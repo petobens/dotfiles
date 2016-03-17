@@ -31,3 +31,6 @@ set -o vi
 alias emr-tmux='ssh prd-emr-master -t tmux new -A -s pedrof'
 # Presto command line
 alias presto='ssh prd-emr-master -t tmux new -A -s pedrof "presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
+
+# Try the following
+# alias run-presto='ssh prd-emr-master -t tmux new -A -s pedrof "presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof\ --execute\ \"SELECT ref_hash FROM all_events_monthly LIMIT 5;\"\ --output-format\ ALIGNED\ --file\ test.txt"'
