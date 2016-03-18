@@ -150,6 +150,21 @@ hs.hotkey.bind(cmd_ctrl, "t", function()
 hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open /Users/Pedro/Downloads/") end)
 
+-- Vim specific
+-- FIXME: launch app and quit
+hs.hotkey.bind(cmd_ctrl, "m", function()
+                hs.execute("mvim -u /Users/Pedro/OneDrive/vimfiles/vimrc_min",
+                            true) end)
+
+-- Restart Vim and load previous session
+hs.hotkey.bind(cmd_ctrl, "r", function()
+                hs.eventtap.keyStrokes(",kv")
+                hs.eventtap.keyStroke({"cmd"}, "N")
+                hs.timer.doAfter(3, function()
+                                        hs.eventtap.keyStrokes(",ps") end)
+                end)
+
+
 -- Windows hints (kind of deprecates Hyperswitch)
 hs.hints.hintChars = {"A", "S", "D", "F", "G", "H", "J", "K" , "L"}
 hs.hints.fontSize = 12
