@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 17 Mar 2016
+-- Last Modified: 18 Mar 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- See https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations
@@ -103,24 +103,23 @@ function windowInScreen(screen, win) -- Check if a window belongs to a screen
     return win:screen() == screen
 end
 function focusNextScreen()
-    -- Get next screen using current mouse position and windows within this next
-    -- screen, ordered from front to back.
+    -- Get next screen (and its center point) using current mouse position
     -- local next_screen = hs.window.focusedWindow():screen():next()
     local next_screen = hs.mouse.getCurrentScreen():next()
+    local center = hs.geometry.rectMidPoint(next_screen:fullFrame())
+
+    -- Find windows within this next screen, ordered from front to back.
     windows = hs.fnutils.filter(hs.window.orderedWindows(),
                                 hs.fnutils.partial(windowInScreen, next_screen))
     --  Set focus on front-most application window or bring focus to desktop if
-    --  no windows exists.
+    --  no windows exists
     if #windows > 0 then
         windows[1]:focus()
     else
-        -- FIXME: this doesn't activate the Finder nor the menu bar
         hs.window.desktop():focus()
+        -- In this case also do a click to activate menu bar
+        hs.eventtap.leftClick(hs.mouse.getAbsolutePosition())
     end
-
-    -- Also move the mouse to center of next screen
-    local center = hs.geometry.rectMidPoint(next_screen:fullFrame())
-    hs.mouse.setAbsolutePosition(center)
 end
 hs.hotkey.bind({"alt"}, "§", focusNextScreen)
 hs.hotkey.bind({"alt"}, "`", focusNextScreen)
