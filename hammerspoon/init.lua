@@ -20,7 +20,7 @@ end)
 hs.window.animationDuration = 0
 
 -- Get list of screens and refresh that list whenever screens are plugged or
--- unplugged i.e initiate watchers
+-- unplugged i.e initiate watcher
 local screens = hs.screen.allScreens()
 local screenwatcher = hs.screen.watcher.new(function()
                                                 screens = hs.screen.allScreens()
@@ -221,10 +221,13 @@ hs.hotkey.bind({"shift", "cmd"}, "5", function()
 -- TODO: Shutdown, restart, clear bin and remap capslock key
 -- hs.hotkey.bind({"shift", "cmd"}, "r", function()
                 -- hs.caffeinate.restartSystem() end)
-hs.hotkey.bind({"shift", "cmd"}, "p", function()
-                hs.caffeinate.shutdownSystem() end)
 
+-- Lockscreen
+hs.hotkey.bind({"shift", "cmd"}, "l", function()
+                hs.caffeinate.lockScreen()
+                end)
 
+-- Until the following works we can use ctrl+eject
 function YesNoDialogBox(ActionFunc)
 	test = hs.chooser.new(ActionFunc)
     test:rows(2)
