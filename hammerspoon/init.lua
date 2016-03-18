@@ -154,10 +154,10 @@ hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open /Users/Pedro/Downloads/") end)
 
 -- Vim specific
--- FIXME: launch app and quit
 hs.hotkey.bind(cmd_ctrl, "m", function()
-                hs.execute("mvim -u /Users/Pedro/OneDrive/vimfiles/vimrc_min",
-                            true) end)
+                                os.execute("/usr/local/bin/mvim -u " ..
+                                "/Users/Pedro/OneDrive/vimfiles/vimrc_min &")
+                            end)
 
 -- Restart Vim and load previous session
 hs.hotkey.bind(cmd_ctrl, "r", function()
@@ -167,6 +167,18 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
                                         hs.eventtap.keyStrokes(",ps") end)
                 end)
 
+
+-- Toggle hidden files
+hs.hotkey.bind(cmd_ctrl, "h", function()
+    hidden_status = hs.execute("defaults read com.apple.finder " ..
+                                "AppleShowAllFiles")
+    if hidden_status == "YES\n"  then
+        hs.execute("defaults write com.apple.finder AppleShowAllFiles NO")
+    else
+        hs.execute("defaults write com.apple.finder AppleShowAllFiles YES")
+    end
+    hs.execute("killall Finder")
+end)
 
 -- Expose (show thumbnails of open windows with a hint; kind of deprecates
 -- Hyperswitch)
@@ -186,9 +198,11 @@ hs.hotkey.bind({"shift", "cmd"}, "5", function()
                                         "/Pictures/Screenshots/"
                 local filename = screenshot_dir .. "Screen Shot " ..
                                     current_time .. ".png"
+                -- FIXME: The following gives an error
                 -- image:saveToFile(filename)
                 hs.alert("Screenshot saved as " .. filename)
             end)
+
 
 -- TODO: Shutdown, restart and clear bin, also toggle hidden files
 -- hs.hotkey.bind({"shift", "cmd"}, "r", function()
