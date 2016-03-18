@@ -111,6 +111,10 @@ function focusNextScreen()
     -- Find windows within this next screen, ordered from front to back.
     windows = hs.fnutils.filter(hs.window.orderedWindows(),
                                 hs.fnutils.partial(windowInScreen, next_screen))
+
+    -- Move the mouse to the center of the other screen
+    hs.mouse.setAbsolutePosition(center)
+
     --  Set focus on front-most application window or bring focus to desktop if
     --  no windows exists
     if #windows > 0 then
