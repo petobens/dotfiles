@@ -168,11 +168,27 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
                 end)
 
 
--- Windows hints (kind of deprecates Hyperswitch)
-hs.hints.hintChars = {"A", "S", "D", "F", "G", "H", "J", "K" , "L"}
-hs.hints.fontSize = 12
-hs.hints.showTitleThresh = 7
-hs.hotkey.bind(cmd_ctrl, "h", function() hs.hints.windowHints() end)
+-- Expose (show thumbnails of open windows with a hint; kind of deprecates
+-- Hyperswitch)
+hs.expose.ui.otherSpacesStripWidth = 0  -- I don't use other spaces
+hs.expose.ui.highlightThumbnailStrokeWidth = 5
+hs.expose.ui.textSize = 30
+hs.expose.ui.nonVisibleStripWidth = 0.2
+hs.expose.ui.nonVisibleStripBackgroundColor = {0.08, 0.08, 0.08}
+hs.hotkey.bind(cmd_ctrl, "j", function()
+                hs.expose.new():toggleShow() end)
+
+-- Active window screenshot
+hs.hotkey.bind({"shift", "cmd"}, "5", function()
+                local image = hs.window.focusedWindow():snapshot()
+                local current_time = os.date("%Y-%m-%d %H.%M.%S")
+                local screenshot_dir = os.getenv("HOME") ..
+                                        "/Pictures/Screenshots/"
+                local filename = screenshot_dir .. "Screen Shot " ..
+                                    current_time .. ".png"
+                -- image:saveToFile(filename)
+                hs.alert("Screenshot saved as " .. filename)
+            end)
 
 -- TODO: Shutdown, restart and clear bin, also toggle hidden files
 -- hs.hotkey.bind({"shift", "cmd"}, "r", function()
