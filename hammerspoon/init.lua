@@ -220,16 +220,19 @@ hs.hotkey.bind({"shift", "cmd"}, "5", function()
 -- }}}
 -- Miscellaneous {{{
 
--- TODO: Shutdown, restart, clear bin and remap capslock key
--- hs.hotkey.bind({"shift", "cmd"}, "r", function()
-                -- hs.caffeinate.restartSystem() end)
-
 -- Lockscreen
 hs.hotkey.bind({"shift", "cmd"}, "l", function()
                 hs.caffeinate.lockScreen()
                 end)
 
--- Until the following works we can use ctrl+eject
+-- TODO: Shutdown, restart and remap capslock key to TAB (we already disabled it
+-- from System Preferences)
+-- hs.hotkey.bind({"shift", "cmd"}, "p", function()
+                -- hs.caffeinate.shutdownSystem() end)
+-- hs.hotkey.bind({"shift", "cmd"}, "r", function()
+                -- hs.caffeinate.restartSystem() end)
+
+-- Until the following works we can use ctrl+eject to ask for confirmation
 function YesNoDialogBox(ActionFunc)
 	test = hs.chooser.new(ActionFunc)
     test:rows(2)
@@ -244,6 +247,11 @@ function RebootIfChoice(input)
         hs.alert("Your choice was: no")
     end
 end
-hs.hotkey.bind({"shift", "cmd"}, "r", function() YesNoDialogBox(RebootIfChoice) end)
+hs.hotkey.bind({"shift", "cmd"}, "r", function()
+                                        YesNoDialogBox(RebootIfChoice) end)
+
+-- Open trash folder and empty it
+hs.hotkey.bind({"cmd"}, "b", function() hs.execute("open ~/.Trash/") end)
+hs.hotkey.bind(cmd_ctrl, "b", function() hs.execute("rm -rf ~/.Trash/*") end)
 
 -- }}}
