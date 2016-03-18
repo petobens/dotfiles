@@ -5,8 +5,7 @@
 -- Last Modified: 18 Mar 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
--- See https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations
--- for configuration examples
+-- Preamble {{{
 
 -- Modifier shortcuts
 local cmd_ctrl = {"ctrl", "cmd"}
@@ -21,12 +20,15 @@ end)
 hs.window.animationDuration = 0
 
 -- Get list of screens and refresh that list whenever screens are plugged or
--- unplugged:
+-- unplugged i.e initiate watchers
 local screens = hs.screen.allScreens()
 local screenwatcher = hs.screen.watcher.new(function()
                                                 screens = hs.screen.allScreens()
                                             end)
 screenwatcher:start()
+
+-- }}}
+-- Window handling {{{
 
 -- Resize window for chunk of screen (this deprecates Spectable)
 -- For x and y: use 0 to expand fully in that dimension, 0.5 to expand halfway
@@ -65,7 +67,7 @@ hs.hotkey.bind(cmd_ctrl, "5", function()
                 resize_win(0.25,0.25,0.5,0.5) end) -- Center
 
 
--- Resize window width (setting the grid first)
+-- Change window width (setting the grid first)
 hs.grid.MARGINX = 0
 hs.grid.MARGINY = 0
 hs.grid.GRIDWIDTH = 10
@@ -76,6 +78,19 @@ end)
 hs.hotkey.bind(cmd_ctrl, "=", function()
     hs.grid.resizeWindowWider(hs.window.focusedWindow())
 end)
+
+-- Expose (show thumbnails of open windows with a hint; kind of deprecates
+-- Hyperswitch)
+hs.expose.ui.otherSpacesStripWidth = 0  -- I don't use other spaces
+hs.expose.ui.highlightThumbnailStrokeWidth = 5
+hs.expose.ui.textSize = 30
+hs.expose.ui.nonVisibleStripWidth = 0.2
+hs.expose.ui.nonVisibleStripBackgroundColor = {0.08, 0.08, 0.08}
+hs.hotkey.bind(cmd_ctrl, "j", function()
+                hs.expose.new():toggleShow() end)
+
+-- }}}
+-- Multiple monitors handling {{{
 
 -- Move window to next/previous monitor (checks to make sure monitor exists, if
 -- not moves to last monitor that exists)
@@ -128,8 +143,9 @@ end
 hs.hotkey.bind({"alt"}, "§", focusNextScreen)
 hs.hotkey.bind({"alt"}, "`", focusNextScreen)
 
+-- }}}
+-- Run or activate app {{{
 
--- Run or activate applications (this deprecates Apptivate)
 hs.hotkey.bind(cmd_ctrl, "v", function()
                 hs.application.launchOrFocus("Macvim") end)
 hs.hotkey.bind(cmd_ctrl, "c", function()
@@ -153,7 +169,10 @@ hs.hotkey.bind(cmd_ctrl, "t", function()
 hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open /Users/Pedro/Downloads/") end)
 
--- Vim specific
+-- }}}
+-- Vim specific {{{
+
+--  Open MacVim sourcing minimal vimrc file
 hs.hotkey.bind(cmd_ctrl, "m", function()
                                 os.execute("/usr/local/bin/mvim -u " ..
                                 "/Users/Pedro/OneDrive/vimfiles/vimrc_min &")
@@ -167,8 +186,9 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
                                         hs.eventtap.keyStrokes(",ps") end)
                 end)
 
+-- }}}
+-- Toggle hidden files {{{
 
--- Toggle hidden files
 hs.hotkey.bind(cmd_ctrl, "h", function()
     hidden_status = hs.execute("defaults read com.apple.finder " ..
                                 "AppleShowAllFiles")
@@ -180,17 +200,9 @@ hs.hotkey.bind(cmd_ctrl, "h", function()
     hs.execute("killall Finder")
 end)
 
--- Expose (show thumbnails of open windows with a hint; kind of deprecates
--- Hyperswitch)
-hs.expose.ui.otherSpacesStripWidth = 0  -- I don't use other spaces
-hs.expose.ui.highlightThumbnailStrokeWidth = 5
-hs.expose.ui.textSize = 30
-hs.expose.ui.nonVisibleStripWidth = 0.2
-hs.expose.ui.nonVisibleStripBackgroundColor = {0.08, 0.08, 0.08}
-hs.hotkey.bind(cmd_ctrl, "j", function()
-                hs.expose.new():toggleShow() end)
+-- }}}
+-- Active window screenshot {{{
 
--- Active window screenshot
 hs.hotkey.bind({"shift", "cmd"}, "5", function()
                 local image = hs.window.focusedWindow():snapshot()
                 local current_time = os.date("%Y-%m-%d %H.%M.%S")
@@ -203,8 +215,10 @@ hs.hotkey.bind({"shift", "cmd"}, "5", function()
                 hs.alert("Screenshot saved as " .. filename)
             end)
 
+-- }}}
+-- Miscellaneous {{{
 
--- TODO: Shutdown, restart and clear bin, also toggle hidden files
+-- TODO: Shutdown, restart, clear bin and remap capslock key
 -- hs.hotkey.bind({"shift", "cmd"}, "r", function()
                 -- hs.caffeinate.restartSystem() end)
 hs.hotkey.bind({"shift", "cmd"}, "p", function()
@@ -226,3 +240,5 @@ function RebootIfChoice(input)
     end
 end
 hs.hotkey.bind({"shift", "cmd"}, "r", function() YesNoDialogBox(RebootIfChoice) end)
+
+-- }}}

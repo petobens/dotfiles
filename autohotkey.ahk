@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 17 Mar 2016
+; Last Modified: 18 Mar 2016
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -124,6 +124,8 @@ MiddleWindow()
 ^#3:: TopRightQuarterfWindow()
 ^#4:: BottomRightQuarterfWindow()
 ^#5:: MiddleWindow()
+
+; TODO: Send window to next monitor
 
 ; }}}
 ; Run or activate app and kill process {{{
