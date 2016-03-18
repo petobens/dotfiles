@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 17 Nov 2015
+; Last Modified: 17 Mar 2016
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -162,20 +162,20 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ; Vim specific {{{
 
 ; Run or activate gvim
-^#v:: RoA("GVIM", "gvim", "C:\OD\OneDrive\Users\Pedro\vimfiles")
+^#v:: RoA("GVIM", "gvim", "C:\OD\OneDrive\vimfiles")
 
 ; Restart gvim and load previous session
 ^#r::
     Send :wall!{Enter}
-    Send KK
+    Send {,}kv
     Sleep 150
-    RoA("GVIM", "gvim", "C:\OD\OneDrive\Users\Pedro\vimfiles")
+    RoA("GVIM", "gvim", "C:\OD\OneDrive\vimfiles")
     Sleep 150
     Send {,}ps
     Return
 
 ; Open Gvim sourcing the minimal vimrc
-^#m:: Run, gvim -u C:/OD/OneDrive/Users/Pedro/vimfiles/vimrc_min, C:/OD/OneDrive/Users/Pedro/vimfiles, max
+^#m:: Run, gvim -u C:/OD/OneDrive/vimfiles/vimrc_min, C:/OD/OneDrive/vimfiles, max
 
 ; }}}
 ; Toggle hidden files {{{
