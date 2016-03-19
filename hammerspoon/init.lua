@@ -180,11 +180,14 @@ hs.hotkey.bind(cmd_ctrl, "m", function()
                                 "/Users/Pedro/OneDrive/vimfiles/vimrc_min &")
                             end)
 
--- Restart Vim and load previous session
+-- Restart MacVim and load previous session
 hs.hotkey.bind(cmd_ctrl, "r", function()
                 hs.eventtap.keyStrokes(",kv")
-                hs.eventtap.keyStroke({"cmd"}, "N")
-                hs.timer.doAfter(3, function()
+                -- We don't use Cmd+N because we quit MacVim after last window
+                -- closes
+                hs.timer.doAfter(1, function()
+                                    hs.application.launchOrFocus("Macvim") end)
+                hs.timer.doAfter(4, function()
                                         hs.eventtap.keyStrokes(",ps") end)
                 end)
 
