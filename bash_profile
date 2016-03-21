@@ -1,7 +1,7 @@
 # Path settings
 PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # homebrew
-export PATH="/Users/Pedro/prog-tools/arara4/:$PATH" # arara
+export PATH="/Users/Pedro/prog-tools/arara4:$PATH" # arara
 export PATH="/Library/TeX/texbin:$PATH" # basictex
 export PATH="/Users/Pedro/miniconda3/bin:$PATH" # miniconda
 
