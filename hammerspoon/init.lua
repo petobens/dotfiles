@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 18 Mar 2016
+-- Last Modified: 04 Apr 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- Preamble {{{
@@ -107,8 +107,8 @@ function moveToMonitor(x)
     local center = hs.geometry.rectMidPoint(newScreen:fullFrame())
     hs.mouse.setAbsolutePosition(center)
 end
-hs.hotkey.bind(cmd_ctrl,"right", function() moveToMonitor(2) end)
-hs.hotkey.bind(cmd_ctrl,"left", function() moveToMonitor(1) end)
+hs.hotkey.bind(cmd_ctrl,"right", function() moveToMonitor(1) end)
+hs.hotkey.bind(cmd_ctrl,"left", function() moveToMonitor(2) end)
 
 
 -- Switch focus and mouse to the next monitor
@@ -168,6 +168,10 @@ hs.hotkey.bind(cmd_ctrl, "e", function()
                 hs.application.launchOrFocus("Finder") end)
 hs.hotkey.bind(cmd_ctrl, "t", function()
                 hs.application.launchOrFocus("Thunderbird") end)
+hs.hotkey.bind(cmd_ctrl, "u", function()
+                hs.application.launchOrFocus("Vuze") end)
+hs.hotkey.bind(cmd_ctrl, "y", function()
+                hs.application.launchOrFocus("Spotify") end)
 hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open /Users/Pedro/Downloads/") end)
 
@@ -190,6 +194,16 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
                 hs.timer.doAfter(4, function()
                                         hs.eventtap.keyStrokes(",ps") end)
                 end)
+
+-- }}}
+-- Spotify {{{
+
+hs.hotkey.bind({"cmd", "shift"}, 'm', function()
+                                        hs.spotify.displayCurrentTrack() end)
+hs.hotkey.bind({"cmd", "shift"}, 'p', function() hs.spotify.play() end)
+hs.hotkey.bind({"cmd", "shift"}, 's', function() hs.spotify.pause() end)
+hs.hotkey.bind({"cmd", "shift"}, 'j', function() hs.spotify.next() end)
+hs.hotkey.bind({"cmd", "shift"}, 'k', function() hs.spotify.previous() end)
 
 -- }}}
 -- Toggle hidden files {{{
