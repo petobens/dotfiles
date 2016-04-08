@@ -198,7 +198,7 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
 -- }}}
 -- Spotify {{{
 
-hs.hotkey.bind({"cmd", "shift"}, 'm', function()
+hs.hotkey.bind({"cmd", "shift"}, 't', function()
                                         hs.spotify.displayCurrentTrack() end)
 hs.hotkey.bind({"cmd", "shift"}, 'p', function() hs.spotify.play() end)
 hs.hotkey.bind({"cmd", "shift"}, 's', function() hs.spotify.pause() end)
@@ -213,6 +213,14 @@ end)
 hs.hotkey.bind({"cmd", "shift"}, '-', function()
     local audio_output = hs.audiodevice.defaultOutputDevice()
     audio_output:setVolume(hs.audiodevice.current().volume - 5)
+end)
+hs.hotkey.bind({"cmd", "shift"}, 'm', function()
+    local audio_output = hs.audiodevice.defaultOutputDevice()
+    if audio_output:muted() then
+        audio_output:setMuted(false)
+    else
+        audio_output:setMuted(true)
+    end
 end)
 
 -- }}}
