@@ -81,6 +81,7 @@ end)
 
 -- Expose (show thumbnails of open windows with a hint; kind of deprecates
 -- Hyperswitch)
+-- TODO: use window switcher once it is available
 hs.expose.ui.otherSpacesStripWidth = 0  -- I don't use other spaces
 hs.expose.ui.highlightThumbnailStrokeWidth = 5
 hs.expose.ui.textSize = 30
@@ -176,7 +177,7 @@ hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open /Users/Pedro/Downloads/") end)
 
 -- }}}
--- Vim specific {{{
+-- Vim {{{
 
 --  Open MacVim sourcing minimal vimrc file
 hs.hotkey.bind(cmd_ctrl, "y", function()
@@ -196,7 +197,7 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
                 end)
 
 -- }}}
--- Spotify {{{
+-- Spotify and volume {{{
 
 hs.hotkey.bind({"cmd", "shift"}, 't', function()
                                         hs.spotify.displayCurrentTrack() end)
