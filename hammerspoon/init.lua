@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 04 Apr 2016
+-- Last Modified: 08 Apr 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- Preamble {{{
@@ -170,7 +170,7 @@ hs.hotkey.bind(cmd_ctrl, "t", function()
                 hs.application.launchOrFocus("Thunderbird") end)
 hs.hotkey.bind(cmd_ctrl, "u", function()
                 hs.application.launchOrFocus("Vuze") end)
-hs.hotkey.bind(cmd_ctrl, "y", function()
+hs.hotkey.bind(cmd_ctrl, "m", function()
                 hs.application.launchOrFocus("Spotify") end)
 hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open /Users/Pedro/Downloads/") end)
@@ -179,7 +179,7 @@ hs.hotkey.bind(cmd_ctrl, "d", function()
 -- Vim specific {{{
 
 --  Open MacVim sourcing minimal vimrc file
-hs.hotkey.bind(cmd_ctrl, "m", function()
+hs.hotkey.bind(cmd_ctrl, "y", function()
                                 os.execute("/usr/local/bin/mvim -u " ..
                                 "/Users/Pedro/OneDrive/vimfiles/vimrc_min &")
                             end)
@@ -204,6 +204,16 @@ hs.hotkey.bind({"cmd", "shift"}, 'p', function() hs.spotify.play() end)
 hs.hotkey.bind({"cmd", "shift"}, 's', function() hs.spotify.pause() end)
 hs.hotkey.bind({"cmd", "shift"}, 'j', function() hs.spotify.next() end)
 hs.hotkey.bind({"cmd", "shift"}, 'k', function() hs.spotify.previous() end)
+
+-- Volume control
+hs.hotkey.bind({"cmd", "shift"}, '=', function()
+    local audio_output = hs.audiodevice.defaultOutputDevice()
+    audio_output:setVolume(hs.audiodevice.current().volume + 5)
+end)
+hs.hotkey.bind({"cmd", "shift"}, '-', function()
+    local audio_output = hs.audiodevice.defaultOutputDevice()
+    audio_output:setVolume(hs.audiodevice.current().volume - 5)
+end)
 
 -- }}}
 -- Toggle hidden files {{{
