@@ -34,3 +34,6 @@ alias presto='ssh prd-emr-master -t tmux new -A -s pedrof "presto-cli\ --catalog
 
 # Try the following
 # alias run-presto='ssh prd-emr-master -t tmux new -A -s pedrof "presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof\ --execute\ \"SELECT ref_hash FROM all_events_monthly LIMIT 5;\"\ --output-format\ ALIGNED\ --file\ test.txt"'
+
+# Update brew, python and tlmgr
+alias uall='brew update && brew upgrade && conda update --all && tlmgr update --all'
