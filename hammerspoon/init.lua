@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 08 Apr 2016
+-- Last Modified: 09 Apr 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- Preamble {{{
@@ -108,8 +108,22 @@ function moveToMonitor(x)
     local center = hs.geometry.rectMidPoint(newScreen:fullFrame())
     hs.mouse.setAbsolutePosition(center)
 end
-hs.hotkey.bind(cmd_ctrl,"right", function() moveToMonitor(1) end)
-hs.hotkey.bind(cmd_ctrl,"left", function() moveToMonitor(2) end)
+--  At work we have the MacBook monitor ('Color LCD') on the right and the big
+--  monitor on the left, at home the other way around:
+hs.hotkey.bind(cmd_ctrl,"right", function()
+    if hs.screen('Color LCD'):toEast() then
+        moveToMonitor(2)
+    else
+        moveToMonitor(1)
+    end
+end)
+hs.hotkey.bind(cmd_ctrl,"left", function()
+    if hs.screen('Color LCD'):toWest() then
+        moveToMonitor(2)
+    else
+        moveToMonitor(1)
+    end
+end)
 
 
 -- Switch focus and mouse to the next monitor
