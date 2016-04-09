@@ -222,8 +222,7 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
 
 hs.hotkey.bind({"cmd", "shift"}, 't', function()
                                         hs.spotify.displayCurrentTrack() end)
-hs.hotkey.bind({"cmd", "shift"}, 'p', function() hs.spotify.play() end)
-hs.hotkey.bind({"cmd", "shift"}, 's', function() hs.spotify.pause() end)
+hs.hotkey.bind({"cmd", "shift"}, 'p', function() hs.spotify.playpause() end)
 hs.hotkey.bind({"cmd", "shift"}, 'j', function() hs.spotify.next() end)
 hs.hotkey.bind({"cmd", "shift"}, 'k', function() hs.spotify.previous() end)
 
