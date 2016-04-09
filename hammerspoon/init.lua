@@ -231,10 +231,14 @@ hs.hotkey.bind({"cmd", "shift"}, 'k', function() hs.spotify.previous() end)
 hs.hotkey.bind({"cmd", "shift"}, '=', function()
     local audio_output = hs.audiodevice.defaultOutputDevice()
     audio_output:setVolume(hs.audiodevice.current().volume + 5)
+    hs.alert.show("Volume level: " ..
+                    tostring(hs.audiodevice.current().volume) .. "%")
 end)
 hs.hotkey.bind({"cmd", "shift"}, '-', function()
     local audio_output = hs.audiodevice.defaultOutputDevice()
     audio_output:setVolume(hs.audiodevice.current().volume - 5)
+    hs.alert.show("Volume level: " ..
+                    tostring(hs.audiodevice.current().volume) .. "%")
 end)
 hs.hotkey.bind({"cmd", "shift"}, 'm', function()
     local audio_output = hs.audiodevice.defaultOutputDevice()
@@ -244,6 +248,12 @@ hs.hotkey.bind({"cmd", "shift"}, 'm', function()
         audio_output:setMuted(true)
     end
 end)
+hs.hotkey.bind({"cmd", "shift"}, 'v', function()
+    local audio_output = hs.audiodevice.defaultOutputDevice()
+    hs.alert.show("Volume level: " ..
+                    tostring(hs.audiodevice.current().volume) .. "%")
+end)
+
 
 -- }}}
 -- Toggle hidden files {{{
