@@ -86,9 +86,7 @@ hs.hotkey.bind(cmd_ctrl, "=", function()
     hs.grid.resizeWindowWider(hs.window.focusedWindow())
 end)
 
--- Expose (show thumbnails of open windows with a hint; kind of deprecates
--- Hyperswitch)
--- TODO: use window switcher once it is available
+-- Expose (show thumbnails of open windows with a hint)
 hs.expose.ui.otherSpacesStripWidth = 0  -- I don't use other spaces
 hs.expose.ui.highlightThumbnailStrokeWidth = 5
 hs.expose.ui.textSize = 30
@@ -96,6 +94,19 @@ hs.expose.ui.nonVisibleStripWidth = 0.2
 hs.expose.ui.nonVisibleStripBackgroundColor = {0.08, 0.08, 0.08}
 hs.hotkey.bind(cmd_ctrl, "j", function()
                 hs.expose.new():toggleShow() end)
+
+-- Window switcher (deprecates Hyperswitch)
+hs.window.switcher.ui.showSelectedThumbnail = false
+hs.window.switcher.ui.showSelectedTitle = false
+hs.window.switcher.ui.textSize = 13
+hs.window.switcher.ui.thumbnailSize = 160
+hs.window.switcher.ui.backgroundColor = {0.7, 0.7, 0.7} -- Greyish
+hs.window.switcher.ui.titleBackgroundColor = {0, 0, 0, 0} -- Transparent
+hs.window.switcher.ui.textColor = {0, 0, 0} -- Black
+switcher = hs.window.switcher.new()
+-- FIXME: How to show minimized windows?
+-- switcher = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter())
+hs.hotkey.bind("alt", "tab", function() switcher:next() end)
 
 -- }}}
 -- Multiple monitors handling {{{
@@ -134,8 +145,6 @@ end)
 
 
 -- Switch focus and mouse to the next monitor
--- Preload hs.application to avoid problems when switching monitor focus
-local application = require "hs.application"
 function windowInScreen(screen, win) -- Check if a window belongs to a screen
     return win:screen() == screen
 end
@@ -304,8 +313,8 @@ hs.hotkey.bind({"shift", "cmd"}, "l", function()
 function YesNoDialogBox(ActionFunc)
 	test = hs.chooser.new(ActionFunc)
     test:rows(2)
-    test:choices({{["text"] = "Yes", ["subText"] = "", ["id"] = "yes"},
-                {["text"] = "No", ["subText"] = "", ["id"] = "no"}})
+    test:choices({{["text"] = "Yes", ["id"] = "yes"},
+                {["text"] = "No", ["id"] = "no"}})
     test:show()
 end
 function RebootIfChoice(input)
