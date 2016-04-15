@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 09 Apr 2016
+-- Last Modified: 15 Apr 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- Preamble {{{
@@ -11,7 +11,7 @@
 local cmd_ctrl = {"ctrl", "cmd"}
 
 -- Reload (auto) hotkey script
-hs.hotkey.bind(cmd_ctrl, "A", function()
+hs.hotkey.bind(cmd_ctrl, "a", function()
   hs.reload()
   hs.alert.show("Hammerspoon config was reloaded.")
 end)
@@ -275,13 +275,13 @@ end)
 
 hs.hotkey.bind({"shift", "cmd"}, "5", function()
                 local image = hs.window.focusedWindow():snapshot()
-                local current_time = os.date("%Y-%m-%d %H.%M.%S")
+                local current_date = os.date("%Y-%m-%d")
+                local current_time = os.date("%H.%M.%S")
                 local screenshot_dir = os.getenv("HOME") ..
                                         "/Pictures/Screenshots/"
                 local filename = screenshot_dir .. "Screen Shot " ..
-                                    current_time .. ".png"
-                -- FIXME: The following gives an error
-                -- image:saveToFile(filename)
+                                current_date .. " at " .. current_time .. ".png"
+                image:saveToFile(filename)
                 hs.alert("Screenshot saved as " .. filename)
             end)
 
