@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 15 Apr 2016
+-- Last Modified: 17 Apr 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- Preamble {{{
@@ -97,15 +97,17 @@ hs.hotkey.bind(cmd_ctrl, "j", function()
 
 -- Window switcher (deprecates Hyperswitch)
 hs.window.switcher.ui.showSelectedThumbnail = false
-hs.window.switcher.ui.showSelectedTitle = false
-hs.window.switcher.ui.textSize = 13
-hs.window.switcher.ui.thumbnailSize = 160
-hs.window.switcher.ui.backgroundColor = {0.7, 0.7, 0.7} -- Greyish
+hs.window.switcher.ui.showTitles = false
+hs.window.switcher.ui.textSize = 12
+hs.window.switcher.ui.thumbnailSize = 180
+hs.window.switcher.ui.backgroundColor = {0.2, 0.2, 0.2, 0.3} -- Greyish
 hs.window.switcher.ui.titleBackgroundColor = {0, 0, 0, 0} -- Transparent
 hs.window.switcher.ui.textColor = {0, 0, 0} -- Black
-switcher = hs.window.switcher.new()
--- FIXME: How to show minimized windows?
--- switcher = hs.window.switcher.new(hs.window.filter.new():setCurrentSpace(true):setDefaultFilter())
+-- TODO: Show switcher on active screen
+-- TODO: Open minimized windows
+-- TODO: fix text paddling
+switcher = hs.window.switcher.new(
+                hs.window.filter.new():setCurrentSpace(true):setDefaultFilter{})
 hs.hotkey.bind("alt", "tab", function() switcher:next() end)
 
 -- }}}
