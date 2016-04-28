@@ -1,0 +1,16 @@
+# Temp files
+*.swp
+*.swo
+
+# Windows
+*.dll
+*.exe
+
+# Python
+__pycache__/
+
+# OSX
+.DS_Store*
+Thumbs.db
+Icon?
+.Trashes

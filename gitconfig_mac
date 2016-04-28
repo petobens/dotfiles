@@ -1,0 +1,12 @@
+[user]
+	name = petobens
+	email = ferrari_pedro@yahoo.com
+[push]
+	default = simple
+[core]
+	editor = mvim -f
+    excludesfile = ~/.gitignore
+[web]
+	browser = start
+[credential]
+	helper = osxkeychain
