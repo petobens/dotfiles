@@ -5,7 +5,9 @@
 # Last Modified:
 #   Description: My Bash Profile
 #===============================================================================
-# Note: we use the chalk colorscheme and powerline plugin
+# Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
+# addition we modifiy the cursor and background colors to match the hex values
+# of those of our vim colorscheme
 
 # Path settings
 PATH="/usr/bin:/bin:/usr/sbin:/sbin"
@@ -35,6 +37,11 @@ POWERLINE_BASH_SELECT=1
 
 # Set vi mode
 set -o vi
+set show-mode-in-prompt on
+
+# Start Tmux attaching to an existing session named petobens or creating one with
+# such name
+alias tm='tmux new -A -s petobens'
 
 # SSH and Tmux: connect to ssh and then start tmux creating a new session called
 # pedrof or attaching to an existing one with that name
@@ -43,5 +50,5 @@ alias emr-tmux='ssh prd-emr-master -t tmux new -A -s pedrof'
 alias presto='ssh prd-emr-master -t tmux new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
 
-# Try the following
-# alias run-presto='ssh prd-emr-master -t tmux new -A -s pedrof "presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof\ --execute\ \"SELECT ref_hash FROM all_events_monthly LIMIT 5;\"\ --output-format\ ALIGNED\ --file\ test.txt"'
+# Try something like the following
+# alias run-presto='ssh prd-emr-master -t tmux new -A -s pedrof "presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof\ --output-format\ CSV\ --execute\ \"SELECT\ ref_hash\ FROM\ all_events_monthly\ LIMIT\ 5;\"\ > /mnt1/pedrof-temp/output.csv"'
