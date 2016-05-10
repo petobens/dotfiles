@@ -1,3 +1,9 @@
+#===============================================================================
+#          File: gitignore
+#        Author: Pedro Ferrari
+#       Created: 10 May 2016
+#   Description: My gitignore config
+#===============================================================================
 # Temp files
 *.swp
 *.swo
@@ -15,3 +21,6 @@ __pycache__/
 Thumbs.db
 Icon?
 .Trashes
+
+# Office Temp Files
+~$*
