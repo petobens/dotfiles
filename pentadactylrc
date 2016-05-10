@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 22 Mar 2016
+" Last Modified: 03 May 2016
 "   Description: My pentadactylrc
 "===============================================================================
 " If nightly builds are not available we use releases from the following fork:
@@ -102,9 +102,9 @@ nmap -builtin D <Nop>
 nmap -builtin  <Leader>wd :bd<CR>
 nmap -builtin  <Leader>bd :bd<CR>
 
-" Switch tabs as buffers in vim
-nmap -builtin <C-TAB> :tn<CR>
-nmap -builtin <S-TAB> :tp<CR>
+" Switch tabs as buffers in vim (with C-n and C-p)
+nmap -builtin <C-n> :tn<CR>
+nmap -builtin <C-p> :tp<CR>
 
 " Move the current tab
 nmap -builtin <A-h> :tabmove! -1<CR>
