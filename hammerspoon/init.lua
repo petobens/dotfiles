@@ -2,9 +2,13 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 17 Apr 2016
+-- Last Modified: 26 Apr 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
+-- To use the dev version, download master from git and then run `sh rebuild.sh`
+-- following:
+-- https://github.com/Hammerspoon/hammerspoon/blob/master/CONTRIBUTING.md#making-frequent-local-rebuilds-more-convenient
+
 -- Preamble {{{
 
 -- Modifier shortcuts
@@ -104,7 +108,6 @@ hs.window.switcher.ui.backgroundColor = {0.2, 0.2, 0.2, 0.3} -- Greyish
 hs.window.switcher.ui.titleBackgroundColor = {0, 0, 0, 0} -- Transparent
 hs.window.switcher.ui.textColor = {0, 0, 0} -- Black
 -- TODO: Show switcher on active screen
--- TODO: Open minimized windows
 -- TODO: fix text paddling
 switcher = hs.window.switcher.new(
                 hs.window.filter.new():setCurrentSpace(true):setDefaultFilter{})
@@ -206,7 +209,7 @@ hs.hotkey.bind(cmd_ctrl, "u", function()
 hs.hotkey.bind(cmd_ctrl, "m", function()
                 hs.application.launchOrFocus("Spotify") end)
 hs.hotkey.bind(cmd_ctrl, "d", function()
-                hs.execute("open /Users/Pedro/Downloads/") end)
+                hs.execute("open ~/Downloads/") end)
 
 -- }}}
 -- Vim {{{
@@ -240,17 +243,22 @@ hs.hotkey.bind({"cmd", "shift"}, 'k', function() hs.spotify.previous() end)
 -- Volume control
 hs.hotkey.bind({"cmd", "shift"}, '=', function()
     local audio_output = hs.audiodevice.defaultOutputDevice()
+    if audio_output:muted() then
+        audio_output:setMuted(false)
+    end
     audio_output:setVolume(hs.audiodevice.current().volume + 5)
     hs.alert.closeAll()
     hs.alert.show("Volume level: " ..
-                    tostring(hs.audiodevice.current().volume) .. "%")
+                    tostring(math.floor(hs.audiodevice.current().volume)) ..
+                    "%")
 end)
 hs.hotkey.bind({"cmd", "shift"}, '-', function()
     local audio_output = hs.audiodevice.defaultOutputDevice()
     audio_output:setVolume(hs.audiodevice.current().volume - 5)
     hs.alert.closeAll()
     hs.alert.show("Volume level: " ..
-                    tostring(hs.audiodevice.current().volume) .. "%")
+                    tostring(math.floor(hs.audiodevice.current().volume)) ..
+                    "%")
 end)
 hs.hotkey.bind({"cmd", "shift"}, 'm', function()
     local audio_output = hs.audiodevice.defaultOutputDevice()
@@ -262,8 +270,10 @@ hs.hotkey.bind({"cmd", "shift"}, 'm', function()
 end)
 hs.hotkey.bind({"cmd", "shift"}, 'v', function()
     local audio_output = hs.audiodevice.defaultOutputDevice()
+    hs.alert.closeAll()
     hs.alert.show("Volume level: " ..
-                    tostring(hs.audiodevice.current().volume) .. "%")
+                    tostring(math.floor(hs.audiodevice.current().volume)) ..
+                    "%")
 end)
 
 
@@ -306,8 +316,9 @@ hs.hotkey.bind({"shift", "cmd"}, "l", function()
 
 -- TODO: Shutdown, restart and remap capslock key to TAB (we already disabled it
 -- from System Preferences)
--- hs.hotkey.bind({"shift", "cmd"}, "p", function()
-                -- hs.caffeinate.shutdownSystem() end)
+hs.hotkey.bind({"shift", "cmd"}, "s", function()
+                hs.eventtap.event.newSystemKeyEvent('EJECT', true):setFlags({ctrl = true}):post()
+                end)
 -- hs.hotkey.bind({"shift", "cmd"}, "r", function()
                 -- hs.caffeinate.restartSystem() end)
 
