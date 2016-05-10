@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 26 Apr 2016
+-- Last Modified: 10 May 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -340,8 +340,10 @@ end
 hs.hotkey.bind({"shift", "cmd"}, "r", function()
                                         YesNoDialogBox(RebootIfChoice) end)
 
--- Open trash folder and empty it
+-- Open trash folder and empty it (and then reactivate trash window)
 hs.hotkey.bind({"cmd"}, "b", function() hs.execute("open ~/.Trash/") end)
-hs.hotkey.bind(cmd_ctrl, "b", function() hs.execute("rm -rf ~/.Trash/*") end)
+hs.hotkey.bind(cmd_ctrl, "b", function() hs.execute("rm -rf ~/.Trash/*")
+                                         hs.execute("open ~/.Trash/")
+               end)
 
 -- }}}
