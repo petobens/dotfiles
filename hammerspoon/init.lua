@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 10 May 2016
+-- Last Modified: 13 May 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -185,7 +185,7 @@ hs.hotkey.bind({"alt"}, "`", focusNextScreen)
 hs.hotkey.bind(cmd_ctrl, "v", function()
                 hs.application.launchOrFocus("Macvim") end)
 hs.hotkey.bind(cmd_ctrl, "c", function()
-                hs.application.launchOrFocus("Iterm") end)
+                hs.application.launchOrFocus("iTerm") end)
 hs.hotkey.bind(cmd_ctrl, "i", function()
                 hs.application.launchOrFocus("Firefox") end)
 hs.hotkey.bind(cmd_ctrl, "x", function()
@@ -210,6 +210,74 @@ hs.hotkey.bind(cmd_ctrl, "m", function()
                 hs.application.launchOrFocus("Spotify") end)
 hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open ~/Downloads/") end)
+
+-- Activate Vim inside of tmux inside of iTerm
+function VimTmux()
+    -- Launch or open iTerm
+    hs.application.launchOrFocus("iTerm")
+    -- FIXME: if iTerm is not open this doesn't work
+
+    -- Check if there is a tab with tmux (do this for 5 tabs since
+    -- we rarely open more than 5 tabs in iTerm)
+    local i = 0
+    while i < 5 do
+        local win_title = hs.window.focusedWindow():title()
+        if string.match(win_title:lower(), "tmux") then
+            break
+        else
+            hs.eventtap.keyStroke({"cmd","shift"}, "]")
+            -- Wait for the win title to update (this is necessary!)
+            hs.timer.usleep(120000) -- Microseconds (0.12 seconds)
+        end
+        i = i + 1
+        -- If after 5 tries there is not tmux tab then create a
+        -- tmux tab and attach to an existing session named petobens
+        -- (unless such session doesn't exit in which case create
+        -- one)
+        if i == 5 then
+            -- If our window is a bash prompt then create tmux there
+            -- otherwise open a new tab
+            if not string.match(win_title:lower(), "bash") then
+                hs.eventtap.keyStroke({"cmd"}, "t")
+            end
+            hs.eventtap.keyStrokes("tmux new -A -s petobens")
+            hs.eventtap.keyStroke({""}, "return")
+
+            -- Wait for tmux to open
+            -- TODO: improve this
+            hs.timer.usleep(1500000) -- Microseconds (1.5 seconds)
+        end
+    end
+
+    -- Once inside of tmux try to select a window named Vim
+    hs.eventtap.keyStroke({"ctrl"}, "a")
+    hs.timer.usleep(120000) -- Microseconds (0.12 seconds)
+    hs.eventtap.keyStrokes(":select-window -t Vim")
+    hs.eventtap.keyStroke({""}, "return")
+    hs.timer.usleep(120000) -- Microseconds (0.12 seconds)
+
+
+    -- Check if the window title contains Vim; if it doesn't this
+    -- means we need to create a new window with Vim unless the
+    -- current window is a bash prompt in which case we can call vim
+    -- directly on the current window.
+    -- In order for this to work, iTerm window title must display
+    -- tmux window titles. To do so, put the following in
+    -- .tmux.conf:
+        -- set -g set-titles on
+        -- set-option -g set-titles-string "#{session_name} - #W"
+    local tmux_win_title = hs.window.focusedWindow():title()
+    if string.match(tmux_win_title:lower(), "bash") then
+        hs.eventtap.keyStrokes("vim")
+        hs.eventtap.keyStroke({""}, "return")
+    elseif not string.match(tmux_win_title:lower(), "vim") then
+        hs.eventtap.keyStroke({"ctrl"}, "a")
+        hs.timer.usleep(120000) -- Microseconds (0.12 seconds)
+        hs.eventtap.keyStrokes(":new-window vim")
+        hs.eventtap.keyStroke({""}, "return")
+    end
+end
+hs.hotkey.bind(cmd_ctrl, "q", VimTmux)
 
 -- }}}
 -- Vim {{{
