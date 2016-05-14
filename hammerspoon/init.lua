@@ -182,7 +182,7 @@ hs.hotkey.bind({"alt"}, "`", focusNextScreen)
 -- }}}
 -- Run or activate app {{{
 
-hs.hotkey.bind(cmd_ctrl, "v", function()
+hs.hotkey.bind(cmd_ctrl, "q", function()
                 hs.application.launchOrFocus("Macvim") end)
 hs.hotkey.bind(cmd_ctrl, "c", function()
                 hs.application.launchOrFocus("iTerm") end)
@@ -277,7 +277,7 @@ function VimTmux()
         hs.eventtap.keyStroke({""}, "return")
     end
 end
-hs.hotkey.bind(cmd_ctrl, "q", VimTmux)
+hs.hotkey.bind(cmd_ctrl, "v", VimTmux)
 
 -- }}}
 -- Vim {{{
