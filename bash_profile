@@ -39,6 +39,9 @@ POWERLINE_BASH_SELECT=1
 set -o vi
 set show-mode-in-prompt on
 
+# Disable control flow (necessary to enable C-s bindings in vim)
+stty -ixon
+
 # Start Tmux attaching to an existing session named petobens or creating one with
 # such name
 alias tm='tmux new -A -s petobens'
