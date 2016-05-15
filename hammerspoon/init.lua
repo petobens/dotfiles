@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 13 May 2016
+-- Last Modified: 15 May 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -182,8 +182,6 @@ hs.hotkey.bind({"alt"}, "`", focusNextScreen)
 -- }}}
 -- Run or activate app {{{
 
-hs.hotkey.bind(cmd_ctrl, "q", function()
-                hs.application.launchOrFocus("Macvim") end)
 hs.hotkey.bind(cmd_ctrl, "c", function()
                 hs.application.launchOrFocus("iTerm") end)
 hs.hotkey.bind(cmd_ctrl, "i", function()
@@ -211,14 +209,20 @@ hs.hotkey.bind(cmd_ctrl, "m", function()
 hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open ~/Downloads/") end)
 
+-- }}}
+-- Vim {{{
+
+-- To run or activate Macvim
+-- hs.hotkey.bind(cmd_ctrl, "v", function()
+                -- hs.application.launchOrFocus("Macvim") end)
+
 -- Activate Vim inside of tmux inside of iTerm
 function VimTmux()
     -- Launch or open iTerm
     hs.application.launchOrFocus("iTerm")
-    -- FIXME: if iTerm is not open this doesn't work
 
-    -- Check if there is a tab with tmux (do this for 5 tabs since
-    -- we rarely open more than 5 tabs in iTerm)
+    -- Check if there is a tab with tmux (do this only for 5 tabs since we
+    -- rarely open more than 5 tabs in iTerm) and create one if there is not
     local i = 0
     while i < 5 do
         local win_title = hs.window.focusedWindow():title()
@@ -230,72 +234,77 @@ function VimTmux()
             hs.timer.usleep(120000) -- Microseconds (0.12 seconds)
         end
         i = i + 1
-        -- If after 5 tries there is not tmux tab then create a
-        -- tmux tab and attach to an existing session named petobens
-        -- (unless such session doesn't exit in which case create
-        -- one)
+        -- If after 5 tries there is not tmux tab then create a tmux tab and
+        -- attach to an existing session named petobens (unless such session
+        -- doesn't exit in which case create one)
         if i == 5 then
-            -- If our window is a bash prompt then create tmux there
-            -- otherwise open a new tab
-            if not string.match(win_title:lower(), "bash") then
-                hs.eventtap.keyStroke({"cmd"}, "t")
-            end
+            -- If our current window is a bash console then create tmux there
+            -- otherwise open a new tab.
+            -- Note: since we use powerline we might be inside a bash terminal
+            -- but the window title will show python until powerline finishes
+            -- loading. Therefore we must wait a bit before checking the window
+            -- title.
+            hs.timer.doAfter(0.7, function()
+                local current_win_title = hs.window.focusedWindow():title()
+                if not string.match(current_win_title:lower(), "bash") then
+                    hs.eventtap.keyStroke({"cmd"}, "t")
+                end
+            end)
             hs.eventtap.keyStrokes("tmux new -A -s petobens")
             hs.eventtap.keyStroke({""}, "return")
 
             -- Wait for tmux to open
-            -- TODO: improve this
-            hs.timer.usleep(1500000) -- Microseconds (1.5 seconds)
+            hs.timer.usleep(1000000) -- Microseconds (1 second)
         end
     end
 
     -- Once inside of tmux try to select a window named Vim
     hs.eventtap.keyStroke({"ctrl"}, "a")
-    hs.timer.usleep(120000) -- Microseconds (0.12 seconds)
+    hs.timer.usleep(120000) -- Wait to get into command mode
     hs.eventtap.keyStrokes(":select-window -t Vim")
     hs.eventtap.keyStroke({""}, "return")
-    hs.timer.usleep(120000) -- Microseconds (0.12 seconds)
 
 
-    -- Check if the window title contains Vim; if it doesn't this
-    -- means we need to create a new window with Vim unless the
-    -- current window is a bash prompt in which case we can call vim
-    -- directly on the current window.
-    -- In order for this to work, iTerm window title must display
-    -- tmux window titles. To do so, put the following in
+    -- Check if the window title contains Vim; if it doesn't this means we need
+    -- to create a new window with Vim unless the current window is a bash
+    -- prompt in which case we can call vim directly on the current window.
+    -- In order for this to work, iTerm window title must display tmux window
+    -- titles. To do so, put the following in
     -- .tmux.conf:
         -- set -g set-titles on
         -- set-option -g set-titles-string "#{session_name} - #W"
+    hs.timer.usleep(120000) -- Wait for window title to update
     local tmux_win_title = hs.window.focusedWindow():title()
-    if string.match(tmux_win_title:lower(), "bash") then
-        hs.eventtap.keyStrokes("vim")
-        hs.eventtap.keyStroke({""}, "return")
-    elseif not string.match(tmux_win_title:lower(), "vim") then
-        hs.eventtap.keyStroke({"ctrl"}, "a")
-        hs.timer.usleep(120000) -- Microseconds (0.12 seconds)
-        hs.eventtap.keyStrokes(":new-window vim")
-        hs.eventtap.keyStroke({""}, "return")
+    if not string.match(tmux_win_title:lower(), "vim") then
+        if string.match(tmux_win_title:lower(), "bash") then
+            hs.eventtap.keyStrokes("vim")
+            hs.eventtap.keyStroke({""}, "return")
+        else
+            hs.eventtap.keyStroke({"ctrl"}, "a")
+            hs.timer.usleep(120000)
+            hs.eventtap.keyStrokes(":new-window vim")
+            hs.eventtap.keyStroke({""}, "return")
+        end
     end
 end
 hs.hotkey.bind(cmd_ctrl, "v", VimTmux)
 
--- }}}
--- Vim {{{
-
---  Open MacVim sourcing minimal vimrc file
+--  Open MacVim (GUI) sourcing minimal vimrc file
 hs.hotkey.bind(cmd_ctrl, "y", function()
                                 os.execute("/usr/local/bin/mvim -u " ..
                                 "/Users/Pedro/OneDrive/vimfiles/vimrc_min &")
                             end)
 
--- Restart MacVim and load previous session
+-- Restart MacVim (terminal) and load previous session
 hs.hotkey.bind(cmd_ctrl, "r", function()
                 hs.eventtap.keyStrokes(",kv")
-                -- We don't use Cmd+N because we quit MacVim after last window
-                -- closes
-                hs.timer.doAfter(1, function()
-                                    hs.application.launchOrFocus("Macvim") end)
-                hs.timer.doAfter(4, function()
+                -- Since we are in tmux, once we exit we have bash prompt
+                -- therefore we simply type vim again to restart it
+                hs.timer.doAfter(0.3, function()
+                                    hs.eventtap.keyStrokes("vim")
+                                    hs.eventtap.keyStroke({""}, "return")
+                                end)
+                hs.timer.doAfter(1.5, function()
                                         hs.eventtap.keyStrokes(",ps") end)
                 end)
 
