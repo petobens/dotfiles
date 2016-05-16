@@ -254,7 +254,7 @@ function VimTmux()
             hs.eventtap.keyStroke({""}, "return")
 
             -- Wait for tmux to open
-            hs.timer.usleep(1000000) -- Microseconds (1 second)
+            hs.timer.usleep(1500000) -- Microseconds (1.5 second)
         end
     end
 
@@ -265,25 +265,39 @@ function VimTmux()
     hs.eventtap.keyStroke({""}, "return")
 
 
-    -- Check if the window title contains Vim; if it doesn't this means we need
-    -- to create a new window with Vim unless the current window is a bash
-    -- prompt in which case we can call vim directly on the current window.
+    -- We now check if the window or pane title contains Vim
     -- In order for this to work, iTerm window title must display tmux window
-    -- titles. To do so, put the following in
-    -- .tmux.conf:
+    -- titles. To do so, put the following in .tmux.conf:
         -- set -g set-titles on
         -- set-option -g set-titles-string "#{session_name} - #W"
-    hs.timer.usleep(120000) -- Wait for window title to update
-    local tmux_win_title = hs.window.focusedWindow():title()
-    if not string.match(tmux_win_title:lower(), "vim") then
-        if string.match(tmux_win_title:lower(), "bash") then
-            hs.eventtap.keyStrokes("vim")
-            hs.eventtap.keyStroke({""}, "return")
+    local j = 1
+    while j < 3 do
+        hs.timer.usleep(120000) -- Wait for window title to update
+        local tmux_win_title = hs.window.focusedWindow():title()
+        -- If the current pane/window is vim then break
+        if string.match(tmux_win_title:lower(), "vim") then
+            break
         else
+            -- Go to the next pane
             hs.eventtap.keyStroke({"ctrl"}, "a")
-            hs.timer.usleep(120000)
-            hs.eventtap.keyStrokes(":new-window vim")
+            hs.timer.usleep(120000) -- Wait to get into command mode
+            hs.eventtap.keyStrokes(":select-pane -t :.+")
             hs.eventtap.keyStroke({""}, "return")
+        end
+        j = j + 1
+        if j == 3 then
+            -- If none of the panes contained vim then if the current pane is a
+            -- bash console open vim in it, otherwise open it in a new window
+            local current_pane_title = hs.window.focusedWindow():title()
+            if string.match(current_pane_title:lower(), "bash") then
+                hs.eventtap.keyStrokes("vim")
+                hs.eventtap.keyStroke({""}, "return")
+            else
+                hs.eventtap.keyStroke({"ctrl"}, "a")
+                hs.timer.usleep(120000)
+                hs.eventtap.keyStrokes(":new-window vim")
+                hs.eventtap.keyStroke({""}, "return")
+            end
         end
     end
 end
