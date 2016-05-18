@@ -28,6 +28,15 @@ export LANG=en_US.UTF-8
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
 
+# Ignore case when completing and show all possible matches (note that we pass
+# Readline commands as a single argument to bind built in function instead of
+# adding them to inputrc file)
+bind "set completion-ignore-case on"
+bind "set show-all-if-ambiguous on"
+
+# Show mode in command prompt
+bind "set show-mode-in-prompt on"
+
 # Powerline prompt
 powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1
