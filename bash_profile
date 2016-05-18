@@ -51,8 +51,10 @@ bind -m vi-command '"L": end-of-line'
 # }}}
 # Alias {{{
 
-
+alias up='cd ..'
+alias q='exit'
 alias python='python3'
+
 # Update brew, python, tlmgr and gems
 alias uall='brew update && brew upgrade && conda update --all &&'\
 'tlmgr update --all && sudo gem update'
