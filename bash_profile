@@ -73,6 +73,7 @@ bind -m vi-command '"v": ""'
 # Alias {{{
 
 alias up='cd ..'
+alias hm='cd ~'
 alias q='exit'
 alias python='python3'
 alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
@@ -87,9 +88,9 @@ alias tm='tmux new -A -s petobens'
 
 # SSH and Tmux: connect to ssh and then start tmux creating a new session called
 # pedrof or attaching to an existing one with that name
-alias emr-tmux='ssh prd-emr-master -t tmux new -A -s pedrof'
-# Presto command line
-alias presto='ssh prd-emr-master -t tmux new -A -s pedrof '\
+alias emr='ssh prd-emr-master -t tmux -f "/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
+# Presto client
+alias pcl='ssh prd-emr-master -t tmux -f "/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
 
 # Try something like the following
