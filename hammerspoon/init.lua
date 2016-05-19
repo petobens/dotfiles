@@ -262,7 +262,7 @@ function VimTmux()
     -- Once inside of tmux try to select a window named Vim
     hs.eventtap.keyStroke({"ctrl"}, "a")
     hs.timer.usleep(120000) -- Wait to get into command mode
-    hs.eventtap.keyStrokes(":select-window -t Vim")
+    hs.eventtap.keyStrokes(":select-window -t vim")
     hs.eventtap.keyStroke({""}, "return")
 
 
