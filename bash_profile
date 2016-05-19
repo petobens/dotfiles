@@ -72,13 +72,19 @@ bind -m vi-command '"v": ""'
 # }}}
 # Alias {{{
 
+# Frequent bash commands
 alias up='cd ..'
 alias hm='cd ~'
 alias q='exit'
+alias ca='clear all'
+
+# Ensure we use python3
 alias python='python3'
+
+# Alias to open vim sourcing minimal vimrc file
 alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
-# Update brew, python, tlmgr and gems
+# Update brew, python, tlmgr and gems (gems one requires password)
 alias uall='brew update && brew upgrade && conda update --all &&'\
 'tlmgr update --all && sudo gem update'
 
