@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 15 May 2016
+-- Last Modified: 19 May 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -219,6 +219,7 @@ hs.hotkey.bind(cmd_ctrl, "d", function()
 -- Activate Vim inside of tmux inside of iTerm
 function VimTmux()
     -- Launch or open iTerm
+    -- FIXME: Wait for iTerm to open properly
     hs.application.launchOrFocus("iTerm")
 
     -- Check if there is a tab with tmux (do this only for 5 tabs since we
@@ -303,13 +304,7 @@ function VimTmux()
 end
 hs.hotkey.bind(cmd_ctrl, "v", VimTmux)
 
---  Open MacVim (GUI) sourcing minimal vimrc file
-hs.hotkey.bind(cmd_ctrl, "y", function()
-                                os.execute("/usr/local/bin/mvim -u " ..
-                                "/Users/Pedro/OneDrive/vimfiles/vimrc_min &")
-                            end)
-
--- Restart MacVim (terminal) and load previous session
+-- Restart Vim (terminal) and load previous session
 hs.hotkey.bind(cmd_ctrl, "r", function()
                 hs.eventtap.keyStrokes(",kv")
                 -- Since we are in tmux, once we exit we have bash prompt

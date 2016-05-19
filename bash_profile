@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 18 May 2016
+# Last Modified: 19 May 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -75,6 +75,7 @@ bind -m vi-command '"v": ""'
 alias up='cd ..'
 alias q='exit'
 alias python='python3'
+alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
 # Update brew, python, tlmgr and gems
 alias uall='brew update && brew upgrade && conda update --all &&'\
