@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified:
+# Last Modified: 18 May 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -48,14 +48,26 @@ POWERLINE_BASH_SELECT=1
 
 # Set vi mode
 set -o vi
-# set show-mode-in-prompt on
+
+# Insert mode
 bind -m vi-insert '"jj": vi-movement-mode'
 bind -m vi-insert '"\C-p": previous-history'
 bind -m vi-insert '"\C-n": next-history'
-# bind -m vi-insert '"\C-h": backward-char'
-# bind -m vi-insert '"\C-l": forward-char'
+#  Paste system clipboard
+# inoremap <A-p> <C-R>*
+
+# Command mode
 bind -m vi-command '"H": beginning-of-line'
 bind -m vi-command '"L": end-of-line'
+bind -m vi-command '"k": ""'
+bind -m vi-command '"j": ""'
+bind -m vi-command '"v": ""'
+
+# FIXME: paste with p
+# bind -m vi-command -x '"p": pbpaste'
+# bind -m vi-command -x '"p": ls'
+# bind -m vi-command -x '"p": "reattach-to-user-namespace pbpaste;tmux paste-buffer"'
+
 
 # }}}
 # Alias {{{
