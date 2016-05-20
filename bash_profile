@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 19 May 2016
+# Last Modified: 20 May 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -53,6 +53,8 @@ set -o vi
 bind -m vi-insert '"jj": vi-movement-mode'
 bind -m vi-insert '"\C-p": previous-history'
 bind -m vi-insert '"\C-n": next-history'
+bind -m vi-insert '"\C-e": end-of-line'
+bind -m vi-insert '"\C-a": beginning-of-line'
 #  Paste system clipboard
 # inoremap <A-p> <C-R>*
 
@@ -94,9 +96,10 @@ alias tm='tmux new -A -s petobens'
 
 # SSH and Tmux: connect to ssh and then start tmux creating a new session called
 # pedrof or attaching to an existing one with that name
+# Add -X after ssh to enable X11 forwarding
 alias emr='ssh prd-emr-master -t tmux -f "/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
 # Presto client
-alias pcl='ssh prd-emr-master -t tmux -f "/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
+alias pcli='ssh prd-emr-master -t tmux -f "/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
 
 # Try something like the following
