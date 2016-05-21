@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 19 May 2016
+-- Last Modified: 20 May 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -182,8 +182,6 @@ hs.hotkey.bind({"alt"}, "`", focusNextScreen)
 -- }}}
 -- Run or activate app {{{
 
-hs.hotkey.bind(cmd_ctrl, "c", function()
-                hs.application.launchOrFocus("iTerm") end)
 hs.hotkey.bind(cmd_ctrl, "i", function()
                 hs.application.launchOrFocus("Firefox") end)
 hs.hotkey.bind(cmd_ctrl, "x", function()
@@ -208,6 +206,21 @@ hs.hotkey.bind(cmd_ctrl, "m", function()
                 hs.application.launchOrFocus("Spotify") end)
 hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open ~/Downloads/") end)
+
+function Tmux()
+    -- Launch or open iTerm
+    hs.application.launchOrFocus("iTerm")
+
+    -- Open tmux
+    local win_title = hs.window.focusedWindow():title()
+    hs.timer.usleep(120000) -- Wait for title to update
+    if not string.match(win_title:lower(), "tmux") then
+            hs.eventtap.keyStrokes("tmux new -A -s petobens")
+            hs.eventtap.keyStroke({""}, "return")
+    end
+end
+hs.hotkey.bind(cmd_ctrl, "c", Tmux)
+
 
 -- }}}
 -- Vim {{{
@@ -255,7 +268,7 @@ function VimTmux()
             hs.eventtap.keyStroke({""}, "return")
 
             -- Wait for tmux to open
-            hs.timer.usleep(1500000) -- Microseconds (1.5 second)
+            hs.timer.usleep(1500001) -- Microseconds (1.5 second)
         end
     end
 
