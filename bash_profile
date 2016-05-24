@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 20 May 2016
+# Last Modified: 23 May 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -66,19 +66,20 @@ bind -m vi-command '"j": ""'
 bind -m vi-command '"v": ""'
 
 # FIXME: paste with p
+# bind -m vi-command '"p": "ls"'
 # bind -m vi-command -x '"p": pbpaste'
-# bind -m vi-command -x '"p": ls'
-# bind -m vi-command -x '"p": "reattach-to-user-namespace pbpaste;tmux paste-buffer"'
+bind -m vi-command -x '"p": "pbpaste"'
 
 
 # }}}
 # Alias {{{
 
 # Frequent bash commands
-alias up='cd ..'
-alias hm='cd ~'
+alias u='cd ..'
+alias h='cd ~'
 alias q='exit'
-alias ca='clear all'
+alias c='clear all'
+alias v='vim'
 
 # Ensure we use python3
 alias python='python3'
@@ -87,7 +88,7 @@ alias python='python3'
 alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
 # Update brew, python, tlmgr and gems (gems one requires password)
-alias uall='brew update && brew upgrade && conda update --all &&'\
+alias ua='brew update && brew upgrade && conda update --all &&'\
 'tlmgr update --all && sudo gem update'
 
 # Start Tmux attaching to an existing session named petobens or creating one with
