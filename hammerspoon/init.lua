@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 20 May 2016
+-- Last Modified: 02 Jun 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -322,7 +322,7 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
                 hs.eventtap.keyStrokes(",kv")
                 -- Since we are in tmux, once we exit we have bash prompt
                 -- therefore we simply type vim again to restart it
-                hs.timer.doAfter(0.3, function()
+                hs.timer.doAfter(0.7, function()
                                     hs.eventtap.keyStrokes("vim")
                                     hs.eventtap.keyStroke({""}, "return")
                                 end)
