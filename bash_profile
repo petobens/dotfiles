@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 23 May 2016
+# Last Modified: 03 Jun 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -80,6 +80,8 @@ alias h='cd ~'
 alias q='exit'
 alias c='clear all'
 alias v='vim'
+alias ht='htop'
+alias o='open'
 
 # Ensure we use python3
 alias python='python3'
