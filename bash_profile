@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 03 Jun 2016
+# Last Modified: 10 Jun 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -91,7 +91,7 @@ alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
 # Update brew, python, tlmgr and gems (gems one requires password)
 alias ua='brew update && brew upgrade && conda update --all &&'\
-'tlmgr update --all && sudo gem update'
+'sudo tlmgr update --all && sudo gem update'
 
 # Start Tmux attaching to an existing session named petobens or creating one with
 # such name
