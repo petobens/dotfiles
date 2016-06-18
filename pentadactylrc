@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 24 May 2016
+" Last Modified: 17 Jun 2016
 "   Description: My pentadactylrc
 "===============================================================================
 " If nightly builds are not available we use releases from the following fork:
@@ -109,6 +109,9 @@ nmap -builtin <C-p> :tp<CR>
 " Move the current tab
 nmap -builtin <C-A-h> :tabmove! -1<CR>
 nmap -builtin <C-A-l> :tabmove! +1<CR>
+
+" Pass through mode
+nmap -builtin  <Leader>pt <C-z>
 
 " Movement between tiles/splits
 nmap -builtin  <Leader>1 :buffer 1<CR>
