@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 20 May 2016
+-- Last Modified: 17 Jun 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -374,7 +374,6 @@ hs.hotkey.bind({"cmd", "shift"}, 'v', function()
                     tostring(math.floor(hs.audiodevice.current().volume)) ..
                     "%")
 end)
-
 
 -- }}}
 -- Toggle hidden files {{{
