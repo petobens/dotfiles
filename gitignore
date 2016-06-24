@@ -24,3 +24,12 @@ Icon?
 
 # Office Temp Files
 ~$*
+
+# Latex
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.synctex.gz
+*.toc
