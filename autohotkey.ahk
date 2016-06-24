@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 18 Mar 2016
+; Last Modified: 20 Jun 2016
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -22,101 +22,181 @@ SetTitleMatchMode, 2   ; Window title can contain WinTitle anywhere
     Return
 
  ; }}}
+; Multiple monitors handling {{{
+
+GetCurrentMonitor()
+{
+  SysGet, numberOfMonitors, MonitorCount
+  WinGetPos, winX, winY, winWidth, winHeight, A
+  winMidX := winX + winWidth / 2
+  winMidY := winY + winHeight / 2
+  Loop %numberOfMonitors%
+  {
+    SysGet, monArea, Monitor, %A_Index%
+    if (winMidX > monAreaLeft && winMidX < monAreaRight && winMidY < monAreaBottom && winMidY > monAreaTop)
+      Return A_Index
+  }
+}
+
+; }}}
 ; Window handling {{{
 
 LeftHalfWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=((areaRight-areaLeft)/2)
 	h:=(areaBottom-areaTop)
+    x := 0
+    y := 0
+    if (currMon = 2) {
+        x := -1920
+        y := -300
+    }
 
-	WinRestore, A
-	WinMove, A, , 0, 0,%w%,%h%
+    WinRestore, A
+    WinMove, A, , x, y,%w%,%h%
 }
 
 RightHalfWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=((areaRight-areaLeft)/2)
 	h:=(areaBottom-areaTop)
+    x := w
+    y := 0
+    if (currMon = 2) {
+        x := w -1920
+        y := -300
+    }
 
 	WinRestore, A
-	WinMove, A, , w, 0, w, h
+	WinMove, A, , x, y, w, h
 }
 
 TopHalfWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=(areaRight-areaLeft)
 	h:=((areaBottom-areaTop)/2)
+    x := 0
+    y := 0
+    if (currMon = 2) {
+        x := -1920
+        y := -300
+    }
 
 	WinRestore, A
-	WinMove, A, , 0, 0, w, h
+	WinMove, A, , x, y, w, h
 }
 
 BottomHalfWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=(areaRight-areaLeft)
 	h:=((areaBottom-areaTop)/2)
+    x := 0
+    y := h
+    if (currMon = 2) {
+        x := -1920
+        y := h -300
+    }
 
 	WinRestore, A
-	WinMove, A, , 0, h, w, h
+	WinMove, A, , x, y, w, h
 }
 
 TopLeftQuarterfWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=((areaRight-areaLeft)/2)
 	h:=((areaBottom-areaTop)/2)
+    x := 0
+    y := 0
+    if (currMon = 2) {
+        x := -1920
+        y := -300
+    }
 
 	WinRestore, A
-	WinMove, A, , 0, 0,%w%,%h%
+	WinMove, A, , x, y,%w%,%h%
 }
 
 BottomLeftQuarterfWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=((areaRight-areaLeft)/2)
 	h:=((areaBottom-areaTop)/2)
+    x := 0
+    y := h
+    if (currMon = 2) {
+        x := -1920
+        y := h -300
+    }
 
 	WinRestore, A
-	WinMove, A, , 0, h, w, h
+	WinMove, A, , x, y, w, h
 }
 
 TopRightQuarterfWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=((areaRight-areaLeft)/2)
 	h:=((areaBottom-areaTop)/2)
+    x := w
+    y := 0
+    if (currMon = 2) {
+        x := w -1920
+        y := -300
+    }
 
 	WinRestore, A
-	WinMove, A, , w, 0, w, h
+	WinMove, A, , x, y, w, h
 }
 
 BottomRightQuarterfWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=((areaRight-areaLeft)/2)
 	h:=((areaBottom-areaTop)/2)
+    x := w
+    y := h
+    if (currMon = 2) {
+        x := w -1920
+        y := h -300
+    }
 
 	WinRestore, A
-	WinMove, A, , w, h, w, h
+	WinMove, A, , x, y, w, h
 }
 
 MiddleWindow()
 {
-	SysGet, area, MonitorWorkArea
+    currMon := GetCurrentMonitor()
+	SysGet, area, MonitorWorkArea, %currMon%
 	w:=((areaRight-areaLeft)/2)
 	h:=((areaBottom-areaTop)/2)
+    x := w / 2
+    y := h /2
+    if (currMon = 2) {
+        x := (-1920 - w) / 2
+        y := (-300 / 2)
+    }
 
 	WinRestore, A
-	WinMove, A, , w/2, h/2, w, h
+	WinMove, A, , x, y, w, h
 }
 
 ; Mapppings
-^#Left::  LeftHalfWindow()  ; Default in Windows 10 is #Left
-^#Right:: RightHalfWindow() ; Default in Windows 10 is #Right
+#Left::  LeftHalfWindow()  ; Default in Windows 10 is #Left
+#Right:: RightHalfWindow() ; Default in Windows 10 is #Right
 ^#Up::   TopHalfWindow()
 ^#Down:: BottomHalfWindow()
 ^#1:: TopLeftQuarterfWindow()
@@ -125,7 +205,10 @@ MiddleWindow()
 ^#4:: BottomRightQuarterfWindow()
 ^#5:: MiddleWindow()
 
-; TODO: Send window to next monitor
+; Move windows left and right between monitors
+; FIXME: Respect window width!
+^#Left:: Send #+{Left}
+^#Right:: Send #+{Right}
 
 ; }}}
 ; Run or activate app and kill process {{{
@@ -147,11 +230,13 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#t:: RoA("Mozilla Thunderbird", "thunderbird")
 ^#s:: RoA("Skype", "C:\Program Files (x86)\Skype\Phone\Skype.exe",,"")
 ^#g:: RoA("GifCam", "C:\OD\OneDrive\apps\GifCam.exe",,"")
-^#e:: RoA("Excel", "excel")
+^#x:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
 ^#c:: RoA("cmd.exe", "cmd",,"")
+; ^#c:: RoA("cmd", "C:\Program Files\ConEmu\ConEmu64.exe")
 ^#d:: RoA("Downloads", "C:\Users\Pedro\Downloads",,"")
 ^#p:: RoA("SumatraPDF", "SumatraPDF")
+^#m:: RoA("Spotify Premium", "C:\Users\Pedro\AppData\Roaming\Spotify\Spotify.exe",,"")
 
 ; Kill active window process (useful to close apps like Skype or Vuze)
 ; FIXME: Doesn't close system tray icon ;
@@ -177,7 +262,29 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     Return
 
 ; Open Gvim sourcing the minimal vimrc
-^#m:: Run, gvim -u C:/OD/OneDrive/vimfiles/vimrc_min, C:/OD/OneDrive/vimfiles, max
+; ^#m:: Run, gvim -u C:/OD/OneDrive/vimfiles/vimrc_min, C:/OD/OneDrive/vimfiles, max
+
+; }}}
+; Spotify and Volume {{{
+
+; Spotify
+#+p::Media_Play_Pause
+#+j::Media_Next
+#+k::Media_Prev
+#+t::
+{
+    DetectHiddenWindows, On
+    WinGetTitle, now_playing, ahk_class SpotifyMainWindow
+    StringTrimLeft, playing, now_playing, 0
+    Msgbox,,Spotify Current Track, %playing%, 1.5
+    DetectHiddenWindows, Off
+    Return
+}
+
+; Volume control
+#+-::SoundSet -5
+#+=::SoundSet +5
+#+m:: SoundSet, +1, , mute
 
 ; }}}
 ; Toggle hidden files {{{
@@ -215,56 +322,11 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
     Return
 
 ; }}}
-; Wireless/internet connections {{{
-
-; Show Wireless IP4 properties
-#w::
-    Run ::{7007acc7-3202-11d1-aad2-00805fc1270e},, max
-    WinWaitActive, Network Connections
-    MiddleWindow()
-    Send {Space}w{AppsKey}
-    Sleep 250
-    Send {Down 9}{Enter}
-    WinWaitActive, Wi-Fi Fijo Properties
-    Sleep 300
-    Send {Down 9}
-    ControlClick, P&roperties,,,,3
-    Return
-
-; Automatically set Network settings (requires running autohotkey as admin)
-; FIXME: If run as admin startup script is not executed
-^#n::
-    {
-    SetTimer, ChangeButtonNames, 50
-    Msgbox, 4, Static or Automatic IP Address, Do you want to use a static IP address?
-    IfMsgBox Yes
-    {
-    Run, %comspec% /c netsh interface ip set address "Wi-Fi Fijo" source=static address=192.168.50.130 mask=255.255.255.0 gateway=192.168.50.1
-    Run, %comspec% /c netsh interface ip set dnsservers "Wi-Fi Fijo" source=static address=192.168.50.3 primary
-    }
-	else
-    {
-    Run, %comspec% /c netsh interface ip set address "Wi-Fi Fijo" source=dhcp
-    Run, %comspec% /c netsh interface ip set dnsservers "Wi-Fi Fijo" source=dhcp
-    }
-    }
-    Return
-
-; Helper function to change button names
-ChangeButtonNames:
-    IfWinNotExist, Static or Automatic IP Address
-        Return
-    SetTimer, ChangeButtonNames, off
-    WinActivate
-    ControlSetText, Button1, &Static (AF)
-    ControlSetText, Button2, &Automatic
-    Return
-
-; }}}
 ; Miscellaneous {{{
 
-; Close applications Unix/Mac style
-^q:: Send !{F4}
+; Close applications and window Mac style
+#q:: Send !{F4}
+#w:: Send ^w
 
 ; Make Capslock a Tab key (but allow to retain Capslock with Shift+Capslock)
 +Capslock::Capslock
@@ -290,7 +352,7 @@ Capslock::Tab
 
 ; Shutdown and reboot (using Win+shift combination) (note: we can do this in two
 ; steps with Alt-F4 and Ctrl-q)
-#+p::
+#+s::
     Msgbox, 4, Shutdown option, Do you want to shutdown your computer?
     IfMsgBox Yes
     {
