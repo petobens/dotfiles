@@ -90,12 +90,12 @@ alias jn='jupyter notebook'
 # Alias to open vim sourcing minimal vimrc file
 alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
-# Update brew, python, tlmgr and gems (tlmgr and gems require password)
+# Update brew, python and tlmgr (tlmgr requires password)
 alias ua='brew update && brew upgrade && conda update --all &&'\
-'sudo tlmgr update --all && sudo gem update'
+'sudo tlmgr update --all'
 
-# Start Tmux attaching to an existing session named petobens or creating one with
-# such name
+# Start Tmux attaching to an existing session named petobens or creating one
+# with such name
 alias tm='tmux new -A -s petobens'
 
 # SSH and Tmux: connect to ssh and then start tmux creating a new session called
