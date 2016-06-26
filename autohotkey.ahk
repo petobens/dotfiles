@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 20 Jun 2016
+; Last Modified: 25 Jun 2016
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -210,6 +210,9 @@ MiddleWindow()
 ^#Left:: Send #+{Left}
 ^#Right:: Send #+{Right}
 
+; Expose/Task View (show thumbnails of open windows)
+^#j:: Send #{Tab}
+
 ; }}}
 ; Run or activate app and kill process {{{
 
@@ -282,6 +285,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 }
 
 ; Volume control
+; TODO: Toggle mute when increasing volume
 #+-::SoundSet -5
 #+=::SoundSet +5
 #+m:: SoundSet, +1, , mute
