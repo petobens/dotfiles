@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 25 Jun 2016
+; Last Modified: 26 Jun 2016
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -235,6 +235,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#g:: RoA("GifCam", "C:\OD\OneDrive\apps\GifCam.exe",,"")
 ^#x:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
+^#l:: RoA("Slack", "C:\Users\Pedro\AppData\Local\slack\Update.exe --processStart slack.exe")
 ^#c:: RoA("cmd.exe", "cmd",,"")
 ; ^#c:: RoA("cmd", "C:\Program Files\ConEmu\ConEmu64.exe")
 ^#d:: RoA("Downloads", "C:\Users\Pedro\Downloads",,"")
@@ -285,10 +286,33 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 }
 
 ; Volume control
-; TODO: Toggle mute when increasing volume
-#+-::SoundSet -5
-#+=::SoundSet +5
+#+=::
+{
+    SoundGet, mute_state, , mute
+    If mute_state=On
+        SoundSet, +1, , mute
+    SoundSet +5
+    SoundGet, master_volume
+    vol:=Floor(master_volume)
+    MsgBox,, Volume level, Volume level: %vol%`%., 0.7
+    Return
+}
+#+-::
+{
+    SoundSet -5
+    SoundGet, master_volume
+    vol:=Floor(master_volume)
+    MsgBox,, Volume level, Volume level: %vol%`%., 0.7
+    Return
+}
 #+m:: SoundSet, +1, , mute
+#+v::
+{
+    SoundGet, master_volume
+    vol:=Floor(master_volume)
+    MsgBox,, Volume level, Volume level: %vol%`%., 1.5
+    Return
+}
 
 ; }}}
 ; Toggle hidden files {{{
@@ -346,12 +370,6 @@ Capslock::Tab
         FileRecycleEmpty
         ; MsgBox, The recycle bin has been emptied.
     }
-    Return
-
-; Toggle Synergy scroll lock
-^#l::
-    Send #+l
-    MsgBox, Cursor should  now be locked (unlocked) to (from) this screen.`nIn case this didn't work type 'WinKey+Shift+l'.
     Return
 
 ; Shutdown and reboot (using Win+shift combination) (note: we can do this in two
