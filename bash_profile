@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 25 Jun 2016
+# Last Modified: 28 Jun 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -16,7 +16,6 @@ PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # homebrew
 export PATH="$HOME/prog-tools/arara4:$PATH" # arara
 export PATH="/Library/TeX/texbin:$PATH" # basictex
-export PATH="$HOME/miniconda3/bin:$PATH" # miniconda
 
 # Symlink cask apps to Applications folder
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
@@ -41,7 +40,7 @@ bind "set show-mode-in-prompt on"
 powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1
 POWERLINE_BASH_SELECT=1
-. $HOME/miniconda3/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
+. /usr/local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
 
 # }}}
 # Bindings {{{
@@ -83,15 +82,16 @@ alias v='vim'
 alias ht='htop'
 alias o='open'
 
-# Ensure we use python3
+# Python
 alias python='python3'
+alias pip='pip3'
 alias jn='jupyter notebook'
 
 # Alias to open vim sourcing minimal vimrc file
 alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
 # Update brew, python and tlmgr (tlmgr requires password)
-alias ua='brew update && brew upgrade && conda update --all &&'\
+alias ua='brew update && brew upgrade && pip-review --interactive &&'\
 'sudo tlmgr update --all'
 
 # Start Tmux attaching to an existing session named petobens or creating one
