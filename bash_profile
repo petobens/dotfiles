@@ -17,6 +17,9 @@ export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # homebrew
 export PATH="$HOME/prog-tools/arara4:$PATH" # arara
 export PATH="/Library/TeX/texbin:$PATH" # basictex
 
+# R libraries
+export R_LIBS="/usr/local/lib/R/site-library"
+
 # Symlink cask apps to Applications folder
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
@@ -90,9 +93,10 @@ alias jn='jupyter notebook'
 # Alias to open vim sourcing minimal vimrc file
 alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
-# Update brew, python and tlmgr (tlmgr requires password)
+# Update brew, python, R and tlmgr (tlmgr requires password)
 alias ua='brew update && brew upgrade && pip-review --interactive &&'\
-'sudo tlmgr update --all'
+'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
+'checkBuilt=TRUE)" && sudo tlmgr update --all'
 
 # Start Tmux attaching to an existing session named petobens or creating one
 # with such name
@@ -101,12 +105,11 @@ alias tm='tmux new -A -s petobens'
 # SSH and Tmux: connect to ssh and then start tmux creating a new session called
 # pedrof or attaching to an existing one with that name
 # Add -X after ssh to enable X11 forwarding
-alias emr='ssh prd-emr-master -t tmux -f "/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
+alias emr='ssh prd-emr-master -t tmux -f '\
+'"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
 # Presto client
-alias pcli='ssh prd-emr-master -t tmux -f "/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
+alias pcli='ssh prd-emr-master -t tmux -f '\
+'"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
-
-# Try something like the following
-# alias run-presto='ssh prd-emr-master -t tmux new -A -s pedrof "presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof\ --output-format\ CSV\ --execute\ \"SELECT\ ref_hash\ FROM\ all_events_monthly\ LIMIT\ 5;\"\ > /mnt1/pedrof-temp/output.csv"'
 
 # }}}
