@@ -44,14 +44,23 @@ GetCurrentMonitor()
 LeftHalfWindow()
 {
     currMon := GetCurrentMonitor()
+    ; Get the resolution of the current monitor (excluding taskbar)
 	SysGet, area, MonitorWorkArea, %currMon%
 	w:=((areaRight-areaLeft)/2)
 	h:=(areaBottom-areaTop)
+    ; Set the upper-left pixel of the first screen
     x := 0
     y := 0
     if (currMon = 2) {
+        ; If we are in the second monitor (and assuming this monitor is to the
+        ; left) we need to shift the upper-left pixel of the screen by the
+        ; second monitor screen resolution
         x := -(areaRight - areaLeft)
-        y := -310
+        ; Now get the primary monitor height resolution (including taskbar)
+        SysGet, mon1_area, Monitor, 1
+        ; Move the height up by the difference in height resolution between the
+        ; biggest monitor (second) and the smaller one (first)
+        y:= -((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop))
     }
 
     WinRestore, A
@@ -68,7 +77,8 @@ RightHalfWindow()
     y := 0
     if (currMon = 2) {
         x := w -(areaRight - areaLeft)
-        y := -310
+        SysGet, mon1_area, Monitor, 1
+        y:= -((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop))
     }
 
 	WinRestore, A
@@ -85,7 +95,8 @@ TopHalfWindow()
     y := 0
     if (currMon = 2) {
         x := -(areaRight - areaLeft)
-        y := -310
+        SysGet, mon1_area, Monitor, 1
+        y:= -((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop))
     }
 
 	WinRestore, A
@@ -102,7 +113,8 @@ BottomHalfWindow()
     y := h
     if (currMon = 2) {
         x := -(areaRight - areaLeft)
-        y := h -310
+        SysGet, mon1_area, Monitor, 1
+        y:= h - ((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop))
     }
 
 	WinRestore, A
@@ -119,7 +131,8 @@ TopLeftQuarterfWindow()
     y := 0
     if (currMon = 2) {
         x := -(areaRight - areaLeft)
-        y := -310
+        SysGet, mon1_area, Monitor, 1
+        y:= -((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop))
     }
 
 	WinRestore, A
@@ -136,7 +149,8 @@ BottomLeftQuarterfWindow()
     y := h
     if (currMon = 2) {
         x := -(areaRight - areaLeft)
-        y := h -310
+        SysGet, mon1_area, Monitor, 1
+        y:= h - ((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop))
     }
 
 	WinRestore, A
@@ -153,7 +167,8 @@ TopRightQuarterfWindow()
     y := 0
     if (currMon = 2) {
         x := w -(areaRight - areaLeft)
-        y := -310
+        SysGet, mon1_area, Monitor, 1
+        y:= -((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop))
     }
 
 	WinRestore, A
@@ -170,7 +185,8 @@ BottomRightQuarterfWindow()
     y := h
     if (currMon = 2) {
         x := w -(areaRight - areaLeft)
-        y := h -310
+        SysGet, mon1_area, Monitor, 1
+        y:= h - ((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop))
     }
 
 	WinRestore, A
@@ -187,7 +203,8 @@ MiddleWindow()
     y := h /2
     if (currMon = 2) {
         x := (-(areaRight - areaLeft) - w) / 2
-        y := (-310 / 2.5)
+        SysGet, mon1_area, Monitor, 1
+        y := (-((areaBottom - areaTop) - (mon1_areaBottom - mon1_areaTop)) / 2.5)
     }
 
 	WinRestore, A
