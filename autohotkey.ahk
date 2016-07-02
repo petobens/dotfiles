@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 26 Jun 2016
+; Last Modified: 02 Jul 2016
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -50,7 +50,7 @@ LeftHalfWindow()
     x := 0
     y := 0
     if (currMon = 2) {
-        x := -1920
+        x := -(areaRight - areaLeft)
         y := -310
     }
 
@@ -67,7 +67,7 @@ RightHalfWindow()
     x := w
     y := 0
     if (currMon = 2) {
-        x := w -1920
+        x := w -(areaRight - areaLeft)
         y := -310
     }
 
@@ -84,7 +84,7 @@ TopHalfWindow()
     x := 0
     y := 0
     if (currMon = 2) {
-        x := -1920
+        x := -(areaRight - areaLeft)
         y := -310
     }
 
@@ -101,7 +101,7 @@ BottomHalfWindow()
     x := 0
     y := h
     if (currMon = 2) {
-        x := -1920
+        x := -(areaRight - areaLeft)
         y := h -310
     }
 
@@ -118,7 +118,7 @@ TopLeftQuarterfWindow()
     x := 0
     y := 0
     if (currMon = 2) {
-        x := -1920
+        x := -(areaRight - areaLeft)
         y := -310
     }
 
@@ -135,7 +135,7 @@ BottomLeftQuarterfWindow()
     x := 0
     y := h
     if (currMon = 2) {
-        x := -1920
+        x := -(areaRight - areaLeft)
         y := h -310
     }
 
@@ -152,7 +152,7 @@ TopRightQuarterfWindow()
     x := w
     y := 0
     if (currMon = 2) {
-        x := w -1920
+        x := w -(areaRight - areaLeft)
         y := -310
     }
 
@@ -169,7 +169,7 @@ BottomRightQuarterfWindow()
     x := w
     y := h
     if (currMon = 2) {
-        x := w -1920
+        x := w -(areaRight - areaLeft)
         y := h -310
     }
 
@@ -186,8 +186,8 @@ MiddleWindow()
     x := w / 2
     y := h /2
     if (currMon = 2) {
-        x := (-1920 - w) / 2
-        y := (-310 / 2)
+        x := (-(areaRight - areaLeft) - w) / 2
+        y := (-310 / 2.5)
     }
 
 	WinRestore, A
