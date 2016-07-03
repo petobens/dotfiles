@@ -2,7 +2,7 @@
 ;          File: autohotkey.ahk
 ;        Author: Pedro Ferrari
 ;       Created: 09 Apr 2014
-; Last Modified: 02 Jul 2016
+; Last Modified: 03 Jul 2016
 ;   Description: Autohotkey configuration file
 ;===============================================================================
 ; Preamble {{{
@@ -256,6 +256,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#c:: RoA("cmd.exe", "cmd",,"")
 ; ^#c:: RoA("cmd", "C:\Program Files\ConEmu\ConEmu64.exe")
 ^#d:: RoA("Downloads", "C:\Users\Pedro\Downloads",,"")
+^#f:: RoA("This PC", "explorer")
 ^#p:: RoA("SumatraPDF", "SumatraPDF")
 ^#m:: RoA("Spotify Premium", "C:\Users\Pedro\AppData\Roaming\Spotify\Spotify.exe",,"")
 
@@ -350,7 +351,7 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 
 ; Note that for this to work we need first to resize the default paint image
 ; size to something small (for instance 100x100 pixels)
-^#Printscreen::
+#+5::
     FormatTime,CurrentTime,%A_Now%,dd-MM-yyyy_HH-mm-ss
     image_name=%A_desktop%\screenshot-%CurrentTime%.png
     ; Alt-Print takes screenshot of active window in W >= 8.1
