@@ -33,3 +33,5 @@ Icon?
 *.run.xml
 *.synctex.gz
 *.toc
+*.nav
+*.snm
