@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 28 Jun 2016
+# Last Modified: 18 Jul 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -16,6 +16,7 @@ PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # homebrew
 export PATH="$HOME/prog-tools/arara4:$PATH" # arara
 export PATH="/Library/TeX/texbin:$PATH" # basictex
+export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
 
 # R libraries
 export R_LIBS="/usr/local/lib/R/site-library"
@@ -89,6 +90,10 @@ alias o='open'
 alias python='python3'
 alias pip='pip3'
 alias jn='jupyter notebook'
+
+# Matlab
+alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
+'-nodesktop -nosplash '
 
 # Alias to open vim sourcing minimal vimrc file
 alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
