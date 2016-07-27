@@ -8,3 +8,5 @@
     excludesfile = ~/.gitignore
 [web]
 	browser = start
+[credential]
+	helper = cache --timeout 3600
