@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 18 Jul 2016
+# Last Modified: 27 Jul 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -11,22 +11,27 @@
 
 # Options {{{
 
-# Path settings
-PATH="/usr/bin:/bin:/usr/sbin:/sbin"
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # homebrew
-export PATH="$HOME/prog-tools/arara4:$PATH" # arara
-export PATH="/Library/TeX/texbin:$PATH" # basictex
-export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    # Path settings
+    PATH="/usr/bin:/bin:/usr/sbin:/sbin"
+    export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # homebrew
+    export PATH="$HOME/prog-tools/arara4:$PATH" # arara
+    export PATH="/Library/TeX/texbin:$PATH" # basictex
+    export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
 
-# R libraries
-export R_LIBS="/usr/local/lib/R/site-library"
+    # R libraries
+    export R_LIBS="/usr/local/lib/R/site-library"
 
-# Symlink cask apps to Applications folder
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+    # Symlink cask apps to Applications folder
+    export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
-# Set english utf-8 locale
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+    # Set english utf-8 locale
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+else
+    export TERM="xterm-256color"
+fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
@@ -38,13 +43,17 @@ bind "set completion-ignore-case on"
 bind "set show-all-if-ambiguous on"
 
 # Show mode in command prompt
-bind "set show-mode-in-prompt on"
+# bind "set show-mode-in-prompt on"
 
 # Powerline prompt
 powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1
 POWERLINE_BASH_SELECT=1
-. /usr/local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    . /usr/local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
+else
+    . /usr/local/lib/python3.4/dist-packages/powerline/bindings/bash/powerline.sh
+fi
 
 # }}}
 # Bindings {{{
@@ -69,9 +78,9 @@ bind -m vi-command '"j": ""'
 bind -m vi-command '"v": ""'
 
 # FIXME: paste with p
-# bind -m vi-command '"p": "ls"'
-# bind -m vi-command -x '"p": pbpaste'
-bind -m vi-command -x '"p": "pbpaste"'
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    bind -m vi-command -x '"p": "pbpaste"'
+fi
 
 
 # }}}
@@ -91,30 +100,38 @@ alias python='python3'
 alias pip='pip3'
 alias jn='jupyter notebook'
 
-# Matlab
-alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
-'-nodesktop -nosplash '
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    # Matlab
+    alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
+    '-nodesktop -nosplash '
 
-# Alias to open vim sourcing minimal vimrc file
-alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
+    # Alias to open vim sourcing minimal vimrc file
+    alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
-# Update brew, python, R and tlmgr (tlmgr requires password)
-alias ua='brew update && brew upgrade && pip-review --interactive &&'\
-'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
-'checkBuilt=TRUE)" && sudo tlmgr update --all'
+    # Update brew, python, R and tlmgr (tlmgr requires password)
+    alias ua='brew update && brew upgrade && pip-review --interactive &&'\
+    'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
+    'checkBuilt=TRUE)" && sudo tlmgr update --all'
 
-# Start Tmux attaching to an existing session named petobens or creating one
-# with such name
-alias tm='tmux new -A -s petobens'
+    # Start Tmux attaching to an existing session named petobens or creating one
+    # with such name
+    alias tm='tmux new -A -s petobens'
 
-# SSH and Tmux: connect to ssh and then start tmux creating a new session called
-# pedrof or attaching to an existing one with that name
-# Add -X after ssh to enable X11 forwarding
-alias emr='ssh prd-emr-master -t tmux -f '\
-'"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
-# Presto client
-alias pcli='ssh prd-emr-master -t tmux -f '\
-'"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
-'"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
+    # SSH and Tmux: connect to ssh and then start tmux creating a new session
+    # called pedrof or attaching to an existing one with that name
+    # Add -X after ssh to enable X11 forwarding
+    alias emr='ssh prd-emr-master -t tmux -f '\
+    '"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
+    # Presto client
+    alias pcli='ssh prd-emr-master -t tmux -f '\
+    '"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
+    '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
+
+    # Ubuntu instance
+    alias ui='ssh ubuntu@172.17.14.179'
+
+else
+    alias tm='tmux new -A -s pedrof'
+fi
 
 # }}}
