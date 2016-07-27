@@ -103,15 +103,15 @@ alias jn='jupyter notebook'
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Matlab
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
-    '-nodesktop -nosplash '
+'-nodesktop -nosplash '
 
     # Alias to open vim sourcing minimal vimrc file
     alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
     # Update brew, python, R and tlmgr (tlmgr requires password)
     alias ua='brew update && brew upgrade && pip-review --interactive &&'\
-    'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
-    'checkBuilt=TRUE)" && sudo tlmgr update --all'
+'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
+'checkBuilt=TRUE)" && sudo tlmgr update --all'
 
     # Start Tmux attaching to an existing session named petobens or creating one
     # with such name
@@ -121,11 +121,11 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # called pedrof or attaching to an existing one with that name
     # Add -X after ssh to enable X11 forwarding
     alias emr='ssh prd-emr-master -t tmux -f '\
-    '"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
+'"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
     # Presto client
     alias pcli='ssh prd-emr-master -t tmux -f '\
-    '"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
-    '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
+'"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
+'"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
 
     # Ubuntu instance
     alias ui='ssh ubuntu@172.17.14.179'
@@ -133,7 +133,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 else
     # Update packages and python
     alias ua='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get'\
-    ' autoremove'
+' autoremove'
     alias tm='tmux new -A -s pedrof'
 fi
 
