@@ -15,6 +15,7 @@
 # Python
 __pycache__/
 *.pyc
+/venv/
 
 # OSX
 .DS_Store*

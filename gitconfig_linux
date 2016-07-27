@@ -1,0 +1,10 @@
+[user]
+	name = petobens
+	email = ferrari_pedro@yahoo.com
+[push]
+	default = simple
+[core]
+	editor = vim
+    excludesfile = ~/.gitignore
+[web]
+	browser = start
