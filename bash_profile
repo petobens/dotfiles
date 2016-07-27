@@ -131,6 +131,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     alias ui='ssh ubuntu@172.17.14.179'
 
 else
+    # Update packages and python
+    alias ua='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get'\
+    ' autoremove'
     alias tm='tmux new -A -s pedrof'
 fi
 
