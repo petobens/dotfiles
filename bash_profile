@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 27 Jul 2016
+# Last Modified: 28 Jul 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -135,7 +135,7 @@ else
     alias sudo='sudo '
     # Update packages and python
     alias ua='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get'\
-' autoremove'
+' autoremove && sudo pip-review --interactive'
     # Open tmux session  for pedrof
     alias tm='tmux new -A -s pedrof'
 fi
