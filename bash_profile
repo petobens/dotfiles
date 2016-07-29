@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 28 Jul 2016
+# Last Modified: 29 Jul 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -127,8 +127,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 '"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
 
-    # Ubuntu instance
-    alias ui='ssh ubuntu@172.17.14.179'
+    # Ubuntu instance (with tmux)
+    alias ui='ssh ubuntu@172.17.14.179 -t tmux new -A -s pedrof'
 
 else
     # Expand aliases when using sudo
@@ -136,8 +136,6 @@ else
     # Update packages and python
     alias ua='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get'\
 ' autoremove && sudo pip-review --interactive'
-    # Open tmux session  for pedrof
-    alias tm='tmux new -A -s pedrof'
 fi
 
 # }}}
