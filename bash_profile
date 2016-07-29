@@ -128,7 +128,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
 
     # Ubuntu instance (with tmux)
-    alias ui='ssh ubuntu@172.17.14.179 -t tmux new -A -s pedrof'
+    alias ui='ssh ubuntu@172.17.14.179'
 
 else
     # Expand aliases when using sudo
@@ -136,6 +136,7 @@ else
     # Update packages and python
     alias ua='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get'\
 ' autoremove && sudo pip-review --interactive'
+    alias tm='tmux new -A -s pedrof'
 fi
 
 # }}}
