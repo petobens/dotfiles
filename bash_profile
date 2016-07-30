@@ -30,7 +30,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export LANG=en_US.UTF-8
 
 else
-    export TERM="xterm-256color"
+    # export TERM="xterm-256color"
 fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
