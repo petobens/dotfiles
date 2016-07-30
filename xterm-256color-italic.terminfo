@@ -1,0 +1,3 @@
+tmux-256color-italic|tmux with 256 colors and italic,
+        sitm=\ePtmux;\e\E[3m\e\\, ritm=\ePtmux;\e\E[23m\e\\,
+                use=xterm-256color,
