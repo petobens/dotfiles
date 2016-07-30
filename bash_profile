@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 29 Jul 2016
+# Last Modified: 30 Jul 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -126,6 +126,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Ubuntu instance (with tmux)
     alias ui='ssh ubuntu@172.17.14.179'
+    alias utm='ssh ubuntu@172.17.14.179 -t tmux new -A -s pedrof'
 
 else
     # Expand aliases when using sudo
