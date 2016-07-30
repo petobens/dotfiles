@@ -105,7 +105,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Alias to open vim sourcing minimal vimrc file
     alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
-    # Update brew, python, R and tlmgr (tlmgr requires password)
+    # Update brew, python, R and tex (tlmgr requires password)
     alias ua='brew update && brew upgrade && pip-review --interactive &&'\
 'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
 'checkBuilt=TRUE)" && sudo tlmgr update --all'
@@ -114,8 +114,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # with such name
     alias tm='tmux new -A -s petobens'
 
-    # SSH and Tmux: connect to ssh and then start tmux creating a new session
-    # called pedrof or attaching to an existing one with that name
+    # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
+    # session called pedrof or attaching to an existing one with that name.
     # Add -X after ssh to enable X11 forwarding
     alias emr='ssh prd-emr-master -t tmux -f '\
 '"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
