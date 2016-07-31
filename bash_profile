@@ -134,7 +134,7 @@ else
     # Update packages and python
     alias ua='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get'\
 ' autoremove && sudo pip-review --interactive'
-    alias tm='tmux new -A -s pedrof'
+    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s pedrof'
 fi
 
 # }}}
