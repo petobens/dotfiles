@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 30 Jul 2016
+# Last Modified: 31 Jul 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -111,8 +111,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 'checkBuilt=TRUE)" && sudo tlmgr update --all'
 
     # Start Tmux attaching to an existing session named petobens or creating one
-    # with such name
-    alias tm='tmux new -A -s petobens'
+    # with such name (we also indicate the tmux.conf file location)
+    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s petobens'
 
     # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
     # session called pedrof or attaching to an existing one with that name.
