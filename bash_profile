@@ -30,7 +30,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export LANG=en_US.UTF-8
 
 else
-    export LS_COLORS="$LS_COLORS:'di=0;35:'"
+    # Highlight directories in blue, symbolic links in purple and exectuable
+    # files in red
+    export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
 fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
