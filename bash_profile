@@ -79,7 +79,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     bind -m vi-command -x '"p": "pbpaste"'
 fi
 
-
 # }}}
 # Alias {{{
 
@@ -91,7 +90,6 @@ alias c='clear all'
 alias v='vim'
 alias ht='htop'
 alias o='open'
-alias ls='ls -F' # Differentiate folders, symbolic links, etc.
 
 # Python
 alias python='python3'
@@ -99,6 +97,10 @@ alias pip='pip3'
 alias jn='jupyter notebook'
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
+
+    # Differentiate and use colors for directories, symbolic links, etc.
+    alias ls='ls -GF'
+
     # Matlab
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
 '-nodesktop -nosplash '
@@ -131,6 +133,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 '-s pedrof'
 
 else
+    # Differentiate and use colors for directories, symbolic links, etc.
+    alias ls='ls -F --color=auto'
     # Expand aliases when using sudo
     alias sudo='sudo '
     # Update packages and python
