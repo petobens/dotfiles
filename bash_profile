@@ -91,6 +91,7 @@ alias c='clear all'
 alias v='vim'
 alias ht='htop'
 alias o='open'
+alias ls='ls -F' # Differentiate folders, symbolic links, etc.
 
 # Python
 alias python='python3'
