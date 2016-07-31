@@ -126,7 +126,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Ubuntu instance (with tmux)
     alias ui='ssh ubuntu-as'
-    alias utm='ssh ubuntu-as -t tmux new -A -s pedrof'
+    alias utm='ssh ubuntu-as -t tmux -f "/home/ubuntu/.tmux/tmux.conf" new -A '\
+'-s pedrof'
 
 else
     # Expand aliases when using sudo
@@ -134,6 +135,7 @@ else
     # Update packages and python
     alias ua='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get'\
 ' autoremove && sudo pip-review --interactive'
+    # Open tmux loading config file
     alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s pedrof'
 fi
 
