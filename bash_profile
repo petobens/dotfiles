@@ -81,7 +81,8 @@ bind -m vi-command '"v": ""'
 
 # Paste with p if in a tmux session
 if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
-    bind -m vi-command -x '"p": "tmux set-buffer $(pbpaste); tmux paste-buffer"'
+    # FIXME: This is flaky
+    bind -m vi-command -x '"p": "tmux set-buffer \"$(pbpaste)\"; tmux paste-buffer"'
 fi
 
 # }}}
