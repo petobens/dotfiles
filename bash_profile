@@ -87,7 +87,7 @@ fi
 # }}}
 # Alias {{{
 
-# Frequent bash commands
+# Bash
 alias u='cd ..'
 alias h='cd ~'
 alias q='exit'
@@ -95,6 +95,13 @@ alias c='clear all'
 alias v='vim'
 alias ht='htop'
 alias o='open'
+
+# Git (similar to vim's fugitive)
+alias gs='git status'
+alias gco='git checkout'
+alias gb='git branch'
+alias gp='git push'
+alias gP='git pull'
 
 # Python
 alias python='python3'
