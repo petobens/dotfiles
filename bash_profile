@@ -69,7 +69,7 @@ bind -m vi-insert '"\C-p": previous-history'
 bind -m vi-insert '"\C-n": next-history'
 bind -m vi-insert '"\C-e": end-of-line'
 bind -m vi-insert '"\C-a": beginning-of-line'
-#  Paste system clipboard
+# TODO: Paste system clipboard
 # inoremap <A-p> <C-R>*
 
 # Command mode
@@ -79,9 +79,9 @@ bind -m vi-command '"k": ""'
 bind -m vi-command '"j": ""'
 bind -m vi-command '"v": ""'
 
-# FIXME: paste with p
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    bind -m vi-command -x '"p": "pbpaste"'
+# Paste with p if in a tmux session
+if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
+    bind -m vi-command -x '"p": "tmux set-buffer $(pbpaste); tmux paste-buffer"'
 fi
 
 # }}}
