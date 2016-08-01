@@ -150,6 +150,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Ubuntu instance (with tmux)
     alias ui='ssh ubuntu-as'
+    # When using linux brew we need to specify a full path to the tmux
+    # executable
     alias utm='ssh ubuntu-as -t /home/ubuntu/.linuxbrew/bin/tmux -f'\
 '"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
 
