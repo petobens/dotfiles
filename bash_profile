@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 31 Jul 2016
+# Last Modified: 01 Aug 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -30,6 +30,14 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export LANG=en_US.UTF-8
 
 else
+    # Linuxbrew
+    export PATH="$HOME/.linuxbrew/bin:$PATH"
+    export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
+    export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
+
+    # R libraries
+    export R_LIBS="$HOME/.linuxbrew/lib/R/site-library"
+
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
@@ -54,7 +62,7 @@ POWERLINE_BASH_SELECT=1
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     . /usr/local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
 else
-    . /usr/local/lib/python3.4/dist-packages/powerline/bindings/bash/powerline.sh
+    . $HOME/.linuxbrew/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
 fi
 
 # }}}
@@ -122,7 +130,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
     # Update brew, python, R and tex (tlmgr requires password)
-    alias ua='brew update && brew upgrade && pip-review --interactive &&'\
+    alias ua='brew update && brew upgrade && pip-review --interactive && '\
 'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
 'checkBuilt=TRUE)" && sudo tlmgr update --all'
 
@@ -150,9 +158,15 @@ else
     alias ls='ls -F --color=auto'
     # Expand aliases when using sudo
     alias sudo='sudo '
-    # Update packages and python
-    alias ua='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get'\
-' autoremove && sudo pip-review --interactive'
+    # Alias to open vim sourcing minimal vimrc file
+    alias mvrc='vim -u $HOME/pedrof/vimfiles/vimrc_min'
+    # Update packages (using apt-get)
+    alias aptu='sudo apt-get update && sudo apt-get dist-upgrade && sudo '\
+'apt-get autoremove'
+    # Update brew and python
+    alias ua='brew update && brew upgrade && pip-review --interactive && '\
+'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
+'checkBuilt=TRUE)"'
     # Open tmux loading config file
     alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s pedrof'
 fi
