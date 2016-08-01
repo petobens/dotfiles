@@ -12,15 +12,15 @@
 # Options {{{
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
+    # Set brew directory
+    brew_dir="/usr/local"
+
     # Path settings
     PATH="/usr/bin:/bin:/usr/sbin:/sbin"
-    export PATH="/usr/local/bin:/usr/local/sbin:$PATH" # homebrew
+    export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH" # homebrew
     export PATH="$HOME/prog-tools/arara4:$PATH" # arara
     export PATH="/Library/TeX/texbin:$PATH" # basictex
     export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
-
-    # R libraries
-    export R_LIBS="/usr/local/lib/R/site-library"
 
     # Symlink cask apps to Applications folder
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
@@ -31,17 +31,18 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 
 else
     # Linuxbrew
-    export PATH="$HOME/.linuxbrew/bin:$PATH"
-    export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
-    export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
-
-    # R libraries
-    export R_LIBS="$HOME/.linuxbrew/lib/R/site-library"
+    brew_dir="$HOME/.linuxbrew"
+    export PATH="$brew_dir/bin:$PATH"
+    export MANPATH="$brew_dir/share/man:$MANPATH"
+    export INFOPATH="$brew_dir/share/info:$INFOPATH"
 
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
 fi
+
+# R libraries
+export R_LIBS="$brew_dir/lib/R/site-library"
 
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
@@ -59,11 +60,7 @@ bind "set show-all-if-ambiguous on"
 powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1
 POWERLINE_BASH_SELECT=1
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    . /usr/local/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
-else
-    . $HOME/.linuxbrew/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
-fi
+. $brew_dir/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
 
 # }}}
 # Bindings {{{
