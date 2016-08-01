@@ -150,8 +150,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Ubuntu instance (with tmux)
     alias ui='ssh ubuntu-as'
-    alias utm='ssh ubuntu-as -t tmux -f "/home/ubuntu/.tmux/tmux.conf" new -A '\
-'-s pedrof'
+    alias utm='ssh ubuntu-as -t /home/ubuntu/.linuxbrew/bin/tmux -f'\
+'"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
 
 else
     # Differentiate and use colors for directories, symbolic links, etc.
