@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 01 Aug 2016
+# Last Modified: 06 Aug 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -105,6 +105,7 @@ alias o='open'
 # Git (similar to vim's fugitive)
 alias gs='git status'
 alias gco='git checkout'
+alias gcp='git cherry-pick'
 alias gb='git branch'
 alias gp='git push'
 alias gP='git pull'
