@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 31 Jul 2016
+-- Last Modified: 15 Aug 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -215,9 +215,9 @@ function Tmux()
     local win_title = hs.window.focusedWindow():title()
     hs.timer.usleep(120000) -- Wait for title to update
     if not string.match(win_title:lower(), "tmux") then
-            hs.eventtap.keyStrokes("tmux -f \"/Users/Pedro/.tmux/tmux.conf\"" ..
-            " new -A -s petobens")
-            hs.eventtap.keyStroke({""}, "return")
+        -- Use tmux alias defined in bash_profile
+        hs.eventtap.keyStrokes("tm")
+        hs.eventtap.keyStroke({""}, "return")
     end
 end
 hs.hotkey.bind(cmd_ctrl, "c", Tmux)
