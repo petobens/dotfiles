@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 06 Aug 2016
+# Last Modified: 17 Aug 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -43,6 +43,9 @@ fi
 
 # R libraries
 export R_LIBS="$brew_dir/lib/R/site-library"
+
+# Set editor to vim
+export EDITOR=vim
 
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
