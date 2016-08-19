@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 17 Aug 2016
+# Last Modified: 18 Aug 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -131,7 +131,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
 
     # Update brew, python, R and tex (tlmgr requires password)
-    alias ua='brew update && brew upgrade && pip-review --interactive && '\
+    alias ua='brew update && brew upgrade; pip-review --interactive; '\
 'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
 'checkBuilt=TRUE)" && sudo tlmgr update --all'
 
@@ -167,7 +167,7 @@ else
     alias aptu='sudo apt-get update && sudo apt-get dist-upgrade && sudo '\
 'apt-get autoremove'
     # Update brew and python
-    alias ua='brew update && brew upgrade && pip-review --interactive && '\
+    alias ua='brew update && brew upgrade; pip-review --interactive; '\
 'R --slave --no-save --no-restore -e "update.packages(ask=FALSE, '\
 'checkBuilt=TRUE)"'
     # Open tmux loading config file
