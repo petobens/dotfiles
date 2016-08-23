@@ -16,6 +16,7 @@
 __pycache__/
 *.pyc
 /venv/
+.coverage
 
 # OSX
 .DS_Store*
