@@ -2,11 +2,11 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 28 Jul 2016
+" Last Modified: 23 Aug 2016
 "   Description: My pentadactylrc
 "===============================================================================
 " If nightly builds are not available we use releases from the following fork:
-" https://github.com/prmtl/dactyl
+" https://github.com/willsALMANJ/pentadactyl-signed
 " Note: We use Tile Tabs and Auto Reload addons
 " TODO: Learn caret mode where one can use linewise ($) maps "
 " TODO: Is it possible to center search?
