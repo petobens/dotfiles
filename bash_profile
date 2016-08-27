@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 18 Aug 2016
+# Last Modified: 27 Aug 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
@@ -28,7 +28,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Set english utf-8 locale
     export LC_ALL=en_US.UTF-8
     export LANG=en_US.UTF-8
-
 else
     # Linuxbrew
     brew_dir="$HOME/.linuxbrew"
@@ -41,11 +40,14 @@ else
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
 fi
 
-# R libraries
-export R_LIBS="$brew_dir/lib/R/site-library"
+# Set shell to bash
+export SHELL="$brew_dir/bin/bash"
 
 # Set editor to vim
 export EDITOR=vim
+
+# R libraries
+export R_LIBS="$brew_dir/lib/R/site-library"
 
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
