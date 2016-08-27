@@ -46,9 +46,6 @@ else
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
 fi
 
-# Set shell to bash
-export SHELL="$brew_dir/bin/bash"
-
 # Set editor to vim
 export EDITOR=vim
 
