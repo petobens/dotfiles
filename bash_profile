@@ -28,6 +28,12 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Set english utf-8 locale
     export LC_ALL=en_US.UTF-8
     export LANG=en_US.UTF-8
+
+    # Enable terminal colors and highlight directories in blue, symbolic links
+    # in purple and executable files in red (the actual colors depend on iTerm's
+    # colorscheme)
+    export CLICOLOR=1
+    export LSCOLORS=exfxCxDxbxegedabagaced
 else
     # Linuxbrew
     brew_dir="$HOME/.linuxbrew"
