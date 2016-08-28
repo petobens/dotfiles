@@ -2,13 +2,9 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 27 Aug 2016
+# Last Modified: 28 Aug 2016
 #   Description: My Bash Profile
 #===============================================================================
-# Note: in Iterm we use the afterglow colorscheme and powerline plugin. In
-# addition we modifiy the cursor and background colors to match the hex values
-# of those of our vim colorscheme
-
 # Options {{{
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
@@ -32,6 +28,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Enable terminal colors and highlight directories in blue, symbolic links
     # in purple and executable files in red (the actual colors depend on iTerm's
     # colorscheme)
+    # Note: in Iterm we use the afterglow colorscheme
     export CLICOLOR=1
     export LSCOLORS=exfxCxDxbxegedabagaced
 else
