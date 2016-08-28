@@ -7,6 +7,7 @@
 # Temp files
 *.swp
 *.swo
+.cache/
 
 # Windows
 *.dll
