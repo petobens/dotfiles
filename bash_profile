@@ -125,6 +125,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Differentiate and use colors for directories, symbolic links, etc.
     alias ls='ls -GF'
 
+    # Change directory and list files
+    cd() { builtin cd "$@" && ls -GF; }
+
     # Matlab
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
 '-nodesktop -nosplash '
@@ -161,6 +164,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 else
     # Differentiate and use colors for directories, symbolic links, etc.
     alias ls='ls -F --color=auto'
+    # Change directory and list files
+    cd() { builtin cd "$@" && ls -F --color=auto; }
     # Expand aliases when using sudo
     alias sudo='sudo '
     # Alias to open vim sourcing minimal vimrc file
