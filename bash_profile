@@ -46,10 +46,6 @@ fi
 # Set editor to vim
 export EDITOR=vim
 
-# Set shell to bash
-# FIXME: This seems to give LC_NUMERIC locale warning
-# export SHELL=$(which bash)
-
 # R libraries
 export R_LIBS="$brew_dir/lib/R/site-library"
 
