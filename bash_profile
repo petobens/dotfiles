@@ -47,7 +47,8 @@ fi
 export EDITOR=vim
 
 # Set shell to bash
-export SHELL=$(which bash)
+# FIXME: This seems to give LC_NUMERIC locale warning
+# export SHELL=$(which bash)
 
 # R libraries
 export R_LIBS="$brew_dir/lib/R/site-library"
@@ -163,6 +164,11 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # executable
     alias utm='ssh ubuntu-as -t /home/ubuntu/.linuxbrew/bin/tmux -f'\
 '"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
+
+    # Fix open in tmux (requires installing reattach-to-user-namespace)
+    if [[ '$TMUX' ]]; then
+        alias open='reattach-to-user-namespace open'
+    fi
 
 else
     # Differentiate and use colors for directories, symbolic links, etc.
