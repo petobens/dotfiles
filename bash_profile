@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 28 Aug 2016
+# Last Modified: 03 Sep 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -45,6 +45,9 @@ fi
 
 # Set editor to vim
 export EDITOR=vim
+
+# Set shell to bash
+export SHELL=$(which bash)
 
 # R libraries
 export R_LIBS="$brew_dir/lib/R/site-library"
