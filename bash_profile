@@ -189,9 +189,15 @@ fi
 # }}}
 # Fzf {{{
 
-# fzf settings
+# Base settings
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_COMMAND='ag -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# Extend list of commands with fuzzy completion (basically our aliases)
+complete -F _fzf_file_completion -o default -o bashdefault v o
+
+# Disable tmux integration (because it crashes otherwise)
+export FZF_TMUX='0'
 
 # }}}
