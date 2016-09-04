@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 03 Sep 2016
+# Last Modified: 04 Sep 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -185,5 +185,13 @@ else
     # Open tmux loading config file
     alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s pedrof'
 fi
+
+# }}}
+# Fzf {{{
+
+# fzf settings
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # }}}
