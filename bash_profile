@@ -79,8 +79,6 @@ bind -m vi-insert '"\C-p": previous-history'
 bind -m vi-insert '"\C-n": next-history'
 bind -m vi-insert '"\C-e": end-of-line'
 bind -m vi-insert '"\C-a": beginning-of-line'
-# TODO: Paste system clipboard
-# inoremap <A-p> <C-R>*
 
 # Command mode
 bind -m vi-command '"H": beginning-of-line'
@@ -189,15 +187,24 @@ fi
 # }}}
 # Fzf {{{
 
-# Base settings
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-export FZF_DEFAULT_COMMAND='ag -g ""'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+if [ -f ~/.fzf.bash ]; then
+    # Enable fzf (as well as default mappings and completions)
+    source ~/.fzf.bash
 
-# Extend list of commands with fuzzy completion (basically our aliases)
-complete -F _fzf_file_completion -o default -o bashdefault v o
+    # Use ag (not that this will only list files and not directories)
+    export FZF_DEFAULT_COMMAND='ag -g ""'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-# Disable tmux integration (because it crashes otherwise)
-export FZF_TMUX='0'
+    # Extend list of commands with fuzzy completion (basically add our aliases)
+    complete -F _fzf_file_completion -o default -o bashdefault v o
+
+    # Disable tmux integration (because it crashes)
+    # FIXME: See why this doesn't work
+    export FZF_TMUX='0'
+
+    # Fix Alt-C mapping (since we set Alt to act as meta key)
+    bind '"ã": "\C-x\C-addi$(__fzf_cd__)\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"ã": "ddi$(__fzf_cd__)\C-x\C-e\C-x\C-r\C-m"'
+fi
 
 # }}}
