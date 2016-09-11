@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 15 Aug 2016
+-- Last Modified: 11 Sep 2016
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -210,6 +210,12 @@ hs.hotkey.bind(cmd_ctrl, "d", function()
 function Tmux()
     -- Launch or open iTerm
     hs.application.launchOrFocus("iTerm")
+
+    -- Make sure we are on iTerm
+    local iterm = hs.application.find("iTerm")
+    while not iterm:isFrontmost() do
+        iterm:activate()
+    end
 
     -- Open tmux (loading tmux config file)
     local win_title = hs.window.focusedWindow():title()
