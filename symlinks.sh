@@ -7,7 +7,7 @@
 #   Description: Create all necessary symbolic links
 #===============================================================================
 # TODO: Use a loop and check if symlinks already exist
-dotfiles_dir="$HOME/git-repos/dotfiles"
+dotfiles_dir="$HOME/git-repos/private/dotfiles"
 ln -s "$dotfiles_dir/ctags" "$HOME/.ctags"
 ln -s "$dotfiles_dir/hammerspoon" "$HOME/.hammerspoon"
 ln -s "$dotfiles_dir/pentadactyl" "$HOME/.pentadactyl"
@@ -19,7 +19,7 @@ ln -s "$dotfiles_dir/vintrc.yaml" "$HOME/.vintrc.yaml"
 ln -s "$dotfiles_dir/arararc.yaml" "$HOME/.arararc.yaml"
 ln -s "$dotfiles_dir/Rprofile" "$HOME/.Rprofile"
 ln -s "$dotfiles_dir/bash_profile" "$HOME/.bash_profile"
-ln -s "$dotfiles_dir/powerline_config.json" "$HOME/.config/powerline/config.json"
+ln -s "$dotfiles_dir/config/powerline" "$HOME/.config/powerline"
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     ln -s "$dotfiles_dir/gitconfig_mac" "$HOME/.gitconfig"
