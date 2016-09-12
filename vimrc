@@ -10,8 +10,8 @@
 " Move highlight and airline colors to heraldish; see itchyny landscape.vim
 " SQL support?
 " Filter to convert markdown to html, useful for mails
-" Neovim issues: fix spell, ctrl-h, tex completion, alt mappings; set data_dir
-" for shada and rplugin.
+" Neovim issues: fix spell, tex completion, alt mappings; set data_dir
+" for shada and rplugin; disable nvimlog
 
 " Preamble {{{
 
@@ -630,12 +630,6 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-h> <C-w>h
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
-
-" In neovim c-h is broken:
-" FIXME: Find better fix for this
-if has('nvim')
-    nmap <BS> <C-W>h
-endif
 
 " Increase/decrease size and width (left, down, up and right) using ctrl-alt
 nnoremap <C-A-h> <C-w>2<
