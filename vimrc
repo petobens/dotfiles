@@ -1484,18 +1484,7 @@ augroup ps_jedi
     " Set jedi completion to work with neocomplete
     " au FileType python setlocal omnifunc=jedi#completions
     au BufRead,BufNewFile *.py setlocal omnifunc=jedi#completions
-    " Define mappings
-    au Filetype python nmap <silent> <buffer> <leader>vm :call
-                \ <SID>ViewPyModule()<CR>
 augroup END
-
-function! s:ViewPyModule()
-    let import = input('Enter module name: ')
-    if empty(import)
-        return
-    endif
-    execute 'Pyimport ' . import
-endfunction
 
 " }}}
 " NerdCommenter {{{

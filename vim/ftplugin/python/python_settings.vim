@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 04 Sep 2016
+" Last Modified: 12 Sep 2016
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -1033,6 +1033,26 @@ function! s:ViewPdfFigure()
 endfunction
 
 " }}}
+" View Module {{{
+
+" Function to view a module source code
+if !exists('*s:ViewPyModule()')
+    function! s:ViewPyModule()
+        if !exists(':Pyimport')
+            echohl Error
+            echo 'jedi-vim is not installed.'
+            echohl none
+            return
+        endif
+        let import = input('Enter module name: ')
+        if empty(import)
+            return
+        endif
+        execute 'Pyimport ' . import
+    endfunction
+endif
+
+" }}}
 
 " }}}
 " Mappings {{{
@@ -1088,6 +1108,9 @@ nnoremap <buffer> <silent> <S-k> :call <SID>PyDoc()<CR>
 
 " View PDF figure
 nnoremap <buffer> <silent> <Leader>vp :call <SID>ViewPdfFigure()<CR>
+
+" View module source code
+nnoremap <buffer> <silent> <Leader>vm :call <SID>ViewPyModule()<CR>
 
 " Close output buffer
 nnoremap <buffer> <silent> <Leader>oc :silent! bdelete python_output<CR>

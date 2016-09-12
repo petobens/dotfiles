@@ -6,7 +6,7 @@
 "   Description: Deoplete configuration
 "===============================================================================
 " Autoclose preview when completion is finished
-augroup deoplete_pl
+augroup ps_deoplete
     au!
     au CompleteDone * pclose!
 augroup END
