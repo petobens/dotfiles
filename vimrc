@@ -10,13 +10,10 @@
 " Move highlight and airline colors to heraldish; see itchyny landscape.vim
 " SQL support?
 " Filter to convert markdown to html, useful for mails
-" Use Neovim (and try deoplete and denite plugins)
+" Neovim issues: fix spell, ctrl-h, tex completion, alt mappings; set data_dir
+" for shada and rplugin.
 
 " Preamble {{{
-
-if !has('nvim')
-    set nocompatible   " Get out of vi-compatible
-endif
 
 " Define OS variable
 let s:is_win = has('win32') || has('win64')
