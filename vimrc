@@ -10,8 +10,8 @@
 " Move highlight and airline colors to heraldish; see itchyny landscape.vim
 " SQL support?
 " Filter to convert markdown to html, useful for mails
-" Neovim issues: fix spell, tex completion, fuzzy search; set data_dir for
-" shada, rplugin and deoplete; disable nvimlog
+" Neovim issues: tex completion, fuzzy search; set data_dir for shada, rplugin
+" and deoplete
 
 " Preamble {{{
 
