@@ -31,6 +31,7 @@ if !has('nvim')
 else
     let $DOTVIM = expand('$HOME/.config/nvim')
 endif
+let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
 
 " OS specific settings
 if s:is_win
@@ -706,9 +707,9 @@ nnoremap <Leader>wq :w!<CR>:q!<CR>
 nnoremap <Leader>nw :noautocmd w!<CR>
 
 " Fast editing and reloading of the vimrc file
-nnoremap <silent> <Leader>ev :e $MYVIMRC<CR>
-nnoremap <silent> <Leader>rv :so $MYVIMRC<CR>
-nnoremap <silent> <Leader>em :e $DOTVIM/vimrc_min<CR>
+nnoremap <silent> <Leader>ev :e $DOTFILES/vimrc<CR>
+nnoremap <silent> <Leader>rv :so $DOTFILES/vimrc<CR>
+nnoremap <silent> <Leader>em :e $DOTFILES/vim/vimrc_min<CR>
 
 " Change working directory to that of the current file (autochdir seems to
 " conflict with some plugins)
@@ -857,9 +858,9 @@ augroup ft_ahk_hs
 augroup END
 
 if s:is_mac
-    nnoremap <silent> <Leader>eh :e $HOME/.hammerspoon/init.lua<CR>
+    nnoremap <silent> <Leader>eh :e $DOTFILES/hammerspoon/init.lua<CR>
 else
-    nnoremap <silent> <Leader>eh :e $HOME/.autohotkey.ahk<CR>
+    nnoremap <silent> <Leader>eh :e $DOTFILES/autohotkey.ahk<CR>
 endif
 
 " }}}
@@ -965,7 +966,7 @@ augroup ft_pentadactyl
     au FileType pentadactyl setlocal foldmethod=marker
 augroup END
 
-nnoremap <silent> <Leader>ep :e $HOME/.pentadactylrc<CR>
+nnoremap <silent> <Leader>ep :e $DOTFILES/pentadactylrc<CR>
 
 " }}}
 " Python {{{
