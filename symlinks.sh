@@ -7,6 +7,7 @@
 #   Description: Create all necessary symbolic links
 #===============================================================================
 # TODO: Use a loop and check if symlinks already exist
+# FIXME: symbolic links to directories replicate target directory
 dotfiles_dir="$HOME/git-repos/private/dotfiles"
 ln -s "$dotfiles_dir/ctags" "$HOME/.ctags"
 ln -s "$dotfiles_dir/hammerspoon" "$HOME/.hammerspoon"
@@ -16,6 +17,8 @@ ln -s "$dotfiles_dir/gitignore" "$HOME/.gitignore"
 ln -s "$dotfiles_dir/tmux" "$HOME/.tmux"
 ln -s "$dotfiles_dir/vim/" "$HOME/.vim"
 ln -s "$dotfiles_dir/vimrc" "$HOME/.vimrc"
+ln -s "$dotfiles_dir/vim/" "$HOME/.config/nvim"
+ln -s "$dotfiles_dir/vimrc" "$HOME/.config/nvim/init.vim"
 ln -s "$dotfiles_dir/vintrc.yaml" "$HOME/.vintrc.yaml"
 ln -s "$dotfiles_dir/arararc.yaml" "$HOME/.arararc.yaml"
 ln -s "$dotfiles_dir/Rprofile" "$HOME/.Rprofile"
