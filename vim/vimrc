@@ -23,10 +23,14 @@ let s:is_mac = !s:is_win && (has('mac') || has('macunix') || has('gui_macvim')
 let s:is_linux = !s:is_win && !s:is_mac
 
 " Define vimfiles directory
-if s:is_win
-    let $DOTVIM = expand('$HOME/vimfiles')
+if !has('nvim')
+    if s:is_win
+        let $DOTVIM = expand('$HOME/vimfiles')
+    else
+        let $DOTVIM = expand('$HOME/.vim')
+    endif
 else
-    let $DOTVIM = expand('$HOME/.vim')
+    let $DOTVIM = expand('$HOME/.config/nvim')
 endif
 
 " OS specific settings
@@ -103,6 +107,9 @@ call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})
 " Python
 call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
 call dein#add('tweekmonster/impsort.vim', {'on_ft' : 'python'})
+if has('nvim')
+    call dein#add('zchee/deoplete-jedi')
+endif
 
 " Tim Pope plugins
 call dein#add('tpope/vim-abolish')
@@ -115,20 +122,25 @@ call dein#add('tpope/vim-surround')
 
 " Shougo plugins
 call dein#add('Shougo/dein.vim')
-call dein#add('Shougo/neocomplete.vim')
 call dein#add('Shougo/unite.vim')
 call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
-" Note: when sharing bundle folder in the cloud we need to manually build
-" vimproc for either windows or mac (since it is built automatically only for
-" the os where we run dein#update())
-let s:vimproc_make = 'make -f make_mac.mak'
-if s:is_win
-    let s:vimproc_make = 'tools\\update-dll-mingw'
-elseif s:is_linux
-    let s:vimproc_make = 'make'
-endif
-call dein#add('Shougo/vimproc.vim', {'build' : s:vimproc_make})
 call dein#add('Shougo/vimshell.vim')
+if !has('nvim')
+    call dein#add('Shougo/neocomplete.vim')
+    " Note: when sharing bundle folder in the cloud we need to manually build
+    " vimproc for either windows or mac (since it is built automatically only
+    " for the os where we run dein#update())
+    let s:vimproc_make = 'make -f make_mac.mak'
+    if s:is_win
+        let s:vimproc_make = 'tools\\update-dll-mingw'
+    elseif s:is_linux
+        let s:vimproc_make = 'make'
+    endif
+    call dein#add('Shougo/vimproc.vim', {'build' : s:vimproc_make})
+else
+    call dein#add('Shougo/deoplete.nvim')
+    " call dein#add('Shougo/denite.nvim')
+endif
 " Unite sources
 call dein#add('Shougo/neomru.vim')
 call dein#add('Shougo/neoyank.vim')
@@ -181,19 +193,25 @@ augroup END
 nnoremap <silent> <Leader>ps :so $CACHE/tmp/session/vim_session.vim<CR>
 
 " Change viminfo directory
-set viminfo+=n$CACHE/tmp/viminfo
+if !has('nvim')
+    set viminfo+=n$CACHE/tmp/viminfo
+endif
 
 " Set how many lines of ":" command and search patterns VIM has to remember
 set history=1000
 
 " Use the regular system clipboard for all yank, delete, change and put
 " operations and automatically yank visually selected text
-if s:is_win || s:is_mac
-    set clipboard=autoselect,unnamed
-elseif s:is_linux && has('unnamedplus')
-    " On linux with X11 use the + register (i.e the CLIPBOARD and not the
-    " PRIMARY register). On tmux use `xsel -i -b` to be consistent with this.
-    set clipboard=autoselectplus,unnamedplus
+if !has('nvim')
+    if s:is_win || s:is_mac
+        set clipboard=autoselect,unnamed
+    elseif s:is_linux && has('unnamedplus')
+        " On linux with X11 use the + register (i.e the CLIPBOARD and not the
+        " PRIMARY register). On tmux use `xsel -i -b` to be consistent with this.
+        set clipboard=autoselectplus,unnamedplus
+    endif
+else
+    set clipboard=unnamed
 endif
 
 " Persistent undo (i.e vim remembers undo actions even if file is closed and
@@ -292,7 +310,9 @@ set cmdwinheight=5
 " Don't update the display while executing macros
 set lazyredraw
 " Improve scrolling and redrawing in terminal
-set ttyfast
+if !has('nvim')
+    set ttyfast
+endif
 
 " Set visual bell (no beeping on errors)
 set visualbell
@@ -318,8 +338,10 @@ set fileformat=unix
 set fileformats=unix,dos
 
 " Improve font rendering on Windows
-if s:is_win
-    set renderoptions=type:directx,gamma:1.2,level:1,geom:1,renmode:5,taamode:1
+if !has('nvim')
+    if s:is_win
+        set renderoptions=type:directx,gamma:1.2,level:1,geom:1,renmode:5,taamode:1
+    endif
 endif
 
 " }}}
@@ -608,6 +630,12 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-h> <C-w>h
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
+" In neovim c-h is broken:
+" FIXME: Find better fix for this
+if has('nvim')
+    nmap <BS> <C-W>h
+endif
 
 " Increase/decrease size and width (left, down, up and right) using ctrl-alt
 nnoremap <C-A-h> <C-w>2<
@@ -1485,123 +1513,20 @@ map <Leader>ce <Plug>NERDCommenterToEOL
 map <Leader>ac <Plug>NERDCommenterAppend
 
 " }}}
-" Neocomplete {{{
+" N(D)eocomplete {{{
 
 " Vim completion settings
 set pumheight=15                          " Popup menu max height
 set complete=.                            " Scan only the current buffer
-set completeopt=menuone,preview
 
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#enable_fuzzy_completion = 1
-let g:neocomplete#enable_auto_select = 1
-let g:neocomplete#enable_auto_delimiter = 1
-let g:neocomplete#min_keyword_length = 2
-let g:neocomplete#auto_completion_start_length = 1
-let g:neocomplete#enable_auto_close_preview = 1
-let g:neocomplete#max_list = 100
-let g:neocomplete#data_directory = $CACHE . '/plugins/neocomplete'
-let g:neocomplete#enable_multibyte_completion = 1
-let g:neocomplete#sources#buffer#max_keyword_width = 90
-let g:neocomplete#enable_refresh_always = 1
-
-" Sources used for completion
-if !exists('g:neocomplete#sources')
-    let g:neocomplete#sources = {}
+" Use neocomplete in Vim and deoplete in Neovim
+if !has('nvim')
+    set completeopt=menuone,preview
+    source $DOTVIM/vim-nvim/neocomplete_rc.vim
+else
+    set completeopt=menuone,preview,noinsert
+    source $DOTVIM/vim-nvim/deoplete_rc.vim
 endif
-let g:neocomplete#sources.bib = ['ultisnips']
-let g:neocomplete#sources.snippets = ['ultisnips']
-let g:neocomplete#sources.tex = ['buffer', 'dictionary', 'ultisnips', 'file',
-        \ 'omni']
-
-" Dictionaries (and function to edit them if available)
-let g:neocomplete#sources#dictionary#dictionaries = {
-        \ 'default' : '',
-        \ 'tex' : $DOTVIM.'/ftplugin/tex/tex_dictionary.dict',
-        \ 'vimshell' : $DOTVIM.'/ftplugin/vimshell/vimshell_dictionary.dict'
-        \ }
-
-function! s:Edit_Dict()
-    let dict_file = get(g:neocomplete#sources#dictionary#dictionaries,&filetype)
-    if empty(dict_file)
-        echo 'No dictionary file found.'
-        return
-    endif
-    let split_windows = 'vsplit '
-    if winwidth(0) <= 2 * (&tw ? &tw : 80)
-        let split_windows = 'split '
-    endif
-    execute split_windows . dict_file
-endfunction
-
-" Keyword patterns
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns._ = '[A-Za-zá-úÁ-ÚñÑ_][0-9A-Za-zá-úÁ-ÚñÑ_]*'
-
-" Custom source patterns and attributes
-" FIXME: Pattern for python or vim files should be the initial value and not
-" default value: try echo neocomplete#get_keyword_pattern('python','buffer');
-" See issue #207; NO FIX
-let keyword_patterns = {}
-let keyword_patterns = {'tex' : '\h\w\{,2}:\%(\w*\|\w*_\w*\)\?'}
-let keyword_patterns2 = {'tex' : '\\\?\h\w*'}
-if dein#check_install(['neocomplete']) == 0
-    " FIXME: Buffer completion and ultisnips don't play well see #390
-    call neocomplete#custom#source('buffer', 'keyword_patterns',
-            \ keyword_patterns)
-    call neocomplete#custom#source('dictionary', 'keyword_patterns',
-            \ keyword_patterns2)
-    " FIXME: Ultisnips source will not show triggers after non-word characters
-    " or in the middle of words (UltiSnip#SnippetsInCurrentScope fails);
-    " See Ultisnips issue #330; NO FIX
-    call neocomplete#custom#source('ultisnips', 'rank', 1000)
-endif
-
-" Omni patterns
-if !exists('g:neocomplete#sources#omni#functions')
-    let g:neocomplete#sources#omni#functions= {}
-endif
-let g:neocomplete#sources#omni#functions.sql = 'sqlcomplete#Complete'
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-    let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#force_omni_input_patterns.tex =
-        \ '\v\\\a*cite\a*([^]]*\])?\{(|[^}]*,)' .
-        \ '|(includegraphics|input|include|includeonly)' .
-        \ '%(\s*\[[^]]*\])?\s*\{[^{}]*'
-let g:neocomplete#force_omni_input_patterns.python =
-    \ '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
-
-" Mappings
-if dein#check_install(['neocomplete']) == 0
-    " If a snippet is available enter expands it; if not available, it selects
-    " current candidate and closes the popup menu (i.e it ends completion)
-    inoremap <silent><expr><CR> pumvisible() ?
-        \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
-        \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
-    " Close popup and delete backward character
-    inoremap <expr><BS> neocomplete#smart_close_popup()."\<BS>"
-    " Undo completion i.e remove whole completed word (default plugin mapping)
-    inoremap <expr> <C-g> neocomplete#undo_completion()
-endif
-
-" Move in preview window with tab
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-" Neocomplete cache
-nnoremap <silent> <Leader>nc :NeoCompleteClean\|NeoCompleteBufferMakeCache\|
-            \ NeoCompleteDictionaryMakeCache<CR>
-" Edit dictionary files
-nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>
-
-" }}}
-" R-plugin {{{
-
-let vimrplugin_r_path = fnamemodify(exepath('R'), ':p:h') . '\x64'
 
 " }}}
 " Sneak {{{
@@ -2203,6 +2128,11 @@ if has('gui_running')
 else
     " Terminal settings
     set mouse=a        " Enable the mouse
+
+    " Enable cursorshape on neovim
+    if has('nvim')
+        let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+    endif
 
     " Make cursor shape mode dependent (note: we need double quotes!)
     if exists('$TMUX')
