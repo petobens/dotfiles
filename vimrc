@@ -706,11 +706,10 @@ nnoremap <Leader>wq :w!<CR>:q!<CR>
 " No autocommand write
 nnoremap <Leader>nw :noautocmd w!<CR>
 
-" Fast editing of the vimrc file
-nnoremap <silent> <Leader>ev :e $DOTVIM/vimrc<CR>
+" Fast editing and reloading of the vimrc file
+nnoremap <silent> <Leader>ev :e $MYVIMRC<CR>
+nnoremap <silent> <Leader>rv :so $MYVIMRC<CR>
 nnoremap <silent> <Leader>em :e $DOTVIM/vimrc_min<CR>
-" Reload the vimrc file
-nnoremap <silent> <Leader>rv :so $DOTVIM/vimrc<CR>
 
 " Change working directory to that of the current file (autochdir seems to
 " conflict with some plugins)
