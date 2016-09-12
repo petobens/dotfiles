@@ -10,8 +10,8 @@
 " Move highlight and airline colors to heraldish; see itchyny landscape.vim
 " SQL support?
 " Filter to convert markdown to html, useful for mails
-" Neovim issues: fix spell, tex completion; set data_dir for shada, rplugin and
-" deoplete; disable nvimlog
+" Neovim issues: fix spell, tex completion, fuzzy search; set data_dir for
+" shada, rplugin and deoplete; disable nvimlog
 
 " Preamble {{{
 
@@ -74,7 +74,7 @@ endif
 
 " Set runtimepath
 if has('vim_starting')
-    set runtimepath=$DOTVIM,$VIMRUNTIME,$DOTVIM/after
+    " set runtimepath=$DOTVIM,$VIMRUNTIME,$DOTVIM/after
     execute 'set runtimepath+=' . expand(
                 \ '$DOTVIM/bundle/repos/github.com/Shougo/dein.vim')
 endif
@@ -1744,6 +1744,7 @@ if executable('ag')
         nnoremap <silent> <Leader>ls :Unite
                     \ -buffer-name=fuzzy-search file_rec/async<CR>
     else
+        " FIXME: We need to press space for candidates to appear
         nnoremap <silent> <Leader>ls :Unite
                     \ -buffer-name=fuzzy-search file_rec/neovim<CR>
     endif
