@@ -2,7 +2,7 @@
 #          File: all.snippets
 #        Author: Pedro Ferrari
 #       Created: 25 Feb 2013
-# Last Modified: 27 Aug 2016
+# Last Modified: 12 Sep 2016
 #   Description: Snippets available in every filetype
 #===============================================================================
 # Global snippets **{
@@ -51,7 +51,12 @@ if vim.eval("&ft") == 'bib':
 else:
     snip.rv = "description"
 `}
-`!p snip.rv = line`}$0
+`!p snip.rv = line`}
+`!p
+if vim.eval("&ft") == 'yaml':
+    snip.rv = '---\n'
+else:
+	snip.rv = ''`$0
 endsnippet
 
 # **}
