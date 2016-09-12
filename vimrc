@@ -439,7 +439,7 @@ set nospell
 nnoremap <silent> <Leader>sc :set spell!<CR>
 
 " Dictionaries
-set spelllang=en_gb,es
+set spelllang=en,es
 set spellfile=$DOTVIM/spell/custom-dictionary.utf-8.add
 nnoremap <silent> <Leader>ew :e $DOTVIM/spell/custom-dictionary.utf-8.add<CR>
 
