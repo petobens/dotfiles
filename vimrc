@@ -14,7 +14,9 @@
 
 " Preamble {{{
 
-set nocompatible   " Get out of vi-compatible
+if !has('nvim')
+    set nocompatible   " Get out of vi-compatible
+endif
 
 " Define OS variable
 let s:is_win = has('win32') || has('win64')
