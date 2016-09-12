@@ -62,3 +62,7 @@ brew install vim --with-lua --with-python3 --with-client-server
 Note: we need to set the terminfo right for vim to work properly (i.e place
 xterm256-italic terminfo in both $HOME/.terminfo/x and /lib/terminfo/x
 directories).
+
+# Neovim
+Note for Alt to work on Neovim with need to set in Iterm to +Esc (in vim it must
+be set to Meta)

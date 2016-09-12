@@ -11,7 +11,7 @@
 " SQL support?
 " Filter to convert markdown to html, useful for mails
 " Neovim issues: fix spell, tex completion, alt mappings; set data_dir
-" for shada and rplugin; disable nvimlog
+" for shada, rplugin and deoplete; disable nvimlog
 
 " Preamble {{{
 

@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 04 Sep 2016
+# Last Modified: 12 Sep 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -101,7 +101,7 @@ alias u='cd ..'
 alias h='cd ~'
 alias q='exit'
 alias c='clear all'
-alias v='vim'
+alias v='nvim'
 alias ht='htop'
 alias o='open'
 
@@ -202,7 +202,8 @@ if [ -f ~/.fzf.bash ]; then
     # FIXME: See why this doesn't work
     export FZF_TMUX='0'
 
-    # Fix Alt-C mapping (since we set Alt to act as meta key)
+    # Fix Alt-C mapping (needed for when we set Alt to act as meta key in Iterm
+    # preferences; for instance to make alt key work on vim)
     bind '"ã": "\C-x\C-addi$(__fzf_cd__)\C-x\C-e\C-x\C-r\C-m"'
     bind -m vi-command '"ã": "ddi$(__fzf_cd__)\C-x\C-e\C-x\C-r\C-m"'
 fi
