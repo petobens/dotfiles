@@ -1,11 +1,14 @@
-#===============================================================================
+# ==============================================================================
 #          File: vintrc.yaml
 #        Author: Pedro Ferrari
 #       Created: 23 Sep 2015
-# Last Modified: 23 Sep 2015
+# Last Modified: 12 Sep 2016
 #   Description: Configuration file for vint linter
-#===============================================================================
-# Disable `Make the scope explicit` warning
+# ==============================================================================
+---
+# Disable `Make the scope explicit` and 'Missing scriptencoding' warnings
 policies:
-  ProhibitImplicitScopeVariable:
-      enabled: false
+    ProhibitImplicitScopeVariable:
+        enabled: false
+    ProhibitMissingScriptEncoding:
+        enabled: false
