@@ -1,0 +1,108 @@
+#===============================================================================
+#          File: vim.snippets
+#        Author: Pedro Ferrari
+#       Created: 25 Apr 2013
+# Last Modified: 26 Jul 2016
+#   Description: Vim snippets
+#===============================================================================
+# Global functions **{
+
+# For optional fields:
+global !p
+of = lambda t, c, text: text if len(t[c]) else ""
+endglobal
+
+# **}
+# Functions/Variables **{
+
+snippet fun "Function" b
+function${1:!} ${2:s:}${3:Function_name}(${4:arguments separated by ','})
+	${5:${VISUAL:text}}
+endfunction
+endsnippet
+
+snippet let "Variable" b
+let ${1:g:}${2:variable#name} = ${3:value}
+endsnippet
+
+# **}
+# Code blocks **{
+
+snippet for "For loop" b
+for ${1:needle} in ${2:haystack}
+	${3:${VISUAL:code}}
+endfor
+endsnippet
+
+snippet whi "While loop" b
+while ${1:condition}
+	${2:${VISUAL:code}}
+endwhile
+endsnippet
+
+snippet if "If conditional" b
+if ${1:condition}
+	${2:${VISUAL:code}}
+endif
+endsnippet
+
+snippet ife "If else conditional" b
+if ${1:condition}
+	${2}
+else
+	${3}
+endif
+endsnippet
+
+snippet ei "Elseif statement" b
+elseif ${1:condition}$0
+endsnippet
+
+snippet try "Try / catch" b
+try
+	${1:something}
+catch ${2:pattern}
+	${3:handle exception}
+endtry$0
+endsnippet
+# **}
+# Miscellaneous **{
+
+snippet acg "Autocmd group" b
+augroup ${1:name}
+	au!
+	au ${2:${VISUAL:text}}
+augroup END$0
+endsnippet
+
+snippet km "Key map" b
+${1:n}noremap ${2:<silent>}`!p snip.rv = of(t, 3,' ')`${3:<buffer>} ${4:<Leader>}$0
+endsnippet
+
+snippet pb "Python block" b
+python${1:3} << EOF
+${2:import vim}
+${3:${VISUAL:code}}
+EOF$0
+endsnippet
+
+snippet rtp "Runtimepath" b
+set runtimepath+=\$DOTVIM/bundle/${1:plugin_name}$0
+endsnippet
+
+snippet mv "Minimal vimrc" b
+set nocompatible
+
+`!p
+import sys
+if sys.platform != 'darwin':
+	snip.rv = 'let $CLOUD_DIR = expand(\'C:/OD/OneDrive/Users/Pedro\')'
+else:
+	snip.rv = 'let $CLOUD_DIR = expand(\'$HOME/OneDrive/\')'`
+let $DOTVIM = expand('$CLOUD_DIR/vimfiles')
+
+set runtimepath+=\$DOTVIM/bundle/repos/github.com/${1:plugin_author}
+${2:set runtimepath+=\$DOTVIM/bundle/repos/github.com/${3:plugin_author_2}}`!p snip.rv = '\n' if t[2] else ''`filetype plugin indent on$0
+endsnippet
+
+# **}

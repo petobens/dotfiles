@@ -1,0 +1,257 @@
+#===============================================================================
+#          File: r.snippets
+#        Author: Pedro Ferrari
+#       Created: 05 Aug 2015
+# Last Modified: 19 Nov 2015
+#   Description: R snippets
+#===============================================================================
+# Global functions **{
+
+# For optional fields:
+global !p
+of = lambda t, c, text: text if len(t[c]) else ""
+endglobal
+
+# **}
+# Library/imports **{
+
+snippet lib "Import a library"
+library(${1:package})$0
+endsnippet
+
+snippet req "Require a file"
+require(${1:package})$0
+endsnippet
+
+snippet up "Update all packages" b
+update.packages(ask=FALSE, checkBuilt=TRUE)
+endsnippet
+
+snippet ip "Install package"
+install.packages("${1:package}")$0
+endsnippet
+
+snippet ig "Install from Github"
+devtools::install_github("${1:repository}")$0
+endsnippet
+
+snippet source "Source a file"
+source("${1:file}")$0
+endsnippet
+
+# **}
+# Functions **{
+
+snippet fun "Function definition"
+${1:name} <- function (${2:arguments}) {
+	${3}
+}$0
+endsnippet
+
+snippet ret "Return call"
+return(${1})$0
+endsnippet
+
+# **}
+# Code blocks **{
+
+snippet if "If statement"
+if (${1:condition}) {
+	${2}
+}$0
+endsnippet
+
+snippet eif "Else-If statement"
+else if (${1:condition}) {
+	${2}
+}$0
+endsnippet
+
+snippet el "Else statement"
+else {
+	${1}
+}$0
+endsnippet
+
+snippet ife "if .. else"
+if (${1:condition}) {
+	${2}
+} else {
+	${3}
+}$0
+endsnippet
+
+snippet whi "while loop"
+while (${1:condition}) {
+	${2}
+}$0
+endsnippet
+
+snippet for "for loop"
+for (${1:item} in ${2:list}) {
+	${3}
+}$0
+endsnippet
+
+# **}
+# Types **{
+
+snippet df "Data frame"
+${1:name}[${2:rows}, ${3:cols}]$0
+endsnippet
+
+snippet pdf "Panel Data frame"
+pdata.frame($1)$0
+endsnippet
+
+snippet vec "c (vector) function"
+c(${1:items})$0
+endsnippet
+
+snippet ev "Empty vector of type"
+${1:vector name} <- ${2:numeric}()
+endsnippet
+
+snippet av "Append to vector"
+${1:vector name} <- c($1, ${2:value})$0
+endsnippet
+
+snippet lis "list function"
+list(${1:items})$0
+endsnippet
+
+snippet mat "matrix function"
+matrix(${1:data}, nrow = ${2:rows}, ncol = ${3:cols})$0
+endsnippet
+
+snippet as "Apply type on variable" w
+as.${1:field type}(${2}${VISUAL})$0
+endsnippet
+
+snippet is "Test type on variable" w
+is.${1:field type}(${2}${VISUAL})$0
+endsnippet
+
+# **}
+# Apply **{
+
+snippet app "apply function"
+apply(${1:array}, ${2:margin}, ${3:function})$0
+endsnippet
+
+snippet lapp "lapply function"
+lapply(${1:list}, ${2:function})$0
+endsnippet
+
+snippet sapp "sapply function"
+sapply(${1:list}, ${2:function})$0
+endsnippet
+
+snippet vapp "vapply function"
+vapply(${1:list}, ${2:function}, ${3:type})$0
+endsnippet
+
+snippet mapp "mapply function"
+mapply(${1:function}, ${2:...})$0
+endsnippet
+
+snippet tapp "tapply function"
+tapply(${1:vector}, ${2:index}, ${3:function})$0
+endsnippet
+
+snippet rapp "rapply function"
+rapply(${1:list}, ${2:function})$0
+endsnippet
+
+# **}
+# Plots **{
+
+# Click in same place of the plot to close the window without errors
+snippet fig "Plot/figure window" b
+windows()
+plot.new()
+plot <- ${1:plot_command}
+		theme_bw()
+print(plot)
+locator(1)$0
+endsnippet
+
+snippet qp "qplot" i
+qplot(${1:x}, ${2:y}, geom="${3:line}") +
+		${4:ggtitle("${5:title}") +}`!p snip.rv = of(t, 4,'\n\t\t')`labs(x="${6:x_label}", y="${7:y_label}") +
+endsnippet
+
+snippet gp "ggplot2 plot"
+ggplot(${1:data_frame}, aes(${2:x}, ${3:y}, color = )) +
+		${4:geom_line(aes(y = ${5:y_var}, col = "y"))} +
+endsnippet
+
+# Note the following requires the gridExtra library
+snippet sp "Subplot" b
+grid.arrange(${1:first_plot}, ${2:second_plot}, ncol=${3:columns})
+endsnippet
+
+# Save figure
+snippet sf "Save figure as PDF" b
+ggsave("${1:filename}")$0
+endsnippet
+
+# **}
+# Tests **{
+
+snippet fis "Fisher test"
+fisher.test(${1:x}, ${2:y})$0
+endsnippet
+
+snippet chi "Chi Squared test"
+chisq.test(${1:x}, ${2:y})$0
+endsnippet
+
+snippet tt "t-test"
+t.test(${1:x}, ${2:y})$0
+endsnippet
+
+snippet wil "Wilcox test"
+wilcox.test(${1:x}, ${2:y})$0
+endsnippet
+
+snippet cor "Correlation test"
+cor.test(${1:x}, ${2:y})$0
+endsnippet
+
+snippet fte "FTE test"
+var.test(${1:x}, ${2:y})$0
+endsnippet
+
+snippet kvt "KV test"
+kv.test(${1:x}, ${2:y})$0
+endsnippet
+
+# **}
+# Miscellaneous **{
+
+snippet setwd "Set workingdir" b
+setwd("${1:`!p snip.rv = os.getcwd()`}")$0
+endsnippet
+
+snippet ae "Abort execution" b
+quit()$0
+endsnippet
+
+snippet pri "Print" b
+print($1)$0
+endsnippet
+
+snippet cmd "Create missing directory" b
+if (!dir.exists(file.path("${1:directory}"))) {
+	dir.create(file.path("$1"))
+}$0
+endsnippet
+
+snippet ptt "Print to text file" b
+outfile <- file("${1:filename}.txt");
+writeLines(${2:variable}, outfile)
+close(outfile);`!p snip.rv = of(t, 3,'\n')`${3:print('Created text file with ${4:variable or info}.')}$0
+endsnippet
+
+# **}

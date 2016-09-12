@@ -1,0 +1,77 @@
+#===============================================================================
+#          File: markdown.snippets
+#        Author: Pedro Ferrari
+#       Created: 26 May 2014
+# Last Modified: 03 Jul 2014
+#   Description: Markdown snippets
+#===============================================================================
+snippet sec "Section" b
+# ${1:section name}
+$0
+endsnippet
+
+snippet ss "Subsection" b
+## ${1:subsection name}
+$0
+endsnippet
+
+snippet sss "Subsubsection" b
+### ${1:subsubsection name}
+$0
+endsnippet
+
+snippet tp "Titled paragraph" b
+#### ${1:paragraph header}
+$0
+endsnippet
+
+snippet link "Link" w
+[${1:${VISUAL:text}}](${3:http://${2:www.url.com}})$0
+endsnippet
+
+snippet ima "Image" w
+![${1:caption}](${2:path})$0
+endsnippet
+
+snippet tb "Bold text" w
+**${1:${VISUAL:text}}**$0
+endsnippet
+
+snippet ti "Italic text" w
+_${1:${VISUAL:text}}_$0
+endsnippet
+
+snippet ic "Inline Code" i
+\`${1:${VISUAL:text}}\`$0
+endsnippet
+
+snippet cb "Codeblock" b
+\`\`\`
+${1:${VISUAL:text}}
+\`\`\`
+$0
+endsnippet
+
+snippet bq "Blockquotes" b
+> $0
+endsnippet
+
+snippet ite "Item list" b
+* $1
+* $0
+endsnippet
+
+snippet enu "Enumerated list" b
+1. $1
+2. $0
+endsnippet
+
+# Github specific
+snippet st "Strikethrough" w
+~~${1:${VISUAL:text}}~~
+endsnippet
+
+# Comments
+snippet com "Comment" w
+<!-- ${1:${VISUAL:comment}} -->$0
+endsnippet

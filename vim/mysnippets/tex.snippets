@@ -1,0 +1,1318 @@
+#===============================================================================
+#          File: tex.snippets
+#        Author: Pedro Ferrari
+#       Created: 25 feb 2013
+# Last Modified: 13 Jul 2016
+#   Description: Latex snippets
+#===============================================================================
+extends textemplate
+# Global functions **{
+
+global !p
+import re
+import string
+
+def label(text):
+    mydict = {"á" : "a",
+              "Á" : "A",
+              "é" : "e",
+              "É" : "E",
+              "í" : "i",
+              "Í" : "I",
+              "ó" : "o",
+              "Ó" : "O",
+              "ú" : "u",
+              "Ú" : "U",
+              "ñ" : "ni"}
+    for k, v in mydict.items():
+        text = text.replace(k, v)
+    remove_punct_map = dict.fromkeys(map(ord, string.punctuation))
+    text = text.translate(remove_punct_map)
+    label = text.lower().split(' ')
+    if len(label) >= 10:
+        return '_'.join(label[:10])
+    else:
+        return '_'.join(label)
+
+def tab(text):
+    separators = [i.strip() for i in re.split(r'\[.*?\]|\{.*?\}|@|>', text,
+                                              flags=re.S)]
+    if len(''.join(filter(len,separators))) > 1:
+        return ' & '*(len(''.join(filter(len,separators))) - 2) + ' &  \\\\'
+    elif len(''.join(filter(len,separators))) == 1:
+        return ' \\\\'
+    else:
+        return ''
+
+# For optional fields:
+of = lambda t, c, text: text if len(t[c]) else ""
+endglobal
+
+
+# **}
+# Preamble **{
+
+snippet dc "Document Class" b
+\documentclass${1:[${2:options}]}{${3:class}}
+$0
+endsnippet
+
+snippet agd "Arara general directive" b
+% arara: pdflatex: {interaction: ${1:batchmode},
+% arara: --> options: ["-file-line-error", "-max-print-line=120"]}$0
+endsnippet
+
+snippet abd "Arara book/biber directives" b
+% arara: pdflatex: {interaction: batchmode, synctex: yes,
+% arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+% arara: biber if found('log', 'Please \\\\(re\\\\)run Biber on the file')
+% arara: --> && found('bcf', 'citekey')
+% arara: pdflatex: {interaction: batchmode, synctex: yes,
+% arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+% arara: --> if found('log', 'Please \\\\(re\\\\)run Biber on the file')
+% arara: --> && found('bcf', 'citekey')
+% arara: pdflatex: {interaction: batchmode, synctex: yes,
+% arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+% arara: --> if found('log', '(undefined references|Please rerun|Rerun to get)')
+endsnippet
+
+snippet acd "Arara clean directive" b
+% arara: clean: {files: [`!v expand('%:t:r')`.aux, `!v expand('%:t:r')`.log, `!v expand('%:t:r')`.synctex.gz]}$0
+endsnippet
+
+snippet amd "Arara multiline directive" b
+% arara: --> $0
+endsnippet
+
+snippet up "Use Package" b
+\usepackage${1:[${2:options}]}{${3:name}}
+$0
+endsnippet
+
+snippet ip "Input" b
+\input{$1}$0
+endsnippet
+
+snippet ic "Include" b
+\include{${1:file}}$0
+endsnippet
+
+snippet io "Includeonly" b
+\includeonly{${1:file}}$0
+endsnippet
+
+snippet nc "New Command" b
+\newcommand*{\\${1:cmd}}${2:[${3:number of arg >= 1}]}{\\${4:realcmd}}
+$0
+endsnippet
+
+snippet rnc "(Re)New Command" b
+\renewcommand*{\\${1:cmd}}${2:[${3:number of arg >= 1}]}{\\${4:realcmd}}
+$0
+endsnippet
+
+snippet ne "New Environment" b
+\newenvironment{${1:name}}${2:[${3:number of arg >= 1}]}
+	{${4:before}}`!p snip.rv = of(t, 5, "\n  ")`${5:{${6:after}}}$0
+endsnippet
+
+snippet dmo "Declare Math Operator" b
+\DeclareMathOperator*{\\${1:command}}{${2:operator}}
+$0
+endsnippet
+
+snippet bd "begin/end document" b
+\begin{document}
+
+${VISUAL}$0
+
+\end{document}
+endsnippet
+
+snippet beg "begin{}/end{}" b
+\begin{${1:something}}
+	${VISUAL}$2
+\end{$1}
+$0
+endsnippet
+
+snippet end "End" b
+\end{${1:environment}}$0
+endsnippet
+
+
+# **}
+# Class-specific **{
+
+# Article **{
+
+snippet tp "Titlepage" b
+% Custom titlepage
+\newcommand*{\maketitlepg}{%
+	\renewcommand{\thepage}{\roman{page}}
+	\begingroup`!p snip.rv = of(t, 1, "\n    \\begin{center}\n      ")`${1:include figure/logo or erase}`!p snip.rv = of(t, 1, "\n    \\end{center}")`
+		\vspace{0.01\textheight}
+		\begin{center}
+			\textbf{\LARGE{${2:University}}}\\\\
+			\vspace{0.02\textheight}
+			\textbf{\Large{${3:Department}}}\\\\
+			\vspace{0.3\textheight}
+			\rule{\textwidth}{1.5pt}\par
+			\vspace{\baselineskip}
+			{\bfseries\Huge{${4:Main title}}\par
+			\bigskip\Large{--- ${5:Subtitle} ---}}\\\\
+			\vspace{\baselineskip}
+			\rule{\textwidth}{1.5pt}\par
+			`!p snip.rv = of(t, 6, "\\vfill\n      \\textsc{\huge")`${6:\{${7:<C-j> for author or erase}\}\}}`!p snip.rv = of(t, 6, "\n      ")`\vfill
+			\textbf{\Large{${8:Date}}}
+		\end{center}
+	\endgroup
+	\thispagestyle{empty}\cleardoublepage
+	\renewcommand{\thepage}{\arabic{page}}
+	\setcounter{page}{1}
+}$0
+endsnippet
+
+snippet tha "Thanks" i
+\thanks{${1:University}}$0
+endsnippet
+
+snippet abs "Abstract" b
+\begin{abstract}
+${1:\lipsum[1]}
+\medskip
+\keywords{$2}
+`!p snip.rv = of(t, 3, "\n\\jel")`${3:\{${4:<C-j> for jel code or erase}\}}`!p snip.rv = of(t, 3, "\n")`\end{abstract}
+$0
+endsnippet
+
+snippet aa "Article Appendix" b
+\appheading
+\appendix
+$0
+endsnippet
+
+snippet pt "Points for exercises" i
+\points{${1:nr of points}}$0
+endsnippet
+
+# **}
+# Beamer **{
+
+snippet bf "Beamer frame" b
+\begin{frame}${1:[allowframebreaks]}`!p snip.rv = of(t, 2, "\n  ")`${2:\frametitle{${3:Title}}}
+	${VISUAL}$5
+\end{frame}$0
+endsnippet
+
+snippet ft "Frame title" b
+\frametitle{${1:Title}}$0
+endsnippet
+
+snippet fs "Frame subtitle" b
+\framesubtitle{${1:Subtitle}}$0
+endsnippet
+
+snippet afb "Allowframebreaks" i
+[allowframebreaks]$0
+endsnippet
+
+snippet only "Overlay Specification" b
+\only<${1:+}>{
+	${2:\framesubtitle{${3:default text}}}$4
+}$0
+endsnippet
+
+snippet gb "Beamer go button" w
+\hyperlink{${1:label}}{\beamergotobutton{${2:text}}}$0
+endsnippet
+
+snippet rb "Beamer return button" w
+\hyperlink{${1:label}}{\beamerreturnbutton{${2:text}}}$0
+endsnippet
+
+snippet bsf "Beamer serif font" b
+\renewcommand{\rmdefault}{\sfdefault}
+endsnippet
+
+snippet btc "Beamer table with caption" b
+\begin{table}
+	\caption{${1:text}}
+	\label{fig:${2:`!p snip.rv = label(t[1])`}}
+	${VISUAL}$3
+\end{table}$0
+endsnippet
+
+snippet blo "Beamer block" b
+\begin{block}{${1:title}}
+	${VISUAL}$2
+\end{block}$0
+endsnippet
+
+snippet bel "Beamer enumerate label" b
+\renewcommand{\insertenumlabel}{${1:\Alph{enumi}}}$0
+endsnippet
+
+snippet bil "Beamer itemize label" b
+\setbeamertemplate{itemize items}{${1:$\square$}}$0
+endsnippet
+
+snippet ps "Problem statement" b
+\begin{problem*}
+	${VISUAL}$1
+\end{problem*}
+endsnippet
+
+# **}
+# Book **{
+
+snippet pre "Preface" b
+\chapter{${1:chapter name}}
+\label{cha:${2:`!p snip.rv = label(t[1])`}}
+
+`!p snip.rv = of(t, 3, "")`${3:\lipsum}`!p snip.rv = of(t, 3, "\n\n")`\begin{flushright}
+	\bigskip
+	${4:City}\\\\
+	${5:Date}
+\end{flushright}$0
+endsnippet
+
+
+snippet ba "Book Appendix" b
+\appendix
+\chapter{${1:appendix title}}
+\label{cha:${2:`!p snip.rv = label(t[1])`}}
+
+${VISUAL}$0
+endsnippet
+
+# License **{
+
+
+
+# **}
+
+# **}
+# CV **{
+
+snippet ct "CV Table" b
+\begin{cvtable}
+	${VISUAL}$1
+\end{cvtable}$0
+endsnippet
+
+# **}
+
+# **}
+# Section Environments **{
+
+snippet part "Part" b
+\part{${1:part name}}
+\label{part:${2:`!p snip.rv = label(t[1])`}}
+
+${VISUAL}$0
+endsnippet
+
+snippet cha "Chapter" b
+\chapter{${1:chapter name}}
+\label{cha:${2:`!p snip.rv = label(t[1])`}}
+
+${VISUAL}$0
+endsnippet
+
+snippet sec "Section" b
+\section{${1:section name}}
+\label{sec:${2:`!p snip.rv = label(t[1])`}}
+
+${VISUAL}$0
+endsnippet
+
+snippet ss "Subsection" b
+\subsection{${1:subsection name}}
+\label{sub:${2:`!p snip.rv = label(t[1])`}}
+
+${VISUAL}$0
+endsnippet
+
+snippet sss "Subsubsection" b
+\subsubsection{${1:subsubsection name}}
+\label{ssub:${2:`!p snip.rv = label(t[1])`}}
+
+${VISUAL}$0
+endsnippet
+
+# **}
+# Math **{
+
+# Equation, align and matrix **{
+
+snippet equ "Equation" b
+\begin{equation}
+\label{eq:${1:label}}
+	${VISUAL}$2
+\end{equation}$0
+endsnippet
+
+snippet ueq "Unnumbered Equation" b
+\begin{equation*}
+	${VISUAL}$1
+\end{equation*}$0
+endsnippet
+
+snippet be "Brekable equation" b
+\begin{dmath${1:*}}
+	${VISUAL}$2
+\end{dmath$1}$0
+endsnippet
+
+snippet ali "Align" b
+\begin{align}
+	${VISUAL}${1:first eq} ${2:\label{eq:${3:tag}}} \\\\
+	${4:second eq} ${5:\label{eq:${6:tag}}}$7
+\end{align}$0
+endsnippet
+
+snippet ua "Align*" b
+\begin{align*}
+	${VISUAL}${2:first eq} \\\\
+	${3:second eq}
+\end{align*}$0
+endsnippet
+
+snippet nn "No Number" i
+\nonumber$0
+endsnippet
+
+snippet it "Intertext" b
+\intertext{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet sit "Short Intertext" b
+\shortintertext{${1:${VISUAL:text}}}$0
+endsnippet
+
+# Note: the following environments must be uses within an equation environment
+
+# For aligned and alignedat use b for bottom vertical alignment
+snippet aed "Aligned" b
+\begin{aligned}${1:[${2:r}]}
+	${VISUAL}$3
+\end{aligned}$0
+endsnippet
+
+snippet ada "Alignedat" b
+\begin{alignedat}{${1:2}}
+	${VISUAL}$2
+\end{alignedat}$0
+endsnippet
+
+snippet cas "Cases" b
+\begin{cases}
+	${1:first equation}\\\\
+	${2:second equation}
+\end{cases}$0
+endsnippet
+
+snippet dca "(d)Cases" b
+\begin{dcases*}
+	${1} & ${2:si} \$${3:condition}\$ \\\\
+	${4} & ${5:si} \$${6:condition}\$$7
+\end{dcases*}$0
+endsnippet
+
+snippet drc "(d)Right Cases" b
+\begin{drcases*}
+	${1} & ${2:si} \$${3:condition}\$ \\\\
+	${4} & ${5:si} \$${6:condition}\$$7
+\end{drcases*}$0
+endsnippet
+
+snippet dcc "(d)Cases Condition" b
+	${1} & ${2:si} ${3:\$${4:condition}\$}
+endsnippet
+
+snippet mat "Matrix"
+\begin{${1:p/b/v/V/B}matrix*}${2:[${3:r}]}
+	$4
+\end{$1matrix*}$0
+endsnippet
+
+snippet sm "Small matrix"
+\begin{${1:p/b/v/V/B}smallmatrix*}[${2:c}]
+	$3
+\end{$1smallmatrix*}$0
+endsnippet
+
+# **}
+# Lists **{
+
+snippet enu "Enumerate" b
+\begin{enumerate}${1:[${2:(i)}]}
+	\item ${VISUAL}$3
+\end{enumerate}$0
+endsnippet
+
+snippet rec "Restore enumerate counter" b
+\setcounter{enumi}{\theenumtemp}
+	${VISUAL}$1
+\setcounter{enumtemp}{\theenumi}$0
+endsnippet
+
+snippet ite "Itemize" b
+\begin{itemize}
+	\item ${VISUAL}$1
+\end{itemize}$0
+endsnippet
+
+# **}
+# Theorems **{
+
+snippet the "Theorem" b
+\begin{theorem}${1:[${2:name or reference}]}
+\label{thm:${3}}
+	${VISUAL}$4
+\end{theorem}$0
+endsnippet
+
+snippet uthe "Unnumbered Theorem" b
+\begin{theorem*}${1:[${2:name or reference}]}
+	${VISUAL}$3
+\end{theorem*}$0
+endsnippet
+
+snippet pro "Proposition" b
+\begin{proposition}
+\label{pro:${1}}
+	${VISUAL}$2
+\end{proposition}$0
+endsnippet
+
+snippet upro "Unnumbered Proposition" b
+\begin{proposition*}
+	${VISUAL}$1
+\end{proposition*}$0
+endsnippet
+
+snippet lem "Lemma" b
+\begin{lemma}${1:[${2:name or reference}]}
+\label{lem:${3}}
+	${VISUAL}$4
+\end{lemma}$0
+endsnippet
+
+snippet ulem "Unnumbered Lemma" b
+\begin{lemma*}${1:[${2:name or reference}]}
+	${VISUAL}$3
+\end{lemma*}$0
+endsnippet
+
+snippet cor "Corollary" b
+\begin{corollary}
+\label{cor:${1}}
+	${VISUAL}$2
+\end{corollary}$0
+endsnippet
+
+snippet ucor "Unnumbered Corollary" b
+\begin{corollary*}
+	${VISUAL}$1
+\end{corollary*}$0
+endsnippet
+
+snippet def "Definition" b
+\begin{definition}
+\label{def:${1}}
+	${VISUAL}$2
+\end{definition}$0
+endsnippet
+
+snippet udef "Unnumbered Definition" b
+\begin{definition*}
+	${VISUAL}$1
+\end{definition*}$0
+endsnippet
+
+snippet exa "Example" b
+\begin{example}
+\label{exa:${1}}
+	${VISUAL}$2
+\end{example}$0
+endsnippet
+
+snippet uexa "Unnumbered Example" b
+\begin{example*}
+	${VISUAL}$1
+\end{example*}$0
+endsnippet
+
+snippet ec "Example continued" b
+\begin{examcont}{exa:${1:ref}}
+	${VISUAL}$2
+\end{examcont}$0
+endsnippet
+
+snippet exe "Exercise" b
+\begin{exercise}
+\label{exe:${1}}
+	${VISUAL}$2
+\end{exercise}$0
+endsnippet
+
+snippet uexe "Unnumbered Exercise" b
+\begin{exercise*}
+	${VISUAL}$1
+\end{exercise*}$0
+endsnippet
+
+snippet ans "Answer/Solution" b
+\begin{solution*}
+	${VISUAL}$1
+\end{solution*}$0
+endsnippet
+
+snippet rem "Remark" b
+\begin{remark}
+\label{rem:${1}}
+	${VISUAL}$2
+\end{remark}$0
+endsnippet
+
+snippet urem "Unnumbered Remark" b
+\begin{remark*}
+	${VISUAL}$1
+\end{remark*}$0
+endsnippet
+
+snippet not "Notation" b
+\begin{notation*}
+	${VISUAL}$1
+\end{notation*}$0
+endsnippet
+
+snippet pru "Proof" b
+\begin{proof}${1:[${2:Proof of} \cref*{${3:thm:}}]}
+	${VISUAL}$4
+\end{proof}$0
+endsnippet
+
+# Steps is defined with the enumitem package
+snippet ste "Steps" b
+\begin{steps}
+	\item ${1:${VISUAL}}
+\end{steps}$0
+endsnippet
+
+# **}
+# Operators, commands and fonts **{
+
+snippet frac "Fraction" i
+\frac{${1:${VISUAL:nom}}}{${2:denom}}$0
+endsnippet
+
+snippet tfr "tFraction" w
+\tfrac{${1:${VISUAL:nom}}}{${2:denom}}$0
+endsnippet
+
+snippet sr "Square root" w
+\sqrt${1:[${2:n!=2}]}{${3:${VISUAL:argument}}}$0
+endsnippet
+
+snippet pd "Partial Derivative" w
+\frac{\partial ${1:${VISUAL:}}}{\partial ${2:}}$0
+endsnippet
+
+snippet lim "Limit" w
+\lim_{${1:} \to ${2:}}$0
+endsnippet
+
+snippet sum "Sum or prod" w
+\\${1:sum}_{${2:t=1}}${3:^{${4:\infty}}}${VISUAL}$0
+endsnippet
+
+snippet int "Integral" w
+\int${1:_{${2:inf}}${3:^{${4:sup}}}}\!${5:function}\,\d ${6:variable}$0
+endsnippet
+
+snippet sta "Substack" w
+\substack{${1:0<i<n} \\\\ ${2:0<j<n}}$0
+endsnippet
+
+snippet ol "Overline" i
+\overline{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet ul "Underline" w
+\underline{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet ob "Overbrace" w
+\overbrace{${1:${VISUAL}}}^{${2}}$0
+endsnippet
+
+snippet ub "Underbrace" w
+\underbrace{${1:${VISUAL}}}_{${2}}$0
+endsnippet
+
+snippet os "Overset" w
+\overset{${1:text}}{${2:${VISUAL:symbol}}}$0
+endsnippet
+
+snippet us "Underset" w
+\underset{${1:text}}{${2:${VISUAL:symbol}}}$0
+endsnippet
+
+snippet til "Tilde" w
+\tilde{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet bar "Bar" w
+\bar{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet hat "Hat" w
+\hat{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet dot "Dot" w
+\dot{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet text "Text" w
+\text{${1:${VISUAL:text}}}$0
+endsnippet
+
+# Use italic for multiletter variables
+snippet mi "Math italic" w
+\mathit{${1:${VISUAL:text}}}$0
+endsnippet
+
+# Use roman (upright font) for operators
+snippet mr "Math Roman" i
+\mathrm{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet mbb "Math Blackboard" i
+\mathbb{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet mcg "Math Caligraphic" i
+\mathcal{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet mf "Math Frak" i
+\mathfrak{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet msc "Math Script" i
+\mathscr{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet tss "Text sanfs serif" i
+\textsf{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet ttt "Text type writer" i
+\texttt{${1:${VISUAL:text}}}$0
+endsnippet
+
+# **}
+# Macros **{
+
+snippet set "Set" w
+\\{\, $1 \,\\}$0
+endsnippet
+
+snippet cse "Compact sequence defined in a set" i
+\\{$1\\}${2:_{${3:t=0}}${4:^{\infty}}}$0
+endsnippet
+
+snippet vec "Vector list" i
+(${1:variable}_{1}, $1_{2}, \ldots, $1_{${2:N}})$0
+endsnippet
+
+snippet seq "Seq" i
+${1:variable}_{1}, $1_{2}, \ldots, $1_{${2:N}}$0
+endsnippet
+
+snippet nor "Norm" w
+\norm{${1:default text}}$0
+endsnippet
+
+snippet abs "Absolute value" w
+\abs{${1:default text}}$0
+endsnippet
+
+snippet map "Map" w
+${1:f}\\colon ${2:X} \\to ${3:Y}$0
+endsnippet
+
+snippet da "cdot argument" i
+(\cdot)$0
+endsnippet
+
+# Note this environment goes outside equation environment
+snippet max "Max/Min" b
+\begin{alignat}{2}
+	& \\${1:max}_{\\{$2\\}} & \,${3:F(x,y) & = xy}\\\\
+	& \;\; \text{s.a} & ${4: first constraint with &}\\\\
+	& & ${5:second constraint with &} $0
+\end{alignat}
+endsnippet
+
+snippet cpo "First Order Condition" b
+\begin{alignat}{2}
+	(${1}) &:\quad & ${2} & = ${3:} ${4:\label{eq:${5}}}\\\\
+	(${6}) &:\quad & ${7} & = ${8:} ${9:\label{eq:${10}}}$0
+\end{alignat}
+endsnippet
+
+snippet imp "Implies in proof" w
+$\text{(${1:i})} \iff \text{(${2:ii})}$$0
+endsnippet
+
+snippet log "Log" i
+\log(${1:text})$0
+endsnippet
+
+snippet ln "Natural log" i
+\ln(${1:text})$0
+endsnippet
+
+# **}
+
+# **}
+# Floats **{
+
+# General **{
+
+snippet flo "General Float without caption" b
+\begin{${1:figure}}${2:[${3:!htb}]}${4:\RawFloats}
+	${VISUAL}$5
+\end{$1}$0
+endsnippet
+
+snippet cg "Centered graph" b
+\begin{center}
+	\includegraphics${1:[${2:scale=1}]}\{$3\}
+\end{center}$0
+endsnippet
+
+# From the graphicx package:
+snippet ig "Include graphics" b
+\includegraphics${1:[${2:scale=1}]}\{$3\}$0
+endsnippet
+
+# To set placeholder figures
+snippet rul "Rule" b
+\rule{${1:2cm}}${2:{${3:2cm}}}$0
+endsnippet
+
+# Minipage environment
+snippet mp "Minipage" b
+\begin{minipage}[t]{${1:0.45}\textwidth}
+	${VISUAL}$2
+\end{minipage}${3:\hfill}$0
+endsnippet
+
+
+# **}
+# Figures **{
+
+snippet fig "Figure with caption" b
+\begin{figure}${1:[${2:!htb}]}
+	${VISUAL}$3
+	\caption{${4:text}}
+	\label{fig:${5:`!p snip.rv = label(t[4])`}}
+\end{figure}$0
+endsnippet
+
+# When two figures or subfigures are placed side by side end the first
+# subfigure/minipage with '\hfill'. If you want more than one row separate each
+# row with a '\\[1ex]' after the last subfigure/minipage.
+
+snippet sf "Subfigure with caption" b
+\begin{subfigure}[t]{${1:0.48}\textwidth}
+	\centering
+	${VISUAL}$2
+	\caption{${3:text}}
+	\label{sfig:${4:`!p snip.rv = label(t[3])`}}
+\end{subfigure}${5:\hfill}$0
+endsnippet
+
+# Side by side figures sequence: flo + rf(\RawFloats), sbsf
+snippet sbsf "Side by side figure with caption" b
+\begin{minipage}[t]{${1:0.48}\textwidth}
+	\centering
+	${VISUAL}$2
+	\captionof{figure}{${3:text}}
+	\label{fig:${4:`!p snip.rv = label(t[3])`}}
+\end{minipage}${5:\hfill}$0
+endsnippet
+
+snippet 1ex "Space between rows of figures" i
+\\\\[1ex]$0
+endsnippet
+
+# **}
+# Tables **{
+
+# Table environment with caption width same size as table
+snippet tab "Table with caption" b
+\begin{table}${1:[${2:!htb}]}
+	\ttabbox
+	{\caption{${3:text}}
+	\label{tab:${4:`!p snip.rv = label(t[3])`}}}
+	{\includegraphics${5:[${6:scale=1}]}\{${7:file name}.${8:pdf}\}}
+\end{table}$0
+endsnippet
+
+# Side by side caption sequence: flo + rf(\RawFloats), sbst
+snippet sbst "Side by side table with caption" b
+\begin{minipage}[t]{${1:0.48}\textwidth}
+	\centering
+	\captionof{table}{${2:text}}
+	\label{tab:${3:`!p snip.rv = label(t[2])`}}
+	${VISUAL}$4
+	${5:\captionof*{table}{\textit{${6:Source}}: ${7: based on ...}}}`!p snip.rv = of(t, 5,'\n')`\end{minipage}${8:\hfill}$0
+endsnippet
+
+# Regular or raw tabular (to be used with standalone class)
+snippet rt "Regular tabular" b
+\begin{tabular}{${1:S}}
+	\toprule
+	$3${2:`!p snip.rv = tab(t[1])`}
+	\midrule
+	$5${4:`!p snip.rv = tab(t[1])`}$6
+	\bottomrule
+\end{tabular}$0
+endsnippet
+
+# From longtable package:
+snippet lgt "Long Table with caption" b
+\begin{longtable}{S${1:}}
+	\caption{${2:text}}
+	\label{tab:${3:`!p snip.rv = label(t[2])`}} \\\\
+	\toprule
+	${4:First Head} \\\\
+	\midrule
+	\endfirsthead
+	\caption{(${5:Continuación})} \\\\
+	\toprule
+	${6:$4} \\\
+	\midrule
+	\endhead
+	${VISUAL}$7 \\\\$8
+	\bottomrule
+\end{longtable}$0
+endsnippet
+
+snippet "(\d+)(c)" "Columns" rb
+$1`!p
+if not snip.c:
+    if int(match.group(1)) > 1:
+        snip.rv = (int(match.group(1)) - 2)*' & '+ ' &  \\\\'
+    else:
+        snip.rv = ' \\\\'`$0
+endsnippet
+
+snippet "(\d+)(x)(\d+)" "Rows x columns" rb
+$1`!p
+if not snip.c:
+    for i in range(int(match.group(1))):
+      if int(match.group(3)) > 1:
+        if i in range(int(match.group(1)))[:-1]:
+          snip.rv += snip.mkline((int(match.group(3)) - 2)*' & '+ ' &  \\\\') + '\n'
+        else:
+          snip.rv += snip.mkline((int(match.group(3)) - 2)*' & '+ ' &  \\\\')
+      else:
+        if i in range(int(match.group(1)))[:-1]:
+          snip.rv += snip.mkline(' \\\\') + '\n'
+        else:
+          snip.rv += snip.mkline(' \\\\')`$0
+endsnippet
+
+snippet mc "Multicolumn" w
+\multicolumn{${1:2}}{${2:c}}{${3:${VISUAL:text}}}$0
+endsnippet
+
+# From multirow package:
+snippet mur "Multirow" w
+\multirow{${1:2}}{${2:* or specific box length to wrap}}{${3:${VISUAL:text}}}$0
+endsnippet
+
+# From booktabs package:
+snippet cmr "Column Mid-rule" w
+\cmidrule${1:(${2:r/l})}{${3:1 col}-${4:2col}}$0
+endsnippet
+
+# From siunitx package:
+snippet tf "Table format" i
+[table-format = ${1:-1.3}]$0
+endsnippet
+
+# Row color
+snippet rc "Row color" b
+\rowcolor{${1:color}}$0
+endsnippet
+
+# **}
+# Floatrow package **{
+
+# Environments **{
+
+snippet fr "Floatrow" b
+\begin{floatrow}${1:[${2:2}]}%
+	${VISUAL}$3
+\end{floatrow}$0
+endsnippet
+
+snippet sfr "Subfloatrow" b
+\begin{subfloatrow}${1:[${2:2}]}%
+	${VISUAL}$3
+\end{subfloatrow}$0
+endsnippet
+
+snippet ff "Float footnote" b
+% {\includegraphics[...
+\floatfoot*{\hspace{0.05cm}\emph{Not${1:a}}: ${2:text}}}$0
+endsnippet
+
+snippet fflt "Long table footnote" b
+\noalign{\floatfoot*{\hspace{0.5cm}\emph{Not${1:a}}:${2:text}}}$0
+endsnippet
+
+# **}
+# Figures **{
+
+# Side by side figures sequence: flo,fr,ffb
+snippet ffb "Ffigbox" b
+\ffigbox${1:[${2:\FBwidth}]}{%
+	${VISUAL}$3
+}%
+{\caption{${4:text}}
+\label{fig:${5:`!p snip.rv = label(t[4])`}}}%
+endsnippet
+
+# Subfigure sequence: bf, sfr, sfv
+snippet bff "Boxed Figure" b
+\begin{figure}${1:[${2:!htb}]}
+	\ffigbox${3:[${4:\FBwidth}]}{%
+		${VISUAL}$5
+	}%
+	{\caption{${6:text}}
+	\label{fig:${7:`!p snip.rv = label(t[6])`}}}%
+\end{figure}
+$0
+endsnippet
+
+snippet sfv "Subfigure variant" b
+\ffigbox${1:[${2:\FBwidth}]}{%
+	${VISUAL}$3
+}%
+{\subcaption{${4:text}}
+\label{sfig:${5:`!p snip.rv = label(t[4])`}}}%
+endsnippet
+
+# **}
+# Tables **{
+
+# This table uses floatrow package to align caption
+snippet frt "Floatrow table with caption" b
+\begin{table}${1:[${2:!htb}]}
+	\ttabbox
+	{\caption{${3:text}}
+	\label{tab:${4:`!p snip.rv = label(t[3])`}}}%
+	{\begin{tabular}{${5:S}}
+		\toprule
+		$7${6:`!p snip.rv = tab(t[5])`}
+		\midrule
+		$9${8:`!p snip.rv = tab(t[5])`}$10
+		\bottomrule
+	\end{tabular}}%
+\end{table}$0
+endsnippet
+
+# Side by side tables sequence: flo,fr,ttb
+# Note: use S column if there are overfull warnings
+snippet ttb "ttabbox" b
+\ttabbox
+{\caption{${1:text}}
+\label{tab:${2:`!p snip.rv = label(t[1])`}}}%
+{\begin{tabular}{S${3}}
+	\toprule
+	$4 \\\\
+	\midrule
+	${VISUAL}$5 \\\\ $6
+	\bottomrule
+\end{tabular}}%$0
+endsnippet
+
+# Subtable sequence: bt, sfr, st
+snippet bt "Boxed table" b
+\begin{table}${1:[${2:!htb}]}
+	\ttabbox
+	{\caption{${3:text}}
+	\label{tab:${4:`!p snip.rv = label(t[3])`}}}%
+	{%
+	${VISUAL}$5
+	}%
+\end{table}
+$0
+endsnippet
+
+snippet st "Subtable" b
+\ttabbox
+{\subcaption{${1:text}}
+\label{tab:${2:`!p snip.rv = label(t[1])`}}}%
+{\begin{tabular}{S${4}}
+	\toprule
+	$5 \\\\
+	\midrule
+	${VISUAL}$6 \\\\ $7
+	\bottomrule
+\end{tabular}}%$0
+endsnippet
+
+# **}
+
+# **}
+
+# **}
+# Tikz/PGF plots **{
+
+snippet tikz "Tikz picture" b
+\begin{tikzpicture}${1:[scale=${2:1}]}
+	${VISUAL}$3
+\end{tikzpicture}$0
+endsnippet
+
+snippet draw "Draw command" b
+\draw ${1:[${2:option}]} (${3:cor1}) -- (${4:cor2});$0
+endsnippet
+
+snippet axis "Axis" b
+\draw [big arrow] (0,0) -- (${1:5},0) node[below, xshift=-1mm, yshift=-0.5mm]
+	{$${2:x}$}
+	coordinate (xaxis);
+\draw [big arrow] (0,0) -- (0,$1) node [left,yshift=-1mm, xshift=-0.5mm]
+	{$${3:y}$}
+	coordinate (yaxis);
+endsnippet
+
+snippet node "Node" b
+\node ${1:[${2:position}]} ${3:at (${4:coordinate})} {${5:text}};$0
+endsnippet
+
+snippet cd "Coordinate" b
+\coordinate (${1:name}) at (${2:coordinate});$0
+endsnippet
+
+snippet is "Intersection" b
+\path [name intersections={of=${1:L and K}, by=${2:name}}];$0
+endsnippet
+
+snippet fd "Fill draw" b
+\filldraw (${1:coordinate}) circle (1.5pt)`!p snip.rv = ' ' if t[2] else ';'`${2:node [${3:position}] {${4:text}}}`!p snip.rv = of(t, 2, ";")`$0
+endsnippet
+
+snippet pin "Pin" b
+\node[pin={[pin distance=${1:1cm}]${2:angle}:{${3:label}}}] at
+	(${4:coordinate}) {};$0
+endsnippet
+
+snippet bra "Braces" b
+\draw[thin, decorate,decoration={brace,amplitude=6pt}] (${1:c1}) -- (${2:c2})
+	node [midway] {${3:text}};$0
+endsnippet
+
+snippet sco "Scope" b
+\begin{scope}
+	${VISUAL}$1
+\end{scope}
+$0
+endsnippet
+
+snippet dsc "Draw smooth coordinates" b
+\draw ${1:[${2:bold}]} plot [smooth] coordinates {${3:coordinates}}$0;
+endsnippet
+
+
+# **}
+# Footnote, text fonts and delimiters **{
+
+snippet fn "Footnote" i
+\footnote{${1:${VISUAL:text}}} $0
+endsnippet
+
+snippet ti "Textit" w
+\textit{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet emph "Emphasize" w
+\emph{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet tb "Text bold font" w
+\textbf{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet muc "MakeUppercase" w
+\MakeUppercase{${1:${VISUAL:text}}}$0
+endsnippet
+
+# From Csquotes package
+snippet quo "Quote" w
+\enquote{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet bc "Braces" i
+\\{${1:${VISUAL}}\\}$0
+endsnippet
+
+snippet lr( "left( right)" i
+\left(${1:${VISUAL}}\right)$0
+endsnippet
+
+snippet lr{ "left\{ right\}" i
+\left\\{${1:${VISUAL}}\right\\}$0
+endsnippet
+
+snippet lr[ "left[ right]" i
+\left[${1:${VISUAL}}\right]$0
+endsnippet
+
+snippet vs "Vertical space" w
+\vspace{${1:${VISUAL:length}}}$0
+endsnippet
+
+# **}
+# Miscellaneous packages **{
+
+# Listings package
+snippet ll "Listings (similar to verbatim)" b
+\begin{lstlisting}
+${VISUAL}$0
+\end{lstlisting}
+endsnippet
+
+# Todonotes package:
+snippet td "Todo" i
+\todo{${1:${VISUAL:text}}}$0
+endsnippet
+
+snippet mf "Missing figure" b
+\begin{center}
+	\missingfigure{${1:text}}
+\end{center}
+$0
+endsnippet
+
+snippet url "Url Link" w
+\href{${1:link}}{${2:text}}$0
+endsnippet
+
+
+# **}
+# Cross-references, bookmarks, bibliography and index **{
+
+snippet lab "Label" i
+\label{${1}}$0
+endsnippet
+
+snippet bm "Bookmark" i
+\pdfbookmark[${1:level}]{${2:bookmark text}}{${3:label}}$0
+endsnippet
+
+snippet er "Equation ref" w
+\eqref{eq:${1}}$0
+endsnippet
+
+# Cleveref **{
+
+snippet crg "Cleverref general" w
+\cref{${1}}$0
+endsnippet
+
+snippet crc "Cleverref chapter" w
+\cref{cha:${1}}$0
+endsnippet
+
+snippet crs "Cleverref section" w
+\cref{sec:${1}}$0
+endsnippet
+
+snippet crf "Cleverref figure" w
+\cref{fig:${1}}$0
+endsnippet
+
+snippet crsf "Cleverref subfigure" w
+\cref{sfig:${1}}$0
+endsnippet
+
+snippet crt "Cleverref table" w
+\cref{tab:${1}}$0
+endsnippet
+
+snippet cre "Cleverref equation" w
+\cref{eq:${1}}$0
+endsnippet
+
+snippet crd "Cleverref definition" w
+\cref{def:${1}}$0
+endsnippet
+
+snippet crp "Cleverref proposition" w
+\cref{pro:${1}}$0
+endsnippet
+
+snippet crl "Cleverref lemma" w
+\cref{lem:${1}}$0
+endsnippet
+
+snippet crc "Cleverref corollary" w
+\cref{cor:${1}}$0
+endsnippet
+
+snippet cri "Cleverref item" w
+\cref{item:${1}}$0
+endsnippet
+
+snippet crr "Cleverref crossreference range" w
+\crefrange{${1:label 1}}{${2:label 2}}$0
+endsnippet
+
+# **}
+# Biblatex **{
+
+snippet abr "Add bib resource" b
+\addbibresource{${1:bibname}.bib}$0
+endsnippet
+
+snippet tc "Textcite" w
+\textcite{$1}$0
+endsnippet
+
+snippet fc "Fullcite" w
+\fullcite{$1}$0
+endsnippet
+
+snippet ffc "FootFullcite" i
+\footfullcite{$1}$0
+endsnippet
+
+snippet noc "Nocite" w
+\nocite{$1}$0
+endsnippet
+
+snippet pb "Print Bibliography" b
+\printbibliography[heading=${1:bibarticle/bibbook}]
+$0
+endsnippet
+
+# **}
+
+snippet ind "Index" i
+\index{${1:key}}$0
+endsnippet
+
+# **}

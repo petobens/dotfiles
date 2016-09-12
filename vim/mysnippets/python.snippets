@@ -1,0 +1,230 @@
+#===============================================================================
+#          File: python.snippets
+#        Author: Pedro Ferrari
+#       Created: 04 Mar 2015
+# Last Modified: 27 Aug 2016
+#   Description: Python snippets
+#===============================================================================
+# Global functions **{
+
+# For optional fields:
+global !p
+of = lambda t, c, text: text if len(t[c]) else ""
+endglobal
+
+# **}
+# Imports **{
+
+snippet ia "Import as" b
+import  ${1:module} as ${2:name}
+endsnippet
+
+snippet fm "From module import name" b
+from ${1:module} import $0
+endsnippet
+
+snippet inp "Import numpy as np" b
+import numpy as np$0
+endsnippet
+
+snippet ipp "Import pyplot as plt" b
+import matplotlib.pyplot as plt$0
+endsnippet
+
+snippet ipd "Import pandas as pd" b
+import pandas as pd$0
+endsnippet
+
+snippet ism "Import statsmodels as sm" b
+import statsmodels.api as sm
+endsnippet
+
+# **}
+# Function/Class **{
+
+snippet def "Function" b
+def ${1:function_name}(${2:arguments separated by ','}):`!p snip.rv= '\n    '`${3:"""${4:one-line docstring.}"""}`!p snip.rv= '\n    ' if t[3] else ''`${5:${VISUAL:pass}}$0
+endsnippet
+
+snippet class "class with docstrings" b
+class ${1:MyClass}${2:(${3:parent})}:
+
+
+	def __init__(self${7:, args}):
+		${4:"""${5:one-line docstring.}"""}`!p snip.rv= '\n\t' if t[4] else ''`${6:${VISUAL:pass}}$0
+endsnippet
+
+snippet cm "Class method" b
+def ${1:method_name}(self${2:, args}):`!p snip.rv= '\n\t'`${4:"""${5:one-line docstring.}"""}`!p snip.rv= '\n\t' if t[4] else ''`${6:${VISUAL:pass}}$0
+endsnippet
+
+snippet mld "Multiline docstring" b
+"""${1:summary line}
+
+${2:${VISUAL:text}}
+"""$0
+endsnippet
+
+snippet gd "Google Docstring" b
+${1:Args:`!p snip.rv= '\n\t'`${2:param_name}${3: (${4:type})}: ${5:description}`!p snip.rv = of(t, 6,'\n\t')`${6:${7:param_name}${8: (${9:type})}: ${10:description}}}`!p snip.rv = of(t, 1,'\n\n    ')`Returns:`!p snip.rv= '\n\t'`${11:type: }`!p snip.rv = of(t, 11,' ')`${12:description}`!p snip.rv= '\n\n' if t[13] else ''`${13:`!p snip.rv= '    '`Raises:`!p snip.rv= '\n\t'`${14:ExceptionType}: ${15:description}}$0
+endsnippet
+
+snippet dp "Docstring parameter" b
+${1:param_name}${2: (${3:type})}: ${4:description}$0
+endsnippet
+
+# **}
+# Code blocks **{
+
+snippet for "For loop" b
+for ${1:needle} in ${2:haystack}:
+	${3:${VISUAL:pass}}$0
+endsnippet
+
+snippet whi "While loop" b
+while ${1:condition}:
+	${2:${VISUAL:pass}}$0
+endsnippet
+
+snippet if "If conditional" b
+if ${1:condition}:
+	${2:${VISUAL:pass}}$0
+endsnippet
+
+snippet ife "If else conditional" b
+if ${1:condition}:
+	${2}
+else:
+	${3}$0
+endsnippet
+
+snippet ei "Elif statement" b
+elif ${1:condition}:$0
+endsnippet
+
+snippet try "Try / Except" b
+try:
+	${1:pass}
+except ${2:Exception}, ${3:e}:
+	${4:raise $3}$0
+endsnippet
+
+# **}
+# Matplotlib **{
+
+# Plot
+snippet fig "Plot/figure" b
+plt.plot(${1:x variable}, ${2:y variable}${3:,label='${4:legend}'})
+${5:plt.xlabel('${6:label}')
+plt.ylabel('${7:label}')
+plt.legend(${8:loc='${9:position}'})
+plt.grid()}`!p snip.rv = of(t, 5,'\n')`${10:plt.show()}$0
+endsnippet
+
+snippet sp "Subplots" b
+f, ax = plt.subplots(${1:rows}, ${2:columns})
+ax[${3:row}${4:,column}].${5:plot command}
+${6:ax[${7:row, column}]}$8
+plt.show()$0
+endsnippet
+
+# Save figure
+snippet sf "Save figure as PDF" b
+plt.savefig('${1:file name}' + '.pdf', bbox_inches='tight')
+plt.close()$0
+endsnippet
+
+# **}
+# Tests **{
+
+snippet mp "Monkeypatch" b
+@pytest.fixture
+def ${1:name}(monkeypatch):
+    monkeypatch.setattr('${2:full_import_path}', Mock())
+    return $2$0
+endsnippet
+
+snippet te "Test exception" b
+${1:method}.side_effect = ${2:Exception}(${3:expected_value})
+with pytest.raises($2):
+	$0
+endsnippet
+
+# **}
+# Miscellaneous **{
+
+snippet pri "Print" b
+print($1)$0
+endsnippet
+
+snippet bp "Set PDB breakpoint" b
+import pdb
+pdb.set_trace()$0
+endsnippet
+
+snippet ae "Abort execution" b
+import sys
+sys.exit()
+endsnippet
+
+snippet pa "Print and abort execution" b
+print($1)
+import sys
+sys.exit()$0
+endsnippet
+
+# Pickle dump and load
+snippet pd "Pickle dump" b
+with open(${1:directory  +}'${2:file name}.pkl', 'wb') as f:
+	pickle.dump(${3:variable or list}, f)$0
+endsnippet
+
+snippet pl "Pickle load" b
+with open(${1:directory +}'${2:file name}.pkl', 'rb') as f:
+		${3:variable or tuple} = pickle.load(f)$0
+endsnippet
+
+# Check if a directory exists and create it if it doesn't (create missing
+# directory)
+snippet cmd "Check and make directory" b
+if not os.path.exists('${1:directory}'):
+	os.makedirs('$1')$0
+endsnippet
+
+# Print results to text file
+snippet ptt "Print to text file" b
+with open('${1:filename}.txt', 'w+') as outfile:
+	print(${2:variable}, file=outfile)
+${3:print('Created text file with ${4:variable or info}.')}$0
+endsnippet
+
+snippet im "If main" b
+if __name__ == '__main__':
+	${1:${VISUAL:pass}}$0
+endsnippet
+
+# Add upper directory to path
+snippet iu "Import upper directory" b
+import sys
+sys.path.append('..')$0
+endsnippet
+
+# Check if file exists
+snippet cf "Check if file exists" b
+if not os.path.isfile(${1:file})$0
+endsnippet
+
+# Pandas maximum rows and columns
+snippet mr "Pandas max rows" b
+pd.set_option('display.max_rows', ${1:500})$0
+endsnippet
+
+snippet mc "Pandas max columns" b
+pd.set_option('display.width', ${1:1000})$0
+endsnippet
+
+snippet li "Logger info" b
+logger.info(${1:text})$0
+endsnippet
+
+# **}

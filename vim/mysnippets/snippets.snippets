@@ -1,0 +1,53 @@
+#===============================================================================
+#          File: snippets.snippets
+#        Author: Pedro Ferrari
+#       Created: 15 Apr 2013
+# Last Modified: 12 Dec 2014
+#   Description: Snippets for snippet files
+#===============================================================================
+snippet snip "Snippet definition" b
+`!p snip.rv = "snippet"` ${1:Tab_trigger} "${2:Description}" ${3:b}
+${VISUAL}$4
+`!p snip.rv = "endsnippet"`
+$0
+endsnippet
+
+snippet ph "Placeholder" i
+\$\{${1:tab_stop_no}:${2:${VISUAL:default text}}\}
+endsnippet
+
+snippet tra "Transformation" i
+\$\{${1:<tab_stop_no}/${2:regular_expression}/${3:replacement}/${4:g}}
+endsnippet
+
+snippet vis "${VISUAL}" i
+\$\{VISUAL${1:`!p snip.rv = ':'`${2:default text when not in visual mode}}\}
+endsnippet
+
+snippet shell "Shell interpolation" w
+\`${VISUAL}$1\`$0
+endsnippet
+
+snippet vim "Vim interpolation" w
+\`!v ${VISUAL}$1\`$0
+endsnippet
+
+snippet py "Python interpolation" w
+\`!p ${VISUAL}$1\`$0
+endsnippet
+
+snippet glo "Global snippet" !
+`!p snip.rv = "global"` !p
+${VISUAL}$1
+`!p snip.rv = "endglobal"`
+$0
+endsnippet
+
+snippet srv "Snippet return value" w
+snip.rv = $0
+endsnippet
+
+snippet of "Optional field" i
+\`!p snip.rv = of(t, ${1:number},'${2:text}')\`$0
+endsnippet
+

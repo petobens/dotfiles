@@ -1,0 +1,162 @@
+#===============================================================================
+#          File: bib.snippets
+#        Author: Pedro Ferrari
+#       Created: 01 Mar 2013
+# Last Modified: 25 Mar 2015
+#   Description: Bibtex snippets
+#===============================================================================
+# Python global functions **{
+
+global !p
+
+# Python 3
+def bibkey(names):
+    authors = filter(len,[i.lower() for i in names.split(" and ")])
+    # surnames = sorted(i.split(",")[0] if "," in i else i.split()[-1]
+                      # for i in authors)
+    surnames = [i.split(",")[0] if "," in i else i.split()[-1] for i in authors]
+    if len(surnames) == 0:
+        return ''
+    elif len(surnames) == 1:
+        if len(surnames[0].split(' ')[0]) > 3:
+            return surnames[0].split(' ')[0]
+        elif len(''.join(surnames[0].split(' '))) > 3:
+            return ''.join(surnames[0].split(' '))
+        else:
+            return surnames[0]
+    else:
+        if len(surnames[0].split(' ')[0]) > 3:
+            return surnames[0].split(' ')[0]
+        elif len(''.join(surnames[0].split(' '))) > 3:
+            return ''.join(surnames[0].split(' '))
+        elif len(surnames[1].split(' ')[0]) > 3:
+            return '{}{}'.format(surnames[0], surnames[1].split(' ')[0])
+        else:
+            return '{}{}'.format(surnames[0], ''.join(surnames[1].split(' ')))
+
+def alph(names):
+    authors = filter(len,[i for i in names.split(" and ")])
+    split_authors = []
+    for i in authors:
+        if "," in i:
+            split_authors.append(i.split(", " )[-1])
+            split_authors.append('{},'.format(i.split(", " )[0]))
+        else:
+            split_authors.append(' '.join(i.split()[:-1]))
+            split_authors.append(i.split()[-1])
+    last_names = sorted(split_authors[1::2])
+    order = []
+    for i in last_names:
+        if " " in i:
+            order.append('{} {}'.format(i,
+                         split_authors[split_authors.index(i) - 1]))
+        else:
+            order.append('{} {}'.format(split_authors[split_authors.index(i) -
+                                                      1], i))
+    return ' and '.join(order)
+
+# For optional fields:
+of = lambda t, c, text: text if len(t[c]) else ""
+endglobal
+
+# **}
+# Alphabetical Sorting **{
+
+snippet sort "Alphabetical sorting" w
+`!p snip.rv = alph(snip.v.text)`$0
+endsnippet
+
+# **}
+# Entry types **{
+
+snippet art "Article" b
+@Article{${8:`!p snip.rv = bibkey(t[1])``!p snip.rv = t[4][-2:]`},
+	author  = {${1:names separated by "and"}},
+	title   = {${2:title}},
+	journal = {${3:journal name}},
+	year    = {${4:year}},
+	volume  = {${5:volume number}},
+	number  = {${6:number}},
+	pages   = {${7:page range}}
+}$0
+endsnippet
+
+snippet book "Book" b
+@Book{${8:`!p snip.rv = bibkey(t[1])``!p snip.rv = t[7][-2:]`},
+	author      = {${1:names separated by "and"}},
+	title       = {${2:title}},
+	`!p snip.rv = of(t, 3, "edition     = ")`${3:\{${4:<C-j> for number greater than 1 or erase}\}}`!p snip.rv = of(t, 3, ",\n  ")`publisher   = {${5:publisher name}},
+	address     = {${6:address}},
+	year        = {${7:year}}
+}$0
+endsnippet
+
+snippet ib "InBook" b
+@InBook{${8:`!p snip.rv = bibkey(t[1])``!p snip.rv = t[7][-2:]`},
+	author     = {${1:names separated by "and"}},
+	title      = {${2:title}},
+	booktitle  = {${3:book title}},
+	bookauthor = {${4:names separated by "and"}},
+	publisher  = {${5:publisher name}},
+	address    = {${6:address}},
+	year       = {${7:year}}
+}$0
+endsnippet
+
+snippet ic "InCollection" b
+@InCollection{${10:`!p snip.rv = bibkey(t[1])``!p snip.rv = t[9][-2:]`},
+	author     = {${1:names separated by "and"}},
+	title      = {${2:title}},
+	booktitle  = {${3:collection title}},
+	`!p snip.rv = of(t, 4, "volume     = ")`${4:\{${5: <C-j> for number greater than 1 or erase}\}}`!p snip.rv = of(t, 4, ",\n  ")`editor     = {${6:names separated by "and"}},
+	publisher  = {${7:publisher name}},
+	address    = {${8:address}},
+	year       = {${9:year}}
+}$0
+endsnippet
+
+snippet ip "InProceedings" b
+@InProceedings{${9:`!p snip.rv = bibkey(t[1])``!p snip.rv = t[8][-2:]`},
+	author     = {${1:names separated by "and"}},
+	title      = {${2:title}},
+	booktitle  = {${3:Proceedings of}},
+	`!p snip.rv = of(t, 4, "volume     = ")`${4:\{${5: <C-j> for number greater than 1 or erase}\}}`!p snip.rv = of(t, 4, ",\n  ")`publisher  = {${6:publisher name}},
+	address    = {${7:address}},
+	year       = {${8:year}}
+}$0
+endsnippet
+
+snippet tr "Technical Report" b
+@TechReport{${10:`!p snip.rv = bibkey(t[1])``!p snip.rv = t[9][-2:]`},
+	author      = {${1:name}},
+	title       = {${2:title}},
+	type        = {${3:Working Paper}},
+	`!p snip.rv = of(t, 4, "number      = ")`${4:\{${5:<C-j> for number if any or erase}\}}`!p snip.rv = of(t, 4, ",\n  ")`institution = {${6:institution name}},
+	`!p snip.rv = of(t, 7, "month       = ")`${7:\{${8:<C-j> for month if any or erase}\}}`!p snip.rv = of(t, 7, ",\n  ")`year        = {${9:year}}
+}$0
+endsnippet
+
+snippet phd "PhD Thesis" b
+@PhDThesis{${6:`!p snip.rv = bibkey(t[1])``!p snip.rv = t[5][-2:]`},
+	author      = {${1:name}},
+	title       = {${2:title}},
+	institution = {${3:university name}},
+	address     = {${4:address}},
+	year        = {${5:year}}
+}$0
+endsnippet
+
+# **}
+# Additional entry fields **{
+
+snippet tra "Translator" b
+translator   = {${1:name}},
+origlanguage = {${2:language}},
+endsnippet
+
+snippet rp "Reprint" b
+related     = {${1:reference}},
+relatedtype = {reprint${2:of}},
+endsnippet
+
+# **}
