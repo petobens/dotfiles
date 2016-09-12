@@ -22,19 +22,12 @@ let s:is_mac = !s:is_win && (has('mac') || has('macunix') || has('gui_macvim')
             \ || system('uname') =~? '^darwin')
 let s:is_linux = !s:is_win && !s:is_mac
 
-" Cloud (OneDrive) settings
-if !empty($CLOUD)  " checks for env variable
-    let $CLOUD_DIR = expand($CLOUD)
-elseif isdirectory(expand('$HOME/OneDrive/'))
-    let $CLOUD_DIR = expand('$HOME/OneDrive/')
-elseif s:is_linux
-    let $CLOUD_DIR = expand('$HOME/pedrof/')
-else
-    let $CLOUD_DIR = $HOME
-endif
-
 " Define vimfiles directory
-let $DOTVIM = expand('$CLOUD_DIR/vimfiles')
+if s:is_win
+    let $DOTVIM = expand('$HOME/vimfiles')
+else
+    let $DOTVIM = expand('$HOME/.vim')
+endif
 
 " OS specific settings
 if s:is_win
@@ -838,11 +831,9 @@ augroup ft_ahk_hs
 augroup END
 
 if s:is_mac
-    nnoremap <silent> <Leader>eh :e
-                \ $CLOUD_DIR/dotfiles/hammerspoon/init.lua<CR>
+    nnoremap <silent> <Leader>eh :e $HOME/.hammerspoon/init.lua<CR>
 else
-    nnoremap <silent> <Leader>eh :e
-                \ $CLOUD_DIR/dotfiles/autohotkey.ahk<CR>
+    nnoremap <silent> <Leader>eh :e $HOME/.autohotkey.ahk<CR>
 endif
 
 " }}}
@@ -948,8 +939,7 @@ augroup ft_pentadactyl
     au FileType pentadactyl setlocal foldmethod=marker
 augroup END
 
-nnoremap <silent> <Leader>ep :e
-            \ $CLOUD_DIR/dotfiles/pentadactylrc<CR>
+nnoremap <silent> <Leader>ep :e $HOME/.pentadactylrc<CR>
 
 " }}}
 " Python {{{
