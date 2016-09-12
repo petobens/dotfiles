@@ -10,8 +10,8 @@
 " Move highlight and airline colors to heraldish; see itchyny landscape.vim
 " SQL support?
 " Filter to convert markdown to html, useful for mails
-" Neovim issues: fix spell, tex completion, alt mappings; set data_dir
-" for shada, rplugin and deoplete; disable nvimlog
+" Neovim issues: fix spell, tex completion; set data_dir for shada, rplugin and
+" deoplete; disable nvimlog
 
 " Preamble {{{
 
@@ -212,6 +212,8 @@ if !has('nvim')
     endif
 else
     set clipboard=unnamed
+    " This mimicks autoselect in neovim
+    vmap <Esc> "*ygv<C-c>
 endif
 
 " Persistent undo (i.e vim remembers undo actions even if file is closed and
