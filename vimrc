@@ -1685,8 +1685,8 @@ if dein#check_install(['unite']) == 0
     call unite#filters#sorter_default#use(['sorter_rank'])
 
     " Ignore some type of files
-    call unite#custom#source('file_rec, file_rec/async, file, buffer',
-                \ 'ignore_pattern', join(['\.git\/', 'tmp\/'], '\|')
+    call unite#custom#source('file_rec, file_rec/async, file_rec/neovim, file' .
+                \ ',buffer', 'ignore_pattern', join(['\.git\/', 'tmp\/'], '\|')
                 \ )
     call unite#custom#source('file_mru',
                 \ 'ignore_pattern', join(['\.git\/', 'tmp\/', 'doc\/'], '\|')
@@ -1740,10 +1740,15 @@ endif
 
 " Mappings (sources):
 if executable('ag')
-    nnoremap <silent> <Leader>fs :Unite
-                \ -buffer-name=fuzzy-search file_rec/async<CR>
+    if !has('nvim')
+        nnoremap <silent> <Leader>ls :Unite
+                    \ -buffer-name=fuzzy-search file_rec/async<CR>
+    else
+        nnoremap <silent> <Leader>ls :Unite
+                    \ -buffer-name=fuzzy-search file_rec/neovim<CR>
+    endif
 else
-    nnoremap <silent> <Leader>fs :Unite -buffer-name=fuzzy-search file_rec<CR>
+    nnoremap <silent> <Leader>ls :Unite -buffer-name=fuzzy-search file_rec<CR>
 endif
 nnoremap <silent> <Leader>sd :UniteWithInputDirectory -buffer-name=fuzzy-search
             \ file_rec/async<CR>
