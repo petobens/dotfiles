@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 12 Sep 2016
+# Last Modified: 13 Sep 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -131,8 +131,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
 '-nodesktop -nosplash '
 
-    # Alias to open vim sourcing minimal vimrc file
-    alias mvrc='vim -u $HOME/OneDrive/vimfiles/vimrc_min'
+    # Alias to open vim/nvim sourcing minimal vimrc file
+    alias mvrc='vim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
+    alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min -i NONE'
 
     # Update brew, python, R and tex (tlmgr requires password)
     alias ua='brew update && brew upgrade; pip-review --interactive; '\
