@@ -1325,9 +1325,13 @@ vmap <silent> <Leader>" mz:<C-u>execute
 " }}}
 " Echodoc {{{
 
-" TODO: Do we really need echodoc for python when we can just use jedi-vim to
-" show call signatures?
-let g:echodoc_enable_at_startup = 1
+" On vim we don't need echodoc for python because we can just use jedi-vim to
+" show call signatures? But on Neovim we do need it
+if has('nvim')
+    let g:echodoc_enable_at_startup = 1
+else
+    let g:echodoc_enable_at_startup = 0
+endif
 
 " Disable echodoc for tex and bib files
 function! s:disable_echodoc() abort
