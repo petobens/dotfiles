@@ -172,8 +172,6 @@ else
     cd() { builtin cd "$@" && ls -F --color=auto; }
     # Expand aliases when using sudo
     alias sudo='sudo '
-    # Alias to open vim sourcing minimal vimrc file
-    alias mvrc='vim -u $HOME/pedrof/vimfiles/vimrc_min'
     # Update packages (using apt-get)
     alias aptu='sudo apt-get update && sudo apt-get dist-upgrade && sudo '\
 'apt-get autoremove'
