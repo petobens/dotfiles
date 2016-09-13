@@ -23,7 +23,7 @@ ln -s "$dotfiles_dir/Rprofile" "$HOME/.Rprofile"
 ln -s "$dotfiles_dir/bash_profile" "$HOME/.bash_profile"
 ln -s "$dotfiles_dir/config/powerline" "$HOME/.config/powerline"
 
-if [[ "$OSTYPE" == 'darwin'* ]]; then
+if [ "$OSTYPE" == 'darwin'* ]; then
     ln -s "$dotfiles_dir/gitconfig_mac" "$HOME/.gitconfig"
     ln -s "$dotfiles_dir/hammerspoon" "$HOME/.hammerspoon"
     ln -s "$dotfiles_dir/arararc.yaml" "$HOME/.arararc.yaml"
