@@ -35,19 +35,6 @@ let g:neocomplete#sources#dictionary#dictionaries = {
         \ 'vimshell' : $DOTVIM.'/ftplugin/vimshell/vimshell_dictionary.dict'
         \ }
 
-function! s:Edit_Dict()
-    let dict_file = get(g:neocomplete#sources#dictionary#dictionaries,&filetype)
-    if empty(dict_file)
-        echo 'No dictionary file found.'
-        return
-    endif
-    let split_windows = 'vsplit '
-    if winwidth(0) <= 2 * (&tw ? &tw : 80)
-        let split_windows = 'split '
-    endif
-    execute split_windows . dict_file
-endfunction
-
 " Keyword patterns
 if !exists('g:neocomplete#keyword_patterns')
     let g:neocomplete#keyword_patterns = {}
@@ -102,11 +89,6 @@ if dein#check_install(['neocomplete']) == 0
     inoremap <expr> <C-g> neocomplete#undo_completion()
 endif
 
-" Move in preview window with tab
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 " Neocomplete cache
 nnoremap <silent> <Leader>nc :NeoCompleteClean\|NeoCompleteBufferMakeCache\|
             \ NeoCompleteDictionaryMakeCache<CR>
-" Edit dictionary files
-nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>

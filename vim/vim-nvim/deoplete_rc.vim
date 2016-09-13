@@ -51,19 +51,6 @@ let g:deoplete#sources#dictionary#dictionaries = {
         \ 'vimshell' : $DOTVIM.'/ftplugin/vimshell/vimshell_dictionary.dict'
         \ }
 
-function! s:Edit_Dict()
-    let dict_file = get(g:deoplete#sources#dictionary#dictionaries,&filetype)
-    if empty(dict_file)
-        echo 'No dictionary file found.'
-        return
-    endif
-    let split_windows = 'vsplit '
-    if winwidth(0) <= 2 * (&tw ? &tw : 80)
-        let split_windows = 'split '
-    endif
-    execute split_windows . dict_file
-endfunction
-
 " Keyword patterns
 if !exists('g:deoplete#keyword_patterns')
     let g:deoplete#keyword_patterns = {}
@@ -108,9 +95,3 @@ if dein#check_install(['deoplete']) == 0
     " Undo completion i.e remove whole completed word (default plugin mapping)
     inoremap <expr> <C-g> deoplete#undo_completion()
 endif
-
-" Move in preview window with tab
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-" Edit dictionary files
-nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>

@@ -1516,6 +1516,31 @@ else
     source $DOTVIM/vim-nvim/deoplete_rc.vim
 endif
 
+function! s:Edit_Dict()
+    if has('nvim')
+        let dict_file = get(g:deoplete#sources#dictionary#dictionaries,
+                    \ &filetype)
+    else
+        let dict_file = get(g:neocomplete#sources#dictionary#dictionaries,
+                    \ &filetype)
+    endif
+    if empty(dict_file)
+        echo 'No dictionary file found.'
+        return
+    endif
+    let split_windows = 'vsplit '
+    if winwidth(0) <= 2 * (&tw ? &tw : 80)
+        let split_windows = 'split '
+    endif
+    execute split_windows . dict_file
+endfunction
+
+" Move in preview window with tab
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+" Edit dictionary files
+nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>
+
 " }}}
 " Sneak {{{
 
