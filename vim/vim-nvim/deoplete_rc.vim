@@ -2,7 +2,7 @@
 "          File: deoplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 12 Sep 2016
+" Last Modified: 13 Sep 2016
 "   Description: Deoplete configuration
 "===============================================================================
 " Autoclose preview when completion is finished
@@ -17,7 +17,8 @@ if dein#check_install(['deoplete']) == 0
     call deoplete#custom#set('_', 'min_pattern_length', 1)
     " Use auto delimiter
     call deoplete#custom#set('_', 'converters',
-        \ ['converter_auto_delimiter', 'remove_overlap'])
+        \ ['converter_auto_delimiter', 'remove_overlap',
+        \ 'converter_auto_paren'])
     " Show ultisnips first
     call deoplete#custom#set('ultisnips', 'rank', 1000)
 endif
