@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 12 Sep 2016
+" Last Modified: 13 Sep 2016
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -10,7 +10,7 @@
 " Move highlight and airline colors to heraldish; see itchyny landscape.vim
 " SQL support?
 " Filter to convert markdown to html, useful for mails
-" Neovim issues: tex completion, fuzzy search, install on Ubuntu
+" Neovim issues: tex completion, fuzzy search, echodoc python, install on Ubuntu
 
 " Preamble {{{
 

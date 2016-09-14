@@ -61,11 +61,6 @@ if dein#check_install(['neocomplete']) == 0
 endif
 
 " Omni patterns
-if !exists('g:neocomplete#sources#omni#functions')
-    let g:neocomplete#sources#omni#functions= {}
-endif
-let g:neocomplete#sources#omni#functions.sql = 'sqlcomplete#Complete'
-
 if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
 endif

@@ -2,7 +2,7 @@
 "          File: deoplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 13 Sep 2016
+" Last Modified: 14 Sep 2016
 "   Description: Deoplete configuration
 "===============================================================================
 " Autoclose preview when completion is finished
@@ -71,11 +71,6 @@ if dein#check_install(['deoplete']) == 0
 endif
 
 " Omni patterns
-if !exists('g:deoplete#sources#omni#functions')
-    let g:deoplete#sources#omni#functions= {}
-endif
-let g:deoplete#sources#omni#functions.sql = 'sqlcomplete#Complete'
-
 if !exists('g:deoplete#omni#input_patterns')
     let g:deoplete#omni#input_patterns = {}
 endif
