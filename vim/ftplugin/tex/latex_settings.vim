@@ -2,7 +2,7 @@
 "          File: latex_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2013
-" Last Modified: 03 Sep 2016
+" Last Modified: 14 Sep 2016
 "   Description: Latex settings
 "===============================================================================
 " TODOs:

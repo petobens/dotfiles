@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 13 Sep 2016
+" Last Modified: 14 Sep 2016
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -903,6 +903,11 @@ augroup ft_tex
     au FileType tex setlocal indentkeys=!^F,o,O,0=\\item
     " Highlight dmath environments as equation environments
     au FileType tex call TexNewMathZone("M","dmath",1)
+    " Set dictionary in neovim (for deoplete)
+    if has('nvim')
+        au FileType tex setlocal
+                \ dictionary=$DOTVIM/ftplugin/tex/tex_dictionary.dict
+    endif
 augroup END
 
 " }}}
@@ -1505,20 +1510,19 @@ map <Leader>ac <Plug>NERDCommenterAppend
 " Vim completion settings
 set pumheight=15                          " Popup menu max height
 set complete=.                            " Scan only the current buffer
+set completeopt=menuone,preview
 
 " Use neocomplete in Vim and deoplete in Neovim
 if !has('nvim')
-    set completeopt=menuone,preview
     source $DOTVIM/vim-nvim/neocomplete_rc.vim
 else
-    set completeopt=menuone,preview,noinsert
+    set completeopt+=noinsert
     source $DOTVIM/vim-nvim/deoplete_rc.vim
 endif
 
 function! s:Edit_Dict()
     if has('nvim')
-        let dict_file = get(g:deoplete#sources#dictionary#dictionaries,
-                    \ &filetype)
+        let dict_file = &l:dictionary
     else
         let dict_file = get(g:neocomplete#sources#dictionary#dictionaries,
                     \ &filetype)
@@ -1534,6 +1538,11 @@ function! s:Edit_Dict()
     execute split_windows . dict_file
 endfunction
 
+" If a snippet is available enter expands it; if not available, it selects
+" current candidate and closes the popup menu (i.e it ends completion)
+inoremap <silent><expr><CR> pumvisible() ?
+    \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
+    \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
 " Move in preview window with tab
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"

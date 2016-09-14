@@ -45,47 +45,35 @@ let g:deoplete#sources.snippets = ['ultisnips']
 let g:deoplete#sources.tex = ['buffer', 'dictionary', 'ultisnips', 'file',
         \ 'omni']
 
-" Dictionaries (and function to edit them if available)
-let g:deoplete#sources#dictionary#dictionaries = {
-        \ 'default' : '',
-        \ 'tex' : $DOTVIM.'/ftplugin/tex/tex_dictionary.dict',
-        \ 'vimshell' : $DOTVIM.'/ftplugin/vimshell/vimshell_dictionary.dict'
-        \ }
-
-" Keyword patterns
-if !exists('g:deoplete#keyword_patterns')
-    let g:deoplete#keyword_patterns = {}
-endif
-let g:deoplete#keyword_patterns._ = '[A-Za-zá-úÁ-ÚñÑ_][0-9A-Za-zá-úÁ-ÚñÑ_]*'
-
-" Custom source patterns and attributes
-" FIXME: This should be Python3 regexp?
-let keyword_patterns = {}
-let keyword_patterns = {'tex' : '\h\w\{,2}:\%(\w*\|\w*_\w*\)\?'}
-let keyword_patterns2 = {'tex' : '\\?[a-zA-Z_]\w*'}
+" Custom source patterns and attributes (note this is a python3 regex and not a
+" vim one)
+let tex_buffer_patterns = {'tex' : '\w{2,}:\S+'}
+let tex_dict_patterns = {'tex' : '\\?[a-zA-Z_]\w*'}
 if dein#check_install(['deoplete']) == 0
     call deoplete#custom#set('buffer', 'keyword_patterns',
-            \ keyword_patterns)
+            \ tex_buffer_patterns)
     call deoplete#custom#set('dictionary', 'keyword_patterns',
-            \ keyword_patterns2)
+            \ tex_dict_patterns)
 endif
 
 " Omni patterns
+" if !exists('g:deoplete#omni_patterns')
+    " let g:deoplete#omni_patterns = {}
+" endif
+" let g:deoplete#omni_patterns.tex ='\v\\\a*cite\a*([^]]*\])?\{(|[^}]*,)' .
+        " \ '|(includegraphics|input|include|includeonly)' .
+        " \ '%(\s*\[[^]]*\])?\s*\{[^{}]*'
 if !exists('g:deoplete#omni#input_patterns')
     let g:deoplete#omni#input_patterns = {}
 endif
-let g:deoplete#omni#input_patterns.tex =
-        \ '\v\\\a*cite\a*([^]]*\])?\{(|[^}]*,)' .
-        \ '|(includegraphics|input|include|includeonly)' .
-        \ '%(\s*\[[^]]*\])?\s*\{[^{}]*'
+let g:deoplete#omni#input_patterns.tex = '\\(?:'
+    \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
+    \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+    \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
+    \ .')'
 
 " Mappings
 if dein#check_install(['deoplete']) == 0
-    " If a snippet is available enter expands it; if not available, it selects
-    " current candidate and closes the popup menu (i.e it ends completion)
-    inoremap <silent><expr><CR> pumvisible() ?
-        \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
-        \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
     " Close popup and delete backward character
     inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
     " Undo completion i.e remove whole completed word (default plugin mapping)

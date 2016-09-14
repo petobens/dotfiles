@@ -2,7 +2,7 @@
 "          File: neocomplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 12 Sep 2016
+" Last Modified: 14 Sep 2016
 "   Description: Neocomplete configuration
 "===============================================================================
 let g:neocomplete#enable_at_startup = 1
@@ -73,11 +73,6 @@ let g:neocomplete#force_omni_input_patterns.python =
 
 " Mappings
 if dein#check_install(['neocomplete']) == 0
-    " If a snippet is available enter expands it; if not available, it selects
-    " current candidate and closes the popup menu (i.e it ends completion)
-    inoremap <silent><expr><CR> pumvisible() ?
-        \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
-        \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
     " Close popup and delete backward character
     inoremap <expr><BS> neocomplete#smart_close_popup()."\<BS>"
     " Undo completion i.e remove whole completed word (default plugin mapping)
