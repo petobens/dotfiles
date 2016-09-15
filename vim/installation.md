@@ -68,3 +68,5 @@ To install it use: `brew install --HEAD neovim`
 To update it use: `brew reinstall --HEAD neovim`
 Note for Alt to work on Neovim with need to set in Iterm to +Esc (in vim it must
 be set to Meta)
+
+On Linux if cmake installation fails use `brew install cmake --without-docs`
