@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 13 Sep 2016
+# Last Modified: 15 Sep 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -133,7 +133,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Alias to open vim/nvim sourcing minimal vimrc file
     alias mvrc='vim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
-    alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min -i NONE'
+    alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
 
     # Update brew, python, R and tex (tlmgr requires password)
     alias ua='brew update && brew upgrade && brew cleanup; pip-review '\
