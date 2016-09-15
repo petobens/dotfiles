@@ -16,10 +16,12 @@ if dein#check_install(['deoplete']) == 0
     " Start completion after two characters are typed (this is the default)
     " Note: if we explicitly set this then auto file completion is lost
     " call deoplete#custom#set('_', 'min_pattern_length', 2)
-    " Use auto delimiter
+    " Use auto delimiter and autoparen (not in omni source)
     call deoplete#custom#set('_', 'converters',
         \ ['converter_auto_delimiter', 'remove_overlap',
         \ 'converter_auto_paren'])
+    call deoplete#custom#set('omni', 'converters',
+        \ ['converter_auto_delimiter', 'remove_overlap'])
     " Show ultisnips first and activate completion after 1 character
     call deoplete#custom#set('ultisnips', 'rank', 1000)
     call deoplete#custom#set('ultisnips', 'min_pattern_length', 1)
