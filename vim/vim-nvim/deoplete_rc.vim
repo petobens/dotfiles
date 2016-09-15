@@ -23,6 +23,8 @@ if dein#check_install(['deoplete']) == 0
     " Show ultisnips first and activate completion after 1 character
     call deoplete#custom#set('ultisnips', 'rank', 1000)
     call deoplete#custom#set('ultisnips', 'min_pattern_length', 1)
+    " Extend max candidate width in popup menu for buffer source
+    call deoplete#custom#set('buffer', 'max_menu_width', 90)
 endif
 
 let g:deoplete#enable_at_startup = 1
@@ -31,7 +33,6 @@ let g:deoplete#enable_smart_case = 1
 let g:deoplete#max_list = 150
 " let g:neocomplete#data_directory = $CACHE . '/plugins/neocomplete'
 " let g:neocomplete#enable_multibyte_completion = 1
-" let g:neocomplete#sources#buffer#max_keyword_width = 90
 let g:deoplete#enable_refresh_always = 1
 
 " Python (jedi)
