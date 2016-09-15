@@ -1516,6 +1516,12 @@ if !has('nvim')
 else
     set completeopt+=noinsert
     source $DOTVIM/vim-nvim/deoplete_rc.vim
+    if s:is_mac
+        let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
+    else
+        let g:deoplete#sources#jedi#python_path =
+                    \ '/home/ubuntu/.linuxbrew/bin/python3'
+    endif
 endif
 
 function! s:Edit_Dict()

@@ -38,7 +38,6 @@ let g:deoplete#enable_refresh_always = 1
 
 " Python (jedi)
 let deoplete#sources#jedi#show_docstring = 1
-let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 
 " Sources used for completion
 if !exists('g:deoplete#sources')
