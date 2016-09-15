@@ -124,18 +124,16 @@ call dein#add('Shougo/dein.vim')
 call dein#add('Shougo/unite.vim')
 call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
 call dein#add('Shougo/vimshell.vim')
+" Note: We need vimproc in neovim for grep source to work
+let s:vimproc_make = 'make -f make_mac.mak'
+if s:is_win
+    let s:vimproc_make = 'tools\\update-dll-mingw'
+elseif s:is_linux
+    let s:vimproc_make = 'make'
+endif
+call dein#add('Shougo/vimproc.vim', {'build' : s:vimproc_make})
 if !has('nvim')
     call dein#add('Shougo/neocomplete.vim')
-    " Note: when sharing bundle folder in the cloud we need to manually build
-    " vimproc for either windows or mac (since it is built automatically only
-    " for the os where we run dein#update())
-    let s:vimproc_make = 'make -f make_mac.mak'
-    if s:is_win
-        let s:vimproc_make = 'tools\\update-dll-mingw'
-    elseif s:is_linux
-        let s:vimproc_make = 'make'
-    endif
-    call dein#add('Shougo/vimproc.vim', {'build' : s:vimproc_make})
 else
     call dein#add('Shougo/deoplete.nvim')
     " call dein#add('Shougo/denite.nvim')
