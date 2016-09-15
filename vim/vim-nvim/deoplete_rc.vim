@@ -25,14 +25,13 @@ if dein#check_install(['deoplete']) == 0
     call deoplete#custom#set('ultisnips', 'min_pattern_length', 1)
     " Extend max candidate width in popup menu for buffer source
     call deoplete#custom#set('buffer', 'max_menu_width', 90)
+    " Complete dictionary after one character
+    call deoplete#custom#set('dictionary', 'min_pattern_length', 1)
 endif
 
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
-" let g:neocomplete#min_keyword_length = 2
 let g:deoplete#max_list = 150
-" let g:neocomplete#data_directory = $CACHE . '/plugins/neocomplete'
-" let g:neocomplete#enable_multibyte_completion = 1
 let g:deoplete#enable_refresh_always = 1
 
 " Python (jedi)
@@ -50,7 +49,7 @@ let g:deoplete#sources.tex = ['buffer', 'dictionary', 'ultisnips', 'file',
 
 " Custom source patterns and attributes (note this is a python3 regex and not a
 " vim one)
-let tex_buffer_patterns = {'tex' : '\w{2,}:\S+'}
+let tex_buffer_patterns = {'tex' : '[a-zA-Z_]\w{2,}:\S+'}
 let tex_dict_patterns = {'tex' : '\\?[a-zA-Z_]\w*'}
 if dein#check_install(['deoplete']) == 0
     call deoplete#custom#set('buffer', 'keyword_patterns',
@@ -59,24 +58,15 @@ if dein#check_install(['deoplete']) == 0
             \ tex_dict_patterns)
 endif
 
-" Omni patterns
-" if !exists('g:deoplete#omni_patterns')
-    " let g:deoplete#omni_patterns = {}
-" endif
-" let g:deoplete#omni_patterns.tex ='\v\\\a*cite\a*([^]]*\])?\{(|[^}]*,)' .
-        " \ '|(includegraphics|input|include|includeonly)' .
-        " \ '%(\s*\[[^]]*\])?\s*\{[^{}]*'
-
-" FIXME: If we enable omni we lose dictionary completion
-" if !exists('g:deoplete#omni#input_patterns')
-    " let g:deoplete#omni#input_patterns = {}
-" endif
-" let g:deoplete#omni#input_patterns.tex = '\\(?:'
-    " \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
-    " \ . '|\w*ref(?:\s*\{[^}]*|range\s*\{[^,}]*(?:}{)?)'
-    " \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-    " \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
-    " \ .')'
+" Omni completion (for tex it requires vimtex plugin)
+if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+endif
+let g:deoplete#omni#input_patterns.tex = '\\(?:'
+    \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
+    \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+    \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
+    \ .')'
 
 " Mappings
 if dein#check_install(['deoplete']) == 0
