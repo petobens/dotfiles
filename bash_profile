@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 15 Sep 2016
+# Last Modified: 16 Sep 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -197,9 +197,9 @@ if [ -f ~/.fzf.bash ]; then
     # Extend list of commands with fuzzy completion (basically add our aliases)
     complete -F _fzf_file_completion -o default -o bashdefault v o
 
-    # Disable tmux integration (because it crashes)
-    # FIXME: See why this doesn't work
-    export FZF_TMUX='0'
+    # Disable tmux integration (if fzf crashes)
+    # export FZF_TMUX='0'
+    export FZF_TMUX_HEIGHT='15'
 
     # Fix Alt-C mapping (needed for when we set Alt to act as meta key in Iterm
     # preferences; for instance to make alt key work on vim)
