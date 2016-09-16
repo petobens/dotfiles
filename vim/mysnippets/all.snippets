@@ -2,7 +2,7 @@
 #          File: all.snippets
 #        Author: Pedro Ferrari
 #       Created: 25 Feb 2013
-# Last Modified: 12 Sep 2016
+# Last Modified: 16 Sep 2016
 #   Description: Snippets available in every filetype
 #===============================================================================
 # Global snippets **{
@@ -40,6 +40,8 @@ snippet hea "Header" b
 ${1:`!p if vim.eval("&ft") == 'sh':
 	snip.rv = '#!/usr/bin/env bash\n'``!p
 line, cms, vtw = boxc('=', len(t[1]), int(vim.eval("&tw")))
+if vim.eval("&ft") == 'r':
+	cms = cms + '\''
 snip.rv = line`
 `!p snip.rv = cms`          File: `!v expand('%:t')`
 `!p snip.rv = cms`        Author: Pedro Ferrari
