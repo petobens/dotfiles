@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 16 Sep 2016
+# Last Modified: 20 Sep 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -146,18 +146,18 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
     # session called pedrof or attaching to an existing one with that name.
     # Add -X after ssh to enable X11 forwarding
-    alias emr='ssh prd-emr-master -t tmux -f '\
+    alias emr='ssh emr -t tmux -f '\
 '"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof'
     # Presto client
-    alias pcli='ssh prd-emr-master -t tmux -f '\
+    alias pcli='ssh emr -t tmux -f '\
 '"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
 
-    # Ubuntu instance (with tmux)
-    alias ui='ssh ubuntu-as'
+    # Gerry instance (with tmux)
+    alias ui='ssh gerry'
     # When using linux brew we need to specify a full path to the tmux
     # executable
-    alias utm='ssh ubuntu-as -t /home/ubuntu/.linuxbrew/bin/tmux -f'\
+    alias utm='ssh gerry -t /home/ubuntu/.linuxbrew/bin/tmux -f'\
 '"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
 
     # Fix open in tmux (requires installing reattach-to-user-namespace)
