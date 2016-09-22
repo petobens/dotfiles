@@ -2,7 +2,7 @@
 #          File: arararc.yaml
 #        Author: Pedro Ferrari
 #       Created: 01 Apr 2015
-# Last Modified: 12 Sep 2016
+# Last Modified: 22 Sep 2016
 #   Description: Configuration file for arara 4
 # ==============================================================================
 ---
@@ -24,5 +24,4 @@ preambles:
         % arara: --> && found('bcf', 'citekey')
         % arara: pdflatex: {interaction: batchmode, synctex: yes,
         % arara: --> options: ["-file-line-error", "-max-print-line=120"]}
-        % arara: --> if found('log', '(undefined references|Please rerun|Rerun
-            to get)')
+        % arara: --> if found('log', '(undefined references|Please rerun|Rerun to get)')
