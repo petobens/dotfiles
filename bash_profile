@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 20 Sep 2016
+# Last Modified: 22 Sep 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -43,8 +43,8 @@ else
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
 fi
 
-# Set editor to vim
-export EDITOR=vim
+# Set editor to nvim
+export EDITOR=nvim
 
 # R libraries
 export R_LIBS="$brew_dir/lib/R/site-library"
