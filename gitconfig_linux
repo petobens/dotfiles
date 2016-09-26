@@ -6,7 +6,6 @@
 [core]
 	editor = nvim
     excludesfile = ~/.gitignore
-	attributesfile = ~/.gitattributes
 [web]
 	browser = start
 [credential]
