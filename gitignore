@@ -38,6 +38,3 @@ Icon?
 *.toc
 *.nav
 *.snm
-
-# Git
-.gitattributes
