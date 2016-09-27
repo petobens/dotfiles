@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 27 Aug 2016
+# Last Modified: 27 Sep 2016
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -50,8 +50,8 @@ snippet class "class with docstrings" b
 class ${1:MyClass}${2:(${3:parent})}:
 
 
-	def __init__(self${7:, args}):
-		${4:"""${5:one-line docstring.}"""}`!p snip.rv= '\n\t' if t[4] else ''`${6:${VISUAL:pass}}$0
+	def __init__(self${4:, args}):
+		${5:${VISUAL:}}$0
 endsnippet
 
 snippet cm "Class method" b
