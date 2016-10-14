@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 15 Sep 2016
+" Last Modified: 14 Oct 2016
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -875,6 +875,14 @@ augroup ft_bib
 augroup END
 
 " }}}
+" Crontab {{{
+
+augroup ft_crontab
+    au!
+    au FileType crontab set nobackup nowritebackup
+augroup END
+
+" }}}
 " (La)TeX {{{
 
 " Note: Most LaTeX settings are in the ftplugin folder
@@ -1286,6 +1294,11 @@ let g:dispatch_tmux_height = 1
 
 " Mapping to open console in current directory
 nnoremap <silent> <Leader>cs :Start<CR>
+
+" Fix for tmux > 2.3
+" if exists('$TMUX')
+    " set shellpipe=2>&1\|\ tee\
+" endif
 
 " }}}
 " EasyAlign {{{
