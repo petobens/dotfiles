@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 14 Oct 2016
+" Last Modified: 18 Oct 2016
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1294,11 +1294,6 @@ let g:dispatch_tmux_height = 1
 
 " Mapping to open console in current directory
 nnoremap <silent> <Leader>cs :Start<CR>
-
-" Fix for tmux > 2.3
-" if exists('$TMUX')
-    " set shellpipe=2>&1\|\ tee\
-" endif
 
 " }}}
 " EasyAlign {{{
