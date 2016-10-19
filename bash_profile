@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 22 Sep 2016
+# Last Modified: 19 Oct 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -51,6 +51,10 @@ export R_LIBS="$brew_dir/lib/R/site-library"
 
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
+
+# Increase history
+HISTSIZE=1000
+HISTFILESIZE=2000
 
 # Ignore case when completing and show all possible matches (note that we pass
 # Readline commands as a single argument to bind built in function instead of
