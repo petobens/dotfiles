@@ -156,7 +156,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     alias pcli='ssh emr -t tmux -f '\
 '"/home/hadoop/.tmux/tmux.conf" new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
-
+    # Airflow (reach)
+    alias airflow='ssh airflow -t tmux -f '\
+'"/home/ec2-user/.tmux/tmux.conf" new -A -s reach'
     # Gerry instance (with tmux)
     alias ui='ssh gerry'
     # When using linux brew we need to specify a full path to the tmux
