@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 12 Sep 2016
+# Last Modified: 02 Dec 2016
 #   Description: Create all necessary symbolic links
 #===============================================================================
 # TODO: Use a loop and check if symlinks already exist
@@ -18,6 +18,7 @@ ln -s "$dotfiles_dir/vimrc" "$HOME/.vimrc"
 ln -s "$dotfiles_dir/vim/" "$HOME/.config/nvim"
 ln -s "$dotfiles_dir/vimrc" "$HOME/.config/nvim/init.vim"
 ln -s "$dotfiles_dir/vintrc.yaml" "$HOME/.vintrc.yaml"
+ln -s "$dotfiles_dir/eslintrc.yaml" "$HOME/.eslintrc.yaml"
 ln -s "$dotfiles_dir/Rprofile" "$HOME/.Rprofile"
 ln -s "$dotfiles_dir/bash_profile" "$HOME/.bash_profile"
 ln -s "$dotfiles_dir/config/powerline" "$HOME/.config/powerline"
