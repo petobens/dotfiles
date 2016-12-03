@@ -2,7 +2,7 @@
 "          File: javascript_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Dec 2016
-" Last Modified: 02 Dec 2016
+" Last Modified: 03 Dec 2016
 "   Description: My Javascript settings
 "===============================================================================
 " Installation notes {{{
@@ -392,17 +392,15 @@ function! s:RunEsLint()
     let current_file = expand('%:p:t')
 
     " Set compiler
-    let compiler = 'eslint -f compact -c ' . eslintrc . ' '
+    let compiler = 'eslint --format compact --color ' . eslintrc . ' '
     let &l:makeprg = compiler . current_file
     " Set error format
     let old_efm = &l:efm
     let &l:efm = '%E%f: line %l\, col %c\, Error - %m,' .
-        \ '%W%f: line %l\, col %c\, Warning - %m'
+        \ '%W%f: line %l\, col %c\, Warning - %m, %-G%.%#'
 
     " Use Dispatch for background async compilation if available
     if exists(':Dispatch')
-        " First add extra catchall because Dispatch removes it
-        " let &l:efm = &efm . ',%-G%.%#'
         echon 'running eslint with dispatch ...'
         if s:is_win
             call s:NoShellSlash('Make')
