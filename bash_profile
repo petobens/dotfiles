@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 21 Nov 2016
+# Last Modified: 06 Dec 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -154,7 +154,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 '"/home/hadoop/.tmux/tmux.conf" new -A -s pedrof'
     # Presto client
     alias pcli='ssh emr -t tmux -f '\
-'"/home/hadoop/.tmux/tmux.conf" new -A -s pedrof '\
+'"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
     # Airflow (reach)
     alias airflow='ssh airflow -t tmux -f '\
