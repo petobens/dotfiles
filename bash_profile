@@ -14,7 +14,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Path settings
     PATH="/usr/bin:/bin:/usr/sbin:/sbin"
     export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH" # homebrew
-    export PATH="$HOME/prog-tools/arara4:$PATH" # arara
+    export PATH="$HOME/OneDrive/prog-tools/arara4:$PATH" # arara
     export PATH="/Library/TeX/texbin:$PATH" # basictex
     export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
 
