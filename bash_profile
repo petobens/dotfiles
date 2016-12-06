@@ -150,15 +150,15 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
     # session called pedrof or attaching to an existing one with that name.
     # Add -X after ssh to enable X11 forwarding
-    alias emr='ssh emr -t tmux -f '\
-'"/home/hadoop/.tmux/tmux.conf" new -A -s pedrof'
+    alias emr='ssh emr -t tmux '\
+'new -A -s pedrof'
     # Presto client
-    alias pcli='ssh emr -t tmux -f '\
-'"/home/hadoop/pedrof_files/tmux_emr.conf" new -A -s pedrof '\
+    alias pcli='ssh emr -t tmux '\
+'new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
     # Airflow (reach)
-    alias airflow='ssh airflow -t tmux -f '\
-'"/home/ec2-user/.tmux/tmux.conf" new -A -s reach'
+    alias airflow='ssh airflow -t tmux '\
+'new -A -s reach'
     # Gerry instance (with tmux)
     alias ui='ssh gerry'
     # When using linux brew we need to specify a full path to the tmux
