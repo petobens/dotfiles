@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 06 Dec 2016
+# Last Modified: 07 Dec 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -46,7 +46,7 @@ fi
 # Set editor to nvim
 export EDITOR=nvim
 
-# R libraries
+# R libraries (note: first create this folder if it doesn't exist)
 export R_LIBS="$brew_dir/lib/R/site-library"
 
 # Disable control flow (necessary to enable C-s bindings in vim)
