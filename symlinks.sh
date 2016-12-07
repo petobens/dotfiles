@@ -3,12 +3,14 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 02 Dec 2016
+# Last Modified: 06 Dec 2016
 #   Description: Create all necessary symbolic links
 #===============================================================================
 # TODO: Use a loop and check if symlinks already exist
 # FIXME: symbolic links to directories replicate target directory
 dotfiles_dir="$HOME/git-repos/private/dotfiles"
+
+mkdir -p "$HOME/.config/"
 
 ln -s "$dotfiles_dir/ctags" "$HOME/.ctags"
 ln -s "$dotfiles_dir/gitignore" "$HOME/.gitignore"
