@@ -2,7 +2,7 @@
 "          File: bash_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Aug 2016
-" Last Modified: 27 Aug 2016
+" Last Modified: 06 Dec 2016
 "   Description: My Bash settings file
 "===============================================================================
 " Installation notes {{{
@@ -432,7 +432,7 @@ function! s:RunBeautySh(...)
     endif
 
     let old_formatprg = &l:formatprg
-    setlocal formatprg=beautysh\ -
+    let &l:formatprg = 'beautysh -f -'
     if a:0 && a:1 ==# 'visual'
         execute 'normal! gvgq'
     else
@@ -446,7 +446,8 @@ endfunction
 " Automatically run beautysh and shellcheck on save
 augroup sh_linting
     au!
-    au BufWritePost *.sh call s:RunBeautySh() | call s:RunShellCheck()
+    " au BufWritePost *.sh call s:RunBeautySh() | call s:RunShellCheck()
+    au BufWritePost *.sh call s:RunShellCheck()
 augroup END
 
 " }}}
