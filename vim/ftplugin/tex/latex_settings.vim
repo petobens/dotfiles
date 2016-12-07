@@ -2,7 +2,7 @@
 "          File: latex_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2013
-" Last Modified: 14 Sep 2016
+" Last Modified: 06 Dec 2016
 "   Description: Latex settings
 "===============================================================================
 " TODOs:
@@ -565,15 +565,22 @@ function! s:ForwardInverseSearch(direction)
         let forward =  ' -forward-search ' . expand('%:p') . ' ' . line('.')
 
     elseif s:is_mac
-        if !executable('displayline')
+        let displayline_path = '/Applications/Skim.app/Contents/' .
+                    \ 'SharedSupport/displayline'
+        if !executable('displayline') && !filereadable(displayline_path)
             echoerr 'Skim displayline is not installed or not in your path.'
             return
         endif
+        if filereadable(displayline_path)
+            let displayline_cmd = displayline_path
+        else
+            let displayline_cmd = 'displayline'
+        end
         let bang_command = '! '
         if exists(':Dispatch')
             let bang_command = 'Start! '
         endif
-        let viewer = 'silent! ' . bang_command . 'displayline'
+        let viewer = 'silent! ' . bang_command . displayline_cmd
         let forward =  ' -r -g ' . line('.') . ' ' . pdf_file .  ' ' .
               \ expand('%:p')
     endif
