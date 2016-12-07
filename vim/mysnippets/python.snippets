@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 27 Sep 2016
+# Last Modified: 07 Dec 2016
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -221,6 +221,10 @@ endsnippet
 
 snippet mc "Pandas max columns" b
 pd.set_option('display.width', ${1:1000})$0
+endsnippet
+
+snippet pdf "Pandas DataFrame" w
+pd.DataFrame(${1:[[$2]]}, columns=[$3])$0
 endsnippet
 
 snippet li "Logger info" b
