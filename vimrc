@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 01 Dec 2016
+" Last Modified: 07 Dec 2016
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1679,7 +1679,7 @@ endif
 " want this for new file use BufNew event instead)
 augroup ps_ultisnips
     au!
-    au BufNewFile,BufRead *.{bib,py,snippets,tex,txt,vim,m,R,r,src,prg,sh,yaml}
+    au BufNewFile,BufRead *.{bib,py,snippets,tex,txt,vim,m,R,r,src,js,sh,yaml}
                 \ call s:ExpandHeader()
 augroup END
 function! s:ExpandHeader()
