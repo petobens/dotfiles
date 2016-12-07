@@ -883,6 +883,14 @@ augroup ft_crontab
 augroup END
 
 " }}}
+" Javascript {{{
+
+augroup ft_js
+    au!
+    au Filetype javascript setlocal commentstring=//%s
+augroup END
+
+" }}}
 " (La)TeX {{{
 
 " Note: Most LaTeX settings are in the ftplugin folder
