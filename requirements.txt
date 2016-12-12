@@ -13,6 +13,7 @@ jedi
 jupyter
 matplotlib
 mysql-connector
+neovim
 numpy
 pandas
 powerline-status
