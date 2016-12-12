@@ -1,0 +1,25 @@
+================================================================================
+          File: requirements.txt
+        Author: Pedro Ferrari
+       Created: 12 Dec 2016
+ Last Modified: 12 Dec 2016
+   Description: Usual python libraries
+================================================================================
+autopep8
+bokeh
+cython
+flake8
+jedi
+jupyter
+matplotlib
+mysql-connector
+numpy
+pandas
+powerline-status
+pyhive
+scikit-learn
+scipy
+vim-vint
+xlrd
+xlwings
+yamllint
