@@ -2,11 +2,12 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 12 Sep 2016
+" Last Modified: 20 Dec 2016
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
 " TODO: Learn how to use breakpoints
+" TODO: Use mypy
 
 " Installation notes {{{
 
