@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 12 Dec 2016
+# Last Modified: 23 Dec 2016
 #   Description: Usual python libraries
 # ==============================================================================
 autopep8
@@ -22,5 +22,4 @@ scikit-learn
 scipy
 vim-vint
 xlrd
-xlwings
 yamllint
