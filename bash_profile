@@ -163,7 +163,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     alias ui='ssh gerry'
     # When using linux brew we need to specify a full path to the tmux
     # executable
-    alias utm='ssh gerry -t /home/ubuntu/.linuxbrew/bin/tmux -f'\
+    alias utm='ssh gerry -t /mnt/.linuxbrew/bin/tmux -f'\
 '"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
 
     # Fix open in tmux (requires installing reattach-to-user-namespace)
