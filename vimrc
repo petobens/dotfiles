@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 07 Dec 2016
+" Last Modified: 23 Dec 2016
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:

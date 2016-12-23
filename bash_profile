@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 07 Dec 2016
+# Last Modified: 23 Dec 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -33,7 +33,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export LSCOLORS=exfxCxDxbxegedabagaced
 else
     # Linuxbrew
-    brew_dir="$HOME/.linuxbrew"
+    brew_dir="/mnt/.linuxbrew"
     export PATH="$brew_dir/bin:$PATH"
     export MANPATH="$brew_dir/share/man:$MANPATH"
     export INFOPATH="$brew_dir/share/info:$INFOPATH"
@@ -183,8 +183,7 @@ else
 'apt-get autoremove'
     # Update brew and python
     alias ua='brew update && brew upgrade && brew cleanup; pip-review '\
-'--interactive; R --slave --no-save --no-restore -e "update.packages('\
-'ask=FALSE, checkBuilt=TRUE)"'
+'--interactive'
     # Open tmux loading config file
     alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s pedrof'
 fi
