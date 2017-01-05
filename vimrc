@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 23 Dec 2016
+" Last Modified: 05 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -80,79 +80,83 @@ endif
 
 " Directory where plugins are placed. The function also disables filetype
 " automatically
-call dein#begin(expand('$DOTVIM/bundle/'))
 
-" Normalize plugin names
-let g:dein#enable_name_conversion = 1
+if dein#load_state(expand('$DOTVIM/bundle/'))
+    call dein#begin(expand('$DOTVIM/bundle/'))
 
-" Plugins we are using
-call dein#add('vim-airline/vim-airline')
-call dein#add('itchyny/calendar.vim', {'on_cmd' : 'Calendar'})
-call dein#add('junegunn/vim-easy-align')
-call dein#add('airblade/vim-gitgutter')
-call dein#add('sjl/gundo.vim', {'on_cmd' : 'GundoToggle'})
-call dein#add('petobens/heraldish', {'frozen' : 1})
-call dein#add('Yggdroot/indentLine')
-call dein#add('vim-scripts/matchit.zip', {'name' : 'matchit'})
-call dein#add('scrooloose/nerdcommenter')
-call dein#add('justinmk/vim-sneak')
-if !s:is_win
-    call dein#add('christoomey/vim-tmux-navigator')
+    " Normalize plugin names
+    let g:dein#enable_name_conversion = 1
+
+    " Plugins we are using
+    call dein#add('vim-airline/vim-airline')
+    call dein#add('itchyny/calendar.vim', {'on_cmd' : 'Calendar'})
+    call dein#add('junegunn/vim-easy-align')
+    call dein#add('airblade/vim-gitgutter')
+    call dein#add('sjl/gundo.vim', {'on_cmd' : 'GundoToggle'})
+    call dein#add('petobens/heraldish', {'frozen' : 1})
+    call dein#add('Yggdroot/indentLine')
+    call dein#add('vim-scripts/matchit.zip', {'name' : 'matchit'})
+    call dein#add('scrooloose/nerdcommenter')
+    call dein#add('justinmk/vim-sneak')
+    if !s:is_win
+        call dein#add('christoomey/vim-tmux-navigator')
+    endif
+    call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
+    call dein#add('SirVer/ultisnips')
+    call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})
+
+    " Python
+    call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
+    call dein#add('tweekmonster/impsort.vim', {'on_ft' : 'python'})
+    if has('nvim')
+        call dein#add('zchee/deoplete-jedi')
+    endif
+
+    " Tim Pope plugins
+    call dein#add('tpope/vim-abolish')
+    call dein#add('tpope/vim-dispatch')
+    call dein#add('tpope/vim-fugitive')
+    call dein#add('tommcdo/vim-fubitive')
+    call dein#add('tpope/vim-repeat')
+    call dein#add('tpope/vim-rhubarb')
+    call dein#add('tpope/vim-surround')
+
+    " Shougo plugins
+    call dein#add('Shougo/dein.vim')
+    call dein#add('Shougo/unite.vim')
+    call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
+    call dein#add('Shougo/vimshell.vim')
+    " Note: We need vimproc in neovim for grep source to work
+    let s:vimproc_make = 'make -f make_mac.mak'
+    if s:is_win
+        let s:vimproc_make = 'tools\\update-dll-mingw'
+    elseif s:is_linux
+        let s:vimproc_make = 'make'
+    endif
+    call dein#add('Shougo/vimproc.vim', {'build' : s:vimproc_make})
+    if !has('nvim')
+        call dein#add('Shougo/neocomplete.vim')
+    else
+        call dein#add('Shougo/deoplete.nvim')
+        " call dein#add('Shougo/denite.nvim')
+    endif
+    " Unite sources
+    call dein#add('Shougo/neomru.vim')
+    call dein#add('Shougo/neoyank.vim')
+    call dein#add('thinca/vim-unite-history')
+    call dein#add('osyo-manga/unite-quickfix')
+    call dein#add('kopischke/unite-spell-suggest')
+    call dein#add('tsukkee/unite-tag')
+    " For neocomplete
+    call dein#add('Shougo/context_filetype.vim')
+    call dein#add('Shougo/echodoc.vim')
+    call dein#add('Shougo/neco-vim', {'name' : 'neco-vim'})
+    call dein#add('Shougo/neco-syntax')
+    call dein#add('Shougo/neoinclude.vim')
+
+    call dein#end()
+    call dein#save_state()
 endif
-call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
-call dein#add('SirVer/ultisnips')
-call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})
-
-" Python
-call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
-call dein#add('tweekmonster/impsort.vim', {'on_ft' : 'python'})
-if has('nvim')
-    call dein#add('zchee/deoplete-jedi')
-endif
-
-" Tim Pope plugins
-call dein#add('tpope/vim-abolish')
-call dein#add('tpope/vim-dispatch')
-call dein#add('tpope/vim-fugitive')
-call dein#add('tommcdo/vim-fubitive')
-call dein#add('tpope/vim-repeat')
-call dein#add('tpope/vim-rhubarb')
-call dein#add('tpope/vim-surround')
-
-" Shougo plugins
-call dein#add('Shougo/dein.vim')
-call dein#add('Shougo/unite.vim')
-call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
-call dein#add('Shougo/vimshell.vim')
-" Note: We need vimproc in neovim for grep source to work
-let s:vimproc_make = 'make -f make_mac.mak'
-if s:is_win
-    let s:vimproc_make = 'tools\\update-dll-mingw'
-elseif s:is_linux
-    let s:vimproc_make = 'make'
-endif
-call dein#add('Shougo/vimproc.vim', {'build' : s:vimproc_make})
-if !has('nvim')
-    call dein#add('Shougo/neocomplete.vim')
-else
-    call dein#add('Shougo/deoplete.nvim')
-    " call dein#add('Shougo/denite.nvim')
-endif
-" Unite sources
-call dein#add('Shougo/neomru.vim')
-call dein#add('Shougo/neoyank.vim')
-call dein#add('thinca/vim-unite-history')
-call dein#add('osyo-manga/unite-quickfix')
-call dein#add('kopischke/unite-spell-suggest')
-call dein#add('tsukkee/unite-tag')
-" For neocomplete
-call dein#add('Shougo/context_filetype.vim')
-call dein#add('Shougo/echodoc.vim')
-call dein#add('Shougo/neco-vim', {'name' : 'neco-vim'})
-call dein#add('Shougo/neco-syntax')
-call dein#add('Shougo/neoinclude.vim')
-
-call dein#end()
 
 " Set file type stuff to on
 filetype plugin indent on
