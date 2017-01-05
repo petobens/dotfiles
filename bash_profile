@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 23 Dec 2016
+# Last Modified: 25 Dec 2016
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -69,7 +69,7 @@ bind "set show-all-if-ambiguous on"
 powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1
 POWERLINE_BASH_SELECT=1
-. $brew_dir/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
+. $brew_dir/lib/python3.6/site-packages/powerline/bindings/bash/powerline.sh
 
 # }}}
 # Bindings {{{
