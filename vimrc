@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 05 Jan 2017
+" Last Modified: 07 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -123,6 +123,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
+    call dein#add('Shougo/denite.nvim')
     call dein#add('Shougo/unite.vim')
     call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
     call dein#add('Shougo/vimshell.vim')
@@ -1288,6 +1289,45 @@ nnoremap <silent> <Leader>ul :execute "edit +" g:dein#install_log_filename<CR>
 nnoremap <Leader>bu :call <SID>dein_update()<CR>
 nnoremap  <Leader>rp :call dein#recache_runtimepath()<CR>
 nnoremap <silent> <Leader>bl :Unite dein<CR>
+
+" }}}
+" Denite {{{
+
+" Change default UI
+call denite#custom#option('default', 'prompt', '❯')
+call denite#custom#option('default', 'auto_resize', 1)
+call denite#custom#option('default', 'statusline', 0)
+call denite#custom#option('default', 'winheight', 10)
+call denite#custom#option('default', 'reversed', 1)
+call denite#custom#option('default', 'highlight_matched_char', 'Identifier')
+
+" Change default matcher and sorter
+call denite#custom#source('default', 'matchers', ['matcher_cpsm'])
+call denite#custom#source('default', 'sorters', ['sorter_sublime'])
+
+" Change ignore_globs
+" FIXME: Ignore .git
+call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
+        \ ['.git/', '__pycache__/', 'venv/',  'tmp/'])
+
+" Use ag for file_rec and grep
+if executable('ag')
+	call denite#custom#var('file_rec', 'command',
+        \ ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
+	call denite#custom#var('grep', 'command', ['ag'])
+	call denite#custom#var('grep', 'default_opts',
+        \ ['--smart-case', '--vimgrep', '--hidden', '--follow'])
+	call denite#custom#var('grep', 'recursive_opts', [])
+    call denite#custom#var('grep', 'pattern_opt', ['--match'])
+	call denite#custom#var('grep', 'separator', ['--'])
+	call denite#custom#var('grep', 'final_opts', [])
+endif
+
+" Mappings
+call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>',
+    \ 'noremap')
+call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',
+    \ 'noremap')
 
 " }}}
 " Dispatch {{{
