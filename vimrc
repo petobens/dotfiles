@@ -29,6 +29,9 @@ if !has('nvim')
     endif
 else
     let $DOTVIM = expand('$HOME/.config/nvim')
+    if s:is_mac
+        let g:python3_host_prog = '/usr/local/bin/python3'
+    endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
 
@@ -1197,8 +1200,8 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#buffer_nr_format = '%s:'
 let g:airline#extensions#tabline#buffer_min_count = 2
 let airline#extensions#tabline#disable_refresh = 1
-" Don't show vimshell in the tabline because it flickers
-let g:airline#extensions#tabline#excludes = ['vimshell']
+" Don't show vimshell in the tabline because it flickers (and denite)
+let g:airline#extensions#tabline#excludes = ['vimshell', 'denite']
 
 " Show superindex numbers in tabline that allow to select buffer directly
 let g:airline#extensions#tabline#buffer_idx_mode = 1
