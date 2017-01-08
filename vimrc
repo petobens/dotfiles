@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 07 Jan 2017
+" Last Modified: 08 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1295,6 +1295,7 @@ nnoremap <silent> <Leader>bl :Unite dein<CR>
 
 " Change default UI
 call denite#custom#option('default', 'prompt', '❯')
+call denite#custom#option('default', 'prompt_highlight', 'Identifier')
 call denite#custom#option('default', 'auto_resize', 1)
 call denite#custom#option('default', 'statusline', 0)
 call denite#custom#option('default', 'winheight', 15)
@@ -1336,11 +1337,15 @@ call denite#custom#map('insert', 'jj', '<denite:enter_mode:normal>',
     \ 'noremap')
 call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>',
     \ 'noremap')
+call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>',
+    \ 'noremap')
 call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',
     \ 'noremap')
-call denite#custom#map('insert', '<C-s>', '<denite:do_action:vsplit>',
+call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>',
     \ 'noremap')
-call denite#custom#map('insert', '<C-v>', '<denite:do_action:split>', 'noremap')
+call denite#custom#map('insert', '<C-s>', '<denite:do_action:split>', 'noremap')
+call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
+    \ 'noremap')
 call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
 call denite#custom#map('insert', '<C-a>', '<denite:choose_action>', 'noremap')
 
