@@ -1351,6 +1351,7 @@ call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
     \ 'noremap')
 call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
 call denite#custom#map('insert', '<C-a>', '<denite:choose_action>', 'noremap')
+call denite#custom#map('insert', '<C-y>', '<denite:do_action:yank>', 'noremap')
 
 " }}}
 " Dispatch {{{
