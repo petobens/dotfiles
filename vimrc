@@ -1297,26 +1297,31 @@ nnoremap <silent> <Leader>bl :Unite dein<CR>
 call denite#custom#option('default', 'prompt', '❯')
 call denite#custom#option('default', 'auto_resize', 1)
 call denite#custom#option('default', 'statusline', 0)
-call denite#custom#option('default', 'winheight', 10)
+call denite#custom#option('default', 'winheight', 15)
 call denite#custom#option('default', 'reversed', 1)
 call denite#custom#option('default', 'highlight_matched_char', 'Identifier')
 
 " Change default matcher and sorter
-call denite#custom#source('default', 'matchers', ['matcher_cpsm'])
+call denite#custom#source('default', 'matchers', ['matcher_fuzzy',
+        \ 'matcher_ignore_globs'])
+call denite#custom#source('line', 'matchers', ['matcher_regexp'])
 call denite#custom#source('default', 'sorters', ['sorter_sublime'])
 
-" Change ignore_globs
-" FIXME: Ignore .git
+" Ignore some files and directories
 call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
-        \ ['.git/', '__pycache__/', 'venv/',  'tmp/'])
+        \ ['.git/', '__pycache__/', 'venv/',  'tmp/', 'doc/'])
+
+" Buffer source settings
+call denite#custom#var('buffer', 'date_format', '')
 
 " Use ag for file_rec and grep
 if executable('ag')
 	call denite#custom#var('file_rec', 'command',
-        \ ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
+        \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 	call denite#custom#var('grep', 'command', ['ag'])
 	call denite#custom#var('grep', 'default_opts',
-        \ ['--smart-case', '--vimgrep', '--hidden', '--follow'])
+        \ ['--smart-case', '--vimgrep', '--hidden', '--follow',
+        \ '--ignore', "'.git'"])
 	call denite#custom#var('grep', 'recursive_opts', [])
     call denite#custom#var('grep', 'pattern_opt', ['--match'])
 	call denite#custom#var('grep', 'separator', ['--'])
@@ -1324,10 +1329,20 @@ if executable('ag')
 endif
 
 " Mappings
+" TODO: Mark multiple candidates
+call denite#custom#map('insert', '<ESC>', '<denite:quit>',
+    \ 'noremap')
+call denite#custom#map('insert', 'jj', '<denite:enter_mode:normal>',
+    \ 'noremap')
 call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>',
     \ 'noremap')
 call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',
     \ 'noremap')
+call denite#custom#map('insert', '<C-s>', '<denite:do_action:vsplit>',
+    \ 'noremap')
+call denite#custom#map('insert', '<C-v>', '<denite:do_action:split>', 'noremap')
+call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
+call denite#custom#map('insert', '<C-a>', '<denite:choose_action>', 'noremap')
 
 " }}}
 " Dispatch {{{
