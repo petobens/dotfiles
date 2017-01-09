@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 08 Jan 2017
+" Last Modified: 09 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1304,6 +1304,7 @@ call denite#custom#option('default', 'statusline', 0)
 call denite#custom#option('default', 'winheight', 15)
 call denite#custom#option('default', 'reversed', 1)
 call denite#custom#option('default', 'highlight_matched_char', 'Identifier')
+call denite#custom#option('default', 'highlight_matched_range', 'Normal')
 
 " Change default matcher and sorter
 call denite#custom#source('default', 'matchers', ['matcher_fuzzy',
