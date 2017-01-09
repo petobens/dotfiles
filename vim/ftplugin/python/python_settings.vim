@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 20 Dec 2016
+" Last Modified: 09 Jan 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -539,10 +539,40 @@ function! s:RunAutoPep8(...)
     let &l:formatprg = old_formatprg
 endfunction
 
+function! s:RunYapf(...)
+    " Don't run yapf if it is not installed
+    if !executable('yapf')
+        echoerr 'yapf is not installed or not in your path.'
+        return
+    endif
+    " Don't run yapf if there is only one empty line or we are in a Gdiff
+    " (when file path includes .git)
+    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
+        return
+    endif
+
+    " Try first to sort imports (requires impsort.vim plugin)
+    if exists(':ImpSort')
+        ImpSort
+    endif
+
+    let old_formatprg = &l:formatprg
+    let &l:formatprg = 'yapf '
+    if a:0 && a:1 ==# 'visual'
+        execute 'normal! gvgq'
+    else
+        let save_cursor = getcurpos()
+        execute 'silent! normal! gggqG'
+        call setpos('.', save_cursor)
+    endif
+    let &l:formatprg = old_formatprg
+endfunction
+
 " Automatically run autopep8 and flake8 on save
 augroup py_linting
     au!
-    au BufWritePost *.py call s:RunAutoPep8() | call s:RunFlake8()
+    " au BufWritePost *.py call s:RunAutoPep8() | call s:RunFlake8()
+    au BufWritePost *.py call s:RunYapf() | call s:RunFlake8()
 augroup END
 
 " }}}
@@ -1088,6 +1118,7 @@ if exists(':ImpSort')
 endif
 " The visual map messes up proper comment indentation/formatting:
 " vnoremap <buffer> Q :call <SID>RunAutoPep8('visual')<CR>
+nnoremap <buffer> <Leader>yp :call <SID>RunYapf()<CR>
 
 " Tests and coverage (py.test dependant)
 nnoremap <buffer> <Leader>rt :call <SID>RunPyTest('suite')<CR>
