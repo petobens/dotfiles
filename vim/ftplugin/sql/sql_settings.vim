@@ -2,7 +2,7 @@
 "          File: sql_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 07 Mar 2016
-" Last Modified: 29 Jun 2016
+" Last Modified: 09 Jan 2017
 "   Description: My SQL settings
 "===============================================================================
 " Initialization {{{
@@ -40,7 +40,7 @@ endfunction
 
 " We use sqllint and install it (on Mac) with `sudo gem install sqlint`
 function! s:RunSqlLint()
-    " Don't run vint if it is not installed
+    " Don't run sqlint if it is not installed
     if !executable('sqlint')
         echoerr 'sqlint is not installed or not in your path.'
         return
@@ -105,22 +105,22 @@ function! s:RunSqlLint()
     execute 'lcd ' . l:save_pwd
 endfunction
 
-" For formatting we use pg_format that can be installed (on Mac) with brew
-function! s:RunPgFormat(...)
-    " Don't run pg_format if it is not installed
-    if !executable('pg_format')
-        echoerr 'pg_format is not installed or not in your path.'
+" We use sqlformat and install it (on Mac) with `pip install sqlparse`
+function! s:RunSqlFormat(...)
+    " Don't run sqlparse if it is not installed
+    if !executable('sqlformat')
+        echoerr 'sqlformat is not installed or not in your path.'
         return
     endif
-    " Don't run pg_format if there is only one empty line or we are in a Gdiff
+    " Don't run sqlformat if there is only one empty line or we are in a Gdiff
     " (when file path includes .git)
     if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
         return
     endif
 
     let old_formatprg = &l:formatprg
-    " Use uppercase for function names and 2 spaces
-    setlocal formatprg=pg_format\ -f\ 2\ -s\ 2\ -
+    let &l:formatprg = 'sqlformat --reindent --use_space_around_operators ' .
+                \ '--keywords upper --identifiers lower --indent_width 2 -'
     if a:0 && a:1 ==# 'visual'
         execute 'normal! gvgq'
     else
@@ -134,8 +134,8 @@ endfunction
 " Automatically run pg_format and linter on save
 augroup sql_linting
     au!
-    " au BufWritePost *.sql call s:RunPgFormat() | call s:RunSqlLint()
-    " au BufWritePost *.sql call s:RunSqlLint()
+    " au BufWritePost *.sql call s:RunSqlFormat() | call s:RunSqlLint()
+    " au BufWritePost *.sql call s:RunSqlFormat()
 augroup END
 
 " }}}
@@ -143,7 +143,6 @@ augroup END
 
 " Linter and formatting
 nnoremap <buffer> <Leader>rl :call <SID>RunSqlLint()<CR>
-nnoremap <buffer> <Leader>fq :call <SID>RunPgFormat()<CR>
-vnoremap <buffer> <Leader>pg :call <SID>RunPgFormat('visual')<CR>
+nnoremap <buffer> <Leader>fq :call <SID>RunSqlFormat()<CR>
 
 " }}}
