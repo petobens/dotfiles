@@ -1300,7 +1300,7 @@ nnoremap <silent> <Leader>bl :Unite dein<CR>
 call denite#custom#option('default', 'prompt', '❯')
 call denite#custom#option('default', 'prompt_highlight', 'Identifier')
 call denite#custom#option('default', 'auto_resize', 1)
-call denite#custom#option('default', 'statusline', 0)
+call denite#custom#option('default', 'statusline', 1)
 call denite#custom#option('default', 'winheight', 15)
 call denite#custom#option('default', 'reversed', 1)
 call denite#custom#option('default', 'highlight_matched_char', 'Identifier')
@@ -1328,13 +1328,12 @@ if executable('ag')
         \ ['--smart-case', '--vimgrep', '--hidden', '--follow',
         \ '--ignore', "'.git'"])
 	call denite#custom#var('grep', 'recursive_opts', [])
-    call denite#custom#var('grep', 'pattern_opt', ['--match'])
+    call denite#custom#var('grep', 'pattern_opt', [])
 	call denite#custom#var('grep', 'separator', ['--'])
 	call denite#custom#var('grep', 'final_opts', [])
 endif
 
 " Mappings
-" TODO: Mark multiple candidates
 call denite#custom#map('insert', '<ESC>', '<denite:quit>',
     \ 'noremap')
 call denite#custom#map('insert', 'jj', '<denite:enter_mode:normal>',
@@ -1353,6 +1352,9 @@ call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
 call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
 call denite#custom#map('insert', '<C-a>', '<denite:choose_action>', 'noremap')
 call denite#custom#map('insert', '<C-y>', '<denite:do_action:yank>', 'noremap')
+" FIXME: Change mapping to C-Space
+call denite#custom#map('insert', '<C-m>', '<denite:toggle_select_up>',
+            \ 'noremap')
 
 " }}}
 " Dispatch {{{
