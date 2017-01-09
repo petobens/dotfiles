@@ -1325,13 +1325,19 @@ if executable('ag')
         \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 	call denite#custom#var('grep', 'command', ['ag'])
 	call denite#custom#var('grep', 'default_opts',
-        \ ['--smart-case', '--vimgrep', '--hidden', '--follow',
-        \ '--ignore', "'.git'"])
+        \ ['--smart-case', '--vimgrep', '--follow', '--ignore', "'.git'"])
 	call denite#custom#var('grep', 'recursive_opts', [])
     call denite#custom#var('grep', 'pattern_opt', [])
 	call denite#custom#var('grep', 'separator', ['--'])
 	call denite#custom#var('grep', 'final_opts', [])
 endif
+
+" Mappings
+nnoremap <silent> <Leader>dr :Denite -resume<CR>
+nnoremap <silent> ]d :<C-U>execute 'Denite -resume -select=+'. v:count1 .
+            \ '--immediately'<CR>
+nnoremap <silent> [d :<C-U>execute 'Denite -resume -select=-'. v:count1 .
+            \ '--immediately'<CR>
 
 " Prompt Mappings
 call denite#custom#map('insert', '<ESC>', '<denite:quit>',
