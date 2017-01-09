@@ -1333,7 +1333,7 @@ if executable('ag')
 	call denite#custom#var('grep', 'final_opts', [])
 endif
 
-" Mappings
+" Prompt Mappings
 call denite#custom#map('insert', '<ESC>', '<denite:quit>',
     \ 'noremap')
 call denite#custom#map('insert', 'jj', '<denite:enter_mode:normal>',
@@ -1567,7 +1567,7 @@ let g:jedi#goto_assignments_command = '<C-]>' " Similar to ,st unite mapping
 let g:jedi#goto_command = '<Leader>jd'
 let g:jedi#rename_command = '<Leader>rn'
 let g:jedi#documentation_command = ''  " We use K mapping in our ftplugin file
-let g:jedi#usages_command = ''
+let g:jedi#usages_command = '<Leader>ap' " Appearances of word under cursor
 
 augroup ps_jedi
     au!
