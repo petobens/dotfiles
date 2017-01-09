@@ -2,7 +2,7 @@
 "          File: bash_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Aug 2016
-" Last Modified: 06 Dec 2016
+" Last Modified: 09 Jan 2017
 "   Description: My Bash settings file
 "===============================================================================
 " Installation notes {{{
@@ -446,8 +446,7 @@ endfunction
 " Automatically run beautysh and shellcheck on save
 augroup sh_linting
     au!
-    " au BufWritePost *.sh call s:RunBeautySh() | call s:RunShellCheck()
-    au BufWritePost *.sh call s:RunShellCheck()
+    au BufWritePost *.sh call s:RunBeautySh() | call s:RunShellCheck()
 augroup END
 
 " }}}
@@ -500,6 +499,7 @@ vnoremap <silent> <buffer> <F5> :EvalVisualShForeground<CR>
 
 " Linting
 nnoremap <buffer> <Leader>rl :call <SID>RunShellCheck()<CR>
+nnoremap <buffer> <Leader>fs :call <SID>RunBeautySh()<CR>
 
 " Documentation
 nnoremap <silent> <buffer> <S-k> :call <SID>ViewShDoc()<CR>
