@@ -30,7 +30,8 @@ if !has('nvim')
 else
     let $DOTVIM = expand('$HOME/.config/nvim')
     if s:is_mac
-        let g:python3_host_prog = '/usr/local/bin/python3'
+        " Uncomment this for Neovim HEAD version
+        " let g:python3_host_prog = '/usr/local/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
