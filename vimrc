@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 09 Jan 2017
+" Last Modified: 11 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1296,15 +1296,16 @@ nnoremap <silent> <Leader>bl :Unite dein<CR>
 " }}}
 " Denite {{{
 
-" Change default UI
-call denite#custom#option('default', 'prompt', '❯')
-call denite#custom#option('default', 'prompt_highlight', 'Identifier')
+" Change default UI settings and highlighting
 call denite#custom#option('default', 'auto_resize', 1)
 call denite#custom#option('default', 'statusline', 1)
 call denite#custom#option('default', 'winheight', 15)
 call denite#custom#option('default', 'reversed', 1)
+call denite#custom#option('default', 'prompt', '❯')
+call denite#custom#option('default', 'prompt_highlight', 'Identifier')
 call denite#custom#option('default', 'highlight_matched_char', 'Identifier')
 call denite#custom#option('default', 'highlight_matched_range', 'Normal')
+call denite#custom#option('default', 'highlight_mode_normal', 'CursorLine')
 
 " Change default matcher and sorter
 call denite#custom#source('default', 'matchers', ['matcher_fuzzy',
@@ -1325,7 +1326,7 @@ if executable('ag')
         \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 	call denite#custom#var('grep', 'command', ['ag'])
 	call denite#custom#var('grep', 'default_opts',
-        \ ['--smart-case', '--vimgrep', '--follow', '--ignore', "'.git'"])
+        \ ['--smart-case', '--vimgrep', '--follow'])
 	call denite#custom#var('grep', 'recursive_opts', [])
     call denite#custom#var('grep', 'pattern_opt', [])
 	call denite#custom#var('grep', 'separator', ['--'])
@@ -1358,8 +1359,7 @@ call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
 call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
 call denite#custom#map('insert', '<C-a>', '<denite:choose_action>', 'noremap')
 call denite#custom#map('insert', '<C-y>', '<denite:do_action:yank>', 'noremap')
-" FIXME: Change mapping to C-Space
-call denite#custom#map('insert', '<C-m>', '<denite:toggle_select_up>',
+call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
 
 " }}}
