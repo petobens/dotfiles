@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 09 Jan 2017
+" Last Modified: 14 Jan 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -245,14 +245,7 @@ function! s:RunPython(mode, compilation, ...)
         endif
     endif
 
-    " Delete visual file, restore error format and return to previous working
-    " directory (when using MacVim we delete the visual file later in the
-    " callback function)
-    if !has('gui_macvim')
-        if a:mode ==# 'visual'
-            call delete(current_file)
-        endif
-    endif
+    " Restore error format and return to previous working directory
     let &l:efm = old_efm
     execute 'lcd ' . save_pwd
 endfunction
@@ -282,8 +275,8 @@ function! s:ShowPyOutput()
 
     " Get current file
     let current_file = split(&makeprg, '')[1]
-    " When using MacVim delete visual temp file here
-    if has('gui_macvim') && match(current_file, '_tmpvisual') != -1
+    " Delete visual temp file here (if it exists)
+    if match(current_file, '_tmpvisual') != -1
         call delete(current_file)
     endif
 
