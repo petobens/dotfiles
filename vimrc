@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 11 Jan 2017
+" Last Modified: 16 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -29,8 +29,8 @@ if !has('nvim')
 else
     let $DOTVIM = expand('$HOME/.config/nvim')
     if s:is_mac
-        " Uncomment this for Neovim HEAD version
-        " let g:python3_host_prog = '/usr/local/bin/python3'
+        " Set python3 host (i.e executable)
+        let g:python3_host_prog = '/usr/local/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -1314,6 +1314,7 @@ call denite#custom#source('line', 'matchers', ['matcher_regexp'])
 call denite#custom#source('default', 'sorters', ['sorter_sublime'])
 
 " Ignore some files and directories
+" FIXME: This is not quite working
 call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
         \ ['.git/', '__pycache__/', 'venv/',  'tmp/', 'doc/'])
 
