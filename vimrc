@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 16 Jan 2017
+" Last Modified: 17 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -83,7 +83,6 @@ endif
 
 " Directory where plugins are placed. The function also disables filetype
 " automatically
-
 if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#begin(expand('$DOTVIM/bundle/'))
 
@@ -99,6 +98,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('petobens/heraldish', {'frozen' : 1})
     call dein#add('Yggdroot/indentLine')
     call dein#add('vim-scripts/matchit.zip', {'name' : 'matchit'})
+    call dein#add('neomake/neomake')
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
     if !s:is_win
@@ -1045,12 +1045,16 @@ function! s:AdjustWindowHeight(minheight, maxheight)
     execute max([min([line('$'), a:maxheight]), a:minheight]) . 'wincmd _'
 endfunction
 
-" Maps
+" Maps (for both quickfix and location list)
 nnoremap <silent> <Leader>pc :pclose<cr>
 nnoremap <silent> <Leader>qf :copen<cr>
+nnoremap <silent> <Leader>ll :lopen<cr>
 nnoremap <silent> <Leader>qc :cclose<cr>
+nnoremap <silent> <Leader>lc :lclose<cr>
 nnoremap <silent> ]q :<C-U>execute v:count1 . 'cnext'<CR>
 nnoremap <silent> [q :<C-U>execute v:count1 . 'cprevious'<CR>
+nnoremap <silent> ]l :<C-U>execute v:count1 . 'lnext'<CR>
+nnoremap <silent> [l :<C-U>execute v:count1 . 'lprevious'<CR>
 nnoremap <silent> [Q :cfirst<CR>
 nnoremap <silent> ]Q :clast<CR>
 
@@ -1646,6 +1650,16 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 " Edit dictionary files
 nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>
+
+" }}}
+" Neomake {{{
+
+let g:neomake_open_list = 2  " Open qf and preserve cusor position
+let g:neomake_echo_current_error = 0 " Don't echo error for cusor line
+let g:neomake_place_signs = 0
+let g:neomake_highlight_columns = 0
+" FIXME: Not working
+let g:neomake_python_enabled_makers = ['flake8']
 
 " }}}
 " Sneak {{{

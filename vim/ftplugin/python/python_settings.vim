@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 14 Jan 2017
+" Last Modified: 17 Jan 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -467,6 +467,7 @@ function! s:RunFlake8()
 
     " Use Dispatch for background async compilation if available
     if exists(':Dispatch')
+    " if exists(':Neomake')
         " First add extra catchall because Dispatch removes it
         let &l:efm = &efm . ',%-G%.%#'
         echon 'running flake8 with dispatch ...'
@@ -474,6 +475,7 @@ function! s:RunFlake8()
             call s:NoShellSlash('Make')
         else
             execute 'silent Make'
+            " execute 'silent Neomake!'
         endif
     else
         " Use regular make otherwise
