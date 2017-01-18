@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 25 Dec 2016
+# Last Modified: 18 Jan 2017
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -157,7 +157,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 'new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
     # Airflow (reach)
-    alias airflow='ssh airflow -t tmux '\
+    alias airf='ssh airflow -t tmux '\
 'new -A -s reach'
     # Gerry instance (with tmux)
     alias ui='ssh gerry'
