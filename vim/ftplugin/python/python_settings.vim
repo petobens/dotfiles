@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 17 Jan 2017
+" Last Modified: 19 Jan 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -455,7 +455,7 @@ function! s:RunFlake8()
     let current_file = expand('%:p:t')
 
     " Set compiler (ignore module level import not at top of file error)
-    let compiler = 'flake8 --ignore=E402 '
+    let compiler = 'flake8 --ignore=E402,W503 '
     let &l:makeprg = compiler . current_file
 
     " Set error format
