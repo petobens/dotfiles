@@ -7,7 +7,6 @@
 "===============================================================================
 " TODOs:
 " Try the job feature
-" Move highlight and airline colors to heraldish; see itchyny landscape.vim
 " SQL support?
 " Filter to convert markdown to html, useful for mails
 
