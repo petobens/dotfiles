@@ -2,7 +2,7 @@
 "          File: bash_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Aug 2016
-" Last Modified: 09 Jan 2017
+" Last Modified: 22 Jan 2017
 "   Description: My Bash settings file
 "===============================================================================
 " Installation notes {{{
@@ -353,72 +353,6 @@ augroup END
 " }}}
 " Linting {{{
 
-function! s:RunShellCheck()
-    " Don't run shellcheck if it is not installed
-    if !executable('shellcheck')
-        echoerr 'shellcheck is not installed or not in your path.'
-        return
-    endif
-    " Don't run shellcheck if there is only one empty line or we are in a Gdiff
-    " (when file path includes .git)
-    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
-        return
-    endif
-
-    " Update the file but ignore linting autocommand and close qf
-    " window
-    silent noautocmd update
-    cclose
-
-    " Save working directory and get current file
-    let l:save_pwd = getcwd()
-    lcd %:p:h
-    let current_file = expand('%:p:t')
-
-    " Set compiler
-    let compiler = 'shellcheck -f gcc '
-    let &l:makeprg = compiler . current_file
-    " Set error format
-    let old_efm = &l:efm
-    let &l:efm = '%f:%l:%c: %trror: %m,' .
-        \' %f:%l:%c: %tarning: %m,' .
-        \ '%f:%l:%c: %tote: %m'
-
-    " Use Dispatch for background async compilation if available
-    if exists(':Dispatch')
-        " First add extra catchall because Dispatch removes it
-        " let &l:efm = &efm . ',%-G%.%#'
-        echon 'running shellcheck with dispatch ...'
-        if s:is_win
-            call s:NoShellSlash('Make')
-        else
-            execute 'silent Make'
-        endif
-    else
-        " Use regular make otherwise
-        echon 'running shellcheck ...'
-        silent make!
-        " Open quickfix if there are valid errors or warnings
-        if !empty(getqflist())
-            copen
-            wincmd J
-            let height_gqf = len(getqflist())
-            if height_gqf > 10
-                let height_gqf = 10
-            endif
-            execute height_gqf . ' wincmd _'
-            wincmd p  " Return to previous window
-        else
-            redraw!
-            echon 'Finished shellcheck successfully.'
-        endif
-    endif
-
-    " Restore error format and working directory
-    let &l:efm = old_efm
-    execute 'lcd ' . l:save_pwd
-endfunction
-
 function! s:RunBeautySh(...)
     " Don't run beautysh if it is not installed
     if !executable('beautysh')
@@ -446,7 +380,8 @@ endfunction
 " Automatically run beautysh and shellcheck on save
 augroup sh_linting
     au!
-    au BufWritePost *.sh call s:RunBeautySh() | call s:RunShellCheck()
+    au BufWritePost *.sh call s:RunBeautySh() | silent noautocmd update |
+                \ silent Neomake
 augroup END
 
 " }}}
