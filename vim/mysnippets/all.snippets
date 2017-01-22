@@ -12,18 +12,19 @@ import vim
 def boxc(symbol, phwidth, twidth=None):
     cms = vim.eval("&cms").split('%s')[0].strip(' ')
     vtw = int(vim.eval("&tw"))
+    space_after_cms_fts = ['python', 'yaml', 'javascript']
     if twidth is None:
         if phwidth < (vtw - (len(cms) + 1 + 2)):
             line = cms + symbol * (1 + phwidth + 1) + '+'
-            if vim.eval("&ft") in ['python', 'yaml', 'javascript']:
+            if vim.eval("&ft") in space_after_cms_ft:
                  line = cms + ' ' + symbol * (1 + phwidth) + '+'
         else:
             line = cms + symbol * (vtw - len(cms))
-            if vim.eval("&ft") in ['python', 'yaml', 'javascript']:
+            if vim.eval("&ft") in space_after_cms_fts:
                  line = cms + ' ' + symbol * (vtw - len(cms) - 1)
     else:
         line = cms + symbol * (vtw - len(cms))
-        if vim.eval("&ft") in ['python', 'yaml', 'javascript']:
+        if vim.eval("&ft") in space_after_cms_fts:
              line = cms + ' ' + symbol * (vtw - len(cms) - 1)
     return (line, cms, vtw)
 
