@@ -433,74 +433,6 @@ augroup END
 " }}}
 " Linting {{{
 
-function! s:RunFlake8()
-    " Don't run flake8 if it is not installed
-    if !executable('flake8')
-        echoerr 'flake8 is not installed or not in your path.'
-        return
-    endif
-    " Don't run flake8 if there is only one empty line or we are in a Gdiff
-    " (when file path includes .git)
-    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
-        return
-    endif
-
-    " Update the file but ignore linting autocommand
-    silent noautocmd update
-
-    " Close qf, save working directory and get current file
-    cclose
-    let l:save_pwd = getcwd()
-    lcd %:p:h
-    let current_file = expand('%:p:t')
-
-    " Set compiler (ignore module level import not at top of file error)
-    let compiler = 'flake8 --ignore=E402,W503 '
-    let &l:makeprg = compiler . current_file
-
-    " Set error format
-    let old_efm = &l:efm
-    let &l:efm = '%E%f:%l: could not compile,%-Z%p^,' .
-                \ '%A%f:%l:%c: %t%n %m,' .
-                \ '%A%f:%l: %t%n %m,' .
-                \ '%-G%.%#'
-
-    " Use Dispatch for background async compilation if available
-    if exists(':Dispatch')
-    " if exists(':Neomake')
-        " First add extra catchall because Dispatch removes it
-        let &l:efm = &efm . ',%-G%.%#'
-        echon 'running flake8 with dispatch ...'
-        if s:is_win
-            call s:NoShellSlash('Make')
-        else
-            execute 'silent Make'
-            " execute 'silent Neomake!'
-        endif
-    else
-        " Use regular make otherwise
-        echon 'running flake8 ...'
-        silent make!
-        " Open quickfix if there are valid errors or warnings
-        if !empty(getqflist())
-            copen
-            wincmd J
-            let height_gqf = len(getqflist())
-            if height_gqf > 10
-                let height_gqf = 10
-            endif
-            execute height_gqf . ' wincmd _'
-            wincmd p  " Return to previous window
-        else
-            redraw!
-            echon 'Finished flake8 successfully.'
-        endif
-    endif
-    " Restore error format and working directory
-    let &l:efm = old_efm
-    execute 'lcd ' . l:save_pwd
-endfunction
-
 function! s:RunYapf(...)
     " Don't run yapf if it is not installed
     if !executable('yapf')
@@ -534,7 +466,6 @@ endfunction
 " Automatically run autopep8 and flake8 on save
 augroup py_linting
     au!
-    " au BufWritePost *.py call s:RunYapf() | call s:RunFlake8()
     au BufWritePost *.py call s:RunYapf() | silent noautocmd update |
                 \ silent Neomake
 augroup END
@@ -943,7 +874,7 @@ if !exists('*s:EditTestFile')
         " Open the file in a horizontal or vertical split
         let test_file = 'test_' . current_file
         let split_windows = 'vsplit '
-        if winwidth(0) <= 2 * (&tw ? &tw : 80)
+        if winwidth(0) <= 2 * (&textwidth ? &textwidth : 80)
             let split_windows = 'split '
         endif
         execute split_windows . test_file
