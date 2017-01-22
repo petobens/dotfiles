@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 17 Jan 2017
+" Last Modified: 22 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -30,7 +30,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     if s:is_mac
         " Set python3 host (i.e executable)
-        let g:python3_host_prog = '/usr/local/bin/python3'
+        " let g:python3_host_prog = '/usr/local/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -1656,10 +1656,12 @@ nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>
 
 let g:neomake_open_list = 2  " Open qf and preserve cusor position
 let g:neomake_echo_current_error = 0 " Don't echo error for cusor line
-let g:neomake_place_signs = 0
-let g:neomake_highlight_columns = 0
-" FIXME: Not working
+let g:neomake_place_signs = 0  " Don't place signs
+let g:neomake_highlight_columns = 0 " Don't hl columns with the error
+
+" Python
 let g:neomake_python_enabled_makers = ['flake8']
+let g:neomake_python_flake8_args = ['--ignore=E402,W503']
 
 " }}}
 " Sneak {{{

@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 19 Jan 2017
+" Last Modified: 22 Jan 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -501,39 +501,6 @@ function! s:RunFlake8()
     execute 'lcd ' . l:save_pwd
 endfunction
 
-function! s:RunAutoPep8(...)
-    " Don't run autopep8 if it is not installed
-    if !executable('autopep8')
-        echoerr 'autopep8 is not installed or not in your path.'
-        return
-    endif
-    " Don't run autopep8 if there is only one empty line or we are in a Gdiff
-    " (when file path includes .git)
-    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
-        return
-    endif
-
-    " Try first to sort imports (requires impsort.vim plugin)
-    if exists(':ImpSort')
-        ImpSort
-    endif
-
-    let old_formatprg = &l:formatprg
-    let &l:formatprg = 'autopep8 --aggressive --aggressive -'
-    if a:0 && a:1 ==# 'visual'
-        " Note: we disable this mapping in order to have correct comment
-        " formattings
-        execute 'normal! gvgq'
-    else
-        " FIXME: When running autopep8 indented commented codes gets
-        " unindented
-        let save_cursor = getcurpos()
-        execute 'silent! normal! gggqG'
-        call setpos('.', save_cursor)
-    endif
-    let &l:formatprg = old_formatprg
-endfunction
-
 function! s:RunYapf(...)
     " Don't run yapf if it is not installed
     if !executable('yapf')
@@ -551,23 +518,25 @@ function! s:RunYapf(...)
         ImpSort
     endif
 
+    " Yapf can fail so we don't use format gq motions here (we always run yapf
+    " on the whole file)
     let old_formatprg = &l:formatprg
+    let save_cursor = getcurpos()
     let &l:formatprg = 'yapf '
-    if a:0 && a:1 ==# 'visual'
-        execute 'normal! gvgq'
-    else
-        let save_cursor = getcurpos()
-        execute 'silent! normal! gggqG'
-        call setpos('.', save_cursor)
+    silent execute '0,$!' . &l:formatprg
+    if v:shell_error == 1
+        silent undo
     endif
+    call setpos('.', save_cursor)
     let &l:formatprg = old_formatprg
 endfunction
 
 " Automatically run autopep8 and flake8 on save
 augroup py_linting
     au!
-    " au BufWritePost *.py call s:RunAutoPep8() | call s:RunFlake8()
-    au BufWritePost *.py call s:RunYapf() | call s:RunFlake8()
+    " au BufWritePost *.py call s:RunYapf() | call s:RunFlake8()
+    au BufWritePost *.py call s:RunYapf() | silent noautocmd update |
+                \ silent Neomake
 augroup END
 
 " }}}
