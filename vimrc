@@ -1163,7 +1163,7 @@ set laststatus=2                " Always show the statusline
 set noshowmode                  " Don't show the current mode
 
 " Powerline-like appearance
-let g:airline_theme = 'powerline'
+let g:airline_theme = 'heraldish'
 let g:airline_powerline_fonts = 1
 
 " Short form mode text
