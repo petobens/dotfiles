@@ -2017,6 +2017,8 @@ unlet s:my_split
 " Vimfiler {{{
 
 " Note: on Mac to delete files to the trash install rmtrash
+" FIXME: neovim HEAD segfaults, see:
+" https://github.com/neovim/neovim/issues/5883
 
 if dein#check_install(['vimfiler']) == 0
     function! VimfilerHookOpts() abort
