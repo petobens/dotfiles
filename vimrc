@@ -30,7 +30,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     if s:is_mac
         " Set python3 host (i.e executable)
-        " let g:python3_host_prog = '/usr/local/bin/python3'
+        let g:python3_host_prog = '/usr/local/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -1662,6 +1662,13 @@ let g:neomake_highlight_columns = 0 " Don't hl columns with the error
 " Python
 let g:neomake_python_enabled_makers = ['flake8']
 let g:neomake_python_flake8_args = ['--ignore=E402,W503']
+
+" Run neomake after saving for files were we only have linter settings (i.e no
+" other specific filetype settings in ftplugin folder)
+augroup pl_neomake
+    au!
+    au BufWritePost *.{vim,yaml} silent Neomake
+augroup END
 
 " }}}
 " Sneak {{{
