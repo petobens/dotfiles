@@ -2,7 +2,7 @@
 "          File: javascript_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Dec 2016
-" Last Modified: 03 Dec 2016
+" Last Modified: 22 Jan 2017
 "   Description: My Javascript settings
 "===============================================================================
 " Installation notes {{{
@@ -363,79 +363,19 @@ augroup END
 " }}}
 " Linting {{{
 
-function! s:RunEsLint()
-    " Don't run yamllint if it is not installed
-    if !executable('eslint')
-        echoerr 'eslint is not installed or not in your path.'
+function! s:UpdateJsBuffer()
+    " Only run this function for javascript files
+    if &filetype !=# 'javascript'
         return
     endif
-    " Use global config file
-    let eslintrc = expand($HOME . '/.eslintrc.yaml')
-    if !filereadable(eslintrc)
-        echoerr 'eslintrc file not found in ' . eslintrc
-        return
-    endif
-    " Don't run yamllint if there is only one empty line or we are in a Gdiff
-    " (when file path includes .git)
-    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
-        return
-    endif
-
-    " Update the file but ignore linting autocommand and close qf
-    " window
-    silent noautocmd update
-    cclose
-
-    " Save working directory and get current file
-    let l:save_pwd = getcwd()
-    lcd %:p:h
-    let current_file = expand('%:p:t')
-
-    " Set compiler
-    let compiler = 'eslint --format compact --color ' . eslintrc . ' '
-    let &l:makeprg = compiler . current_file
-    " Set error format
-    let old_efm = &l:efm
-    let &l:efm = '%E%f: line %l\, col %c\, Error - %m,' .
-        \ '%W%f: line %l\, col %c\, Warning - %m, %-G%.%#'
-
-    " Use Dispatch for background async compilation if available
-    if exists(':Dispatch')
-        echon 'running eslint with dispatch ...'
-        if s:is_win
-            call s:NoShellSlash('Make')
-        else
-            execute 'silent Make'
-        endif
-    else
-        " Use regular make otherwise
-        echon 'running eslint ...'
-        silent make!
-        " Open quickfix if there are valid errors or warnings
-        if !empty(getqflist())
-            copen
-            wincmd J
-            let height_gqf = len(getqflist())
-            if height_gqf > 10
-                let height_gqf = 10
-            endif
-            execute height_gqf . ' wincmd _'
-            wincmd p  " Return to previous window
-        else
-            redraw!
-            echon 'Finished eslint successfully.'
-        endif
-    endif
-
-    " Restore error format and working directory
-    let &l:efm = old_efm
-    execute 'lcd ' . l:save_pwd
+    checktime
 endfunction
 
-" Automatically run yamllint on save
+" Run eslint and reload buffer for style autofixing
 augroup js_linting
     au!
-    au BufWritePost *.js call s:RunEsLint()
+    au BufWritePost *.js silent Neomake
+    au User NeomakeJobFinished call s:UpdateJsBuffer()
 augroup END
 
 " }}}

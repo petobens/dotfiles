@@ -1034,15 +1034,16 @@ augroup END
 
 augroup ft_quickfix
     au!
-    au Filetype qf setlocal colorcolumn="" textwidth=0 wincmd J
+    au Filetype qf setlocal colorcolumn="" textwidth=0
     au Filetype qf call s:AdjustWindowHeight(1, 15)
     au Filetype qf nnoremap <buffer><silent> q :bdelete<CR>
     au Filetype qf nnoremap <buffer><silent> Q :bdelete<CR>
 augroup END
 
-" Automatically adjust window to fit content
+" Set window to the bottom and automatically adjust window to fit content
 function! s:AdjustWindowHeight(minheight, maxheight)
-    execute max([min([line('$'), a:maxheight]), a:minheight]) . 'wincmd _'
+    execute 'wincmd J|' . max([min([line('$'), a:maxheight]), a:minheight]) .
+                \ 'wincmd _'
 endfunction
 
 " Maps (for both quickfix and location list)
@@ -1662,6 +1663,14 @@ let g:neomake_highlight_columns = 0 " Don't hl columns with the error
 " Python
 let g:neomake_python_enabled_makers = ['flake8']
 let g:neomake_python_flake8_args = ['--ignore=E402,W503']
+
+" Javascript
+let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_javascript_eslint_args = ['--no-color', '--format', 'compact',
+            \ '--config', expand($HOME . '/.eslintrc.yaml'), '--fix']
+let g:neomake_javascript_eslint_errorformat = ''.
+        \ '%E%f: line %l\, col %c\, Error - %m,' .
+        \ '%W%f: line %l\, col %c\, Warning - %m, %-G%.%#'
 
 " Run neomake after saving for files were we only have linter settings (i.e no
 " other specific filetype settings in ftplugin folder)
