@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 22 Jan 2017
+" Last Modified: 24 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -29,7 +29,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     if s:is_mac
         " Set python3 host (i.e executable)
-        let g:python3_host_prog = '/usr/local/bin/python3'
+        " let g:python3_host_prog = '/usr/local/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -85,13 +85,13 @@ endif
 if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#begin(expand('$DOTVIM/bundle/'))
 
-    " Normalize plugin names
-    let g:dein#enable_name_conversion = 1
-
     " Plugins we are using
     call dein#add('vim-airline/vim-airline')
     call dein#add('itchyny/calendar.vim', {'on_cmd' : 'Calendar'})
     call dein#add('junegunn/vim-easy-align')
+    call dein#add('junegunn/fzf', {'build': './install --bin',
+                \ 'merged': 0})
+    call dein#add('junegunn/fzf.vim', {'depends': 'junegunn/fzf'})
     call dein#add('airblade/vim-gitgutter')
     call dein#add('sjl/gundo.vim', {'on_cmd' : 'GundoToggle'})
     call dein#add('petobens/heraldish', {'frozen' : 1})
@@ -141,7 +141,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('Shougo/neocomplete.vim')
     else
         call dein#add('Shougo/deoplete.nvim')
-        " call dein#add('Shougo/denite.nvim')
     endif
     " Unite sources
     call dein#add('Shougo/neomru.vim')
@@ -1509,6 +1508,16 @@ if dein#check_install(['unite']) == 0 &&
 else
     nnoremap <silent> <Leader>gl :Glog -- %<CR>:copen<CR>
 endif
+
+" }}}
+" Fzf {{{
+
+let g:fzf_action = {
+  \ 'ctrl-s': 'split',
+  \ 'ctrl-v': 'vsplit' }
+let g:fzf_layout = {'down': '~30%'}
+
+" TODO: Format hl and status line
 
 " }}}
 " GitGutter {{{
