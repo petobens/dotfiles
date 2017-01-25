@@ -2,7 +2,7 @@
 #          File: all.snippets
 #        Author: Pedro Ferrari
 #       Created: 25 Feb 2013
-# Last Modified: 22 Jan 2017
+# Last Modified: 25 Jan 2017
 #   Description: Snippets available in every filetype
 #===============================================================================
 # Global snippets **{
@@ -16,7 +16,7 @@ def boxc(symbol, phwidth, twidth=None):
     if twidth is None:
         if phwidth < (vtw - (len(cms) + 1 + 2)):
             line = cms + symbol * (1 + phwidth + 1) + '+'
-            if vim.eval("&ft") in space_after_cms_ft:
+            if vim.eval("&ft") in space_after_cms_fts:
                  line = cms + ' ' + symbol * (1 + phwidth) + '+'
         else:
             line = cms + symbol * (vtw - len(cms))
