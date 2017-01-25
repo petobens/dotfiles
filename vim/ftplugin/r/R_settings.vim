@@ -2,7 +2,7 @@
 "          File: R_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 05 Aug 2015
-" Last Modified: 03 Sep 2016
+" Last Modified: 25 Jan 2017
 "   Description: R Settings for Vim
 "===============================================================================
 " TODO: Close figure window with x button (without need of using locator(1))
@@ -84,6 +84,7 @@ function! s:RunR(mode, compilation, ...)
     " Update the file but ignore linting autocommand
     silent noautocmd update
     cclose
+    lclose
     " Change directory
     let l:save_pwd = getcwd()
     lcd %:p:h

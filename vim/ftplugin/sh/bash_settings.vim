@@ -54,8 +54,9 @@ function! s:RunSh(mode, compilation, ...)
     " Update the file but ignore linting autocommand
     silent noautocmd update
 
-    " Close qf, save and change working directory
+    " Close qf and location list, save and change working directory
     cclose
+    lclose
     let l:save_pwd = getcwd()
     lcd %:p:h
 

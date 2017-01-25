@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 22 Jan 2017
+" Last Modified: 25 Jan 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -119,8 +119,9 @@ function! s:RunPython(mode, compilation, ...)
     " Update the file but ignore linting autocommand
     silent noautocmd update
 
-    " Close qf, save and change working directory
+    " Close qf and location list, save and change working directory
     cclose
+    lclose
     let l:save_pwd = getcwd()
     lcd %:p:h
 

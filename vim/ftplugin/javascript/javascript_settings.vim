@@ -2,7 +2,7 @@
 "          File: javascript_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Dec 2016
-" Last Modified: 22 Jan 2017
+" Last Modified: 25 Jan 2017
 "   Description: My Javascript settings
 "===============================================================================
 " Installation notes {{{
@@ -54,8 +54,9 @@ function! s:RunJS(mode, compilation, ...)
     " Update the file but ignore linting autocommand
     silent noautocmd update
 
-    " Close qf, save and change working directory
+    " Close qf and location list, save and change working directory
     cclose
+    lclose
     let l:save_pwd = getcwd()
     lcd %:p:h
 
