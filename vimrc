@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 24 Jan 2017
+" Last Modified: 25 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1512,12 +1512,38 @@ endif
 " }}}
 " Fzf {{{
 
-let g:fzf_action = {
-  \ 'ctrl-s': 'split',
-  \ 'ctrl-v': 'vsplit' }
+" Colors
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Identifier'],
+  \ 'fg+':     ['fg', 'CursorLine', 'Normal', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'Normal'],
+  \ 'hl+':     ['fg', 'Identifier'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Identifier'],
+  \ 'pointer': ['fg', 'Keyword'],
+  \ 'marker':  ['fg', 'CursorLineNr'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+" Statusline
+ " let g:fzf_nvim_statusline = 0
+function! s:fzf_statusline()
+  highlight default fzf1 guifg=#f8f6f2 guibg=#303030
+  setlocal statusline=%#fzf1#fzf
+endfunction
+autocmd! User FzfStatusLine call <SID>fzf_statusline()
+
+" Layout
 let g:fzf_layout = {'down': '~30%'}
 
-" TODO: Format hl and status line
+" Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" Mappings
+let g:fzf_action = {'ctrl-s': 'split', 'ctrl-v': 'vsplit'}
+
 
 " }}}
 " GitGutter {{{
