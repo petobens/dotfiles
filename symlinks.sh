@@ -3,15 +3,23 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 06 Dec 2016
-#   Description: Create all necessary symbolic links
+# Last Modified: 25 Jan 2017
+#   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
-# TODO: Use a loop and check if symlinks already exist
-# FIXME: symbolic links to directories replicate target directory
 dotfiles_dir="$HOME/git-repos/private/dotfiles"
 
+echo Removing any existing dotfiles from your home directory...
+rm -rf "$HOME/.ctags" "$HOME/.gitignore" "$HOME/.tmux" "$HOME/.vim" \
+"$HOME/.vimrc"  "$HOME/.config/nvim" "$HOME/.config/nvim/init.vim" \
+"$HOME/.vintrc.yaml" "$HOME/.eslintrc.yaml" "$HOME/.Rprofile" \
+"$HOME/.bash_profile" "$HOME/.config/powerline" "$HOME/.gitconfig" \
+"$HOME/.hammerspoon" "$HOME/.arararc.yaml" "$HOME/.pentadactyl" \
+"$HOME/.pentadactylrc"
+
+echo Creating .config directory...
 mkdir -p "$HOME/.config/"
 
+echo Creating symlinks in your home directory...
 ln -s "$dotfiles_dir/ctags" "$HOME/.ctags"
 ln -s "$dotfiles_dir/gitignore" "$HOME/.gitignore"
 ln -s "$dotfiles_dir/tmux" "$HOME/.tmux"
