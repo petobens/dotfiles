@@ -2,7 +2,7 @@
 "          File: bash_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Aug 2016
-" Last Modified: 22 Jan 2017
+" Last Modified: 25 Jan 2017
 "   Description: My Bash settings file
 "===============================================================================
 " Installation notes {{{
@@ -365,15 +365,23 @@ function! s:RunBeautySh(...)
         return
     endif
 
+    " Change shellredir to avoid inserting error output into the buffer (i.e
+    " don't include stderr in output buffer)
+    let shrd = &shellredir
+    set shellredir=>%s
     let old_formatprg = &l:formatprg
     let &l:formatprg = 'beautysh -f -'
+    let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'normal! gvgq'
     else
-        let save_cursor = getcurpos()
         execute 'silent! normal! gggqG'
-        call setpos('.', save_cursor)
     endif
+    if v:shell_error == 1
+        silent undo
+    endif
+    call setpos('.', save_cursor)
+    let &shellredir = shrd
     let &l:formatprg = old_formatprg
 endfunction
 
