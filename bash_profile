@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 18 Jan 2017
+# Last Modified: 26 Jan 2017
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -195,6 +195,9 @@ if [ -f ~/.fzf.bash ]; then
     # Enable fzf (as well as default mappings and completions)
     source ~/.fzf.bash
 
+    # Change default options (show 15 lines, use top-down layout)
+    export FZF_DEFAULT_OPTS='--height 15 --reverse'
+
     # Use ag (not that this will only list files and not directories)
     export FZF_DEFAULT_COMMAND='ag -g ""'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -202,8 +205,8 @@ if [ -f ~/.fzf.bash ]; then
     # Extend list of commands with fuzzy completion (basically add our aliases)
     complete -F _fzf_file_completion -o default -o bashdefault v o
 
-    # Disable tmux integration (if fzf crashes)
-    # export FZF_TMUX='0'
+    # Enable tmux integration
+    # export FZF_TMUX='1'
     export FZF_TMUX_HEIGHT='15'
 
     # Fix Alt-C mapping (needed for when we set Alt to act as meta key in Iterm
