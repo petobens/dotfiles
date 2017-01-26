@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 25 Jan 2017
+" Last Modified: 26 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -113,6 +113,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     if has('nvim')
         call dein#add('zchee/deoplete-jedi')
     endif
+    call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
@@ -993,7 +994,7 @@ nnoremap <silent> <Leader>ep :e $DOTFILES/pentadactylrc<CR>
 
 " Note: Most python settings are in ftplugin folder
 
-" Don't fold docstrings; see ftplugin/python/folding.vim
+" Don't fold docstrings; see https://github.com/tmhedberg/SimpylFold
 let g:SimpylFold_fold_docstring = 0
 
 augroup ft_py
