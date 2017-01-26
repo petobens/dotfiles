@@ -89,9 +89,11 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('vim-airline/vim-airline')
     call dein#add('itchyny/calendar.vim', {'on_cmd' : 'Calendar'})
     call dein#add('junegunn/vim-easy-align')
-    call dein#add('junegunn/fzf', {'build': './install --bin',
-                \ 'merged': 0})
-    call dein#add('junegunn/fzf.vim', {'depends': 'junegunn/fzf'})
+    if s:is_mac
+        " We installed fzf with Brew
+        call dein#add('/usr/local/opt/fzf')
+    endif
+    call dein#add('junegunn/fzf.vim')
     call dein#add('airblade/vim-gitgutter')
     call dein#add('sjl/gundo.vim', {'on_cmd' : 'GundoToggle'})
     call dein#add('petobens/heraldish', {'frozen' : 1})
