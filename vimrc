@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 26 Jan 2017
+" Last Modified: 27 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -75,7 +75,6 @@ endif
 
 " Set runtimepath
 if has('vim_starting')
-    " set runtimepath=$DOTVIM,$VIMRUNTIME,$DOTVIM/after
     execute 'set runtimepath+=' . expand(
                 \ '$DOTVIM/bundle/repos/github.com/Shougo/dein.vim')
 endif
@@ -95,10 +94,10 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('junegunn/fzf.vim')
     call dein#add('airblade/vim-gitgutter')
-    call dein#add('sjl/gundo.vim', {'on_cmd' : 'GundoToggle'})
     call dein#add('petobens/heraldish', {'frozen' : 1})
     call dein#add('Yggdroot/indentLine')
     call dein#add('vim-scripts/matchit.zip', {'name' : 'matchit'})
+    call dein#add('simnalamburt/vim-mundo', {'on_cmd' : 'MundoToggle'})
     call dein#add('neomake/neomake')
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
@@ -1517,7 +1516,7 @@ endif
 
 " Colors
 let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
+\ {'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
   \ 'hl':      ['fg', 'Identifier'],
   \ 'fg+':     ['fg', 'CursorLine', 'Normal', 'Normal'],
@@ -1528,7 +1527,7 @@ let g:fzf_colors =
   \ 'pointer': ['fg', 'Keyword'],
   \ 'marker':  ['fg', 'CursorLineNr'],
   \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
+  \ 'header':  ['fg', 'Comment']}
 
 " Statusline
  " let g:fzf_nvim_statusline = 0
@@ -1539,6 +1538,9 @@ endfunction
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
 
 " Layout
+if has('nvim')
+  let $FZF_DEFAULT_OPTS .= ' --inline-info'
+endif
 let g:fzf_layout = {'down': '~30%'}
 
 " Jump to the existing window if possible
@@ -1570,16 +1572,17 @@ nmap [h <Plug>GitGutterPrevHunk<bar>zvzz
 " }}}
 " Gundo {{{
 
-let g:gundo_width = 60
-let g:gundo_preview_height = 15
-let g:gundo_help = 0
-let g:gundo_tree_statusline = 'Gundo'
-let g:gundo_preview_statusline = 'Gundo Preview'
+" We are now using a fork called Mundo
+let g:mundo_width = 60
+let g:mundo_preview_height = 15
+let g:mundo_help = 0
+let g:mundo_tree_statusline = 'Mundo'
+let g:mundo_preview_statusline = 'Mundo Preview'
 if has('python3')
-    let g:gundo_prefer_python3 = 1
+    let g:mundo_prefer_python3 = 1
 endif
 
-nnoremap <silent> <Leader>gu :GundoToggle<CR>
+nnoremap <silent> <Leader>gu :MundoToggle<CR>
 
 " }}}
 " Indentline {{{
