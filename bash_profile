@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 26 Jan 2017
+# Last Modified: 29 Jan 2017
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -196,7 +196,8 @@ if [ -f ~/.fzf.bash ]; then
     source ~/.fzf.bash
 
     # Change default options (show 15 lines, use top-down layout)
-    export FZF_DEFAULT_OPTS='--height 15 --reverse'
+    export FZF_DEFAULT_OPTS='--height 15 --reverse '\
+'--bind=ctrl-space:toggle+down'
 
     # Use ag (not that this will only list files and not directories)
     export FZF_DEFAULT_COMMAND='ag -g ""'
