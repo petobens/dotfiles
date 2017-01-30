@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 29 Jan 2017
+" Last Modified: 30 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1339,6 +1339,7 @@ if executable('ag')
 	call denite#custom#var('grep', 'final_opts', [])
 endif
 
+" FIXME: This should allow path completion
 function! s:DeniteScanDir()
     let narrow_dir = input('Input narrowing directory: ')
     redraw!
