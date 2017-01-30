@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 27 Jan 2017
+" Last Modified: 29 Jan 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1310,7 +1310,7 @@ call denite#custom#option('default', 'prompt', '❯')
 call denite#custom#option('default', 'prompt_highlight', 'Identifier')
 call denite#custom#option('default', 'highlight_matched_char', 'Identifier')
 call denite#custom#option('default', 'highlight_matched_range', 'Normal')
-call denite#custom#option('default', 'highlight_mode_normal', 'CursorLine')
+call denite#custom#option('default', 'highlight_mode_insert', 'WildMenu')
 
 " Change default matcher and sorter
 call denite#custom#source('default', 'matchers', ['matcher_fuzzy',
@@ -1338,6 +1338,13 @@ if executable('ag')
 	call denite#custom#var('grep', 'separator', ['--'])
 	call denite#custom#var('grep', 'final_opts', [])
 endif
+
+function! s:DeniteScanDir()
+    let narrow_dir = input('Input narrowing directory: ')
+    redraw!
+    silent execute 'Denite file_rec -path=' . narrow_dir
+endfunction
+nnoremap <silent> <Leader>tt :call <SID>DeniteScanDir()<CR>
 
 " Mappings
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
@@ -1549,7 +1556,6 @@ let g:fzf_buffers_jump = 1
 " Mappings
 let g:fzf_action = {'ctrl-s': 'split', 'ctrl-v': 'vsplit'}
 
-
 " }}}
 " GitGutter {{{
 
@@ -1570,7 +1576,7 @@ nmap [h <Plug>GitGutterPrevHunk<bar>zvzz
 " index file to stage individual hunks, ii) save the index file and iii) commit
 
 " }}}
-" Gundo {{{
+" G(M)undo {{{
 
 " We are now using a fork called Mundo
 let g:mundo_width = 60
