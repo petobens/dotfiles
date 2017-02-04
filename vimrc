@@ -1486,19 +1486,6 @@ augroup END
 " Note: when we create a new repositiory in Bitbucket we must drop the
 " 'petobens@' part from the url in order to be able to open it with Gbrowse
 
-" To merge a single commit (create a new branch with that commit):
-" git checkout master
-" git checkout -b new_branch_name
-" git pull origin master
-" git cherry-pick commit_hash
-" git push origin new_branch_name
-" Then delete the branch both locally and remotely:
-" git checkout another_branch
-" git branch -D new_branch_name
-" git push origin --delete new_branch_name
-
-" Afterwards merge master into local branch
-
 augroup ps_fugitive
     au!
     " Start in insert mode for commits and enable spell checking
