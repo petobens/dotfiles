@@ -144,11 +144,12 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     else
         call dein#add('Shougo/deoplete.nvim')
     endif
-    " Unite sources
+    " Unite/denite sources
+    call dein#add('chemzqm/unite-location')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('thinca/vim-unite-history')
-    call dein#add('osyo-manga/unite-quickfix')
+    " call dein#add('osyo-manga/unite-quickfix')
     call dein#add('kopischke/unite-spell-suggest')
     call dein#add('tsukkee/unite-tag')
     " For neocomplete
@@ -1324,6 +1325,7 @@ call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
         \ ['.git/', '__pycache__/', 'venv/',  'tmp/', 'doc/'])
 
 " Buffer source settings
+" TODO: Use converter_uniq_word
 call denite#custom#var('buffer', 'date_format', '')
 
 " Use ag for file_rec and grep
@@ -1355,8 +1357,10 @@ function! s:DeniteGrep()
     call denite#start([{'name': 'grep', 'args': [narrow_dir]}])
 endfunction
 function! s:DeniteTasklist()
-    call denite#start([{'name': 'line', 'args': []}], {'input': 'TODO:|FIXME:'})
+    call denite#start([{'name': 'grep',
+                \ 'args': [expand('%'), '','TODO:\s|FIXME:\s']}])
 endfunction
+" todo:
 nnoremap <silent> <Leader>tt :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>tg :call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>tr :call <SID>DeniteTasklist()<CR>
@@ -1384,6 +1388,10 @@ call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>',
 call denite#custom#map('insert', '<C-d>', '<denite:scroll_window_downwards>',
             \ 'noremap')
 call denite#custom#map('insert', '<C-u>', '<denite:scroll_window_upwards>',
+            \ 'noremap')
+call denite#custom#map('insert', '<C-h>', '<denite:move_caret_to_left>',
+            \ 'noremap')
+call denite#custom#map('insert', '<C-l>', '<denite:move_caret_to_right>',
             \ 'noremap')
 call denite#custom#map('insert', '<C-s>', '<denite:do_action:split>', 'noremap')
 call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
