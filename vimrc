@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 30 Jan 2017
+" Last Modified: 04 Feb 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1339,13 +1339,23 @@ if executable('ag')
 	call denite#custom#var('grep', 'final_opts', [])
 endif
 
-" FIXME: This should allow path completion
+" FIXME: Reversed option is not respected
 function! s:DeniteScanDir()
-    let narrow_dir = input('Input narrowing directory: ')
-    redraw!
-    silent execute 'Denite file_rec -path=' . narrow_dir
+    let narrow_dir = input('Input narrowing directory: ', '', 'file')
+    if narrow_dir == ''
+        return
+    endif
+    call denite#start([{'name': 'file_rec', 'args': [narrow_dir]}])
+endfunction
+function! s:DeniteGrep()
+    let narrow_dir = input('Target: ', '.', 'file')
+    if narrow_dir == ''
+        return
+    endif
+    call denite#start([{'name': 'grep', 'args': [narrow_dir]}])
 endfunction
 nnoremap <silent> <Leader>tt :call <SID>DeniteScanDir()<CR>
+nnoremap <silent> <Leader>tg :call <SID>DeniteGrep()<CR>
 
 " Mappings
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
