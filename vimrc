@@ -1528,8 +1528,11 @@ if dein#check_install(['unite']) == 0 &&
             \ !empty(unite#get_all_sources('quickfix'))
     nnoremap <silent> <Leader>gl :Glog -- %<CR>:Unite -no-quit -wrap
                 \ -buffer-name=[Quickfix_List] quickfix<CR>
+    nnoremap <silent> <Leader>gL :Glog --<CR>:Unite -no-quit -wrap
+                \ -buffer-name=[Quickfix_List] quickfix<CR>
 else
     nnoremap <silent> <Leader>gl :Glog -- %<CR>:copen<CR>
+    nnoremap <silent> <Leader>gL :Glog --<CR>:copen<CR>
 endif
 
 " }}}
