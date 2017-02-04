@@ -1354,8 +1354,12 @@ function! s:DeniteGrep()
     endif
     call denite#start([{'name': 'grep', 'args': [narrow_dir]}])
 endfunction
+function! s:DeniteTasklist()
+    call denite#start([{'name': 'line', 'args': []}], {'input': 'TODO:|FIXME:'})
+endfunction
 nnoremap <silent> <Leader>tt :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>tg :call <SID>DeniteGrep()<CR>
+nnoremap <silent> <Leader>tr :call <SID>DeniteTasklist()<CR>
 
 " Mappings
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
@@ -1377,6 +1381,10 @@ call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',
     \ 'noremap')
 call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>',
     \ 'noremap')
+call denite#custom#map('insert', '<C-d>', '<denite:scroll_window_downwards>',
+            \ 'noremap')
+call denite#custom#map('insert', '<C-u>', '<denite:scroll_window_upwards>',
+            \ 'noremap')
 call denite#custom#map('insert', '<C-s>', '<denite:do_action:split>', 'noremap')
 call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
     \ 'noremap')
