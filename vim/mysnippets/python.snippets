@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 07 Dec 2016
+# Last Modified: 06 Feb 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -37,6 +37,10 @@ endsnippet
 
 snippet ism "Import statsmodels as sm" b
 import statsmodels.api as sm
+endsnippet
+
+snippet idt "Import datetime" b
+from datetime import datetime${1:, timedelta}$0
 endsnippet
 
 # **}
@@ -230,5 +234,13 @@ endsnippet
 snippet li "Logger info" b
 logger.info(${1:text})$0
 endsnippet
+
+snippet tl "Test logger" b
+import logging.config
+import yaml
+logging.config.dictConfig(yaml.load(open('config.yaml', 'r'))['logger'])
+logger = logging.getLogger('print')$0
+endsnippet
+
 
 # **}
