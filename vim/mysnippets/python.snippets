@@ -239,8 +239,7 @@ snippet tl "Test logger" b
 import logging.config
 import yaml
 logging.config.dictConfig(yaml.load(open('config.yaml', 'r'))['logger'])
-logger = logging.getLogger('print')$0
+logger = logging.getLogger('${1:module_logger}')$0
 endsnippet
-
 
 # **}
