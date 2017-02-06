@@ -235,11 +235,11 @@ snippet li "Logger info" b
 logger.info(${1:text})$0
 endsnippet
 
-snippet tl "Test logger" b
+snippet ml "Module logger" b
 import logging.config
 import yaml
-logging.config.dictConfig(yaml.load(open('config.yaml', 'r'))['logger'])
-logger = logging.getLogger('${1:module_logger}')$0
+logging.config.dictConfig(yaml.load(open('${1:logger_config}.yaml', 'r'))['logger'])
+logger = logging.getLogger('${2:module_logger}')$0
 endsnippet
 
 # **}
