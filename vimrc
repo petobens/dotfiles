@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 04 Feb 2017
+" Last Modified: 06 Feb 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1725,7 +1725,7 @@ let g:neomake_highlight_columns = 0 " Don't hl columns with the error
 let g:airline#extensions#neomake#enabled = 0 " Don't show on Airline
 
 " Python
-let g:neomake_python_enabled_makers = ['flake8']
+let g:neomake_python_enabled_makers = ['flake8', 'mypy']
 let g:neomake_python_flake8_args = ['--ignore=E402,W503']
 let g:neomake_python_mypy_args = ['--ignore-missing-imports',
             \ '--follow-imports=skip', '--fast-parser', '--python-version',
