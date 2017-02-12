@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 09 Feb 2017
+# Last Modified: 12 Feb 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -77,6 +77,14 @@ snippet dp "Docstring parameter" b
 ${1:param_name}${2: (${3:type})}: ${4:description}$0
 endsnippet
 
+snippet dec "Decorator" b
+def ${1:my_decorator}(${2:func}):
+	def ${3:wrapper}(${4:*args, **kwargs}):
+		$0
+	$3.__name__ = $2.__name__
+	return $3
+endsnippet
+
 # **}
 # Code blocks **{
 
@@ -144,8 +152,8 @@ endsnippet
 snippet mp "Monkeypatch" b
 @pytest.fixture
 def ${1:name}(monkeypatch):
-    monkeypatch.setattr('${2:full_import_path}', Mock())
-    return $2$0
+	monkeypatch.setattr('${2:full_import_path}', Mock())
+	return $2$0
 endsnippet
 
 snippet te "Test exception" b
