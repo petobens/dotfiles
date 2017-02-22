@@ -2,7 +2,7 @@
 "          File: deoplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 15 Sep 2016
+" Last Modified: 21 Feb 2017
 "   Description: Deoplete configuration
 "===============================================================================
 " Autoclose preview when completion is finished
@@ -35,6 +35,7 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 let g:deoplete#max_list = 150
 let g:deoplete#enable_refresh_always = 1
+let g:deoplete#auto_complete_delay = 50
 
 " Python (jedi)
 let deoplete#sources#jedi#show_docstring = 1
