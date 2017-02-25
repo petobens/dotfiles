@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 06 Feb 2017
+" Last Modified: 25 Feb 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1342,6 +1342,7 @@ if executable('ag')
 endif
 
 " FIXME: Reversed option is not respected
+" Functions
 function! s:DeniteScanDir()
     let narrow_dir = input('Input narrowing directory: ', '', 'file')
     if narrow_dir == ''
@@ -1360,12 +1361,15 @@ function! s:DeniteTasklist()
     call denite#start([{'name': 'grep',
                 \ 'args': [expand('%'), '','TODO:\s|FIXME:\s']}])
 endfunction
-" todo:
-nnoremap <silent> <Leader>tt :call <SID>DeniteScanDir()<CR>
-nnoremap <silent> <Leader>tg :call <SID>DeniteGrep()<CR>
-nnoremap <silent> <Leader>tr :call <SID>DeniteTasklist()<CR>
 
 " Mappings
+nnoremap <silent> <Leader>ls :Denite file_rec<CR>
+nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
+nnoremap <silent> <Leader>rd :Denite file_mru<CR>
+" FIXME: Switch if exists otherwise open
+nnoremap <silent> <Leader>be :Denite -default-action=switch buffer<CR>
+nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
+nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume -select=+'. v:count1 .
             \ '--immediately'<CR>
@@ -1982,22 +1986,22 @@ endif
 " Mappings (sources):
 if executable('ag')
     if !has('nvim')
-        nnoremap <silent> <Leader>ls :Unite
+        nnoremap <silent> <Leader>uls :Unite
                     \ -buffer-name=fuzzy-search file_rec/async<CR>
     else
         " FIXME: We need to press space for candidates to appear
-        nnoremap <silent> <Leader>ls :Unite
+        nnoremap <silent> <Leader>uls :Unite
                     \ -buffer-name=fuzzy-search file_rec/neovim<CR>
     endif
 else
-    nnoremap <silent> <Leader>ls :Unite -buffer-name=fuzzy-search file_rec<CR>
+    nnoremap <silent> <Leader>uls :Unite -buffer-name=fuzzy-search file_rec<CR>
 endif
-nnoremap <silent> <Leader>sd :UniteWithInputDirectory -buffer-name=fuzzy-search
+nnoremap <silent> <Leader>usd :UniteWithInputDirectory -buffer-name=fuzzy-search
             \ file_rec/async<CR>
-nnoremap <silent> <Leader>rd :Unite -buffer-name=mru-files neomru/file<CR>
+nnoremap <silent> <Leader>urd :Unite -buffer-name=mru-files neomru/file<CR>
 nnoremap <silent> <Leader>bm :Unite -profile-name=bookmark -default-action=rec
             \ -buffer-name=my-directories bookmark<CR>
-nnoremap <silent> <Leader>be :Unite -default-action=switch buffer<CR>
+nnoremap <silent> <Leader>ube :Unite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>me :Unite mapping<CR>
 " nnoremap <silent> <Leader>ce :Unite command<CR>
 nnoremap <silent> <Leader>uf :Unite function<CR>
@@ -2007,9 +2011,9 @@ nnoremap <silent> <Leader>sh :Unite history/search<CR>
 nnoremap <silent> <Leader>us :Unite -buffer-name=search line:forward<CR>
 nnoremap <silent> <Leader>uw :UniteWithCursorWord -auto-preview
             \ -buffer-name=search line<CR>
-nnoremap <silent> <Leader>tl :Unite -auto-highlight -buffer-name=task-list
+nnoremap <silent> <Leader>utl :Unite -auto-highlight -buffer-name=task-list
             \ vimgrep:%:\\CTODO\:\\<bar>FIXME\:<CR>
-nnoremap <silent> <Leader>ag :Unite -buffer-name=ag grep<CR>
+nnoremap <silent> <Leader>dag :Unite -buffer-name=ag grep<CR>
 nnoremap <silent> <Leader>ur :UniteResume -force-redraw -immediately<CR>
 nnoremap <silent> <Leader>sm :Unite output:messages<CR>
 " FIXME: UniteNext and UnitePrevious don't work with qf source
