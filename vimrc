@@ -1205,7 +1205,7 @@ if dein#check_install(['airline']) == 0
     call airline#parts#define_raw('linenr', '%l')
     call airline#parts#define_accent('linenr', 'bold')
     let g:airline_section_z = airline#section#create(['%3p%%  ',
-                \ g:airline_symbols.linenr . '  ', 'linenr', ':%c '])
+                \ '␤ ', 'linenr', ':%c '])
 endif
 
 " Check for trailing whitespace and mixed (tabs and spaces) indentation
