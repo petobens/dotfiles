@@ -2,7 +2,7 @@
 #          File: search.py
 #        Author: Pedro Ferrari
 #       Created: 04 Feb 2017
-# Last Modified: 25 Feb 2017
+# Last Modified: 01 Mar 2017
 #   Description: Search history file for Denite
 # =============================================================================
 from .base import Base
@@ -21,7 +21,5 @@ class Source(Base):
                 self.vim.eval("histget('search', " + str(i) + ")")
                 for i in range(1, hist_len + 1)
             ]))[::-1]
-        # TODO: `echo foo` is not shown
-        # TODO: Add to command history
-        # self.vim.call('histadd', 'command', )
+        self.vim.command('set hlsearch')
         return [{'action__command': '/' + i, 'word': i} for i in history]

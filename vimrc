@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 25 Feb 2017
+" Last Modified: 01 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -29,7 +29,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     if s:is_mac
         " Set python3 host (i.e executable)
-        " let g:python3_host_prog = '/usr/local/bin/python3'
+        let g:python3_host_prog = '/usr/local/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -145,7 +145,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('Shougo/deoplete.nvim')
     endif
     " Unite/denite sources
-    call dein#add('chemzqm/unite-location')
+    " call dein#add('chemzqm/unite-location')
+    call dein#add('petobens/unite-location')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('thinca/vim-unite-history')
@@ -847,6 +848,13 @@ if s:is_mac || s:is_linux
 endif
 
 " }}}
+" Terminal mode {{{
+
+if has('nvim')
+    " TODO: Complete this
+endif
+
+" }}}
 
 " }}}
 " Filetype-specific {{{
@@ -1109,6 +1117,16 @@ augroup ft_sql
 augroup END
 
 " }}}
+" Terminal {{{
+
+if has('nvim')
+    if s:is_mac
+        nnoremap <Leader>tm :10split +terminal<CR>
+                    \ source $HOME/.bash_profile<CR>c<CR>
+    endif
+endif
+
+" }}}
 " Text {{{
 
 augroup ft_text
@@ -1366,10 +1384,13 @@ endfunction
 nnoremap <silent> <Leader>ls :Denite file_rec<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
-" FIXME: Switch if exists otherwise open
 nnoremap <silent> <Leader>be :Denite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
+nnoremap <silent> <Leader>yh :Denite neoyank<CR>
+nnoremap <silent> <Leader>ds :Denite line:forward<CR>
+nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
+            \ line:forward<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume -select=+'. v:count1 .
             \ '--immediately'<CR>
@@ -2005,7 +2026,7 @@ nnoremap <silent> <Leader>ube :Unite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>me :Unite mapping<CR>
 " nnoremap <silent> <Leader>ce :Unite command<CR>
 nnoremap <silent> <Leader>uf :Unite function<CR>
-nnoremap <silent> <Leader>yh :Unite history/yank<CR>
+nnoremap <silent> <Leader>uyh :Unite history/yank<CR>
 nnoremap <silent> <Leader>ch :Unite history/command<CR>
 nnoremap <silent> <Leader>sh :Unite history/search<CR>
 nnoremap <silent> <Leader>us :Unite -buffer-name=search line:forward<CR>
