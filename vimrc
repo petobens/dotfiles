@@ -1390,7 +1390,7 @@ nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>ds :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
-nnoremap <silent> <Leader>dq :Denite -no-quit kquickfix<CR>
+nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume -select=+'. v:count1 .
             \ '--immediately'<CR>
