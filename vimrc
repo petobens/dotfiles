@@ -1386,6 +1386,7 @@ nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
+nnoremap <silent> <Leader>dg :DeniteCursorWord grep<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>ds :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
