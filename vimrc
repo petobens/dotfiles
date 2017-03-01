@@ -145,8 +145,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('Shougo/deoplete.nvim')
     endif
     " Unite/denite sources
-    " call dein#add('chemzqm/unite-location')
-    call dein#add('petobens/unite-location')
+    call dein#add('chemzqm/unite-location')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('thinca/vim-unite-history')
@@ -1391,6 +1390,7 @@ nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>ds :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
+nnoremap <silent> <Leader>dq :Denite -no-quit kquickfix<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume -select=+'. v:count1 .
             \ '--immediately'<CR>
@@ -1549,12 +1549,9 @@ nnoremap <silent> <Leader>gP :Gpull<CR>
 nnoremap <silent> <Leader>gb :Gbrowse<cr>
 vnoremap <silent> <Leader>gb :Gbrowse<cr>
 " FIXME: for mac not working as expected
-if dein#check_install(['unite']) == 0 &&
-            \ !empty(unite#get_all_sources('quickfix'))
-    nnoremap <silent> <Leader>gl :Glog -- %<CR>:Unite -no-quit -wrap
-                \ -buffer-name=[Quickfix_List] quickfix<CR>
-    nnoremap <silent> <Leader>gL :Glog --<CR>:Unite -no-quit -wrap
-                \ -buffer-name=[Quickfix_List] quickfix<CR>
+if dein#check_install(['denite']) == 0
+    nnoremap <silent> <Leader>gl :Glog -- %<CR>:Denite quickfix<CR>
+    nnoremap <silent> <Leader>gL :Glog --<CR>:Denite quickfix<CR>
 else
     nnoremap <silent> <Leader>gl :Glog -- %<CR>:copen<CR>
     nnoremap <silent> <Leader>gL :Glog --<CR>:copen<CR>
