@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 01 Mar 2017
+" Last Modified: 03 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -145,11 +145,10 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('Shougo/deoplete.nvim')
     endif
     " Unite/denite sources
-    call dein#add('chemzqm/unite-location')
+    call dein#add('chemzqm/denite-extra')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('thinca/vim-unite-history')
-    " call dein#add('osyo-manga/unite-quickfix')
     call dein#add('kopischke/unite-spell-suggest')
     call dein#add('tsukkee/unite-tag')
     " For neocomplete
@@ -1120,7 +1119,7 @@ augroup END
 
 if has('nvim')
     if s:is_mac
-        nnoremap <Leader>tm :10split +terminal<CR>
+        nnoremap <silent> <Leader>tm :10split +terminal<CR>
                     \ source $HOME/.bash_profile<CR>c<CR>
     endif
 endif
@@ -1388,6 +1387,8 @@ nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>dg :DeniteCursorWord grep<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
+nnoremap <silent> <Leader>sh :Denite history:search<CR>
+nnoremap <silent> <Leader>ch :Denite history:cmd<CR>
 nnoremap <silent> <Leader>ds :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
@@ -1426,6 +1427,8 @@ call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
 call denite#custom#map('insert', '<C-a>', '<denite:choose_action>', 'noremap')
 call denite#custom#map('insert', '<C-y>', '<denite:do_action:yank>', 'noremap')
 call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
+            \ 'noremap')
+call denite#custom#map('insert', '<C-e>', '<denite:do_action:feedkeys>',
             \ 'noremap')
 
 " }}}
@@ -2024,8 +2027,8 @@ nnoremap <silent> <Leader>me :Unite mapping<CR>
 " nnoremap <silent> <Leader>ce :Unite command<CR>
 nnoremap <silent> <Leader>uf :Unite function<CR>
 nnoremap <silent> <Leader>uyh :Unite history/yank<CR>
-nnoremap <silent> <Leader>ch :Unite history/command<CR>
-nnoremap <silent> <Leader>sh :Unite history/search<CR>
+nnoremap <silent> <Leader>uch :Unite history/command<CR>
+nnoremap <silent> <Leader>ush :Unite history/search<CR>
 nnoremap <silent> <Leader>us :Unite -buffer-name=search line:forward<CR>
 nnoremap <silent> <Leader>uw :UniteWithCursorWord -auto-preview
             \ -buffer-name=search line<CR>
