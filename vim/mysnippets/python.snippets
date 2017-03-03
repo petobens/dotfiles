@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 12 Feb 2017
+# Last Modified: 03 Mar 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -248,6 +248,11 @@ import logging.config
 import yaml
 logging.config.dictConfig(yaml.load(open('${1:logger_config}.yaml', 'r'))['logger'])
 logger = logging.getLogger('${2:module_logger}')$0
+endsnippet
+
+snippet bl "Basic Logger" b
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)$0
 endsnippet
 
 # **}
