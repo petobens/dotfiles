@@ -86,7 +86,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Plugins we are using
     call dein#add('vim-airline/vim-airline')
-    call dein#add('itchyny/calendar.vim', {'on_cmd' : 'Calendar'})
     call dein#add('junegunn/vim-easy-align')
     if s:is_mac
         " We installed fzf with Brew
@@ -116,6 +115,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
+    call dein#add('joshdick/onedark.vim')
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
@@ -131,7 +131,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/denite.nvim')
     call dein#add('Shougo/unite.vim')
     call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
-    call dein#add('Shougo/vimshell.vim')
     " Note: We need vimproc in neovim for grep source to work
     let s:vimproc_make = 'make -f make_mac.mak'
     if s:is_win
@@ -219,6 +218,7 @@ if !has('nvim')
 else
     set clipboard=unnamed
     " This mimicks autoselect in neovim
+    " FIXME: Not working
     vmap <Esc> "*ygv<C-c>
 endif
 
@@ -948,11 +948,6 @@ augroup ft_gauss
     au BufNewFile,BufReadPost *.{prg,g,gss,src,e} set filetype=gauss
     au Filetype gauss setlocal commentstring=//%s
     au FileType gauss setlocal iskeyword-=:
-
-    " Vimshell interpreter settings
-    au FileType int-tgauss setlocal filetype=int-gauss.gauss
-    au Filetype int-tgauss syn match gaussIntPrompt "^(gauss)"
-    au Filetype int-tgauss hi def link gaussIntPrompt Statement
 augroup END
 
 " }}}
@@ -1016,22 +1011,6 @@ augroup ft_py
     " Python notebooks are json files
     au BufNewFile,BufReadPost *.ipynb set filetype=json
 
-    " Vimshell python interpreter settings
-    " TODO: Open interactive repls as popups (-popup flag doesn't work)
-    " Set filetype
-    au FileType int-python setlocal filetype=int-python.python
-    " Since jedi omnifunc doesn't seem to work with the vimshell interpreter we
-    " change the omnifunc
-    au FileType int-python.python setlocal omnifunc=python3complete#Complete
-    " Syntax groups
-    au Filetype int-python.python syn match PyIntInit "\python\_.*information."
-    au Filetype int-python.python syn match PyIntPrompt "^>>>"
-    au Filetype int-python.python syn match PyIntError "^\w\+Error:\s.\+$"
-    " Highlight
-    au Filetype int-python.python hi def link PyIntInit Normal
-    au Filetype int-python.python hi def link PyIntPrompt Statement
-    au Filetype int-python.python hi def link PyIntError Error
-
     " Highlight all python functions
     au Filetype python syn match pythonAttribute2 /\.\h\w*(/hs=s+1,he=e-1
     au Filetype python hi def link pythonAttribute2 Function
@@ -1079,16 +1058,6 @@ augroup ft_R
     au!
     " Set the .Rprofile to R
     au BufNewFile,BufRead {Rprofile,.Rprofile,*.R} set filetype=r
-    " Vimshell R interpreter settings
-    au FileType int-R setlocal filetype=int-R.r  " Fix highlighting
-    " Syntax groups
-    au Filetype int-R.r syn match RIntInit "\R\_.*R."
-    au Filetype int-R.r syn match RIntPrompt "^>>>"
-    au Filetype int-R.r syn match RIntOut "\[1\]"
-    " Highlight
-    au Filetype int-R.r hi def link RIntInit Normal
-    au Filetype int-R.r hi def link RIntPrompt Statement
-    au Filetype int-R.r hi def link RIntOut Identifier
 augroup END
 
 " }}}
@@ -1121,6 +1090,8 @@ augroup END
 " Terminal {{{
 
 if has('nvim')
+    let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+
     if s:is_mac
         nnoremap <silent> <Leader>tm :10split +terminal<CR>
                     \ source $HOME/.bash_profile<CR>c<CR>
@@ -1136,25 +1107,7 @@ augroup ft_text
     au Filetype text setlocal shiftwidth=2 tabstop=2 softtabstop=2
     " au FileType text setlocal foldmethod=marker
     au Filetype text syn match txtURL "\(http\|www\.\)[^ ]*"
-    au Filetype text nnoremap <buffer><silent><Leader>ct
-                \ :call <SID>CheckMissingTask('check')<CR>
-    au Filetype text nnoremap <buffer><silent><Leader>mt
-                \ :call <SID>CheckMissingTask('missing')<CR>
 augroup END
-
-function! s:CheckMissingTask(symbol)
-    normal! mz
-    let check_symbol = 'u2714'
-    let cross_symbol = 'u2718'
-    " Remove previous symbols and whitespace
-    execute 's/\s\+\(\%' . check_symbol. '\|\%' . cross_symbol .'\)//ge'
-    if a:symbol ==# 'check'
-        execute "normal! 0A\<space>\<C-V>" . check_symbol
-    else
-        execute "normal! 0A\<space>\<C-V>" . cross_symbol
-    endif
-    normal! `z
-endfunction
 
 " }}}
 " Vim {{{
@@ -1225,8 +1178,8 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#buffer_nr_format = '%s:'
 let g:airline#extensions#tabline#buffer_min_count = 2
 let airline#extensions#tabline#disable_refresh = 1
-" Don't show vimshell in the tabline because it flickers (and denite)
-let g:airline#extensions#tabline#excludes = ['vimshell', 'denite']
+" Don't show some filetypes in the tabline
+let g:airline#extensions#tabline#excludes = ['denite']
 
 " Show superindex numbers in tabline that allow to select buffer directly
 let g:airline#extensions#tabline#buffer_idx_mode = 1
@@ -1241,67 +1194,7 @@ nmap <silent> <Leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <Leader>9 <Plug>AirlineSelectTab9
 
 " }}}
-" Calendar {{{
-
-" TODO: Sort tasklist alphabetically?
-" Improve mappings: create tasklist, move between them, delete task
-
-function! s:RefreshCal()
-    let timestamp_dir = g:calendar_cache_directory . '/timestamp'
-    let file_list = globpath(timestamp_dir,'*', 0, 1)
-    if empty(timestamp_dir)
-        return
-    endif
-    " Delete Google calendar cache if not empty
-    for item in file_list
-        if exists(':VimProcBang') && s:is_win
-            call vimproc#delete_trash(item)
-        else
-            execute delete(item)
-        endif
-    endfor
-endfunction
-
-let g:calendar_first_day = 'monday'
-let g:calendar_date_endian = 'little'
-let g:calendar_date_month_name = 1
-let g:calendar_date_separator = ' '
-let g:calendar_views = ['year', 'month', 'week', 'agenda', 'day_2']
-let g:calendar_week_number = 1
-let g:calendar_date_full_month_name = 1
-let g:calendar_time_zone = '-03:00'
-let g:calendar_task_delete = 1
-let g:calendar_google_calendar = 1
-let g:calendar_google_task = 1
-let g:calendar_cache_directory = $CACHE . '/plugins/calendar'
-
-" Maps
-nnoremap <silent> <Leader>ca :call <SID>RefreshCal()<CR>:Calendar -task
-            \ -split=horizontal -position=below<CR>:wincmd J<bar>50 wincmd _<CR>
-
-augroup ps_calendar
-    au!
-    au FileType calendar call s:calendar_settings()
-augroup END
-
-function! s:calendar_settings()
-    " Hide task list and event list with q; exit with Q
-    nmap <buffer> q <Plug>(calendar_escape)
-    " Change view
-    nmap <buffer> H <Plug>(calendar_view_left)
-    nmap <buffer> L <Plug>(calendar_view_right)
-    " Move events/tasks up and down
-    nmap <buffer> <A-j> <Plug>(calendar_move_down)
-    nmap <buffer> <A-k> <Plug>(calendar_move_up)
-    " Change window
-    nmap <buffer> <C-k> <C-w>k
-endfunction
-
-" }}}
 " Dein {{{
-
-" Note: Unlike neobundle we need to run `Unite dein/log` manually once the
-" update finishes
 
 let g:dein#install_log_filename = $CACHE . '/plugins/dein/dein.log'
 let g:dein#install_max_processes = 16
@@ -1316,7 +1209,7 @@ endfunction
 nnoremap <silent> <Leader>ul :execute "edit +" g:dein#install_log_filename<CR>
 nnoremap <Leader>bu :call <SID>dein_update()<CR>
 nnoremap  <Leader>rp :call dein#recache_runtimepath()<CR>
-nnoremap <silent> <Leader>bl :Unite dein<CR>
+nnoremap <silent> <Leader>bl :Denite dein<CR>
 
 " }}}
 " Denite {{{
@@ -1331,6 +1224,9 @@ call denite#custom#option('default', 'prompt_highlight', 'Identifier')
 call denite#custom#option('default', 'highlight_matched_char', 'Identifier')
 call denite#custom#option('default', 'highlight_matched_range', 'Normal')
 call denite#custom#option('default', 'highlight_mode_insert', 'WildMenu')
+
+" Change some hl groups
+hi default link deniteSource_grepFile Directory
 
 " Change default matcher and sorter
 call denite#custom#source('default', 'matchers', ['matcher_fuzzy',
@@ -1449,9 +1345,6 @@ endfunction
 " Set dispatch tmux height to the minimum
 let g:dispatch_tmux_height = 1
 
-" Mapping to open console in current directory
-nnoremap <silent> <Leader>cs :Start<CR>
-
 " }}}
 " EasyAlign {{{
 
@@ -1502,12 +1395,13 @@ endif
 
 " Disable echodoc for tex and bib files
 function! s:disable_echodoc() abort
-  if &filetype ==# 'bib' || &filetype ==# 'tex' || &filetype ==# 'vimshell'
+  if &filetype ==# 'bib' || &filetype ==# 'tex'
     call echodoc#disable()
   else
     call echodoc#enable()
   endif
 endfunction
+
 augroup ps_echodoc
     au! FileType * call s:disable_echodoc()
 augroup END
@@ -1605,7 +1499,7 @@ let g:fzf_action = {'ctrl-s': 'split', 'ctrl-v': 'vsplit'}
 " }}}
 " GitGutter {{{
 
-" FIXME: Not working on Windows
+" FIXME: Not working on Windows?
 let g:gitgutter_map_keys = 0           " Disable default mappings
 let g:gitgutter_realtime = 0           " Don't update when typing stops
 let g:gitgutter_eager = 1              " Update when switching/writing buffers
@@ -1813,8 +1707,8 @@ omap T <Plug>Sneak_T
 " }}}
 " Tagbar {{{
 
-" Note: we use universal-ctags which supersedes exuberant ctags and compile with
-" `mingw32-make -f mk_mingw.mak`
+" Note: we use universal-ctags which supersedes exuberant ctags and compile it
+" (on Windows) with `mingw32-make -f mk_mingw.mak`
 
 let g:tagbar_left = 1
 let g:tagbar_width = 45
@@ -1876,11 +1770,13 @@ let g:tagbar_type_python = {
     \ ],
 \ }
 
-" Mappings
-nnoremap <silent> <Leader>tb :TagbarToggle<CR>
+" Settings
 let g:tagbar_map_openfold = ['zo', 'l']
 let g:tagbar_map_closeallfolds = 'zm'
 let g:tagbar_map_openallfolds = 'zr'
+
+" Mappings
+nnoremap <silent> <Leader>tb :TagbarToggle<CR>
 
 " }}}
 " Ultisnips {{{
@@ -1978,70 +1874,17 @@ let g:unite_data_directory = $CACHE . '/plugins/unite'
 let g:unite_force_overwrite_statusline = 0        " Avoid conflicts with Airline
 let g:unite_enable_auto_select = 0                " Don't skip first line
 
-" MRU settings (neomru is a separate source now)
-let g:neomru#file_mru_limit = 750
-let g:neomru#time_format = ''
-let g:neomru#file_mru_path = $CACHE . '/plugins/unite/mru/file'
-let g:neomru#directory_mru_path = $CACHE . '/plugins/unite/mru/directory'
-
-" Yank settings
-let g:neoyank#file = g:unite_data_directory . '/yank/history_yank'
-
 " Buffer settings (don't show time)
 let g:unite_source_buffer_time_format = ''
 
-" Quickfix (we use it for instance with Glog)
-let unite_quickfix_filename_is_pathshorten = 0
-let g:unite_quickfix_is_multiline = 0
-let g:unite#filters#converter_quickfix_highlight#enable_bold_for_message = 0
-
-" Async recursive file search and grep settings (if ag is not available a good
-" alternative is the platinium searcher, pt)
-" Note: on Windows we install ag through msys2 pacman
-if executable('ag')
-    let g:unite_source_rec_async_command = ['ag', '--follow',  '--nocolor',
-                \ '--nogroup', '--hidden', '-g', '']
-    let g:unite_source_grep_command = 'ag'
-    let g:unite_source_grep_default_opts =
-      \ '--smart-case --vimgrep --hidden --follow --ignore ''.git'''
-    let g:unite_source_grep_recursive_opt = ''
-endif
-
 " Mappings (sources):
-if executable('ag')
-    if !has('nvim')
-        nnoremap <silent> <Leader>uls :Unite
-                    \ -buffer-name=fuzzy-search file_rec/async<CR>
-    else
-        nnoremap <silent> <Leader>uls :Unite
-                    \ -buffer-name=fuzzy-search file_rec/neovim<CR>
-    endif
-else
-    nnoremap <silent> <Leader>uls :Unite -buffer-name=fuzzy-search file_rec<CR>
-endif
-nnoremap <silent> <Leader>usd :UniteWithInputDirectory -buffer-name=fuzzy-search
-            \ file_rec/async<CR>
-nnoremap <silent> <Leader>urd :Unite -buffer-name=mru-files neomru/file<CR>
 nnoremap <silent> <Leader>bm :Unite -profile-name=bookmark -default-action=rec
             \ -buffer-name=my-directories bookmark<CR>
 nnoremap <silent> <Leader>ube :Unite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>me :Unite mapping<CR>
-" nnoremap <silent> <Leader>ce :Unite command<CR>
 nnoremap <silent> <Leader>uf :Unite function<CR>
-nnoremap <silent> <Leader>uyh :Unite history/yank<CR>
-nnoremap <silent> <Leader>uch :Unite history/command<CR>
-nnoremap <silent> <Leader>ush :Unite history/search<CR>
-nnoremap <silent> <Leader>us :Unite -buffer-name=search line:forward<CR>
-nnoremap <silent> <Leader>uw :UniteWithCursorWord -auto-preview
-            \ -buffer-name=search line<CR>
-nnoremap <silent> <Leader>utl :Unite -auto-highlight -buffer-name=task-list
-            \ vimgrep:%:\\CTODO\:\\<bar>FIXME\:<CR>
-nnoremap <silent> <Leader>dag :Unite -buffer-name=ag grep<CR>
 nnoremap <silent> <Leader>ur :UniteResume -force-redraw -immediately<CR>
 nnoremap <silent> <Leader>sm :Unite output:messages<CR>
-" FIXME: UniteNext and UnitePrevious don't work with qf source
-nnoremap <silent> <Leader>uq :Unite -no-quit -wrap -auto-highlight
-            \ -buffer-name=[Quickfix_List][-] quickfix<CR>
 " NeoInclude and Unite tag
 nnoremap <silent> <Leader>te :NeoIncludeMakeCache<CR>:Unite
             \ tag/include<CR>
@@ -2115,8 +1958,6 @@ unlet s:my_split
 " Vimfiler {{{
 
 " Note: on Mac to delete files to the trash install rmtrash
-" FIXME: neovim HEAD segfaults, see:
-" https://github.com/neovim/neovim/issues/5883
 
 if dein#check_install(['vimfiler']) == 0
     function! VimfilerHookOpts() abort
@@ -2279,86 +2120,6 @@ augroup ps_vimlatex
 augroup END
 
 " }}}
-" Vimshell {{{
-
-" Set prompt to show working directory
-let g:vimshell_prompt_expr =
-    \ 'escape(fnamemodify(getcwd(), ":~").">", "\\[]()?! ")." "'
-let g:vimshell_prompt_pattern = '^\%(\f\|\\.\)\+> '
-" Change cache directory
-let g:vimshell_data_directory = $CACHE . '/plugins/vimshell'
-
-" To run :VimShellExecute directly on a python file
-let g:vimshell_execute_file_list = {}
-let g:vimshell_execute_file_list['py'] = 'python'
-
-" Use ipython for python files
-if !exists('g:vimshell_interactive_interpreter_commands')
-    let g:vimshell_interactive_interpreter_commands = {}
-endif
-let g:vimshell_interactive_interpreter_commands.python = 'ipython3'
-
-" Maps
-nnoremap <silent> <Leader>vt :VimShellBufferDir -popup<CR>
-vnoremap <silent> <Leader>ei :VimShellSendString<CR>
-nmap <silent> <Leader>vc mz:VimShell<CR><bar><Plug>(vimshell_exit)`z
-
-augroup ps_vimshell
-    au!
-    " Vimshell
-    au FileType vimshell call s:vimshell_settings()
-    " Interpreter
-	au FileType int-* call s:interactive_settings()
-augroup END
-
-function! s:vimshell_settings()
-    " Options
-    setlocal textwidth=0
-
-    " Alias
-    call vimshell#set_alias('up', 'cdup')
-
-    " Mappings
-    " Exit with escape key and q, Q
-    nmap <buffer> <ESC> <Plug>(vimshell_exit)
-    nmap <buffer> q <Plug>(vimshell_exit)
-    nmap <buffer> Q <Plug>(vimshell_exit)
-    " Map <CR> properly
-    imap <buffer><expr><CR> pumvisible() ?
-        \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
-        \ neocomplete#close_popup()."\<C-R>=UltiSnips#ExpandSnippet()\<CR>" :
-        \ neocomplete#close_popup()) : "\<Plug>(vimshell_enter)"
-    " Change window and redraw screen
-    nmap <buffer> <C-j> <C-w>j
-    nmap <buffer> <C-h> <C-w>h
-    nmap <buffer> <C-k> <C-w>k
-    nmap <buffer> <C-l> <C-w>l
-    " Since we remap key to redraw/clear vimshell we map it again
-    nmap <buffer> <C-r>	<Plug>(vimshell_clear)
-endfunction
-
-function! s:interactive_settings()
-    " Options
-     setlocal textwidth=0
-
-    " Mappings
-    " Also exit with Q besides q
-    nmap <buffer> Q <Plug>(vimshell_int_exit)
-    " Map <CR> properly
-    imap <buffer><expr><CR> pumvisible() ?
-        \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
-        \ neocomplete#close_popup()."\<C-R>=UltiSnips#ExpandSnippet()\<CR>" :
-        \ neocomplete#close_popup()) : "\<Plug>(vimshell_int_execute_line)"
-    " Move as in insert mode
-    imap <buffer><C-l> <C-o>l
-    imap <buffer><C-h> <C-o>h
-    " Show history with unite
-    imap <buffer><C-u> <Plug>(vimshell_int_history_unite)
-    " Redraw/clear
-    imap <buffer> <C-r> <ESC><Plug>(vimshell_int_clear)
-endfunction
-
-" }}}
 
 " }}}
 " GUI and Terminal {{{
@@ -2388,11 +2149,6 @@ if has('gui_running')
 else
     " Terminal settings
     set mouse=a        " Enable the mouse
-
-    " Enable cursorshape on neovim
-    if has('nvim')
-        let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
-    endif
 
     " Make cursor shape mode dependent (note: we need double quotes!)
     if exists('$TMUX')
@@ -2487,31 +2243,6 @@ augroup END
 nnoremap <Leader>dt :call <SID>DeleteTrailingWhitespace()<CR>
 
 " }}}
-" Mark windows and then swap them {{{
-
-function! s:MarkWindowSwap()
-    let g:markedWinNum = winnr()
-endfunction
-
-function! s:DoWindowSwap()
-    " Mark destination
-    let curNum = winnr()
-    let curBuf = bufnr('%')
-    execute g:markedWinNum . 'wincmd w'
-    " Switch to source and shuffle dest->source
-    let markedBuf = bufnr('%')
-    " Hide and open so that we aren't prompted and keep history
-    execute 'hide buf' curBuf
-    " Switch to dest and shuffle source->dest
-    execute curNum . 'wincmd w'
-    " Hide and open so that we aren't prompted and keep history
-    execute 'hide buf' markedBuf
-endfunction
-
-nnoremap <silent> <Leader>mw :call <SID>MarkWindowSwap()<CR>
-nnoremap <silent> <Leader>sw :call <SID>DoWindowSwap()<CR>
-
-" }}}
 " Highlight word {{{
 
 " From Steve Losh's vimrc: Use <Leader>N (number from 1-6) to highlight the
@@ -2541,117 +2272,6 @@ nnoremap <silent> <Leader>h3 :call <SID>HiInterestingWord(3)<cr>
 nnoremap <silent> <Leader>h4 :call <SID>HiInterestingWord(4)<cr>
 nnoremap <silent> <Leader>h5 :call <SID>HiInterestingWord(5)<cr>
 nnoremap <silent> <Leader>h6 :call <SID>HiInterestingWord(6)<cr>
-
-" }}}
-" Next and last motions {{{
-
-" From Steve Losh's Vimrc
-" Motion for next/last object. Last here means previous, not final
-" example: cin( to change inner next parenthesis
-
-function! s:NextTextObject(motion, dir)
-    let c = nr2char(getchar())
-    let d = ''
-
-    if c ==# 'b' || c ==# '(' || c ==# ')'
-        let c = '('
-    elseif c ==# 'B' || c ==# '{' || c ==# '}'
-        let c = '{'
-    elseif c ==# 'r' || c ==# '[' || c ==# ']'
-        let c = '['
-    elseif c ==# "'"
-        let c = "'"
-    elseif c ==# '"'
-        let c = '"'
-    else
-        return
-    endif
-
-" Find the next opening-whatever.
-    execute 'normal! ' . a:dir . c . "\<cr>"
-
-    if a:motion ==# 'a'
-" If we're doing an 'around' method, we just need to select around it
-" and we can bail out to Vim.
-        execute 'normal! va' . c
-    else
-" Otherwise we're looking at an 'inside' motion. Unfortunately these
-" get tricky when you're dealing with an empty set of delimiters because
-" Vim does the wrong thing when you say vi(.
-
-        let open = ''
-        let close = ''
-
-        if c ==# '('
-            let open = '('
-            let close = ')'
-        elseif c ==# '{'
-            let open = '{'
-            let close = '}'
-        elseif c ==# '['
-            let open = "\\["
-            let close = "\\]"
-        elseif c ==# "'"
-            let open = "'"
-            let close = "'"
-        elseif c ==# '"'
-            let open = '"'
-            let close = '"'
-        endif
-
-" We'll start at the current delimiter.
-        let start_pos = getpos('.')
-        let start_l = start_pos[1]
-        let start_c = start_pos[2]
-
-" Then we'll find it's matching end delimiter.
-        if c ==# "'" || c ==# '"'
-" searchpairpos() doesn't work for quotes, because fuck me.
-            let end_pos = searchpos(open)
-        else
-            let end_pos = searchpairpos(open, '', close)
-        endif
-
-        let end_l = end_pos[0]
-        let end_c = end_pos[1]
-
-        call setpos('.', start_pos)
-
-        if start_l == end_l && start_c == (end_c - 1)
-" We're in an empty set of delimiters. We'll append an "x"
-" character and select that so most Vim commands will do something
-" sane. v is gonna be weird, and so is y. Oh well.
-            execute "normal! ax\<esc>\<left>"
-            execute 'normal! vi' . c
-        elseif start_l == end_l && start_c == (end_c - 2)
-" We're on a set of delimiters that contain a single, non-newline
-" character. We can just select that and we're done.
-            execute 'normal! vi' . c
-        else
-" Otherwise these delimiters contain something. But we're still not
-" sure Vim's gonna work, because if they contain nothing but
-" newlines Vim still does the wrong thing. So we'll manually select
-" the guts ourselves.
-            let whichwrap = &whichwrap
-            set whichwrap+=h,l
-
-            execute 'normal! va' . c . 'hol'
-
-            let &whichwrap = whichwrap
-        endif
-    endif
-endfunction
-
-" Mappings
-onoremap an :<c-u>call <SID>NextTextObject('a', '/')<cr>
-xnoremap an :<c-u>call <SID>NextTextObject('a', '/')<cr>
-onoremap in :<c-u>call <SID>NextTextObject('i', '/')<cr>
-xnoremap in :<c-u>call <SID>NextTextObject('i', '/')<cr>
-
-onoremap al :<c-u>call <SID>NextTextObject('a', '?')<cr>
-xnoremap al :<c-u>call <SID>NextTextObject('a', '?')<cr>
-onoremap il :<c-u>call <SID>NextTextObject('i', '?')<cr>
-xnoremap il :<c-u>call <SID>NextTextObject('i', '?')<cr>
 
 " }}}
 " Open web links {{{
