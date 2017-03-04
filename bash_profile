@@ -2,7 +2,7 @@
 #          File: bash_profile
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 29 Jan 2017
+# Last Modified: 04 Mar 2017
 #   Description: My Bash Profile
 #===============================================================================
 # Options {{{
@@ -121,6 +121,9 @@ alias gP='git pull'
 alias python='python3'
 alias pip='pip3'
 alias jn='jupyter notebook'
+
+# Since we use an italics terminfo the following alias avoid ssh issues
+alias ssh="TERM=xterm-256color ssh"
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
 
