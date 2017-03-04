@@ -2,11 +2,11 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 03 Mar 2017
+" Last Modified: 04 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
-" Try the job feature
+" Try the job feature: skywind3000/asyncrun.vim or neomake to replace dispatch?
 " SQL support?
 " Filter to convert markdown to html, useful for mails
 
@@ -115,6 +115,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('zchee/deoplete-jedi')
     endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
+    call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
@@ -1004,6 +1005,8 @@ nnoremap <silent> <Leader>ep :e $DOTFILES/pentadactylrc<CR>
 
 " Don't fold docstrings; see https://github.com/tmhedberg/SimpylFold
 let g:SimpylFold_fold_docstring = 0
+" Better highlighting; see https://github.com/vim-python/python-syntax
+let g:python_highlight_all = 1
 
 augroup ft_py
     au!
@@ -1357,7 +1360,6 @@ if executable('ag')
 	call denite#custom#var('grep', 'final_opts', [])
 endif
 
-" FIXME: Reversed option is not respected
 " Functions
 function! s:DeniteScanDir()
     let narrow_dir = input('Input narrowing directory: ', '', 'file')
@@ -1386,6 +1388,7 @@ nnoremap <silent> <Leader>be :Denite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>dg :DeniteCursorWord grep<CR>
+nnoremap <silent> <Leader>he :Denite help<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>sh :Denite history:search<CR>
 nnoremap <silent> <Leader>ch :Denite history:cmd<CR>
@@ -2010,7 +2013,6 @@ if executable('ag')
         nnoremap <silent> <Leader>uls :Unite
                     \ -buffer-name=fuzzy-search file_rec/async<CR>
     else
-        " FIXME: We need to press space for candidates to appear
         nnoremap <silent> <Leader>uls :Unite
                     \ -buffer-name=fuzzy-search file_rec/neovim<CR>
     endif
