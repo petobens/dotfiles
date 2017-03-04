@@ -1196,7 +1196,7 @@ nmap <silent> <Leader>9 <Plug>AirlineSelectTab9
 " }}}
 " Dein {{{
 
-let g:dein#install_log_filename = $CACHE . '/plugins/dein/dein.log'
+let g:dein#install_log_filename = expand('$HOME/.cache/dein/dein.log')
 let g:dein#install_max_processes = 16
 
 " Function to open unite buffer with updates after update finishes
@@ -1242,6 +1242,10 @@ call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
 " Buffer source settings
 " TODO: Use converter_uniq_word
 call denite#custom#var('buffer', 'date_format', '')
+
+" Neomru
+let g:neomru#file_mru_limit = 750
+let g:neomru#time_format = ''
 
 " Use ag for file_rec and grep
 if executable('ag')
@@ -2002,9 +2006,6 @@ let g:vimfiler_tree_indentation = 3
 " Note that we can write this as a list rather than a (long) string
 let g:vimfiler_ignore_pattern = '\%(\.sys\|\.bat\|\.bak\)$\|'.
             \ '^\%(\.git\|\.DS_Store\)$'
-
-" Cache directory
-let g:vimfiler_data_directory = $CACHE . '/plugins/vimfiler'
 
 " Set next variable to 0 if there are conflicts with Airline
 let g:vimfiler_force_overwrite_statusline = 1
