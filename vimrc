@@ -102,7 +102,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('kassio/neoterm')
     endif
     call dein#add('scrooloose/nerdcommenter')
-    call dein#add('joshdick/onedark.vim')
     call dein#add('justinmk/vim-sneak')
     if exists('$TMUX')
         call dein#add('christoomey/vim-tmux-navigator')
@@ -253,36 +252,13 @@ silent! call s:MakeDirIfNoExists(&directory)
 silent! call s:MakeDirIfNoExists(&backupdir)
 
 " }}}
-" Color scheme and syntax highlighting {{{
+" Syntax highlighting {{{
 
 " Enable syntax highlighting
 syntax enable
 
-if !has('gui_running')
-    if s:is_win
-        " ConEmu settings on Windows (for Mac we don't need to set the term
-        " variable explicitly since it is read from $TERM env variable)
-        set term=xterm
-        set t_Co=256
-        let &t_AB="\e[48;5;%dm"
-        let &t_AF="\e[38;5;%dm"
-    else
-        " Use guicolors in the terminal (this requires iTerm 2.9 and tmux 2.2)
-        set termguicolors
-    endif
-endif
-
-" Colorscheme
-if dein#check_install(['heraldish']) == 0
-    colorscheme heraldish
-endif
-
-" Reload the colorscheme when we write the color file in order to see changes
-augroup color_heraldish
-    au!
-    au BufWritePost heraldish.vim source $DOTVIM/vimrc
-    au BufWritePost heraldish.vim colorscheme heraldish
-augroup END
+" Use guicolors in terminal (we seem to need to place this here)
+set termguicolors
 
 " Highlight todos colons in red
 set iskeyword+=:
@@ -1189,6 +1165,25 @@ nmap <silent> <Leader>6 <Plug>AirlineSelectTab6
 nmap <silent> <Leader>7 <Plug>AirlineSelectTab7
 nmap <silent> <Leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <Leader>9 <Plug>AirlineSelectTab9
+
+" }}}
+" Colorscheme {{{
+
+" Colorscheme
+if dein#check_install(['heraldish']) == 0
+    colorscheme heraldish
+endif
+
+" Reload the colorscheme when we write the color file in order to see changes
+augroup color_heraldish
+    au!
+    if has('nvim')
+        au BufWritePost heraldish.vim silent call dein#recache_runtimepath()
+    else
+        au BufWritePost heraldish.vim source $DOTVIM/vimrc
+    endif
+    au BufWritePost heraldish.vim colorscheme heraldish
+augroup END
 
 " }}}
 " Dein {{{
