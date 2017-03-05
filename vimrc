@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 04 Mar 2017
+" Last Modified: 05 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -98,6 +98,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('vim-scripts/matchit.zip', {'name' : 'matchit'})
     call dein#add('simnalamburt/vim-mundo', {'on_cmd' : 'MundoToggle'})
     call dein#add('neomake/neomake')
+    if exists(':tnoremap')
+        call dein#add('kassio/neoterm')
+    endif
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
     if !s:is_win
@@ -849,8 +852,15 @@ endif
 " }}}
 " Terminal mode {{{
 
-if has('nvim')
-    " TODO: Complete this
+if exists(':tnoremap')
+    " Exit terminal mode and return to vim normal mode (essentially the terminal
+    " now becomes a regular vim buffer)
+    tnoremap <Esc> <C-\><C-n>
+    " Window movement
+    tnoremap <c-k> <C-\><C-n><C-w>k
+    tnoremap <c-h> <C-\><C-n><C-w>h
+    tnoremap <c-l> <C-\><C-n><C-w>l
+    tnoremap <c-j> <C-\><C-n><C-w>j
 endif
 
 " }}}
@@ -1085,18 +1095,6 @@ augroup ft_sql
     au Filetype sql syn keyword sqlFunction DATE_PARSE DATE_DIFF DATE_TRUNC
                 \ LAG ARBITRARY COUNT_IF LEAD
 augroup END
-
-" }}}
-" Terminal {{{
-
-if has('nvim')
-    let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
-
-    if s:is_mac
-        nnoremap <silent> <Leader>tm :10split +terminal<CR>
-                    \ source $HOME/.bash_profile<CR>c<CR>
-    endif
-endif
 
 " }}}
 " Text {{{
@@ -1673,6 +1671,40 @@ let g:neomake_sh_enabled_makers = ['shellcheck']
 augroup pl_neomake
     au!
     au BufWritePost *.{vim,yaml} silent Neomake
+augroup END
+
+" }}}
+" Neoterm {{{
+
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+
+let g:neoterm_size = 10
+let g:neoterm_autoinsert = 1
+let g:neoterm_automap_keys = ''
+let g:neoterm_keep_term_open = 0
+
+" Functions
+function! s:OpenNeotermSplit(position)
+    let g:neoterm_position = a:position
+    let g:neoterm_size = 10
+    if a:position ==# 'vertical'
+        let g:neoterm_size = ''
+    endif
+   Topen
+endfunction
+
+" Mappings
+nnoremap <silent> <Leader>tm :call <SID>OpenNeotermSplit('horizontal')<CR>
+nnoremap <silent> <Leader>vt :call <SID>OpenNeotermSplit('vertical')<CR>
+nnoremap <silent> <Leader>tc :T exit<CR>:set relativenumber<CR>
+vnoremap <silent> <Leader>ri :TREPLSendSelection<CR>
+
+augroup term_au
+    au!
+    " Get into insert mode whenever we enter a terminal buffer
+    au BufEnter * if &buftype == 'terminal' | startinsert | endif
+    " FIXME: Not working
+    au TermClose term://*neoterm* set number relativenumber
 augroup END
 
 " }}}

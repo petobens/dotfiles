@@ -2,7 +2,7 @@
 "          File: latex_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2013
-" Last Modified: 06 Dec 2016
+" Last Modified: 05 Mar 2017
 "   Description: Latex settings
 "===============================================================================
 " TODOs:
@@ -248,12 +248,11 @@ function! s:CompileTex(...)
     " gives an error if it doesn't exist so there is no need to check existance
     let directives = '-p minimize_runs '
 
-    " Use Vimshell for foreground async compilation when an argument is given
-    if a:0 && exists(':VimShell') != 0
-        VimShellBufferDir -popup
-        echon 'compiling with arara using vimshell...'
-        execute 'VimShellSendString '. compiler . directives . '-v ' . mainfile
-        wincmd p
+    " Use Vimshell for foreground async compilation
+    if a:0 && exists(':Topen')
+        let g:neoterm_autoinsert = 0
+        execute 'T ' . compiler . directives . '-v ' . mainfile
+        let g:neoterm_autoinsert = 1
         " Return to previous working directory and exit the function
         execute 'lcd ' . save_pwd
         return

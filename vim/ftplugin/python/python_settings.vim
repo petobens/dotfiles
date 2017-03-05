@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 25 Jan 2017
+" Last Modified: 05 Mar 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -156,21 +156,14 @@ function! s:RunPython(mode, compilation, ...)
     endif
 
     " Use Vimshell for foreground async compilation
-    if a:compilation ==# 'foreground' && exists(':VimShell')
-        VimShellBufferDir -popup
-        " If we are on Windows we need to fix the encoding first
-        let fix_encoding = ''
-        if s:is_win
-            let fix_encoding = 'exe --encoding=latin1 '
-        endif
+    if a:compilation ==# 'foreground' && exists(':Topen')
+        let g:neoterm_autoinsert = 0
         if a:mode ==# 'visual'
-            return vimshell#interactive#send([fix_encoding . compiler .
-                        \ current_file, 'rm ' . current_file])
+            execute 'T ' . compiler .  current_file . '; rm ' . current_file
         else
-            execute 'VimShellSendString ' . fix_encoding . compiler .
-                        \ current_file
-            wincmd p
+            execute 'T ' . compiler .  current_file
         endif
+        let g:neoterm_autoinsert = 1
         " Return to previous working directory and exit the function
         execute 'lcd ' . save_pwd
         return
@@ -998,7 +991,7 @@ vnoremap <silent> <buffer> <F7> :EvalVisualPyBackground<CR>
 " Foreground compilation
 nnoremap <silent> <buffer> <Leader>rf :call
             \ <SID>RunPython('normal', 'foreground')<CR>
-vnoremap <silent> <buffer> <Leader>rf :EvalVisualPyVimshell<CR>:wincmd p<CR>
+vnoremap <silent> <buffer> <Leader>rf :EvalVisualPyVimshell<CR>
 " Run in the command line (useful when input is required)
 nnoremap <silent> <buffer> <F5> :call
             \ <SID>RunPython('normal', 'foreground_os')<CR>

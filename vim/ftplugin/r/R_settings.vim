@@ -2,7 +2,7 @@
 "          File: R_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 05 Aug 2015
-" Last Modified: 25 Jan 2017
+" Last Modified: 05 Mar 2017
 "   Description: R Settings for Vim
 "===============================================================================
 " TODO: Close figure window with x button (without need of using locator(1))
@@ -123,20 +123,14 @@ function! s:RunR(mode, compilation, ...)
                 \ '"'
 
     " Use Vimshell for foreground async compilation
-    if a:compilation ==# 'foreground' && exists(':VimShell')
-        VimShellBufferDir -popup
-        " If we are on Windows we need to fix the encoding first
-        let fix_encoding = ''
-        if s:is_win
-            let fix_encoding = 'exe --encoding=latin1 '
-        endif
+    if a:compilation ==# 'foreground' && exists(':Topen')
+        let g:neoterm_autoinsert = 0
         if a:mode ==# 'visual'
-            return vimshell#interactive#send([fix_encoding . compiler,
-                        \ 'rm ' . current_file])
+            execute 'T ' . compiler .  current_file . '; rm ' . current_file
         else
-            execute 'VimShellSendString ' . fix_encoding . compiler
-            wincmd p
+            execute 'T ' . compiler .  current_file
         endif
+        let g:neoterm_autoinsert = 1
         " Return to previous working directory and exit the function
         execute 'lcd ' . save_pwd
         return
@@ -851,7 +845,7 @@ vnoremap <silent> <buffer> <F7> :EvalVisualRBackground<CR>
 " Foreground compilation (vimshell)
 nnoremap <silent> <buffer> <Leader>rf :call
             \ <SID>RunR('normal', 'foreground')<CR>
-vnoremap <silent> <buffer> <Leader>rf :EvalVisualRVimshell<CR>:wincmd p<CR>
+vnoremap <silent> <buffer> <Leader>rf :EvalVisualRVimshell<CR>
 " Foreground compilation in os console
 nnoremap <silent> <buffer> <F5> :call <SID>RunR('normal', 'foreground_os')<CR>
 inoremap <silent> <buffer> <F5> <ESC>:call
