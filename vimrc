@@ -102,6 +102,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('kassio/neoterm')
     endif
     call dein#add('scrooloose/nerdcommenter')
+    call dein#add('joshdick/onedark.vim')
     call dein#add('justinmk/vim-sneak')
     if !s:is_win
         call dein#add('christoomey/vim-tmux-navigator')
@@ -118,7 +119,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
-    call dein#add('joshdick/onedark.vim')
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
@@ -151,7 +151,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('chemzqm/denite-extra')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
-    call dein#add('thinca/vim-unite-history')
     call dein#add('kopischke/unite-spell-suggest')
     call dein#add('tsukkee/unite-tag')
     " For neocomplete
@@ -1676,6 +1675,7 @@ augroup END
 " }}}
 " Neoterm {{{
 
+" TODO: Change colour and shape
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 
 let g:neoterm_autoinsert = 1
