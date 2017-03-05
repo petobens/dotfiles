@@ -124,13 +124,17 @@ function! s:RunR(mode, compilation, ...)
 
     " Use Vimshell for foreground async compilation
     if a:compilation ==# 'foreground' && exists(':Topen')
+        let old_size = g:neoterm_size
+        let old_autoinsert = g:neoterm_autoinsert
+        let g:neoterm_size = 10
         let g:neoterm_autoinsert = 0
         if a:mode ==# 'visual'
             execute 'T ' . compiler .  current_file . '; rm ' . current_file
         else
             execute 'T ' . compiler .  current_file
         endif
-        let g:neoterm_autoinsert = 1
+        let g:neoterm_size = old_size
+        let g:neoterm_autoinsert = old_autoinsert
         " Return to previous working directory and exit the function
         execute 'lcd ' . save_pwd
         return
@@ -166,7 +170,7 @@ function! s:RunR(mode, compilation, ...)
     " If we had used the catchall '%+G%.%#' then the quickfix would
     " automatically open once a build finishes since every line would be
     " considered a valid error.
-    setlocal efm=%E!\ UnMatchaBle\ %trror:\ %m
+    setlocal errorformat=%E!\ UnMatchaBle\ %trror:\ %m
 
     " Use Dispatch for background async compilation if available (note that for
     " background visual compilation we delete the visual file from the function
@@ -442,7 +446,7 @@ function! s:LintR()
     " Use Dispatch for background async compilation if available
     if exists(':Dispatch')
         " First add extra catchall because Dispatch removes it
-        let &l:efm = &efm . ',%-G%.%#'
+        let &l:efm = &errorformat . ',%-G%.%#'
         echon 'running lintr with dispatch ...'
         if s:is_win
             call s:NoShellSlash('Make')

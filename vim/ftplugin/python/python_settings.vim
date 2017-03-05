@@ -157,13 +157,17 @@ function! s:RunPython(mode, compilation, ...)
 
     " Use Vimshell for foreground async compilation
     if a:compilation ==# 'foreground' && exists(':Topen')
+        let old_size = g:neoterm_size
+        let old_autoinsert = g:neoterm_autoinsert
+        let g:neoterm_size = 10
         let g:neoterm_autoinsert = 0
         if a:mode ==# 'visual'
             execute 'T ' . compiler .  current_file . '; rm ' . current_file
         else
             execute 'T ' . compiler .  current_file
         endif
-        let g:neoterm_autoinsert = 1
+        let g:neoterm_size = old_size
+        let g:neoterm_autoinsert = old_autoinsert
         " Return to previous working directory and exit the function
         execute 'lcd ' . save_pwd
         return

@@ -1678,19 +1678,22 @@ augroup END
 
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 
-let g:neoterm_size = 10
 let g:neoterm_autoinsert = 1
 let g:neoterm_automap_keys = ''
 let g:neoterm_keep_term_open = 0
 
 " Functions
 function! s:OpenNeotermSplit(position)
+    let old_position = g:neoterm_position
+    let old_size = g:neoterm_size
     let g:neoterm_position = a:position
     let g:neoterm_size = 10
     if a:position ==# 'vertical'
         let g:neoterm_size = ''
     endif
-   Topen
+    Topen
+    let g:neoterm_position = old_position
+    let g:neoterm_size = old_size
 endfunction
 
 " Mappings

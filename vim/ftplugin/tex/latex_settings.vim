@@ -209,7 +209,7 @@ if !exists('*s:EditFile')
 
         " Open the file in a horizontal or vertical split
         let split_windows = 'vsplit '
-        if winwidth(0) <= 2 * (&tw ? &tw : 80)
+        if winwidth(0) <= 2 * (&textwidth ? &textwidth : 80)
             let split_windows = 'split '
         endif
         execute split_windows . file_path
@@ -250,9 +250,13 @@ function! s:CompileTex(...)
 
     " Use Vimshell for foreground async compilation
     if a:0 && exists(':Topen')
+        let old_size = g:neoterm_size
+        let old_autoinsert = g:neoterm_autoinsert
+        let g:neoterm_size = 10
         let g:neoterm_autoinsert = 0
         execute 'T ' . compiler . directives . '-v ' . mainfile
-        let g:neoterm_autoinsert = 1
+        let g:neoterm_size = old_size
+        let g:neoterm_autoinsert = old_autoinsert
         " Return to previous working directory and exit the function
         execute 'lcd ' . save_pwd
         return
