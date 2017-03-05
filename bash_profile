@@ -46,6 +46,9 @@ fi
 # Set editor to nvim
 export EDITOR=nvim
 
+# Set shell to latest bash
+export SHELL="$brew_dir/bin/bash"
+
 # R libraries (note: first create this folder if it doesn't exist)
 export R_LIBS="$brew_dir/lib/R/site-library"
 
