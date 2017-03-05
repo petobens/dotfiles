@@ -104,7 +104,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('joshdick/onedark.vim')
     call dein#add('justinmk/vim-sneak')
-    if !s:is_win
+    if exists('$TMUX')
         call dein#add('christoomey/vim-tmux-navigator')
     endif
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
@@ -1699,15 +1699,13 @@ endfunction
 " Mappings
 nnoremap <silent> <Leader>st :call <SID>OpenNeotermSplit('horizontal')<CR>
 nnoremap <silent> <Leader>vt :call <SID>OpenNeotermSplit('vertical')<CR>
-nnoremap <silent> <Leader>tc :T exit<CR>:set relativenumber<CR>
+nnoremap <silent> <Leader>tc :T exit<CR>
 vnoremap <silent> <Leader>ri :TREPLSendSelection<CR>
 
 augroup term_au
     au!
     " Get into insert mode whenever we enter a terminal buffer
     au BufEnter * if &buftype == 'terminal' | startinsert | endif
-    " FIXME: Not working
-    au TermClose term://*neoterm* set number relativenumber
 augroup END
 
 " }}}
