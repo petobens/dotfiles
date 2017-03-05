@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 25 Jan 2017
+# Last Modified: 04 Mar 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 dotfiles_dir="$HOME/git-repos/private/dotfiles"
@@ -14,7 +14,7 @@ rm -rf "$HOME/.ctags" "$HOME/.gitignore" "$HOME/.tmux" "$HOME/.vim" \
 "$HOME/.vintrc.yaml" "$HOME/.eslintrc.yaml" "$HOME/.Rprofile" \
 "$HOME/.bash_profile" "$HOME/.config/powerline" "$HOME/.gitconfig" \
 "$HOME/.hammerspoon" "$HOME/.arararc.yaml" "$HOME/.pentadactyl" \
-"$HOME/.pentadactylrc"
+"$HOME/.pentadactylrc" "$HOME/.bashrc"
 
 echo Creating .config directory...
 mkdir -p "$HOME/.config/"
@@ -31,6 +31,7 @@ ln -s "$dotfiles_dir/vintrc.yaml" "$HOME/.vintrc.yaml"
 ln -s "$dotfiles_dir/eslintrc.yaml" "$HOME/.eslintrc.yaml"
 ln -s "$dotfiles_dir/Rprofile" "$HOME/.Rprofile"
 ln -s "$dotfiles_dir/bash_profile" "$HOME/.bash_profile"
+ln -s "$dotfiles_dir/bashrc" "$HOME/.bashrc"
 ln -s "$dotfiles_dir/config/powerline" "$HOME/.config/powerline"
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
