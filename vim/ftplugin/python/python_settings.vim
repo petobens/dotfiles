@@ -155,7 +155,7 @@ function! s:RunPython(mode, compilation, ...)
         let current_file = expand('%:p:t')
     endif
 
-    " Use Vimshell for foreground async compilation
+    " Use neovim terminal for foreground async compilation
     if a:compilation ==# 'foreground' && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert
@@ -1020,9 +1020,9 @@ nnoremap <buffer> <Leader>tc :call <SID>RunPyTest('class')<CR>
 nnoremap <buffer> <Leader>tm :call <SID>RunPyTest('method')<CR>
 nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 
-" (Open) Interpreter (in vimshell) and ipython
-if exists(':VimShell')
-    nnoremap <buffer> <silent> <Leader>oi :VimShellInteractive python<CR>
+" (Open) Interpreter (in neovim terminal) and ipython
+if exists(':Topen')
+    nnoremap <buffer> <silent> <Leader>oi :T python<CR>
 endif
 if executable('ipython')
     nnoremap <buffer> <silent> <Leader>ip :!start /b ipython qtconsole<CR>

@@ -73,7 +73,7 @@ function! s:RunSh(mode, compilation, ...)
         let current_file = expand('%:p:t')
     endif
 
-    " Use Vimshell for foreground async compilation
+    " Use neovim terminal for foreground async compilation
     if a:compilation ==# 'foreground' && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert

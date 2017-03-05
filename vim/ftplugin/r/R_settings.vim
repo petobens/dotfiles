@@ -122,16 +122,16 @@ function! s:RunR(mode, compilation, ...)
     let compiler = 'R ' . flags . '"' . error_options . set_wd .  source_file .
                 \ '"'
 
-    " Use Vimshell for foreground async compilation
+    " Use neovim terminal for foreground async compilation
     if a:compilation ==# 'foreground' && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert
         let g:neoterm_size = 10
         let g:neoterm_autoinsert = 0
         if a:mode ==# 'visual'
-            execute 'T ' . compiler .  current_file . '; rm ' . current_file
+            execute 'T ' . compiler . '; rm ' . current_file
         else
-            execute 'T ' . compiler .  current_file
+            execute 'T ' . compiler
         endif
         let g:neoterm_size = old_size
         let g:neoterm_autoinsert = old_autoinsert
@@ -846,7 +846,7 @@ nnoremap <silent> <buffer> <F7> :call <SID>RunR('normal', 'background')<CR>
 inoremap <silent> <buffer> <F7> <ESC>:call
             \ <SID>RunR('normal', 'background')<CR>
 vnoremap <silent> <buffer> <F7> :EvalVisualRBackground<CR>
-" Foreground compilation (vimshell)
+" Foreground compilation (neovim terminal)
 nnoremap <silent> <buffer> <Leader>rf :call
             \ <SID>RunR('normal', 'foreground')<CR>
 vnoremap <silent> <buffer> <Leader>rf :EvalVisualRVimshell<CR>
@@ -861,8 +861,8 @@ nnoremap <buffer> <silent> <Leader>rl :call <SID>LintR()<CR>
 nnoremap <buffer> <silent> <Leader>fr :call <SID>FormatR()<CR>
 
 " (Open) Interpreter or console
-if exists(':VimShell')
-    nnoremap <silent><buffer> <Leader>oi :lcd %:p:h<CR>:VimShellInteractive
+if exists(':Topen')
+    nnoremap <silent><buffer> <Leader>oi :lcd %:p:h<CR>:T
                 \ R --ess --no-save --no-restore<CR>
 endif
 nnoremap <silent><buffer> <Leader>oc :call <SID>OpenRConsole()<CR>

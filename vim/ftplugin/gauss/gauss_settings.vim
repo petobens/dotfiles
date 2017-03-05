@@ -116,7 +116,7 @@ function! s:RunGauss(mode, compilation, ...)
         let current_file = expand('%:p:t')
     endif
 
-    " Use Vimshell for foreground async compilation
+    " Use neovim terminal for foreground async compilation
     if a:compilation ==# 'foreground' && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert
@@ -617,8 +617,8 @@ inoremap <silent> <buffer> <F5> <ESC>:call
 vnoremap <silent> <buffer> <F5> :EvalVisualGaussForeground<CR>
 
 " (Open) Interpreter or console
-if exists(':VimShell')
-    nnoremap <silent><buffer> <Leader>oi :lcd %:p:h<CR>:VimShellInteractive
+if exists(':Topen')
+    nnoremap <silent><buffer> <Leader>oi :lcd %:p:h<CR>:T
                 \ tgauss<CR>
 endif
 nnoremap <silent><buffer> <Leader>oc :lcd %:p:h<CR>:!start /b gauss<CR>

@@ -2,11 +2,11 @@
 "          File: matlab_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 06 Jul 2015
-" Last Modified: 26 Aug 2016
+" Last Modified: 05 Mar 2017
 "   Description: Matlab settings for vim
 "===============================================================================
 " TODO: Include loaded files when running a visual selection
-" TODO: Run matlab from vimshell? Not possible on Windows
+" TODO: Run matlab from neovim terminal? Not possible on Windows
 " TODO: Completion similar to jedi with neocomplete?
 " TODO: Use one matlab instance instead of creating a new one each time
 

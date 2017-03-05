@@ -82,7 +82,7 @@
 " C:\prog-tools\maven-325\bin
 
 " This file also uses and sometimes requires the following plugins:
-" EasyAlign, Dispatch, Ultisnips, Vimproc and Vimshell
+" EasyAlign, Dispatch, Ultisnips, Vimproc and neoterm
 " Besides SumatraPDF is used as the default PDF viewer on Windows.
 
 " }}}
@@ -248,7 +248,7 @@ function! s:CompileTex(...)
     " gives an error if it doesn't exist so there is no need to check existance
     let directives = '-p minimize_runs '
 
-    " Use Vimshell for foreground async compilation
+    " Use neovim terminal for foreground async compilation
     if a:0 && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert
