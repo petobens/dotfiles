@@ -1697,7 +1697,7 @@ function! s:OpenNeotermSplit(position)
 endfunction
 
 " Mappings
-nnoremap <silent> <Leader>tm :call <SID>OpenNeotermSplit('horizontal')<CR>
+nnoremap <silent> <Leader>st :call <SID>OpenNeotermSplit('horizontal')<CR>
 nnoremap <silent> <Leader>vt :call <SID>OpenNeotermSplit('vertical')<CR>
 nnoremap <silent> <Leader>tc :T exit<CR>:set relativenumber<CR>
 vnoremap <silent> <Leader>ri :TREPLSendSelection<CR>
