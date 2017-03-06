@@ -16,10 +16,12 @@ mysql-connector
 neovim
 numpy
 pandas
+pip-review
 powerline-status
+scikit-learn
 pyhive
 scipy
-scikit-learn
 vim-vint
 xlrd
 yamllint
+yapf
