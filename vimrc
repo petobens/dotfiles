@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 05 Mar 2017
+" Last Modified: 06 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -93,7 +93,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('junegunn/fzf.vim')
     call dein#add('airblade/vim-gitgutter')
-    call dein#add('petobens/heraldish', {'frozen' : 1})
     call dein#add('Yggdroot/indentLine')
     call dein#add('vim-scripts/matchit.zip', {'name' : 'matchit'})
     call dein#add('simnalamburt/vim-mundo', {'on_cmd' : 'MundoToggle'})
@@ -109,6 +108,11 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
     call dein#add('SirVer/ultisnips')
     call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})
+
+    " Colorschemes
+    call dein#add('petobens/heraldish', {'frozen' : 1})
+    call dein#add('rakr/vim-one')
+    call dein#add('joshdick/onedark.vim')
 
     " Python
     call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
@@ -1109,8 +1113,7 @@ augroup END
 set laststatus=2                " Always show the statusline
 set noshowmode                  " Don't show the current mode
 
-" Powerline-like appearance
-let g:airline_theme = 'heraldish'
+" Powerline-like appearance (we set the theme when setting the colorscheme)
 let g:airline_powerline_fonts = 1
 
 " Short form mode text
@@ -1169,12 +1172,12 @@ nmap <silent> <Leader>9 <Plug>AirlineSelectTab9
 " }}}
 " Colorscheme {{{
 
-" Colorscheme
-if dein#check_install(['heraldish']) == 0
-    colorscheme heraldish
-endif
+" Always use dark background
+set background=dark
 
-" Reload the colorscheme when we write the color file in order to see changes
+" Heraldish settings
+" Reload the colorscheme when we write the color file in order to see
+" changes
 augroup color_heraldish
     au!
     if has('nvim')
@@ -1184,6 +1187,19 @@ augroup color_heraldish
     endif
     au BufWritePost heraldish.vim colorscheme heraldish
 augroup END
+
+" One dark overrides
+" let s:comment_grey = {'gui': '#5C6370', 'cterm': '59'}
+" autocmd ColorScheme * call onedark#set_highlight('VertSplit',
+            " \ {'fg': s:comment_grey})
+
+" Actually set the colorscheme and airline theme
+colorscheme heraldish
+let g:airline_theme = 'heraldish'
+" colorscheme onedark
+" let g:airline_theme = 'onedark'
+" colorscheme one
+" let g:airline_theme = 'one'
 
 " }}}
 " Dein {{{
@@ -1670,7 +1686,7 @@ augroup END
 " }}}
 " Neoterm {{{
 
-" TODO: Change colour and shape
+" FIXME Change colour and shape of cursor
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 
 let g:neoterm_autoinsert = 1
