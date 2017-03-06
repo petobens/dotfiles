@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 23 Dec 2016
+# Last Modified: 06 Mar 2017
 #   Description: Usual python libraries
 # ==============================================================================
 autopep8
@@ -18,8 +18,8 @@ numpy
 pandas
 powerline-status
 pyhive
-scikit-learn
 scipy
+scikit-learn
 vim-vint
 xlrd
 yamllint
