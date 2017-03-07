@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 06 Mar 2017
+" Last Modified: 07 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -111,8 +111,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Colorschemes
     call dein#add('petobens/heraldish', {'frozen' : 1})
-    call dein#add('rakr/vim-one')
+    " call dein#add('rakr/vim-one')
     call dein#add('joshdick/onedark.vim')
+    call dein#add('petobens/vim-one')
 
     " Python
     call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
@@ -1181,11 +1182,14 @@ set background=dark
 augroup color_heraldish
     au!
     if has('nvim')
-        au BufWritePost heraldish.vim silent call dein#recache_runtimepath()
+        au BufWritePost {heraldish.vim,one.vim} silent
+                    \ call dein#recache_runtimepath()
     else
         au BufWritePost heraldish.vim source $DOTVIM/vimrc
     endif
     au BufWritePost heraldish.vim colorscheme heraldish
+    au BufWritePost one.vim set background=dark
+    au BufWritePost one.vim colorscheme one
 augroup END
 
 " One dark overrides
@@ -1194,12 +1198,12 @@ augroup END
             " \ {'fg': s:comment_grey})
 
 " Actually set the colorscheme and airline theme
-colorscheme heraldish
-let g:airline_theme = 'heraldish'
+" colorscheme heraldish
+" let g:airline_theme = 'heraldish'
 " colorscheme onedark
 " let g:airline_theme = 'onedark'
-" colorscheme one
-" let g:airline_theme = 'one'
+colorscheme one
+let g:airline_theme = 'one'
 
 " }}}
 " Dein {{{
