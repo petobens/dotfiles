@@ -28,7 +28,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Enable terminal colors and highlight directories in blue, symbolic links
     # in purple and executable files in red (the actual colors depend on iTerm's
     # colorscheme)
-    # Note: in Iterm we use the afterglow colorscheme
+    # Note: in Iterm we use ether the afterglow colorscheme or
+    # https://github.com/anunez/one-dark-iterm
     export CLICOLOR=1
     export LSCOLORS=exfxCxDxbxegedabagaced
 else
