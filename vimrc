@@ -1656,7 +1656,7 @@ let g:airline#extensions#neomake#enabled = 0 " Don't show on Airline
 " Python
 let g:neomake_python_enabled_makers = ['flake8', 'mypy']
 let g:neomake_python_flake8_args = ['--ignore=E402,W503']
-let g:neomake_python_mypy_args = ['--ignore-missing-imports',
+let g:neomake_python_mypy_args = ['--ignore-missing-imports', '--fast-parser',
             \ '--follow-imports=skip', '--python-version', '3.6']
 
 " Javascript
