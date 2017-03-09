@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 07 Mar 2017
+" Last Modified: 09 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1176,34 +1176,29 @@ nmap <silent> <Leader>9 <Plug>AirlineSelectTab9
 " Always use dark background
 set background=dark
 
-" Heraldish settings
 " Reload the colorscheme when we write the color file in order to see
 " changes
 augroup color_heraldish
     au!
     if has('nvim')
-        au BufWritePost {heraldish.vim,one.vim} silent
+        au BufWritePost {heraldish.vim,onedarkish.vim} silent
                     \ call dein#recache_runtimepath()
     else
-        au BufWritePost heraldish.vim source $DOTVIM/vimrc
+        au BufWritePost {heraldish.vim, onedarkish.vim} source $DOTVIM/vimrc
     endif
     au BufWritePost heraldish.vim colorscheme heraldish
-    au BufWritePost one.vim set background=dark
-    au BufWritePost one.vim colorscheme one
+    au BufWritePost onedarkish.vim colorscheme onedarkish
 augroup END
-
-" One dark overrides
-" let s:comment_grey = {'gui': '#5C6370', 'cterm': '59'}
-" autocmd ColorScheme * call onedark#set_highlight('VertSplit',
-            " \ {'fg': s:comment_grey})
 
 " Actually set the colorscheme and airline theme
 " colorscheme heraldish
 " let g:airline_theme = 'heraldish'
 " colorscheme onedark
 " let g:airline_theme = 'onedark'
-colorscheme one
-let g:airline_theme = 'one'
+" colorscheme one
+" let g:airline_theme = 'one'
+colorscheme onedarkish
+let g:airline_theme = 'onedarkish'
 
 " }}}
 " Dein {{{
