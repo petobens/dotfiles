@@ -1183,8 +1183,8 @@ augroup color_heraldish
     else
         au BufWritePost {heraldish.vim, onedarkish.vim} source $DOTVIM/vimrc
     endif
-    au BufWritePost heraldish.vim colorscheme heraldish
-    au BufWritePost onedarkish.vim colorscheme onedarkish
+    au BufWritePost heraldish.vim colorscheme heraldish | AirlineRefresh
+    au BufWritePost onedarkish.vim colorscheme onedarkish | AirlineRefresh
 augroup END
 
 " Actually set the colorscheme and airline theme
