@@ -109,11 +109,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('SirVer/ultisnips')
     call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})
 
-    " Colorschemes
-    call dein#add('petobens/heraldish', {'frozen' : 1})
-    " call dein#add('rakr/vim-one')
-    call dein#add('joshdick/onedark.vim')
-    call dein#add('petobens/vim-one')
+    " (my) Colorschemes
+    call dein#add('petobens/heraldish', {'frozen': 1})
+    call dein#add('petobens/vim-one', {'frozen': 1})
 
     " Python
     call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
@@ -1176,8 +1174,7 @@ nmap <silent> <Leader>9 <Plug>AirlineSelectTab9
 " Always use dark background
 set background=dark
 
-" Reload the colorscheme when we write the color file in order to see
-" changes
+" Reload the colorscheme when we write the color file in order to see changes
 augroup color_heraldish
     au!
     if has('nvim')
@@ -1191,14 +1188,8 @@ augroup color_heraldish
 augroup END
 
 " Actually set the colorscheme and airline theme
-" colorscheme heraldish
-" let g:airline_theme = 'heraldish'
-" colorscheme onedark
-" let g:airline_theme = 'onedark'
-" colorscheme one
-" let g:airline_theme = 'one'
-colorscheme onedarkish
-let g:airline_theme = 'onedarkish'
+colorscheme onedarkish  " alternatives are heraldish and onedarkish
+let g:airline_theme = g:colors_name
 
 " }}}
 " Dein {{{
@@ -1547,10 +1538,14 @@ nnoremap <silent> <Leader>gu :MundoToggle<CR>
 let g:indentLine_enabled = 0
 let g:indentLine_showFirstIndentLevel = 1
 
-" The following correspond to the `mediumgravel` color in heraldish colorscheme
-" (we need to define them here to avoid issues when running in the terminal)
-let g:indentLine_color_gui = '#666462'
-let g:indentLine_color_term = 241
+" We need to define them here to avoid issues when running in the terminal
+if g:colors_name ==# 'heraldish'
+    let g:indentLine_color_gui = '#666462' " mediumgravel
+    let g:indentLine_color_term = 241
+elseif g:colors_name ==# 'onedarkish'
+    let g:indentLine_color_gui = '#5c6370' " comment_grey
+    let g:indentLine_color_term = 59
+endif
 
 nnoremap <silent> <leader>I :IndentLinesToggle<cr>
 
