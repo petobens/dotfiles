@@ -321,7 +321,6 @@ if has('nvim')
     set cpoptions-=_
 endif
 
-
 " }}}
 " Encoding and fileformat {{{
 
