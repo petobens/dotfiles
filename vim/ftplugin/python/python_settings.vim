@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 05 Mar 2017
+" Last Modified: 11 Mar 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -429,7 +429,7 @@ augroup show_py_output
 augroup END
 
 " }}}
-" Linting {{{
+" Formatting {{{
 
 function! s:RunYapf(...)
     " Don't run yapf if it is not installed
@@ -452,7 +452,8 @@ function! s:RunYapf(...)
     " on the whole file)
     let old_formatprg = &l:formatprg
     let save_cursor = getcurpos()
-    let &l:formatprg = 'yapf '
+    let &l:formatprg = "yapf --style='{based_on_style: pep8, " .
+                \ "blank_line_before_nested_class_or_def: true}'"
     silent execute '0,$!' . &l:formatprg
     if v:shell_error == 1
         silent undo
