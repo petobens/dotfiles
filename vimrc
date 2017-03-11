@@ -110,8 +110,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})
 
     " (my) Colorschemes
-    call dein#add('petobens/heraldish', {'frozen': 1})
-    call dein#add('petobens/vim-one', {'frozen': 1})
+    call dein#add('petobens/colorish', {'frozen': 1})
 
     " Python
     call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
