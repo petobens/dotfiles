@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 09 Mar 2017
+" Last Modified: 11 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -316,6 +316,11 @@ set updatetime=500
 set timeoutlen=550
 " Time in milliseconds waited for a key code to complete
 set ttimeoutlen=0
+" When using cw and cW include whitespace following the word in the motion
+if has('nvim')
+    set cpoptions-=_
+endif
+
 
 " }}}
 " Encoding and fileformat {{{
