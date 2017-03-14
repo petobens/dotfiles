@@ -2,7 +2,7 @@
 "          File: deoplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 21 Feb 2017
+" Last Modified: 14 Mar 2017
 "   Description: Deoplete configuration
 "===============================================================================
 " Autoclose preview when completion is finished
@@ -68,6 +68,8 @@ let g:deoplete#omni#input_patterns.tex = '\\(?:'
     \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
     \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
     \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
+    \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
+    \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
     \ .')'
 
 " Mappings
