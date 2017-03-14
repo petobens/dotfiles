@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 11 Mar 2017
+" Last Modified: 14 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -2153,6 +2153,9 @@ augroup ps_vimlatex
                 \ <Plug>(vimtex-env-toggle-star)
     au Filetype tex nmap <silent> <buffer> <Leader>lr
                 \ <Plug>(vimtex-delim-toggle-modifier)
+    " FIXME: not working
+    au Filetype tex nmap <silent> <buffer> im <Plug>(vimtex-i$)
+    au Filetype tex nmap <silent> <buffer> am <Plug>(vimtex-a$)
     " End environment or delimiter in insert mode
     au Filetype tex imap <silent> <buffer> }ee <Plug>(vimtex-delim-close)
 augroup END
