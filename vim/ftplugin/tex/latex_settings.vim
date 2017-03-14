@@ -2,7 +2,7 @@
 "          File: latex_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2013
-" Last Modified: 05 Mar 2017
+" Last Modified: 14 Mar 2017
 "   Description: Latex settings
 "===============================================================================
 " TODOs:
@@ -255,6 +255,9 @@ function! s:CompileTex(...)
         let g:neoterm_size = 10
         let g:neoterm_autoinsert = 0
         execute 'T ' . compiler . directives . '-v ' . mainfile
+        " Avoid getting into insert mode using `au BufEnter * if &buftype ==
+        " 'terminal' | startinsert | endif`
+        stopinsert
         let g:neoterm_size = old_size
         let g:neoterm_autoinsert = old_autoinsert
         " Return to previous working directory and exit the function
@@ -284,16 +287,16 @@ endfunction
 " Use the errorformat from vimtex:
 function! s:SetTexEfm()
     " Push file to file stack
-    setlocal efm=%-P**%f
-    setlocal efm+=%-P**\"%f\"
+    setlocal errorformat=%-P**%f
+    setlocal errorformat+=%-P**\"%f\"
     " Match errors
-    setlocal efm+=%E!\ LaTeX\ %trror:\ %m
-    setlocal efm+=%E%f:%l:\ %m
-    setlocal efm+=%E!\ %m
+    setlocal errorformat+=%E!\ LaTeX\ %trror:\ %m
+    setlocal errorformat+=%E%f:%l:\ %m
+    setlocal errorformat+=%E!\ %m
     " More info for undefined control sequences
-    setlocal efm+=%Z<argument>\ %m
+    setlocal errorformat+=%Z<argument>\ %m
     " More info for some errors (this clashes with the log-preview function)
-    " setlocal efm+=%Cl.%l\ %m
+    " setlocal errorformat+=%Cl.%l\ %m
     " Show warnings
     if !exists('g:vimtex_quickfix_ignore_all_warnings')
         let g:vimtex_quickfix_ignore_all_warnings = 0
@@ -305,25 +308,25 @@ function! s:SetTexEfm()
         endif
         for w in g:vimtex_quickfix_ignored_warnings
             let warning = escape(substitute(w, '[\,]', '%\\\\&', 'g'), ' ')
-            exe 'setlocal efm+=%-G%.%#'. warning .'%.%#'
+            exe 'setlocal errorformat+=%-G%.%#'. warning .'%.%#'
         endfor
-        setlocal efm+=%+WLaTeX\ %.%#Warning:\ %.%#line\ %l%.%#
-        setlocal efm+=%+W%.%#\ at\ lines\ %l--%*\\d
-        setlocal efm+=%+WLaTeX\ %.%#Warning:\ %m
-        setlocal efm+=%+W%.%#%.%#Warning:\ %m
+        setlocal errorformat+=%+WLaTeX\ %.%#Warning:\ %.%#line\ %l%.%#
+        setlocal errorformat+=%+W%.%#\ at\ lines\ %l--%*\\d
+        setlocal errorformat+=%+WLaTeX\ %.%#Warning:\ %m
+        setlocal errorformat+=%+W%.%#%.%#Warning:\ %m
         " Parse biblatex warnings
-        setlocal efm+=%-C(biblatex)%.%#in\ t%.%#
-        setlocal efm+=%-C(biblatex)%.%#Please\ v%.%#
-        setlocal efm+=%-C(biblatex)%.%#LaTeX\ a%.%#
-        setlocal efm+=%-Z(biblatex)%m
+        setlocal errorformat+=%-C(biblatex)%.%#in\ t%.%#
+        setlocal errorformat+=%-C(biblatex)%.%#Please\ v%.%#
+        setlocal errorformat+=%-C(biblatex)%.%#LaTeX\ a%.%#
+        setlocal errorformat+=%-Z(biblatex)%m
         " Parse babel warnings
-        setlocal efm+=%-Z(babel)%.%#input\ line\ %l.
-        setlocal efm+=%-C(babel)%m
+        setlocal errorformat+=%-Z(babel)%.%#input\ line\ %l.
+        setlocal errorformat+=%-C(babel)%m
         " Parse hyperref warnings
-        setlocal efm+=%-C(hyperref)%.%#on\ input\ line\ %l.
+        setlocal errorformat+=%-C(hyperref)%.%#on\ input\ line\ %l.
     endif
     " Ignore unmatched lines
-    setlocal efm+=%-G%.%#
+    setlocal errorformat+=%-G%.%#
 endfunction
 
 " Function to parse log file for errors (and update PDF file when needed)
@@ -347,10 +350,10 @@ function! s:QuickFixLog()
     endif
 
     " Set proper error format to parse log file
-    let old_efm = &l:efm
+    let old_errorformat = &l:errorformat
     call s:SetTexEfm()
     execute 'cgetfile ' . fnameescape(logfile)
-    let &l:efm = old_efm
+    let &l:errorformat = old_errorformat
 
     " Open quick fix window if there are errors
     if !empty(getqflist())
@@ -399,8 +402,8 @@ function! s:CheckTex()
     let &l:makeprg = compiler . ignore_warnings . current_file
 
     " Set error format
-    let old_efm = &l:efm
-    let &l:efm = '%EError %n in %f line %l: %m,' .
+    let old_errorformat = &l:errorformat
+    let &l:errorformat = '%EError %n in %f line %l: %m,' .
         \ '%WWarning %n in %f line %l: %m,' .
         \ '%WMessage %n in %f line %l: %m,' .
         \ '%Z%p^,' .
@@ -409,7 +412,7 @@ function! s:CheckTex()
     " Use Dispatch for background async compilation if available
     if exists(':Dispatch')
         " First add extra catchall because Dispatch removes it
-        let &l:efm = &efm . ',%-G%.%#'
+        let &l:errorformat = &errorformat . ',%-G%.%#'
         echon 'running chktex with dispatch ...'
         if s:is_win
             call s:NoShellSlash('Make')
@@ -438,7 +441,7 @@ function! s:CheckTex()
     endif
 
     " Restore error format and working directory
-    let &l:efm = old_efm
+    let &l:errorformat = old_errorformat
     execute 'lcd ' . l:save_pwd
 endfunction
 

@@ -2,7 +2,7 @@
 "          File: javascript_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Dec 2016
-" Last Modified: 05 Mar 2017
+" Last Modified: 14 Mar 2017
 "   Description: My Javascript settings
 "===============================================================================
 " Installation notes {{{
@@ -84,6 +84,8 @@ function! s:RunJS(mode, compilation, ...)
         else
             execute 'T ' . compiler .  current_file
         endif
+        " Avoid getting into insert mode using `au BufEnter * if &buftype ==
+        " 'terminal' | startinsert | endif`
         let g:neoterm_size = old_size
         let g:neoterm_autoinsert = old_autoinsert
         " Return to previous working directory and exit the function

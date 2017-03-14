@@ -2,7 +2,7 @@
 "          File: R_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 05 Aug 2015
-" Last Modified: 05 Mar 2017
+" Last Modified: 14 Mar 2017
 "   Description: R Settings for Vim
 "===============================================================================
 " TODO: Close figure window with x button (without need of using locator(1))
@@ -133,6 +133,9 @@ function! s:RunR(mode, compilation, ...)
         else
             execute 'T ' . compiler
         endif
+        " Avoid getting into insert mode using `au BufEnter * if &buftype ==
+        " 'terminal' | startinsert | endif`
+        stopinsert
         let g:neoterm_size = old_size
         let g:neoterm_autoinsert = old_autoinsert
         " Return to previous working directory and exit the function
