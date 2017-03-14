@@ -1685,6 +1685,7 @@ let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
 let g:neoterm_autoinsert = 1
 let g:neoterm_automap_keys = ''
 let g:neoterm_keep_term_open = 0
+let g:neoterm_autoscroll = 1
 
 " Functions
 function! s:OpenNeotermSplit(position)
