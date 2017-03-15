@@ -1293,6 +1293,7 @@ nnoremap <silent> <Leader>ds :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
+nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume -select=+'. v:count1 .
             \ '--immediately'<CR>
