@@ -1,0 +1,36 @@
+{
+    "colors": {
+        "onedarkish_black": [
+            235,
+            "24272e"
+        ],
+        "onedarkish_white": [
+            145,
+            "abb2bf"
+        ],
+        "onedarkish_light_blue": [
+            39,
+            "61afef"
+        ],
+        "onedarkish_cursor_grey": [
+            236,
+            "282c34"
+        ],
+        "onedarkish_mono_2": [
+            247,
+            "828997"
+        ],
+        "onedarkish_red": [
+            204,
+            "e06c75"
+        ],
+        "onedarkish_dark_red": [
+            196,
+            "be5046"
+        ],
+        "onedarkish_special_grey": [
+            238,
+            "3b4048"
+        ]
+    }
+}
