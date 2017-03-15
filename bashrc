@@ -3,14 +3,14 @@
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
 # Last Modified: 04 Mar 2017
-#   Description: My Bash rc file
+#   Description: My bashrc file
 #===============================================================================
 # Options {{{
 
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    # Set brew directory
-    brew_dir="/usr/local"
+# Define brew directory
+brew_dir=$(brew --prefix)
 
+if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Path settings
     PATH="/usr/bin:/bin:/usr/sbin:/sbin"
     export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH" # homebrew
@@ -33,8 +33,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export CLICOLOR=1
     export LSCOLORS=exfxCxDxbxegedabagaced
 else
-    # Linuxbrew
-    brew_dir="/mnt/.linuxbrew"
     export PATH="$brew_dir/bin:$PATH"
     export MANPATH="$brew_dir/share/man:$MANPATH"
     export INFOPATH="$brew_dir/share/info:$INFOPATH"
@@ -62,14 +60,14 @@ stty -ixon
 HISTSIZE=1000
 HISTFILESIZE=2000
 
-# Show mode in command prompt
-# bind "set show-mode-in-prompt on"
-
 # Powerline prompt
-powerline-daemon -q
-POWERLINE_BASH_CONTINUATION=1
-POWERLINE_BASH_SELECT=1
-. $brew_dir/lib/python3.6/site-packages/powerline/bindings/bash/powerline.sh
+if [ -f $(which powerline-daemon) ]; then
+    powerline-daemon -q
+    POWERLINE_BASH_CONTINUATION=1
+    POWERLINE_BASH_SELECT=1
+    . $(dirname $(python3 -c 'import powerline.bindings; '\
+'print(powerline.bindings.__file__)'))/bash/powerline.sh
+fi
 
 # }}}
 # Bindings {{{
@@ -98,7 +96,7 @@ if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
 fi
 
 # }}}
-# Completion {{{
+# Completion (readline) {{{
 
 # Improve bash completion (install them with `brew install bash-completion`)
 if [ -f $brew_dir/etc/bash_completion ]; then
@@ -111,6 +109,7 @@ bind "set completion-ignore-case on"
 bind "set menu-complete-display-prefix on" # show candidates before cycling
 bind "set show-all-if-ambiguous on"
 bind "set colored-stats on" # color completion candidates
+# bind "set show-mode-in-prompt on"  # Show mode in command prompt
 
 # Cycle forward with TAB and backwards with S-Tab when using menu-complete
 bind -m vi-insert '"\C-i": menu-complete'
