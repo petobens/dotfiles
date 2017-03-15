@@ -98,9 +98,9 @@ fi
 # }}}
 # Completion (readline) {{{
 
-# Improve bash completion (install them with `brew install bash-completion`)
-if [ -f $brew_dir/etc/bash_completion ]; then
-. $brew_dir/etc/bash_completion
+# Improve bash completion (install them with `brew install bash-completion2`)
+if [ -f $brew_dir/share/bash-completion/bash_completion ]; then
+. $brew_dir/share/bash-completion/bash_completion
 fi
 
 # Note: we pass Readline commands as a single argument to
