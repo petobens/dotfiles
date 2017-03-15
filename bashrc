@@ -62,7 +62,7 @@ HISTSIZE=1000
 HISTFILESIZE=2000
 
 # Powerline prompt
-if [ -f $(which powerline-daemon) ]; then
+if { [[ -f $(which powerline-daemon) ]] && [[ -f $(which python3) ]]; } then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
     POWERLINE_BASH_SELECT=1
