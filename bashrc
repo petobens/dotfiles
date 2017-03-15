@@ -52,6 +52,11 @@ if [ -f "$brew_dir/bin/bash" ]; then
     export SHELL="$brew_dir/bin/bash"
 fi
 
+# Improve bash completion (install them with `brew install bash-completion`)
+if [ -f $brew_dir/etc/bash_completion ]; then
+. $brew_dir/etc/bash_completion
+fi
+
 # R libraries (note: first create this folder if it doesn't exist)
 export R_LIBS="$brew_dir/lib/R/site-library"
 
