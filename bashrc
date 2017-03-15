@@ -52,11 +52,6 @@ if [ -f "$brew_dir/bin/bash" ]; then
     export SHELL="$brew_dir/bin/bash"
 fi
 
-# Improve bash completion (install them with `brew install bash-completion`)
-if [ -f $brew_dir/etc/bash_completion ]; then
-. $brew_dir/etc/bash_completion
-fi
-
 # R libraries (note: first create this folder if it doesn't exist)
 export R_LIBS="$brew_dir/lib/R/site-library"
 
@@ -66,13 +61,6 @@ stty -ixon
 # Increase history
 HISTSIZE=1000
 HISTFILESIZE=2000
-
-# Ignore case when completing, show all possible matches and color tab
-# completion output (note that we pass Readline commands as a single argument to
-# bind built in function instead of adding them to inputrc file)
-bind "set completion-ignore-case on"
-bind "set show-all-if-ambiguous on"
-bind "set colored-stats on"
 
 # Show mode in command prompt
 # bind "set show-mode-in-prompt on"
@@ -108,6 +96,25 @@ if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
     # FIXME: This is flaky
     bind -m vi-command -x '"p": "tmux set-buffer \"$(pbpaste)\"; tmux paste-buffer"'
 fi
+
+# }}}
+# Completion {{{
+
+# Improve bash completion (install them with `brew install bash-completion`)
+if [ -f $brew_dir/etc/bash_completion ]; then
+. $brew_dir/etc/bash_completion
+fi
+
+# Note: we pass Readline commands as a single argument to
+# bind built in function instead of adding them to inputrc file)
+bind "set completion-ignore-case on"
+bind "set menu-complete-display-prefix on" # show candidates before cycling
+bind "set show-all-if-ambiguous on"
+bind "set colored-stats on" # color completion candidates
+
+# Cycle forward with TAB and backwards with S-Tab when using menu-complete
+bind -m vi-insert '"\C-i": menu-complete'
+bind -m vi-insert '"\e[Z": menu-complete-backward'
 
 # }}}
 # Alias {{{
