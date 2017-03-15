@@ -2,7 +2,7 @@
 "          File: json_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2016
-" Last Modified: 22 Jan 2017
+" Last Modified: 15 Mar 2017
 "   Description: My Json settings
 "===============================================================================
 " Installation notes {{{
@@ -40,7 +40,7 @@ function! s:RunJsonFormat(...)
 
     " Set the format program
     let old_formatprg = &l:formatprg
-    let &l:formatprg = 'jsonlint --pretty-print ' . current_file
+    let &l:formatprg = 'jsonlint --indent 4 --pretty-print ' . current_file
     if a:0 && a:1 ==# 'visual'
         execute 'normal! gvgq'
     else
