@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 14 Mar 2017
+" Last Modified: 15 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1213,7 +1213,7 @@ nnoremap <silent> <Leader>bl :Denite dein<CR>
 
 " Change default UI settings and highlighting
 call denite#custom#option('default', 'auto_resize', 1)
-call denite#custom#option('default', 'statusline', 1)
+call denite#custom#option('default', 'statusline', 0) " For vim-airline
 call denite#custom#option('default', 'winheight', 15)
 call denite#custom#option('default', 'reversed', 1)
 call denite#custom#option('default', 'prompt', '❯')
