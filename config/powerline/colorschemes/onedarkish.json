@@ -19,9 +19,11 @@
             "attrs": []
         },
         "information:priority": {
-            "fg": "brightyellow",
-            "bg": "mediumorange",
-            "attrs": []
+            "fg": "onedarkish_black",
+            "bg": "onedarkish_dark_yellow",
+            "attrs": [
+                "bold"
+            ]
         },
         "warning:regular": {
             "fg": "white",
@@ -38,9 +40,11 @@
             ]
         },
         "critical:success": {
-            "fg": "white",
-            "bg": "darkestgreen",
-            "attrs": []
+            "fg": "onedarkish_black",
+            "bg": "onedarkish_green",
+            "attrs": [
+                "bold"
+            ]
         },
         "background": {
             "fg": "white",
