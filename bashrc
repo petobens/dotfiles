@@ -62,9 +62,15 @@ HISTCONTROL=ignoreboth:erasedups  # avoid duplicates
 HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
-# Save and reload the history after each command finishes
-# FIXME: This break powerline last_status inside TMUX
-export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+# Save and reload the history after each command finishes (we wrap it in a
+# function to preserve exit status when using powerline on tmux)
+save_reload_hist() {
+    local last_exit_status=$?
+    history -a; history -c; history -r
+    return $last_exit_status
+}
+export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # Powerline prompt (to see changes when customizing use `powerline-daemon
 # --restart`)
