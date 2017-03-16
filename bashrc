@@ -65,7 +65,8 @@ shopt -s histappend # append to history i.e don't overwrite it
 # Save and reload the history after each command finishes
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
-# Powerline prompt
+# Powerline prompt (to see changes when customizing use `powerline-daemon
+# --restart`)
 if { [[ -f $(which powerline-daemon) ]] && [[ -f $(which python3) ]]; } then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
