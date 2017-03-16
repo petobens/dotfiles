@@ -80,8 +80,8 @@
             "bg": "onedarkish_special_grey",
             "attrs": []
         },
-        "gitstatus_behind": "gitstatus",
-        "gitstatus_ahead": "gitstatus",
+        "gitstatus_behind": "gitstatus_branch_detached",
+        "gitstatus_ahead": "gitstatus_branch_detached",
         "gitstatus_staged": {
             "fg": "onedarkish_green",
             "bg": "onedarkish_special_grey",
