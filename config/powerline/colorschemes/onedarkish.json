@@ -64,12 +64,8 @@
         },
         "gitstatus_branch": "gitstatus",
         "gitstatus_branch_dirty": "gitstatus",
+        "gitstatus_branch_clean": "gitstatus",
         "gitstatus:divider": "gitstatus",
-        "gitstatus_branch_clean": {
-            "fg": "onedarkish_green",
-            "bg": "onedarkish_special_grey",
-            "attrs": []
-        },
         "gitstatus_branch_detached": {
             "fg": "onedarkish_purple",
             "bg": "onedarkish_special_grey",
