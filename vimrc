@@ -1707,6 +1707,7 @@ endfunction
 nnoremap <silent> <Leader>st :call <SID>OpenNeotermSplit('horizontal')<CR>
 nnoremap <silent> <Leader>vt :call <SID>OpenNeotermSplit('vertical')<CR>
 nnoremap <silent> <Leader>tc :T exit<CR>
+nnoremap <silent> <Leader>ri :TREPLSendLine<CR>
 vnoremap <silent> <Leader>ri :TREPLSendSelection<CR>
 
 augroup term_au
