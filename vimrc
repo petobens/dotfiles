@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 15 Mar 2017
+" Last Modified: 16 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -494,7 +494,8 @@ set autoindent     " Indent at the same level of the previous line
 
 set wildmenu                         " Better command-line completion with tab
 set wildignorecase                   " Ignore case
-set wildmode=full                    " Show a list and complete first full match
+" Complete longest common string first and then show full alternatives
+set wildmode=longest:full,full
 " Stuff to ignore when tab completing
 set wildignore=*.ini,*~,*.o,*.obj,*.dll,*.dat,*.swp,*.zip,*.exe
 set wildignore+=*.DS_Store,*.out,*.toc
