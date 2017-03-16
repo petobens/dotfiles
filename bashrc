@@ -86,14 +86,13 @@ bind -m vi-insert '"\C-p": previous-history'
 bind -m vi-insert '"\C-n": next-history'
 bind -m vi-insert '"\C-e": end-of-line'
 bind -m vi-insert '"\C-a": beginning-of-line'
-bind -m vi-insert '"\C-x\C-e": edit-and-execute-command'
 
 # Command mode
 bind -m vi-command '"H": beginning-of-line'
 bind -m vi-command '"L": end-of-line'
 bind -m vi-command '"k": ""'
 bind -m vi-command '"j": ""'
-# bind -m vi-command '"v": ""' # Edit command on vim
+# bind -m vi-command '"v": ""' # Edit command with vim
 
 # Paste with p if in a tmux session
 if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
