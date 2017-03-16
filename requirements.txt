@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 15 Mar 2017
+# Last Modified: 16 Mar 2017
 #   Description: Usual python libraries
 # ==============================================================================
 bokeh
@@ -17,6 +17,7 @@ numpy
 pandas
 pip-review
 powerline-status
+powerline-gitstatus
 scikit-learn
 pyhive
 scipy
