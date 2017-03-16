@@ -57,9 +57,13 @@ export R_LIBS="$brew_dir/lib/R/site-library"
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
 
-# Increase history
-HISTSIZE=1000
-HISTFILESIZE=2000
+# History settings
+HISTCONTROL=ignoreboth:erasedups  # avoid duplicates
+HISTSIZE=100000
+HISTFILESIZE=200000
+shopt -s histappend # append to history i.e don't overwrite it
+# Save and reload the history after each command finishes
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # Powerline prompt
 if { [[ -f $(which powerline-daemon) ]] && [[ -f $(which python3) ]]; } then
