@@ -140,13 +140,18 @@ alias v='nvim'
 alias ht='htop'
 alias o='open'
 
-# Git (similar to vim's fugitive)
+# Git (similar to vim's fugitive); also bind auto-complete functions to each
+# alias
 alias gs='git status'
 alias gco='git checkout'
+__git_complete gco _git_checkout
 alias gcp='git cherry-pick'
 alias gb='git branch'
+__git_complete gb _git_branch
 alias gp='git push'
+__git_complete gp _git_push
 alias gP='git pull'
+__git_complete gp _git_pull
 
 # Python
 alias python='python3'
