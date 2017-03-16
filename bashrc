@@ -63,6 +63,7 @@ HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
 # Save and reload the history after each command finishes
+# FIXME: This break powerline last_status inside TMUX
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # Powerline prompt (to see changes when customizing use `powerline-daemon
