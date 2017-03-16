@@ -46,11 +46,6 @@
                 "bold"
             ]
         },
-        "branch": {
-            "fg": "onedarkish_white",
-            "bg": "onedarkish_special_grey",
-            "attrs": []
-        },
         "hostname": "information:priority",
         "cwd": "information:additional",
         "cwd:current_folder": "information:regular",
@@ -61,6 +56,56 @@
             "attrs": [
                 "bold"
             ]
+        },
+        "gitstatus": {
+            "fg": "onedarkish_white",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
+        },
+        "gitstatus_branch": "gitstatus",
+        "gitstatus_branch_dirty": "gitstatus",
+        "gitstatus:divider": "gitstatus",
+        "gitstatus_branch_clean": {
+            "fg": "onedarkish_green",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
+        },
+        "gitstatus_branch_detached": {
+            "fg": "onedarkish_purple",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
+        },
+        "gitstatus_tag": {
+            "fg": "darkcyan",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
+        },
+        "gitstatus_behind": "gitstatus",
+        "gitstatus_ahead": "gitstatus",
+        "gitstatus_staged": {
+            "fg": "onedarkish_green",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
+        },
+        "gitstatus_unmerged": {
+            "fg": "onedarkish_dark_yellow",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
+        },
+        "gitstatus_changed": {
+            "fg": "onedarkish_red",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
+        },
+        "gitstatus_untracked": {
+            "fg": "onedarkish_yellow",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
+        },
+        "gitstatus_stashed": {
+            "fg": "onedarkish_blue",
+            "bg": "onedarkish_special_grey",
+            "attrs": []
         }
     }
 }

@@ -12,6 +12,10 @@
             39,
             "61afef"
         ],
+        "onedarkish_blue": [
+            40,
+            "528bff"
+        ],
         "onedarkish_purple": [
             170,
             "c678dd"
@@ -43,6 +47,10 @@
         "onedarkish_dark_yellow": [
             173,
             "d19a66"
+        ],
+        "onedarkish_yellow": [
+            180,
+            "e5c07b"
         ],
         "onedarkish_powerline_bg": [
             252,
