@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 14 Mar 2017
+" Last Modified: 19 Mar 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -981,6 +981,24 @@ if !exists('*s:ViewPyModule()')
 endif
 
 " }}}
+" Visual REPL {{{
+
+" Latest ipython doesn't allow to send multiple lines therefore we must one
+" python. See https://github.com/ipython/ipython/issues/9948
+function! s:PyREPL() range
+    call neoterm#repl#set('python')
+    let old_size = g:neoterm_size
+    let old_autoinsert = g:neoterm_autoinsert
+    let g:neoterm_size = 10
+    let g:neoterm_autoinsert = 0
+    TREPLSendSelection
+    stopinsert
+    let g:neoterm_size = old_size
+    let g:neoterm_autoinsert = old_autoinsert
+    call neoterm#repl#set('ipython')
+endfunction
+
+" }}}
 
 " }}}
 " Mappings {{{
@@ -1020,13 +1038,15 @@ nnoremap <buffer> <Leader>yp :call <SID>RunYapf()<CR>
 " Tests and coverage (py.test dependant)
 nnoremap <buffer> <Leader>rt :call <SID>RunPyTest('suite')<CR>
 nnoremap <buffer> <Leader>tf :call <SID>RunPyTest('file')<CR>
-nnoremap <buffer> <Leader>tc :call <SID>RunPyTest('class')<CR>
+nnoremap <buffer> <Leader>to :call <SID>RunPyTest('class')<CR>
 nnoremap <buffer> <Leader>tm :call <SID>RunPyTest('method')<CR>
 nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 
-" (Open) Interpreter (in neovim terminal) and ipython
+" (Open) and run visual selection in the interpreter (in neovim terminal) and
+" ipython
 if exists(':Topen')
     nnoremap <buffer> <silent> <Leader>oi :T python<CR>
+    vnoremap <silent> <buffer> <Leader>ri :call <SID>PyREPL()<CR>
 endif
 if executable('ipython')
     nnoremap <buffer> <silent> <Leader>ip :!start /b ipython qtconsole<CR>

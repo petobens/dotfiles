@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 16 Mar 2017
+" Last Modified: 19 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1703,12 +1703,22 @@ function! s:OpenNeotermSplit(position)
     let g:neoterm_size = old_size
 endfunction
 
+function! s:RunLineREPL()
+    let old_size = g:neoterm_size
+    let old_autoinsert = g:neoterm_autoinsert
+    let g:neoterm_size = 10
+    let g:neoterm_autoinsert = 0
+    TREPLSendLine
+    stopinsert
+    let g:neoterm_size = old_size
+    let g:neoterm_autoinsert = old_autoinsert
+endfunction
+
 " Mappings
 nnoremap <silent> <Leader>st :call <SID>OpenNeotermSplit('horizontal')<CR>
 nnoremap <silent> <Leader>vt :call <SID>OpenNeotermSplit('vertical')<CR>
-nnoremap <silent> <Leader>tc :T exit<CR>
-nnoremap <silent> <Leader>ri :TREPLSendLine<CR>
-vnoremap <silent> <Leader>ri :TREPLSendSelection<CR>
+nnoremap <silent> <Leader>tc :Tclose<CR>
+nnoremap <silent> <Leader>ri :call <SID>RunLineREPL()<CR>
 
 augroup term_au
     au!
