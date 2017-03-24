@@ -45,8 +45,8 @@ fi
 # Set editor to nvim
 export EDITOR=nvim
 
-# Set shell to latest bash (on iTerm also set `/usr/local/bin/bash --login -i`
-# as the command used to start the shell)
+# Set shell to latest bash (this should be redundant if we previously ran
+# `sudo chsh -s $(brew --prefix)/bash`)
 if [ -f "$brew_dir/bin/bash" ]; then
     export SHELL="$brew_dir/bin/bash"
 fi
