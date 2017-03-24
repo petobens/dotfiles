@@ -46,7 +46,7 @@ fi
 export EDITOR=nvim
 
 # Set shell to latest bash (this should be redundant if we previously ran
-# `sudo chsh -s $(brew --prefix)/bash`)
+# `sudo chsh -s $(brew --prefix)/bin/bash`)
 if [ -f "$brew_dir/bin/bash" ]; then
     export SHELL="$brew_dir/bin/bash"
 fi
@@ -155,9 +155,11 @@ __git_complete gp _git_push
 alias gP='git pull'
 __git_complete gp _git_pull
 
-# Python
-# alias python='python3'
-# alias pip='pip3'
+# Python"
+if [ ! -f "$brew_dir"/bin/python2 ]; then
+    alias python='python3'
+    alias pip='pip3'
+fi
 alias jn='jupyter notebook'
 
 # Since we use an italics terminfo the following alias avoid ssh issues
