@@ -74,12 +74,14 @@ export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # Powerline prompt (to see changes when customizing use `powerline-daemon
 # --restart`)
-if { [[ -f $(which powerline-daemon) ]] && [[ -f $(which python3) ]]; } then
+if type "powerline-daemon" > /dev/null ; then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
     POWERLINE_BASH_SELECT=1
-    . $(dirname $(python3 -c 'import powerline.bindings; '\
+    if type "python3" > /dev/null ; then
+        . $(dirname $(python3 -c 'import powerline.bindings; '\
 'print(powerline.bindings.__file__)'))/bash/powerline.sh
+    fi
 fi
 
 # }}}
