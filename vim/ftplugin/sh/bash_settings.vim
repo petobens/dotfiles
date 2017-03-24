@@ -2,7 +2,7 @@
 "          File: bash_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Aug 2016
-" Last Modified: 14 Mar 2017
+" Last Modified: 24 Mar 2017
 "   Description: My Bash settings file
 "===============================================================================
 " Installation notes {{{
@@ -40,7 +40,7 @@ endfunction
 
 function! s:RunSh(mode, compilation, ...)
     " Check if sh files are executable
-    if !executable('sh')
+    if !executable('bash')
         echoerr 'bash is not installed or not in your path.'
         return
     endif
@@ -61,7 +61,7 @@ function! s:RunSh(mode, compilation, ...)
     lcd %:p:h
 
     " Set compiler
-    let compiler = 'sh '
+    let compiler = 'bash '
 
     if a:mode ==# 'visual' && a:0 >= 2 && strlen(a:1) && strlen(a:2)
         " Create temp file in the current directory with visual content (and
@@ -119,7 +119,7 @@ function! s:RunSh(mode, compilation, ...)
 
     " Use Dispatch for background async compilation if available
     if exists(':Dispatch')
-        echon 'running sh with dispatch ...'
+        echon 'running bash with dispatch ...'
         " Make
         if s:is_win
             call s:NoShellSlash('Make')
@@ -128,7 +128,7 @@ function! s:RunSh(mode, compilation, ...)
         endif
     else
         " Use regular make otherwise
-        echon 'running sh with make...'
+        echon 'running bash with make...'
         silent make!
         " Open the quickfix window as a bottom window with appropiate height if
         " the quickfix list is not empty (since we remove output from the
@@ -152,7 +152,7 @@ function! s:RunSh(mode, compilation, ...)
             " is an output buffer: if there is one then resize it
             wincmd p
             wincmd k
-            if bufname('%') ==# 'sh_output'
+            if bufname('%') ==# 'bash_output'
                 let output_height = line('$')
                 if output_height < 15
                     execute output_height . ' wincmd _'
@@ -192,13 +192,13 @@ command! -range EvalVisualShForeground
 function! s:ShowShOutput()
     " Only call this function after a sh run
     let compiler = split(&makeprg, '')[0]
-    if compiler !=# 'sh'
+    if compiler !=# 'bash'
         return
     endif
 
     " Close/delete previous output preview window buffer
     silent! pclose
-    silent! bdelete sh_output
+    silent! bdelete bash_output
 
     " Get current file
     let current_file = split(&makeprg, '')[1]
@@ -295,11 +295,11 @@ function! s:ShowShOutput()
     if height == 0
         if has_warnings == 0
             redraw
-            unsilent echo 'No (printable) sh output'
+            unsilent echo 'No (printable) bash output'
         endif
         return
     else
-        execute 'silent botright new sh_output'
+        execute 'silent botright new bash_output'
     endif
     silent! setlocal buftype=nofile bufhidden=delete noswapfile nowrap
                 \ colorcolumn=0 textwidth=0 nonumber norelativenumber
@@ -325,7 +325,7 @@ function! s:ShowShOutput()
         " Since the quickfix window will be open as a bottom window, now move
         " up to the output buffer and resize it
         wincmd k
-        if bufname('%') ==# 'sh_output'
+        if bufname('%') ==# 'bash_output'
             if height > 15
                 let height = 15
             endif
