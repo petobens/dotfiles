@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 24 Mar 2017
+# Last Modified: 25 Mar 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 # Ask for dotfiles dir. Note: the -i flag is only available on Bash 4
@@ -15,7 +15,7 @@ done
 # Strip last (potential) slash
 dotfiles_dir=${dotfiles_dir%/}
 
-echo Creating symlinks in your home directory...
+echo Creating symlinks under "$HOME"/
 if type "ctags" > /dev/null; then
     rm -rf "$HOME/.ctags"
     ln -s "$dotfiles_dir/ctags" "$HOME/.ctags"
