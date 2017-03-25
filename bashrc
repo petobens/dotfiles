@@ -143,6 +143,11 @@ alias v='nvim'
 alias ht='htop'
 alias o='open'
 
+# Colorized cat (with Python's pygment library)
+if type "pygmentize" > /dev/null; then
+    alias dog='pygmentize -O style=monokai -f terminal16m -g'
+fi
+
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
 # alias
 alias gs='git status'
