@@ -2,7 +2,7 @@
 "          File: deoplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 24 Mar 2017
+" Last Modified: 25 Mar 2017
 "   Description: Deoplete configuration
 "===============================================================================
 " Autoclose preview when completion is finished
@@ -12,7 +12,7 @@ augroup ps_deoplete
 augroup END
 
 " Custom settings
-if dein#tap('deoplete') == 1
+if dein#tap('deoplete.nvim') == 1
     " Start completion after two characters are typed (this is the default)
     " Note: if we explicitly set this then auto file completion is lost
     " call deoplete#custom#set('_', 'min_pattern_length', 2)
@@ -53,7 +53,7 @@ let g:deoplete#sources.tex = ['buffer', 'dictionary', 'ultisnips', 'file',
 " vim one)
 let tex_buffer_patterns = {'tex' : '[a-zA-Z_]\w{2,}:\S+'}
 let tex_dict_patterns = {'tex' : '\\?[a-zA-Z_]\w*'}
-if dein#tap('deoplete') == 1
+if dein#tap('deoplete.nvim') == 1
     call deoplete#custom#set('buffer', 'keyword_patterns',
             \ tex_buffer_patterns)
     call deoplete#custom#set('dictionary', 'keyword_patterns',
@@ -73,7 +73,7 @@ let g:deoplete#omni#input_patterns.tex = '\\(?:'
     \ .')'
 
 " Mappings
-if dein#tap('deoplete') == 1
+if dein#tap('deoplete.nvim') == 1
     " Close popup and delete backward character
     inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
     " Undo completion i.e remove whole completed word (default plugin mapping)
