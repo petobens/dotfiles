@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 24 Mar 2017
+# Last Modified: 25 Mar 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -54,7 +54,6 @@ brew install redis
 # Other useful binaries
 brew install the_silver_searcher
 brew install fzf
-"$brew_dir"/opt/fzf/install
 brew install htop
 brew install gcc
 if [[  "$OSTYPE" == 'darwin'* ]]; then

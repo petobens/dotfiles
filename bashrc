@@ -237,9 +237,10 @@ fi
 # }}}
 # Fzf {{{
 
-if [ -f ~/.fzf.bash ]; then
-    # Enable fzf (as well as default mappings and completions)
-    source ~/.fzf.bash
+if type "fzf" > /dev/null; then
+    # Enable completion and key bindings
+    [[ $- == *i* ]] && source "$brew_dir/opt/fzf/shell/completion.bash" 2> /dev/null
+    source "$brew_dir/opt/fzf/shell/key-bindings.bash"
 
     # Change default options (show 15 lines, use top-down layout)
     export FZF_DEFAULT_OPTS='--height 15 --reverse '\
