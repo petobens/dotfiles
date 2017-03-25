@@ -86,16 +86,18 @@ if type "arara" > /dev/null; then
     ln -s "$dotfiles_dir/arararc.yaml" "$HOME/.arararc.yaml"
     echo Created .arararc.yaml symlink
 fi
-if open -Ra "firefox"; then
-    rm -rf "$HOME/.pentadactyl"
-    ln -s "$dotfiles_dir/pentadactyl" "$HOME/.pentadactyl"
-    echo Created .pentadactyl folder symlink
-    rm -rf "$HOME/.pentadactylrc"
-    ln -s "$dotfiles_dir/pentadactylrc" "$HOME/.pentadactylrc"
-    echo Created .pentadactylrc symlink
-fi
-if open -Ra "hammerspoon" ; then
-    rm -rf "$HOME/.hammerspoon"
-    ln -s "$dotfiles_dir/hammerspoon" "$HOME/.hammerspoon"
-    echo Created .hammerspoon folder symlink
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if open -Ra "firefox"; then
+        rm -rf "$HOME/.pentadactyl"
+        ln -s "$dotfiles_dir/pentadactyl" "$HOME/.pentadactyl"
+        echo Created .pentadactyl folder symlink
+        rm -rf "$HOME/.pentadactylrc"
+        ln -s "$dotfiles_dir/pentadactylrc" "$HOME/.pentadactylrc"
+        echo Created .pentadactylrc symlink
+    fi
+    if open -Ra "hammerspoon" ; then
+        rm -rf "$HOME/.hammerspoon"
+        ln -s "$dotfiles_dir/hammerspoon" "$HOME/.hammerspoon"
+        echo Created .hammerspoon folder symlink
+    fi
 fi
