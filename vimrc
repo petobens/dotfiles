@@ -79,8 +79,9 @@ if has('vim_starting')
                 \ '$DOTVIM/bundle/repos/github.com/Shougo/dein.vim')
 endif
 
-" Directory where plugins are placed. The function also disables filetype
-" automatically
+" Directory where plugins (with normalized names) are placed. The function also
+" disables filetype automatically
+let g:dein#enable_name_conversion = 1
 if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#begin(expand('$DOTVIM/bundle/'))
 
@@ -1130,7 +1131,7 @@ let g:airline_mode_map = {
     \ '' : 'S-B',
     \ }
 
-if dein#tap('vim-airline') == 1
+if dein#tap('airline') == 1
     " Change spacing of line and column number
     call airline#parts#define_raw('linenr', '%l')
     call airline#parts#define_accent('linenr', 'bold')
@@ -1453,7 +1454,7 @@ nnoremap <silent> <Leader>gP :Gpull<CR>
 nnoremap <silent> <Leader>gb :Gbrowse<cr>
 vnoremap <silent> <Leader>gb :Gbrowse<cr>
 " FIXME: for mac not working as expected
-if dein#tap('denite.nvim') == 1
+if dein#tap('denite') == 1
     nnoremap <silent> <Leader>gl :Glog -- %<CR>:Denite quickfix<CR>
     nnoremap <silent> <Leader>gL :Glog --<CR>:Denite quickfix<CR>
 else
@@ -1887,7 +1888,7 @@ inoremap <silent> [[ [[<C-R>=UltiSnips#Anon('[${1:${VISUAL}}]', '[[',
 " }}}
 " Unite {{{
 
-if dein#tap('unite.vim') == 1
+if dein#tap('unite') == 1
     " Default appearance options
     call unite#custom#profile('default', 'context', {
                 \ 'silent' : 1, 'update_time' : 200,
@@ -2004,7 +2005,7 @@ function! s:my_split.func(candidate)
     endif
     call unite#take_action(split_action, a:candidate)
 endfunction
-if dein#tap('unite.vim') == 1
+if dein#tap('unite') == 1
     call unite#custom_action('openable', 'context_split', s:my_split)
 endif
 unlet s:my_split
