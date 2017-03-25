@@ -161,6 +161,8 @@ if [ ! -f "$brew_dir"/bin/python2 ]; then
     alias python='python3'
     alias pip='pip3'
 fi
+# To choose between both python2 and python3 kernels we need to run
+# `ipython kernel install` and `ipython3 kernel install`
 alias jn='jupyter notebook'
 
 # Since we use an italics terminfo the following alias avoid ssh issues
