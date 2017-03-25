@@ -6,11 +6,22 @@
 # Last Modified: 25 Mar 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
+# Check bash major version
+bash_version=${BASH_VERSION:0:1}
+
 # Ask for dotfiles dir. Note: the -i flag is only available on Bash 4
-read -r -e -p "Enter dotfiles directory: " -i "$HOME/" dotfiles_dir
+if [[ $bash_version -gt 3 ]]; then
+    read -r -e -p "Enter dotfiles directory: " -i "$HOME/" dotfiles_dir
+else
+    read -r -e -p "Enter dotfiles directory: " dotfiles_dir
+fi
 while [ ! -d "$dotfiles_dir" ]; do
     (>&2 echo "$dotfiles_dir: No such directory")
-    read -r -e -p "Enter dotfiles directory: " -i "$HOME/" dotfiles_dir
+    if [[ $bash_version -gt 3 ]]; then
+        read -r -e -p "Enter dotfiles directory: " -i "$HOME/" dotfiles_dir
+    else
+        read -r -e -p "Enter dotfiles directory: " dotfiles_dir
+    fi
 done
 # Strip last (potential) slash
 dotfiles_dir=${dotfiles_dir%/}
