@@ -24,12 +24,12 @@ fi
 if type "git" > /dev/null; then
     rm -rf "$HOME/.gitignore"
     rm -rf "$HOME/.gitconfig"
-    ln -s "$dotfiles_dir/gitignore" "$HOME/.gitignore"
+    ln -s "$dotfiles_dir/git/gitignore" "$HOME/.gitignore"
     echo Created .gitignore symlink
     if [[ "$OSTYPE" == 'darwin'* ]]; then
-        ln -s "$dotfiles_dir/gitconfig_mac" "$HOME/.gitconfig"
+        ln -s "$dotfiles_dir/git/gitconfig_mac" "$HOME/.gitconfig"
     else
-        ln -s "$dotfiles_dir/gitconfig_linux" "$HOME/.gitconfig"
+        ln -s "$dotfiles_dir/git/gitconfig_linux" "$HOME/.gitconfig"
     fi
     echo Created .gitconfig symlink
 fi
