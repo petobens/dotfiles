@@ -4,7 +4,7 @@
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
 # Last Modified: 24 Mar 2017
-#   Description: Brew, symlinks and python installation for new computer
+#   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
 if ! type "brew" > /dev/null; then
@@ -25,6 +25,7 @@ brew install git
 
 # Latest bash with completions (and linter)
 brew install bash
+sudo chsh -s "$brew_dir"/bin/bash
 brew tap homebrew/versions
 brew install bash-completion2
 brew install shellcheck
@@ -63,5 +64,5 @@ brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags
 brew install unrar
 
-# Remove outdated versions from the cellar.
+# Remove outdated versions
 brew cleanup
