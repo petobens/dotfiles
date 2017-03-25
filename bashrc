@@ -134,6 +134,7 @@ bind -m vi-insert '"\e[Z": menu-complete-backward'
 # Alias {{{
 
 # Bash
+alias sh='bash'
 alias u='cd ..'
 alias h='cd ~'
 alias q='exit'
