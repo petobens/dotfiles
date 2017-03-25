@@ -2,7 +2,7 @@
 "          File: neocomplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 14 Sep 2016
+" Last Modified: 24 Mar 2017
 "   Description: Neocomplete configuration
 "===============================================================================
 let g:neocomplete#enable_at_startup = 1
@@ -48,7 +48,7 @@ let g:neocomplete#keyword_patterns._ = '[A-Za-zá-úÁ-ÚñÑ_][0-9A-Za-zá-úÁ
 let keyword_patterns = {}
 let keyword_patterns = {'tex' : '\h\w\{,2}:\%(\w*\|\w*_\w*\)\?'}
 let keyword_patterns2 = {'tex' : '\\\?\h\w*'}
-if dein#check_install(['neocomplete']) == 0
+if dein#tap('neocomplete') == 1
     " FIXME: Buffer completion and ultisnips don't play well see #390
     call neocomplete#custom#source('buffer', 'keyword_patterns',
             \ keyword_patterns)
@@ -72,7 +72,7 @@ let g:neocomplete#force_omni_input_patterns.python =
     \ '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 
 " Mappings
-if dein#check_install(['neocomplete']) == 0
+if dein#tap('neocomplete') == 1
     " Close popup and delete backward character
     inoremap <expr><BS> neocomplete#smart_close_popup()."\<BS>"
     " Undo completion i.e remove whole completed word (default plugin mapping)

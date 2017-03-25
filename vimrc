@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 19 Mar 2017
+" Last Modified: 24 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1130,7 +1130,7 @@ let g:airline_mode_map = {
     \ '' : 'S-B',
     \ }
 
-if dein#check_install(['airline']) == 0
+if dein#tap('airline') == 1
     " Change spacing of line and column number
     call airline#parts#define_raw('linenr', '%l')
     call airline#parts#define_accent('linenr', 'bold')
@@ -1453,7 +1453,7 @@ nnoremap <silent> <Leader>gP :Gpull<CR>
 nnoremap <silent> <Leader>gb :Gbrowse<cr>
 vnoremap <silent> <Leader>gb :Gbrowse<cr>
 " FIXME: for mac not working as expected
-if dein#check_install(['denite']) == 0
+if dein#tap('denite') == 1
     nnoremap <silent> <Leader>gl :Glog -- %<CR>:Denite quickfix<CR>
     nnoremap <silent> <Leader>gL :Glog --<CR>:Denite quickfix<CR>
 else
@@ -1887,7 +1887,7 @@ inoremap <silent> [[ [[<C-R>=UltiSnips#Anon('[${1:${VISUAL}}]', '[[',
 " }}}
 " Unite {{{
 
-if dein#check_install(['unite']) == 0
+if dein#tap('unite') == 1
     " Default appearance options
     call unite#custom#profile('default', 'context', {
                 \ 'silent' : 1, 'update_time' : 200,
@@ -2004,7 +2004,7 @@ function! s:my_split.func(candidate)
     endif
     call unite#take_action(split_action, a:candidate)
 endfunction
-if dein#check_install(['unite']) == 0
+if dein#tap('unite') == 1
     call unite#custom_action('openable', 'context_split', s:my_split)
 endif
 unlet s:my_split
@@ -2014,7 +2014,7 @@ unlet s:my_split
 
 " Note: on Mac to delete files to the trash install rmtrash
 
-if dein#check_install(['vimfiler']) == 0
+if dein#tap('vimfiler') == 1
     function! VimfilerHookOpts() abort
         call vimfiler#custom#profile('default', 'context', {
                     \ 'direction' : 'topleft',
