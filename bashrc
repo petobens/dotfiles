@@ -155,7 +155,7 @@ __git_complete gp _git_push
 alias gP='git pull'
 __git_complete gp _git_pull
 
-# Python"
+# Python
 if [ ! -f "$brew_dir"/bin/python2 ]; then
     alias python='python3'
     alias pip='pip3'
