@@ -35,7 +35,9 @@ brew install python3
 brew tap homebrew/science
 brew install r
 if [[  "$OSTYPE" == 'darwin'* ]]; then
-    brew cask install basictex
+    if ! type "pdflatex" > /dev/null; then
+        brew cask install basictex
+    fi
 else
     brew install texlive with-basic
 fi
