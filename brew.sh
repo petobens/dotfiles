@@ -18,6 +18,7 @@ fi
 brew_dir=$(brew --prefix)
 
 # Use latest homebrew and update any already installed formulae
+echo "Updating Brew..."
 brew update && brew upgrade
 
 # Git

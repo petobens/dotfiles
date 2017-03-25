@@ -10,8 +10,9 @@
 bash_version=${BASH_VERSION:0:1}
 
 # Ask for dotfiles dir. Note: the -i flag is only available on Bash 4
+current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [[ $bash_version -gt 3 ]]; then
-    read -r -e -p "Enter dotfiles directory: " -i "$HOME/" dotfiles_dir
+    read -r -e -p "Enter dotfiles directory: " -i "$current_dir" dotfiles_dir
 else
     read -r -e -p "Enter dotfiles directory: " dotfiles_dir
 fi
