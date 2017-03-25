@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 14 Mar 2017
+-- Last Modified: 24 Mar 2017
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -230,13 +230,13 @@ hs.hotkey.bind(cmd_ctrl, "c", Tmux)
 
 
 -- }}}
--- Vim {{{
+-- (n)Vim {{{
 
 -- To run or activate Macvim
 -- hs.hotkey.bind(cmd_ctrl, "v", function()
                 -- hs.application.launchOrFocus("Macvim") end)
 
--- Activate Vim inside of tmux inside of iTerm
+-- Activate (n)vim inside of tmux inside of iTerm
 function VimTmux()
     -- Launch or open iTerm
     -- FIXME: Wait for iTerm to open properly
@@ -282,7 +282,7 @@ function VimTmux()
     -- Once inside of tmux try to select a window named Vim
     hs.eventtap.keyStroke({"ctrl"}, "a")
     hs.timer.usleep(120000) -- Wait to get into command mode
-    hs.eventtap.keyStrokes(":select-window -t vim")
+    hs.eventtap.keyStrokes(":select-window -t nvim")
     hs.eventtap.keyStroke({""}, "return")
 
 
@@ -296,7 +296,7 @@ function VimTmux()
         hs.timer.usleep(120000) -- Wait for window title to update
         local tmux_win_title = hs.window.focusedWindow():title()
         -- If the current pane/window is vim then break
-        if string.match(tmux_win_title:lower(), "vim") then
+        if string.match(tmux_win_title:lower(), "nvim") then
             break
         else
             -- Go to the next pane
@@ -311,12 +311,12 @@ function VimTmux()
             -- bash console open vim in it, otherwise open it in a new window
             local current_pane_title = hs.window.focusedWindow():title()
             if string.match(current_pane_title:lower(), "bash") then
-                hs.eventtap.keyStrokes("vim")
+                hs.eventtap.keyStrokes("v")
                 hs.eventtap.keyStroke({""}, "return")
             else
                 hs.eventtap.keyStroke({"ctrl"}, "a")
                 hs.timer.usleep(120000)
-                hs.eventtap.keyStrokes(":new-window vim")
+                hs.eventtap.keyStrokes(":new-window v")
                 hs.eventtap.keyStroke({""}, "return")
             end
         end
@@ -330,7 +330,7 @@ hs.hotkey.bind(cmd_ctrl, "r", function()
                 -- Since we are in tmux, once we exit we have bash prompt
                 -- therefore we simply type vim again to restart it
                 hs.timer.doAfter(0.7, function()
-                                    hs.eventtap.keyStrokes("vim")
+                                    hs.eventtap.keyStrokes("v")
                                     hs.eventtap.keyStroke({""}, "return")
                                 end)
                 hs.timer.doAfter(1.5, function()
