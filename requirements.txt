@@ -11,7 +11,7 @@ flake8
 jedi
 jupyter
 matplotlib
-mypy
+mypy; python_version >= '3.2'
 mysql-connector
 neovim
 numpy
