@@ -18,10 +18,15 @@ echo Symlinks...
 source "$current_dir/symlinks.sh"
 
 echo Fonts...
-git clone https://github.com/powerline/fonts.git
-(cd fonts || exit
-./install.sh SourceCodePro)
-rm -rf fonts
+if [[  "$OSTYPE" == 'darwin'* ]]; then
+    cd ~/Library/Fonts || exit
+else
+    mkdir -p ~/.local/share/fonts
+    cd ~/.local/share/fonts || exit
+fi
+curl -fLo "Sauce Code Pro Nerd Font Complete.ttf" https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
+echo Installed Sauce Code Pro Nerd Font Complete.ttf font
+cd "$current_dir" || exit
 
 echo Nvim...
 nvim +qall
@@ -34,7 +39,6 @@ fi
 
 echo Latex...
 # TODO: complete this; move my biblatex settings to github and use lacheck
-
 
 echo R...
 # TODO: complete this

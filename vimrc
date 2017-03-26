@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 25 Mar 2017
+" Last Modified: 26 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -29,7 +29,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     if s:is_mac
         " Set python3 host (i.e executable)
-        " let g:python3_host_prog = '/usr/local/bin/python3'
+        let g:python3_host_prog = '/usr/local/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -161,6 +161,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/neco-vim', {'name' : 'neco-vim'})
     call dein#add('Shougo/neco-syntax')
     call dein#add('Shougo/neoinclude.vim')
+
+    " Devicons (load this last!)
+    call dein#add('ryanoasis/vim-devicons')
 
     call dein#end()
     call dein#save_state()
@@ -2023,7 +2026,7 @@ if dein#tap('vimfiler') == 1
                     \ 'winwidth' : 40,
                     \ 'force_quit': 1,
                     \ 'status' : 1,
-                    \ 'columns' : 'size',
+                    \ 'columns' : 'devicons:size',
                     \ 'safe': 0
                     \ })
 
