@@ -2112,6 +2112,8 @@ function! s:vimfiler_settings()
     nmap <buffer> D <Plug>(vimfiler_make_directory)
     " Move up a directory
     nmap <buffer> u <Plug>(vimfiler_switch_to_parent_directory)
+    " Home directory
+    nmap <buffer> h <Plug>(vimfiler_switch_to_home_directory)
     " Change window and redraw screen
     nmap <buffer> <C-j> <C-w>j
     nmap <buffer> <C-h> <C-w>h
