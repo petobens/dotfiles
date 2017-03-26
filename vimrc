@@ -1118,6 +1118,8 @@ set noshowmode                  " Don't show the current mode
 
 " Powerline-like appearance (we set the theme when setting the colorscheme)
 let g:airline_powerline_fonts = 1
+" Rounded right sep
+let g:airline_right_sep = '' " U+E0B6
 
 " Short form mode text
 let g:airline_mode_map = {
