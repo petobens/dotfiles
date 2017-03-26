@@ -1340,6 +1340,24 @@ call denite#custom#map('insert', '<C-e>', '<denite:do_action:feedkeys>',
             \ 'noremap')
 
 " }}}
+" Devicons {{{
+
+" Add or override individual additional filetypes
+if !exists('g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols')
+    let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}
+endif
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {'tex': '',
+            \ 'vim': '', 'bib':'', 'yaml': '', 'gitcommit': ''}
+
+" Add or override individual specific files
+if !exists('g:WebDevIconsUnicodeDecorateFileNodesExactSymbols')
+    let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {}
+endif
+let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
+            \ '.gitignore': '', 'vimrc': '', 'bashrc': '', '.bashrc': '',
+            \ 'bash_profile': '', '.bash_profile': ''}
+
+" }}}
 " Dispatch {{{
 
 " Dispatch won't work with shellslash on Windows. We need to wrap commands that
