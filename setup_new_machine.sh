@@ -7,6 +7,7 @@
 #   Description: Script to setup a new machine
 #===============================================================================
 # Ask for sudo right away and get this script directory
+# TODO: Give message about commenting some parts
 sudo echo -n
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -24,7 +25,9 @@ else
     mkdir -p ~/.local/share/fonts
     cd ~/.local/share/fonts || exit
 fi
-curl -fLo "Sauce Code Pro Nerd Font Complete.ttf" https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
+curl -fLo "Sauce Code Pro Nerd Font Complete.ttf" \
+https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/\
+SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
 echo Installed Sauce Code Pro Nerd Font Complete.ttf font
 cd "$current_dir" || exit
 
