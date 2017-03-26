@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 25 Mar 2017
+# Last Modified: 26 Mar 2017
 #   Description: Script to setup a new machine
 #===============================================================================
 # Ask for sudo right away and get this script directory
@@ -17,6 +17,12 @@ brew_dir=$(brew --prefix)
 echo Symlinks...
 source "$current_dir/symlinks.sh"
 
+echo Fonts...
+git clone https://github.com/powerline/fonts.git
+(cd fonts || exit
+./install.sh SourceCodePro)
+rm -rf fonts
+
 echo Nvim...
 nvim +qall
 
@@ -27,7 +33,7 @@ if [  -f "$brew_dir"/bin/python2 ]; then
 fi
 
 echo Latex...
-# TODO: complete this
+# TODO: complete this; move my biblatex settings to github and use lacheck
 
 
 echo R...
