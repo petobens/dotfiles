@@ -1354,8 +1354,8 @@ if !exists('g:WebDevIconsUnicodeDecorateFileNodesExactSymbols')
     let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {}
 endif
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
-            \ '.gitignore': '', 'vimrc': '', 'bashrc': '', '.bashrc': '',
-            \ 'bash_profile': '', '.bash_profile': ''}
+            \ '.gitignore': '', 'vimrc': '', '.vimrc': '', 'bashrc': '',
+            \ '.bashrc': '', 'bash_profile': '', '.bash_profile': ''}
 
 " }}}
 " Dispatch {{{
