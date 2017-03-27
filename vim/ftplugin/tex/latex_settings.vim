@@ -48,6 +48,7 @@
 " TDS structure
 
 " In particular to fix font errors install `collection-fontsrecommended` package
+" To count words and lint install texcount and chktex with tlmgr
 
 " To uninstall basictex (in order to update texlive) remove with `rm -rf` the
 " following directories: '/usr/local/texlive/', '/Library/TeX/' and
