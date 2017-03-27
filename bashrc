@@ -170,9 +170,6 @@ fi
 # `ipython kernel install` and `ipython3 kernel install`
 alias jn='jupyter notebook'
 
-# Since we use an italics terminfo the following alias avoid ssh issues
-alias ssh="TERM=xterm-256color ssh"
-
 if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Differentiate and use colors for directories, symbolic links, etc.

@@ -18,6 +18,9 @@ brew_dir=$(brew --prefix)
 echo Symlinks...
 source "$current_dir/symlinks.sh"
 
+echo Italics terminfo...
+tic "$current_dir/xterm-256color-italic.terminfo"
+
 echo Fonts...
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     cd ~/Library/Fonts || exit
