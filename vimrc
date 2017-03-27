@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 26 Mar 2017
+" Last Modified: 27 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1219,15 +1219,17 @@ nnoremap <silent> <Leader>bl :Denite dein<CR>
 " Denite {{{
 
 " Change default UI settings and highlighting
-call denite#custom#option('default', 'auto_resize', 1)
-call denite#custom#option('default', 'statusline', 0) " For vim-airline
-call denite#custom#option('default', 'winheight', 15)
-call denite#custom#option('default', 'reversed', 1)
-call denite#custom#option('default', 'prompt', '❯')
-call denite#custom#option('default', 'prompt_highlight', 'Function')
-call denite#custom#option('default', 'highlight_matched_char', 'Function')
-call denite#custom#option('default', 'highlight_matched_range', 'Normal')
-call denite#custom#option('default', 'highlight_mode_insert', 'WildMenu')
+call denite#custom#option('default', {
+            \ 'auto_resize': 1,
+            \ 'statusline': 0,
+            \ 'winheight': 15,
+            \ 'reversed': 1,
+            \ 'prompt': '❯',
+            \ 'prompt_highlight': 'Function',
+            \ 'highlight_matched_char': 'Function',
+            \ 'highlight_matched_range': 'Normal',
+            \ 'highlight_mode_insert': 'WildMenu'
+            \ })
 
 " Change some hl groups
 hi default link deniteSource_grepFile Directory
