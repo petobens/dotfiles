@@ -2,7 +2,7 @@
 "          File: latex_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2013
-" Last Modified: 14 Mar 2017
+" Last Modified: 27 Mar 2017
 "   Description: Latex settings
 "===============================================================================
 " TODOs:
@@ -374,6 +374,7 @@ augroup END
 " }}}
 " Linting {{{
 
+" To install chktex use tlmgr
 function! s:CheckTex()
     " Don't run chktex if it is not installed
     if !executable('chktex')
@@ -636,10 +637,15 @@ endfunction
 " }}}
 " Word counting {{{
 
+" Install texcount with tlmgr
 function! s:CountWords()
     " Check if perl is installed
     if !executable('perl')
         echoerr 'perl is not installed or not in your path.'
+        return
+    endif
+    if !executable('texcount')
+        echoerr 'texcount is not installed or not in your path.'
         return
     endif
 
