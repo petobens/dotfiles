@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 24 Mar 2017
+-- Last Modified: 27 Mar 2017
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -450,5 +450,9 @@ hs.hotkey.bind({"cmd"}, "b", function() hs.execute("open ~/.Trash/") end)
 hs.hotkey.bind(cmd_ctrl, "b", function() hs.execute("rm -rf ~/.Trash/*")
                                          hs.execute("open ~/.Trash/")
                end)
+
+-- Move the mouse with the keyboard
+local vimouse = require('vimouse')
+vimouse({'shift', 'cmd'}, 'm')
 
 -- }}}
