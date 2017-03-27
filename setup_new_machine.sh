@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 26 Mar 2017
+# Last Modified: 27 Mar 2017
 #   Description: Script to setup a new machine
 #===============================================================================
 # Ask for sudo right away and get this script directory
@@ -31,14 +31,14 @@ SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
 echo Installed Sauce Code Pro Nerd Font Complete.ttf font
 cd "$current_dir" || exit
 
-echo Nvim...
-nvim +qall
-
 echo Python...
 pip3 install -r "$current_dir"/requirements.txt
 if [  -f "$brew_dir"/bin/python2 ]; then
     pip install -r "$current_dir"/requirements.txt
 fi
+
+echo Nvim...
+nvim +UpdateRemotePlugins +qall
 
 echo Latex...
 # TODO: complete this; move my biblatex settings to github and use lacheck
