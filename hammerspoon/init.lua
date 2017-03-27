@@ -440,6 +440,6 @@ hs.hotkey.bind(cmd_ctrl, "b", function() hs.execute("rm -rf ~/.Trash/*")
 
 -- Move the mouse with the keyboard (requires vimouse.lua script)
 local vimouse = require('vimouse')
-vimouse({'shift', 'cmd'}, 'm')
+vimouse({'shift', 'cmd'}, 'h')
 
 -- }}}

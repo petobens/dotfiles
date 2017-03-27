@@ -2,9 +2,9 @@
 -- Save to ~/.hammerspoon
 -- In ~/.hammerspoon/init.lua:
 --    local vimouse = require('vimouse')
---    vimouse({'shift', 'cmd'}, 'm')
+--    vimouse({'shift', 'cmd'}, 'h')
 --
--- This sets shift-cmd-m as the key that toggles Vi Mouse.
+-- This sets shift-cmd-h as the key that toggles Vi Mouse.
 --
 -- h/j/k/l moves the mouse cursor by 20 pixels.  Holding shift moves by 100
 -- pixels, and holding alt moves by 5 pixels.
