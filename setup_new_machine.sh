@@ -38,10 +38,17 @@ if [  -f "$brew_dir"/bin/python2 ]; then
 fi
 
 echo Nvim...
-nvim +UpdateRemotePlugins +qall
+nvim +qall
 
 echo Latex...
-# TODO: complete this; move my biblatex settings to github and use lacheck
+# TODO: complete this
+if [[  "$OSTYPE" == 'darwin'* ]]; then
+    mkdir -p ~/Library/texmf
+    git clone https://github.com/petobens/mybibformat ~/Library/texmf
+else
+    mkdir -p ~/texmf
+    git clone https://github.com/petobens/mybibformat ~/texmf
+fi
 
 echo R...
 # TODO: complete this
