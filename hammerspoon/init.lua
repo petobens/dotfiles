@@ -17,7 +17,7 @@ local cmd_ctrl = {"ctrl", "cmd"}
 -- Reload (auto) hotkey script
 hs.hotkey.bind(cmd_ctrl, "a", function()
   hs.reload()
-  hs.alert.show("Hammerspoon config was reloaded.")
+  hs.alert("Hammerspoon config was reloaded.")
 end)
 
 -- Don't perform animations when resizing
@@ -419,31 +419,18 @@ hs.hotkey.bind({"shift", "cmd"}, "l", function()
                 hs.caffeinate.lockScreen()
                 end)
 
--- TODO: Shutdown, restart and remap capslock key to TAB (we already disabled it
--- from System Preferences)
-hs.hotkey.bind({"shift", "cmd"}, "s", function()
-                hs.eventtap.event.newSystemKeyEvent('EJECT', true):setFlags({ctrl = true}):post()
-                end)
--- hs.hotkey.bind({"shift", "cmd"}, "r", function()
-                -- hs.caffeinate.restartSystem() end)
+-- TODO: Remap capslock key to TAB (we already disabled it from System
+-- Preferences)
 
--- Until the following works we can use ctrl+eject to ask for confirmation
-function YesNoDialogBox(ActionFunc)
-	test = hs.chooser.new(ActionFunc)
-    test:rows(2)
-    test:choices({{["text"] = "Yes", ["id"] = "yes"},
-                {["text"] = "No", ["id"] = "no"}})
-    test:show()
-end
-function RebootIfChoice(input)
-    if input.id == "yes" then
-        hs.alert("Your choice was: yes")
-    else
-        hs.alert("Your choice was: no")
-    end
-end
+-- Shutdown and restart (with confirmation dialog)
+hs.hotkey.bind({"shift", "cmd"}, "s", function()
+                os.execute("osascript -e 'tell application \"loginwindow\"" ..
+                           "to «event aevtrsdn»'")
+                end)
 hs.hotkey.bind({"shift", "cmd"}, "r", function()
-                                        YesNoDialogBox(RebootIfChoice) end)
+                os.execute("osascript -e 'tell application \"loginwindow\"" ..
+                           "to «event aevtrrst»'")
+                end)
 
 -- Open trash folder and empty it (and then reactivate trash window)
 hs.hotkey.bind({"cmd"}, "b", function() hs.execute("open ~/.Trash/") end)
@@ -451,7 +438,7 @@ hs.hotkey.bind(cmd_ctrl, "b", function() hs.execute("rm -rf ~/.Trash/*")
                                          hs.execute("open ~/.Trash/")
                end)
 
--- Move the mouse with the keyboard
+-- Move the mouse with the keyboard (requires vimouse.lua script)
 local vimouse = require('vimouse')
 vimouse({'shift', 'cmd'}, 'm')
 
