@@ -19,7 +19,7 @@
 --
 -- Press <esc> or the configured toggle key to end Vi Mouse mode.
 
-return function(mod, key)
+return function(tmod, tkey)
   -- local overlay = nil
   local log = hs.logger.new('vimouse', 'debug')
   local tap = nil
@@ -29,6 +29,15 @@ return function(mod, key)
   local mousedown_time = 0
   local mousepress_time = 0
   local mousepress = 0
+  local tapmods = {['cmd']=false, ['ctrl']=false, ['alt']=false, ['shift']=false}
+
+  if type(tmod) == 'string' then
+    tapmods[tmod] = true
+  else
+    for _, name in ipairs(tmod) do
+      tapmods[name] = true
+    end
+  end
 
   local eventTypes = hs.eventtap.event.types
   local eventPropTypes = hs.eventtap.event.properties
@@ -91,6 +100,20 @@ return function(mod, key)
       local x_delta = 0
       local y_delta = 0
       local scroll_y_delta = 0
+      local is_tapkey = code == keycodes[tkey]
+
+      if is_tapkey == true then
+        for name, _ in pairs(tapmods) do
+          if flags[name] == nil then
+            flags[name] = false
+          end
+
+          if tapmods[name] ~= flags[name] then
+            is_tapkey = false
+            break
+          end
+        end
+      end
 
       if flags.alt then
         step = 5
@@ -102,7 +125,7 @@ return function(mod, key)
         mul = 1
       end
 
-      if code == keycodes['escape'] or (code == keycodes[key] and flags[mod]) then
+      if is_tapkey or code == keycodes['escape'] then
         if dragging then
           postEvent(eventTypes.leftMouseUp, coords, flags, 0)
         end
@@ -155,7 +178,7 @@ return function(mod, key)
     return true
   end)
 
-  hs.hotkey.bind(mod, key, nil, function(event)
+  hs.hotkey.bind(tmod, tkey, nil, function(event)
     local screen = hs.mouse.getCurrentScreen()
     local frame = screen:fullFrame()
 
