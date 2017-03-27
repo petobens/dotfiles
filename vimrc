@@ -1194,6 +1194,7 @@ augroup color_heraldish
 augroup END
 
 " Actually set the colorscheme and airline theme
+let g:one_allow_italics = 1  " use italics with onedarkish theme
 colorscheme onedarkish  " alternatives are heraldish and onedarkish
 let g:airline_theme = g:colors_name
 
