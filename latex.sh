@@ -44,4 +44,18 @@ else
     git clone https://github.com/petobens/mybibformat ~/texmf
 fi
 
-# TODO: Install latex packages
+# Update tlmgr and all packages
+sudo tlmgr update --self
+sudo tlmgr update all
+
+# Install texdoc and enable automatic build of documentation
+sudo tlmgr install texdoc
+sudo tlmgr option docfiles 1
+sudo tlmgr install --reinstall "$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')"
+
+# Install linter, word counter and fonts
+sudo tlmgr install texcount
+sudo tlmgr install chktex
+sudo tlmgr install collection-fontsrecommended
+
+# TODO: Install additional latex packages
