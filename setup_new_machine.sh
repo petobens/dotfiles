@@ -24,11 +24,11 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
 fi
 
 echo Brew...
-source "$current_dir/brew.sh"
+. "$current_dir/brew.sh"
 brew_dir=$(brew --prefix)
 
 echo Symlinks...
-source "$current_dir/symlinks.sh"
+. "$current_dir/symlinks.sh"
 
 echo Italics terminfo...
 tic "$current_dir/xterm-256color-italic.terminfo"

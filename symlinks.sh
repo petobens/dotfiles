@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 25 Mar 2017
+# Last Modified: 27 Mar 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 # Check bash major version
@@ -28,6 +28,18 @@ done
 dotfiles_dir=${dotfiles_dir%/}
 
 echo Creating symlinks under "$HOME"/
+
+# First symlink bashrc and reload it without logging out and back in
+if type "bash" > /dev/null; then
+    rm -rf "$HOME/.bashrc"
+    ln -s "$dotfiles_dir/bashrc" "$HOME/.bashrc"
+    echo Created .bashrc symlink
+    rm -rf "$HOME/.bash_profile"
+    ln -s "$dotfiles_dir/bash_profile" "$HOME/.bash_profile"
+    echo Created .bash_profile symlink
+fi
+. "$HOME/.bashrc"
+
 if type "ctags" > /dev/null; then
     rm -rf "$HOME/.ctags"
     ln -s "$dotfiles_dir/ctags" "$HOME/.ctags"
@@ -79,14 +91,6 @@ if type "r" > /dev/null; then
     rm -rf "$HOME/.Rprofile"
     ln -s "$dotfiles_dir/Rprofile" "$HOME/.Rprofile"
     echo Created .Rprofile symlink
-fi
-if type "bash" > /dev/null; then
-    rm -rf "$HOME/.bashrc"
-    ln -s "$dotfiles_dir/bashrc" "$HOME/.bashrc"
-    echo Created .bashrc symlink
-    rm -rf "$HOME/.bash_profile"
-    ln -s "$dotfiles_dir/bash_profile" "$HOME/.bash_profile"
-    echo Created .bash_profile symlink
 fi
 if type "powerline-daemon" > /dev/null; then
     rm -rf  "$HOME/.config/powerline"
