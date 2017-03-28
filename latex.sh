@@ -30,8 +30,11 @@ exec java -jar \$0 "\$@"
 
 EOF
 cat ./arara-4.0-jar-with-dependencies.jar >> ./arara && chmod +x ./arara
-mv ./arara "$(brew --prefix)"/bin/
 cd ../../../ || exit
+mv arara/application/target/arara arara/
+mkdir "$(brew --prefix)/lib/arara"
+mv arara/* "$(brew --prefix)"/lib/arara
+ln -s  "$(brew --prefix)"/lib/arara/arara "$(brew --prefix)"/bin/arara
 rm -rf arara
 
 # Install mybibformat style
