@@ -4,12 +4,24 @@
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
 # Last Modified: 27 Mar 2017
-#   Description: Script to setup a new machine
+#   Description: Script to setup a new machine; run it with
+#                `bash setup_new_machine.sh`
 #===============================================================================
 # Ask for sudo right away and get this script directory
 # TODO: Give message about commenting some parts
 sudo echo -n
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [[  "$OSTYPE" == 'darwin'* ]]; then
+    echo Xcode Command Line Tools
+    if ! xcode-select --print-path > /dev/null; then
+        xcode-select --install &> /dev/null
+        # Wait until XCode command tools are installed
+        until xcode-select --print-path &> /dev/null; do
+            sleep 5
+        done
+    fi
+fi
 
 echo Brew...
 source "$current_dir/brew.sh"
@@ -43,6 +55,7 @@ fi
 echo Nvim...
 nvim +qall
 
+# TODO: From here onwards the installation make installation optional
 echo Latex...
 # TODO: complete this
 if [[  "$OSTYPE" == 'darwin'* ]]; then
