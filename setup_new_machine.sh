@@ -59,13 +59,7 @@ nvim +qall
 # TODO: From here onwards make installation optional
 echo Latex...
 # TODO: complete this
-if [[  "$OSTYPE" == 'darwin'* ]]; then
-    mkdir -p ~/Library/texmf
-    git clone https://github.com/petobens/mybibformat ~/Library/texmf
-else
-    mkdir -p ~/texmf
-    git clone https://github.com/petobens/mybibformat ~/texmf
-fi
+. "$current_dir/latex.sh"
 
 echo R...
 # TODO: complete this

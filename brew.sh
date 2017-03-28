@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 27 Mar 2017
+# Last Modified: 28 Mar 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -31,7 +31,7 @@ brew tap homebrew/versions
 brew install bash-completion2
 brew install shellcheck
 
-# Python3, R, latex, node
+# Languages: Python3, R, latex, node, java
 brew install python3
 brew tap homebrew/science
 brew install r
