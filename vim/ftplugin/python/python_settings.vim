@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 19 Mar 2017
+" Last Modified: 28 Mar 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -986,7 +986,10 @@ endif
 " Latest ipython doesn't allow to send multiple lines therefore we must one
 " python. See https://github.com/ipython/ipython/issues/9948
 function! s:PyREPL() range
-    call neoterm#repl#set('python')
+    call neoterm#repl#set('python3')
+    if !executable('python3')
+        call neoterm#repl#set('python')
+    endif
     let old_size = g:neoterm_size
     let old_autoinsert = g:neoterm_autoinsert
     let g:neoterm_size = 10
