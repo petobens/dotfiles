@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 25 Mar 2017
+# Last Modified: 27 Mar 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -36,8 +36,12 @@ brew install python3
 brew tap homebrew/science
 brew install r
 if [[  "$OSTYPE" == 'darwin'* ]]; then
-    if ! type "pdflatex" > /dev/null; then
+    if ! type "tlmgr" > /dev/null; then
         brew cask install basictex
+        # Wait until basictex is installed
+        until type "/Library/TeX/texbin/tlmgr" &> /dev/null; do
+            sleep 5
+        done
     fi
 else
     brew install texlive with-basic
