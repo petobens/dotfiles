@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 27 Mar 2017
+# Last Modified: 28 Mar 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
@@ -13,7 +13,7 @@ sudo echo -n
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [[  "$OSTYPE" == 'darwin'* ]]; then
-    echo Xcode Command Line Tools
+    echo Xcode Command Line Tools...
     if ! xcode-select --print-path > /dev/null; then
         xcode-select --install &> /dev/null
         # Wait until XCode command tools are installed
@@ -22,13 +22,6 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
         done
     fi
 fi
-
-echo Brew...
-. "$current_dir/brew.sh"
-brew_dir=$(brew --prefix)
-
-echo Symlinks...
-. "$current_dir/symlinks.sh"
 
 echo Italics terminfo...
 tic "$current_dir/xterm-256color-italic.terminfo"
@@ -46,16 +39,24 @@ SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
 echo Installed Sauce Code Pro Nerd Font Complete.ttf font
 cd "$current_dir" || exit
 
+echo Brew...
+. "$current_dir/brew.sh"
+brew_dir=$(brew --prefix)
+
+echo Symlinks...
+. "$current_dir/symlinks.sh"
+
 echo Python...
 pip3 install -r "$current_dir"/requirements.txt
 if [  -f "$brew_dir"/bin/python2 ]; then
+    # TODO: Install ipython 2 and 3 kernel in this case
     pip install -r "$current_dir"/requirements.txt
 fi
 
 echo Nvim...
 nvim +qall
 
-# TODO: From here onwards the installation make installation optional
+# TODO: From here onwards make installation optional
 echo Latex...
 # TODO: complete this
 if [[  "$OSTYPE" == 'darwin'* ]]; then
@@ -75,3 +76,7 @@ npm install -g jsonlint
 
 echo Ruby...
 sudo gem install sqlint --conservative
+
+echo Symlinks again...
+# FIXME: The current path is printed
+source "$current_dir/symlinks.sh"
