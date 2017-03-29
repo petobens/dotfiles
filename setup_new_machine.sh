@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 28 Mar 2017
+# Last Modified: 29 Mar 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
@@ -58,7 +58,6 @@ nvim +qall
 
 # TODO: From here onwards make installation optional
 echo Latex...
-# TODO: complete this
 . "$current_dir/latex.sh"
 
 echo R...

@@ -3,7 +3,7 @@
 #          File: latex.sh
 #        Author: Pedro Ferrari
 #       Created: 28 Mar 2017
-# Last Modified: 28 Mar 2017
+# Last Modified: 29 Mar 2017
 #   Description: Setup latex
 #===============================================================================
 # Download and install arara (we need java and maven first)
@@ -61,4 +61,30 @@ sudo tlmgr install texcount
 sudo tlmgr install chktex
 sudo tlmgr install collection-fontsrecommended
 
-# TODO: Install additional latex packages
+# Install additional latex packages
+sudo tlmgr install amssymb
+sudo tlmgr install biblatex
+sudo tlmgr install cleveref
+sudo tlmgr install csquotes
+sudo tlmgr install emptypage
+sudo tlmgr install enumitem
+sudo tlmgr install environ
+sudo tlmgr install etoolbox
+sudo tlmgr install floatrow
+sudo tlmgr install footmisc
+sudo tlmgr install framed
+sudo tlmgr install fvextra
+sudo tlmgr install ifplatform
+sudo tlmgr install imakeidx
+sudo tlmgr install lipsum
+sudo tlmgr install logreq
+sudo tlmgr install minted
+sudo tlmgr install multirow
+sudo tlmgr install silence
+sudo tlmgr install siunitx
+sudo tlmgr install spreadtab
+sudo tlmgr install tcolorbox
+sudo tlmgr install titlesec
+sudo tlmgr install trimspaces
+sudo tlmgr install xpatch
+sudo tlmgr install xstring
