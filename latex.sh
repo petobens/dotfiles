@@ -88,3 +88,6 @@ sudo tlmgr install titlesec
 sudo tlmgr install trimspaces
 sudo tlmgr install xpatch
 sudo tlmgr install xstring
+
+# Update all recently installed packages
+sudo tlmgr update all
