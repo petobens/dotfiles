@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 27 Mar 2017
+# Last Modified: 30 Mar 2017
 #   Description: Usual python libraries
 # ==============================================================================
 bokeh
@@ -12,7 +12,7 @@ jedi
 jupyter
 matplotlib
 mypy; python_version >= '3.2'
-mysql-connector
+mysql-connector==2.1.4
 neovim
 numpy
 pandas
