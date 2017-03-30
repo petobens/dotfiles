@@ -17,6 +17,8 @@ if ! type "brew" > /dev/null; then
     echo "Installing brew..."
     ruby -e "$(curl -fsSl 'https://raw.githubusercontent.com/'$brew_prefix'brew/install/master/install')"
     export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
+else
+    brew_dir=$(brew --prefix)
 fi
 
 # Use latest homebrew and update any already installed formulae
