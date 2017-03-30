@@ -26,6 +26,7 @@ brew install git
 
 # Latest bash with completions (and linter)
 brew install bash
+"$brew_dir"/bin/bash | sudo tee -a /etc/shells
 sudo chsh -s "$brew_dir"/bin/bash
 brew tap homebrew/versions
 brew install bash-completion2
