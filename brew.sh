@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 28 Mar 2017
+# Last Modified: 30 Mar 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -44,7 +44,7 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
         done
     fi
 else
-    brew install texlive with-basic
+    brew install texlive --with-basic
 fi
 brew install node
 

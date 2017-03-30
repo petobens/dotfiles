@@ -3,16 +3,24 @@
 #          File: latex.sh
 #        Author: Pedro Ferrari
 #       Created: 28 Mar 2017
-# Last Modified: 29 Mar 2017
+# Last Modified: 30 Mar 2017
 #   Description: Setup latex
 #===============================================================================
+# Don't do this if latex was not installed
+if ! type "tlmgr" > /dev/null; then
+    exit 1
+fi
+
 # Download and install arara (we need java and maven first)
-if ! type "java" > /dev/null; then
-    brew cask install java
-    # Wait until basictex is installed
-    until type "java" &> /dev/null; do
-        sleep 5
-    done
+if [[  "$OSTYPE" == 'darwin'* ]]; then
+    if ! type "java" > /dev/null; then
+        # FIXME: This is only for macos
+        brew cask install java
+        # Wait until basictex is installed
+        until type "java" &> /dev/null; do
+            sleep 5
+        done
+    fi
 fi
 brew install maven
 
