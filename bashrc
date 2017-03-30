@@ -7,12 +7,8 @@
 #===============================================================================
 # Options {{{
 
-# Define brew directory
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    brew_dir=$(brew --prefix)
-else
-    brew_dir="/mnt/.linuxbrew"
-fi
+# Brew directory
+brew_dir=$(brew --prefix)
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Path settings

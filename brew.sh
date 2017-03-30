@@ -9,13 +9,15 @@
 # Install brew if not installed
 if ! type "brew" > /dev/null; then
     brew_prefix='Home'
+    brew_dir='/usr/local'
     if [[ ! "$OSTYPE" == 'darwin'* ]]; then
         brew_prefix='Linux'
+        brew_dir="$HOME/.linuxbrew"
     fi
     echo "Installing brew..."
     ruby -e "$(curl -fsSl 'https://raw.githubusercontent.com/'$brew_prefix'brew/install/master/install')"
 fi
-brew_dir=$(brew --prefix)
+export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
 
 # Use latest homebrew and update any already installed formulae
 echo "Updating Brew..."
