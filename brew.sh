@@ -16,8 +16,8 @@ if ! type "brew" > /dev/null; then
     fi
     echo "Installing brew..."
     ruby -e "$(curl -fsSl 'https://raw.githubusercontent.com/'$brew_prefix'brew/install/master/install')"
+    export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
 fi
-export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
 
 # Use latest homebrew and update any already installed formulae
 echo "Updating Brew..."
@@ -28,10 +28,11 @@ brew install git
 
 # Latest bash with completions (and linter)
 brew install bash
-# "$brew_dir"/bin/bash | sudo tee -a /etc/shells
+sudo bash -c "echo $brew_dir/bin/bash >> /etc/shells"
 sudo chsh -s "$brew_dir"/bin/bash
 brew tap homebrew/versions
 brew install bash-completion2
+# FIXME: not insalling on Linux due to ghc error
 brew install shellcheck
 
 # Languages: Python3, R, latex, node, java
