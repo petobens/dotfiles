@@ -6,20 +6,17 @@
 # Last Modified: 30 Mar 2017
 #   Description: Setup latex
 #===============================================================================
-# Don't do this if latex was not installed
-if ! type "tlmgr" > /dev/null; then
-    exit 1
-fi
-
 # Download and install arara (we need java and maven first)
-if [[  "$OSTYPE" == 'darwin'* ]]; then
-    if ! type "java" > /dev/null; then
+if ! type "java" > /dev/null; then
+    if [[  "$OSTYPE" == 'darwin'* ]]; then
         # FIXME: This is only for macos
         brew cask install java
         # Wait until basictex is installed
         until type "java" &> /dev/null; do
             sleep 5
         done
+    else
+        sudo apt-get install default-jre
     fi
 fi
 brew install maven
