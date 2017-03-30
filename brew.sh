@@ -35,7 +35,7 @@ brew install shellcheck
 # Languages: Python3, R, latex, node, java
 brew install python3
 brew tap homebrew/science
-brew install r
+brew install R
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     if ! type "tlmgr" > /dev/null; then
         brew cask install basictex

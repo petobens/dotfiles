@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 28 Mar 2017
+# Last Modified: 30 Mar 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 # Check bash major version
@@ -87,7 +87,7 @@ if type "eslint" > /dev/null; then
     ln -s "$dotfiles_dir/eslintrc.yaml" "$HOME/.eslintrc.yaml"
     echo Created .eslintrc.yaml symlink
 fi
-if type "r" > /dev/null; then
+if type "R" > /dev/null; then
     rm -rf "$HOME/.Rprofile"
     ln -s "$dotfiles_dir/Rprofile" "$HOME/.Rprofile"
     echo Created .Rprofile symlink
