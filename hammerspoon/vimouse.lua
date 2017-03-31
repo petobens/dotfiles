@@ -125,7 +125,7 @@ return function(tmod, tkey)
         mul = 1
       end
 
-      if is_tapkey or code == keycodes['escape'] then
+      if is_tapkey or code == keycodes['escape'] or code == keycodes['q'] then
         if dragging then
           postEvent(eventTypes.leftMouseUp, coords, flags, 0)
         end
