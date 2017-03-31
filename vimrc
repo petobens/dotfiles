@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 27 Mar 2017
+" Last Modified: 31 Mar 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -30,6 +30,8 @@ else
     if s:is_mac
         " Set python3 host (i.e executable)
         let g:python3_host_prog = '/usr/local/bin/python3'
+    elseif s:is_linux
+        let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
