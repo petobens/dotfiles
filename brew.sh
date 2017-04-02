@@ -25,17 +25,15 @@ fi
 echo "Updating Brew..."
 brew update && brew upgrade
 
-# Git
-brew install git
-
-# Latest bash with completions (and linter)
+# Latest bash with completions
 brew install bash
 sudo bash -c "echo $brew_dir/bin/bash >> /etc/shells"
 sudo chsh -s "$brew_dir"/bin/bash
 brew tap homebrew/versions
 brew install bash-completion2
-# FIXME: not installing on Linux due to ghc error
-brew install shellcheck
+
+# Git
+brew install git
 
 # Languages: Python3, R, latex, node, java
 brew install python3
@@ -90,6 +88,8 @@ fi
 brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags
 brew install unrar
+# FIXME: not installing on Linux due to ghc error
+brew install shellcheck
 
 # Remove outdated versions
 brew cleanup
