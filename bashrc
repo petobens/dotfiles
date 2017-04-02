@@ -171,6 +171,7 @@ fi
 # alias
 alias gs='git status'
 alias gco='git checkout'
+_completion_loader git
 __git_complete gco _git_checkout
 alias gcp='git cherry-pick'
 alias gb='git branch'
