@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 30 Mar 2017
+# Last Modified: 02 Apr 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 # Check bash major version
@@ -71,8 +71,8 @@ if type "nvim" > /dev/null; then
     echo Created .vimrc symlink
     mkdir -p "$HOME/.config/"
     rm -rf "$HOME/.config/nvim"
-    echo Created ./config/nvim folder symlink
     ln -s "$dotfiles_dir/vim/" "$HOME/.config/nvim"
+    echo Created ./config/nvim folder symlink
     rm -rf "$HOME/.config/nvim/init.vim"
     ln -s "$dotfiles_dir/vimrc" "$HOME/.config/nvim/init.vim"
     echo Created .init.vim symlink
@@ -102,15 +102,15 @@ if type "arara" > /dev/null; then
     ln -s "$dotfiles_dir/arararc.yaml" "$HOME/.arararc.yaml"
     echo Created .arararc.yaml symlink
 fi
+if open -Ra "firefox"; then
+    rm -rf "$HOME/.pentadactyl"
+    ln -s "$dotfiles_dir/pentadactyl" "$HOME/.pentadactyl"
+    echo Created .pentadactyl folder symlink
+    rm -rf "$HOME/.pentadactylrc"
+    ln -s "$dotfiles_dir/pentadactylrc" "$HOME/.pentadactylrc"
+    echo Created .pentadactylrc symlink
+fi
 if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if open -Ra "firefox"; then
-        rm -rf "$HOME/.pentadactyl"
-        ln -s "$dotfiles_dir/pentadactyl" "$HOME/.pentadactyl"
-        echo Created .pentadactyl folder symlink
-        rm -rf "$HOME/.pentadactylrc"
-        ln -s "$dotfiles_dir/pentadactylrc" "$HOME/.pentadactylrc"
-        echo Created .pentadactylrc symlink
-    fi
     if open -Ra "hammerspoon" ; then
         rm -rf "$HOME/.hammerspoon"
         ln -s "$dotfiles_dir/hammerspoon" "$HOME/.hammerspoon"

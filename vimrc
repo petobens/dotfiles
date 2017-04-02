@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 31 Mar 2017
+" Last Modified: 02 Apr 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -2177,6 +2177,7 @@ let g:vimtex_complete_img_use_tail = 1
 " Compilation
 let g:vimtex_view_enabled = 0
 let g:vimtex_latexmk_enabled = 0
+" TODO: Use vimtex_quickfix_latexlog
 let g:vimtex_quickfix_ignore_all_warnings = 0
 let g:vimtex_quickfix_ignored_warnings = ['refsection', 'pop empty color',
             \ 'multiple pdfs', 'font warning', 'contains only floats',
@@ -2207,6 +2208,11 @@ augroup END
 " }}}
 " GUI and Terminal {{{
 
+if has('gui_running') || has('nvim')
+    " Disable cursor blinking in all modes
+    set guicursor+=a:blinkon0
+endif
+
 if has('gui_running')
     " GUI Settings
     " Patched font with fancy Unicode glyphs
@@ -2214,8 +2220,6 @@ if has('gui_running')
     " Options (remove toolbar, menu, scrollbars; auto-copy visual selection and
     " use console dialogs)
     set guioptions=ac
-    " Disable cursor blinking in all modes
-    set guicursor+=a:blinkon0
 
     " Macvim specific
     if has('gui_macvim')

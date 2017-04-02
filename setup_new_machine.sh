@@ -3,12 +3,17 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 30 Mar 2017
+# Last Modified: 02 Apr 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
+read -p 'This script will erase/override many files. Do you want to run it (y/n)? ' -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+fi
+
 # Ask for sudo right away and get this script directory
-# TODO: Give message about commenting some parts
 sudo echo -n
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -43,20 +48,15 @@ echo Brew...
 . "$current_dir/brew.sh"
 brew_dir=$(brew --prefix)
 
-echo Symlinks...
-. "$current_dir/symlinks.sh"
-
 echo Python...
 pip3 install -r "$current_dir"/requirements.txt
 if [  -f "$brew_dir"/bin/python2 ]; then
-    # TODO: Install ipython 2 and 3 kernel in this case
     pip install -r "$current_dir"/requirements.txt
+    # Enable both python2 and python3 ipython kernels
+    ipython kernel install
+    ipython3 kernel install
 fi
 
-echo Nvim...
-nvim +qall
-
-# TODO: From here onwards make installation optional
 if type "tlmgr" > /dev/null; then
     echo Latex...
     . "$current_dir/latex.sh"
@@ -64,6 +64,9 @@ fi
 
 echo R...
 # TODO: complete this
+if type "R" > /dev/null; then
+    mkdir -p "$brew_dir/lib/R/site-library"
+fi
 
 echo Node.js...
 npm install -g eslint
@@ -72,6 +75,8 @@ npm install -g jsonlint
 echo Ruby...
 sudo gem install sqlint --conservative
 
-echo Symlinks again...
-# FIXME: The current path is printed
-source "$current_dir/symlinks.sh"
+echo Symlinks...
+. "$current_dir/symlinks.sh"
+
+echo Nvim...
+nvim +qall
