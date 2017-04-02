@@ -2162,27 +2162,24 @@ let g:vimtex_index_resize = 0
 let g:vimtex_toc_show_preamble = 0
 let g:vimtex_toc_secnumdepth = 1
 let g:vimtex_index_hide_line_numbers = 0
-
 " Folding
 let g:vimtex_fold_enabled = 0
-
 " Indendation
 let g:vimtex_indent_enabled = 0
-
 " Bib and image completion
 let g:vimtex_complete_close_braces = 1
 let g:vimtex_complete_recursive_bib = 1
 let g:vimtex_complete_img_use_tail = 1
-
 " Compilation
 let g:vimtex_view_enabled = 0
-let g:vimtex_latexmk_enabled = 0
-" TODO: Use vimtex_quickfix_latexlog
-let g:vimtex_quickfix_ignore_all_warnings = 0
-let g:vimtex_quickfix_ignored_warnings = ['refsection', 'pop empty color',
-            \ 'multiple pdfs', 'font warning', 'contains only floats',
-            \ 'PDF inclus']
-
+let g:vimtex_compiler_enabled = 0
+let g:vimtex_quickfix_latexlog = {'refsection' : 0, 'contains only floats': 0}
+" Minted syntax highlight
+let g:vimtex_syntax_minted = [
+    \ {'lang' : 'python'},
+    \ {'lang' : 'ipython', 'syntax' : 'python'},
+    \ {'lang' : 'pycon', 'syntax' : 'python'}
+    \ ]
 " Disable insert mode mappings
 let g:vimtex_imaps_enabled = 0
 
