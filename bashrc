@@ -90,7 +90,7 @@ save_reload_hist() {
 export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # Powerline prompt (to see changes when customizing use `powerline-daemon
-# --restart`)
+# --replace`)
 if type "powerline-daemon" > /dev/null ; then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
