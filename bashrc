@@ -169,11 +169,6 @@ fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
 # alias
-if [[ ! "$OSTYPE" == 'darwin'* ]]; then
-    if [ -f $brew_dir/etc/bash_completion.d ]; then
-        . $brew_dir/etc/bash_completion.d
-    fi
-fi
 alias gs='git status'
 alias gco='git checkout'
 __git_complete gco _git_checkout
