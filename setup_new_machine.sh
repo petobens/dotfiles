@@ -7,7 +7,12 @@
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
-# TODO: Give message about commenting some parts
+read -p 'This script will erase/override many files. Do you want to run it (y/n)? ' -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    exit 1
+fi
+
 # Ask for sudo right away and get this script directory
 sudo echo -n
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -71,7 +76,7 @@ echo Ruby...
 sudo gem install sqlint --conservative
 
 echo Symlinks...
-source "$current_dir/symlinks.sh"
+. "$current_dir/symlinks.sh"
 
 echo Nvim...
 nvim +qall
