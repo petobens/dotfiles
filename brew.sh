@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 30 Mar 2017
+# Last Modified: 02 Apr 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -34,23 +34,37 @@ sudo bash -c "echo $brew_dir/bin/bash >> /etc/shells"
 sudo chsh -s "$brew_dir"/bin/bash
 brew tap homebrew/versions
 brew install bash-completion2
-# FIXME: not insalling on Linux due to ghc error
+# FIXME: not installing on Linux due to ghc error
 brew install shellcheck
 
 # Languages: Python3, R, latex, node, java
 brew install python3
-brew tap homebrew/science
-brew install R
-if [[  "$OSTYPE" == 'darwin'* ]]; then
-    if ! type "tlmgr" > /dev/null; then
-        brew cask install basictex
-        # Wait until basictex is installed
-        until type "/Library/TeX/texbin/tlmgr" &> /dev/null; do
-            sleep 5
-        done
+read -p "Do you want to install python2 (y/n)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    brew install python2
+fi
+if ! type "tlmgr" > /dev/null; then
+    read -p "Do you want to install latex (y/n)? " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [[  "$OSTYPE" == 'darwin'* ]]; then
+            brew cask install basictex
+            # Wait until basictex is installed
+            while [ ! -f "/Library/TeX/texbin/tlmgr" ]; do
+                sleep 5
+            done
+            export PATH="/Library/TeX/texbin:$PATH"
+        else
+            brew install texlive --with-basic
+        fi
     fi
-else
-    brew install texlive --with-basic
+fi
+read -p "Do you want to install R (y/n)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    brew tap homebrew/science
+    brew install R
 fi
 brew install node
 
@@ -71,6 +85,7 @@ brew install htop
 brew install gcc
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     brew install reattach-to-user-namespace
+    brew install rmtrash
 fi
 brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags

@@ -8,18 +8,32 @@
 # Options {{{
 
 # Brew directory
-if [[ "$OSTYPE" == 'darwin'* ]]; then
+if type "brew" > /dev/null; then
     brew_dir=$(brew --prefix)
 else
-    brew_dir='/mnt/.linuxbrew'
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        if [ -d '/usr/local/bin' ]; then
+            brew_dir='/usr/local'
+        fi
+    else
+        if [ -d "$HOME/.linuxbrew" ]; then
+            brew_dir="$HOME/.linuxbrew"
+        else
+            brew_dir='/mnt/.linuxbrew'
+        fi
+    fi
 fi
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Path settings
     PATH="/usr/bin:/bin:/usr/sbin:/sbin"
     export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH" # homebrew
-    export PATH="/Library/TeX/texbin:$PATH" # basictex
-    export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
+    if [ -d "/Library/TeX/texbin" ]; then
+        export PATH="/Library/TeX/texbin:$PATH" # basictex
+    fi
+    if [ -d "/Applications/MATLAB_R2015b.app/bin" ]; then
+        export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
+    fi
 
     # Symlink cask apps to Applications folder
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
@@ -81,10 +95,12 @@ if type "powerline-daemon" > /dev/null ; then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
     POWERLINE_BASH_SELECT=1
+    py_exec='python2'
     if type "python3" > /dev/null ; then
-        . $(dirname $(python3 -c 'import powerline.bindings; '\
-'print(powerline.bindings.__file__)'))/bash/powerline.sh
+        py_exec='python3'
     fi
+    . $(dirname $($py_exec -c 'import powerline.bindings; '\
+'print(powerline.bindings.__file__)'))/bash/powerline.sh
 fi
 
 # }}}
@@ -116,7 +132,7 @@ fi
 # }}}
 # Completion (readline) {{{
 
-# Improve bash completion (install them with `brew install bash-completion2`)
+# Improved bash completion (install them with `brew install bash-completion2`)
 if [ -f $brew_dir/share/bash-completion/bash_completion ]; then
 . $brew_dir/share/bash-completion/bash_completion
 fi
@@ -169,12 +185,9 @@ if [ ! -f "$brew_dir"/bin/python2 ]; then
     alias python='python3'
     alias pip='pip3'
 fi
-# To choose between both python2 and python3 kernels we need to run
-# `ipython kernel install` and `ipython3 kernel install`
 alias jn='jupyter notebook'
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
-
     # Differentiate and use colors for directories, symbolic links, etc.
     alias ls='ls -GF'
 
@@ -201,15 +214,10 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
     # session called pedrof or attaching to an existing one with that name.
     # Add -X after ssh to enable X11 forwarding
-    alias emr='ssh emr -t tmux '\
-'new -A -s pedrof'
+    alias emr='ssh emr -t tmux new -A -s pedrof'
     # Presto client
-    alias pcli='ssh emr -t tmux '\
-'new -A -s pedrof '\
+    alias pcli='ssh emr -t tmux new -A -s pedrof '\
 '"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
-    # Airflow (reach)
-    alias airf='ssh airflow -t tmux '\
-'new -A -s reach'
     # Gerry instance (with tmux)
     alias ui='ssh gerry'
     # When using linux brew we need to specify a full path to the tmux
