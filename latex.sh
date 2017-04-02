@@ -3,7 +3,7 @@
 #          File: latex.sh
 #        Author: Pedro Ferrari
 #       Created: 28 Mar 2017
-# Last Modified: 30 Mar 2017
+# Last Modified: 02 Apr 2017
 #   Description: Setup latex
 #===============================================================================
 # Download and install arara (we need java and maven first)
@@ -61,10 +61,11 @@ sudo tlmgr install texdoc
 sudo tlmgr option docfiles 1
 sudo tlmgr install --reinstall "$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')"
 
-# Install linter, word counter and fonts
+# Install additional binaries: linter, word counter, fonts and biber
 sudo tlmgr install texcount
 sudo tlmgr install chktex
 sudo tlmgr install collection-fontsrecommended
+sudo tlmgr install biber
 
 # Install additional latex packages
 sudo tlmgr install amssymb
