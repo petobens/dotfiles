@@ -50,7 +50,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export CLICOLOR=1
     export LSCOLORS=exfxCxDxbxegedabagaced
 else
-    export PATH="$brew_dir/bin:$PATH"
+    export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
     export MANPATH="$brew_dir/share/man:$MANPATH"
     export INFOPATH="$brew_dir/share/info:$INFOPATH"
 
