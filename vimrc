@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 02 Apr 2017
+" Last Modified: 05 Apr 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1077,7 +1077,7 @@ augroup ft_sql
     au Filetype sql syn keyword sqlKeyword INNER RIGHT LEFT OUTER JOIN OVER
                 \ PARTITION
     au Filetype sql syn keyword sqlFunction DATE_PARSE DATE_DIFF DATE_TRUNC
-                \ LAG ARBITRARY COUNT_IF LEAD
+                \ LAG ARBITRARY COUNT_IF LEAD JSON_EXTRACT
 augroup END
 
 " }}}
