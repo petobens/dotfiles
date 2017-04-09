@@ -227,7 +227,6 @@ if !has('nvim')
 else
     set clipboard=unnamed
     " This mimicks autoselect in neovim
-    " FIXME: Not working
     vmap <Esc> "*ygv<C-c>
 endif
 
