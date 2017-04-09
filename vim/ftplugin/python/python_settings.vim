@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 28 Mar 2017
+" Last Modified: 09 Apr 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -1048,11 +1048,11 @@ nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 " (Open) and run visual selection in the interpreter (in neovim terminal) and
 " ipython
 if exists(':Topen')
-    nnoremap <buffer> <silent> <Leader>oi :T python<CR>
+    nnoremap <buffer> <silent> <Leader>oi :T python3<CR>
     vnoremap <silent> <buffer> <Leader>ri :call <SID>PyREPL()<CR>
-endif
-if executable('ipython')
-    nnoremap <buffer> <silent> <Leader>ip :!start /b ipython qtconsole<CR>
+    if executable('ipython')
+        nnoremap <buffer> <silent> <Leader>ip :T ipython3<CR>
+    endif
 endif
 
 " Documentation
