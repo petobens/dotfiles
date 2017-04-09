@@ -188,6 +188,21 @@ if [ ! -f "$brew_dir"/bin/python2 ]; then
 fi
 alias jn='jupyter notebook'
 
+# Update all binaries (with brew) and language libraries
+ua='brew update && brew upgrade && brew cleanup; '\
+'python3 -m pip_review --interactive'
+if [ -f "$brew_dir"/bin/python2 ]; then
+    ua=$ua'; python2 -m pip_review --interactive'
+fi
+if type "R" > /dev/null; then
+    ua=$ua'; R --slave --no-save --no-restore -e '\
+'"update.packages(ask=FALSE, checkBuilt=TRUE)"'
+fi
+if type "tlmgr" > /dev/null; then
+    ua=$ua'; sudo tlmgr update --all'
+fi
+alias ua="$ua"
+
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Differentiate and use colors for directories, symbolic links, etc.
     alias ls='ls -GF'
@@ -202,11 +217,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Alias to open vim/nvim sourcing minimal vimrc file
     alias mvrc='vim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
     alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
-
-    # Update brew, python, R and tex (tlmgr requires password)
-    alias ua='brew update && brew upgrade && brew cleanup; python3 -m '\
-'pip_review --interactive; R --slave --no-save --no-restore -e '\
-'"update.packages(ask=FALSE, checkBuilt=TRUE)" && sudo tlmgr update --all'
 
     # Start Tmux attaching to an existing session named petobens or creating one
     # with such name (we also indicate the tmux.conf file location)
@@ -241,9 +251,6 @@ else
     # Update packages (using apt-get)
     alias aptu='sudo apt-get update && sudo apt-get dist-upgrade && sudo '\
 'apt-get autoremove'
-    # Update brew and python
-    alias ua='brew update && brew upgrade && brew cleanup; python3 -m '\
-'pip_review --interactive'
     # Open tmux loading config file
     alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s pedrof'
 fi
