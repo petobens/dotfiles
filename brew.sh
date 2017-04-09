@@ -7,7 +7,7 @@
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
-if ! type "brew" > /dev/null; then
+if ! type "brew" > /dev/null 2>&1; then
     brew_prefix='Home'
     brew_dir='/usr/local'
     if [[ ! "$OSTYPE" == 'darwin'* ]]; then
@@ -42,7 +42,7 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     brew install python2
 fi
-if ! type "tlmgr" > /dev/null; then
+if ! type "tlmgr" > /dev/null 2>&1; then
     read -p "Do you want to install latex (y/n)? " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then

@@ -8,7 +8,7 @@
 # Options {{{
 
 # Brew directory
-if type "brew" > /dev/null; then
+if type "brew" > /dev/null 2>&1; then
     brew_dir=$(brew --prefix)
 else
     if [[ "$OSTYPE" == 'darwin'* ]]; then
@@ -91,12 +91,12 @@ export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # Powerline prompt (to see changes when customizing use `powerline-daemon
 # --replace`)
-if type "powerline-daemon" > /dev/null ; then
+if type "powerline-daemon" > /dev/null 2>&1; then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
     POWERLINE_BASH_SELECT=1
     py_exec='python2'
-    if type "python3" > /dev/null ; then
+    if type "python3" > /dev/null 2>&1; then
         py_exec='python3'
     fi
     . $(dirname $($py_exec -c 'import powerline.bindings; '\
@@ -163,7 +163,7 @@ alias ht='htop'
 alias o='open'
 
 # Colorized cat (with Python's pygment library)
-if type "pygmentize" > /dev/null; then
+if type "pygmentize" > /dev/null 2>&1; then
     alias dog='pygmentize -O style=monokai -f terminal16m -g'
 fi
 
@@ -194,14 +194,14 @@ ua='brew update && brew upgrade && brew cleanup; '\
 if [ -f "$brew_dir"/bin/python2 ]; then
     ua=$ua'; python2 -m pip_review --interactive'
 fi
-if type "R" > /dev/null; then
+if type "R" > /dev/null 2>&1; then
     ua=$ua'; R --slave --no-save --no-restore -e '\
 '"update.packages(ask=FALSE, checkBuilt=TRUE)"'
 fi
-if type "tlmgr" > /dev/null; then
+if type "tlmgr" > /dev/null 2>&1; then
     ua=$ua'; sudo tlmgr update --all'
 fi
-if type "npm" > /dev/null; then
+if type "npm" > /dev/null 2>&1; then
     ua=$ua'; npm update -g'
 fi
 alias ua="$ua"
@@ -261,7 +261,7 @@ fi
 # }}}
 # Fzf {{{
 
-if type "fzf" > /dev/null; then
+if type "fzf" > /dev/null 2>&1; then
     # Enable completion and key bindings
     [[ $- == *i* ]] && . "$brew_dir/opt/fzf/shell/completion.bash" 2> /dev/null
     . "$brew_dir/opt/fzf/shell/key-bindings.bash"

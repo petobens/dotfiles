@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 02 Apr 2017
+# Last Modified: 09 Apr 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
@@ -19,10 +19,10 @@ current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     echo Xcode Command Line Tools...
-    if ! xcode-select --print-path > /dev/null; then
+    if ! xcode-select --print-path > /dev/null 2>&1; then
         xcode-select --install &> /dev/null
         # Wait until XCode command tools are installed
-        until xcode-select --print-path &> /dev/null; do
+        until xcode-select --print-path > /dev/null 2>&1; do
             sleep 5
         done
     fi
@@ -57,14 +57,14 @@ if [  -f "$brew_dir"/bin/python2 ]; then
     ipython3 kernel install
 fi
 
-if type "tlmgr" > /dev/null; then
+if type "tlmgr" > /dev/null 2>&1; then
     echo Latex...
     . "$current_dir/latex.sh"
 fi
 
 echo R...
 # TODO: complete this
-if type "R" > /dev/null; then
+if type "R" > /dev/null 2>&1; then
     mkdir -p "$brew_dir/lib/R/site-library"
 fi
 
