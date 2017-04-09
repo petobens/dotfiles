@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 05 Apr 2017
+" Last Modified: 09 Apr 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -2206,8 +2206,9 @@ augroup END
 " GUI and Terminal {{{
 
 if has('gui_running') || has('nvim')
-    " Disable cursor blinking in all modes
-    set guicursor+=a:blinkon0
+    " Disable cursor blinking in all modes, use bar in insert mode and
+    " underscore in replace mode
+    set guicursor+=a:blinkon0,i-ci:ver25,r-cr:hor20
 endif
 
 if has('gui_running')
