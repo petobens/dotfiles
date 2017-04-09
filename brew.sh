@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 02 Apr 2017
+# Last Modified: 09 Apr 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -88,8 +88,9 @@ fi
 brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags
 brew install unrar
-# FIXME: not installing on Linux due to ghc error
+# FIXME: the following do not install on Linux due to ghc error
 brew install shellcheck
+brew install pandoc
 
 # Remove outdated versions
 brew cleanup
