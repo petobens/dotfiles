@@ -1709,9 +1709,6 @@ augroup END
 " }}}
 " Neoterm {{{
 
-" FIXME Change colour and shape of cursor
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
-
 let g:neoterm_autoinsert = 1
 let g:neoterm_automap_keys = ''
 let g:neoterm_keep_term_open = 0
