@@ -201,6 +201,9 @@ fi
 if type "tlmgr" > /dev/null; then
     ua=$ua'; sudo tlmgr update --all'
 fi
+if type "npm" > /dev/null; then
+    ua=$ua'; npm update -g'
+fi
 alias ua="$ua"
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
