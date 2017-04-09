@@ -2206,9 +2206,13 @@ augroup END
 " GUI and Terminal {{{
 
 if has('gui_running') || has('nvim')
-    " Disable cursor blinking in all modes, use bar in insert mode and
-    " underscore in replace mode
-    set guicursor+=a:blinkon0,i-ci:ver25,r-cr:hor20
+    " If there are no guicursor settings, use bar in insert mode and underscore
+    " in replace mode
+    if &guicursor ==# ''
+        set guicursor=n-v-c:block,i-ci:ver25,r-cr:hor20
+    endif
+    " Disable cursor blinking in all modes (the blinking setting must go last)
+    set guicursor+=a:blinkon0
 endif
 
 if has('gui_running')
