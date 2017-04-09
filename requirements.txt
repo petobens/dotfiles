@@ -2,9 +2,10 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 30 Mar 2017
+# Last Modified: 09 Apr 2017
 #   Description: Usual python libraries
 # ==============================================================================
+beautysh
 bokeh
 cython
 flake8
