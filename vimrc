@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 10 Apr 2017
+" Last Modified: 11 Apr 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -421,6 +421,11 @@ map <tab> %
 set showmatch
 " How many tenths of a second to blink when showing matching pair
 set matchtime=1
+
+" Show the effect of substitute incrementally
+if has('nvim')
+    set inccommand=nosplit
+endif
 
 " }}}
 " Spelling and abbreviations {{{
