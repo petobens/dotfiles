@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 11 Apr 2017
+" Last Modified: 12 Apr 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1230,7 +1230,7 @@ call denite#custom#option('default', {
             \ 'auto_resize': 1,
             \ 'statusline': 0,
             \ 'winheight': 15,
-            \ 'updatetime': 50,
+            \ 'updatetime': 1,
             \ 'reversed': 1,
             \ 'prompt': '❯',
             \ 'prompt_highlight': 'Function',
