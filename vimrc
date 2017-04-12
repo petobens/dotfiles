@@ -2195,8 +2195,8 @@ augroup ps_vimlatex
     au!
     au Filetype tex nmap <silent> <buffer> <Leader>tc
                 \ <Plug>(vimtex-toc-open)
-    au Filetype tex nnoremap <silent> <buffer> <Leader>ll :Unite
-                \ -auto-preview vimtex_labels<CR>
+    au Filetype tex nnoremap <silent> <buffer> <Leader>ll :Denite
+                \ -auto-preview -vertical-preview vimtex_labels<CR>
     " Note the following can be called directly with cse, tse and tsd
     au Filetype tex nmap <silent> <buffer> <Leader>ce <Plug>(vimtex-env-change)
     au Filetype tex nmap <silent> <buffer> <Leader>ts
