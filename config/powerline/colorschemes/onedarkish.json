@@ -41,7 +41,7 @@
         },
         "user": {
             "fg": "onedarkish_black",
-            "bg": "onedarkish_light_blue",
+            "bg": "onedarkish_powerline_bg",
             "attrs": [
                 "bold"
             ]

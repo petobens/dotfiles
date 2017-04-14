@@ -143,7 +143,14 @@ bind "set completion-ignore-case on"
 bind "set menu-complete-display-prefix on" # show candidates before cycling
 bind "set show-all-if-ambiguous on"
 bind "set colored-stats on" # color completion candidates
-# bind "set show-mode-in-prompt on"  # Show mode in command prompt
+
+# Show mode in command prompt (note: 38 is fg color and 48 bg color; 2 means
+# truecolor (i.e rgb) and 5 256color)
+bind "set show-mode-in-prompt on"
+bind 'set vi-ins-mode-string \1\e[38;5;235;48;2;97;175;239;1m\2 I '\
+'\1\e[38;2;97;175;239;48;5;252;1m\2\1\e[0m\2'
+bind 'set vi-cmd-mode-string \1\e[38;5;235;48;2;152;195;121;1m\2 N '\
+'\1\e[38;2;152;195;121;48;5;252;1m\2\1\e[0m\2'
 
 # Cycle forward with TAB and backwards with S-Tab when using menu-complete
 bind -m vi-insert '"\C-i": menu-complete'
