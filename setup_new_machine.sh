@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 09 Apr 2017
+# Last Modified: 14 Apr 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
@@ -80,3 +80,8 @@ echo Symlinks...
 
 echo Nvim...
 nvim +qall
+
+if [[  "$OSTYPE" == 'darwin'* ]]; then
+    echo Mac OSX...
+    . "$current_dir/macos.sh"
+fi
