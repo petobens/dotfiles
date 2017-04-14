@@ -148,9 +148,9 @@ bind "set colored-stats on" # color completion candidates
 # truecolor (i.e rgb) and 5 256color)
 bind "set show-mode-in-prompt on"
 bind 'set vi-ins-mode-string \1\e[38;5;235;48;2;97;175;239;1m\2 I '\
-'\1\e[38;2;97;175;239;48;5;252;1m\2\1\e[0m\2\1\e[6 q\2'
+'\1\e[38;2;97;175;239;48;2;208;208;208;1m\2\1\e[0m\2\1\e[6 q\2'
 bind 'set vi-cmd-mode-string \1\e[38;5;235;48;2;152;195;121;1m\2 N '\
-'\1\e[38;2;152;195;121;48;5;252;1m\2\1\e[0m\2\1\e[2 q\2'
+'\1\e[38;2;152;195;121;48;2;208;208;208;1m\2\1\e[0m\2\1\e[2 q\2'
 # Switch to block cursor before executing a command
 bind -m vi-insert 'RETURN: "\e\n"'
 
