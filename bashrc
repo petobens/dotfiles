@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 04 Mar 2017
+# Last Modified: 14 Apr 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -158,7 +158,7 @@ alias u='cd ..'
 alias h='cd ~'
 alias q='exit'
 alias c='clear all'
-alias v='nvim'
+alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
 alias ht='htop'
 alias o='open'
 

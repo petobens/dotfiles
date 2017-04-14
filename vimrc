@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 13 Apr 2017
+" Last Modified: 14 Apr 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -2292,7 +2292,8 @@ endfunction
 
 augroup LastMod
     au!
-    au BufWritePre {*.*,vimrc,pentadactylrc,bash_profile} call s:LastModified()
+    au BufWritePre {*.*,vimrc,pentadactylrc,bash_profile,bashrc} call
+                \ s:LastModified()
 augroup END
 
 " }}}
