@@ -3,7 +3,7 @@
 #          File: latex.sh
 #        Author: Pedro Ferrari
 #       Created: 28 Mar 2017
-# Last Modified: 09 Apr 2017
+# Last Modified: 14 Apr 2017
 #   Description: Setup latex
 #===============================================================================
 # Download and install arara (we need java and maven first)
@@ -94,6 +94,7 @@ sudo tlmgr install titlesec
 sudo tlmgr install trimspaces
 sudo tlmgr install xpatch
 sudo tlmgr install xstring
+sudo tlmgr install wrapfig
 
 # Update all recently installed packages
 sudo tlmgr update all
