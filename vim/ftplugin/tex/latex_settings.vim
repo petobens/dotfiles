@@ -2,7 +2,7 @@
 "          File: latex_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2013
-" Last Modified: 27 Mar 2017
+" Last Modified: 14 Apr 2017
 "   Description: Latex settings
 "===============================================================================
 " TODOs:
@@ -597,11 +597,13 @@ function! s:ForwardInverseSearch(direction)
         if s:is_mac
             " Inverse search settings in Skim must be set directly from Skim
             " preferences Sync tab (i.e they cannot be set with flags) as a Custom
-            " preset with Command: `mvim` and Arguments: `--remote-silent
+            " preset with Command: `nvr` and Arguments: `--remote-silent
             " +"%line|foldo!" "%file"`
             " Note: to allow automatic reload, check the box that says `Check for
             " file changes` and then run the following command
                 " defaults write -app Skim SKAutoReloadFileUpdate -boolean true
+            " Note that for inverse search to work with nvim we need to install
+            " neovim-remote python module
             let open_cmd = 'open '
             if exists('$TMUX') && executable('reattach-to-user-namespace')
                 " In tmux we need to fix the open command
