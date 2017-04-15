@@ -13,9 +13,8 @@ if [ -d "/Applications/iTerm.app/" ]; then
     onedarkish_iterm="$cur_dir/onedarkish.itermcolors"
     if [ -f "$onedarkish_iterm" ]; then
         defaults write -app iTerm 'Custom Color Presets' -dict-add "onedarkish" "$(cat "$onedarkish_iterm")"
-        # TODO: apply this theme
     fi
-    # TODO: Add other iterm settings
+    defaults write -app iTerm QuitWhenAllWindowsClosed -bool true
 fi
 exit
 
@@ -23,5 +22,4 @@ exit
 if [ -d "/Applications/Skim.app/" ]; then
     # Auto reload files
     defaults write -app Skim SKAutoReloadFileUpdate -boolean true
-    # TODO: Set synctex
 fi
