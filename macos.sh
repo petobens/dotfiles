@@ -16,10 +16,13 @@ if [ -d "/Applications/iTerm.app/" ]; then
     fi
     defaults write -app iTerm QuitWhenAllWindowsClosed -bool true
 fi
-exit
 
 # Skim (PDF viewer)
 if [ -d "/Applications/Skim.app/" ]; then
     # Auto reload files
     defaults write -app Skim SKAutoReloadFileUpdate -boolean true
+    # Syntex (with neovim)
+    defaults write -app Skim SKTeXEditorPreset "Custom"
+    defaults write -app Skim SKTeXEditorCommand  "nvr"
+    defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line|foldo!\'\' \'\'%file\'\'"
 fi
