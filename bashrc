@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 14 Apr 2017
+# Last Modified: 15 Apr 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -126,7 +126,7 @@ bind -m vi-command '"j": ""'
 # Paste with p if in a tmux session
 if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
     # FIXME: This is flaky
-    bind -m vi-command -x '"p": "tmux set-buffer \"$(pbpaste)\"; tmux paste-buffer"'
+    bind -m vi-command -x '"p": "reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer"'
 fi
 
 # }}}
