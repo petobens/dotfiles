@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 09 Apr 2017
+" Last Modified: 21 Apr 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -465,7 +465,7 @@ function! s:RunYapf(...)
     let &l:formatprg = old_formatprg
 endfunction
 
-" Automatically run autopep8 and flake8 on save
+" Automatically run yapf and flake8 on save
 augroup py_linting
     au!
     au BufWritePost *.py call s:RunYapf() | silent noautocmd update |
@@ -1029,8 +1029,6 @@ inoremap <silent> <buffer> <F5> <ESC>:call
 vnoremap <silent> <buffer> <F5> :EvalVisualPyForeground<CR>
 
 " Linting (and import sorting)
-nnoremap <buffer> <Leader>rl :call <SID>RunFlake8()<CR>
-nnoremap <buffer> <Leader>ap :call <SID>RunAutoPep8()<CR>
 if exists(':ImpSort')
     nnoremap <buffer> <silent> <Leader>is :ImpSort<CR>
 endif
