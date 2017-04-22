@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 02 Apr 2017
+# Last Modified: 22 Apr 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 # Check bash major version
@@ -101,6 +101,11 @@ if type "arara" > /dev/null; then
     rm -rf "$HOME/.arararc.yaml"
     ln -s "$dotfiles_dir/arararc.yaml" "$HOME/.arararc.yaml"
     echo Created .arararc.yaml symlink
+fi
+if type "mutt" > /dev/null; then
+    rm -rf "$HOME/.config/.mutt"
+    ln -s "$dotfiles_dir/config/mutt" "$HOME/.config/mutt"
+    echo Created .config/mutt folder symlink
 fi
 if open -Ra "firefox"; then
     rm -rf "$HOME/.pentadactyl"
