@@ -2,17 +2,116 @@
 #          File: muttrc
 #        Author: Pedro Ferrari
 #       Created: 22 Apr 2017
-# Last Modified: 22 Apr 2017
+# Last Modified: 26 Apr 2017
 #   Description: My muttrc
 #===============================================================================
-# Basic options {{{
+# Paths {{{
 
 # Mail location
 set folder = ~/.mail
+set alias_file = ~/.mutt/aliases
+
+
+#  }}}
+# Basic options {{{
+
+# Set mailbox local storage format to the newest `Maildir` format
+set mbox_type = Maildir
+
+# Only use relevant headers (in specific order)
+ignore *
+unignore from: to: cc: date: subject:
+unhdr_order *
+hdr_order from: to: cc: date: subject:
+
+#  }}}
+# Index {{{
+
+# This is the list of emails inside a folder
+
+set date_format = "%d-%m-%y"
+set index_format = "[%Z] %D %-20.20F %s"
+
+# Sort like gmail does: by threads, according to the most recent e-mail in a
+# thread and without collapsing on unread messages
+set sort = threads
+set sort_aux = reverse-last-date-received
+set uncollapse_jump
+
+# Key bindings
+bind index gg first-entry
+bind index G last-entry
+bind index R group-reply
+bind index N search-opposite
+bind index zc collapse-thread  # actually toggle thread collapsing
+bind index zo collapse-thread
+
+#  }}}
+#  Pager {{{
+
+# This is where we see the email content
+
+# Number of lines to show
+set pager_index_lines = 10
+# Number of context lines to show
+set pager_context = 3
+# Don't go to the next message automatically
+set pager_stop
+# Scroll in menus
+set menu_scroll
+# Show tildes like in vim
+set tilde
+
+# Key bindings
+bind pager k previous-line
+bind pager j next-line
+bind pager gg top
+bind pager G bottom
+bind pager R group-reply
+bind pager N search-opposite
+# bind attach <return> view-mailcap  # view attachments properly
+
+#  }}}
+#  Composing {{{
+
+# Who am I?
+set realname = "Pedro Ferrari"
+
+# Forwarding: set format of subject and include message in forward)
+# Format of subject when forwarding
+set forward_format = "Fwd: %s"
+set forward_quote
+
+# Replying: dormat of quoting header, skip to compose when replying, reply to
+# whoever send the email and include message in reply.
+set attribution = "On %d, %n wrote:"
+set fast_reply
+set reverse_name
+set include
+
+# Use nvim to compose mails and eliminate odd line breaks
+set editor = "nvim +:silent+?^$"
+set text_flowed = yes
 
 #  }}}
 # Sidebar {{{
 
 set sidebar_visible
+set sidebar_width = 30
+
+# Bindings (from index and pager): up and down to switch between folder and
+# right arrow to enter/open a folder
+bind index,pager <down> sidebar-next
+bind index,pager <up> sidebar-prev
+bind index,pager <right> sidebar-open
 
 # }}}
+#  Statusline and colors {{{
+
+
+
+#  }}}
+#  Account settings {{{
+
+
+#  }}}
