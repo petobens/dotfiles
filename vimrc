@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 22 Apr 2017
+" Last Modified: 29 Apr 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -949,13 +949,14 @@ augroup ft_gauss
 augroup END
 
 " }}}
-" Mail {{{
+" Mail (and mutt) {{{
 
 augroup ft_mail
     au!
     au Filetype mail setlocal formatoptions=ta
     au Filetype mail setlocal textwidth=72
     au Filetype mail setlocal spell
+    au Filetype muttrc setlocal commentstring=#%s
 augroup END
 
 " }}}
