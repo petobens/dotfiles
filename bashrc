@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 15 Apr 2017
+# Last Modified: 01 May 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -157,6 +157,9 @@ bind -m vi-insert 'RETURN: "\e\n"'
 # Cycle forward with TAB and backwards with S-Tab when using menu-complete
 bind -m vi-insert '"\C-i": menu-complete'
 bind -m vi-insert '"\e[Z": menu-complete-backward'
+
+# Use bracketed paste (i.e distinguish between typed and pasted text)
+bind 'set enable-bracketed-paste on'
 
 # }}}
 # Alias {{{
