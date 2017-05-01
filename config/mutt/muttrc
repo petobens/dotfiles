@@ -2,7 +2,7 @@
 #          File: muttrc
 #        Author: Pedro Ferrari
 #       Created: 22 Apr 2017
-# Last Modified: 26 Apr 2017
+# Last Modified: 29 Apr 2017
 #   Description: My muttrc
 #===============================================================================
 # Paths {{{
@@ -10,7 +10,10 @@
 # Mail location
 set folder = ~/.mail
 set alias_file = ~/.mutt/aliases
-
+set header_cache = ~/.mutt/cache/headers
+set message_cachedir = ~/.mutt/cache/bodies
+set certificate_file = ~/.mutt/certificates
+set tmpdir = ~/.mutt/temp
 
 #  }}}
 # Basic options {{{
@@ -24,7 +27,7 @@ unignore from: to: cc: date: subject:
 unhdr_order *
 hdr_order from: to: cc: date: subject:
 
-#  }}}
+# }}}
 # Index {{{
 
 # This is the list of emails inside a folder
@@ -46,8 +49,8 @@ bind index N search-opposite
 bind index zc collapse-thread  # actually toggle thread collapsing
 bind index zo collapse-thread
 
-#  }}}
-#  Pager {{{
+# }}}
+# Pager {{{
 
 # This is where we see the email content
 
@@ -71,8 +74,8 @@ bind pager R group-reply
 bind pager N search-opposite
 # bind attach <return> view-mailcap  # view attachments properly
 
-#  }}}
-#  Composing {{{
+# }}}
+# Composing {{{
 
 # Who am I?
 set realname = "Pedro Ferrari"
@@ -93,7 +96,7 @@ set include
 set editor = "nvim +:silent+?^$"
 set text_flowed = yes
 
-#  }}}
+# }}}
 # Sidebar {{{
 
 set sidebar_visible
@@ -106,12 +109,18 @@ bind index,pager <up> sidebar-prev
 bind index,pager <right> sidebar-open
 
 # }}}
-#  Statusline and colors {{{
+# Statusline and colors {{{
 
 
 
-#  }}}
-#  Account settings {{{
+# }}}
+# Account settings {{{
 
+set imap_user = 'ferrari_pedro@yahoo.com'
+# set spoolfile = "+INBOX"
+set spoolfile = imaps://imap.mail.yahoo.com:993/INBOX
+set folder = "imaps://imap.mail.yahoo.com:993"
+set smtp_url = "smtps://ferrari_pedro@smtp.mail.yahoo.com:465"
+set postponed = "Draft"
 
-#  }}}
+# }}}
