@@ -2,9 +2,14 @@
 #          File: muttrc
 #        Author: Pedro Ferrari
 #       Created: 22 Apr 2017
-# Last Modified: 29 Apr 2017
+# Last Modified: 01 May 2017
 #   Description: My muttrc
 #===============================================================================
+# Preamble {{{
+
+macro index,pager \Cr "<enter-command>source ~/.config/mutt/muttrc<enter>"
+
+# }}}
 # Paths {{{
 
 # Mail location
@@ -32,8 +37,11 @@ hdr_order from: to: cc: date: subject:
 
 # This is the list of emails inside a folder
 
-set date_format = "%d-%m-%y"
-set index_format = "[%Z] %D %-20.20F %s"
+# Show message number, status flag, date, author name, size and subject
+set index_format = "%4C [%Z] %D %-20.20L (%?l?%4l&%4c?) %s"
+
+# Define date format
+set date_format = "%d-%m-%y %H:%M"
 
 # Sort like gmail does: by threads, according to the most recent e-mail in a
 # thread and without collapsing on unread messages
@@ -48,6 +56,8 @@ bind index R group-reply
 bind index N search-opposite
 bind index zc collapse-thread  # actually toggle thread collapsing
 bind index zo collapse-thread
+bind index \Cd half-down
+bind index \Cu half-up
 
 # }}}
 # Pager {{{
@@ -72,6 +82,8 @@ bind pager gg top
 bind pager G bottom
 bind pager R group-reply
 bind pager N search-opposite
+bind pager \Cd half-down
+bind pager \Cu half-up
 # bind attach <return> view-mailcap  # view attachments properly
 
 # }}}
@@ -111,7 +123,7 @@ bind index,pager <right> sidebar-open
 # }}}
 # Statusline and colors {{{
 
-
+source ~/.config/mutt/heraldish_mutt
 
 # }}}
 # Account settings {{{
