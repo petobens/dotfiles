@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 01 May 2017
+# Last Modified: 06 May 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -173,6 +173,7 @@ alias c='clear all'
 alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
 alias ht='htop'
 alias o='open'
+alias rg='ranger'
 
 # Colorized cat (with Python's pygment library)
 if type "pygmentize" > /dev/null 2>&1; then
