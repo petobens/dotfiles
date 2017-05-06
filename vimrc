@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 29 Apr 2017
+" Last Modified: 06 May 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1692,7 +1692,7 @@ let g:airline#extensions#neomake#enabled = 0 " Don't show on Airline
 " Python
 let g:neomake_python_enabled_makers = ['flake8', 'mypy']
 let g:neomake_python_flake8_args = ['--ignore=E402,W503']
-let g:neomake_python_mypy_args = ['--ignore-missing-imports', '--fast-parser',
+let g:neomake_python_mypy_args = ['--ignore-missing-imports',
             \ '--follow-imports=skip', '--python-version', '3.6']
 
 " Javascript
