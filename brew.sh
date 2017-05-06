@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 22 Apr 2017
+# Last Modified: 06 May 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -89,6 +89,7 @@ brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags
 brew install unrar
 brew install --HEAD neomutt --with-sidebar-patch --with-notmuch-patch
+brew install ranger
 # FIXME: the following do not install on Linux due to ghc error
 brew install shellcheck
 brew install pandoc
