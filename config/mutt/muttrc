@@ -26,6 +26,9 @@ set tmpdir = ~/.mutt/temp
 # Set mailbox local storage format to the newest `Maildir` format
 set mbox_type = Maildir
 
+# Don't ask for confirmation
+set delete
+
 # Only use relevant headers (in specific order)
 ignore *
 unignore from: to: cc: date: subject:
