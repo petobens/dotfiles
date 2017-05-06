@@ -25,13 +25,15 @@ class fzf_select(Command):
     def execute(self):
         if self.quantifier:
             # match only directories
-            command = "find -L . \( -path '*/\.*' -o -fstype 'dev' -o -fstype 'proc' \) -prune \
-            -o -type d -print 2> /dev/null | sed 1d | cut -b3- | fzf +m"
+            command = "find -L . \( -path '*/\.*' -o -fstype 'dev' -o " \
+                "-fstype 'proc' \) -prune -o -type d -print 2> /dev/null | " \
+                "sed 1d | cut -b3- | fzf +m"
 
         else:
             # match files and directories
-            command = "find -L . \( -path '*/\.*' -o -fstype 'dev' -o -fstype 'proc' \) -prune \
-            -o -print 2> /dev/null | sed 1d | cut -b3- | fzf +m"
+            command = "find -L . \( -path '*/\.*' -o -fstype 'dev' -o " \
+                "-fstype 'proc' \) -prune -o -print 2> /dev/null | sed 1d | " \
+                "cut -b3- | fzf +m"
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, stderr = fzf.communicate()
@@ -57,7 +59,8 @@ class show_files_in_finder(Command):
         ])
         reveal_script = "tell application \"Finder\" to reveal {{{0}}}".format(
             files)
-        activate_script = "tell application \"Finder\" to set frontmost to true"
+        activate_script = "tell application \"Finder\" to set frontmost to " \
+            "true"
         script = "osascript -e '{0}' -e '{1}'".format(reveal_script,
                                                       activate_script)
         self.fm.notify(script)
