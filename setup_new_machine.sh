@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 14 Apr 2017
+# Last Modified: 07 May 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
@@ -18,8 +18,8 @@ sudo echo -n
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [[  "$OSTYPE" == 'darwin'* ]]; then
-    echo Xcode Command Line Tools...
     if ! xcode-select --print-path > /dev/null 2>&1; then
+        echo Xcode Command Line Tools...
         xcode-select --install &> /dev/null
         # Wait until XCode command tools are installed
         until xcode-select --print-path > /dev/null 2>&1; do
@@ -81,7 +81,5 @@ echo Symlinks...
 echo Nvim...
 nvim +qall
 
-if [[  "$OSTYPE" == 'darwin'* ]]; then
-    echo Mac OSX...
-    . "$current_dir/macos.sh"
-fi
+echo Extra settings...
+. "$current_dir/extras.sh"

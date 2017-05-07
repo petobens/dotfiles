@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #===============================================================================
-#          File: macos.sh
+#          File: extras.sh
 #        Author: Pedro Ferrari
 #       Created: 14 Apr 2017
-# Last Modified: 15 Apr 2017
+# Last Modified: 07 May 2017
 #   Description: Mac OSX (and apps) settings
 #===============================================================================
 cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -25,4 +25,14 @@ if [ -d "/Applications/Skim.app/" ]; then
     defaults write -app Skim SKTeXEditorPreset "Custom"
     defaults write -app Skim SKTeXEditorCommand  "nvr"
     defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line|foldo!\'\' \'\'%file\'\'"
+fi
+
+# Install ranger plugins
+if type "ranger" > /dev/null 2>&1; then
+    git clone https://github.com/alexanderjeurissen/ranger_devicons
+    (
+        cd ranger_devicons || exit
+        make install
+    )
+    rm -rf ranger_devicons
 fi
