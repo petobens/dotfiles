@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 14 Apr 2017
+# Last Modified: 07 May 2017
 #   Description: Usual python libraries
 # ==============================================================================
 beautysh
@@ -12,10 +12,10 @@ flake8
 jedi
 jupyter
 matplotlib
-mypy; python_version >= '3.2'
+mypy; python_version >= '3.5'
 mysql-connector==2.1.4
 neovim
-neovim-remote; python_version >= '3.2'
+neovim-remote; python_version >= '3.5'
 numpy
 pandas
 pip-review
@@ -23,6 +23,7 @@ powerline-status
 powerline-gitstatus
 scikit-learn
 pyhive
+ranger-fm; python_version >= '3.5'
 scipy
 sqlparse
 vim-vint
