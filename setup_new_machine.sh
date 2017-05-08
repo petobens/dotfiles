@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 07 May 2017
+# Last Modified: 08 May 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
@@ -33,16 +33,18 @@ tic "$current_dir/xterm-256color-italic.terminfo"
 
 echo Fonts...
 if [[  "$OSTYPE" == 'darwin'* ]]; then
-    cd ~/Library/Fonts || exit
+    brew tap caskroom/fonts
+    brew cask install font-sourcecodepro-nerd-font
 else
     mkdir -p ~/.local/share/fonts
     cd ~/.local/share/fonts || exit
+    curl -fLo "Sauce Code Pro Nerd Font Complete.ttf" \
+    https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/\
+    patched-fonts/SourceCodePro/Regular/complete/\
+    Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
+    echo Installed Sauce Code Pro Nerd Font Complete.ttf font
+    cd "$current_dir" || exit
 fi
-curl -fLo "Sauce Code Pro Nerd Font Complete.ttf" \
-https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/\
-SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
-echo Installed Sauce Code Pro Nerd Font Complete.ttf font
-cd "$current_dir" || exit
 
 echo Brew...
 . "$current_dir/brew.sh"
