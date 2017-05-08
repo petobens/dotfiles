@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 21 Apr 2017
+" Last Modified: 08 May 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -451,17 +451,24 @@ function! s:RunYapf(...)
         ImpSort
     endif
 
-    " Yapf can fail so we don't use format gq motions here (we always run yapf
-    " on the whole file)
+    " Change shellredir to avoid inserting error output into the buffer (i.e
+    " don't include stderr in output buffer)
+    let shrd = &shellredir
+    set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let save_cursor = getcurpos()
     let &l:formatprg = "yapf --style='{based_on_style: pep8, " .
                 \ "blank_line_before_nested_class_or_def: true}'"
-    silent execute '0,$!' . &l:formatprg
+    let save_cursor = getcurpos()
+    if a:0 && a:1 ==# 'visual'
+        execute 'normal! gvgq'
+    else
+        execute 'silent! normal! gggqG'
+    endif
     if v:shell_error == 1
         silent undo
     endif
     call setpos('.', save_cursor)
+    let &shellredir = shrd
     let &l:formatprg = old_formatprg
 endfunction
 
@@ -1033,7 +1040,7 @@ if exists(':ImpSort')
     nnoremap <buffer> <silent> <Leader>is :ImpSort<CR>
 endif
 " The visual map messes up proper comment indentation/formatting:
-" vnoremap <buffer> Q :call <SID>RunAutoPep8('visual')<CR>
+vnoremap <buffer> Q :call <SID>RunYapf('visual')<CR>
 nnoremap <buffer> <Leader>yp :call <SID>RunYapf()<CR>
 
 " Tests and coverage (py.test dependant)
