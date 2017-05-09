@@ -71,7 +71,8 @@ let g:deoplete#omni#input_patterns.tex = '\\(?:'
     \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
     \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
     \ .')'
-let g:deoplete#omni#input_patterns.gitcommit = '#'
+let g:deoplete#omni#input_patterns.gitcommit = '((?:F|f)ix(?:es)?\s|'
+    \ . '(?:C|c)lose(?:s)?\s|(?:S|s)ee\s)\S*'
 
 " Mappings
 if dein#tap('deoplete') == 1
