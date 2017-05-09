@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 06 May 2017
+# Last Modified: 09 May 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 # Check bash major version
@@ -48,14 +48,30 @@ fi
 if type "git" > /dev/null; then
     rm -rf "$HOME/.gitignore"
     rm -rf "$HOME/.gitconfig"
-    ln -s "$dotfiles_dir/git/gitignore" "$HOME/.gitignore"
+    ln -s "$dotfiles_dir/gitignore" "$HOME/.gitignore"
     echo Created .gitignore symlink
+    read -r -e -p "Enter git user name: " username
+    read -r -e -p "Enter git mail: " mail
     if [[ "$OSTYPE" == 'darwin'* ]]; then
-        ln -s "$dotfiles_dir/git/gitconfig_mac" "$HOME/.gitconfig"
+        credential_helper='osxkeychain'
     else
-        ln -s "$dotfiles_dir/git/gitconfig_linux" "$HOME/.gitconfig"
+        credential_helper='cache --timeout 3600'
     fi
-    echo Created .gitconfig symlink
+    cat > "$HOME/.gitconfig" << EOF
+[user]
+    name = $username
+    email = $mail
+[push]
+    default = simple
+[core]
+    editor = nvim
+    excludesfile = ~/.gitignore
+[web]
+    browser = start
+[credential]
+    helper = $credential_helper
+EOF
+    echo Created .gitconfig file
 fi
 if type "tmux" > /dev/null; then
     rm -rf "$HOME/.tmux"
@@ -103,7 +119,7 @@ if type "arara" > /dev/null; then
     echo Created .arararc.yaml symlink
 fi
 if type "mutt" > /dev/null; then
-    rm -rf "$HOME/.config/.mutt"
+    rm -rf "$HOME/.config/mutt"
     ln -s "$dotfiles_dir/config/mutt" "$HOME/.config/mutt"
     echo Created .config/mutt folder symlink
 fi

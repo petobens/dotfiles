@@ -16,6 +16,7 @@
 # Python
 __pycache__/
 *.pyc
+.mypy_cache/
 /venv/
 .coverage
 .ipynb_checkpoints
