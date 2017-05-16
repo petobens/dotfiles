@@ -2,14 +2,14 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 07 May 2017
+# Last Modified: 16 May 2017
 #   Description: Usual python libraries
 # ==============================================================================
-beautysh
+beautysh; python_version >= '3.5'
 bokeh
 cython
-flake8
-jedi
+flake8; python_version >= '3.5'
+jedi; python_version >= '3.5'
 jupyter
 matplotlib
 mypy; python_version >= '3.5'
@@ -19,14 +19,14 @@ neovim-remote; python_version >= '3.5'
 numpy
 pandas
 pip-review
-powerline-status
-powerline-gitstatus
+powerline-status; python_version >= '3.5'
+powerline-gitstatus; python_version >= '3.5'
 scikit-learn
 pyhive
 ranger-fm; python_version >= '3.5'
 scipy
-sqlparse
-vim-vint
+sqlparse; python_version >= '3.5'
+vim-vint; python_version >= '3.5'
 xlrd
 yamllint
-yapf
+yapf; python_version >= '3.5'
