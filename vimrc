@@ -2,13 +2,14 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 06 May 2017
+" Last Modified: 21 May 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
 " Try the job feature: skywind3000/asyncrun.vim or neomake to replace dispatch?
 " SQL support?
 " Filter to convert markdown to html, useful for mails
+" Try dash or investigate for doc searching
 
 " Preamble {{{
 
@@ -29,7 +30,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     " Set python3 host (i.e executable)
     if s:is_mac
-        " let g:python3_host_prog = '/usr/local/bin/python3'
+        let g:python3_host_prog = '/usr/local/bin/python3'
     elseif s:is_linux
         " let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
     endif

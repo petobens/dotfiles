@@ -2,7 +2,7 @@
 "          File: deoplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 08 May 2017
+" Last Modified: 21 May 2017
 "   Description: Deoplete configuration
 "===============================================================================
 " Autoclose preview when completion is finished
@@ -70,6 +70,7 @@ let g:deoplete#omni#input_patterns.tex = '\\(?:'
     \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
     \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
     \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
+    \ . '|\w*'
     \ .')'
 let g:deoplete#omni#input_patterns.gitcommit = '((?:F|f)ix(?:es)?\s|'
     \ . '(?:C|c)lose(?:s)?\s|(?:R|r)esolve(?:s)?\s|(?:S|s)ee\s)\S*'
