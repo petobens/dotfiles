@@ -30,7 +30,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     " Set python3 host (i.e executable)
     if s:is_mac
-        let g:python3_host_prog = '/usr/local/bin/python3'
+        " let g:python3_host_prog = '/usr/local/bin/python3'
     elseif s:is_linux
         " let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
     endif
@@ -2418,6 +2418,20 @@ function! s:SelectIndent()
 endfunction
 
 nnoremap <silent> <Leader>si :call <SID>SelectIndent()<CR>
+
+" }}}
+" Google it {{{
+
+function! s:goog(pat, lucky)
+  let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
+  let q = substitute(q, '[[:punct:] ]',
+       \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
+  call system(printf('open "https://www.google.com/search?%sq=%s"',
+                   \ a:lucky ? 'btnI&' : '', q))
+endfunction
+
+nnoremap <leader>? :call <SID>goog(expand("<cWORD>"), 0)<cr>
+nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
 
 " }}}
 
