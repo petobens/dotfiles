@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 21 May 2017
+" Last Modified: 25 May 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1368,6 +1368,9 @@ endif
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
             \ '.gitignore': '', 'vimrc': '', '.vimrc': '', 'bashrc': '',
             \ '.bashrc': '', 'bash_profile': '', '.bash_profile': ''}
+
+" Disable denite integration (because it makes denite really slow)
+let g:webdevicons_enable_denite = 0
 
 " }}}
 " Dispatch {{{
