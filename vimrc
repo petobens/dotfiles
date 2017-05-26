@@ -125,6 +125,11 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
 
+    " Javascript
+    call dein#add('carlitux/deoplete-ternjs', {'on_ft' : 'javascript'})
+    call dein#add('ternjs/tern_for_vim',
+                \ {'on_ft' : 'javascript', 'build': 'npm install'})
+
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
     call dein#add('tpope/vim-dispatch')
@@ -1873,6 +1878,16 @@ let g:tagbar_map_openallfolds = 'zr'
 
 " Mappings
 nnoremap <silent> <Leader>tb :TagbarToggle<CR>
+
+" }}}
+" Tern {{{
+
+" Use deoplete
+let g:tern_request_timeout = 1
+
+" Use tern_for_vim
+let g:tern#command = ['tern']
+let g:tern#arguments = ['--persistent']
 
 " }}}
 " Ultisnips {{{

@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 08 May 2017
+# Last Modified: 26 May 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
@@ -64,15 +64,16 @@ if type "tlmgr" > /dev/null 2>&1; then
     . "$current_dir/latex.sh"
 fi
 
-echo R...
 # TODO: complete this
 if type "R" > /dev/null 2>&1; then
+    echo R...
     mkdir -p "$brew_dir/lib/R/site-library"
 fi
 
-echo Node.js...
-npm install -g eslint
-npm install -g jsonlint
+if type "npm" > /dev/null 2>&1; then
+    echo Node.js...
+    . "$current_dir/npm.sh"
+fi
 
 echo Ruby...
 sudo gem install sqlint --conservative

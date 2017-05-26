@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 07 May 2017
+# Last Modified: 26 May 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -64,7 +64,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     brew tap homebrew/science
     brew install R
 fi
-brew install node
+read -p "Do you want to install Node.js (y/n)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    brew install node
+fi
 
 # Neovim and tmux latest versions
 brew tap neovim/neovim
