@@ -2,7 +2,7 @@
 #          File: eslintrc.yaml
 #        Author: Pedro Ferrari
 #       Created: 02 Dec 2016
-# Last Modified: 22 Jan 2017
+# Last Modified: 26 May 2017
 #   Description: My eslint rc file
 # ==============================================================================
 ---
@@ -11,6 +11,7 @@ extends: ['eslint:recommended']
 env:
     es6: true
     node: true
+    browser: true
 
 rules:
     brace-style: [2, '1tbs']
