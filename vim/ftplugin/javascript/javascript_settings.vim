@@ -2,7 +2,7 @@
 "          File: javascript_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 02 Dec 2016
-" Last Modified: 14 Mar 2017
+" Last Modified: 26 May 2017
 "   Description: My Javascript settings
 "===============================================================================
 " Installation notes {{{
@@ -396,8 +396,5 @@ nnoremap <silent> <buffer> <F5> :call
 inoremap <silent> <buffer> <F5> <ESC>:call
             \ <SID>RunJS('normal', 'foreground_os')<CR>
 vnoremap <silent> <buffer> <F5> :EvalVisualJSForeground<CR>
-
-" Linting
-nnoremap <buffer> <Leader>rl :call <SID>RunEsLint()<CR>
 
 " }}}

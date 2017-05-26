@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 25 May 2017
+" Last Modified: 26 May 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1888,6 +1888,15 @@ let g:tern_request_timeout = 1
 " Use tern_for_vim
 let g:tern#command = ['tern']
 let g:tern#arguments = ['--persistent']
+
+augroup ps_tern
+    au!
+    au Filetype javascript nmap <silent> <buffer> <Leader>jd :TernDef<CR>
+    au Filetype javascript nmap <silent> <buffer> <Leader>rn :TernRename<CR>
+    au Filetype javascript nmap <silent> <buffer> K :TernDoc<CR>
+    au Filetype javascript nmap <silent> <buffer> <Leader>ap :TernRefs<CR>
+    au BufRead,BufNewFile *.{javascript,js} setlocal omnifunc=tern#Complete
+augroup END
 
 " }}}
 " Ultisnips {{{
