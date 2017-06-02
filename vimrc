@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 26 May 2017
+" Last Modified: 02 Jun 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -126,6 +126,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
 
     " Javascript
+    call dein#add('pangloss/vim-javascript', {'on_ft' : 'javascript'})
     call dein#add('carlitux/deoplete-ternjs', {'on_ft' : 'javascript'})
     call dein#add('ternjs/tern_for_vim',
                 \ {'on_ft' : 'javascript', 'build': 'npm install'})
