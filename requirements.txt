@@ -2,7 +2,7 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 16 May 2017
+# Last Modified: 01 Jun 2017
 #   Description: Usual python libraries
 # ==============================================================================
 beautysh; python_version >= '3.5'
@@ -13,7 +13,8 @@ jedi; python_version >= '3.5'
 jupyter
 matplotlib
 mypy; python_version >= '3.5'
-mysql-connector==2.1.4
+# Note: mysql connector needs protobuf; see https://stackoverflow.com/a/43066829/2149400
+mysql-connector
 neovim
 neovim-remote; python_version >= '3.5'
 numpy

@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 26 May 2017
+# Last Modified: 01 Jun 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -78,6 +78,7 @@ brew install --HEAD tmux
 # Databases
 brew install postgresql
 brew install mysql
+brew install protobuf # Required by python's mysql-connector
 brew install redis
 
 # Other useful binaries
