@@ -2,13 +2,13 @@
 "          File: deoplete_rc.vim
 "        Author: Pedro Ferrari
 "       Created: 12 Sep 2016
-" Last Modified: 26 May 2017
+" Last Modified: 03 Jun 2017
 "   Description: Deoplete configuration
 "===============================================================================
 " Autoclose preview when completion is finished
 augroup ps_deoplete
     au!
-    au CompleteDone * pclose!
+    au CompleteDone * silent! pclose!
 augroup END
 
 " Custom settings
