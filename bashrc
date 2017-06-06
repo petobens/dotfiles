@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 06 May 2017
+# Last Modified: 05 Jun 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -241,10 +241,11 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
     # session called pedrof or attaching to an existing one with that name.
     # Add -X after ssh to enable X11 forwarding
-    alias emr='ssh emr -t tmux new -A -s pedrof'
+    alias emr='ssh pedrof@stg-amber-pivot.jampp.com -t tmux new -A -s pedrof'
     # Presto client
-    alias pcli='ssh emr -t tmux new -A -s pedrof '\
-'"presto-cli\ --catalog\ hive\ --schema\ fault\ --user\ pedrof"'
+    alias pcli='ssh pedrof@stg-amber-pivot.jampp.com -t tmux new -A -s pedrof '\
+'"presto-cli\ --server\ emr-prd-queries.jampp.com:8889\ --catalog\ hive\ '\
+'--schema\ aleph\ --user\ pedrof"'
     # Gerry instance (with tmux)
     alias ui='ssh gerry'
     # When using linux brew we need to specify a full path to the tmux
