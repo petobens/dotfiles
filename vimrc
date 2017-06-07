@@ -1490,6 +1490,10 @@ augroup ps_fugitive
     au Filetype gitcommit nmap <silent> <buffer> Q q
     " Open git previous commits unfolded since we use Glog for the current file:
     au Filetype git setlocal foldlevel=1
+    " Use rhubarb omnifunc in git commit messages
+    au Filetype gitcommit setlocal omnifunc=rhubarb#omnifunc
+    au BufEnter *.{git/COMMIT_EDITMSG,gitcommit}
+                \ setlocal omnifunc=rhubarb#omnifunc
 augroup END
 
 function! s:BufEnterCommit()
