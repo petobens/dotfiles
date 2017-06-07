@@ -130,6 +130,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('carlitux/deoplete-ternjs', {'on_ft' : 'javascript'})
     call dein#add('ternjs/tern_for_vim',
                 \ {'on_ft' : 'javascript', 'build': 'npm install'})
+    call dein#add('chrisbra/Colorizer', {'on_cmd': 'ColorToggle'})
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
@@ -1209,6 +1210,12 @@ nmap <silent> <Leader>6 <Plug>AirlineSelectTab6
 nmap <silent> <Leader>7 <Plug>AirlineSelectTab7
 nmap <silent> <Leader>8 <Plug>AirlineSelectTab8
 nmap <silent> <Leader>9 <Plug>AirlineSelectTab9
+
+" }}}
+" Colorizer {{{
+
+let g:colorizer_auto_filetype='css,html'
+nnoremap <silent> <Leader>cz :ColorToggle<CR>
 
 " }}}
 " Colorscheme {{{
