@@ -691,6 +691,28 @@ function! s:GoToFileSplit()
 endfunction
 nnoremap <silent> gf :call <SID>GoToFileSplit()<CR>
 
+" Diff in split window
+function! s:DiffFileSplit()
+    let win_id = win_getid()
+    let other_file = input('Input file for diffing: ', '', 'file')
+    if other_file == ''
+        return
+    endif
+    if winwidth(0) <= 2 * (&tw ? &tw : 80)
+        let diff_cmd = 'diffsplit '
+    else
+        let diff_cmd = 'vert diffsplit '
+    endif
+    execute diff_cmd . other_file
+    call win_gotoid(win_id)
+    normal! gg]c
+endfunction
+nnoremap <silent> <Leader>ds :call <SID>DiffFileSplit()<CR>
+nnoremap <silent> <Leader>de :diffoff!<CR>
+" Use [h and ]h for jumping between hunks (changes)
+nnoremap <expr> ]h &diff ? ']c' : ']h'
+nnoremap <expr> [h &diff ? '[c' : '[h'
+
 " }}}
 " Write, save and quit {{{
 
@@ -1314,7 +1336,7 @@ nnoremap <silent> <Leader>he :Denite help<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>sh :Denite history:search<CR>
 nnoremap <silent> <Leader>ch :Denite history:cmd<CR>
-nnoremap <silent> <Leader>ds :Denite line:forward<CR>
+nnoremap <silent> <Leader>dl :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
