@@ -2020,9 +2020,6 @@ if dein#tap('unite') == 1
     " Sort candidates in buffer source by word
     call unite#custom#source('buffer', 'sorters',
                 \ ['converter_word', 'sorter_word'])
-    " Quickfix highlighting
-    call unite#custom_source('quickfix', 'converters',
-                \ 'converter_quickfix_default')
 endif
 
 let g:unite_data_directory = $CACHE . '/plugins/unite'
