@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 07 Jun 2017
+" Last Modified: 09 Jun 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1745,7 +1745,9 @@ let g:neomake_javascript_eslint_args = ['--no-color', '--format', 'compact',
 let g:neomake_javascript_eslint_errorformat = ''.
         \ '%E%f: line %l\, col %c\, Error - %m,' .
         \ '%W%f: line %l\, col %c\, Warning - %m, %-G%.%#'
-
+" Html
+" let g:neomake_html_enabled_makers = ['htmlhint']
+" let g:neomake_html_htmlhint_args = ['--no-color', '--format', 'unix']
 " Bash
 let g:neomake_sh_enabled_makers = ['shellcheck']
 
@@ -1753,7 +1755,7 @@ let g:neomake_sh_enabled_makers = ['shellcheck']
 " other specific filetype settings in ftplugin folder)
 augroup pl_neomake
     au!
-    au BufWritePost *.{vim,yaml} silent Neomake
+    au BufWritePost *.{vim,yaml,html} silent Neomake
 augroup END
 
 " }}}

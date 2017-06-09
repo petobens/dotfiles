@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 25 May 2017
+# Last Modified: 09 Jun 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 # Check bash major version
@@ -132,6 +132,11 @@ if type "tern" > /dev/null 2>&1; then
     rm -rf "$HOME/.tern-config"
     ln -s "$dotfiles_dir/tern-config" "$HOME/.tern-config"
     echo Created .tern-config symlink
+fi
+if type "tidy" > /dev/null 2>&1; then
+    rm -rf "$HOME/.tidy.conf"
+    ln -s "$dotfiles_dir/tidy.conf" "$HOME/.tidy.conf"
+    echo Created .tidy.conf symlink
 fi
 if open -Ra "firefox"; then
     rm -rf "$HOME/.pentadactyl"

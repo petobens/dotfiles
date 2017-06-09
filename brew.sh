@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 01 Jun 2017
+# Last Modified: 09 Jun 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -97,6 +97,7 @@ brew install --HEAD neomutt --with-sidebar-patch --with-notmuch-patch
 # FIXME: the following do not install on Linux due to ghc error
 brew install shellcheck
 brew install pandoc
+brew install tidy
 
 # Remove outdated versions
 brew cleanup
