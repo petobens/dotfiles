@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 06 Jun 2017
+# Last Modified: 10 Jun 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -254,6 +254,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 '"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
 
     # Fix open in tmux (requires installing reattach-to-user-namespace)
+    # Not need any more? https://github.com/tmux/tmux/commit/78352fdd328b611d93
     if [[ '$TMUX' ]]; then
         alias open='reattach-to-user-namespace open'
     fi
