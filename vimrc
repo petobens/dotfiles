@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 09 Jun 2017
+" Last Modified: 11 Jun 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -927,6 +927,15 @@ augroup ft_crontab
 augroup END
 
 " }}}
+" Html {{{
+
+augroup ft_html
+    au!
+    au Filetype html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    " au FileType html nnoremap <buffer><silent> <F7> :silent! ! start %<CR>
+augroup END
+
+" }}}
 " Javascript {{{
 
 augroup ft_js
@@ -990,14 +999,13 @@ augroup ft_mail
 augroup END
 
 " }}}
-" Markdown/Html {{{
+" Markdown {{{
 
 " Note: Most Markdown settings are in ftplugin folder
 augroup ft_markdown
     au!
     au BufNewFile,BufReadPost *.md set filetype=markdown
     au FileType markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    au FileType html nnoremap <buffer><silent> <F7> :silent! ! start %<CR>
 augroup END
 
 " }}}
@@ -1385,6 +1393,9 @@ call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
 call denite#custom#map('insert', '<C-e>', '<denite:do_action:feedkeys>',
             \ 'noremap')
+" FIXME: Not quite working (denite should restart upon rentering buffer)
+call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
+call denite#custom#map('normal', '<C-r>', '<denite:restart>', 'noremap')
 
 " }}}
 " Devicons {{{
@@ -1746,7 +1757,7 @@ let g:neomake_javascript_eslint_errorformat = ''.
         \ '%E%f: line %l\, col %c\, Error - %m,' .
         \ '%W%f: line %l\, col %c\, Warning - %m, %-G%.%#'
 " Html
-" let g:neomake_html_enabled_makers = ['htmlhint']
+let g:neomake_html_enabled_makers = ['tidy']
 " let g:neomake_html_htmlhint_args = ['--no-color', '--format', 'unix']
 " Bash
 let g:neomake_sh_enabled_makers = ['shellcheck']
@@ -1755,7 +1766,7 @@ let g:neomake_sh_enabled_makers = ['shellcheck']
 " other specific filetype settings in ftplugin folder)
 augroup pl_neomake
     au!
-    au BufWritePost *.{vim,yaml,html} silent Neomake
+    au BufWritePost *.{vim,yaml} silent Neomake
 augroup END
 
 " }}}
@@ -1770,6 +1781,7 @@ if executable('ipython3')
 else
     let g:neoterm_repl_python = 'python3'
 endif
+let g:neoterm_direct_open_repl = 1
 
 " Functions
 function! s:OpenNeotermSplit(position)
