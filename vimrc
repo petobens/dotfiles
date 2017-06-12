@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 11 Jun 2017
+" Last Modified: 12 Jun 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1758,7 +1758,8 @@ let g:neomake_javascript_eslint_errorformat = ''.
         \ '%W%f: line %l\, col %c\, Warning - %m, %-G%.%#'
 " Html
 let g:neomake_html_enabled_makers = ['tidy']
-" let g:neomake_html_htmlhint_args = ['--no-color', '--format', 'unix']
+let g:neomake_html_tidy_args = ['-e', '-q', '--gnu-emacs', 'true',
+            \ '--show-body-only', 'yes']
 " Bash
 let g:neomake_sh_enabled_makers = ['shellcheck']
 
