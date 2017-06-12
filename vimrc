@@ -1757,9 +1757,9 @@ let g:neomake_javascript_eslint_errorformat = ''.
         \ '%E%f: line %l\, col %c\, Error - %m,' .
         \ '%W%f: line %l\, col %c\, Warning - %m, %-G%.%#'
 " Html
-let g:neomake_html_enabled_makers = ['tidy']
-let g:neomake_html_tidy_args = ['-e', '-q', '--gnu-emacs', 'true',
-            \ '--show-body-only', 'yes']
+let g:neomake_html_enabled_makers = ['htmlhint']
+let g:neomake_html_htmlhint_args = ['--format', 'unix', '--rules',
+            \ 'doctype-first:false']
 " Bash
 let g:neomake_sh_enabled_makers = ['shellcheck']
 
