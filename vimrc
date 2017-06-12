@@ -1758,8 +1758,8 @@ let g:neomake_javascript_eslint_errorformat = ''.
         \ '%W%f: line %l\, col %c\, Warning - %m, %-G%.%#'
 " Html
 let g:neomake_html_enabled_makers = ['htmlhint']
-let g:neomake_html_htmlhint_args = ['--format', 'unix', '--rules',
-            \ 'doctype-first:false']
+let g:neomake_html_htmlhint_args = ['--format', 'unix', '--config',
+            \ expand($HOME . '/.htmlhintrc')]
 " Bash
 let g:neomake_sh_enabled_makers = ['shellcheck']
 

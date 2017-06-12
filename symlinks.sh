@@ -133,6 +133,11 @@ if type "tern" > /dev/null 2>&1; then
     ln -s "$dotfiles_dir/tern-config" "$HOME/.tern-config"
     echo Created .tern-config symlink
 fi
+if type "htmlhint" > /dev/null 2>&1; then
+    rm -rf "$HOME/.htmlhintrc"
+    ln -s "$dotfiles_dir/htmlhintrc" "$HOME/.htmlhintrc"
+    echo Created .htmlhintrc symlink
+fi
 if open -Ra "firefox"; then
     rm -rf "$HOME/.pentadactyl"
     ln -s "$dotfiles_dir/pentadactyl" "$HOME/.pentadactyl"

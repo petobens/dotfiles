@@ -57,7 +57,7 @@ function! s:RunHtmlBeautify(...)
     let &l:formatprg = old_formatprg
 endfunction
 
-" Automatically run tidy formatter and tidy linter on save
+" Automatically run html-beautify formatter and htmlhint linter on save
 augroup html_linting
     au!
     au BufWritePost *.html call s:RunHtmlBeautify() | silent noautocmd update |
