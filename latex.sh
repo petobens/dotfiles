@@ -3,7 +3,7 @@
 #          File: latex.sh
 #        Author: Pedro Ferrari
 #       Created: 28 Mar 2017
-# Last Modified: 14 Apr 2017
+# Last Modified: 15 Jun 2017
 #   Description: Setup latex
 #===============================================================================
 # Download and install arara (we need java and maven first)
@@ -22,6 +22,8 @@ fi
 brew install maven
 
 echo "Installing arara..."
+rm -rf "$(brew --prefix)"/lib/arara
+rm -rf "$(brew --prefix)"/bin/arara
 git clone https://github.com/cereda/arara
 cd ./arara/application/ || exit
 mvn assembly:assembly
@@ -37,7 +39,7 @@ EOF
 cat ./arara-4.0-jar-with-dependencies.jar >> ./arara && chmod +x ./arara
 cd ../../../ || exit
 mv arara/application/target/arara arara/
-mkdir "$(brew --prefix)/lib/arara"
+mkdir "$(brew --prefix)"/lib/arara
 mv arara/* "$(brew --prefix)"/lib/arara
 ln -s  "$(brew --prefix)"/lib/arara/arara "$(brew --prefix)"/bin/arara
 rm -rf arara
@@ -45,9 +47,11 @@ rm -rf arara
 # Install mybibformat style
 echo "Installing mybibformat biblatex style..."
 if [[  "$OSTYPE" == 'darwin'* ]]; then
+    rm -rf ~/Library/texmf
     mkdir -p ~/Library/texmf
     git clone https://github.com/petobens/mybibformat ~/Library/texmf
 else
+    rm -rf ~/texmf
     mkdir -p ~/texmf
     git clone https://github.com/petobens/mybibformat ~/texmf
 fi
