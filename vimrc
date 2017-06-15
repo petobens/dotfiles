@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 12 Jun 2017
+" Last Modified: 15 Jun 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1782,7 +1782,6 @@ if executable('ipython3')
 else
     let g:neoterm_repl_python = 'python3'
 endif
-let g:neoterm_direct_open_repl = 1
 
 " Functions
 function! s:OpenNeotermSplit(position)
