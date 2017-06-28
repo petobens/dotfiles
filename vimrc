@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 15 Jun 2017
+" Last Modified: 28 Jun 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -30,7 +30,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     " Set python3 host (i.e executable)
     if s:is_mac
-        " let g:python3_host_prog = '/usr/local/bin/python3'
+       " let g:python3_host_prog = '/usr/local/bin/python3'
     elseif s:is_linux
         " let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
     endif
@@ -134,7 +134,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
-    call dein#add('tpope/vim-dispatch', {'rev' : 'job'})
+    call dein#add('tpope/vim-dispatch')
     call dein#add('tpope/vim-fugitive')
     call dein#add('tommcdo/vim-fubitive')
     call dein#add('tpope/vim-repeat')
