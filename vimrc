@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 28 Jun 2017
+" Last Modified: 03 Jul 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1343,7 +1343,7 @@ endfunction
 nnoremap <silent> <Leader>ls :Denite file_rec<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
-nnoremap <silent> <Leader>be :Denite -default-action=switch buffer<CR>
+nnoremap <silent> <Leader>be :Denite -default-action=context_split buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>dg :DeniteCursorWord grep<CR>
@@ -1361,6 +1361,17 @@ nnoremap <silent> ]d :<C-U>execute 'Denite -resume -select=+'. v:count1 .
             \ '--immediately'<CR>
 nnoremap <silent> [d :<C-U>execute 'Denite -resume -select=-'. v:count1 .
             \ '--immediately'<CR>
+" NeoInclude and Denite tag
+nnoremap <silent> <Leader>dte :NeoIncludeMakeCache<CR>:Denite
+            \ tag:include<CR>
+" FIXME: This should be improved
+augroup ps_denite_tag
+    au!
+    au BufNewFile,BufRead *.{vim,tex,bib,r,R} nnoremap <buffer> <silent> <C-]>
+                \ :NeoIncludeMakeCache<CR>
+                \ :DeniteCursorWord -immediately
+                \ -default-action=context_split tag:include<CR>
+augroup END
 
 " Prompt Mappings
 call denite#custom#map('insert', '<ESC>', '<denite:quit>',
@@ -1396,6 +1407,24 @@ call denite#custom#map('insert', '<C-e>', '<denite:do_action:feedkeys>',
 " FIXME: Not quite working (denite should restart upon rentering buffer)
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 call denite#custom#map('normal', '<C-r>', '<denite:restart>', 'noremap')
+
+" Custom split action
+function! s:my_split(context)
+    let split_action = 'vsplit'
+    if winwidth(winnr('#')) <= 2 * (&tw ? &tw : 80)
+        let split_action = 'split'
+    endif
+    if has_key(a:context['targets'][0], 'action__bufnr')
+        execute split_action
+        execute 'buffer' a:context['targets'][0].action__bufnr
+    else
+        execute split_action a:context['targets'][0].action__path
+    endif
+endfunction
+if dein#tap('denite') == 1
+    call denite#custom#action('buffer,directory,file', 'context_split',
+                \ function('s:my_split'))
+endif
 
 " }}}
 " Devicons {{{
