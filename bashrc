@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 10 Jun 2017
+# Last Modified: 01 Jul 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -134,7 +134,7 @@ fi
 
 # Improved bash completion (install them with `brew install bash-completion2`)
 if [ -f $brew_dir/share/bash-completion/bash_completion ]; then
-. $brew_dir/share/bash-completion/bash_completion
+    . $brew_dir/share/bash-completion/bash_completion
 fi
 
 # Note: we pass Readline commands as a single argument to
