@@ -249,10 +249,10 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 '"presto-cli\ --server\ emr-prd-queries.jampp.com:8889\ --catalog\ hive\ '\
 '--schema\ aleph\ --user\ pedrof"'
     # Gerry instance (with tmux)
-    alias ui='ssh gerry'
+    alias ui='TERM=xterm-256color; ssh gerry'
     # When using linux brew we need to specify a full path to the tmux
     # executable
-    alias utm='ssh gerry -t /mnt/.linuxbrew/bin/tmux -f'\
+    alias utm='TERM=xterm-256color; ssh gerry -t /mnt/.linuxbrew/bin/tmux -f'\
 '"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
 
     # Fix open in tmux (requires installing reattach-to-user-namespace)
