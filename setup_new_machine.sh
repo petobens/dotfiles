@@ -3,7 +3,7 @@
 #          File: setup_new_machine.sh
 #        Author: Pedro Ferrari
 #       Created: 25 Mar 2017
-# Last Modified: 26 May 2017
+# Last Modified: 10 Jul 2017
 #   Description: Script to setup a new machine; run it with
 #                `bash setup_new_machine.sh`
 #===============================================================================
@@ -28,8 +28,8 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-echo Italics terminfo...
-tic "$current_dir/xterm-256color-italic.terminfo"
+echo Italics tmux terminfo...
+tic "$current_dir/tmux-xterm-256color-italic.terminfo"
 
 echo Fonts...
 if [[  "$OSTYPE" == 'darwin'* ]]; then

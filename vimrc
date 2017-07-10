@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 03 Jul 2017
+" Last Modified: 09 Jul 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -30,7 +30,7 @@ else
     let $DOTVIM = expand('$HOME/.config/nvim')
     " Set python3 host (i.e executable)
     if s:is_mac
-       " let g:python3_host_prog = '/usr/local/bin/python3'
+        " let g:python3_host_prog = '/usr/local/bin/python3'
     elseif s:is_linux
         " let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
     endif
