@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 01 Jul 2017
+# Last Modified: 10 Jul 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -241,9 +241,11 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
     # session called pedrof or attaching to an existing one with that name.
     # Add -X after ssh to enable X11 forwarding
-    alias emr='ssh pedrof@prd-amber-pivot.jampp.com -t tmux new -A -s pedrof'
+    alias emr='TERM=xterm-256color; ssh pedrof@prd-amber-pivot.jampp.com -t '\
+'tmux new -A -s pedrof'
     # Presto client
-    alias pcli='ssh pedrof@prd-amber-pivot.jampp.com -t tmux new -A -s pedrof '\
+    alias pcli='TERM=xterm-256color; ssh pedrof@prd-amber-pivot.jampp.com -t '\
+'tmux new -A -s pedrof '\
 '"presto-cli\ --server\ emr-prd-queries.jampp.com:8889\ --catalog\ hive\ '\
 '--schema\ aleph\ --user\ pedrof"'
     # Gerry instance (with tmux)
