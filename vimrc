@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 15 Jul 2017
+" Last Modified: 16 Jul 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1414,12 +1414,7 @@ function! s:my_split(context)
     if winwidth(winnr('#')) <= 2 * (&tw ? &tw : 80)
         let split_action = 'split'
     endif
-    if has_key(a:context['targets'][0], 'action__bufnr')
-        execute split_action
-        execute 'buffer' a:context['targets'][0].action__bufnr
-    else
-        execute split_action a:context['targets'][0].action__path
-    endif
+    call denite#do_action(a:context, split_action, a:context['targets'])
 endfunction
 if dein#tap('denite') == 1
     call denite#custom#action('buffer,directory,file', 'context_split',
