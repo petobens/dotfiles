@@ -2279,11 +2279,9 @@ let g:vimtex_complete_close_braces = 1
 let g:vimtex_complete_recursive_bib = 1
 let g:vimtex_complete_img_use_tail = 1
 " Compilation
-" FIXME: THIS IS BROKEN!!
 let g:vimtex_view_enabled = 0
 let g:vimtex_compiler_enabled = 0
-let g:vimtex_quickfix_ignored_warnings = ['refsection', 'contains only floats']
-let g:vimtex_quickfix_latexlog = {'refsection' : 0, 'contains only floats': 0}
+let g:vimtex_quickfix_enabled = 0
 " Minted syntax highlight
 let g:vimtex_syntax_minted = [
     \ {'lang' : 'python'},

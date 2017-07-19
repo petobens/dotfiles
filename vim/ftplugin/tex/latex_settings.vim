@@ -2,7 +2,7 @@
 "          File: latex_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2013
-" Last Modified: 14 Apr 2017
+" Last Modified: 19 Jul 2017
 "   Description: Latex settings
 "===============================================================================
 " TODOs:
@@ -298,16 +298,11 @@ function! s:SetTexEfm()
     setlocal errorformat+=%Z<argument>\ %m
     " More info for some errors (this clashes with the log-preview function)
     " setlocal errorformat+=%Cl.%l\ %m
-    " Show warnings
-    if !exists('g:vimtex_quickfix_ignore_all_warnings')
-        let g:vimtex_quickfix_ignore_all_warnings = 0
-    endif
-    if g:vimtex_quickfix_ignore_all_warnings == 0
-        " Ignore some warnings
-        if !exists('g:vimtex_quickfix_ignored_warnings')
-            let g:vimtex_quickfix_ignored_warnings = []
-        endif
-        for w in g:vimtex_quickfix_ignored_warnings
+    " Show warnings (some warnings)
+    let quickfix_ignore_all_warnings = 0  " set to 1 to disable all warnings
+    let quickfix_ignored_warnings = ['refsection', 'contains only floats']
+    if quickfix_ignore_all_warnings == 0
+        for w in quickfix_ignored_warnings
             let warning = escape(substitute(w, '[\,]', '%\\\\&', 'g'), ' ')
             exe 'setlocal errorformat+=%-G%.%#'. warning .'%.%#'
         endfor
