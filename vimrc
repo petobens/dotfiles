@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 16 Jul 2017
+" Last Modified: 19 Jul 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1357,10 +1357,12 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
-nnoremap <silent> ]d :<C-U>execute 'Denite -resume -select=+'. v:count1 .
-            \ '--immediately'<CR>
-nnoremap <silent> [d :<C-U>execute 'Denite -resume -select=-'. v:count1 .
-            \ '--immediately'<CR>
+nnoremap <silent> ]d :<C-U>execute 'Denite -resume -cursor-pos=+'. v:count1 .
+            \ ' -immediately'<CR>
+nnoremap <silent> [d :<C-U>execute 'Denite -resume -cursor-pos=-'. v:count1 .
+            \ ' -immediately'<CR>
+nnoremap ]D :<C-u>Denite -resume -cursor-pos=0 -immediately<CR>
+nnoremap [D :<C-u>Denite -resume -cursor-pos=$ -immediately<CR>
 " NeoInclude and Denite tag
 nnoremap <silent> <Leader>dte :NeoIncludeMakeCache<CR>:Denite
             \ tag:include<CR>
@@ -2277,8 +2279,10 @@ let g:vimtex_complete_close_braces = 1
 let g:vimtex_complete_recursive_bib = 1
 let g:vimtex_complete_img_use_tail = 1
 " Compilation
+" FIXME: THIS IS BROKEN!!
 let g:vimtex_view_enabled = 0
 let g:vimtex_compiler_enabled = 0
+let g:vimtex_quickfix_ignored_warnings = ['refsection', 'contains only floats']
 let g:vimtex_quickfix_latexlog = {'refsection' : 0, 'contains only floats': 0}
 " Minted syntax highlight
 let g:vimtex_syntax_minted = [
