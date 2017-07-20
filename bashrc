@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 10 Jul 2017
+# Last Modified: 20 Jul 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -121,7 +121,7 @@ bind -m vi-command '"H": beginning-of-line'
 bind -m vi-command '"L": end-of-line'
 bind -m vi-command '"k": ""'
 bind -m vi-command '"j": ""'
-# bind -m vi-command '"v": ""' # Edit command with vim
+bind -m vi-command '"v": ""' # Don't edit command with default editor (nvim)
 
 # Paste with p if in a tmux session
 if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
