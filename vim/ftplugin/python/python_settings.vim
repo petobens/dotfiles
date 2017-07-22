@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 08 May 2017
+" Last Modified: 22 Jul 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn OOP and TDD
@@ -457,7 +457,8 @@ function! s:RunYapf(...)
     set shellredir=>%s
     let old_formatprg = &l:formatprg
     let &l:formatprg = "yapf --style='{based_on_style: pep8, " .
-                \ "blank_line_before_nested_class_or_def: true}'"
+                \ "blank_line_before_nested_class_or_def: true, " .
+                \ "dedent_closing_brackets: true}'"
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'normal! gvgq'
