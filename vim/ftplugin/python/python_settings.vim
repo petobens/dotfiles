@@ -478,7 +478,7 @@ endfunction
 " Automatically run yapf and flake8 on save
 augroup py_linting
     au!
-    au BufWritePost *.py call s:RunYapf() | silent noautocmd update |
+    au BufWritePost *.py lclose | call s:RunYapf() | silent noautocmd update |
                 \ silent Neomake
 augroup END
 
@@ -601,8 +601,9 @@ function! s:RunPyTest(level)
     " Update the file but ignore linting autocommand
     silent noautocmd update
 
-    " Close qf, save working directory and get current file
+    " Close qf and location list, save working directory and get current file
     cclose
+    lclose
     let l:save_pwd = getcwd()
     lcd %:p:h
     let current_file = expand('%:p:t')
