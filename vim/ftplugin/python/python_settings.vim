@@ -5,9 +5,7 @@
 " Last Modified: 22 Jul 2017
 "   Description: Python settings for Vim
 "===============================================================================
-" TODO: Learn OOP and TDD
-" TODO: Learn how to use breakpoints
-" TODO: Use mypy
+" TODO: Learn TDD (and improve testing environment defined in this file)
 
 " Installation notes {{{
 
@@ -94,10 +92,10 @@ function! s:SetPyEfm()
     " setlocal errorformat+=%-G%.%#warnings%.%#
 endfunction
 
-function! s:RunPython(mode, compilation, ...)
+function! s:RunPython(compiler, mode, compilation, ...)
     " Check if python is installed
-    if !executable('python3') && !executable('python')
-        echoerr 'python is not installed or not in your path.'
+    if !executable(a:compiler)
+        echoerr a:compiler . 'is not installed or not in your path.'
         return
     endif
 
@@ -125,15 +123,18 @@ function! s:RunPython(mode, compilation, ...)
     let l:save_pwd = getcwd()
     lcd %:p:h
 
-    " Set compiler (prefer python3) and file to run compiler
-    let compiler = 'python3'
-    if !executable(compiler)
-        let compiler = 'python'
+    " Set compiler (prefer python3)
+    if a:compiler == 'python'
+        let compiler = 'python3'
+        if !executable(compiler)
+            let compiler = 'python2'
+        endif
+    else
+        let compiler = a:compiler
     endif
-    " Add space to compiler
     let compiler = compiler . ' '
 
-
+    " Define file to run
     if a:mode ==# 'visual' && a:0 >= 2 && strlen(a:1) && strlen(a:2)
         " Create temp file in the current directory with visual content (and
         " imported modules)
@@ -251,13 +252,14 @@ function! s:RunPython(mode, compilation, ...)
     execute 'lcd ' . save_pwd
 endfunction
 
-" Define commands to run visual selections
-command! -range EvalVisualPyVimshell
-      \ call s:RunPython('visual', 'foreground', <line1>, <line2>)
-command! -range EvalVisualPyBackground
-      \ call s:RunPython('visual', 'background', <line1>, <line2>)
-command! -range EvalVisualPyForeground
-            \ call s:RunPython('visual', 'foreground_os', <line1>, <line2>)
+" Define commands to run visual selections (always in python3)
+command! -range -nargs=* EvalVisualPyVimshell
+      \ call s:RunPython(<f-args>, 'visual', 'foreground', <line1>, <line2>)
+command! -range -nargs=* EvalVisualPyBackground
+      \ call s:RunPython(<f-args>, 'visual', 'background', <line1>, <line2>)
+command! -range -nargs=* EvalVisualPyForeground
+            \ call s:RunPython(<f-args>, 'visual', 'foreground_os', <line1>,
+            \ <line2>)
 
 " }}}
 " Output/Errors {{{
@@ -266,7 +268,7 @@ command! -range EvalVisualPyForeground
 function! s:ShowPyOutput()
     " Only call this function after a python run
     let compiler = split(&makeprg, '')[0]
-    if compiler !=# 'python3' && compiler !=# 'python'
+    if compiler !=# 'python3' && compiler !=# 'python2' && compiler !=# 'python'
         return
     endif
 
@@ -1021,20 +1023,32 @@ if exists(':UltiSnipsEdit')
 endif
 
 " Background compilation
-nnoremap <silent> <buffer> <F7> :call <SID>RunPython('normal', 'background')<CR>
+nnoremap <silent> <buffer> <F7> :call
+            \ <SID>RunPython('python3', 'normal', 'background')<CR>
 inoremap <silent> <buffer> <F7> <ESC>:call
-            \ <SID>RunPython('normal', 'background')<CR>
-vnoremap <silent> <buffer> <F7> :EvalVisualPyBackground<CR>
+            \ <SID>RunPython('python3', 'normal', 'background')<CR>
+vnoremap <silent> <buffer> <F7> :EvalVisualPyBackground python3<CR>
 " Foreground compilation
 nnoremap <silent> <buffer> <Leader>rf :call
-            \ <SID>RunPython('normal', 'foreground')<CR>
-vnoremap <silent> <buffer> <Leader>rf :EvalVisualPyVimshell<CR>
+            \ <SID>RunPython('python3', 'normal', 'foreground')<CR>
+vnoremap <silent> <buffer> <Leader>rf :EvalVisualPyVimshell python3<CR>
 " Run in the command line (useful when input is required)
 nnoremap <silent> <buffer> <F5> :call
-            \ <SID>RunPython('normal', 'foreground_os')<CR>
+            \ <SID>RunPython('python3', 'normal', 'foreground_os')<CR>
 inoremap <silent> <buffer> <F5> <ESC>:call
-            \ <SID>RunPython('normal', 'foreground_os')<CR>
-vnoremap <silent> <buffer> <F5> :EvalVisualPyForeground<CR>
+            \ <SID>RunPython('python3', 'normal', 'foreground_os')<CR>
+vnoremap <silent> <buffer> <F5> :EvalVisualPyForeground python3<CR>
+" Python 2 compilation
+nnoremap <silent> <buffer> <F2> :call
+            \ <SID>RunPython('python2', 'normal', 'background')<CR>
+inoremap <silent> <buffer> <F2> <ESC>:call
+            \ <SID>RunPython('python2', 'normal', 'background')<CR>
+vnoremap <silent> <buffer> <F2> :EvalVisualPyBackground python2<CR>
+nnoremap <silent> <buffer> <F3> :call
+            \ <SID>RunPython('python2', 'normal', 'foreground_os')<CR>
+inoremap <silent> <buffer> <F3> <ESC>:call
+            \ <SID>RunPython('python2', 'normal', 'foreground_os')<CR>
+vnoremap <silent> <buffer> <F3> :EvalVisualPyForeground python2<CR>
 
 " Linting (and import sorting)
 if exists(':ImpSort')
