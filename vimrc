@@ -1347,6 +1347,7 @@ nnoremap <silent> <Leader>he :Denite help<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>sh :Denite history:search<CR>
 nnoremap <silent> <Leader>ch :Denite history:cmd<CR>
+nnoremap <silent> <Leader>sm :Denite output:messages<CR>
 nnoremap <silent> <Leader>dl :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
@@ -1551,7 +1552,7 @@ if s:is_win
 endif
 
 " Mappings
-nnoremap <silent> <Leader>gi :Unite output:echo\ system("git\ init")<cr>
+nnoremap <silent> <Leader>gi :Denite output:echo\ system("git\ init")<cr>
 nnoremap <silent> <Leader>gd :Gdiff<cr>:wincmd x<CR>
 nnoremap <silent> <Leader>gs :Gstatus<cr>
 nnoremap <silent> <Leader>gw :Gwrite<cr>
@@ -2077,7 +2078,7 @@ endfunction
 let g:UltiSnipsExpandTrigger = '<C-s>'
 nnoremap <Leader>es :UltiSnipsEdit<CR>
 " Snippet explorer with Unite
-nnoremap <silent> <Leader>se :Unite output:call\ UltiSnips#ListSnippets()<CR>
+nnoremap <silent> <Leader>se :Denite output:call\ UltiSnips#ListSnippets()<CR>
 
 " FIXME: Solve problems with anon snippets or use delimitMate; See #248; NO FIX?
 " Maybe use neosnippet
@@ -2145,7 +2146,6 @@ nnoremap <silent> <Leader>ube :Unite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>me :Unite mapping<CR>
 nnoremap <silent> <Leader>uf :Unite function<CR>
 nnoremap <silent> <Leader>ur :UniteResume -force-redraw -immediately<CR>
-nnoremap <silent> <Leader>sm :Unite output:messages<CR>
 " NeoInclude and Unite tag
 nnoremap <silent> <Leader>te :NeoIncludeMakeCache<CR>:Unite
             \ tag/include<CR>
