@@ -2057,11 +2057,11 @@ endif
 " Automatically insert header when creating new files (Note: the header snippet
 " is defined in all.snippets file) or when we opening a blank file (if we only
 " want this for new file use BufNew event instead)
-augroup ps_ultisnips
-    au!
-    au BufNewFile,BufRead *.{bib,py,snippets,tex,txt,vim,m,R,r,src,js,sh,yaml}
-                \ call s:ExpandHeader()
-augroup END
+" augroup ps_ultisnips
+    " au!
+    " au BufNewFile,BufRead *.{bib,py,snippets,tex,txt,vim,m,R,r,src,js,sh,yaml}
+                " \ call s:ExpandHeader()
+" augroup END
 function! s:ExpandHeader()
     " Don't try to expand a header from a Gdiff (when file path includes .git)
     if expand('%:p') =~# "/\\.git/"
