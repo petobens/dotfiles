@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 22 Jul 2017
+" Last Modified: 23 Jul 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -84,8 +84,10 @@ function! s:SetPyEfm()
     setlocal errorformat+=%Z%\\@=%m
     " setlocal errorformat+=%+Z%.%#Error\:\ %.%#
     " Python errors are multiline and often start with 'Traceback', if we don't
-    " want to capture this so we use -G instead of +G
+    " want to capture this we use -G instead of +G
     setlocal errorformat+=%+GTraceback%.%#
+    setlocal errorformat+=%+GDuring\ handling%.%#
+    setlocal errorformat+=%+GThe\ above\ exception%.%#
     " Warnings (we ignore/delete the continuation line in the output function
     " that is called with the QuickFixCmdPost event)
     setlocal errorformat+=%f:%l:\ %.%#%tarning:%m
@@ -274,7 +276,10 @@ function! s:ShowPyOutput()
 
     " Close/delete previous output preview window buffer
     silent! pclose
-    silent! bdelete python_output
+    silent! bwipeout python_output
+
+    " Get current active window
+    let active_window = win_getid()
 
     " Get current file
     let current_file = split(&makeprg, '')[1]
@@ -290,11 +295,14 @@ function! s:ShowPyOutput()
     let has_errors = 0
     let has_warnings = 0
 
-    " If the error type is indeed and error then we want to slice the qlist
-    " until this first error to avoid showing output or warnings before it
+    " Check if there are errors
     for entry in qflist
         if entry.type ==# 'E'
-            let qflist = qflist[index(qflist, entry):]
+            " If there are errors insert a line to indicate they start here
+            let new_entry = {'valid': 0, 'type': 'O',
+                \ 'text': '********************-ERRORS-********************'}
+            unsilent echo new_entry
+            call insert(qflist, new_entry, index(qflist, entry) - 1)
             let has_errors = 1
             break
         endif
@@ -329,10 +337,10 @@ function! s:ShowPyOutput()
             endfor
         endif
         " Delete visual marks since they are not longer needed and actually
-        " replace qflist entries with the modified ones. If there are only
-        " errors then exit
+        " replace qflist entries with the modified ones.
         silent! delmarks V M
         call setqflist(qflist, 'r')
+        " If there are only errors exit here
         if has_errors == 1
             return
         endif
@@ -348,10 +356,10 @@ function! s:ShowPyOutput()
         endfor
     endif
 
-    " If there are no errors (but potentially warnings) get output text and
-    " then remove this output entries from the quickfix list
+    " Get output text and then remove this output entries from the quickfix
+    " list
     for entry in qflist
-        if entry.valid == 0
+        if entry.valid == 0  " get all 'non-valid' lines
             " On Windows with locale latin1 the error messages have the locale
             " encoding so we need to convert them back to utf-8
             if s:is_win
@@ -361,16 +369,17 @@ function! s:ShowPyOutput()
             call remove(qflist, index(qflist, entry))
         endif
     endfor
+    " Compute number of lines in output
+    let height = len(output)
 
-    " In these cases also delete visual marks and then replace the quickfix
-    " list with the (shortened) qflist
+    " Delete visual marks and then replace the quickfix list with the
+    " (shortened) qflist
     silent! delmarks V M
     call setqflist(qflist, 'r')
 
     " If we don't have output we return (when there no warnings giving a
-    " message); if we have output (and potentially warnings) we create a
-    " buffer to dump that output
-    let height = len(output)
+    " message); if we have output (and potentially warnings) we create a buffer
+    " to dump that output
     if height == 0
         if has_warnings == 0
             redraw
@@ -379,7 +388,21 @@ function! s:ShowPyOutput()
         return
     else
         execute 'silent botright new python_output'
+        let output_win = win_getid()
+        if has_warnings == 1
+            " When there are warnings and output and we are using Dispatch, the
+            " output window is not resized properly because the quickfix window
+            " opens after it (due to Dispatch Make calling cwindow). To prevent
+            " this this we call cwindow ourselves so that when Dispatch calls
+            " cwindow again nothing happens (because the quickfix window will be
+            " already opened)
+            cwindow
+        endif
+        call win_gotoid(output_win)
+        execute '1 wincmd _'
     endif
+
+    " Set output buffer properties
     silent! setlocal buftype=nofile bufhidden=delete noswapfile nowrap
                 \ colorcolumn=0 textwidth=0 nonumber norelativenumber
                 \ nocursorline winfixheight
@@ -393,38 +416,12 @@ function! s:ShowPyOutput()
     " Mapping to enable syntax highlighting of SQL output
     nnoremap <silent> <buffer> <Leader>ss :set syntax=sql<CR>
 
-    " When there are warnings and output and we are using Dispatch, the output
-    " window is not resized properly because the quickfix window opens after it
-    " (due to Dispatch Make calling cwindow). To prevent this this we call
-    " cwindow ourselves so that when Dispatch calls cwindow again nothing
-    " happens (because the quickfix window will be already opened)
-    if has_warnings == 1 && exists(':Dispatch')
-        " Move back to the current window, get its number and then open the
-        " quickfix list with cwindow (which makes the cursor move to the qf)
-        wincmd p
-        let active_window = winnr()
-        cwindow
-        " Since the quickfix window will be open as a bottom window, now move
-        " up to the output buffer and resize it
-        wincmd k
-        if bufname('%') ==# 'python_output'
-            if height > 15
-                let height = 15
-            endif
-            execute height . ' wincmd _'
-        endif
-        " Finally return to original window and exit
-        execute active_window . ' wincmd w'
-        return
-    endif
-
-    " When we only have output we simply resize the output buffer and then
-    " return to the current window
+    " Resize the output buffer and then return to the last active  window
     if height > 15
         let height = 15
     endif
     execute height . ' wincmd _'
-    wincmd p
+    call win_gotoid(active_window)
 endfunction
 
 augroup show_py_output
