@@ -9,16 +9,16 @@
 
 # Basic colors {{{
 
-color status color145 color236 # status line
-color indicator color235 color39 # cursor line
+color status white black # status line
+color indicator black blue # cursor line
 
 # }}}
 # Index {{{
 
-color index color145 color235 "~A" # all messages
-color index color38 color235 "~N" # new messages
-color index color38 color235 "~U" # unread messages
-# color index color19 color0 "~D" # Deleted messages
+color index white black "~A" # all messages
+color index blue black "~N" # new messages
+color index blue black "~U" # unread messages
+color index red black "~D" # deleted messages
 # color index brightcolor11 color0 "~T" # "Tagged" (selected) messages.
 
 # }}}
