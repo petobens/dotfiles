@@ -132,10 +132,13 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
                 \ {'on_ft' : 'javascript', 'build': 'npm install'})
     call dein#add('chrisbra/Colorizer', {'on_cmd': 'ColorToggle'})
 
+    " Git
+    call dein#add('junegunn/gv.vim')
+    call dein#add('tpope/vim-fugitive')
+
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
     call dein#add('tpope/vim-dispatch')
-    call dein#add('tpope/vim-fugitive')
     call dein#add('tommcdo/vim-fubitive')
     call dein#add('tpope/vim-repeat')
     call dein#add('tpope/vim-rhubarb')
@@ -1273,7 +1276,7 @@ call denite#custom#option('default', {
             \ 'statusline': 0,
             \ 'winheight': 15,
             \ 'updatetime': 100,
-            \ 'reversed': 1,
+            \ 'reversed': 0,
             \ 'prompt': '❯',
             \ 'prompt_highlight': 'Function',
             \ 'highlight_matched_char': 'Function',
@@ -1569,6 +1572,8 @@ else
     nnoremap <silent> <Leader>gl :Glog -- %<CR>:copen<CR>
     nnoremap <silent> <Leader>gL :Glog --<CR>:copen<CR>
 endif
+" Commit explorer/browser (from gv.vim plugin)
+nnoremap <silent> <Leader>cb :GV<cr>
 
 " }}}
 " Fzf {{{
