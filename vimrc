@@ -1063,6 +1063,8 @@ augroup ft_quickfix
     au Filetype qf call s:AdjustWindowHeight(1, 15)
     au Filetype qf nnoremap <buffer><silent> q :bdelete<CR>
     au Filetype qf nnoremap <buffer><silent> Q :bdelete<CR>
+    " Automatically close corresponding loclist when quitting a window
+    au QuitPre,BufDelete * if &filetype != 'qf' | silent! lclose | endif
 augroup END
 
 " Set window to the bottom and automatically adjust window to fit content
