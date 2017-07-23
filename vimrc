@@ -1402,9 +1402,7 @@ call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
 call denite#custom#map('insert', '<C-e>', '<denite:do_action:feedkeys>',
             \ 'noremap')
-" FIXME: Not quite working (denite should restart upon rentering buffer)
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
-call denite#custom#map('normal', '<C-r>', '<denite:restart>', 'noremap')
 
 " Custom split action
 function! s:my_split(context)
