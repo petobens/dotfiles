@@ -299,7 +299,7 @@ function! s:ShowPyOutput()
     for entry in qflist
         if entry.type ==# 'E'
             " If there are errors insert a line to indicate they start here
-            let new_entry = {'valid': 0, 'type': 'O',
+            let new_entry = {'valid': 0, 'type': '',
                 \ 'text': '********************-ERRORS-********************'}
             unsilent echo new_entry
             call insert(qflist, new_entry, index(qflist, entry) - 1)
@@ -340,7 +340,10 @@ function! s:ShowPyOutput()
         " replace qflist entries with the modified ones.
         silent! delmarks V M
         call setqflist(qflist, 'r')
-        " If there are only errors exit here
+
+
+        " If there are only errors exit
+        " TODO: Remove blank lines?
         if has_errors == 1
             return
         endif
