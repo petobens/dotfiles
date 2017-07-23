@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 22 Jul 2017
+" Last Modified: 23 Jul 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1269,6 +1269,7 @@ nnoremap <silent> <Leader>bl :Denite dein<CR>
 " Change default UI settings and highlighting
 call denite#custom#option('default', {
             \ 'auto_resize': 1,
+            \ 'auto_resume': 1,
             \ 'statusline': 0,
             \ 'winheight': 15,
             \ 'updatetime': 100,
