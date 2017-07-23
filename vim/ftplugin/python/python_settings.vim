@@ -298,11 +298,11 @@ function! s:ShowPyOutput()
     " Check if there are errors
     for entry in qflist
         if entry.type ==# 'E'
+            let first_error_index = index(qflist, entry)
             " If there are errors insert a line to indicate they start here
             let new_entry = {'valid': 0, 'type': '',
-                \ 'text': '********************-ERRORS-********************'}
-            unsilent echo new_entry
-            call insert(qflist, new_entry, index(qflist, entry) - 1)
+                \ 'text': repeat('*', 40) . '-ERRORS-' . repeat('*', 40)}
+            call insert(qflist, new_entry, first_error_index - 1)
             let has_errors = 1
             break
         endif
@@ -343,8 +343,15 @@ function! s:ShowPyOutput()
 
 
         " If there are only errors exit
-        " TODO: Remove blank lines?
         if has_errors == 1
+            for entry in qflist
+                " Get all non-valid lines and remove blank lines
+                " FIXME: Remove only blank lines after first error
+                if entry.valid == 0 && match(entry.text, '^$') != -1
+                    call remove(qflist, index(qflist, entry))
+                endif
+            endfor
+            call setqflist(qflist, 'r')
             return
         endif
     endif
