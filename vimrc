@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 23 Jul 2017
+" Last Modified: 24 Jul 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -32,7 +32,7 @@ else
     if s:is_mac
         let g:python3_host_prog = '/usr/local/bin/python3'
     elseif s:is_linux
-        " let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
+        let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -1723,7 +1723,7 @@ if s:is_mac
     let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 else
     let g:deoplete#sources#jedi#python_path =
-                \ '/home/ubuntu/.linuxbrew/bin/python3'
+                \ '/mnt/.linuxbrew/bin/python3'
 endif
 
 " Autoclose preview when completion is finished
