@@ -1,0 +1,48 @@
+" Preamble {{{
+
+" To load this local cvimrc:
+" i) In the browser run `:source /path/to/your/.cvimrc`
+" ii) Go to :settings and put only set localconfig in the cvimrc textarea
+" iii)  Check `Allow access to file URLS` for cvim in the extension view
+let configpath = '/Users/pedro/.cvimrc'
+set localconfig
+
+" Set local leader to comma
+let mapleader = ","
+
+" }}}
+" Appearance {{{
+
+" colorscheme molokai
+
+" set visualbell
+
+" Highlight all search matches, not just the first
+" set hlfind
+" Clear search highlighting and normal highlighting
+map <Leader><Space> clearSearchHighlight
+
+" set guioptions=Csn
+" Toggle navigation bar
+" nmap -builtin <Leader>nb  :set guioptions!=T<CR>
+let barposition = 'bottom'
+
+" }}}
+" Mappings {{{
+map ; :
+let hintcharacters = 'asdfghjkl'
+map s :open google <Space>
+map S :tabnew google <Space>
+
+" Tab navigation
+map <Leader>wd closeTab
+map <Leader>bd closeTab
+map <C-c> closeTab
+map <C-n> nextTab
+map <C-p> previousTab
+map <C-d> scrollPageDown
+map <C-u> scrollPageUp
+map <M-h> moveTabLeft
+map <M-l> moveTabRight
+
+" }}}
