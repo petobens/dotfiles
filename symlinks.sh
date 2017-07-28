@@ -3,7 +3,7 @@
 #          File: symlinks.sh
 #        Author: Pedro Ferrari
 #       Created: 12 Sep 2016
-# Last Modified: 12 Jun 2017
+# Last Modified: 28 Jul 2017
 #   Description: Create all necessary symbolic links from my dotfiles
 #===============================================================================
 # Check bash major version
@@ -145,6 +145,11 @@ if open -Ra "firefox"; then
     rm -rf "$HOME/.pentadactylrc"
     ln -s "$dotfiles_dir/pentadactylrc" "$HOME/.pentadactylrc"
     echo Created .pentadactylrc symlink
+fi
+if open -Ra "Google Chrome"; then
+    rm -rf "$HOME/.cvimrc"
+    ln -s "$dotfiles_dir/cvimrc" "$HOME/.cvimrc"
+    echo Created .cvimrc symlink
 fi
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if open -Ra "hammerspoon" ; then
