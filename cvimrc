@@ -9,40 +9,116 @@ set localconfig
 
 " Set local leader to comma
 let mapleader = ","
+" Open command mode more easily
+map ; :
 
 " }}}
-" Appearance {{{
+" Appearance and options {{{
 
 " colorscheme molokai
 
 " set visualbell
-
-" Highlight all search matches, not just the first
-" set hlfind
-" Clear search highlighting and normal highlighting
-map <Leader><Space> clearSearchHighlight
-
-" set guioptions=Csn
 " Toggle navigation bar
+" set guioptions=Csn
 " nmap -builtin <Leader>nb  :set guioptions!=T<CR>
+
+" Place the command bar in the bottom with max height of 15
 let barposition = 'bottom'
+let searchlimit = 15
+" Only use google as completion engine
+let completionengines = ['google']
+
+" Scroll smoothly
+set smoothscroll
 
 " }}}
-" Mappings {{{
-map ; :
+" Bookmarks/Quickmarks {{{
+
+map <Leader>bm :bookmarks <Space>
+map <Leader>ab createBookmark
+
+" Use ' to jump to quickmarks in current tab and " in new tab
+map '* openQuickMark
+map "* openQuickMarkTabbed
+
+" " Define qmarks
+let qmark b = 'www.bitbucket.com'
+let qmark c = 'www.utdt.edu/campusvirtual'
+let qmark d = 'http://distancia.econ.uba.ar/'
+let qmark d = 'https://drive.google.com/drive/my-drive'
+let qmark e = 'https://extratorrent.unblockall.xyz/hot_torrents/2/XVID+DIVX.html'
+let qmark f = 'www.facebook.com'
+let qmark g = 'www.github.com'
+let qmark h = 'www.google.com.ar'
+let qmark i = 'www.infobae.com.ar'
+let qmark l = 'www.lanacion.com.ar'
+let qmark m = 'www.mercadolibre.com.ar'
+let qmark n = 'www.netflix.com'
+let qmark p = 'http://pirateproxy.net'
+let qmark s = 'http://stackoverflow.com'
+let qmark t = 'tex.stackexchange.com'
+let qmark u = 'www.alumnos.econ.uba.ar'
+let qmark v = 'http://virtual.econ.uba.ar/'
+let qmark y = 'www.yahoo.com/mail'
+
+" For jampp
+let qmark j = 'http://app.jampp.com/'
+let qmark q = 'http://emr-prd-queries.jampp.com:8889/'
+
+" }}}
+" Navigation and tab handling {{{
+
+" Show tab numbers
+set showtabindices
+" Open new tabs next to the currently opened tab
+set nonativelinkorder
+
+" Keys used for hints (front row)
 let hintcharacters = 'asdfghjkl'
+
+" Faster navigation
+" map j 3j
+" map k 3k
+
+" Scroll half page
+map <C-d> scrollPageDown
+map <C-u> scrollPageUp
+
 map s :open google <Space>
 map S :tabnew google <Space>
 
-" Tab navigation
+" New tab
+map <Leader>nt :tabopen<CR>
+map <C-t> :tabopen<CR>
+
+" Delete/ close tabs
 map <Leader>wd closeTab
 map <Leader>bd closeTab
 map <C-c> closeTab
+
+" Switch tabs as buffers in vim (with C-n and C-p)
 map <C-n> nextTab
 map <C-p> previousTab
-map <C-d> scrollPageDown
-map <C-u> scrollPageUp
-map <M-h> moveTabLeft
-map <M-l> moveTabRight
+
+" FIXME: Not working
+" Move the current tab
+map <A-h> moveTabLeft
+map <A-l> moveTabRight
+
+" Go to tab number
+switchTab(n) -> {{ RUNTIME('goToTab', {index: n - 1}); }}
+map <Leader>1 :call switchTab(1)<CR>
+map <Leader>2 :call switchTab(2)<CR>
+map <Leader>3 :call switchTab(3)<CR>
+map <Leader>4 :call switchTab(4)<CR>
+map <Leader>5 :call switchTab(5)<CR>
+map <Leader>6 :call switchTab(6)<CR>
+map <Leader>7 :call switchTab(7)<CR>
+map <Leader>8 :call switchTab(8)<CR>
+map <Leader>9 :call switchTab(9)<CR>
+
+
+" Clear search highlighting and normal highlighting
+map <Leader><Space> clearSearchHighlight
 
 " }}}
