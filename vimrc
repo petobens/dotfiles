@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 24 Jul 2017
+" Last Modified: 29 Jul 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1278,7 +1278,7 @@ call denite#custom#option('default', {
             \ 'statusline': 0,
             \ 'winheight': 15,
             \ 'updatetime': 100,
-            \ 'reversed': 0,
+            \ 'reversed': 1,
             \ 'prompt': '❯',
             \ 'prompt_highlight': 'Function',
             \ 'highlight_matched_char': 'Function',
