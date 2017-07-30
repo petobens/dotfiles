@@ -25,8 +25,8 @@ let mapleader = ','
 " Place the command bar in the bottom with max height of 15
 let barposition = 'bottom'
 let searchlimit = 15
-" Only use google as completion engine
-let completionengines = ['google', 'wikipedia', 'youtube']
+" Only complete from google and wikipedia
+let completionengines = ['google', 'wikipedia']
 
 " Scroll smoothly
 set smoothscroll
@@ -92,9 +92,6 @@ let hintcharacters = 'asdfghjkl'
 map <C-d> scrollPageDown
 map <C-u> scrollPageUp
 
-map s :open google<Space>
-map S :tabnew google<Space>
-
 " New tab
 map <Leader>nt :tabopen<CR>
 map <C-t> :tabopen<CR>
@@ -103,6 +100,9 @@ map <C-t> :tabopen<CR>
 map <Leader>wd closeTab
 map <Leader>bd closeTab
 map <C-c> closeTab
+
+" Undo last tab
+map u lastClosedTab
 
 " Switch tabs as buffers in vim (with C-n and C-p)
 map <C-n> nextTab
@@ -184,11 +184,15 @@ map <Leader>dl :chrome downloads<CR>
 " Addons (i.e extensions)
 map <Leader>ad :chrome extensions<CR>
 
-
-" Search in wikipedia wikipedia
+" Search engines
+map s :open google<Space>
+map S :tabnew google<Space>
 map <Leader>sw :open wikipedia<Space>
 map <Leader>Sw :tabopen wikipedia<Space>
 map <Leader>sy :open youtube<Space>
 map <Leader>Sy :tabopen youtube<Space>
+let searchengine stackoverflow = "http://stackoverflow.com/search?q="
+map <Leader>ss :open stackoverflow<Space>
+map <Leader>Ss :tabopen stackoverflow<Space>
 
 " }}}
