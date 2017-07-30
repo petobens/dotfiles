@@ -194,5 +194,8 @@ map <Leader>Sy :tabopen youtube<Space>
 let searchengine stackoverflow = "http://stackoverflow.com/search?q="
 map <Leader>ss :open stackoverflow<Space>
 map <Leader>Ss :tabopen stackoverflow<Space>
+let searchengine meli = "http://www.mercadolibre.com.ar/jm/search?as_word="
+map <Leader>sm :open meli<Space>
+map <Leader>Sm :tabopen meli<Space>
 
 " }}}
