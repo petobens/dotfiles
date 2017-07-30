@@ -2,7 +2,7 @@
 "          File: pentadactylrc
 "        Author: Pedro Ferrari
 "       Created: 24 sep 2013
-" Last Modified: 06 Jun 2017
+" Last Modified: 30 Jul 2017
 "   Description: My pentadactylrc
 "===============================================================================
 " If nightly builds are not available we use releases from the following fork:
@@ -123,6 +123,9 @@ nmap -builtin  <Leader>6 :buffer 6<CR>
 nmap -builtin  <Leader>7 :buffer 7<CR>
 nmap -builtin  <Leader>8 :buffer 8<CR>
 nmap -builtin  <Leader>9 :buffer 9<CR>
+
+" Explore open tabs/buffers
+map -builtin <Leader>be :buffer<Space>
 
 " Tiles (similar to splits)
 nmap -builtin  <Leader>vs :emenu Tile.New Layout.2 Tabs - Vertical<CR>
