@@ -128,6 +128,9 @@ map <Leader>9 :call switchTab(9)<CR>
 " Explore open tabs/buffers
 map <Leader>be :buffer<Space>
 
+" Mute tab
+map M muteTab
+
 " Clear search highlighting and normal highlighting
 map <Leader><Space> clearSearchHighlight
 
