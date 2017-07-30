@@ -9,8 +9,6 @@ set localconfig
 
 " Set local leader to comma
 let mapleader = ","
-" Open command mode more easily
-map ; :
 
 " }}}
 " Appearance and options {{{
@@ -26,15 +24,22 @@ map ; :
 let barposition = 'bottom'
 let searchlimit = 15
 " Only use google as completion engine
-let completionengines = ['google']
+let completionengines = ['google', 'wikipedia', 'youtube']
 
 " Scroll smoothly
 set smoothscroll
 
+" Stops sites from focusing on an input box when they load
+set noautofocus
+
+" The following should autoselect first candidate
+" FIXME: Not working
+set completeonopen
+
 " }}}
 " Bookmarks/Quickmarks {{{
 
-map <Leader>bm :bookmarks <Space>
+map <Leader>bm :bookmarks<Space>
 map <Leader>ab createBookmark
 
 " Use ' to jump to quickmarks in current tab and " in new tab
@@ -77,15 +82,16 @@ set nonativelinkorder
 let hintcharacters = 'asdfghjkl'
 
 " Faster navigation
-" map j 3j
-" map k 3k
+" FIXME: Not working
+" map j :execute 3j<CR>
+" map k :execute 3k<CR>
 
 " Scroll half page
 map <C-d> scrollPageDown
 map <C-u> scrollPageUp
 
-map s :open google <Space>
-map S :tabnew google <Space>
+map s :open google<Space>
+map S :tabnew google<Space>
 
 " New tab
 map <Leader>nt :tabopen<CR>
@@ -117,8 +123,63 @@ map <Leader>7 :call switchTab(7)<CR>
 map <Leader>8 :call switchTab(8)<CR>
 map <Leader>9 :call switchTab(9)<CR>
 
+" Explore open tabs/buffers
+map <Leader>be :buffer<Space>
 
 " Clear search highlighting and normal highlighting
 map <Leader><Space> clearSearchHighlight
+
+" }}}
+" Insert mode {{{
+
+" Exit insert mode with jj
+" imap jj :execute <Esc><CR>
+
+" Focus on first input field fast (note that i gets into caret mode)
+map I gi
+" Go to the second input field (useful for skipping over search fields)
+" FIXME: Not working
+map gI 2gi
+
+" Move left and write like in normal mode
+imap <C-l> forwardChar
+imap <C-h> backwardChar
+
+" " Yank and  paste in insert mode with C-c and C-v
+" imap -builtin <C-c> <C-v><C-c>
+" imap -builtin <C-v> <S-Ins>
+
+" }}}
+" Command mode {{{
+
+" Make ; work like : to enter command mode (; is used to enter extended hints)
+map ; :
+
+" }}}
+" Convenient mappings {{{
+
+" Kill Chrome (save first the current session and then quit)
+map <Leader>kv :qall<CR>
+" Restart Chrome
+map <Leader>rs :chrome://restart<CR>
+" Restore previous session
+" nmap -builtin  <Leader>ps :emenu History.Restore Previous Session<CR>
+" History
+" nmap -builtin <Leader>hs :history<CR>
+" Clear history
+" nmap -builtin <Leader>ch :emenu History.Clear Recent History…<CR>
+
+" Downloads
+map <Leader>dl :chrome downloads<CR>
+
+" Addons (i.e extensions)
+map <Leader>ad :chrome extensions<CR>
+
+
+" Search in wikipedia wikipedia
+map <Leader>sw :open wikipedia<Space>
+map <Leader>Sw :tabopen wikipedia<Space>
+map <Leader>sy :open youtube<Space>
+map <Leader>Sy :tabopen youtube<Space>
 
 " }}}
