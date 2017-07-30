@@ -1,14 +1,16 @@
+" Consider trying fork at https://github.com/hbt/mouseless
+
 " Preamble {{{
 
 " To load this local cvimrc:
-" i) In the browser run `:source /path/to/your/.cvimrc`
-" ii) Go to :settings and put only set localconfig in the cvimrc textarea
-" iii)  Check `Allow access to file URLS` for cvim in the extension view
+" i) Go to :settings and put only set localconfig in the cvimrc textarea
+" ii) In the browser run `:source /path/to/your/.cvimrc`
+" iii) Check `Allow access to file URLS` for cvim in the extension view
 let configpath = '/Users/pedro/.cvimrc'
 set localconfig
 
 " Set local leader to comma
-let mapleader = ","
+let mapleader = ','
 
 " }}}
 " Appearance and options {{{
@@ -32,8 +34,8 @@ set smoothscroll
 " Stops sites from focusing on an input box when they load
 set noautofocus
 
-" The following should autoselect first candidate
-" FIXME: Not working
+" The following should autoselect first candidate?
+" FIXME: https://github.com/1995eaton/chromium-vim/issues/335
 set completeonopen
 
 " }}}
@@ -82,7 +84,7 @@ set nonativelinkorder
 let hintcharacters = 'asdfghjkl'
 
 " Faster navigation
-" FIXME: Not working
+" FIXME: https://github.com/1995eaton/chromium-vim/issues/464
 " map j :execute 3j<CR>
 " map k :execute 3k<CR>
 
@@ -106,10 +108,10 @@ map <C-c> closeTab
 map <C-n> nextTab
 map <C-p> previousTab
 
-" FIXME: Not working
-" Move the current tab
-map <A-h> moveTabLeft
-map <A-l> moveTabRight
+" FIXME: https://github.com/1995eaton/chromium-vim/issues/458
+" Move the current tab (we do it with shift instead of alt for now)
+map <C-S-h> moveTabLeft
+map <C-S-l> moveTabRight
 
 " Go to tab number
 switchTab(n) -> {{ RUNTIME('goToTab', {index: n - 1}); }}
@@ -133,12 +135,15 @@ map <Leader><Space> clearSearchHighlight
 " Insert mode {{{
 
 " Exit insert mode with jj
-" imap jj :execute <Esc><CR>
+" FIXME: https://github.com/1995eaton/chromium-vim/issues/178
+" We also cannot "de-focus" the address bar:
+" https://github.com/1995eaton/chromium-vim/issues/560
+" imap jj <ESC>
 
 " Focus on first input field fast (note that i gets into caret mode)
 map I gi
 " Go to the second input field (useful for skipping over search fields)
-" FIXME: Not working
+" FIXME: only some work: https://github.com/1995eaton/chromium-vim/issues/426
 map gI 2gi
 
 " Move left and write like in normal mode
@@ -158,14 +163,18 @@ map ; :
 " }}}
 " Convenient mappings {{{
 
+" Copy the url of the current page to the clibboard
+map y yankDocumentUrl
+
 " Kill Chrome (save first the current session and then quit)
 map <Leader>kv :qall<CR>
 " Restart Chrome
 map <Leader>rs :chrome://restart<CR>
 " Restore previous session
 " nmap -builtin  <Leader>ps :emenu History.Restore Previous Session<CR>
-" History
-" nmap -builtin <Leader>hs :history<CR>
+" History (and tab history)
+map <Leader>hs :history<Space>
+map <Leader>th :tabhistory<Space>
 " Clear history
 " nmap -builtin <Leader>ch :emenu History.Clear Recent History…<CR>
 
