@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 03 Jul 2017
+-- Last Modified: 30 Jul 2017
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -189,6 +189,8 @@ hs.hotkey.bind(cmd_ctrl, "x", function()
 hs.hotkey.bind(cmd_ctrl, "w", function()
                 hs.application.launchOrFocus("Microsoft Word") end)
 hs.hotkey.bind(cmd_ctrl, "g", function()
+                hs.application.launchOrFocus("Google Chrome") end)
+hs.hotkey.bind(cmd_ctrl, "q", function()
                 hs.application.launchOrFocus("Giphy Capture") end)
 hs.hotkey.bind(cmd_ctrl, "s", function()
                 hs.application.launchOrFocus("Skype") end)
