@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 03 Mar 2017
+# Last Modified: 03 Aug 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -251,8 +251,12 @@ logger = logging.getLogger('${2:module_logger}')$0
 endsnippet
 
 snippet bl "Basic Logger" b
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)$0
+logging.basicConfig(
+level=logging.${1:DEBUG},
+format='%(asctime)s-%(name)s-%(levelname)s: %(message)s',
+handlers=[logging.FileHandler('${2:logger_name}.log'),
+			logging.StreamHandler()]
+)$0
 endsnippet
 
 # **}
