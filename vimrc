@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 29 Jul 2017
+" Last Modified: 04 Aug 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1334,7 +1334,13 @@ function! s:DeniteGrep()
     if narrow_dir == ''
         return
     endif
-    call denite#start([{'name': 'grep', 'args': [narrow_dir]}])
+    let filetype = input('Filetype: ', '')
+    if filetype == ''
+        let ft_filter = '--all-types'
+    else
+        let ft_filter = '--' . filetype
+    endif
+    call denite#start([{'name': 'grep', 'args': [narrow_dir, [ft_filter]]}])
 endfunction
 function! s:DeniteTasklist()
     call denite#start([{'name': 'grep',
