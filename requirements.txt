@@ -2,11 +2,12 @@
 #          File: requirements.txt
 #        Author: Pedro Ferrari
 #       Created: 12 Dec 2016
-# Last Modified: 03 Jul 2017
+# Last Modified: 04 Aug 2017
 #   Description: Usual python libraries
 # ==============================================================================
 beautysh; python_version >= '3.5'
 bokeh
+coverage
 cython
 flake8; python_version >= '3.5'
 jedi; python_version >= '3.5'
@@ -24,6 +25,7 @@ powerline-status; python_version >= '3.5'
 powerline-gitstatus; python_version >= '3.5'
 scikit-learn
 pyhive
+pytest
 ranger-fm; python_version >= '3.5'
 scipy
 sqlparse; python_version >= '3.5'
