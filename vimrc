@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 04 Aug 2017
+" Last Modified: 05 Aug 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1366,8 +1366,10 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
-nnoremap <silent> ]d :<C-U>execute 'Denite -resume -cursor-pos=+'. v:count1<CR>
-nnoremap <silent> [d :<C-U>execute 'Denite -resume -cursor-pos=-'. v:count1<CR>
+nnoremap <silent> ]d :<C-U>execute 'Denite -resume  -immediately ' .
+            \ -cursor-pos=+'. v:count1<CR>
+nnoremap <silent> [d :<C-U>execute 'Denite -resume -immediately ' .
+            \ -cursor-pos=-'. v:count1<CR>
 nnoremap ]D :<C-u>Denite -resume -cursor-pos=$<CR>
 nnoremap [D :<C-u>Denite -resume -cursor-pos=0<CR>
 " NeoInclude and Denite tag
