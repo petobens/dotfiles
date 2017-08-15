@@ -426,11 +426,7 @@ else:
 % Reduce margins (i.e increase textwidth)
 \setbeamersize{text margin left=0.35cm,text margin right=0.35cm}
 
-% Fix short title color and hyperlink clash in footline
-% \addtobeamertemplate{footline}{\hypersetup{allcolors=.}}{}
-
 % Define color
-% TODO: Add arbitrary color here
 \definecolor{${2:jampp_color}}{RGB}{${6:`!p snip.rv= '54,53,91' if t[2] == 'jampp_color' else ''`}}
 
 % Set frametitle, title and date color
@@ -448,15 +444,15 @@ else:
 \end{beamercolorbox}
 }
 
-% Insert logo in headline (load tikz package for this)
+% Insert rule and logo in headline (load tikz package for this)
 \usepackage{tikz}
 \usetikzlibrary{arrows,intersections,calc,decorations.pathreplacing,
 decorations.markings}
 \addtobeamertemplate{frametitle}{}{%
 \begin{tikzpicture}[remember picture,overlay]
 \node[anchor=north east, xshift=-7pt] at (current page.north east)
-{\includegraphics[scale=0.175]{$11}};
-\draw[blue!40!black!90!] ([yshift=-0.72cm, xshift=0.25cm]current page.north west)
+{\includegraphics[scale=0.12]{$11}};
+\draw[$2] ([yshift=-0.72cm, xshift=0.25cm]current page.north west)
 	-- ([yshift=-0.72cm, xshift=\paperwidth - 0.25cm]current page.north west);
 \end{tikzpicture}}
 
@@ -569,17 +565,19 @@ else:
 
 % Enumerate
 % Note: For a list of steps give the optional argument [Step 1.] to enumerate
+% To use regular enumeration uncomment the following line
 % \setbeamertemplate{enumerate items}[default]
 \setbeamercolor*{item projected}{bg=$2, fg=white}
 \setbeamercolor*{enumerate item}{fg=$2}
 \setbeamercolor*{enumerate subitem}{fg=$2}
-\renewcommand{\insertsubenumlabel}{\roman{enumii}}
-\renewcommand{\insertsubsubenumlabel}{\alph{enumiii}}
+\setbeamercolor*{enumerate subsubitem}{fg=$2}
+\renewcommand{\insertsubenumlabel}{\alph{enumii}}
+\renewcommand{\insertsubsubenumlabel}{\roman{enumiii}}
 
-% Increase item separation
+% Increase item separation a bit
 \let\olditem\item
 \renewcommand{\item}{%
-\olditem\vspace{3pt}}
+\olditem\vspace{2pt}}
 
 % Temporary counter to store enumerate value
 \newcounter{enumtemp}
@@ -736,7 +734,7 @@ pdfkeywords={${14:keywords}}
 ${10:\titlegraphic{%
 \begin{tikzpicture}[remember picture,overlay]
 \node[anchor=north east, yshift=-1pt] at (current page.north east)
-{\includegraphics[scale=0.175]{${11:logo_path.png}}};
+{\includegraphics[scale=0.12]{${11:logo_path.png}}};
 \end{tikzpicture}}}
 
 % Add agenda toc frame at the beginning of each section and anchor for proper
@@ -780,7 +778,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 
 \begin{document}
 
-\frame{\titlepage}
+\frame[plain]{\titlepage}
 
 ${VISUAL}$0
 
