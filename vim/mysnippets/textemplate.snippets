@@ -2,7 +2,7 @@
 #          File: textemplate.snippets
 #        Author: Pedro Ferrari
 #       Created: 25 Feb 2013
-# Last Modified: 13 Jul 2016
+# Last Modified: 15 Aug 2017
 #   Description: Latex templates to use with Vim Ultisnips
 #===============================================================================
 # Global functions **{
@@ -369,6 +369,7 @@ endsnippet
 # Beamer **{
 
 snippet bea "Beamer template" b
+\PassOptionsToPackage{table,x11names}{xcolor}
 \documentclass[leqno, 10pt, envcountsect]{beamer}
 
 %------------------------------+
@@ -414,44 +415,60 @@ else:
 %-------------------------------------+
 % Beamer style: theme, frames, titles |
 %-------------------------------------+
-% Set type (theme): whale (color), rounded (inner) and infolines (outer)
-\usetheme{Madrid}
+% Use the default theme (alternative define another one like this:)
+% \usetheme{Madrid}
 
 % Frames (empty navigation bar and add roman number title when a frame is split)
 \beamertemplatenavigationsymbolsempty
 \setbeamertemplate{frametitle continuation}[from second][
 	\insertcontinuationcountroman]
 
-% Set frametitle, title and date color
-\setbeamercolor*{frametitle}{fg=white,bg=structure.fg!75!black}
-\setbeamercolor*{title}{fg=white,bg=structure.fg!75!black}
-\setbeamercolor*{date in head/foot}{fg=white,bg=structure.fg!92!black}
-
-% Reduce frametitle height (see beamerouterthemedefault.sty)
-\setbeamertemplate{frametitle}{%
-	\nointerlineskip
-	\begin{beamercolorbox}[sep=0.9ex,wd=\paperwidth,leftskip=.1cm,
-		rightskip=0cm]{frametitle}%
-		\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}%
-			\insertframetitle\\\\[2.5pt]
-		\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}%
-			\insertframesubtitle
-	\end{beamercolorbox}%
-}
-
-% Center date in footline (see infolines outer theme)
-\makeatletter
-\patchcmd{\beamer@@tmpl@footline}{right}{left}{}{}% change in-box alignment
-\patchcmd{\beamer@@tmpl@footline}% replace def of 'date in head/foot' box
-	{\usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
-		\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}}
-	{\rlap{\makebox[.333333\paperwidth][r]{%
-		\insertframenumber{} / \inserttotalframenumber \hspace*{2ex}}}
-		\usebeamerfont{date in head/foot}\hfill\insertshortdate{}\hfill}{}{}
-\makeatother
+% Reduce margins (i.e increase textwidth)
+\setbeamersize{text margin left=0.35cm,text margin right=0.35cm}
 
 % Fix short title color and hyperlink clash in footline
-\addtobeamertemplate{footline}{\hypersetup{allcolors=.}}{}
+% \addtobeamertemplate{footline}{\hypersetup{allcolors=.}}{}
+
+% Define color
+% TODO: Add arbitrary color here
+\definecolor{${2:jampp_color}}{RGB}{${6:`!p snip.rv= '54,53,91' if t[2] == 'jampp_color' else ''`}}
+
+% Set frametitle, title and date color
+\setbeamercolor*{title}{fg=$2}
+\setbeamercolor*{frametitle}{fg=black}
+\setbeamerfont{frametitle}{size=\small, series=\bfseries}
+\setbeamertemplate{frametitle}{\hspace{-0.1cm}
+	\expandafter\MakeUppercase\expandafter\insertframetitle
+}
+
+% Insert Page number in footline
+\defbeamertemplate*{footline}{example theme}
+{\begin{beamercolorbox}[wd=\paperwidth, dp=2.5ex]{}
+	\hfill\textcolor{$2}{\scriptsize{\insertframenumber}}\hspace{0.4cm}
+\end{beamercolorbox}
+}
+
+% Insert logo in headline (load tikz package for this)
+\usepackage{tikz}
+\usetikzlibrary{arrows,intersections,calc,decorations.pathreplacing,
+decorations.markings}
+\addtobeamertemplate{frametitle}{}{%
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north east, xshift=-7pt] at (current page.north east)
+{\includegraphics[scale=0.175]{$11}};
+\draw[blue!40!black!90!] ([yshift=-0.72cm, xshift=0.25cm]current page.north west)
+	-- ([yshift=-0.72cm, xshift=\paperwidth - 0.25cm]current page.north west);
+\end{tikzpicture}}
+
+% Comment or uncomment to see notes
+% \setbeameroption{show notes}
+% Display notes with item option as an itemize environment (instead of an
+% enumerate one)
+\AtBeginNote{%
+	\let\enumerate\itemize%
+	\let\endenumerate\enditemize%
+}
+% \setbeameroption{show notes on second screen=right}
 
 %-------------------------------+
 % Math symbols and environments |
@@ -540,25 +557,48 @@ else:
 %------------------------------------------------------+
 % Lists symbols and colors
 \useinnertheme{circles}
-\setbeamertemplate{itemize item}{$\bullet$}
-\setbeamertemplate{itemize subitem}[triangle]
-\setbeamercolor*{itemize item}{fg=structure.fg!75!black}
-\setbeamercolor*{itemize subitem}{fg=structure.fg!75!black}
-\setbeamercolor*{itemize subsubitem}{fg=structure.fg!75!black}
+
+% Itemize
+\setbeamertemplate{itemize item}{\large{$\bullet$}}
+\setbeamertemplate{itemize subitem}{\scriptsize{\textbf{\textcircled{}}}}
+\setbeamertemplate{itemize subsubitem}{--}
+\setbeamercolor*{itemize item}{fg=$2}
+\setbeamercolor*{itemize subitem}{fg=$2}
+\setbeamercolor*{itemize subsubitem}{fg=$2}
+\setlength{\leftmargini}{0.4cm}
+
+% Enumerate
 % Note: For a list of steps give the optional argument [Step 1.] to enumerate
 % \setbeamertemplate{enumerate items}[default]
-\setbeamercolor*{item projected}{bg=structure.fg!75!black, fg=white}
+\setbeamercolor*{item projected}{bg=$2, fg=white}
+\setbeamercolor*{enumerate item}{fg=$2}
+\setbeamercolor*{enumerate subitem}{fg=$2}
 \renewcommand{\insertsubenumlabel}{\roman{enumii}}
 \renewcommand{\insertsubsubenumlabel}{\alph{enumiii}}
+
+% Increase item separation
+\let\olditem\item
+\renewcommand{\item}{%
+\olditem\vspace{3pt}}
 
 % Temporary counter to store enumerate value
 \newcounter{enumtemp}
 
-% Useful for inserting code (no unicode support)
-% \usepackage{listings}
-% \lstset{basicstyle=\small\ttfamily}
+% Code insertion (note: requires pygment python library and shell pdflatex flag)
+\usepackage{minted}
+% Define bg_color and frame border (using tcolorbox)
+\definecolor{notebook_bg}{RGB}{247,247,247}
+\definecolor{notebook_border}{RGB}{207,207,207}
+\usepackage{tcolorbox}
+\BeforeBeginEnvironment{minted}{\begin{tcolorbox}[colframe=notebook_border,
+colback=notebook_bg, boxrule=0.4pt, left=0pt, top=0pt, bottom=0pt]}%
+\AfterEndEnvironment{minted}{\end{tcolorbox}}%
+% Set minted style
+\setminted{style=default, fontsize=\scriptsize, autogobble}
 
 % \usepackage{lipsum}    % Dummy text generator
+
+\usepackage[normalem]{ulem} % strikethrough
 
 %--------------------------+
 % References and footnotes |
@@ -588,10 +628,10 @@ backend=biber]{biblatex}
 
 % Hyperref setup
 \hypersetup{colorlinks=true, allcolors=structure.fg!92!black,
-pdfcreator={Vim LaTeX}, pdfsubject={${10:Subject}},
-pdftitle={$2},
-pdfauthor={`!p snip.rv = pdf(t[4])`},
-pdfkeywords={${11:keywords}}
+pdfcreator={Vim LaTeX}, pdfsubject={${13}},
+pdftitle={$3},
+pdfauthor={`!p snip.rv = pdf(t[5])`},
+pdfkeywords={${14:keywords}}
 }
 
 % Add anchor for equations, figures and tables
@@ -644,17 +684,61 @@ pdfkeywords={${11:keywords}}
 %------------------------+
 % Title and TOC settings |
 %------------------------+
-% Reduce date font
+% Reduce date font and change title and subtitle color
+\setbeamerfont{title}{shape=\bfseries, size=\large}
+\setbeamerfont{subtitle}{series=\mdseries}
 \setbeamerfont{date}{size=\scriptsize}
+\setbeamercolor{title}{fg=black}
 
-\title[${12:$2}]{${2:Title}}
-\subtitle{${3:Subtitle}}
-\author[${5:institution}]{${4:authors separated by '\and'}}
-\institute[]{$6}
-\date[${6:`!p snip.rv= '\\Today' if t[1] == 'spanish' else '\\today'`}]{}
-${7:\titlegraphic{\includegraphics[scale=0.7]{${8:logo_utdt_color}.${9:pdf}}}}
-`!p snip.rv = of(t, 7,'\n')`% Increase TOC number size
-\setbeamerfont{section number projected}{size=\footnotesize}
+% Use uppercase for title and subtitle
+\makeatletter
+\setbeamertemplate{title page}{%
+	\vbox{}
+	\vfill
+	\begingroup
+		\centering
+		\begin{beamercolorbox}[sep=8pt,center]{title}
+		\usebeamerfont{title}\MakeUppercase{\inserttitle}\par%
+		\ifx\insertsubtitle\@empty%
+		\else%
+			\vskip0.25em%
+			{\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\MakeUppercase{\insertsubtitle}\par}%
+		\fi%
+	\end{beamercolorbox}%
+	\vskip1em\par
+	\begin{beamercolorbox}[sep=8pt,center]{author}
+		\usebeamerfont{author}\insertauthor
+	\end{beamercolorbox}
+	\begin{beamercolorbox}[sep=8pt,center]{institute}
+		\usebeamerfont{institute}\insertinstitute
+	\end{beamercolorbox}
+	\begin{beamercolorbox}[sep=8pt,center]{date}
+		\usebeamerfont{date}\insertdate
+	\end{beamercolorbox}\vskip0.5em
+	{\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+	\endgroup
+	\vfill
+}
+\makeatother
+
+% Increase separation between top of the slide and title
+\makeatletter
+\expandafter\patchcmd\csname beamer@@tmpl@title page\endcsname%
+	{\vfill}{\vspace*{0.3cm}}{}{}
+\makeatother
+
+% Actually define maketitle
+\title[${12:$3}]{${3:Title}}
+\subtitle{${4:Subtitle}}
+\author[${6:institution}]{${5:authors separated by '\and'}}
+\institute[]{${7:`!p snip.rv= '\\Today' if t[1] == 'spanish' else '\\today'`}}
+\date[]{${8:\includegraphics[scale=0.47]{${9:title_graphic_filepath}}}}
+${10:\titlegraphic{%
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north east, yshift=-1pt] at (current page.north east)
+{\includegraphics[scale=0.175]{${11:logo_path.png}}};
+\end{tikzpicture}}}
+
 % Add agenda toc frame at the beginning of each section and anchor for proper
 % hyperlinking
 \AtBeginSection[]{
@@ -664,6 +748,15 @@ ${7:\titlegraphic{\includegraphics[scale=0.7]{${8:logo_utdt_color}.${9:pdf}}}}
 		\tableofcontents[currentsection]
 	\end{frame}
 }
+% Increase TOC number size
+\setbeamerfont{section number projected}{size=\footnotesize}
+% Change toc bullets to circles and use black color
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+	\node[shape=circle,draw=$2,inner sep=2pt,
+	line width=0.6pt, text=black] (char) {#1};}}
+\setbeamertemplate{section in
+toc}{\circled{\small{\inserttocsectionnumber}}~%
+\bfseries{\inserttocsection}}
 
 %---------------------------------------------------+
 % (Re)Definition of new commands and math operators |
