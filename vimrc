@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 05 Aug 2017
+" Last Modified: 15 Aug 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -618,8 +618,8 @@ nnoremap Q gwap
 " Sort alphabetically ignoring case
 nnoremap <Leader>sa :sort i<CR>
 
-" Upper case inner word (one can toggle a visual selection case with ~)
-nnoremap <A-u> mzgUiw`z
+" Toggle (Upper)casing inner word
+nnoremap <A-u> mzg~iw`z
 
 " Search and replace
 nnoremap <Leader>sr :%s/
