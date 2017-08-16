@@ -2,7 +2,7 @@
 #          File: textemplate.snippets
 #        Author: Pedro Ferrari
 #       Created: 25 Feb 2013
-# Last Modified: 15 Aug 2017
+# Last Modified: 16 Aug 2017
 #   Description: Latex templates to use with Vim Ultisnips
 #===============================================================================
 # Global functions **{
@@ -565,8 +565,8 @@ else:
 
 % Enumerate
 % Note: For a list of steps give the optional argument [Step 1.] to enumerate
-% To use regular enumeration uncomment the following line
-% \setbeamertemplate{enumerate items}[default]
+% To use projected enumeration items comment the following line
+\setbeamertemplate{enumerate items}[default]
 \setbeamercolor*{item projected}{bg=$2, fg=white}
 \setbeamercolor*{enumerate item}{fg=$2}
 \setbeamercolor*{enumerate subitem}{fg=$2}
