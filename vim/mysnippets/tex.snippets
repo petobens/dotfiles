@@ -2,7 +2,7 @@
 #          File: tex.snippets
 #        Author: Pedro Ferrari
 #       Created: 25 feb 2013
-# Last Modified: 13 Jul 2016
+# Last Modified: 16 Aug 2017
 #   Description: Latex snippets
 #===============================================================================
 extends textemplate
@@ -200,8 +200,9 @@ endsnippet
 # Beamer **{
 
 snippet bf "Beamer frame" b
-\begin{frame}${1:[allowframebreaks]}`!p snip.rv = of(t, 2, "\n  ")`${2:\frametitle{${3:Title}}}
-	${VISUAL}$5
+\begin{frame}
+	\frametitle{${1:Title}}
+	${VISUAL}$2
 \end{frame}$0
 endsnippet
 
