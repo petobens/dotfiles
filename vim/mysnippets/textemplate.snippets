@@ -370,7 +370,7 @@ endsnippet
 
 snippet bea "Beamer template" b
 \PassOptionsToPackage{table,x11names}{xcolor}
-\documentclass[leqno, 11pt, envcountsect]{beamer}
+\documentclass[leqno, 10pt, envcountsect]{beamer}
 
 %------------------------------+
 % Silence compilation warnings |
@@ -432,7 +432,7 @@ else:
 % Set frametitle, title and date color
 \setbeamercolor*{title}{fg=$2}
 \setbeamercolor*{frametitle}{fg=black}
-\setbeamerfont{frametitle}{size=\small, series=\bfseries}
+\setbeamerfont{frametitle}{size=\normalsize, series=\bfseries}
 \setbeamertemplate{frametitle}{\hspace{-0.1cm}
 	\expandafter\MakeUppercase\expandafter\insertframetitle
 }
