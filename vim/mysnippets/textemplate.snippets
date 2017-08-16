@@ -451,7 +451,7 @@ decorations.markings}
 \addtobeamertemplate{frametitle}{}{%
 \begin{tikzpicture}[remember picture,overlay]
 \node[anchor=north east, xshift=-7pt] at (current page.north east)
-{\includegraphics[scale=0.12]{$11}};
+{\includegraphics[scale=0.12]{$9}};
 \draw[$2] ([yshift=-0.72cm, xshift=0.25cm]current page.north west)
 	-- ([yshift=-0.72cm, xshift=\paperwidth - 0.25cm]current page.north west);
 \end{tikzpicture}}
@@ -731,11 +731,11 @@ pdfkeywords={${14:keywords}}
 \subtitle{${4:Subtitle}}
 \author[${6:institution}]{${5:authors separated by '\and'}}
 \institute[]{${7:`!p snip.rv= '\\Today' if t[1] == 'spanish' else '\\today'`}}
-\date[]{${8:\includegraphics[scale=0.47]{${9:title_graphic_filepath}}}}
+\date[]{${8:\includegraphics[scale=0.47]{${9:logo_filepath}}}}
 ${10:\titlegraphic{%
 \begin{tikzpicture}[remember picture,overlay]
 \node[anchor=north east, yshift=-1pt] at (current page.north east)
-{\includegraphics[scale=0.12]{${11:logo_path.png}}};
+{\includegraphics[scale=0.12]{${11:titlegraph_path.png}}};
 \end{tikzpicture}}}
 
 % Add agenda toc frame at the beginning of each section and anchor for proper
