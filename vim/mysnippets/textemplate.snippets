@@ -450,10 +450,10 @@ else:
 decorations.markings}
 \addtobeamertemplate{frametitle}{}{%
 \begin{tikzpicture}[remember picture,overlay]
-\node[anchor=north east, xshift=-7pt] at (current page.north east)
+\node[anchor=south west, yshift=-2pt, xshift=1pt] at (current page.south west)
 {\includegraphics[scale=0.12]{$11}};
-\draw[$2] ([yshift=-0.72cm, xshift=0.25cm]current page.north west)
-	-- ([yshift=-0.72cm, xshift=\paperwidth - 0.25cm]current page.north west);
+\draw[$2] ([yshift=-0.65cm, xshift=0.25cm]current page.north west)
+	-- ([yshift=-0.65cm, xshift=\paperwidth - 0.25cm]current page.north west);
 \end{tikzpicture}}
 
 % Comment or uncomment to see notes
