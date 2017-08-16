@@ -370,7 +370,7 @@ endsnippet
 
 snippet bea "Beamer template" b
 \PassOptionsToPackage{table,x11names}{xcolor}
-\documentclass[leqno, 10pt, envcountsect]{beamer}
+\documentclass[leqno, 11pt, envcountsect]{beamer}
 
 %------------------------------+
 % Silence compilation warnings |
@@ -577,7 +577,7 @@ else:
 % Increase item separation a bit
 \let\olditem\item
 \renewcommand{\item}{%
-\olditem\vspace{2pt}}
+\olditem\vspace{1pt}}
 
 % Temporary counter to store enumerate value
 \newcounter{enumtemp}
@@ -683,7 +683,7 @@ pdfkeywords={${14:keywords}}
 % Title and TOC settings |
 %------------------------+
 % Reduce date font and change title and subtitle color
-\setbeamerfont{title}{shape=\bfseries, size=\large}
+\setbeamerfont{title}{shape=\bfseries, size=\Large}
 \setbeamerfont{subtitle}{series=\mdseries}
 \setbeamerfont{date}{size=\scriptsize}
 \setbeamercolor{title}{fg=black}
