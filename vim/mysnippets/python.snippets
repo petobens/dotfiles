@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 03 Aug 2017
+# Last Modified: 16 Aug 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -237,6 +237,10 @@ endsnippet
 
 snippet pdf "Pandas DataFrame" w
 pd.DataFrame(${1:[[$2]]}, columns=[$3])$0
+endsnippet
+
+snippet rdf "Random Pandas DataFrame" w
+pd.DataFrame(np.random.randint(0, 100, size=(100, 4)), columns=list('ABCD'))
 endsnippet
 
 snippet li "Logger info" b
