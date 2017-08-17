@@ -2,7 +2,7 @@
 #          File: textemplate.snippets
 #        Author: Pedro Ferrari
 #       Created: 25 Feb 2013
-# Last Modified: 16 Aug 2017
+# Last Modified: 17 Aug 2017
 #   Description: Latex templates to use with Vim Ultisnips
 #===============================================================================
 # Global functions **{
@@ -445,6 +445,8 @@ else:
 }
 
 % Insert rule and logo in headline (load tikz package for this)
+% To make this work with multiline frametitle see:
+% https://tex.stackexchange.com/a/386733/9953
 \usepackage{tikz}
 \usetikzlibrary{arrows,intersections,calc,decorations.pathreplacing,
 decorations.markings}
