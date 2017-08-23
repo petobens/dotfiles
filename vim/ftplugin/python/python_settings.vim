@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 23 Jul 2017
+" Last Modified: 23 Aug 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -594,14 +594,14 @@ function! s:RunPyTest(level)
         echoerr 'py.test is not installed or not in your path.'
         return
     endif
-    " Also exit if coverage is not installed
+    " Also exit if coverage is not installed (note we also need pytest-cov)
+    " TODO: Find a way to check if pytest-cov is installed
     if !executable('coverage')
         echoerr 'coverage is not installed or not in your path.'
         return
     endif
-    " Don't run py.test if there is only one empty line or we are in a Gdiff
-    " (when file path includes .git)
-    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
+    " Don't run py.test if we are in a Gdiff (when file path includes .git)
+    if expand('%:p') =~# "/\\.git/"
         return
     endif
 
@@ -617,9 +617,11 @@ function! s:RunPyTest(level)
 
     " Set compiler (Use short traceback print mode and decrease verbosity)
     let compiler = 'py.test --tb=short -q '
-    " let &l:makeprg = compiler . current_file
 
-    " Check if we have a tests dir and change lcd to it
+    " Check if we have a tests dir and change lcd to it (essentially move up
+    " from the current directory until we find a `tests` directory)
+    " Note: this assumes we have a tests dir outside the application code (i.e
+    " at the same level as the application code)
     let test_dir = ''
     let dir_level = ':p:h'
     for i in [1, 2, 3]
@@ -645,11 +647,11 @@ function! s:RunPyTest(level)
     if a:level ==# 'suite'
         " We want to get coverage when running the full test suite
         let compiler = compiler . '--cov-report term-missing --cov='
-        " Try to infer project name (by searching for a main.py file)
-        let proj_dir = globpath(test_dir . '/**', 'main.py', 0, 1)
-        if len(proj_dir) == 1
-            let project = fnamemodify(proj_dir[0], ':h:t')
-        else
+        " Assume that the project name is the same as the last dir in the test
+        " dir (i.e if my project is called `foo` then assume there is also a
+        " folder `foo` at the same level as the `tests` folder)
+        let project = fnamemodify(test_dir, ':t')
+        if !isdirectory(test_dir . '/'. project)
             let project = input('Enter project to view coverage: ')
             if empty(project)
                 redraw!
@@ -795,7 +797,7 @@ function! s:ShowPyTestCoverage()
     for i in range(1, bufnr('$'))
         let buf_name = fnamemodify(bufname(i), ':p')
         if fnamemodify(buf_name, ':h:t') ==# project
-            let base_dir = fnamemodify(buf_name, ':h:h')
+            let base_dir = fnamemodify(buf_name, ':h')
             break
         endif
     endfor
