@@ -615,9 +615,6 @@ function! s:RunPyTest(level)
     lcd %:p:h
     let current_file = expand('%:p:t')
 
-    " Set compiler (Use short traceback print mode and decrease verbosity)
-    let compiler = 'py.test --tb=short -q '
-
     " Check if we have a tests dir and change lcd to it (essentially move up
     " from the current directory until we find a `tests` directory)
     " Note: this assumes we have a tests dir outside the application code (i.e
@@ -641,6 +638,16 @@ function! s:RunPyTest(level)
     endif
     execute 'lcd ' . test_dir
 
+    " Ensure the current file is a 'test' file
+    let need_prefix = 0
+    if match(current_file, '^test_') == -1
+        let current_file = 'test_' . current_file
+        let need_prefix = 1
+    endif
+
+    " Set compiler (Use short traceback print mode and decrease verbosity)
+    let compiler = 'py.test --tb=short -q '
+
     " Allow to run the whole test suite, just one test file (module) or specific
     " classes or methods inside a test file. When running the whole suite also
     " perform test coverage.
@@ -661,32 +668,35 @@ function! s:RunPyTest(level)
         let &l:makeprg = compiler . project . ' tests/'
     elseif a:level ==# 'file'
         execute 'lcd ' . test_dir . '/tests'
-        if match(current_file, '^test_') == -1
-            let current_file = 'test_' . current_file
-        endif
         let &l:makeprg = compiler . current_file
     else
         " When not running for the whole suite or a test file then get current
         " tag using Tagbar plugin
         execute 'lcd ' . test_dir . '/tests'
-        if exists(':Tagbar')
-            let current_tag = split(tagbar#currenttag('%s', '', 'f'), '\.')
-            if len(current_tag) == 2
-                let class = current_tag[0]
-                let method = split(current_tag[1], '(')[0]
-            else
-                let method = split(current_tag[0], '(')[0]
+        if !exists(':Tagbar')
+            echoerr 'Tagbar plugin is needed for this functionality.'
+            return
+        endif
+
+        let current_tag = split(tagbar#currenttag('%s', '', 'f'), '\.')
+        if len(current_tag) == 2
+            let class = current_tag[0]
+            let method = split(current_tag[1], '(')[0]
+            if need_prefix == 1
+                let class = 'Test' . class
+                let method = 'test_' . method
             endif
-            if a:level ==# 'class'
-                if match(current_file, '^test_') == -1
-                    let current_file = 'test_' . current_file
-                    let class = 'Test' . class
-                endif
-                let &l:makeprg = compiler . current_file . '::' . class
-            else
-                let &l:makeprg = compiler . current_file . '::' . class .
-                            \ '::' . method
+        else
+            let method = split(current_tag[0], '(')[0]
+            if need_prefix == 1
+                let method = 'test_' . method
             endif
+        endif
+        if a:level ==# 'class'
+            let &l:makeprg = compiler . current_file . '::' . class
+        else
+            let &l:makeprg = compiler . current_file . '::' . class .
+                        \ '::' . method
         endif
     endif
 
@@ -802,8 +812,25 @@ function! s:ShowPyTestCoverage()
         endif
     endfor
 
-    " Get those lines with missing coverage and add them to the quickfix list
+    " We will show the coverage output inside the quickfix, so create a
+    " container for it
     let cov_qflist = []
+
+    " Add report as text to the quickfix (the key is to set the entry type to
+    " something not valid)
+    for line in output
+        " Remove empty and not relevant lines
+        if line ==# '' || line ==# '..'
+            continue
+        endif
+        let entry = {}
+        let entry.valid = 0
+        let entry.text = line
+        call add(cov_qflist, entry)
+    endfor
+
+    " Get those lines with missing coverage and add them to the quickfix list
+    " as valid entries (so we can jump directly to the line)
     for line in output
         let entry = {}
         let entry.type = 'W'
@@ -829,35 +856,6 @@ function! s:ShowPyTestCoverage()
         " Set quickfix
         call setqflist(cov_qflist, 'r')
     endif
-
-    " If we have output we create a buffer to dump that output
-    let height = len(output)
-    if height != 0
-        execute 'silent botright new coverage_output'
-    else
-        return
-    endif
-    silent! setlocal buftype=nofile bufhidden=delete noswapfile nowrap
-                \ colorcolumn=0 textwidth=0 nonumber norelativenumber
-                \ nocursorline winfixheight
-
-    " Actually append output
-    call append(line('$'), output)
-
-    " Delete extra line at the end (only if it's empty) and at the beginning
-    " and set the buffer to not modifiable
-    if getline(line('$')) ==# ''
-        silent normal! Gdd
-        let height = height - 1
-    endif
-    silent normal! ggdd
-    setlocal nomodifiable nomodified
-
-    " Resize the buffer height
-    if height > g:jedi#max_doc_height
-        let height = g:jedi#max_doc_height
-    endif
-    execute height . ' wincmd _'
 endfunction
 
 augroup show_pytest_coverage
@@ -1069,10 +1067,10 @@ vnoremap <buffer> Q :call <SID>RunYapf('visual')<CR>
 nnoremap <buffer> <Leader>yp :call <SID>RunYapf()<CR>
 
 " Tests and coverage (py.test dependant)
-nnoremap <buffer> <Leader>rt :call <SID>RunPyTest('suite')<CR>
-nnoremap <buffer> <Leader>tf :call <SID>RunPyTest('file')<CR>
-nnoremap <buffer> <Leader>to :call <SID>RunPyTest('class')<CR>
-nnoremap <buffer> <Leader>tm :call <SID>RunPyTest('method')<CR>
+nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite')<CR>
+nnoremap <buffer> <Leader>ptf :call <SID>RunPyTest('file')<CR>
+nnoremap <buffer> <Leader>ptc :call <SID>RunPyTest('class')<CR>
+nnoremap <buffer> <Leader>ptm :call <SID>RunPyTest('method')<CR>
 nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 
 " (Open) and run visual selection in the interpreter (in neovim terminal) and
