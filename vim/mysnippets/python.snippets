@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 22 Aug 2017
+# Last Modified: 23 Aug 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -217,8 +217,9 @@ endsnippet
 
 # Add upper directory to path
 snippet iu "Import upper directory" b
-import sys
-sys.path.append('..')$0
+sys.path.append(
+	os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+)$0
 endsnippet
 
 # Check if file exists
