@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 23 Aug 2017
+" Last Modified: 24 Aug 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -588,7 +588,7 @@ augroup END
 " }}}
 " (Py)Tests {{{
 
-function! s:RunPyTest(level)
+function! s:RunPyTest(level, compilation)
     " Don't run if pytest if it is not installed
     if !executable('py.test')
         echoerr 'py.test is not installed or not in your path.'
@@ -717,6 +717,18 @@ function! s:RunPyTest(level)
       \%C%.%#,
       \%-G%.%#\ seconds,
       \%-G%.%#,
+
+    " We might want to do a foreground compilation in the regular os console
+    if a:compilation ==# 'foreground'
+        let bang_command = '!'
+        if exists(':Dispatch')
+            let bang_command = 'Start -wait=always '
+        endif
+        execute bang_command . &l:makeprg
+        " Restore error format and working directory
+        let &l:efm = old_efm
+        execute 'lcd ' . l:save_pwd
+    endif
 
     " Use Dispatch for background async compilation if available
     if exists(':Dispatch')
@@ -1067,10 +1079,12 @@ vnoremap <buffer> Q :call <SID>RunYapf('visual')<CR>
 nnoremap <buffer> <Leader>yp :call <SID>RunYapf()<CR>
 
 " Tests and coverage (py.test dependant)
-nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite')<CR>
-nnoremap <buffer> <Leader>ptf :call <SID>RunPyTest('file')<CR>
-nnoremap <buffer> <Leader>ptc :call <SID>RunPyTest('class')<CR>
-nnoremap <buffer> <Leader>ptm :call <SID>RunPyTest('method')<CR>
+nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite', 'background')<CR>
+nnoremap <buffer> <Leader>ptf :call <SID>RunPyTest('file', 'background')<CR>
+nnoremap <buffer> <Leader>ptc :call <SID>RunPyTest('class', 'background')<CR>
+nnoremap <buffer> <Leader>ptm :call <SID>RunPyTest('method', 'background')<CR>
+nnoremap <buffer> <silent> <Leader>rt :call
+            \ <SID>RunPyTest('suite', 'foreground')<CR>
 nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 
 " (Open) and run visual selection in the interpreter (in neovim terminal) and
