@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 23 Aug 2017
+# Last Modified: 29 Aug 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -79,10 +79,10 @@ endsnippet
 
 snippet dec "Decorator" b
 def ${1:my_decorator}(${2:func}):
+	@wraps(func)
 	def ${3:wrapper}(${4:*args, **kwargs}):
 		$0
-	$3.__name__ = $2.__name__
-	return $3
+	return $5
 endsnippet
 
 # **}
