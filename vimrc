@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 15 Aug 2017
+" Last Modified: 24 Sep 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -140,6 +140,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('tpope/vim-abolish')
     call dein#add('tpope/vim-dispatch')
     call dein#add('tommcdo/vim-fubitive')
+    call dein#add('shumphrey/fugitive-gitlab.vim')
     call dein#add('tpope/vim-repeat')
     call dein#add('tpope/vim-rhubarb')
     call dein#add('tpope/vim-surround')
