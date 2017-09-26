@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 19 Sep 2017
+" Last Modified: 26 Sep 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -370,6 +370,9 @@ function! s:ShowPyOutput()
     " list
     for entry in qflist
         if entry.valid == 0  " get all 'non-valid' lines
+        " FIXME: The max line length is 4096
+        " See https://github.com/neovim/neovim/blob/
+            " 51808a244ecaa0a40b4e8280938333d2792d8422/src/nvim/api/vim.c#L37
             " On Windows with locale latin1 the error messages have the locale
             " encoding so we need to convert them back to utf-8
             if s:is_win
