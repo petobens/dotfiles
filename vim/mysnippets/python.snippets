@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 29 Aug 2017
+# Last Modified: 02 Oct 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -266,6 +266,11 @@ endsnippet
 
 snippet cd "Current dir" w
 os.path.dirname(os.path.realpath(__file__))
+endsnippet
+
+snippet wo "With open" b
+with open(${1:filepath}, '${2:r}') as f:
+	$0
 endsnippet
 
 # **}
