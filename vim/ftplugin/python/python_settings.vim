@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 26 Sep 2017
+" Last Modified: 10 Oct 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -686,14 +686,18 @@ function! s:RunPyTest(level, compilation)
         if len(current_tag) == 2
             let class = current_tag[0]
             let method = split(current_tag[1], '(')[0]
+            " If the method is private and thus start with an underscore don't
+            " add an extra underscore
+            let prefix = (match(method, '^_') == -1)? 'test_' : 'test'
             if need_prefix == 1
                 let class = 'Test' . class
-                let method = 'test_' . method
+                let method = prefix . method
             endif
         else
             let method = split(current_tag[0], '(')[0]
+            let prefix = (match(method, '^_') == -1)? 'test_' : 'test'
             if need_prefix == 1
-                let method = 'test_' . method
+                let method = prefix . method
             endif
         endif
         if a:level ==# 'class'
