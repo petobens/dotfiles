@@ -1283,7 +1283,7 @@ call denite#custom#option('default', {
             \ 'prompt': '❯',
             \ 'prompt_highlight': 'Function',
             \ 'highlight_matched_char': 'Operator',
-            \ 'highlight_matched_range': 'Normal',
+            \ 'highlight_matched_range': 'None',
             \ 'highlight_mode_insert': 'WildMenu'
             \ })
 
