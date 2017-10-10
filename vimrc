@@ -710,6 +710,7 @@ function! s:DiffFileSplit()
 endfunction
 nnoremap <silent> <Leader>ds :call <SID>DiffFileSplit()<CR>
 nnoremap <silent> <Leader>de :diffoff!<CR>
+nnoremap <silent> <Leader>du :diffupdate<CR>
 " Use [h and ]h for jumping between hunks (changes)
 nnoremap <expr> ]h &diff ? ']c' : ']h'
 nnoremap <expr> [h &diff ? '[c' : '[h'
