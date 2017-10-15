@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 01 Oct 2017
+# Last Modified: 15 Oct 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -203,9 +203,9 @@ alias jn='jupyter notebook'
 
 # Update all binaries (with brew) and language libraries
 ua='sudo echo -n; brew update && brew upgrade && brew cleanup; '\
-'sudo python3 -m pip_review --interactive'
+'python3 -m pip_review --interactive'
 if [ -f "$brew_dir"/bin/python2 ]; then
-    ua=$ua'; sudo python2 -m pip_review --interactive'
+    ua=$ua'; python2 -m pip_review --interactive'
 fi
 if type "R" > /dev/null 2>&1; then
     ua=$ua'; R --slave --no-save --no-restore -e '\
