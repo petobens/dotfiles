@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 17 Oct 2017
+# Last Modified: 19 Oct 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -174,6 +174,7 @@ alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
 alias ht='htop'
 alias o='open'
 alias rg='ranger'
+alias sudo='sudo ' # Expand aliases when using sudo
 
 # Colorized cat (with Python's pygment library)
 if type "pygmentize" > /dev/null 2>&1; then
@@ -266,8 +267,6 @@ else
     alias ls='ls -F --color=auto'
     # Change directory and list files
     cd() { builtin cd "$@" && ls -F --color=auto; }
-    # Expand aliases when using sudo
-    alias sudo='sudo '
     # Update packages (using apt-get)
     alias aptu='sudo apt-get update && sudo apt-get dist-upgrade && sudo '\
 'apt-get autoremove'
