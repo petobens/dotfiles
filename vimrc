@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 10 Oct 2017
+" Last Modified: 20 Oct 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -90,6 +90,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Plugins we are using
     call dein#add('vim-airline/vim-airline')
+    call dein#add('vim-scripts/dbext.vim')
     call dein#add('junegunn/vim-easy-align')
     if s:is_mac
         " We installed fzf with Brew
@@ -1251,6 +1252,11 @@ augroup END
 let g:one_allow_italics = 1  " use italics with onedarkish theme
 colorscheme onedarkish  " alternatives are heraldish and onedarkish
 let g:airline_theme = g:colors_name
+
+" }}}
+" Dbext {{{
+
+let g:dbext_default_profile_mysql_local = ''
 
 " }}}
 " Dein {{{
