@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 10 Oct 2017
+" Last Modified: 20 Oct 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -28,10 +28,10 @@
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
-if exists('b:my_python_settings_file')
-    finish
-endif
-let b:my_python_settings_file = 1
+" if exists('b:my_python_settings_file')
+    " finish
+" endif
+" let b:my_python_settings_file = 1
 
 " }}}
 " Helpers {{{
@@ -1021,18 +1021,28 @@ endif
 " }}}
 " Visual REPL {{{
 
-" Latest ipython doesn't allow to send multiple lines therefore we must one
-" python. See https://github.com/ipython/ipython/issues/9948
+" Latest ipython doesn't allow to send multiple lines therefore we must add
+" bracketed paste sequences to the text being sent to the interpreter
+" See https://github.com/ipython/ipython/issues/9948
+function! s:IPythonSelection()
+  let [l:lnum1, l:col1] = getpos("'<")[1:2]
+  let [l:lnum2, l:col2] = getpos("'>")[1:2]
+  let l:lines = getline(l:lnum1, l:lnum2)
+  let l:lines[-1] = l:lines[-1][:l:col2 - 1]
+  let l:lines[0] = l:lines[0][l:col1 - 1:]
+  call insert(l:lines, "\e[200~")
+  call add(l:lines, "\e[201~")
+  call g:neoterm.repl.exec(l:lines)
+endfunction
+
+command! -range IPythonNeoterm silent call <SID>IPythonSelection()
+
 function! s:PyREPL() range
-    call neoterm#repl#set('python3')
-    if !executable('python3')
-        call neoterm#repl#set('python')
-    endif
     let old_size = g:neoterm_size
     let old_autoinsert = g:neoterm_autoinsert
     let g:neoterm_size = 10
     let g:neoterm_autoinsert = 0
-    TREPLSendSelection
+    IPythonNeoterm  " Instead of 'TREPLSendSelection'
     stopinsert
     let g:neoterm_size = old_size
     let g:neoterm_autoinsert = old_autoinsert
