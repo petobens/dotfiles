@@ -28,10 +28,10 @@
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
-" if exists('b:my_python_settings_file')
-    " finish
-" endif
-" let b:my_python_settings_file = 1
+if exists('b:my_python_settings_file')
+    finish
+endif
+let b:my_python_settings_file = 1
 
 " }}}
 " Helpers {{{
