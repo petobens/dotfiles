@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 19 Oct 2017
+# Last Modified: 20 Oct 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -33,6 +33,10 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
     if [ -d "/Applications/MATLAB_R2015b.app/bin" ]; then
         export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
+    fi
+    if type "go" > /dev/null 2>&1; then
+        export GOPATH=$HOME/go
+        export PATH=$PATH:$GOPATH/bin
     fi
 
     # Symlink cask apps to Applications folder
