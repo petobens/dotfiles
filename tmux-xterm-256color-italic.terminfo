@@ -2,4 +2,4 @@
 # xterm-256color settings and fixes the sitm/ritm (italics) capabilities
 tmux-256color|tmux-xterm with 256 colors and italics,
     use=xterm-256color,
-    sitm=\E[3m, ritm=\E[23m, kbs=\177,
+    sitm=\E[3m, ritm=\E[23m,
