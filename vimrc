@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 20 Oct 2017
+" Last Modified: 26 Oct 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -90,7 +90,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Plugins we are using
     call dein#add('vim-airline/vim-airline')
-    call dein#add('vim-scripts/dbext.vim')
     call dein#add('junegunn/vim-easy-align')
     if s:is_mac
         " We installed fzf with Brew
@@ -109,6 +108,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('justinmk/vim-sneak')
     if exists('$TMUX')
         call dein#add('christoomey/vim-tmux-navigator')
+        call dein#add('wellle/tmux-complete.vim')
     endif
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
     call dein#add('SirVer/ultisnips')
@@ -1254,11 +1254,6 @@ colorscheme onedarkish  " alternatives are heraldish and onedarkish
 let g:airline_theme = g:colors_name
 
 " }}}
-" Dbext {{{
-
-let g:dbext_default_profile_mysql_local = ''
-
-" }}}
 " Dein {{{
 
 let g:dein#install_log_filename = expand('$HOME/.cache/dein/dein.log')
@@ -1776,6 +1771,11 @@ let g:deoplete#auto_complete_delay = 50
 
 " Python (jedi)
 let deoplete#sources#jedi#show_docstring = 1
+
+" Tmux completion (with tmux-complete plugin)
+if exists('$TMUX')
+    let g:tmuxcomplete#trigger = ''
+endif
 
 " Sources used for completion
 if !exists('g:deoplete#sources')
