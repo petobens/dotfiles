@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 26 Oct 2017
+" Last Modified: 02 Nov 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1858,6 +1858,7 @@ let g:neomake_echo_current_error = 0 " Don't echo error for cusor line
 let g:neomake_place_signs = 0  " Don't place signs
 let g:neomake_highlight_columns = 0 " Don't hl columns with the error
 let g:airline#extensions#neomake#enabled = 0 " Don't show on Airline
+call neomake#quickfix#is_enabled()  " enable experimental quickfix formatting
 
 " Python
 let g:neomake_python_enabled_makers = ['flake8', 'mypy']
