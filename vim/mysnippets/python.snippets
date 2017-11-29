@@ -2,7 +2,7 @@
 #          File: python.snippets
 #        Author: Pedro Ferrari
 #       Created: 04 Mar 2015
-# Last Modified: 02 Oct 2017
+# Last Modified: 29 Nov 2017
 #   Description: Python snippets
 #===============================================================================
 # Global functions **{
@@ -262,6 +262,10 @@ format='%(asctime)s-%(name)s-%(levelname)s: %(message)s',
 handlers=[logging.FileHandler('${2:logger_name}.log'),
 			logging.StreamHandler()]
 )$0
+endsnippet
+
+snippet gl "Get logger" b
+logger = logging.getLogger(${1:__name__})$0
 endsnippet
 
 snippet cd "Current dir" w
