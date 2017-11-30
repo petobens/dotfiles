@@ -184,7 +184,7 @@ alias ssh='TERM=xterm-256color; ssh'
 
 # Colorized cat (with Python's pygment library)
 if type "pygmentize" > /dev/null 2>&1; then
-    alias dog='pygmentize -O style=monokai -f terminal16m -g'
+    alias dog='pygmentize -O style=fruity -f terminal16m -g'
 fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
