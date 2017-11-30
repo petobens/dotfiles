@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 11 Nov 2017
+# Last Modified: 30 Nov 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -143,6 +143,7 @@ fi
 
 # Note: we pass Readline commands as a single argument to
 # bind built in function instead of adding them to inputrc file)
+# TODO: Consider moving all this to inputrc
 bind "set completion-ignore-case on"
 bind "set menu-complete-display-prefix on" # show candidates before cycling
 bind "set show-all-if-ambiguous on"
@@ -179,6 +180,7 @@ alias ht='htop'
 alias o='open'
 alias rg='ranger'
 alias sudo='sudo ' # Expand aliases when using sudo
+alias ssh='TERM=xterm-256color; ssh'
 
 # Colorized cat (with Python's pygment library)
 if type "pygmentize" > /dev/null 2>&1; then
@@ -246,18 +248,18 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
     # session called pedrof or attaching to an existing one with that name.
     # Add -X after ssh to enable X11 forwarding
-    alias emr='TERM=xterm-256color; ssh pedrof@prd-amber-pivot.jampp.com -t '\
+    alias emr='ssh pedrof@prd-amber-pivot.jampp.com -t '\
 'tmux new -A -s pedrof'
     # Presto client
-    alias pcli='TERM=xterm-256color; ssh pedrof@prd-amber-pivot.jampp.com -t '\
+    alias pcli='ssh pedrof@prd-amber-pivot.jampp.com -t '\
 'tmux new -A -s pedrof '\
 '"presto-cli\ --server\ emr-prd-queries.jampp.com:8889\ --catalog\ hive\ '\
 '--schema\ aleph\ --user\ pedrof"'
     # Gerry instance (with tmux)
-    alias ui='TERM=xterm-256color; ssh gerry'
+    alias ui='ssh gerry'
     # When using linux brew we need to specify a full path to the tmux
     # executable
-    alias utm='TERM=xterm-256color; ssh gerry -t /mnt/.linuxbrew/bin/tmux -f'\
+    alias utm='ssh gerry -t /mnt/.linuxbrew/bin/tmux -f'\
 '"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
 
     # Fix open in tmux (requires installing reattach-to-user-namespace)
