@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 30 Nov 2017
+# Last Modified: 08 Dec 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -129,8 +129,7 @@ bind -m vi-command '"v": ""' # Don't edit command with default editor (nvim)
 
 # Paste with p if in a tmux session
 if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
-    # FIXME: This is flaky
-    bind -m vi-command -x '"p": "reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer"'
+    bind -m vi-command -x '"p": "pbpaste | tmux load-buffer - && tmux paste-buffer"'
 fi
 
 # }}}
@@ -261,12 +260,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # executable
     alias utm='ssh gerry -t /mnt/.linuxbrew/bin/tmux -f'\
 '"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
-
-    # Fix open in tmux (requires installing reattach-to-user-namespace)
-    # Not need any more? https://github.com/tmux/tmux/commit/78352fdd328b611d93
-    if [[ '$TMUX' ]]; then
-        alias open='reattach-to-user-namespace open'
-    fi
 
 else
     # Differentiate and use colors for directories, symbolic links, etc.

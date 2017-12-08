@@ -2,7 +2,7 @@
 "          File: latex_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 27 Aug 2013
-" Last Modified: 19 Jul 2017
+" Last Modified: 08 Dec 2017
 "   Description: Latex settings
 "===============================================================================
 " TODOs:
@@ -600,10 +600,6 @@ function! s:ForwardInverseSearch(direction)
             " Note that for inverse search to work with nvim we need to install
             " neovim-remote python module
             let open_cmd = 'open '
-            if exists('$TMUX') && executable('reattach-to-user-namespace')
-                " In tmux we need to fix the open command
-                let open_cmd = 'reattach-to-user-namespace open '
-            endif
             execute 'silent! !' . open_cmd . '-a Skim ' . pdf_file
             " We need to redraw screen here!
             redraw!

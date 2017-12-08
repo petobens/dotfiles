@@ -2,7 +2,7 @@
 "          File: R_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 05 Aug 2015
-" Last Modified: 14 Mar 2017
+" Last Modified: 08 Dec 2017
 "   Description: R Settings for Vim
 "===============================================================================
 " TODO: Close figure window with x button (without need of using locator(1))
@@ -820,10 +820,6 @@ function! s:ViewPdfFigure()
         let viewer = 'silent! !start SumatraPDF -reuse-instance ' . pdf_file
     else
         let open_cmd = 'open '
-        if exists('$TMUX') && executable('reattach-to-user-namespace')
-            " In tmux we need to fix the open command
-            let open_cmd = 'reattach-to-user-namespace open '
-        endif
         let viewer = 'silent! !' . open_cmd . '-a Skim ' . pdf_file
     endif
     execute viewer

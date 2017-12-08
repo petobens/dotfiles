@@ -2,7 +2,7 @@
 "          File: mk_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 26 May 2014
-" Last Modified: 30 Nov 2017
+" Last Modified: 08 Dec 2017
 "   Description: Markdown settings
 "===============================================================================
 " Initialization {{{
@@ -125,10 +125,6 @@ function! s:ViewPreview(extension)
         endif
     elseif s:is_mac
         let open_cmd = 'open '
-        if exists('$TMUX') && executable('reattach-to-user-namespace')
-            " In tmux we need to fix the open command
-            let open_cmd = 'reattach-to-user-namespace open '
-        endif
         execute 'silent! !' . open_cmd . '-a Skim ' . preview_file
         " We need to redraw screen here!
         redraw!

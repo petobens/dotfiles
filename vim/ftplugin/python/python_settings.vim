@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 20 Oct 2017
+" Last Modified: 08 Dec 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -985,10 +985,6 @@ function! s:ViewPdfFigure()
 
     else
         let open_cmd = 'open '
-        if exists('$TMUX') && executable('reattach-to-user-namespace')
-            " In tmux we need to fix the open command
-            let open_cmd = 'reattach-to-user-namespace open '
-        endif
         let viewer = 'silent! !' . open_cmd . '-a Skim ' . pdf_file
     endif
     execute viewer
