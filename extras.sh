@@ -3,7 +3,7 @@
 #          File: extras.sh
 #        Author: Pedro Ferrari
 #       Created: 14 Apr 2017
-# Last Modified: 26 Oct 2017
+# Last Modified: 08 Dec 2017
 #   Description: Mac OSX (and apps) settings
 #===============================================================================
 cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -24,7 +24,7 @@ if [ -d "/Applications/Skim.app/" ]; then
     # Synctex (with neovim)
     defaults write -app Skim SKTeXEditorPreset "Custom"
     defaults write -app Skim SKTeXEditorCommand  "nvr"
-    defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line|foldo!\'\' \'\'%file\'\'"
+    defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line|foldo!\'\' %file"
 fi
 
 # Install ranger plugins and scope.sh executable
