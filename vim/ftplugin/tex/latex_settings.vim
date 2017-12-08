@@ -593,12 +593,14 @@ function! s:ForwardInverseSearch(direction)
             " Inverse search settings in Skim must be set directly from Skim
             " preferences Sync tab (i.e they cannot be set with flags) as a Custom
             " preset with Command: `nvr` and Arguments: `--remote-silent
-            " +"%line|foldo!" "%file"`
+            " +"%line|foldo!" %file`
             " Note: to allow automatic reload, check the box that says `Check for
             " file changes` and then run the following command
                 " defaults write -app Skim SKAutoReloadFileUpdate -boolean true
             " Note that for inverse search to work with nvim we need to install
             " neovim-remote python module
+            " To actually use it press Shift + Cmd and click on a point in the
+            " PDF
             let open_cmd = 'open '
             execute 'silent! !' . open_cmd . '-a Skim ' . pdf_file
             " We need to redraw screen here!
