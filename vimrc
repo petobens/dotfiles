@@ -2,12 +2,11 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 18 Nov 2017
+" Last Modified: 12 Dec 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
 " Try the job feature: skywind3000/asyncrun.vim or neomake to replace dispatch?
-" SQL support?
 " Filter to convert markdown to html, useful for mails
 " Try dash or investigate for doc searching
 
@@ -136,6 +135,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Git
     call dein#add('junegunn/gv.vim')
     call dein#add('tpope/vim-fugitive')
+
+    " SQL
+    call dein#add('joereynolds/SQHell.vim', {'on_ft' : 'sql'})
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
@@ -1935,6 +1937,18 @@ augroup term_au
     au!
     " Get into insert mode whenever we enter a terminal buffer
     au BufEnter * if &buftype == 'terminal' | startinsert | endif
+augroup END
+
+" }}}
+" SQHell {{{
+
+" Load dict with connection details
+source $HOME/sqh_connections.vim
+
+augroup ps_sqhell
+    au!
+    au Filetype sql nnoremap <silent> <buffer> <F7> :SQHExecute<CR>
+    au Filetype sql vnoremap <silent> <buffer> <F7> :SQHExecute<CR>
 augroup END
 
 " }}}
