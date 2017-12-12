@@ -136,8 +136,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('junegunn/gv.vim')
     call dein#add('tpope/vim-fugitive')
 
-    " SQL
+    " SQL (and database related)
     call dein#add('joereynolds/SQHell.vim', {'on_ft' : 'sql'})
+    call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
@@ -1254,6 +1255,20 @@ augroup END
 let g:one_allow_italics = 1  " use italics with onedarkish theme
 colorscheme onedarkish  " alternatives are heraldish and onedarkish
 let g:airline_theme = g:colors_name
+
+" }}}
+" Csv {{{
+
+augroup ps_csv
+    au!
+    " Raw csv on and off (note: this disables syntax hl in all buffers)
+    au Filetype csv nnoremap <silent> <buffer> <Leader>rc :
+        \ if exists('g:syntax_on') <Bar>
+        \   syntax off <Bar>
+        \ else <Bar>
+        \   syntax enable <Bar>
+        \ endif <CR>
+augroup END
 
 " }}}
 " Dein {{{
