@@ -1960,6 +1960,8 @@ augroup END
 " Load dict with connection details
 source $HOME/sqh_connections.vim
 
+let g:sqh_results_output = 'split'
+
 augroup ps_sqhell
     au!
     au Filetype sql nnoremap <silent> <buffer> <F7> :SQHExecute<CR>
