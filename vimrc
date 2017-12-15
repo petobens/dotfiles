@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 12 Dec 2017
+" Last Modified: 15 Dec 2017
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1958,7 +1958,9 @@ augroup END
 " SQHell {{{
 
 " Load dict with connection details
-source $HOME/sqh_connections.vim
+if filereadable($HOME/sqh_connections.vim)
+    source $HOME/sqh_connections.vim
+endif
 
 let g:sqh_results_output = 'split'
 
