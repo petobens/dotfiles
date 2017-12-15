@@ -1958,7 +1958,7 @@ augroup END
 " SQHell {{{
 
 " Load dict with connection details
-if filereadable($HOME/sqh_connections.vim)
+if filereadable('$HOME/sqh_connections.vim')
     source $HOME/sqh_connections.vim
 endif
 
