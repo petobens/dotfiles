@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 08 Dec 2017
+# Last Modified: 18 Dec 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -199,6 +199,7 @@ alias gp='git push'
 __git_complete gp _git_push
 alias gP='git pull'
 __git_complete gp _git_pull
+alias gdr='git push origin --delete'
 
 # Python
 if [ ! -f "$brew_dir"/bin/python2 ]; then
