@@ -2,7 +2,7 @@
 #          File: bashrc
 #        Author: Pedro Ferrari
 #       Created: 11 Apr 2016
-# Last Modified: 18 Dec 2017
+# Last Modified: 25 Dec 2017
 #   Description: My bashrc file
 #===============================================================================
 # Options {{{
@@ -63,8 +63,9 @@ else
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
 fi
 
-# Set editor to nvim
+# Set editor to nvim and use it as a manpager
 export EDITOR=nvim
+export MANPAGER="nvim -c 'set ft=man' -"
 
 # Set shell to latest bash (this should be redundant if we previously ran
 # `sudo chsh -s $(brew --prefix)/bin/bash`)
