@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 08 Dec 2017
+" Last Modified: 27 Dec 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -671,8 +671,12 @@ function! s:RunPyTest(level, compilation)
         endif
         let &l:makeprg = compiler . project . ' tests/'
     elseif a:level ==# 'file'
+        " Also run test coverage here but only for this file
+        let compiler = compiler . '--cov-report term-missing --cov='
         execute 'lcd ' . test_dir . '/tests'
-        let &l:makeprg = compiler . current_file
+        " We already ensured that the current file has `test_` preprended
+        let cov_file = split(fnamemodify(current_file, ':t:r'), 'test_')[-1]
+        let &l:makeprg = compiler . cov_file . ' ' . current_file
     else
         " When not running for the whole suite or a test file then get current
         " tag using Tagbar plugin
@@ -799,8 +803,8 @@ function! s:ShowPyTestCoverage()
         for entry in qflist
             if match(entry.text , '^---------- coverage') != -1
                 let coverage_start = index(qflist, entry) - 1
-            elseif match(entry.text , '^TOTAL') != -1
-                let coverage_end = index(qflist, entry) + 1
+            elseif entry.type == 'E'
+                let coverage_end = index(qflist, entry) - 1
                 break
             endif
         endfor
