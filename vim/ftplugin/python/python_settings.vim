@@ -854,11 +854,13 @@ function! s:ShowPyTestCoverage()
 
     " Get those lines with missing coverage and add them to the quickfix list
     " as valid entries (so we can jump directly to the line)
+    let has_missing_lines = 0
     for line in output
         let entry = {}
         let entry.type = 'W'
         let missing_lines = matchstr(line, '\d\+%\s\+\zs\d*.*')
         if missing_lines !=# ''
+            let has_missing_lines = 1
             " Get first missing line of the file (and report in the message all
             " missing line numbers)
             let missing_file = matchstr(line, '^\w*.*\.py')
@@ -874,6 +876,16 @@ function! s:ShowPyTestCoverage()
             call add(cov_qflist, entry)
         endif
     endfor
+
+    " If there are no missing lines then we need to explicitly open the quickfix
+    " window to see the coverage output; to do that we add fake valid empty
+    " entry
+    if has_missing_lines == 0
+        let entry = {}
+        let entry.valid = 1
+        let entry.text = ''
+        call add(cov_qflist, entry)
+    endif
 
     if !empty(cov_qflist)
         " Set quickfix
