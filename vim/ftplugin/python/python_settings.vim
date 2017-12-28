@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 27 Dec 2017
+" Last Modified: 28 Dec 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -800,10 +800,9 @@ function! s:ShowPyTestCoverage()
 
     " If there are errors remove coverage stats from quickfix and then exit
     if has_errors == 1
+        let coverage_start = 0
         for entry in qflist
-            if match(entry.text , '^---------- coverage') != -1
-                let coverage_start = index(qflist, entry) - 1
-            elseif entry.type == 'E'
+            if entry.type == 'E'
                 let coverage_end = index(qflist, entry) - 1
                 break
             endif
