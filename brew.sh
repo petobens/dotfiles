@@ -3,7 +3,7 @@
 #          File: brew.sh
 #        Author: Pedro Ferrari
 #       Created: 24 Mar 2017
-# Last Modified: 19 Nov 2017
+# Last Modified: 30 Dec 2017
 #   Description: Brew installation
 #===============================================================================
 # Install brew if not installed
@@ -98,6 +98,7 @@ brew install --HEAD neomutt --with-sidebar-patch --with-notmuch-patch
 brew install shellcheck
 brew install pandoc
 brew install neofetch
+brew install imgcat
 
 # Remove outdated versions
 brew cleanup
