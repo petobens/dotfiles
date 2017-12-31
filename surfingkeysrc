@@ -1,0 +1,331 @@
+// Preamble {{{
+
+// To load this local config file:
+// i) In the extenions settings check `Advanced mode` box and the path to this
+// file
+// ii) Check `Allow access to file URLS` for surfingkeys in the extension view
+
+// To ensure that surfingkeys keys works when starting Chrome or creating a
+// new tab set the starting page and the new tab page to something other than
+// Chrome's default `chrome//newtab` (for instance google.com) or install patch
+// Chrome version. See https://github.com/brookhong/Surfingkeys/issues/511 and
+// https://brookhong.github.io/2017/10/15/surfingkeys-across-all-pages.html
+
+unmapAllExcept(['f', '/', '*', '?', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm']);
+
+// }}}
+// Options and Appearance {{{
+
+settings.omnibarPosition = 'bottom';
+settings.focusFirstCandidate = true;
+settings.enableAutoFocus = false;
+settings.hintAlign = 'left';
+Hints.characters = 'asdfghjkl';
+// TODO: Add tab numbers / indices
+
+// Theme
+// TODO: Improve this
+settings.theme = `
+.sk_theme {
+    font-family: Input Sans Condensed, Charcoal, sans-serif;
+    font-size: 10pt;
+    background: #000;
+    color: #fff;
+}
+.sk_theme tbody {
+    color: #fff;
+}
+.sk_theme input {
+    color: #d9dce0;
+}
+.sk_theme .url {
+    color: #2173c5;
+}
+.sk_theme .annotation {
+    color: #38f;
+}
+.sk_theme .omnibar_highlight {
+    color: #505050;
+}
+.sk_theme ul>li:nth-child(odd) {
+    background: #1e211d;
+}
+.sk_theme ul>li.focused {
+    background: #606060;
+}
+#sk_status, #sk_find {
+    font-size: 20pt;
+}`;
+
+// }}}
+// Bookmarks/Quickmarks {{{
+
+// View and add bookmarks
+mapkey(',bm', 'Open bookmarks', function() {
+    Front.openOmnibar(({type: 'Bookmarks'}));
+});
+mapkey(',ab', 'Bookmark current page to selected folder', function() {
+    var page = {
+        url: window.location.href,
+        title: document.title
+    };
+    Front.openOmnibar(({type: 'AddBookmark', extra: page}));
+});
+
+// Quickmarks
+mapkey("'", 'Jump to vim-like mark', function(mark) {
+    Normal.jumpVIMark(mark);
+});
+mapkey('"', 'Jump to vim-like mark in new tab', function(mark) {
+    Normal.jumpVIMark(mark, true);
+});
+mapkey(',qm', 'Open URL from vim-like marks', function() {
+    Front.openOmnibar({type: 'VIMarks'});
+});
+
+// TODO: Can't set quickmarks directly from here? Also can they be lowercase?
+
+// }}}
+// Navigation and tab handling  {{{
+
+// Page navigation (and opening links)
+mapkey('r', 'Refresh', function() {
+    RUNTIME('reloadTab', {nocache: false});
+});
+mapkey ('H', 'Backward', function() {
+    history.go(-1);
+});
+mapkey ('L', 'Forward', function() {
+    history.go(1);
+});
+mapkey('F', 'Open a link in non-active new tab', function() {
+    Hints.create('', Hints.dispatchMouseClick, {tabbed: true, active: false});
+});
+
+// Page movement (and searching)
+mapkey('j', 'Roll down', function() {
+    Normal.scroll('down');
+});
+mapkey('k', 'Roll up', function() {
+    Normal.scroll('up');
+});
+mapkey('<Ctrl-u>', 'Scroll up half a page', function() {
+    Normal.scroll('pageUp');
+});
+mapkey('<Ctrl-d>', 'Scroll down half a page', function() {
+    Normal.scroll('pageDown');
+});
+mapkey ('gg', 'Jump to the top of the page', function() {
+    Normal.scroll('top');
+});
+mapkey ('G', 'Jump to the bottom of the page', function() {
+    Normal.scroll('bottom');
+});
+mapkey ('n', 'Next search result', function() {
+    Visual.next(false);
+});
+mapkey ('N', 'Previous search result', function() {
+    Visual.next(true);
+});
+
+// Tabs
+mapkey(',nt', 'Open new tab', function() {
+    tabOpenLink('www.google.com.ar');
+});
+mapkey ('<Ctrl-c>', 'Close tab', function() {
+    RUNTIME('closeTab');
+});
+map(',wd', '<Ctrl-c>');
+map(',bd', '<Ctrl-c>');
+mapkey('<Ctrl-n>', 'Go one tab right', function() {
+    RUNTIME('nextTab');
+});
+mapkey('<Ctrl-p>', 'Go one tab left', function() {
+    RUNTIME('previousTab');
+});
+mapkey('<Alt-h>', 'Move current tab to left', function() {
+    RUNTIME('moveTab', {step: -1});
+});
+mapkey('<Alt-l>', 'Move current tab to right', function() {
+    RUNTIME('moveTab', {step: 1});
+});
+mapkey(',be', 'Choose a tab with omnibar', function() {
+    Front.openOmnibar({type: 'Tabs'});
+});
+mapkey(',bc', 'Choose a tab', function() {
+    Front.chooseTab();
+});
+mapkey('M', 'Mute/unmute current tab', function() {
+    RUNTIME('muteTab');
+});
+
+// Yanking and pasting
+mapkey('y', 'Copy current page\'s URL', function() {
+    Clipboard.write(window.location.href);
+});
+mapkey('P', 'Open link from clipboard in a new tab', function() {
+    if (window.getSelection().toString()) {
+        tabOpenLink(window.getSelection().toString());
+    } else {
+        Clipboard.read(function(response) {
+            tabOpenLink(response.data);
+        });
+    }
+});
+
+// }}}
+// Omnibar {{{
+
+// Map ; to :
+mapkey(';', 'Open commands', function() {
+    Front.openOmnibar({type: 'Commands'});
+});
+
+// Move in omnibar (first candidate is in the bottom)
+cmap('<Ctrl-p>', '<Tab>');
+cmap('<Ctrl-n>', '<Shift-Tab>');
+cmap('<Ctrl-k>', '<Tab>');
+cmap('<Ctrl-j>', '<Shift-Tab>');
+
+// URLs
+mapkey('o', 'Open a URL in current tab', function() {
+    Front.openOmnibar({type: 'URLs', extra: 'getAllSites', tabbed: false});
+});
+mapkey('t', 'Open a URL in a new tab', function() {
+    Front.openOmnibar({type: 'URLs', extra: 'getAllSites'});
+});
+mapkey('u', 'Open recently closed URL', function() {
+    Front.openOmnibar({type: 'URLs', extra: 'getRecentlyClosed'});
+});
+
+// Search engines
+mapkey('s', 'Search in google in current tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'g', tabbed: false});
+});
+mapkey('S', 'Search in google in new tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'g'});
+});
+mapkey(',ss', 'Search in StackOverflow in current tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 's', tabbed: false});
+});
+mapkey(',Ss', 'Search in StackOverflow in new tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 's'});
+});
+mapkey(',sg', 'Search in Github in current tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'h', tabbed: false});
+});
+mapkey(',Sg', 'Search in Github in new tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'h'});
+});
+addSearchAliasX('w', 'Wikipedia',
+    'https://en.wikipedia.org/wiki/Special:Search?search=');
+mapkey(',sw', 'Search in Wikpedia in current tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'w', tabbed: false});
+});
+mapkey(',Sw', 'Search in Wikpedia in new tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'w'});
+});
+addSearchAliasX('y', 'YouTube',
+    'https://www.youtube.com/results?search_query=');
+mapkey(',sy', 'Search in Youtube in current tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'y', tabbed: false});
+});
+mapkey(',Sy', 'Search in Youtube in new tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'y'});
+});
+addSearchAliasX('m', 'MercadoLibre',
+    'http://www.mercadolibre.com.ar/jm/search?as_word=');
+mapkey(',sm', 'Search in MercadoLibre in current tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'm', tabbed: false});
+});
+mapkey(',Sm', 'Search in MercadoLibre in new tab', function() {
+    Front.openOmnibar({type: 'SearchEngine', extra: 'm'});
+});
+
+// History
+mapkey(',hs', 'Open URL from history', function() {
+    Front.openOmnibar({type: 'History', tabbed: false});
+});
+mapkey(',th', 'Open URL from history in a new tab', function() {
+    Front.openOmnibar({type: 'History'});
+});
+mapkey(',dh', 'Delete history older than 30 days', function() {
+    RUNTIME('deleteHistoryOlderThan', {
+        days: 30
+    });
+});
+
+// }}}
+// Insert mode and AceVim {{{
+
+// Note: we can show avaible input boxes with i or I and enter vim editor mode
+// with <Ctrl-I>
+
+mapkey('gi', 'Go to the first edit box', function() {
+    Hints.createInputLayer();
+});
+// FIXME: Not working
+mapkey('gI', 'Go to the second edit box', function() {
+    Hints.create('input[type=text]:nth(1)', Hints.dispatchMouseClick);
+});
+
+// Mappings
+// FIXME: These are not working
+imap('jj', '<Esc>');
+imap('<Ctrl-a>', '<Ctrl-f>');
+imap('<Ctrl-h>', '<ArrowLeft>');
+imap('<Ctrl-l>', '<ArrowRight>');
+
+// AceVim
+aceVimMap('jj', '<Esc>', 'insert');
+aceVimMap('H', '0', 'normal');
+aceVimMap('L', '$', 'normal');
+
+
+// }}}
+// Visual mode {{{
+
+vmap('L', '$')
+vmap('H', '0')
+
+// }}}
+// Blacklisting {{{
+
+// Pass through mode (toggle i.e disable Surfingkeys)
+// map(',pt', '<Alt-s>');  // Must one key stroke
+
+settings.blacklistPattern = /.*docs\.google\.com.*/i;
+
+// }}}
+// Convenient mappings {{{
+
+// Session handling
+mapkey(',kv', 'Save session and quit', function() {
+    RUNTIME('createSession', {
+        name: 'LAST',
+        quitAfterSaved: true
+    });
+});
+mapkey(',ps', 'Restore previous session', function() {
+    RUNTIME('openSession', {
+        name: 'LAST'
+    });
+});
+
+// View page source
+mapkey(',vs', 'View page source', function() {
+    RUNTIME('viewSource', {tab: {tabbed: true}});
+});
+
+// Chrome specific
+mapkey(',dl', 'Open Chrome Downloads', function() {
+        tabOpenLink('chrome://downloads/');
+});
+mapkey(',cd', 'Close Downloads Shelf', function() {
+    RUNTIME("closeDownloadsShelf", {clearHistory: true});
+});
+mapkey(',ad', 'Open Chrome Extensions', function() {
+        tabOpenLink('chrome://extensions/');
+});
+
+// }}}
