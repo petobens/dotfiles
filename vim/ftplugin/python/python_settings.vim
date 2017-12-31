@@ -2,7 +2,7 @@
 "          File: python_settings.vim
 "        Author: Pedro Ferrari
 "       Created: 30 Jan 2015
-" Last Modified: 28 Dec 2017
+" Last Modified: 31 Dec 2017
 "   Description: Python settings for Vim
 "===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
@@ -1110,6 +1110,7 @@ nnoremap <buffer> <Leader>yp :call <SID>RunYapf()<CR>
 " Tests and coverage (py.test dependant)
 nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite', 'background')<CR>
 nnoremap <buffer> <Leader>ptf :call <SID>RunPyTest('file', 'background')<CR>
+nnoremap <buffer> <Leader>Ptf :call <SID>RunPyTest('file', 'foreground')<CR>
 nnoremap <buffer> <Leader>ptc :call <SID>RunPyTest('class', 'background')<CR>
 nnoremap <buffer> <Leader>ptm :call <SID>RunPyTest('method', 'background')<CR>
 nnoremap <buffer> <silent> <Leader>rt :call
