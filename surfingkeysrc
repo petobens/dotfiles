@@ -23,35 +23,40 @@ settings.hintAlign = 'left';
 Hints.characters = 'asdfghjkl';
 // TODO: Add tab numbers / indices
 
-// Theme
-// TODO: Improve this
+// Theme (uses Onedark colors)
 settings.theme = `
 .sk_theme {
     font-family: Input Sans Condensed, Charcoal, sans-serif;
     font-size: 10pt;
-    background: #000;
-    color: #fff;
+    background: #24272e;
+    color: #abb2bf;
 }
 .sk_theme tbody {
     color: #fff;
 }
 .sk_theme input {
-    color: #d9dce0;
+    color: #d0d0d0;
 }
 .sk_theme .url {
-    color: #2173c5;
+    color: #61afef;
 }
 .sk_theme .annotation {
-    color: #38f;
+    color: #56b6c2;
 }
 .sk_theme .omnibar_highlight {
-    color: #505050;
+    color: #c678dd;
+}
+.sk_theme .omnibar_timestamp {
+    color: #e5c07b;
+}
+.sk_theme .omnibar_visitcount {
+    color: #98c379;
 }
 .sk_theme ul>li:nth-child(odd) {
-    background: #1e211d;
+    background: #303030;
 }
 .sk_theme ul>li.focused {
-    background: #606060;
+    background: #3e4452;
 }
 #sk_status, #sk_find {
     font-size: 20pt;
