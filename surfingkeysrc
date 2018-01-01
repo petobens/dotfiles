@@ -17,7 +17,7 @@ unmapAllExcept(['f', '/', '*', '?', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm']);
 // Options and Appearance {{{
 
 settings.omnibarPosition = 'bottom';
-settings.focusFirstCandidate = true;
+settings.focusFirstCandidate = false;
 settings.enableAutoFocus = false;
 settings.hintAlign = 'left';
 Hints.characters = 'asdfghjkl';
@@ -44,7 +44,7 @@ settings.theme = `
     color: #56b6c2;
 }
 .sk_theme .omnibar_highlight {
-    color: #c678dd;
+    color: #528bff;
 }
 .sk_theme .omnibar_timestamp {
     color: #e5c07b;
@@ -276,7 +276,7 @@ mapkey(',dh', 'Delete history older than 30 days', function() {
 mapkey('gi', 'Go to the first edit box', function() {
     Hints.createInputLayer();
 });
-// FIXME: Not working
+// FIXME: Not working (and can't cycle through input boxes with tab)
 mapkey('gI', 'Go to the second edit box', function() {
     Hints.create('input[type=text]:nth(1)', Hints.dispatchMouseClick);
 });
