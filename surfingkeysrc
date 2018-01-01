@@ -198,7 +198,8 @@ mapkey('u', 'Open recently closed URL', function() {
     Front.openOmnibar({type: 'URLs', extra: 'getRecentlyClosed'});
 });
 
-// Search engines
+// Search engines (see https://github.com/b0o/surfingkeys-conf to add extra
+// completions)
 mapkey('s', 'Search in google in current tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 'g', tabbed: false});
 });
@@ -218,7 +219,13 @@ mapkey(',Sg', 'Search in Github in new tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 'h'});
 });
 addSearchAliasX('w', 'Wikipedia',
-    'https://en.wikipedia.org/wiki/Special:Search?search=');
+    "https://en.wikipedia.org/w/index.php?search=",
+    's',
+    "https://en.wikipedia.org/w/api.php?action=query&format=json&list=prefixsearch&utf8&pssearch=",
+    function(response) {
+        var res = JSON.parse(response.text).query.prefixsearch.map(r => r.title)
+        return res
+});
 mapkey(',sw', 'Search in Wikpedia in current tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 'w', tabbed: false});
 });
