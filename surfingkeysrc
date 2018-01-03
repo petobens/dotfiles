@@ -209,33 +209,38 @@ mapkey('M', 'Mute/unmute current tab', function() {
 });
 
 // Yanking and pasting
-mapkey('y', 'Copy current page\'s URL', function() {
+mapkey('y', "Copy current page's URL", function() {
     Clipboard.write(window.location.href);
 });
-// FIXME: this should search in google if pasted text is not a valid url
-mapkey('p', 'Open link from clipboard in current tab', function() {
-    if (window.getSelection().toString()) {
+mapkey('p', 'Open the clipboard in the current tab', function() {
+    Clipboard.read(function(response) {
+        if (response.data.startsWith("http://") ||
+            response.data.startsWith("https://") ||
+            response.data.startsWith("www.")) {
+            var data = response.data;
+        } else {
+            var data = "https://www.google.com/search?q=" + response.data;
+        }
         RUNTIME('openLink', {
             tab: {tabbed: false},
-            url: window.getSelection().toString()
+            url: data
         });
-    } else {
-        Clipboard.read(function(response) {
-            RUNTIME('openLink', {
-                tab: {tabbed: false},
-                url: response.data
-            });
-        });
-    }
+    });
 });
-mapkey('P', 'Open link from clipboard in a new tab', function() {
-    if (window.getSelection().toString()) {
-        tabOpenLink(window.getSelection().toString());
-    } else {
-        Clipboard.read(function(response) {
-            tabOpenLink(response.data);
+mapkey('P', 'Open the clipboard in a new tab', function() {
+    Clipboard.read(function(response) {
+        if (response.data.startsWith("http://") ||
+            response.data.startsWith("https://") ||
+            response.data.startsWith("www.")) {
+            var data = response.data;
+        } else {
+            var data = "https://www.google.com/search?q=" + response.data;
+        }
+        RUNTIME('openLink', {
+            tab: {tabbed: true},
+            url: data
         });
-    }
+    });
 });
 
 // }}}
