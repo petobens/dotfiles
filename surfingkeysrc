@@ -83,13 +83,9 @@ mapkey(',ab', 'Bookmark current page to selected folder', function() {
 });
 
 // Quickmarks (own implementation)
-var qmarksMapKey = function(prefix, urls) {
-    if (prefix === "\'") {
-        var newTab = false;
-    } else {
-        var newTab = true;
-    }
-    var openLink = function(link, newTab) {
+const qmarksMapKey = function(prefix, urls) {
+    const newTab = (prefix !== "\'");
+    const openLink = function(link, newTab) {
         return function() {
             RUNTIME('openLink', {
                 tab: {tabbed: newTab},
@@ -102,7 +98,7 @@ var qmarksMapKey = function(prefix, urls) {
     }
 };
 
-var qmarksUrls = {
+const qmarksUrls = {
     b: 'www.bitbucket.com',
     c: 'www.utdt.edu/campusvirtual',
     d: 'http://distancia.econ.uba.ar/',
@@ -304,7 +300,7 @@ addSearchAliasX('w', 'Wikipedia',
     's',
     "https://en.wikipedia.org/w/api.php?action=query&format=json&list=prefixsearch&utf8&pssearch=",
     function(response) {
-        var res = JSON.parse(response.text).query.prefixsearch.map(r => r.title)
+        const res = JSON.parse(response.text).query.prefixsearch.map(r => r.title)
         return res
 });
 mapkey(',sw', 'Search in Wikpedia in current tab', function() {
