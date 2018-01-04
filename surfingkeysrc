@@ -18,7 +18,7 @@ unmapAllExcept(['f', '/', '*', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm']);
 
 settings.omnibarPosition = 'bottom';
 settings.focusFirstCandidate = false;
-settings.enableAutoFocus = false;
+settings.enableAutoFocus = true;
 settings.modeAfterYank = 'Normal'
 settings.hintAlign = 'left';
 Hints.characters = 'asdfghjkl';
