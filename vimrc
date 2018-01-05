@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 16 Dec 2017
+" Last Modified: 05 Jan 2018
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -1200,8 +1200,9 @@ endif
 let g:airline#extensions#whitespace#checks = ['trailing', 'indent']
 let g:airline#extensions#whitespace#symbol = 'Ξ'
 
-" Disable word count
+" Disable some extensions
 let g:airline#extensions#wordcount#enabled = 0
+let g:airline#extensions#cursormode#enabled = 0
 
 " Tabline (minibufexpl replacement)
 let g:airline#extensions#tabline#enabled = 1
@@ -1211,6 +1212,7 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#buffer_nr_format = '%s:'
 let g:airline#extensions#tabline#buffer_min_count = 2
 let airline#extensions#tabline#disable_refresh = 1
+let g:airline#extensions#tabline#show_tab_type = 1
 " Don't show some filetypes in the tabline
 let g:airline#extensions#tabline#excludes = ['denite']
 
