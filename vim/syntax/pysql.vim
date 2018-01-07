@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: pysql.vim
-"        Author: Pedro Ferrari
-"       Created: 07 Mar 2016
-" Last Modified: 09 Mar 2016
-"   Description: SQL higlighting inside Python strings
-"===============================================================================
 if exists('b:current_syntax')
   finish
 endif

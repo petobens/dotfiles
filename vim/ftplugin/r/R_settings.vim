@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: R_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 05 Aug 2015
-" Last Modified: 08 Dec 2017
-"   Description: R Settings for Vim
-"===============================================================================
 " TODO: Close figure window with x button (without need of using locator(1))
 " TODO: Better completion with Vim-R plugin and eventually with neocomplete
 " TODO: Add function to view R source code of an object or library?

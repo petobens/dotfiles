@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-#===============================================================================
-#          File: brew.sh
-#        Author: Pedro Ferrari
-#       Created: 24 Mar 2017
-# Last Modified: 30 Dec 2017
-#   Description: Brew installation
-#===============================================================================
 # Install brew if not installed
 if ! type "brew" > /dev/null 2>&1; then
     brew_prefix='Home'

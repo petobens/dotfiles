@@ -1,10 +1,3 @@
-#===============================================================================
-#          File: muttrc
-#        Author: Pedro Ferrari
-#       Created: 22 Apr 2017
-# Last Modified: 01 May 2017
-#   Description: My muttrc
-#===============================================================================
 # The first color is foreground and the second the background
 
 # Basic colors {{{

@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: matlab.vim
-"        Author: Pedro Ferrari
-"       Created: 03 Oct 2015
-" Last Modified: 03 Oct 2015
-"   Description: Matlab indent file
-"===============================================================================
 " Original Maintainer:	Fabrice Guy <fabrice.guy at gmail dot com>
 
 " Only load this indent file when no other was loaded.

@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: gauss.vim
-"        Author: Pedro Ferrari
-"       Created: 04 Nov 2015
-" Last Modified: 06 Nov 2015
-"   Description: Gauss syntax file
-"===============================================================================
 " Original Maintainer:	Alan Isaac <aisaac@american.edu>
 
 " Quit when a syntax file was already loaded

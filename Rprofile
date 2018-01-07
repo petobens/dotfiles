@@ -1,10 +1,3 @@
-# ==============================================================================
-#           File: Rprofile
-#         Author: Pedro Ferrari
-#        Created: 13 Aug 2015
-#  Last Modified: 23 Oct 2015
-#    Description: My R profile file
-# ==============================================================================
 # Set default CRAN mirror to USA
 options(repos = "http://cran.us.r-project.org")
 

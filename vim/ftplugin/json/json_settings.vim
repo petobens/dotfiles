@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: json_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 27 Aug 2016
-" Last Modified: 15 Mar 2017
-"   Description: My Json settings
-"===============================================================================
 " Installation notes {{{
 
 " To use the linter we need to install jsonlint (install it with npm).

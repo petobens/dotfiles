@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-#===============================================================================
-#          File: extras.sh
-#        Author: Pedro Ferrari
-#       Created: 14 Apr 2017
-# Last Modified: 08 Dec 2017
-#   Description: Mac OSX (and apps) settings
-#===============================================================================
 cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # iTerm

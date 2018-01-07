@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: bash_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 02 Aug 2016
-" Last Modified: 24 Mar 2017
-"   Description: My Bash settings file
-"===============================================================================
 " Installation notes {{{
 
 " To use the linter we need to install sheellcheck.

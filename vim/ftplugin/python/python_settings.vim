@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: python_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 30 Jan 2015
-" Last Modified: 31 Dec 2017
-"   Description: Python settings for Vim
-"===============================================================================
 " TODO: Learn TDD (and improve testing environment defined in this file)
 
 " Installation notes {{{

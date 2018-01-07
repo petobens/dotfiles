@@ -1,10 +1,3 @@
-#===============================================================================
-#          File: bashrc
-#        Author: Pedro Ferrari
-#       Created: 11 Apr 2016
-# Last Modified: 25 Dec 2017
-#   Description: My bashrc file
-#===============================================================================
 # Options {{{
 
 # Brew directory

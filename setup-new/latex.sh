@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-#===============================================================================
-#          File: latex.sh
-#        Author: Pedro Ferrari
-#       Created: 28 Mar 2017
-# Last Modified: 09 Sep 2017
-#   Description: Setup latex
-#===============================================================================
 # Download and install arara (we need java and maven first)
 if ! java -version >/dev/null 2>&1;  then
     if [[  "$OSTYPE" == 'darwin'* ]]; then

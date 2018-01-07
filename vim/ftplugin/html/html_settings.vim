@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: html_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 09 Jun 2017
-" Last Modified: 12 Jun 2017
-"   Description: My html settings
-"===============================================================================
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice

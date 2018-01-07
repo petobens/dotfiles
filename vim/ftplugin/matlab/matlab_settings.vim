@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: matlab_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 06 Jul 2015
-" Last Modified: 05 Mar 2017
-"   Description: Matlab settings for vim
-"===============================================================================
 " TODO: Include loaded files when running a visual selection
 " TODO: Run matlab from neovim terminal? Not possible on Windows
 " TODO: Completion similar to jedi with neocomplete?

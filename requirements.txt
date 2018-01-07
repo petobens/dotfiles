@@ -1,10 +1,3 @@
-# ==============================================================================
-#          File: requirements.txt
-#        Author: Pedro Ferrari
-#       Created: 12 Dec 2016
-# Last Modified: 19 Nov 2017
-#   Description: Usual python libraries
-# ==============================================================================
 beautysh; python_version >= '3.5'
 bokeh
 cython

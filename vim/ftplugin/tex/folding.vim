@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: folding.vim
-"        Author: Pedro Ferrari
-"       Created: 28 ago 2013
-" Last Modified: 23 Sep 2015
-"   Description: Modifications to Latex-Box plugin folding style
-"===============================================================================
 " TODO: Improve line number alignment <29/08/2013 16:57:13> "
 " TODO: Use vimtex manual folding refresh?
 

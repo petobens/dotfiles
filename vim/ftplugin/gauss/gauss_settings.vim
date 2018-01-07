@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: gauss_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 04 Nov 2015
-" Last Modified: 14 Mar 2017
-"   Description: Gauss settings for Vim
-"===============================================================================
 " Installation notes {{{
 
 " In Windows we create a symbolic link for gauss configuration file (gauss.cfg)

@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: latex_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 27 Aug 2013
-" Last Modified: 08 Dec 2017
-"   Description: Latex settings
-"===============================================================================
 " TODOs:
 " Add pie, line and bar plots to templates?
 " Improve fold function? See vimtex issue #52 and begin frame title argument,

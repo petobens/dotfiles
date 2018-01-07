@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: mk_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 26 May 2014
-" Last Modified: 08 Dec 2017
-"   Description: Markdown settings
-"===============================================================================
 " Initialization {{{
 
 if exists('b:loaded_md_settings_file')

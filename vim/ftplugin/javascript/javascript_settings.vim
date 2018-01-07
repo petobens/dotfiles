@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: javascript_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 02 Dec 2016
-" Last Modified: 26 May 2017
-"   Description: My Javascript settings
-"===============================================================================
 " Installation notes {{{
 
 " To use the linter we need to install eslint (install it with npm).

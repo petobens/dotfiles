@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: vimrc
-"        Author: Pedro Ferrari
-"       Created: 29 Dec 2012
-" Last Modified: 07 Jan 2018
-"   Description: My vimrc file
-"===============================================================================
 " TODOs:
 " Try the job feature: skywind3000/asyncrun.vim or neomake to replace dispatch?
 " Filter to convert markdown to html, useful for mails

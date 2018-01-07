@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: stata_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 05 Aug 2015
-" Last Modified: 23 Sep 2015
-"   Description: Settings for Stata
-"===============================================================================
 " Installation notes {{{
 
 " In order to compile we use rundo.exe and add it our path

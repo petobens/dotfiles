@@ -1,10 +1,3 @@
-"===============================================================================
-"          File: sql_settings.vim
-"        Author: Pedro Ferrari
-"       Created: 07 Mar 2016
-" Last Modified: 09 Jan 2017
-"   Description: My SQL settings
-"===============================================================================
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice

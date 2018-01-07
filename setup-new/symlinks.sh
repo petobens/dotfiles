@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-#===============================================================================
-#          File: symlinks.sh
-#        Author: Pedro Ferrari
-#       Created: 12 Sep 2016
-# Last Modified: 07 Jan 2018
-#   Description: Create all necessary symbolic links from my dotfiles
-#===============================================================================
 # Check bash major version
 bash_version=${BASH_VERSION:0:1}
 
