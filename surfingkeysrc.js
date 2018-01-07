@@ -20,7 +20,7 @@ settings.omnibarPosition = 'bottom';
 settings.showTabIndices = true;
 settings.focusFirstCandidate = false;
 settings.enableAutoFocus = true;
-settings.modeAfterYank = 'Normal'
+settings.modeAfterYank = 'Normal';
 settings.hintAlign = 'left';
 Hints.characters = 'asdfghjkl';
 
@@ -84,24 +84,23 @@ mapkey(',ab', 'Bookmark current page to selected folder', function() {
 
 // Quickmarks (own implementation)
 const qmarksMapKey = function(prefix, urls) {
-    const newTab = (prefix !== "\'");
+    const newTab = (prefix !== '\'');
     const openLink = function(link, newTab) {
         return function() {
             RUNTIME('openLink', {
                 tab: {tabbed: newTab},
                 url: link
             });
-        }
+        };
     };
     for (var key in urls) {
-        mapkey(prefix + key, 'qmark: ' + urls[key], openLink(urls[key], newTab))
+        mapkey(prefix + key, 'qmark: ' + urls[key], openLink(urls[key], newTab));
     }
 };
 
 const qmarksUrls = {
     b: 'www.bitbucket.com',
     c: 'www.utdt.edu/campusvirtual',
-    d: 'http://distancia.econ.uba.ar/',
     d: 'https://drive.google.com/drive/my-drive',
     e: 'https://extratorrent.unblockall.xyz/hot_torrents/2/XVID+DIVX.html',
     f: 'www.facebook.com',
@@ -121,11 +120,11 @@ const qmarksUrls = {
     j: 'http://app.jampp.com/',
     q: 'http://emr-prd-queries.jampp.com:8889/',
 };
-qmarksMapKey('"', qmarksUrls)
-qmarksMapKey("\'", qmarksUrls)
+qmarksMapKey('"', qmarksUrls);
+qmarksMapKey('\'', qmarksUrls);
 
 // Surfingkeys ViMarks
-mapkey("`", 'Jump to vim-like mark in current tab', function(mark) {
+mapkey('`', 'Jump to vim-like mark in current tab', function(mark) {
     Normal.jumpVIMark(mark);
 });
 // mapkey('"', 'Jump to vim-like mark in new tab', function(mark) {
@@ -211,6 +210,7 @@ mapkey(',be', 'Choose a tab with omnibar', function() {
 mapkey(',bc', 'Choose a tab', function() {
     Front.chooseTab();
 });
+// TODO: Do this with `,n`
 mapkey('T', 'Choose a tab (use nT to move to the nth tab)', function() {
     Front.chooseTab();
 });
@@ -219,17 +219,17 @@ mapkey('M', 'Mute/unmute current tab', function() {
 });
 
 // Yanking and pasting
-mapkey('y', "Copy current page's URL", function() {
+mapkey('y', 'Copy current page\'s URL', function() {
     Clipboard.write(window.location.href);
 });
 mapkey('p', 'Open the clipboard in the current tab', function() {
     Clipboard.read(function(response) {
-        if (response.data.startsWith("http://") ||
-            response.data.startsWith("https://") ||
-            response.data.startsWith("www.")) {
+        if (response.data.startsWith('http://') ||
+            response.data.startsWith('https://') ||
+            response.data.startsWith('www.')) {
             var data = response.data;
         } else {
-            var data = "https://www.google.com/search?q=" + response.data;
+            var data = 'https://www.google.com/search?q=' + response.data;
         }
         RUNTIME('openLink', {
             tab: {tabbed: false},
@@ -239,12 +239,12 @@ mapkey('p', 'Open the clipboard in the current tab', function() {
 });
 mapkey('P', 'Open the clipboard in a new tab', function() {
     Clipboard.read(function(response) {
-        if (response.data.startsWith("http://") ||
-            response.data.startsWith("https://") ||
-            response.data.startsWith("www.")) {
+        if (response.data.startsWith('http://') ||
+            response.data.startsWith('https://') ||
+            response.data.startsWith('www.')) {
             var data = response.data;
         } else {
-            var data = "https://www.google.com/search?q=" + response.data;
+            var data = 'https://www.google.com/search?q=' + response.data;
         }
         RUNTIME('openLink', {
             tab: {tabbed: true},
@@ -299,13 +299,13 @@ mapkey(',Sg', 'Search in Github in new tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 'h'});
 });
 addSearchAliasX('w', 'Wikipedia',
-    "https://en.wikipedia.org/w/index.php?search=",
+    'https://en.wikipedia.org/w/index.php?search=',
     's',
-    "https://en.wikipedia.org/w/api.php?action=query&format=json&list=prefixsearch&utf8&pssearch=",
+    'https://en.wikipedia.org/w/api.php?action=query&format=json&list=prefixsearch&utf8&pssearch=',
     function(response) {
-        const res = JSON.parse(response.text).query.prefixsearch.map(r => r.title)
-        return res
-});
+        const res = JSON.parse(response.text).query.prefixsearch.map(r => r.title);
+        return res;
+    });
 mapkey(',sw', 'Search in Wikpedia in current tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 'w', tabbed: false});
 });
@@ -372,8 +372,8 @@ aceVimMap('L', '$', 'normal');
 // }}}
 // Visual mode {{{
 
-vmap('L', '$')
-vmap('H', '0')
+vmap('L', '$');
+vmap('H', '0');
 
 // }}}
 // Blacklisting {{{
@@ -406,13 +406,13 @@ mapkey(',vs', 'View page source', function() {
 
 // Chrome specific
 mapkey(',dl', 'Open Chrome Downloads', function() {
-        tabOpenLink('chrome://downloads/');
+    tabOpenLink('chrome://downloads/');
 });
 mapkey(',cd', 'Close Downloads Shelf', function() {
-    RUNTIME("closeDownloadsShelf", {clearHistory: true});
+    RUNTIME('closeDownloadsShelf', {clearHistory: true});
 });
 mapkey(',ad', 'Open Chrome Extensions', function() {
-        tabOpenLink('chrome://extensions/');
+    tabOpenLink('chrome://extensions/');
 });
 
 // }}}

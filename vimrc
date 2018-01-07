@@ -2,7 +2,7 @@
 "          File: vimrc
 "        Author: Pedro Ferrari
 "       Created: 29 Dec 2012
-" Last Modified: 05 Jan 2018
+" Last Modified: 07 Jan 2018
 "   Description: My vimrc file
 "===============================================================================
 " TODOs:
@@ -213,8 +213,8 @@ endfunction
 augroup session
     au!
     au VimLeave * call s:SaveSession()
-    au BufWinLeave {*.*,vimrc,pentadactylrc}  mkview
-    au BufWinEnter {*.*,vimrc,pentadactylrc}  silent! loadview
+    au BufWinLeave {*.*,vimrc}  mkview
+    au BufWinEnter {*.*,vimrc}  silent! loadview
 augroup END
 nnoremap <silent> <Leader>ps :so $CACHE/tmp/session/vim_session.vim<CR>
 
@@ -1022,18 +1022,6 @@ augroup ft_matlab
     au Filetype matlab setlocal commentstring=%%s
     au FileType matlab setlocal iskeyword-=:
 augroup END
-
-" }}}
-" Pentadactyl {{{
-
-augroup ft_pentadactyl
-    au!
-    au BufNewFile,BufRead *pentadactylrc*,*.penta set filetype=pentadactyl
-    au Filetype pentadactyl setlocal commentstring=\"%s comments=:\"
-    au FileType pentadactyl setlocal foldmethod=marker
-augroup END
-
-nnoremap <silent> <Leader>ep :e $DOTFILES/pentadactylrc<CR>
 
 " }}}
 " Python {{{
@@ -2518,7 +2506,7 @@ endfunction
 
 augroup LastMod
     au!
-    au BufWritePre {*.*,vimrc,pentadactylrc,bash_profile,bashrc,muttrc} call
+    au BufWritePre {*.*,vimrc,bash_profile,bashrc,muttrc} call
                 \ s:LastModified()
 augroup END
 
