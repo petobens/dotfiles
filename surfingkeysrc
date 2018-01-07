@@ -17,12 +17,12 @@ unmapAllExcept(['f', '/', '*', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm']);
 // Options and Appearance {{{
 
 settings.omnibarPosition = 'bottom';
+settings.showTabIndices = true;
 settings.focusFirstCandidate = false;
 settings.enableAutoFocus = true;
 settings.modeAfterYank = 'Normal'
 settings.hintAlign = 'left';
 Hints.characters = 'asdfghjkl';
-// TODO: Add tab numbers / indices
 
 // Theme (uses Onedark colors)
 settings.theme = `
@@ -209,6 +209,9 @@ mapkey(',be', 'Choose a tab with omnibar', function() {
     Front.openOmnibar({type: 'Tabs'});
 });
 mapkey(',bc', 'Choose a tab', function() {
+    Front.chooseTab();
+});
+mapkey('T', 'Choose a tab (use nT to move to the nth tab)', function() {
     Front.chooseTab();
 });
 mapkey('M', 'Mute/unmute current tab', function() {
