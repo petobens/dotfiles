@@ -1,5 +1,3 @@
-" TODO: Learn TDD (and improve testing environment defined in this file)
-
 " Installation notes {{{
 
 " On Windows if we use the `winpython` distribution then we need to add the
@@ -727,7 +725,7 @@ function! s:RunPyTest(level, compilation)
     if a:compilation ==# 'foreground'
         let bang_command = '!'
         if exists(':Dispatch')
-            let bang_command = 'Start -wait=always '
+            let bang_command = 'Start -wait=always -title=pytest '
         endif
         execute bang_command . &l:makeprg
         " Restore error format and working directory
@@ -1105,7 +1103,9 @@ nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite', 'background')<CR>
 nnoremap <buffer> <Leader>ptf :call <SID>RunPyTest('file', 'background')<CR>
 nnoremap <buffer> <Leader>Ptf :call <SID>RunPyTest('file', 'foreground')<CR>
 nnoremap <buffer> <Leader>ptc :call <SID>RunPyTest('class', 'background')<CR>
+nnoremap <buffer> <Leader>Ptc :call <SID>RunPyTest('class', 'foreground')<CR>
 nnoremap <buffer> <Leader>ptm :call <SID>RunPyTest('method', 'background')<CR>
+nnoremap <buffer> <Leader>Ptm :call <SID>RunPyTest('method', 'foreground')<CR>
 nnoremap <buffer> <silent> <Leader>rt :call
             \ <SID>RunPyTest('suite', 'foreground')<CR>
 nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
