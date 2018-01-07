@@ -680,10 +680,10 @@ function! s:RunPyTest(level, compilation)
         endif
 
         let current_tag = split(tagbar#currenttag('%s', '', 'f'), '\.')
-        if len(current_tag) == 2
+        if len(current_tag) >= 2
             let class = current_tag[0]
             let method = split(current_tag[1], '(')[0]
-            " If the method is private and thus start with an underscore don't
+            " If the method is private and thus starts with an underscore don't
             " add an extra underscore
             let prefix = (match(method, '^_') == -1)? 'test_' : 'test'
             if need_prefix == 1
