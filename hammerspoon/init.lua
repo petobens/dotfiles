@@ -2,7 +2,7 @@
 --          File: init.lua
 --        Author: Pedro Ferrari
 --       Created: 13 Mar 2016
--- Last Modified: 10 Dec 2017
+-- Last Modified: 24 Dec 2017
 --   Description: My Hammerspoon config file
 --==============================================================================
 -- To use the dev version, download master from git and then run `sh rebuild.sh`
@@ -96,8 +96,8 @@ hs.expose.ui.highlightThumbnailStrokeWidth = 5
 hs.expose.ui.textSize = 30
 hs.expose.ui.nonVisibleStripWidth = 0.2
 hs.expose.ui.nonVisibleStripBackgroundColor = {0.08, 0.08, 0.08}
-hs.hotkey.bind(cmd_ctrl, "j", function()
-                hs.expose.new():toggleShow() end)
+expose = hs.expose.new()
+hs.hotkey.bind(cmd_ctrl, "j", function() expose:toggleShow() end)
 
 -- Window switcher (deprecates Hyperswitch)
 hs.window.switcher.ui.showSelectedThumbnail = false
