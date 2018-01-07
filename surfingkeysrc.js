@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // Preamble {{{
 
 // To load this local config file:
@@ -75,7 +76,7 @@ mapkey(',bm', 'Open bookmarks', function() {
     Front.openOmnibar(({type: 'Bookmarks'}));
 });
 mapkey(',ab', 'Bookmark current page to selected folder', function() {
-    var page = {
+    let page = {
         url: window.location.href,
         title: document.title
     };
@@ -94,7 +95,9 @@ const qmarksMapKey = function(prefix, urls) {
         };
     };
     for (var key in urls) {
-        mapkey(prefix + key, 'qmark: ' + urls[key], openLink(urls[key], newTab));
+        mapkey(
+            prefix + key, 'qmark: ' + urls[key], openLink(urls[key], newTab)
+        );
     }
 };
 
@@ -223,13 +226,14 @@ mapkey('y', 'Copy current page\'s URL', function() {
     Clipboard.write(window.location.href);
 });
 mapkey('p', 'Open the clipboard in the current tab', function() {
+    let data;
     Clipboard.read(function(response) {
         if (response.data.startsWith('http://') ||
             response.data.startsWith('https://') ||
             response.data.startsWith('www.')) {
-            var data = response.data;
+            data = response.data;
         } else {
-            var data = 'https://www.google.com/search?q=' + response.data;
+            data = 'https://www.google.com/search?q=' + response.data;
         }
         RUNTIME('openLink', {
             tab: {tabbed: false},
@@ -238,13 +242,14 @@ mapkey('p', 'Open the clipboard in the current tab', function() {
     });
 });
 mapkey('P', 'Open the clipboard in a new tab', function() {
+    let data;
     Clipboard.read(function(response) {
         if (response.data.startsWith('http://') ||
             response.data.startsWith('https://') ||
             response.data.startsWith('www.')) {
-            var data = response.data;
+            data = response.data;
         } else {
-            var data = 'https://www.google.com/search?q=' + response.data;
+            data = 'https://www.google.com/search?q=' + response.data;
         }
         RUNTIME('openLink', {
             tab: {tabbed: true},
@@ -301,9 +306,11 @@ mapkey(',Sg', 'Search in Github in new tab', function() {
 addSearchAliasX('w', 'Wikipedia',
     'https://en.wikipedia.org/w/index.php?search=',
     's',
-    'https://en.wikipedia.org/w/api.php?action=query&format=json&list=prefixsearch&utf8&pssearch=',
+    ('https://en.wikipedia.org/w/api.php?action=query&format=json' +
+    '&list=prefixsearch&utf8&pssearch='),
     function(response) {
-        const res = JSON.parse(response.text).query.prefixsearch.map(r => r.title);
+        const res = JSON.parse(response.text).
+                    query.prefixsearch.map(r => r.title);
         return res;
     });
 mapkey(',sw', 'Search in Wikpedia in current tab', function() {
