@@ -647,20 +647,25 @@ function! s:RunPyTest(level, compilation)
     " classes or methods inside a test file. When running the whole suite also
     " perform test coverage.
     if a:level ==# 'suite'
-        " We want to get coverage when running the full test suite
-        let compiler = compiler . '--cov-report term-missing --cov='
-        " Assume that the project name is the same as the last dir in the test
-        " dir (i.e if my project is called `foo` then assume there is also a
-        " folder `foo` at the same level as the `tests` folder)
-        let project = fnamemodify(test_dir, ':t')
-        if !isdirectory(test_dir . '/'. project)
-            let project = input('Enter project to view coverage: ')
-            if empty(project)
-                redraw!
-                return
+        " We want to get coverage when running the full test suite (assume here
+        " that we want to run coverage for all files)
+        let compiler = compiler . '--cov-report term-missing --cov=. '
+
+        " Check if we have a coveragerc file
+        let search_path = fnamemodify(test_dir, ':p:h') . '/**'
+        let coveragerc_file = globpath(search_path, '*coveragerc*')
+        if !filereadable(coveragerc_file)
+            let coveragerc_file = input('Enter coveragerc path: ', '', 'file')
+            if empty(coveragerc_file)
+                let coveragerc_file = ''
             endif
         endif
-        let &l:makeprg = compiler . project . ' tests/'
+        if coveragerc_file != ''
+            let cov_config = ' --cov-config ' . coveragerc_file
+        else
+            let cov_config = ''
+        endif
+        let &l:makeprg = compiler . 'tests/' . cov_config
     elseif a:level ==# 'file'
         " Also run test coverage here but only for this file
         let compiler = compiler . '--cov-report term-missing --cov='
