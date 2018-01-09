@@ -25,6 +25,9 @@ settings.modeAfterYank = 'Normal';
 settings.hintAlign = 'left';
 Hints.characters = 'asdfghjkl';
 
+// Disable PDF viewer (note that ;s toggle that does this doesn't seem to work)
+chrome.storage.local.set({'noPdfViewer': 1});
+
 // Theme (uses Onedark colors)
 settings.theme = `
 .sk_theme {
