@@ -820,17 +820,6 @@ function! s:ShowPyTestCoverage()
         endif
     endfor
 
-    " Check if we have a file with dir matching to our project
-    let project = matchstr(&makeprg, '-cov=\zs.*\ze\s')
-    let base_dir = ''
-    for i in range(1, bufnr('$'))
-        let buf_name = fnamemodify(bufname(i), ':p')
-        if fnamemodify(buf_name, ':h:t') ==# project
-            let base_dir = fnamemodify(buf_name, ':h')
-            break
-        endif
-    endfor
-
     " We will show the coverage output inside the quickfix, so create a
     " container for it
     let cov_qflist = []
@@ -847,6 +836,34 @@ function! s:ShowPyTestCoverage()
         let entry.text = line
         call add(cov_qflist, entry)
     endfor
+
+    " Set our base dir (note that we cannot directly read it from the --cov
+    " parameter since it is either `.` or just `basename`)
+    let project = matchstr(&makeprg, '-cov=\zs.*\ze\s\w')
+    let base_dir = ''
+    if project !=# '.'
+        for i in range(1, bufnr('$'))
+            let buf_name = fnamemodify(bufname(i), ':p')
+            if fnamemodify(buf_name, ':h:t') ==# project
+                let base_dir = fnamemodify(buf_name, ':h')
+                break
+            endif
+        endfor
+    else
+        for line in output
+            let project_file = matchstr(line, '^\w*.*\.py')
+            if project_file !=# ''
+                for i in range(1, bufnr('$'))
+                    let buf_name = fnamemodify(bufname(i), ':p')
+                    if (fnamemodify(buf_name, ':t:r') ==#
+                                \ fnamemodify(project_file, ':t:r'))
+                        let base_dir = fnamemodify(buf_name, ':h')
+                        break
+                    endif
+                endfor
+            endif
+        endfor
+    endif
 
     " Get those lines with missing coverage and add them to the quickfix list
     " as valid entries (so we can jump directly to the line)
