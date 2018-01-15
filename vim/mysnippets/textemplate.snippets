@@ -91,7 +91,6 @@ height=21cm,top=3.7cm,headsep=1cm, headheight=1.6cm,footskip=1.2cm]{geometry}
 \pagestyle{${5:main or jampp}}
 
 \usepackage{emptypage}          % Empty blank pages created by \cleardoublepage
-% \setcounter{secnumdepth}{2}   % Don't number subsubsections
 
 \usepackage[stable,multiple]{footmisc}  % Customizations of footnotes
 \DefineFNsymbols*{mysymbols}[math]{\dagger\ddagger\S\diamondsuit*}
@@ -287,9 +286,9 @@ else:
 \numberwithin{table}{enumi}
 \renewcommand\theHtable{\arabic{enumi}.\arabic{table}}
 
-% Don't number section environments (but create bookmarks for them) and create
-% bookmark for each exercise
-\setcounter{secnumdepth}{0}
+% Don't number subsubsection environments (but create bookmarks for them) and
+% create bookmark for each exercise
+\setcounter{secnumdepth}{2}
 \preto{\labelenumi}{%
 	\pdfbookmark[2]{`!p snip.rv= 'Ejercicio' if t[1] == 'spanish' else 'Exercise'` \arabic{enumi}}{ejer\arabic{enumi}}}
 	\preto{\labelenumii}{%
