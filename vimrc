@@ -128,6 +128,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Git
     call dein#add('junegunn/gv.vim')
     call dein#add('tpope/vim-fugitive')
+    call dein#add('idanarye/vim-merginal')
 
     " SQL (and database related)
     call dein#add('joereynolds/SQHell.vim', {'on_ft' : 'sql'})
@@ -1343,7 +1344,7 @@ function! s:DeniteGrep()
     else
         let ft_filter = '--' . filetype
     endif
-    call denite#start([{'name': 'grep', 'args': [narrow_dir, [ft_filter]]}])
+    call denite#start([{'name': 'grep', 'args': [narrow_dir, ft_filter]}])
 endfunction
 function! s:DeniteTasklist()
     call denite#start([{'name': 'grep',
@@ -1587,8 +1588,13 @@ else
     nnoremap <silent> <Leader>gl :Glog -- %<CR>:copen<CR>
     nnoremap <silent> <Leader>gL :Glog --<CR>:copen<CR>
 endif
+
 " Commit explorer/browser (from gv.vim plugin)
 nnoremap <silent> <Leader>cb :GV<cr>
+
+" Merginal
+let g:merginal_splitType = ''
+let g:merginal_windowSize = 15
 
 " }}}
 " Fzf {{{
