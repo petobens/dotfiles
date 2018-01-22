@@ -703,8 +703,12 @@ function! s:RunPyTest(level, compilation)
         if a:level ==# 'class'
             let &l:makeprg = compiler . current_file . '::' . class
         else
-            let &l:makeprg = compiler . current_file . '::' . class .
-                        \ '::' . method
+            if exists('class')
+                let &l:makeprg = compiler . current_file . '::' . class .
+                            \ '::' . method
+            else
+                let &l:makeprg = compiler . current_file . '::' . method
+            endif
         endif
     endif
 
