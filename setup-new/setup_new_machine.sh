@@ -66,8 +66,8 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         pip install -r "$parent_dir"/requirements.txt
         # Enable both python2 and python3 ipython kernels
         ipython kernel install
-        ipython3 kernel install
     fi
+    ipython3 kernel install
 fi
 
 if type "tlmgr" > /dev/null 2>&1; then

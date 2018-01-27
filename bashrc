@@ -168,39 +168,53 @@ alias u='cd ..'
 alias h='cd ~'
 alias q='exit'
 alias c='clear'
-alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
-alias ht='htop'
 alias o='open'
-alias rg='ranger'
 alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
 
-# Colorized cat (with Python's pygment library)
+# Other binaries
+if type "htop" > /dev/null 2>&1; then
+    alias ht='htop'
+fi
+if type "nvim" > /dev/null 2>&1; then
+    alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
+fi
+if type "ranger" > /dev/null 2>&1; then
+    alias rg='ranger'
+fi
 if type "pygmentize" > /dev/null 2>&1; then
+    # Colorized cat
     alias dog='pygmentize -O style=fruity -f terminal16m -g'
+fi
+if type "unimatrix" > /dev/null 2>&1; then
+    alias neo='unimatrix -s 90'
 fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
 # alias
-alias gs='git status'
-alias gco='git checkout'
-_completion_loader git
-__git_complete gco _git_checkout
-alias gcp='git cherry-pick'
-alias gb='git branch'
-__git_complete gb _git_branch
-alias gp='git push'
-__git_complete gp _git_push
-alias gP='git pull'
-__git_complete gp _git_pull
-alias gdr='git push origin --delete'
+if type "git" > /dev/null 2>&1; then
+    alias gs='git status'
+    alias gco='git checkout'
+    _completion_loader git
+    __git_complete gco _git_checkout
+    alias gcp='git cherry-pick'
+    alias gb='git branch'
+    __git_complete gb _git_branch
+    alias gp='git push'
+    __git_complete gp _git_push
+    alias gP='git pull'
+    __git_complete gp _git_pull
+    alias gdr='git push origin --delete'
+fi
 
 # Python
 if [ ! -f "$brew_dir"/bin/python2 ]; then
     alias python='python3'
     alias pip='pip3'
 fi
-alias jn='jupyter notebook'
+if type "jupyter" > /dev/null 2>&1; then
+    alias jn='jupyter notebook'
+fi
 
 # Update all binaries (with brew) and language libraries
 ua='sudo echo -n; brew update && brew upgrade && brew cleanup; '\
