@@ -1260,10 +1260,10 @@ augroup END
 let g:dein#install_log_filename = expand('$HOME/.cache/dein/dein.log')
 let g:dein#install_max_processes = 16
 
-" Function to open unite buffer with updates after update finishes
+" Function to open denite buffer with updates as updates finish
 function! s:dein_update()
   call dein#update()
-  Unite dein/log:!
+  Denite -no-quit -mode=normal dein_log:!
 endfunction
 
 " Maps
