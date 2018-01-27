@@ -12,7 +12,9 @@
 // Chrome version. See https://github.com/brookhong/Surfingkeys/issues/511 and
 // https://brookhong.github.io/2017/10/15/surfingkeys-across-all-pages.html
 
-unmapAllExcept(['f', '/', '*', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm']);
+unmapAllExcept( [
+    'f', '/', '*', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm',
+]);
 
 // }}}
 // Options and Appearance {{{
@@ -392,6 +394,10 @@ vmap('H', '0');
 // map(',pt', '<Alt-s>');  // Must one key stroke
 
 settings.blacklistPattern = /.*docs\.google\.com.*/i;
+
+mapkey(',pt', 'Enter PassThrough mode', function() {
+    Normal.passThrough();
+});
 
 // }}}
 // Convenient mappings {{{
