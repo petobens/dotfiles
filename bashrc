@@ -187,7 +187,7 @@ if type "pygmentize" > /dev/null 2>&1; then
     alias dog='pygmentize -O style=fruity -f terminal16m -g'
 fi
 if type "unimatrix" > /dev/null 2>&1; then
-    alias neo='unimatrix -s 90'
+    alias iamneo='unimatrix -s 90'
 fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
