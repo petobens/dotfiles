@@ -41,6 +41,11 @@ if type "ctags" > /dev/null 2>&1; then
     ln -s "$dotfiles_dir/ctags" "$HOME/.ctags"
     echo Created .ctags symlink
 fi
+if type "python" > /dev/null 2>&1; then
+    rm -rf "$HOME/.pdbrc"
+    ln -s "$dotfiles_dir/pdbrc" "$HOME/.pdbrc"
+    echo Created .pdbrc symlink
+fi
 if type "tmux" > /dev/null 2>&1; then
     rm -rf "$HOME/.tmux"
     ln -s "$dotfiles_dir/tmux" "$HOME/.tmux"
