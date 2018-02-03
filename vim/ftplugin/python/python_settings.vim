@@ -1078,6 +1078,16 @@ function! s:PyREPL() range
 endfunction
 
 " }}}
+" Remove breakpoints {{{
+
+function! s:RemoveBreakPoint()
+    let save_cursor = getcurpos()
+    execute 'g/import pdb; pdb.set_trace()/d'
+    silent update
+    call setpos('.', save_cursor)
+endfunction
+
+" }}}
 
 " }}}
 " Mappings {{{
@@ -1087,6 +1097,8 @@ if exists(':UltiSnipsEdit')
     inoremap <buffer> <silent> tq tq<C-R>=UltiSnips#Anon('"""${1:${VISUAL}}"""',
                 \ 'tq', '', 'i')<CR>
 endif
+" Remove breakpoints (set them with bp snippet)
+nnoremap <silent> <buffer> <Leader>rb :call <SID>RemoveBreakPoint()<CR>
 
 " Background compilation
 nnoremap <silent> <buffer> <F7> :call
