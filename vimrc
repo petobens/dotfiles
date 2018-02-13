@@ -111,7 +111,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Python
     call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
-    call dein#add('tweekmonster/impsort.vim', {'on_ft' : 'python'})
+    " call dein#add('tweekmonster/impsort.vim', {'on_ft' : 'python'})
+    call dein#add('tweekmonster/impsort.vim')
     if has('nvim')
         call dein#add('zchee/deoplete-jedi')
     endif
@@ -1639,8 +1640,6 @@ let g:fzf_action = {'ctrl-s': 'split', 'ctrl-v': 'vsplit'}
 
 " FIXME: Not working on Windows?
 let g:gitgutter_map_keys = 0           " Disable default mappings
-let g:gitgutter_realtime = 0           " Don't update when typing stops
-let g:gitgutter_eager = 1              " Update when switching/writing buffers
 let g:gitgutter_signs = 0              " Don't show signs (toggle them with map)
 
 " Mappings
