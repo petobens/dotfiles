@@ -44,6 +44,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     if [[  "$OSTYPE" == 'darwin'* ]]; then
         brew tap caskroom/fonts
         brew cask install font-sourcecodepro-nerd-font
+        # Nerd fonts Source Code Pro version doesn't have italics so we install
+        # the official version
+        brew cask install font-source-code-pro
     else
         mkdir -p ~/.local/share/fonts
         cd ~/.local/share/fonts || exit
@@ -52,6 +55,8 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
             patched-fonts/SourceCodePro/Regular/complete/\
             Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
         echo Installed Sauce Code Pro Nerd Font Complete.ttf font
+        # TODO: Add ubuntu installation instructions for official Source Code
+        # Pro
         cd "$current_dir" || exit
     fi
 fi

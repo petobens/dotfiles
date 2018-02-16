@@ -28,7 +28,8 @@ brew install bash-completion2
 # Git
 brew install git
 
-# Languages: Python3, R, latex, node, java
+# Languages: Rust, Python3, R, latex, node, java
+brew install rust  # We need this for Alacritty
 brew install python3
 read -p "Do you want to install python2 (y/n)? " -n 1 -r
 echo
@@ -87,11 +88,12 @@ brew tap universal-ctags/universal-ctags
 brew install --HEAD universal-ctags
 brew install unrar
 brew install --HEAD neomutt --with-sidebar-patch --with-notmuch-patch
-# FIXME: the following do not install on Linux due to ghc error
+# FIXME: the following two do not install on Linux due to ghc error
 brew install shellcheck
 brew install pandoc
 brew install neofetch
 brew install imgcat
+brew install urlview
 
 # Remove outdated versions
 brew cleanup

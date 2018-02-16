@@ -111,9 +111,15 @@ if type "htmlhint" > /dev/null 2>&1; then
     ln -s "$dotfiles_dir/linters/htmlhintrc" "$HOME/.htmlhintrc"
     echo Created .htmlhintrc symlink
 fi
+
 rm -rf "$HOME/.surfingkeysrc"
 ln -s "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 echo Created .surfingkeysrc symlink
+
+rm -rf "$HOME/.config/alacritty"
+ln -s "$dotfiles_dir/config/alacritty" "$HOME/.config/alacritty"
+echo Created .config/alacritty folder symlink
+
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if open -Ra "hammerspoon" ; then
         rm -rf "$HOME/.hammerspoon"

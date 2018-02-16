@@ -1,14 +1,4 @@
 #!/usr/bin/env bash
-cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-# iTerm
-if [ -d "/Applications/iTerm.app/" ]; then
-    onedarkish_iterm="$cur_dir/onedarkish.itermcolors"
-    if [ -f "$onedarkish_iterm" ]; then
-        defaults write -app iTerm 'Custom Color Presets' -dict-add "onedarkish" "$(cat "$onedarkish_iterm")"
-    fi
-    defaults write -app iTerm QuitWhenAllWindowsClosed -bool true
-fi
 
 # Skim (PDF viewer)
 if [ -d "/Applications/Skim.app/" ]; then
@@ -18,6 +8,22 @@ if [ -d "/Applications/Skim.app/" ]; then
     defaults write -app Skim SKTeXEditorPreset "Custom"
     defaults write -app Skim SKTeXEditorCommand  "nvr"
     defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line|foldo!\'\' %file"
+fi
+
+# Alacritty
+if type "cargo" > /dev/null 2>&1; then
+    echo "Installing Alacritty..."
+    git clone https://github.com/jwilm/alacritty.git
+    (
+        cd alacritty || exit
+        cargo build --release
+        if [[  "$OSTYPE" == 'darwin'* ]]; then
+            echo "Moving Alacritty.app to Applications folder..."
+            make app
+            cp -r target/release/osx/Alacritty.app /Applications/
+        fi
+    )
+    rm -rf alacritty
 fi
 
 # Install ranger plugins and scope.sh executable

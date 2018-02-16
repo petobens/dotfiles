@@ -27,10 +27,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     if [ -d "/Applications/MATLAB_R2015b.app/bin" ]; then
         export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
     fi
-    if type "go" > /dev/null 2>&1; then
-        export GOPATH=$HOME/go
-        export PATH=$PATH:$GOPATH/bin
-    fi
+    export PKG_CONFIG_PATH="$brew_dir/lib/pkgconfig:$brew_dir/lib"
 
     # Symlink cask apps to Applications folder
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
@@ -54,6 +51,12 @@ else
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
+fi
+
+# Path OS agnostic settings
+if type "go" > /dev/null 2>&1; then
+    export GOPATH=$HOME/go
+    export PATH=$PATH:$GOPATH/bin
 fi
 
 # Set editor to nvim and use it as a manpager
@@ -169,6 +172,7 @@ alias h='cd ~'
 alias q='exit'
 alias c='clear'
 alias o='open'
+alias rm='rm -v'
 alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
 
@@ -205,6 +209,7 @@ if type "git" > /dev/null 2>&1; then
     alias gP='git pull'
     __git_complete gp _git_pull
     alias gdr='git push origin --delete'
+    __git_complete gdr _git_push
 fi
 
 # Python
