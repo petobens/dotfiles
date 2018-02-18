@@ -1295,14 +1295,14 @@ call denite#custom#option('default', {
 hi default link deniteSource_grepFile Directory
 
 " Change default matcher and sorter
-call denite#custom#source('default', 'matchers', ['matcher_fuzzy',
-        \ 'matcher_ignore_globs'])
-call denite#custom#source('line', 'matchers', ['matcher_regexp'])
-call denite#custom#source('default', 'sorters', ['sorter_sublime'])
+call denite#custom#source('default', 'matchers', ['matcher/fuzzy',
+        \ 'matcher/ignore_globs'])
+call denite#custom#source('line', 'matchers', ['matcher/regexp'])
+call denite#custom#source('default', 'sorters', ['sorter/rank'])
 
 " Ignore some files and directories
 " FIXME: This is not quite working
-call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
+call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
         \ ['.git/', '__pycache__/', 'venv/',  'tmp/', 'doc/'])
 
 " Buffer source settings
@@ -1315,7 +1315,7 @@ let g:neomru#time_format = ''
 
 " Use ag for file_rec and grep
 if executable('ag')
-	call denite#custom#var('file_rec', 'command',
+	call denite#custom#var('file/rec', 'command',
         \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 	call denite#custom#var('grep', 'command', ['ag'])
 	call denite#custom#var('grep', 'default_opts',
@@ -1332,7 +1332,7 @@ function! s:DeniteScanDir()
     if narrow_dir == ''
         return
     endif
-    call denite#start([{'name': 'file_rec', 'args': [narrow_dir]}])
+    call denite#start([{'name': 'file/rec', 'args': [narrow_dir]}])
 endfunction
 function! s:DeniteGrep()
     let narrow_dir = input('Target: ', '.', 'file')
@@ -1353,7 +1353,7 @@ function! s:DeniteTasklist()
 endfunction
 
 " Mappings
-nnoremap <silent> <Leader>ls :Denite file_rec<CR>
+nnoremap <silent> <Leader>ls :Denite file/rec<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite -default-action=context_split buffer<CR>
