@@ -91,6 +91,7 @@ brew install --HEAD neomutt --with-sidebar-patch --with-notmuch-patch
 # FIXME: the following two do not install on Linux due to ghc error
 brew install shellcheck
 brew install pandoc
+brew install pandoc-citeproc
 brew install neofetch
 brew install imgcat
 brew install urlview
