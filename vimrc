@@ -101,6 +101,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     if exists('$TMUX')
         call dein#add('christoomey/vim-tmux-navigator')
         call dein#add('wellle/tmux-complete.vim')
+        call dein#add('tmux-plugins/vim-tmux-focus-events')
     endif
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
     call dein#add('SirVer/ultisnips')
@@ -137,6 +138,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
+    call dein#add('tpope/vim-dadbod')
     call dein#add('tpope/vim-dispatch')
     call dein#add('tommcdo/vim-fubitive')
     call dein#add('shumphrey/fugitive-gitlab.vim')
@@ -1256,6 +1258,11 @@ augroup ps_csv
 augroup END
 
 " }}}
+" Dadbod {{{
+
+" let g:db = 'mysql://blah'
+
+" }}}
 " Dein {{{
 
 let g:dein#install_log_filename = expand('$HOME/.cache/dein/dein.log')
@@ -1445,15 +1452,15 @@ if !exists('g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols')
     let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}
 endif
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {'tex': '',
-            \ 'vim': '', 'bib':'', 'yaml': '', 'gitcommit': ''}
+            \ 'bib':'', 'gitcommit': ''}
 
 " Add or override individual specific files
 if !exists('g:WebDevIconsUnicodeDecorateFileNodesExactSymbols')
     let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {}
 endif
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
-            \ '.gitignore': '', 'vimrc': '', '.vimrc': '', 'bashrc': '',
-            \ '.bashrc': '', 'bash_profile': '', '.bash_profile': ''}
+            \ '.gitignore': '', 'bashrc': '', '.bashrc': '',
+            \ 'bash_profile': '', '.bash_profile': ''}
 
 " Disable denite integration (because it makes denite really slow)
 let g:webdevicons_enable_denite = 0
