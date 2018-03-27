@@ -1,0 +1,13 @@
+snippet dpt "Dummy Presto table" b
+WITH dummy_table AS
+(
+SELECT * FROM (
+	VALUES
+		(1, 'a', NULL),
+		${1:another row}
+) AS t (a, b, c)
+)
+
+SELECT *
+FROM dummy_table$0
+endsnippet
