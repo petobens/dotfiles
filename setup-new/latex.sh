@@ -14,7 +14,7 @@ rm -rf "$(brew --prefix)"/lib/arara
 rm -rf "$(brew --prefix)"/bin/arara
 git clone https://github.com/cereda/arara
 cd ./arara/application/ || exit
-mvn assembly:assembly
+mvn compile assembly:single
 
 cd ./target || exit
 cat > arara << EOF
