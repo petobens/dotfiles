@@ -22,8 +22,7 @@ brew update && brew upgrade
 brew install bash
 sudo bash -c "echo $brew_dir/bin/bash >> /etc/shells"
 sudo chsh -s "$brew_dir"/bin/bash
-brew tap homebrew/versions
-brew install bash-completion2
+brew install bash-completion@2
 
 # Git
 brew install git
@@ -55,7 +54,6 @@ fi
 read -p "Do you want to install R (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    brew tap homebrew/science
     brew install R
 fi
 read -p "Do you want to install Node.js (y/n)? " -n 1 -r
@@ -84,8 +82,7 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
     brew install reattach-to-user-namespace
     brew install rmtrash
 fi
-brew tap universal-ctags/universal-ctags
-brew install --HEAD universal-ctags
+brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 brew install unrar
 brew install --HEAD neomutt --with-sidebar-patch --with-notmuch-patch
 # FIXME: the following two do not install on Linux due to ghc error
