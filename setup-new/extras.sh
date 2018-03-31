@@ -7,7 +7,7 @@ if [ -d "/Applications/Skim.app/" ]; then
     # Synctex (with neovim)
     defaults write -app Skim SKTeXEditorPreset "Custom"
     defaults write -app Skim SKTeXEditorCommand  "nvr"
-    defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line|foldo!\'\' %file"
+    defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line\'\' %file"
 fi
 
 # Alacritty
