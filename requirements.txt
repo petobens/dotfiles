@@ -25,6 +25,5 @@ scipy
 sqlparse; python_version >= '3.5'
 git+https://github.com/will8211/unimatrix; python_version >= '3.5'
 vim-vint; python_version >= '3.5'
-xlrd
 yamllint
 yapf; python_version >= '3.5'
