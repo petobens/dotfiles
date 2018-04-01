@@ -1,5 +1,4 @@
 beautysh; python_version >= '3.5'
-bokeh
 cython
 flake8; python_version >= '3.5'
 jedi; python_version >= '3.5'
@@ -8,7 +7,7 @@ matplotlib
 mycli
 mypy; python_version >= '3.5'
 # Note: mysql connector needs protobuf; see https://stackoverflow.com/a/43066829/2149400
-mysql-connector==2.1.4
+mysql-connector==2.1.6
 neovim
 neovim-remote; python_version >= '3.5'
 numpy
