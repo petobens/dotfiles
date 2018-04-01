@@ -54,10 +54,10 @@ sudo tlmgr option docfiles 1
 sudo tlmgr install --reinstall "$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')"
 
 # Install additional binaries: linter, word counter, fonts and biber
-sudo tlmgr install texcount
+sudo tlmgr install biber
 sudo tlmgr install chktex
 sudo tlmgr install collection-fontsrecommended
-sudo tlmgr install biber
+sudo tlmgr install texcount
 
 # Install additional latex packages
 sudo tlmgr install amssymb
@@ -78,15 +78,17 @@ sudo tlmgr install lipsum
 sudo tlmgr install logreq
 sudo tlmgr install minted
 sudo tlmgr install multirow
+sudo tlmgr install pgfplots
 sudo tlmgr install silence
 sudo tlmgr install siunitx
 sudo tlmgr install spreadtab
+sudo tlmgr install standalone
 sudo tlmgr install tcolorbox
 sudo tlmgr install titlesec
 sudo tlmgr install trimspaces
+sudo tlmgr install wrapfig
 sudo tlmgr install xpatch
 sudo tlmgr install xstring
-sudo tlmgr install wrapfig
 
 # Update all recently installed packages
 sudo tlmgr update all
