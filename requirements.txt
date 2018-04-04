@@ -1,29 +1,29 @@
-beautysh; python_version >= '3.5'
+beautysh; python_version >= '3.6'
 cython
-flake8; python_version >= '3.5'
-jedi; python_version >= '3.5'
+flake8; python_version >= '3.6'
+jedi; python_version >= '3.6'
 jupyter
 matplotlib
-mycli
-mypy; python_version >= '3.5'
+mycli; python_version >= '3.6'
+mypy; python_version >= '3.6'
 # Note: mysql connector needs protobuf; see https://stackoverflow.com/a/43066829/2149400
 mysql-connector==2.1.6
 neovim
-neovim-remote; python_version >= '3.5'
+neovim-remote; python_version >= '3.6'
 numpy
 pandas
-pgcli
+pgcli; python_version >= '3.6'
 pip-review
-powerline-status; python_version >= '3.5'
-powerline-gitstatus; python_version >= '3.5'
+powerline-status; python_version >= '3.6'
+powerline-gitstatus; python_version >= '3.6'
 scikit-learn
 pyhive
 pytest
 pytest-cov
-ranger-fm; python_version >= '3.5'
+ranger-fm; python_version >= '3.6'
 scipy
-sqlparse; python_version >= '3.5'
-git+https://github.com/will8211/unimatrix; python_version >= '3.5'
-vim-vint; python_version >= '3.5'
+sqlparse; python_version >= '3.6'
+git+https://github.com/will8211/unimatrix; python_version >= '3.6'
+vim-vint; python_version >= '3.6'
 yamllint
-yapf; python_version >= '3.5'
+yapf; python_version >= '3.6'
