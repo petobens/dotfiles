@@ -1916,15 +1916,14 @@ endif
 
 " Functions
 function! s:OpenNeotermSplit(position)
-    let old_position = g:neoterm_position
     let old_size = g:neoterm_size
-    let g:neoterm_position = a:position
     let g:neoterm_size = 10
     if a:position ==# 'vertical'
         let g:neoterm_size = ''
+        vertical Topen
+    else
+        botright Topen
     endif
-    Topen
-    let g:neoterm_position = old_position
     let g:neoterm_size = old_size
 endfunction
 
