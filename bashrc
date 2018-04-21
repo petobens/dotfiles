@@ -295,6 +295,12 @@ if type "fzf" > /dev/null 2>&1; then
     [[ $- == *i* ]] && . "$brew_dir/opt/fzf/shell/completion.bash" 2> /dev/null
     . "$brew_dir/opt/fzf/shell/key-bindings.bash"
 
+    # Add bookmarks support (requires https://github.com/urbainvaes/fzf-marks)
+    if [ -f "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash" ]; then
+        . "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash"
+        alias bm='fzm'
+    fi
+
     # Change default options (show 15 lines, use top-down layout)
     export FZF_DEFAULT_OPTS='--height 15 --reverse '\
 '--bind=ctrl-space:toggle+down'

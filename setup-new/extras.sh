@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+brew_dir=$(brew --prefix)
 
 # Skim (PDF viewer)
 if [ -d "/Applications/Skim.app/" ]; then
@@ -35,4 +36,14 @@ if type "ranger" > /dev/null 2>&1; then
     )
     rm -rf ranger_devicons
     ranger --copy-config=scope
+fi
+
+# Install fzf plugins
+if type "fzf" > /dev/null 2>&1; then
+    git clone https://github.com/urbainvaes/fzf-marks.git
+    (
+        cd fzf-marks || exit
+        cp fzf-marks.plugin.bash  "$brew_dir/opt/fzf/shell"
+    )
+    rm -rf fzf-marks
 fi
