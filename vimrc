@@ -120,6 +120,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
 
+    " R
+    call dein#add('jalvesaq/Nvim-R')
+
     " Javascript
     call dein#add('pangloss/vim-javascript', {'on_ft' : 'javascript'})
     call dein#add('carlitux/deoplete-ternjs', {'on_ft' : 'javascript'})
@@ -166,7 +169,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/neoyank.vim')
     call dein#add('kopischke/unite-spell-suggest')
     call dein#add('tsukkee/unite-tag')
-    " For neocomplete
+    " For deoplete
     call dein#add('Shougo/context_filetype.vim')
     call dein#add('Shougo/echodoc.vim')
     call dein#add('Shougo/neco-vim', {'name' : 'neco-vim'})
@@ -1439,10 +1442,8 @@ function! s:my_split(context)
     endif
     call denite#do_action(a:context, split_action, a:context['targets'])
 endfunction
-if dein#tap('denite') == 1
-    call denite#custom#action('buffer,directory,file', 'context_split',
-                \ function('s:my_split'))
-endif
+call denite#custom#action('buffer,directory,file', 'context_split',
+            \ function('s:my_split'))
 
 " }}}
 " Devicons {{{
@@ -1697,7 +1698,7 @@ nnoremap <silent> <leader>I :IndentLinesToggle<cr>
 if has('python3')
     let g:jedi#force_py_version = 3
 endif
-" For neocomplete to work
+" For deoplete to work
 let g:jedi#completions_enabled = 0
 let g:jedi#auto_vim_configuration = 0
 let g:jedi#max_doc_height = 15
@@ -1717,7 +1718,7 @@ let g:jedi#usages_command = '<Leader>ap' " Appearances of word under cursor
 
 augroup ps_jedi
     au!
-    " Set jedi completion to work with neocomplete
+    " Set jedi completion to work with deoplete
     " au FileType python setlocal omnifunc=jedi#completions
     au BufRead,BufNewFile *.py setlocal omnifunc=jedi#completions
 augroup END
@@ -1743,7 +1744,14 @@ set pumheight=15                          " Popup menu max height
 set complete=.                            " Scan only the current buffer
 set completeopt=menuone,preview,noinsert
 
+" Autoclose preview when completion is finished
+augroup ps_deoplete
+    au!
+    au CompleteDone * silent! pclose!
+augroup END
+
 " Always use deoplete (it is async)
+let g:deoplete#enable_at_startup = 1
 if s:is_mac
     let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 else
@@ -1751,97 +1759,75 @@ else
                 \ '/mnt/.linuxbrew/bin/python3'
 endif
 
-" Autoclose preview when completion is finished
-augroup ps_deoplete
-    au!
-    au CompleteDone * silent! pclose!
-augroup END
+" Options
+call deoplete#custom#option('smart_case', v:true)
+call deoplete#custom#option('max_list', 150)
+call deoplete#custom#option('refresh_always', v:true)
+call deoplete#custom#option('auto_complete_delay', 5)
+call deoplete#custom#option('sources', {
+    \ 'bib': ['ultisnips'],
+    \ 'snippets': ['ultisnips'],
+    \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni']
+\})
 
-" Custom settings
-if dein#tap('deoplete') == 1
-    " Start completion after two characters are typed (this is the default)
-    " Note: if we explicitly set this then auto file completion is lost
-    " call deoplete#custom#source('_', 'min_pattern_length', 2)
-    " Use auto delimiter and autoparen (not in omni source)
-    call deoplete#custom#source('_', 'converters',
-        \ ['converter_auto_delimiter', 'remove_overlap',
-        \ 'converter_auto_paren'])
-    call deoplete#custom#source('omni', 'converters',
-        \ ['converter_auto_delimiter', 'remove_overlap'])
-    " Show ultisnips first and activate completion after 1 character
-    call deoplete#custom#source('ultisnips', 'rank', 1000)
-    call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
-    " Extend max candidate width in popup menu for buffer source
-    call deoplete#custom#source('buffer', 'max_menu_width', 90)
-    " Complete dictionary after one character
-    call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
-endif
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#max_list = 150
-let g:deoplete#enable_refresh_always = 1
-let g:deoplete#auto_complete_delay = 50
-
-" Python (jedi)
-let deoplete#sources#jedi#show_docstring = 1
-
-" Tmux completion (with tmux-complete plugin)
-if exists('$TMUX')
-    let g:tmuxcomplete#trigger = ''
-endif
-
-" Sources used for completion
-if !exists('g:deoplete#sources')
-    let g:deoplete#sources = {}
-endif
-let g:deoplete#sources.bib = ['ultisnips']
-let g:deoplete#sources.snippets = ['ultisnips']
-let g:deoplete#sources.tex = ['buffer', 'dictionary', 'ultisnips', 'file',
-        \ 'omni']
-
+" Source specific
+" Use auto delimiter and autoparen (not in omni source)
+call deoplete#custom#source('_', 'converters',
+    \ ['converter_auto_delimiter', 'remove_overlap'])
+" Show ultisnips first and activate completion after 1 character
+call deoplete#custom#source('ultisnips', 'rank', 1000)
+call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
+" Extend max candidate width in popup menu for buffer source
+call deoplete#custom#source('buffer', 'max_menu_width', 90)
+" Complete dictionary after one character
+call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
 " Custom source patterns and attributes (note this is a python3 regex and not a
 " vim one)
 let tex_buffer_patterns = {'tex' : '[a-zA-Z_]\w{2,}:\S+'}
 let tex_dict_patterns = {'tex' : '\\?[a-zA-Z_]\w*'}
-if dein#tap('deoplete') == 1
-    call deoplete#custom#source('buffer', 'keyword_patterns',
-            \ tex_buffer_patterns)
-    call deoplete#custom#source('dictionary', 'keyword_patterns',
-            \ tex_dict_patterns)
-endif
+call deoplete#custom#source('buffer', 'keyword_patterns', tex_buffer_patterns)
+call deoplete#custom#source('dictionary', 'keyword_patterns', tex_dict_patterns)
+" Omni completion (for tex it requires vimtex plugin; to add commmand completion
+" include '|\w*' in the regex)
+call deoplete#custom#var('omni', 'input_patterns', {
+        \ 'tex' : '\\(?:'
+            \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
+            \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+            \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
+            \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
+            \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
+            \ . '|\w*'
+            \ .')',
+        \ 'gitcommit' : '((?:F|f)ix(?:es)?\s|'
+            \ . '(?:C|c)lose(?:s)?\s|(?:R|r)esolve(?:s)?\s|(?:S|s)ee\s)\S*',
+        \ 'javascript' : ['[^. *\t]\.\w*', '[A-Za-z]+'],
+    \ }
+\)
 
-" Omni completion (for tex it requires vimtex plugin)
-if !exists('g:deoplete#omni#input_patterns')
-    let g:deoplete#omni#input_patterns = {}
+" External sources
+let deoplete#sources#jedi#show_docstring = 1
+if exists('$TMUX')
+    " Tmux completion (with tmux-complete plugin)
+    let g:tmuxcomplete#trigger = ''
 endif
-let g:deoplete#omni#input_patterns.tex = '\\(?:'
-    \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
-    \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-    \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
-    \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
-    \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
-    \ . '|\w*'
-    \ .')'
-let g:deoplete#omni#input_patterns.gitcommit = '((?:F|f)ix(?:es)?\s|'
-    \ . '(?:C|c)lose(?:s)?\s|(?:R|r)esolve(?:s)?\s|(?:S|s)ee\s)\S*'
-let g:deoplete#omni#input_patterns.javascript = ['[^. *\t]\.\w*', '[A-Za-z]+']
 
 " Mappings
-if dein#tap('deoplete') == 1
-    " Close popup and delete backward character
-    inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
-    " Undo completion i.e remove whole completed word (default plugin mapping)
-    inoremap <expr> <C-g> deoplete#undo_completion()
-endif
+" Close popup and delete backward character
+inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
+" Undo completion i.e remove whole completed word (default plugin mapping)
+inoremap <expr> <C-g> deoplete#undo_completion()
+" If a snippet is available enter expands it; if not available, it selects
+" current candidate and closes the popup menu (i.e it ends completion)
+inoremap <silent><expr><CR> pumvisible() ?
+    \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
+    \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
+" Move in preview window with tab
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
+" Edit dictionary files
 function! s:Edit_Dict()
-    if has('nvim')
-        let dict_file = &l:dictionary
-    else
-        let dict_file = get(g:neocomplete#sources#dictionary#dictionaries,
-                    \ &filetype)
-    endif
+    let dict_file = &l:dictionary
     if empty(dict_file)
         echo 'No dictionary file found.'
         return
@@ -1852,16 +1838,6 @@ function! s:Edit_Dict()
     endif
     execute split_windows . dict_file
 endfunction
-
-" If a snippet is available enter expands it; if not available, it selects
-" current candidate and closes the popup menu (i.e it ends completion)
-inoremap <silent><expr><CR> pumvisible() ?
-    \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
-    \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
-" Move in preview window with tab
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-" Edit dictionary files
 nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>
 
 " }}}
@@ -1949,6 +1925,26 @@ augroup term_au
     " Get into insert mode whenever we enter a terminal buffer
     au BufEnter * if &buftype == 'terminal' | startinsert | endif
 augroup END
+
+" }}}
+" Nvim-R {{{
+
+" Use tmux
+let R_in_buffer = 0
+let R_source = '$DOTFILES/vim/bundle/repos/github.com/jalvesaq/Nvim-R/' .
+            \  'R/tmux_split.vim'
+" Disable _ conversion
+let R_assign = 0
+
+augroup plugin_R
+    au!
+    " Start R
+    " au BufNewFile,BufRead {Rprofile,.Rprofile,*.R} set filetype=r
+    au FileType r nmap <Leader>rs <Plug>RStart
+    au FileType r nmap <Leader>rf <Plug>RSendFile
+    au FileType r vmap <Leader>rf <Plug>RDSendSelection
+augroup END
+
 
 " }}}
 " SQHell {{{
