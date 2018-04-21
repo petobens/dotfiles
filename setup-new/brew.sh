@@ -76,6 +76,7 @@ brew install redis
 # Other useful binaries
 brew install the_silver_searcher
 brew install fzf
+brew install z
 brew install htop
 brew install gcc
 if [[  "$OSTYPE" == 'darwin'* ]]; then

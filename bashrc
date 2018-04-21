@@ -301,6 +301,18 @@ if type "fzf" > /dev/null 2>&1; then
         alias bm='fzm'
     fi
 
+    # Z
+    if [ -f "$brew_dir/etc/profile.d/z.sh" ]; then
+        . /usr/local/etc/profile.d/z.sh
+    fi
+    unalias z 2> /dev/null
+    z() {
+        [ $# -gt 0 ] && _z "$*" && return
+        cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse \
+        --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
+    }
+    alias rd=z
+
     # Change default options (show 15 lines, use top-down layout)
     export FZF_DEFAULT_OPTS='--height 15 --reverse '\
 '--bind=ctrl-space:toggle+down'
