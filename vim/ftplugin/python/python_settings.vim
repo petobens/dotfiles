@@ -1058,8 +1058,9 @@ function! s:IPythonSelection()
   let l:lines = getline(l:lnum1, l:lnum2)
   let l:lines[-1] = l:lines[-1][:l:col2 - 1]
   let l:lines[0] = l:lines[0][l:col1 - 1:]
-  call insert(l:lines, "\e[200~")
+  let l:lines[0] = "\e[200~" . l:lines[0]
   call add(l:lines, "\e[201~")
+  call add(l:lines, "")  " Needed to actually execute the command
   call g:neoterm.repl.exec(l:lines)
 endfunction
 
@@ -1165,10 +1166,10 @@ nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 " (Open) and run visual selection in the interpreter (in neovim terminal) and
 " ipython
 if exists(':Topen')
-    nnoremap <buffer> <silent> <Leader>oi :T python3<CR>
+    nnoremap <buffer> <silent> <Leader>oi :botright T python3<CR>
     vnoremap <silent> <buffer> <Leader>ri :call <SID>PyREPL()<CR>
     if executable('ipython')
-        nnoremap <buffer> <silent> <Leader>ip :T ipython3<CR>
+        nnoremap <buffer> <silent> <Leader>ip :botright T ipython3<CR>
     endif
 endif
 
