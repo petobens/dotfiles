@@ -1779,14 +1779,13 @@ call deoplete#custom#source('ultisnips', 'rank', 1000)
 call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
 " Extend max candidate width in popup menu for buffer source
 call deoplete#custom#source('buffer', 'max_menu_width', 90)
-" Complete dictionary after one character
+" Complete dictionary after one character, rank dict completion first and set
+" some keyword_patterns (via python3 regex)
 call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
-" Custom source patterns and attributes (note this is a python3 regex and not a
-" vim one)
-let tex_buffer_patterns = {'tex' : '[a-zA-Z_]\w{2,}:\S+'}
-let tex_dict_patterns = {'tex' : '\\?[a-zA-Z_]\w*'}
-call deoplete#custom#source('buffer', 'keyword_patterns', tex_buffer_patterns)
-call deoplete#custom#source('dictionary', 'keyword_patterns', tex_dict_patterns)
+call deoplete#custom#source('dictionary', 'rank', 1000)
+call deoplete#custom#source('dictionary', 'keyword_patterns', {
+            \ 'tex' : '\\?[a-zA-Z_]\w*',
+\})
 " Omni completion (for tex it requires vimtex plugin; to add commmand completion
 " include '|\w*' in the regex)
 call deoplete#custom#var('omni', 'input_patterns', {
@@ -1796,7 +1795,6 @@ call deoplete#custom#var('omni', 'input_patterns', {
             \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
             \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
             \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
-            \ . '|\w*'
             \ .')',
         \ 'gitcommit' : '((?:F|f)ix(?:es)?\s|'
             \ . '(?:C|c)lose(?:s)?\s|(?:R|r)esolve(?:s)?\s|(?:S|s)ee\s)\S*',
@@ -1805,7 +1803,7 @@ call deoplete#custom#var('omni', 'input_patterns', {
 \)
 
 " External sources
-let deoplete#sources#jedi#show_docstring = 1
+let deoplete#sources#jedi#show_docstring = 0
 if exists('$TMUX')
     " Tmux completion (with tmux-complete plugin)
     let g:tmuxcomplete#trigger = ''
