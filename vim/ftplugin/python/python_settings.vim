@@ -155,6 +155,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
         let old_autoinsert = g:neoterm_autoinsert
         let g:neoterm_size = 10
         let g:neoterm_autoinsert = 0
+        botright Topen
         if a:mode ==# 'visual'
             execute 'T ' . compiler .  current_file . '; rm ' . current_file
         else
@@ -1049,6 +1050,14 @@ endif
 " }}}
 " Visual REPL {{{
 
+function! s:OpenREPL(repl)
+    let old_size = g:neoterm_size
+    let g:neoterm_size = 10
+    botright Topen
+    execute 'T ' .  a:repl
+    let g:neoterm_size = old_size
+endfunction
+
 " Latest ipython doesn't allow to send multiple lines therefore we must add
 " bracketed paste sequences to the text being sent to the interpreter
 " See https://github.com/ipython/ipython/issues/9948
@@ -1166,10 +1175,11 @@ nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 " (Open) and run visual selection in the interpreter (in neovim terminal) and
 " ipython
 if exists(':Topen')
-    nnoremap <buffer> <silent> <Leader>oi :botright T python3<CR>
+    nnoremap <buffer> <silent> <Leader>oi :call <SID>OpenREPL('python3')<CR>
     vnoremap <silent> <buffer> <Leader>ri :call <SID>PyREPL()<CR>
-    if executable('ipython')
-        nnoremap <buffer> <silent> <Leader>ip :botright T ipython3<CR>
+    if executable('ipython') || executable('ipython3')
+        nnoremap <buffer> <silent> <Leader>ip :call
+                    \ <SID>OpenREPL('ipython3')<CR>
     endif
 endif
 
