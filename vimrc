@@ -1882,6 +1882,8 @@ let g:neoterm_autoinsert = 1
 let g:neoterm_automap_keys = ''
 let g:neoterm_keep_term_open = 0
 let g:neoterm_autoscroll = 1
+let g:neoterm_default_mod = 'botright'
+let g:neoterm_fixedsize = 1
 if executable('ipython3')
     let g:neoterm_repl_python = 'ipython3'
 else
