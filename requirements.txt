@@ -1,12 +1,13 @@
+# Note: mysql connector needs protobuf; see https://stackoverflow.com/a/43066829/2149400
 beautysh; python_version >= '3.6'
 cython
 flake8; python_version >= '3.6'
+git+https://github.com/will8211/unimatrix; python_version >= '3.6'
 jedi; python_version >= '3.6'
 jupyter
 matplotlib
 mycli; python_version >= '3.6'
 mypy; python_version >= '3.6'
-# Note: mysql connector needs protobuf; see https://stackoverflow.com/a/43066829/2149400
 mysql-connector==2.1.6
 neovim
 neovim-remote; python_version >= '3.6'
@@ -14,16 +15,16 @@ numpy
 pandas
 pgcli; python_version >= '3.6'
 pip-review
-powerline-status; python_version >= '3.6'
 powerline-gitstatus; python_version >= '3.6'
-scikit-learn
+powerline-status; python_version >= '3.6'
 pyhive
 pytest
 pytest-cov
 ranger-fm; python_version >= '3.6'
+requests
+scikit-learn
 scipy
 sqlparse; python_version >= '3.6'
-git+https://github.com/will8211/unimatrix; python_version >= '3.6'
 vim-vint; python_version >= '3.6'
 yamllint
 yapf; python_version >= '3.6'
