@@ -111,6 +111,11 @@ if type "htmlhint" > /dev/null 2>&1; then
     ln -s "$dotfiles_dir/linters/htmlhintrc" "$HOME/.htmlhintrc"
     echo Created .htmlhintrc symlink
 fi
+if type "pip" > /dev/null 2>&1; then
+    rm -rf "$HOME/.config/pip"
+    ln -s "$dotfiles_dir/config/pip" "$HOME/.config/pip"
+    echo Created .config/pip folder symlink
+fi
 
 rm -rf "$HOME/.surfingkeysrc"
 ln -s "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
