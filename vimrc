@@ -879,6 +879,7 @@ if exists(':tnoremap')
     " Exit terminal mode and return to vim normal mode (essentially the terminal
     " now becomes a regular vim buffer)
     tnoremap <Esc> <C-\><C-n>
+    tnoremap kj <C-\><C-n>
     " Window movement
     tnoremap <c-k> <C-\><C-n><C-w>k
     tnoremap <c-h> <C-\><C-n><C-w>h
