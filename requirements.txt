@@ -18,8 +18,8 @@ pip-review
 powerline-gitstatus; python_version >= '3.6'
 powerline-status; python_version >= '3.6'
 pyhive
-pytest
-pytest-cov
+pytest; python_version >= '3.6'
+pytest-cov; python_version >= '3.6'
 ranger-fm; python_version >= '3.6'
 requests
 scikit-learn
