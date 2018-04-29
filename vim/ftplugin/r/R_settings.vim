@@ -115,27 +115,6 @@ function! s:RunR(mode, compilation, ...)
     let compiler = 'R ' . flags . '"' . error_options . set_wd .  source_file .
                 \ '"'
 
-    " Use neovim terminal for foreground async compilation
-    if a:compilation ==# 'foreground' && exists(':Topen')
-        let old_size = g:neoterm_size
-        let old_autoinsert = g:neoterm_autoinsert
-        let g:neoterm_size = 10
-        let g:neoterm_autoinsert = 0
-        if a:mode ==# 'visual'
-            execute 'T ' . compiler . '; rm ' . current_file
-        else
-            execute 'T ' . compiler
-        endif
-        " Avoid getting into insert mode using `au BufEnter * if &buftype ==
-        " 'terminal' | startinsert | endif`
-        stopinsert
-        let g:neoterm_size = old_size
-        let g:neoterm_autoinsert = old_autoinsert
-        " Return to previous working directory and exit the function
-        execute 'lcd ' . save_pwd
-        return
-    endif
-
     " We might want to do a foreground compilation in the regular os console
     if a:compilation ==# 'foreground_os'
         let bang_command = '!start '
@@ -190,9 +169,8 @@ function! s:RunR(mode, compilation, ...)
     execute 'lcd ' . save_pwd
 endfunction
 
-" Define commands to run visual selections
-command! -range EvalVisualRVimshell
-            \ call s:RunR('visual', 'foreground', <line1>, <line2>)
+" Define commands to run visual selections (foreground visual compilation is
+" done directly with nvimr plugin)
 command! -range EvalVisualRBackground
             \ call s:RunR('visual', 'background', <line1>, <line2>)
 command! -range EvalVisualRForeground
@@ -865,10 +843,6 @@ nnoremap <silent> <buffer> <F7> :call <SID>RunR('normal', 'background')<CR>
 inoremap <silent> <buffer> <F7> <ESC>:call
             \ <SID>RunR('normal', 'background')<CR>
 vnoremap <silent> <buffer> <F7> :EvalVisualRBackground<CR>
-" Foreground compilation (neovim terminal) with nvimr now
-" nnoremap <silent> <buffer> <Leader>rf :call
-            " \ <SID>RunR('normal', 'foreground')<CR>
-" vnoremap <silent> <buffer> <Leader>rf :EvalVisualRVimshell<CR>
 " Foreground compilation in os console
 nnoremap <silent> <buffer> <F5> :call <SID>RunR('normal', 'foreground_os')<CR>
 inoremap <silent> <buffer> <F5> <ESC>:call
