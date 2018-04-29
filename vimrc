@@ -1938,35 +1938,23 @@ let R_source = '$DOTFILES/vim/bundle/repos/github.com/jalvesaq/Nvim-R/' .
 let R_tmux_title = 'automatic'
 let R_rconsole_width = 0  " Always use horizontal split
 let R_rconsole_height = 12
-" TODO: How to add breakpoints and run debugger
 
 let R_assign = 0  " Disable _ conversion
 
 " Object browser
-" TODO: Add mapping to toggle this
 let R_objbr_place = 'script,left'
 let R_objbr_w = 30
-
-function! s:RunR()
-    let r_started = IsSendCmdToRFake()
-    redraw!
-    if r_started == 0
-        call StartR("R")
-    endif
-    call SendFileToR("silent")
-endfunction
 
 augroup plugin_R
     au!
     au FileType r nmap <Leader>rs <Plug>RStart
     au FileType r nmap <Leader>rq <Plug>RClose
-    " TODO: Add something to clear/reset namespace
+    au FileType r nmap <Leader>rr <Plug>RClearAll
     au FileType r nmap <Leader>rc <Plug>RClearConsole
     au FileType r nmap <Leader>ro <Plug>RUpdateObjBrowser
-    au FileType r nmap <Leader>rf :call <SID>RunR()<CR>
+    au FileType r nmap <Leader>rf <Plug>RSendFile
     au FileType r vmap <Leader>rf <Plug>RDSendSelection
 augroup END
-
 
 " }}}
 " SQHell {{{

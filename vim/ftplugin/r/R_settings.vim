@@ -824,6 +824,28 @@ function! s:ViewPdfFigure()
 endfunction
 
 " }}}
+" Debugging {{{
+
+function! s:AddBreakPoint()
+    let save_cursor = getcurpos()
+    let current_line = line('.')
+    let breakpoint_line = current_line - 1
+    let indent_length = match(getline(current_line), '\w')
+    let indents = repeat(' ', indent_length)
+    let bp_statement = 'browser()'
+    call append(breakpoint_line, indents . bp_statement)
+    silent noautocmd update
+    call setpos('.', save_cursor)
+endfunction
+
+function! s:RemoveBreakPoint()
+    let save_cursor = getcurpos()
+    execute 'g/browser()/d'
+    silent update
+    call setpos('.', save_cursor)
+endfunction
+
+" }}}
 
 " }}}
 " Mappings {{{
@@ -833,6 +855,10 @@ if exists(':UltiSnipsEdit')
     inoremap <buffer> <silent> <<
                 \ <<<C-R>=UltiSnips#Anon('<-','<<', '', 'i')<CR>
 endif
+
+" Breakpoints
+nnoremap <silent> <buffer> <Leader>bp :call <SID>AddBreakPoint()<CR>
+nnoremap <silent> <buffer> <Leader>rb :call <SID>RemoveBreakPoint()<CR>
 
 " Background compilation
 nnoremap <silent> <buffer> <F7> :call <SID>RunR('normal', 'background')<CR>
