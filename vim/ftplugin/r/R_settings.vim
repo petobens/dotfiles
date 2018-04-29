@@ -220,12 +220,6 @@ function! s:ShowROutputOrError()
     let base_file = matchstr(makeprg_string, 'source(''\zs.*\ze\'',')
     let current_file = base_dir . '/' . base_file
 
-    " If the file was run from a visual selection delete temp file since we
-    " don't need it anymore
-    if match(current_file, '_tmpvisual') != -1
-        call delete(current_file)
-    endif
-
     " Get output from the quickfix list
     let original_qflist = getqflist()
     let output = []
@@ -343,6 +337,12 @@ function! s:ShowROutputOrError()
             " that we cannot get warning line numbers
         endif
     endfor
+
+    " If the file was run from a visual selection delete temp file since we
+    " don't need it anymore
+    if match(current_file, '_tmpvisual') != -1
+        call delete(current_file)
+    endif
 
     " Open the quickfix (if there are errors)
     if !empty(qflist)
@@ -541,7 +541,8 @@ endfunction
 " Automatically run formatR and lintr on save
 augroup R_linting
     au!
-    au BufWritePost *.{r,R} call s:FormatR() | call s:LintR()
+    " au BufWritePost *.{r,R} call s:FormatR() | call s:LintR()
+    au BufWritePost *.{r,R} call s:LintR()
 augroup END
 
 " }}}
@@ -838,10 +839,10 @@ nnoremap <silent> <buffer> <F7> :call <SID>RunR('normal', 'background')<CR>
 inoremap <silent> <buffer> <F7> <ESC>:call
             \ <SID>RunR('normal', 'background')<CR>
 vnoremap <silent> <buffer> <F7> :EvalVisualRBackground<CR>
-" Foreground compilation (neovim terminal)
-nnoremap <silent> <buffer> <Leader>rf :call
-            \ <SID>RunR('normal', 'foreground')<CR>
-vnoremap <silent> <buffer> <Leader>rf :EvalVisualRVimshell<CR>
+" Foreground compilation (neovim terminal) with nvimr now
+" nnoremap <silent> <buffer> <Leader>rf :call
+            " \ <SID>RunR('normal', 'foreground')<CR>
+" vnoremap <silent> <buffer> <Leader>rf :EvalVisualRVimshell<CR>
 " Foreground compilation in os console
 nnoremap <silent> <buffer> <F5> :call <SID>RunR('normal', 'foreground_os')<CR>
 inoremap <silent> <buffer> <F5> <ESC>:call

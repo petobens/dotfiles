@@ -20,5 +20,5 @@ options(show.signif.stars=FALSE)
 # options(warnPartialMatchAttr = TRUE, warnPartialMatchDollar = TRUE,
         # warnPartialMatchArgs = TRUE)
 
-# To use with vim-R-plugin
-# library(vimcom)
+# Load some libraries by default
+library(colorout)

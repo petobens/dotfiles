@@ -247,4 +247,10 @@ writeLines(${2:variable}, outfile)
 close(outfile);`!p snip.rv = of(t, 3,'\n')`${3:print('Created text file with ${4:variable or info}.')}$0
 endsnippet
 
+snippet im "R's if __main__" b
+if (!interactive()) {
+	$0
+}
+endsnippet
+
 # **}
