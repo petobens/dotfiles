@@ -134,7 +134,7 @@ fi
 # }}}
 # Completion (readline) {{{
 
-# Improved bash completion (install them with `brew install bash-completion2`)
+# Improved bash completion (install them with `brew install bash-completion@2`)
 if [ -f $brew_dir/share/bash-completion/bash_completion ]; then
     . $brew_dir/share/bash-completion/bash_completion
 fi
