@@ -25,7 +25,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         export PATH="/Library/TeX/texbin:$PATH" # basictex
     fi
     if [ -d "/Applications/MATLAB_R2015b.app/bin" ]; then
-        export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" #matlab
+        export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" # matlab
     fi
     export PKG_CONFIG_PATH="$brew_dir/lib/pkgconfig:$brew_dir/lib"
 
@@ -70,7 +70,9 @@ if [ -f "$brew_dir/bin/bash" ]; then
 fi
 
 # R libraries (note: first create this folder if it doesn't exist)
-export R_LIBS="$brew_dir/lib/R/site-library"
+if type "R" > /dev/null 2>&1; then
+    export R_LIBS_USER="$brew_dir/lib/R/site-library"
+fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon

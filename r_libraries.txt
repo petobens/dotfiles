@@ -1,0 +1,9 @@
+caret
+colorout
+data.table
+devtools
+dplyr
+formatR
+ggplot2
+glue
+lintr
