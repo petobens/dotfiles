@@ -384,9 +384,8 @@ function! s:LintR()
     endif
     let lintr_dir = expand($R_LIBS_USER . '/lintr')
     if !isdirectory(lintr_dir)
-            echoerr "The library 'lintr' was not found in " . lintr_dir
-
-            return
+        echoerr "The library 'lintr' was not found in " . lintr_dir
+        return
     endif
 
     " Don't run lintr if there is only one empty line or we are in a Gdiff (when
@@ -465,8 +464,8 @@ function! s:FormatR()
     endif
     let formatr_dir = expand($R_LIBS_USER . '/formatR')
     if !isdirectory(formatr_dir)
-            echoerr "The library 'formatR' was not found in " . formatr_dir
-            return
+        echoerr "The library 'formatR' was not found in " . formatr_dir
+        return
     endif
 
     " Don't run formatR if there is only one empty line or we are in a Gdiff
