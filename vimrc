@@ -1761,15 +1761,17 @@ else
 endif
 
 " Options
-call deoplete#custom#option('smart_case', v:true)
-call deoplete#custom#option('max_list', 150)
-call deoplete#custom#option('refresh_always', v:true)
-call deoplete#custom#option('auto_complete_delay', 5)
-call deoplete#custom#option('sources', {
-    \ 'bib': ['ultisnips'],
-    \ 'snippets': ['ultisnips'],
-    \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni']
-\})
+call deoplete#custom#option({
+    \ 'smart_case': v:true,
+    \ 'max_list': 150,
+    \ 'refresh_always': v:true,
+    \ 'auto_complete_delay': 5,
+    \ 'sources': {
+        \ 'bib': ['ultisnips'],
+        \ 'snippets': ['ultisnips'],
+        \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni']
+    \ },
+\ })
 
 " Source specific
 " Use auto delimiter and autoparen (not in omni source)
