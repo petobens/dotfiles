@@ -27,6 +27,12 @@ brew install bash-completion@2
 # Git
 brew install git
 
+# Compiler related
+brew install gcc
+brew install llvm
+brew install libomp
+brew install openblas
+
 # Languages: Rust, Python3, R, latex, node, java
 brew install rust  # We need this for Alacritty
 brew install python3
@@ -54,7 +60,7 @@ fi
 read -p "Do you want to install R (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    brew install R
+    brew install R --with-openblas
 fi
 read -p "Do you want to install Node.js (y/n)? " -n 1 -r
 echo
@@ -78,7 +84,6 @@ brew install the_silver_searcher
 brew install fzf
 brew install z
 brew install htop
-brew install gcc
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     brew install reattach-to-user-namespace
     brew install rmtrash

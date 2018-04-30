@@ -89,15 +89,7 @@ if type "R" > /dev/null 2>&1; then
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo Installing R libraries...
-        mkdir -p "$brew_dir/lib/R/site-library"
-        R --slave --no-save << EOF
-packages <- readLines("$parent_dir/r_libraries.txt")
-new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
-if (length(new_packages)) {
-    print(paste("Installing the following packages:", paste(new_packages, collapse=", ")))
-    install.packages(new_packages)
-}
-EOF
+        . "$current_dir/R.sh"
     fi
 fi
 
