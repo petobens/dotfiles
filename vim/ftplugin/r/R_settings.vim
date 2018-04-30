@@ -378,11 +378,11 @@ function! s:LintR()
         echoerr 'R is not installed or not in your path.'
         return
     endif
-    " Check if the lintr library is installed (using $R_LIBS env variable)
-    if empty($R_LIBS)
-        echoerr 'Please set R_LIBS env variable.'
+    " Check if the formatR library is installed (using $R_LIBS_USER env variable)
+    if empty($R_LIBS_USER) == 1
+        echoerr 'Please set R_LIBS_USER env variable.'
     endif
-    let lintr_dir = expand($R_LIBS . '/lintr')
+    let lintr_dir = expand($R_LIBS_USER . '/lintr')
     if !isdirectory(lintr_dir)
             echoerr "The library 'lintr' was not found in " . lintr_dir
 
@@ -459,11 +459,11 @@ function! s:FormatR()
         echoerr 'R is not installed or not in your path.'
         return
     endif
-    " Check if the formatR library is installed (using $R_LIBS env variable)
-    if empty($R_LIBS)
-        echoerr 'Please set R_LIBS env variable.'
+    " Check if the formatR library is installed (using $R_LIBS_USER env variable)
+    if empty($R_LIBS_USER) == 1
+        echoerr 'Please set R_LIBS_USER env variable.'
     endif
-    let formatr_dir = expand($R_LIBS . '/formatR')
+    let formatr_dir = expand($R_LIBS_USER . '/formatR')
     if !isdirectory(formatr_dir)
             echoerr "The library 'formatR' was not found in " . formatr_dir
             return
