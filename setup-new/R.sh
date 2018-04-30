@@ -3,8 +3,11 @@ parent_dir="$(dirname "$current_dir")"
 brew_dir=$(brew --prefix)
 
 # Create makevars compiling options (note: for data.table we need to add the
-# `-fopenmp` flag). See details in:
+# `-fopenmp` flag).
+# To use clang see:
 # http://luisspuerto.net/2018/01/install-r-100-homebrew-edition-with-openblas-openmp-my-version/
+# To use gcc:
+# https://github.com/Rdatatable/data.table/issues/2409#issuecomment-336811279
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     mkdir -p "$HOME/.R"
     echo "\
@@ -17,10 +20,12 @@ CXX=/usr/local/opt/llvm/bin/clang++
 CFLAGS=-g -O3 -Wall -pedantic -std=gnu99 -mtune=native -pipe
 CXXFLAGS=-g -O3 -Wall -pedantic -std=c++11 -mtune=native -pipe
 LDFLAGS=-L/usr/local/opt/gettext/lib -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
-CPPFLAGS=-I/usr/local/opt/gettext/include -I/usr/local/opt/llvm/include" > "$HOME/.R/Makevars"
+    CPPFLAGS=-I/usr/local/opt/gettext/include -I/usr/local/opt/llvm/include" > "$HOME/.R/Makevars"
 fi
 
-# Actually install libraries
+# Actually install libraries (to install from source use devtools or something
+# like: `install.packages("data.table", type = "source",
+# repos = "http://rdatatable.github.io/data.table")`)
 mkdir -p "$brew_dir/lib/R/site-library"
 R --slave --no-save << EOF
 packages <- readLines("$parent_dir/r_libraries.txt")
