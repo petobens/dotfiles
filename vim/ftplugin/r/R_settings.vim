@@ -407,8 +407,16 @@ function! s:LintR()
     " Set compiler
     let flags = '--slave --no-save --no-restore -e '
     let set_wd = 'setwd(''' . current_dir . ''');'
-    let lint_command = 'library(lintr);lint(''' . current_file . ''')'
-    let compiler = 'R ' . flags . '"' . set_wd . lint_command . '"'
+    let lintr_opts = 'with_defaults('
+                \. 'line_length_linter(80), '
+                \. 'commented_code_linter = NULL, '
+                \. 'camel_case_linter, '
+                \. 'snake_case_linter = NULL'
+                \. ')'
+    let lint_command = 'library(lintr);lint(commandArgs(TRUE), '
+                \  . lintr_opts . ')'
+    let file_args = ' --args ' . current_file
+    let compiler = 'R ' . flags . '"' . set_wd . lint_command . '"' . file_args
     let &l:makeprg = compiler
 
     " Set error format
