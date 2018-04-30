@@ -8,78 +8,6 @@
 " Print black hyperlinks (patch with fixes not included in hyperref)
 " Refsection biblatex warning when compiling; NO FIX?
 
-" Installation notes {{{
-
-" Miktex:
-" Install 64-bit version for a single user and check that this user has
-" permissions to write the folder were miktex was installed (such as
-" C:/prog-lang/miktex)
-" If miktex gives an error about a missing mfc120.dll file then install
-" vcredist_x64 (Microsoft Visual C++ 2013 Redistributable)
-
-" Note that to be able to use texcount we need a Perl distribution (such as
-" Strawberry Perl). We can install directly with msys2 and pandoc
-
-" Also note that if we want to use our own packages we need to add
-" C:\OD\OneDrive\Latex\localtexmf to the root search path
-
-" Basictex:
-" On Mac install basictex using 'brew cask install basictex' and then add the
-" following to your bash_profile:
-" export PATH="/Library/TeX/texbin:$PATH"
-
-" To install texdoc, enable automatic build of documentation and build
-" documentation for all installed packages do:
-" sudo tlmgr install texdoc
-" sudo tlmgr option docfiles 1
-" sudo tlmgr install --reinstall $(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')
-
-" Install additional packages with `sudo tlmgr install package_name`
-" Update tex live manager with `sudo tlmgr update --self`
-" Update all packages with `sudo tlmgr update all`
-" To install our own packages we need to create a folder in ~/Library/texmf with
-" TDS structure
-
-" In particular to fix font errors install `collection-fontsrecommended` package
-" To count words and lint install texcount and chktex with tlmgr
-
-" To uninstall basictex (in order to update texlive) remove with `rm -rf` the
-" following directories: '/usr/local/texlive/', '/Library/TeX/' and
-" '/Library/texlive'
-
-" To install arara build it with maven and then create a script called `arara4`
-" with the following contents:
-
-" #!/bin/sh
-"
-" exec java -jar $0 "$@"
-"
-" Take care to add several empty lines at the end. Then run
-" cat ./arara4.jar >> ./arara
-" chmod +x ./arara
-" And add the arara folder (along the executable) to your path
-
-" Linter:
-" In order to use ChkTeX linter on Windows, from the chektex directory we first
-" run `./configure` and then `mingw32-make.exe` from the msys2 cmd prompt
-" (assuming we have msys2 and mingw64 installed). Then we add the chktex
-" executable to the path.
-"
-" Vimtex:
-" We use b:vimtex.tex variable (provided by vimtex plugin) to get the path of
-" the main tex file. We then build arara 4 from source (using maven) to compile
-" the document; to do that (on Windows) we first to download the Java SKD and
-" create a JAVA_HOME env variable set to the root of the jdk installation:
-" C:\prog-lang\java\java-jdk (note there is no need to install the jre since it
-" is included in the jdk). Then also add C:\prog-lang\java\java-jdk\bin to path.
-" Finally we need to add the maven bin folder to path:
-" C:\prog-tools\maven-325\bin
-
-" This file also uses and sometimes requires the following plugins:
-" EasyAlign, Dispatch, Ultisnips, Vimproc and neoterm
-" Besides SumatraPDF is used as the default PDF viewer on Windows.
-
-" }}}
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
@@ -447,6 +375,7 @@ endfunction
 " File deletion {{{
 
 function! s:DeleteAuxFiles()
+    let save_cursor = getpos('.')
     " If the extensions to be deleted are wildignored they won't be recognised
     " by globpath function. Thus we first save and empty the wildignore setting
     let old_wig = &wildignore
@@ -474,6 +403,7 @@ function! s:DeleteAuxFiles()
         echo nr_filetypes 'auxiliary file(s) deleted.'
     endif
     let &wildignore = old_wig
+    call setpos('.', save_cursor)
 endfunction
 
 function! s:DeleteBiberCache()

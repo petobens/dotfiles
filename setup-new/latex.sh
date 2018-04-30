@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+
+# Note: to uninstall basictex (in order to update texlive) remove with `rm -rf`
+# the following directories (on Unix): '/usr/local/texlive/', '/Library/TeX/'
+# and '/Library/texlive'. Then (at least on Mac) run
+# `brew cask reinstall basictex`)
+
 # Download and install arara (we need java and maven first)
 if ! java -version >/dev/null 2>&1;  then
     if [[  "$OSTYPE" == 'darwin'* ]]; then
@@ -9,28 +15,32 @@ if ! java -version >/dev/null 2>&1;  then
 fi
 brew install maven
 
-echo "Installing arara..."
-rm -rf "$(brew --prefix)"/lib/arara
-rm -rf "$(brew --prefix)"/bin/arara
-git clone https://github.com/cereda/arara
-cd ./arara/application/ || exit
-mvn compile assembly:single
+read -p "Do you want to install arara (y/n)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Installing arara..."
+    rm -rf "$(brew --prefix)"/lib/arara
+    rm -rf "$(brew --prefix)"/bin/arara
+    git clone https://github.com/cereda/arara
+    cd ./arara/application/ || exit
+    mvn compile assembly:single
 
-cd ./target || exit
-cat > arara << EOF
+    cd ./target || exit
+    cat > arara << EOF
 #!/usr/bin/env bash
 
 exec java -jar \$0 "\$@"
 
 
 EOF
-cat ./arara-4.0-jar-with-dependencies.jar >> ./arara && chmod +x ./arara
-cd ../../../ || exit
-mv arara/application/target/arara arara/
-mkdir "$(brew --prefix)"/lib/arara
-mv arara/* "$(brew --prefix)"/lib/arara
-ln -s  "$(brew --prefix)"/lib/arara/arara "$(brew --prefix)"/bin/arara
-rm -rf arara
+    cat ./arara-4.0-jar-with-dependencies.jar >> ./arara && chmod +x ./arara
+    cd ../../../ || exit
+    mv arara/application/target/arara arara/
+    mkdir "$(brew --prefix)"/lib/arara
+    mv arara/* "$(brew --prefix)"/lib/arara
+    ln -s  "$(brew --prefix)"/lib/arara/arara "$(brew --prefix)"/bin/arara
+    rm -rf arara
+fi
 
 # Install mybibformat style
 echo "Installing mybibformat biblatex style..."
