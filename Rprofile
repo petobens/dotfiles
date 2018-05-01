@@ -17,5 +17,11 @@ options(show.signif.stars=FALSE)
 
 # Load some libraries by default
 if (interactive()) {
-    require("colorout")
+    require("colorout", quietly = TRUE)
+    setOutputColors(normal = 145, negnum = 173, zero = 173,
+                    number = 173, date = 114, string = 114,
+                    const = 38 , false = 170, true = 170,
+                    infinite = 173, index = 39, stderror = 204,
+                    warn = c(235, 173), error = c(235, 204),
+                    verbose = FALSE, zero.limit = NA)
 }

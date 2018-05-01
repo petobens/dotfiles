@@ -1942,6 +1942,8 @@ let R_rconsole_width = 0  " Always use horizontal split
 let R_rconsole_height = 12
 
 let R_assign = 0  " Disable _ conversion
+let Rout_more_colors = 1
+let rout_follow_colorscheme = 1
 
 " Object browser
 let R_objbr_place = 'script,left'
