@@ -1958,6 +1958,7 @@ augroup plugin_R
     au FileType r nmap <Leader>ro <Plug>RUpdateObjBrowser
     au FileType r nmap <Leader>rf <Plug>RSendFile
     au FileType r vmap <Leader>rf <Plug>RDSendSelection
+    au FileType rbrowser nmap q <Plug>RUpdateObjBrowser
 augroup END
 
 " }}}
