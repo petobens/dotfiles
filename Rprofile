@@ -1,8 +1,8 @@
 # Set default CRAN mirror to USA
 options(repos = "http://cran.us.r-project.org")
 
-# Prompt similar to Python REPL
-options(prompt=">>> ")
+# Prompt (using ANSI escape sequences)
+options(prompt="\033[0;35mR>> \033[0m")
 options(continue="... ")
 
 # Don't convert strings to factor variables by default in a data.frame
