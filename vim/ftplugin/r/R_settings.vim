@@ -839,12 +839,11 @@ vnoremap <silent> <buffer> <F5> :EvalVisualRForeground<CR>
 nnoremap <buffer> <silent> <Leader>rl :call <SID>LintR()<CR>
 nnoremap <buffer> <silent> <Leader>fr :call <SID>FormatR()<CR>
 
-" (Open) Interpreter or console
+" (Open) Interpreter (we mostly use nvim-r for this now)
 if exists(':Topen')
     nnoremap <silent><buffer> <Leader>oi :lcd %:p:h<CR>:T
                 \ R --ess --no-save --no-restore<CR>
 endif
-nnoremap <silent><buffer> <Leader>oc :call <SID>OpenRConsole()<CR>
 
 " Documentation
 nnoremap <silent><buffer> <S-k> :call <SID>ViewRDoc()<CR>
