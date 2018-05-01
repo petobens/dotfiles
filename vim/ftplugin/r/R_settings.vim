@@ -748,27 +748,6 @@ function! s:GetLibraries()
 endfunction
 
 " }}}
-" Open Console {{{
-
-function! s:OpenRConsole()
-    " Get the current directory to set it as starting working directory
-    let l:save_pwd = getcwd()
-    lcd %:p:h
-    " Open the R Gui in the current directory in Single Document Interface
-    if s:is_win
-        let rgui_path = fnamemodify(exepath('R'), ':p:h') . '\x64'
-        let rgui_exe = rgui_path . '\Rgui.exe'
-        if executable(rgui_exe)
-            let rgui_flags = ' --sdi --no-save --no-restore'
-            silent execute '!start /b ' . rgui_exe . rgui_flags
-        else
-            echon "Could not find 'Rgui' in " . rgui_exe
-        endif
-    endif
-    execute 'lcd ' . save_pwd
-endfunction
-
-" }}}
 " View (PDF) figure {{{
 
 function! s:ViewPdfFigure()
