@@ -1972,7 +1972,13 @@ augroup plugin_R
     au FileType r nmap <Leader>rf :call <SID>RunR('file')<CR>
     au FileType r vmap <Leader>rf <Esc>:call <SID>RunR('visual')<CR>
     au FileType r nmap <Leader>ro <Plug>RUpdateObjBrowser
+    au FileType r nmap <Leader>rv <Plug>RViewDF
+    " Object browser mappings
     au FileType rbrowser nmap q <Plug>RUpdateObjBrowser
+    au FileType rbrowser nmap zm :call RBrOpenCloseLs(0)<CR>
+    au FileType rbrowser nmap zc :call RBrOpenCloseLs(0)<CR>
+    au FileType rbrowser nmap zo :call RBrOpenCloseLs(1)<CR>
+    au FileType rbrowser nmap zr :call RBrOpenCloseLs(1)<CR>
 augroup END
 
 " }}}
