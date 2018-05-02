@@ -15,7 +15,7 @@ options(show.signif.stars=FALSE)
 # options(warnPartialMatchAttr = TRUE, warnPartialMatchDollar = TRUE,
         # warnPartialMatchArgs = TRUE)
 
-# Load some libraries by default
+# Load some libraries by default and add some commands
 if (interactive()) {
     require("colorout", quietly = TRUE)
     setOutputColors(normal = 145, negnum = 173, zero = 173,
@@ -24,4 +24,6 @@ if (interactive()) {
                     infinite = 173, index = 39, stderror = 204,
                     warn = c(235, 173), error = c(235, 204),
                     verbose = FALSE, zero.limit = NA)
+    clear_fun <- function() cat(c("\033[2J","\033[0;0H"))
+    makeActiveBinding("clear", clear_fun, baseenv())
 }
