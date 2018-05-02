@@ -460,7 +460,7 @@ function! s:LintR()
     execute 'lcd ' . l:save_pwd
 endfunction
 
-function! s:FormatR()
+function! s:FormatR(...)
     " Don't run formatR if R is not installed
     if !executable('R')
         echoerr 'R is not installed or not in your path.'
@@ -494,23 +494,22 @@ function! s:FormatR()
     " Save cursor position
     let save_cursor = getcurpos()
 
-    " Get each line and encapsulate it in double quotes
-    let lines = getline(1,'$')
-    let mod_lines = []
-    for line in lines
-        call add(mod_lines,'\"' . line . '\"')
-    endfor
-    let lines = join(mod_lines, ', ')
+    " Yank the whole buffer
+    silent normal! ggyG
 
     " Set compiler
     let flags = '--slave --no-save --no-restore -e '
-    let set_wd = 'setwd(''' . current_dir . ''');'
-    let tidy_command = 'library(formatR);tidy_source(text = c(' . lines . '),'.
-                \ ' width.cutoff = 80, arrow=TRUE)'
-    let compiler = 'R ' . flags . '"' . set_wd . tidy_command . '"'
+    let tidy_command = 'library(formatR);x <- tidy_source(source = ' .
+                \ '\"clipboard\", width.cutoff = 80, arrow = TRUE)'
+    let compiler = 'R ' . flags . '"' . tidy_command . '"'
 
     " Run the command and replace buffer with this modified text
     let output = split(system(compiler), '\n')
+    " FIXME: For some reason this sometimes fails and gives no output
+    if len(output) == 0
+        call setpos('.', save_cursor)
+        return
+    endif
     silent normal! ggdG
     call append(line('$'), output)
 
@@ -526,8 +525,9 @@ endfunction
 " Automatically run formatR and lintr on save
 augroup R_linting
     au!
-    " au BufWritePost *.{r,R} call s:FormatR() | call s:LintR()
     au BufWritePost *.{r,R} call s:LintR()
+    " Don't autoformat since it's pretty basic
+    " au BufWritePost *.{r,R} call s:FormatR() | call s:LintR()
 augroup END
 
 " }}}
