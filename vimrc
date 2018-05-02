@@ -1946,7 +1946,7 @@ let Rout_more_colors = 1
 let rout_follow_colorscheme = 1
 
 " Object browser
-let R_objbr_place = 'script,left'
+let R_objbr_place = 'LEFT'
 let R_objbr_w = 30
 
 function! s:RunR(mode)
@@ -1969,9 +1969,9 @@ augroup plugin_R
     au FileType r nmap <Leader>rq <Plug>RClose
     au FileType r nmap <Leader>rr <Plug>RClearAll
     au FileType r nmap <Leader>rc <Plug>RClearConsole
-    au FileType r nmap <Leader>ro <Plug>RUpdateObjBrowser
     au FileType r nmap <Leader>rf :call <SID>RunR('file')<CR>
     au FileType r vmap <Leader>rf <Esc>:call <SID>RunR('visual')<CR>
+    au FileType r nmap <Leader>ro <Plug>RUpdateObjBrowser
     au FileType rbrowser nmap q <Plug>RUpdateObjBrowser
 augroup END
 
