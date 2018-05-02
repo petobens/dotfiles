@@ -499,6 +499,7 @@ function! s:FormatR(...)
 
     " Set compiler
     let flags = '--slave --no-save --no-restore -e '
+    " TODO: Consider using styler instead of formatr
     let tidy_command = 'library(formatR);x <- tidy_source(source = ' .
                 \ '\"clipboard\", width.cutoff = 80, arrow = TRUE)'
     let compiler = 'R ' . flags . '"' . tidy_command . '"'
