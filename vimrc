@@ -1949,6 +1949,20 @@ let rout_follow_colorscheme = 1
 let R_objbr_place = 'script,left'
 let R_objbr_w = 30
 
+function! s:RunR(mode)
+    if g:rplugin_nvimcom_port == 0
+        call StartR("R")
+        while g:rplugin_nvimcom_port == 0
+            sleep 300m
+        endwhile
+    endif
+    if a:mode == 'file'
+        call SendFileToR("silent")
+    elseif a:mode == 'visual'
+        call SendSelectionToR("silent", "down")
+    endif
+endfunction
+
 augroup plugin_R
     au!
     au FileType r nmap <Leader>rs <Plug>RStart
@@ -1956,8 +1970,8 @@ augroup plugin_R
     au FileType r nmap <Leader>rr <Plug>RClearAll
     au FileType r nmap <Leader>rc <Plug>RClearConsole
     au FileType r nmap <Leader>ro <Plug>RUpdateObjBrowser
-    au FileType r nmap <Leader>rf <Plug>RSendFile
-    au FileType r vmap <Leader>rf <Plug>RDSendSelection
+    au FileType r nmap <Leader>rf :call <SID>RunR('file')<CR>
+    au FileType r vmap <Leader>rf <Esc>:call <SID>RunR('visual')<CR>
     au FileType rbrowser nmap q <Plug>RUpdateObjBrowser
 augroup END
 

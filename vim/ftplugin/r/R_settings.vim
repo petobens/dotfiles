@@ -413,7 +413,7 @@ function! s:LintR()
                 \. 'camel_case_linter, '
                 \. 'snake_case_linter = NULL'
                 \. ')'
-    let lint_command = 'library(lintr);lint(commandArgs(TRUE), '
+    let lint_command = 'library(lintr);lint(cache = FALSE, commandArgs(TRUE), '
                 \  . lintr_opts . ')'
     let file_args = ' --args ' . current_file
     let compiler = 'R ' . flags . '"' . set_wd . lint_command . '"' . file_args
