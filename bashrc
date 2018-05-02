@@ -195,6 +195,9 @@ fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
 fi
+if type "R" > /dev/null 2>&1; then
+    alias R='R --no-save --quiet'
+fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
 # alias
