@@ -1769,8 +1769,12 @@ call deoplete#custom#option({
     \ 'sources': {
         \ 'bib': ['ultisnips'],
         \ 'snippets': ['ultisnips'],
-        \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni']
+        \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni'],
+        \ 'r' : ['buffer', 'ultisnips', 'file', 'omni']
     \ },
+    \ 'omni_patterns':  {
+		\ 'r': ['[^. *\t]\.\w*', '\h\w*::\w*', '\h\w*\$\w*'],
+    \},
 \ })
 
 " Source specific
