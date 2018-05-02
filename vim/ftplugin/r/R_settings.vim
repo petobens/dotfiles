@@ -503,13 +503,21 @@ function! s:FormatR(...)
                 \ '\"clipboard\", width.cutoff = 80, arrow = TRUE)'
     let compiler = 'R ' . flags . '"' . tidy_command . '"'
 
-    " Run the command and replace buffer with this modified text
+    " Run the command
     let output = split(system(compiler), '\n')
+
     " FIXME: For some reason this sometimes fails and gives no output
     if len(output) == 0
         call setpos('.', save_cursor)
         return
     endif
+
+    " If there are errors simply return
+    if match(output[0], '^Error') != -1
+        call setpos('.', save_cursor)
+        return
+    endif
+
     silent normal! ggdG
     call append(line('$'), output)
 
