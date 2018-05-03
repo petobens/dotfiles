@@ -36,7 +36,7 @@ endsnippet
 # Functions **{
 
 snippet fun "Function definition"
-${1:name} <- function (${2:arguments}) {
+${1:name} <- function(${2:arguments}) {
 	${3}
 }$0
 endsnippet
@@ -251,10 +251,22 @@ writeLines(${2:variable}, outfile)
 close(outfile);`!p snip.rv = of(t, 3,'\n')`${3:print('Created text file with ${4:variable or info}.')}$0
 endsnippet
 
-snippet im "R's if __main__" b
+snippet ii "R's if not interactive" b
 if (!interactive()) {
 	$0
 }
+endsnippet
+
+snippet im "R's if __main__" b
+if (!interactive()) {
+	if (sys.nframe() == 0) {
+		$0
+	}
+}
+endsnippet
+
+snippet fl "Futile logger" b
+flog.${1:info}(${2:msg}, name = "${3:logger}")$0
 endsnippet
 
 # **}
