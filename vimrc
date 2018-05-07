@@ -1726,6 +1726,9 @@ call deoplete#custom#option({
         \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni'],
         \ 'r' : ['buffer', 'ultisnips', 'file', 'omni']
     \ },
+    \ 'omni_patterns':  {
+		\ 'r': ['\h\w*::\w*', '\h\w*\$\w*', '\h\w*(w*'],
+    \ },
 \ })
 
 " Source specific
