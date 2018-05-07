@@ -279,6 +279,7 @@ hs.hotkey.bind({"shift", "cmd"}, "5", function()
                 local current_time = os.date("%H.%M.%S")
                 local screenshot_dir = os.getenv("HOME") ..
                                         "/Pictures/Screenshots/"
+                os.execute("mkdir " .. screenshot_dir)
                 local filename = screenshot_dir .. "Screen Shot " ..
                                 current_date .. " at " .. current_time .. ".png"
                 image:saveToFile(filename)
