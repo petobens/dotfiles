@@ -1974,11 +1974,11 @@ augroup plugin_R
     au FileType r nmap <Leader>ro <Plug>RUpdateObjBrowser
     au FileType r nmap <Leader>rv <Plug>RViewDF
     " Object browser mappings
-    au FileType rbrowser nmap q <Plug>RUpdateObjBrowser
-    au FileType rbrowser nmap zm :call RBrOpenCloseLs(0)<CR>
-    au FileType rbrowser nmap zc :call RBrOpenCloseLs(0)<CR>
-    au FileType rbrowser nmap zo :call RBrOpenCloseLs(1)<CR>
-    au FileType rbrowser nmap zr :call RBrOpenCloseLs(1)<CR>
+    au FileType rbrowser nmap <buffer> q <Plug>RUpdateObjBrowser
+    au FileType rbrowser nmap <silent><buffer> zo :call RBrOpenCloseLs(1)<CR>
+    au FileType rbrowser nmap <silent><buffer> zr :call RBrOpenCloseLs(1)<CR>
+    au FileType rbrowser nmap <silent><buffer> zm :call RBrOpenCloseLs(0)<CR>
+    au FileType rbrowser nmap <silent><buffer> zc :call RBrOpenCloseLs(0)<CR>
 augroup END
 
 " }}}
