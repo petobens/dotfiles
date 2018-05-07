@@ -4,6 +4,7 @@ data.table
 devtools
 dplyr
 formatR
+futile.logger
 ggplot2
 glue
 lintr
