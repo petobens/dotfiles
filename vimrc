@@ -83,11 +83,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Plugins we are using
     call dein#add('vim-airline/vim-airline')
     call dein#add('junegunn/vim-easy-align')
-    if s:is_mac
-        " We installed fzf with Brew
-        call dein#add('/usr/local/opt/fzf')
-    endif
-    call dein#add('junegunn/fzf.vim')
     call dein#add('airblade/vim-gitgutter')
     call dein#add('Yggdroot/indentLine')
     call dein#add('vim-scripts/matchit.zip', {'name' : 'matchit'})
@@ -136,7 +131,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('idanarye/vim-merginal')
 
     " SQL (and database related)
-    call dein#add('joereynolds/SQHell.vim', {'on_ft' : 'sql'})
     call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
 
     " Tim Pope plugins
@@ -1605,44 +1599,6 @@ let g:merginal_splitType = ''
 let g:merginal_windowSize = 15
 
 " }}}
-" Fzf {{{
-
-" Colors
-let g:fzf_colors =
-\ {'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Identifier'],
-  \ 'fg+':     ['fg', 'CursorLine', 'Normal', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'Normal'],
-  \ 'hl+':     ['fg', 'Identifier'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'prompt':  ['fg', 'Identifier'],
-  \ 'pointer': ['fg', 'Keyword'],
-  \ 'marker':  ['fg', 'CursorLineNr'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment']}
-
-" Statusline
- " let g:fzf_nvim_statusline = 0
-function! s:fzf_statusline()
-  highlight default fzf1 guifg=#f8f6f2 guibg=#303030
-  setlocal statusline=%#fzf1#fzf
-endfunction
-autocmd! User FzfStatusLine call <SID>fzf_statusline()
-
-" Layout
-if has('nvim')
-  let $FZF_DEFAULT_OPTS .= ' --inline-info'
-endif
-let g:fzf_layout = {'down': '~30%'}
-
-" Jump to the existing window if possible
-let g:fzf_buffers_jump = 1
-
-" Mappings
-let g:fzf_action = {'ctrl-s': 'split', 'ctrl-v': 'vsplit'}
-
-" }}}
 " GitGutter {{{
 
 " FIXME: Not working on Windows?
@@ -1979,22 +1935,6 @@ augroup plugin_R
     au FileType rbrowser nmap <silent><buffer> zr :call RBrOpenCloseLs(1)<CR>
     au FileType rbrowser nmap <silent><buffer> zm :call RBrOpenCloseLs(0)<CR>
     au FileType rbrowser nmap <silent><buffer> zc :call RBrOpenCloseLs(0)<CR>
-augroup END
-
-" }}}
-" SQHell {{{
-
-" Load dict with connection details
-if filereadable(expand('$HOME/sqh_connections.vim'))
-    source $HOME/sqh_connections.vim
-endif
-
-let g:sqh_results_output = 'smart'
-
-augroup ps_sqhell
-    au!
-    au Filetype sql nnoremap <silent> <buffer> <F7> :SQHExecute<CR>
-    au Filetype sql vnoremap <silent> <buffer> <F7> :SQHExecute<CR>
 augroup END
 
 " }}}
