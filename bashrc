@@ -234,7 +234,7 @@ if [ -f "$brew_dir"/bin/python2 ]; then
 fi
 if type "R" > /dev/null 2>&1; then
     ua=$ua'; R --slave --no-save --no-restore -e '\
-'"update.packages(ask=FALSE, checkBuilt=TRUE)"'
+'"update.packages(ask=TRUE, checkBuilt=TRUE)"'
 fi
 if type "tlmgr" > /dev/null 2>&1; then
     ua=$ua'; sudo tlmgr update --all'
