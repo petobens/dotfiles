@@ -190,40 +190,9 @@ ggsave("${1:filename}")$0
 endsnippet
 
 # **}
-# Tests **{
-
-snippet fis "Fisher test"
-fisher.test(${1:x}, ${2:y})$0
-endsnippet
-
-snippet chi "Chi Squared test"
-chisq.test(${1:x}, ${2:y})$0
-endsnippet
-
-snippet tt "t-test"
-t.test(${1:x}, ${2:y})$0
-endsnippet
-
-snippet wil "Wilcox test"
-wilcox.test(${1:x}, ${2:y})$0
-endsnippet
-
-snippet cor "Correlation test"
-cor.test(${1:x}, ${2:y})$0
-endsnippet
-
-snippet fte "FTE test"
-var.test(${1:x}, ${2:y})$0
-endsnippet
-
-snippet kvt "KV test"
-kv.test(${1:x}, ${2:y})$0
-endsnippet
-
-# **}
 # Miscellaneous **{
 
-snippet setwd "Set workingdir" b
+snippet swd "Set workingdir" b
 setwd("${1:`!p snip.rv = os.getcwd()`}")$0
 endsnippet
 
@@ -251,7 +220,13 @@ writeLines(${2:variable}, outfile)
 close(outfile);`!p snip.rv = of(t, 3,'\n')`${3:print('Created text file with ${4:variable or info}.')}$0
 endsnippet
 
-snippet ii "R's if not interactive" b
+snippet ii "R's if interactive" b
+if (interactive()) {
+	$0
+}
+endsnippet
+
+snippet ini "R's if not interactive" b
 if (!interactive()) {
 	$0
 }
@@ -263,6 +238,10 @@ if (!interactive()) {
 		$0
 	}
 }
+endsnippet
+
+snippet rdf "Random DataFrame" w
+data.frame(a = factor(1:10), b = 1:10, c = factor(letters[1:10]))$0
 endsnippet
 
 snippet fl "Futile logger" b

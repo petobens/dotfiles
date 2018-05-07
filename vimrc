@@ -1084,13 +1084,11 @@ nnoremap <silent> ]Q :clast<CR>
 " }}}
 " R {{{
 
-" Use syntax folding (this is defined in syntax/r.vim)
-" let r_syntax_folding = 1
-
 augroup ft_R
     au!
     " Set the .Rprofile to R
     au BufNewFile,BufRead {Rprofile,.Rprofile,*.R} set filetype=r
+    au FileType r foldmethod=syntax
 augroup END
 
 " }}}
@@ -1772,9 +1770,6 @@ call deoplete#custom#option({
         \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni'],
         \ 'r' : ['buffer', 'ultisnips', 'file', 'omni']
     \ },
-    \ 'omni_patterns':  {
-		\ 'r': ['[^. *\t]\.\w*', '\h\w*::\w*', '\h\w*\$\w*'],
-    \},
 \ })
 
 " Source specific
@@ -1946,6 +1941,7 @@ let R_rconsole_width = 0  " Always use horizontal split
 let R_rconsole_height = 12
 
 let R_assign = 0  " Disable _ conversion
+let r_syntax_folding = 1
 let Rout_more_colors = 1
 let rout_follow_colorscheme = 1
 
