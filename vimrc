@@ -1088,7 +1088,7 @@ augroup ft_R
     au!
     " Set the .Rprofile to R
     au BufNewFile,BufRead {Rprofile,.Rprofile,*.R} set filetype=r
-    au FileType r foldmethod=syntax
+    au FileType r setlocal foldmethod=syntax
 augroup END
 
 " }}}
