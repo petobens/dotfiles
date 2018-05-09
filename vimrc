@@ -1604,6 +1604,7 @@ let g:merginal_windowSize = 15
 " FIXME: Not working on Windows?
 let g:gitgutter_map_keys = 0           " Disable default mappings
 let g:gitgutter_signs = 0              " Don't show signs (toggle them with map)
+let g:gitgutter_terminal_reports_focus = 0
 
 " Mappings
 nnoremap <silent> <Leader>gg :GitGutterSignsToggle<CR>
