@@ -128,17 +128,16 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Git
     call dein#add('junegunn/gv.vim')
     call dein#add('tpope/vim-fugitive')
-    call dein#add('idanarye/vim-merginal')
+    call dein#add('tommcdo/vim-fubitive')
+    call dein#add('shumphrey/fugitive-gitlab.vim')
 
     " SQL (and database related)
     call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
+    call dein#add('tpope/vim-dadbod')
 
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
-    call dein#add('tpope/vim-dadbod')
     call dein#add('tpope/vim-dispatch')
-    call dein#add('tommcdo/vim-fubitive')
-    call dein#add('shumphrey/fugitive-gitlab.vim')
     call dein#add('tpope/vim-repeat')
     call dein#add('tpope/vim-rhubarb')
     call dein#add('tpope/vim-surround')
@@ -1549,11 +1548,30 @@ augroup ps_fugitive
     au Filetype gitcommit nmap <silent> <buffer> Q q
     " Open git previous commits unfolded since we use Glog for the current file:
     au Filetype git setlocal foldlevel=1
-    " Use rhubarb omnifunc in git commit messages
-    au Filetype gitcommit setlocal omnifunc=rhubarb#omnifunc
+    " Complete with issues from github and gitlab
+    au Filetype gitcommit
+        \ if fugitive#buffer().repo().config('remote.origin.url') =~#
+            \ 'gitlab.com' |
+            \ setlocal omnifunc=gitlab#omnifunc |
+        \ else |
+            \ setlocal omnifunc=rhubarb#omnifunc |
+        \ endif
     au BufEnter *.{git/COMMIT_EDITMSG,gitcommit}
-                \ setlocal omnifunc=rhubarb#omnifunc
+        \ if fugitive#buffer().repo().config('remote.origin.url') =~#
+            \ 'gitlab.com' |
+            \ setlocal omnifunc=gitlab#omnifunc |
+        \ else |
+            \ setlocal omnifunc=rhubarb#omnifunc |
+        \ endif
 augroup END
+
+" Gitlab
+if filereadable(expand('$HOME/.gitlab_access_token'))
+    let s:gitlab_keys = readfile(expand('$HOME/.gitlab_access_token'))
+    if len(s:gitlab_keys) == 1
+        let g:gitlab_api_keys = {'gitlab.com': s:gitlab_keys[0]}
+    endif
+endif
 
 function! s:BufEnterCommit()
     normal! gg0
@@ -1593,10 +1611,6 @@ endif
 
 " Commit explorer/browser (from gv.vim plugin)
 nnoremap <silent> <Leader>cb :GV<cr>
-
-" Merginal
-let g:merginal_splitType = ''
-let g:merginal_windowSize = 15
 
 " }}}
 " GitGutter {{{
@@ -2356,7 +2370,8 @@ endfunction
 " Vimtex {{{
 
 " TOC and labels
-let g:vimtex_index_split_width = 45
+let g:vimtex_index_split_pos = 'topleft vsplit'
+let g:vimtex_index_split_width = 30
 let g:vimtex_toc_fold = 1
 let g:vimtex_toc_fold_levels = 1
 let g:vimtex_index_show_help = 0
