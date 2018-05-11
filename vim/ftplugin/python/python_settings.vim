@@ -461,7 +461,7 @@ function! s:RunYapf(...)
     set shellredir=>%s
     let old_formatprg = &l:formatprg
     let &l:formatprg = "yapf --style='{based_on_style: pep8, " .
-                \ "blank_line_before_nested_class_or_def: true, " .
+                \ "blank_line_before_nested_class_or_def: false, " .
                 \ "allow_split_before_dict_value: false, " .
                 \ "dedent_closing_brackets: true}'"
     let save_cursor = getcurpos()
