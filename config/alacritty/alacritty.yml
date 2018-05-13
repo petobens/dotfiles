@@ -425,3 +425,4 @@ key_bindings:
   - { key: Key8,     mods: Alt,       chars: "\x1b8"                     }
   - { key: Key9,     mods: Alt,       chars: "\x1b9"                     }
   - { key: Key0,     mods: Alt,       chars: "\x1b0"                     }
+  - { key: Space,    mods: Control,   chars: "\x00"                      }
