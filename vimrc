@@ -2370,8 +2370,8 @@ endfunction
 " Vimtex {{{
 
 " TOC and labels
-let g:vimtex_index_split_pos = 'topleft vsplit'
-let g:vimtex_index_split_width = 30
+let g:vimtex_index_split_pos = 'vert topleft'
+let g:vimtex_index_split_width = 40
 let g:vimtex_toc_fold = 1
 let g:vimtex_toc_fold_levels = 1
 let g:vimtex_index_show_help = 0
