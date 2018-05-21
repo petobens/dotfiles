@@ -188,9 +188,9 @@ fi
 if type "ranger" > /dev/null 2>&1; then
     alias rg='ranger'
 fi
-if type "pygmentize" > /dev/null 2>&1; then
+if type "bat" > /dev/null 2>&1; then
     # Colorized cat
-    alias dog='pygmentize -O style=fruity -f terminal16m -g'
+    alias dog='bat --style plain'
 fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'

@@ -98,6 +98,7 @@ brew install pandoc-citeproc
 brew install neofetch
 brew install imgcat
 brew install urlview
+brew install bat
 
 # Remove outdated versions
 brew cleanup
