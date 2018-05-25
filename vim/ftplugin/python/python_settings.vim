@@ -466,7 +466,7 @@ function! s:RunYapf(...)
                 \ "dedent_closing_brackets: true}'"
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
-        execute 'normal! gvgq'
+        execute 'silent! normal! gvgq'
     else
         execute 'silent! normal! gggqG'
     endif
@@ -1152,13 +1152,14 @@ inoremap <silent> <buffer> <F3> <ESC>:call
             \ <SID>RunPython('python2', 'normal', 'foreground_os')<CR>
 vnoremap <silent> <buffer> <F3> :EvalVisualPyForeground python2<CR>
 
-" Linting (and import sorting)
+" Linting, formatting and import sorting
+nnoremap <silent> <buffer> <Leader>rl :Neomake<CR>
 if exists(':ImpSort')
     nnoremap <buffer> <silent> <Leader>is :ImpSort<CR>
 endif
-" The visual map messes up proper comment indentation/formatting:
-vnoremap <buffer> Q :call <SID>RunYapf('visual')<CR>
-nnoremap <buffer> <Leader>yp :call <SID>RunYapf()<CR>
+" Note: The visual map messes up proper comment indentation/formatting:
+vnoremap <silent> <buffer> Q :call <SID>RunYapf('visual')<CR>
+nnoremap <silent> <buffer> <Leader>yp :call <SID>RunYapf()<CR>
 
 " Tests and coverage (py.test dependant)
 nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite', 'background')<CR>
