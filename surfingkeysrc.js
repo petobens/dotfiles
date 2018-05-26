@@ -136,7 +136,7 @@ mapkey('`', 'Jump to vim-like mark in current tab', function(mark) {
     Normal.jumpVIMark(mark);
 });
 // mapkey('"', 'Jump to vim-like mark in new tab', function(mark) {
-    // Normal.jumpVIMark(mark, true);
+// Normal.jumpVIMark(mark, true);
 // });
 mapkey(',qm', 'Open URL from vim-like marks', function() {
     Front.openOmnibar({type: 'VIMarks'});
@@ -302,6 +302,19 @@ mapkey(',ss', 'Search in StackOverflow in current tab', function() {
 mapkey(',Ss', 'Search in StackOverflow in new tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 's'});
 });
+addSearchAliasX('h', 'GitHub',
+    'https://github.com/search?q=',
+    's',
+    ('https://api.github.com/search/repositories?order=desc&q='),
+    function(response) {
+        var res = JSON.parse(response.text)['items'];
+        return res.map(function(r){
+            return {
+                title: r.description,
+                url: r.html_url
+            };
+        });
+    });
 mapkey(',sg', 'Search in Github in current tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 'h', tabbed: false});
 });
@@ -315,7 +328,7 @@ addSearchAliasX('w', 'Wikipedia',
     '&list=prefixsearch&utf8&pssearch='),
     function(response) {
         const res = JSON.parse(response.text).
-                    query.prefixsearch.map(r => r.title);
+            query.prefixsearch.map(r => r.title);
         return res;
     });
 mapkey(',sw', 'Search in Wikpedia in current tab', function() {
