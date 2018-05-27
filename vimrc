@@ -161,6 +161,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('kopischke/unite-spell-suggest')
+    call dein#add('rafi/vim-denite-z')
     call dein#add('tsukkee/unite-tag')
     " For deoplete
     call dein#add('Shougo/context_filetype.vim')
@@ -1357,6 +1358,7 @@ endfunction
 " Mappings
 nnoremap <silent> <Leader>ls :Denite file/rec<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
+nnoremap <silent> <Leader>dz :Denite -default-action=narrow z<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite -default-action=context_split buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
