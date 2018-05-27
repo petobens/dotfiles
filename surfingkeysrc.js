@@ -309,8 +309,12 @@ addSearchAliasX('h', 'GitHub',
     function(response) {
         var res = JSON.parse(response.text)['items'];
         return res.map(function(r){
+            var prefix = '';
+            if (r.stargazers_count) {
+                prefix += '[★' + r.stargazers_count + '] ';
+            }
             return {
-                title: r.description,
+                title: prefix + r.description,
                 url: r.html_url
             };
         });
