@@ -296,6 +296,20 @@ mapkey('s', 'Search in google in current tab', function() {
 mapkey('S', 'Search in google in new tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 'g'});
 });
+addSearchAliasX('s', 'StackOverflow',
+    'https://stackoverflow.com/search?q=',
+    's',
+    ('https://api.stackexchange.com/2.2/search/advanced?pagesize=10&' +
+     'order=desc&sort=relevance&site=stackoverflow&q='),
+    function(response) {
+        var res = JSON.parse(response.text)['items'];
+        return res.map(function(r){
+            return {
+                title: '[' + r.score + '] ' + r.title,
+                url: r.link
+            };
+        });
+    });
 mapkey(',ss', 'Search in StackOverflow in current tab', function() {
     Front.openOmnibar({type: 'SearchEngine', extra: 's', tabbed: false});
 });
@@ -305,7 +319,7 @@ mapkey(',Ss', 'Search in StackOverflow in new tab', function() {
 addSearchAliasX('h', 'GitHub',
     'https://github.com/search?q=',
     's',
-    ('https://api.github.com/search/repositories?order=desc&q='),
+    'https://api.github.com/search/repositories?order=desc&q=',
     function(response) {
         var res = JSON.parse(response.text)['items'];
         return res.map(function(r){
@@ -396,7 +410,6 @@ imap('<Ctrl-l>', '<ArrowRight>');
 aceVimMap('jj', '<Esc>', 'insert');
 aceVimMap('H', '0', 'normal');
 aceVimMap('L', '$', 'normal');
-
 
 // }}}
 // Visual mode {{{
