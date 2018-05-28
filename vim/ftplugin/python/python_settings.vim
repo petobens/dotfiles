@@ -450,9 +450,11 @@ function! s:RunYapf(...)
         return
     endif
 
-    " Try first to sort imports (requires impsort.vim plugin)
-    if exists(':ImpSort')
-        ImpSort
+    " Try first to sort imports if full run (requires impsort.vim plugin)
+    if a:0 == 0
+        if exists(':ImpSort')
+            ImpSort
+        endif
     endif
 
     " Change shellredir to avoid inserting error output into the buffer (i.e
