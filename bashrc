@@ -191,7 +191,7 @@ if type "ranger" > /dev/null 2>&1; then
 fi
 if type "bat" > /dev/null 2>&1; then
     # Colorized cat
-    alias dog='bat --style plain'
+    alias dog='bat --style numbers --theme TwoDark'
 fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
