@@ -905,7 +905,8 @@ endif
 
 augroup ft_bash
     au!
-    au BufNewFile,BufReadPost bash_profile set filetype=sh foldmethod=marker
+    au BufNewFile,BufReadPost {bash_profile,bashrc} set filetype=sh
+        \ foldmethod=marker
 augroup END
 
 " }}}
@@ -1440,6 +1441,114 @@ call denite#custom#action('buffer,directory,file', 'context_split',
             \ function('s:my_split'))
 
 " }}}
+" Deocomplete {{{
+
+" Vim completion settings
+set pumheight=15                          " Popup menu max height
+set complete=.                            " Scan only the current buffer
+set completeopt=menuone,preview,noinsert
+
+" Autoclose preview when completion is finished
+augroup ps_deoplete
+    au!
+    au CompleteDone * silent! pclose!
+augroup END
+
+" Always use deoplete (it is async)
+let g:deoplete#enable_at_startup = 1
+if s:is_mac
+    let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
+else
+    let g:deoplete#sources#jedi#python_path =
+                \ '/mnt/.linuxbrew/bin/python3'
+endif
+
+" Options
+call deoplete#custom#option({
+    \ 'smart_case': v:true,
+    \ 'max_list': 150,
+    \ 'refresh_always': v:true,
+    \ 'auto_complete_delay': 5,
+    \ 'sources': {
+        \ 'bib': ['ultisnips'],
+        \ 'snippets': ['ultisnips'],
+        \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni'],
+        \ 'r' : ['buffer', 'ultisnips', 'file', 'omni']
+    \ },
+    \ 'omni_patterns':  {
+		\ 'r': ['\h\w*::\w*', '\h\w*\$\w*', '\h\w*(w*'],
+    \ },
+\ })
+
+" Source specific
+" Use auto delimiter and autoparen (not in omni source)
+call deoplete#custom#source('_', 'converters',
+    \ ['converter_auto_delimiter', 'remove_overlap'])
+" Show ultisnips first and activate completion after 1 character
+call deoplete#custom#source('ultisnips', 'rank', 1000)
+call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
+" Extend max candidate width in popup menu for buffer source
+call deoplete#custom#source('buffer', 'max_menu_width', 90)
+" Complete dictionary after one character, rank dict completion first and set
+" some keyword_patterns (via python3 regex)
+call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
+call deoplete#custom#source('dictionary', 'rank', 1000)
+call deoplete#custom#source('dictionary', 'keyword_patterns', {
+            \ 'tex' : '\\?[a-zA-Z_]\w*',
+\})
+" Omni completion (for tex it requires vimtex plugin; to add commmand completion
+" include '|\w*' in the regex)
+call deoplete#custom#var('omni', 'input_patterns', {
+        \ 'tex' : '\\(?:'
+            \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
+            \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+            \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
+            \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
+            \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
+            \ .')',
+        \ 'gitcommit' : '((?:F|f)ix(?:es)?\s|'
+            \ . '(?:C|c)lose(?:s)?\s|(?:R|r)esolve(?:s)?\s|(?:S|s)ee\s)\S*',
+        \ 'javascript' : ['[^. *\t]\.\w*', '[A-Za-z]+'],
+    \ }
+\)
+
+" External sources
+let deoplete#sources#jedi#show_docstring = 0
+if exists('$TMUX')
+    " Tmux completion (with tmux-complete plugin)
+    let g:tmuxcomplete#trigger = ''
+endif
+
+" Mappings
+" Close popup and delete backward character
+inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
+" Undo completion i.e remove whole completed word (default plugin mapping)
+inoremap <expr> <C-g> deoplete#undo_completion()
+" If a snippet is available enter expands it; if not available, it selects
+" current candidate and closes the popup menu (i.e it ends completion)
+inoremap <silent><expr><CR> pumvisible() ?
+    \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
+    \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
+" Move in preview window with tab
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+
+" Edit dictionary files
+function! s:Edit_Dict()
+    let dict_file = &l:dictionary
+    if empty(dict_file)
+        echo 'No dictionary file found.'
+        return
+    endif
+    let split_windows = 'vsplit '
+    if winwidth(0) <= 2 * (&tw ? &tw : 80)
+        let split_windows = 'split '
+    endif
+    execute split_windows . dict_file
+endfunction
+nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>
+
+" }}}
 " Devicons {{{
 
 " Add or override individual additional filetypes
@@ -1707,114 +1816,6 @@ map <Leader>cc <Plug>NERDCommenterComment
 map <Leader>cu <Plug>NERDCommenterUncomment
 map <Leader>ce <Plug>NERDCommenterToEOL
 map <Leader>ac <Plug>NERDCommenterAppend
-
-" }}}
-" N(D)eocomplete {{{
-
-" Vim completion settings
-set pumheight=15                          " Popup menu max height
-set complete=.                            " Scan only the current buffer
-set completeopt=menuone,preview,noinsert
-
-" Autoclose preview when completion is finished
-augroup ps_deoplete
-    au!
-    au CompleteDone * silent! pclose!
-augroup END
-
-" Always use deoplete (it is async)
-let g:deoplete#enable_at_startup = 1
-if s:is_mac
-    let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
-else
-    let g:deoplete#sources#jedi#python_path =
-                \ '/mnt/.linuxbrew/bin/python3'
-endif
-
-" Options
-call deoplete#custom#option({
-    \ 'smart_case': v:true,
-    \ 'max_list': 150,
-    \ 'refresh_always': v:true,
-    \ 'auto_complete_delay': 5,
-    \ 'sources': {
-        \ 'bib': ['ultisnips'],
-        \ 'snippets': ['ultisnips'],
-        \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni'],
-        \ 'r' : ['buffer', 'ultisnips', 'file', 'omni']
-    \ },
-    \ 'omni_patterns':  {
-		\ 'r': ['\h\w*::\w*', '\h\w*\$\w*', '\h\w*(w*'],
-    \ },
-\ })
-
-" Source specific
-" Use auto delimiter and autoparen (not in omni source)
-call deoplete#custom#source('_', 'converters',
-    \ ['converter_auto_delimiter', 'remove_overlap'])
-" Show ultisnips first and activate completion after 1 character
-call deoplete#custom#source('ultisnips', 'rank', 1000)
-call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
-" Extend max candidate width in popup menu for buffer source
-call deoplete#custom#source('buffer', 'max_menu_width', 90)
-" Complete dictionary after one character, rank dict completion first and set
-" some keyword_patterns (via python3 regex)
-call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
-call deoplete#custom#source('dictionary', 'rank', 1000)
-call deoplete#custom#source('dictionary', 'keyword_patterns', {
-            \ 'tex' : '\\?[a-zA-Z_]\w*',
-\})
-" Omni completion (for tex it requires vimtex plugin; to add commmand completion
-" include '|\w*' in the regex)
-call deoplete#custom#var('omni', 'input_patterns', {
-        \ 'tex' : '\\(?:'
-            \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
-            \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-            \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
-            \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
-            \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
-            \ .')',
-        \ 'gitcommit' : '((?:F|f)ix(?:es)?\s|'
-            \ . '(?:C|c)lose(?:s)?\s|(?:R|r)esolve(?:s)?\s|(?:S|s)ee\s)\S*',
-        \ 'javascript' : ['[^. *\t]\.\w*', '[A-Za-z]+'],
-    \ }
-\)
-
-" External sources
-let deoplete#sources#jedi#show_docstring = 0
-if exists('$TMUX')
-    " Tmux completion (with tmux-complete plugin)
-    let g:tmuxcomplete#trigger = ''
-endif
-
-" Mappings
-" Close popup and delete backward character
-inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
-" Undo completion i.e remove whole completed word (default plugin mapping)
-inoremap <expr> <C-g> deoplete#undo_completion()
-" If a snippet is available enter expands it; if not available, it selects
-" current candidate and closes the popup menu (i.e it ends completion)
-inoremap <silent><expr><CR> pumvisible() ?
-    \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
-    \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
-" Move in preview window with tab
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-
-" Edit dictionary files
-function! s:Edit_Dict()
-    let dict_file = &l:dictionary
-    if empty(dict_file)
-        echo 'No dictionary file found.'
-        return
-    endif
-    let split_windows = 'vsplit '
-    if winwidth(0) <= 2 * (&tw ? &tw : 80)
-        let split_windows = 'split '
-    endif
-    execute split_windows . dict_file
-endfunction
-nnoremap <silent> <Leader>ed :call <SID>Edit_Dict()<CR>
 
 " }}}
 " Neomake {{{
