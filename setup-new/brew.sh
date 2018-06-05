@@ -99,6 +99,7 @@ brew install neofetch
 brew install imgcat
 brew install urlview
 brew install bat
+brew install rsync
 
 # Remove outdated versions
 brew cleanup
