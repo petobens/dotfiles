@@ -170,6 +170,8 @@ bind 'set enable-bracketed-paste on'
 # Bash
 alias sh='bash'
 alias u='cd ..'
+alias uu='cd ../..'
+alias uuu='cd ../../..'
 alias h='cd ~'
 alias q='exit'
 alias c='clear'
