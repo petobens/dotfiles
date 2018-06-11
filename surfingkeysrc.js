@@ -59,10 +59,10 @@ settings.theme = `
 .sk_theme .omnibar_visitcount {
     color: #98c379;
 }
-.sk_theme ul>li:nth-child(odd) {
+.sk_theme #sk_omnibarSearchResult>ul>li:nth-child(odd) {
     background: #303030;
 }
-.sk_theme ul>li.focused {
+.sk_theme #sk_omnibarSearchResult>ul>li.focused {
     background: #3e4452;
 }
 #sk_status, #sk_find {
