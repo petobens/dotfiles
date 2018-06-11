@@ -97,7 +97,6 @@ brew install pandoc
 brew install pandoc-citeproc
 brew install neofetch
 brew install imgcat
-brew install urlview
 brew install bat
 brew install rsync
 
