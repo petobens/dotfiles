@@ -170,6 +170,15 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/neco-syntax')
     call dein#add('Shougo/neoinclude.vim')
 
+    " Temp
+     if has('nvim')
+        " This basically fixes visual block pasting
+        " https://github.com/neovim/neovim/issues/1822#issuecomment-233152833
+        call dein#add('bfredl/nvim-miniyank')
+        map p <Plug>(miniyank-autoput)
+        map P <Plug>(miniyank-autoPut)
+     endif
+
     " Devicons (load this last!)
     call dein#add('ryanoasis/vim-devicons')
 
