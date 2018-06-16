@@ -161,6 +161,11 @@ bind -m vi-insert 'RETURN: "\e\n"'
 bind -m vi-insert '"\C-i": menu-complete'
 bind -m vi-insert '"\e[Z": menu-complete-backward'
 
+# Bind C-p and C-n to search the history conditional on input (like zsh) instead
+# of simply going up or down
+bind '"\C-p": history-search-backward'
+bind '"\C-n": history-search-forward'
+
 # Use bracketed paste (i.e distinguish between typed and pasted text)
 bind 'set enable-bracketed-paste on'
 
