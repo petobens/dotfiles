@@ -337,7 +337,8 @@ if type "fzf" > /dev/null 2>&1; then
             fi
     }
         local start_dir="$(dirname "$PWD")"  # start with parent dir
-        local DIR=$(get_parent_dirs $(realpath "${1:-$start_dir}") | fzf --preview 'tree -C -d -L 2 {} | head -200')
+        local DIR=$(get_parent_dirs $(realpath "${1:-$start_dir}") | \
+            fzf --preview 'tree -C -d -L 2 {} | head -200')
         if [[ ! -z $DIR ]]; then
             printf 'cd %q' "$DIR"
         else
