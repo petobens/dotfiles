@@ -101,6 +101,7 @@ brew install imgcat
 brew install rsync
 brew install bat
 brew install fd
+brew install tree
 
 # Remove outdated versions
 brew cleanup

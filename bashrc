@@ -316,6 +316,9 @@ if type "fzf" > /dev/null 2>&1; then
     export FZF_DEFAULT_COMMAND='ag -g ""'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+    if type "tree" > /dev/null 2>&1; then
+        export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+    fi
     # Disable tmux integration (use ncurses directly)
     export FZF_TMUX='0'
 
@@ -334,7 +337,7 @@ if type "fzf" > /dev/null 2>&1; then
             fi
     }
         local start_dir="$(dirname "$PWD")"  # start with parent dir
-        local DIR=$(get_parent_dirs $(realpath "${1:-$start_dir}") | fzf-tmux)
+        local DIR=$(get_parent_dirs $(realpath "${1:-$start_dir}") | fzf --preview 'tree -C -d -L 2 {} | head -200')
         if [[ ! -z $DIR ]]; then
             printf 'cd %q' "$DIR"
         else
