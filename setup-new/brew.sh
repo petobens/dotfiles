@@ -32,6 +32,7 @@ brew install gcc
 brew install llvm
 brew install libomp
 brew install openblas
+brew install coreutils  # (realpath, etc)
 
 # Languages: Rust, Python3, R, latex, node, java
 brew install rust  # We need this for Alacritty
@@ -97,8 +98,9 @@ brew install pandoc
 brew install pandoc-citeproc
 brew install neofetch
 brew install imgcat
-brew install bat
 brew install rsync
+brew install bat
+brew install fd
 
 # Remove outdated versions
 brew cleanup

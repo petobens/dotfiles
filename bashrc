@@ -119,7 +119,7 @@ bind -m vi-insert '"\C-n": next-history'
 bind -m vi-insert '"\C-e": end-of-line'
 bind -m vi-insert '"\C-a": beginning-of-line'
 
-# Command mode
+# Command (normal) mode
 bind -m vi-command '"H": beginning-of-line'
 bind -m vi-command '"L": end-of-line'
 bind -m vi-command '"k": ""'
@@ -309,6 +309,41 @@ if type "fzf" > /dev/null 2>&1; then
     [[ $- == *i* ]] && . "$brew_dir/opt/fzf/shell/completion.bash" 2> /dev/null
     . "$brew_dir/opt/fzf/shell/key-bindings.bash"
 
+    # Change default options (show 15 lines, use top-down layout)
+    export FZF_DEFAULT_OPTS='--height 15 --reverse '\
+'--bind=ctrl-space:toggle+down'
+    # Use ag for files and fd for dirs
+    export FZF_DEFAULT_COMMAND='ag -g ""'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+    # Disable tmux integration (use ncurses directly)
+    export FZF_TMUX='0'
+
+    # Extend list of commands with fuzzy completion (basically add our aliases)
+    complete -F _fzf_path_completion -o default -o bashdefault v o dog
+
+    # Add Alt-p mapping to cd to selected parent directory (sister to Alt-c)
+    __fzf_cd_parent__() {
+        local declare dirs=()
+        get_parent_dirs() {
+            if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+            if [[ "${1}" == '/' ]]; then
+                for _dir in "${dirs[@]}"; do echo $_dir; done
+            else
+                get_parent_dirs $(dirname "$1")
+            fi
+    }
+        local start_dir="$(dirname "$PWD")"  # start with parent dir
+        local DIR=$(get_parent_dirs $(realpath "${1:-$start_dir}") | fzf-tmux)
+        if [[ ! -z $DIR ]]; then
+            printf 'cd %q' "$DIR"
+        else
+            return 1
+        fi
+    }
+    bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ep": "ddi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
+
     # Add bookmarks support (requires https://github.com/urbainvaes/fzf-marks)
     if [ -f "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash" ]; then
         . "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash"
@@ -327,25 +362,6 @@ if type "fzf" > /dev/null 2>&1; then
     }
     alias rd=z
 
-    # Change default options (show 15 lines, use top-down layout)
-    export FZF_DEFAULT_OPTS='--height 15 --reverse '\
-'--bind=ctrl-space:toggle+down'
-
-    # Use ag (not that this will only list files and not directories)
-    export FZF_DEFAULT_COMMAND='ag -g ""'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-
-    # Extend list of commands with fuzzy completion (basically add our aliases)
-    complete -F _fzf_file_completion -o default -o bashdefault v o
-
-    # Enable tmux integration
-    # export FZF_TMUX='1'
-    export FZF_TMUX_HEIGHT='15'
-
-    # Fix Alt-C mapping (needed for when we set Alt to act as meta key in Iterm
-    # preferences; for instance to make alt key work on vim)
-    bind '"ã": "\C-x\C-addi$(__fzf_cd__)\C-x\C-e\C-x\C-r\C-m"'
-    bind -m vi-command '"ã": "ddi$(__fzf_cd__)\C-x\C-e\C-x\C-r\C-m"'
 fi
 
 # }}}
