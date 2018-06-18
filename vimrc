@@ -1439,7 +1439,7 @@ call denite#custom#map('insert', '<C-e>', '<denite:do_action:feedkeys>',
             \ 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 
-" Custom split action
+" Custom actions
 function! s:my_split(context)
     let split_action = 'vsplit'
     if winwidth(winnr('#')) <= 2 * (&tw ? &tw : 80)
@@ -1449,6 +1449,8 @@ function! s:my_split(context)
 endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
             \ function('s:my_split'))
+call denite#custom#action('file', 'narrow',
+      \ {context -> denite#do_action(context, 'open', context['targets'])})
 
 " }}}
 " Deocomplete {{{
