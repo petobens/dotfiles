@@ -45,6 +45,9 @@ if type "python" > /dev/null 2>&1; then
     rm -rf "$HOME/.pdbrc"
     ln -s "$dotfiles_dir/pdbrc" "$HOME/.pdbrc"
     echo Created .pdbrc symlink
+    rm -rf "$HOME/.ipython/profile_default/ipython_config.py"
+    ln -s "$dotfiles_dir/ipython_config.py" "$HOME/.ipython/profile_default/ipython_config.py"
+    echo Created .ipython_config symlink
 fi
 if type "tmux" > /dev/null 2>&1; then
     rm -rf "$HOME/.tmux"
