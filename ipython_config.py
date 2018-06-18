@@ -1,11 +1,13 @@
+# See: https://github.com/wilywampa/vimconfig/blob/master/misc/python/ipython_config.py
 from pygments.token import (
     Comment, Error, Keyword, Literal, Name, Number, Operator, String, Text,
     Token
 )
 
-c = get_config()
+c = get_config()  # noqa
 
 c.TerminalInteractiveShell.true_color = True
+c.TerminalInteractiveShell.editing_mode = 'vi'
 
 # Palette (onedarkish)
 white = '#abb2bf'
@@ -38,11 +40,12 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Keyword.Constant: green,
     Keyword.Namespace: purple,
     Name.Namespace: syntax_fg,
-    Name.Builtin: light_blue,
+    Name.Builtin: red,
     Name.Function: light_blue,
-    Name.Class: red,
+    Name.Class: light_blue,
     Name.Decorator: light_blue,
-    Name.Exception: light_blue,
+    Name.Exception: yellow,
+    Name.Variable.Magic: red,  # dunder methods
     Number: dark_yellow,
     Operator: purple,
     Operator.Word: green,
