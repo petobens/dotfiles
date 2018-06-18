@@ -326,7 +326,7 @@ if type "fzf" > /dev/null 2>&1; then
     # Extend list of commands with fuzzy completion (basically add our aliases)
     complete -F _fzf_path_completion -o default -o bashdefault v o dog
 
-    # Add Alt-p mapping to cd to selected parent directory (sister to Alt-c)
+    # Alt-p mapping to cd to selected parent directory (sister to Alt-c)
     __fzf_cd_parent__() {
         local declare dirs=()
         get_parent_dirs() {
@@ -349,7 +349,7 @@ if type "fzf" > /dev/null 2>&1; then
     bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
     bind -m vi-command '"\ep": "ddi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
 
-    # Add bookmarks support (requires https://github.com/urbainvaes/fzf-marks)
+    # Bookmarks (requires https://github.com/urbainvaes/fzf-marks)
     if [ -f "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash" ]; then
         . "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash"
         alias bm='fzm'
@@ -367,6 +367,18 @@ if type "fzf" > /dev/null 2>&1; then
     }
     alias rd=z
 
+    # Git
+    gl() {
+        # TODO: Add preview
+        git log --graph --color=always \
+            --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+        fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+            --bind "ctrl-m:execute:
+                        (grep -o '[a-f0-9]\{7\}' | head -1 |
+                        xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                        {}
+        FZF-EOF"
+    }
 fi
 
 # }}}
