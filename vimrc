@@ -722,6 +722,10 @@ nnoremap <silent> <Leader>du :diffupdate<CR>
 nnoremap <expr> ]h &diff ? ']c' : ']h'
 nnoremap <expr> [h &diff ? '[c' : '[h'
 
+" Make horizontal window vertical and viceversa
+nnoremap <silent> <Leader>hv <C-W>H<C-W>x
+nnoremap <silent> <Leader>vh <C-W>K
+
 " }}}
 " Write, save and quit {{{
 
