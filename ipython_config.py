@@ -1,8 +1,11 @@
 # See: https://github.com/wilywampa/vimconfig/blob/master/misc/python/ipython_config.py
+import IPython.terminal.prompts as prompts
+
 from pygments.token import (
     Comment, Error, Keyword, Literal, Name, Number, Operator, String, Text,
     Token
 )
+from prompt_toolkit.key_binding.vi_state import InputMode
 
 c = get_config()  # noqa
 
@@ -10,6 +13,24 @@ c = get_config()  # noqa
 c.TerminalInteractiveShell.true_color = True
 c.TerminalInteractiveShell.editing_mode = 'vi'
 c.TerminalInteractiveShell.confirm_exit = False
+
+# TODO: Add emacs bindings:
+# https://gitlab.com/memeplex/home-i3/blob/master/.ipython/profile_default/startup/startup.py
+
+
+class MyPrompt(prompts.Prompts):
+    """Custom prompt with vi mode indicator"""
+
+    def in_prompt_tokens(self, cli=None):
+        mode = 'I' if cli.vi_state.input_mode == InputMode.INSERT else 'N'
+        return [
+            (prompts.Token.Prompt, f'({mode})In ['),
+            (prompts.Token.PromptNum,
+             str(self.shell.execution_count)), (prompts.Token.Prompt, ']: ')
+        ]
+
+
+c.TerminalInteractiveShell.prompts_class = MyPrompt
 
 # Palette (onedarkish)
 white = '#abb2bf'
@@ -55,8 +76,8 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     String: green,
     Token.Prompt: green,
     Token.PromptNum: f'{green} bold',
-    Token.OutPrompt: dark_red,
-    Token.OutPromptNum: f'{dark_red} bold',
+    Token.OutPrompt: blue,
+    Token.OutPromptNum: f'{blue} bold',
     Token.Menu.Completions.Completion: f'bg:{pmenu} {syntax_fg}',
     Token.Menu.Completions.Completion.Current: f'bg:{light_blue} {black}',
     Token.MatchingBracket.Other: blue,
