@@ -885,8 +885,12 @@ endif
 if exists(':tnoremap')
     " Exit terminal mode and return to vim normal mode (essentially the terminal
     " now becomes a regular vim buffer)
-    tnoremap <Esc> <C-\><C-n>
-    tnoremap kj <C-\><C-n>
+    " Note: we don't want to do this with <ESC> because when using vi mode most
+    " readline programs actually use ESC to enter normal mode; since we
+    " might also use jj to get into normal mode from within the readline program
+    " we also avoid remapping it here and prefer jk instead
+    " tnoremap <Esc> <C-\><C-n>
+    tnoremap jk <C-\><C-n>
     " Window movement
     tnoremap <c-k> <C-\><C-n><C-w>k
     tnoremap <c-h> <C-\><C-n><C-w>h
