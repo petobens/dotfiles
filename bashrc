@@ -235,6 +235,9 @@ fi
 if type "jupyter" > /dev/null 2>&1; then
     alias jn='jupyter notebook'
 fi
+if type "ipython3" > /dev/null 2>&1; then
+    alias ip='ipython3'
+fi
 
 # Update all binaries (with brew) and language libraries
 ua='sudo echo -n; brew update && brew upgrade && brew cleanup; '\
