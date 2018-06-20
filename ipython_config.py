@@ -6,8 +6,10 @@ from pygments.token import (
 
 c = get_config()  # noqa
 
+# Options
 c.TerminalInteractiveShell.true_color = True
 c.TerminalInteractiveShell.editing_mode = 'vi'
+c.TerminalInteractiveShell.confirm_exit = False
 
 # Palette (onedarkish)
 white = '#abb2bf'
