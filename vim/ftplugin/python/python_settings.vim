@@ -153,7 +153,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
     if a:compilation ==# 'foreground' && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert
-        let g:neoterm_size = 10
+        let g:neoterm_size = 12
         let g:neoterm_autoinsert = 0
         botright Topen
         if a:mode ==# 'visual'
@@ -1054,7 +1054,7 @@ endif
 
 function! s:OpenREPL(repl)
     let old_size = g:neoterm_size
-    let g:neoterm_size = 10
+    let g:neoterm_size = 12
     botright Topen
     execute 'T ' .  a:repl
     let g:neoterm_size = old_size
@@ -1080,7 +1080,7 @@ command! -range IPythonNeoterm silent call <SID>IPythonSelection()
 function! s:PyREPL() range
     let old_size = g:neoterm_size
     let old_autoinsert = g:neoterm_autoinsert
-    let g:neoterm_size = 10
+    let g:neoterm_size = 12
     let g:neoterm_autoinsert = 0
     IPythonNeoterm  " Instead of 'TREPLSendSelection'
     stopinsert

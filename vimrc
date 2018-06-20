@@ -1892,7 +1892,7 @@ endif
 " Functions
 function! s:OpenNeotermSplit(position)
     let old_size = g:neoterm_size
-    let g:neoterm_size = 10
+    let g:neoterm_size = 12
     if a:position ==# 'vertical'
         let g:neoterm_size = ''
         vertical Topen
@@ -1905,7 +1905,7 @@ endfunction
 function! s:RunLineREPL()
     let old_size = g:neoterm_size
     let old_autoinsert = g:neoterm_autoinsert
-    let g:neoterm_size = 10
+    let g:neoterm_size = 12
     let g:neoterm_autoinsert = 0
     TREPLSendLine
     stopinsert

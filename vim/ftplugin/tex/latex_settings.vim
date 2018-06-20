@@ -174,7 +174,7 @@ function! s:CompileTex(...)
     if a:0 && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert
-        let g:neoterm_size = 10
+        let g:neoterm_size = 12
         let g:neoterm_autoinsert = 0
         execute 'T ' . compiler . directives . '-v ' . mainfile
         " Avoid getting into insert mode using `au BufEnter * if &buftype ==

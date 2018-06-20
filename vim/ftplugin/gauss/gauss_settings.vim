@@ -113,7 +113,7 @@ function! s:RunGauss(mode, compilation, ...)
     if a:compilation ==# 'foreground' && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert
-        let g:neoterm_size = 10
+        let g:neoterm_size = 12
         let g:neoterm_autoinsert = 0
         if a:mode ==# 'visual'
             execute 'T ' . compiler .  current_file . '; rm ' . current_file
