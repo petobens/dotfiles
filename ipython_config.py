@@ -13,6 +13,7 @@ c = get_config()  # noqa
 c.TerminalInteractiveShell.true_color = True
 c.TerminalInteractiveShell.editing_mode = 'vi'
 c.TerminalInteractiveShell.confirm_exit = False
+c.TerminalIPythonApp.display_banner = False
 
 # TODO: Add emacs bindings:
 # https://gitlab.com/memeplex/home-i3/blob/master/.ipython/profile_default/startup/startup.py
