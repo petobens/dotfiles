@@ -859,13 +859,13 @@ vnoremap <silent> G G$
 " }}}
 " Command mode {{{
 
-" Emacs bindings in command line mode (beginning and end of line)
+" Emacs bindings in command line mode (similar to rsi.vim)
 cnoremap <c-a> <home>
 cnoremap <c-e> <end>
-
-" Move left and right
 cnoremap <c-h> <left>
 cnoremap <c-l> <right>
+cnoremap <A-f> <S-Right>
+cnoremap <A-b> <S-Left>
 
 " Insert the directory of the current buffer in command line mode
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'
