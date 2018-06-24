@@ -1433,17 +1433,23 @@ call denite#custom#map('insert', '<C-h>', '<denite:move_caret_to_left>',
             \ 'noremap')
 call denite#custom#map('insert', '<C-l>', '<denite:move_caret_to_right>',
             \ 'noremap')
+call denite#custom#map('insert', '<A-b>',
+            \ '<denite:move_caret_to_one_word_left>', 'noremap')
+call denite#custom#map('insert', '<A-f>',
+            \ '<denite:move_caret_to_one_word_right>', 'noremap')
+call denite#custom#map('insert', '<C-a>', '<denite:move_caret_to_head>',
+            \ 'noremap')
+call denite#custom#map('insert', '<C-e>', '<denite:move_caret_to_tail>',
+            \ 'noremap')
 call denite#custom#map('insert', '<C-s>', '<denite:do_action:split>', 'noremap')
 call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
     \ 'noremap')
 call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
-call denite#custom#map('insert', '<C-a>', '<denite:choose_action>', 'noremap')
+call denite#custom#map('insert', '<C-x>', '<denite:choose_action>', 'noremap')
 call denite#custom#map('insert', '<C-y>', '<denite:do_action:yank>', 'noremap')
 call denite#custom#map('insert', '<C-q>', '<denite:do_action:quickfix>',
             \ 'noremap')
 call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
-            \ 'noremap')
-call denite#custom#map('insert', '<C-e>', '<denite:do_action:feedkeys>',
             \ 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 
