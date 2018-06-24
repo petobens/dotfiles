@@ -118,6 +118,8 @@ bind -m vi-insert '"\C-p": previous-history'
 bind -m vi-insert '"\C-n": next-history'
 bind -m vi-insert '"\C-e": end-of-line'
 bind -m vi-insert '"\C-a": beginning-of-line'
+bind -m vi-insert '"\ef": forward-word'
+bind -m vi-insert '"\eb": backward-word'
 
 # Command (normal) mode
 bind -m vi-command '"H": beginning-of-line'
