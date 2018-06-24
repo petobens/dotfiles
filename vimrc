@@ -1917,6 +1917,7 @@ endfunction
 nnoremap <silent> <Leader>st :call <SID>OpenNeotermSplit('horizontal')<CR>
 nnoremap <silent> <Leader>vt :call <SID>OpenNeotermSplit('vertical')<CR>
 nnoremap <silent> <Leader>tc :Tclose<CR>
+nnoremap <silent> <Leader>tl :Tclear<CR><ESC>
 nnoremap <silent> <Leader>ri :call <SID>RunLineREPL()<CR>
 
 augroup term_au

@@ -149,17 +149,35 @@ function! s:RunPython(compiler, mode, compilation, ...)
         let current_file = expand('%:p:t')
     endif
 
-    " Use neovim terminal for foreground async compilation
+    " Use neovim terminal for foreground async compilation (either in regular
+    " python or ipython)
     if a:compilation ==# 'foreground' && exists(':Topen')
         let old_size = g:neoterm_size
         let old_autoinsert = g:neoterm_autoinsert
         let g:neoterm_size = 12
         let g:neoterm_autoinsert = 0
-        botright Topen
-        if a:mode ==# 'visual'
-            execute 'T ' . compiler .  current_file . '; rm ' . current_file
+
+        if match(compiler, '^ipython') == -1
+            Topen
+            if a:mode ==# 'visual'
+                execute 'T ' . compiler .  current_file .
+                            \ '; command rm ' . current_file
+            else
+                execute 'T ' . compiler .  current_file
+            endif
         else
-            execute 'T ' . compiler .  current_file
+            " We only do normal ipython run here since visual runs are handled
+            " by IPyREPL function defined afterwards (below)
+            if !g:neoterm.has_any()
+                " This ensures we have an instance
+                execute 'T ipython3'
+            endif
+            if a:mode !=# 'visual'
+                let cmd = ['%run ' . current_file, '\n']
+                call s:NeoTermExecNoExpand(cmd)
+                " let instance =  g:neoterm.last()
+                " call instance.exec(cmd)
+            endif
         endif
         " Avoid getting into insert mode using `au BufEnter * if &buftype ==
         " 'terminal' | startinsert | endif`
@@ -1050,7 +1068,7 @@ if !exists('*s:ViewPyModule()')
 endif
 
 " }}}
-" Visual REPL {{{
+" REPL (neoterm) {{{
 
 function! s:OpenREPL(repl)
     let old_size = g:neoterm_size
@@ -1060,24 +1078,37 @@ function! s:OpenREPL(repl)
     let g:neoterm_size = old_size
 endfunction
 
+function! s:NeoTermExecNoExpand(cmd)
+    " Note: this assumes that an instance exists and that cmd is a list
+    let instance =  g:neoterm.last()
+    call instance.exec(a:cmd)
+endfunction
+
 " Latest ipython doesn't allow to send multiple lines therefore we must add
 " bracketed paste sequences to the text being sent to the interpreter
 " See https://github.com/ipython/ipython/issues/9948
 function! s:IPythonSelection()
-  let [l:lnum1, l:col1] = getpos("'<")[1:2]
-  let [l:lnum2, l:col2] = getpos("'>")[1:2]
-  let l:lines = getline(l:lnum1, l:lnum2)
-  let l:lines[-1] = l:lines[-1][:l:col2 - 1]
-  let l:lines[0] = l:lines[0][l:col1 - 1:]
-  let l:lines[0] = "\e[200~" . l:lines[0]
-  call add(l:lines, "\e[201~")
-  call add(l:lines, "")  " Needed to actually execute the command
-  call g:neoterm.repl.exec(l:lines)
+    let [l:lnum1, l:col1] = getpos("'<")[1:2]
+    let [l:lnum2, l:col2] = getpos("'>")[1:2]
+    let l:lines = getline(l:lnum1, l:lnum2)
+    let l:lines[-1] = l:lines[-1][:l:col2 - 1]
+    let l:lines[0] = l:lines[0][l:col1 - 1:]
+    let l:lines[0] = "\e[200~" . l:lines[0]
+    call add(l:lines, "\e[201~")
+    call add(l:lines, "")  " Needed to actually execute the command
+    if !g:neoterm.has_any()
+        " This ensures we have an instance
+        execute 'T ipython3'
+    endif
+    " The following avoids prepending `ipython` before the command which if ran
+    " from within ipython results in an error
+    let g:neoterm_auto_repl_cmd = 0
+    call g:neoterm.repl.exec(l:lines)
 endfunction
 
 command! -range IPythonNeoterm silent call <SID>IPythonSelection()
 
-function! s:PyREPL() range
+function! s:IPyREPL() range
     let old_size = g:neoterm_size
     let old_autoinsert = g:neoterm_autoinsert
     let g:neoterm_size = 12
@@ -1136,6 +1167,11 @@ vnoremap <silent> <buffer> <F7> :EvalVisualPyBackground python3<CR>
 nnoremap <silent> <buffer> <Leader>rf :call
             \ <SID>RunPython('python3', 'normal', 'foreground')<CR>
 vnoremap <silent> <buffer> <Leader>rf :EvalVisualPyVimshell python3<CR>
+if executable('ipython') || executable('ipython3')
+        nnoremap <silent> <buffer> <Leader>ri :call
+            \ <SID>RunPython('ipython3', 'normal', 'foreground')<CR>
+        vnoremap <silent> <buffer> <Leader>ri :call <SID>IPyREPL()<CR>
+endif
 " Run in the command line (useful when input is required)
 nnoremap <silent> <buffer> <F5> :call
             \ <SID>RunPython('python3', 'normal', 'foreground_os')<CR>
@@ -1179,10 +1215,13 @@ nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 " ipython
 if exists(':Topen')
     nnoremap <buffer> <silent> <Leader>oi :call <SID>OpenREPL('python3')<CR>
-    vnoremap <silent> <buffer> <Leader>ri :call <SID>PyREPL()<CR>
     if executable('ipython') || executable('ipython3')
         nnoremap <buffer> <silent> <Leader>ip :call
-                    \ <SID>OpenREPL('ipython3')<CR>
+            \ <SID>OpenREPL('ipython3')<CR>
+        " Reset ipython variables (and clear screen)
+        nnoremap <buffer> <silent> <Leader>tr :call
+            \ <SID>NeoTermExecNoExpand(["\<c-l>"])<CR><ESC>:call
+            \ <SID>NeoTermExecNoExpand(['%reset -f', '\n'])<CR><ESC>
     endif
 endif
 
