@@ -175,7 +175,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
                 " in our ipython config and if we don't sleep here then ipython
                 " breaks at startup
                 " FIXME: Find a better way to get around this
-                sleep 1500ms
+                sleep 1300ms
             endif
             if a:mode !=# 'visual'
                 let cmd = ['%run ' . current_file, '']
