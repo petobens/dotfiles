@@ -44,10 +44,13 @@ class MyPrompt(prompts.Prompts):
     def in_prompt_tokens(self, cli=None):
         mode = 'I' if cli.vi_state.input_mode == InputMode.INSERT else 'N'
         return [
-            (prompts.Token.Prompt, f'({mode})In ['),
+            (prompts.Token.Prompt, f'({mode})['),
             (prompts.Token.PromptNum,
-             str(self.shell.execution_count)), (prompts.Token.Prompt, ']: ')
+             str(self.shell.execution_count)), (prompts.Token.Prompt, ']>> ')
         ]
+
+    def out_prompt_tokens(self):
+        return []
 
 
 c.TerminalInteractiveShell.prompts_class = MyPrompt
