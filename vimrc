@@ -158,6 +158,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/deoplete.nvim')
     " Unite/denite sources
     call dein#add('chemzqm/denite-extra')
+    call dein#add('kmnk/gitn')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('kopischke/unite-spell-suggest')
@@ -1393,6 +1394,10 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
+nnoremap <silent> <Leader>gl :Denite -auto-preview -default-action=diff
+            \ gitn_log:*<CR>
+nnoremap <silent> <Leader>gL :execute 'Denite -auto-preview -default-action=diff
+            \ gitn_log:' . expand('%:p')<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume  -immediately ' .
             \ -cursor-pos=+'. v:count1<CR>
@@ -1737,14 +1742,6 @@ nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Gpush')<CR>
 nnoremap <silent> <Leader>gP :Gpull<CR>
 nnoremap <silent> <Leader>gb :Gbrowse<cr>
 vnoremap <silent> <Leader>gb :Gbrowse<cr>
-" FIXME: for mac not working as expected
-if dein#tap('denite') == 1
-    nnoremap <silent> <Leader>gl :Glog -- %<CR>:Denite quickfix<CR>
-    nnoremap <silent> <Leader>gL :Glog --<CR>:Denite quickfix<CR>
-else
-    nnoremap <silent> <Leader>gl :Glog -- %<CR>:copen<CR>
-    nnoremap <silent> <Leader>gL :Glog --<CR>:copen<CR>
-endif
 
 " Commit explorer/browser (from gv.vim plugin)
 nnoremap <silent> <Leader>cb :GV<cr>
