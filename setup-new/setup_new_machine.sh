@@ -65,10 +65,10 @@ read -p "Do you want to install python modules (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo Installing Python3 modules...
-    pip3 install -r "$parent_dir"/requirements.txt
+    pip3 install -r "$parent_dir"/python/requirements.txt
     if [  -f "$brew_dir"/bin/python2 ]; then
         echo Installing Python2 modules...
-        pip install -r "$parent_dir"/requirements.txt
+        pip install -r "$parent_dir"/python/requirements.txt
         # Enable both python2 and python3 ipython kernels
         ipython kernel install
     fi

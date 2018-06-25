@@ -43,11 +43,14 @@ if type "ctags" > /dev/null 2>&1; then
 fi
 if type "python" > /dev/null 2>&1; then
     rm -rf "$HOME/.pdbrc"
-    ln -s "$dotfiles_dir/pdbrc" "$HOME/.pdbrc"
+    ln -s "$dotfiles_dir/python/pdbrc" "$HOME/.pdbrc"
     echo Created .pdbrc symlink
     rm -rf "$HOME/.ipython/profile_default/ipython_config.py"
-    ln -s "$dotfiles_dir/ipython_config.py" "$HOME/.ipython/profile_default/ipython_config.py"
+    ln -s "$dotfiles_dir/python/ipython_config.py" "$HOME/.ipython/profile_default/ipython_config.py"
     echo Created .ipython_config symlink
+    rm -rf "$HOME/.ipython/profile_default/startup/ipython_startup.py"
+    ln -s "$dotfiles_dir/python/ipython_startup.py" "$HOME/.ipython/profile_default/startup/ipython_startup.py"
+    echo Created .ipython_startup symlink
 fi
 if type "tmux" > /dev/null 2>&1; then
     rm -rf "$HOME/.tmux"

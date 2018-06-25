@@ -1,11 +1,15 @@
 # See: https://github.com/wilywampa/vimconfig/blob/master/misc/python/ipython_config.py
+import sys
+
+from operator import attrgetter
+
 import IPython.terminal.prompts as prompts
 
 from pygments.token import (
     Comment, Error, Keyword, Literal, Name, Number, Operator, String, Text,
     Token
 )
-from prompt_toolkit.key_binding.vi_state import InputMode
+from prompt_toolkit.key_binding.vi_state import InputMode, ViState
 
 c = get_config()  # noqa
 
@@ -15,8 +19,23 @@ c.TerminalInteractiveShell.editing_mode = 'vi'
 c.TerminalInteractiveShell.confirm_exit = False
 c.TerminalIPythonApp.display_banner = False
 
-# TODO: Add emacs bindings:
-# https://gitlab.com/memeplex/home-i3/blob/master/.ipython/profile_default/startup/startup.py
+
+# Change cursor shape depending on mode
+# https://github.com/jonathanslenders/python-prompt-toolkit/issues/192
+def set_input_mode(self, mode):
+    shape = {InputMode.NAVIGATION: 2, InputMode.REPLACE: 4}.get(mode, 6)
+    raw = u'\x1b[{} q'.format(shape)
+    if hasattr(sys.stdout, '_cli'):
+        out = sys.stdout._cli.output.write_raw
+    else:
+        out = sys.stdout.write
+    out(raw)
+    sys.stdout.flush()
+    self._input_mode = mode
+
+
+ViState._input_mode = InputMode.INSERT
+ViState.input_mode = property(attrgetter('_input_mode'), set_input_mode)
 
 
 class MyPrompt(prompts.Prompts):
