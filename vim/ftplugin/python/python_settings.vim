@@ -171,12 +171,15 @@ function! s:RunPython(compiler, mode, compilation, ...)
             if !g:neoterm.has_any()
                 " This ensures we have an instance
                 execute 'T ipython3'
+                " This is needed because we set a custom `ViState.input_mode`
+                " in our ipython config and if we don't sleep here then ipython
+                " breaks at startup
+                " FIXME: Find a better way to get around this
+                sleep 1500ms
             endif
             if a:mode !=# 'visual'
-                let cmd = ['%run ' . current_file, '\n']
+                let cmd = ['%run ' . current_file, '']
                 call s:NeoTermExecNoExpand(cmd)
-                " let instance =  g:neoterm.last()
-                " call instance.exec(cmd)
             endif
         endif
         " Avoid getting into insert mode using `au BufEnter * if &buftype ==
