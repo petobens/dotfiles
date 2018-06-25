@@ -1,4 +1,3 @@
-# See: https://github.com/wilywampa/vimconfig/blob/master/misc/python/ipython_config.py
 import sys
 
 from operator import attrgetter
@@ -45,8 +44,8 @@ class MyPrompt(prompts.Prompts):
         mode = 'I' if cli.vi_state.input_mode == InputMode.INSERT else 'N'
         return [
             (prompts.Token.Prompt, f'({mode})['),
-            (prompts.Token.PromptNum,
-             str(self.shell.execution_count)), (prompts.Token.Prompt, ']>> ')
+            (prompts.Token.PromptNum, str(self.shell.execution_count)),
+            (prompts.Token.Prompt, ']>> '),
         ]
 
     def out_prompt_tokens(self):
