@@ -22,8 +22,8 @@ pytest; python_version >= '3.6'
 pytest-cov; python_version >= '3.6'
 ranger-fm; python_version >= '3.6'
 requests
-scikit-learn
 scipy
+scikit-learn
 sqlparse; python_version >= '3.6'
 vim-vint; python_version >= '3.6'
 yamllint
