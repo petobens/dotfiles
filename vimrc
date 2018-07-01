@@ -1395,9 +1395,9 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
 nnoremap <silent> <Leader>gl :Denite -auto-preview -default-action=diff
-            \ gitn_log:*<CR>
+            \ -no-quit gitn_log:*:current<CR>
 nnoremap <silent> <Leader>gL :execute 'Denite -auto-preview -default-action=diff
-            \ gitn_log:' . expand('%:p')<CR>
+            \ -no-quit gitn_log:' . expand('%:p')<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume  -immediately ' .
             \ -cursor-pos=+'. v:count1<CR>
@@ -1452,8 +1452,9 @@ call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
 call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
 call denite#custom#map('insert', '<C-x>', '<denite:choose_action>', 'noremap')
 call denite#custom#map('insert', '<C-y>', '<denite:do_action:yank>', 'noremap')
-call denite#custom#map('insert', '<C-q>', '<denite:do_action:quickfix>',
-            \ 'noremap')
+call denite#custom#map('insert', '<C-q>',
+            \ '<denite:multiple_mappings:denite:toggle_select_all' .
+            \ ',denite:do_action:quickfix>', 'noremap')
 call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
