@@ -102,6 +102,7 @@ brew install rsync
 brew install bat
 brew install fd
 brew install tree
+brew install pyenv
 
 # Remove outdated versions
 brew cleanup
