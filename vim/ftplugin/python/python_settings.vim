@@ -1141,7 +1141,7 @@ endfunction
 function! s:RemoveBreakPoint()
     let save_cursor = getcurpos()
     execute 'g/import pdb; pdb.set_trace()/d'
-    silent update
+    silent noautocmd update
     call setpos('.', save_cursor)
 endfunction
 
