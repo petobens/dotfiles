@@ -28,6 +28,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" # matlab
     fi
     export PKG_CONFIG_PATH="$brew_dir/lib/pkgconfig:$brew_dir/lib"
+    if [ -d "/usr/local/opt/sqlite/bin" ]; then
+        export PATH="/usr/local/opt/sqlite/bin:$PATH"
+    fi
 
     # Symlink cask apps to Applications folder
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"

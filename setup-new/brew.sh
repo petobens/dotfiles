@@ -79,6 +79,7 @@ brew install postgresql
 brew install mysql
 brew install protobuf # Required by python's mysql-connector
 brew install redis
+brew install sqlite3
 
 # Other useful binaries
 brew install the_silver_searcher
