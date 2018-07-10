@@ -1378,7 +1378,7 @@ endfunction
 " Mappings
 nnoremap <silent> <Leader>ls :Denite file/rec<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
-nnoremap <silent> <Leader>dz :Denite -default-action=narrow z<CR>
+nnoremap <silent> <Leader>bm :Denite -default-action=narrow z<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite -default-action=context_split buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
@@ -2208,7 +2208,7 @@ let g:unite_enable_auto_select = 0                " Don't skip first line
 let g:unite_source_buffer_time_format = ''
 
 " Mappings (sources):
-nnoremap <silent> <Leader>bm :Unite -profile-name=bookmark -default-action=rec
+nnoremap <silent> <Leader>ub :Unite -profile-name=bookmark -default-action=rec
             \ -buffer-name=my-directories bookmark<CR>
 nnoremap <silent> <Leader>ube :Unite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>me :Unite mapping<CR>
