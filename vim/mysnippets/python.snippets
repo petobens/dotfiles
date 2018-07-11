@@ -249,10 +249,9 @@ endsnippet
 
 snippet bl "Basic Logger" b
 logging.basicConfig(
-level=logging.${1:DEBUG},
-format='%(asctime)s-%(name)s-%(levelname)s: %(message)s',
-handlers=[logging.FileHandler('${2:logger_name}.log'),
-			logging.StreamHandler()]
+	level=logging.${1:DEBUG},
+	format='%(asctime)s-%(name)s-%(levelname)s: %(message)s',
+	handlers=[${2:logging.FileHandler('${3:logger_name}.log'), }logging.StreamHandler()]
 )$0
 endsnippet
 
