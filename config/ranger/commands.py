@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 
 from ranger.api.commands import Command
@@ -36,6 +37,31 @@ class fzf_select(Command):
                 self.fm.cd(fzf_file)
             else:
                 self.fm.select_file(fzf_file)
+
+
+class fzf_z(Command):
+    """
+    :fzf_z
+
+    Find a directory using fzf and z.
+    """
+
+    def execute(self):
+        z_sh = None
+        if sys.platform == 'darwin':
+            z_sh = '/usr/local/etc/profile.d/z.sh'
+        if not os.path.isfile(z_sh):
+            return
+        command = f'. {z_sh} &&  ' \
+            '_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse ' \
+            '--inline-info +s --tac --query "${*##-* }" ' \
+            '| sed "s/^[0-9,.]* *//"'
+
+        fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
+        stdout, stderr = fzf.communicate()
+        if fzf.returncode == 0:
+            fzf_dir = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
+            self.fm.cd(fzf_dir)
 
 
 class show_files_in_finder(Command):
