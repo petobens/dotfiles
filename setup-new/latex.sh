@@ -5,43 +5,6 @@
 # and '/Library/texlive'. Then (at least on Mac) run
 # `brew cask reinstall basictex`)
 
-# Download and install arara (we need java and maven first)
-if ! java -version >/dev/null 2>&1;  then
-    if [[  "$OSTYPE" == 'darwin'* ]]; then
-        brew cask install java
-    else
-        sudo apt-get install default-jre
-    fi
-fi
-brew install maven
-
-read -p "Do you want to install arara (y/n)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Installing arara..."
-    rm -rf "$(brew --prefix)"/lib/arara
-    rm -rf "$(brew --prefix)"/bin/arara
-    git clone https://github.com/cereda/arara
-    cd ./arara/application/ || exit
-    mvn compile assembly:single
-
-    cd ./target || exit
-    cat > arara << EOF
-#!/usr/bin/env bash
-
-exec java -jar \$0 "\$@"
-
-
-EOF
-    cat ./arara-4.0-jar-with-dependencies.jar >> ./arara && chmod +x ./arara
-    cd ../../../ || exit
-    mv arara/application/target/arara arara/
-    mkdir "$(brew --prefix)"/lib/arara
-    mv arara/* "$(brew --prefix)"/lib/arara
-    ln -s  "$(brew --prefix)"/lib/arara/arara "$(brew --prefix)"/bin/arara
-    rm -rf arara
-fi
-
 # Install mybibformat style
 echo "Installing mybibformat biblatex style..."
 if [[  "$OSTYPE" == 'darwin'* ]]; then
@@ -62,6 +25,21 @@ sudo tlmgr update all
 sudo tlmgr install texdoc
 sudo tlmgr option docfiles 1
 sudo tlmgr install --reinstall "$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')"
+
+# Install arara (needs java)
+read -p "Do you want to install arara (y/n)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if ! java -version >/dev/null 2>&1;  then
+        if [[  "$OSTYPE" == 'darwin'* ]]; then
+            brew cask install java
+        else
+            sudo apt-get install default-jre
+        fi
+    fi
+    brew install maven
+    sudo tlmgr install arara
+fi
 
 # Install additional binaries: linter, word counter, fonts and biber
 sudo tlmgr install biber
