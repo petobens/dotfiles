@@ -424,7 +424,7 @@ nmap # #<C-o>
 " work with folds)
 nnoremap n nzzzv
 nnoremap N Nzzzv
-nnoremap <C-o> <C-o>zz
+nnoremap <C-o> <C-o>zvzz
 
 " Change quote and back tick for easy navigation to marks
 noremap ' `
