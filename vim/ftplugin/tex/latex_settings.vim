@@ -507,7 +507,7 @@ function! s:ForwardInverseSearch(direction)
             let bang_command = 'Start! '
         endif
         let viewer = 'silent! ' . bang_command . displayline_cmd
-        let forward =  ' -r -g ' . line('.') . ' ' . pdf_file .  ' ' .
+        let forward =  ' -r ' . line('.') . ' ' . pdf_file .  ' ' .
               \ expand('%:p')
     endif
 
