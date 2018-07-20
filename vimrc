@@ -312,7 +312,7 @@ set title
 set showcmd
 
 " Make command line two lines high
-set cmdheight=2
+set cmdheight=1
 " Reduce maximum height of the command line window (default is 7)
 set cmdwinheight=5
 
