@@ -175,11 +175,10 @@ function! s:RunPython(compiler, mode, compilation, ...)
                 " in our ipython config and if we don't sleep here then ipython
                 " breaks at startup
                 " FIXME: Find a better way to get around this
-                sleep 1800ms
+                sleep 1900ms
             endif
             if a:mode !=# 'visual'
-                let cmd = ['%run ' . current_file, '']
-                call s:NeoTermExecNoExpand(cmd)
+                execute 'T %run ' . current_file
             endif
         endif
         " Avoid getting into insert mode using `au BufEnter * if &buftype ==
@@ -1081,12 +1080,6 @@ function! s:OpenREPL(repl)
     let g:neoterm_size = old_size
 endfunction
 
-function! s:NeoTermExecNoExpand(cmd)
-    " Note: this assumes that an instance exists and that cmd is a list
-    let instance =  g:neoterm.last()
-    call instance.exec(a:cmd)
-endfunction
-
 " Latest ipython doesn't allow to send multiple lines therefore we must add
 " bracketed paste sequences to the text being sent to the interpreter
 " See https://github.com/ipython/ipython/issues/9948
@@ -1221,10 +1214,9 @@ if exists(':Topen')
     if executable('ipython') || executable('ipython3')
         nnoremap <buffer> <silent> <Leader>ip :call
             \ <SID>OpenREPL('ipython3')<CR>
-        " Reset ipython variables (and clear screen)
-        nnoremap <buffer> <silent> <Leader>tr :call
-            \ <SID>NeoTermExecNoExpand(["\<c-l>"])<CR><ESC>:call
-            \ <SID>NeoTermExecNoExpand(['%reset -f', '\n'])<CR><ESC>
+        nnoremap <buffer> <silent> <Leader>tr
+            \ :T %reset -f<CR><ESC>
+            \ :call neoterm#clear({})<CR><ESC>
     endif
 endif
 
