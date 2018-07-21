@@ -21,6 +21,7 @@ pyhive
 pytest; python_version >= '3.6'
 pytest-cov; python_version >= '3.6'
 ranger-fm; python_version >= '3.6'
+git+https://github.com/ranger/ranger; python_version >= '3.6'
 requests
 scipy
 scikit-learn
