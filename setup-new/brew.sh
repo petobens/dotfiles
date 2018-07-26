@@ -104,6 +104,7 @@ brew install bat
 brew install fd
 brew install tree
 brew install pyenv
+brew install socat  # for faster powerline
 
 # Remove outdated versions
 brew cleanup
