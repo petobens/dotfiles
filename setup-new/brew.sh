@@ -76,7 +76,9 @@ brew install --HEAD tmux
 
 # Databases
 brew install postgresql
+brew install pgcli
 brew install mysql
+brew install mycli
 brew install protobuf # Required by python's mysql-connector
 brew install redis
 brew install sqlite3
