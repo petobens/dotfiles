@@ -45,6 +45,8 @@ if type "python" > /dev/null 2>&1; then
     rm -rf "$HOME/.pdbrc"
     ln -s "$dotfiles_dir/python/pdbrc" "$HOME/.pdbrc"
     echo Created .pdbrc symlink
+fi
+if type "python" > /dev/null 2>&1; then
     rm -rf "$HOME/.ipython/profile_default/ipython_config.py"
     ln -s "$dotfiles_dir/python/ipython_config.py" "$HOME/.ipython/profile_default/ipython_config.py"
     echo Created .ipython_config symlink
@@ -136,6 +138,32 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         rm -rf "$HOME/.hammerspoon"
         ln -s "$dotfiles_dir/hammerspoon" "$HOME/.hammerspoon"
         echo Created .hammerspoon folder symlink
+    fi
+else
+    if type "i3" > /dev/null 2>&1; then
+        rm -rf "$HOME/.config/i3"
+        ln -s "$dotfiles_dir/arch/i3" "$HOME/.config/i3"
+        echo Created i3 folder symlink
+    fi
+    if type "polybar" > /dev/null 2>&1; then
+        rm -rf "$HOME/.config/polybar"
+        ln -s "$dotfiles_dir/arch/polybar" "$HOME/.config/polybar"
+        echo Created polybar folder symlink
+    fi
+    if type "pulseaudio" > /dev/null 2>&1; then
+        rm -rf "$HOME/.pulse/default.pa"
+        ln -s "$dotfiles_dir/arch/pulse/default.pa" "$HOME/.pulse/default.pa"
+        echo Created pulseaudio default.pa folder symlink
+    fi
+    if [ -d "$dotfiles_dir/arch/bin" ]; then
+        rm -rf "$HOME/bin"
+        ln -s "$dotfiles_dir/arch/bin" "$HOME/bin"
+        echo Created bin folder symlink
+    fi
+    if [[ $DISPLAY ]]; then
+        rm -rf "$HOME/.xinitrc"
+        ln -s "$dotfiles_dir/arch/xinitrc" "$HOME/.xinitrc"
+        echo Created .xinitrc symlink
     fi
 fi
 if type "git" > /dev/null 2>&1; then

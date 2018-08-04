@@ -1,0 +1,131 @@
+[colors]
+bg = 13191c
+fg = cfd7d3
+fg-urg = cc6666
+fg-warn = f0c674
+
+[bar/main]
+monitor = ${env:MONITOR:}
+bottom = false
+width = 100%
+height = 25
+offset-x = 0
+offset-y = 0
+background = ${colors.bg}
+foreground = ${colors.fg}
+line-size = 1
+padding = 0
+module-margin-left = 2
+modules-left = menu title
+modules-center = i3
+modules-right = xkeyboard wlan pulseaudio battery date
+font-0 = DejaVu Sans Mono:size=8;3
+font-1 = DejaVu Sans Mono:size=15;2
+font-2 = DejaVu Sans:size=10;3
+font-3 = DejaVu Sans:size=10:weight=bold;3
+font-4 = Symbols Nerd Font:size=11;3
+font-5 = Symbols Nerd Font:size=13;3
+tray-position = right
+tray-maxsize = 16
+enable-ipc = true
+
+[global/wm]
+margin-bottom = 0
+margin-top = 0
+
+[module/menu]
+type = custom/text
+content = 
+content-padding = 1
+/* click-left = xdotool key Super_L+Return */
+
+[module/title]
+type = internal/xwindow
+label-maxlen = 30
+label-font = 4
+
+[module/i3]
+type = internal/i3
+pin-workspaces = true
+index-sort = true
+label-focused = %index%
+label-focused-font = 4
+label-focused-padding = 2
+label-focused-margin = 2
+label-focused-underline = ${colors.fg}
+label-unfocused = %index%
+label-unfocused-font = 3
+label-unfocused-margin = 4
+label-visible = %index%
+label-visible-font = 4
+label-visible-margin = 4
+label-urgent = %index%
+label-urgent-font = 3
+label-urgent-padding = 2
+label-urgent-margin = 2
+label-urgent-underline = ${colors.fg-urg}
+
+[module/xkeyboard]
+type = internal/xkeyboard
+format = <label-layout>
+label-layout-font = 4
+
+[module/wlan]
+type = internal/network
+interface = wlp3s0
+interval = 5.0
+format-connected = %{A1:connman-gtk &:}<label-connected>%{A}
+format-disconnected =  %{A1:connman-gtk &:}<label-disconnected>%{A}
+label-connected = 直 %signal%%
+label-disconnected = 睊 Off
+label-disconnected-foreground = ${colors.fg-urg}
+
+[module/battery]
+type = internal/battery
+full-at = 99
+battery = BAT0
+adapter = ACAD
+poll-interval = 5
+format-charging = <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
+format-full = <label-full>
+label-charging =   %percentage%%
+label-discharging = %percentage%%
+label-full =  100%
+ramp-capacity-0 = 
+ramp-capacity-0-foreground = ${colors.fg-urg}
+ramp-capacity-1 = 
+ramp-capacity-1-foreground = ${colors.fg-warn}
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+[module/pulseaudio]
+type = internal/pulseaudio
+use-ui-max = true
+; TODO: Max vol is 96 and should be 100
+; TODO: Right click should open pavucontrol properly
+format-volume = %{A1:pavucontrol &:}<label-volume> <bar-volume>%{A}
+format-muted = %{A3:pavucontrol &:}<label-muted>%{A}
+label-volume = 奄
+label-muted = 
+label-muted-font = 6
+label-muted-foreground = ${colors.fg-urg}
+bar-volume-width = 7
+bar-volume-gradient = false
+bar-volume-indicator = │
+bar-volume-indicator-foreground = #ff
+bar-volume-fill = ─
+bar-volume-empty = ─
+
+[module/date]
+type = internal/date
+interval = 5.0
+date = %a %b %d
+time = %H:%M
+date-alt = %A %d %B %Y
+time-alt = %H:%M:%S
+format = <label>
+label = %date% %time%
+label-font = 3
+label-padding-right = 1

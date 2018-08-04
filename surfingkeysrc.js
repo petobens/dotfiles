@@ -200,10 +200,11 @@ mapkey ('<Ctrl-c>', 'Close tab', function() {
 });
 map(',wd', '<Ctrl-c>');
 map(',bd', '<Ctrl-c>');
-mapkey('<Ctrl-n>', 'Go one tab right', function() {
+// Ctrl-n cannot be mapped on Linux so we use alt-n (and alt-p) instead
+mapkey('<Alt-n>', 'Go one tab right', function() {
     RUNTIME('nextTab');
 });
-mapkey('<Ctrl-p>', 'Go one tab left', function() {
+mapkey('<Alt-p>', 'Go one tab left', function() {
     RUNTIME('previousTab');
 });
 mapkey('<Alt-h>', 'Move current tab to left', function() {

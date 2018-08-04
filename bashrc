@@ -5,14 +5,14 @@ if type "brew" > /dev/null 2>&1; then
     brew_dir=$(brew --prefix)
 else
     if [[ "$OSTYPE" == 'darwin'* ]]; then
-        if [ -d '/usr/local/bin' ]; then
+        if [ -d "/usr/local/bin" ]; then
             brew_dir='/usr/local'
         fi
     else
         if [ -d "$HOME/.linuxbrew" ]; then
             brew_dir="$HOME/.linuxbrew"
         else
-            brew_dir='/mnt/.linuxbrew'
+            brew_dir="/mnt/.linuxbrew"
         fi
     fi
 fi
@@ -47,10 +47,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export CLICOLOR=1
     export LSCOLORS=exfxCxDxbxegedabagaced
 else
-    export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
-    export MANPATH="$brew_dir/share/man:$MANPATH"
-    export INFOPATH="$brew_dir/share/info:$INFOPATH"
-
+    if [ -d "$HOME/bin" ]; then
+        export PATH="$HOME/bin:$PATH"
+    fi
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
@@ -143,8 +142,14 @@ fi
 # Completion (readline) {{{
 
 # Improved bash completion (install them with `brew install bash-completion@2`)
-if [ -f $brew_dir/share/bash-completion/bash_completion ]; then
-    . $brew_dir/share/bash-completion/bash_completion
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if [ -f $brew_dir/share/bash-completion/bash_completion ]; then
+        . $brew_dir/share/bash-completion/bash_completion
+    fi
+else
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    fi
 fi
 
 # Note: we pass Readline commands as a single argument to
@@ -202,6 +207,9 @@ if type "htop" > /dev/null 2>&1; then
 fi
 if type "nvim" > /dev/null 2>&1; then
     alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
+    if [ -f "HOME/git-repos/private/dotfiles/vim/vimrc_min" ]; then
+        alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
+    fi
 fi
 if type "ranger" > /dev/null 2>&1; then
     alias rg='ranger'
@@ -215,6 +223,9 @@ if type "unimatrix" > /dev/null 2>&1; then
 fi
 if type "R" > /dev/null 2>&1; then
     alias R='R --no-save --quiet'
+fi
+if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
+    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s petobens'
 fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
@@ -276,41 +287,16 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
 '-nodesktop -nosplash '
 
-    # Alias to open vim/nvim sourcing minimal vimrc file
-    alias mvrc='vim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
-    alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
-
-    # Start Tmux attaching to an existing session named petobens or creating one
-    # with such name (we also indicate the tmux.conf file location)
-    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s petobens'
-
-    # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
-    # session called pedrof or attaching to an existing one with that name.
-    # Add -X after ssh to enable X11 forwarding
-    alias emr='ssh pedrof@prd-amber-pivot.jampp.com -t '\
-'tmux new -A -s pedrof'
-    # Presto client
-    alias pcli='ssh pedrof@prd-amber-pivot.jampp.com -t '\
-'tmux new -A -s pedrof '\
-'"presto-cli\ --server\ emr-prd-queries.jampp.com:8889\ --catalog\ hive\ '\
-'--schema\ aleph\ --user\ pedrof"'
-    # Gerry instance (with tmux)
-    alias ui='ssh gerry'
-    # When using linux brew we need to specify a full path to the tmux
-    # executable
-    alias utm='ssh gerry -t /mnt/.linuxbrew/bin/tmux -f'\
-'"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
-
 else
     # Differentiate and use colors for directories, symbolic links, etc.
     alias ls='ls -F --color=auto'
     # Change directory and list files
     cd() { builtin cd "$@" && ls -F --color=auto; }
-    # Update packages (using apt-get)
-    alias aptu='sudo apt-get update && sudo apt-get dist-upgrade && sudo '\
-'apt-get autoremove'
-    # Open tmux loading config file
-    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s pedrof'
+
+    if [ -f "$HOME/bin/dual" ]; then
+        # Dual monitor
+        alias dm=dual
+    fi
 fi
 
 # }}}
@@ -318,8 +304,14 @@ fi
 
 if type "fzf" > /dev/null 2>&1; then
     # Enable completion and key bindings
-    [[ $- == *i* ]] && . "$brew_dir/opt/fzf/shell/completion.bash" 2> /dev/null
-    . "$brew_dir/opt/fzf/shell/key-bindings.bash"
+
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        [[ $- == *i* ]] && . "$brew_dir/opt/fzf/shell/completion.bash" 2> /dev/null
+        . "$brew_dir/opt/fzf/shell/key-bindings.bash"
+    else
+        [[ $- == *i* ]] && . "/usr/share/fzf/completion.bash" 2> /dev/null
+        . "/usr/share/fzf/key-bindings.bash"
+    fi
 
     # Change default options (show 15 lines, use top-down layout)
     export FZF_DEFAULT_OPTS='--height 15 --reverse '\
@@ -367,8 +359,14 @@ if type "fzf" > /dev/null 2>&1; then
     fi
 
     # Z
-    if [ -f "$brew_dir/etc/profile.d/z.sh" ]; then
-        . /usr/local/etc/profile.d/z.sh
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        if [ -f "$brew_dir/etc/profile.d/z.sh" ]; then
+            . /usr/local/etc/profile.d/z.sh
+        fi
+    else
+        if [ -f "/usr/share/z/z.sh" ]; then
+            . /usr/share/z/z.sh
+        fi
     fi
     unalias z 2> /dev/null
     z() {

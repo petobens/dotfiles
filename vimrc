@@ -24,7 +24,7 @@ else
     if s:is_mac
         let g:python3_host_prog = '/usr/local/bin/python3'
     elseif s:is_linux
-        let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
+        let g:python3_host_prog = '/usr/bin/python'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -42,7 +42,7 @@ if s:is_win
 elseif s:is_mac
     let $CACHE = expand('$DOTVIM/cache/MacBookPro')
 else
-    let $CACHE = expand('$DOTVIM/cache/Ubuntu')
+    let $CACHE = expand('$DOTVIM/cache/Arch')
 endif
 
 let g:mapleader = ','    " Default for mappings is now , character instead of /
@@ -93,6 +93,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
+    " FIXME: This check is not working in linux
     if exists('$TMUX')
         call dein#add('christoomey/vim-tmux-navigator')
         call dein#add('wellle/tmux-complete.vim')
@@ -158,7 +159,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/deoplete.nvim')
     " Unite/denite sources
     call dein#add('chemzqm/denite-extra')
-    call dein#add('kmnk/gitn')
+    " TODO: Fix this not working
+    " call dein#add('kmnk/gitn')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('kopischke/unite-spell-suggest')
@@ -241,7 +243,11 @@ if !has('nvim')
         set clipboard=autoselectplus,unnamedplus
     endif
 else
-    set clipboard=unnamed
+    if s:is_win || s:is_mac
+        set clipboard=unnamed
+    else
+        set clipboard=unnamedplus
+    endif
     " This mimicks autoselect in neovim
     vmap <Esc> "*ygv<C-c>
 endif
@@ -1364,7 +1370,7 @@ function! s:DeniteGrep()
     endif
     let filetype = input('Filetype: ', '')
     if filetype == ''
-        let ft_filter = '--all-types'
+        let ft_filter = ''
     else
         let ft_filter = '--' . filetype
     endif
@@ -1491,8 +1497,7 @@ let g:deoplete#enable_at_startup = 1
 if s:is_mac
     let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 else
-    let g:deoplete#sources#jedi#python_path =
-                \ '/mnt/.linuxbrew/bin/python3'
+    let g:deoplete#sources#jedi#python_path ='/usr/bin/python'
 endif
 
 " Options

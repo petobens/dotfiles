@@ -50,7 +50,9 @@ class fzf_z(Command):
         z_sh = None
         if sys.platform == 'darwin':
             z_sh = '/usr/local/etc/profile.d/z.sh'
-        if not os.path.isfile(z_sh):
+        else:
+            z_sh = '/usr/share/z/z.sh'
+        if not os.path.isfile(z_sh) or z_sh is None:
             return
         command = f'. {z_sh} &&  ' \
             '_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse ' \

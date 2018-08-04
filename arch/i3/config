@@ -1,0 +1,152 @@
+# Preamble {{{
+
+# Super key
+set $mod Mod4
+
+# Disable startup notifications (to be used with scripts)
+set $nexec exec --no-startup-id
+
+# Reload the configuration file
+bindsym $mod+Control+a reload
+
+# Restart i3 inplace (preserving layout)
+bindsym $mod+Control+r restart
+# Exit i3 (logging out of X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# }}}
+#  Window handling {{{
+
+# This prevents floating windows to bleed out from screen
+floating_maximum_size 800 x 500
+
+# Layout (p for (p)iled)
+workspace_layout tabbed  # default
+bindsym $mod+t layout tabbed
+bindsym $mod+s layout toggle split
+bindsym $mod+p layout stacking
+
+# Toggle floatin and tiling
+bindsym $mod+Shift+space floating toggle
+
+# Focus window
+bindsym $mod+h focus left
+bindsym $mod+l focus right
+bindsym $mod+k focus up
+bindsym $mod+j focus down
+
+# Horizontal split
+# bindsym $mod+h split h
+
+# Vertical split
+# bindsym $mod+v split v
+
+# Full screen
+bindsym $mod+Control+e fullscreen toggle
+
+# Binding for resize
+#  FIXME: Don't use this!
+bindsym $mod+r mode "resize"
+mode "resize" {
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym j resize shrink height 10 px or 10 ppt
+
+    # back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+
+#  }}}
+#  Multiple monitors and workspaces {{{
+
+bindsym $mod+Ctrl+Return $nexec dual
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+
+# Switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+
+#  }}}
+# Run or activate app and rules {{{
+
+# Launch or focus
+#  TODO: Actually launch it or focus
+bindsym $mod+Return exec alacritty
+bindsym $mod+Ctrl+i exec chromium
+bindsym $mod+Ctrl+l exec slack
+bindsym $mod+Ctrl+m exec spotify
+
+# bindsym $mod+Ctrl+i exec $HOME/.config/i3/launch_or_focus.sh
+
+# Rules (use `xprop | grep -i 'class' to actually get the class)
+for_window [class="^Pavucontrol$"] floating enable, resize set 800 400, move position center
+for_window [class="^Connman-gtk$"] floating enable, resize set 800 400, move position center
+
+#  }}}
+#  Spotify and volume {{{
+
+
+#  }}}
+#  Theme and fonts {{{
+
+#  FIXME: Doesn't seem to do much
+# for_window [class=".*"] title_format " %title"
+# default_border normal 1
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+font pango:DejaVu Sans Bold 10
+
+# Theme
+set $bg #13191c
+set $border #101619
+set $fg #83898c
+set $fg_high #cfd7d3
+set $fg_urg #cc6666
+#                       Border  Background Text     Indicator Child border
+client.focused          $border $bg        $fg_high $fg       $border
+client.focused_inactive $border $bg        $fg      $fg       $border
+client.unfocused        $border $bg        $fg      $fg       $border
+client.urgent           $border $bg        $fg_urg  $fg       $border
+client.placeholder      $border $bg        $fg      $fg       $border
+client.background       $border
+
+#  }}}
+#  Miscellaneous {{{
+
+# Kill focused window (as in mac)
+bindsym $mod+q kill
+
+
+# Shutdown, restart and lock
+bindsym $mod+Shift+s exec systemctl poweroff
+bindsym $mod+Shift+r exec systemctl reboot
+bindsym $mod+Shift+l exec i3lock
+
+# Screen brightness
+bindsym $mod+Shift+Right exec xbacklight -inc 10
+bindsym $mod+Shift+Left exec xbacklight -dec 10
+
+#  }}}
+#  Startup {{{
+
+$nexec $HOME/.config/polybar/launch.sh
+
+#  }}}

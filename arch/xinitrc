@@ -1,0 +1,8 @@
+#!/bin/bash
+
+setxkbmap -layout us,es -option grp:win_space_toggle -option ctrl:nocaps
+xbacklight -set 50
+
+udiskie &
+[[ -f ~/bin/dual ]] && ~/bin/dual
+exec i3
