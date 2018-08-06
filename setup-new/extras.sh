@@ -22,6 +22,8 @@ if type "cargo" > /dev/null 2>&1; then
             echo "Moving Alacritty.app to Applications folder..."
             make app
             cp -r target/release/osx/Alacritty.app /Applications/
+        else
+            sudo cp target/release/alacritty /usr/local/bin
         fi
     )
     rm -rf alacritty
@@ -36,14 +38,4 @@ if type "ranger" > /dev/null 2>&1; then
     )
     rm -rf ranger_devicons
     ranger --copy-config=scope
-fi
-
-# Install fzf plugins
-if type "fzf" > /dev/null 2>&1; then
-    git clone https://github.com/urbainvaes/fzf-marks.git
-    (
-        cd fzf-marks || exit
-        cp fzf-marks.plugin.bash  "$brew_dir/opt/fzf/shell"
-    )
-    rm -rf fzf-marks
 fi

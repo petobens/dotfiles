@@ -164,6 +164,17 @@ else
         rm -rf "$HOME/.xinitrc"
         ln -s "$dotfiles_dir/arch/xinitrc" "$HOME/.xinitrc"
         echo Created .xinitrc symlink
+        rm -rf "$HOME/.Xresources"
+        ln -s "$dotfiles_dir/arch/xresources" "$HOME/.Xresources"
+        echo Created .Xresources symlink
+    fi
+    if [ -d "$dotfiles_dir/arch/gtk" ]; then
+        rm -rf "$HOME/.config/gtk-3.0"
+        ln -s "$dotfiles_dir/arch/gtk/gtk-3.0" "$HOME/.config/gtk-3.0"
+        echo Created gtk-3.0 folder symlink
+        rm -rf "$HOME/.gtkrc-2.0"
+        ln -s "$dotfiles_dir/arch/gtk/gtkrc-2.0" "$HOME/.gtkrc-2.0"
+        echo Created .gtkrc-2.0 symlink
     fi
 fi
 if type "git" > /dev/null 2>&1; then

@@ -2624,6 +2624,8 @@ function! s:OpenLink()
     let open_command = 'open '
     if s:is_win
         let open_command = 'start '
+    elseif s:is_linux
+        let open_command = 'xdg-open '
     endif
     execute 'silent! !' .  open_command . url
     redraw!

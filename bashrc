@@ -196,6 +196,9 @@ alias ll='ls -lah'
 alias q='exit'
 alias c='clear'
 alias o='open'
+if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    alias open='xdg-open'
+fi
 alias rm='rm -v'
 alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
@@ -351,12 +354,6 @@ if type "fzf" > /dev/null 2>&1; then
     }
     bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
     bind -m vi-command '"\ep": "ddi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
-
-    # Bookmarks (requires https://github.com/urbainvaes/fzf-marks)
-    if [ -f "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash" ]; then
-        . "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash"
-        alias bm='fzm'
-    fi
 
     # Z
     if [[ "$OSTYPE" == 'darwin'* ]]; then

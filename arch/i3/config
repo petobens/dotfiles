@@ -2,17 +2,11 @@
 
 # Super key
 set $mod Mod4
-
-# Disable startup notifications (to be used with scripts)
+# Variable to disable startup notifications (to be used with scripts)
 set $nexec exec --no-startup-id
 
-# Reload the configuration file
-bindsym $mod+Control+a reload
-
-# Restart i3 inplace (preserving layout)
-bindsym $mod+Control+r restart
-# Exit i3 (logging out of X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+# Restart i3 inplace (preserving layout): this also reloads the config file
+bindsym $mod+Control+a restart
 
 # }}}
 #  Window handling {{{
@@ -25,6 +19,12 @@ workspace_layout tabbed  # default
 bindsym $mod+t layout tabbed
 bindsym $mod+s layout toggle split
 bindsym $mod+p layout stacking
+
+# Change layout
+# bindsym $mod+w layout splith
+# bindsym $mod+Control+w layout splitv
+# bindsym $mod+d split h
+# bindsym $mod+Control+d split v
 
 # Toggle floatin and tiling
 bindsym $mod+Shift+space floating toggle
@@ -62,10 +62,10 @@ mode "resize" {
 #  }}}
 #  Multiple monitors and workspaces {{{
 
-bindsym $mod+Ctrl+Return $nexec dual
+#  FIXME: Find out why this is not read from PATH
+bindsym $mod+Ctrl+Return $nexec $HOME/bin/dual
 
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
+# Define names for default workspaces
 set $ws1 "1"
 set $ws2 "2"
 set $ws3 "3"
@@ -93,8 +93,6 @@ bindsym $mod+Ctrl+i exec chromium
 bindsym $mod+Ctrl+l exec slack
 bindsym $mod+Ctrl+m exec spotify
 
-# bindsym $mod+Ctrl+i exec $HOME/.config/i3/launch_or_focus.sh
-
 # Rules (use `xprop | grep -i 'class' to actually get the class)
 for_window [class="^Pavucontrol$"] floating enable, resize set 800 400, move position center
 for_window [class="^Connman-gtk$"] floating enable, resize set 800 400, move position center
@@ -102,6 +100,15 @@ for_window [class="^Connman-gtk$"] floating enable, resize set 800 400, move pos
 #  }}}
 #  Spotify and volume {{{
 
+# TODO: Get metadata and display notification with it
+bindsym $mod+Shift+p $nexec playerctl --player spotify play-pause
+bindsym $mod+Shift+j $nexec playerctl --player spotify next
+bindsym $mod+Shift+k $nexec playerctl --player spotify previous
+
+bindsym $mod+Shift+plus $nexec "pactl set-sink-mute @DEFAULT_SINK@ false ; pactl set-sink-volume @DEFAULT_SINK@ +10%"
+bindsym $mod+Shift+minus $nexec pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym $mod+Shift+m $nexec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym $mod+Shift+v exec pavucontrol
 
 #  }}}
 #  Theme and fonts {{{
@@ -110,16 +117,15 @@ for_window [class="^Connman-gtk$"] floating enable, resize set 800 400, move pos
 # for_window [class=".*"] title_format " %title"
 # default_border normal 1
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
-font pango:DejaVu Sans Bold 10
+# Font for window titles
+font pango:DejaVu Sans 10
 
 # Theme
-set $bg #13191c
-set $border #101619
-set $fg #83898c
-set $fg_high #cfd7d3
-set $fg_urg #cc6666
+set $bg #24272e
+set $border #282c34
+set $fg #abb2bf
+set $fg_high #d0d0d0
+set $fg_urg #e06c75
 #                       Border  Background Text     Indicator Child border
 client.focused          $border $bg        $fg_high $fg       $border
 client.focused_inactive $border $bg        $fg      $fg       $border
@@ -133,7 +139,6 @@ client.background       $border
 
 # Kill focused window (as in mac)
 bindsym $mod+q kill
-
 
 # Shutdown, restart and lock
 bindsym $mod+Shift+s exec systemctl poweroff

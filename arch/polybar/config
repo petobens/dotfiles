@@ -1,8 +1,8 @@
 [colors]
-bg = 13191c
-fg = cfd7d3
-fg-urg = cc6666
-fg-warn = f0c674
+bg = #24272e
+fg = #abb2bf
+fg-urg = #e06c75
+fg-warn = #d19a66
 
 [bar/main]
 monitor = ${env:MONITOR:}
@@ -26,7 +26,7 @@ font-3 = DejaVu Sans:size=10:weight=bold;3
 font-4 = Symbols Nerd Font:size=11;3
 font-5 = Symbols Nerd Font:size=13;3
 tray-position = right
-tray-maxsize = 16
+tray-maxsize = 10
 enable-ipc = true
 
 [global/wm]
@@ -95,7 +95,8 @@ label-full =  100%
 ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.fg-urg}
 ramp-capacity-1 = 
-ramp-capacity-1-foreground = ${colors.fg-warn}
+; TODO: set this at another level or remove it all together
+; ramp-capacity-1-foreground = ${colors.fg-warn}
 ramp-capacity-2 = 
 ramp-capacity-3 = 
 ramp-capacity-4 = 
