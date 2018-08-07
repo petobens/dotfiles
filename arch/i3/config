@@ -144,8 +144,8 @@ client.background       $border
 bindsym $mod+q kill
 
 # Shutdown, restart and lock
-bindsym $mod+Shift+s exec systemctl poweroff
-bindsym $mod+Shift+r exec systemctl reboot
+bindsym $mod+Shift+s $nexec $HOME/.config/i3/poweroff_dialog.py poweroff
+bindsym $mod+Shift+r $nexec $HOME/.config/i3/poweroff_dialog.py reboot
 bindsym $mod+Shift+l exec i3lock-fancy -p
 
 # Screen brightness
