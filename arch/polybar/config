@@ -26,7 +26,7 @@ font-3 = DejaVu Sans:size=10:weight=bold;3
 font-4 = Symbols Nerd Font:size=11;3
 font-5 = Symbols Nerd Font:size=13;3
 tray-position = right
-tray-maxsize = 10
+tray-maxsize = 16
 enable-ipc = true
 
 [global/wm]
@@ -35,9 +35,9 @@ margin-top = 0
 
 [module/menu]
 type = custom/text
-content = 
+content = 
 content-padding = 1
-/* click-left = xdotool key Super_L+Return */
+click-left = xdotool key Super_L+p
 
 [module/title]
 type = internal/xwindow

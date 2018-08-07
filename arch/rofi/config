@@ -1,0 +1,29 @@
+rofi.font:            DejaVu Sans Mono 10
+rofi.hide-scrollbar:  true
+rofi.show-icons:      true
+rofi.drun-icon-theme: Papirus-Dark
+rofi.matching:        fuzzy
+rofi.kb-row-down:     Super-Tab,Ctrl-n,Down
+rofi.kb-row-up:       Shift-Tab,Ctrl-p,Up
+rofi.kb-accept-entry: Super-q,Return
+rofi.terminal:        alacritty
+rofi.separator-style: solid
+
+# bg      #ea13191c
+# bg_act  #90292a2e
+# bg_head #90373b41
+# fg      #cfd7d3
+# fg_head #e8e8e8
+# fg_urg  #cc6666
+
+rofi.color-enabled: true
+! Property Name     BG         Border   Separator
+!                   bg         bg       bg_act
+rofi.color-window:  #ed13191c, #13191c, #282a2e
+! Property Name     BG         FG       BG-alt     Head-BG    Head-FG
+!                   bg         fg       bg         bg_head    fg_head
+rofi.color-normal:  #0013191c, #cfd7d3, #0013191c, #90373b41, #e8e8e8
+!                   bg_act     fg       bg_act     bg_head    fg_head
+rofi.color-active:  #90292a2e, #cfd7d3, #90292a2e, #90373b41, #e8e8e8
+!                   bg         fg_urg   bg         bg_head    fg_urg
+rofi.color-urgent:  #0013191c, #cc6666, #0013191c, #90373b41, #cc6666

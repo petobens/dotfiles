@@ -94,11 +94,11 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
     " FIXME: This check is not working in linux
-    if exists('$TMUX')
-        call dein#add('christoomey/vim-tmux-navigator')
-        call dein#add('wellle/tmux-complete.vim')
-        call dein#add('tmux-plugins/vim-tmux-focus-events')
-    endif
+    " if exists('$TMUX')
+    call dein#add('christoomey/vim-tmux-navigator')
+    call dein#add('wellle/tmux-complete.vim')
+    call dein#add('tmux-plugins/vim-tmux-focus-events')
+    " endif
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
     call dein#add('SirVer/ultisnips')
     call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})

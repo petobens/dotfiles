@@ -177,6 +177,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
                 " FIXME: Find a better way to get around this
                 sleep 1900ms
             endif
+            " FIXME: This should be a full path in linux
             if a:mode !=# 'visual'
                 execute 'T %run ' . current_file
             endif

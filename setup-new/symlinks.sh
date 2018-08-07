@@ -176,6 +176,16 @@ else
         ln -s "$dotfiles_dir/arch/gtk/gtkrc-2.0" "$HOME/.gtkrc-2.0"
         echo Created .gtkrc-2.0 symlink
     fi
+    if [ -d "$dotfiles_dir/arch/fontconfig" ]; then
+        rm -rf "$HOME/fontconfig"
+        ln -s "$dotfiles_dir/arch/fontconfig" "$HOME/fontconfig"
+        echo Created fontconfig folder symlink
+    fi
+    if type "rofi" > /dev/null 2>&1; then
+        rm -rf "$HOME/.config/rofi"
+        ln -s "$dotfiles_dir/arch/rofi" "$HOME/.config/rofi"
+        echo Created rofi folder symlink
+    fi
 fi
 if type "git" > /dev/null 2>&1; then
     rm -rf "$HOME/.gitignore"

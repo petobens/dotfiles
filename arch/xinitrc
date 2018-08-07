@@ -1,8 +1,10 @@
 #!/bin/bash
 
 setxkbmap -layout us,es -option grp:win_space_toggle -option ctrl:nocaps
+[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 xbacklight -set 50
 
+[[ -f ~/.fehbg ]] && ~/.fehbg &
 udiskie &
-[[ -f ~/bin/dual ]] && ~/bin/dual
+[[ -f ~/bin/dual ]] && ~/bin/dual init
 exec i3

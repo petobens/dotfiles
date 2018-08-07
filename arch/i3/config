@@ -1,7 +1,8 @@
 # Preamble {{{
 
-# Super key
+# Define some keys
 set $mod Mod4
+set $alt Mod1
 # Variable to disable startup notifications (to be used with scripts)
 set $nexec exec --no-startup-id
 
@@ -18,7 +19,7 @@ floating_maximum_size 800 x 500
 workspace_layout tabbed  # default
 bindsym $mod+t layout tabbed
 bindsym $mod+s layout toggle split
-bindsym $mod+p layout stacking
+# bindsym $mod+p layout stacking
 
 # Change layout
 # bindsym $mod+w layout splith
@@ -86,14 +87,17 @@ bindsym $mod+Shift+4 move container to workspace $ws4
 #  }}}
 # Run or activate app and rules {{{
 
-# Launch or focus
-#  TODO: Actually launch it or focus
-bindsym $mod+Return exec alacritty
-bindsym $mod+Ctrl+i exec chromium
-bindsym $mod+Ctrl+l exec slack
-bindsym $mod+Ctrl+m exec spotify
+# Rofi (application launcher / switcher)
+bindsym $alt+Tab $nexec rofi -no-fixed-num-lines -location 0 -show window -yoffset -25
+bindsym $mod+p $nexec "rofi -location 0 -combi-modi drun,run -show combi -yoffset -25"
 
-# Rules (use `xprop | grep -i 'class' to actually get the class)
+# Launch or focus
+bindsym $mod+Ctrl+c $nexec raiseorlaunch -c Alacritty
+bindsym $mod+Ctrl+i $nexec raiseorlaunch -c Chromium
+bindsym $mod+Ctrl+l $nexec raiseorlaunch -c Slack
+bindsym $mod+Ctrl+m $nexec raiseorlaunch -c Spotify
+
+# Rules (use `xprop | grep -i 'class'` to actually get the class)
 for_window [class="^Pavucontrol$"] floating enable, resize set 800 400, move position center
 for_window [class="^Connman-gtk$"] floating enable, resize set 800 400, move position center
 
@@ -113,12 +117,11 @@ bindsym $mod+Shift+v exec pavucontrol
 #  }}}
 #  Theme and fonts {{{
 
-#  FIXME: Doesn't seem to do much
-# for_window [class=".*"] title_format " %title"
-# default_border normal 1
+# Disable title bar (when not tabbed)
+for_window [class="^.*"] border pixel 1
+# Font for window titles (actually disable the bar)
+font pango:DejaVu Sans 0
 
-# Font for window titles
-font pango:DejaVu Sans 10
 
 # Theme
 set $bg #24272e
@@ -143,7 +146,7 @@ bindsym $mod+q kill
 # Shutdown, restart and lock
 bindsym $mod+Shift+s exec systemctl poweroff
 bindsym $mod+Shift+r exec systemctl reboot
-bindsym $mod+Shift+l exec i3lock
+bindsym $mod+Shift+l exec i3lock-fancy -p
 
 # Screen brightness
 bindsym $mod+Shift+Right exec xbacklight -inc 10

@@ -8,4 +8,4 @@ Xft*rgba: rgb
 ! https://bbs.archlinux.org/viewtopic.php?id=206270
 ! https://bbs.archlinux.org/viewtopic.php?id=220776
 Xcursor.size: 24
-Xcursor.theme: Adwaita
+Xcursor.theme: Paper
