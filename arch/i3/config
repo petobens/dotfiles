@@ -104,10 +104,10 @@ for_window [class="^Connman-gtk$"] floating enable, resize set 800 400, move pos
 #  }}}
 #  Spotify and volume {{{
 
-# TODO: Get metadata and display notification with it
 bindsym $mod+Shift+p $nexec playerctl --player spotify play-pause
 bindsym $mod+Shift+j $nexec playerctl --player spotify next
 bindsym $mod+Shift+k $nexec playerctl --player spotify previous
+bindsym $mod+Shift+t $nexec $HOME/.config/i3/spotify_track.py
 
 bindsym $mod+Shift+plus $nexec "pactl set-sink-mute @DEFAULT_SINK@ false ; pactl set-sink-volume @DEFAULT_SINK@ +10%"
 bindsym $mod+Shift+minus $nexec pactl set-sink-volume @DEFAULT_SINK@ -10%
@@ -155,6 +155,7 @@ bindsym $mod+Shift+Left exec xbacklight -dec 10
 #  }}}
 #  Startup {{{
 
-$nexec $HOME/.config/polybar/launch.sh
+# Use exec_always to relaunch polybar when restarting i3
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 #  }}}

@@ -5,6 +5,7 @@ setxkbmap -layout us,es -option grp:win_space_toggle -option ctrl:nocaps
 xbacklight -set 50
 
 [[ -f ~/.fehbg ]] && ~/.fehbg &
+dunst &
 udiskie &
 [[ -f ~/bin/dual ]] && ~/bin/dual init
 exec i3
