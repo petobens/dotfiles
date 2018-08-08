@@ -42,7 +42,7 @@ click-left = xdotool key Super_L+p
 [module/title]
 type = internal/xwindow
 label-maxlen = 30
-label-font = 4
+label-font = 3
 
 [module/i3]
 type = internal/i3
