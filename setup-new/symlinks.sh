@@ -211,7 +211,7 @@ if type "git" > /dev/null 2>&1; then
         if [[ "$OSTYPE" == 'darwin'* ]]; then
             credential_helper='osxkeychain'
         else
-            credential_helper='cache --timeout 3600'
+            credential_helper='/usr/share/git/credential/netrc/git-credential-netrc'
         fi
         cat > "$HOME/.gitconfig" << EOF
 [user]
