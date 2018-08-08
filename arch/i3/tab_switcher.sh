@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Add `monitor primary` if we want to show always in the same monitor
 rofi \
     -show window  \
     -no-fixed-num-lines \

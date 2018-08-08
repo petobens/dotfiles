@@ -259,7 +259,7 @@ key_bindings:
   - { key: End,                     chars: "\x1b[F",   mode: ~AppCursor  }
   - { key: Key0,     mods: Command, action: ResetFontSize                }
   - { key: Equals,   mods: Command, action: IncreaseFontSize             }
-  - { key: Minus,    mods: Command, action: DecreaseFontSize             }
+  - { key: F11,      mods: Command, action: DecreaseFontSize             }
   - { key: PageUp,   mods: Shift,   chars: "\x1b[5;2~"                   }
   - { key: PageUp,   mods: Control, chars: "\x1b[5;5~"                   }
   - { key: PageUp,                  chars: "\x1b[5~"                     }
@@ -349,7 +349,7 @@ key_bindings:
   - { key: F8,       mods: Command, chars: "\x1b[19;3~"                  }
   - { key: F9,       mods: Command, chars: "\x1b[20;3~"                  }
   - { key: F10,      mods: Command, chars: "\x1b[21;3~"                  }
-  - { key: F11,      mods: Command, chars: "\x1b[23;3~"                  }
+  # - { key: F11,      mods: Command, chars: "\x1b[23;3~"                  }
   - { key: F12,      mods: Command, chars: "\x1b[24;3~"                  }
   - { key: A,        mods: Alt,       chars: "\x1ba"                     }
   - { key: B,        mods: Alt,       chars: "\x1bb"                     }
