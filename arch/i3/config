@@ -11,7 +11,7 @@ set $nexec exec --no-startup-id
 bindsym $mod+Control+a restart
 
 # }}}
-#  Window handling {{{
+# Window handling {{{
 
 # This prevents floating windows to bleed out from screen
 floating_maximum_size 800 x 500
