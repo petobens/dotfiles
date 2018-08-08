@@ -1,4 +1,3 @@
 .include /etc/pulse/default.pa
-load-module module-equalizer-sink
 load-module module-dbus-protocol
 load-module module-switch-on-connect
