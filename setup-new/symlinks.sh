@@ -191,6 +191,11 @@ else
         ln -s "$dotfiles_dir/arch/dunst" "$HOME/.config/dunst"
         echo Created dunst folder symlink
     fi
+    if type "compton" > /dev/null 2>&1; then
+        rm -rf "$HOME/.config/compton.conf"
+        ln -s "$dotfiles_dir/arch/compton.conf" "$HOME/.config/compton.conf"
+        echo Created compton config symlink
+    fi
 fi
 if type "git" > /dev/null 2>&1; then
     rm -rf "$HOME/.gitignore"

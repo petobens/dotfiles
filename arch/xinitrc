@@ -7,5 +7,6 @@ xbacklight -set 50
 [[ -f ~/.fehbg ]] && ~/.fehbg &
 dunst &
 udiskie &
+compton -cCG -r 7 &
 [[ -f ~/bin/dual ]] && ~/bin/dual init
 exec i3
