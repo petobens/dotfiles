@@ -25,7 +25,7 @@ font-2 = DejaVu Sans:size=10;3
 font-3 = DejaVu Sans:size=10:weight=bold;3
 font-4 = Symbols Nerd Font:size=11;3
 font-5 = Symbols Nerd Font:size=13;3
-tray-position = right
+tray-position = ${env:TRAY_POS:}
 tray-maxsize = 16
 enable-ipc = true
 

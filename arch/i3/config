@@ -140,7 +140,8 @@ client.background       $border
 #  }}}
 #  Miscellaneous {{{
 
-# Kill focused window (as in mac)
+# Kill focused window (as in mac); note that this quit apps that are minimized
+# to sys tray (in this cases, such as slack, use ctrl-q to actually kill them)
 bindsym $mod+q kill
 
 # Shutdown, restart and lock
@@ -156,6 +157,6 @@ bindsym $mod+Shift+Left exec xbacklight -dec 10
 #  Startup {{{
 
 # Use exec_always to relaunch polybar when restarting i3
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id $HOME/.config/polybar/launch.py
 
 #  }}}
