@@ -5,7 +5,6 @@ Xft*hinting: true
 Xft*hintstyle: hintslight
 Xft*rgba: rgb
 
-! https://bbs.archlinux.org/viewtopic.php?id=206270
-! https://bbs.archlinux.org/viewtopic.php?id=220776
+! Cursor
 Xcursor.size: 24
-Xcursor.theme: Paper
+Xcursor.theme: capitaine-cursors
