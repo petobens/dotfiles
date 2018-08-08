@@ -88,8 +88,8 @@ bindsym $mod+Shift+4 move container to workspace $ws4
 # Run or activate app and rules {{{
 
 # Rofi (application launcher / switcher)
-bindsym $alt+Tab $nexec rofi -no-fixed-num-lines -location 0 -show window -yoffset -25
-bindsym $mod+p $nexec "rofi -location 0 -combi-modi drun,run -show combi -yoffset -25"
+bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
+bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 
 # Launch or focus (in specific workspace)
 bindsym $mod+Ctrl+c $nexec raiseorlaunch -c Alacritty -w $ws2
