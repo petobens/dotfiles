@@ -1,8 +1,9 @@
 # Preamble {{{
 
-# Define some keys
+# Define some keys as variables (super and alt)
 set $mod Mod4
 set $alt Mod1
+
 # Variable to disable startup notifications (to be used with scripts)
 set $nexec exec --no-startup-id
 
@@ -16,10 +17,9 @@ bindsym $mod+Control+a restart
 floating_maximum_size 800 x 500
 
 # Layout (p for (p)iled)
-workspace_layout tabbed  # default
+workspace_layout tabbed
 bindsym $mod+t layout tabbed
 bindsym $mod+s layout toggle split
-# bindsym $mod+p layout stacking
 
 # Change layout
 # bindsym $mod+w layout splith
@@ -78,11 +78,11 @@ bindsym $mod+2 workspace $ws2
 bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace $ws4
 
-# Move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4
+# Move focused container to workspace and switch focus to that container
+bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
 
 #  }}}
 # Run or activate app and rules {{{
@@ -146,7 +146,7 @@ bindsym $mod+q kill
 # Shutdown, restart and lock
 bindsym $mod+Shift+s $nexec $HOME/.config/i3/poweroff_dialog.py poweroff
 bindsym $mod+Shift+r $nexec $HOME/.config/i3/poweroff_dialog.py reboot
-bindsym $mod+Shift+l exec i3lock-fancy -p
+bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
 bindsym $mod+Shift+Right exec xbacklight -inc 10
