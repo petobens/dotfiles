@@ -16,8 +16,10 @@ def confirmation_dialog(action):
     dialog = Gtk.Dialog(
         parent=win,
         buttons=(
-            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK,
-            Gtk.ResponseType.OK
+            Gtk.STOCK_OK,
+            Gtk.ResponseType.OK,
+            Gtk.STOCK_CANCEL,
+            Gtk.ResponseType.CANCEL,
         )
     )
     dialog.set_property('title', 'Power Management')
