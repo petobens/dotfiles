@@ -1,0 +1,16 @@
+#!/bin/bash
+
+SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
+FILENAME="$SCREENSHOT_DIR/Screenshot_$(date +'%Y-%m-%d_%H:%M:%S').png"
+mkdir -p "$SCREENSHOT_DIR"
+
+case $1 in
+    full)
+        # TODO: Select screen: https://github.com/naelstrof/maim/issues/103
+        maim "$FILENAME";;
+    active)
+        maim -i $(xdotool getactivewindow) "$FILENAME";;
+    selection)
+        maim -s "$FILENAME";;
+esac
+dunstify -i accessories-screenshot 'Screenshot Taken' "Saved as $FILENAME"

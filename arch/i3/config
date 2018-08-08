@@ -91,10 +91,13 @@ bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
 bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 
-# Launch
+# Run (includes screnshots)
 bindsym $mod+Return $nexec alacritty
+bindsym Print $nexec $HOME/bin/shots full
+bindsym $mod+Shift+5 $nexec $HOME/bin/shots selection
+bindsym $mod+Shift+6 $nexec $HOME/bin/shots active
 
-# Launch or focus (in specific workspace)
+# Run/Launch or focus (in specific workspace)
 bindsym $mod+Ctrl+c $nexec raiseorlaunch -c Alacritty -w $ws2
 bindsym $mod+Ctrl+i $nexec raiseorlaunch -c Chromium -w $ws1
 bindsym $mod+Ctrl+l $nexec raiseorlaunch -c Slack -w $ws1
