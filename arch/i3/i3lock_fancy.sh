@@ -25,7 +25,7 @@ i3lock \
     --keyhlcolor=$K          \
     --bshlcolor=$K           \
     \
-    --blur 10                \
+    --blur 15                \
     --clock                  \
     --timestr="%H:%M:%S"     \
     --datestr="%a %b %d"     \
