@@ -124,7 +124,7 @@ bindsym $mod+Shift+v exec pavucontrol
 #  Theme and fonts {{{
 
 # Disable title bar
-font pango:DejaVu Sans 0
+font pango:Noto Sans 0
 
 # Set window border width
 for_window [class="^.*"] border pixel 2

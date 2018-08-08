@@ -1,5 +1,5 @@
 # Options
-rofi.font:            DejaVu Sans Mono 10
+rofi.font:            Noto Sans Mono 10
 rofi.hide-scrollbar:  true
 rofi.show-icons:      true
 rofi.drun-icon-theme: Papirus-Dark

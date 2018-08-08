@@ -19,10 +19,10 @@ module-margin-left = 2
 modules-left = menu title
 modules-center = i3
 modules-right = xkeyboard wlan pulseaudio battery date
-font-0 = DejaVu Sans Mono:size=8;3
-font-1 = DejaVu Sans Mono:size=15;2
-font-2 = DejaVu Sans:size=10;3
-font-3 = DejaVu Sans:size=10:weight=bold;3
+font-0 = Noto Sans Mono:size=8;3
+font-1 = Noto Sans Mono:size=15;2
+font-2 = Noto Sans:size=10;3
+font-3 = Noto Sans:size=10:weight=bold;3
 font-4 = Symbols Nerd Font:size=11;3
 font-5 = Symbols Nerd Font:size=13;3
 tray-position = ${env:TRAY_POS:}
