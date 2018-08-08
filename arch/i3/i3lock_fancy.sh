@@ -9,7 +9,7 @@ i3lock \
     --insidevercolor=$B      \
     --ringvercolor=$K        \
     --verifcolor=$K          \
-    --veriftext="Checking"   \
+    --veriftext="Validating" \
     \
     --insidewrongcolor=$B    \
     --ringwrongcolor=$W      \
