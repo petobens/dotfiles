@@ -46,7 +46,7 @@ bindsym $mod+j focus down
 bindsym $mod+Control+e fullscreen toggle
 
 # Binding for resize
-#  FIXME: Don't use this!
+# FIXME: Don't use this!
 bindsym $mod+r mode "resize"
 mode "resize" {
     bindsym h resize shrink width 10 px or 10 ppt
