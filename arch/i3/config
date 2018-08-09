@@ -16,6 +16,9 @@ bindsym $mod+Control+a restart
 # This prevents floating windows to bleed out from screen
 floating_maximum_size 800 x 500
 
+# Move a floating window with the mouse and pressing mod
+floating_modifier $mod
+
 # Layout (p for (p)iled)
 workspace_layout tabbed
 bindsym $mod+t layout tabbed
@@ -28,7 +31,7 @@ bindsym $mod+s layout toggle split
 # bindsym $mod+Control+d split v
 
 # Toggle floating and tiling
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Control+space floating toggle
 
 # Focus window
 bindsym $mod+h focus left
@@ -102,6 +105,9 @@ bindsym $mod+Ctrl+c $nexec raiseorlaunch -c Alacritty -w $ws2
 bindsym $mod+Ctrl+i $nexec raiseorlaunch -c Chromium -w $ws1
 bindsym $mod+Ctrl+l $nexec raiseorlaunch -c Slack -w $ws1
 bindsym $mod+Ctrl+m $nexec raiseorlaunch -c Spotify -w $ws1
+#  FIXME: not working
+bindsym $mod+Ctrl+s $nexec raiseorlaunch -c Skype -w $ws1
+bindsym $mod+Ctrl+u $nexec raiseorlaunch -c Transmission-gtk -w $ws1
 
 # Scratchpad
 # TODO:
