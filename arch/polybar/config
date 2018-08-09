@@ -25,6 +25,7 @@ font-2 = Noto Sans:size=10;3
 font-3 = Noto Sans:size=10:weight=bold;3
 font-4 = Symbols Nerd Font:size=11;3
 font-5 = Symbols Nerd Font:size=13;3
+font-6 = Noto Sans:size=9:weight=bold;3
 tray-position = ${env:TRAY_POS:}
 tray-maxsize = 16
 enable-ipc = true
@@ -128,5 +129,5 @@ date-alt = %A %d %B %Y
 time-alt = %H:%M:%S
 format = <label>
 label = %date% %time%
-label-font = 3
+label-font = 7
 label-padding-right = 1
