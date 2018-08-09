@@ -104,11 +104,11 @@ ramp-capacity-4 = 
 
 [module/pulseaudio]
 type = internal/pulseaudio
-use-ui-max = true
-; TODO: Max vol is 96 and should be 100
-; TODO: Right click should open pavucontrol properly
+; Max vol might go beyond 100% (but it is amplified and hence distorted). We
+; show the normalized (100%) version
+use-ui-max = false
 format-volume = %{A1:pavucontrol &:}<label-volume> <bar-volume>%{A}
-format-muted = %{A3:pavucontrol &:}<label-muted>%{A}
+format-muted = %{A1:pavucontrol &:}<label-muted>%{A}
 label-volume = 奄
 label-muted = 
 label-muted-font = 6

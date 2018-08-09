@@ -124,7 +124,7 @@ bindsym $mod+Shift+m $nexec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym $mod+Shift+v exec pavucontrol
 
 #  }}}
-#  Theme and fonts {{{
+# Theme and fonts {{{
 
 # Disable title bar
 font pango:Noto Sans 0
@@ -148,7 +148,7 @@ client.placeholder      $border $bg        $fg      $fg       $border
 client.background       $border
 
 #  }}}
-#  Miscellaneous {{{
+# Miscellaneous {{{
 
 # Kill focused window (as in mac); note that this quit apps that are minimized
 # to sys tray (in this cases, such as slack, use ctrl-q to actually kill them)
