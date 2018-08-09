@@ -173,6 +173,11 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/neco-syntax')
     call dein#add('Shougo/neoinclude.vim')
 
+    " Filetype plugins
+    if executable('i3')
+        call dein#add('mboughaba/i3config.vim')
+    endif
+
     " Temp
      if has('nvim')
         " This basically fixes visual block pasting
@@ -910,18 +915,21 @@ endif
 " }}}
 " Filetype-specific {{{
 
-" Autohotkey / Hammerspoon {{{
+" Autohotkey / Hammerspoon / i3 {{{
 
-augroup ft_ahk_hs
+augroup ft_ahk_hs_i3
     au!
     au Filetype autohotkey setlocal commentstring=;%s foldmethod=marker
     au BufNewFile,BufRead,BufReadPost init.lua setlocal foldmethod=marker
+    au BufNewFile,BufReadPost *i3/config set ft=i3config foldmethod=marker
 augroup END
 
 if s:is_mac
     nnoremap <silent> <Leader>eh :e $DOTFILES/hammerspoon/init.lua<CR>
-else
+elseif s:is_win
     nnoremap <silent> <Leader>eh :e $DOTFILES/autohotkey.ahk<CR>
+else
+    nnoremap <silent> <Leader>eh :e $DOTFILES/arch/i3/config<CR>
 endif
 
 " }}}
@@ -941,6 +949,15 @@ augroup ft_bib
     au Filetype bib setlocal commentstring=%%s foldmethod=marker
     au Filetype bib setlocal spell
     au Filetype bib setlocal shiftwidth=2 tabstop=2 softtabstop=2
+augroup END
+
+" }}}
+" Config {{{
+
+augroup ft_config
+    au!
+    au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc
+        \ set filetype=config foldmethod=marker
 augroup END
 
 " }}}

@@ -27,7 +27,7 @@ bindsym $mod+s layout toggle split
 # bindsym $mod+d split h
 # bindsym $mod+Control+d split v
 
-# Toggle floatin and tiling
+# Toggle floating and tiling
 bindsym $mod+Shift+space floating toggle
 
 # Focus window
