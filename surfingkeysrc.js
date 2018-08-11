@@ -124,9 +124,8 @@ const qmarksUrls = {
     u: 'www.alumnos.econ.uba.ar',
     v: 'http://virtual.econ.uba.ar/',
     y: 'www.yahoo.com/mail',
-    // Work related
-    j: 'http://app.jampp.com/',
-    q: 'http://emr-prd-queries.jampp.com:8889/',
+    // Printing (arch)
+    q: 'http://localhost:631/admin',
 };
 qmarksMapKey('"', qmarksUrls);
 qmarksMapKey('\'', qmarksUrls);
