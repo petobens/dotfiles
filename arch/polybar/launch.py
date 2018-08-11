@@ -12,9 +12,10 @@ def sh_no_block(cmd, *args, **kwargs):
 
 
 def sh(cmd, *args, **kwargs):
-    return sh_no_block(
+    res, err = sh_no_block(
         cmd, *args, stdout=subprocess.PIPE, **kwargs
-    ).communicate()[0]
+    ).communicate()
+    return res
 
 
 # Terminate already running bar instances

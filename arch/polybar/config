@@ -18,7 +18,7 @@ padding = 0
 module-margin-left = 2
 modules-left = menu title
 modules-center = i3
-modules-right = xkeyboard wlan pulseaudio battery date
+modules-right = onedrive xkeyboard wlan pulseaudio battery date
 font-0 = Noto Sans Mono:size=8;3
 font-1 = Noto Sans Mono:size=15;2
 font-2 = Noto Sans:size=10;3
@@ -65,6 +65,11 @@ label-urgent-font = 3
 label-urgent-padding = 2
 label-urgent-margin = 2
 label-urgent-underline = ${colors.fg-urg}
+
+[module/onedrive]
+type = custom/script
+exec = python ~/.config/polybar/onedrive.py
+interval = 5.0
 
 [module/xkeyboard]
 type = internal/xkeyboard
