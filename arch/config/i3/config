@@ -89,7 +89,7 @@ bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
 bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
 bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
 
-#  }}}
+# }}}
 # Run or activate app and rules {{{
 
 # Rofi (application launcher / switcher)
@@ -111,13 +111,20 @@ bindsym $mod+Ctrl+s $nexec raiseorlaunch -c Skype -e skypeforlinux -w $ws1
 bindsym $mod+Ctrl+u $nexec raiseorlaunch -c Transmission-gtk -w $ws1
 
 # Scratchpad
-# TODO:
+# See: https://github.com/jwilm/alacritty/pull/1403#issuecomment-412298753
+bindsym $mod+Ctrl+n $nexec alacritty -t numbers -d 100 25 -e sh -c \
+    "i3-msg -q move position center && ipython3"
+bindsym $mod+Ctrl+f $nexec alacritty -t finder -d 100 25 -e sh -c \
+    "i3-msg -q move position center && ranger"
+bindsym $mod+Ctrl+o $nexec alacritty -t OneDrive -d 150 30 -e sh -c \
+    "i3-msg -q move position center && less +F $HOME/onedrive.log"
+for_window [title="^(numbers|finder|OneDrive)$"] floating enable
 
 # Rules (use `xprop | grep -i 'class'` to actually get the class)
-for_window [class="^Pavucontrol$"] floating enable, resize set 800 400, move position center
-for_window [class="^Connman-gtk$"] floating enable, resize set 800 400, move position center
+for_window [class="^(Pavucontrol|Connman-gtk)$"] floating enable, \
+    resize set 800 400, move position center
 
-#  }}}
+# }}}
 #  Spotify and volume {{{
 
 bindsym $mod+Shift+p $nexec playerctl --player spotify play-pause
@@ -130,7 +137,7 @@ bindsym $mod+Shift+minus $nexec pactl set-sink-volume @DEFAULT_SINK@ -10%
 bindsym $mod+Shift+m $nexec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym $mod+Shift+v exec pavucontrol
 
-#  }}}
+# }}}
 # Theme and fonts {{{
 
 # Disable title bar
@@ -154,7 +161,7 @@ client.urgent           $border $bg        $fg_urg  $fg       $border
 client.placeholder      $border $bg        $fg      $fg       $border
 client.background       $border
 
-#  }}}
+# }}}
 # Miscellaneous {{{
 
 # Kill focused window (as in mac); note that this quit apps that are minimized
@@ -162,8 +169,10 @@ client.background       $border
 bindsym $mod+q kill
 
 # Shutdown, restart and lock
-bindsym $mod+Shift+s $nexec $HOME/bin/gtk_dialog -t "Power Management" -m "Do you want to poweroff?" -a "systemctl poweroff"
-bindsym $mod+Shift+r $nexec $HOME/bin/gtk_dialog -t "Power Management" -m "Do you want to reboot?" -a "systemctl reboot"
+bindsym $mod+Shift+s $nexec $HOME/bin/gtk_dialog -t "Power Management" \
+    -m "Do you want to poweroff?" -a "systemctl poweroff"
+bindsym $mod+Shift+r $nexec $HOME/bin/gtk_dialog -t "Power Management" \
+    -m "Do you want to reboot?" -a "systemctl reboot"
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
@@ -171,12 +180,21 @@ bindsym $mod+Shift+Right exec xbacklight -inc 10
 bindsym $mod+Shift+Left exec xbacklight -dec 10
 
 # Eject mounted media (usb drives)
-bindsym $mod+Shift+e exec $HOME/bin/gtk_dialog -t "Media Management" -m "Do you want to eject media drive?" -a "udiskie-umount -a"
+bindsym $mod+Shift+e $nexec $HOME/bin/gtk_dialog -t "Media Management" \
+    -m "Do you want to eject media drive?" -a "udiskie-umount -a"
 
-#  }}}
-#  Startup {{{
+# Trash Can
+bindsym $mod+Ctrl+b $nexec alacritty -t 'Trash Can'  -d 100 25 -e sh -c \
+    "i3-msg -q move position center && trash-list | less"
+for_window [title="^Trash Can$"] floating enable
+bindsym $mod+Shift+b $nexec $HOME/bin/gtk_dialog \
+    -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
+    -a "trash-empty & dunstify -i trashindicator 'Trash can was emptied!'"
+
+# }}}
+# Startup {{{
 
 # Use exec_always to relaunch polybar when restarting i3
 exec_always --no-startup-id $HOME/.config/polybar/launch.py
 
-#  }}}
+# }}}

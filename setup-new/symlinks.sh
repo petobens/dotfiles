@@ -142,7 +142,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 else
     if type "i3" > /dev/null 2>&1; then
         rm -rf "$HOME/.config/i3"
-        ln -s "$dotfiles_dir/arch/i3" "$HOME/.config/i3"
+        ln -s "$dotfiles_dir/arch/config/i3" "$HOME/.config/i3"
         echo Created i3 folder symlink
     fi
     if type "polybar" > /dev/null 2>&1; then

@@ -70,6 +70,7 @@ label-urgent-underline = ${colors.fg-urg}
 type = custom/script
 exec = python ~/.config/polybar/onedrive.py
 interval = 5.0
+click-left = xdotool key Super_L+Control+o
 
 [module/xkeyboard]
 type = internal/xkeyboard

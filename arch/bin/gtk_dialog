@@ -8,7 +8,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 
-def confirmation_dialog(title, msg, action):
+def confirmation_dialog(title, msg, action, shell=False):
     win = Gtk.Window()
     win.connect("destroy", Gtk.main_quit)
 
@@ -30,7 +30,7 @@ def confirmation_dialog(title, msg, action):
 
     res = dialog.run()
     if res == Gtk.ResponseType.OK:
-        Popen(action)
+        Popen(action, shell=shell)
     elif res == Gtk.ResponseType.CANCEL:
         pass
     dialog.destroy()
@@ -44,10 +44,13 @@ if __name__ == '__main__':
     parser.add_argument('--title', '-t', required=True)
     parser.add_argument('--msg', '-m', required=True)
     parser.add_argument('--action', '-a', required=True)
+    parser.add_argument('--shell', dest='shell', action='store_true')
+    parser.add_argument('--no-shell', dest='shell', action='store_false')
+    parser.set_defaults(shell=False)
     args = parser.parse_args()
 
-    if isinstance(args.action, str):
+    if isinstance(args.action, str) and not args.shell:
         args.action = args.action.split()
 
-    confirmation_dialog(args.title, args.msg, args.action)
+    confirmation_dialog(args.title, args.msg, args.action, args.shell)
     Gtk.main()
