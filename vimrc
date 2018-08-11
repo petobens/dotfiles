@@ -180,6 +180,11 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Temp
      if has('nvim')
+        if s:is_linux
+            " This allows to write without sudo
+            " See: https://github.com/neovim/neovim/issues/1716
+            call dein#add('lambdalisue/suda.vim')
+        endif
         " This basically fixes visual block pasting
         " https://github.com/neovim/neovim/issues/1822#issuecomment-233152833
         call dein#add('bfredl/nvim-miniyank')
@@ -752,6 +757,12 @@ nnoremap <Leader>wc :w!<CR><C-w>c
 nnoremap <Leader>wq :w!<CR>:q!<CR>
 " No autocommand write
 nnoremap <Leader>nw :noautocmd w!<CR>
+" Saving when root privileges are required
+if s:is_mac
+    nnoremap <Leader>sw :w !sudo tee % >/dev/null<CR>
+elseif s:is_linux && has('nvim') && dein#tap('suda') == 1
+    nnoremap <Leader>sw :w suda://%<CR>
+endif
 
 " Fast editing and reloading of the vimrc file
 nnoremap <silent> <Leader>ev :e $DOTFILES/vimrc<CR>
@@ -885,11 +896,6 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'
 " Paste system clipboard to command line
 " Note: to yank a commmand, call Unite history/yank + <C-y> (yank action)
 cnoremap <A-p> <C-R>*
-
-" Saving when root privileges are required (use :w!! to sudo and write)
-if s:is_mac || s:is_linux
-    cnoremap w!! w !sudo tee % >/dev/null
-endif
 
 " }}}
 " Terminal mode {{{
