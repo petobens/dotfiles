@@ -196,11 +196,6 @@ else
         ln -s "$dotfiles_dir/arch/compton.conf" "$HOME/.config/compton.conf"
         echo Created compton config symlink
     fi
-    if type "xdg-user-dir" > /dev/null 2>&1; then
-        rm -rf "$HOME/.config/user-dirs.dirs"
-        ln -s "$dotfiles_dir/arch/user-dirs.dir" "$HOME/.config/user-dirs.dirs"
-        echo Created xdg user-dirs.dir symlink
-    fi
 fi
 if type "git" > /dev/null 2>&1; then
     rm -rf "$HOME/.gitignore"

@@ -119,9 +119,5 @@ fi
 echo Installing nvim packages...
 nvim +qall
 
-read -p "Do you want to install extra settings? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo Installing extra settings...
-    . "$current_dir/extras.sh"
-fi
+echo Running post install...
+. "$current_dir/post.sh"

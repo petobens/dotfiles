@@ -39,3 +39,19 @@ if type "ranger" > /dev/null 2>&1; then
     rm -rf ranger_devicons
     ranger --copy-config=scope
 fi
+
+
+# Create XDG directories
+if type "xdg-user-dirs-update" > /dev/null 2>&1; then
+    echo "Creating missing XDG directories..."
+    dirs=("Desktop" "Documents" "Downloads" "Music" "Pictures" "Videos"
+    "Public" "Templates")
+    for dir in "${dirs[@]}"; do
+        if [ $dir ==  "Templates" ]; then
+            xdg-user-dirs-update --set ${dir^^} "$HOME"
+            continue
+        fi
+        mkdir -p "$HOME/$dir"
+        xdg-user-dirs-update --set ${dir^^} "$HOME/$dir"
+    done
+fi
