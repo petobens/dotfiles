@@ -935,7 +935,7 @@ if s:is_mac
 elseif s:is_win
     nnoremap <silent> <Leader>eh :e $DOTFILES/autohotkey.ahk<CR>
 else
-    nnoremap <silent> <Leader>eh :e $DOTFILES/arch/i3/config<CR>
+    nnoremap <silent> <Leader>eh :e $DOTFILES/arch/config/i3/config<CR>
 endif
 
 " }}}
