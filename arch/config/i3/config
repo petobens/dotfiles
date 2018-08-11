@@ -96,7 +96,7 @@ bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
 bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 
-# Run (includes screnshots)
+# Run scripts (includes screenshots)
 bindsym $mod+Return $nexec alacritty
 bindsym Print $nexec $HOME/bin/shots full
 bindsym $mod+Shift+5 $nexec $HOME/bin/shots selection
@@ -114,16 +114,20 @@ bindsym $mod+Ctrl+x $nexec raiseorlaunch -c 'libreoffice-calc' \
 bindsym $mod+Ctrl+w $nexec raiseorlaunch -c 'libreoffice-writer' \
     -e 'libreoffice --writer' -w $ws1
 
-
-# Scratchpad
-# See: https://github.com/jwilm/alacritty/pull/1403#issuecomment-412298753
+# Run standalone terminal apps in floating window
 bindsym $mod+Ctrl+n $nexec alacritty -t numbers -d 100 25 -e sh -c \
     "i3-msg -q move position center && ipython3"
 bindsym $mod+Ctrl+f $nexec alacritty -t finder -d 100 25 -e sh -c \
     "i3-msg -q move position center && ranger"
+bindsym $mod+Ctrl+d $nexec alacritty -t Downloads -d 100 25 -e sh -c \
+    "i3-msg -q move position center && ranger ~/Downloads"
+bindsym $mod+Ctrl+h $nexec alacritty -t htop -d 100 25 -e sh -c \
+    "i3-msg -q move position center && htop"
 bindsym $mod+Ctrl+o $nexec alacritty -t OneDrive -d 150 30 -e sh -c \
     "i3-msg -q move position center && less +F $HOME/onedrive.log"
-for_window [title="^(numbers|finder|OneDrive)$"] floating enable
+for_window [title="^(numbers|finder|OneDrive|htop|Downloads)$"] floating enable
+
+#  TODO: Scratchpad
 
 # Rules (use `xprop | grep -i 'class'` to get the class)
 for_window [window_type="splash"] floating enable , move position center
@@ -195,7 +199,7 @@ bindsym $mod+Ctrl+b $nexec alacritty -t 'Trash Can'  -d 100 25 -e sh -c \
 for_window [title="^Trash Can$"] floating enable
 bindsym $mod+Shift+b $nexec $HOME/bin/gtk_dialog \
     -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
-    -a "trash-empty & dunstify -i trashindicator 'Trash can was emptied!'"
+    -a "trash-empty & dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
 
 # }}}
 # Startup {{{
