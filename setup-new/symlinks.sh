@@ -68,7 +68,7 @@ if type "nvim" > /dev/null 2>&1; then
     echo Created .vimrc symlink
     mkdir -p "$HOME/.config/"
     rm -rf "$HOME/.config/nvim"
-    ln -s "$dotfiles_dir/vim/" "$HOME/.config/nvim"
+    ln -s "$dotfiles_dir/vim" "$HOME/.config/nvim"
     echo Created ./config/nvim folder symlink
     rm -rf "$HOME/.config/nvim/init.vim"
     ln -s "$dotfiles_dir/vimrc" "$HOME/.config/nvim/init.vim"
@@ -147,7 +147,7 @@ else
     fi
     if type "polybar" > /dev/null 2>&1; then
         rm -rf "$HOME/.config/polybar"
-        ln -s "$dotfiles_dir/arch/polybar" "$HOME/.config/polybar"
+        ln -s "$dotfiles_dir/arch/config/polybar" "$HOME/.config/polybar"
         echo Created polybar folder symlink
     fi
     if type "pulseaudio" > /dev/null 2>&1; then
@@ -168,12 +168,12 @@ else
         ln -s "$dotfiles_dir/arch/xresources" "$HOME/.Xresources"
         echo Created .Xresources symlink
     fi
-    if [ -d "$dotfiles_dir/arch/gtk" ]; then
+    if [ -d "$dotfiles_dir/arch/config/gtk" ]; then
         rm -rf "$HOME/.config/gtk-3.0"
-        ln -s "$dotfiles_dir/arch/gtk/gtk-3.0" "$HOME/.config/gtk-3.0"
+        ln -s "$dotfiles_dir/arch/config/gtk/gtk-3.0" "$HOME/.config/gtk-3.0"
         echo Created gtk-3.0 folder symlink
         rm -rf "$HOME/.gtkrc-2.0"
-        ln -s "$dotfiles_dir/arch/gtk/gtkrc-2.0" "$HOME/.gtkrc-2.0"
+        ln -s "$dotfiles_dir/arch/config/gtk/gtkrc-2.0" "$HOME/.gtkrc-2.0"
         echo Created .gtkrc-2.0 symlink
     fi
     if [ -d "$dotfiles_dir/arch/fontconfig" ]; then
@@ -183,18 +183,23 @@ else
     fi
     if type "rofi" > /dev/null 2>&1; then
         rm -rf "$HOME/.config/rofi"
-        ln -s "$dotfiles_dir/arch/rofi" "$HOME/.config/rofi"
+        ln -s "$dotfiles_dir/arch/config/rofi" "$HOME/.config/rofi"
         echo Created rofi folder symlink
     fi
     if type "dunst" > /dev/null 2>&1; then
         rm -rf "$HOME/.config/dunst"
-        ln -s "$dotfiles_dir/arch/dunst" "$HOME/.config/dunst"
+        ln -s "$dotfiles_dir/arch/config/dunst" "$HOME/.config/dunst"
         echo Created dunst folder symlink
     fi
     if type "compton" > /dev/null 2>&1; then
         rm -rf "$HOME/.config/compton.conf"
-        ln -s "$dotfiles_dir/arch/compton.conf" "$HOME/.config/compton.conf"
+        ln -s "$dotfiles_dir/arch/config/compton.conf" "$HOME/.config/compton.conf"
         echo Created compton config symlink
+    fi
+    if type "feh" > /dev/null 2>&1; then
+        rm -rf "$HOME/.config/feh"
+        ln -s "$dotfiles_dir/arch/config/feh" "$HOME/.config/feh"
+        echo Created feh folder symlink
     fi
 fi
 if type "git" > /dev/null 2>&1; then

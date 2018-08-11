@@ -1,0 +1,13 @@
+# key definition: <action name> <key1> [<key2> [<key3>]]
+
+zoom_in k
+zoom_out j
+next_img l
+prev_img h
+
+scroll_up K
+scroll_down J
+scroll_right L
+scroll_left H
+
+toggle_fullscreen E
