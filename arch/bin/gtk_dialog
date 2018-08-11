@@ -8,8 +8,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 
-def confirmation_dialog(action):
-    assert action in ['poweroff', 'reboot']
+def confirmation_dialog(title, msg, action):
     win = Gtk.Window()
     win.connect("destroy", Gtk.main_quit)
 
@@ -22,16 +21,16 @@ def confirmation_dialog(action):
             Gtk.ResponseType.CANCEL,
         )
     )
-    dialog.set_property('title', 'Power Management')
+    dialog.set_property('title', title)
     dialog.set_default_size(150, 100)
-    label = Gtk.Label(f"Do you want to {action}?")
+    label = Gtk.Label(msg)
     box = dialog.get_content_area()
     box.add(label)
     dialog.show_all()
 
     res = dialog.run()
     if res == Gtk.ResponseType.OK:
-        Popen(['systemctl', action])
+        Popen(action)
     elif res == Gtk.ResponseType.CANCEL:
         pass
     dialog.destroy()
@@ -42,8 +41,13 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('action')
+    parser.add_argument('--title', '-t', required=True)
+    parser.add_argument('--msg', '-m', required=True)
+    parser.add_argument('--action', '-a', required=True)
     args = parser.parse_args()
 
-    confirmation_dialog(args.action)
+    if isinstance(args.action, str):
+        args.action = args.action.split()
+
+    confirmation_dialog(args.title, args.msg, args.action)
     Gtk.main()
