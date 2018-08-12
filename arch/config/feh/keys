@@ -10,6 +10,6 @@ scroll_down J
 scroll_right L
 scroll_left H
 
-toggle_fullscreen e
+toggle_fullscreen E
 toggle_filenames f
 save_image w
