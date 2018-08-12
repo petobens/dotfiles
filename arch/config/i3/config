@@ -14,8 +14,7 @@ bindsym $mod+Control+a restart
 # Window handling {{{
 
 # This prevents floating windows to bleed out from screen
-floating_maximum_size 800 x 500
-
+floating_maximum_size 4000 x 4000
 # Move a floating window with the mouse and pressing mod
 floating_modifier $mod
 
@@ -23,6 +22,18 @@ floating_modifier $mod
 workspace_layout tabbed
 bindsym $mod+t layout tabbed
 bindsym $mod+s layout toggle split
+
+# Floating resizing
+bindsym $mod+Up $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Left $nexec $HOME/.config/i3/resize.py Left
+bindsym $mod+Right $nexec $HOME/.config/i3/resize.py Right
+bindsym $mod+Control+Up $nexec $HOME/.config/i3/resize.py Top
+bindsym $mod+Control+Down $nexec $HOME/.config/i3/resize.py Bottom
+bindsym $mod+Control+1 $nexec $HOME/.config/i3/resize.py 'Top Left'
+bindsym $mod+Control+2 $nexec $HOME/.config/i3/resize.py 'Top Right'
+bindsym $mod+Control+3 $nexec $HOME/.config/i3/resize.py 'Bottom Left'
+bindsym $mod+Control+4 $nexec $HOME/.config/i3/resize.py 'Bottom Right'
+bindsym $mod+Control+5 $nexec $HOME/.config/i3/resize.py Center
 
 # Change layout
 # bindsym $mod+w layout splith
@@ -33,7 +44,7 @@ bindsym $mod+s layout toggle split
 # Toggle floating and tiling
 # FIMXE: there is some other binding with this
 #  TODO: To switch between floating and tiled use focus mode toggle
-bindsym $mod+Control+space floating toggle
+bindsym $mod+f floating toggle
 
 # Focus window
 bindsym $mod+h focus left
@@ -113,6 +124,7 @@ bindsym $mod+Ctrl+x $nexec raiseorlaunch -c 'libreoffice-calc' \
     -e 'libreoffice --calc' -w $ws1
 bindsym $mod+Ctrl+w $nexec raiseorlaunch -c 'libreoffice-writer' \
     -e 'libreoffice --writer' -w $ws1
+bindsym $mod+Ctrl+g $nexec raiseorlaunch -c 'Peek'
 
 # Run standalone terminal apps in floating window
 bindsym $mod+Ctrl+n $nexec alacritty -t numbers -d 100 25 -e sh -c \
@@ -132,6 +144,8 @@ for_window [title="^(numbers|finder|OneDrive|htop|Downloads)$"] floating enable
 # Rules (use `xprop | grep -i 'class'` to get the class)
 for_window [window_type="splash"] floating enable , move position center
 for_window [class="^(Pavucontrol|Connman-gtk)$"] floating enable, \
+    resize set 800 400, move position center
+for_window [class="^(Peek)$"] floating enable, \
     resize set 800 400, move position center
 
 # }}}
