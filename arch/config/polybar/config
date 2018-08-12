@@ -5,8 +5,8 @@ fg-urg = #e06c75
 fg-warn = #d19a66
 
 [bar/main]
-monitor = ${env:MONITOR:}
 bottom = false
+monitor = ${env:MONITOR:}
 width = 100%
 height = 25
 offset-x = 0
