@@ -399,6 +399,12 @@ augroup END
 " Allow unsaved buffers to be put on the background without saving
 set hidden
 
+" Disable readonly warning
+augroup no_ro_warn
+    au!
+    au FileChangedRO * set noreadonly
+augroup END
+
 " }}}
 " Search, jumps and matching pairs {{{
 
