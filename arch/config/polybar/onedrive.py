@@ -31,4 +31,4 @@ elif status in ['Creating']:
 elif status in ['Syncing']:
     print("")
 else:
-    print("%{F#e06c75}{F-}")
+    print("%{F#e06c75}%{F-}")
