@@ -11,5 +11,6 @@ dunst &
 onedrive --synchronize --monitor &
 udiskie &
 compton -cCG -r 7 &
+xfce4-power-manager &
 [[ -f ~/bin/dual ]] && ~/bin/dual init
 exec i3
