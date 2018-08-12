@@ -1,8 +1,10 @@
 #!/bin/bash
 
 setxkbmap -layout us,es -option grp:win_space_toggle -option ctrl:nocaps
-[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+# Map the key next to z (<) to tilde (use `xev` to find the actual keycode)
+xmodmap -e "keycode 94 = grave asciitilde"
 xbacklight -set 50
+[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 
 [[ -f ~/.fehbg ]] && ~/.fehbg &
 dunst &
