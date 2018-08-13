@@ -34,10 +34,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         if [[  "$OSTYPE" == 'darwin'* ]]; then
             brew cask install java
         else
-            sudo apt-get install default-jre
+            yay jdk
         fi
     fi
-    brew install maven
     sudo tlmgr install arara
 fi
 
@@ -48,7 +47,6 @@ sudo tlmgr install collection-fontsrecommended
 sudo tlmgr install texcount
 
 # Install additional latex packages
-sudo tlmgr install amssymb
 sudo tlmgr install biblatex
 sudo tlmgr install cleveref
 sudo tlmgr install csquotes
@@ -57,14 +55,17 @@ sudo tlmgr install enumitem
 sudo tlmgr install environ
 sudo tlmgr install etoolbox
 sudo tlmgr install floatrow
+sudo tlmgr install fontawesome
 sudo tlmgr install footmisc
 sudo tlmgr install framed
 sudo tlmgr install fvextra
 sudo tlmgr install ifplatform
 sudo tlmgr install imakeidx
+sudo tlmgr install import
 sudo tlmgr install lipsum
 sudo tlmgr install logreq
 sudo tlmgr install minted
+sudo tlmgr install moderncv
 sudo tlmgr install multirow
 sudo tlmgr install pgfplots
 sudo tlmgr install silence
@@ -77,6 +78,28 @@ sudo tlmgr install trimspaces
 sudo tlmgr install wrapfig
 sudo tlmgr install xpatch
 sudo tlmgr install xstring
+
+# Linux specific (i.e not included in basic texlive installation)
+if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    sudo tlmgr install beamer
+    sudo tlmgr install booktabs
+    sudo tlmgr install breqn
+    sudo tlmgr install caption
+    sudo tlmgr install fancyvrb
+    sudo tlmgr install float
+    sudo tlmgr install jknapltx
+    sudo tlmgr install l3kernel
+    sudo tlmgr install l3packages
+    sudo tlmgr install lineno
+    sudo tlmgr install mathtools
+    sudo tlmgr install microtype
+    sudo tlmgr install setspace
+    sudo tlmgr install translator
+    sudo tlmgr install ulem
+    sudo tlmgr install upquote
+    sudo tlmgr install xcolor
+    sudo tlmgr install xkeyval
+fi
 
 # Update all recently installed packages
 sudo tlmgr update all

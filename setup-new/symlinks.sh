@@ -201,6 +201,11 @@ else
         ln -s "$dotfiles_dir/arch/config/feh" "$HOME/.config/feh"
         echo Created feh folder symlink
     fi
+    if type "zathura" > /dev/null 2>&1; then
+        rm -rf "$HOME/.config/zathura"
+        ln -s "$dotfiles_dir/arch/config/zathura" "$HOME/.config/zathura"
+        echo Created zathura folder symlink
+    fi
 fi
 if type "git" > /dev/null 2>&1; then
     rm -rf "$HOME/.gitignore"

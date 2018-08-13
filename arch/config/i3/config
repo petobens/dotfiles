@@ -107,6 +107,7 @@ bindsym $mod+Ctrl+m $nexec raiseorlaunch -c Spotify -w $ws1
 bindsym $mod+Ctrl+s $nexec raiseorlaunch -c Skype -e skypeforlinux -w $ws1
 bindsym $mod+Ctrl+t $nexec raiseorlaunch -c Thunderbird -w $ws1
 bindsym $mod+Ctrl+u $nexec raiseorlaunch -c Transmission-gtk -w $ws1
+bindsym $mod+Ctrl+p $nexec raiseorlaunch -c Zathura
 bindsym $mod+Ctrl+x $nexec raiseorlaunch -c 'libreoffice-calc' \
     -e 'libreoffice --calc' -w $ws1
 bindsym $mod+Ctrl+w $nexec raiseorlaunch -c 'libreoffice-writer' \

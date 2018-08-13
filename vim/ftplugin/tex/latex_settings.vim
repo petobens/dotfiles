@@ -490,25 +490,39 @@ function! s:ForwardInverseSearch(direction)
                     \ '"gvim --remote-silent +\%l|foldo\! \%f"'
         let forward =  ' -forward-search ' . expand('%:p') . ' ' . line('.')
 
-    elseif s:is_mac
-        let displayline_path = '/Applications/Skim.app/Contents/' .
-                    \ 'SharedSupport/displayline'
-        if !executable('displayline') && !filereadable(displayline_path)
-            echoerr 'Skim displayline is not installed or not in your path.'
-            return
-        endif
-        if filereadable(displayline_path)
-            let displayline_cmd = displayline_path
-        else
-            let displayline_cmd = 'displayline'
-        end
+    else
         let bang_command = '! '
         if exists(':Dispatch')
             let bang_command = 'Start! '
         endif
-        let viewer = 'silent! ' . bang_command . displayline_cmd
-        let forward =  ' -r ' . line('.') . ' ' . pdf_file .  ' ' .
-              \ expand('%:p')
+
+        if s:is_mac
+            let displayline_path = '/Applications/Skim.app/Contents/' .
+                        \ 'SharedSupport/displayline'
+            if !executable('displayline') && !filereadable(displayline_path)
+                echoerr 'Skim displayline is not installed or not in your path.'
+                return
+            endif
+            if filereadable(displayline_path)
+                let displayline_cmd = displayline_path
+            else
+                let displayline_cmd = 'displayline'
+            end
+            let viewer = 'silent! ' . bang_command . displayline_cmd
+            let forward =  ' -r ' . line('.') . ' ' . pdf_file .  ' ' .
+                \ expand('%:p')
+        else
+            if !executable('zathura')
+                echoerr 'zathura is not installed or not in your path.'
+                return
+            endif
+        endif
+        let viewer = 'silent! ' . bang_command . 'zathura'
+        let forward = ' --synctex-forward ' . line('.') . ':' . col('.') . ':' .
+            \ expand('%:p') . ' ' . pdf_file
+        " Inverse search is defined in zathura config file (use
+        " FIXME: Works on spawned zathura instance and not current tex file
+        let inverse = ' ' . pdf_file
     endif
 
     if a:direction ==# 'inv'

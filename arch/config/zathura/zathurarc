@@ -1,0 +1,39 @@
+# TODO: Try zathura-tabbed
+# Options
+set font "Noto Sans Mono 10"
+set smooth-scroll true
+set statusbar-home-tilde true
+set window-title-basename true
+set incremental-search true
+set n-completion-items 12
+set synctex true
+set synctex-editor-command "nvr --remote-silent +\%{line} \%{input}"
+
+# Mappings
+map w adjust_window width
+map b adjust_window best-fit
+map v adjust_window best-fit
+unmap q
+unmap [presentation] q
+
+# Colors
+set default-bg "#24272e"
+set default-fg "#abb2bf"
+set statusbar-bg "#282c34"
+set statusbar-fg "#abb2bf"
+set inputbar-bg "#282c34"
+set inputbar-fg "#abb2bf"
+set completion-bg "#24272e"
+set completion-fg "#abb2bf"
+set completion-highlight-bg "#61afef"
+set completion-highlight-fg "#24272e"
+set highlight-color "#e5c07b"
+set highlight-active-color "#e5c07b"
+set notification-bg "#24272e"
+set notification-fg "#d19a66"
+set notification-error-bg "#24272e"
+set notification-error-fg "#e06c75"
+set index-bg "#24272e"
+set index-fg "#abb2bf"
+set index-active-bg "#61afef"
+set index-active-fg "#24272e"

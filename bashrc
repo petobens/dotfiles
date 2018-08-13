@@ -50,6 +50,11 @@ else
     if [ -d "$HOME/bin" ]; then
         export PATH="$HOME/bin:$PATH"
     fi
+    if [ -d "/usr/local/texlive" ]; then
+        export PATH="/usr/local/texlive/2018/bin/x86_64-linux:$PATH"
+        export MANPATH="$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man"
+        export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
+    fi
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
