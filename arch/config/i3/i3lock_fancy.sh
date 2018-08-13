@@ -12,30 +12,32 @@ T='#ABB2BFFF'  # text
 W='#E06C75FF'  # wrong
 K='#528BFFFF'  # key press
 i3lock \
-    --insidevercolor=$B      \
-    --ringvercolor=$K        \
-    --verifcolor=$K          \
-    --veriftext="Validating" \
+    --insidevercolor=$B              \
+    --ringvercolor=$K                \
+    --verifcolor=$K                  \
+    --veriftext="Validating"         \
+    --locktext="Locking"             \
+    --lockfailedtext="Lock failed!"  \
     \
-    --insidewrongcolor=$B    \
-    --ringwrongcolor=$W      \
-    --wrongcolor=$W          \
-    --wrongtext="Try again"  \
-    --noinputtext="No input!"\
+    --insidewrongcolor=$B            \
+    --ringwrongcolor=$W              \
+    --wrongcolor=$W                  \
+    --wrongtext="Try again"          \
+    --noinputtext="No input!"        \
     \
-    --insidecolor=$B         \
-    --ringcolor=$B           \
-    --linecolor=$B           \
+    --insidecolor=$B                 \
+    --ringcolor=$B                   \
+    --linecolor=$B                   \
     \
-    --timecolor=$T           \
-    --datecolor=$T           \
-    --keyhlcolor=$K          \
-    --bshlcolor=$K           \
+    --timecolor=$T                   \
+    --datecolor=$T                   \
+    --keyhlcolor=$K                  \
+    --bshlcolor=$K                   \
     \
-    --blur 15                \
-    --clock                  \
-    --timestr="%H:%M:%S"     \
-    --datestr="%a %b %d"     \
-    --ring-width=3.0         \
+    --blur 15                        \
+    --clock                          \
+    --timestr="%H:%M:%S"             \
+    --datestr="%a %b %d"             \
+    --ring-width=3.0                 \
     --radius=100
 \
