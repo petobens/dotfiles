@@ -135,7 +135,7 @@ stack_duplicates = true
 hide_duplicate_count = false
 
 # Display indicators for URLs (U) and actions (A).
-show_indicators = yes
+show_indicators = no
 
 # Align icons left/right/off
 icon_position = right
