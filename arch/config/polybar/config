@@ -82,7 +82,8 @@ type = custom/script
 exec = echo vpn
 exec-if = pgrep -x openconnect
 interval = 5
-format-underline = #61afef
+format-underline = ${colors.fg}
+label-font = 7
 
 [module/wlan]
 type = internal/network
