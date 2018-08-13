@@ -55,3 +55,16 @@ if type "xdg-user-dirs-update" > /dev/null 2>&1; then
         xdg-user-dirs-update --set ${dir^^} "$HOME/$dir"
     done
 fi
+
+# Set some default apps on Linux
+if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    if type "xdg-mime" > /dev/null 2>&1; then
+        echo "Setting default apps for specific filetypes..."
+        if type "zathura" > /dev/null 2>&1; then
+            xdg-mime default org.pwmt.zathura-pdf-mupdf.desktop application/pdf
+        fi
+        if type "mpv" > /dev/null 2>&1; then
+            xdg-mime default mpv.desktop image/gif
+        fi
+    fi
+fi

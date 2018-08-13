@@ -2345,6 +2345,9 @@ if dein#tap('vimfiler') == 1
         elseif s:is_mac
             call vimfiler#set_execute_file('pdf,PDF,doc,docx,xls,xlsx,xlsm,png',
                 \ 'open')
+        else
+            call vimfiler#set_execute_file('pdf,PDF,doc,docx,xls,xlsx,xlsm,png',
+                \ 'xdg-open')
         endif
     endfunction
     call dein#set_hook('vimfiler', 'hook_source', function('VimfilerHookOpts'))
