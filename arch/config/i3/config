@@ -13,17 +13,23 @@ bindsym $mod+Control+a restart
 # }}}
 # Window handling {{{
 
-# This prevents floating windows to bleed out from screen
-floating_maximum_size 4000 x 4000
+# Make all windows floating by default (i'm used to that)
+for_window [class="^.*"] floating enable
+
+# Allow floating windows to have any size
+floating_maximum_size -1 x -1
+
 # Move a floating window with the mouse and pressing mod
 floating_modifier $mod
 
-# Layout (p for (p)iled)
-workspace_layout tabbed
-bindsym $mod+t layout tabbed
-bindsym $mod+s layout toggle split
+# Toggle floating and tiling
+bindsym $mod+f floating toggle
 
-# Floating resizing
+# Full screen
+bindsym $mod+Control+e fullscreen toggle
+
+# Floating resizing (spanning)
+# FIXME: Keep focus
 bindsym $mod+Up $nexec $HOME/.config/i3/resize.py Full
 bindsym $mod+Left $nexec $HOME/.config/i3/resize.py Left
 bindsym $mod+Right $nexec $HOME/.config/i3/resize.py Right
@@ -35,52 +41,28 @@ bindsym $mod+Control+3 $nexec $HOME/.config/i3/resize.py 'Bottom Left'
 bindsym $mod+Control+4 $nexec $HOME/.config/i3/resize.py 'Bottom Right'
 bindsym $mod+Control+5 $nexec $HOME/.config/i3/resize.py Center
 
-# Change layout
-# bindsym $mod+w layout splith
-# bindsym $mod+Control+w layout splitv
-# bindsym $mod+d split h
-# bindsym $mod+Control+d split v
-
-# Toggle floating and tiling
-# FIMXE: there is some other binding with this
-#  TODO: To switch between floating and tiled use focus mode toggle
-bindsym $mod+f floating toggle
-
-# Focus window
-bindsym $mod+h focus left
-bindsym $mod+l focus right
-bindsym $mod+k focus up
-bindsym $mod+j focus down
-
-# Horizontal split
-# bindsym $mod+h split h
-
-# Vertical split
-# bindsym $mod+v split v
-
-# Full screen
-bindsym $mod+Control+e fullscreen toggle
-
-# Binding for resize
-# FIXME: Don't use this!
-bindsym $mod+r mode "resize"
-mode "resize" {
-    bindsym h resize shrink width 10 px or 10 ppt
-    bindsym l resize grow width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym j resize shrink height 10 px or 10 ppt
-
-    # back to normal: Enter or Escape or $mod+r
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
-}
+# Resize
+bindsym $mod+h resize grow left 10 px or 5 ppt
+bindsym $mod+$alt+h resize shrink right 10 px or 5 ppt
+bindsym $mod+l resize grow right 10 px or 5 ppt
+bindsym $mod+$alt+l resize shrink left 10 px or 5 ppt
+bindsym $mod+k resize grow up 10 px or 5 ppt
+bindsym $mod+$alt+j resize shrink up 10 px or 5 ppt
+bindsym $mod+j resize grow down 10 px or 5 ppt
+bindsym $mod+$alt+k resize shrink down 10 px or 5 ppt
 
 #  }}}
 #  Multiple monitors and workspaces {{{
 
 #  FIXME: Find out why this is not read from PATH
 bindsym $mod+Ctrl+Return $nexec $HOME/bin/dual
+
+# Move window (container) in monitor (output) direction and switch focus
+# TODO: Resize to correct split instead of full screen
+bindsym $mod+Ctrl+Right move container to output right; focus output right; \
+    $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Ctrl+Left move container to output left; focus output left; \
+    $nexec $HOME/.config/i3/resize.py Full
 
 # Define names for default workspaces
 set $ws1 "1"
@@ -94,7 +76,8 @@ bindsym $mod+2 workspace $ws2
 bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace $ws4
 
-# Move focused container to workspace and switch focus to that container
+# Move focused container to specific workspace and switch focus to that
+# container
 bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
 bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
 bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
@@ -114,6 +97,9 @@ bindsym $mod+Shift+5 $nexec $HOME/bin/shots selection
 bindsym $mod+Shift+6 $nexec $HOME/bin/shots active
 
 # Run/Launch or focus (in specific workspace)
+# FIXME: raiseorlaunch's `-w` flag because that will create new windows in that
+# specific workspace if the window was moved to another one
+# TODO: Open these windows maximised
 bindsym $mod+Ctrl+c $nexec raiseorlaunch -c Alacritty -w $ws2
 bindsym $mod+Ctrl+i $nexec raiseorlaunch -c Chromium -w $ws1
 bindsym $mod+Ctrl+l $nexec raiseorlaunch -c Slack -w $ws1
@@ -139,14 +125,13 @@ bindsym $mod+Ctrl+o $nexec alacritty -t OneDrive -d 150 30 -e sh -c \
     "i3-msg -q move position center && less +F $HOME/onedrive.log"
 for_window [title="^(numbers|finder|OneDrive|htop|Downloads)$"] floating enable
 
-#  TODO: Scratchpad
 
-# Rules (use `xprop | grep -i 'class'` to get the class)
+# Other rules (use `xprop | grep -i 'class'` to get the class)
 for_window [window_type="splash"] floating enable , move position center
 for_window [class="^(Pavucontrol|Connman-gtk)$"] floating enable, \
     resize set 800 400, move position center
-for_window [class="^(Peek)$"] floating enable, \
-    resize set 800 400, move position center
+for_window [class="^(Peek)$"] $nexec $HOME/.config/i3/resize.py Center
+
 
 # }}}
 #  Spotify and volume {{{
@@ -169,7 +154,6 @@ font pango:Noto Sans 0
 
 # Set window border width
 for_window [class="^.*"] border pixel 2
-
 
 # Theme
 set $bg #24272e

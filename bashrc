@@ -214,7 +214,7 @@ if type "htop" > /dev/null 2>&1; then
 fi
 if type "nvim" > /dev/null 2>&1; then
     alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
-    if [ -f "HOME/git-repos/private/dotfiles/vim/vimrc_min" ]; then
+    if [ -f "$HOME/git-repos/private/dotfiles/vim/vimrc_min" ]; then
         alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
     fi
 fi
