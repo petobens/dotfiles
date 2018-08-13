@@ -306,6 +306,10 @@ else
     fi
 fi
 
+# Work
+alias cvpn='sudo pkill -9 -f openconnect; sudo openconnect --background '\
+'--authgroup=1 --user=EXB77159 vpn.claro.com.ar'
+
 # }}}
 # Fzf {{{
 

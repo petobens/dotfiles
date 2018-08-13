@@ -18,7 +18,7 @@ padding = 0
 module-margin-left = 2
 modules-left = menu title
 modules-center = i3
-modules-right = onedrive xkeyboard wlan pulseaudio battery date
+modules-right = onedrive xkeyboard vpn wlan pulseaudio battery date
 font-0 = Noto Sans Mono:size=8;3
 font-1 = Noto Sans Mono:size=15;2
 font-2 = Noto Sans:size=10;3
@@ -76,6 +76,13 @@ click-left = xdotool key Super_L+Control+o
 type = internal/xkeyboard
 format = <label-layout>
 label-layout-font = 4
+
+[module/vpn]
+type = custom/script
+exec = echo vpn
+exec-if = pgrep -x openconnect
+interval = 5
+format-underline = #61afef
 
 [module/wlan]
 type = internal/network
