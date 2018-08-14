@@ -10,7 +10,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 
     # Path settings
-    PATH="/usr/bin:/bin:/usr/sbin:/sbin"
+    PATH="$HOME/local/bin:$HOME/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     export PATH="$base_pkg_dir/bin:$base_pkg_dir/sbin:$PATH" # homebrew
     if [ -d "/Library/TeX/texbin" ]; then
         export PATH="/Library/TeX/texbin:$PATH" # basictex
@@ -80,7 +80,7 @@ fi
 
 # R libraries (note: first create this folder if it doesn't exist)
 if type "R" > /dev/null 2>&1; then
-    export R_LIBS_USER="$base_pkg_dir/lib/R/site-library"
+    export R_LIBS_USER="$base_pkg_dir/.local/lib/R/site-library"
 fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
@@ -275,26 +275,27 @@ fi
 ua='sudo echo -n'
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "brew" > /dev/null 2>&1; then
-        ua=$ua';brew update && brew upgrade && brew cleanup'
+        ua=$ua';echo "-> Brew..."; brew update && brew upgrade && brew cleanup'
     fi
 else
     if type "yay" > /dev/null 2>&1; then
-        ua=$ua';yay -Syu --nodiffmenu --answerclean A --removemake --devel '\
-'--timeupdate --combinedupgrade --afterclean; yay -c'
+        ua=$ua';echo "-> YaY..."; yay -Syu --nodiffmenu --answerclean A '\
+'--removemake --devel --timeupdate --combinedupgrade --afterclean; yay -c'
     fi
 fi
 if type "python3" > /dev/null 2>&1; then
-    ua=$ua';python3 -m pip_review --user --interactive'
+    ua=$ua';echo "-> Updating Python..."; pip list --user --outdated '\
+'--format=freeze | grep -v ‘^\-e’ | cut -d = -f 1 | xargs -n1 pip install -U'
 fi
 if type "R" > /dev/null 2>&1; then
-    ua=$ua'; R --slave --no-save --no-restore -e '\
+    ua=$ua'; echo "-> Updating R..."; R --slave --no-save --no-restore -e '\
 '"update.packages(ask=TRUE, checkBuilt=TRUE)"'
 fi
 if type "tlmgr" > /dev/null 2>&1; then
-    ua=$ua'; sudo tlmgr update --all'
+    ua=$ua'; echo "-> Updating LaTeX..."; sudo tlmgr update --all'
 fi
 if type "npm" > /dev/null 2>&1; then
-    ua=$ua'; npm update -g'
+    ua=$ua'; echo "-> Updating Node..."; npm update -g'
 fi
 alias ua="$ua"
 unset ua

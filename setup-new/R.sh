@@ -26,7 +26,7 @@ fi
 # like: `install.packages("data.table", type = "source",
 # repos = "http://rdatatable.github.io/data.table")`)
 sudo mkdir -p $R_LIBS_USER
-sudo chmod -R 777 $R_LIBS_USER
+sudo chmod -R 777 "$(dirname "$R_LIBS_USER")"
 R --slave --no-save << EOF
 packages <- readLines("$parent_dir/R/r_libraries.txt")
 new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
