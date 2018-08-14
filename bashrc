@@ -258,7 +258,9 @@ if [ ! -f "$base_pkg_dir"/bin/python2 ]; then
     alias pip='pip3'
 fi
 if type "jupyter" > /dev/null 2>&1; then
-    alias jn='jupyter notebook'
+    # TODO: Hack for notebooks with python 3.7
+    # See: https://github.com/jupyter/notebook/issues/3837
+    alias jn='unset BROWSER;jupyter notebook'
 fi
 if type "ipython3" > /dev/null 2>&1; then
     alias ip='ipython3'
@@ -282,7 +284,7 @@ else
     fi
 fi
 if type "python3" > /dev/null 2>&1; then
-    ua=$ua';python3 -m pip_review --interactive'
+    ua=$ua';python3 -m pip_review --user --interactive'
 fi
 if type "R" > /dev/null 2>&1; then
     ua=$ua'; R --slave --no-save --no-restore -e '\
