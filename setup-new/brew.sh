@@ -3,10 +3,6 @@
 if ! type "brew" > /dev/null 2>&1; then
     brew_prefix='Home'
     brew_dir='/usr/local'
-    if [[ ! "$OSTYPE" == 'darwin'* ]]; then
-        brew_prefix='Linux'
-        brew_dir="$HOME/.linuxbrew"
-    fi
     echo "Installing brew..."
     ruby -e "$(curl -fsSl 'https://raw.githubusercontent.com/'$brew_prefix'brew/install/master/install')"
     export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
@@ -17,6 +13,18 @@ fi
 # Use latest homebrew and update any already installed formulae
 echo "Updating Brew..."
 brew update && brew upgrade
+
+# Fonts
+read -p "Do you want to install Nerd fonts with fancy glyphs (y/n)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo Installing Nerd Fonts...
+    brew tap caskroom/fonts
+    brew cask install font-sourcecodepro-nerd-font
+    # Nerd fonts Source Code Pro version doesn't have italics so we install
+    # the official version
+    brew cask install font-source-code-pro
+fi
 
 # Latest bash with completions
 brew install bash
@@ -46,16 +54,12 @@ if ! type "tlmgr" > /dev/null 2>&1; then
     read -p "Do you want to install latex (y/n)? " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        if [[  "$OSTYPE" == 'darwin'* ]]; then
-            brew cask install basictex
-            # Wait until basictex is installed
-            while [ ! -f "/Library/TeX/texbin/tlmgr" ]; do
-                sleep 5
-            done
-            export PATH="/Library/TeX/texbin:$PATH"
-        else
-            brew install texlive --with-basic
-        fi
+        brew cask install basictex
+        # Wait until basictex is installed
+        while [ ! -f "/Library/TeX/texbin/tlmgr" ]; do
+            sleep 5
+        done
+        export PATH="/Library/TeX/texbin:$PATH"
     fi
 fi
 read -p "Do you want to install R (y/n)? " -n 1 -r
@@ -88,14 +92,11 @@ brew install the_silver_searcher
 brew install fzf
 brew install z
 brew install htop
-if [[  "$OSTYPE" == 'darwin'* ]]; then
-    brew install reattach-to-user-namespace
-    brew install rmtrash
-fi
+brew install reattach-to-user-namespace
+brew install rmtrash
 brew install --HEAD universal-ctags/universal-ctags/universal-ctags
 brew install unrar
 brew install --HEAD neomutt --with-sidebar-patch --with-notmuch-patch
-# FIXME: the following two do not install on Linux due to ghc error
 brew install shellcheck
 brew install pandoc
 brew install pandoc-citeproc

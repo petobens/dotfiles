@@ -1,6 +1,5 @@
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 parent_dir="$(dirname "$current_dir")"
-brew_dir=$(brew --prefix)
 
 # Create makevars compiling options (note: for data.table we need to add the
 # `-fopenmp` flag).
@@ -26,12 +25,18 @@ fi
 # Actually install libraries (to install from source use devtools or something
 # like: `install.packages("data.table", type = "source",
 # repos = "http://rdatatable.github.io/data.table")`)
-mkdir -p "$brew_dir/lib/R/site-library"
+sudo mkdir -p $R_LIBS_USER
+sudo chmod -R 777 $R_LIBS_USER
 R --slave --no-save << EOF
-packages <- readLines("$parent_dir/r_libraries.txt")
+packages <- readLines("$parent_dir/R/r_libraries.txt")
 new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
 if (length(new_packages)) {
     print(paste("Installing the following packages:", paste(new_packages, collapse=", ")))
     install.packages(new_packages)
 }
 EOF
+
+# Install colorout
+git clone https://github.com/jalvesaq/colorout.git
+R CMD INSTALL colorout
+rm -rf colorout

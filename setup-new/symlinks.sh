@@ -86,7 +86,7 @@ if type "eslint" > /dev/null 2>&1; then
 fi
 if type "R" > /dev/null 2>&1; then
     rm -rf "$HOME/.Rprofile"
-    ln -s "$dotfiles_dir/Rprofile" "$HOME/.Rprofile"
+    ln -s "$dotfiles_dir/R/Rprofile" "$HOME/.Rprofile"
     echo Created .Rprofile symlink
 fi
 if type "powerline-daemon" > /dev/null 2>&1; then

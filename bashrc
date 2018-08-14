@@ -1,23 +1,11 @@
 # Options {{{
 
-# Brew directory
-if type "brew" > /dev/null 2>&1; then
-    brew_dir=$(brew --prefix)
-else
-    if [[ "$OSTYPE" == 'darwin'* ]]; then
-        if [ -d "/usr/local/bin" ]; then
-            brew_dir='/usr/local'
-        fi
-    else
-        if [ -d "$HOME/.linuxbrew" ]; then
-            brew_dir="$HOME/.linuxbrew"
-        else
-            brew_dir="/mnt/.linuxbrew"
-        fi
-    fi
-fi
-
 if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if type "brew" > /dev/null 2>&1; then
+        brew_dir=$(brew --prefix)
+        base_pkg_dir=$brew_dir
+    fi
+
     # Path settings
     PATH="/usr/bin:/bin:/usr/sbin:/sbin"
     export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH" # homebrew
@@ -40,17 +28,16 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export LANG=en_US.UTF-8
 
     # Enable terminal colors and highlight directories in blue, symbolic links
-    # in purple and executable files in red (the actual colors depend on iTerm's
-    # colorscheme)
-    # Note: in Iterm we use ether the afterglow colorscheme or
-    # https://github.com/anunez/one-dark-iterm
+    # in purple and executable files in red
     export CLICOLOR=1
     export LSCOLORS=exfxCxDxbxegedabagaced
 else
+    base_pkg_dir='/usr'
+
     if [ -d "$HOME/bin" ]; then
         export PATH="$HOME/bin:$PATH"
     fi
-    if [ -d "/usr/local/texlive" ]; then
+    if [ -d "$base_pkg_dir/local/texlive" ]; then
         export PATH="/usr/local/texlive/2018/bin/x86_64-linux:$PATH"
         export MANPATH="$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man"
         export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
@@ -77,13 +64,13 @@ export MANPAGER="nvim -c 'set ft=man' -"
 
 # Set shell to latest bash (this should be redundant if we previously ran
 # `sudo chsh -s $(brew --prefix)/bin/bash`)
-if [ -f "$brew_dir/bin/bash" ]; then
-    export SHELL="$brew_dir/bin/bash"
+if [ -f "$base_pkg_dir/bin/bash" ]; then
+    export SHELL="$base_pkg_dir/bin/bash"
 fi
 
 # R libraries (note: first create this folder if it doesn't exist)
 if type "R" > /dev/null 2>&1; then
-    export R_LIBS_USER="$brew_dir/lib/R/site-library"
+    export R_LIBS_USER="$base_pkg_dir/lib/R/site-library"
 fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
@@ -149,14 +136,8 @@ fi
 # Completion (readline) {{{
 
 # Improved bash completion (install them with `brew install bash-completion@2`)
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if [ -f $brew_dir/share/bash-completion/bash_completion ]; then
-        . $brew_dir/share/bash-completion/bash_completion
-    fi
-else
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
-        . /usr/share/bash-completion/bash_completion
-    fi
+if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
+    . $base_pkg_dir/share/bash-completion/bash_completion
 fi
 
 # Note: we pass Readline commands as a single argument to
@@ -259,7 +240,7 @@ if type "git" > /dev/null 2>&1; then
 fi
 
 # Python
-if [ ! -f "$brew_dir"/bin/python2 ]; then
+if [ ! -f "$base_pkg_dir"/bin/python2 ]; then
     alias python='python3'
     alias pip='pip3'
 fi
@@ -273,7 +254,7 @@ fi
 # Update all binaries (with brew) and language libraries
 ua='sudo echo -n; brew update && brew upgrade && brew cleanup; '\
 'python3 -m pip_review --interactive'
-if [ -f "$brew_dir"/bin/python2 ]; then
+if [ -f "$base_pkg_dir"/bin/python2 ]; then
     ua=$ua';python2 -m pip_review --interactive'
 fi
 if type "R" > /dev/null 2>&1; then
@@ -323,11 +304,11 @@ if type "fzf" > /dev/null 2>&1; then
     # Enable completion and key bindings
 
     if [[ "$OSTYPE" == 'darwin'* ]]; then
-        [[ $- == *i* ]] && . "$brew_dir/opt/fzf/shell/completion.bash" 2> /dev/null
-        . "$brew_dir/opt/fzf/shell/key-bindings.bash"
+        [[ $- == *i* ]] && . "$base_pkg_dir/opt/fzf/shell/completion.bash" 2> /dev/null
+        . "$base_pkg_dir/opt/fzf/shell/key-bindings.bash"
     else
-        [[ $- == *i* ]] && . "/usr/share/fzf/completion.bash" 2> /dev/null
-        . "/usr/share/fzf/key-bindings.bash"
+        [[ $- == *i* ]] && . "$base_pkg_dir/share/fzf/completion.bash" 2> /dev/null
+        . "$base_pkg_dir/share/fzf/key-bindings.bash"
     fi
 
     # Change default options (show 15 lines, use top-down layout)
@@ -371,12 +352,12 @@ if type "fzf" > /dev/null 2>&1; then
 
     # Z
     if [[ "$OSTYPE" == 'darwin'* ]]; then
-        if [ -f "$brew_dir/etc/profile.d/z.sh" ]; then
-            . /usr/local/etc/profile.d/z.sh
+        if [ -f "$base_pkg_dir/etc/profile.d/z.sh" ]; then
+            . "$base_pkg_dir/etc/profile.d/z.sh"
         fi
     else
-        if [ -f "/usr/share/z/z.sh" ]; then
-            . /usr/share/z/z.sh
+        if [ -f "$base_pkg_dir/share/z/z.sh" ]; then
+            . "$base_pkg_dir/share/z/z.sh"
         fi
     fi
     unalias z 2> /dev/null

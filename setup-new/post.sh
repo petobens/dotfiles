@@ -1,15 +1,4 @@
 #!/usr/bin/env bash
-brew_dir=$(brew --prefix)
-
-# Skim (PDF viewer)
-if [ -d "/Applications/Skim.app/" ]; then
-    # Auto reload files
-    defaults write -app Skim SKAutoReloadFileUpdate -boolean true
-    # Synctex (with neovim)
-    defaults write -app Skim SKTeXEditorPreset "Custom"
-    defaults write -app Skim SKTeXEditorCommand  "nvr"
-    defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line\'\' %file"
-fi
 
 # Alacritty
 if type "cargo" > /dev/null 2>&1; then
@@ -40,24 +29,36 @@ if type "ranger" > /dev/null 2>&1; then
     ranger --copy-config=scope
 fi
 
-
-# Create XDG directories
-if type "xdg-user-dirs-update" > /dev/null 2>&1; then
-    echo "Creating missing XDG directories..."
-    dirs=("Desktop" "Documents" "Downloads" "Music" "Pictures" "Videos"
-    "Public" "Templates")
-    for dir in "${dirs[@]}"; do
-        if [ $dir ==  "Templates" ]; then
-            xdg-user-dirs-update --set ${dir^^} "$HOME"
-            continue
-        fi
-        mkdir -p "$HOME/$dir"
-        xdg-user-dirs-update --set ${dir^^} "$HOME/$dir"
-    done
+# Mac
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if [ -d "/Applications/Skim.app/" ]; then
+        # Auto reload files
+        defaults write -app Skim SKAutoReloadFileUpdate -boolean true
+        # Synctex (with neovim)
+        defaults write -app Skim SKTeXEditorPreset "Custom"
+        defaults write -app Skim SKTeXEditorCommand  "nvr"
+        defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line\'\' %file"
+    fi
 fi
 
-# Set some default apps on Linux
+# Linux
 if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    # Create XDG directories
+    if type "xdg-user-dirs-update" > /dev/null 2>&1; then
+        echo "Creating missing XDG directories..."
+        dirs=("Desktop" "Documents" "Downloads" "Music" "Pictures" "Videos"
+        "Public" "Templates")
+        for dir in "${dirs[@]}"; do
+            if [ $dir ==  "Templates" ]; then
+                xdg-user-dirs-update --set ${dir^^} "$HOME"
+                continue
+            fi
+            mkdir -p "$HOME/$dir"
+            xdg-user-dirs-update --set ${dir^^} "$HOME/$dir"
+        done
+    fi
+
+    # Set some default apps on Linux
     if type "xdg-mime" > /dev/null 2>&1; then
         echo "Setting default apps for specific filetypes..."
         if type "zathura" > /dev/null 2>&1; then
