@@ -13,4 +13,6 @@ case $1 in
     selection)
         maim -s "$FILENAME";;
 esac
-dunstify -i accessories-screenshot 'Screenshot Taken' "Saved as $FILENAME"
+if [ -f "$FILENAME" ]; then
+    dunstify -i accessories-screenshot 'Screenshot Taken' "Saved as $FILENAME"
+fi
