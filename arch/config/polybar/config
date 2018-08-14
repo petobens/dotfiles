@@ -25,7 +25,7 @@ font-2 = Noto Sans:size=10;3
 font-3 = Noto Sans:size=10:weight=bold;3
 font-4 = Symbols Nerd Font:size=11;3
 font-5 = Symbols Nerd Font:size=13;3
-font-6 = Noto Sans:size=9:weight=bold;3
+font-6 = Noto Sans Mono:size=9:weight=bold;3
 tray-position = ${env:TRAY_POS:}
 tray-maxsize = 16
 enable-ipc = true
@@ -88,7 +88,7 @@ label-font = 7
 [module/wlan]
 type = internal/network
 interface = wlp3s0
-interval = 5.0
+ping-interval = 3
 format-connected = %{A1:connman-gtk &:}<label-connected>%{A}
 format-disconnected =  %{A1:connman-gtk &:}<label-disconnected>%{A}
 label-connected = 直 %signal%%
@@ -110,8 +110,6 @@ label-full =  100%
 ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.fg-urg}
 ramp-capacity-1 = 
-; TODO: set this at another level or remove it all together
-; ramp-capacity-1-foreground = ${colors.fg-warn}
 ramp-capacity-2 = 
 ramp-capacity-3 = 
 ramp-capacity-4 = 
@@ -137,11 +135,10 @@ bar-volume-empty = ─
 [module/date]
 type = internal/date
 interval = 5.0
-date = %a %b %d
+date = %a %d %b
 time = %H:%M
-date-alt = %A %d %B %Y
+date-alt = %A %d %b %Y
 time-alt = %H:%M:%S
-format = <label>
-label = %date% %time%
+label =  %date% %time%
 label-font = 7
 label-padding-right = 1

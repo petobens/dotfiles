@@ -32,6 +32,7 @@ bindsym $mod+Control+e fullscreen toggle
 # FIXME: Keep focus
 bindsym $mod+Up $nexec $HOME/.config/i3/resize.py Full
 bindsym $mod+Left $nexec $HOME/.config/i3/resize.py Left
+#  FIXME: This one doesn't work quite well
 bindsym $mod+Right $nexec $HOME/.config/i3/resize.py Right
 bindsym $mod+Control+Up $nexec $HOME/.config/i3/resize.py Top
 bindsym $mod+Control+Down $nexec $HOME/.config/i3/resize.py Bottom
@@ -55,13 +56,13 @@ bindsym $mod+$alt+k resize shrink down 10 px or 5 ppt
 #  Multiple monitors and workspaces {{{
 
 #  FIXME: Find out why this is not read from PATH
-bindsym $mod+Ctrl+Return $nexec $HOME/bin/dual
+bindsym $mod+Control+Return $nexec $HOME/bin/dual
 
 # Move window (container) in monitor (output) direction and switch focus
 # TODO: Resize to correct split instead of full screen
-bindsym $mod+Ctrl+Right move container to output right; focus output right; \
+bindsym $mod+Control+Right move container to output right; focus output right; \
     $nexec $HOME/.config/i3/resize.py Full
-bindsym $mod+Ctrl+Left move container to output left; focus output left; \
+bindsym $mod+Control+Left move container to output left; focus output left; \
     $nexec $HOME/.config/i3/resize.py Full
 
 # Define names for default workspaces
@@ -84,7 +85,7 @@ bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
 bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
 
 # }}}
-# Run or activate app and rules {{{
+# Run or activate apps and rules {{{
 
 # Rofi (application launcher / switcher)
 bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
@@ -100,30 +101,30 @@ bindsym $mod+Shift+6 $nexec $HOME/bin/shots active
 # FIXME: raiseorlaunch's `-w` flag because that will create new windows in that
 # specific workspace if the window was moved to another one
 # TODO: Open these windows maximised
-bindsym $mod+Ctrl+c $nexec raiseorlaunch -c Alacritty -w $ws2
-bindsym $mod+Ctrl+i $nexec raiseorlaunch -c Chromium -w $ws1
-bindsym $mod+Ctrl+l $nexec raiseorlaunch -c Slack -w $ws1
-bindsym $mod+Ctrl+m $nexec raiseorlaunch -c Spotify -w $ws1
-bindsym $mod+Ctrl+s $nexec raiseorlaunch -c Skype -e skypeforlinux -w $ws1
-bindsym $mod+Ctrl+t $nexec raiseorlaunch -c Thunderbird -w $ws1
-bindsym $mod+Ctrl+u $nexec raiseorlaunch -c Transmission-gtk -w $ws1
-bindsym $mod+Ctrl+p $nexec raiseorlaunch -c Zathura
-bindsym $mod+Ctrl+x $nexec raiseorlaunch -c 'libreoffice-calc' \
+bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -w $ws2
+bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -w $ws1
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -w $ws1
+bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -w $ws1
+bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -e skypeforlinux -w $ws1
+bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -w $ws1
+bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -w $ws1
+bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura
+bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' \
     -e 'libreoffice --calc' -w $ws1
-bindsym $mod+Ctrl+w $nexec raiseorlaunch -c 'libreoffice-writer' \
+bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' \
     -e 'libreoffice --writer' -w $ws1
-bindsym $mod+Ctrl+g $nexec raiseorlaunch -c 'Peek'
+bindsym $mod+Control+g $nexec raiseorlaunch -c 'Peek'
 
 # Run standalone terminal apps in floating window
-bindsym $mod+Ctrl+n $nexec alacritty -t numbers -d 100 25 -e sh -c \
+bindsym $mod+Control+n $nexec alacritty -t numbers -d 100 25 -e sh -c \
     "i3-msg -q move position center && ipython3"
-bindsym $mod+Ctrl+f $nexec alacritty -t finder -d 100 25 -e sh -c \
+bindsym $mod+Control+f $nexec alacritty -t finder -d 100 25 -e sh -c \
     "i3-msg -q move position center && ranger"
-bindsym $mod+Ctrl+d $nexec alacritty -t Downloads -d 100 25 -e sh -c \
+bindsym $mod+Control+d $nexec alacritty -t Downloads -d 100 25 -e sh -c \
     "i3-msg -q move position center && ranger ~/Downloads"
-bindsym $mod+Ctrl+h $nexec alacritty -t htop -d 100 25 -e sh -c \
+bindsym $mod+Control+h $nexec alacritty -t htop -d 100 25 -e sh -c \
     "i3-msg -q move position center && htop"
-bindsym $mod+Ctrl+o $nexec alacritty -t OneDrive -d 150 30 -e sh -c \
+bindsym $mod+Control+o $nexec alacritty -t OneDrive -d 150 30 -e sh -c \
     "i3-msg -q move position center && less +F $HOME/onedrive.log"
 for_window [title="^(numbers|finder|OneDrive|htop|Downloads)$"] floating enable
 
@@ -194,7 +195,7 @@ bindsym $mod+Shift+e $nexec $HOME/bin/gtk_dialog -t "Media Management" \
     -m "Do you want to eject media drive?" -a "udiskie-umount -a"
 
 # Trash Can
-bindsym $mod+Ctrl+b $nexec alacritty -t 'Trash Can'  -d 100 25 -e sh -c \
+bindsym $mod+Control+b $nexec alacritty -t 'Trash Can'  -d 100 25 -e sh -c \
     "i3-msg -q move position center && trash-list | less"
 for_window [title="^Trash Can$"] floating enable
 bindsym $mod+Shift+b $nexec $HOME/bin/gtk_dialog \

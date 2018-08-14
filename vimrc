@@ -969,7 +969,7 @@ augroup END
 augroup ft_config
     au!
     au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc,*.dirs,
-                \zathurarc set filetype=config foldmethod=marker
+                \zathurarc,*mpv/*.conf set filetype=config foldmethod=marker
 augroup END
 
 " }}}

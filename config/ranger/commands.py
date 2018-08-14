@@ -74,6 +74,8 @@ class show_files_in_finder(Command):
     """
 
     def execute(self):
+        if sys.platform != 'darwin':
+            return
         files = ",".join(
             [
                 '"{0}" as POSIX file'.format(file.path)

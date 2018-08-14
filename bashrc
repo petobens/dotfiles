@@ -206,7 +206,7 @@ alias o='open'
 if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     alias open='xdg-open'
     alias ss='sudo su'
-    alias feh='feh --image-bg "#13191c"'
+    alias feh='feh --image-bg "#24272E"'
 fi
 alias rm='rm -v'
 alias sudo='sudo ' # Expand aliases when using sudo

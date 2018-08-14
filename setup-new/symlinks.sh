@@ -206,6 +206,11 @@ else
         ln -s "$dotfiles_dir/arch/config/zathura" "$HOME/.config/zathura"
         echo Created zathura folder symlink
     fi
+    if type "mpv" > /dev/null 2>&1; then
+        rm -rf "$HOME/.config/mpv"
+        ln -s "$dotfiles_dir/arch/config/mpv" "$HOME/.config/mpv"
+        echo Created mpv folder symlink
+    fi
 fi
 if type "git" > /dev/null 2>&1; then
     rm -rf "$HOME/.gitignore"
