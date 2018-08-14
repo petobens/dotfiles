@@ -1,28 +1,19 @@
 # Note: mysql connector needs protobuf; see https://stackoverflow.com/a/43066829/2149400
-beautysh; python_version >= '3.6'
 cython
 flake8; python_version >= '3.6'
-git+https://github.com/will8211/unimatrix; python_version >= '3.6'
 jedi; python_version >= '3.6'
 jupyter
 matplotlib
 mypy; python_version >= '3.6'
 mysql-connector==2.1.6
-neovim; python_version >= '3.6'
-neovim-remote; python_version >= '3.6'
 numpy
 pandas
 pip-review
-powerline-gitstatus; python_version >= '3.6'
-powerline-status; python_version >= '3.6'
 pyhive
 pytest; python_version >= '3.6'
 pytest-cov; python_version >= '3.6'
-git+https://github.com/ranger/ranger; python_version >= '3.6'
 requests
 scipy
 scikit-learn
 sqlparse; python_version >= '3.6'
 vim-vint; python_version >= '3.6'
-yamllint
-yapf; python_version >= '3.6'

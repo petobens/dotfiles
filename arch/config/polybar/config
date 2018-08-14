@@ -3,6 +3,7 @@ bg = #24272e
 fg = #abb2bf
 fg-urg = #e06c75
 fg-warn = #d19a66
+fg-under = #61afef
 
 [bar/main]
 bottom = false

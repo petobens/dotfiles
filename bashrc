@@ -1,21 +1,24 @@
 # Options {{{
 
+shopt -s checkwinsize
+
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "brew" > /dev/null 2>&1; then
-        brew_dir=$(brew --prefix)
-        base_pkg_dir=$brew_dir
+        base_pkg_dir=$(brew --prefix)
+    else
+        base_pkg_dir='/usr/local'
     fi
 
     # Path settings
     PATH="/usr/bin:/bin:/usr/sbin:/sbin"
-    export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH" # homebrew
+    export PATH="$base_pkg_dir/bin:$base_pkg_dir/sbin:$PATH" # homebrew
     if [ -d "/Library/TeX/texbin" ]; then
         export PATH="/Library/TeX/texbin:$PATH" # basictex
     fi
     if [ -d "/Applications/MATLAB_R2015b.app/bin" ]; then
         export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" # matlab
     fi
-    export PKG_CONFIG_PATH="$brew_dir/lib/pkgconfig:$brew_dir/lib"
+    export PKG_CONFIG_PATH="$base_pkg_dir/lib/pkgconfig:$base_pkg_dir/lib"
     if [ -d "/usr/local/opt/sqlite/bin" ]; then
         export PATH="/usr/local/opt/sqlite/bin:$PATH"
     fi
@@ -34,14 +37,21 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 else
     base_pkg_dir='/usr'
 
-    if [ -d "$HOME/bin" ]; then
-        export PATH="$HOME/bin:$PATH"
-    fi
+    # PATH is originally defined in /etc/profile
+    # export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin"
     if [ -d "$base_pkg_dir/local/texlive" ]; then
         export PATH="/usr/local/texlive/2018/bin/x86_64-linux:$PATH"
         export MANPATH="$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man"
         export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
     fi
+
+    # Local paths first
+    export PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
+    export MANPATH="$HOME/local/share/man:$HOME/.local/share/man:$MANPATH"
+    if [ -d "$HOME/bin" ]; then
+        export PATH="$HOME/bin:$PATH"
+    fi
+
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
@@ -81,6 +91,9 @@ HISTCONTROL=ignoreboth:erasedups  # avoid duplicates
 HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
+
+# Unset the prompt so we can set properly afterwards
+unset PROMPT_COMMAND
 
 # Save and reload the history after each command finishes (we wrap it in a
 # function to preserve exit status when using powerline on tmux)
@@ -251,11 +264,25 @@ if type "ipython3" > /dev/null 2>&1; then
     alias ip='ipython3'
 fi
 
-# Update all binaries (with brew) and language libraries
-ua='sudo echo -n; brew update && brew upgrade && brew cleanup; '\
-'python3 -m pip_review --interactive'
-if [ -f "$base_pkg_dir"/bin/python2 ]; then
-    ua=$ua';python2 -m pip_review --interactive'
+# Package manager
+if type "yay" > /dev/null 2>&1; then
+    alias yay='yay --nodiffmenu --answerclean A --removemake --afterclean'
+fi
+
+# Update system (and language libraries)
+ua='sudo echo -n'
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if type "brew" > /dev/null 2>&1; then
+        ua=$ua';brew update && brew upgrade && brew cleanup'
+    fi
+else
+    if type "yay" > /dev/null 2>&1; then
+        ua=$ua';yay -Syu --nodiffmenu --answerclean A --removemake --devel '\
+'--timeupdate --combinedupgrade --afterclean; yay -c'
+    fi
+fi
+if type "python3" > /dev/null 2>&1; then
+    ua=$ua';python3 -m pip_review --interactive'
 fi
 if type "R" > /dev/null 2>&1; then
     ua=$ua'; R --slave --no-save --no-restore -e '\
@@ -268,6 +295,7 @@ if type "npm" > /dev/null 2>&1; then
     ua=$ua'; npm update -g'
 fi
 alias ua="$ua"
+unset ua
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Differentiate and use colors for directories, symbolic links, etc.

@@ -56,7 +56,7 @@ bindsym $mod+$alt+k resize shrink down 10 px or 5 ppt
 #  Multiple monitors and workspaces {{{
 
 #  FIXME: Find out why this is not read from PATH
-bindsym $mod+Control+Return $nexec $HOME/bin/dual
+bindsym $mod+Control+Return $nexec dual
 
 # Move window (container) in monitor (output) direction and switch focus
 # TODO: Resize to correct split instead of full screen
@@ -93,9 +93,9 @@ bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 
 # Run scripts (includes screenshots)
 bindsym $mod+Return $nexec alacritty
-bindsym Print $nexec $HOME/bin/shots full
-bindsym $mod+Shift+5 $nexec $HOME/bin/shots selection
-bindsym $mod+Shift+6 $nexec $HOME/bin/shots active
+bindsym Print $nexec shots full
+bindsym $mod+Shift+5 $nexec shots selection
+bindsym $mod+Shift+6 $nexec shots active
 
 # Run/Launch or focus (in specific workspace)
 # FIXME: raiseorlaunch's `-w` flag because that will create new windows in that
@@ -180,9 +180,9 @@ client.background       $border
 bindsym $mod+q kill
 
 # Shutdown, restart and lock
-bindsym $mod+Shift+s $nexec $HOME/bin/gtk_dialog -t "Power Management" \
+bindsym $mod+Shift+s $nexec gtk_dialog -t "Power Management" \
     -m "Do you want to poweroff?" -a "systemctl poweroff"
-bindsym $mod+Shift+r $nexec $HOME/bin/gtk_dialog -t "Power Management" \
+bindsym $mod+Shift+r $nexec gtk_dialog -t "Power Management" \
     -m "Do you want to reboot?" -a "systemctl reboot"
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
@@ -191,14 +191,14 @@ bindsym $mod+Shift+Right exec xbacklight -inc 10
 bindsym $mod+Shift+Left exec xbacklight -dec 10
 
 # Eject mounted media (usb drives)
-bindsym $mod+Shift+e $nexec $HOME/bin/gtk_dialog -t "Media Management" \
+bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \
     -m "Do you want to eject media drive?" -a "udiskie-umount -a"
 
 # Trash Can
 bindsym $mod+Control+b $nexec alacritty -t 'Trash Can'  -d 100 25 -e sh -c \
     "i3-msg -q move position center && trash-list | less"
 for_window [title="^Trash Can$"] floating enable
-bindsym $mod+Shift+b $nexec $HOME/bin/gtk_dialog \
+bindsym $mod+Shift+b $nexec gtk_dialog \
     -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
     -a "trash-empty & dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
 
