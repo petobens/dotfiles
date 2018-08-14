@@ -70,6 +70,7 @@ label-urgent-underline = ${colors.fg-urg}
 [module/onedrive]
 type = custom/script
 exec = python ~/.config/polybar/onedrive.py
+label-font = 6
 interval = 5.0
 click-left = xdotool key Super_L+Control+o
 
@@ -95,6 +96,7 @@ format-disconnected =  %{A1:connman-gtk &:}<label-disconnected>%{A}
 label-connected = 直 %signal%%
 label-disconnected = 睊 Off
 label-disconnected-foreground = ${colors.fg-urg}
+label-font = 6
 
 [module/battery]
 type = internal/battery
