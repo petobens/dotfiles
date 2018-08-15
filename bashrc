@@ -276,7 +276,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Matlab
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
 '-nodesktop -nosplash '
-
 else
     # Differentiate and use colors for directories, symbolic links, etc.
     alias ls='ls -F --color=auto'
@@ -292,7 +291,6 @@ else
         alias lsip='comm -23 <(pacman -Qqett | sort) <(pacman -Qqg base'\
 ' -g base-devel -g xorg | sort | uniq)'
     fi
-
 fi
 
 # Work (VPN related)
