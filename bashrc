@@ -48,9 +48,6 @@ else
     # Local paths first
     export PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
     export MANPATH="$HOME/local/share/man:$HOME/.local/share/man:$MANPATH"
-    if [ -d "$HOME/bin" ]; then
-        export PATH="$HOME/bin:$PATH"
-    fi
 
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
@@ -60,6 +57,9 @@ else
 fi
 
 # Path OS agnostic settings
+if [ -d "$HOME/bin" ]; then
+    export PATH="$HOME/bin:$PATH"
+fi
 if type "go" > /dev/null 2>&1; then
     export GOPATH=$HOME/go
     export PATH=$PATH:$GOPATH/bin
@@ -271,34 +271,8 @@ if type "yay" > /dev/null 2>&1; then
     alias yay='yay --nodiffmenu --answerclean A --removemake --afterclean'
 fi
 
-# Update system (and language libraries)
-ua='sudo echo -n'
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if type "brew" > /dev/null 2>&1; then
-        ua=$ua';echo "-> Brew..."; brew update && brew upgrade && brew cleanup'
-    fi
-else
-    if type "yay" > /dev/null 2>&1; then
-        ua=$ua';echo "-> YaY..."; yay -Syu --nodiffmenu --answerclean A '\
-'--removemake --devel --timeupdate --combinedupgrade --afterclean; yay -c'
-    fi
-fi
-if type "python3" > /dev/null 2>&1; then
-    ua=$ua';echo "-> Updating Python..."; pip list --user --outdated '\
-'--format=freeze | grep -v ‘^\-e’ | cut -d = -f 1 | xargs -n1 pip install -U'
-fi
-if type "R" > /dev/null 2>&1; then
-    ua=$ua'; echo "-> Updating R..."; R --slave --no-save --no-restore -e '\
-'"update.packages(ask=TRUE, checkBuilt=TRUE)"'
-fi
-if type "tlmgr" > /dev/null 2>&1; then
-    ua=$ua'; echo "-> Updating LaTeX..."; sudo tlmgr update --all'
-fi
-if type "npm" > /dev/null 2>&1; then
-    ua=$ua'; echo "-> Updating Node..."; npm update -g'
-fi
-alias ua="$ua"
-unset ua
+# Update system (and language libraries); script in bin foler
+alias ua=sys_update
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Differentiate and use colors for directories, symbolic links, etc.

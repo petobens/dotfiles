@@ -1,0 +1,39 @@
+#!/bin/bash
+
+sudo echo -n
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if type "brew" > /dev/null 2>&1; then
+        echo "-> Brew..."
+        brew update && brew upgrade && brew cleanup
+    fi
+else
+    if type "yay" > /dev/null 2>&1; then
+        echo "-> YaY..."
+        yay -Syu --nodiffmenu --answerclean A --removemake --devel \
+            --timeupdate --combinedupgrade --afterclean
+        yay -c
+    fi
+fi
+if type "python3" > /dev/null 2>&1; then
+    echo "-> Updating python..."
+    u_list=$(pip list --user --outdated --format=freeze | grep -v ‘^\-e’ | cut -d = -f 1)
+    for i in $u_list; do
+        read -p "Do you want to update $i (y/n)? " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            pip install --user -U $i
+        fi
+    done
+fi
+if type "R" > /dev/null 2>&1; then
+    echo "-> Updating R..."
+    R --slave --no-save --no-restore -e "update.packages(ask=TRUE, checkBuilt=TRUE)"
+fi
+if type "tlmgr" > /dev/null 2>&1; then
+    echo "-> Updating LaTeX..."
+    sudo tlmgr update --all
+fi
+if type "npm" > /dev/null 2>&1; then
+    echo "-> Updating Node..."
+    npm update -g
+fi
