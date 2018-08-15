@@ -1,7 +1,5 @@
 # Options {{{
 
-shopt -s checkwinsize
-
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "brew" > /dev/null 2>&1; then
         base_pkg_dir=$(brew --prefix)
@@ -85,6 +83,8 @@ fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
+# Update values of lines and columns after running each command
+shopt -s checkwinsize
 
 # History settings
 HISTCONTROL=ignoreboth:erasedups  # avoid duplicates
@@ -94,14 +94,6 @@ shopt -s histappend # append to history i.e don't overwrite it
 
 # Unset the prompt so we can set properly afterwards
 unset PROMPT_COMMAND
-
-# Save and reload the history after each command finishes (we wrap it in a
-# function to preserve exit status when using powerline on tmux)
-save_reload_hist() {
-    local last_exit_status=$?
-    history -a; history -c; history -r
-    return $last_exit_status
-}
 export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # Powerline prompt (to see changes when customizing use `powerline-daemon
@@ -272,7 +264,7 @@ if type "yay" > /dev/null 2>&1; then
 fi
 
 # Update system (and language libraries); script in bin foler
-alias ua=sys_update
+alias ua=sys_update_all
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Differentiate and use colors for directories, symbolic links, etc.
@@ -295,6 +287,12 @@ else
         # Dual monitor
         alias dm=dual
     fi
+
+    if type "pacman" > /dev/null 2>&1; then
+        alias lsip='comm -23 <(pacman -Qqett | sort) <(pacman -Qqg base'\
+' -g base-devel -g xorg | sort | uniq)'
+    fi
+
 fi
 
 # Work (VPN related)
@@ -386,5 +384,60 @@ if type "fzf" > /dev/null 2>&1; then
         FZF-EOF"
     }
 fi
+
+# }}}
+# Functions {{{
+
+# Save and reload the history after each command finishes (we wrap it in a
+# function to preserve exit status when using powerline on tmux)
+save_reload_hist() {
+    local last_exit_status=$?
+    history -a; history -c; history -r
+    return $last_exit_status
+}
+
+# Update the system  package and language libraries
+sys_update_all() {
+    sudo echo -n
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        if type "brew" > /dev/null 2>&1; then
+            echo "-> Brew..."
+            brew update && brew upgrade && brew cleanup
+        fi
+    else
+        if type "yay" > /dev/null 2>&1; then
+            echo "-> YaY..."
+            yay -Syu --nodiffmenu --answerclean A --removemake --devel \
+                --timeupdate --combinedupgrade --afterclean
+            yay -c
+        fi
+    fi
+    if type "python3" > /dev/null 2>&1; then
+        echo "-> Updating python..."
+        u_list=$(pip list --user --outdated --format=freeze | \
+grep -v ‘^\-e’ | cut -d = -f 1)
+        for i in $u_list; do
+            read -p "Do you want to update $i (y/n)? " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                pip install --user -U $i
+            fi
+        done
+    fi
+    if type "R" > /dev/null 2>&1; then
+        echo "-> Updating R..."
+        R --slave --no-save --no-restore -e \
+"update.packages(ask=TRUE, checkBuilt=TRUE)"
+    fi
+    if type "tlmgr" > /dev/null 2>&1; then
+        echo "-> Updating LaTeX..."
+        sudo tlmgr update --all
+    fi
+    if type "npm" > /dev/null 2>&1; then
+        echo "-> Updating Node..."
+        npm update -g
+    fi
+}
+
 
 # }}}

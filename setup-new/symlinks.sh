@@ -133,12 +133,7 @@ rm -rf "$HOME/.config/alacritty"
 ln -s "$dotfiles_dir/config/alacritty" "$HOME/.config/alacritty"
 echo Created .config/alacritty folder symlink
 
-if [ -d "$dotfiles_dir/arch/bin" ]; then
-    rm -rf "$HOME/bin"
-    ln -s "$dotfiles_dir/arch/bin" "$HOME/bin"
-    echo Created bin folder symlink
-fi
-
+# OS dependent
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if open -Ra "hammerspoon" ; then
         rm -rf "$HOME/.hammerspoon"
@@ -146,6 +141,11 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         echo Created .hammerspoon folder symlink
     fi
 else
+    if [ -d "$dotfiles_dir/arch/bin" ]; then
+        rm -rf "$HOME/bin"
+        ln -s "$dotfiles_dir/arch/bin" "$HOME/bin"
+        echo Created bin folder symlink
+    fi
     if type "i3" > /dev/null 2>&1; then
         rm -rf "$HOME/.config/i3"
         ln -s "$dotfiles_dir/arch/config/i3" "$HOME/.config/i3"
@@ -213,6 +213,7 @@ else
         echo Created mpv folder symlink
     fi
 fi
+
 if type "git" > /dev/null 2>&1; then
     rm -rf "$HOME/.gitignore"
     ln -s "$dotfiles_dir/gitignore" "$HOME/.gitignore"
