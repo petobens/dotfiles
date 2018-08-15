@@ -133,6 +133,12 @@ rm -rf "$HOME/.config/alacritty"
 ln -s "$dotfiles_dir/config/alacritty" "$HOME/.config/alacritty"
 echo Created .config/alacritty folder symlink
 
+if [ -d "$dotfiles_dir/arch/bin" ]; then
+    rm -rf "$HOME/bin"
+    ln -s "$dotfiles_dir/arch/bin" "$HOME/bin"
+    echo Created bin folder symlink
+fi
+
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if open -Ra "hammerspoon" ; then
         rm -rf "$HOME/.hammerspoon"
@@ -154,11 +160,6 @@ else
         rm -rf "$HOME/.pulse/default.pa"
         ln -s "$dotfiles_dir/arch/pulse/default.pa" "$HOME/.pulse/default.pa"
         echo Created pulseaudio default.pa folder symlink
-    fi
-    if [ -d "$dotfiles_dir/arch/bin" ]; then
-        rm -rf "$HOME/bin"
-        ln -s "$dotfiles_dir/arch/bin" "$HOME/bin"
-        echo Created bin folder symlink
     fi
     if [[ $DISPLAY ]]; then
         rm -rf "$HOME/.xinitrc"
