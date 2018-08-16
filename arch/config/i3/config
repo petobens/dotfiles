@@ -116,18 +116,16 @@ bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' \
 bindsym $mod+Control+g $nexec raiseorlaunch -c 'Peek'
 
 # Run standalone terminal apps in floating window
-# FIXME: Make this raiseorlaunch
-bindsym $mod+Control+n $nexec alacritty -t numbers -d 100 25 -e sh -c \
-    "i3-msg -q move position center && ipython3"
-bindsym $mod+Control+f $nexec alacritty -t finder -d 100 25 -e sh -c \
-    "i3-msg -q move position center && ranger"
-bindsym $mod+Control+d $nexec alacritty -t Downloads -d 100 25 -e sh -c \
-    "i3-msg -q move position center && ranger ~/Downloads"
-bindsym $mod+Control+h $nexec alacritty -t htop -d 100 25 -e sh -c \
-    "i3-msg -q move position center && htop"
-bindsym $mod+Control+o $nexec alacritty -t OneDrive -d 150 30 -e sh -c \
-    "i3-msg -q move position center && less +F $HOME/onedrive.log"
-for_window [title="^(numbers|finder|OneDrive|htop|Downloads)$"] floating enable
+bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
+    'alacritty -t numbers -d 100 25 -e sh -c "i3-msg -q move position center && ipython3"'
+bindsym $mod+Control+f $nexec raiseorlaunch -t 'finder' -e \
+    'alacritty -t finder -d 100 25 -e sh -c "i3-msg -q move position center && ranger"'
+bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -e \
+    'alacritty -t Downloads -d 100 25 -e sh -c "i3-msg -q move position center && ranger ~/Downloads"'
+bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -e \
+    'alacritty -t htop -d 100 25 -e sh -c "i3-msg -q move position center && htop"'
+bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -e \
+    'alacritty -t OneDrive -d 150 30 -e sh -c "i3-msg -q move position center && less +F $HOME/onedrive.log"'
 
 
 # Other rules (use `xprop | grep -i 'class'` to get the class)
