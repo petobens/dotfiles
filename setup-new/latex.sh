@@ -34,7 +34,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         if [[  "$OSTYPE" == 'darwin'* ]]; then
             brew cask install java
         else
-            yay jdk
+            yay -S jdk10-openjdk
         fi
     fi
     sudo tlmgr install arara

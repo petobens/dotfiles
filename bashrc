@@ -260,7 +260,7 @@ fi
 
 # Package manager
 if type "yay" > /dev/null 2>&1; then
-    alias yay='yay --nodiffmenu --answerclean A --removemake --afterclean'
+    alias yay='yay --nodiffmenu --answerclean N --removemake'
 fi
 
 # Update system (and language libraries); script in bin foler
@@ -405,8 +405,8 @@ sys_update_all() {
     else
         if type "yay" > /dev/null 2>&1; then
             echo "-> YaY..."
-            yay -Syu --nodiffmenu --answerclean A --removemake --devel \
-                --timeupdate --combinedupgrade --afterclean
+            yay -Syu --nodiffmenu --answerclean N --removemake --devel \
+                --timeupdate --combinedupgrade
             yay -c
         fi
     fi

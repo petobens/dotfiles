@@ -32,7 +32,12 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
         base_pkg_dir=$brew_dir
     fi
 else
-    # TODO: Add arch installation here
+    read -p "Do you want to install pacman packages (y/n)? " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo Installing pacman/yay packages...
+        . "$current_dir/yay.sh"
+    fi
     base_pkg_dir='/usr'
 fi
 
