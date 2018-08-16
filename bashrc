@@ -43,6 +43,11 @@ else
         export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
     fi
 
+    if type "npm" > /dev/null 2>&1; then
+        PATH="$HOME/.node_modules/bin:$PATH"
+        export npm_config_prefix="$HOME/.node_modules"
+    fi
+
     # Local paths first
     export PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
     export MANPATH="$HOME/local/share/man:$HOME/.local/share/man:$MANPATH"
@@ -357,8 +362,8 @@ if type "fzf" > /dev/null 2>&1; then
             . "$base_pkg_dir/etc/profile.d/z.sh"
         fi
     else
-        if [ -f "$base_pkg_dir/share/z/z.sh" ]; then
-            . "$base_pkg_dir/share/z/z.sh"
+        if [ -f "$HOME/.local/bin/z.sh" ]; then
+            . "$HOME/.local/bin/z.sh"
         fi
     fi
     unalias z 2> /dev/null

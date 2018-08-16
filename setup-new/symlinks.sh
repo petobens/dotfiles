@@ -212,6 +212,11 @@ else
         ln -s "$dotfiles_dir/arch/config/mpv" "$HOME/.config/mpv"
         echo Created mpv folder symlink
     fi
+    if type "onedrive" > /dev/null 2>&1; then
+        rm -rf "$HOME/.config/onedrive"
+        ln -s "$dotfiles_dir/arch/config/onedrive" "$HOME/.config/onedrive"
+        echo Created onedrive folder symlink
+    fi
 fi
 
 if type "git" > /dev/null 2>&1; then

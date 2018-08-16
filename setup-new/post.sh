@@ -12,6 +12,7 @@ if type "cargo" > /dev/null 2>&1; then
             make app
             cp -r target/release/osx/Alacritty.app /Applications/
         else
+            sudo rm -rf /usr/local/bin/alacritty
             sudo cp target/release/alacritty /usr/local/bin
         fi
     )

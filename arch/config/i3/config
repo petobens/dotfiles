@@ -116,6 +116,7 @@ bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' \
 bindsym $mod+Control+g $nexec raiseorlaunch -c 'Peek'
 
 # Run standalone terminal apps in floating window
+# FIXME: Make this raiseorlaunch
 bindsym $mod+Control+n $nexec alacritty -t numbers -d 100 25 -e sh -c \
     "i3-msg -q move position center && ipython3"
 bindsym $mod+Control+f $nexec alacritty -t finder -d 100 25 -e sh -c \

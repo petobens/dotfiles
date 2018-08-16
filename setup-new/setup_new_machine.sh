@@ -96,7 +96,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     sudo gem install sqlint --conservative
 fi
 
-read -p "Do you want to generate symlinks to these dotfiles? " -n 1 -r
+read -p "Do you want to generate symlinks to these dotfiles (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo Generating symlinks...
