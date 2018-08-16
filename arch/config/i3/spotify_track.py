@@ -12,4 +12,13 @@ title = player.get_title()
 artist = player.get_artist()
 album = player.get_album()
 
-Popen(['dunstify', '-a', 'Spotify', title, f'{artist}\n{album}'])
+status = player.get_property('status')
+playing = ''
+if status.startswith('Playing'):
+    playing = '▶'
+elif status.startswith('Paused'):
+    playing = '⏸'
+elif status.startswith('Stopped'):
+    playing = '⏹'
+
+Popen(['dunstify', '-a', 'Spotify', f'{playing} {title}', f'{artist}\n{album}'])

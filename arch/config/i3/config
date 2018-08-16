@@ -129,7 +129,7 @@ bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -e \
 
 
 # Other rules (use `xprop | grep -i 'class'` to get the class)
-for_window [window_type="splash"] floating enable , move position center
+for_window [window_type="splash"] floating enable, move position center
 for_window [class="^(Pavucontrol|Connman-gtk)$"] floating enable, \
     resize set 800 400, move position center
 for_window [class="^(Peek)$"] $nexec $HOME/.config/i3/resize.py Center
