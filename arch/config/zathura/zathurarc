@@ -6,6 +6,7 @@ set statusbar-home-tilde true
 set window-title-basename true
 set incremental-search true
 set n-completion-items 12
+set selection-clipboard clipboard
 set synctex true
 set synctex-editor-command "nvr --remote-silent +\%{line} \%{input}"
 
