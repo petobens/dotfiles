@@ -98,24 +98,34 @@ bindsym $mod+Shift+5 $nexec shots selection
 bindsym $mod+Shift+6 $nexec shots active
 
 # Run/Launch or focus (in specific workspace)
-# FIXME: raiseorlaunch's `-w` flag because that will create new windows in that
-# specific workspace if the window was moved to another one
-# TODO: Open these windows maximised
-bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -w $ws2
-bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -w $ws1
-bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -w $ws1
-bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -w $ws1
-bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -e skypeforlinux -w $ws1
-bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -w $ws1
-bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -w $ws1
-bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura
-bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' \
-    -e 'libreoffice --calc' -w $ws1
-bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' \
-    -e 'libreoffice --writer' -w $ws1
-bindsym $mod+Control+g $nexec raiseorlaunch -c 'Peek'
+# Note: we use the i3-msg hack to open the window in an specific workspace but
+# focus it if it's already opened in another one.
+# See: https://github.com/open-dynaMIX/raiseorlaunch/issues/15
+# TODO: Open some of these windows maximised?
+bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -e \
+    "--no-startup-id \\\"i3-msg workspace $ws2 && alacritty\\\""
+bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -e \
+    "--no-startup-id \\\"i3-msg workspace $ws1 && chromium\\\""
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -e \
+    "--no-startup-id \\\"i3-msg workspace $ws1 && slack\\\""
+bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -e \
+    "--no-startup-id \\\"i3-msg workspace $ws1 && spotify\\\""
+bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -e \
+    "--no-startup-id \\\"i3-msg workspace $ws1 && skypeforlinux\\\""
+bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -e \
+    "--no-startup-id \\\"i3-msg workspace $ws1 && thunderbird\\\""
+bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -e \
+    "--no-startup-id \\\"i3-msg workspace $ws1 && transmission-gtk\\\""
+bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -e \
+    "--no-startup-id \\\"i3-msg workspace $ws2 && zathura\\\""
+bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -e \
+    "--no-startup-id \\\"i3-msg workspace $ws1 && libreoffice --calc\\\""
+bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -e \
+    "--no-startup-id \\\"i3-msg workspace $ws1 && libreoffice --writer\\\""
+bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -e \
+    "--no-startup-id \\\"i3-msg workspace $ws2 && peek\\\""
 
-# Run standalone terminal apps in floating window
+# Run standalone terminal apps in floating window (in the current workspace)
 bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
     'alacritty -t numbers -d 100 25 -e sh -c "i3-msg -q move position center && ipython3"'
 bindsym $mod+Control+f $nexec raiseorlaunch -t 'finder' -e \
