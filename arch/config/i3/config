@@ -95,8 +95,8 @@ bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 # Run scripts (includes screenshots)
 bindsym $mod+Return $nexec alacritty
 bindsym Print $nexec shots full
-bindsym $mod+Shift+5 $nexec shots selection
-bindsym $mod+Shift+6 $nexec shots active
+bindsym $mod+Shift+4 $nexec shots selection
+bindsym $mod+Shift+5 $nexec shots active
 
 # Run/Launch or focus (in specific workspace)
 # Note: we use the i3-msg hack to open the window in a specific workspace but
