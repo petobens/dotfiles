@@ -104,27 +104,27 @@ bindsym $mod+Shift+6 $nexec shots active
 # See: https://github.com/open-dynaMIX/raiseorlaunch/issues/15
 # TODO: Open some of these windows maximised?
 bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -e \
-    "--no-startup-id \\\"i3-msg workspace $ws2 && alacritty\\\""
-bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -e \
-    "--no-startup-id \\\"i3-msg workspace $ws1 && chromium\\\""
+    "--no-startup-id i3-msg workspace $ws2 && alacritty"
+bindsym $mod+Control+i $nexec --no-startup-id raiseorlaunch -c Chromium -e \
+    "--no-startup-id i3-msg workspace $ws1 && chromium"
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -e \
-    "--no-startup-id \\\"i3-msg workspace $ws1 && slack\\\""
+    "--no-startup-id i3-msg workspace $ws1 && slack"
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -e \
-    "--no-startup-id \\\"i3-msg workspace $ws1 && spotify\\\""
+    "--no-startup-id i3-msg workspace $ws1 && spotify"
 bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -e \
-    "--no-startup-id \\\"i3-msg workspace $ws1 && skypeforlinux\\\""
+    "--no-startup-id i3-msg workspace $ws1 && skypeforlinux"
 bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -e \
-    "--no-startup-id \\\"i3-msg workspace $ws1 && thunderbird\\\""
+    "--no-startup-id i3-msg workspace $ws1 && thunderbird"
 bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -e \
-    "--no-startup-id \\\"i3-msg workspace $ws1 && transmission-gtk\\\""
+    "--no-startup-id i3-msg workspace $ws1 && transmission-gtk"
 bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -e \
-    "--no-startup-id \\\"i3-msg workspace $ws2 && zathura\\\""
+    "--no-startup-id i3-msg workspace $ws2 && zathura"
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -e \
-    "--no-startup-id \\\"i3-msg workspace $ws1 && libreoffice --calc\\\""
+    "--no-startup-id i3-msg workspace $ws1 && libreoffice --calc"
 bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -e \
-    "--no-startup-id \\\"i3-msg workspace $ws1 && libreoffice --writer\\\""
+    "--no-startup-id i3-msg workspace $ws1 && libreoffice --writer"
 bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -e \
-    "--no-startup-id \\\"i3-msg workspace $ws2 && peek\\\""
+    "--no-startup-id i3-msg workspace $ws2 && peek"
 
 # Run standalone terminal apps in floating window (in the current workspace)
 bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
