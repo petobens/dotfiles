@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# X stuff
+[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+setxkbmap -layout us,es -option grp:win_space_toggle -option ctrl:nocaps
+[[ -f ~/.Xmodmap ]] && xmodmap ~/.Xmodmap
+xbacklight -set 50
+
+# Programs
+[[ -f ~/.fehbg ]] && ~/.fehbg &
+dunst &
+onedrive --synchronize --monitor &
+udiskie &
+compton -cCG -r 7 &
+xfce4-power-manager &
+dual init
+exec i3

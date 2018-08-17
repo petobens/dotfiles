@@ -1,0 +1,4 @@
+! Change spanish accent modifier to next to p key
+keycode 34 = bracketleft braceleft dead_acute dead_circumflex bracketleft dead_abovering
+! Make tilde (`) with <> key next to z
+keycode 94 = grave asciitilde

@@ -163,11 +163,14 @@ else
     fi
     if [[ $DISPLAY ]]; then
         rm -rf "$HOME/.xinitrc"
-        ln -s "$dotfiles_dir/arch/xinitrc" "$HOME/.xinitrc"
+        ln -s "$dotfiles_dir/arch/X/xinitrc" "$HOME/.xinitrc"
         echo Created .xinitrc symlink
         rm -rf "$HOME/.Xresources"
-        ln -s "$dotfiles_dir/arch/xresources" "$HOME/.Xresources"
+        ln -s "$dotfiles_dir/arch/X/xresources" "$HOME/.Xresources"
         echo Created .Xresources symlink
+        rm -rf "$HOME/.Xmodmap"
+        ln -s "$dotfiles_dir/arch/X/xmodmap" "$HOME/.Xmodmap"
+        echo Created .Xmodmap symlink
     fi
     if [ -d "$dotfiles_dir/arch/config/gtk" ]; then
         rm -rf "$HOME/.config/gtk-3.0"
