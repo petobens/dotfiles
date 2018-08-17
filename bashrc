@@ -43,11 +43,6 @@ else
         export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
     fi
 
-    if type "npm" > /dev/null 2>&1; then
-        PATH="$HOME/.node_modules/bin:$PATH"
-        export npm_config_prefix="$HOME/.node_modules"
-    fi
-
     # Local paths first
     export PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
     export MANPATH="$HOME/local/share/man:$HOME/.local/share/man:$MANPATH"
@@ -62,6 +57,10 @@ fi
 # Path OS agnostic settings
 if [ -d "$HOME/bin" ]; then
     export PATH="$HOME/bin:$PATH"
+fi
+if type "npm" > /dev/null 2>&1; then
+    PATH="$HOME/.node_modules/bin:$PATH"
+    export npm_config_prefix="$HOME/.node_modules"
 fi
 if type "go" > /dev/null 2>&1; then
     export GOPATH=$HOME/go
@@ -97,7 +96,7 @@ HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
 
-# Unset the prompt so we can set properly afterwards
+# Unset the prompt so we can set it properly afterwards
 unset PROMPT_COMMAND
 export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
@@ -234,9 +233,10 @@ fi
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
 # alias
 if type "git" > /dev/null 2>&1; then
-    alias gs='git status'
-    alias gco='git checkout'
     _completion_loader git
+    alias gs='git status'
+    alias gcl='git clone'
+    alias gco='git checkout'
     __git_complete gco _git_checkout
     alias gcp='git cherry-pick'
     alias gb='git branch'
