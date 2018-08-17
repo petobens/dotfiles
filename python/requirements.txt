@@ -16,3 +16,4 @@ scipy
 scikit-learn
 sqlparse; python_version >= '3.6'
 vim-vint; python_version >= '3.6'
+yapf; python_version >= '3.6'
