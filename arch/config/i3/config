@@ -55,7 +55,8 @@ bindsym $mod+$alt+k resize shrink down 10 px or 5 ppt
 #  }}}
 #  Multiple monitors and workspaces {{{
 
-#  FIXME: Find out why this is not read from PATH
+# Toggle dual monitor
+#  FIXME: This completely breaks the window and polybar layout
 bindsym $mod+Control+Return $nexec dual
 
 # Move window (container) in monitor (output) direction and switch focus
@@ -98,7 +99,7 @@ bindsym $mod+Shift+5 $nexec shots selection
 bindsym $mod+Shift+6 $nexec shots active
 
 # Run/Launch or focus (in specific workspace)
-# Note: we use the i3-msg hack to open the window in an specific workspace but
+# Note: we use the i3-msg hack to open the window in a specific workspace but
 # focus it if it's already opened in another one.
 # See: https://github.com/open-dynaMIX/raiseorlaunch/issues/15
 # TODO: Open some of these windows maximised?
