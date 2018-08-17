@@ -51,7 +51,7 @@ class fzf_z(Command):
         if sys.platform == 'darwin':
             z_sh = '/usr/local/etc/profile.d/z.sh'
         else:
-            z_sh = '/usr/share/z/z.sh'
+            z_sh = '/home/pedro/.local/bin/z.sh'
         if not os.path.isfile(z_sh) or z_sh is None:
             return
         command = f'. {z_sh} &&  ' \
