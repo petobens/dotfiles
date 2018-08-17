@@ -196,7 +196,9 @@ alias o='open'
 if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     alias open='xdg-open'
     alias ss='sudo su'
-    alias iv='feh --image-bg "#24272E"'
+    if type "feh" > /dev/null 2>&1; then
+        alias iv='feh'
+    fi
 fi
 alias rm='rm -v'
 alias sudo='sudo ' # Expand aliases when using sudo
@@ -441,6 +443,5 @@ grep -v ‘^\-e’ | cut -d = -f 1)
         npm update -g
     fi
 }
-
 
 # }}}
