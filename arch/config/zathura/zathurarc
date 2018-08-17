@@ -12,7 +12,7 @@ set synctex-editor-command "nvr --remote-silent +\%{line} \%{input}"
 
 # Mappings
 map n navigate next
-map p navigate p
+map p navigate previous
 map = zoom in
 map - zoom out
 map 0 zoom original
