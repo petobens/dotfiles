@@ -206,6 +206,11 @@ alias ssh='TERM=xterm-256color; ssh'
 alias ds='du -shc * | sort -rh'
 
 # Other binaries
+if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
+    . $base_pkg_dir/share/bash-completion/completions/man
+    alias m='man'
+    complete -F _man m
+fi
 if type "htop" > /dev/null 2>&1; then
     alias ht='htop'
 fi
@@ -341,9 +346,9 @@ if type "fzf" > /dev/null 2>&1; then
         get_parent_dirs() {
             if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
             if [[ "${1}" == '/' ]]; then
-                for _dir in "${dirs[@]}"; do echo $_dir; done
+                for _dir in "${dirs[@]}"; do echo "$_dir"; done
             else
-                get_parent_dirs $(dirname "$1")
+                get_parent_dirs "$(dirname "$1")"
             fi
     }
         local start_dir="$(dirname "$PWD")"  # start with parent dir
@@ -425,7 +430,7 @@ grep -v ‘^\-e’ | cut -d = -f 1)
             read -p "Do you want to update $i (y/n)? " -n 1 -r
             echo
             if [[ $REPLY =~ ^[Yy]$ ]]; then
-                pip install --user -U $i
+                pip install --user -U "$i"
             fi
         done
     fi
