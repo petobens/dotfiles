@@ -1,4 +1,4 @@
-# TODO: Try zathura-tabbed
+# TODO: Try zathura-tabbed?
 # Options
 set font "Noto Sans Mono 10"
 set smooth-scroll true
@@ -11,11 +11,16 @@ set synctex true
 set synctex-editor-command "nvr --remote-silent +\%{line} \%{input}"
 
 # Mappings
+map n navigate next
+map p navigate p
+map = zoom in
+map - zoom out
+map 0 zoom original
 map w adjust_window width
 map b adjust_window best-fit
-map v adjust_window best-fit
 unmap q
 unmap [presentation] q
+map i toggle_index
 
 # Colors
 set default-bg "#24272e"
