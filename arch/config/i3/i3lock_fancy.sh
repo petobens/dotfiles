@@ -1,10 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-# Pre lock
+# Pre lock (pause music and notifications)
 SPOTIFY_STATUS=$(playerctl -p spotify status)
 if [[ $SPOTIFY_STATUS == "Playing" ]]; then
     playerctl -p spotify pause
 fi
+killall -SIGUSR1 dunst
 
 # Actual locking
 B='#24272EFF'  # inside color
@@ -40,4 +41,6 @@ i3lock \
     --datestr="%a %b %d"             \
     --ring-width=3.0                 \
     --radius=100
-\
+
+# Post lock
+killall -SIGUSR2 dunst
