@@ -19,7 +19,7 @@ padding = 0
 module-margin-left = 2
 modules-left = menu title
 modules-center = i3
-modules-right = onedrive xkeyboard vpn wlan pulseaudio battery date
+modules-right = docker onedrive xkeyboard vpn wlan pulseaudio battery date
 font-0 = Noto Sans Mono:size=8;3
 font-1 = Noto Sans Mono:size=15;2
 font-2 = Noto Sans:size=10;3
@@ -66,6 +66,12 @@ label-urgent-font = 3
 label-urgent-padding = 2
 label-urgent-margin = 2
 label-urgent-underline = ${colors.fg-urg}
+
+[module/docker]
+type = custom/script
+exec = ~/.config/polybar/docker.sh
+label-font = 6
+interval = 5.0
 
 [module/onedrive]
 type = custom/script

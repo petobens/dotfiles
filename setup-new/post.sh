@@ -43,19 +43,19 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 fi
 
 # Linux
-if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+if [ "$(expr substr "$(uname -s)" 1 5)" == "Linux" ]; then
     # Create XDG directories
     if type "xdg-user-dirs-update" > /dev/null 2>&1; then
         echo "Creating missing XDG directories..."
         dirs=("Desktop" "Documents" "Downloads" "Music" "Pictures" "Videos"
         "Public" "Templates")
         for dir in "${dirs[@]}"; do
-            if [ $dir ==  "Templates" ]; then
-                xdg-user-dirs-update --set ${dir^^} "$HOME"
+            if [ "$dir" ==  "Templates" ]; then
+                xdg-user-dirs-update --set "${dir^^}" "$HOME"
                 continue
             fi
             mkdir -p "$HOME/$dir"
-            xdg-user-dirs-update --set ${dir^^} "$HOME/$dir"
+            xdg-user-dirs-update --set "${dir^^}" "$HOME/$dir"
         done
     fi
 
@@ -68,5 +68,12 @@ if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
         if type "mpv" > /dev/null 2>&1; then
             xdg-mime default mpv.desktop image/gif
         fi
+    fi
+
+    # Manage docker as non-root
+    if type "docker" > /dev/null 2>&1; then
+        echo "Manage docker as non-root..."
+        sudo groupadd docker
+        sudo usermod -aG docker "$USER"
     fi
 fi
