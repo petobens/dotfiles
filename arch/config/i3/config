@@ -116,6 +116,8 @@ bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -e \
     "--no-startup-id i3-msg workspace $ws1 && transmission-gtk"
 bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -e \
     "--no-startup-id i3-msg workspace $ws2 && zathura"
+bindsym $mod+Control+v $nexec raiseorlaunch -c feh  -e \
+    "--no-startup-id i3-msg workspace $ws2 && feh"
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -e \
     "--no-startup-id i3-msg workspace $ws1 && libreoffice --calc"
 bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -e \

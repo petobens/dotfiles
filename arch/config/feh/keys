@@ -1,15 +1,17 @@
-zoom_in k
-zoom_out j
+zoom_in equal
+zoom_out minus
 zoom_default o
 
-next_img l
-next_img j l
-prev_img h k
+next_img j l n
+prev_img h k p
+reload_image r
 
 scroll_up K
 scroll_down J
 scroll_right L
 scroll_left H
+scroll_up_page C-u
+scroll_down_page C-d
 
 toggle_fullscreen E
 toggle_filenames f
