@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # Check bash major version
 bash_version=${BASH_VERSION:0:1}
 
@@ -150,6 +151,11 @@ else
         rm -rf "$HOME/.config/i3"
         ln -s "$dotfiles_dir/arch/config/i3" "$HOME/.config/i3"
         echo Created i3 folder symlink
+        if type "xfce4-power-manager" > /dev/null 2>&1; then
+            sudo rm -rf "/usr/local/bin/xflock4"
+            sudo ln -s "$dotfiles_dir/arch/config/i3/i3lock_fancy.sh" "/usr/local/bin/xflock4"
+            echo Created xflock4 symlink
+        fi
     fi
     if type "polybar" > /dev/null 2>&1; then
         rm -rf "$HOME/.config/polybar"
