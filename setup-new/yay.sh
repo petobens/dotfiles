@@ -88,10 +88,12 @@ $yay_cmd playerctl
 $yay_cmd polybar-git
 $yay_cmd raiseorlaunch
 $yay_cmd rofi-git
+$yay_cmd tabbed
 $yay_cmd udiskie
 $yay_cmd upower
 $yay_cmd xdg-user-dirs
 $yay_cmd xdotool
+$yay_cmd xsendkey
 $yay_cmd xsel
 
 # Themes

@@ -1,4 +1,3 @@
-# TODO: Try zathura-tabbed?
 # Options
 set font "Noto Sans Mono 10"
 set smooth-scroll true
@@ -43,3 +42,8 @@ set index-bg "#24272e"
 set index-fg "#abb2bf"
 set index-active-bg "#61afef"
 set index-active-fg "#24272e"
+
+# Tabs (with tabbed and using `tabbed zathura --reparent`)
+# FIXME: Not working
+map <C-n> feedkeys ":exec xsendkey Control+Shift+l<Return>"
+map <C-p> feedkeys ":exec xsendkey Control+Shift+h<Return>"
