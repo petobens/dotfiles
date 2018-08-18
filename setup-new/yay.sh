@@ -88,6 +88,7 @@ $yay_cmd playerctl
 $yay_cmd polybar-git
 $yay_cmd raiseorlaunch
 $yay_cmd rofi-git
+$yay_cmd rofi-dmenu
 $yay_cmd tabbed
 $yay_cmd udiskie
 $yay_cmd upower
