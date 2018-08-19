@@ -9,10 +9,13 @@ case $1 in
         # TODO: Select screen: https://github.com/naelstrof/maim/issues/103
         maim "$FILENAME";;
     active)
-        maim -i $(xdotool getactivewindow) "$FILENAME";;
+        maim -i "$(xdotool getactivewindow)" "$FILENAME";;
     selection)
         maim -s "$FILENAME";;
 esac
+
+# Copy to clipboard and send notification
 if [ -f "$FILENAME" ]; then
+    xclip -selection clipboard -i -t image/png "$FILENAME"
     dunstify -i accessories-screenshot 'Screenshot Taken' "Saved as $FILENAME"
 fi
