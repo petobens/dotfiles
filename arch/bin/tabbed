@@ -3,5 +3,3 @@
 if [ -f /usr/bin/tabbed ]; then
     /usr/bin/tabbed -u "#282c34" -U "#abb2bf" -t "#3b4048" -T "#abb2bf" -d -c "$@" & disown
 fi
-
-

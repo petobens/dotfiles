@@ -7,11 +7,11 @@ mkdir -p "$SCREENSHOT_DIR"
 case $1 in
     full)
         # TODO: Select screen: https://github.com/naelstrof/maim/issues/103
-        maim "$FILENAME";;
+        maim "$FILENAME" ;;
     active)
-        maim -i "$(xdotool getactivewindow)" "$FILENAME";;
+        maim -i "$(xdotool getactivewindow)" "$FILENAME" ;;
     selection)
-        maim -s "$FILENAME";;
+        maim -s "$FILENAME" ;;
 esac
 
 # Copy to clipboard and send notification

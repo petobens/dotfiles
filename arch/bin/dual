@@ -2,8 +2,8 @@
 
 internal='LVDS1'
 external='HDMI1'
-connected=$(xrandr | grep '[ *]+' | wc -l)
-active=$(xrandr | grep '*+' | wc -l)
+connected=$(xrandr | grep -c '[ *]+')
+active=$(xrandr | grep -c '*+')
 
 if [[ $connected == 2 && ( $1 == 'init' || $active == 1 ) ]]; then
     xrandr --output "$internal" --primary --auto \
@@ -11,4 +11,4 @@ if [[ $connected == 2 && ( $1 == 'init' || $active == 1 ) ]]; then
 else
     xrandr --output "$external" --off --output "$internal" --auto
 fi
-[[ $1 != 'init' ]] && $HOME/.config/polybar/launch.sh &> /dev/null
+[[ $1 != 'init' ]] && "$HOME/.config/polybar/launch.sh" &> /dev/null
