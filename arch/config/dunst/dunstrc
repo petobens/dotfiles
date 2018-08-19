@@ -182,7 +182,7 @@ per_monitor_dpi = false
 close = ctrl+space
 close_all = ctrl+shift+space
 history = ctrl+grave
-# Context menu.
+# Context menu (to operate on notification)
 context = ctrl+shift+period
 
 
@@ -206,6 +206,6 @@ timeout = 0
 
 # Per app rules
 [Spotify]
-appname = Spotify
+    appname = Spotify
 new_icon = Spotify
 timeout = 3
