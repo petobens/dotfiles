@@ -424,15 +424,19 @@ sys_update_all() {
     fi
     if type "python3" > /dev/null 2>&1; then
         echo "-> Updating python..."
-        u_list=$(pip list --user --outdated --format=freeze | \
-grep -v ‘^\-e’ | cut -d = -f 1)
-        for i in $u_list; do
-            read -p "Do you want to update $i (y/n)? " -n 1 -r
-            echo
-            if [[ $REPLY =~ ^[Yy]$ ]]; then
-                pip install --user -U "$i"
-            fi
-        done
+        outdated="$(pip list --user --outdated)"
+        if [ ! -z "$outdated" ]; then
+            echo "$outdated"
+            u_list=$(pip list --user --outdated --format=freeze | \
+                        grep -v ‘^\-e’ | cut -d = -f 1)
+            for i in $u_list; do
+                read -p "Do you want to update $i (y/n)? " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    pip install --user -U "$i"
+                fi
+            done
+        fi
     fi
     if type "R" > /dev/null 2>&1; then
         echo "-> Updating R..."
