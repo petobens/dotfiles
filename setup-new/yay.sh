@@ -82,6 +82,7 @@ $yay_cmd i3ipc-python-git
 $yay_cmd i3lock-color-git
 $yay_cmd maim
 $yay_cmd mpv
+$yay_cmd ntfs-3g
 $yay_cmd pulseaudio
 $yay_cmd pavucontrol
 $yay_cmd playerctl
