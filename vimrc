@@ -767,6 +767,7 @@ if s:is_mac
     nnoremap <Leader>sw :w !sudo tee % >/dev/null<CR>
 elseif s:is_linux && has('nvim') && dein#tap('suda') == 1
     nnoremap <Leader>sw :w suda://%<CR>
+    nnoremap <Leader>se :e suda://
 endif
 
 " Fast editing and reloading of the vimrc file
@@ -2179,8 +2180,8 @@ endfunction
 " Mappings
 let g:UltiSnipsExpandTrigger = '<C-s>'
 nnoremap <Leader>es :UltiSnipsEdit<CR>
-" Snippet explorer with Unite
-nnoremap <silent> <Leader>se :Denite output:call\ UltiSnips#ListSnippets()<CR>
+" Snippet explorer with Denite (we use this mapping for sudo edit now)
+" nnoremap <silent> <Leader>se :Denite output:call\ UltiSnips#ListSnippets()<CR>
 
 " FIXME: Solve problems with anon snippets or use delimitMate; See #248; NO FIX?
 " Maybe use neosnippet
