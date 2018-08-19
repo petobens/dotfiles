@@ -257,17 +257,22 @@ if type "git" > /dev/null 2>&1; then
 fi
 
 # Python
-if [ ! -f "$base_pkg_dir"/bin/python2 ]; then
-    alias python='python3'
-    alias pip='pip3'
-fi
-if type "jupyter" > /dev/null 2>&1; then
-    # TODO: Hack for notebooks with python 3.7
-    # See: https://github.com/jupyter/notebook/issues/3837
-    alias jn='unset BROWSER;jupyter notebook'
-fi
-if type "ipython3" > /dev/null 2>&1; then
-    alias ip='ipython3'
+if type "python" > /dev/null 2>&1; then
+    if [ ! -f "$base_pkg_dir"/bin/python2 ]; then
+        alias python='python3'
+        alias pip='pip3'
+    fi
+    if type "jupyter" > /dev/null 2>&1; then
+        # TODO: Hack for notebooks with python 3.7
+        # See: https://github.com/jupyter/notebook/issues/3837
+        alias jn='unset BROWSER;jupyter notebook'
+    fi
+    if type "pip" > /dev/null 2>&1; then
+        alias piu='pip install --user'
+    fi
+    if type "ipython3" > /dev/null 2>&1; then
+        alias ip='ipython3'
+    fi
 fi
 
 # Package manager
