@@ -102,13 +102,16 @@ bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 
 # Run/Launch or focus (in specific workspace)
-# Note: we use the i3-msg hack to open the window in a specific workspace but
+# Note: i) we use the i3-msg hack to open the window in a specific workspace but
 # focus it if it's already opened in another one.
 # See: https://github.com/open-dynaMIX/raiseorlaunch/issues/15
+# ii) we use marks terminal to avoid focusing on other windows of the same class
+# https://github.com/open-dynaMIX/raiseorlaunch/issues/17
+
 # TODO: Open some of these windows maximised?
 # WS1 (foreground programs)
-bindsym $mod+Control+i $nexec --no-startup-id raiseorlaunch -c Chromium -e \
-    "--no-startup-id i3-msg workspace $ws1 && chromium"
+bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -e \
+    "--no-startup-id i3-msg workspace $ws1 && chromium" -m browser
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -e \
     "--no-startup-id i3-msg workspace $ws1 && slack"
 bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -e \
@@ -119,7 +122,7 @@ bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -e \
     "--no-startup-id i3-msg workspace $ws1 && libreoffice --writer"
 # WS2 (terminal and those interacting with it)
 bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -e \
-    "--no-startup-id i3-msg workspace $ws2 && alacritty"
+    "--no-startup-id i3-msg workspace $ws2 && alacritty" -m terminal
 bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -e \
     "--no-startup-id i3-msg workspace $ws2 && zathura"
 bindsym $mod+Control+v $nexec raiseorlaunch -c feh  -e \
@@ -140,7 +143,7 @@ bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -e \
     "--no-startup-id i3-msg workspace $ws3 && chromium --new-window https://calendar.google.com/calendar/r" -m cal
 
 # Standalone terminal apps in floating window in the current workspace
-bindsym $mod+Return $nexec alacritty
+bindsym $mod+Return $nexec alacritty -d 100 25
 bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
     'alacritty -t numbers -d 100 25 -e sh -c "i3-msg -q move position center && ipython3"'
 bindsym $mod+Control+f $nexec raiseorlaunch -t 'finder' -e \
