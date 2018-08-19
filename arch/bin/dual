@@ -11,4 +11,3 @@ if [[ $connected == 2 && ( $1 == 'init' || $active == 1 ) ]]; then
 else
     xrandr --output "$external" --off --output "$internal" --auto
 fi
-[[ $1 != 'init' ]] && "$HOME/.config/polybar/launch.sh" &> /dev/null

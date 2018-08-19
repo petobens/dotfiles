@@ -53,18 +53,18 @@ index-sort = true
 label-focused = %index%
 label-focused-font = 4
 label-focused-padding = 2
-label-focused-margin = 2
+label-focused-margin = 0
 label-focused-underline = ${colors.fg}
 label-unfocused = %index%
 label-unfocused-font = 3
-label-unfocused-margin = 4
+label-unfocused-margin = 2
 label-visible = %index%
 label-visible-font = 4
-label-visible-margin = 4
+label-visible-margin = 2
 label-urgent = %index%
 label-urgent-font = 3
 label-urgent-padding = 2
-label-urgent-margin = 2
+label-urgent-margin = 0
 label-urgent-underline = ${colors.fg-urg}
 
 [module/docker]
