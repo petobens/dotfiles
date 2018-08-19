@@ -23,7 +23,7 @@ i3lock \
     --insidewrongcolor=$B            \
     --ringwrongcolor=$W              \
     --wrongcolor=$W                  \
-    --wrongtext="Try again"          \
+    --wrongtext="Wrong!"             \
     --noinputtext="No input!"        \
     \
     --insidecolor=$B                 \
