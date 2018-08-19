@@ -94,6 +94,9 @@ workspace $ws2 output $external
 workspace $ws3 output $interal
 workspace $ws4 output $external
 
+# Focus next monitor (with wrapping): this switches mouse cursor two
+bindsym $alt+grave focus output right
+
 # }}}
 # Run or activate apps and rules {{{
 
