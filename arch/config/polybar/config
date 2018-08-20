@@ -52,7 +52,7 @@ pin-workspaces = true
 index-sort = true
 label-focused = %index%
 label-focused-font = 2
-label-focused-padding = 3
+label-focused-padding = 2
 label-focused-margin = 0
 label-focused-underline = ${colors.fg}
 label-unfocused = %index%
@@ -66,6 +66,9 @@ label-urgent-font = 2
 label-urgent-padding = 2
 label-urgent-margin = 0
 label-urgent-underline = ${colors.fg-urg}
+label-separator = ─
+label-separator-padding = 1
+label-separator-font = 2
 
 [module/docker]
 type = custom/script
@@ -104,19 +107,19 @@ interface = wlp3s0
 ping-interval = 3
 format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}
 format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
+label-disconnected-font = 4
 label-connected = 直  %{T3}%signal%%%{T-}
 label-connected-font = 4
-label-disconnected = 睊 %{T3}Off{T-}
+label-disconnected = 睊 %{T3}Off%{T-}
 label-disconnected-foreground = ${colors.fg-urg}
-label-font = 4
 
 [module/pulseaudio]
 type = internal/pulseaudio
 ; Note: max vol might go beyond 100% (but it is amplified and hence distorted).
 ; We show the normalized (100%) version
 use-ui-max = false
-format-volume = %{A1:pavucontrol &:} <label-volume> <bar-volume>   %{A}
-format-muted = %{A1:pavucontrol &:} <label-muted>   %{A}
+format-volume = %{A1:pavucontrol &:}<label-volume> <bar-volume>  %{A}
+format-muted = %{A1:pavucontrol &:}<label-muted>  %{A}
 label-volume = 奄
 label-volume-font = 5
 label-muted = 
@@ -134,9 +137,9 @@ full-at = 99
 battery = BAT0
 adapter = ACAD
 poll-interval = 5
-format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>   %{A}
-format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>  <label-discharging>   %{A}
-format-full = %{A1:xfce4-power-manager-settings &:}<label-full>   %{A}
+format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>  %{A}
+format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>  <label-discharging>  %{A}
+format-full = %{A1:xfce4-power-manager-settings &:}<label-full>  %{A}
 label-charging =   %{T3}%percentage%%%{T-}
 label-discharging = %{T3}%percentage%%%{T-}
 label-charging-font = 4
@@ -158,5 +161,4 @@ date-alt = %A %d %b %Y
 time-alt = %H:%M:%S
 label =  %date% %time%
 label-font = 3
-label-padding-right = 1
-label-padding-left = 0
+label-padding-right = 2
