@@ -152,7 +152,7 @@ ramp-capacity-4 = 
 [module/date]
 type = internal/date
 interval = 5.0
-date = %a %d %b
+date = %a %d
 time = %H:%M
 date-alt = %A %d %b %Y
 time-alt = %H:%M:%S
