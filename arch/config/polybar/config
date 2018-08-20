@@ -38,7 +38,7 @@ margin-top = 0
 type = custom/text
 content = 
 content-padding = 3
-content-font = 4
+content-font = 5
 click-left = xdotool key Super_L+p
 
 [module/title]
