@@ -20,6 +20,13 @@ map b adjust_window best-fit
 unmap q
 unmap [presentation] q
 map i toggle_index
+map r recolor
+
+# Black background
+set recolor-lightcolor "#24272e"
+set recolor-darkcolor "#abb2bf"
+set recolor false
+set recolor-keephue false
 
 # Colors
 set default-bg "#24272e"
