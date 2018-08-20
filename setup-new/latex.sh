@@ -80,7 +80,7 @@ sudo tlmgr install xpatch
 sudo tlmgr install xstring
 
 # Linux specific (i.e not included in basic texlive installation)
-if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+if [ "$(expr substr "$(uname -s)" 1 5)" == "Linux" ]; then
     sudo tlmgr install beamer
     sudo tlmgr install booktabs
     sudo tlmgr install breqn
