@@ -99,6 +99,8 @@ workspace $ws1 output $internal
 workspace $ws2 output $external
 workspace $ws3 output $interal
 workspace $ws4 output $external
+workspace $ws5 output $internal
+workspace $ws6 output $external
 
 # Focus next monitor (with wrapping): this switches mouse cursor two
 bindsym $alt+grave focus output right
