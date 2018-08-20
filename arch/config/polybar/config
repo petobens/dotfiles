@@ -108,9 +108,9 @@ ping-interval = 3
 format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}
 format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
 label-disconnected-font = 4
-label-connected = 直  %{T1}%signal%%%{T-}
+label-connected = 直  %{T3}%signal%%%{T-}
 label-connected-font = 4
-label-disconnected = 睊 %{T1}Off%{T-}
+label-disconnected = 睊 %{T3}Off%{T-}
 label-disconnected-foreground = ${colors.fg-urg}
 
 [module/pulseaudio]
@@ -140,11 +140,11 @@ poll-interval = 5
 format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>  %{A}
 format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>  <label-discharging>  %{A}
 format-full = %{A1:xfce4-power-manager-settings &:}<label-full>  %{A}
-label-charging =   %{T1}%percentage%%%{T-}
-label-discharging = %{T1}%percentage%%%{T-}
+label-charging =   %{T3}%percentage%%%{T-}
+label-discharging = %{T3}%percentage%%%{T-}
 label-charging-font = 4
 label-discharging-font = 4
-label-full =  %{T1}100%%{T-}
+label-full =  %{T3}100%%{T-}
 ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.fg-urg}
 ramp-capacity-1 = 
