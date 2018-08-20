@@ -76,6 +76,7 @@ fi
 # Neovim and tmux latest versions
 brew tap neovim/neovim
 brew install --HEAD neovim
+brew install neovim-remote
 brew install --HEAD tmux
 
 # Databases
@@ -108,6 +109,12 @@ brew install fd
 brew install tree
 brew install pyenv
 brew install socat  # for faster powerline
+
+# Python binaries
+brew install beautysh
+brew install powerline
+brew install ranger
+brew install yamllint
 
 # Remove outdated versions
 brew cleanup
