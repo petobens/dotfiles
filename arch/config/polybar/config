@@ -7,6 +7,7 @@ fg-under = #61afef
 
 [bar/main]
 bottom = false
+enable-ipc = true
 monitor = ${env:MONITOR:}
 width = 100%
 height = 25
@@ -20,16 +21,14 @@ module-margin-left = 2
 modules-left = menu title
 modules-center = i3
 modules-right = docker onedrive xkeyboard vpn wlan pulseaudio battery date
-font-0 = Noto Sans Mono:size=8;3
-font-1 = Noto Sans Mono:size=15;2
-font-2 = Noto Sans:size=10;3
-font-3 = Noto Sans:size=10:weight=bold;3
-font-4 = Symbols Nerd Font:size=11;3
-font-5 = Symbols Nerd Font:size=13;3
-font-6 = Noto Sans Mono:size=9:weight=bold;3
 tray-position = ${env:TRAY_POS:}
-tray-maxsize = 16
-enable-ipc = true
+tray-maxsize = 8
+; Font definition
+font-0 = Noto Sans:size=11;3
+font-1 = Noto Sans:size=11:weight=bold;3
+font-2 = Noto Sans Mono:size=10:weight=bold;3
+font-3 = Symbols Nerd Font:size=13;4
+font-4 = Symbols Nerd Font:size=14;4
 
 [global/wm]
 margin-bottom = 0
@@ -38,31 +37,32 @@ margin-top = 0
 [module/menu]
 type = custom/text
 content = 
-content-padding = 1
+content-padding = 3
+content-font = 4
 click-left = xdotool key Super_L+p
 
 [module/title]
 type = internal/xwindow
 label-maxlen = 30
-label-font = 7
+label-font = 3
 
 [module/i3]
 type = internal/i3
 pin-workspaces = true
 index-sort = true
 label-focused = %index%
-label-focused-font = 4
-label-focused-padding = 2
+label-focused-font = 2
+label-focused-padding = 3
 label-focused-margin = 0
 label-focused-underline = ${colors.fg}
 label-unfocused = %index%
-label-unfocused-font = 3
+label-unfocused-font = 1
 label-unfocused-margin = 2
 label-visible = %index%
-label-visible-font = 4
+label-visible-font = 2
 label-visible-margin = 2
 label-urgent = %index%
-label-urgent-font = 3
+label-urgent-font = 2
 label-urgent-padding = 2
 label-urgent-margin = 0
 label-urgent-underline = ${colors.fg-urg}
@@ -70,21 +70,24 @@ label-urgent-underline = ${colors.fg-urg}
 [module/docker]
 type = custom/script
 exec = ~/.config/polybar/docker.sh
-label-font = 6
 interval = 5.0
+label-font = 5
+format-padding = 1
 click-left = alacritty -t Docker -d 150 30 -e sh -c "i3-msg -q move position center && docker info | less +F"
 
 [module/onedrive]
 type = custom/script
 exec = python ~/.config/polybar/onedrive.py
-label-font = 6
+label-font = 5
+format-padding = 1
 interval = 5.0
 click-left = xdotool key Super_L+Control+o
 
 [module/xkeyboard]
 type = internal/xkeyboard
 format = <label-layout>
-label-layout-font = 4
+label-layout-font = 2
+label-layout-padding = 1
 
 [module/vpn]
 type = custom/script
@@ -92,18 +95,38 @@ exec = echo vpn
 exec-if = pgrep -x openconnect
 interval = 5
 format-underline = ${colors.fg}
-label-font = 7
+label-font = 3
+format-padding = 2
 
 [module/wlan]
 type = internal/network
 interface = wlp3s0
 ping-interval = 3
-format-connected = %{A1:connman-gtk &:}<label-connected>%{A}
-format-disconnected =  %{A1:connman-gtk &:}<label-disconnected>%{A}
-label-connected = 直 %signal%%
-label-disconnected = 睊 Off
+format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}
+format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
+label-connected = 直  %{T3}%signal%%%{T-}
+label-connected-font = 4
+label-disconnected = 睊 %{T3}Off{T-}
 label-disconnected-foreground = ${colors.fg-urg}
-label-font = 6
+label-font = 4
+
+[module/pulseaudio]
+type = internal/pulseaudio
+; Note: max vol might go beyond 100% (but it is amplified and hence distorted).
+; We show the normalized (100%) version
+use-ui-max = false
+format-volume = %{A1:pavucontrol &:} <label-volume> <bar-volume>   %{A}
+format-muted = %{A1:pavucontrol &:} <label-muted>   %{A}
+label-volume = 奄
+label-volume-font = 5
+label-muted = 
+label-muted-font = 4
+label-muted-foreground = ${colors.fg-urg}
+bar-volume-width = 7
+bar-volume-gradient = false
+bar-volume-indicator = │
+bar-volume-fill = ─
+bar-volume-empty = ─
 
 [module/battery]
 type = internal/battery
@@ -111,36 +134,20 @@ full-at = 99
 battery = BAT0
 adapter = ACAD
 poll-interval = 5
-format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>%{A}
-format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity> <label-discharging>%{A}
-format-full = %{A1:xfce4-power-manager-settings &:}<label-full>%{A}
-label-charging =  %percentage%%
-label-discharging = %percentage%%
-label-full =  100%
+format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>   %{A}
+format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>  <label-discharging>   %{A}
+format-full = %{A1:xfce4-power-manager-settings &:}<label-full>   %{A}
+label-charging =   %{T3}%percentage%%%{T-}
+label-discharging = %{T3}%percentage%%%{T-}
+label-charging-font = 4
+label-discharging-font = 4
+label-full =  %{T3}100%%{T-}
 ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.fg-urg}
 ramp-capacity-1 = 
 ramp-capacity-2 = 
 ramp-capacity-3 = 
 ramp-capacity-4 = 
-
-[module/pulseaudio]
-type = internal/pulseaudio
-; Max vol might go beyond 100% (but it is amplified and hence distorted). We
-; show the normalized (100%) version
-use-ui-max = false
-format-volume = %{A1:pavucontrol &:}<label-volume> <bar-volume>%{A}
-format-muted = %{A1:pavucontrol &:}<label-muted>%{A}
-label-volume = 奄
-label-muted = 
-label-muted-font = 6
-label-muted-foreground = ${colors.fg-urg}
-bar-volume-width = 7
-bar-volume-gradient = false
-bar-volume-indicator = │
-bar-volume-indicator-foreground = #ff
-bar-volume-fill = ─
-bar-volume-empty = ─
 
 [module/date]
 type = internal/date
@@ -150,5 +157,6 @@ time = %H:%M
 date-alt = %A %d %b %Y
 time-alt = %H:%M:%S
 label =  %date% %time%
-label-font = 7
+label-font = 3
 label-padding-right = 1
+label-padding-left = 0
