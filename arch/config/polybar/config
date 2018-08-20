@@ -22,7 +22,7 @@ modules-left = menu title
 modules-center = i3
 modules-right = docker onedrive xkeyboard vpn wlan pulseaudio battery date
 tray-position = ${env:TRAY_POS:}
-tray-maxsize = 8
+tray-maxsize = 16
 ; Font definition
 font-0 = Noto Sans:size=11;3
 font-1 = Noto Sans:size=11:weight=bold;3
