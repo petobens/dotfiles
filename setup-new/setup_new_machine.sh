@@ -53,9 +53,11 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo Installing Python3 modules...
     pip3 install --user -r "$parent_dir"/python/requirements.txt
+    pip3 install jupyter
     if [  -f "$base_pkg_dir"/bin/python2 ]; then
         echo Installing Python2 modules...
-        pip install --user -r "$parent_dir"/python/requirements.txt
+        pip2 install --user -r "$parent_dir"/python/requirements.txt
+        pip2 install jupyter
         # Enable both python2 and python3 ipython kernels
         ipython kernel install
     fi
@@ -96,14 +98,14 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     . "$current_dir/symlinks.sh"
 fi
 
-read -p "Do you want to install vim packages? " -n 1 -r
+read -p "Do you want to install vim packages (y/n)?" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo Installing nvim packages...
     nvim +qall
 fi
 
-read -p "Do you want to install extra stuff? " -n 1 -r
+read -p "Do you want to install extra stuff (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo Running post install...

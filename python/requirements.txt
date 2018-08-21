@@ -2,7 +2,6 @@
 cython
 flake8; python_version >= '3.6'
 jedi; python_version >= '3.6'
-jupyter
 matplotlib
 mypy; python_version >= '3.6'
 mysql-connector==2.1.6
