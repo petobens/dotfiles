@@ -47,7 +47,8 @@ if type "python" > /dev/null 2>&1; then
     ln -s "$dotfiles_dir/python/pdbrc" "$HOME/.pdbrc"
     echo Created .pdbrc symlink
 fi
-if type "python" > /dev/null 2>&1; then
+if type "ipython" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.ipython/profile_default"
     rm -rf "$HOME/.ipython/profile_default/ipython_config.py"
     ln -s "$dotfiles_dir/python/ipython_config.py" "$HOME/.ipython/profile_default/ipython_config.py"
     echo Created .ipython_config symlink
