@@ -105,7 +105,7 @@ format-padding = 2
 [module/wlan]
 type = internal/network
 ; Get interface with `command ip link`
-interface = wlp60s0
+interface = wlan0
 ping-interval = 3
 format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}
 format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
@@ -129,13 +129,9 @@ label-muted-font = 4
 label-muted-foreground = ${colors.fg-urg}
 bar-volume-width = 7
 bar-volume-gradient = false
-; FIXME: these glyphs are not shown
-# bar-volume-indicator = │
-# bar-volume-fill = ─
-# bar-volume-empty = ─
-bar-volume-indicator = |
-bar-volume-fill = -
-bar-volume-empty = -
+bar-volume-indicator = │
+bar-volume-fill = ─
+bar-volume-empty = ─
 
 [module/battery]
 type = internal/battery
