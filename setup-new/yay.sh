@@ -75,6 +75,7 @@ $yay_cmd python-powerline-gitstatus
 # Arch specific and window manager
 $yay_cmd compton
 $yay_cmd connman
+$yay_cmd dunst
 $yay_cmd dunstify
 $yay_cmd feh
 $yay_cmd i3-gaps
