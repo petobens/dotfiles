@@ -163,6 +163,7 @@ else
         echo Created polybar folder symlink
     fi
     if type "pulseaudio" > /dev/null 2>&1; then
+        mkdir -p "$HOME/.pulse/"
         rm -rf "$HOME/.pulse/default.pa"
         ln -s "$dotfiles_dir/arch/pulse/default.pa" "$HOME/.pulse/default.pa"
         echo Created pulseaudio default.pa folder symlink
