@@ -21,6 +21,7 @@ yay_cmd='yay -S --nodiffmenu --answerclean N --needed --force --removemake'
 # Fonts
 $yay_cmd adobe-source-code-pro-fonts
 $yay_cmd nerd-fonts-source-code-pro
+$yay_cmd noto-fonts
 $yay_cmd noto-fonts-cjk
 $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
