@@ -89,13 +89,6 @@ if type "npm" > /dev/null 2>&1; then
     fi
 fi
 
-read -p "Do you want to install extra Ruby libraries (y/n)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo Installing Ruby libraries...
-    sudo gem install sqlint --conservative
-fi
-
 read -p "Do you want to generate symlinks to these dotfiles (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
