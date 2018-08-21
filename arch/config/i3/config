@@ -93,8 +93,8 @@ bindsym $mod+Control+Left move container to output left; focus output left; \
 
 # Assign workspaces to specific monitors (use `xrandr --current` to see which
 # are available). Even on primary and odds on secondary
-set $internal LVDS1
-set $external HDMI1
+set $internal "eDP-1"
+set $external "DP-1"
 workspace $ws1 output $internal
 workspace $ws2 output $external
 workspace $ws3 output $interal
@@ -142,7 +142,7 @@ bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -e \
     "--no-startup-id i3-msg workspace $ws2 && peek"
 # WS3 (background programs)
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -e \
-    "--no-startup-id i3-msg workspace $ws3 && spotify"
+    "--no-startup-id i3-msg workspace $ws3 && spotify --force-device-scale-factor=2"
 bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -e \
     "--no-startup-id i3-msg workspace $ws3 && thunderbird"
 bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -e \
@@ -169,7 +169,7 @@ bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -e \
 # Other rules (use `xprop | grep -i 'class'` to get the class)
 for_window [window_type="splash"] floating enable, move position center
 for_window [class="^(Pavucontrol|Connman-gtk)$"] floating enable, \
-    resize set 800 400, move position center
+    resize set 50ppt 40ppt, move position center
 for_window [class="^(Peek)$"] $nexec $HOME/.config/i3/resize.py Center
 
 # }}}

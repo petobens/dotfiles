@@ -93,10 +93,12 @@ $yay_cmd rofi-git
 $yay_cmd rofi-dmenu
 $yay_cmd tabbed
 $yay_cmd udiskie
+$yay_cmd update-grub
 $yay_cmd upower
 $yay_cmd xdg-user-dirs
 $yay_cmd xdotool
 $yay_cmd xsendkey
+$yay_cmd xclip
 $yay_cmd xsel
 
 # Themes

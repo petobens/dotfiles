@@ -1,13 +1,13 @@
 #!/bin/bash
 
-internal='LVDS1'
-external='HDMI1'
+internal='eDP-1'
+external='DP-1'
 connected=$(xrandr | grep -c '[ *]+')
 active=$(xrandr | grep -c '*+')
 
 if [[ $connected == 2 && ( $1 == 'init' || $active == 1 ) ]]; then
-    xrandr --output "$internal" --primary --auto \
-    --output "$external" --left-of "$internal" --auto
+    xrandr --output "$internal" --primary --dpi 192 \
+    --output "$external" --scale 2x2 --mode 1920x1080 --left-of "$internal"
 else
-    xrandr --output "$external" --off --output "$internal" --auto
+    xrandr --output "$external" --off --output "$internal" --dpi 192
 fi

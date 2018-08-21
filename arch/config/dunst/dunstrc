@@ -175,7 +175,7 @@ startup_notification = false
 
 
 [experimental]
-per_monitor_dpi = false
+per_monitor_dpi = true
 
 
 [shortcuts]

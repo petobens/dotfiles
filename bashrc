@@ -52,6 +52,10 @@ else
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
 
     export BROWSER='chromium'
+
+    # Scaling
+    export GDK_SCALE=2
+    export GDK_DPI_SCALE=0.5
 fi
 
 # Path OS agnostic settings

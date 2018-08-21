@@ -379,6 +379,7 @@ mapkey(',hs', 'Open URL from history', function() {
 mapkey(',th', 'Open URL from history in a new tab', function() {
     Front.openOmnibar({type: 'History'});
 });
+// FIXME: Not working?
 mapkey(',dh', 'Delete history older than 30 days', function() {
     RUNTIME('deleteHistoryOlderThan', {
         days: 30
