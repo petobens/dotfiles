@@ -53,13 +53,15 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo Installing Python3 modules...
     pip3 install --user -r "$parent_dir"/python/requirements.txt
-    pip3 install jupyter
+    sudo pip3 install jupyter
     if [  -f "$base_pkg_dir"/bin/python2 ]; then
-        echo Installing Python2 modules...
-        pip2 install --user -r "$parent_dir"/python/requirements.txt
-        pip2 install jupyter
-        # Enable both python2 and python3 ipython kernels
-        ipython kernel install
+        if type "pip2" > /dev/null 2>&1; then
+            echo Installing Python2 modules...
+            pip2 install --user -r "$parent_dir"/python/requirements.txt
+            sudo pip2 install jupyter
+            # Enable both python2 and python3 ipython kernels
+            ipython kernel install
+        fi
     fi
     ipython3 kernel install
 fi
