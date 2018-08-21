@@ -40,6 +40,7 @@ $yay_cmd openblas
 # Languages
 $yay_cmd python
 $yay_cmd python-pip
+$yay_cmd pyenv
 $yay_cmd rust
 if ! type "tlmgr" > /dev/null 2>&1; then
     read -p "Do you want to install latex (y/n)? " -n 1 -r
