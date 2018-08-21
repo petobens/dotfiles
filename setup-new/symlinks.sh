@@ -169,7 +169,7 @@ else
         ln -s "$dotfiles_dir/arch/pulse/default.pa" "$HOME/.pulse/default.pa"
         echo Created pulseaudio default.pa folder symlink
     fi
-    if [[ $DISPLAY ]]; then
+    if type "Xorg" > /dev/null 2>&1; then
         rm -rf "$HOME/.xinitrc"
         ln -s "$dotfiles_dir/arch/X/xinitrc" "$HOME/.xinitrc"
         echo Created .xinitrc symlink
