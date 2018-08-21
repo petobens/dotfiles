@@ -63,7 +63,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
             ipython kernel install
         fi
     fi
-    ipython3 kernel install
+    sudo ipython3 kernel install
 fi
 
 if type "tlmgr" > /dev/null 2>&1; then
