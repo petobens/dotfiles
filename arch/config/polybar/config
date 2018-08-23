@@ -21,7 +21,7 @@ padding = 0
 module-margin-left = 2
 modules-left = menu title
 modules-center = i3
-modules-right = docker onedrive xkeyboard vpn wlan pulseaudio battery date
+modules-right = docker onedrive xkeyboard vpn wifi ethernet pulseaudio battery date
 tray-position = ${env:TRAY_POS:}
 tray-maxsize = 32
 ; Font definition
@@ -102,7 +102,7 @@ format-underline = ${colors.fg}
 label-font = 3
 format-padding = 2
 
-[module/wlan]
+[module/wifi]
 type = internal/network
 ; Get interface with `command ip link`
 interface = wlan0
@@ -112,7 +112,18 @@ format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
 label-disconnected-font = 4
 label-connected = 直  %{T3}%signal%%%{T-}
 label-connected-font = 4
-label-disconnected = 睊 %{T3}Off%{T-}
+label-disconnected = 睊
+label-disconnected-foreground = ${colors.fg-urg}
+
+[module/ethernet]
+type = internal/network
+interface = eth0
+format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}
+format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
+label-disconnected-font = 5
+label-connected = 
+label-connected-font = 5
+label-disconnected = 
 label-disconnected-foreground = ${colors.fg-urg}
 
 [module/pulseaudio]
@@ -135,7 +146,7 @@ bar-volume-empty = ─
 
 [module/battery]
 type = internal/battery
-full-at = 99
+full-at = 100
 battery = BAT0
 adapter = ACAD
 poll-interval = 5
