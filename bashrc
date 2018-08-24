@@ -114,8 +114,7 @@ if type "powerline-daemon" > /dev/null 2>&1; then
     if type "python3" > /dev/null 2>&1; then
         py_exec='python3'
     fi
-    . $(dirname $($py_exec -c 'import powerline.bindings; '\
-'print(powerline.bindings.__file__)'))/bash/powerline.sh
+    . /usr/lib/python3.7/site-packages/powerline/bindings/bash/powerline.sh
 fi
 
 # }}}
