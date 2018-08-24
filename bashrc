@@ -239,6 +239,10 @@ fi
 if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
     alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s petobens'
 fi
+if type "mpv" > /dev/null 2>&1; then
+    # (P)hot(b)ooth (webcam)
+    alias pb='mpv tv://'
+fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
 # alias
