@@ -28,7 +28,7 @@ follow = keyboard
 # the top and down respectively.
 # The width can be negative.  In this case the actual width is the
 # screen width minus the width defined in within the geometry option.
-geometry = "550-0+55"
+geometry = "600x5-0+55"
 
 # Show how many messages are currently hidden (because of geometry).
 indicate_hidden = yes
