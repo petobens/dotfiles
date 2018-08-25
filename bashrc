@@ -86,7 +86,7 @@ fi
 
 # R libraries (note: first create this folder if it doesn't exist)
 if type "R" > /dev/null 2>&1; then
-    export R_LIBS_USER="$base_pkg_dir/.local/lib/R/site-library"
+    export R_LIBS_USER="$HOME/.local/lib/R/site-library"
 fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
@@ -456,7 +456,7 @@ sys_update_all() {
     if type "R" > /dev/null 2>&1; then
         echo "-> Updating R..."
         R --slave --no-save --no-restore -e \
-"update.packages(ask=TRUE, checkBuilt=TRUE)"
+'update.packages(ask=TRUE, checkBuilt=TRUE, lib=Sys.getenv("R_LIBS_USER"))'
     fi
     if type "tlmgr" > /dev/null 2>&1; then
         echo "-> Updating LaTeX..."

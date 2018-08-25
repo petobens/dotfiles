@@ -34,7 +34,7 @@ packages <- readLines("$parent_dir/R/r_libraries.txt")
 new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
 if (length(new_packages)) {
     print(paste("Installing the following packages:", paste(new_packages, collapse=", ")))
-    install.packages(new_packages)
+    install.packages(new_packages, lib=Sys.getenv("R_LIBS_USER"))
 }
 EOF
 
