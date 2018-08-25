@@ -326,10 +326,11 @@ set title
 " Show the command being typed
 set showcmd
 
-" Make command line two lines high
-set cmdheight=1
+" Make command line two lines high (we cannot set it to 1 because we get the
+" `press ENTER` message)
+set cmdheight=2
 " Reduce maximum height of the command line window (default is 7)
-set cmdwinheight=5
+set cmdwinheight=4
 
 " Don't update the display while executing macros
 set lazyredraw
