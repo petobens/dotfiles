@@ -155,6 +155,8 @@ bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -e \
 
 # Standalone terminal apps in floating window in the current workspace
 bindsym $mod+Return $nexec alacritty -d 100 25
+bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -e \
+    'alacritty -t QuickTerm -d 80 20 -e sh -c "i3-msg -q move position center && /bin/bash"'
 bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
     'alacritty -t numbers -d 100 25 -e sh -c "i3-msg -q move position center && ipython3"'
 bindsym $mod+Control+f $nexec raiseorlaunch -t 'finder' -e \
