@@ -95,7 +95,8 @@ stty -ixon
 shopt -s checkwinsize
 
 # History settings
-HISTCONTROL=ignoreboth:erasedups  # avoid duplicates
+HISTCONTROL=ignoreboth:erasedups  # era duplicate entries
+HISTIGNORE='?:??' # don't save one and two character commands (q, ls, aliases)
 HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
@@ -413,9 +414,10 @@ fi
 
 # Save and reload the history after each command finishes (we wrap it in a
 # function to preserve exit status when using powerline on tmux)
+# See: https://unix.stackexchange.com/a/18443
 save_reload_hist() {
     local last_exit_status=$?
-    history -a; history -c; history -r
+    history -n; history -w; history -c; history -r
     return $last_exit_status
 }
 
