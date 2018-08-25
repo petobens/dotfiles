@@ -157,6 +157,9 @@ else
             sudo ln -s "$dotfiles_dir/arch/config/i3/i3lock_fancy.sh" "/usr/local/bin/xflock4"
             echo Created xflock4 symlink
         fi
+        sudo rm -rf "/etc/systemd/system/sleeplock.service"
+        sudo ln -s "$dotfiles_dir/arch/systemd/sleeplock.service" "/etc/systemd/system/sleeplock.service"
+        echo Created sleeplock service symlink
     fi
     if type "polybar" > /dev/null 2>&1; then
         rm -rf "$HOME/.config/polybar"

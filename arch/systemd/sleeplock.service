@@ -1,0 +1,13 @@
+[Unit]
+Description=Lock screen on resuming from sleep/suspend
+Before=sleep.target
+
+[Service]
+User=pedro
+Type=forking
+Environment=DISPLAY=:0
+ExecStart=/home/pedro/.config/i3/i3lock_fancy.sh suspend
+ExecStartPost=/bin/sleep 1
+
+[Install]
+WantedBy=suspend.target

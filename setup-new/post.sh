@@ -76,4 +76,10 @@ if [ "$(expr substr "$(uname -s)" 1 5)" == "Linux" ]; then
         sudo groupadd docker
         sudo usermod -aG docker "$USER"
     fi
+
+    # Enable some services
+    if [ -f /etc/systemd/system/sleeplock.service ]; then
+        sudo systemctl enable sleeplock.service
+        sudo systemctl start sleeplock.service
+    fi
 fi
