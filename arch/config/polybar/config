@@ -145,10 +145,12 @@ bar-volume-fill = ─
 bar-volume-empty = ─
 
 [module/battery]
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
 type = internal/battery
 full-at = 100
 battery = BAT0
-adapter = ACAD
+adapter = AC0
 poll-interval = 5
 format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>  %{A}
 format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>  <label-discharging>  %{A}
