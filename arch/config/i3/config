@@ -113,7 +113,6 @@ bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 
 # Run/Launch or focus (in specific workspace)
-# TODO: Open some of these windows maximised?
 # WS1 (foreground programs)
 bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -W $ws1 -m browser
 #  FIXME: Waiting not quite working
@@ -136,32 +135,40 @@ bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
 bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws3
 bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -W $ws3
-# Note: to have calendar desktop notifications we must enable the following
-# flag: `chrome://flags/#enable-native-notifications`.
-# See: https://github.com/dunst-project/dunst/issues/375
 bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws3 -m cal -e \
     "chromium --new-window https://calendar.google.com/calendar/r"
 
 # Standalone terminal apps in floating window in the current workspace
-bindsym $mod+Return $nexec alacritty -d 100 25
 bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -e \
-    'alacritty -t QuickTerm -d 80 20 -e sh -c "i3-msg -q move position center && /bin/bash"'
+    'alacritty -t QuickTerm -e /bin/bash --login'
 bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
-    'alacritty -t numbers -d 100 25 -e sh -c "i3-msg -q move position center && ipython3"'
-bindsym $mod+Control+f $nexec raiseorlaunch -t 'finder' -e \
-    'alacritty -t finder -d 100 25 -e sh -c "i3-msg -q move position center && ranger"'
+    'alacritty -t numbers -e ipython3'
+bindsym $mod+Control+f $nexec raiseorlaunch -t 'ranger' -e \
+    'alacritty -t ranger -e ranger'
 bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -e \
-    'alacritty -t Downloads -d 100 25 -e sh -c "i3-msg -q move position center && ranger ~/Downloads"'
+    'alacritty -t Downloads -e ranger ~/Downloads'
 bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -e \
-    'alacritty -t htop -d 100 25 -e sh -c "i3-msg -q move position center && htop"'
+    'alacritty -t htop -e htop'
 bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -e \
     'alacritty -t OneDrive -d 150 30 -e sh -c "i3-msg -q move position center && less +F $HOME/onedrive.log"'
 
-# Other rules (use `xprop | grep -i 'class'` to get the class)
+# Sizing and position rules (use `xprop` to get the window info)
+# Note: `for_window` applies the first time i3 encounters a window (i.e not when
+# re-focusing it)
+for_window [class="^(Spotify|Slack|libreoffice-calc|libreoffice-writer|Thunderbird|Transmission-gtk)$"] \
+    $nexec $HOME/.config/i3/resize.py Full
+# We seem to need this hack for Alacritty (i.e use title instead of mark)
+for_window [title="^(Alacritty)$"] \
+    $nexec $HOME/.config/i3/resize.py Full
+for_window [con_mark="^(browser|cal)$"] \
+    $nexec $HOME/.config/i3/resize.py Full
+for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
+    $nexec $HOME/.config/i3/resize.py Center
+for_window [title="^(QuickTerm|numbers|ranger|Downloads|htop)$"] \
+    $nexec $HOME/.config/i3/resize.py Center
+for_window [class="^(Zathura|feh)$"] \
+    $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
-for_window [class="^(Pavucontrol|Connman-gtk)$"] floating enable, \
-    resize set 50ppt 40ppt, move position center
-for_window [class="^(Peek)$"] $nexec $HOME/.config/i3/resize.py Center
 
 # }}}
 #  Spotify and volume {{{
