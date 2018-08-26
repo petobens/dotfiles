@@ -76,6 +76,7 @@ $yay_cmd powerline
 $yay_cmd python-powerline-gitstatus
 
 # Arch specific and window manager
+$yay_cmd acpi_call
 $yay_cmd compton
 $yay_cmd connman
 $yay_cmd dunst
@@ -95,6 +96,7 @@ $yay_cmd raiseorlaunch
 $yay_cmd rofi-git
 $yay_cmd rofi-dmenu
 $yay_cmd tabbed
+$yay_cmd tlp
 $yay_cmd udiskie
 $yay_cmd update-grub
 $yay_cmd upower
