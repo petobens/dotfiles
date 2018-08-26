@@ -113,45 +113,34 @@ bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 
 # Run/Launch or focus (in specific workspace)
-# Note: i) we use the i3-msg hack to open the window in a specific workspace but
-# focus it if it's already opened in another one.
-# See: https://github.com/open-dynaMIX/raiseorlaunch/issues/15
-# ii) we use marks terminal to avoid focusing on other windows of the same class
-# https://github.com/open-dynaMIX/raiseorlaunch/issues/17
-
 # TODO: Open some of these windows maximised?
 # WS1 (foreground programs)
-bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -e \
-    "--no-startup-id i3-msg workspace $ws1 && chromium" -m browser
-bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -e \
-    "--no-startup-id i3-msg workspace $ws1 && slack"
-bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -e \
-    "--no-startup-id i3-msg workspace $ws1 && skypeforlinux"
-bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -e \
-    "--no-startup-id i3-msg workspace $ws1 && libreoffice --calc"
-bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -e \
-    "--no-startup-id i3-msg workspace $ws1 && libreoffice --writer"
+bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -W $ws1 -m browser
+#  FIXME: Waiting not quite working
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws1 -l 5
+bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws1 -l 3 -C -e \
+    "skypeforlinux"
+bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -W $ws1 -e \
+    "libreoffice --calc" -l 3
+bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -W $ws1 -e \
+    "libreoffice --writer" -l 3
 # WS2 (terminal and those interacting with it)
-bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -e \
-    "--no-startup-id i3-msg workspace $ws2 && alacritty" -m terminal
-bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -e \
-    "--no-startup-id i3-msg workspace $ws2 && zathura"
-bindsym $mod+Control+v $nexec raiseorlaunch -c feh  -e \
-    "--no-startup-id i3-msg workspace $ws2 && feh"
-bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -e \
-    "--no-startup-id i3-msg workspace $ws2 && peek"
+# Note: we use marks terminal to avoid focusing on other windows of the same
+# class. See https://github.com/open-dynaMIX/raiseorlaunch/issues/17
+bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws2 -m terminal
+bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -W $ws2 -C
+bindsym $mod+Control+v $nexec raiseorlaunch -c feh -W $ws2 -C
+bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -W $ws2
 # WS3 (background programs)
-bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -e \
-    "--no-startup-id i3-msg workspace $ws3 && spotify --force-device-scale-factor=2"
-bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -e \
-    "--no-startup-id i3-msg workspace $ws3 && thunderbird"
-bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -e \
-    "--no-startup-id i3-msg workspace $ws3 && transmission-gtk"
+bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
+    "spotify --force-device-scale-factor=2"
+bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws3
+bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -W $ws3
 # Note: to have calendar desktop notifications we must enable the following
 # flag: `chrome://flags/#enable-native-notifications`.
 # See: https://github.com/dunst-project/dunst/issues/375
-bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -e \
-    "--no-startup-id i3-msg workspace $ws3 && chromium --new-window https://calendar.google.com/calendar/r" -m cal
+bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws3 -m cal -e \
+    "chromium --new-window https://calendar.google.com/calendar/r"
 
 # Standalone terminal apps in floating window in the current workspace
 bindsym $mod+Return $nexec alacritty -d 100 25
