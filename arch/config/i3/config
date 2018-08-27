@@ -222,6 +222,9 @@ bindsym $mod+Shift+9 $nexec shots active
 # Kill focused window (as in mac); note that this quit apps that are minimized
 # to sys tray (in this cases, such as slack, use ctrl-q to actually kill them)
 bindsym $mod+q kill
+# Kill all windows on all workspaces (match any class string)
+bindsym $mod+Shift+q $nexec gtk_dialog -t "App Management" \
+    -m "Do you want to quit all apps?" -a 'i3-msg [class="^.*"] kill'
 
 # Shutdown, restart and lock
 bindsym $mod+Shift+s $nexec gtk_dialog -t "Power Management" \
