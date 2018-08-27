@@ -206,6 +206,6 @@ timeout = 0
 
 # Per app rules
 [Spotify]
-    appname = Spotify
+appname = Spotify
 new_icon = Spotify
 timeout = 3
