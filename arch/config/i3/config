@@ -171,7 +171,6 @@ for_window [title="^(QuickTerm|numbers|ranger|Downloads)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(htop|Trash Can|OneDrive)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle
-#  TODO: Add rectangle for htop, onedrive and trashcan
 for_window [class="^(Zathura|feh)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
