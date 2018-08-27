@@ -50,4 +50,6 @@ if __name__ == '__main__':
         resize_win(0.5, 0.5, 0.5, 0.5)
     elif how == 'Center':
         resize_win(0.25, 0.25, 0.5, 0.5)
+    elif how == 'Rectangle':
+        resize_win(0.15, 0.15, 0.75, 0.6)
     sys.exit(0)

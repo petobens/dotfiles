@@ -41,6 +41,7 @@ bindsym $mod+Control+2 $nexec $HOME/.config/i3/resize.py 'Top Right'
 bindsym $mod+Control+3 $nexec $HOME/.config/i3/resize.py 'Bottom Left'
 bindsym $mod+Control+4 $nexec $HOME/.config/i3/resize.py 'Bottom Right'
 bindsym $mod+Control+5 $nexec $HOME/.config/i3/resize.py Center
+bindsym $mod+Control+6 $nexec $HOME/.config/i3/resize.py Rectangle
 
 # Resize
 bindsym $mod+h resize grow left 10 px or 5 ppt
@@ -150,7 +151,9 @@ bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -e \
 bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -e \
     'alacritty -t htop -e htop'
 bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -e \
-    'alacritty -t OneDrive -d 150 30 -e sh -c "i3-msg -q move position center && less +F $HOME/onedrive.log"'
+    'alacritty -t "OneDrive" -e sh -c "less +F $HOME/onedrive.log"'
+bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -e \
+    'alacritty -t "Trash Can" -e sh -c "trash-list | less"'
 
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
@@ -164,8 +167,11 @@ for_window [con_mark="^(browser|cal)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(QuickTerm|numbers|ranger|Downloads|htop)$"] \
+for_window [title="^(QuickTerm|numbers|ranger|Downloads)$"] \
     $nexec $HOME/.config/i3/resize.py Center
+for_window [title="^(htop|Trash Can|OneDrive)$"] \
+    $nexec $HOME/.config/i3/resize.py Rectangle
+#  TODO: Add rectangle for htop, onedrive and trashcan
 for_window [class="^(Zathura|feh)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
@@ -233,10 +239,7 @@ bindsym $mod+Shift+Left exec xbacklight -dec 10
 bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \
     -m "Do you want to eject media drive?" -a "udiskie-umount -a"
 
-# Trash Can
-bindsym $mod+Control+b $nexec alacritty -t 'Trash Can'  -d 100 25 -e sh -c \
-    "i3-msg -q move position center && trash-list | less"
-for_window [title="^Trash Can$"] floating enable
+# Empty Trash Can
 bindsym $mod+Shift+b $nexec gtk_dialog \
     -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
     -a "trash-empty & dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
