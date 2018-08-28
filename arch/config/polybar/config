@@ -137,7 +137,6 @@ label-volume = 奄
 label-volume-font = 5
 label-muted = 
 label-muted-font = 4
-label-muted-foreground = ${colors.fg-urg}
 bar-volume-width = 7
 bar-volume-gradient = false
 bar-volume-indicator = │
