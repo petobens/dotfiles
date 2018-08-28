@@ -117,13 +117,13 @@ bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 # WS1 (foreground programs)
 bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -W $ws1 -m browser
 #  FIXME: Waiting not quite working
-bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws1 -l 20
-bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws1 -l 20 -C -e \
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws1 -l 30
+bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws1 -l 30 -C -e \
     "skypeforlinux"
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -W $ws1 -e \
-    "libreoffice --calc" -l 20
+    "libreoffice --calc" -l 30
 bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -W $ws1 -e \
-    "libreoffice --writer" -l 20
+    "libreoffice --writer" -l 30
 # WS2 (terminal and those interacting with it)
 # Note: we use marks terminal to avoid focusing on other windows of the same
 # class. See https://github.com/open-dynaMIX/raiseorlaunch/issues/17
