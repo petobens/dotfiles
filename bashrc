@@ -197,7 +197,7 @@ alias ll='ls -lah'
 alias q='exit'
 alias c='clear'
 alias o='open'
-if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+if [ "$OSTYPE" == 'linux-gnu' ]; then
     alias open='xdg-open'
     alias ss='sudo su'
     if type "feh" > /dev/null 2>&1; then

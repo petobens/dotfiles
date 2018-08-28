@@ -43,7 +43,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 fi
 
 # Linux
-if [ "$(expr substr "$(uname -s)" 1 5)" == "Linux" ]; then
+if [ "$OSTYPE" == 'linux-gnu' ]; then
     # Create XDG directories
     if type "xdg-user-dirs-update" > /dev/null 2>&1; then
         echo "Creating missing XDG directories..."
