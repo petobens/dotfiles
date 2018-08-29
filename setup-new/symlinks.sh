@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Ask for sudo right away
+sudo echo -n
+
 # Check bash major version
 bash_version=${BASH_VERSION:0:1}
 
@@ -129,6 +132,10 @@ else
     if [ -d "$dotfiles_dir/arch/bin" ]; then
         ln -fTs "$dotfiles_dir/arch/bin" "$HOME/bin"
         echo Created bin folder symlink
+    fi
+    if type "pacman" > /dev/null 2>&1; then
+        sudo ln -fTs "$dotfiles_dir/arch/config/pacman.conf" "/etc/pacman.conf"
+        echo Created /etc/pacman.conf symlink
     fi
     # Window manager related
     if type "i3" > /dev/null 2>&1; then

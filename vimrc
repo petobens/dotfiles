@@ -970,8 +970,8 @@ augroup END
 augroup ft_config
     au!
     au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc,*.dirs,
-                \zathurarc,*mpv/*.conf,*onedrive/config, set filetype=config
-                \ foldmethod=marker
+                \zathurarc,*mpv/*.conf,*onedrive/config,pacman.conf
+                \ set filetype=config foldmethod=marker
 augroup END
 
 " }}}
