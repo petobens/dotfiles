@@ -30,6 +30,7 @@ font-1 = Noto Sans:size=11:weight=bold;3
 font-2 = Noto Sans Mono:size=10:weight=bold;3
 font-3 = Symbols Nerd Font:size=13;4
 font-4 = Symbols Nerd Font:size=14;4
+font-5 = Symbols Nerd Font:size=12;4
 
 [global/wm]
 margin-bottom = 0
@@ -155,8 +156,8 @@ format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>  <labe
 format-full = %{A1:xfce4-power-manager-settings &:}<label-full>  %{A}
 label-charging =   %{T3}%percentage%%%{T-}
 label-discharging = %{T3}%percentage%%%{T-}
-label-charging-font = 4
-label-discharging-font = 4
+label-charging-font = 6
+label-discharging-font = 6
 label-full =  %{T3}100%%{T-}
 ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.fg-urg}
@@ -172,6 +173,6 @@ date = %a %d
 time = %H:%M
 date-alt = %A %d %b %Y
 time-alt = %H:%M:%S
-label =  %date% %time%
+label = %{T6} %{T-}%{T3} %date% %time%%{T-}
 label-font = 3
 label-padding-right = 2
