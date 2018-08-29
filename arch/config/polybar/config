@@ -95,11 +95,10 @@ label-layout-padding = 1
 
 [module/vpn]
 type = custom/script
-exec = echo vpn
+exec = echo ﯴ
 exec-if = pgrep -x openconnect
 interval = 5
-format-underline = ${colors.fg}
-label-font = 3
+label-font = 4
 format-padding = 2
 
 [module/wifi]
