@@ -100,6 +100,7 @@ $yay_cmd tlp
 $yay_cmd udiskie
 $yay_cmd update-grub
 $yay_cmd upower
+$yay_cmd unclutter-xfixes-git
 $yay_cmd xdg-user-dirs
 $yay_cmd xdotool
 $yay_cmd xsendkey

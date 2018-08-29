@@ -5,6 +5,7 @@
 setxkbmap -layout us,es -option grp:win_space_toggle -option ctrl:nocaps
 [[ -f ~/.Xmodmap ]] && xmodmap ~/.Xmodmap
 xbacklight -set 40
+unclutter &
 
 # Programs
 [[ -f ~/.fehbg ]] && ~/.fehbg &
