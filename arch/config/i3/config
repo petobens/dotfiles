@@ -165,7 +165,7 @@ for_window [title="^(Alacritty)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [con_mark="^(browser|cal)$"] \
     $nexec $HOME/.config/i3/resize.py Full
-for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
+for_window [class="^(Peek|Pavucontrol|Connman-gtk|mpv)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(QuickTerm|numbers|ranger|Downloads)$"] \
     $nexec $HOME/.config/i3/resize.py Center
