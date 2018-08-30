@@ -144,6 +144,8 @@ $yay_cmd openconnect
 $yay_cmd openssh
 $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
+$yay_cmd pass
+$yay_cmd rlwrap
 $yay_cmd rsync
 $yay_cmd shellcheck
 $yay_cmd socat
