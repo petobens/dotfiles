@@ -137,6 +137,7 @@ $yay_cmd beautysh
 $yay_cmd docker
 $yay_cmd fd
 $yay_cmd fzf
+$yay_cmd gnupg
 $yay_cmd htop
 $yay_cmd neofetch-git
 $yay_cmd neomutt
@@ -149,6 +150,7 @@ $yay_cmd rlwrap
 $yay_cmd rsync
 $yay_cmd shellcheck
 $yay_cmd socat
+$yay_cmd sshpass
 $yay_cmd the_silver_searcher
 $yay_cmd trash-cli
 $yay_cmd tree
