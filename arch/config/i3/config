@@ -112,6 +112,7 @@ bindsym $alt+grave focus output right
 # Rofi (application launcher / switcher)
 bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
+bindsym $mod+z $nexec "passmenu"
 
 # Run/Launch or focus (in specific workspace)
 # WS1 (foreground programs)
