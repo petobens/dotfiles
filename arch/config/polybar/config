@@ -173,6 +173,6 @@ date = %a %d
 time = %H:%M
 date-alt = %A %d %b %Y
 time-alt = %H:%M:%S
-label = %{T6} %{T-}%{T3} %date% %time%%{T-}
+label = %{A1:xdotool key Super_L+Control+a:}%{T6} %{T-}%{T3} %date% %time%%{T-}%{A}
 label-font = 3
 label-padding-right = 2
