@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
+# Ask for sudo right away and get this script directory
+sudo echo -n
+current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+parent_dir="$(dirname "$current_dir")"
+
+# Use our pacman conf
+if type "pacman" > /dev/null 2>&1; then
+    sudo ln -fTs "$parent_dir/arch/config/pacman.conf" "/etc/pacman.conf"
+    echo Created /etc/pacman.conf symlink
+fi
 
 # Install yay if not installed
 if ! type "yay" > /dev/null 2>&1; then
