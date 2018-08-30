@@ -146,6 +146,7 @@ $yay_cmd openssh
 $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
 $yay_cmd pass
+$yay_cmd pass-update
 $yay_cmd rlwrap
 $yay_cmd rsync
 $yay_cmd shellcheck
