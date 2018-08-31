@@ -142,7 +142,7 @@ $yay_cmd gnupg
 $yay_cmd htop
 $yay_cmd neofetch-git
 $yay_cmd neomutt
-$yay_cmd openconnect
+$yay_cmd openconnect-git
 $yay_cmd openssh
 $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
@@ -153,6 +153,7 @@ $yay_cmd rsync
 $yay_cmd shellcheck
 $yay_cmd socat
 $yay_cmd sshpass
+$yay_cmd stoken-git
 $yay_cmd the_silver_searcher
 $yay_cmd trash-cli
 $yay_cmd tree

@@ -324,8 +324,9 @@ fi
 # Work (mostly vpn and databases)
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn"'
 # Claro
+# Note: run `sudo cp ~/.stokenrc /root` to allow openconnect to find .stokenrc
 alias cvpn='sudo pkill -INT -f openconnect; sudo openconnect --background '\
-'--authgroup=1 --user=EXB77159 vpn.claro.com.ar'
+'--authgroup=1 --user=EXB77159 --token-mode=rsa vpn.claro.com.ar'
 alias cmjolnir='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh mjolnir'
 alias cvaras='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh varas'
 alias crac8='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
