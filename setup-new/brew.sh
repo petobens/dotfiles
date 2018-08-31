@@ -28,8 +28,6 @@ fi
 
 # Latest bash with completions
 brew install bash
-sudo bash -c "echo $brew_dir/bin/bash >> /etc/shells"
-sudo chsh -s "$brew_dir"/bin/bash
 brew install bash-completion@2
 
 # Git

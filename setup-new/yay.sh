@@ -87,6 +87,7 @@ $yay_cmd python-powerline-gitstatus
 
 # Arch specific and window manager
 $yay_cmd acpi_call
+$yay_cmd alsa-tools
 $yay_cmd compton
 $yay_cmd connman
 $yay_cmd dunst

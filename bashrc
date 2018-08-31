@@ -81,8 +81,7 @@ fi
 export EDITOR=nvim
 export MANPAGER="nvim -c 'set ft=man' -"
 
-# Set shell to latest bash (this should be redundant if we previously ran
-# `sudo chsh -s $(brew --prefix)/bin/bash`)
+# Set shell to latest bash (check "$(command -v bash)")
 if [ -f "$base_pkg_dir/bin/bash" ]; then
     export SHELL="$base_pkg_dir/bin/bash"
 fi

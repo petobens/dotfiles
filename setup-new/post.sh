@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Set default shell to latest bash
+sudo bash -c "echo $(command -v bash) >> /etc/shells"
+sudo chsh -s "$(command -v bash)"
+
 # Alacritty
 if type "cargo" > /dev/null 2>&1; then
     echo "Installing Alacritty..."
