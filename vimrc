@@ -1160,6 +1160,7 @@ augroup ft_sql
     au!
     au Filetype sql setlocal commentstring=--%s
     au Filetype sql setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    au BufNewFile,BufReadPost sqlplus_login set filetype=sql
     " Add highlighting of some keywords (presto specific)
     au Filetype sql syn keyword sqlKeyword INNER RIGHT LEFT OUTER JOIN OVER
                 \ PARTITION

@@ -73,6 +73,9 @@ fi
 if type "pyenv" > /dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
+if type "sqlplus" > /dev/null 2>&1; then
+    export SQLPATH="$HOME/.config/sqlplus"
+fi
 
 # Set editor to nvim and use it as a manpager
 export EDITOR=nvim
@@ -319,10 +322,15 @@ else
     fi
 fi
 
-# Work (VPN related)
+# Work (mostly vpn and databases)
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn"'
+# Claro
 alias cvpn='sudo pkill -INT -f openconnect; sudo openconnect --background '\
 '--authgroup=1 --user=EXB77159 vpn.claro.com.ar'
+alias cmjolnir='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh mjolnir'
+alias cvaras='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh varas'
+alias crac8='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
+'@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
 
 # }}}
 # Fzf {{{

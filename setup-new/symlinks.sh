@@ -121,6 +121,11 @@ if type "ranger" > /dev/null 2>&1; then
     ln -fTs "$dotfiles_dir/config/ranger" "$HOME/.config/ranger"
     echo Created .config/ranger folder symlink
 fi
+if type "sqlplus" > /dev/null 2>&1; then
+    sudo mkdir -p "$HOME/.config/sqlplus"
+    sudo ln -fTs "$dotfiles_dir/sqlplus_login" "$HOME/.config/sqlplus/login.sql"
+    echo Created "$HOME/.config/sqlplus/login.sql" symlink
+fi
 
 # OS dependent
 if [[ "$OSTYPE" == 'darwin'* ]]; then
