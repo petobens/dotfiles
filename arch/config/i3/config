@@ -176,6 +176,9 @@ for_window [class="^(Zathura|feh)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
 
+# Automatically switch to windows that raise an urgent flag
+for_window [urgent=latest] focus
+
 # }}}
 #  Spotify and volume {{{
 
