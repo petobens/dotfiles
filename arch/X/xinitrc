@@ -10,7 +10,6 @@ unclutter &
 # Programs
 [[ -f ~/.fehbg ]] && ~/.fehbg &
 dunst &
-onedrive --synchronize --monitor &
 udiskie &
 compton -cCG -r 7 &
 xfce4-power-manager &
