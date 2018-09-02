@@ -74,12 +74,18 @@ bindsym $mod+6 workspace $ws6
 
 # Move focused container to specific workspace and switch focus to that
 # container
-bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6; workspace $ws6
+bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1; \
+    $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2; \
+    $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3; \
+    $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4; \
+    $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5; \
+    $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Shift+6 move container to workspace $ws6; workspace $ws6; \
+    $nexec $HOME/.config/i3/resize.py Full
 
 # Toggle dual monitor and define those monitors
 #  FIXME: This completely breaks the window and polybar layout
@@ -128,7 +134,10 @@ bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -W $ws1 -e \
 # WS2 (terminal and those interacting with it)
 # Note: we use marks terminal to avoid focusing on other windows of the same
 # class. See https://github.com/open-dynaMIX/raiseorlaunch/issues/17
-bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws2 -m terminal
+# Note: We use fixed DPI scaling as per:
+# https://github.com/jwilm/alacritty/pull/1403#issuecomment-417876005
+bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws2 -m terminal \
+    -e 'WINIT_HIDPI_FACTOR=2.66 alacritty -e /usr/bin/bash -i'
 bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -W $ws2 -C
 bindsym $mod+Control+v $nexec raiseorlaunch -c feh -W $ws2 -C
 bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -W $ws2
@@ -142,19 +151,19 @@ bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws3 -m cal -e \
 
 # Standalone terminal apps in floating window in the current workspace
 bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -e \
-    'alacritty -t QuickTerm -e /bin/bash --login'
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t QuickTerm -e /usr/bin/bash -i'
 bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
-    'alacritty -t numbers -e ipython3'
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t numbers -e ipython3'
 bindsym $mod+Control+f $nexec raiseorlaunch -t 'ranger' -e \
-    'alacritty -t ranger -e ranger'
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t ranger -e ranger'
 bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -e \
-    'alacritty -t Downloads -e ranger ~/Downloads'
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t Downloads -e ranger ~/Downloads'
 bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -e \
-    'alacritty -t htop -e htop'
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t htop -e htop'
 bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -e \
-    'alacritty -t "OneDrive" -e sh -c "less +F $HOME/onedrive.log"'
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t "OneDrive" -e sh -c "less +F $HOME/onedrive.log"'
 bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -e \
-    'alacritty -t "Trash Can" -e sh -c "trash-list | less"'
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t "Trash Can" -e sh -c "trash-list | less"'
 
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when

@@ -212,7 +212,7 @@ live_config_reload: true
 shell:
   program: /usr/bin/bash
   args:
-    - --login
+    - -i
 
 # Key bindings
 #
