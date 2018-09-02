@@ -1,0 +1,153 @@
+#!/usr/bin/env python3
+import sys
+import subprocess
+
+from time import sleep
+from collections.abc import Sequence
+
+import i3ipc
+
+
+def multi(how):
+    _xrandr(how)
+    if how != 'init':
+        _restart_i3_and_polybar()
+        sleep(0.7)
+        i3 = i3ipc.Connection()
+        _adjust_windows(i3)
+    sys.exit(0)
+
+
+def _xrandr(how):
+    if how == 'hotplug':
+        # When plugging and unplugging (using udev rules) wait a bit before
+        # querying xrandr (because xrandr lags behind udev)
+        sleep(1)
+
+    xrandr_out = [
+        line.decode('ascii').split() for line in _sh('xrandr').splitlines()
+    ]
+    conn = [l for l in xrandr_out if l[1] == 'connected']
+    nr_monitors = len(conn)
+
+    # Primary monitor (assume it's the first connected monitor if it isn't
+    # explicitly specified)
+    prim = list(_flatten([i for i in conn if 'primary' in i]))
+    if not prim:
+        prim = conn[0]
+    prim_n, prim_w, prim_h = _get_name_and_res(xrandr_out, prim)
+    assert prim_n == PRIM
+    print(f"Primary monitor: {prim_n}-{prim_w}x{prim_h}")
+
+    # Secondary
+    if nr_monitors == 2:
+        sec = list(_flatten([i for i in conn if i != prim]))
+        sec_n, sec_w, sec_h = _get_name_and_res(xrandr_out, sec)
+        assert sec_n == SEC
+        print(f"Secondary monitor: {sec_n}-{sec_w}x{sec_h}")
+
+    if how == 'init' or how == 'hotplug':
+        how = 'dual' if nr_monitors == 2 else 'primary'
+
+    if how == 'primary':
+        cmd = f'xrandr --output {SEC} --off --output {PRIM} --primary ' \
+              f'--dpi {PRIM_DPI}'
+    elif how == 'mirror':
+        mirror_scale = f'{prim_w/sec_w:.2f}x{prim_h/sec_h:.2f}'
+        cmd = f'xrandr --output {SEC} --scale {mirror_scale} --auto '  \
+            f'--output {PRIM} --dpi {PRIM_DPI}'
+    elif how == 'dual':
+        cmd = f'xrandr --output {SEC} --scale {FIXED_SCALE}x{FIXED_SCALE} ' \
+              f'--auto --pos 0x0 --output {PRIM} --primary --dpi '\
+              f'{PRIM_DPI} --pos {FIXED_SCALE * sec_w}x0'
+
+    print(f"Running the following xrandr command: {cmd}")
+    _sh(cmd)
+
+
+def _restart_i3_and_polybar():
+    # Using `reload` or `restart` don't seem to work and we need to rely on
+    # the binding defined in the i3 config
+    _sh('xdotool key Super_L+Control+r')
+
+
+def _adjust_windows(i3):
+    # TODO: Keep original layout also in the unfocused monitor
+    tree = i3.get_tree()
+    focused_win = tree.find_focused()
+    windows = set(w for w in tree.leaves())
+    for w in windows:
+        i3.command(f'[con_id={w.id}] focus')
+        while not i3.get_tree().find_focused().id == w.id:
+            sleep(0.1)
+        _resize_win(i3, 0, 0, 1, 1)
+    i3.command(f'[con_id={focused_win.id}] focus')
+
+
+# Helpers
+def _sh(cmd, *args, **kwargs):
+    res, err = _sh_no_block(
+        cmd, *args, stdout=subprocess.PIPE, **kwargs
+    ).communicate()
+    return res
+
+
+def _sh_no_block(cmd, *args, **kwargs):
+    if isinstance(cmd, str):
+        cmd = cmd.split()
+    return subprocess.Popen(cmd, *args, **kwargs)
+
+
+def _get_name_and_res(xrandr_out, mon_info):
+    # Name is the first element and active resolution is the line immediately
+    # after the monitor info marked with `+` (or `*+`)
+    mon_name = mon_info[0]
+    start_index = xrandr_out.index(mon_info) + 1
+    for l in xrandr_out[start_index:]:
+        res = l[0]
+        if '*+' in l[1] or '+' in l[2]:
+            mon_w, mon_h = tuple([int(i) for i in res.split('x')])
+            break
+    return mon_name, mon_w, mon_h
+
+
+def _resize_win(i3, x, y, w, h):
+    win = i3.get_tree().find_focused()
+    ws = win.workspace()
+    max_h = ws.rect.height
+    max_w = ws.rect.width
+    max_x = ws.rect.x
+    max_y = ws.rect.y
+
+    x = int(max_x + (max_w * x))
+    y = int(max_y + (max_h * y))
+    w = int(max_w * w)
+    h = int(max_h * h)
+    cmd = f"fullscreen disable, floating enable, " \
+          f"move position {x} {y}, resize set {w} {h}"
+    i3.command(cmd)
+
+
+def _flatten(l):
+    for i in l:
+        if isinstance(i, Sequence) and not isinstance(i, (str, bytes)):
+            yield from _flatten(i)
+        else:
+            yield i
+
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('how')
+    args = parser.parse_args()
+    how = args.how
+
+    # Constants
+    PRIM = 'eDP1'
+    SEC = 'DP1'
+    PRIM_DPI = 192
+    FIXED_SCALE = 2
+
+    multi(how)

@@ -199,7 +199,7 @@ hide_cursor_when_typing: true
 # - Underline
 # - Beam
 cursor_style: Block
-unfocused_hollow_cursor: false
+unfocused_hollow_cursor: True
 
 # Live config reload (changes require restart)
 live_config_reload: true

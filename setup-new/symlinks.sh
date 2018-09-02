@@ -209,6 +209,11 @@ else
         ln -fTs "$dotfiles_dir/arch/config/onedrive" "$HOME/.config/onedrive"
         echo Created .config/onedrive folder symlink
     fi
+    if type "udevadm" > /dev/null 2>&1; then
+        mkdir -p "/etc/udev/rules.d"
+        sudo ln -fTs "$dotfiles_dir/arch/udev/monitor-hotplug.rules" "/etc/udev/rules.d/99-monitor-hotplug.rules"
+        echo Created /etc/udev/rules.d/99-monitor-hotplug.rules symlink
+    fi
 fi
 
 # Git

@@ -1,0 +1,1 @@
+KERNEL=="card0", SUBSYSTEM=="drm", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/pedro/.Xauthority", RUN+="/home/pedro/bin/multimon hotplug"
