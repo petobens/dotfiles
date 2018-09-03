@@ -465,7 +465,7 @@ sys_update_all() {
     if type "R" > /dev/null 2>&1; then
         echo "-> Updating R..."
         R --slave --no-save --no-restore -e \
-'update.packages(ask=TRUE, checkBuilt=TRUE, lib=Sys.getenv("R_LIBS_USER"))'
+'update.packages(ask=TRUE, checkBuilt=TRUE, lib.loc=Sys.getenv("R_LIBS_USER"))'
     fi
     if type "tlmgr" > /dev/null 2>&1; then
         echo "-> Updating LaTeX..."
