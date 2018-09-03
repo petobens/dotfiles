@@ -13,6 +13,9 @@ def resize_win(x, y, w, h):
     max_y = ws.rect.y
 
     x = int(max_x + (max_w * x))
+    # Fix for incorrect calculation when monitor extends right
+    # TODO: Find a better way of doing this
+    x -= 1
     y = int(max_y + (max_h * y))
     w = int(max_w * w)
     h = int(max_h * h)
