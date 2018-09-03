@@ -120,7 +120,7 @@ const qmarksUrls = {
     n: 'www.netflix.com',
     p: 'http://pirateproxy.net',
     s: 'http://stackoverflow.com',
-    t: 'tex.stackexchange.com',
+    t: 'http://trello.com',
     u: 'www.alumnos.econ.uba.ar',
     v: 'http://virtual.econ.uba.ar/',
     y: 'www.yahoo.com/mail',
