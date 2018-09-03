@@ -247,8 +247,8 @@ bindsym $mod+Shift+r $nexec gtk_dialog -t "Power Management" \
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
-bindsym $mod+Shift+Right exec xbacklight -inc 10
-bindsym $mod+Shift+Left exec xbacklight -dec 10
+bindsym $mod+Shift+Right exec xbacklight -inc 5
+bindsym $mod+Shift+Left exec xbacklight -dec 5
 
 # Eject mounted media (usb drives)
 bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \

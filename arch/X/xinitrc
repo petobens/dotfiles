@@ -4,7 +4,7 @@
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 setxkbmap -layout us,es -option grp:win_space_toggle -option ctrl:nocaps
 [[ -f ~/.Xmodmap ]] && xmodmap ~/.Xmodmap
-xbacklight -set 40
+xbacklight -set 35
 
 # Programs
 unclutter &
