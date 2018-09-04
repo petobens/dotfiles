@@ -11,6 +11,7 @@ import i3ipc
 def multi(how):
     _xrandr(how)
     if how != 'init':
+        sleep(0.2)
         _restart_i3_and_polybar()
         sleep(0.7)
         i3 = i3ipc.Connection()
@@ -22,6 +23,7 @@ def _xrandr(how):
     if how == 'hotplug':
         # When plugging and unplugging (using udev rules) wait a bit before
         # querying xrandr (because xrandr lags behind udev)
+        # FIXME: Must run `sudo udevadm control --reload`?
         sleep(1)
 
     xrandr_out = [
@@ -36,29 +38,39 @@ def _xrandr(how):
     if not prim:
         prim = conn[0]
     prim_n, prim_w, prim_h = _get_name_and_res(xrandr_out, prim)
-    assert prim_n == PRIM
     print(f"Primary monitor: {prim_n}-{prim_w}x{prim_h}")
 
     # Secondary
     if nr_monitors == 2:
         sec = list(_flatten([i for i in conn if i != prim]))
         sec_n, sec_w, sec_h = _get_name_and_res(xrandr_out, sec)
-        assert sec_n == SEC
+        forced_res = False
+        if sec_w > 1920:
+            forced_res = True
+            sec_w = 1920
+            sec_h = 1080
         print(f"Secondary monitor: {sec_n}-{sec_w}x{sec_h}")
 
     if how == 'init' or how == 'hotplug':
         how = 'dual' if nr_monitors == 2 else 'primary'
 
     if how == 'primary':
-        cmd = f'xrandr --output {SEC} --off --output {PRIM} --primary ' \
-              f'--dpi {PRIM_DPI}'
+        prim_cmd = f'--output {prim_n} --primary --dpi {PRIM_DPI}'
+        if nr_monitors == 2:
+            cmd = f'xrandr --output {sec_n} --off {prim_cmd}'
+        else:
+            cmd = f'xrandr {prim_cmd}'
+
     elif how == 'mirror':
         mirror_scale = f'{prim_w/sec_w:.2f}x{prim_h/sec_h:.2f}'
-        cmd = f'xrandr --output {SEC} --scale {mirror_scale} --auto '  \
-            f'--output {PRIM} --dpi {PRIM_DPI}'
+        mode = f'--mode {sec_w}x{sec_h}' if forced_res else '--auto'
+        cmd = f'xrandr --output {sec_n} --scale {mirror_scale} {mode} '  \
+            f'--output {prim_n} --dpi {PRIM_DPI}'
+
     elif how == 'dual':
-        cmd = f'xrandr --output {SEC} --scale {FIXED_SCALE}x{FIXED_SCALE} ' \
-              f'--auto --pos 0x0 --output {PRIM} --primary --dpi '\
+        mode = f'--mode {sec_w}x{sec_h}' if forced_res else '--auto'
+        cmd = f'xrandr --output {sec_n} --scale {FIXED_SCALE}x{FIXED_SCALE} ' \
+              f'{mode} --pos 0x0 --output {prim_n} --primary --dpi '\
               f'{PRIM_DPI} --pos {FIXED_SCALE * sec_w}x0'
 
     print(f"Running the following xrandr command: {cmd}")
@@ -103,11 +115,15 @@ def _get_name_and_res(xrandr_out, mon_info):
     # after the monitor info marked with `+` (or `*+`)
     mon_name = mon_info[0]
     start_index = xrandr_out.index(mon_info) + 1
-    for l in xrandr_out[start_index:]:
+    resolutions = xrandr_out[start_index:]
+    for l in resolutions:
         res = l[0]
-        if '*+' in l[1] or '+' in l[2]:
-            mon_w, mon_h = tuple([int(i) for i in res.split('x')])
+        if any('*' in e or '+' in e for e in l):
             break
+    else:
+        # If there is no line marked then use the first (highest) resolution
+        res = resolutions[0][0]
+    mon_w, mon_h = tuple([int(i) for i in res.split('x')])
     return mon_name, mon_w, mon_h
 
 
@@ -145,8 +161,6 @@ if __name__ == '__main__':
     how = args.how
 
     # Constants
-    PRIM = 'eDP1'
-    SEC = 'DP1'
     PRIM_DPI = 192
     FIXED_SCALE = 2
 

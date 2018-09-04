@@ -42,6 +42,7 @@ bindsym $mod+Control+3 $nexec $HOME/.config/i3/resize.py 'Bottom Left'
 bindsym $mod+Control+4 $nexec $HOME/.config/i3/resize.py 'Bottom Right'
 bindsym $mod+Control+5 $nexec $HOME/.config/i3/resize.py Center
 bindsym $mod+Control+6 $nexec $HOME/.config/i3/resize.py Rectangle
+bindsym $mod+Control+7 $nexec $HOME/.config/i3/resize.py 'Semi Full'
 
 # Resize
 bindsym $mod+h resize grow left 10 px or 5 ppt
@@ -100,8 +101,8 @@ bindsym $mod+Control+Left move container to output left; focus output left; \
 
 # Assign workspaces to specific monitors (use `xrandr --current` to see which
 # are available). Even on primary and odds on secondary
-set $internal "eDP-1"
-set $external "DP-1"
+set $internal "eDP1"
+set $external "DP1"
 workspace $ws1 output $internal
 workspace $ws2 output $external
 workspace $ws3 output $interal

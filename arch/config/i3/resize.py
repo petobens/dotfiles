@@ -55,4 +55,10 @@ if __name__ == '__main__':
         resize_win(0.25, 0.25, 0.5, 0.5)
     elif how == 'Rectangle':
         resize_win(0.15, 0.15, 0.75, 0.6)
+    if how == 'Semi Full':
+        # This is hack to resize windows in HiDPI screens that were downscaled
+        # to 1920x1080 and (for some strange reason) incorrectly rendered when
+        # using `Full`
+        # FIXME: Obviously find a way to avoid this
+        resize_win(0.016, 0, 0.965, 0.975)
     sys.exit(0)
