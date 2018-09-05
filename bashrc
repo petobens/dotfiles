@@ -310,9 +310,9 @@ else
     # Change directory and list files
     cd() { builtin cd "$@" && ls -F --color=auto; }
 
-    if [ -f "$HOME/bin/dual" ]; then
+    if [ -f "$HOME/bin/multimon" ]; then
         # Dual monitor
-        alias dm=dual
+        alias mm=multimon
     fi
 
     if type "pacman" > /dev/null 2>&1; then

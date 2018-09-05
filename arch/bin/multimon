@@ -136,6 +136,7 @@ def _resize_win(i3, x, y, w, h):
     max_y = ws.rect.y
 
     x = int(max_x + (max_w * x))
+    x -= 1
     y = int(max_y + (max_h * y))
     w = int(max_w * w)
     h = int(max_h * h)

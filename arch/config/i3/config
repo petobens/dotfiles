@@ -23,16 +23,14 @@ floating_maximum_size -1 x -1
 floating_modifier $mod
 
 # Toggle floating and tiling
-bindsym $mod+f floating toggle
+# bindsym $mod+f floating toggle
 
 # Full screen
 bindsym $mod+Control+e fullscreen toggle
 
 # Floating resizing (spanning)
-# FIXME: Keep focus
 bindsym $mod+Up $nexec $HOME/.config/i3/resize.py Full
 bindsym $mod+Left $nexec $HOME/.config/i3/resize.py Left
-#  FIXME: This one doesn't work quite well
 bindsym $mod+Right $nexec $HOME/.config/i3/resize.py Right
 bindsym $mod+Control+Up $nexec $HOME/.config/i3/resize.py Top
 bindsym $mod+Control+Down $nexec $HOME/.config/i3/resize.py Bottom
@@ -64,6 +62,8 @@ set $ws3 "3"
 set $ws4 "4"
 set $ws5 "5"
 set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
 
 # Switch (and created if needed) workspace
 bindsym $mod+1 workspace $ws1
@@ -72,43 +72,47 @@ bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace $ws4
 bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
 
 # Move focused container to specific workspace and switch focus to that
 # container
-bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1; \
-    $nexec $HOME/.config/i3/resize.py Full
-bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2; \
-    $nexec $HOME/.config/i3/resize.py Full
-bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3; \
-    $nexec $HOME/.config/i3/resize.py Full
-bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4; \
-    $nexec $HOME/.config/i3/resize.py Full
-bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5; \
-    $nexec $HOME/.config/i3/resize.py Full
-bindsym $mod+Shift+6 move container to workspace $ws6; workspace $ws6; \
-    $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Shift+1 $nexec $HOME/.config/i3/multimon_move.py -w "1"
+bindsym $mod+Shift+2 $nexec $HOME/.config/i3/multimon_move.py -w "2"
+bindsym $mod+Shift+3 $nexec $HOME/.config/i3/multimon_move.py -w "3"
+bindsym $mod+Shift+4 $nexec $HOME/.config/i3/multimon_move.py -w "4"
+bindsym $mod+Shift+5 $nexec $HOME/.config/i3/multimon_move.py -w "5"
+bindsym $mod+Shift+6 $nexec $HOME/.config/i3/multimon_move.py -w "6"
+bindsym $mod+Shift+7 $nexec $HOME/.config/i3/multimon_move.py -w "7"
+bindsym $mod+Shift+8 $nexec $HOME/.config/i3/multimon_move.py -w "8"
 
 # Activate primary or dual monitor and define those monitors
 bindsym $mod+Return $nexec multimon primary
 bindsym $mod+Control+Return $nexec multimon dual
 
 # Move window (container) in monitor (output) direction and switch focus
-# TODO: Resize to correct split instead of full screen
-bindsym $mod+Control+Right move container to output right; focus output right; \
-    $nexec $HOME/.config/i3/resize.py Full
-bindsym $mod+Control+Left move container to output left; focus output left; \
-    $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Control+Right $nexec $HOME/.config/i3/multimon_move.py -d "right"
+bindsym $mod+Control+Left $nexec $HOME/.config/i3/multimon_move.py -d "left"
 
-# Assign workspaces to specific monitors (use `xrandr --current` to see which
-# are available). Even on primary and odds on secondary
-set $internal "eDP1"
-set $external "DP1"
-workspace $ws1 output $internal
-workspace $ws2 output $external
-workspace $ws3 output $interal
-workspace $ws4 output $external
-workspace $ws5 output $internal
-workspace $ws6 output $external
+# Move workspace in monitor (output) direction and switch focus
+# TODO: Resize all windows properly
+bindsym $mod+Shift+Right \
+    $nexec $HOME/.config/i3/multimon_move.py -d "right" --move-ws
+bindsym $mod+Shift+Left \
+    $nexec $HOME/.config/i3/multimon_move.py -d "left" --move-ws
+
+# Assign workspaces to specific monitors
+# TODO: Do this dynamically (i.e don't harcode monitor names)
+set $primary "eDP1"
+set $secondary "DP1"
+workspace $ws1 output $primary
+workspace $ws2 output $primary
+workspace $ws3 output $primary
+workspace $ws4 output $primary
+workspace $ws5 output $secondary
+workspace $ws6 output $secondary
+workspace $ws7 output $secondary
+workspace $ws8 output $secondary
 
 # Focus next monitor (with wrapping): this switches mouse cursor two
 bindsym $alt+grave focus output right
@@ -121,34 +125,37 @@ bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
 bindsym $mod+z $nexec "passmenu"
 
-# Run/Launch or focus (in specific workspace)
-# WS1 (foreground programs)
+# WS1: browser
 bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -W $ws1 -m browser
+# WS2: chat/communication related and calendar
 #  FIXME: Waiting not quite working
-bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws1 -l 30
-bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws1 -l 30 -C -e \
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30
+bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
-bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -W $ws1 -e \
+bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws2
+bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws2 -m cal -e \
+    "chromium --new-window https://calendar.google.com/calendar/r"
+# WS3: Music, video, torrents
+bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
+    "spotify --force-device-scale-factor=2"
+bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -W $ws3
+# WS4: Other
+bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -W $ws4 -e \
     "libreoffice --calc" -l 30
-bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -W $ws1 -e \
+bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -W $ws4 -e \
     "libreoffice --writer" -l 30
-# WS2 (terminal and those interacting with it)
+
+# WS5 (terminal and those interacting with it; in secondary monitor)
 # Note: we use marks terminal to avoid focusing on other windows of the same
 # class. See https://github.com/open-dynaMIX/raiseorlaunch/issues/17
 # Note: We use fixed DPI scaling as per:
 # https://github.com/jwilm/alacritty/pull/1403#issuecomment-417876005
-bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws2 -m terminal \
+bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws5 -m terminal \
     -e 'WINIT_HIDPI_FACTOR=2.66 alacritty -e /usr/bin/bash -i'
-bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -W $ws2 -C
-bindsym $mod+Control+v $nexec raiseorlaunch -c feh -W $ws2 -C
-bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -W $ws2
-# WS3 (background programs)
-bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
-    "spotify --force-device-scale-factor=2"
-bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws3
-bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -W $ws3
-bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws3 -m cal -e \
-    "chromium --new-window https://calendar.google.com/calendar/r"
+bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -W $ws5
+# WS6 PDFs and images
+bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -W $ws6 -C
+bindsym $mod+Control+v $nexec raiseorlaunch -c feh -W $ws6 -C
 
 # Standalone terminal apps in floating window in the current workspace
 bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -e \
@@ -230,8 +237,8 @@ client.background       $border
 
 # Screenshots
 bindsym Print $nexec shots full
-bindsym $mod+Shift+8 $nexec shots selection
-bindsym $mod+Shift+9 $nexec shots active
+bindsym $mod+Shift+9 $nexec shots selection
+bindsym $mod+Shift+0 $nexec shots active
 
 # Kill focused window (as in mac); note that this quit apps that are minimized
 # to sys tray (in this cases, such as slack, use ctrl-q to actually kill them)
@@ -248,8 +255,8 @@ bindsym $mod+Shift+r $nexec gtk_dialog -t "Power Management" \
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
-bindsym $mod+Shift+Right exec xbacklight -inc 5
-bindsym $mod+Shift+Left exec xbacklight -dec 5
+bindsym $mod+Shift+Up exec xbacklight -inc 5
+bindsym $mod+Shift+Down exec xbacklight -dec 5
 
 # Eject mounted media (usb drives)
 bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \
