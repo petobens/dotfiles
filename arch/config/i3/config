@@ -189,7 +189,7 @@ for_window [title="^(QuickTerm|numbers|ranger|Downloads)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle
-for_window [class="^(Zathura|feh)$"] \
+for_window [class="^(Zathura|feh|Skype)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
 
