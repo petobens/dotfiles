@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 import sys
 
+from time import sleep
+
 import i3ipc
 
 from resize import resize_win
 
 
 def move_and_resize(i3, direction=None, move_win=True, workspace=None):
-    x, y, w, h = _find_how_to_resize(i3)
+    resize_map = _get_resize_map(i3)
+
     if direction is not None:
         if move_win:
             cmd = f'move container to output {direction}, ' \
@@ -17,12 +20,36 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
     if workspace is not None:
         cmd = f'move container to workspace {workspace}, workspace {workspace}'
     i3.command(cmd)
-    # TODO: When moving workspace we should resize each window
-    resize_win(i3, x, y, w, h)
+
+    for win_id, win_data in resize_map.items():
+        if cmd.startswith('move container'):
+            if not win_data['focused']:
+                continue
+        else:
+            i3.command(f'[con_id={win_id}] focus')
+            while not i3.get_tree().find_focused().id == win_id:
+                sleep(0.1)
+        x, y, w, h = win_data['how']
+        resize_win(i3, x, y, w, h)
 
 
-def _find_how_to_resize(i3):
-    win = i3.get_tree().find_focused()
+def _get_resize_map(i3):
+    res_map = {}
+    tree = i3.get_tree()
+    focused_win = tree.find_focused()
+    ws = focused_win.workspace()
+    for w in ws.leaves():
+        res_map[w.id] = {
+            'win': w,
+            'focused': w.focused,
+            'how': _find_how_to_resize(i3, w),
+        }
+    return res_map
+
+
+def _find_how_to_resize(i3, win=None):
+    if win is None:
+        win = i3.get_tree().find_focused()
     win_h = win.rect.height
     win_w = win.rect.width
     win_x = win.rect.x
