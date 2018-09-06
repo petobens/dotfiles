@@ -125,7 +125,7 @@ const qmarksUrls = {
     v: 'http://virtual.econ.uba.ar/',
     y: 'www.yahoo.com/mail',
     // Printing (arch)
-    q: 'http://localhost:631/admin',
+    q: 'http://localhost:631/jobs',
 };
 qmarksMapKey('"', qmarksUrls);
 qmarksMapKey('\'', qmarksUrls);
