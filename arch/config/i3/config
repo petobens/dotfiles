@@ -176,14 +176,14 @@ bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -e \
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
 # re-focusing it)
-for_window [class="^(Spotify|Slack|libreoffice-calc|libreoffice-writer|Thunderbird|Transmission-gtk)$"] \
+for_window [class="^(Spotify|Slack|libreoffice-calc|libreoffice-writer|Thunderbird|Transmission-gtk|mpv)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 # We seem to need this hack for Alacritty (i.e use title instead of mark)
 for_window [title="^(Alacritty)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [con_mark="^(browser|cal)$"] \
     $nexec $HOME/.config/i3/resize.py Full
-for_window [class="^(Peek|Pavucontrol|Connman-gtk|mpv)$"] \
+for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(QuickTerm|numbers|ranger|Downloads)$"] \
     $nexec $HOME/.config/i3/resize.py Center
@@ -192,6 +192,9 @@ for_window [title="^(htop|Trash Can|OneDrive|Open Files)$"] \
 for_window [class="^(Zathura|feh)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
+
+# Assign to specific workspaces and resize
+for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
 
 # Automatically switch to windows that raise an urgent flag
 for_window [urgent=latest] focus
