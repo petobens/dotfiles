@@ -103,6 +103,7 @@ bindsym $mod+Shift+Left \
 
 # Assign workspaces to specific monitors
 # TODO: Do this dynamically (i.e don't harcode monitor names)
+# We need an ugly hack: https://github.com/i3/i3/issues/2387
 set $primary "eDP1"
 set $secondary "DP1"
 workspace $ws1 output $primary
