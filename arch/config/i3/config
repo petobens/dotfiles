@@ -65,6 +65,10 @@ set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
 
+# Move to next and previous workspace
+bindsym $mod+n workspace next
+bindsym $mod+p workspace prev
+
 # Switch (and created if needed) workspace
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
@@ -123,7 +127,7 @@ bindsym $alt+grave focus output right
 
 # Rofi (application launcher / switcher)
 bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
-bindsym $mod+p $nexec "rofi -combi-modi drun,run -show combi"
+bindsym $mod+s $nexec "rofi -combi-modi drun,run -show combi"
 bindsym $mod+z $nexec "passmenu"
 
 # WS1: browser
