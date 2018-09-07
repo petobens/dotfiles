@@ -4,6 +4,8 @@ fg = #abb2bf
 fg-urg = #e06c75
 fg-warn = #d19a66
 fg-under = #61afef
+bg-focused-i3 = #2c323c
+fg-unfocused-i3 = #5c6370
 
 [bar/main]
 bottom = false
@@ -31,6 +33,7 @@ font-2 = Noto Sans Mono:size=10:weight=bold;3
 font-3 = Symbols Nerd Font:size=13;4
 font-4 = Symbols Nerd Font:size=14;4
 font-5 = Symbols Nerd Font:size=12;4
+font-6 = Noto Sans:size=7:weight=bold;-10
 
 [global/wm]
 margin-bottom = 0
@@ -39,7 +42,7 @@ margin-top = 0
 [module/menu]
 type = custom/text
 content = 
-content-padding = 3
+content-padding = 1
 content-font = 5
 click-left = xdotool key Super_L+p
 
@@ -52,25 +55,30 @@ label-font = 3
 type = internal/i3
 pin-workspaces = true
 index-sort = true
-label-focused = %index%
-label-focused-font = 2
+ws-icon-0 = 1;爵
+ws-icon-1 = 2;
+ws-icon-2 = 3;ﱘ
+ws-icon-3 = 4;﬿
+ws-icon-4 = 5;ﲵ
+ws-icon-5 = 6;龎
+ws-icon-default = ﬿
+label-focused = %icon% %{T7}%index%%{T-}
+label-focused-font = 4
 label-focused-padding = 2
-label-focused-margin = 0
-label-focused-underline = ${colors.fg}
-label-unfocused = %index%
-label-unfocused-font = 1
+label-focused-background = ${colors.bg-focused-i3}
+label-unfocused = %icon% %{T7}%index%%{T-}
+label-unfocused-font = 4
 label-unfocused-margin = 2
-label-visible = %index%
-label-visible-font = 2
-label-visible-margin = 2
-label-urgent = %index%
-label-urgent-font = 2
+label-unfocused-foreground = ${colors.fg-unfocused-i3}
+label-visible = %icon% %{T7}%index%%{T-}
+label-visible-font = 4
+label-visible-margin = 3
+label-visible-foreground = ${colors.fg}
+label-urgent = %icon% %{T7}%index%%{T-}
+label-urgent-font = 4
 label-urgent-padding = 2
-label-urgent-margin = 0
-label-urgent-underline = ${colors.fg-urg}
-label-separator = ─
-label-separator-padding = 1
-label-separator-font = 2
+label-urgent-margin = 3
+label-urgent-foreground = ${colors.fg-urg}
 
 [module/docker]
 type = custom/script
