@@ -76,8 +76,7 @@ label-visible-margin = 3
 label-visible-foreground = ${colors.fg}
 label-urgent = %icon% %{T7}%index%%{T-}
 label-urgent-font = 4
-label-urgent-padding = 2
-label-urgent-margin = 3
+label-urgent-margin = 2
 label-urgent-foreground = ${colors.fg-urg}
 
 [module/docker]
