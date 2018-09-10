@@ -26,7 +26,7 @@ floating_modifier $mod
 # bindsym $mod+f floating toggle
 
 # Full screen
-bindsym $mod+Control+e fullscreen toggle
+bindsym $mod+e fullscreen toggle
 
 # Floating resizing (spanning)
 bindsym $mod+Up $nexec $HOME/.config/i3/resize.py Full
@@ -130,16 +130,16 @@ bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+s $nexec "rofi -combi-modi drun,run -show combi"
 bindsym $mod+z $nexec "passmenu"
 
-# WS1: browser
+# WS1: browser and agenda
 bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -W $ws1 -m browser
-# WS2: chat/communication related and calendar
-#  FIXME: Waiting not quite working
+bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws1 -m cal -e \
+    "chromium --new-window https://calendar.google.com/calendar/r"
+# WS2: chat/communication related (i.e mail)
+# FIXME: Waiting not quite working
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30
 bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
 bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws2
-bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws2 -m cal -e \
-    "chromium --new-window https://calendar.google.com/calendar/r"
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
