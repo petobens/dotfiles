@@ -27,7 +27,7 @@ if status in ['Downloading']:
 elif status in ['Uploading']:
     print(" ")
 elif status in ['Creating', 'Deleting']:
-    print(" ")
+    print(" %{T6}%{T-}")
 elif status in ['Initializing', 'OneDrive', 'Syncing']:
     print("")
 else:
