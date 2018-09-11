@@ -212,9 +212,9 @@ bindsym $mod+Shift+j $nexec playerctl --player spotify next
 bindsym $mod+Shift+k $nexec playerctl --player spotify previous
 bindsym $mod+Shift+t $nexec $HOME/.config/i3/spotify_track.py
 
-bindsym $mod+Shift+plus $nexec "pactl set-sink-mute @DEFAULT_SINK@ false ; pactl set-sink-volume @DEFAULT_SINK@ +10%"
-bindsym $mod+Shift+minus $nexec pactl set-sink-volume @DEFAULT_SINK@ -10%
-bindsym $mod+Shift+m $nexec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym $mod+Shift+plus $nexec $HOME/.config/i3/volume.py up
+bindsym $mod+Shift+minus $nexec $HOME/.config/i3/volume.py down
+bindsym $mod+Shift+m $nexec $HOME/.config/i3/volume.py mute
 bindsym $mod+Shift+v exec pavucontrol
 
 # }}}

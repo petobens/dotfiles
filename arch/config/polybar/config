@@ -138,17 +138,16 @@ type = internal/pulseaudio
 ; Note: max vol might go beyond 100% (but it is amplified and hence distorted).
 ; We show the normalized (100%) version
 use-ui-max = false
-format-volume = %{A1:pavucontrol &:}<label-volume> <bar-volume>  %{A}
+interval = 10
+format-volume = %{A1:pavucontrol &:}<ramp-volume>  %{A}
 format-muted = %{A1:pavucontrol &:}<label-muted>  %{A}
-label-volume = 奄
-label-volume-font = 5
 label-muted = 
 label-muted-font = 4
-bar-volume-width = 7
-bar-volume-gradient = false
-bar-volume-indicator = │
-bar-volume-fill = ─
-bar-volume-empty = ─
+ramp-volume-0 = 
+ramp-volume-1 = 奔
+ramp-volume-2 = 墳
+ramp-volume-3 = 
+ramp-volume-font = 5
 
 [module/battery]
 ; Use the following command to list batteries and adapters:
@@ -165,7 +164,7 @@ label-charging =   %{T3}%percentage%%%{T-}
 label-discharging = %{T3}%percentage%%%{T-}
 label-charging-font = 6
 label-discharging-font = 6
-label-full =  %{T3}100%%{T-}
+label-full = %{T6}%{T-} %{T3}100%%{T-}
 ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.fg-urg}
 ramp-capacity-1 = 
