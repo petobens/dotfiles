@@ -21,4 +21,6 @@ elif status.startswith('Paused'):
 elif status.startswith('Stopped'):
     playing = '⏹'
 
-Popen(['dunstify', '-a', 'Spotify', f'{playing} {title}', f'{artist}\n{album}'])
+Popen(
+    ['dunstify', '-a', 'Spotify', f'{playing} {title}', f'{artist}\n{album}']
+)

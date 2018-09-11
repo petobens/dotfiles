@@ -3,44 +3,29 @@ import sys
 import subprocess
 
 
-def _sh(cmd, *args, **kwargs):
-    res, err = _sh_no_block(
-        cmd, *args, stdout=subprocess.PIPE, **kwargs
-    ).communicate()
-    return res
-
-
-def _sh_no_block(cmd, *args, **kwargs):
-    if isinstance(cmd, str):
-        cmd = cmd.split()
-    return subprocess.Popen(cmd, *args, **kwargs)
-
-
-def get_vol_and_output_device():
-    pactl_out = [
-        line.decode('ascii').split()
-        for line in _sh('pactl list sinks').splitlines()
-    ]
-    vol_list = [e for e in pactl_out if 'Volume:' in e[0]][0]
-    curr_vol = next(i for i in vol_list if i.endswith('%')).split('%')[0]
-
-    out_list = [e for e in pactl_out
-                if 'Active' in e[0] and 'Port:' in e[1]][0]
-    device = out_list[-1].split('-')[-1]
-    return int(curr_vol), device
+def control_volume(how):
+    _change_vol(how)
+    if how == 'mute':
+        # Remove existing notification
+        _sh('xdotool key Control+space')
+    else:
+        _send_notification()
+    return 0
 
 
 def _change_vol(how):
+    mute_cmd = 'pactl set-sink-mute @DEFAULT_SINK@ '
     if how == 'mute':
-        cmd = 'pactl set-sink-mute @DEFAULT_SINK@ toggle'
-    elif how == 'up':
-        cmd = 'pactl set-sink-mute @DEFAULT_SINK@ false'
-    elif how == 'down':
-        cmd = 'pactl set-sink-volume @DEFAULT_SINK@ -10%'
+        mute_cmd += 'toggle'
+    else:
+        mute_cmd += 'false'
+    _sh(mute_cmd)
 
-    _sh(cmd)
-    if how == 'up':
-        _sh('pactl set-sink-volume @DEFAULT_SINK@ +10%')
+    if how != 'mute':
+        vol_cmd = 'pactl set-sink-volume @DEFAULT_SINK@ {}10%'.format(
+            '+' if how == 'up' else '-'
+        )
+        _sh(vol_cmd)
     return 0
 
 
@@ -57,11 +42,31 @@ def _send_notification():
     _sh(not_cmd)
 
 
-def control_volume(how):
-    _change_vol(how)
-    if how != 'mute':
-        _send_notification()
-    return 0
+def get_vol_and_output_device():
+    pactl_out = [
+        line.decode('ascii').split()
+        for line in _sh('pactl list sinks').splitlines()
+    ]
+    vol_list = [e for e in pactl_out if 'Volume:' in e[0]][0]
+    curr_vol = next(i for i in vol_list if i.endswith('%')).split('%')[0]
+
+    out_list = [e for e in pactl_out
+                if 'Active' in e[0] and 'Port:' in e[1]][0]
+    device = out_list[-1].split('-')[-1]
+    return int(curr_vol), device
+
+
+def _sh(cmd, *args, **kwargs):
+    res, err = _sh_no_block(
+        cmd, *args, stdout=subprocess.PIPE, **kwargs
+    ).communicate()
+    return res
+
+
+def _sh_no_block(cmd, *args, **kwargs):
+    if isinstance(cmd, str):
+        cmd = cmd.split()
+    return subprocess.Popen(cmd, *args, **kwargs)
 
 
 if __name__ == '__main__':
