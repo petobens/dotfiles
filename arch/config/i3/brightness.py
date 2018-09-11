@@ -30,7 +30,7 @@ def _send_notification():
         'dunstify', '-i', 'display-brightness', '-t', '3000', '-r', '1753',
         '-u', 'normal', f'   {bar}  {bright_perc}%'
     ]
-    _sh(not_cmd)
+    _sh_no_block(not_cmd)
 
 
 def _get_brightness(maximum=False):

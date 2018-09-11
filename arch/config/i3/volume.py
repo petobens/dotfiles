@@ -39,7 +39,7 @@ def _send_notification():
         'dunstify', '-i', not_icon, '-t', '3000', '-r', '1743', '-u', 'normal',
         f'   {bar}  {vol}%'
     ]
-    _sh(not_cmd)
+    _sh_no_block(not_cmd)
 
 
 def get_vol_and_output_device():
