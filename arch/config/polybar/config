@@ -44,7 +44,7 @@ type = custom/text
 content = 
 content-padding = 1
 content-font = 5
-click-left = xdotool key Super_L+p
+click-left = xdotool key Super_L+s
 
 [module/title]
 type = internal/xwindow
