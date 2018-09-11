@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import sys
+
 from subprocess import Popen
 
 import gi
@@ -24,3 +26,4 @@ elif status.startswith('Stopped'):
 Popen(
     ['dunstify', '-a', 'Spotify', f'{playing} {title}', f'{artist}\n{album}']
 )
+sys.exit(0)
