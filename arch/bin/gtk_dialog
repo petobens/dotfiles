@@ -5,25 +5,33 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 
+from PIL import ImageFont
 from gi.repository import Gtk
+
+FONT, FONT_SIZE = 'NotoSans-Regular.ttf', 10
 
 
 def confirmation_dialog(title, msg, action, shell=False):
     win = Gtk.Window()
-    win.connect("destroy", Gtk.main_quit)
+    win.connect('destroy', Gtk.main_quit)
+    dialog = Gtk.Dialog(parent=win)
 
-    dialog = Gtk.Dialog(
-        parent=win,
-        buttons=(
-            Gtk.STOCK_OK,
-            Gtk.ResponseType.OK,
-            Gtk.STOCK_CANCEL,
-            Gtk.ResponseType.CANCEL,
-        )
-    )
+    font = ImageFont.truetype(FONT, FONT_SIZE)
+    w, _ = font.getsize(msg)
+    actual_w = 150 if w < 150 else w + 80
+    dialog.set_default_size(actual_w, 100)
+
     dialog.set_property('title', title)
-    dialog.set_default_size(150, 100)
-    label = Gtk.Label(msg)
+    dialog.add_buttons(
+        Gtk.STOCK_OK,
+        Gtk.ResponseType.OK,
+        Gtk.STOCK_CANCEL,
+        Gtk.ResponseType.CANCEL,
+    )
+    dialog.action_area.set_property('halign', Gtk.Align.CENTER)
+
+    label = Gtk.Label()
+    label.set_text(msg)
     box = dialog.get_content_area()
     box.add(label)
     dialog.show_all()
