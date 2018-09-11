@@ -17,6 +17,8 @@ map - zoom out
 map 0 zoom original
 map w adjust_window width
 map b adjust_window best-fit
+map > rotate
+map < rotate rotate-ccw
 unmap q
 unmap [presentation] q
 map i toggle_index
