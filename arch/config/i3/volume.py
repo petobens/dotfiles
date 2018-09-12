@@ -36,7 +36,7 @@ def _send_notification():
 
     not_icon = 'audio-speakers' if device == 'speaker' else 'audio-headphones'
     not_cmd = [
-        'dunstify', '-i', not_icon, '-t', '3000', '-r', '1743', '-u', 'normal',
+        'dunstify', '-i', not_icon, '-t', '2000', '-r', '1743', '-u', 'normal',
         f'   {bar}  {vol}%'
     ]
     _sh_no_block(not_cmd)

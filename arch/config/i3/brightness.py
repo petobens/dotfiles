@@ -27,7 +27,7 @@ def _send_notification():
     bar = '─' * int(bright_perc / 5)
 
     not_cmd = [
-        'dunstify', '-i', 'display-brightness', '-t', '3000', '-r', '1753',
+        'dunstify', '-i', 'display-brightness', '-t', '2000', '-r', '1753',
         '-u', 'normal', f'   {bar}  {bright_perc}%'
     ]
     _sh_no_block(not_cmd)
