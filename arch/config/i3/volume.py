@@ -3,8 +3,8 @@ import sys
 import subprocess
 
 
-def control_volume(how):
-    _change_vol(how)
+def control_volume(how, level):
+    _change_vol(how, level)
     if how == 'mute':
         # Remove existing notification
         _sh('xdotool key Control+space')
@@ -13,7 +13,7 @@ def control_volume(how):
     return 0
 
 
-def _change_vol(how):
+def _change_vol(how, level):
     mute_cmd = 'pactl set-sink-mute @DEFAULT_SINK@ '
     if how == 'mute':
         mute_cmd += 'toggle'
@@ -22,8 +22,8 @@ def _change_vol(how):
     _sh(mute_cmd)
 
     if how != 'mute':
-        vol_cmd = 'pactl set-sink-volume @DEFAULT_SINK@ {}10%'.format(
-            '+' if how == 'up' else '-'
+        vol_cmd = 'pactl set-sink-volume @DEFAULT_SINK@ {how}{level}%'.format(
+            how='+' if how == 'up' else '-', level=level
         )
         _sh(vol_cmd)
     return 0
@@ -73,9 +73,9 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('how')
+    parser.add_argument('--direction', '-d', required=True)
+    parser.add_argument('--level', '-l', type=int, default=10)
     args = parser.parse_args()
-    how = args.how
 
-    control_volume(how)
+    control_volume(args.direction, args.level)
     sys.exit(0)

@@ -9,14 +9,14 @@ if not BRIGHTNESS_DIR.is_dir():
     raise FileNotFoundError("Missing brightness directory!")
 
 
-def control_brightness(how):
-    _change_brightness(how)
+def control_brightness(how, level):
+    _change_brightness(how, level)
     _send_notification()
     return 0
 
 
-def _change_brightness(how):
-    cmd = f'xbacklight -{how} 5'
+def _change_brightness(how, level):
+    cmd = f'xbacklight -{how} {level}'
     _sh(cmd)
 
 
@@ -58,9 +58,9 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('how')
+    parser.add_argument('--direction', '-d', required=True)
+    parser.add_argument('--level', '-l', type=int, default=5)
     args = parser.parse_args()
-    how = args.how
 
-    control_brightness(how)
+    control_brightness(args.direction, args.level)
     sys.exit(0)

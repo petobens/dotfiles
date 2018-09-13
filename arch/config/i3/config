@@ -212,9 +212,9 @@ bindsym $mod+Shift+j $nexec playerctl --player spotify next
 bindsym $mod+Shift+k $nexec playerctl --player spotify previous
 bindsym $mod+Shift+t $nexec $HOME/.config/i3/spotify_track.py
 
-bindsym $mod+Shift+plus $nexec $HOME/.config/i3/volume.py up
-bindsym $mod+Shift+minus $nexec $HOME/.config/i3/volume.py down
-bindsym $mod+Shift+m $nexec $HOME/.config/i3/volume.py mute
+bindsym $mod+Shift+plus $nexec $HOME/.config/i3/volume.py -d up
+bindsym $mod+Shift+minus $nexec $HOME/.config/i3/volume.py -d down
+bindsym $mod+Shift+m $nexec $HOME/.config/i3/volume.py -d mute
 bindsym $mod+Shift+v exec pavucontrol
 
 # }}}
@@ -263,8 +263,8 @@ bindsym $mod+Shift+r $nexec gtk_dialog -t "Power Management" \
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
-bindsym $mod+Shift+Up $nexec $HOME/.config/i3/brightness.py inc
-bindsym $mod+Shift+Down $nexec $HOME/.config/i3/brightness.py dec
+bindsym $mod+Shift+Up $nexec $HOME/.config/i3/brightness.py -d inc
+bindsym $mod+Shift+Down $nexec $HOME/.config/i3/brightness.py -d dec
 
 # Eject mounted media (usb drives)
 bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \
