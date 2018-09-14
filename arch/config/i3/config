@@ -198,8 +198,9 @@ for_window [class="^(feh|Skype)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
 
-# Assign to specific workspaces and resize
+# Assign to specific workspaces (for apps opened with ranger)
 for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
+for_window [class="^(Zathura)$"] $nexec $HOME/.config/i3/multimon_move.py -w "6"
 
 # Automatically switch to windows that raise an urgent flag
 for_window [urgent=latest] focus
