@@ -29,6 +29,7 @@ def _xrandr(how):
     xrandr_out = [
         line.decode('ascii').split() for line in _sh('xrandr').splitlines()
     ]
+    monitors = [e[0] for e in xrandr_out if not e[0][0].isdigit()]
     conn = [l for l in xrandr_out if l[1] == 'connected']
     nr_monitors = len(conn)
 
@@ -55,11 +56,12 @@ def _xrandr(how):
         how = 'dual' if nr_monitors == 2 else 'primary'
 
     if how == 'primary':
-        prim_cmd = f'--output {prim_n} --primary --dpi {PRIM_DPI}'
-        if nr_monitors == 2:
-            cmd = f'xrandr --output {sec_n} --off {prim_cmd}'
-        else:
-            cmd = f'xrandr {prim_cmd}'
+        cmd = f'xrandr --output {prim_n} --primary --dpi {PRIM_DPI}'
+        turn_off = [
+            i for i in monitors if i not in ('Screen', 'VIRTUAL1', prim_n)
+        ]
+        for m in turn_off:
+            cmd += f' --output {m} --off'
 
     elif how == 'mirror':
         mirror_scale = f'{prim_w/sec_w:.2f}x{prim_h/sec_h:.2f}'
