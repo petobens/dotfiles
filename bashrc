@@ -76,6 +76,9 @@ fi
 if type "sqlplus" > /dev/null 2>&1; then
     export SQLPATH="$HOME/.config/sqlplus"
 fi
+if type "mssql-cli" > /dev/null 2>&1; then
+    export MSSQL_CLI_TELEMETRY_OPTOUT=1
+fi
 
 # Set editor to nvim and use it as a manpager
 export EDITOR=nvim
