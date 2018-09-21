@@ -1225,6 +1225,10 @@ let g:airline_mode_map = {
     \ 'S'  : 'S-L',
     \ '' : 'S-B',
     \ 't'  : 'T',
+    \ 'ic' : 'IC',
+    \ 'ix' : 'IC',
+    \ 'ni' : '(I)',
+    \ 'no' : 'O-P',
     \ }
 
 if dein#tap('airline') == 1
