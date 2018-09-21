@@ -323,6 +323,7 @@ fi
 
 # Work (mostly vpn and databases)
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn"'
+
 # Claro
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
 # enabled)
@@ -332,6 +333,10 @@ alias cmjolnir='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh mjolnir'
 alias cvaras='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh varas'
 alias crac8='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
+
+# AUSA
+alias ssausa='mssql-cli -S 172.25.1.70 -U pfarina -P '\
+'"$(pass ausa/sqlserver/pfarina)"'
 
 # }}}
 # Fzf {{{
