@@ -3,16 +3,17 @@ cython
 flake8; python_version >= '3.6'
 jedi; python_version >= '3.6'
 matplotlib
+mssql-cli; python_version >= '3.6'
 mypy; python_version >= '3.6'
 mysql-connector==2.1.6
 numpy
 pandas
 pyhive
-pytest; python_version >= '3.6'
 pytest-cov; python_version >= '3.6'
+pytest; python_version >= '3.6'
 requests
-scipy
 scikit-learn
+scipy
 sqlparse; python_version >= '3.6'
 vim-vint; python_version >= '3.6'
 yapf; python_version >= '3.6'
