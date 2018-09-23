@@ -51,9 +51,8 @@ def _get_layout(i3):
         min_distance = 1e10
         for name, vals in LAYOUT_DICT.items():
             known_layout = [round(float(i), 2) for i in vals]
-            curr_distance = round(
-                sum([abs(i - j) for i, j in zip(actual_layout, known_layout)]),
-                2
+            curr_distance = sum(
+                [abs(i - j) for i, j in zip(actual_layout, known_layout)]
             )
 
             if curr_distance == 0:
