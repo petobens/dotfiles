@@ -42,15 +42,15 @@ bindsym $mod+Control+5 $nexec $HOME/.config/i3/resize.py Center
 bindsym $mod+Control+6 $nexec $HOME/.config/i3/resize.py Rectangle
 bindsym $mod+Control+7 $nexec $HOME/.config/i3/resize.py 'Semi Full'
 
-# Resize
-bindsym $mod+h resize grow left 10 px or 5 ppt
-bindsym $mod+$alt+h resize shrink right 10 px or 5 ppt
-bindsym $mod+l resize grow right 10 px or 5 ppt
-bindsym $mod+$alt+l resize shrink left 10 px or 5 ppt
-bindsym $mod+k resize grow up 10 px or 5 ppt
-bindsym $mod+$alt+j resize shrink up 10 px or 5 ppt
-bindsym $mod+j resize grow down 10 px or 5 ppt
-bindsym $mod+$alt+k resize shrink down 10 px or 5 ppt
+# Resize (grid-like)
+bindsym $mod+l $nexec $HOME/.config/i3/grid_resize.py -a grow -o right
+bindsym $mod+$alt+h $nexec $HOME/.config/i3/grid_resize.py -a shrink -o right
+bindsym $mod+h $nexec $HOME/.config/i3/grid_resize.py -a grow -o left
+bindsym $mod+$alt+l $nexec $HOME/.config/i3/grid_resize.py -a shrink -o left
+bindsym $mod+k $nexec $HOME/.config/i3/grid_resize.py -a grow -o up
+bindsym $mod+$alt+j $nexec $HOME/.config/i3/grid_resize.py -a shrink -o up
+bindsym $mod+j $nexec $HOME/.config/i3/grid_resize.py -a grow -o down
+bindsym $mod+$alt+k $nexec $HOME/.config/i3/grid_resize.py -a shrink -o down
 
 #  }}}
 #  Multiple monitors and workspaces {{{

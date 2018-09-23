@@ -3,6 +3,25 @@ import sys
 
 import i3ipc
 
+LAYOUT_DICT = {
+    'Full': (0, 0, 1, 1),
+    'Left': (0, 0, 0.5, 1),
+    'Right': (0.5, 0, 0.5, 1),
+    'Top': (0, 0, 1, 0.5),
+    'Bottom': (0, 0.5, 1, 0.5),
+    'Top Left': (0, 0, 0.5, 0.5),
+    'Top Right': (0.5, 0, 0.5, 0.5),
+    'Bottom Left': (0, 0.5, 0.5, 0.5),
+    'Bottom Right': (0.5, 0.5, 0.5, 0.5),
+    'Center': (0.25, 0.25, 0.5, 0.5),
+    'Rectangle': (0.15, 0.15, 0.75, 0.6),
+    # This is hack to resize windows in HiDPI screens that were downscaled
+    # to 1920x1080 and (for some strange reason) incorrectly rendered when
+    # using `Full`:
+    # FIXME: Obviously find a better way of doing this
+    'Semi Full': (0.016, 0, 0.965, 0.975),
+}
+
 
 def resize_win(i3, x, y, w, h):
     win = i3.get_tree().find_focused()
@@ -33,32 +52,5 @@ if __name__ == '__main__':
     how = args.how
 
     i3 = i3ipc.Connection()
-    if how == 'Full':
-        resize_win(i3, 0, 0, 1, 1)
-    elif how == 'Left':
-        resize_win(i3, 0, 0, 0.5, 1)
-    elif how == 'Right':
-        resize_win(i3, 0.5, 0, 0.5, 1)
-    elif how == 'Top':
-        resize_win(i3, 0, 0, 1, 0.5)
-    elif how == 'Bottom':
-        resize_win(i3, 0, 0.5, 1, 0.5)
-    elif how == 'Top Left':
-        resize_win(i3, 0, 0, 0.5, 0.5)
-    elif how == 'Top Right':
-        resize_win(i3, 0.5, 0, 0.5, 0.5)
-    elif how == 'Bottom Left':
-        resize_win(i3, 0, 0.5, 0.5, 0.5)
-    elif how == 'Bottom Right':
-        resize_win(i3, 0.5, 0.5, 0.5, 0.5)
-    elif how == 'Center':
-        resize_win(i3, 0.25, 0.25, 0.5, 0.5)
-    elif how == 'Rectangle':
-        resize_win(i3, 0.15, 0.15, 0.75, 0.6)
-    if how == 'Semi Full':
-        # This is hack to resize windows in HiDPI screens that were downscaled
-        # to 1920x1080 and (for some strange reason) incorrectly rendered when
-        # using `Full`
-        # FIXME: Obviously find a way to avoid this
-        resize_win(i3, 0.016, 0, 0.965, 0.975)
+    resize_win(i3, *LAYOUT_DICT[how])
     sys.exit(0)
