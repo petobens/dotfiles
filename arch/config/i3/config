@@ -190,7 +190,7 @@ for_window [con_mark="^(browser|cal)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(QuickTerm|numbers|ranger|Downloads)$"] \
+for_window [title="^(QuickTerm|numbers|ranger|Downloads|About Arch)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle

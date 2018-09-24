@@ -11,8 +11,9 @@ rofi.dpi:             0
 rofi.terminal:        alacritty
 
 # Maps
-rofi.kb-row-down:     Ctrl-n
-rofi.kb-row-up:       Shift_L+Left_Tab,Ctrl-p
+rofi.kb-remove-to-eol:
+rofi.kb-row-down:     Ctrl-n,Down,Ctrl-j
+rofi.kb-row-up:       Shift_L+Left_Tab,Ctrl-p,Up,Ctrl-k
 rofi.kb-accept-entry: Return
 rofi.kb-cancel:       Ctrl-c,Escape
 

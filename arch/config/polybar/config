@@ -21,15 +21,15 @@ foreground = ${colors.fg}
 line-size = 2
 padding = 0
 module-margin-left = 2
-modules-left = menu title
+modules-left = arch title
 modules-center = i3
 modules-right = docker onedrive xkeyboard vpn wifi ethernet pulseaudio battery date
 tray-position = ${env:TRAY_POS:}
 tray-maxsize = 32
 ; Font definition
 font-0 = Noto Sans:size=11;3
-font-1 = Noto Sans:size=11:weight=bold;3
-font-2 = Noto Sans Mono:size=10:weight=bold;3
+font-1 = Noto Sans:size=11:weight=bold;2
+font-2 = Noto Sans Mono:size=10:weight=bold;2
 font-3 = Symbols Nerd Font:size=13;4
 font-4 = Symbols Nerd Font:size=14;4
 font-5 = Symbols Nerd Font:size=12;4
@@ -39,17 +39,17 @@ font-6 = Noto Sans:size=7:weight=bold;-10
 margin-bottom = 0
 margin-top = 0
 
-[module/menu]
+[module/arch]
 type = custom/text
-content = 
+content = %{T6} %{T-}
 content-padding = 1
-content-font = 5
-click-left = xdotool key Super_L+s
+click-left = /home/pedro/.config/polybar/arch_dmenu.sh
 
 [module/title]
 type = internal/xwindow
 label-maxlen = 30
 label-font = 3
+format-padding = 0
 
 [module/i3]
 type = internal/i3
