@@ -4,33 +4,32 @@
 # - https://forum.manjaro.org/t/rofi-based-application-launcher-menu-with-categories/43113/7
 # - https://github.com/Chrysostomus/rofi-scripts/blob/master/bin/rofimenu
 # TODO: Fix padding
+# TODO: Fix launcher not launching
 
 THEME="\
-#window {
+    window {
     location: northwest;
     anchor: northwest;
     y-offset: 1em;
-    width: 15ch;
+    width: 18ch;
     x-offset: 0;
 }
-// Note: mainbox part is needed to disable input box
-#mainbox {
+mainbox {
     children: [ listview ];
 }
-#listview {
+listview {
     fixed-height: false;
     dynamic: true;
+    padding: 0px 0px 0px;
 }"
 
-menulist="\
- Launcher
- Restart
+menulist=" Launcher
+ Reboot
 襤 Shutdown
  About"
 
-category=$(echo "$menulist" | \
-    rofi -dmenu \
-        -i \
+category=$(echo -e "$menulist" | \
+        rofi -dmenu \
         -no-custom \
         -select "$category" \
         -font "Noto Sans Mono 11" \
@@ -43,7 +42,7 @@ fi
 
 if [ "$category" = "Launcher" ] ; then
     rofi -combi-modi drun,run -show combi
-elif [ "$category" = "Restart" ] ; then
+elif [ "$category" = "Reboot" ] ; then
     xdotool key Super_L+Shift+r
 elif [ "$category" = "Shutdown" ] ; then
     xdotool key Super_L+Shift+s
