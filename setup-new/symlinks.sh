@@ -109,6 +109,13 @@ if type "htmlhint" > /dev/null 2>&1; then
 fi
 
 # Terminal programs
+if type "ssh" > /dev/null 2>&1; then
+    if [ -f "$HOME"/OneDrive/arch/ssh/config ]; then
+        sudo mkdir -p "$HOME/.ssh"
+        ln -fTs "$HOME/OneDrive/arch/ssh/config" "$HOME/.ssh/config"
+        echo Created .ssh/config symlink
+    fi
+fi
 if type "arara" > /dev/null 2>&1; then
     ln -fTs "$dotfiles_dir/arararc.yaml" "$HOME/.arararc.yaml"
     echo Created .arararc.yaml symlink

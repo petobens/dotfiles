@@ -104,10 +104,10 @@ label-layout-padding = 1
 [module/vpn]
 type = custom/script
 exec = echo ﯴ
-exec-if = pgrep -x openconnect
+exec-if = pgrep -x "openconnect|openvpn"
 interval = 5
 label-font = 4
-format-padding = 2
+format-padding = 1
 
 [module/wifi]
 type = internal/network

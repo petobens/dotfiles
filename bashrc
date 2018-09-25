@@ -324,7 +324,7 @@ else
     fi
 fi
 
-# Work (mostly vpn and databases)
+# Work (mostly vpn and databases; ssh hosts are defined in .ssh/config)
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn"'
 
 # Claro
@@ -340,6 +340,12 @@ alias crac8='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
 # AUSA
 alias ssausa='mssql-cli -S 172.25.1.70 -U pfarina -P '\
 '"$(pass ausa/sqlserver/pfarina)"'
+
+# Min Prod
+alias mpvpn='sudo pkill -INT -f openvpn; sudo openvpn --daemon --cd '\
+'~/OneDrive/arch/vpn --config microstrategy.ovpn'
+alias mpssh='TERM=xterm-256color; sshpass -p '\
+'"$(pass minprod/ssh/microstrategy)" ssh minprod'
 
 # }}}
 # Fzf {{{
