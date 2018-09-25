@@ -197,7 +197,10 @@ for_window [title="^(htop|Trash Can|OneDrive|Open Files)$"] \
 for_window [class="^(feh|Skype)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
-for_window [window_type="dialog"] $nexec $HOME/.config/i3/resize.py Dialog
+for_window [window_type="dialog" class="^(?!Gtk_dialog).+" window_role="^(?!GtkFileChooserDialog).+"] \
+    $nexec $HOME/.config/i3/resize.py Dialog
+for_window [window_role="^(GtkFileChooserDialog)$"] \
+    $nexec $HOME/.config/i3/resize.py Rectangle
 
 # Assign to specific workspaces (for apps opened with ranger)
 for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
