@@ -9,7 +9,7 @@ from resize import LAYOUT_DICT
 from multimon_move import _get_resize_map
 
 
-def adjust(i3, how, orient, size=30):
+def adjust(i3, how, orient, size=20):
     layout = _get_layout(i3)
 
     for win_id, win_data in layout.items():
@@ -151,8 +151,8 @@ def _get_adjustable_layouts(focused_layout, how, orient):
         if how == 'shrink' and orient == 'up':
             adjustable_layouts['Bottom Left'] = ('shrink', 'up')
             adjustable_layouts['Top'] = ('grow', 'down')
-            adjustable_layouts['Top Left'] = ('grown', 'down')
-            adjustable_layouts['Top Right'] = ('grown', 'down')
+            adjustable_layouts['Top Left'] = ('grow', 'down')
+            adjustable_layouts['Top Right'] = ('grow', 'down')
 
     if focused_position == 'Top':
         if how == 'grow' and orient == 'down':
@@ -183,7 +183,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--action', '-a')
     parser.add_argument('--orient', '-o')
-    parser.add_argument('--size', '-s', type=int, default=30)
+    parser.add_argument('--size', '-s', type=int, default=20)
     args = parser.parse_args()
 
     i3 = i3ipc.Connection()
