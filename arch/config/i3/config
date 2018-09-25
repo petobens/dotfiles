@@ -40,7 +40,8 @@ bindsym $mod+Control+3 $nexec $HOME/.config/i3/resize.py 'Bottom Left'
 bindsym $mod+Control+4 $nexec $HOME/.config/i3/resize.py 'Bottom Right'
 bindsym $mod+Control+5 $nexec $HOME/.config/i3/resize.py Center
 bindsym $mod+Control+6 $nexec $HOME/.config/i3/resize.py Rectangle
-bindsym $mod+Control+7 $nexec $HOME/.config/i3/resize.py 'Semi Full'
+bindsym $mod+Control+7 $nexec $HOME/.config/i3/resize.py Dialog
+bindsym $mod+Control+8 $nexec $HOME/.config/i3/resize.py 'Semi Full'
 
 # Resize (grid-like)
 bindsym $mod+l $nexec $HOME/.config/i3/grid_resize.py -a grow -o right
@@ -196,6 +197,7 @@ for_window [title="^(htop|Trash Can|OneDrive|Open Files)$"] \
 for_window [class="^(feh|Skype)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
+for_window [window_type="dialog"] $nexec $HOME/.config/i3/resize.py Dialog
 
 # Assign to specific workspaces (for apps opened with ranger)
 for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
