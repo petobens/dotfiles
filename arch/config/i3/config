@@ -69,7 +69,7 @@ set $ws8 "8"
 bindsym $mod+n workspace next
 bindsym $mod+p workspace prev
 
-# Switch (and created if needed) workspace
+# Switch (and create if needed) workspace
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
 bindsym $mod+3 workspace $ws3
@@ -90,7 +90,7 @@ bindsym $mod+Shift+6 $nexec $HOME/.config/i3/multimon_move.py -w "6"
 bindsym $mod+Shift+7 $nexec $HOME/.config/i3/multimon_move.py -w "7"
 bindsym $mod+Shift+8 $nexec $HOME/.config/i3/multimon_move.py -w "8"
 
-# Activate primary or dual monitor and define those monitors
+# Activate primary or dual monitor
 bindsym $mod+Return $nexec multimon primary
 bindsym $mod+Control+Return $nexec multimon dual
 
@@ -99,7 +99,6 @@ bindsym $mod+Control+Right $nexec $HOME/.config/i3/multimon_move.py -d "right"
 bindsym $mod+Control+Left $nexec $HOME/.config/i3/multimon_move.py -d "left"
 
 # Move workspace in monitor (output) direction and switch focus
-# TODO: Resize all windows properly
 bindsym $mod+Shift+Right \
     $nexec $HOME/.config/i3/multimon_move.py -d "right" --move-ws
 bindsym $mod+Shift+Left \
@@ -107,7 +106,7 @@ bindsym $mod+Shift+Left \
 
 # Assign workspaces to specific monitors
 # TODO: Do this dynamically (i.e don't harcode monitor names)
-# We need an ugly hack: https://github.com/i3/i3/issues/2387
+# We seem to need an ugly hack: https://github.com/i3/i3/issues/2387
 set $primary "eDP1"
 set $secondary "DP1"
 workspace $ws1 output $primary
@@ -119,7 +118,7 @@ workspace $ws6 output $secondary
 workspace $ws7 output $secondary
 workspace $ws8 output $secondary
 
-# Focus next monitor (with wrapping): this switches mouse cursor two
+# Focus next monitor (with wrapping): this also switches mouse cursor
 bindsym $alt+grave focus output right
 
 # }}}
