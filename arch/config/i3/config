@@ -279,7 +279,7 @@ bindsym $mod+Shift+b $nexec gtk_dialog \
 # }}}
 # Startup {{{
 
-# Note: use exec_always to alwasy run when restarting i3
+# Note: use exec_always to always run when restarting i3
 
 # Set the wallpaper
 exec_always --no-startup-id "[[ -f ~/.fehbg ]] && ~/.fehbg &"
