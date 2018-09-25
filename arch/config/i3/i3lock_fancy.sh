@@ -43,7 +43,8 @@ i3lock \
     --datestr="%a %b %d"             \
     --ring-width=3.0                 \
     --radius=100                     \
-    -c 24272e
+    \
+    --color="24272e"
 
 
 # Post lock
