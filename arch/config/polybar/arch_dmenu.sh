@@ -11,8 +11,8 @@ THEME="\
     location: northwest;
     anchor: northwest;
     y-offset: 1em;
-    width: 18ch;
-    x-offset: 0;
+    width: 20ch;
+    x-offset: 10;
 }
 mainbox {
     children: [ listview ];
@@ -20,14 +20,15 @@ mainbox {
 listview {
     fixed-height: false;
     dynamic: true;
-    padding: 0px 0px 0px;
 }"
 
-menulist=" Launcher
+menulist=" About Arch
+ App Launcher
  Reboot
-襤 Shutdown
- About"
+襤 Shut Down"
 
+# TODO: Highlight option under mouse
+# See: https://github.com/DaveDavenport/rofi/issues/600
 category=$(echo -e "$menulist" | \
         rofi -dmenu \
         -no-custom \
@@ -39,15 +40,14 @@ category=$(echo -e "$menulist" | \
 if [ -z "$category" ] ; then
     exit
 fi
-
-if [ "$category" = "Launcher" ] ; then
+if [ "$category" = "App" ] ; then
     rofi -combi-modi drun,run -show combi
 elif [ "$category" = "Reboot" ] ; then
     xdotool key Super_L+Shift+r
-elif [ "$category" = "Shutdown" ] ; then
+elif [ "$category" = "Shut" ] ; then
     xdotool key Super_L+Shift+s
 elif [ "$category" = "About" ] ; then
-    WINIT_HIDPI_FACTOR=2.66 alacritty -t "About Arch" -e /usr/bin/bash -i -c "neofetch;bash"
+    WINIT_HIDPI_FACTOR=2.66 alacritty -t "About Arch" -e /usr/bin/bash -i -c "neofetch;read -p ''"
 fi
 
 sleep 0.1 # pause to avoid instant menu closing with mouse
