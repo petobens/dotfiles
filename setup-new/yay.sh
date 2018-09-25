@@ -144,6 +144,7 @@ $yay_cmd neofetch-git
 $yay_cmd neomutt
 $yay_cmd openconnect-git
 $yay_cmd openssh
+$yay_cmd openvpn
 $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
 $yay_cmd pass
