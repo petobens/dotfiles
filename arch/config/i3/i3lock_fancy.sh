@@ -44,10 +44,14 @@ i3lock \
     --ring-width=3.0                 \
     --radius=100                     \
     \
-    --color="24272e"
+    --color="24272e"                 \
+    --nofork
 
 
 # Post lock
 if [ "$1" != 'suspend' ]; then
+    if [[ $SPOTIFY_STATUS == "Playing" ]]; then
+        playerctl -p spotify play
+    fi
     killall -SIGUSR2 dunst
 fi

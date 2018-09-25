@@ -4,7 +4,7 @@ Before=sleep.target
 
 [Service]
 User=pedro
-Type=forking
+Type=simple
 Environment=DISPLAY=:0
 ExecStart=/home/pedro/.config/i3/i3lock_fancy.sh suspend
 ExecStartPost=/bin/sleep 1
