@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import sys
 import subprocess
 
 from time import sleep
@@ -41,3 +42,4 @@ for line in xrandr:
             env = os.environ.copy()
             env['MONITOR'] = monitor
             sh_no_block('polybar --reload main', env=env)
+sys.exit(0)

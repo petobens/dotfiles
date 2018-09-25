@@ -12,14 +12,12 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
     resize_map = _get_resize_map(i3)
 
     if direction is not None:
-        if move_win:
-            cmd = f'move container to output {direction}, ' \
-                  f'focus output {direction}'
-        else:
-            cmd = f'move workspace to output {direction}'
+        cmd = f'move {"container" if move_win else "workspace"} to ' \
+              f'output {direction}, focus output {direction}'
     if workspace is not None:
         cmd = f'move container to workspace {workspace}, workspace {workspace}'
     i3.command(cmd)
+    sleep(0.2)
 
     for win_id, win_data in resize_map.items():
         if cmd.startswith('move container'):
@@ -31,6 +29,7 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
                 sleep(0.1)
         x, y, w, h = win_data['how']
         resize_win(i3, x, y, w, h)
+    return
 
 
 def _get_resize_map(i3):

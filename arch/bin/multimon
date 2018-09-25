@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import sys
 import subprocess
 
@@ -9,14 +10,18 @@ import i3ipc
 
 
 def multi(how):
+    if how == 'init':
+        _xrandr(how)
+        return
+
+    i3 = i3ipc.Connection()
+    rmap = _get_resize_map(i3)
     _xrandr(how)
-    if how != 'init':
-        sleep(0.2)
-        _restart_i3_and_polybar()
-        sleep(0.7)
-        i3 = i3ipc.Connection()
-        _adjust_windows(i3)
-    sys.exit(0)
+    sleep(0.5)
+    _restart_polybar()
+    sleep(0.5)
+    _adjust_windows(i3, rmap)
+    return
 
 
 def _xrandr(how):
@@ -79,37 +84,89 @@ def _xrandr(how):
     _sh(cmd)
 
 
-def _restart_i3_and_polybar():
-    # Using `reload` or `restart` don't seem to work and we need to rely on
-    # the binding defined in the i3 config
-    _sh('xdotool key Super_L+Control+r')
-
-
-def _adjust_windows(i3):
-    # TODO: Keep original layout also in the unfocused monitor
+def _get_resize_map(i3):
+    res_map = {}
     tree = i3.get_tree()
-    focused_win = tree.find_focused()
-    windows = set(w for w in tree.leaves())
-    for w in windows:
-        i3.command(f'[con_id={w.id}] focus')
-        while not i3.get_tree().find_focused().id == w.id:
+    workspaces = tree.workspaces()
+    for ws in workspaces:
+        for w in ws.leaves():
+            res_map[w.id] = {
+                'win': w,
+                'focused': w.focused,
+                'how': _find_how_to_resize(i3, w),
+            }
+    return res_map
+
+
+def _adjust_windows(i3, resize_map):
+    for win_id, win_data in resize_map.items():
+        i3.command(f'[con_id={win_id}] focus')
+        while not i3.get_tree().find_focused().id == win_id:
             sleep(0.1)
-        _resize_win(i3, 0, 0, 1, 1)
-    i3.command(f'[con_id={focused_win.id}] focus')
+        x, y, w, h = win_data['how']
+        _resize_win(i3, x, y, w, h)
+
+        if win_data['focused']:
+            focused_win_id = win_id
+    i3.command(f'[con_id={focused_win_id}] focus')
+    return
+
+
+def _restart_polybar():
+    polybar_launch_file = os.path.expanduser('~/.config/polybar/launch.py')
+    os.system(f'python {polybar_launch_file}')
+    return
 
 
 # Helpers
-def _sh(cmd, *args, **kwargs):
-    res, err = _sh_no_block(
-        cmd, *args, stdout=subprocess.PIPE, **kwargs
-    ).communicate()
-    return res
+def _find_how_to_resize(i3, win=None):
+    if win is None:
+        win = i3.get_tree().find_focused()
+    win_h = win.rect.height
+    win_w = win.rect.width
+    win_x = win.rect.x
+    win_y = win.rect.y
+
+    ws = win.workspace()
+    max_h = ws.rect.height
+    max_w = ws.rect.width
+    max_x = ws.rect.x
+    max_y = ws.rect.y
+
+    w = round(win_w / max_w, 2)
+    h = round(win_h / max_h, 2)
+    x = round((win_x + 1 - max_x) / max_w, 2)
+    if x > 1:
+        # If win_x is wrongly reported then the factor will > 1; in these
+        # cases the actual x value should be 0
+        x = 0
+    y = round((win_y - max_y) / max_h, 2)
+
+    return x, y, w, h
 
 
-def _sh_no_block(cmd, *args, **kwargs):
-    if isinstance(cmd, str):
-        cmd = cmd.split()
-    return subprocess.Popen(cmd, *args, **kwargs)
+def _resize_win(i3, x, y, w, h):
+    win = i3.get_tree().find_focused()
+    ws = win.workspace()
+    max_h = ws.rect.height
+    max_w = ws.rect.width
+    max_x = ws.rect.x
+    max_y = ws.rect.y
+
+    x = int(max_x + (max_w * x))
+    # Fix for incorrect calculation when monitor extends right
+    # TODO: Find a better way of doing this
+    x -= 1
+    y = int(max_y + (max_h * y))
+    if y < POLYBAR_HEIGHT:
+        # We always want to leave space for polybar
+        y = POLYBAR_HEIGHT
+    w = int(max_w * w)
+    h = int(max_h * h)
+    cmd = f"fullscreen disable, floating enable, " \
+          f"move position {x} {y}, resize set {w} {h}"
+    i3.command(cmd)
+    return
 
 
 def _get_name_and_res(xrandr_out, mon_info):
@@ -129,22 +186,17 @@ def _get_name_and_res(xrandr_out, mon_info):
     return mon_name, mon_w, mon_h
 
 
-def _resize_win(i3, x, y, w, h):
-    win = i3.get_tree().find_focused()
-    ws = win.workspace()
-    max_h = ws.rect.height
-    max_w = ws.rect.width
-    max_x = ws.rect.x
-    max_y = ws.rect.y
+def _sh(cmd, *args, **kwargs):
+    res, err = _sh_no_block(
+        cmd, *args, stdout=subprocess.PIPE, **kwargs
+    ).communicate()
+    return res
 
-    x = int(max_x + (max_w * x))
-    x -= 1
-    y = int(max_y + (max_h * y))
-    w = int(max_w * w)
-    h = int(max_h * h)
-    cmd = f"fullscreen disable, floating enable, " \
-          f"move position {x} {y}, resize set {w} {h}"
-    i3.command(cmd)
+
+def _sh_no_block(cmd, *args, **kwargs):
+    if isinstance(cmd, str):
+        cmd = cmd.split()
+    return subprocess.Popen(cmd, *args, **kwargs)
 
 
 def _flatten(l):
@@ -166,5 +218,7 @@ if __name__ == '__main__':
     # Constants
     PRIM_DPI = 192
     FIXED_SCALE = 2
+    POLYBAR_HEIGHT = 55
 
     multi(how)
+    sys.exit(0)
