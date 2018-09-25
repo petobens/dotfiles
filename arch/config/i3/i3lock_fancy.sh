@@ -9,7 +9,8 @@ if [ "$1" != 'suspend' ]; then
     killall -SIGUSR1 dunst
 fi
 
-# Actual locking
+# Actual locking (use `--blur 15` instead of the `c` option to blur images;
+# note however that it is terrible slow)
 B='#24272EFF'  # inside color
 T='#ABB2BFFF'  # text
 W='#E06C75FF'  # wrong
@@ -37,12 +38,13 @@ i3lock \
     --keyhlcolor=$K                  \
     --bshlcolor=$K                   \
     \
-    --blur 15                        \
     --clock                          \
     --timestr="%H:%M:%S"             \
     --datestr="%a %b %d"             \
     --ring-width=3.0                 \
-    --radius=100
+    --radius=100                     \
+    -c 24272e
+
 
 # Post lock
 if [ "$1" != 'suspend' ]; then
