@@ -11,7 +11,7 @@ THEME="\
     location: northwest;
     anchor: northwest;
     y-offset: 1em;
-    width: 20ch;
+    width: 25ch;
     x-offset: 10;
 }
 mainbox {
@@ -22,7 +22,7 @@ listview {
     dynamic: true;
 }"
 
-menulist=" About Arch
+menulist=" About This Arch
  App Launcher
  Reboot
 襤 Shut Down"
