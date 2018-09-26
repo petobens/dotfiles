@@ -91,6 +91,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     sudo tlmgr install l3kernel
     sudo tlmgr install l3packages
     sudo tlmgr install lineno
+    sudo tlmgr install listings
     sudo tlmgr install mathtools
     sudo tlmgr install microtype
     sudo tlmgr install setspace
