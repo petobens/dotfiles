@@ -10,7 +10,7 @@ xbacklight -set 35
 unclutter &
 dunst &
 udiskie &
-compton -cCG -r 7 &
+compton &
 xfce4-power-manager &
 multimon init
 exec i3

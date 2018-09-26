@@ -231,7 +231,7 @@ bindsym $mod+Shift+v exec pavucontrol
 font pango:Noto Sans 0
 
 # Set window border width
-for_window [class="^.*"] border pixel 1
+for_window [class="^.*"] border pixel 2
 
 # Theme
 set $bg #24272e
