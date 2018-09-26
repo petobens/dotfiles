@@ -181,7 +181,7 @@ bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -e \
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
 # re-focusing it)
-for_window [class="^(Spotify|Slack|libreoffice-calc|libreoffice-writer|Thunderbird|Transmission-gtk|mpv|Zathura)$"] \
+for_window [class="^(Spotify|Slack|libreoffice|libreoffice-calc|libreoffice-writer|Thunderbird|Transmission-gtk|mpv|Zathura)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 # We seem to need this hack for Alacritty (i.e use title instead of mark)
 for_window [title="^(Alacritty)$"] \
@@ -204,6 +204,8 @@ for_window [window_role="^(GtkFileChooserDialog)$"] \
 
 # Assign to specific workspaces (for apps opened with ranger)
 for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
+for_window [class="^(?i)libreoffice-*"] \
+    $nexec $HOME/.config/i3/multimon_move.py -w "4"
 for_window [class="^(Zathura)$"] $nexec $HOME/.config/i3/multimon_move.py -w "6"
 
 # Automatically switch to windows that raise an urgent flag
