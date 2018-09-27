@@ -291,6 +291,7 @@ fi
 
 # Package manager
 if type "yay" > /dev/null 2>&1; then
+    # Note yay will prompt twice: https://github.com/Jguer/yay/issues/170
     alias yay='yay --nodiffmenu --answerclean N --removemake'
 fi
 
