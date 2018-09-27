@@ -136,8 +136,7 @@ bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws1 -m cal -e \
     "chromium --new-window https://calendar.google.com/calendar/r"
 # WS2: chat/communication related (i.e mail)
 # FIXME: Waiting not quite working
-bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 40 -e \
-    "GTK_THEME=Adwaita:dark flatpak run com.slack.Slack"
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30
 bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
 bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws2
