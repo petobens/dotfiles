@@ -183,12 +183,15 @@ $yay_cmd onedrive-abraunegg-git
 $yay_cmd peek
 $yay_cmd ranger-git
 $yay_cmd skypeforlinux-preview-bin
-$yay_cmd slack-desktop
 $yay_cmd spotify
 $yay_cmd thunderbird
 $yay_cmd transmission-gtk
 $yay_cmd xfce4-power-manager
 $yay_cmd zathura
 $yay_cmd zathura-pdf-mupdf
+
+# Flatpak
+$yay_cmd flatpak
+flatpak install flathub com.slack.Slack
 
 yay -c

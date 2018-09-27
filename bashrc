@@ -460,6 +460,10 @@ sys_update_all() {
                 --timeupdate --combinedupgrade
             yay -c
         fi
+        if type "flatpak" > /dev/null 2>&1; then
+            echo "-> Flatpak..."
+            flatpak update
+        fi
     fi
     if type "python3" > /dev/null 2>&1; then
         echo "-> Updating python..."
