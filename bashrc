@@ -339,7 +339,7 @@ alias crac8='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
 
 # AUSA
-alias ssausa='mssql-cli -S 172.25.1.70 -U pfarina -P '\
+alias ausass='mssql-cli -S 172.25.1.70 -U pfarina -P '\
 '"$(pass ausa/sqlserver/pfarina)"'
 
 # Min Prod
