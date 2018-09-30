@@ -110,7 +110,7 @@ const qmarksUrls = {
     b: 'www.bitbucket.com',
     c: 'www.utdt.edu/campusvirtual',
     d: 'https://drive.google.com/drive/my-drive',
-    e: 'https://extratorrent.unblockall.xyz/hot_torrents/2/XVID+DIVX.html',
+    e: 'https://yts.am/browse-movies',
     f: 'www.facebook.com',
     g: 'www.github.com',
     h: 'www.google.com.ar',
@@ -120,13 +120,12 @@ const qmarksUrls = {
     n: 'www.netflix.com',
     p: 'http://pirateproxy.net',
     s: 'http://stackoverflow.com',
-    t: 'tex.stackexchange.com',
+    t: 'http://trello.com',
     u: 'www.alumnos.econ.uba.ar',
     v: 'http://virtual.econ.uba.ar/',
     y: 'www.yahoo.com/mail',
-    // Work related
-    j: 'http://app.jampp.com/',
-    q: 'http://emr-prd-queries.jampp.com:8889/',
+    // Printing (arch)
+    q: 'http://localhost:631/jobs',
 };
 qmarksMapKey('"', qmarksUrls);
 qmarksMapKey('\'', qmarksUrls);
@@ -200,10 +199,11 @@ mapkey ('<Ctrl-c>', 'Close tab', function() {
 });
 map(',wd', '<Ctrl-c>');
 map(',bd', '<Ctrl-c>');
-mapkey('<Ctrl-n>', 'Go one tab right', function() {
+// Ctrl-n cannot be mapped on Linux so we use alt-n (and alt-p) instead
+mapkey('<Alt-n>', 'Go one tab right', function() {
     RUNTIME('nextTab');
 });
-mapkey('<Ctrl-p>', 'Go one tab left', function() {
+mapkey('<Alt-p>', 'Go one tab left', function() {
     RUNTIME('previousTab');
 });
 mapkey('<Alt-h>', 'Move current tab to left', function() {
@@ -379,6 +379,7 @@ mapkey(',hs', 'Open URL from history', function() {
 mapkey(',th', 'Open URL from history in a new tab', function() {
     Front.openOmnibar({type: 'History'});
 });
+// FIXME: Not working?
 mapkey(',dh', 'Delete history older than 30 days', function() {
     RUNTIME('deleteHistoryOlderThan', {
         days: 30

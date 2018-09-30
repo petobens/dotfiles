@@ -5,17 +5,19 @@
 # Note that we always use batchmode since arara sees pdftex exit code and stops
 # without executing further directives only if the exit code of the command was
 # not zero (independent of the visibility on the console).
+# To use only 120 max lines on linux modify /usr/local/texlive/{year}/texmf.cnf
+# as per https://tex.stackexchange.com/a/83608
 preambles:
     minimize_runs: |
         % arara: pdflatex: {interaction: batchmode, synctex: yes, shell: yes,
-        % arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+        % arara: --> options: ["-file-line-error"]}
         % arara: biber if found('log', 'Please \\(re\\)run Biber on the file')
         % arara: --> && found('bcf', 'citekey')
         % arara: pdflatex: {interaction: batchmode, synctex: yes,
-        % arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+        % arara: --> options: ["-file-line-error"]}
         % arara: --> if found('log', 'Please \\(re\\)run Biber on the file')
         % arara: --> && found('bcf', 'citekey')
         % arara: pdflatex: {interaction: batchmode, synctex: yes, shell: yes,
-        % arara: --> options: ["-file-line-error", "-max-print-line=120"]}
+        % arara: --> options: ["-file-line-error"]}
         % arara: --> if found('log', '(undefined references|Please rerun|Rerun to get)')
 ...

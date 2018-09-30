@@ -22,12 +22,23 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-read -p "Do you want to install brew packages (y/n)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo Installing Brew packages...
-    . "$current_dir/brew.sh"
-    brew_dir=$(brew --prefix)
+if [[  "$OSTYPE" == 'darwin'* ]]; then
+    read -p "Do you want to install brew packages (y/n)? " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo Installing Brew packages...
+        . "$current_dir/brew.sh"
+        brew_dir=$(brew --prefix)
+        base_pkg_dir=$brew_dir
+    fi
+else
+    read -p "Do you want to install pacman packages (y/n)? " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo Installing pacman/yay packages...
+        . "$current_dir/yay.sh"
+    fi
+    base_pkg_dir='/usr'
 fi
 
 read -p "Do you want to install tmux terminfo with italics support (y/n)? " -n 1 -r
@@ -37,42 +48,22 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     tic "$parent_dir/tmux-xterm-256color-italic.terminfo"
 fi
 
-read -p "Do you want to install Nerd fonts with fancy glyphs (y/n)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo Installing Nerd Fonts...
-    if [[  "$OSTYPE" == 'darwin'* ]]; then
-        brew tap caskroom/fonts
-        brew cask install font-sourcecodepro-nerd-font
-        # Nerd fonts Source Code Pro version doesn't have italics so we install
-        # the official version
-        brew cask install font-source-code-pro
-    else
-        mkdir -p ~/.local/share/fonts
-        cd ~/.local/share/fonts || exit
-        curl -fLo "Sauce Code Pro Nerd Font Complete.ttf" \
-            https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/\
-            patched-fonts/SourceCodePro/Regular/complete/\
-            Sauce%20Code%20Pro%20Nerd%20Font%20Complete.ttf
-        echo Installed Sauce Code Pro Nerd Font Complete.ttf font
-        # TODO: Add ubuntu installation instructions for official Source Code
-        # Pro
-        cd "$current_dir" || exit
-    fi
-fi
-
 read -p "Do you want to install python modules (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo Installing Python3 modules...
-    pip3 install -r "$parent_dir"/python/requirements.txt
-    if [  -f "$brew_dir"/bin/python2 ]; then
-        echo Installing Python2 modules...
-        pip install -r "$parent_dir"/python/requirements.txt
-        # Enable both python2 and python3 ipython kernels
-        ipython kernel install
+    pip3 install --user -r "$parent_dir"/python/requirements.txt
+    sudo pip3 install jupyter
+    if [  -f "$base_pkg_dir"/bin/python2 ]; then
+        if type "pip2" > /dev/null 2>&1; then
+            echo Installing Python2 modules...
+            pip2 install --user -r "$parent_dir"/python/requirements.txt
+            sudo pip2 install jupyter
+            # Enable both python2 and python3 ipython kernels
+            ipython kernel install
+        fi
     fi
-    ipython3 kernel install
+    sudo ipython3 kernel install
 fi
 
 if type "tlmgr" > /dev/null 2>&1; then
@@ -102,26 +93,23 @@ if type "npm" > /dev/null 2>&1; then
     fi
 fi
 
-read -p "Do you want to install extra Ruby libraries (y/n)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo Installing Ruby libraries...
-    sudo gem install sqlint --conservative
-fi
-
-read -p "Do you want to generate symlinks to these dotfiles? " -n 1 -r
+read -p "Do you want to generate symlinks to these dotfiles (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo Generating symlinks...
     . "$current_dir/symlinks.sh"
 fi
 
-echo Installing nvim packages...
-nvim +qall
-
-read -p "Do you want to install extra settings? " -n 1 -r
+read -p "Do you want to install vim packages (y/n)?" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo Installing extra settings...
-    . "$current_dir/extras.sh"
+    echo Installing nvim packages...
+    nvim +qall
+fi
+
+read -p "Do you want to install extra stuff (y/n)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo Running post install...
+    . "$current_dir/post.sh"
 fi

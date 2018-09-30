@@ -1,0 +1,18 @@
+zoom_in equal
+zoom_out minus
+zoom_default o
+
+next_img j l n
+prev_img h k p
+reload_image r
+
+scroll_up K
+scroll_down J
+scroll_right L
+scroll_left H
+scroll_up_page C-u
+scroll_down_page C-d
+
+toggle_fullscreen E
+toggle_filenames f
+save_image w

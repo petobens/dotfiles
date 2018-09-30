@@ -1,5 +1,4 @@
 caret
-colorout
 data.table
 devtools
 dplyr

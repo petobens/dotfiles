@@ -104,3 +104,8 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Token.Menu.Completions.Completion.Current: f'bg:{light_blue} {black}',
     Token.MatchingBracket.Other: blue,
 }
+
+# Always import some modules
+c.InteractiveShellApp.exec_lines = [
+    'import numpy as np',
+]

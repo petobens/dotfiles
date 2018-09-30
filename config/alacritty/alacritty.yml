@@ -29,7 +29,7 @@ window:
 
   # Window decorations
   # Setting this to false will result in window without borders and title bar.
-  decorations: true
+  decorations: false
 
 # Display tabs using this many cells (changes require restart)
 tabspaces: 4
@@ -53,25 +53,25 @@ font:
 
   # The italic font face
   italic:
-    family: Source Code Pro
+    family: SourceCode Pro
     # Style can be specified to pick a specific face.
     style: Italic
 
   # Point size of the font
-  size: 16.0
+  size: 8.5
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
   offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increase the x offset to move the glyph to
   # the right, increase the y offset to move the glyph upward.
   glyph_offset:
-    x: 0.0
-    y: 0.0
+    x: 0
+    y: 0
 
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
@@ -190,7 +190,7 @@ selection:
 
 dynamic_title: true
 
-hide_cursor_when_typing: false
+hide_cursor_when_typing: true
 
 # Style of the cursor
 #
@@ -199,6 +199,7 @@ hide_cursor_when_typing: false
 # - Underline
 # - Beam
 cursor_style: Block
+unfocused_hollow_cursor: true
 
 # Live config reload (changes require restart)
 live_config_reload: true
@@ -209,9 +210,9 @@ live_config_reload: true
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
 shell:
-  program: /usr/local/bin/bash
+  program: /usr/bin/bash
   args:
-    - --login
+    - -i
 
 # Key bindings
 #
@@ -259,7 +260,7 @@ key_bindings:
   - { key: End,                     chars: "\x1b[F",   mode: ~AppCursor  }
   - { key: Key0,     mods: Command, action: ResetFontSize                }
   - { key: Equals,   mods: Command, action: IncreaseFontSize             }
-  - { key: Minus,    mods: Command, action: DecreaseFontSize             }
+  - { key: F11,      mods: Command, action: DecreaseFontSize             }
   - { key: PageUp,   mods: Shift,   chars: "\x1b[5;2~"                   }
   - { key: PageUp,   mods: Control, chars: "\x1b[5;5~"                   }
   - { key: PageUp,                  chars: "\x1b[5~"                     }
@@ -349,7 +350,7 @@ key_bindings:
   - { key: F8,       mods: Command, chars: "\x1b[19;3~"                  }
   - { key: F9,       mods: Command, chars: "\x1b[20;3~"                  }
   - { key: F10,      mods: Command, chars: "\x1b[21;3~"                  }
-  - { key: F11,      mods: Command, chars: "\x1b[23;3~"                  }
+  # - { key: F11,      mods: Command, chars: "\x1b[23;3~"                  }
   - { key: F12,      mods: Command, chars: "\x1b[24;3~"                  }
   - { key: A,        mods: Alt,       chars: "\x1ba"                     }
   - { key: B,        mods: Alt,       chars: "\x1bb"                     }

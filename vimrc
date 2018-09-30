@@ -24,7 +24,7 @@ else
     if s:is_mac
         let g:python3_host_prog = '/usr/local/bin/python3'
     elseif s:is_linux
-        let g:python3_host_prog = '/mnt/.linuxbrew/bin/python3'
+        let g:python3_host_prog = '/usr/bin/python'
     endif
 endif
 let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
@@ -42,7 +42,7 @@ if s:is_win
 elseif s:is_mac
     let $CACHE = expand('$DOTVIM/cache/MacBookPro')
 else
-    let $CACHE = expand('$DOTVIM/cache/Ubuntu')
+    let $CACHE = expand('$DOTVIM/cache/Arch')
 endif
 
 let g:mapleader = ','    " Default for mappings is now , character instead of /
@@ -93,7 +93,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
-    if exists('$TMUX')
+    if !empty('$TMUX')
         call dein#add('christoomey/vim-tmux-navigator')
         call dein#add('wellle/tmux-complete.vim')
         call dein#add('tmux-plugins/vim-tmux-focus-events')
@@ -158,7 +158,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/deoplete.nvim')
     " Unite/denite sources
     call dein#add('chemzqm/denite-extra')
-    call dein#add('kmnk/gitn')
+    " TODO: Fix this not working
+    " call dein#add('kmnk/gitn')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('kopischke/unite-spell-suggest')
@@ -171,8 +172,18 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/neco-syntax')
     call dein#add('Shougo/neoinclude.vim')
 
+    " Filetype plugins
+    if executable('i3')
+        call dein#add('mboughaba/i3config.vim')
+    endif
+
     " Temp
      if has('nvim')
+        if s:is_linux
+            " This allows to write without sudo
+            " See: https://github.com/neovim/neovim/issues/1716
+            call dein#add('lambdalisue/suda.vim')
+        endif
         " This basically fixes visual block pasting
         " https://github.com/neovim/neovim/issues/1822#issuecomment-233152833
         call dein#add('bfredl/nvim-miniyank')
@@ -241,7 +252,11 @@ if !has('nvim')
         set clipboard=autoselectplus,unnamedplus
     endif
 else
-    set clipboard=unnamed
+    if s:is_win || s:is_mac
+        set clipboard=unnamed
+    else
+        set clipboard=unnamedplus
+    endif
     " This mimicks autoselect in neovim
     vmap <Esc> "*ygv<C-c>
 endif
@@ -311,10 +326,11 @@ set title
 " Show the command being typed
 set showcmd
 
-" Make command line two lines high
-set cmdheight=1
+" Make command line two lines high (we cannot set it to 1 because we get the
+" `press ENTER` message)
+set cmdheight=2
 " Reduce maximum height of the command line window (default is 7)
-set cmdwinheight=5
+set cmdwinheight=4
 
 " Don't update the display while executing macros
 set lazyredraw
@@ -382,6 +398,12 @@ augroup focus_lost
 augroup END
 " Allow unsaved buffers to be put on the background without saving
 set hidden
+
+" Disable readonly warning
+augroup no_ro_warn
+    au!
+    au FileChangedRO * set noreadonly
+augroup END
 
 " }}}
 " Search, jumps and matching pairs {{{
@@ -741,6 +763,13 @@ nnoremap <Leader>wc :w!<CR><C-w>c
 nnoremap <Leader>wq :w!<CR>:q!<CR>
 " No autocommand write
 nnoremap <Leader>nw :noautocmd w!<CR>
+" Saving when root privileges are required
+if s:is_mac
+    nnoremap <Leader>sw :w !sudo tee % >/dev/null<CR>
+elseif s:is_linux && has('nvim') && dein#tap('suda') == 1
+    nnoremap <Leader>sw :w suda://%<CR>
+    nnoremap <Leader>se :e suda://
+endif
 
 " Fast editing and reloading of the vimrc file
 nnoremap <silent> <Leader>ev :e $DOTFILES/vimrc<CR>
@@ -875,11 +904,6 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'
 " Note: to yank a commmand, call Unite history/yank + <C-y> (yank action)
 cnoremap <A-p> <C-R>*
 
-" Saving when root privileges are required (use :w!! to sudo and write)
-if s:is_mac || s:is_linux
-    cnoremap w!! w !sudo tee % >/dev/null
-endif
-
 " }}}
 " Terminal mode {{{
 
@@ -904,18 +928,21 @@ endif
 " }}}
 " Filetype-specific {{{
 
-" Autohotkey / Hammerspoon {{{
+" Autohotkey / Hammerspoon / i3 {{{
 
-augroup ft_ahk_hs
+augroup ft_ahk_hs_i3
     au!
     au Filetype autohotkey setlocal commentstring=;%s foldmethod=marker
     au BufNewFile,BufRead,BufReadPost init.lua setlocal foldmethod=marker
+    au BufNewFile,BufReadPost *i3/config set ft=i3config foldmethod=marker
 augroup END
 
 if s:is_mac
     nnoremap <silent> <Leader>eh :e $DOTFILES/hammerspoon/init.lua<CR>
-else
+elseif s:is_win
     nnoremap <silent> <Leader>eh :e $DOTFILES/autohotkey.ahk<CR>
+else
+    nnoremap <silent> <Leader>eh :e $DOTFILES/arch/config/i3/config<CR>
 endif
 
 " }}}
@@ -935,6 +962,16 @@ augroup ft_bib
     au Filetype bib setlocal commentstring=%%s foldmethod=marker
     au Filetype bib setlocal spell
     au Filetype bib setlocal shiftwidth=2 tabstop=2 softtabstop=2
+augroup END
+
+" }}}
+" Config {{{
+
+augroup ft_config
+    au!
+    au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc,*.dirs,
+                \zathurarc,*mpv/*.conf,*onedrive/config,pacman.conf,compton.conf
+                \ set filetype=config foldmethod=marker
 augroup END
 
 " }}}
@@ -1123,6 +1160,7 @@ augroup ft_sql
     au!
     au Filetype sql setlocal commentstring=--%s
     au Filetype sql setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    au BufNewFile,BufReadPost sqlplus_login set filetype=sql
     " Add highlighting of some keywords (presto specific)
     au Filetype sql syn keyword sqlKeyword INNER RIGHT LEFT OUTER JOIN OVER
                 \ PARTITION
@@ -1187,6 +1225,10 @@ let g:airline_mode_map = {
     \ 'S'  : 'S-L',
     \ '' : 'S-B',
     \ 't'  : 'T',
+    \ 'ic' : 'IC',
+    \ 'ix' : 'IC',
+    \ 'ni' : '(I)',
+    \ 'no' : 'O-P',
     \ }
 
 if dein#tap('airline') == 1
@@ -1194,7 +1236,7 @@ if dein#tap('airline') == 1
     call airline#parts#define_raw('linenr', '%l')
     call airline#parts#define_accent('linenr', 'bold')
     let g:airline_section_z = airline#section#create(['%3p%%  ',
-                \ '␤ ', 'linenr', ':%c '])
+                \ ' ', 'linenr', ':%c '])
 endif
 
 " Check for trailing whitespace and mixed (tabs and spaces) indentation
@@ -1364,7 +1406,7 @@ function! s:DeniteGrep()
     endif
     let filetype = input('Filetype: ', '')
     if filetype == ''
-        let ft_filter = '--all-types'
+        let ft_filter = ''
     else
         let ft_filter = '--' . filetype
     endif
@@ -1380,7 +1422,7 @@ nnoremap <silent> <Leader>ls :Denite file/rec<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>bm :Denite -default-action=narrow z<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
-nnoremap <silent> <Leader>be :Denite -default-action=context_split buffer<CR>
+nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>dg :DeniteCursorWord grep<CR>
@@ -1491,8 +1533,7 @@ let g:deoplete#enable_at_startup = 1
 if s:is_mac
     let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
 else
-    let g:deoplete#sources#jedi#python_path =
-                \ '/mnt/.linuxbrew/bin/python3'
+    let g:deoplete#sources#jedi#python_path ='/usr/bin/python'
 endif
 
 " Options
@@ -1546,7 +1587,7 @@ call deoplete#custom#var('omni', 'input_patterns', {
 
 " External sources
 let deoplete#sources#jedi#show_docstring = 0
-if exists('$TMUX')
+if !empty('$TMUX')
     " Tmux completion (with tmux-complete plugin)
     let g:tmuxcomplete#trigger = ''
 endif
@@ -2145,8 +2186,8 @@ endfunction
 " Mappings
 let g:UltiSnipsExpandTrigger = '<C-s>'
 nnoremap <Leader>es :UltiSnipsEdit<CR>
-" Snippet explorer with Unite
-nnoremap <silent> <Leader>se :Denite output:call\ UltiSnips#ListSnippets()<CR>
+" Snippet explorer with Denite (we use this mapping for sudo edit now)
+" nnoremap <silent> <Leader>se :Denite output:call\ UltiSnips#ListSnippets()<CR>
 
 " FIXME: Solve problems with anon snippets or use delimitMate; See #248; NO FIX?
 " Maybe use neosnippet
@@ -2311,6 +2352,9 @@ if dein#tap('vimfiler') == 1
         elseif s:is_mac
             call vimfiler#set_execute_file('pdf,PDF,doc,docx,xls,xlsx,xlsm,png',
                 \ 'open')
+        else
+            call vimfiler#set_execute_file('pdf,PDF,doc,docx,xls,xlsx,xlsm,png',
+                \ 'xdg-open')
         endif
     endfunction
     call dein#set_hook('vimfiler', 'hook_source', function('VimfilerHookOpts'))
@@ -2486,7 +2530,7 @@ else
     set mouse=a        " Enable the mouse
 
     " Make cursor shape mode dependent (note: we need double quotes!)
-    if exists('$TMUX')
+    if !empty('$TMUX')
         " Vertical bar in insert mode, underscore in replace mode and block in
         " normal mode
         let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>[6 q\<Esc>\\"
@@ -2619,6 +2663,8 @@ function! s:OpenLink()
     let open_command = 'open '
     if s:is_win
         let open_command = 'start '
+    elseif s:is_linux
+        let open_command = 'xdg-open '
     endif
     execute 'silent! !' .  open_command . url
     redraw!

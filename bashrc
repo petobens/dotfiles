@@ -1,33 +1,22 @@
 # Options {{{
 
-# Brew directory
-if type "brew" > /dev/null 2>&1; then
-    brew_dir=$(brew --prefix)
-else
-    if [[ "$OSTYPE" == 'darwin'* ]]; then
-        if [ -d '/usr/local/bin' ]; then
-            brew_dir='/usr/local'
-        fi
-    else
-        if [ -d "$HOME/.linuxbrew" ]; then
-            brew_dir="$HOME/.linuxbrew"
-        else
-            brew_dir='/mnt/.linuxbrew'
-        fi
-    fi
-fi
-
 if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if type "brew" > /dev/null 2>&1; then
+        base_pkg_dir=$(brew --prefix)
+    else
+        base_pkg_dir='/usr/local'
+    fi
+
     # Path settings
-    PATH="/usr/bin:/bin:/usr/sbin:/sbin"
-    export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH" # homebrew
+    PATH="$HOME/local/bin:$HOME/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    export PATH="$base_pkg_dir/bin:$base_pkg_dir/sbin:$PATH" # homebrew
     if [ -d "/Library/TeX/texbin" ]; then
         export PATH="/Library/TeX/texbin:$PATH" # basictex
     fi
     if [ -d "/Applications/MATLAB_R2015b.app/bin" ]; then
         export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" # matlab
     fi
-    export PKG_CONFIG_PATH="$brew_dir/lib/pkgconfig:$brew_dir/lib"
+    export PKG_CONFIG_PATH="$base_pkg_dir/lib/pkgconfig:$base_pkg_dir/lib"
     if [ -d "/usr/local/opt/sqlite/bin" ]; then
         export PATH="/usr/local/opt/sqlite/bin:$PATH"
     fi
@@ -40,23 +29,43 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export LANG=en_US.UTF-8
 
     # Enable terminal colors and highlight directories in blue, symbolic links
-    # in purple and executable files in red (the actual colors depend on iTerm's
-    # colorscheme)
-    # Note: in Iterm we use ether the afterglow colorscheme or
-    # https://github.com/anunez/one-dark-iterm
+    # in purple and executable files in red
     export CLICOLOR=1
     export LSCOLORS=exfxCxDxbxegedabagaced
 else
-    export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
-    export MANPATH="$brew_dir/share/man:$MANPATH"
-    export INFOPATH="$brew_dir/share/info:$INFOPATH"
+    base_pkg_dir='/usr'
+
+    # PATH is originally defined in /etc/profile
+    # export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin"
+    if [ -d "$base_pkg_dir/local/texlive" ]; then
+        export PATH="/usr/local/texlive/2018/bin/x86_64-linux:$PATH"
+        export MANPATH="$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man"
+        export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
+    fi
+
+    # Local paths first
+    export PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
+    export MANPATH="$HOME/local/share/man:$HOME/.local/share/man:$MANPATH"
 
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
+
+    export BROWSER='chromium'
+
+    # Scaling
+    export GDK_SCALE=2
+    export GDK_DPI_SCALE=0.5
 fi
 
 # Path OS agnostic settings
+if [ -d "$HOME/bin" ]; then
+    export PATH="$HOME/bin:$PATH"
+fi
+if type "npm" > /dev/null 2>&1; then
+    PATH="$HOME/.node_modules/bin:$PATH"
+    export npm_config_prefix="$HOME/.node_modules"
+fi
 if type "go" > /dev/null 2>&1; then
     export GOPATH=$HOME/go
     export PATH=$PATH:$GOPATH/bin
@@ -64,38 +73,41 @@ fi
 if type "pyenv" > /dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
+if type "sqlplus" > /dev/null 2>&1; then
+    export SQLPATH="$HOME/.config/sqlplus"
+fi
+if type "mssql-cli" > /dev/null 2>&1; then
+    export MSSQL_CLI_TELEMETRY_OPTOUT=1
+fi
 
 # Set editor to nvim and use it as a manpager
 export EDITOR=nvim
 export MANPAGER="nvim -c 'set ft=man' -"
 
-# Set shell to latest bash (this should be redundant if we previously ran
-# `sudo chsh -s $(brew --prefix)/bin/bash`)
-if [ -f "$brew_dir/bin/bash" ]; then
-    export SHELL="$brew_dir/bin/bash"
+# Set shell to latest bash (check "$(command -v bash)")
+if [ -f "$base_pkg_dir/bin/bash" ]; then
+    export SHELL="$base_pkg_dir/bin/bash"
 fi
 
 # R libraries (note: first create this folder if it doesn't exist)
 if type "R" > /dev/null 2>&1; then
-    export R_LIBS_USER="$brew_dir/lib/R/site-library"
+    export R_LIBS_USER="$HOME/.local/lib/R/site-library"
 fi
 
 # Disable control flow (necessary to enable C-s bindings in vim)
 stty -ixon
+# Update values of lines and columns after running each command
+shopt -s checkwinsize
 
 # History settings
-HISTCONTROL=ignoreboth:erasedups  # avoid duplicates
+HISTCONTROL=ignoreboth:erasedups  # era duplicate entries
+HISTIGNORE='?:??' # don't save one and two character commands (q, ls, aliases)
 HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
 
-# Save and reload the history after each command finishes (we wrap it in a
-# function to preserve exit status when using powerline on tmux)
-save_reload_hist() {
-    local last_exit_status=$?
-    history -a; history -c; history -r
-    return $last_exit_status
-}
+# Unset the prompt so we can set it properly afterwards
+unset PROMPT_COMMAND
 export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # Powerline prompt (to see changes when customizing use `powerline-daemon
@@ -108,8 +120,7 @@ if type "powerline-daemon" > /dev/null 2>&1; then
     if type "python3" > /dev/null 2>&1; then
         py_exec='python3'
     fi
-    . $(dirname $($py_exec -c 'import powerline.bindings; '\
-'print(powerline.bindings.__file__)'))/bash/powerline.sh
+    . /usr/lib/python3.7/site-packages/powerline/bindings/bash/powerline.sh
 fi
 
 # }}}
@@ -143,8 +154,8 @@ fi
 # Completion (readline) {{{
 
 # Improved bash completion (install them with `brew install bash-completion@2`)
-if [ -f $brew_dir/share/bash-completion/bash_completion ]; then
-    . $brew_dir/share/bash-completion/bash_completion
+if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
+    . $base_pkg_dir/share/bash-completion/bash_completion
 fi
 
 # Note: we pass Readline commands as a single argument to
@@ -191,17 +202,32 @@ alias ll='ls -lah'
 alias q='exit'
 alias c='clear'
 alias o='open'
+if [ "$OSTYPE" == 'linux-gnu' ]; then
+    alias open='xdg-open'
+    alias ss='sudo su'
+    if type "feh" > /dev/null 2>&1; then
+        alias iv='feh'
+    fi
+fi
 alias rm='rm -v'
 alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
 alias ds='du -shc * | sort -rh'
 
 # Other binaries
+if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
+    . $base_pkg_dir/share/bash-completion/completions/man
+    alias m='man'
+    complete -F _man m
+fi
 if type "htop" > /dev/null 2>&1; then
     alias ht='htop'
 fi
 if type "nvim" > /dev/null 2>&1; then
     alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
+    if [ -f "$HOME/git-repos/private/dotfiles/vim/vimrc_min" ]; then
+        alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
+    fi
 fi
 if type "ranger" > /dev/null 2>&1; then
     alias rg='ranger'
@@ -216,13 +242,22 @@ fi
 if type "R" > /dev/null 2>&1; then
     alias R='R --no-save --quiet'
 fi
+if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
+    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s petobens'
+fi
+if type "mpv" > /dev/null 2>&1; then
+    # (P)hot(b)ooth (webcam)
+    alias pb='mpv tv:// --tv-height=500 --tv-width=400 --tv-fps=60 '\
+'--no-quiet'
+fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
 # alias
 if type "git" > /dev/null 2>&1; then
-    alias gs='git status'
-    alias gco='git checkout'
     _completion_loader git
+    alias gs='git status'
+    alias gcl='git clone'
+    alias gco='git checkout'
     __git_complete gco _git_checkout
     alias gcp='git cherry-pick'
     alias gb='git branch'
@@ -236,34 +271,32 @@ if type "git" > /dev/null 2>&1; then
 fi
 
 # Python
-if [ ! -f "$brew_dir"/bin/python2 ]; then
-    alias python='python3'
-    alias pip='pip3'
-fi
-if type "jupyter" > /dev/null 2>&1; then
-    alias jn='jupyter notebook'
-fi
-if type "ipython3" > /dev/null 2>&1; then
-    alias ip='ipython3'
+if type "python" > /dev/null 2>&1; then
+    if [ ! -f "$base_pkg_dir"/bin/python2 ]; then
+        alias python='python3'
+        alias pip='pip3'
+    fi
+    if type "jupyter" > /dev/null 2>&1; then
+        # TODO: Hack for notebooks with python 3.7
+        # See: https://github.com/jupyter/notebook/issues/3837
+        alias jn='unset BROWSER;jupyter notebook'
+    fi
+    if type "pip" > /dev/null 2>&1; then
+        alias piu='pip install --user'
+    fi
+    if type "ipython3" > /dev/null 2>&1; then
+        alias ip='ipython3'
+    fi
 fi
 
-# Update all binaries (with brew) and language libraries
-ua='sudo echo -n; brew update && brew upgrade && brew cleanup; '\
-'python3 -m pip_review --interactive'
-if [ -f "$brew_dir"/bin/python2 ]; then
-    ua=$ua';python2 -m pip_review --interactive'
+# Package manager
+if type "yay" > /dev/null 2>&1; then
+    # Note yay will prompt twice: https://github.com/Jguer/yay/issues/170
+    alias yay='yay --nodiffmenu --answerclean N --removemake'
 fi
-if type "R" > /dev/null 2>&1; then
-    ua=$ua'; R --slave --no-save --no-restore -e '\
-'"update.packages(ask=TRUE, checkBuilt=TRUE)"'
-fi
-if type "tlmgr" > /dev/null 2>&1; then
-    ua=$ua'; sudo tlmgr update --all'
-fi
-if type "npm" > /dev/null 2>&1; then
-    ua=$ua'; npm update -g'
-fi
-alias ua="$ua"
+
+# Update system (and language libraries); script in bin foler
+alias ua=sys_update_all
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Differentiate and use colors for directories, symbolic links, etc.
@@ -275,51 +308,59 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     # Matlab
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
 '-nodesktop -nosplash '
-
-    # Alias to open vim/nvim sourcing minimal vimrc file
-    alias mvrc='vim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
-    alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
-
-    # Start Tmux attaching to an existing session named petobens or creating one
-    # with such name (we also indicate the tmux.conf file location)
-    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s petobens'
-
-    # SSH and Tmux: connect to emr via ssh and then start tmux creating a new
-    # session called pedrof or attaching to an existing one with that name.
-    # Add -X after ssh to enable X11 forwarding
-    alias emr='ssh pedrof@prd-amber-pivot.jampp.com -t '\
-'tmux new -A -s pedrof'
-    # Presto client
-    alias pcli='ssh pedrof@prd-amber-pivot.jampp.com -t '\
-'tmux new -A -s pedrof '\
-'"presto-cli\ --server\ emr-prd-queries.jampp.com:8889\ --catalog\ hive\ '\
-'--schema\ aleph\ --user\ pedrof"'
-    # Gerry instance (with tmux)
-    alias ui='ssh gerry'
-    # When using linux brew we need to specify a full path to the tmux
-    # executable
-    alias utm='ssh gerry -t /mnt/.linuxbrew/bin/tmux -f'\
-'"/home/ubuntu/.tmux/tmux.conf" new -A -s pedrof'
-
 else
     # Differentiate and use colors for directories, symbolic links, etc.
     alias ls='ls -F --color=auto'
     # Change directory and list files
     cd() { builtin cd "$@" && ls -F --color=auto; }
-    # Update packages (using apt-get)
-    alias aptu='sudo apt-get update && sudo apt-get dist-upgrade && sudo '\
-'apt-get autoremove'
-    # Open tmux loading config file
-    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s pedrof'
+
+    if [ -f "$HOME/bin/multimon" ]; then
+        # Dual monitor
+        alias mm=multimon
+    fi
+
+    if type "pacman" > /dev/null 2>&1; then
+        alias lsip='comm -23 <(pacman -Qqett | sort) <(pacman -Qqg base'\
+' -g base-devel -g xorg | sort | uniq)'
+    fi
 fi
+
+# Work (mostly vpn and databases; ssh hosts are defined in .ssh/config)
+alias kvpn='sudo pkill -INT -f "openconnect|openvpn"'
+
+# Claro
+# Note: this requires a passwordless stoken (use token-mode=rsa if password is
+# enabled)
+alias cvpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
+'--background --authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
+alias cmjolnir='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh mjolnir'
+alias cvaras='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh varas'
+alias crac8='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
+'@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
+
+# AUSA
+alias ausass='mssql-cli -S 172.25.1.70 -U pfarina -P '\
+'"$(pass ausa/sqlserver/pfarina)"'
+
+# Min Prod
+alias mpvpn='sudo pkill -INT -f openvpn; sudo openvpn --daemon --cd '\
+'~/OneDrive/arch/vpn --config microstrategy.ovpn'
+alias mpssh='TERM=xterm-256color; sshpass -p '\
+'"$(pass minprod/ssh/microstrategy)" ssh minprod'
 
 # }}}
 # Fzf {{{
 
 if type "fzf" > /dev/null 2>&1; then
     # Enable completion and key bindings
-    [[ $- == *i* ]] && . "$brew_dir/opt/fzf/shell/completion.bash" 2> /dev/null
-    . "$brew_dir/opt/fzf/shell/key-bindings.bash"
+
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        [[ $- == *i* ]] && . "$base_pkg_dir/opt/fzf/shell/completion.bash" 2> /dev/null
+        . "$base_pkg_dir/opt/fzf/shell/key-bindings.bash"
+    else
+        [[ $- == *i* ]] && . "$base_pkg_dir/share/fzf/completion.bash" 2> /dev/null
+        . "$base_pkg_dir/share/fzf/key-bindings.bash"
+    fi
 
     # Change default options (show 15 lines, use top-down layout)
     export FZF_DEFAULT_OPTS='--height 15 --reverse '\
@@ -343,9 +384,9 @@ if type "fzf" > /dev/null 2>&1; then
         get_parent_dirs() {
             if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
             if [[ "${1}" == '/' ]]; then
-                for _dir in "${dirs[@]}"; do echo $_dir; done
+                for _dir in "${dirs[@]}"; do echo "$_dir"; done
             else
-                get_parent_dirs $(dirname "$1")
+                get_parent_dirs "$(dirname "$1")"
             fi
     }
         local start_dir="$(dirname "$PWD")"  # start with parent dir
@@ -360,15 +401,15 @@ if type "fzf" > /dev/null 2>&1; then
     bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
     bind -m vi-command '"\ep": "ddi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
 
-    # Bookmarks (requires https://github.com/urbainvaes/fzf-marks)
-    if [ -f "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash" ]; then
-        . "$brew_dir/opt/fzf/shell/fzf-marks.plugin.bash"
-        alias bm='fzm'
-    fi
-
     # Z
-    if [ -f "$brew_dir/etc/profile.d/z.sh" ]; then
-        . /usr/local/etc/profile.d/z.sh
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        if [ -f "$base_pkg_dir/etc/profile.d/z.sh" ]; then
+            . "$base_pkg_dir/etc/profile.d/z.sh"
+        fi
+    else
+        if [ -f "$HOME/.local/bin/z.sh" ]; then
+            . "$HOME/.local/bin/z.sh"
+        fi
     fi
     unalias z 2> /dev/null
     z() {
@@ -391,5 +432,68 @@ if type "fzf" > /dev/null 2>&1; then
         FZF-EOF"
     }
 fi
+
+# }}}
+# Functions {{{
+
+# Save and reload the history after each command finishes (we wrap it in a
+# function to preserve exit status when using powerline on tmux)
+# See: https://unix.stackexchange.com/a/18443
+save_reload_hist() {
+    local last_exit_status=$?
+    history -n; history -w; history -c; history -r
+    return $last_exit_status
+}
+
+# Update the system  package and language libraries
+sys_update_all() {
+    sudo echo -n
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        if type "brew" > /dev/null 2>&1; then
+            echo "-> Brew..."
+            brew update && brew upgrade && brew cleanup
+        fi
+    else
+        if type "yay" > /dev/null 2>&1; then
+            echo "-> YaY..."
+            yay -Syu --nodiffmenu --answerclean N --removemake --devel \
+                --timeupdate --combinedupgrade
+            yay -c
+        fi
+        if type "flatpak" > /dev/null 2>&1; then
+            echo "-> Flatpak..."
+            flatpak update
+        fi
+    fi
+    if type "python3" > /dev/null 2>&1; then
+        echo "-> Updating python..."
+        outdated="$(pip list --user --outdated)"
+        if [ ! -z "$outdated" ]; then
+            echo "$outdated"
+            u_list=$(pip list --user --outdated --format=freeze | \
+                        grep -v ‘^\-e’ | cut -d = -f 1)
+            for i in $u_list; do
+                read -p "Do you want to update $i (y/n)? " -n 1 -r
+                echo
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    pip install --user -U "$i"
+                fi
+            done
+        fi
+    fi
+    if type "R" > /dev/null 2>&1; then
+        echo "-> Updating R..."
+        R --slave --no-save --no-restore -e \
+'update.packages(ask=TRUE, checkBuilt=TRUE, lib.loc=Sys.getenv("R_LIBS_USER"))'
+    fi
+    if type "tlmgr" > /dev/null 2>&1; then
+        echo "-> Updating LaTeX..."
+        sudo tlmgr update --all
+    fi
+    if type "npm" > /dev/null 2>&1; then
+        echo "-> Updating Node..."
+        npm update -g
+    fi
+}
 
 # }}}

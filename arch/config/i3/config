@@ -1,0 +1,299 @@
+# Preamble {{{
+
+# Define some keys as variables (super and alt)
+set $mod Mod4
+set $alt Mod1
+
+# Variable to disable startup notifications (to be used with scripts)
+set $nexec exec --no-startup-id
+
+# Restart i3 inplace (preserving layout): this also reloads the config file
+bindsym $mod+Control+r restart
+
+# Reload polybar
+bindsym $mod+b $nexec $HOME/.config/polybar/launch.py
+
+# }}}
+# Window handling {{{
+
+# Make all windows floating by default (i'm used to that)
+for_window [class="^.*"] floating enable
+
+# Allow floating windows to have any size
+floating_maximum_size -1 x -1
+
+# Move a floating window with the mouse and pressing mod
+floating_modifier $mod
+
+# Toggle floating and tiling
+# bindsym $mod+f floating toggle
+
+# Full screen
+bindsym $mod+e fullscreen toggle
+
+# Floating resizing (spanning)
+bindsym $mod+Up $nexec $HOME/.config/i3/resize.py Full
+bindsym $mod+Left $nexec $HOME/.config/i3/resize.py Left
+bindsym $mod+Right $nexec $HOME/.config/i3/resize.py Right
+bindsym $mod+Control+Up $nexec $HOME/.config/i3/resize.py Top
+bindsym $mod+Control+Down $nexec $HOME/.config/i3/resize.py Bottom
+bindsym $mod+Control+1 $nexec $HOME/.config/i3/resize.py 'Top Left'
+bindsym $mod+Control+2 $nexec $HOME/.config/i3/resize.py 'Top Right'
+bindsym $mod+Control+3 $nexec $HOME/.config/i3/resize.py 'Bottom Left'
+bindsym $mod+Control+4 $nexec $HOME/.config/i3/resize.py 'Bottom Right'
+bindsym $mod+Control+5 $nexec $HOME/.config/i3/resize.py Center
+bindsym $mod+Control+6 $nexec $HOME/.config/i3/resize.py Rectangle
+bindsym $mod+Control+7 $nexec $HOME/.config/i3/resize.py Dialog
+bindsym $mod+Control+8 $nexec $HOME/.config/i3/resize.py 'Semi Full'
+
+# Resize (grid-like)
+bindsym $mod+l $nexec $HOME/.config/i3/grid_resize.py -a grow -o right
+bindsym $mod+$alt+h $nexec $HOME/.config/i3/grid_resize.py -a shrink -o right
+bindsym $mod+h $nexec $HOME/.config/i3/grid_resize.py -a grow -o left
+bindsym $mod+$alt+l $nexec $HOME/.config/i3/grid_resize.py -a shrink -o left
+bindsym $mod+k $nexec $HOME/.config/i3/grid_resize.py -a grow -o up
+bindsym $mod+$alt+j $nexec $HOME/.config/i3/grid_resize.py -a shrink -o up
+bindsym $mod+j $nexec $HOME/.config/i3/grid_resize.py -a grow -o down
+bindsym $mod+$alt+k $nexec $HOME/.config/i3/grid_resize.py -a shrink -o down
+
+#  }}}
+#  Multiple monitors and workspaces {{{
+
+# Define names for default workspaces
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+
+# Move to next and previous workspace
+bindsym $mod+n workspace next
+bindsym $mod+p workspace prev
+
+# Switch (and create if needed) workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+
+# Move focused container to specific workspace and switch focus to that
+# container
+bindsym $mod+Shift+1 $nexec $HOME/.config/i3/multimon_move.py -w "1"
+bindsym $mod+Shift+2 $nexec $HOME/.config/i3/multimon_move.py -w "2"
+bindsym $mod+Shift+3 $nexec $HOME/.config/i3/multimon_move.py -w "3"
+bindsym $mod+Shift+4 $nexec $HOME/.config/i3/multimon_move.py -w "4"
+bindsym $mod+Shift+5 $nexec $HOME/.config/i3/multimon_move.py -w "5"
+bindsym $mod+Shift+6 $nexec $HOME/.config/i3/multimon_move.py -w "6"
+bindsym $mod+Shift+7 $nexec $HOME/.config/i3/multimon_move.py -w "7"
+bindsym $mod+Shift+8 $nexec $HOME/.config/i3/multimon_move.py -w "8"
+
+# Activate primary or dual monitor
+bindsym $mod+Return $nexec multimon primary
+bindsym $mod+Control+Return $nexec multimon dual
+
+# Move window (container) in monitor (output) direction and switch focus
+bindsym $mod+Control+Right $nexec $HOME/.config/i3/multimon_move.py -d "right"
+bindsym $mod+Control+Left $nexec $HOME/.config/i3/multimon_move.py -d "left"
+
+# Move workspace in monitor (output) direction and switch focus
+bindsym $mod+Shift+Right \
+    $nexec $HOME/.config/i3/multimon_move.py -d "right" --move-ws
+bindsym $mod+Shift+Left \
+    $nexec $HOME/.config/i3/multimon_move.py -d "left" --move-ws
+
+# Assign workspaces to specific monitors
+# TODO: Do this dynamically (i.e don't harcode monitor names)
+# We seem to need an ugly hack: https://github.com/i3/i3/issues/2387
+set $primary "eDP1"
+set $secondary "DP1"
+workspace $ws1 output $primary
+workspace $ws2 output $primary
+workspace $ws3 output $primary
+workspace $ws4 output $primary
+workspace $ws5 output $secondary
+workspace $ws6 output $secondary
+workspace $ws7 output $secondary
+workspace $ws8 output $secondary
+
+# Focus next monitor (with wrapping): this also switches mouse cursor
+bindsym $alt+grave focus output right
+
+# }}}
+# Run or activate apps and rules {{{
+
+# Rofi (application launcher / switcher)
+bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
+bindsym $mod+s $nexec "rofi -combi-modi drun,run -show combi"
+bindsym $mod+z $nexec "passmenu"
+
+# WS1: browser and agenda
+bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -W $ws1 -m browser
+bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws1 -m cal -e \
+    "chromium --new-window https://calendar.google.com/calendar/r"
+# WS2: chat/communication related (i.e mail)
+# FIXME: Waiting not quite working
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30
+bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
+    "skypeforlinux"
+bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws2
+# WS3: Music, video, torrents
+bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
+    "spotify --force-device-scale-factor=2"
+bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -W $ws3
+# WS4: Other
+bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -W $ws4 -e \
+    "libreoffice --calc" -l 30
+bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -W $ws4 -e \
+    "libreoffice --writer" -l 30
+
+# WS5 (terminal and those interacting with it; in secondary monitor)
+# Note: we use marks terminal to avoid focusing on other windows of the same
+# class. See https://github.com/open-dynaMIX/raiseorlaunch/issues/17
+# Note: We use fixed DPI scaling as per:
+# https://github.com/jwilm/alacritty/pull/1403#issuecomment-417876005
+bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws5 -m terminal \
+    -e 'WINIT_HIDPI_FACTOR=2.66 alacritty -e /usr/bin/bash -i -c "tm"'
+bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -W $ws5
+# WS6 PDFs and images
+bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -W $ws6 -C
+bindsym $mod+Control+v $nexec raiseorlaunch -c feh -W $ws6 -C
+
+# Standalone terminal apps in floating window in the current workspace
+bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -e \
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t QuickTerm -e /usr/bin/bash -i'
+bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t numbers -e ipython3'
+bindsym $mod+Control+f $nexec raiseorlaunch -t 'ranger' -e \
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t ranger -e ranger'
+bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -e \
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t Downloads -e ranger ~/Downloads'
+bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -e \
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t htop -e htop'
+bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -e \
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t "OneDrive" -e sh -c "less +F $HOME/onedrive.log"'
+bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -e \
+    'WINIT_HIDPI_FACTOR=2.66 alacritty -t "Trash Can" -e sh -c "trash-list | less"'
+
+# Sizing and position rules (use `xprop` to get the window info)
+# Note: `for_window` applies the first time i3 encounters a window (i.e not when
+# re-focusing it)
+for_window [class="^(Spotify|Slack|libreoffice|libreoffice-calc|libreoffice-writer|Thunderbird|Transmission-gtk|mpv|Zathura)$"] \
+    $nexec $HOME/.config/i3/resize.py Full
+# We seem to need this hack for Alacritty (i.e use title instead of mark)
+for_window [title="^(Alacritty)$"] \
+    $nexec $HOME/.config/i3/resize.py Full
+for_window [con_mark="^(browser|cal)$"] \
+    $nexec $HOME/.config/i3/resize.py Full
+for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
+    $nexec $HOME/.config/i3/resize.py Center
+for_window [title="^(QuickTerm|numbers|ranger|Downloads|About Arch)$"] \
+    $nexec $HOME/.config/i3/resize.py Center
+for_window [title="^(htop|Trash Can|OneDrive|Open Files)$"] \
+    $nexec $HOME/.config/i3/resize.py Rectangle
+for_window [class="^(feh|Skype)$"] \
+    $nexec $HOME/.config/i3/resize.py Right
+for_window [window_type="splash"] floating enable, move position center
+for_window [window_type="dialog" class="^(?!Gtk_dialog).+" window_role="^(?!GtkFileChooserDialog).+"] \
+    $nexec $HOME/.config/i3/resize.py Dialog
+for_window [window_role="^(GtkFileChooserDialog)$"] \
+    $nexec $HOME/.config/i3/resize.py Rectangle
+
+# Assign to specific workspaces (for apps opened with ranger)
+for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
+for_window [class="^(?i)libreoffice-*"] \
+    $nexec $HOME/.config/i3/multimon_move.py -w "4"
+for_window [class="^(Zathura)$"] $nexec $HOME/.config/i3/multimon_move.py -w "6"
+
+# Automatically switch to windows that raise an urgent flag
+for_window [urgent=latest] focus
+
+# }}}
+#  Spotify and volume {{{
+
+bindsym $mod+Shift+p $nexec playerctl --player spotify play-pause
+bindsym $mod+Shift+j $nexec playerctl --player spotify next
+bindsym $mod+Shift+k $nexec playerctl --player spotify previous
+bindsym $mod+Shift+t $nexec $HOME/.config/i3/spotify_track.py
+
+bindsym $mod+Shift+plus $nexec $HOME/.config/i3/volume.py -d up -l 5
+bindsym $mod+Shift+minus $nexec $HOME/.config/i3/volume.py -d down -l 5
+bindsym $mod+Shift+m $nexec $HOME/.config/i3/volume.py -d mute
+bindsym $mod+Shift+v exec pavucontrol
+
+# }}}
+# Theme and fonts {{{
+
+# Disable title bar
+font pango:Noto Sans 0
+
+# Set window border width
+for_window [class="^.*"] border pixel 2
+
+# Theme
+set $bg #24272e
+set $border #282c34
+set $fg #abb2bf
+set $fg_high #d0d0d0
+set $fg_urg #e06c75
+#                       Border  Background Text     Indicator Child border
+client.focused          $border $bg        $fg_high $fg       $border
+client.focused_inactive $border $bg        $fg      $fg       $border
+client.unfocused        $border $bg        $fg      $fg       $border
+client.urgent           $border $bg        $fg_urg  $fg       $border
+client.placeholder      $border $bg        $fg      $fg       $border
+client.background       $border
+
+# }}}
+# Miscellaneous {{{
+
+# Screenshots
+bindsym Print $nexec shots full
+bindsym $mod+Shift+9 $nexec shots selection
+bindsym $mod+Shift+0 $nexec shots active
+
+# Kill focused window (as in mac); note that this quit apps that are minimized
+# to sys tray (in this cases, such as slack, use ctrl-q to actually kill them)
+bindsym $mod+q kill
+# Kill all windows on all workspaces (match any class string)
+bindsym $mod+Shift+q $nexec gtk_dialog -t "App Management" \
+    -m "Do you want to quit all apps?" -a 'i3-msg [class="^.*"] kill'
+
+# Shutdown, restart and lock
+bindsym $mod+Shift+s $nexec gtk_dialog -t "Power Management" \
+    -m "Do you want to poweroff?" -a "systemctl poweroff"
+bindsym $mod+Shift+r $nexec gtk_dialog -t "Power Management" \
+    -m "Do you want to reboot?" -a "systemctl reboot"
+bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
+
+# Screen brightness
+bindsym $mod+Shift+Up $nexec $HOME/.config/i3/brightness.py -d inc
+bindsym $mod+Shift+Down $nexec $HOME/.config/i3/brightness.py -d dec
+
+# Eject mounted media (usb drives)
+bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \
+    -m "Do you want to eject media drive?" -a "udiskie-umount -a"
+
+# Empty Trash Can
+bindsym $mod+Shift+b $nexec gtk_dialog \
+    -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
+    -a "trash-empty & dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
+
+# }}}
+# Startup {{{
+
+# Note: use exec_always to always run when restarting i3
+
+# Set the wallpaper
+exec_always --no-startup-id "[[ -f ~/.fehbg ]] && ~/.fehbg &"
+
+# Launch polybar
+exec_always --no-startup-id $HOME/.config/polybar/launch.py
+
+# }}}

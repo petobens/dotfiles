@@ -1,0 +1,3 @@
+.include /etc/pulse/default.pa
+load-module module-dbus-protocol
+load-module module-switch-on-connect

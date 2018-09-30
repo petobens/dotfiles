@@ -146,7 +146,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
         let lines = import_lines + new_visual_lines
         call writefile(lines, current_file)
     else
-        let current_file = expand('%:p:t')
+        let current_file = expand('%:p')
     endif
 
     " Use neovim terminal for foreground async compilation (either in regular

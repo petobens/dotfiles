@@ -1,0 +1,25 @@
+# Options
+rofi.font:            Noto Sans Mono 10
+rofi.hide-scrollbar:  true
+rofi.show-icons:      true
+rofi.drun-icon-theme: Papirus-Dark
+rofi.matching:        fuzzy
+rofi.separator-style: solid
+rofi.location:        0
+rofi.yoffset:         -50
+rofi.dpi:             0
+rofi.terminal:        alacritty
+
+# Maps
+rofi.kb-remove-to-eol:
+rofi.kb-row-down:     Ctrl-n,Down,Ctrl-j
+rofi.kb-row-up:       Shift_L+Left_Tab,Ctrl-p,Up,Ctrl-k
+rofi.kb-accept-entry: Return
+rofi.kb-cancel:       Ctrl-c,Escape
+
+# Colors (see theming man section for details)
+rofi.color-enabled: true
+rofi.color-window: #24272e, #282c34, #282c34
+rofi.color-normal: #24272e, #abb2bf, #24272e, #61afef, #24272e
+rofi.color-active: #24272e, #abb2bf, #24272e, #c678dd, #24272e
+rofi.color-urgent: #24272e, #abb2bf, #24272e, #e06c75, #24272e

@@ -435,8 +435,8 @@ inoremap <silent> <buffer> <F5> <ESC>:call
 vnoremap <silent> <buffer> <F5> :EvalVisualShForeground<CR>
 
 " Linting
-nnoremap <buffer> <Leader>rl :call <SID>RunShellCheck()<CR>
-nnoremap <buffer> <Leader>fs :call <SID>RunBeautySh()<CR>
+nnoremap <silent> <buffer> <Leader>rl :silent Neomake<CR>
+nnoremap <silent> <buffer> <Leader>bs :call <SID>RunBeautySh()<CR>
 
 " Documentation
 nnoremap <silent> <buffer> <S-k> :call <SID>ViewShDoc()<CR>

@@ -1,0 +1,224 @@
+#!/usr/bin/env python3
+import os
+import sys
+import subprocess
+
+from time import sleep
+from collections.abc import Sequence
+
+import i3ipc
+
+
+def multi(how):
+    if how == 'init':
+        _xrandr(how)
+        return
+
+    i3 = i3ipc.Connection()
+    rmap = _get_resize_map(i3)
+    _xrandr(how)
+    sleep(0.5)
+    _restart_polybar()
+    sleep(0.5)
+    _adjust_windows(i3, rmap)
+    return
+
+
+def _xrandr(how):
+    if how == 'hotplug':
+        # When plugging and unplugging (using udev rules) wait a bit before
+        # querying xrandr (because xrandr lags behind udev)
+        # FIXME: Must run `sudo udevadm control --reload`?
+        sleep(1)
+
+    xrandr_out = [
+        line.decode('ascii').split() for line in _sh('xrandr').splitlines()
+    ]
+    monitors = [e[0] for e in xrandr_out if not e[0][0].isdigit()]
+    conn = [l for l in xrandr_out if l[1] == 'connected']
+    nr_monitors = len(conn)
+
+    # Primary monitor (assume it's the first connected monitor if it isn't
+    # explicitly specified)
+    prim = list(_flatten([i for i in conn if 'primary' in i]))
+    if not prim:
+        prim = conn[0]
+    prim_n, prim_w, prim_h = _get_name_and_res(xrandr_out, prim)
+    print(f"Primary monitor: {prim_n}-{prim_w}x{prim_h}")
+
+    # Secondary
+    if nr_monitors == 2:
+        sec = list(_flatten([i for i in conn if i != prim]))
+        sec_n, sec_w, sec_h = _get_name_and_res(xrandr_out, sec)
+        forced_res = False
+        if sec_w > 1920:
+            forced_res = True
+            sec_w = 1920
+            sec_h = 1080
+        print(f"Secondary monitor: {sec_n}-{sec_w}x{sec_h}")
+
+    if how == 'init' or how == 'hotplug':
+        how = 'dual' if nr_monitors == 2 else 'primary'
+
+    if how == 'primary':
+        cmd = f'xrandr --output {prim_n} --primary --dpi {PRIM_DPI}'
+        turn_off = [
+            i for i in monitors if i not in ('Screen', 'VIRTUAL1', prim_n)
+        ]
+        for m in turn_off:
+            cmd += f' --output {m} --off'
+
+    elif how == 'mirror':
+        mirror_scale = f'{prim_w/sec_w:.2f}x{prim_h/sec_h:.2f}'
+        mode = f'--mode {sec_w}x{sec_h}' if forced_res else '--auto'
+        cmd = f'xrandr --output {sec_n} --scale {mirror_scale} {mode} '  \
+            f'--output {prim_n} --dpi {PRIM_DPI}'
+
+    elif how == 'dual':
+        mode = f'--mode {sec_w}x{sec_h}' if forced_res else '--auto'
+        cmd = f'xrandr --output {sec_n} --scale {FIXED_SCALE}x{FIXED_SCALE} ' \
+              f'{mode} --pos 0x0 --output {prim_n} --primary --dpi '\
+              f'{PRIM_DPI} --pos {FIXED_SCALE * sec_w}x0'
+
+    print(f"Running the following xrandr command: {cmd}")
+    _sh(cmd)
+
+
+def _get_resize_map(i3):
+    res_map = {}
+    tree = i3.get_tree()
+    workspaces = tree.workspaces()
+    for ws in workspaces:
+        for w in ws.leaves():
+            res_map[w.id] = {
+                'win': w,
+                'focused': w.focused,
+                'how': _find_how_to_resize(i3, w),
+            }
+    return res_map
+
+
+def _adjust_windows(i3, resize_map):
+    for win_id, win_data in resize_map.items():
+        i3.command(f'[con_id={win_id}] focus')
+        while not i3.get_tree().find_focused().id == win_id:
+            sleep(0.1)
+        x, y, w, h = win_data['how']
+        _resize_win(i3, x, y, w, h)
+
+        if win_data['focused']:
+            focused_win_id = win_id
+    i3.command(f'[con_id={focused_win_id}] focus')
+    return
+
+
+def _restart_polybar():
+    polybar_launch_file = os.path.expanduser('~/.config/polybar/launch.py')
+    os.system(f'python {polybar_launch_file}')
+    return
+
+
+# Helpers
+def _find_how_to_resize(i3, win=None):
+    if win is None:
+        win = i3.get_tree().find_focused()
+    win_h = win.rect.height
+    win_w = win.rect.width
+    win_x = win.rect.x
+    win_y = win.rect.y
+
+    ws = win.workspace()
+    max_h = ws.rect.height
+    max_w = ws.rect.width
+    max_x = ws.rect.x
+    max_y = ws.rect.y
+
+    w = round(win_w / max_w, 2)
+    h = round(win_h / max_h, 2)
+    x = round((win_x + 1 - max_x) / max_w, 2)
+    if x > 1:
+        # If win_x is wrongly reported then the factor will > 1; in these
+        # cases the actual x value should be 0
+        x = 0
+    y = round((win_y - max_y) / max_h, 2)
+
+    return x, y, w, h
+
+
+def _resize_win(i3, x, y, w, h):
+    win = i3.get_tree().find_focused()
+    ws = win.workspace()
+    max_h = ws.rect.height
+    max_w = ws.rect.width
+    max_x = ws.rect.x
+    max_y = ws.rect.y
+
+    x = int(max_x + (max_w * x))
+    # Fix for incorrect calculation when monitor extends right
+    # TODO: Find a better way of doing this
+    x -= 1
+    y = int(max_y + (max_h * y))
+    if y < POLYBAR_HEIGHT:
+        # We always want to leave space for polybar
+        y = POLYBAR_HEIGHT
+    w = int(max_w * w)
+    h = int(max_h * h)
+    cmd = f"fullscreen disable, floating enable, " \
+          f"move position {x} {y}, resize set {w} {h}"
+    i3.command(cmd)
+    return
+
+
+def _get_name_and_res(xrandr_out, mon_info):
+    # Name is the first element and active resolution is the line immediately
+    # after the monitor info marked with `+` (or `*+`)
+    mon_name = mon_info[0]
+    start_index = xrandr_out.index(mon_info) + 1
+    resolutions = xrandr_out[start_index:]
+    for l in resolutions:
+        res = l[0]
+        if any('*' in e or '+' in e for e in l):
+            break
+    else:
+        # If there is no line marked then use the first (highest) resolution
+        res = resolutions[0][0]
+    mon_w, mon_h = tuple([int(i) for i in res.split('x')])
+    return mon_name, mon_w, mon_h
+
+
+def _sh(cmd, *args, **kwargs):
+    res, err = _sh_no_block(
+        cmd, *args, stdout=subprocess.PIPE, **kwargs
+    ).communicate()
+    return res
+
+
+def _sh_no_block(cmd, *args, **kwargs):
+    if isinstance(cmd, str):
+        cmd = cmd.split()
+    return subprocess.Popen(cmd, *args, **kwargs)
+
+
+def _flatten(l):
+    for i in l:
+        if isinstance(i, Sequence) and not isinstance(i, (str, bytes)):
+            yield from _flatten(i)
+        else:
+            yield i
+
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('how')
+    args = parser.parse_args()
+    how = args.how
+
+    # Constants
+    PRIM_DPI = 192
+    FIXED_SCALE = 2
+    POLYBAR_HEIGHT = 55
+
+    multi(how)
+    sys.exit(0)

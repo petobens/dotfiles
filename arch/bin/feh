@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -f /usr/bin/feh ]; then
+    /usr/bin/feh --image-bg "#24272E" --scale-down "$@" & disown
+fi
