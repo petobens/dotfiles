@@ -123,6 +123,7 @@ label-disconnected = 睊
 label-disconnected-foreground = ${colors.fg-urg}
 
 [module/ethernet]
+; See: https://github.com/jaagr/polybar/issues/1164
 type = internal/network
 interface = eth0
 format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}

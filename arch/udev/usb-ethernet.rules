@@ -1,0 +1,3 @@
+# FIXME: Polybar is killed but not reloaded
+ACTION=="add", ENV{ID_MODEL}=="USB_10_100_LAN", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/pedro/.Xauthority", RUN+="/home/pedro/.config/polybar/launch.py"
+ACTION=="remove", ENV{ID_MODEL}=="USB_10_100_LAN", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/pedro/.Xauthority", RUN+="/home/pedro/.config/polybar/launch.py"

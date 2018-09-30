@@ -33,13 +33,8 @@ xrandr = [line.decode('ascii').split() for line in sh('xrandr').splitlines()]
 for line in xrandr:
     if 'connected' in line:
         monitor = line[0]
-        try:
-            env = os.environ.copy()
-            env['MONITOR'] = monitor
-            env['TRAY_POS'] = 'right' if 'primary' in line else ''
-            sh_no_block('polybar --reload main', env=env)
-        except Exception as e:
-            env = os.environ.copy()
-            env['MONITOR'] = monitor
-            sh_no_block('polybar --reload main', env=env)
+        env = os.environ.copy()
+        env['MONITOR'] = monitor
+        env['TRAY_POS'] = 'right' if 'primary' in line else ''
+        sh_no_block('polybar --reload main', env=env)
 sys.exit(0)

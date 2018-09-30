@@ -1,1 +1,2 @@
+# FIXME: Polybar is not properly reloaded
 KERNEL=="card0", SUBSYSTEM=="drm", ACTION=="change", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/pedro/.Xauthority", RUN+="/home/pedro/bin/multimon hotplug"

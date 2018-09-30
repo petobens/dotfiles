@@ -10,6 +10,9 @@ set $nexec exec --no-startup-id
 # Restart i3 inplace (preserving layout): this also reloads the config file
 bindsym $mod+Control+r restart
 
+# Reload polybar
+bindsym $mod+b $nexec $HOME/.config/polybar/launch.py
+
 # }}}
 # Window handling {{{
 

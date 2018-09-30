@@ -218,8 +218,11 @@ else
     fi
     if type "udevadm" > /dev/null 2>&1; then
         mkdir -p "/etc/udev/rules.d"
-        sudo ln -fTs "$dotfiles_dir/arch/udev/monitor-hotplug.rules" "/etc/udev/rules.d/99-monitor-hotplug.rules"
-        echo Created /etc/udev/rules.d/99-monitor-hotplug.rules symlink
+        # FIXME: Uncomment when figuring it how to reload polybar from udev rule
+        # sudo ln -fTs "$dotfiles_dir/arch/udev/monitor-hotplug.rules" "/etc/udev/rules.d/99-monitor-hotplug.rules"
+        # echo Created /etc/udev/rules.d/99-monitor-hotplug.rules symlink
+        # sudo ln -fTs "$dotfiles_dir/arch/udev/usb-ethernet.rules" "/etc/udev/rules.d/99-usb-ethernet.rules"
+        # echo Created /etc/udev/rules.d/99-usb-ethernet.rules symlink
     fi
 fi
 
