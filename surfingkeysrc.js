@@ -119,6 +119,7 @@ const qmarksUrls = {
     m: 'www.mercadolibre.com.ar',
     n: 'www.netflix.com',
     p: 'http://pirateproxy.net',
+    r: 'www.reddit.com',
     s: 'http://stackoverflow.com',
     t: 'http://trello.com',
     u: 'www.alumnos.econ.uba.ar',
