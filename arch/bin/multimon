@@ -18,7 +18,7 @@ def multi(how):
     rmap = _get_resize_map(i3)
     _xrandr(how)
     sleep(0.5)
-    _restart_polybar()
+    _restart_dunst_and_polybar()
     sleep(0.5)
     _adjust_windows(i3, rmap)
     return
@@ -112,9 +112,12 @@ def _adjust_windows(i3, resize_map):
     return
 
 
-def _restart_polybar():
+def _restart_dunst_and_polybar():
     polybar_launch_file = os.path.expanduser('~/.config/polybar/launch.py')
     os.system(f'python {polybar_launch_file}')
+    sleep(0.2)
+    _sh('pkill -f dunst')
+    _sh_no_block('nohup dunst &', stdout=subprocess.DEVNULL)
     return
 
 
