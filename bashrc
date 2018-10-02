@@ -293,6 +293,11 @@ fi
 if type "yay" > /dev/null 2>&1; then
     # Note yay will prompt twice: https://github.com/Jguer/yay/issues/170
     alias yay='yay --nodiffmenu --answerclean N --removemake'
+    # Update pacman mirrorlist
+    if type "reflector" > /dev/null 2>&1; then
+        alias upm='sudo reflector --verbose --latest 25 -p http -p https '\
+'--sort rate --save /etc/pacman.d/mirrorlist'
+    fi
 fi
 
 # Update system (and language libraries); script in bin foler
