@@ -147,6 +147,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/denite.nvim')
     call dein#add('Shougo/unite.vim')
     call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
+    call dein#add('Shougo/defx.nvim')
     " Note: We need vimproc in neovim for grep source to work
     let s:vimproc_make = 'make -f make_mac.mak'
     if s:is_win
@@ -1319,6 +1320,54 @@ augroup END
 " Dadbod {{{
 
 " let g:db = 'mysql://blah'
+
+" }}}
+" Defx {{{
+
+" Maps
+nnoremap <silent> <Leader>xf :Defx -split=vertical -winwidth=50
+            \ -direction=topleft `expand('%:p:h')` -search=`expand('%:p')`<CR>
+
+" Filetype settings
+augroup ps_def
+    au!
+    au FileType defx call s:defx_settings()
+augroup END
+
+function! s:defx_settings()
+    " Exit with escape key and q, Q; hide with <C-c>
+    nnoremap <silent><buffer><expr> <ESC> defx#do_action('quit')
+    nnoremap <silent><buffer><expr> q defx#do_action('quit')
+    nnoremap <silent><buffer><expr> Q defx#do_action('quit')
+    " nmap <buffer> <C-c> <Plug>(vimfiler_hide)
+    " Edit and open with external program
+    nnoremap <silent><buffer><expr> <CR>
+        \ defx#do_action('open', 'wincmd w \| drop')
+
+    nnoremap <silent><buffer><expr> l defx#do_action('open')
+    nnoremap <silent><buffer><expr> o defx#do_action('execute_system')
+    " Open files in splits
+    nnoremap <silent><buffer><expr> s defx#do_action('open', 'split')
+    nnoremap <silent><buffer><expr> v defx#do_action('open', 'vsplit')
+    " Copy, move, paste and remove
+    nnoremap <silent><buffer><expr> c defx#do_action('copy')
+    nnoremap <silent><buffer><expr> m defx#do_action('move')
+    nnoremap <silent><buffer><expr> p defx#do_action('paste')
+    nnoremap <silent><buffer><expr> d defx#do_action('remove_trash')
+    " Yank and rename
+    nnoremap <silent><buffer><expr> y defx#do_action('yank_path')
+    nnoremap <silent><buffer><expr> r defx#do_action('rename')
+    " New file and directory
+    nnoremap <silent><buffer><expr> F defx#do_action('new_file')
+    nnoremap <silent><buffer><expr> D defx#do_action('new_directory')
+    " Move up a directory
+    nnoremap <silent><buffer><expr> u defx#do_action('cd', ['..'])
+    " Home directory
+    nnoremap <silent><buffer><expr> h  defx#do_action('cd')
+    " Mark a file
+    nnoremap <silent><buffer><expr> <Space>
+        \ defx#do_action('toggle_select') . 'j'
+endfunction
 
 " }}}
 " Dein {{{
