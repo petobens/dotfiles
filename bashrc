@@ -189,7 +189,7 @@ bind '"\C-n": history-search-forward'
 bind 'set enable-bracketed-paste on'
 
 # }}}
-# Alias {{{
+# Aliases {{{
 
 # Bash
 alias sh='bash'
@@ -330,7 +330,10 @@ else
     fi
 fi
 
-# Work (mostly vpn and databases; ssh hosts are defined in .ssh/config)
+# }}}
+# Work Aliases {{{
+
+# Mostly vpn and databases; ssh hosts are defined in .ssh/config
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc"'
 
 # Claro
@@ -355,6 +358,11 @@ alias mpvpn='sudo pkill -INT -f openvpn; sudo openvpn --daemon --cd '\
 '~/OneDrive/arch/vpn --config microstrategy.ovpn'
 alias mpssh='TERM=xterm-256color; sshpass -p '\
 '"$(pass minprod/ssh/microstrategy)" ssh minprod'
+
+# Humber
+alias hdb='mongo mongodb://humberDbRead:"$(pass humber/mongodb/humberDbRead)"'\
+'@db1.humber.com.ar:37117,db2.humber.com.ar:37117,'\
+'arbiter.humber.com.ar:37117/humberPro001?replicaSet=humber-replica-set'
 
 # }}}
 # Fzf {{{

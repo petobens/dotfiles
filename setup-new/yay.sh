@@ -126,6 +126,8 @@ $yay_cmd papirus-icon-theme
 # Databases
 $yay_cmd gqlplus # depends on adding oracle to pacman and installing sqlplus
 $yay_cmd python-pymysql
+$yay_cmd mongodb
+$yay_cmd mongodb-tools
 $yay_cmd mycli
 $yay_cmd postgresql
 $yay_cmd pgcli
