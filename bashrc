@@ -331,7 +331,7 @@ else
 fi
 
 # Work (mostly vpn and databases; ssh hosts are defined in .ssh/config)
-alias kvpn='sudo pkill -INT -f "openconnect|openvpn"'
+alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc"'
 
 # Claro
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
@@ -344,6 +344,9 @@ alias crac8='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
 
 # AUSA
+alias ausavpn='sudo vpnc ausa_vpn.conf && '\
+'sudo \ip route add 172.25.0.0/16 dev tun0 scope link &&'\
+'sudo \ip route del default dev tun0 scope link'
 alias ausass='mssql-cli -S 172.25.1.70 -U pfarina -P '\
 '"$(pass ausa/sqlserver/pfarina)"'
 
