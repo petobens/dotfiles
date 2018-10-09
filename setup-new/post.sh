@@ -23,6 +23,17 @@ if type "cargo" > /dev/null 2>&1; then
     rm -rf alacritty
 fi
 
+# Mongo db improvements
+if type "mongo" > /dev/null 2>&1; then
+    echo "Installing mongo-hacker..."
+    git clone https://github.com/TylerBrock/mongo-hacker
+    (
+        cd mongo-hacker || exit
+        make install
+    )
+    # rm -rf mongo-hacker # (this erases config file)
+fi
+
 # Install ranger plugins and scope.sh executable
 if type "ranger" > /dev/null 2>&1; then
     git clone https://github.com/alexanderjeurissen/ranger_devicons
