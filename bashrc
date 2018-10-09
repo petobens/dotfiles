@@ -341,16 +341,16 @@ alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc"'
 # enabled)
 alias cvpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
 '--background --authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
-alias cmjolnir='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh mjolnir'
-alias cvaras='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh varas'
-alias crac8='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
+alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh mjolnir'
+alias cvssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh varas'
+alias cdb='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
 
 # AUSA
-alias ausavpn='sudo vpnc ausa_vpn.conf && '\
+alias avpn='sudo vpnc ausa_vpn.conf && '\
 'sudo \ip route add 172.25.0.0/16 dev tun0 scope link &&'\
 'sudo \ip route del default dev tun0 scope link'
-alias ausass='mssql-cli -S 172.25.1.70 -U pfarina -P '\
+alias adb='mssql-cli -S 172.25.1.70 -U pfarina -P '\
 '"$(pass ausa/sqlserver/pfarina)"'
 
 # Min Prod
