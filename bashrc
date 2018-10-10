@@ -466,23 +466,23 @@ sys_update_all() {
     sudo echo -n
     if [[ "$OSTYPE" == 'darwin'* ]]; then
         if type "brew" > /dev/null 2>&1; then
-            echo "-> Brew..."
+            echo -e "\033[1;34m-> Brew...\033[0m"
             brew update && brew upgrade && brew cleanup
         fi
     else
         if type "yay" > /dev/null 2>&1; then
-            echo "-> YaY..."
+            echo -e "\033[1;34m-> YaY...\033[0m"
             yay -Syu --nodiffmenu --answerclean N --removemake --devel \
                 --timeupdate --combinedupgrade
             yay -c
         fi
         if type "flatpak" > /dev/null 2>&1; then
-            echo "-> Flatpak..."
+            echo -e "\033[1;34m\n-> Updating flatpaks...\033[0m"
             flatpak update
         fi
     fi
     if type "python3" > /dev/null 2>&1; then
-        echo "-> Updating python..."
+        echo -e "\033[1;34m\n-> Updating Python...\033[0m"
         outdated="$(pip list --user --outdated)"
         if [ ! -z "$outdated" ]; then
             echo "$outdated"
@@ -498,16 +498,16 @@ sys_update_all() {
         fi
     fi
     if type "R" > /dev/null 2>&1; then
-        echo "-> Updating R..."
+        echo -e "\033[1;34m\n-> Updating R...\033[0m"
         R --slave --no-save --no-restore -e \
 'update.packages(ask=TRUE, checkBuilt=TRUE, lib.loc=Sys.getenv("R_LIBS_USER"))'
     fi
     if type "tlmgr" > /dev/null 2>&1; then
-        echo "-> Updating LaTeX..."
+        echo -e "\033[1;34m\n-> Updating Latex...\033[0m"
         sudo tlmgr update --all
     fi
     if type "npm" > /dev/null 2>&1; then
-        echo "-> Updating Node..."
+        echo -e "\033[1;34m\n-> Updating Node...\033[0m"
         npm update -g
     fi
 }
