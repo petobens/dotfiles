@@ -73,6 +73,9 @@ fi
 if type "pyenv" > /dev/null 2>&1; then
     eval "$(pyenv init -)"
 fi
+if type "pipenv" > /dev/null 2>&1; then
+    eval "$(pipenv --completion)"
+fi
 if type "sqlplus" > /dev/null 2>&1; then
     export SQLPATH="$HOME/.config/sqlplus"
 fi
@@ -286,6 +289,10 @@ if type "python" > /dev/null 2>&1; then
     fi
     if type "ipython3" > /dev/null 2>&1; then
         alias ip='ipython3'
+    fi
+    if type "pipenv" > /dev/null 2>&1; then
+        alias pel='pipenv run pip list'
+        alias pei='pipenv install'
     fi
 fi
 

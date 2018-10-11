@@ -125,6 +125,13 @@ function! s:RunPython(compiler, mode, compilation, ...)
     else
         let compiler = a:compiler
     endif
+
+    " If we are inside a pipenv venv then override the compiler
+    let pipenv_venv_path = system('pipenv --venv')
+    if v:shell_error == 0
+        let compiler = trim(pipenv_venv_path) . '/bin/python'
+    endif
+
     let compiler = compiler . ' '
 
     " Define file to run
@@ -281,7 +288,7 @@ command! -range -nargs=* EvalVisualPyForeground
 " Show py output from the qf in a preview window
 function! s:ShowPyOutput()
     " Only call this function after a python run
-    let compiler = split(&makeprg, '')[0]
+    let compiler = split(split(&makeprg, '')[0], '/')[-1]
     if compiler !=# 'python3' && compiler !=# 'python2' && compiler !=# 'python'
         return
     endif

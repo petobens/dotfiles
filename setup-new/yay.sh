@@ -50,6 +50,7 @@ $yay_cmd openblas
 # Languages
 $yay_cmd python
 $yay_cmd python-pip
+$yay_cmd python-pipenv
 $yay_cmd pyenv
 $yay_cmd rust
 if ! type "tlmgr" > /dev/null 2>&1; then

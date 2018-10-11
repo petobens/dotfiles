@@ -135,6 +135,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
     call dein#add('tpope/vim-dadbod')
 
+    " TOML
+    call dein#add('cespare/vim-toml', {'on_ft': 'toml'})
+
     " Tim Pope plugins
     call dein#add('tpope/vim-abolish')
     call dein#add('tpope/vim-dispatch')
@@ -1178,6 +1181,14 @@ augroup ft_text
     au Filetype text setlocal shiftwidth=2 tabstop=2 softtabstop=2
     " au FileType text setlocal foldmethod=marker
     au Filetype text syn match txtURL "\(http\|www\.\)[^ ]*"
+augroup END
+
+" }}}
+" TOML {{{
+
+augroup ft_toml
+    au!
+    au BufNewFile,BufReadPost Pipfile set filetype=toml
 augroup END
 
 " }}}
