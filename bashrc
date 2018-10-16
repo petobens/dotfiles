@@ -437,10 +437,12 @@ if type "fzf" > /dev/null 2>&1; then
     unalias z 2> /dev/null
     z() {
         [ $# -gt 0 ] && _z "$*" && return
-        cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse \
-        --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
+        dir="$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse \
+            --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
+        printf 'cd %q' "$dir"
     }
-    alias rd=z
+    bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
 
     # Git
     gl() {
