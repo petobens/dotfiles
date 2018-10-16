@@ -1,6 +1,7 @@
 # Note: mysql connector needs protobuf; see https://stackoverflow.com/a/43066829/2149400
 cython
 flake8; python_version >= '3.6'
+git+git://github.com/PyCQA/flake8; python_version >= '3.6'
 jedi; python_version >= '3.6'
 matplotlib
 mssql-cli; python_version >= '3.6'
