@@ -1095,8 +1095,8 @@ augroup ft_py
     " Fix else: syntax highlight and comment string
     au FileType python setlocal iskeyword-=:
     au Filetype python setlocal commentstring=#%s
-    " Python notebooks are json files
-    au BufNewFile,BufReadPost *.ipynb set filetype=json
+    " Python notebooks and Pipfile.lock are json files
+    au BufNewFile,BufReadPost *.ipynb,Pipfile.lock set filetype=json
 
     " Highlight all python functions
     au Filetype python syn match pythonAttribute2 /\.\h\w*(/hs=s+1,he=e-1
