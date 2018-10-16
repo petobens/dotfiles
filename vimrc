@@ -703,6 +703,8 @@ nnoremap <silent> <Leader>nb :call <SID>NewBuffer()<CR>
 
 " Ask for filename and filetype of a new (D)ocument to be edited in (D)esktop
 nnoremap <Leader>dd :e $HOME/Desktop/
+" Scratch buffer
+nnoremap <expr> <Leader>sb ':edit ' . expand('%:p:h') . '/scratch/'
 
 " Delete window and buffer
 nnoremap <silent> <Leader>wd :bd<CR>
