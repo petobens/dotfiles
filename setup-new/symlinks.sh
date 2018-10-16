@@ -27,13 +27,13 @@ dotfiles_dir=${dotfiles_dir%/}   # Strip last (potential) slash
 echo Creating symlinks under "$HOME"/
 mkdir -p "$HOME/.config/"
 
-# Always use coreutils $ln_cmd command
+# Always use coreutils ln command
 ln_cmd='ln'
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "gln" > /dev/null 2>&1; then
         ln_cmd='gln'
     else
-        echo "Coreutils $ln_cmd (gln) not found!" 1>&2
+        echo "Coreutils ln (gln) not found!" 1>&2
         exit 1
     fi
 fi
