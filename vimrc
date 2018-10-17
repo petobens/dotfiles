@@ -162,6 +162,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/deoplete.nvim')
     " Unite/denite sources
     call dein#add('chemzqm/denite-extra')
+    call dein#add('raghur/fruzzy')
     " TODO: Fix this not working
     " call dein#add('kmnk/gitn')
     call dein#add('Shougo/neomru.vim')
@@ -1421,9 +1422,13 @@ call denite#custom#option('default', {
 " Change some hl groups
 hi default link deniteSource_grepFile Directory
 
-" Change default matcher and sorter
-call denite#custom#source('default', 'matchers', ['matcher/fuzzy',
+" Fruzzy matcher
+let g:fruzzy#usenative = 0
+let g:fruzzy#sortonempty = 0
+call denite#custom#source('_', 'matchers', ['matcher/fruzzy',
         \ 'matcher/ignore_globs'])
+
+" Other matcher and sorting options
 call denite#custom#source('line', 'matchers', ['matcher/regexp'])
 call denite#custom#source('default', 'sorters', ['sorter/rank'])
 
@@ -1577,7 +1582,7 @@ call denite#custom#action('file', 'narrow',
       \ {context -> denite#do_action(context, 'open', context['targets'])})
 
 " }}}
-" Deocomplete {{{
+" Deoplete {{{
 
 " Vim completion settings
 set pumheight=15                          " Popup menu max height
