@@ -23,6 +23,14 @@ if type "cargo" > /dev/null 2>&1; then
     rm -rf alacritty
 fi
 
+# Jupyter notebook (assumes jupyter-core was installed with pipsi)
+if type "pipsi" > /dev/null 2>&1; then
+    if [ -d "$HOME/.local/venv/jupyter-core" ]; then
+        echo "Installing jupyter notebook..."
+        "$HOME"/.local/venv/jupyter-core/bin/pip install jupyter
+    fi
+fi
+
 # Mongo db improvements
 if type "mongo" > /dev/null 2>&1; then
     echo "Installing mongo-hacker..."

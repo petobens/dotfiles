@@ -126,12 +126,9 @@ $yay_cmd papirus-icon-theme
 
 # Databases
 $yay_cmd gqlplus # depends on adding oracle to pacman and installing sqlplus
-$yay_cmd python-pymysql
 $yay_cmd mongodb
 $yay_cmd mongodb-tools
-$yay_cmd mycli
 $yay_cmd postgresql
-$yay_cmd pgcli
 $yay_cmd protobuf # Required by python's mysql-connector
 $yay_cmd redis
 $yay_cmd sqlite3
@@ -196,3 +193,13 @@ $yay_cmd zathura
 $yay_cmd zathura-pdf-mupdf
 
 yay -c
+
+# Python binaries (can also be installed with yay but we do it with pipsi to
+# avoid clashing dependencies)
+$yay_cmd python-pipsi
+pipsi install ipython
+pipsi install jupyter-core
+pipsi install pgcli
+pipsi install mycli
+# FIXME: Not working:
+# pipsi install mssql-cli
