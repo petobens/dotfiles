@@ -126,6 +126,7 @@ $yay_cmd papirus-icon-theme
 
 # Databases
 $yay_cmd gqlplus # depends on adding oracle to pacman and installing sqlplus
+$yay_cmd python-pymysql
 $yay_cmd mongodb
 $yay_cmd mongodb-tools
 $yay_cmd postgresql
@@ -192,21 +193,3 @@ $yay_cmd zathura-pdf-mupdf
 
 # Cleanup
 yay -c
-
-# Python binaries (can also be mostly installed with yay but we do it with pipx
-# to avoid clashing dependencies)
-if ! type "pipx" > /dev/null 2>&1; then
-    mkdir -p "$HOME"/.local/pipx/venvs
-    curl https://raw.githubusercontent.com/cs01/pipx/master/get-pipx.py | python3
-fi
-pipx install --spec git+https://github.com/PyCQA/flake8 flake8 --verbose
-pipx install beautysh --verbose
-pipx install ipython --verbose
-pipx install jupyter-core --verbose
-pipx install mycli --verbose
-pipx install pgcli --verbose
-pipx install vim-vint --verbose
-pipx install yamllint --verbose
-pipx install yapf --verbose
-# FIXME: Not working:
-# pipx install mssql-cli --verbose

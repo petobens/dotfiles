@@ -79,9 +79,7 @@ brew install --HEAD tmux
 
 # Databases
 brew install postgresql
-brew install pgcli
 brew install mysql
-brew install mycli
 brew install protobuf # Required by python's mysql-connector
 brew install redis
 brew install sqlite3
@@ -107,12 +105,8 @@ brew install fd
 brew install tree
 brew install pyenv
 brew install socat  # for faster powerline
-
-# Python binaries
-brew install beautysh
 brew install powerline
 brew install ranger
-brew install yamllint
 
 # Remove outdated versions
 brew cleanup

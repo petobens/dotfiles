@@ -41,6 +41,13 @@ else
     base_pkg_dir='/usr'
 fi
 
+read -p "Do you want to install python binaries (y/n)? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Installing python binaries (with pipx)..."
+    . "$current_dir/python.sh"
+fi
+
 read -p "Do you want to install tmux terminfo with italics support (y/n)? " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then

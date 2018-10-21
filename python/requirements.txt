@@ -1,7 +1,6 @@
 cython
 jedi; python_version >= '3.6'
 matplotlib
-mssql-cli; python_version >= '3.6'
 mypy; python_version >= '3.6'
 numpy
 pandas
