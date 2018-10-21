@@ -1,27 +1,20 @@
 from IPython import get_ipython
 from prompt_toolkit.keys import Keys
-from prompt_toolkit.filters import EmacsInsertMode, ViInsertMode
-from prompt_toolkit.key_binding.vi_state import InputMode
+from prompt_toolkit.filters import emacs_insert_mode, vi_insert_mode
+from prompt_toolkit.key_binding.key_processor import KeyPress
 from prompt_toolkit.key_binding.bindings.named_commands import (
     backward_word, beginning_of_line, end_of_line, forward_word
 )
 
-ip = get_ipython()
-r = get_ipython().pt_cli.application.key_bindings_registry
+r = get_ipython().pt_app.key_bindings
 
 
-# https://github.com/jonathanslenders/python-prompt-toolkit/issues/425
 def vi_movement_mode(event):
-    buffer = event.current_buffer
-    vi_state = event.cli.vi_state
-    vi_state.reset(InputMode.NAVIGATION)
-    if bool(buffer.selection_state):
-        buffer.exit_selection()
+    event.cli.key_processor.feed(KeyPress(Keys.Escape))
 
 
 # Insert mode mappings
-vi_insert_mode = ViInsertMode()
-insert_mode = vi_insert_mode | EmacsInsertMode()
+insert_mode = vi_insert_mode | emacs_insert_mode
 r.add_binding(
     'j', 'j', filter=vi_insert_mode, eager=True
 )(lambda ev: vi_movement_mode(ev))

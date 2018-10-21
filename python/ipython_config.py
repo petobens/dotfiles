@@ -2,12 +2,14 @@ import sys
 
 from operator import attrgetter
 
-import IPython.terminal.prompts as prompts
-
 from pygments.token import (
     Comment, Error, Keyword, Literal, Name, Number, Operator, String, Text,
     Token
 )
+
+import IPython.terminal.prompts as prompts
+
+from prompt_toolkit.application import get_app
 from prompt_toolkit.key_binding.vi_state import InputMode, ViState
 
 c = get_config()  # noqa
@@ -40,8 +42,9 @@ ViState.input_mode = property(attrgetter('_input_mode'), set_input_mode)
 class MyPrompt(prompts.Prompts):
     """Custom prompt with vi mode indicator"""
 
-    def in_prompt_tokens(self, cli=None):
-        mode = 'I' if cli.vi_state.input_mode == InputMode.INSERT else 'N'
+    def in_prompt_tokens(self):
+        mode = 'I' if get_app(
+        ).vi_state.input_mode == InputMode.INSERT else 'N'
         return [
             (prompts.Token.Prompt, f'({mode})['),
             (prompts.Token.PromptNum, str(self.shell.execution_count)),

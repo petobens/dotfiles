@@ -23,11 +23,15 @@ if type "cargo" > /dev/null 2>&1; then
     rm -rf alacritty
 fi
 
-# Jupyter notebook (assumes jupyter-core was installed with pipx)
+# Jupyter notebook and ipython (using pipx's venvs)
 if type "pipx" > /dev/null 2>&1; then
     if [ -d "$HOME/.local/pipx/venvs/jupyter-core" ]; then
         echo "Installing jupyter notebook..."
         "$HOME"/.local/pipx/venvs/jupyter-core/bin/pip install jupyter
+    fi
+    if [ -d "$HOME/.local/pipx/venvs/ipython" ]; then
+        echo "Installing pandas for ipytho..."
+        "$HOME"/.local/pipx/venvs/ipython/bin/pip install pandas
     fi
 fi
 
