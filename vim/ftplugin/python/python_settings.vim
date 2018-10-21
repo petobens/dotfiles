@@ -204,7 +204,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
         let bang_command = '!'
         let remove_visual_command = ''
         if exists(':Dispatch')
-            let bang_command = 'Start -wait=always '
+            let bang_command = 'Spawn -wait=always '
         endif
         if a:mode ==# 'visual'
             let remove_visual_command = '; rm ' . current_file
@@ -764,7 +764,7 @@ function! s:RunPyTest(level, compilation)
     if a:compilation ==# 'foreground'
         let bang_command = '!'
         if exists(':Dispatch')
-            let bang_command = 'Start -wait=always -title=pytest '
+            let bang_command = 'Spawn -wait=always -title=pytest '
         endif
         execute bang_command . &l:makeprg
         " Restore error format and working directory

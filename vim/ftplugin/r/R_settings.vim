@@ -121,7 +121,7 @@ function! s:RunR(mode, compilation, ...)
         let pause_command = '&& pause'
         let remove_visual_command = ''
         if exists(':Dispatch')
-            let bang_command = 'Start -wait=always '
+            let bang_command = 'Spawn -wait=always '
             let pause_command = ''
         endif
         if a:mode ==# 'visual'

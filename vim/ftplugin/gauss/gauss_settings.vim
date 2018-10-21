@@ -135,7 +135,7 @@ function! s:RunGauss(mode, compilation, ...)
         let bang_command = '!'
         let remove_visual_command = ''
         if exists(':Dispatch')
-            let bang_command = 'Start -wait=always '
+            let bang_command = 'Spawn -wait=always '
         endif
         if a:mode ==# 'visual'
             let remove_visual_command = '; rm ' . current_file
