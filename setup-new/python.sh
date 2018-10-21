@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Python binaries (can also be mostly installed with ia package manager but we
+# Python binaries (can also be mostly installed with a package manager but we
 # do it with pipx to avoid dependency clash)
 if ! type "pipx" > /dev/null 2>&1; then
     mkdir -p "$HOME"/.local/pipx/venvs
