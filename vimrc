@@ -162,7 +162,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/deoplete.nvim')
     " Unite/denite sources
     call dein#add('chemzqm/denite-extra')
-    call dein#add('raghur/fruzzy')
+    call dein#add('raghur/fruzzy',
+        \ {'hook_post_update': 'call fruzzy#install()'})
     " TODO: Fix this not working
     " call dein#add('kmnk/gitn')
     call dein#add('Shougo/neomru.vim')
@@ -1423,7 +1424,7 @@ call denite#custom#option('default', {
 hi default link deniteSource_grepFile Directory
 
 " Fruzzy matcher
-let g:fruzzy#usenative = 0
+let g:fruzzy#usenative = 1
 let g:fruzzy#sortonempty = 0
 call denite#custom#source('_', 'matchers', ['matcher/fruzzy',
         \ 'matcher/ignore_globs'])
