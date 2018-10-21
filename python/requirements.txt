@@ -1,6 +1,4 @@
 cython
-flake8; python_version >= '3.6'
-git+git://github.com/PyCQA/flake8; python_version >= '3.6'
 jedi; python_version >= '3.6'
 matplotlib
 mssql-cli; python_version >= '3.6'
@@ -14,5 +12,3 @@ requests
 scikit-learn
 scipy
 sqlparse; python_version >= '3.6'
-vim-vint; python_version >= '3.6'
-yapf; python_version >= '3.6'

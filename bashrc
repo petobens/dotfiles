@@ -76,9 +76,9 @@ fi
 if type "pipenv" > /dev/null 2>&1; then
     eval "$(pipenv --completion)"
 fi
-if type "pipsi" > /dev/null 2>&1; then
-    export PIPSI_HOME=$HOME/.local/venv
-    export PIPSI_BIN_DIR=$HOME/.local/bin
+if type "pipx" > /dev/null 2>&1; then
+    export PIPX_HOME=$HOME/.local/pipx/venvs
+    export PIPX_BIN_DIR=$HOME/.local/bin
 fi
 if type "sqlplus" > /dev/null 2>&1; then
     export SQLPATH="$HOME/.config/sqlplus"
@@ -514,9 +514,9 @@ sys_update_all() {
             done
         fi
     fi
-    if type "pipsi" > /dev/null 2>&1; then
-        echo -e "\033[1;34m\n-> Updating Python binaries with pipsi...\033[0m"
-        pipsi list | grep 'Package ' | cut -d\" -f2 | xargs -n1 pipsi upgrade
+    if type "pipx" > /dev/null 2>&1; then
+        echo -e "\033[1;34m\n-> Updating Python binaries with pipx...\033[0m"
+        pipx upgrade-all --verbose
     fi
     if type "R" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating R...\033[0m"

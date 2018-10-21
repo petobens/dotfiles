@@ -135,7 +135,6 @@ $yay_cmd sqlite3
 
 # CLI
 $yay_cmd bat
-$yay_cmd beautysh
 $yay_cmd docker
 $yay_cmd fd
 $yay_cmd fzf
@@ -164,7 +163,6 @@ $yay_cmd universal-ctags-git
 $yay_cmd unrar
 $yay_cmd unzip
 $yay_cmd w3m
-$yay_cmd yamllint
 $yay_cmd zip
 
 # Z (jump around)
@@ -192,14 +190,23 @@ $yay_cmd xfce4-power-manager
 $yay_cmd zathura
 $yay_cmd zathura-pdf-mupdf
 
+# Cleanup
 yay -c
 
-# Python binaries (can also be installed with yay but we do it with pipsi to
-# avoid clashing dependencies)
-$yay_cmd python-pipsi
-pipsi install ipython
-pipsi install jupyter-core
-pipsi install pgcli
-pipsi install mycli
+# Python binaries (can also be mostly installed with yay but we do it with pipx
+# to avoid clashing dependencies)
+if ! type "pipx" > /dev/null 2>&1; then
+    mkdir -p "$HOME"/.local/pipx/venvs
+    curl https://raw.githubusercontent.com/cs01/pipx/master/get-pipx.py | python3
+fi
+pipx install --spec git+https://github.com/PyCQA/flake8 flake8 --verbose
+pipx install beautysh --verbose
+pipx install ipython --verbose
+pipx install jupyter-core --verbose
+pipx install mycli --verbose
+pipx install pgcli --verbose
+pipx install vim-vint --verbose
+pipx install yamllint --verbose
+pipx install yapf --verbose
 # FIXME: Not working:
-# pipsi install mssql-cli
+# pipx install mssql-cli --verbose

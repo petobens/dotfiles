@@ -23,11 +23,11 @@ if type "cargo" > /dev/null 2>&1; then
     rm -rf alacritty
 fi
 
-# Jupyter notebook (assumes jupyter-core was installed with pipsi)
-if type "pipsi" > /dev/null 2>&1; then
-    if [ -d "$HOME/.local/venv/jupyter-core" ]; then
+# Jupyter notebook (assumes jupyter-core was installed with pipx)
+if type "pipx" > /dev/null 2>&1; then
+    if [ -d "$HOME/.local/pipx/venvs/jupyter-core" ]; then
         echo "Installing jupyter notebook..."
-        "$HOME"/.local/venv/jupyter-core/bin/pip install jupyter
+        "$HOME"/.local/pipx/venvs/jupyter-core/bin/pip install jupyter
     fi
 fi
 
