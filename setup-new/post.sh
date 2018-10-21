@@ -30,7 +30,7 @@ if type "pipx" > /dev/null 2>&1; then
         "$HOME"/.local/pipx/venvs/jupyter-core/bin/pip install jupyter
     fi
     if [ -d "$HOME/.local/pipx/venvs/ipython" ]; then
-        echo "Installing pandas for ipytho..."
+        echo "Installing pandas for ipython..."
         "$HOME"/.local/pipx/venvs/ipython/bin/pip install pandas
     fi
 fi
