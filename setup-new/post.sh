@@ -23,19 +23,20 @@ if type "cargo" > /dev/null 2>&1; then
     rm -rf alacritty
 fi
 
-# Jupyter notebook and ipython (using pipx's venvs)
+# Pipx
 if type "pipx" > /dev/null 2>&1; then
-    if [ -d "$HOME/.local/pipx/venvs/jupyter-core" ]; then
+    pipx_home="$HOME/.local/pipx/venvs"
+    if [ -d "$pipx_home/jupyter-core" ]; then
         echo "Installing jupyter notebook..."
-        "$HOME"/.local/pipx/venvs/jupyter-core/bin/pip install jupyter
+        "$pipx_home"/jupyter-core/bin/pip install jupyter
     fi
-    if [ -d "$HOME/.local/pipx/venvs/ipython" ]; then
+    if [ -d "$pipx_home/ipython" ]; then
         echo "Installing pandas for ipython..."
-        "$HOME"/.local/pipx/venvs/ipython/bin/pip install pandas
+        "$pipx_home"/ipython/bin/pip install pandas
     fi
-    if [ -d "$HOME/.local/pipx/venvs/flake8" ]; then
+    if [ -d "$pipx_home/flake8" ]; then
         echo "Installing bugbear for flake8..."
-        "$HOME"/.local/pipx/venvs/flake8/bin/pip install flake8-bugbear
+        "$pipx_home"/flake8/bin/pip install flake8-bugbear
     fi
 fi
 
