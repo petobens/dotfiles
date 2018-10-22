@@ -1855,6 +1855,7 @@ vnoremap <silent> <Leader>gb :Gbrowse<cr>
 
 " Commit explorer/browser (from gv.vim plugin)
 nnoremap <silent> <Leader>cb :GV<cr>
+nnoremap <silent> <Leader>cB :GV!<cr>  " only current file
 
 " }}}
 " GitGutter {{{
