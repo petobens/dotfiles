@@ -44,7 +44,7 @@ endfunction
 " }}}
 " Options {{{
 
-setlocal textwidth=79
+setlocal textwidth=88
 
 " }}}
 " Compiling {{{
@@ -465,13 +465,13 @@ augroup END
 " }}}
 " Formatting {{{
 
-function! s:RunYapf(...)
-    " Don't run yapf if it is not installed
-    if !executable('yapf')
-        echoerr 'yapf is not installed or not in your path.'
+function! s:RunBlack(...)
+    " Don't run black if it is not installed
+    if !executable('black')
+        echoerr 'black is not installed or not in your path.'
         return
     endif
-    " Don't run yapf if there is only one empty line or we are in a Gdiff
+    " Don't run black if there is only one empty line or we are in a Gdiff
     " (when file path includes .git)
     if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
         return
@@ -489,10 +489,7 @@ function! s:RunYapf(...)
     let shrd = &shellredir
     set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let &l:formatprg = "yapf --style='{based_on_style: pep8, " .
-                \ "blank_line_before_nested_class_or_def: false, " .
-                \ "allow_split_before_dict_value: false, " .
-                \ "dedent_closing_brackets: true}'"
+    let &l:formatprg = "black -S -l 88 -"
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'silent! normal! gvgq'
@@ -507,10 +504,10 @@ function! s:RunYapf(...)
     let &l:formatprg = old_formatprg
 endfunction
 
-" Automatically run yapf and flake8 on save
+" Automatically run black and flake8 on save
 augroup py_linting
     au!
-    au BufWritePost *.py lclose | call s:RunYapf() | silent noautocmd update |
+    au BufWritePost *.py lclose | call s:RunBlack() | silent noautocmd update |
                 \ silent Neomake
 augroup END
 
@@ -1132,7 +1129,7 @@ function! s:AddBreakPoint()
     let breakpoint_line = current_line - 1
     let indent_length = match(getline(current_line), '\w')
     let indents = repeat(' ', indent_length)
-    let bp_statement = 'import pdb; pdb.set_trace()  # noqa # yapf: disable'
+    let bp_statement = 'breakpoint()'
     call append(breakpoint_line, indents . bp_statement)
     silent noautocmd update
     call setpos('.', save_cursor)
@@ -1140,7 +1137,7 @@ endfunction
 
 function! s:RemoveBreakPoint()
     let save_cursor = getcurpos()
-    execute 'g/import pdb; pdb.set_trace()/d'
+    execute 'g/breakpoint()/d'
     silent noautocmd update
     call setpos('.', save_cursor)
 endfunction
@@ -1199,8 +1196,8 @@ if exists(':ImpSort')
     nnoremap <buffer> <silent> <Leader>is :ImpSort<CR>
 endif
 " Note: The visual map messes up proper comment indentation/formatting:
-vnoremap <silent> <buffer> Q :call <SID>RunYapf('visual')<CR>
-nnoremap <silent> <buffer> <Leader>yp :call <SID>RunYapf()<CR>
+vnoremap <silent> <buffer> Q :call <SID>RunBlack('visual')<CR>
+nnoremap <silent> <buffer> <Leader>bf :call <SID>RunBlack()<CR>
 
 " Tests and coverage (py.test dependant)
 nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite', 'background')<CR>

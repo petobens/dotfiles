@@ -33,6 +33,10 @@ if type "pipx" > /dev/null 2>&1; then
         echo "Installing pandas for ipython..."
         "$HOME"/.local/pipx/venvs/ipython/bin/pip install pandas
     fi
+    if [ -d "$HOME/.local/pipx/venvs/flake8" ]; then
+        echo "Installing bugbear for flake8..."
+        "$HOME"/.local/pipx/venvs/flake8/bin/pip install flake8-bugbear
+    fi
 fi
 
 # Mongo db improvements

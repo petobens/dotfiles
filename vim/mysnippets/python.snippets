@@ -160,8 +160,10 @@ snippet pri "Print" b
 print($1)$0
 endsnippet
 
-snippet bp "Set PDB breakpoint" b
-import pdb; pdb.set_trace()  # noqa # yapf: disable$0
+snippet pdb "Set PDB breakpoint" b
+# fmt: off
+import pdb; pdb.set_trace() # noqa
+# fmt: on$0
 endsnippet
 
 snippet ae "Abort execution" b

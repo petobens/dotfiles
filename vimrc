@@ -1963,7 +1963,8 @@ let g:airline#extensions#neomake#enabled = 0 " Don't show on Airline
 
 " Python
 let g:neomake_python_enabled_makers = ['flake8', 'mypy']
-let g:neomake_python_flake8_args = ['--ignore=E402,W503']
+let g:neomake_python_flake8_args = ['--ignore=E402,E203,E501,W503',
+            \ '--max-line-length=88', '--select=C,E,F,W,B,B950']
 let g:neomake_python_mypy_args = ['--ignore-missing-imports',
             \ '--follow-imports=skip']
 
