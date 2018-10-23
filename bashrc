@@ -123,10 +123,6 @@ if type "powerline-daemon" > /dev/null 2>&1; then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
     POWERLINE_BASH_SELECT=1
-    py_exec='python2'
-    if type "python3" > /dev/null 2>&1; then
-        py_exec='python3'
-    fi
     . /usr/lib/python3.7/site-packages/powerline/bindings/bash/powerline.sh
 fi
 
