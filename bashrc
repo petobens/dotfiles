@@ -307,7 +307,7 @@ if type "yay" > /dev/null 2>&1; then
     fi
 fi
 
-# Update system (and language libraries); script in bin foler
+# Update system (and language libraries); see function below
 alias ua=sys_update_all
 
 if [[ "$OSTYPE" == 'darwin'* ]]; then
