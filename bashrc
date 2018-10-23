@@ -71,10 +71,14 @@ if type "go" > /dev/null 2>&1; then
     export PATH=$PATH:$GOPATH/bin
 fi
 if type "pyenv" > /dev/null 2>&1; then
+	export PYENV_ROOT="$HOME/.pyenv"
+	export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
 fi
 if type "pipenv" > /dev/null 2>&1; then
     eval "$(pipenv --completion)"
+    # Always create a pipenv venv (useful when running from vim)
+    export PIPENV_IGNORE_VIRTUALENVS=1
 fi
 if type "pipx" > /dev/null 2>&1; then
     export PIPX_HOME=$HOME/.local/pipx/venvs
@@ -293,6 +297,7 @@ if type "python" > /dev/null 2>&1; then
     if type "pipenv" > /dev/null 2>&1; then
         alias pel='pipenv run pip list'
         alias pei='pipenv install'
+        alias pes='pipenv shell'
     fi
 fi
 

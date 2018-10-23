@@ -114,6 +114,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
+    call dein#add('petobens/vim-virtualenv', {'rev': 'pipenv'})
 
     " R
     call dein#add('jalvesaq/Nvim-R')
@@ -1424,7 +1425,7 @@ call denite#custom#option('default', {
 hi default link deniteSource_grepFile Directory
 
 " Fruzzy matcher
-let g:fruzzy#usenative = 1
+let g:fruzzy#usenative = 0
 let g:fruzzy#sortonempty = 0
 call denite#custom#source('_', 'matchers', ['matcher/fruzzy',
         \ 'matcher/ignore_globs'])
@@ -1598,11 +1599,6 @@ augroup END
 
 " Always use deoplete (it is async)
 let g:deoplete#enable_at_startup = 1
-if s:is_mac
-    let g:deoplete#sources#jedi#python_path = '/usr/local/bin/python3'
-else
-    let g:deoplete#sources#jedi#python_path ='/usr/bin/python'
-endif
 
 " Options
 call deoplete#custom#option({
@@ -2558,6 +2554,21 @@ augroup ps_vimlatex
                 \ <Plug>(vimtex-delim-toggle-modifier)
     " End environment or delimiter in insert mode
     au Filetype tex imap <silent> <buffer> }ee <Plug>(vimtex-delim-close)
+augroup END
+
+" }}}
+" Virtualenv {{{
+
+" FIXME: We need to call activate twice for this to actually work sometimes
+let g:airline#extensions#virtualenv#enabled = 1
+let g:virtualenv_auto_activate = 0
+
+augroup pl_venv_python
+    au!
+    " TODO: Find a way to reset jedi when calling these commands
+    au Filetype python nnoremap <buffer> <Leader>vea
+                \ :VirtualEnvActivate<CR>:VirtualEnvActivate<CR>
+    au Filetype python nnoremap <buffer> <Leader>ved :VirtualEnvDeactivate<CR>
 augroup END
 
 " }}}
