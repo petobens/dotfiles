@@ -298,6 +298,7 @@ if type "python" > /dev/null 2>&1; then
         alias pel='pipenv run pip list'
         alias pei='pipenv install'
         alias pes='pipenv shell'
+        alias pep='pipenv run python'
     fi
 fi
 
