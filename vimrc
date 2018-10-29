@@ -1172,11 +1172,12 @@ augroup ft_sql
     au Filetype sql setlocal commentstring=--%s
     au Filetype sql setlocal shiftwidth=2 tabstop=2 softtabstop=2
     au BufNewFile,BufReadPost sqlplus_login set filetype=sql
-    " Add highlighting of some keywords (presto specific)
+    " Add highlighting of some keywords
     au Filetype sql syn keyword sqlKeyword INNER RIGHT LEFT OUTER JOIN OVER
                 \ PARTITION
     au Filetype sql syn keyword sqlFunction DATE_PARSE DATE_DIFF DATE_TRUNC
                 \ LAG ARBITRARY COUNT_IF LEAD JSON_EXTRACT
+    au Filetype sql syn keyword sqlType INT
 augroup END
 
 " }}}
