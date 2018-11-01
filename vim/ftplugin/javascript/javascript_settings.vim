@@ -1,8 +1,3 @@
-" Installation notes {{{
-
-" To use the linter we need to install eslint (install it with npm).
-
-" }}}
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
@@ -92,7 +87,9 @@ function! s:RunJS(mode, compilation, ...)
         let bang_command = '!'
         let remove_visual_command = ''
         if exists(':Dispatch')
-            let bang_command = 'Spawn -wait=always '
+            let dispatch_title = 'js-'. fnamemodify(current_file, ':t')[:8]
+            let bang_command = 'Spawn -wait=always -title=' .
+                        \ dispatch_title . ' '
         endif
         if a:mode ==# 'visual'
             let remove_visual_command = '; rm ' . current_file

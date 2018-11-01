@@ -1,21 +1,3 @@
-" Installation notes {{{
-
-" On Windows if we use the `winpython` distribution then we need to add the
-" following to Path variable
-" C:\prog-lang\winpython\python-3.4.3.amd64;
-" C:\prog-lang\winpython\python-3.4.3.amd64\Scripts;
-" C:\prog-lang\winpython\python-3.4.3.amd64\DLLs;
-" In order for gvim to work we also need to create a PYTHONHOME env variable:
-" C:\prog-lang\winpython\python-3.4.3.amd64
-" Finally we use a requirements.txt file to install packages not included in
-" winpython distribution (see dotfile folder)
-
-" If we don't use winpython then some scientific packages (those that required
-" compilation) must be installed with lepisma/pipwin or directly downloaded from
-" Christoph Gohlke page.
-" TODO: When using pipwin also use a requirements file
-
-" }}}
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
@@ -204,7 +186,9 @@ function! s:RunPython(compiler, mode, compilation, ...)
         let bang_command = '!'
         let remove_visual_command = ''
         if exists(':Dispatch')
-            let bang_command = 'Spawn -wait=always '
+            let dispatch_title = 'py-'. fnamemodify(current_file, ':t')[:8]
+            let bang_command = 'Spawn -wait=always -title=' .
+                        \ dispatch_title . ' '
         endif
         if a:mode ==# 'visual'
             let remove_visual_command = '; rm ' . current_file

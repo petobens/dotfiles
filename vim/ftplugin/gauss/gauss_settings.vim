@@ -1,26 +1,3 @@
-" Installation notes {{{
-
-" In Windows we create a symbolic link for gauss configuration file (gauss.cfg)
-" from our dotfiles to the gauss executable directory.
-" We then add our local program, library and dynamic files doing:
-    " src_path = $(GAUSSDIR)\src;$(GAUSSDIR)\examples;
-    " $(CLOUD)\programming\gauss\libraries\src
-    " extra_lib_path = $(CLOUD)\programming\gauss\libraries\lib
-    " dlib_path = $(CLOUD)\programming\gauss\libraries\dlib
-
-" Note that most of the important libraries (nlsys, etc) can be copied from the
-" Time Series course
-
-" The 32-bit version of the dynamic libraries (PszTgSen, PsdTgSencan, etc) can
-" be obtained from: https://sites.sas.upenn.edu/schorf/files/re.zip
-" The `dforrt.dll` must be placed inside the root directory
-
-" Note that we don't add a linter or function to query the documentation because
-" there is no linter available (however Gauss is compiled to byte code before
-" execution and thus many error are catched at that stage) and no command to
-" print the docs to the console
-
-" }}}
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
@@ -135,7 +112,9 @@ function! s:RunGauss(mode, compilation, ...)
         let bang_command = '!'
         let remove_visual_command = ''
         if exists(':Dispatch')
-            let bang_command = 'Spawn -wait=always '
+            let dispatch_title = 'g-'. fnamemodify(current_file, ':t')[:8]
+            let bang_command = 'Spawn -wait=always -title=' .
+                        \ dispatch_title . ' '
         endif
         if a:mode ==# 'visual'
             let remove_visual_command = '; rm ' . current_file

@@ -2,28 +2,6 @@
 " TODO: Better completion with Vim-R plugin and eventually with neocomplete
 " TODO: Add function to view R source code of an object or library?
 
-" Installation notes {{{
-
-" On Windows we need to add the following to Path variable in order to compile R
-" code: C:\prog-lang\R\R-version_nr\bin
-
-" In order to install packages without administrative rights we need to give
-" permissions to the user to read a write the library folder of the R
-" installation: C:\prog-lang\R\R-version_nr\library
-" On the other to install new packages in another location, add the following
-" environmental (system) variable and check it is the first directory listed by
-" `.libPaths()`: R_LIB = C:\prog-lang\R\libraries
-
-" To see the docs in nice markdown format we need pandoc
-
-" We install the following R packages (and their dependencies):
-" devtools, lintr, plm, lmtest, gridExtra, gtable
-
-" We use the vim-R-plugin for completion which in turns requires the vimcom
-" library. For this to work we need to place (via a symlink) the Rprofile file
-" in the Users/Documents folder
-
-" }}}
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
@@ -121,7 +99,9 @@ function! s:RunR(mode, compilation, ...)
         let pause_command = '&& pause'
         let remove_visual_command = ''
         if exists(':Dispatch')
-            let bang_command = 'Spawn -wait=always '
+            let dispatch_title = 'R-'. fnamemodify(current_file, ':t')[:8]
+            let bang_command = 'Spawn -wait=always -title=' .
+                        \ dispatch_title . ' '
             let pause_command = ''
         endif
         if a:mode ==# 'visual'
