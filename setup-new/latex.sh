@@ -6,7 +6,7 @@
 # `brew cask reinstall basictex`)
 
 # Install mybibformat style
-echo "Installing mybibformat biblatex style..."
+echo -e "\033[1;34m--> Installing mybibformat biblatex style...\033[0m"
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     rm -rf ~/Library/texmf
     mkdir -p ~/Library/texmf
@@ -27,7 +27,7 @@ sudo tlmgr option docfiles 1
 sudo tlmgr install --reinstall "$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')"
 
 # Install arara (needs java)
-read -p "Do you want to install arara (y/n)? " -n 1 -r
+read -p $'\033[1mDo you want to install arara (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     if ! java -version >/dev/null 2>&1;  then

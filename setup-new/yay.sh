@@ -54,7 +54,7 @@ $yay_cmd python-pipenv
 $yay_cmd pyenv
 $yay_cmd rust
 if ! type "tlmgr" > /dev/null 2>&1; then
-    read -p "Do you want to install latex (y/n)? " -n 1 -r
+    read -p $'\033[1mDo you want to install LaTeX (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
@@ -66,12 +66,12 @@ if ! type "tlmgr" > /dev/null 2>&1; then
         rm -rf install-tl-*/
     fi
 fi
-read -p "Do you want to install R (y/n)? " -n 1 -r
+read -p $'\033[1mDo you want to install R (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     $yay_cmd r
 fi
-read -p "Do you want to install Node.js (y/n)? " -n 1 -r
+read -p $'\033[1mDo you want to install Node.js (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     $yay_cmd nodejs

@@ -3,7 +3,7 @@
 if ! type "brew" > /dev/null 2>&1; then
     brew_prefix='Home'
     brew_dir='/usr/local'
-    echo "Installing brew..."
+    echo -e "\033[1;34m--> Installing brew....\033[0m"
     ruby -e "$(curl -fsSl 'https://raw.githubusercontent.com/'$brew_prefix'brew/install/master/install')"
     export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
 else
@@ -11,20 +11,15 @@ else
 fi
 
 # Use latest homebrew and update any already installed formulae
-echo "Updating Brew..."
+echo -e "\033[1;34m-->Updating Brew...\033[0m"
 brew update && brew upgrade
 
 # Fonts
-read -p "Do you want to install Nerd fonts with fancy glyphs (y/n)? " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo Installing Nerd Fonts...
-    brew tap caskroom/fonts
-    brew cask install font-sourcecodepro-nerd-font
-    # Nerd fonts Source Code Pro version doesn't have italics so we install
-    # the official version
-    brew cask install font-source-code-pro
-fi
+brew tap caskroom/fonts
+brew cask install font-sourcecodepro-nerd-font
+# Nerd fonts Source Code Pro version doesn't have italics so we install
+# the official version
+brew cask install font-source-code-pro
 
 # Latest bash with completions
 brew install bash
@@ -43,13 +38,13 @@ brew install coreutils  # (realpath, etc)
 # Languages: Rust, Python3, R, latex, node, java
 brew install rust  # We need this for Alacritty
 brew install python3
-read -p "Do you want to install python2 (y/n)? " -n 1 -r
+read -p $'\033[1mDo you want to install python2 (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     brew install python2
 fi
 if ! type "tlmgr" > /dev/null 2>&1; then
-    read -p "Do you want to install latex (y/n)? " -n 1 -r
+    read -p $'\033[1mDo you want to install LaTeX (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         brew cask install basictex
@@ -60,12 +55,12 @@ if ! type "tlmgr" > /dev/null 2>&1; then
         export PATH="/Library/TeX/texbin:$PATH"
     fi
 fi
-read -p "Do you want to install R (y/n)? " -n 1 -r
+read -p $'\033[1mDo you want to install R (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     brew install R --with-openblas
 fi
-read -p "Do you want to install Node.js (y/n)? " -n 1 -r
+read -p $'\033[1mDo you want to install Node.js (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     brew install node
