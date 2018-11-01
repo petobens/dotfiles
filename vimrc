@@ -1484,9 +1484,14 @@ function! s:DeniteGrep()
     endif
     call denite#start([{'name': 'grep', 'args': [narrow_dir, ft_filter]}])
 endfunction
-function! s:DeniteTasklist()
+function! s:DeniteTasklist(...)
+    if a:0 >=1  && a:1 ==# '.'
+        let target = a:1
+    else
+        let target = expand('%')
+    endif
     call denite#start([{'name': 'grep',
-                \ 'args': [expand('%'), '','TODO:\s|FIXME:\s']}])
+                \ 'args': [target, '','TODO:\s|FIXME:\s']}])
 endfunction
 
 " Mappings
@@ -1496,6 +1501,7 @@ nnoremap <silent> <Leader>bm :Denite -default-action=narrow z<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
+nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
 nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>dg :DeniteCursorWord grep<CR>
 nnoremap <silent> <Leader>he :Denite help<CR>
