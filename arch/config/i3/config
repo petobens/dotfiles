@@ -193,9 +193,9 @@ for_window [con_mark="^(browser|cal)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(QuickTerm|numbers|ranger|Downloads|About Arch)$"] \
+for_window [title="^(QuickTerm|numbers|About Arch)$"] \
     $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(htop|Trash Can|OneDrive|Open Files)$"] \
+for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle
 for_window [class="^(feh|Skype|Matplotlib)$"] \
     $nexec $HOME/.config/i3/resize.py Right
