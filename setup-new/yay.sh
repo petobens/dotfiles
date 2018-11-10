@@ -175,6 +175,7 @@ fi
 
 # Apps
 $yay_cmd chromium
+$yay_cmd chromium-widevine
 $yay_cmd connman-gtk
 $yay_cmd cups
 $yay_cmd cups-pdf
