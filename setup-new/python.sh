@@ -14,6 +14,7 @@ pipx install ipython --verbose
 pipx install jupyter-core --verbose
 pipx install mycli --verbose
 pipx install pgcli --verbose
+pipx install raiseorlaunch --verbose
 pipx install vim-vint --verbose
 pipx install yamllint --verbose
 # TODO: Replace this once it's merged (and actually works)
