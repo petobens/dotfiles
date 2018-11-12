@@ -14,7 +14,9 @@ pipx install ipython --verbose
 pipx install jupyter-core --verbose
 pipx install mycli --verbose
 pipx install pgcli --verbose
-pipx install raiseorlaunch --verbose
+if type "i3" > /dev/null 2>&1; then
+    pipx install raiseorlaunch --verbose
+fi
 pipx install vim-vint --verbose
 pipx install yamllint --verbose
 # TODO: Replace this once it's merged (and actually works)
