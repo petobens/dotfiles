@@ -1991,7 +1991,7 @@ let g:neomake_sh_enabled_makers = ['shellcheck']
 " other specific filetype settings in ftplugin folder)
 augroup pl_neomake
     au!
-    au BufWritePost *.{vim,yaml} silent Neomake
+    au BufWritePost *.{vim,yaml,yml} silent Neomake
 augroup END
 
 " }}}
