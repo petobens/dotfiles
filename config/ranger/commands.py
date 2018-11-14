@@ -3,31 +3,29 @@ import sys
 import subprocess
 
 from ranger.api.commands import Command
+from ranger.ext.get_executables import get_executables
 
 
 class fzf_select(Command):
     """
     :fzf_select
 
-    Find a file using fzf.
+    Find a file or directory using fzf and fd.
 
     With a prefix argument select only directories.
-
-    See: https://github.com/junegunn/fzf
     """
 
     def execute(self):
-        if self.quantifier:
-            # match only directories
-            command = "find -L . \( -path '*/\.*' -o -fstype 'dev' -o " \
-                "-fstype 'proc' \) -prune -o -type d -print 2> /dev/null | " \
-                "sed 1d | cut -b3- | fzf +m"
+        fd_cmd = 'fd'
+        if fd_cmd not in get_executables():
+            self.fm.notify(f"Couldn't find {fd_cmd} on the PATH.", bad=True)
+            return
 
-        else:
-            # match files and directories
-            command = "find -L . \( -path '*/\.*' -o -fstype 'dev' -o " \
-                "-fstype 'proc' \) -prune -o -print 2> /dev/null | sed 1d | " \
-                "cut -b3- | fzf +m"
+        only_dirs = True if self.arg(1) else False
+        command = (
+            f"{fd_cmd}{' --type d' if only_dirs else ''} --hidden --follow "
+            "--exclude .git | fzf +m"
+        )
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, stderr = fzf.communicate()
@@ -54,10 +52,12 @@ class fzf_z(Command):
             z_sh = '/home/pedro/.local/bin/z.sh'
         if not os.path.isfile(z_sh) or z_sh is None:
             return
-        command = f'. {z_sh} &&  ' \
-            '_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse ' \
-            '--inline-info +s --tac --query "${*##-* }" ' \
+        command = (
+            f'. {z_sh} &&  '
+            '_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse '
+            '--inline-info +s --tac --query "${*##-* }" '
             '| sed "s/^[0-9,.]* *//"'
+        )
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, stderr = fzf.communicate()
@@ -82,14 +82,9 @@ class show_files_in_finder(Command):
                 for file in self.fm.thistab.get_selection()
             ]
         )
-        reveal_script = "tell application \"Finder\" to reveal {{{0}}}".format(
-            files
-        )
-        activate_script = "tell application \"Finder\" to set frontmost to " \
-            "true"
-        script = "osascript -e '{0}' -e '{1}'".format(
-            reveal_script, activate_script
-        )
+        reveal_script = "tell application \"Finder\" to reveal {{{0}}}".format(files)
+        activate_script = "tell application \"Finder\" to set frontmost to " "true"
+        script = "osascript -e '{0}' -e '{1}'".format(reveal_script, activate_script)
         self.fm.notify(script)
         subprocess.check_output(
             ["osascript", "-e", reveal_script, "-e", activate_script]
