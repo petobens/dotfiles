@@ -335,7 +335,7 @@ set showcmd
 
 " Make command line two lines high (we cannot set it to 1 because we get the
 " `press ENTER` message)
-set cmdheight=2
+set cmdheight=1
 " Reduce maximum height of the command line window (default is 7)
 set cmdwinheight=4
 
