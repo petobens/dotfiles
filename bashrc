@@ -355,8 +355,10 @@ alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc"'
 # enabled)
 alias cvpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
 '--background --authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
-alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh mjolnir'
-alias cvssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh)" ssh varas'
+alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
+'ssh mjolnir'
+alias cvssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/varas)" '\
+'ssh varas'
 alias cdb='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
 
