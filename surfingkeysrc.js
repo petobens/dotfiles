@@ -420,15 +420,26 @@ vmap('L', '$');
 vmap('H', '0');
 
 // }}}
-// Blacklisting {{{
+// Blacklisting and domain specific maps {{{
 
 // Pass through mode (toggle i.e disable Surfingkeys)
-// map(',pt', '<Alt-s>');  // Must one key stroke
+// map(',pt', '<Alt-s>');  // Must be one key stroke
 
-settings.blacklistPattern = /.*docs\.google\.com.*/i;
+// settings.blacklistPattern = /.*docs\.google\.com.*/i;
 
 mapkey(',pt', 'Enter PassThrough mode', function() {
     Normal.passThrough();
+});
+
+imapkey('<Alt-p>', 'Previous Tab', function () {
+    RUNTIME('previousTab');
+}, {
+    domain: /.*docs\.google\.com.*/i
+});
+imapkey('<Alt-n>', 'Next Tab', function () {
+    RUNTIME('nextTab');
+}, {
+    domain: /.*docs\.google\.com.*/i
 });
 
 // }}}
