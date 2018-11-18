@@ -45,18 +45,16 @@ pipx install yamllint --verbose
 
 
 # Install some missing libraries in each venv
-if type "pipx" > /dev/null 2>&1; then
-    pipx_home="$HOME/.local/pipx/venvs"
-    if [ -d "$pipx_home/jupyter-core" ]; then
-        echo "Installing jupyter notebook..."
-        "$pipx_home"/jupyter-core/bin/pip install jupyter
-    fi
-    if [ -d "$pipx_home/ipython" ]; then
-        echo "Installing pandas for ipython..."
-        "$pipx_home"/ipython/bin/pip install pandas
-    fi
-    if [ -d "$pipx_home/flake8" ]; then
-        echo "Installing bugbear for flake8..."
-        "$pipx_home"/flake8/bin/pip install flake8-bugbear
-    fi
+pipx_home="$HOME/.local/pipx/venvs"
+if [ -d "$pipx_home/jupyter-core" ]; then
+    echo "Installing jupyter notebook..."
+    "$pipx_home"/jupyter-core/bin/pip install jupyter
+fi
+if [ -d "$pipx_home/ipython" ]; then
+    echo "Installing pandas for ipython..."
+    "$pipx_home"/ipython/bin/pip install pandas
+fi
+if [ -d "$pipx_home/flake8" ]; then
+    echo "Installing bugbear for flake8..."
+    "$pipx_home"/flake8/bin/pip install flake8-bugbear
 fi
