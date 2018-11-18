@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+if type "pip3" > /dev/null 2>&1; then
+    echo -e "\033[1;34m--> Installing Python3 modules...\033[0m"
+    pip_install_cmd='pip3 install --user '
+    $pip_install_cmd cython
+    $pip_install_cmd jedi
+    $pip_install_cmd matplotlib
+    $pip_install_cmd mypy
+    $pip_install_cmd numpy
+    $pip_install_cmd pandas
+    $pip_install_cmd pyhive
+    $pip_install_cmd pynvim
+    $pip_install_cmd pytest-cov
+    $pip_install_cmd pytest
+    $pip_install_cmd requests
+    $pip_install_cmd scikit-learn
+    $pip_install_cmd scipy
+fi
 
 # Python binaries (can also be mostly installed with a package manager but we
 # do it with pipx to avoid dependency clash)
@@ -6,17 +23,19 @@ if ! type "pipx" > /dev/null 2>&1; then
     mkdir -p "$HOME"/.local/pipx/venvs
     curl https://raw.githubusercontent.com/cs01/pipx/master/get-pipx.py | python3
 fi
-
+echo -e "\033[1;34m--> Installing python binaries (with pipx)...\033[0m"
 pipx install --spec git+https://github.com/PyCQA/flake8 flake8 --verbose
 pipx install beautysh --verbose
 pipx install black --verbose
 pipx install ipython --verbose
 pipx install jupyter-core --verbose
 pipx install mycli --verbose
+pipx install neovim-remote --verbose
 pipx install pgcli --verbose
 if type "i3" > /dev/null 2>&1; then
     pipx install raiseorlaunch --verbose
 fi
+pipx install sqlparse --verbose
 pipx install vim-vint --verbose
 pipx install yamllint --verbose
 # TODO: Replace this once it's merged (and actually works)

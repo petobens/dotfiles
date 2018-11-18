@@ -80,8 +80,6 @@ fi
 
 # Neovim and tmux and more bash
 $yay_cmd neovim-git
-$yay_cmd python-neovim
-$yay_cmd neovim-remote
 $yay_cmd tmux
 $yay_cmd powerline
 $yay_cmd python-powerline-gitstatus

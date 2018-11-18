@@ -41,10 +41,10 @@ else
     base_pkg_dir='/usr'
 fi
 
-read -p $'\033[1mDo you want to install python binaries (y/n)? \033[0m' -n 1 -r
+read -p $'\033[1mDo you want to install python modules and binaries (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\033[1;34m-> Installing python binaries (with pipx)...\033[0m"
+    echo -e "\033[1;34m-> Installing python modules and binaries (with pipx)...\033[0m"
     . "$current_dir/python.sh"
 fi
 
@@ -53,19 +53,6 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo -e "\033[1;34m-> Installing Italics tmux terminfo ...\033[0m"
     tic "$parent_dir/tmux-xterm-256color-italic.terminfo"
-fi
-
-read -p $'\033[1mDo you want to install python modules (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\033[1;34m-> Installing Python3 modules...\033[0m"
-    pip3 install --user -r "$parent_dir"/python/requirements.txt
-    if [  -f "$base_pkg_dir"/bin/python2 ]; then
-        if type "pip2" > /dev/null 2>&1; then
-            echo -e "\033[1;34m->Installing Python2 modules...\033[0m"
-            pip2 install --user -r "$parent_dir"/python/requirements.txt
-        fi
-    fi
 fi
 
 if type "tlmgr" > /dev/null 2>&1; then
