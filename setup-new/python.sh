@@ -5,11 +5,11 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd cython
     $pip_install_cmd jedi
     $pip_install_cmd matplotlib
-    $pip_install_cmd mypy
     $pip_install_cmd numpy
     $pip_install_cmd pandas
-    $pip_install_cmd pyhive
-    $pip_install_cmd pynvim
+    if type "nvim" > /dev/null 2>&1; then
+        $pip_install_cmd pynvim
+    fi
     $pip_install_cmd pytest-cov
     $pip_install_cmd pytest
     $pip_install_cmd requests
@@ -30,6 +30,7 @@ pipx install black --verbose
 pipx install ipython --verbose
 pipx install jupyter-core --verbose
 pipx install mycli --verbose
+pipx install mypy --verbose
 pipx install neovim-remote --verbose
 pipx install pgcli --verbose
 if type "i3" > /dev/null 2>&1; then
