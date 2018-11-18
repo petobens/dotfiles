@@ -31,7 +31,9 @@ pipx install ipython --verbose
 pipx install jupyter-core --verbose
 pipx install mycli --verbose
 pipx install mypy --verbose
-pipx install neovim-remote --verbose
+if type "nvim" > /dev/null 2>&1; then
+    pipx install neovim-remote --verbose
+fi
 pipx install pgcli --verbose
 if type "i3" > /dev/null 2>&1; then
     pipx install raiseorlaunch --verbose
@@ -42,7 +44,6 @@ pipx install yamllint --verbose
 # TODO: Replace this once it's merged (and actually works)
 # See: https://github.com/dbcli/mssql-cli/pull/228
 # pipx install --spec git+https://github.com/cs01/mssql-cli@593d7f6516 mssql-cli --verbose
-
 
 # Install some missing libraries in each venv
 pipx_home="$HOME/.local/pipx/venvs"
