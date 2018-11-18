@@ -1636,22 +1636,17 @@ call deoplete#custom#source('ultisnips', 'rank', 1000)
 call deoplete#custom#source('ultisnips', 'min_pattern_length', 1)
 " Extend max candidate width in popup menu for buffer source
 call deoplete#custom#source('buffer', 'max_menu_width', 90)
-" Complete dictionary after one character, rank dict completion first and set
-" some keyword_patterns (via python3 regex)
-call deoplete#custom#source('dictionary', 'min_pattern_length', 1)
-call deoplete#custom#source('dictionary', 'rank', 1000)
-call deoplete#custom#source('dictionary', 'keyword_patterns', {
-            \ 'tex' : '\\?[a-zA-Z_]\w*',
-\})
-" Omni completion (for tex it requires vimtex plugin; to add commmand completion
-" include '|\w*' in the regex)
+" Omni completion
 call deoplete#custom#var('omni', 'input_patterns', {
         \ 'tex' : '\\(?:'
             \ .  '\w*cite\w*(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
             \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
             \ . '|(?:include(?:only)?|input)\s*\{[^}]*'
-            \ . '|usepackage(\s*\[[^]]*\])?\s*\{[^}]*'
+            \ . '|(usepackage|RequirePackage|PassOptionsToPackage)(\s*\[[^]]*\])?\s*\{[^}]*'
             \ . '|documentclass(\s*\[[^]]*\])?\s*\{[^}]*'
+            \ . '|begin(\s*\[[^]]*\])?\s*\{[^}]*'
+            \ . '|end(\s*\[[^]]*\])?\s*\{[^}]*'
+            \ . '|\w*'
             \ .')',
         \ 'gitcommit' : '((?:F|f)ix(?:es)?\s|'
             \ . '(?:C|c)lose(?:s)?\s|(?:R|r)esolve(?:s)?\s|(?:S|s)ee\s)\S*',
@@ -2519,15 +2514,20 @@ endfunction
 " Vimtex {{{
 
 " TOC and labels
-let g:vimtex_index_split_pos = 'vert topleft'
-let g:vimtex_index_split_width = 40
-let g:vimtex_toc_fold = 1
-let g:vimtex_toc_fold_levels = 1
-let g:vimtex_index_show_help = 0
-let g:vimtex_index_resize = 0
+let g:vimtex_toc_config = {
+    \ 'split_pos': 'vert topleft',
+    \ 'split_width': 40,
+    \ 'mode': 1,
+    \ 'fold_enable': 1,
+    \ 'fold_level_start': -1,
+    \ 'show_help': 0,
+    \ 'resize': 0,
+    \ 'show_numbers': 1,
+    \ 'layer_status': {'label': 0, 'include': 0, 'todo': 0, 'content': 1},
+    \ 'hide_line_numbers': 0,
+    \ 'tocdepth': 1,
+\}
 let g:vimtex_toc_show_preamble = 0
-let g:vimtex_toc_secnumdepth = 1
-let g:vimtex_index_hide_line_numbers = 0
 " Folding
 let g:vimtex_fold_enabled = 0
 " Indendation
@@ -2554,8 +2554,6 @@ augroup ps_vimlatex
     au!
     au Filetype tex nmap <silent> <buffer> <Leader>tc
                 \ <Plug>(vimtex-toc-open)
-    au Filetype tex nnoremap <silent> <buffer> <Leader>ll :Denite
-                \ -auto-preview -vertical-preview vimtex_labels<CR>
     " Note the following can be called directly with cse, tse and tsd
     au Filetype tex nmap <silent> <buffer> <Leader>ce <Plug>(vimtex-env-change)
     au Filetype tex nmap <silent> <buffer> <Leader>ts
