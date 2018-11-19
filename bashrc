@@ -93,7 +93,7 @@ fi
 
 # Set editor to nvim and use it as a manpager
 export EDITOR=nvim
-export MANPAGER="nvim -c 'set ft=man' -"
+export MANPAGER='nvim +Man!'
 
 # Set shell to latest bash (check "$(command -v bash)")
 if [ -f "$base_pkg_dir/bin/bash" ]; then
