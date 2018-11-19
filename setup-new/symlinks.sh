@@ -33,7 +33,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "gln" > /dev/null 2>&1; then
         ln_cmd='gln'
     else
-        echo "Coreutils ln (gln) not found!" 1>&2
+        echo "Coreutils ln (gln) command not found!" 1>&2
         exit 1
     fi
 fi

@@ -506,7 +506,7 @@ sys_update_all() {
         pipx upgrade-all
     fi
     if type "python3" > /dev/null 2>&1; then
-        echo -e "\033[1;34m\n-> Updating Python...\033[0m"
+        echo -e "\033[1;34m\n-> Updating Python user modules...\033[0m"
         outdated="$(pip list --user --outdated)"
         if [ ! -z "$outdated" ]; then
             echo "$outdated"
@@ -522,16 +522,16 @@ sys_update_all() {
         fi
     fi
     if type "R" > /dev/null 2>&1; then
-        echo -e "\033[1;34m\n-> Updating R...\033[0m"
+        echo -e "\033[1;34m\n-> Updating R packages...\033[0m"
         R --slave --no-save --no-restore -e \
 'update.packages(ask=TRUE, checkBuilt=TRUE, lib.loc=Sys.getenv("R_LIBS_USER"))'
     fi
     if type "tlmgr" > /dev/null 2>&1; then
-        echo -e "\033[1;34m\n-> Updating Latex...\033[0m"
+        echo -e "\033[1;34m\n-> Updating Latex packages...\033[0m"
         sudo tlmgr update --all
     fi
     if type "npm" > /dev/null 2>&1; then
-        echo -e "\033[1;34m\n-> Updating Node...\033[0m"
+        echo -e "\033[1;34m\n-> Updating Node packages...\033[0m"
         npm update -g
     fi
 }
