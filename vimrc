@@ -132,6 +132,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('tommcdo/vim-fubitive')
     call dein#add('shumphrey/fugitive-gitlab.vim')
 
+    " Markdown
+    call dein#add('gabrielelana/vim-markdown', {'on_ft' : 'markdown'})
+
     " SQL (and database related)
     call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
     call dein#add('tpope/vim-dadbod')
@@ -1072,6 +1075,7 @@ augroup ft_markdown
     au!
     au BufNewFile,BufReadPost *.md set filetype=markdown
     au FileType markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    au Filetype markdown setlocal textwidth=100
 augroup END
 
 " }}}
@@ -2509,6 +2513,18 @@ function! s:vimfiler_settings()
     " Bookmarks (reuses vimfiler buffer)
     nmap <buffer>b <Plug>(vimfiler_cd_input_directory)<C-u>bookmark:/<CR>
 endfunction
+
+" }}}
+" vim-markdown {{{
+
+let g:markdown_include_jekyll_support = 0
+let g:markdown_enable_folding = 1
+let g:markdown_enable_mappings = 0
+let g:markdown_enable_insert_mode_mappings = 0
+let g:markdown_enable_insert_mode_leader_mappings = 0
+let g:markdown_enable_spell_checking = 1
+let g:markdown_enable_input_abbreviations = 0
+let g:markdown_enable_conceal = 0
 
 " }}}
 " Vimtex {{{

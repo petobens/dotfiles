@@ -18,11 +18,7 @@ let s:is_linux = !s:is_win && !s:is_mac
 " Options {{{
 
 " Spell checking
-setlocal spell
-
-" Folding
-setlocal foldmethod=expr
-setlocal foldexpr=MarkdownLevel()
+" setlocal spell
 
 " }}}
 " Compile preview {{{
@@ -125,20 +121,6 @@ function! s:ViewPreview(extension)
 
     " Restore previous working directory
     execute 'lcd ' . save_pwd
-endfunction
-
-" }}}
-" Folding {{{
-
-" TODO: Remove this function once tpope version of markdown files that include
-" folding support reach Vim ftplugin
-function! MarkdownLevel()
-    let h = matchstr(getline(v:lnum), '^#\+')
-    if empty(h)
-        return '='
-    else
-        return '>' . len(h)
-    endif
 endfunction
 
 " }}}
