@@ -189,8 +189,8 @@ else
     fi
     if type "connmanctl" > /dev/null 2>&1; then
         sudo mkdir -p "/etc/connman"
-        sudo $ln_cmd -fTs "$dotfiles_dir/arch/config/connman.conf" "/etc/connman/main.conf"
-        echo Created /etc/connman/main.conf symlink
+        sudo cp "$dotfiles_dir/arch/config/connman.conf" "/etc/connman/main.conf"
+        echo Copied connman config to /etc/connman/main.conf
     fi
     if [ -d "$dotfiles_dir/arch/config/gtk" ]; then
         $ln_cmd -fTs "$dotfiles_dir/arch/config/gtk/gtk-3.0" "$HOME/.config/gtk-3.0"
