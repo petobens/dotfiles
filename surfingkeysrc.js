@@ -109,7 +109,8 @@ const qmarksMapKey = function(prefix, urls) {
 const qmarksUrls = {
     b: 'www.bitbucket.com',
     c: 'www.utdt.edu/campusvirtual',
-    d: 'https://drive.google.com/drive/my-drive',
+    // d: 'https://drive.google.com/drive/my-drive',
+    d: 'https://drive.google.com/drive/u/1/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
     e: 'https://yts.am/browse-movies',
     f: 'www.facebook.com',
     g: 'www.github.com',
@@ -425,8 +426,8 @@ vmap('H', '0');
 // Pass through mode (toggle i.e disable Surfingkeys)
 // map(',pt', '<Alt-s>');  // Must be one key stroke
 
+// Note: if we blacklist we loose all mappings
 // settings.blacklistPattern = /.*docs\.google\.com.*/i;
-
 mapkey(',pt', 'Enter PassThrough mode', function() {
     Normal.passThrough();
 });
