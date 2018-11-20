@@ -177,10 +177,13 @@ $yay_cmd chromium-widevine
 $yay_cmd connman-gtk
 $yay_cmd cups
 $yay_cmd cups-pdf
+$yay_cmd firefox
+$yay_cmd flashplugin  # flash player for firefox
 $yay_cmd hplip-plugin
 $yay_cmd libreoffice-fresh
 $yay_cmd onedrive-abraunegg-git
 $yay_cmd peek
+$yay_cmd pepper-flash  # flash player for chromimum
 $yay_cmd ranger-git
 $yay_cmd slack-desktop
 $yay_cmd skypeforlinux-preview-bin
