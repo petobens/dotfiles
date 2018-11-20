@@ -361,7 +361,7 @@ alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
 'ssh tcal'
 alias codb='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
-alias cpdb='PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
+alias cpdb=' PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
 '-h tcalt-01.claro.amx -p 5432 -U airflow -d delver'
 
 # AUSA
