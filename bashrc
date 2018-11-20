@@ -359,8 +359,10 @@ alias cvssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/varas)" '\
 'ssh varas'
 alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
 'ssh tcal'
-alias cdb='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
+alias codb='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
+alias cpdb='PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
+'-h tcalt-01.claro.amx -p 5432 -U airflow -d delver'
 
 # AUSA
 alias avpn='sudo vpnc ausa_vpn.conf && '\
