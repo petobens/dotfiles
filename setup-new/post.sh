@@ -100,4 +100,10 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
         sudo systemctl enable sleeplock.service
         sudo systemctl start sleeplock.service
     fi
+
+    # Make us owner of postgresql dir
+    if [ -d "/var/lib/postgres" ]; then
+        echo -e "\033[1;34m--> Setting permissions on postgresql dirs...\033[0m"
+        sudo chown -R $USER /var/lib/postgres/
+    fi
 fi
