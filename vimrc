@@ -1675,9 +1675,9 @@ inoremap <expr> <C-g> deoplete#undo_completion()
 inoremap <silent><expr><CR> pumvisible() ?
     \ (len(keys(UltiSnips#SnippetsInCurrentScope())) > 0 ?
     \ "\<C-y>\<C-R>=UltiSnips#ExpandSnippet()\<CR>" : "\<C-y>") : "\<CR>"
-" Move in preview window with tab
+" Move in preview window with tab (and map shift-tab to detab)
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<C-d>"
 
 " Edit dictionary files
 function! s:Edit_Dict()
