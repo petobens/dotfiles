@@ -1075,7 +1075,7 @@ augroup ft_markdown
     au!
     au BufNewFile,BufReadPost *.md set filetype=markdown
     au FileType markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    au Filetype markdown setlocal textwidth=90
+    au Filetype markdown setlocal textwidth=90 nolinebreak
 augroup END
 
 " }}}
