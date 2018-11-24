@@ -156,7 +156,6 @@ $yay_cmd sshpass
 $yay_cmd stoken-git
 $yay_cmd the_silver_searcher
 $yay_cmd tk
-$yay_cmd trash-cli
 $yay_cmd tree
 $yay_cmd unimatrix
 $yay_cmd universal-ctags-git

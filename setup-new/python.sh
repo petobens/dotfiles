@@ -13,6 +13,7 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd pytest-cov
     $pip_install_cmd pytest
     $pip_install_cmd requests
+    $pip_install_cmd Send2Trash
     $pip_install_cmd scikit-learn
     $pip_install_cmd scipy
 fi
@@ -40,6 +41,7 @@ if type "i3" > /dev/null 2>&1; then
     pipx install raiseorlaunch --verbose
 fi
 pipx install sqlparse --verbose
+pipx install trash-cli --verbose
 pipx install vim-vint --verbose
 pipx install yamllint --verbose
 # TODO: Replace this once it's merged (and actually works)
