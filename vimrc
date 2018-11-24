@@ -1387,10 +1387,15 @@ function! s:defx_settings()
     " Move up a directory
     nnoremap <silent><buffer><expr> u defx#do_action('cd', ['..'])
     " Home directory
-    nnoremap <silent><buffer><expr> h  defx#do_action('cd')
+    nnoremap <silent><buffer><expr> h defx#do_action('cd')
     " Mark a file
     nnoremap <silent><buffer><expr> <Space>
         \ defx#do_action('toggle_select') . 'j'
+    " Open in external file browser
+    if s:is_linux && executable('ranger')
+        nmap <silent><buffer><expr>ge defx#do_action('change_vim_cwd',
+                    \ "call <SID>TmuxSplitCmd('ranger')")
+    endif
 endfunction
 
 " }}}
@@ -2508,8 +2513,17 @@ function! s:vimfiler_settings()
     nmap <buffer> <C-l> <C-w>l
     nmap <buffer> <C-r> <Plug>(vimfiler_redraw_screen)
     " Open external filer at current direction
-    nmap <buffer> ge
-    \ <Plug>(vimfiler_cd_vim_current_dir)<Plug>(vimfiler_execute_external_filer)
+    if !s:is_linux
+        nmap <buffer> ge <Plug>(vimfiler_cd_vim_current_dir)
+                    \ <Plug>(vimfiler_execute_external_filer)
+    else
+        " Note: we cannot simply run `!xdg-open`.
+        " See https://github.com/neovim/neovim/issues/1496
+        if executable('ranger')
+            nmap <buffer>ge <Plug>(vimfiler_cd_vim_current_dir)
+                        \ <C-u>:call <SID>TmuxSplitCmd('ranger')<CR>
+        endif
+    endif
     " Bookmarks (reuses vimfiler buffer)
     nmap <buffer>b <Plug>(vimfiler_cd_input_directory)<C-u>bookmark:/<CR>
 endfunction
@@ -2818,6 +2832,16 @@ endfunction
 
 nnoremap <leader>? :call <SID>goog(expand("<cWORD>"), 0)<cr>
 nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
+
+" }}}
+" Tmux run in split window {{{
+
+function! s:TmuxSplitCmd(cmd)
+    if empty('$TMUX')
+        return
+    endif
+   silent execute '!tmux split-window -p 30 -c '. getcwd() . ' ' . a:cmd
+endfunction
 
 " }}}
 
