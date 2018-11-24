@@ -44,9 +44,9 @@ pipx install sqlparse --verbose
 pipx install trash-cli --verbose
 pipx install vim-vint --verbose
 pipx install yamllint --verbose
-# TODO: Replace this once it's merged (and actually works)
-# See: https://github.com/dbcli/mssql-cli/pull/228
-# pipx install --spec git+https://github.com/cs01/mssql-cli@593d7f6516 mssql-cli --verbose
+# TODO: Replace this once there is a new (fixed) mssql-cli release
+# See https://github.com/dbcli/mssql-cli/pull/229
+# pipx install --spec git+https://github.com/cs01/mssql-cli mssql-cli --verbose
 
 # Install some missing libraries in each venv
 pipx_home="$HOME/.local/pipx/venvs"
