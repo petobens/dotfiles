@@ -27,6 +27,7 @@ echo -e "\033[1;34m--> Installing python binaries (with pipx)...\033[0m"
 pipx install --spec git+https://github.com/PyCQA/flake8 flake8 --verbose
 pipx install beautysh --verbose
 pipx install black --verbose
+pipx install ranger-fm --verbose
 pipx install ipython --verbose
 pipx install jupyter-core --verbose
 pipx install mycli --verbose
@@ -50,6 +51,11 @@ pipx_home="$HOME/.local/pipx/venvs"
 if [ -d "$pipx_home/jupyter-core" ]; then
     echo "Installing jupyter notebook..."
     "$pipx_home"/jupyter-core/bin/pip install jupyter
+fi
+if [ -d "$pipx_home/ranger-fm" ]; then
+    echo "Adding desktop entry for ranger-fm..."
+    xdg-desktop-menu install --novendor "$pipx_home"/ranger-fm/share/applications/ranger.desktop
+    echo "xdg-mime query default inode/directory is: $(xdg-mime query default inode/directory)"
 fi
 if [ -d "$pipx_home/ipython" ]; then
     echo "Installing pandas for ipython..."

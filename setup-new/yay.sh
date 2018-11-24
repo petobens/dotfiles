@@ -184,7 +184,6 @@ $yay_cmd libreoffice-fresh
 $yay_cmd onedrive-abraunegg-git
 $yay_cmd peek
 $yay_cmd pepper-flash  # flash player for chromimum
-$yay_cmd ranger-git
 $yay_cmd slack-desktop
 $yay_cmd skypeforlinux-preview-bin
 $yay_cmd spotify
