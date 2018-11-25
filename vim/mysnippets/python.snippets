@@ -213,6 +213,8 @@ endsnippet
 
 # Add upper directory to path
 snippet iu "Import upper directory" b
+import sys
+import os
 sys.path.append(
 	os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 )$0
@@ -274,6 +276,10 @@ endsnippet
 
 snippet nq "Don't lint" w
 # noqa$0
+endsnippet
+
+snippet iss "iSort skip" w
+# isort:skip$0
 endsnippet
 
 # **}

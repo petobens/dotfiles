@@ -28,8 +28,8 @@ echo -e "\033[1;34m--> Installing python binaries (with pipx)...\033[0m"
 pipx install --spec git+https://github.com/PyCQA/flake8 flake8 --verbose
 pipx install beautysh --verbose
 pipx install black --verbose
-pipx install ranger-fm --verbose
 pipx install ipython --verbose
+pipx install isort --spec git+https://github.com/timothycrosley/isort@develop --verbose
 pipx install jupyter-core --verbose
 pipx install mycli --verbose
 pipx install mypy --verbose
@@ -40,6 +40,7 @@ pipx install pgcli --verbose
 if type "i3" > /dev/null 2>&1; then
     pipx install raiseorlaunch --verbose
 fi
+pipx install ranger-fm --verbose
 pipx install sqlparse --verbose
 pipx install trash-cli --verbose
 pipx install vim-vint --verbose

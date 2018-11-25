@@ -449,6 +449,40 @@ augroup END
 " }}}
 " Formatting {{{
 
+function! s:RuniSort(...)
+    " Don't run isort if it is not installed
+    if !executable('isort')
+        echoerr 'isort is not installed or not in your path.'
+        return
+    endif
+    " Don't run isort if there is only one empty line or we are in a Gdiff
+    " (when file path includes .git)
+    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
+        return
+    endif
+
+    " Change shellredir to avoid inserting error output into the buffer (i.e
+    " don't include stderr in output buffer)
+    let shrd = &shellredir
+    set shellredir=>%s
+    let old_formatprg = &l:formatprg
+    " TODO: Fix comments between imports with black8
+    let &l:formatprg = "isort --trailing-comma --multi-line 3 "
+                \. "--line-width 88 -"
+    let save_cursor = getcurpos()
+    if a:0 && a:1 ==# 'visual'
+        execute 'silent! normal! gvgq'
+    else
+        execute 'silent! normal! gggqG'
+    endif
+    if v:shell_error == 1
+        silent undo
+    endif
+    call setpos('.', save_cursor)
+    let &shellredir = shrd
+    let &l:formatprg = old_formatprg
+endfunction
+
 function! s:RunBlack(...)
     " Don't run black if it is not installed
     if !executable('black')
@@ -461,11 +495,9 @@ function! s:RunBlack(...)
         return
     endif
 
-    " Try first to sort imports if full run (requires impsort.vim plugin)
+    " Try first to sort imports if full run
     if a:0 == 0
-        if exists(':ImpSort')
-            ImpSort
-        endif
+        call s:RuniSort()
     endif
 
     " Change shellredir to avoid inserting error output into the buffer (i.e
@@ -1176,9 +1208,7 @@ vnoremap <silent> <buffer> <F3> :EvalVisualPyForeground python2<CR>
 
 " Linting, formatting and import sorting
 nnoremap <silent> <buffer> <Leader>rl :Neomake<CR>
-if exists(':ImpSort')
-    nnoremap <buffer> <silent> <Leader>is :ImpSort<CR>
-endif
+nnoremap <buffer> <silent> <Leader>is :call <SID>RuniSort()<CR>
 " Note: The visual map messes up proper comment indentation/formatting:
 vnoremap <silent> <buffer> Q :call <SID>RunBlack('visual')<CR>
 nnoremap <silent> <buffer> <Leader>bf :call <SID>RunBlack()<CR>
