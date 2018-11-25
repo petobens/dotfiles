@@ -93,11 +93,6 @@ font:
     x: 0
     y: 0
 
-  # Scale the font size based on the monitor's DPI. This will lead to bigger
-  # text on HiDPI screens and make reading text a little easier.
-  # Note: we disable this and use WINIT_HIDPI_FACTOR for fixed scaling
-  scale_with_dpi: false
-
 # Should display the render timer
 render_timer: false
 
