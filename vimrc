@@ -1391,6 +1391,9 @@ function! s:defx_settings()
     " Mark a file
     nnoremap <silent><buffer><expr> <Space>
         \ defx#do_action('toggle_select') . 'j'
+    " Toggle hidden files
+    nnoremap <silent><buffer><expr> <Leader>th
+        \ defx#do_action('toggle_ignored_files')
     " Open in external file browser
     if s:is_linux && executable('ranger')
         nmap <silent><buffer><expr>ge defx#do_action('change_vim_cwd',
