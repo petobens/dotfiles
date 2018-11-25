@@ -466,7 +466,6 @@ function! s:RuniSort(...)
     let shrd = &shellredir
     set shellredir=>%s
     let old_formatprg = &l:formatprg
-    " TODO: Fix comments between imports with black8
     let &l:formatprg = "isort --trailing-comma --multi-line 3 "
                 \. "--line-width 88 -"
     let save_cursor = getcurpos()
