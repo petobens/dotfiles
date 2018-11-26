@@ -1396,8 +1396,9 @@ function! s:defx_settings()
         \ defx#do_action('toggle_ignored_files')
     " Open in external file browser
     if s:is_linux && executable('ranger')
+        command! -nargs=1 TmuxRanger call s:TmuxSplitCmd('ranger', <q-args>)
         nmap <silent><buffer><expr>ge defx#do_action('change_vim_cwd',
-                    \ "call <SID>TmuxSplitCmd('ranger')")
+                    \ "TmuxRanger")
     endif
 endfunction
 
@@ -2524,7 +2525,7 @@ function! s:vimfiler_settings()
         " See https://github.com/neovim/neovim/issues/1496
         if executable('ranger')
             nmap <buffer>ge <Plug>(vimfiler_cd_vim_current_dir)
-                        \ <C-u>:call <SID>TmuxSplitCmd('ranger')<CR>
+                        \ <C-u>:call <SID>TmuxSplitCmd('ranger', '')<CR>
         endif
     endif
     " Bookmarks (reuses vimfiler buffer)
@@ -2839,11 +2840,16 @@ nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
 " }}}
 " Tmux run in split window {{{
 
-function! s:TmuxSplitCmd(cmd)
+function! s:TmuxSplitCmd(cmd, cwd)
     if empty('$TMUX')
         return
     endif
-   silent execute '!tmux split-window -p 30 -c '. getcwd() . ' ' . a:cmd
+    if a:cwd == ''
+        let cwd = getcwd()
+    else
+        let cwd = a:cwd
+    endif
+   silent execute '!tmux split-window -p 30 -c '. cwd . ' ' . a:cmd
 endfunction
 
 " }}}
