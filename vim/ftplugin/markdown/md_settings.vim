@@ -100,6 +100,11 @@ function! s:ViewPreview(extension)
         return
     endif
 
+    let bang_command = '! '
+    if exists(':Dispatch')
+        let bang_command = 'Start! '
+    endif
+
     " Try to open it
     if s:is_win
         if a:extension ==# 'pdf'
@@ -117,6 +122,12 @@ function! s:ViewPreview(extension)
         execute 'silent! !' . open_cmd . '-a Skim ' . preview_file
         " We need to redraw screen here!
         redraw!
+    else
+        if !executable('zathura')
+            echoerr 'zathura is not installed or not in your path.'
+            return
+        endif
+            execute 'silent! ' . bang_command . 'zathura ' . preview_file
     endif
 
     " Restore previous working directory
