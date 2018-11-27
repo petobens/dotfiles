@@ -133,7 +133,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('shumphrey/fugitive-gitlab.vim')
 
     " Markdown
-    call dein#add('gabrielelana/vim-markdown', {'on_ft' : 'markdown'})
+    call dein#add('plasticboy/vim-markdown', {'on_ft' : 'markdown'})
 
     " SQL (and database related)
     call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
@@ -1075,7 +1075,7 @@ augroup ft_markdown
     au!
     au BufNewFile,BufReadPost *.md set filetype=markdown
     au FileType markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    au Filetype markdown setlocal textwidth=90 nolinebreak
+    au Filetype markdown setlocal textwidth=90 nolinebreak spell
 augroup END
 
 " }}}
@@ -1325,6 +1325,13 @@ augroup END
 let g:one_allow_italics = 1  " use italics with onedarkish theme
 colorscheme onedarkish  " alternatives are heraldish and onedarkish
 let g:airline_theme = g:colors_name
+
+" Find color (syntax highlighting) group under the cursor
+function! s:ColorGroup()
+    let l:s = synID(line('.'), col('.'), 1)
+    echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+endfun
+nnoremap <silent><Leader>cg :call <SID>ColorGroup()<CR>
 
 " }}}
 " Csv {{{
@@ -2537,12 +2544,15 @@ endfunction
 " }}}
 " vim-markdown {{{
 
-let g:markdown_include_jekyll_support = 0
-let g:markdown_enable_folding = 1
-let g:markdown_enable_mappings = 0
-let g:markdown_enable_spell_checking = 1
-let g:markdown_enable_input_abbreviations = 0
-let g:markdown_enable_conceal = 0
+let g:vim_markdown_folding_style_pythonic = 1
+let g:vim_markdown_override_foldtext = 0
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_auto_insert_bullets = 1
+
+augroup ps_vimmarkdown
+    au!
+    au Filetype markdown nmap <silent> <buffer> <Leader>tc :Toc<CR>
+augroup END
 
 " }}}
 " Vimtex {{{
