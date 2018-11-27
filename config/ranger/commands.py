@@ -1,6 +1,7 @@
 import os
-import sys
 import subprocess
+import sys
+from functools import partial
 
 from ranger.api.commands import Command
 from ranger.ext.get_executables import get_executables
@@ -89,3 +90,29 @@ class show_files_in_finder(Command):
         subprocess.check_output(
             ["osascript", "-e", reveal_script, "-e", activate_script]
         )
+
+
+class trash_with_confirmation(Command):
+    def execute(self):
+        fd_cmd = 'trash-put'
+        if fd_cmd not in get_executables():
+            self.fm.notify(f"Couldn't find {fd_cmd} on the PATH.", bad=True)
+            return
+
+        if self.rest(1):
+            self.fm.notify(f"Arg: {self.rest(1)}", bad=True)
+            file = self.rest(1)
+        else:
+            self.fm.notify("No file selected for deletion", bad=True)
+            return
+        self.fm.ui.console.ask(
+            f"Confirm deletion of: {file} (y/N)",
+            partial(self._question_callback, file),
+            ('n', 'N', 'y', 'Y'),
+        )
+
+    def _question_callback(self, file, answer):
+        if answer == 'y' or answer == 'Y':
+            cmd = f'trash-put {file}'
+            trash_cli = self.fm.execute_command(cmd, stdout=subprocess.PIPE)
+            stdout, stderr = trash_cli.communicate()
