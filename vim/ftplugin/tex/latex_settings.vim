@@ -516,13 +516,13 @@ function! s:ForwardInverseSearch(direction)
                 echoerr 'zathura is not installed or not in your path.'
                 return
             endif
+            let viewer = 'silent! ' . bang_command . 'zathura'
+            let forward = ' --synctex-forward ' . line('.') . ':' . col('.')
+                \ . ':' . expand('%:p') . ' ' . pdf_file
+            " Inverse search is defined in zathura config file (use
+            " FIXME: Works on spawned zathura instance and not current tex file
+            let inverse = ' ' . pdf_file
         endif
-        let viewer = 'silent! ' . bang_command . 'zathura'
-        let forward = ' --synctex-forward ' . line('.') . ':' . col('.') . ':' .
-            \ expand('%:p') . ' ' . pdf_file
-        " Inverse search is defined in zathura config file (use
-        " FIXME: Works on spawned zathura instance and not current tex file
-        let inverse = ' ' . pdf_file
     endif
 
     if a:direction ==# 'inv'
