@@ -1177,6 +1177,7 @@ augroup ft_sql
     au Filetype sql setlocal commentstring=--%s
     au Filetype sql setlocal shiftwidth=2 tabstop=2 softtabstop=2
     au BufNewFile,BufReadPost sqlplus_login set filetype=sql
+    au BufNewFile,BufReadPost *.{pgsql,mssql,mysql} set filetype=sql
     " Add highlighting of some keywords
     au Filetype sql syn keyword sqlKeyword INNER RIGHT LEFT OUTER JOIN OVER
                 \ PARTITION

@@ -120,6 +120,11 @@ if type "htmlhint" > /dev/null 2>&1; then
 fi
 
 # Terminal programs
+if type "less" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/lesskey" "$HOME/.lesskey"
+    echo Created .lesskey symlink. Running lesskey executable to generate .less binary file...
+    lesskey
+fi
 if type "ssh" > /dev/null 2>&1; then
     if [ -f "$HOME"/OneDrive/arch/ssh/config ]; then
         sudo mkdir -p "$HOME/.ssh"
@@ -141,8 +146,18 @@ if type "ranger" > /dev/null 2>&1; then
 fi
 if type "sqlplus" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/sqlplus"
-    sudo $ln_cmd -fTs "$dotfiles_dir/sqlplus_login" "$HOME/.config/sqlplus/login.sql"
-    echo Created "$HOME/.config/sqlplus/login.sql" symlink
+    sudo $ln_cmd -fTs "$dotfiles_dir/dbs/sqlplus_login" "$HOME/.config/sqlplus/login.sql"
+    echo Created "$.config/sqlplus/login.sql" symlink
+fi
+if type "pgcli" > /dev/null 2>&1; then
+    sudo mkdir -p "$HOME/.config/pgcli"
+    sudo $ln_cmd -fTs "$dotfiles_dir/dbs/pgcli_config" "$HOME/.config/pgcli/config"
+    echo Created ".config/pgcli/config" symlink
+fi
+if type "mssql-cli" > /dev/null 2>&1; then
+    sudo mkdir -p "$HOME/.config/mssqlcli"
+    sudo $ln_cmd -fTs "$dotfiles_dir/dbs/mssqlcli_config" "$HOME/.config/mssqlcli/config"
+    echo Created ".config/mssqlcli/config" symlink
 fi
 
 # OS dependent
