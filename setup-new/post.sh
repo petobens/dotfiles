@@ -6,7 +6,7 @@ sudo chsh -s "$(command -v bash)"
 
 # Alacritty
 if type "cargo" > /dev/null 2>&1; then
-    echo -e "\033[1;34m--> Installing Alacritty...\033[0m"
+    echo -e "\\033[1;34m--> Installing Alacritty...\\033[0m"
     git clone https://github.com/jwilm/alacritty.git
     (
         cd alacritty || exit
@@ -25,7 +25,7 @@ fi
 
 # Mongo db improvements
 if type "mongo" > /dev/null 2>&1; then
-    echo -e "\033[1;34m--> Installing mongo-hacker...\033[0m"
+    echo -e "\\033[1;34m--> Installing mongo-hacker...\\033[0m"
     git clone https://github.com/jwilm/alacritty.git
     git clone https://github.com/TylerBrock/mongo-hacker
     (
@@ -37,7 +37,7 @@ fi
 
 # Install ranger plugins and scope.sh executable
 if type "ranger" > /dev/null 2>&1; then
-    echo -e "\033[1;34m--> Installing ranger devicons...\033[0m"
+    echo -e "\\033[1;34m--> Installing ranger devicons...\\033[0m"
     git clone https://github.com/alexanderjeurissen/ranger_devicons
     (
         cd ranger_devicons || exit
@@ -63,7 +63,7 @@ fi
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     # Create XDG directories
     if type "xdg-user-dirs-update" > /dev/null 2>&1; then
-        echo -e "\033[1;34m--> Creating missing XDG directories...\033[0m"
+        echo -e "\\033[1;34m--> Creating missing XDG directories...\\033[0m"
         dirs=("Desktop" "Documents" "Downloads" "Music" "Pictures" "Videos"
         "Public" "Templates")
         for dir in "${dirs[@]}"; do
@@ -78,7 +78,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
 
     # Set some default apps on Linux
     if type "xdg-mime" > /dev/null 2>&1; then
-        echo -e "\033[1;34m--> Setting default apps for specific filetypes...\033[0m"
+        echo -e "\\033[1;34m--> Setting default apps for specific filetypes...\\033[0m"
         if type "zathura" > /dev/null 2>&1; then
             xdg-mime default org.pwmt.zathura-pdf-mupdf.desktop application/pdf
         fi
@@ -89,14 +89,14 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
 
     # Manage docker as non-root
     if type "docker" > /dev/null 2>&1; then
-        echo -e "\033[1;34m--> Managing docker as non-root...\033[0m"
+        echo -e "\\033[1;34m--> Managing docker as non-root...\\033[0m"
         sudo groupadd docker
         sudo usermod -aG docker "$USER"
     fi
 
     # Enable some services
     if [ -f /etc/systemd/system/sleeplock.service ]; then
-        echo -e "\033[1;34m--> Enabling some systemd services...\033[0m"
+        echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
         sudo systemctl enable sleeplock.service
         sudo systemctl start sleeplock.service
     fi

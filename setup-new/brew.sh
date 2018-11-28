@@ -3,7 +3,7 @@
 if ! type "brew" > /dev/null 2>&1; then
     brew_prefix='Home'
     brew_dir='/usr/local'
-    echo -e "\033[1;34m--> Installing brew....\033[0m"
+    echo -e "\\033[1;34m--> Installing brew....\\033[0m"
     ruby -e "$(curl -fsSl 'https://raw.githubusercontent.com/'$brew_prefix'brew/install/master/install')"
     export PATH="$brew_dir/bin:$brew_dir/sbin:$PATH"
 else
@@ -11,7 +11,7 @@ else
 fi
 
 # Use latest homebrew and update any already installed formulae
-echo -e "\033[1;34m-->Updating Brew...\033[0m"
+echo -e "\\033[1;34m-->Updating Brew...\\033[0m"
 brew update && brew upgrade
 
 # Fonts

@@ -6,7 +6,7 @@
 # `brew cask reinstall basictex`)
 
 # Install mybibformat style
-echo -e "\033[1;34m--> Installing mybibformat biblatex style...\033[0m"
+echo -e "\\033[1;34m--> Installing mybibformat biblatex style...\\033[0m"
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     rm -rf ~/Library/texmf
     mkdir -p ~/Library/texmf

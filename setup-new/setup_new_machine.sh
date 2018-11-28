@@ -13,7 +13,7 @@ parent_dir="$(dirname "$current_dir")"
 # We need xcode command tools on Mac
 if [[  "$OSTYPE" == 'darwin'* ]]; then
     if ! xcode-select --print-path > /dev/null 2>&1; then
-        echo -e "\033[1;34m-> Installing Xcode Command Line Tools...\033[0m"
+        echo -e "\\033[1;34m-> Installing Xcode Command Line Tools...\\033[0m"
         xcode-select --install &> /dev/null
         # Wait until XCode command tools are installed
         until xcode-select --print-path > /dev/null 2>&1; do
@@ -26,32 +26,29 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
     read -p $'\033[1mDo you want to install brew packages (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "\033[1;34m-> Installing Brew packages...\033[0m"
+        echo -e "\\033[1;34m-> Installing Brew packages...\\033[0m"
         . "$current_dir/brew.sh"
-        brew_dir=$(brew --prefix)
-        base_pkg_dir=$brew_dir
     fi
 else
     read -p $'\033[1mDo you want to install pacman packages (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "\033[1;34m-> Installing pacman/yay packages...\033[0m"
+        echo -e "\\033[1;34m-> Installing pacman/yay packages...\\033[0m"
         . "$current_dir/yay.sh"
     fi
-    base_pkg_dir='/usr'
 fi
 
 read -p $'\033[1mDo you want to install python modules and binaries (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\033[1;34m-> Installing python modules and binaries (with pipx)...\033[0m"
+    echo -e "\\033[1;34m-> Installing python modules and binaries (with pipx)...\\033[0m"
     . "$current_dir/python.sh"
 fi
 
 read -p $'\033[1mDo you want to install tmux terminfo with italics support (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\033[1;34m-> Installing Italics tmux terminfo ...\033[0m"
+    echo -e "\\033[1;34m-> Installing Italics tmux terminfo ...\\033[0m"
     tic "$parent_dir/tmux-xterm-256color-italic.terminfo"
 fi
 
@@ -59,7 +56,7 @@ if type "tlmgr" > /dev/null 2>&1; then
     read -p $'\033[1mDo you want to install LaTeX packages (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "\033[1;34m-> Installing Latex packages...\033[0m"
+        echo -e "\\033[1;34m-> Installing Latex packages...\\033[0m"
         . "$current_dir/latex.sh"
     fi
 fi
@@ -68,7 +65,7 @@ if type "R" > /dev/null 2>&1; then
     read -p $'\033[1mDo you want to install R libraries (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "\033[1;34m-> Installing R libraries...\033[0m"
+        echo -e "\\033[1;34m-> Installing R libraries...\\033[0m"
         . "$current_dir/R.sh"
     fi
 fi
@@ -77,7 +74,7 @@ if type "npm" > /dev/null 2>&1; then
     read -p $'\033[1mDo you want to install node libraries (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "\033[1;34m-> Installing Node.js libraries...\033[0m"
+        echo -e "\\033[1;34m-> Installing Node.js libraries...\\033[0m"
         . "$current_dir/npm.sh"
     fi
 fi
@@ -85,20 +82,20 @@ fi
 read -p $'\033[1mDo you want to generate symlinks to these dotfiles (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\033[1;34m-> Generating symlinks...\033[0m"
+    echo -e "\\033[1;34m-> Generating symlinks...\\033[0m"
     . "$current_dir/symlinks.sh"
 fi
 
 read -p $'\033[1mDo you want to install vim packages (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\033[1;34m-> Installing nvim packages...\033[0m"
+    echo -e "\\033[1;34m-> Installing nvim packages...\\033[0m"
     nvim +qall
 fi
 
 read -p $'\033[1mDo you want to run post install script (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\033[1;34m-> Running post install...\033[0m"
+    echo -e "\\033[1;34m-> Running post install...\\033[0m"
     . "$current_dir/post.sh"
 fi

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if type "pip3" > /dev/null 2>&1; then
-    echo -e "\033[1;34m--> Installing Python3 modules...\033[0m"
+    echo -e "\\033[1;34m--> Installing Python3 modules...\\033[0m"
     pip_install_cmd='pip3 install --user '
     $pip_install_cmd cython
     $pip_install_cmd jedi
@@ -24,7 +24,7 @@ if ! type "pipx" > /dev/null 2>&1; then
     mkdir -p "$HOME"/.local/pipx/venvs
     curl https://raw.githubusercontent.com/cs01/pipx/master/get-pipx.py | python3
 fi
-echo -e "\033[1;34m--> Installing python binaries (with pipx)...\033[0m"
+echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
 pipx install --spec git+https://github.com/PyCQA/flake8 flake8 --verbose
 pipx install beautysh --verbose
 pipx install black --verbose
