@@ -135,6 +135,27 @@ function! s:ViewPreview(extension)
 endfunction
 
 " }}}
+" Miscellaneous {{{
+
+" Toggle check item {{{
+
+function! s:ToggleCheckList()
+    let save_cursor = getcurpos()
+    let curr_line = getline('.')
+    let curr_line_nr = line('.')
+    let state = matchstr(curr_line, '^\s*\W\s\[\zs.*]\ze')
+    echo state
+    if state ==# 'x]'
+        call setline(curr_line_nr, substitute(curr_line, 'x]', ']', ''))
+    elseif state ==# ']'
+        call setline(curr_line_nr, substitute(curr_line, ']', 'x]', ''))
+    endif
+    call setpos('.', save_cursor)
+endfunction
+
+" }}}
+
+" }}}
 " Mappings {{{
 
 " Anon snippets
@@ -153,5 +174,8 @@ inoremap <buffer> <silent> <F9> <ESC>:call <SID>PandocConversion('html')<CR>
 nnoremap <buffer> <silent> <Leader>vp :call <SID>ViewPreview('pdf')<CR>
 nnoremap <buffer> <silent> <Leader>vh :call <SID>ViewPreview('html')<CR>
 nnoremap <buffer> <silent> <Leader>dp :call <SID>DeletePreviewFiles()<CR>
+
+" Miscellaneous
+nnoremap <buffer> <silent> <Leader>cl :call <SID>ToggleCheckList()<CR>
 
 " }}}
