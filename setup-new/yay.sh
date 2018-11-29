@@ -122,6 +122,9 @@ $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
 
 # Databases
+
+$yay_cmd oracle-instantclient-basic
+$yay_cmd oracle-instantclient-sqlplus
 $yay_cmd python-pymysql  # python version of mysql
 $yay_cmd mongodb
 $yay_cmd mongodb-tools
