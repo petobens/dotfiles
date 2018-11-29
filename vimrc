@@ -1,8 +1,3 @@
-" TODOs:
-" Try the job feature: skywind3000/asyncrun.vim or neomake to replace dispatch?
-" Filter to convert markdown to html, useful for mails
-" Try dash or investigate for doc searching
-
 " Preamble {{{
 
 " Define OS variable
