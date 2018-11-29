@@ -131,6 +131,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('tpope/vim-fugitive')
     call dein#add('tommcdo/vim-fubitive')
     call dein#add('shumphrey/fugitive-gitlab.vim')
+    call dein#add('chemzqm/denite-git')
 
     " Markdown
     call dein#add('plasticboy/vim-markdown', {'on_ft' : 'markdown'})
@@ -168,8 +169,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('chemzqm/denite-extra')
     call dein#add('raghur/fruzzy',
         \ {'hook_post_update': 'call fruzzy#install()'})
-    " TODO: Fix this not working
-    " call dein#add('kmnk/gitn')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('kopischke/unite-spell-suggest')
@@ -1538,10 +1537,10 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
-nnoremap <silent> <Leader>gl :Denite -auto-preview -default-action=diff
-            \ -no-quit gitn_log:*:current<CR>
-nnoremap <silent> <Leader>gL :execute 'Denite -auto-preview -default-action=diff
-            \ -no-quit gitn_log:' . expand('%:p')<CR>
+nnoremap <silent> <Leader>gl :Denite -auto-preview -vertical-preview
+            \ gitlog:all<CR>
+nnoremap <silent> <Leader>gL :Denite -auto-preview -vertical-preview
+            \ gitlog<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume  -immediately ' .
             \ -cursor-pos=+'. v:count1<CR>
