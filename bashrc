@@ -467,18 +467,17 @@ if type "fzf" > /dev/null 2>&1; then
     bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
     bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
 
-    # Git
-    gl() {
-        # TODO: Add preview
-        git log --graph --color=always \
-            --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-        fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-            --bind "ctrl-m:execute:
-                        (grep -o '[a-f0-9]\{7\}' | head -1 |
-                        xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                        {}
-        FZF-EOF"
-    }
+    # Forgit (git and fzf)
+    export FORGIT_NO_ALIASES="1"
+    alias gl=__forgit_log
+    alias gd=__forgit_diff
+    alias ga=__forgit_add
+    alias gcu=__forgit_restore
+    alias gsv=__forgit_stash_show
+    if [ -f "$HOME/.local/bin/forgit.plugin.sh" ]; then
+        . "$HOME/.local/bin/forgit.plugin.sh"
+    fi
+
 fi
 
 # }}}
