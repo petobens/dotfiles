@@ -87,6 +87,10 @@ fi
 if type "sqlplus" > /dev/null 2>&1; then
     export SQLPATH="$HOME/.config/sqlplus"
 fi
+# We use sqlcl instead of sqlplus (it must be manually installed to this dir)
+if [ -d "$HOME/.local/sqlcl" ]; then
+    export PATH="$HOME/.local/sqlcl/bin:$PATH"
+fi
 if type "mssql-cli" > /dev/null 2>&1; then
     export MSSQL_CLI_TELEMETRY_OPTOUT=1
 fi
@@ -359,8 +363,12 @@ alias cvssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/varas)" '\
 'ssh varas'
 alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
 'ssh tcal'
-alias codb='rlwrap -c sqlplus dracing/"$(pass claro/oracle/rac8/dracing)"'\
-'@exa1-scan.claro.amx:1521/RAC8.WORLD @login'
+alias codb='rlwrap -a"$(pass claro/oracle/rac8/dracing)" -N '\
+'sql CTI22156/"$(pass claro/oracle/rac8/cti22156)"'\
+'@exa1-scan.claro.amx:1521/RAC8.WORLD'
+alias cowdb='rlwrap -a"$(pass claro/oracle/rac8/cti22156)" -N '\
+'sql CTI22156/"$(pass claro/oracle/rac8/cti22156)"'\
+'@exa1-scan.claro.amx:1521/RAC8.WORLD'
 alias cpdb=' PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
 '-h tcalt-01.claro.amx -p 5432 -U airflow -d delver'
 

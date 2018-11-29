@@ -145,9 +145,12 @@ if type "ranger" > /dev/null 2>&1; then
     echo Created .config/ranger folder symlink
 fi
 if type "sqlplus" > /dev/null 2>&1; then
-    sudo mkdir -p "$HOME/.config/sqlplus"
-    sudo $ln_cmd -fTs "$dotfiles_dir/dbs/sqlplus_login" "$HOME/.config/sqlplus/login.sql"
-    echo Created "$.config/sqlplus/login.sql" symlink
+    # Note: we actually use sqlcl as cli
+    mkdir -p "$HOME/.config/sqlplus"
+    $ln_cmd -fTs "$dotfiles_dir/dbs/sqlcl_config" "$HOME/.config/sqlplus/login.sql"
+    echo Created ".config/sqlplus/login.sql" symlink
+    $ln_cmd -fTs "$dotfiles_dir/dbs/sqlcl_prompt.js" "$HOME/.config/sqlplus/sqlcl_prompt.js"
+    echo Created ".config/sqlplus/sqlcl_prompt.js" symlink
 fi
 if type "pgcli" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/pgcli"

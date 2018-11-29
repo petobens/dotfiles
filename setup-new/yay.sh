@@ -122,8 +122,7 @@ $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
 
 # Databases
-$yay_cmd gqlplus # depends on adding oracle to pacman and installing sqlplus
-$yay_cmd python-pymysql
+$yay_cmd python-pymysql  # python version of mysql
 $yay_cmd mongodb
 $yay_cmd mongodb-tools
 $yay_cmd postgresql

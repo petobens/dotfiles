@@ -1,0 +1,2 @@
+SET sqlformat ansiconsole
+SCRIPT sqlcl_prompt.js
