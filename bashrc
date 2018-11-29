@@ -443,6 +443,19 @@ if type "fzf" > /dev/null 2>&1; then
     bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
     bind -m vi-command '"\ep": "ddi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
 
+    # Tmux session switcher (`tms foo` attaches to `foo` it exists, else creates
+    # it)
+    tms() {
+    [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+    if [ $1 ]; then
+        tmux $change -t "$1" 2>/dev/null || \
+            (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+    fi
+    session=$(tmux list-sessions -F \
+        "#{session_name}" 2>/dev/null | fzf --exit-0) && \
+        tmux $change -t "$session" || echo "No sessions found."
+    }
+
     # Z
     if [[ "$OSTYPE" == 'darwin'* ]]; then
         if [ -f "$base_pkg_dir/etc/profile.d/z.sh" ]; then
