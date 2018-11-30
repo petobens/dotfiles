@@ -49,8 +49,8 @@ fi
 
 # Language related
 if type "python" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/python/pdbrc" "$HOME/.pdbrc"
-    echo Created .pdbrc symlink
+    $ln_cmd -fTs "$dotfiles_dir/python/pdbrc.py" "$HOME/.pdbrc.py"
+    echo Created .pdbrc.py symlink
     if type "pip" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/config/pip" "$HOME/.config/pip"
         echo Created .config/pip folder symlink

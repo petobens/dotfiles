@@ -7,6 +7,7 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd matplotlib
     $pip_install_cmd numpy
     $pip_install_cmd pandas
+    $pip_install_cmd pdbpp
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
     fi
