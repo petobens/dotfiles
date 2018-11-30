@@ -79,6 +79,7 @@ class Config(pdb.DefaultConfig):
         # Aliases
         pdb_class.do_l = pdb_class.do_longlist
         pdb_class.do_ll = pdb_class.do_list
+        pdb_class.do_st = pdb_class.do_sticky
         pdb_class.do_ev = pdb_class.do_edit
         pdb_class.do_ip = pdb_class.do_interact
         # Colors
