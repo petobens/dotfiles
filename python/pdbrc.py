@@ -39,7 +39,7 @@ syntax_fg = white
 syntax_fold_bg = comment_grey
 
 
-class onedarkish(Style):
+class OneDarkish(Style):
     styles = {
         Text: syntax_fg,
         Error: red,
@@ -63,20 +63,24 @@ class onedarkish(Style):
 
 
 class Config(pdb.DefaultConfig):
-    # TODO: Add some aliases
     prompt = '(Pdb++)> '
     sticky_by_default = True
 
     highlight = True
     use_pygments = True
     use_terminal256formatter = True
-    # TODO: Change this to match one darkish
     filename_color = pdb.Color.yellow
     line_number_color = pdb.Color.darkgray
-    current_line_color = 40
+    current_line_color = 40  # black
 
     def setup(self, pdb):
         # See https://github.com/antocuni/pdb/issues/36
         pdb_class = pdb.__class__
+        # Aliases
+        pdb_class.do_l = pdb_class.do_longlist
+        pdb_class.do_ll = pdb_class.do_list
+        pdb_class.do_ev = pdb_class.do_edit
+        pdb_class.do_ip = pdb_class.do_interact
+        # Colors
         pdb_class._lexer = PythonLexer()
-        pdb_class._fmt = Terminal256Formatter(style=onedarkish)
+        pdb_class._fmt = Terminal256Formatter(style=OneDarkish)
