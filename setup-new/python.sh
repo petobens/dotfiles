@@ -69,3 +69,30 @@ if [ -d "$pipx_home/flake8" ]; then
     echo "Installing bugbear for flake8..."
     "$pipx_home"/flake8/bin/pip install flake8-bugbear
 fi
+
+# Copy pygment onedarkish style
+echo -e "\\033[1;34m--> Installing onedarkish pygment style...\\033[0m"
+current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+parent_dir="$(dirname "$current_dir")"
+python_dir="$parent_dir/python"
+
+ln_cmd='ln'
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if type "gln" > /dev/null 2>&1; then
+        ln_cmd='gln'
+    else
+        echo "Coreutils ln (gln) command not found!" 1>&2
+        exit 1
+    fi
+fi
+
+for dbcli in mycli pgcli mssql-cli
+do
+    if [ -d "$pipx_home/$dbcli" ]; then
+        styles_dir="$pipx_home/$dbcli/lib/python3.7/site-packages/pygments/styles"
+        if [ -d "$styles_dir" ]; then
+            $ln_cmd -fTs "$python_dir/onedarkish.py" "$styles_dir/onedarkish.py"
+            echo Created symlink in "$styles_dir/onedarkish.py"
+        fi
+    fi
+done
