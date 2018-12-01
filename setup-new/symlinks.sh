@@ -118,6 +118,10 @@ if type "htmlhint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/htmlhintrc" "$HOME/.htmlhintrc"
     echo Created .htmlhintrc symlink
 fi
+if type "markdownlint" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/markdownlint.json" "$HOME/.markdownlint.json"
+    echo Created .markdownlint.json symlink
+fi
 
 # Terminal programs
 if type "less" > /dev/null 2>&1; then

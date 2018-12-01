@@ -1999,12 +1999,16 @@ let g:neomake_html_htmlhint_args = ['--format', 'unix', '--config',
             \ expand($HOME . '/.htmlhintrc')]
 " Bash
 let g:neomake_sh_enabled_makers = ['shellcheck']
+" Markdown
+let g:neomake_markdown_enabled_makers = ['markdownlint']
+let g:neomake_markdown_markdownlint_args = ['--config',
+            \ expand($HOME . '/.markdownlint.json')]
 
 " Run neomake after saving for files were we only have linter settings (i.e no
 " other specific filetype settings in ftplugin folder)
 augroup pl_neomake
     au!
-    au BufWritePost *.{vim,yaml,yml} silent Neomake
+    au BufWritePost *.{vim,yaml,yml,markdown,md} silent Neomake
 augroup END
 
 " }}}
