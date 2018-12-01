@@ -67,6 +67,10 @@ if type "R" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/R/Rprofile" "$HOME/.Rprofile"
     echo Created .Rprofile symlink
 fi
+if type "ruby" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/gemrc" "$HOME/.gemrc"
+    echo Created .gemrc symlink
+fi
 
 # Coding environment
 if type "alacritty" > /dev/null 2>&1; then

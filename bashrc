@@ -70,6 +70,10 @@ if type "go" > /dev/null 2>&1; then
     export GOPATH=$HOME/go
     export PATH=$PATH:$GOPATH/bin
 fi
+if type "ruby" > /dev/null 2>&1; then
+    export GEM_HOME=$HOME/.gem
+    PATH="$PATH:$GEM_HOME/bin"
+fi
 if type "pyenv" > /dev/null 2>&1; then
 	export PYENV_ROOT="$HOME/.pyenv"
 	export PATH="$PYENV_ROOT/bin:$PATH"

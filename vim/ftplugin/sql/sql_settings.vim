@@ -31,74 +31,6 @@ endfunction
 " }}}
 " Linter and formatting {{{
 
-" We use sqllint and install it (on Mac) with `sudo gem install sqlint`
-function! s:RunSqlLint()
-    " Don't run sqlint if it is not installed
-    if !executable('sqlint')
-        echoerr 'sqlint is not installed or not in your path.'
-        return
-    endif
-    " Don't run linter if there is only one empty line or we are in a Gdiff
-    " (when file path includes .git)
-    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
-        return
-    endif
-
-    " Update the file but ignore linting autocommand and close qf
-    " window
-    silent noautocmd update
-    cclose
-
-    " Save working directory and get current file
-    let l:save_pwd = getcwd()
-    lcd %:p:h
-    let current_file = expand('%:p:t')
-
-    " Set compiler
-    let compiler = 'sqlint '
-    let &l:makeprg = compiler . current_file
-    " Set error format
-    let old_efm = &l:efm
-    " TODO: remove the parenthesis at the end of the line
-    let &l:efm =
-        \ '%E%f:%l:%c:ERROR %m,' .
-        \ '%W%f:%l:%c:WARNING %m,' .
-        \ '%C %m'
-
-    " Use Dispatch for background async compilation if available
-    if exists(':Dispatch')
-        echon 'running sqlint with dispatch ...'
-        if s:is_win
-            call s:NoShellSlash('Make')
-        else
-            execute 'silent Make'
-        endif
-    else
-        " Use regular make otherwise
-        echon 'running sqlint ...'
-        silent make!
-        " Open quickfix if there are valid errors or warnings
-        if !empty(getqflist())
-            copen
-            wincmd J
-            let height_gqf = len(getqflist())
-            if height_gqf > 10
-                let height_gqf = 10
-            endif
-            execute height_gqf . ' wincmd _'
-            wincmd p  " Return to previous window
-        else
-            redraw!
-            echon 'Finished sqlint successfully.'
-        endif
-    endif
-
-    " Restore error format and working directory
-    let &l:efm = old_efm
-    execute 'lcd ' . l:save_pwd
-endfunction
-
-" We use sqlformat and install it (on Mac) with `pip install sqlparse`
 function! s:RunSqlFormat(...)
     " Don't run sqlparse if it is not installed
     if !executable('sqlformat')
@@ -124,18 +56,17 @@ function! s:RunSqlFormat(...)
     let &l:formatprg = old_formatprg
 endfunction
 
-" Automatically run pg_format and linter on save
 augroup sql_linting
     au!
-    " au BufWritePost *.sql call s:RunSqlFormat() | call s:RunSqlLint()
-    " au BufWritePost *.sql call s:RunSqlFormat()
+    " Only run linter on save
+    au BufWritePost *.{sql,pgsql,mysql} silent Neomake
 augroup END
 
 " }}}
 " Mappings {{{
 
 " Linter and formatting
-nnoremap <buffer> <Leader>rl :call <SID>RunSqlLint()<CR>
+nnoremap <buffer> <Leader>rl :Neomake<CR>
 nnoremap <buffer> <Leader>fq :call <SID>RunSqlFormat()<CR>
 
 " }}}

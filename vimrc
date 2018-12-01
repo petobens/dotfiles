@@ -2003,6 +2003,8 @@ let g:neomake_sh_enabled_makers = ['shellcheck']
 let g:neomake_markdown_enabled_makers = ['markdownlint']
 let g:neomake_markdown_markdownlint_args = ['--config',
             \ expand($HOME . '/.markdownlint.json')]
+" SQL
+let g:neomake_sql_enabled_makers = ['sqlint']
 
 " Run neomake after saving for files were we only have linter settings (i.e no
 " other specific filetype settings in ftplugin folder)
