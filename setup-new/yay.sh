@@ -52,6 +52,7 @@ $yay_cmd python
 $yay_cmd python-pip
 $yay_cmd python-pipenv
 $yay_cmd pyenv
+$yay_cmd ruby
 $yay_cmd rust
 if ! type "tlmgr" > /dev/null 2>&1; then
     read -p $'\033[1mDo you want to install LaTeX (y/n)? \033[0m' -n 1 -r
