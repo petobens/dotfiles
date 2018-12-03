@@ -2623,7 +2623,7 @@ augroup pl_venv_python
     au Filetype python nnoremap <buffer><silent> <Leader>vea
         \ :call virtualenv#deactivate()<CR>:call virtualenv#activate()<CR>
     au Filetype python nnoremap <buffer><silent> <Leader>ved
-        \:VirtualEnvDeactivate<CR>
+        \ :VirtualEnvDeactivate<CR>
     " Auto activate when entering a window with a python file
     " au WinEnter,BufWinEnter *.py call virtualenv#deactivate() |
                 " \ call virtualenv#activate('', 1)
