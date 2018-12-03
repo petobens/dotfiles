@@ -266,7 +266,7 @@ logger = logging.getLogger(${1:__name__})$0
 endsnippet
 
 snippet cd "Current dir" w
-os.path.dirname(os.path.realpath(__file__))
+Path(__file__).resolve().parent
 endsnippet
 
 snippet wo "With open" b
