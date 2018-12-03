@@ -148,6 +148,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
     call dein#add('Shougo/denite.nvim')
+    " call dein#add('petobens/denite.nvim')
     call dein#add('Shougo/unite.vim')
     call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
     call dein#add('Shougo/defx.nvim')
@@ -2614,7 +2615,6 @@ augroup END
 
 " FIXME: We need to call activate twice for this to actually work sometimes
 let g:airline#extensions#virtualenv#enabled = 1
-let g:virtualenv_auto_activate = 0
 
 augroup pl_venv_python
     au!
@@ -2622,6 +2622,7 @@ augroup pl_venv_python
     au Filetype python nnoremap <buffer> <Leader>vea
                 \ :VirtualEnvActivate<CR>:VirtualEnvActivate<CR>
     au Filetype python nnoremap <buffer> <Leader>ved :VirtualEnvDeactivate<CR>
+    au BufWinEnter *.py call virtualenv#activate('', 1)
 augroup END
 
 " }}}
