@@ -2622,7 +2622,8 @@ augroup pl_venv_python
     au Filetype python nnoremap <buffer> <Leader>vea
                 \ :VirtualEnvActivate<CR>:VirtualEnvActivate<CR>
     au Filetype python nnoremap <buffer> <Leader>ved :VirtualEnvDeactivate<CR>
-    au BufWinEnter *.py call virtualenv#activate('', 1)
+    au WinEnter,BufWinEnter *.py call virtualenv#deactivate() |
+                \ call virtualenv#activate('', 1)
 augroup END
 
 " }}}
