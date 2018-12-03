@@ -25,6 +25,9 @@ floating_maximum_size -1 x -1
 # Move a floating window with the mouse and pressing mod
 floating_modifier $mod
 
+# Leave fullscreen when a popup appears in order to display it
+popup_during_fullscreen leave_fullscreen
+
 # Toggle floating and tiling
 # bindsym $mod+f floating toggle
 
