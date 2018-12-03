@@ -53,6 +53,13 @@ if type "ranger" > /dev/null 2>&1; then
     ranger --copy-config=scope
 fi
 
+# Git access tokens
+if type "pass" > /dev/null 2>&1; then
+    echo -e "\\033[1;34m--> Generating gitlab access token file...\\033[0m"
+    pass git/gitlab/access_token > "$HOME/.gitlab_access_token"
+    echo "Created .gitlab_access_token file"
+fi
+
 # Mac
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if [ -d "/Applications/Skim.app/" ]; then
