@@ -108,10 +108,15 @@ function! s:RunPython(compiler, mode, compilation, ...)
         let compiler = a:compiler
     endif
 
-    " If we are inside a pipenv venv then override the compiler
-    let pipenv_venv_path = system('pipenv --venv')
-    if v:shell_error == 0
-        let compiler = trim(pipenv_venv_path) . '/bin/python'
+    " If we are inside a venv then override the compiler
+    if isdirectory($VIRTUAL_ENV)
+        let compiler = $VIRTUAL_ENV . '/bin/python'
+    else
+        " Look for pipenv venv if VIRTUAL_ENV var is not set
+        let pipenv_venv_path = system('pipenv --venv')
+        if v:shell_error == 0
+            let compiler = trim(pipenv_venv_path) . '/bin/python'
+        endif
     endif
 
     let compiler = compiler . ' '
