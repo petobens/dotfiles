@@ -2620,13 +2620,12 @@ let g:virtualenv_auto_activate = 0  " We do it manually below
 
 augroup pl_venv_python
     au!
-    au Filetype python nnoremap <buffer><silent> <Leader>vea
-        \ :call virtualenv#deactivate()<CR>:call virtualenv#activate()<CR>
-    au Filetype python nnoremap <buffer><silent> <Leader>ved
+    au Filetype python nnoremap <buffer> <Leader>vea
+        \ :VirtualEnvActivate<CR>
+    au Filetype python nnoremap <buffer> <Leader>ved
         \ :VirtualEnvDeactivate<CR>
     " Auto activate when entering a window with a python file
-    " au WinEnter,BufWinEnter *.py call virtualenv#deactivate() |
-                " \ call virtualenv#activate('', 1)
+    au WinEnter,BufWinEnter *.py call virtualenv#activate('', 1)
 augroup END
 
 " }}}
