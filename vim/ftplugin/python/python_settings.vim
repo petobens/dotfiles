@@ -1114,8 +1114,7 @@ function! s:IPythonSelection()
     let l:lines[-1] = l:lines[-1][:l:col2 - 1]
     let l:lines[0] = l:lines[0][l:col1 - 1:]
     let l:lines[0] = "\e[200~" . l:lines[0]
-    call add(l:lines, "\e[201~")
-    call add(l:lines, "")  " Needed to actually execute the command
+    let l:lines[-1] = l:lines[-1] . "\e[201~"
     if !g:neoterm.has_any()
         " This ensures we have an instance
         execute 'T ipython3'
