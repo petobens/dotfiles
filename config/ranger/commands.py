@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 import sys
 from functools import partial
@@ -113,6 +114,7 @@ class trash_with_confirmation(Command):
 
     def _question_callback(self, file, answer):
         if answer == 'y' or answer == 'Y':
+            file = re.escape(file)
             cmd = f'trash-put {file}'
             trash_cli = self.fm.execute_command(cmd, stdout=subprocess.PIPE)
             stdout, stderr = trash_cli.communicate()
