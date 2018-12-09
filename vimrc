@@ -107,6 +107,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     if has('nvim')
         call dein#add('zchee/deoplete-jedi')
     endif
+    call dein#add('jeetsukumaran/vim-pythonsense', {'on_ft' : 'python'})
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
     call dein#add('petobens/vim-virtualenv', {'rev': 'pipenv'})
@@ -2120,6 +2121,32 @@ augroup plugin_R
     au FileType rbrowser nmap <silent><buffer> zr :call RBrOpenCloseLs(1)<CR>
     au FileType rbrowser nmap <silent><buffer> zm :call RBrOpenCloseLs(0)<CR>
     au FileType rbrowser nmap <silent><buffer> zc :call RBrOpenCloseLs(0)<CR>
+augroup END
+
+" }}}
+" Pythonsense {{{
+
+let g:is_pythonsense_suppress_location_keymaps = 1
+
+augroup ps_pythonsense
+    au!
+    " Text Objects
+    " FIXME: When args are split in several lines this doesn't work
+    " See: https://github.com/jeetsukumaran/vim-pythonsense/issues/6
+    au Filetype python map <buffer>am <Plug>(PythonsenseOuterFunctionTextObject)
+    au Filetype python map <buffer>im <Plug>(PythonsenseInnerFunctionTextObject)
+    " Motions
+    au Filetype python map <buffer> ]c <Plug>(PythonsenseStartOfNextPythonClass)
+    au Filetype python map <buffer> ]C <Plug>(PythonsenseEndOfPythonClass)
+    au Filetype python map <buffer> [c <Plug>(PythonsenseStartOfPythonClass)
+    au Filetype python map <buffer> [C
+                \ <Plug>(PythonsenseEndOfPreviousPythonClass)
+    au Filetype python map <buffer> ]f
+                \ <Plug>(PythonsenseStartOfNextPythonFunction)
+    au Filetype python map <buffer> ]F <Plug>(PythonsenseEndOfPythonFunction)
+    au Filetype python map <buffer> [f <Plug>(PythonsenseStartOfPythonFunction)
+    au Filetype python map <buffer> [F
+                \ <Plug>(PythonsenseEndOfPreviousPythonFunction)
 augroup END
 
 " }}}
