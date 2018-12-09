@@ -17,7 +17,7 @@ from pygments.token import (
     Token,
 )
 
-c = get_config()  # noqa
+c = get_config()  # type: ignore # noqa
 
 # Options
 c.TerminalInteractiveShell.true_color = True
@@ -84,7 +84,8 @@ pmenu = '#333841'
 syntax_fg = white
 syntax_fold_bg = comment_grey
 
-# See: https://github.com/prompt-toolkit/python-prompt-toolkit/blob/master/prompt_toolkit/styles/defaults.py
+# See:
+# https://github.com/prompt-toolkit/python-prompt-toolkit/blob/master/prompt_toolkit/styles/defaults.py # noqa
 c.TerminalInteractiveShell.highlighting_style_overrides = {
     Text: syntax_fg,
     Error: red,
@@ -104,6 +105,8 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Operator.Word: f'{purple} nobold',
     Literal: green,
     Literal.String.Doc: f'{green} noitalic',
+    Literal.String.Interpol: f'{light_blue} nobold',
+    Literal.String.Escape: f'{light_blue} nobold',
     String: green,
     Token.Prompt: green,
     Token.PromptNum: f'{green} bold',
