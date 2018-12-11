@@ -95,26 +95,25 @@ class show_files_in_finder(Command):
 
 class trash_with_confirmation(Command):
     def execute(self):
-        fd_cmd = 'trash-put'
-        if fd_cmd not in get_executables():
-            self.fm.notify(f"Couldn't find {fd_cmd} on the PATH.", bad=True)
+        trash_cmd = 'trash-put'
+        if trash_cmd not in get_executables():
+            self.fm.notify(f"Couldn't find {trash_cmd} on the PATH.", bad=True)
             return
 
-        if self.rest(1):
-            self.fm.notify(f"Arg: {self.rest(1)}", bad=True)
-            file = self.rest(1)
-        else:
+        files = [f.relative_path for f in self.fm.thistab.get_selection()]
+        if not files:
             self.fm.notify("No file selected for deletion", bad=True)
             return
         self.fm.ui.console.ask(
-            f"Confirm deletion of: {file} (y/N)",
-            partial(self._question_callback, file),
+            f"Confirm deletion of: {files} (y/N)",
+            partial(self._question_callback, files),
             ('n', 'N', 'y', 'Y'),
         )
 
-    def _question_callback(self, file, answer):
+    def _question_callback(self, files, answer):
         if answer == 'y' or answer == 'Y':
-            file = re.escape(file)
-            cmd = f'trash-put {file}'
-            trash_cli = self.fm.execute_command(cmd, stdout=subprocess.PIPE)
-            stdout, stderr = trash_cli.communicate()
+            for f in files:
+                file = re.escape(f)
+                cmd = f'trash-put {file}'
+                trash_cli = self.fm.execute_command(cmd, stdout=subprocess.PIPE)
+                stdout, stderr = trash_cli.communicate()
