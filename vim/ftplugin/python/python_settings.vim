@@ -110,13 +110,14 @@ function! s:RunPython(compiler, mode, compilation, ...)
 
     " If we are inside a venv then override the compiler
     if isdirectory($VIRTUAL_ENV)
-        let compiler = $VIRTUAL_ENV . '/bin/python'
+        let compiler_bin = $VIRTUAL_ENV . '/bin/'
     else
         " Look for pipenv venv if VIRTUAL_ENV var is not set
         let pipenv_venv_path = system('pipenv --venv')
         if v:shell_error == 0
-            let compiler = trim(pipenv_venv_path) . '/bin/python'
+            let compiler_bin = trim(pipenv_venv_path) . '/bin/'
         endif
+    let compiler = compiler_bin . '/' . compiler
     endif
 
     let compiler = compiler . ' '
@@ -153,6 +154,19 @@ function! s:RunPython(compiler, mode, compilation, ...)
 
         if match(compiler, '^ipython') == -1
             Topen
+            " If we are inside an ipython instance exit first (and reset name)
+            let last_active_instance = g:neoterm.last()
+            let buf_nr = last_active_instance.buffer_id
+            if bufexists(buf_nr)
+                let term_buf_name = bufname(buf_nr)
+            endif
+            if term_buf_name ==# 'ipython'
+                execute 'T exit'
+                let winid = win_findbuf(buf_nr)[0]
+                call win_gotoid(winid)
+                keepalt file bash
+                wincmd p
+            endif
             if a:mode ==# 'visual'
                 execute 'T ' . compiler .  current_file .
                             \ '; command rm ' . current_file
@@ -162,15 +176,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
         else
             " We only do normal ipython run here since visual runs are handled
             " by IPyREPL function defined afterwards (below)
-            if !g:neoterm.has_any()
-                " This ensures we have an instance
-                execute 'T ipython3'
-                " This is needed because we set a custom `ViState.input_mode`
-                " in our ipython config and if we don't sleep here then ipython
-                " breaks at startup
-                " FIXME: Find a better way to get around this
-                sleep 1900ms
-            endif
+            call s:EnsureIpythonNeotermInstance()
             if a:mode !=# 'visual'
                 execute 'T %run ' . current_file
             endif
@@ -1096,11 +1102,50 @@ endif
 " }}}
 " REPL (neoterm) {{{
 
+function! s:EnsureIpythonNeotermInstance()
+    let term_buf_name = ''
+    if g:neoterm.has_any()
+        " If we alreay have a terminal buffer check if it has ipython
+        " running
+        let last_active_instance = g:neoterm.last()
+        let buf_nr = last_active_instance.buffer_id
+        if bufexists(buf_nr)
+            let term_buf_name = bufname(buf_nr)
+        endif
+    endif
+    if !g:neoterm.has_any() || term_buf_name !=# 'ipython'
+        " This ensures we have an instance
+        execute 'T ipython3'
+        " Rename terminal buffer to ipython (note however that we cannot
+        " use neoterm origin as winid because it's wrongly set)
+        let last_active_instance = g:neoterm.last()
+        let bufnr = last_active_instance.buffer_id
+        let winid = win_findbuf(bufnr)[0]
+        call win_gotoid(winid)
+        keepalt file ipython
+        wincmd p
+    endif
+endfunction
+
 function! s:OpenREPL(repl)
     let old_size = g:neoterm_size
     let g:neoterm_size = 12
+    if g:neoterm.has_any()
+        " If an ipython instance exists jump to it
+        let last_active_instance = g:neoterm.last()
+        let buf_nr = last_active_instance.buffer_id
+        if bufexists(buf_nr)
+            let term_buf_name = bufname(buf_nr)
+        endif
+        if term_buf_name ==# 'ipython'
+            let winid = win_findbuf(buf_nr)[0]
+            call win_gotoid(winid)
+        endif
+        return
+    endif
     botright Topen
     execute 'T ' .  a:repl
+    keepalt file ipython
     let g:neoterm_size = old_size
 endfunction
 
@@ -1115,10 +1160,7 @@ function! s:IPythonSelection()
     let l:lines[0] = l:lines[0][l:col1 - 1:]
     let l:lines[0] = "\e[200~" . l:lines[0]
     let l:lines[-1] = l:lines[-1] . "\e[201~"
-    if !g:neoterm.has_any()
-        " This ensures we have an instance
-        execute 'T ipython3'
-    endif
+    call s:EnsureIpythonNeotermInstance()
     " The following avoids prepending `ipython` before the command which if ran
     " from within ipython results in an error
     let g:neoterm_auto_repl_cmd = 0
