@@ -26,7 +26,6 @@ fi
 # Mongo db improvements
 if type "mongo" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing mongo-hacker...\\033[0m"
-    git clone https://github.com/jwilm/alacritty.git
     git clone https://github.com/TylerBrock/mongo-hacker
     (
         cd mongo-hacker || exit
