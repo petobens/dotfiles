@@ -1,6 +1,6 @@
 import pdb
 
-from pygments.formatters import Terminal256Formatter
+from pygments.formatters import TerminalTrueColorFormatter
 from pygments.lexers import PythonLexer
 from pygments.style import Style
 from pygments.token import (
@@ -44,20 +44,23 @@ class OneDarkish(Style):
         Text: syntax_fg,
         Error: red,
         Comment: comment_grey,
-        Keyword: purple,
-        Keyword.Constant: green,
+        Keyword: f'{purple} nobold',
+        Keyword.Constant: dark_yellow,
         Keyword.Namespace: purple,
-        Name.Namespace: syntax_fg,
+        Name.Namespace: f'{syntax_fg} nobold',
         Name.Builtin: red,
         Name.Function: light_blue,
-        Name.Class: light_blue,
+        Name.Class: f'{light_blue} nobold',
         Name.Decorator: light_blue,
         Name.Exception: yellow,
         Name.Variable.Magic: red,  # dunder methods
         Number: dark_yellow,
         Operator: purple,
-        Operator.Word: green,
+        Operator.Word: f'{purple} nobold',
         Literal: green,
+        Literal.String.Doc: f'{green} noitalic',
+        Literal.String.Interpol: f'{light_blue} nobold',
+        Literal.String.Escape: f'{light_blue} nobold',
         String: green,
     }
 
@@ -84,4 +87,4 @@ class Config(pdb.DefaultConfig):
         pdb_class.do_ip = pdb_class.do_interact
         # Colors
         pdb_class._lexer = PythonLexer()
-        pdb_class._fmt = Terminal256Formatter(style=OneDarkish)
+        pdb_class._fmt = TerminalTrueColorFormatter(style=OneDarkish)
