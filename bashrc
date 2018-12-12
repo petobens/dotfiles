@@ -98,6 +98,11 @@ fi
 if type "mssql-cli" > /dev/null 2>&1; then
     export MSSQL_CLI_TELEMETRY_OPTOUT=1
 fi
+# Prepend python virtual env to path if exists (this is useful when spawning a
+# new terminal form within neovim). Note: this must be the very last PATH mod
+if [ ! -z $VIRTUAL_ENV ]; then
+    PATH="$VIRTUAL_ENV/bin:$PATH"
+fi
 
 # Remove duplicate path entries
 PATH=$(printf "%s" "$PATH" | awk -v RS=':' '!a[$1]++ { if (NR > 1) printf RS; printf $1 }')

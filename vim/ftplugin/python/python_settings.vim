@@ -155,7 +155,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
         let g:neoterm_size = 12
         let g:neoterm_autoinsert = 0
 
-        if match(compiler, '^ipython') == -1
+        if match(trim(split(compiler, '/')[-1]), '^ipython') == -1
             Topen
             " If we are inside an ipython instance exit first (and reset name)
             let last_active_instance = g:neoterm.last()
