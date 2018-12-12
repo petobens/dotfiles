@@ -9,16 +9,16 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Path settings
     PATH="$HOME/local/bin:$HOME/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-    export PATH="$base_pkg_dir/bin:$base_pkg_dir/sbin:$PATH" # homebrew
+    PATH="$base_pkg_dir/bin:$base_pkg_dir/sbin:$PATH" # homebrew
     if [ -d "/Library/TeX/texbin" ]; then
-        export PATH="/Library/TeX/texbin:$PATH" # basictex
+        PATH="/Library/TeX/texbin:$PATH" # basictex
     fi
     if [ -d "/Applications/MATLAB_R2015b.app/bin" ]; then
-        export PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" # matlab
+        PATH="/Applications/MATLAB_R2015b.app/bin/matlab:$PATH" # matlab
     fi
     export PKG_CONFIG_PATH="$base_pkg_dir/lib/pkgconfig:$base_pkg_dir/lib"
     if [ -d "/usr/local/opt/sqlite/bin" ]; then
-        export PATH="/usr/local/opt/sqlite/bin:$PATH"
+        PATH="/usr/local/opt/sqlite/bin:$PATH"
     fi
 
     # Symlink cask apps to Applications folder
@@ -38,13 +38,13 @@ else
     # PATH is originally defined in /etc/profile
     # export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin"
     if [ -d "$base_pkg_dir/local/texlive" ]; then
-        export PATH="/usr/local/texlive/2018/bin/x86_64-linux:$PATH"
+        PATH="/usr/local/texlive/2018/bin/x86_64-linux:$PATH"
         export MANPATH="$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man"
         export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
     fi
 
     # Local paths first
-    export PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
+    PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
     export MANPATH="$HOME/local/share/man:$HOME/.local/share/man:$MANPATH"
 
     # Highlight directories in blue, symbolic links in purple and executable
@@ -60,7 +60,7 @@ fi
 
 # Path OS agnostic settings
 if [ -d "$HOME/bin" ]; then
-    export PATH="$HOME/bin:$PATH"
+    PATH="$HOME/bin:$PATH"
 fi
 if type "npm" > /dev/null 2>&1; then
     PATH="$HOME/.node_modules/bin:$PATH"
@@ -68,7 +68,7 @@ if type "npm" > /dev/null 2>&1; then
 fi
 if type "go" > /dev/null 2>&1; then
     export GOPATH=$HOME/go
-    export PATH=$PATH:$GOPATH/bin
+    PATH=$PATH:$GOPATH/bin
 fi
 if type "ruby" > /dev/null 2>&1; then
     export GEM_HOME=$HOME/.gem
@@ -76,7 +76,7 @@ if type "ruby" > /dev/null 2>&1; then
 fi
 if type "pyenv" > /dev/null 2>&1; then
 	export PYENV_ROOT="$HOME/.pyenv"
-	export PATH="$PYENV_ROOT/bin:$PATH"
+	PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
 fi
 if type "pipenv" > /dev/null 2>&1; then
@@ -93,11 +93,14 @@ if type "sqlplus" > /dev/null 2>&1; then
 fi
 # We use sqlcl instead of sqlplus (it must be manually installed to this dir)
 if [ -d "$HOME/.local/sqlcl" ]; then
-    export PATH="$HOME/.local/sqlcl/bin:$PATH"
+    PATH="$PATH:$HOME/.local/sqlcl/bin"
 fi
 if type "mssql-cli" > /dev/null 2>&1; then
     export MSSQL_CLI_TELEMETRY_OPTOUT=1
 fi
+
+# Remove duplicate path entries
+PATH=$(printf "%s" "$PATH" | awk -v RS=':' '!a[$1]++ { if (NR > 1) printf RS; printf $1 }')
 
 # Set editor to nvim and use it as a manpager
 export EDITOR=nvim
