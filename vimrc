@@ -1354,8 +1354,8 @@ augroup END
 
 " Maps
 " FIXME: Size is not shown taken into account the winwidth
-nnoremap <silent> <Leader>xf :Defx -split=vertical -winwidth=50
-            \ -columns=mark:filename:type:size
+nnoremap <silent> <Leader>xf :Defx -split=vertical -winwidth=40
+            \ -columns=mark:filename:type:size -show-ignored-files
             \ -direction=topleft `expand('%:p:h')` -search=`expand('%:p')`<CR>
 
 " Filetype settings
