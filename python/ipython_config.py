@@ -112,13 +112,13 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Token.PromptNum: f'{green} bold',
     Token.OutPrompt: blue,
     Token.OutPromptNum: f'{blue} bold',
-    # FIXME: CompletionMenu don't seem to work
-    Token.CompletionMenu: f'bg:{pmenu} {syntax_fg}',
-    Token.CompletionMenu.Completion: f'bg:{pmenu} {syntax_fg}',
-    Token.CompletionMenu.Completion.Current: f'bg:{light_blue} {black}',
-    Token.CompletionMenu.Meta.Completion: f'bg:{pmenu} {syntax_fg}',
-    Token.CompletionMenu.Meta.Completion.Current: f'bg:{light_blue} {black}',
-    Token.CompletionMenu.MultiColumnMeta: f'bg:{light_blue} {black}',
+    # This uses a modified pyments style_from_pygments_dict function
+    # See: https://github.com/ipython/ipython/issues/11526
+    'completion-menu.completion.current': f'bg:{light_blue} {black}',
+    'completion-menu.completion': f'bg:{pmenu} {white}',
+    'completion-menu.meta.completion.current': f'bg:{light_blue} {black}',
+    'completion-menu.meta.completion': f'bg:{pmenu} {white}',
+    'completion-menu.multi-column-meta': f'bg:{pmenu} {white}',
     Token.MatchingBracket.Other: blue,
 }
 
