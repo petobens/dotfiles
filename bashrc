@@ -253,7 +253,7 @@ if type "nvim" > /dev/null 2>&1; then
     fi
 fi
 if type "ranger" > /dev/null 2>&1; then
-    alias rg='ranger'
+    alias fm='ranger'
 fi
 if type "bat" > /dev/null 2>&1; then
     # Colorized cat

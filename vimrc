@@ -1470,17 +1470,19 @@ call denite#custom#var('buffer', 'date_format', '')
 let g:neomru#file_mru_limit = 750
 let g:neomru#time_format = ''
 
-" Use ag for file_rec and grep
+" Use ag for file_rec and ripgrep for grep
 if executable('ag')
 	call denite#custom#var('file/rec', 'command',
         \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-	call denite#custom#var('grep', 'command', ['ag'])
-	call denite#custom#var('grep', 'default_opts',
-        \ ['--smart-case', '--vimgrep'])
-	call denite#custom#var('grep', 'recursive_opts', [])
+endif
+if executable('rg')
+    call denite#custom#var('grep', 'command', ['rg'])
+    call denite#custom#var('grep', 'default_opts',
+            \ ['--smart-case', '--vimgrep', '--no-heading'])
+    call denite#custom#var('grep', 'recursive_opts', [])
     call denite#custom#var('grep', 'pattern_opt', [])
-	call denite#custom#var('grep', 'separator', ['--'])
-	call denite#custom#var('grep', 'final_opts', [])
+    call denite#custom#var('grep', 'separator', ['--'])
+    call denite#custom#var('grep', 'final_opts', [])
 endif
 
 " Functions
@@ -1500,7 +1502,7 @@ function! s:DeniteGrep()
     if filetype == ''
         let ft_filter = ''
     else
-        let ft_filter = '--' . filetype
+        let ft_filter = '--type ' . filetype
     endif
     call denite#start([{'name': 'grep', 'args': [narrow_dir, ft_filter]}])
 endfunction
@@ -1522,7 +1524,7 @@ nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
-nnoremap <silent> <Leader>ag :call <SID>DeniteGrep()<CR>
+nnoremap <silent> <Leader>rg :call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>dg :DeniteCursorWord grep<CR>
 nnoremap <silent> <Leader>he :Denite help<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
@@ -1730,7 +1732,7 @@ let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
 " Disable denite integration (because it makes denite really slow)
 let g:webdevicons_enable_denite = 0
 call denite#custom#source('file_mru,buffer',
-            \'converters', ['devicons_denite_converter'])
+            \ 'converters', ['devicons_denite_converter'])
 
 " }}}
 " Dispatch {{{

@@ -151,6 +151,7 @@ $yay_cmd pandoc-citeproc
 $yay_cmd pass
 $yay_cmd pass-update
 $yay_cmd qrencode
+$yay_cmd ripgrep
 $yay_cmd rlwrap
 $yay_cmd rsync
 $yay_cmd shellcheck
