@@ -1099,7 +1099,8 @@ augroup ft_py
     " Fix else: syntax highlight and comment string
     au FileType python setlocal iskeyword-=:
     au Filetype python setlocal commentstring=#%s
-    " Python notebooks and Pipfile.lock are json files
+    " pdbrc is a python file and python notebooks and Pipfile.lock json files
+    au BufNewFile,BufReadPost pdbrc set filetype=python
     au BufNewFile,BufReadPost *.ipynb,Pipfile.lock set filetype=json
 
     " Highlight all python functions
@@ -1536,10 +1537,8 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
-nnoremap <silent> <Leader>gl :Denite -auto-preview -vertical-preview
-            \ gitlog:all<CR>
-nnoremap <silent> <Leader>gL :Denite -auto-preview -vertical-preview
-            \ gitlog<CR>
+nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
+nnoremap <silent> <Leader>gL :Denite gitlog<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume  -immediately ' .
             \ -cursor-pos=+'. v:count1<CR>
