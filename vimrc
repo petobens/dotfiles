@@ -1729,6 +1729,8 @@ let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
 
 " Disable denite integration (because it makes denite really slow)
 let g:webdevicons_enable_denite = 0
+call denite#custom#source('file_mru,buffer',
+            \'converters', ['devicons_denite_converter'])
 
 " }}}
 " Dispatch {{{
