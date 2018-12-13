@@ -1,7 +1,7 @@
 import pdb
 
 from pygments.formatters import TerminalTrueColorFormatter
-from pygments.lexers import PythonLexer
+from pygments.lexers import Python3Lexer
 from pygments.style import Style
 from pygments.token import (
     Comment,
@@ -45,7 +45,7 @@ class OneDarkish(Style):
         Error: red,
         Comment: comment_grey,
         Keyword: f'{purple} nobold',
-        Keyword.Constant: dark_yellow,
+        Keyword.Constant: green,
         Keyword.Namespace: purple,
         Name.Namespace: f'{syntax_fg} nobold',
         Name.Builtin: red,
@@ -86,5 +86,5 @@ class Config(pdb.DefaultConfig):
         pdb_class.do_ev = pdb_class.do_edit
         pdb_class.do_ip = pdb_class.do_interact
         # Colors
-        pdb_class._lexer = PythonLexer()
+        pdb_class._lexer = Python3Lexer()
         pdb_class._fmt = TerminalTrueColorFormatter(style=OneDarkish)

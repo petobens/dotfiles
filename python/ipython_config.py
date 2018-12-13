@@ -91,7 +91,7 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Error: red,
     Comment: comment_grey,
     Keyword: f'{purple} nobold',
-    Keyword.Constant: dark_yellow,
+    Keyword.Constant: green,
     Keyword.Namespace: purple,
     Name.Namespace: f'{syntax_fg} nobold',
     Name.Builtin: red,
