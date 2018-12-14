@@ -25,6 +25,7 @@ settings.focusFirstCandidate = false;
 settings.enableAutoFocus = true;
 settings.modeAfterYank = 'Normal';
 settings.hintAlign = 'left';
+settings.editableBodyCare = false;
 Hints.characters = 'asdfghjkl';
 
 // Disable PDF viewer (note that ;s toggle that does this doesn't seem to work)
