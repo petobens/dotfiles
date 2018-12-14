@@ -1471,10 +1471,11 @@ call denite#custom#var('buffer', 'date_format', '')
 let g:neomru#file_mru_limit = 750
 let g:neomru#time_format = ''
 
-" Use ag for file_rec and ripgrep for grep
-if executable('ag')
-	call denite#custom#var('file/rec', 'command',
-        \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+" Use fd for file_rec and ripgrep for grep
+if executable('fd')
+    call denite#custom#var('file/rec', 'command',
+        \ ['fd', '--type', 'f', '--follow', '--hidden', '--exclude', '.git',
+        \ ''])
 endif
 if executable('rg')
     call denite#custom#var('grep', 'command', ['rg'])

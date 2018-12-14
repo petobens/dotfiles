@@ -14,7 +14,7 @@ class fzf_select(Command):
 
     Find a file or directory using fzf and fd.
 
-    With a prefix argument select only directories.
+    With a prefix argument select only directories else only files.
     """
 
     def execute(self):
@@ -25,7 +25,7 @@ class fzf_select(Command):
 
         only_dirs = True if self.arg(1) else False
         command = (
-            f"{fd_cmd}{' --type d' if only_dirs else ''} --hidden --follow "
+            f"{fd_cmd} --type {'d' if only_dirs else 'f'} --hidden --follow "
             "--exclude .git | fzf +m"
         )
 

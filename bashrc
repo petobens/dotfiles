@@ -418,8 +418,8 @@ if type "fzf" > /dev/null 2>&1; then
     # Change default options (show 15 lines, use top-down layout)
     export FZF_DEFAULT_OPTS='--height 15 --reverse '\
 '--bind=ctrl-space:toggle+down'
-    # Use ag for files and fd for dirs
-    export FZF_DEFAULT_COMMAND='ag -g ""'
+    # Use fd for files and dirs
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
     if type "tree" > /dev/null 2>&1; then
@@ -518,7 +518,7 @@ save_reload_hist() {
     return $last_exit_status
 }
 
-# Update the system  package and language libraries
+# Update the system package and language libraries
 sys_update_all() {
     sudo echo -n
     if [[ "$OSTYPE" == 'darwin'* ]]; then
