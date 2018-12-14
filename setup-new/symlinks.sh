@@ -103,6 +103,10 @@ if type "ctags" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/ctags" "$HOME/.ctags"
     echo Created .ctags symlink
 fi
+if type "fd" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/fdignore" "$HOME/.fdignore"
+    echo Created .fdignore symlink
+fi
 # Browser
 $ln_cmd -fTs "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 echo Created .surfingkeysrc symlink

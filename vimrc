@@ -979,7 +979,7 @@ augroup ft_config
     au!
     au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc,*.dirs,
                 \zathurarc,*mpv/*.conf,*onedrive/config,pacman.conf,
-                \compton.conf,connman.conf
+                \compton.conf,connman.conf,*fdignore
                 \ set filetype=config foldmethod=marker
 augroup END
 
