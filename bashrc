@@ -228,8 +228,8 @@ alias o='open'
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     alias open='xdg-open'
     alias ss='sudo su'
-    if type "feh" > /dev/null 2>&1; then
-        alias iv='feh'
+    if type "vimiv" > /dev/null 2>&1; then
+        alias iv='vimiv'
     fi
 fi
 alias rm='rm -v'

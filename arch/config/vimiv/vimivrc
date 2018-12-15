@@ -1,0 +1,4 @@
+[LIBRARY]
+start_show_library: no
+expand_lib: no
+desktop_start_dir: ~/Pictures

@@ -252,6 +252,10 @@ else
         $ln_cmd -fTs "$dotfiles_dir/arch/config/feh" "$HOME/.config/feh"
         echo Created .config/feh folder symlink
     fi
+    if type "vimiv" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/arch/config/vimiv" "$HOME/.config/vimiv"
+        echo Created .config/vimiv folder symlink
+    fi
     if type "zathura" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/arch/config/zathura" "$HOME/.config/zathura"
         echo Created .config/zathura folder symlink
