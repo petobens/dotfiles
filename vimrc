@@ -148,6 +148,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
+    call dein#add('wsdjeg/dein-ui.vim')
     call dein#add('Shougo/denite.nvim')
     " call dein#add('petobens/denite.nvim')
     call dein#add('Shougo/unite.vim')
@@ -164,8 +165,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/deoplete.nvim')
     " Unite/denite sources
     call dein#add('chemzqm/denite-extra')
-    call dein#add('raghur/fruzzy',
-        \ {'hook_post_update': 'call fruzzy#install()'})
+    call dein#add('raghur/fruzzy')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('kopischke/unite-spell-suggest')
