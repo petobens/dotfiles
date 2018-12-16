@@ -978,8 +978,8 @@ augroup END
 augroup ft_config
     au!
     au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc,*.dirs,
-                \zathurarc,*mpv/*.conf,*onedrive/config,pacman.conf,
-                \compton.conf,connman.conf,*fdignore
+                \zathurarc,*mpv/*.conf,*onedrive/config,*fdignore,*vimivrc,
+                \*.conf
                 \ set filetype=config foldmethod=marker
 augroup END
 
