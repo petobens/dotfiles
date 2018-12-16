@@ -1519,7 +1519,8 @@ function! s:DeniteTasklist(...)
 endfunction
 
 " Mappings
-nnoremap <silent> <Leader>ls :lcd %:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>zd :Denite -default-action=narrow z<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
