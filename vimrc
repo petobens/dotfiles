@@ -2045,9 +2045,9 @@ function! s:OpenNeotermSplit(position)
     let g:neoterm_size = 12
     if a:position ==# 'vertical'
         let g:neoterm_size = ''
-        noautocmd vertical Topen
+        vertical Topen
     else
-        noautocmd botright Topen
+        botright Topen
     endif
     let g:neoterm_size = old_size
 endfunction

@@ -156,7 +156,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
         let g:neoterm_autoinsert = 0
 
         if match(trim(split(compiler, '/')[-1]), '^ipython') == -1
-            noautocmd Topen
+            Topen
             " If we are inside an ipython instance exit first (and reset name)
             let last_active_instance = g:neoterm.last()
             let buf_nr = last_active_instance.buffer_id
@@ -1146,7 +1146,7 @@ function! s:OpenREPL(repl)
         endif
         return
     endif
-    noautocmd botright Topen
+    botright Topen
     execute 'T ' .  a:repl
     keepalt file ipython
     let g:neoterm_size = old_size
