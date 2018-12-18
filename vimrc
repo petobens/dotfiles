@@ -148,7 +148,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
-    call dein#add('wsdjeg/dein-ui.vim')
     call dein#add('Shougo/denite.nvim')
     " call dein#add('petobens/denite.nvim')
     call dein#add('Shougo/unite.vim')
@@ -1423,9 +1422,8 @@ endfunction
 
 " Maps
 nnoremap <silent> <Leader>ul :execute "edit +" g:dein#install_log_filename<CR>
-nnoremap <Leader>bu :DeinUpdate<CR>
-nnoremap <Leader>dul :Denite -mode=normal dein_log:!<CR>
-nnoremap  <Leader>rp :call dein#recache_runtimepath()<CR>
+nnoremap <Leader>bu :call <SID>dein_update()<CR>
+nnoremap <Leader>rp :call dein#recache_runtimepath()<CR>
 nnoremap <silent> <Leader>bl :Denite dein<CR>
 
 " }}}
