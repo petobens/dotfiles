@@ -1423,7 +1423,8 @@ endfunction
 
 " Maps
 nnoremap <silent> <Leader>ul :execute "edit +" g:dein#install_log_filename<CR>
-nnoremap <Leader>bu :call <SID>dein_update()<CR>
+nnoremap <Leader>bu :DeinUpdate<CR>
+nnoremap <Leader>dul :Denite -mode=normal dein_log:!<CR>
 nnoremap  <Leader>rp :call dein#recache_runtimepath()<CR>
 nnoremap <silent> <Leader>bl :Denite dein<CR>
 
