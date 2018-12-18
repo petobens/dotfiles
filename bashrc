@@ -74,6 +74,9 @@ if type "ruby" > /dev/null 2>&1; then
     export GEM_HOME=$HOME/.gem
     PATH="$PATH:$GEM_HOME/bin"
 fi
+if type "python" > /dev/null 2>&1; then
+    export AIRFLOW_GPL_UNIDECODE='yes'
+fi
 if type "pyenv" > /dev/null 2>&1; then
 	export PYENV_ROOT="$HOME/.pyenv"
 	PATH="$PYENV_ROOT/bin:$PATH"
@@ -102,6 +105,8 @@ fi
 # new terminal form within neovim). Note: this must be the very last PATH mod
 if [ ! -z $VIRTUAL_ENV ]; then
     PATH="$VIRTUAL_ENV/bin:$PATH"
+    # Also set airflow home to this dir (pipenv shell reads .env file)
+    export AIRFLOW_HOME="$VIRTUAL_ENV/airflow"
 fi
 
 # Remove duplicate path entries
@@ -236,6 +241,7 @@ alias rm='rm -v'
 alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
 alias ds='du -shc * | sort -rh'
+alias diff='diff -u --color'
 
 # Other binaries
 if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
