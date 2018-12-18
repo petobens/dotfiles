@@ -112,13 +112,13 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Token.PromptNum: f'{green} bold',
     Token.OutPrompt: blue,
     Token.OutPromptNum: f'{blue} bold',
-    # This uses a modified pyments style_from_pygments_dict function
+    # The following requires a modified pygments style_from_pygments_dict function
     # See: https://github.com/ipython/ipython/issues/11526
-    'completion-menu.completion.current': f'bg:{light_blue} {black}',
-    'completion-menu.completion': f'bg:{pmenu} {white}',
-    'completion-menu.meta.completion.current': f'bg:{light_blue} {black}',
-    'completion-menu.meta.completion': f'bg:{pmenu} {white}',
-    'completion-menu.multi-column-meta': f'bg:{pmenu} {white}',
+    # 'completion-menu.completion.current': f'bg:{light_blue} {black}',
+    # 'completion-menu.completion': f'bg:{pmenu} {white}',
+    # 'completion-menu.meta.completion.current': f'bg:{light_blue} {black}',
+    # 'completion-menu.meta.completion': f'bg:{pmenu} {white}',
+    # 'completion-menu.multi-column-meta': f'bg:{pmenu} {white}',
     Token.MatchingBracket.Other: blue,
 }
 
