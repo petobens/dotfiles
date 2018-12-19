@@ -138,6 +138,7 @@ $yay_cmd sqlite3
 # CLI
 $yay_cmd bat
 $yay_cmd docker
+$yay_cmd docker-compose
 $yay_cmd fd
 $yay_cmd fzf
 $yay_cmd gnupg
