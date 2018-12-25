@@ -102,7 +102,7 @@ $yay_cmd ntfs-3g
 $yay_cmd pulseaudio
 $yay_cmd pavucontrol
 $yay_cmd playerctl
-$yay_cmd polybar-git
+$yay_cmd polybar
 $yay_cmd reflector
 $yay_cmd rofi-git
 $yay_cmd rofi-dmenu
