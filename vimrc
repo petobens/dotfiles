@@ -110,7 +110,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('jeetsukumaran/vim-pythonsense', {'on_ft' : 'python'})
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
-    call dein#add('petobens/vim-virtualenv', {'rev': 'pipenv'})
+    call dein#add('petobens/vim-virtualenv')
 
     " R
     call dein#add('jalvesaq/Nvim-R')
