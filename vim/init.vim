@@ -2180,7 +2180,7 @@ function PythonSemshiHl()
     hi semshiAttribute       guifg=#abb2bf
     hi semshiLocal           guifg=#56b6c2
     hi semshiFree            guifg=#56b6c2
-    hi semshiGlobal          guifg=#61afef
+    hi semshiGlobal          guifg=#be5046
     hi semshiUnresolved      guifg=#abb2bf gui=NONE
     " Python default (defined here to override semshi's)
     hi pythonKeyword         guifg=#98c379
