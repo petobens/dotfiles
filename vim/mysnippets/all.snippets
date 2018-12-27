@@ -38,7 +38,7 @@ if vim.eval("&ft") == 'r':
 	cms = cms + '\''
 snip.rv = line`
 `!p snip.rv = cms`          File: `!v expand('%:t')`
-`!p snip.rv = cms`        Author: Pedro Ferrari
+`!p snip.rv = cms`        Author: `!p snip.rv = os.environ.get('USER').title()`
 `!p snip.rv = cms`       Created: `!v strftime("%d %b %Y")`
 `!p snip.rv = cms` Last Modified: `!p snip.rv = ''`
 `!p snip.rv = cms`   Description: ${2:`!p
@@ -68,7 +68,7 @@ line, cms, vtw = boxc('=', len(t[1]), int(vim.eval("&tw")))
 if vim.eval("&ft") == 'r':
 	cms = cms + '\''
 snip.rv = line`
-`!p snip.rv = cms`        Author: Pedro Ferrari
+`!p snip.rv = cms`        Author: `!p snip.rv = os.environ.get('USER').title()`
 `!p snip.rv = cms`   Description: ${2:`!p
 if vim.eval("&ft") == 'bib':
     snip.rv = 'BibTeX file for ' + vim.eval('expand("%:t:r")') + '.tex'
