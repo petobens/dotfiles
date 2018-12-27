@@ -102,12 +102,13 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Python
     call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
-    " call dein#add('tweekmonster/impsort.vim', {'on_ft' : 'python'})
-    call dein#add('tweekmonster/impsort.vim')
     if has('nvim')
         call dein#add('zchee/deoplete-jedi')
     endif
     call dein#add('jeetsukumaran/vim-pythonsense', {'on_ft' : 'python'})
+    if has('nvim')
+        call dein#add('numirias/semshi', {'on_ft': 'python'})
+    endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
     call dein#add('petobens/vim-virtualenv')
@@ -1636,7 +1637,7 @@ call deoplete#custom#option({
     \ 'smart_case': v:true,
     \ 'max_list': 150,
     \ 'refresh_always': v:true,
-    \ 'auto_complete_delay': 5,
+    \ 'auto_complete_delay': 100,
     \ 'sources': {
         \ 'bib': ['ultisnips'],
         \ 'snippets': ['ultisnips'],
@@ -2154,6 +2155,35 @@ augroup ps_pythonsense
     au Filetype python map <buffer> [F
                 \ <Plug>(PythonsenseEndOfPreviousPythonFunction)
 augroup END
+
+" }}}
+" Semshi {{{
+
+let g:semshi#mark_selected_nodes = 0
+let g:semshi#simplify_markup = v:false
+let g:semshi#error_sign = v:false
+
+augroup ps_semshi
+    au!
+    au! FileType python call PythonSemshiHl()
+augroup END
+
+function PythonSemshiHl()
+    " If these are defined within our colorschem they will be overriden so
+    " define them here instead
+    hi semshiImported        guifg=#e06c75 gui=NONE
+    hi semshiParameter       guifg=#d19a66
+    hi semshiParameterUnused guifg=#d19a66 gui=underline
+    hi semshiBuiltin         guifg=#e5c07b
+    hi semshiSelf            guifg=#e06c75
+    hi semshiAttribute       guifg=#abb2bf
+    hi semshiLocal           guifg=#56b6c2
+    hi semshiFree            guifg=#56b6c2
+    hi semshiGlobal          guifg=#61afef
+    hi semshiUnresolved      guifg=#abb2bf gui=NONE
+    " Python default (defined here to override semshi's)
+    hi pythonKeyword         guifg=#98c379
+endfunction
 
 " }}}
 " Sneak {{{
