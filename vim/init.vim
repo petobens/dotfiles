@@ -696,7 +696,7 @@ nnoremap <A-o> <C-w>ozv
 " New buffer in vertical or horizontal split
 function! s:NewBuffer()
     let buf_dir = 'vnew'
-    if winwidth(0) <= 2 * (&tw ? &tw : 80)
+    if winwidth(0) <= 2 * (&textwidth ? &textwidth : 80)
         let buf_dir = 'new'
     endif
     execute buf_dir
@@ -722,7 +722,7 @@ nnoremap <silent><Leader>pu :wincmd J<bar>15 wincmd _<CR>
 
 " When following a file open it in a split window
 function! s:GoToFileSplit()
-    if winwidth(0) <= 2 * (&tw ? &tw : 80)
+    if winwidth(0) <= 2 * (&textwidth ? &textwidth : 80)
         wincmd f
     else
         vertical wincmd f
@@ -734,10 +734,10 @@ nnoremap <silent> gf :call <SID>GoToFileSplit()<CR>
 function! s:DiffFileSplit()
     let win_id = win_getid()
     let other_file = input('Input file for diffing: ', '', 'file')
-    if other_file == ''
+    if other_file ==# ''
         return
     endif
-    if winwidth(0) <= 2 * (&tw ? &tw : 80)
+    if winwidth(0) <= 2 * (&textwidth ? &textwidth : 80)
         let diff_cmd = 'diffsplit '
     else
         let diff_cmd = 'vert diffsplit '
@@ -1490,7 +1490,7 @@ endif
 " Functions
 function! s:DeniteScanDir()
     let narrow_dir = input('Input narrowing directory: ', '', 'file')
-    if narrow_dir == ''
+    if narrow_dir ==# ''
         return
     endif
     call denite#start([{'name': 'file/rec', 'args': [narrow_dir]}])
@@ -1499,11 +1499,11 @@ function! s:DeniteGrep()
     let l:save_pwd = getcwd()
     lcd %:p:h
     let narrow_dir = input('Target: ', '.', 'file')
-    if narrow_dir == ''
+    if narrow_dir ==# ''
         return
     endif
     let filetype = input('Filetype: ', '')
-    if filetype == ''
+    if filetype ==# ''
         let ft_filter = ''
     else
         let ft_filter = '--type ' . filetype
@@ -1608,7 +1608,7 @@ call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 " Custom actions
 function! s:my_split(context)
     let split_action = 'vsplit'
-    if winwidth(winnr('#')) <= 2 * (&tw ? &tw : 80)
+    if winwidth(winnr('#')) <= 2 * (&textwidth ? &textwidth : 80)
         let split_action = 'split'
     endif
     call denite#do_action(a:context, split_action, a:context['targets'])
@@ -1708,7 +1708,7 @@ function! s:Edit_Dict()
         return
     endif
     let split_windows = 'vsplit '
-    if winwidth(0) <= 2 * (&tw ? &tw : 80)
+    if winwidth(0) <= 2 * (&textwidth ? &textwidth : 80)
         let split_windows = 'split '
     endif
     execute split_windows . dict_file
@@ -2101,15 +2101,15 @@ let R_objbr_w = 30
 
 function! s:RunR(mode)
     if g:rplugin_nvimcom_port == 0
-        call StartR("R")
+        call StartR('R')
         while g:rplugin_nvimcom_port == 0
             sleep 300m
         endwhile
     endif
-    if a:mode == 'file'
-        call SendFileToR("silent")
-    elseif a:mode == 'visual'
-        call SendSelectionToR("silent", "down")
+    if a:mode ==# 'file'
+        call SendFileToR('silent')
+    elseif a:mode ==# 'visual'
+        call SendSelectionToR('silent', 'down')
     endif
 endfunction
 
@@ -2475,7 +2475,7 @@ endfunction
 let s:my_split = {'is_selectable': 1}
 function! s:my_split.func(candidate)
     let split_action = 'vsplit'
-    if winwidth(winnr('#')) <= 2 * (&tw ? &tw : 80)
+    if winwidth(winnr('#')) <= 2 * (&textwidth ? &textwidth : 80)
         let split_action = 'split'
     endif
     call unite#take_action(split_action, a:candidate)
@@ -2925,7 +2925,7 @@ function! s:TmuxSplitCmd(cmd, cwd)
     if empty('$TMUX')
         return
     endif
-    if a:cwd == ''
+    if a:cwd ==# ''
         let cwd = getcwd()
     else
         let cwd = a:cwd
