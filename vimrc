@@ -1848,8 +1848,6 @@ if filereadable(expand('$HOME/.gitlab_access_token'))
     if len(s:gitlab_keys) == 1
         let g:gitlab_api_keys = {'gitlab.com': s:gitlab_keys[0]}
     endif
-else
-    echoerr 'Missing ' . expand('$HOME/.gitlab_access_token')
 endif
 
 function! s:BufEnterCommit()

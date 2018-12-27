@@ -148,7 +148,7 @@ if type "powerline-daemon" > /dev/null 2>&1; then
     powerline-daemon -q
     POWERLINE_BASH_CONTINUATION=1
     POWERLINE_BASH_SELECT=1
-    . /usr/lib/python3.7/site-packages/powerline/bindings/bash/powerline.sh
+    .  "$base_pkg_dir/lib/python3.7/site-packages/powerline/bindings/bash/powerline.sh"
 fi
 
 # }}}
@@ -272,7 +272,13 @@ if type "R" > /dev/null 2>&1; then
     alias R='R --no-save --quiet'
 fi
 if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
-    alias tm='tmux -f "$HOME/.tmux/tmux.conf" new -A -s petobens'
+    if [ $USER = 'pedro' ]; then
+        tmux_session_name='petobens'
+    else
+        tmux_session_name="$USER"
+    fi
+    alias tm="tmux -f "$HOME/.tmux/tmux.conf" new -A -s $tmux_session_name"
+    unset tmux_session_name
 fi
 if type "mpv" > /dev/null 2>&1; then
     # (P)hot(b)ooth (webcam)

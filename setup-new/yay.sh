@@ -162,7 +162,6 @@ $yay_cmd sshpass
 $yay_cmd stoken-git
 $yay_cmd tk
 $yay_cmd tree
-$yay_cmd unimatrix
 $yay_cmd universal-ctags-git
 $yay_cmd unrar
 $yay_cmd unzip

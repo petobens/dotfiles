@@ -26,7 +26,7 @@ if ! type "pipx" > /dev/null 2>&1; then
     curl https://raw.githubusercontent.com/cs01/pipx/master/get-pipx.py | python3
 fi
 echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
-pipx install --spec git+https://github.com/PyCQA/flake8 flake8 --verbose
+pipx install flake8 --spec git+https://github.com/PyCQA/flake8 --verbose
 pipx inject flake8 flake8-bugbear --verbose
 pipx install beautysh --verbose
 pipx install black --verbose
@@ -47,6 +47,7 @@ fi
 pipx install ranger-fm --verbose
 pipx install sqlparse --verbose
 pipx install trash-cli --verbose
+pipx install unimatrix --spec git+https://github.com/will8211/unimatrix --verbose
 pipx install vim-vint --verbose
 pipx install yamllint --verbose
 # TODO: Replace this once there is a new (fixed) mssql-cli release

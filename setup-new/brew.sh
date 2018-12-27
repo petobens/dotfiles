@@ -14,40 +14,41 @@ fi
 echo -e "\\033[1;34m-->Updating Brew...\\033[0m"
 brew update && brew upgrade
 
+# Brew and brew cask install commands
+brew_install_cmd='brew install'
+brew_cask_install_cmd='brew cask install'
+
 # Fonts
 brew tap caskroom/fonts
-brew cask install font-sourcecodepro-nerd-font
+$brew_cask_install_cmd font-sourcecodepro-nerd-font
 # Nerd fonts Source Code Pro version doesn't have italics so we install
 # the official version
-brew cask install font-source-code-pro
+$brew_cask_install_cmd font-source-code-pro
 
 # Latest bash with completions
-brew install bash
-brew install bash-completion@2
+$brew_install_cmd bash
+$brew_install_cmd bash-completion@2
 
 # Git
-brew install git
+$brew_install_cmd git
 
 # Compiler related
-brew install gcc
-brew install llvm
-brew install libomp
-brew install openblas
-brew install coreutils  # (realpath, etc)
+$brew_install_cmd gcc
+$brew_install_cmd llvm
+$brew_install_cmd libomp
+$brew_install_cmd openblas
+$brew_install_cmd coreutils  # (realpath, ln, etc)
 
 # Languages: Rust, Python3, R, latex, node, java
-brew install rust  # We need this for Alacritty
-brew install python3
-read -p $'\033[1mDo you want to install python2 (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    brew install python2
-fi
+$brew_install_cmd python3
+$brew_install_cmd pipenv
+$brew_install_cmd pyenv
+$brew_install_cmd rust
 if ! type "tlmgr" > /dev/null 2>&1; then
     read -p $'\033[1mDo you want to install LaTeX (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        brew cask install basictex
+        $brew_cask_install_cmd basictex
         # Wait until basictex is installed
         while [ ! -f "/Library/TeX/texbin/tlmgr" ]; do
             sleep 5
@@ -58,50 +59,77 @@ fi
 read -p $'\033[1mDo you want to install R (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    brew install R --with-openblas
+    $brew_install_cmd R --with-openblas
 fi
 read -p $'\033[1mDo you want to install Node.js (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    brew install node
+    $brew_install_cmd node
 fi
 
-# Neovim and tmux latest versions
+# Neovim and tmux and more bash
 brew tap neovim/neovim
-brew install --HEAD neovim
-brew install neovim-remote
-brew install --HEAD tmux
+$brew_install_cmd neovim --HEAD
+$brew_install_cmd neovim-remote
+$brew_install_cmd tmux --HEAD
+$brew_install_cmd socat  # for faster powerline
+$brew_install_cmd powerline
 
 # Databases
-brew install postgresql
-brew install mysql
-brew install protobuf # Required by python's mysql-connector
-brew install redis
-brew install sqlite3
+$brew_install_cmd mongodb
+$brew_install_cmd mysql
+$brew_install_cmd postgresql
+$brew_install_cmd protobuf # Required by python's mysql-connector
+$brew_install_cmd redis
+$brew_install_cmd sqlite3
 
 # Other useful binaries
-brew install the_silver_searcher
-brew install fzf
-brew install z
-brew install htop
-brew install reattach-to-user-namespace
-brew install rmtrash
-brew install --HEAD universal-ctags/universal-ctags/universal-ctags
-brew install unrar
-brew install --HEAD neomutt --with-sidebar-patch --with-notmuch-patch
-brew install shellcheck
-brew install pandoc
-brew install pandoc-citeproc
-brew install neofetch
-brew install imgcat
-brew install rsync
-brew install bat
-brew install fd
-brew install tree
-brew install pyenv
-brew install socat  # for faster powerline
-brew install powerline
-brew install ranger
+$brew_install_cmd bat
+$brew_install_cmd fd
+$brew_install_cmd fzf
+$brew_install_cmd gnupg
+$brew_install_cmd htop
+$brew_install_cmd imgcat
+$brew_install_cmd neofetch --HEAD
+$brew_install_cmd neomutt --HEAD --with-sidebar-patch --with-notmuch-patch
+$brew_install_cmd openconnect --HEAD --with-stoken
+$brew_install_cmd openvpn
+$brew_install_cmd openssh
+$brew_install_cmd pandoc
+$brew_install_cmd pandoc-citeproc
+$brew_install_cmd pass
+$brew_install_cmd pass-update
+$brew_install_cmd qrendcode
+$brew_install_cmd reattach-to-user-namespace
+$brew_install_cmd ripgrep
+$brew_install_cmd rlwrap
+$brew_install_cmd rsync
+$brew_install_cmd shellcheck
+$brew_install_cmd shellpass
+$brew_install_cmd stoken
+$brew_install_cmd tree
+$brew_install_cmd universal-ctags/universal-ctags/universal-ctags --HEAD
+$brew_install_cmd unrar
+$brew_install_cmd unzip
+$brew_install_cmd zip
+$brew_install_cmd z
+
+# Forgit (fzf and git integration)
+if [ ! -f "$HOME/.local/bin/forgit.plugin.sh" ]; then
+    sudo mkdir -p ~/.local/bin/
+    wget https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.sh -P ~/.local/bin
+fi
+
+# Apps
+$brew_cask_install_cmd google-chrome
+$brew_cask_install_cmd firefox
+$brew_cask_install_cmd skype
+$brew_cask_install_cmd spotify
+$brew_cask_install_cmd thunderbird
+$brew_cask_install_cmd skim
+$brew_cask_install_cmd slack
+$brew_cask_install_cmd vlc
+$brew_cask_install_cmd vuze
 
 # Remove outdated versions
 brew cleanup
