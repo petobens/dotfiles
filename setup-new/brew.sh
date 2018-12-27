@@ -121,6 +121,8 @@ if [ ! -f "$HOME/.local/bin/forgit.plugin.sh" ]; then
 fi
 
 # Apps
+$brew_cask_install_cmd docker
+$brew_install_cmd docker-compose
 $brew_cask_install_cmd google-chrome
 $brew_cask_install_cmd firefox
 $brew_cask_install_cmd skype
