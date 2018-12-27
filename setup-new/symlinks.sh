@@ -96,8 +96,6 @@ fi
 if type "nvim" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/vim" "$HOME/.config/nvim"
     echo Created .config/nvim folder symlink
-    $ln_cmd -fTs "$dotfiles_dir/vimrc" "$HOME/.config/nvim/init.vim"
-    echo Created .config/nvim/.init.vim symlink
 fi
 if type "ctags" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/ctags" "$HOME/.ctags"
