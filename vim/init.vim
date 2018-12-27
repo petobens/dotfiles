@@ -22,7 +22,6 @@ else
         let g:python3_host_prog = '/usr/bin/python'
     endif
 endif
-let $DOTFILES = expand('$HOME/git-repos/private/dotfiles/')
 
 " OS specific settings
 if s:is_win
@@ -781,9 +780,9 @@ elseif s:is_linux && has('nvim') && dein#tap('suda') == 1
 endif
 
 " Fast editing and reloading of the vimrc file
-nnoremap <silent> <Leader>ev :e $DOTFILES/vimrc<CR>
-nnoremap <silent> <Leader>rv :so $DOTFILES/vimrc<CR>
-nnoremap <silent> <Leader>em :e $DOTFILES/vim/vimrc_min<CR>
+nnoremap <silent> <Leader>ev :e $DOTVIM/init.vim<CR>
+nnoremap <silent> <Leader>rv :so $DOTVIM/init.vim<CR>
+nnoremap <silent> <Leader>em :e $DOTVIM/vimrc_min<CR>
 
 " Change working directory to that of the current file (autochdir seems to
 " conflict with some plugins)
@@ -947,11 +946,11 @@ augroup ft_ahk_hs_i3
 augroup END
 
 if s:is_mac
-    nnoremap <silent> <Leader>eh :e $DOTFILES/hammerspoon/init.lua<CR>
+    nnoremap <silent> <Leader>eh :e $HOME/.config/hammerspoon/init.lua<CR>
 elseif s:is_win
-    nnoremap <silent> <Leader>eh :e $DOTFILES/autohotkey.ahk<CR>
+    nnoremap <silent> <Leader>eh :e $HOME/autohotkey.ahk<CR>
 else
-    nnoremap <silent> <Leader>eh :e $DOTFILES/arch/config/i3/config<CR>
+    nnoremap <silent> <Leader>eh :e $HOME/.config/i3/config<CR>
 endif
 
 " }}}
@@ -2085,7 +2084,7 @@ augroup END
 " Console settings (using tmux)
 let R_args = ['--no-save', '--quiet']
 let R_in_buffer = 0
-let R_source = '$DOTFILES/vim/bundle/repos/github.com/jalvesaq/Nvim-R/' .
+let R_source = '$DOTVIM/bundle/repos/github.com/jalvesaq/Nvim-R/' .
             \  'R/tmux_split.vim'
 let R_tmux_title = 'automatic'
 let R_rconsole_width = 0  " Always use horizontal split
