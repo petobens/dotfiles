@@ -1496,6 +1496,8 @@ function! s:DeniteScanDir()
     call denite#start([{'name': 'file/rec', 'args': [narrow_dir]}])
 endfunction
 function! s:DeniteGrep()
+    let l:save_pwd = getcwd()
+    lcd %:p:h
     let narrow_dir = input('Target: ', '.', 'file')
     if narrow_dir == ''
         return
@@ -1506,6 +1508,7 @@ function! s:DeniteGrep()
     else
         let ft_filter = '--type ' . filetype
     endif
+    execute 'lcd ' . l:save_pwd
     call denite#start([{'name': 'grep', 'args': [narrow_dir, ft_filter]}])
 endfunction
 function! s:DeniteTasklist(...)
