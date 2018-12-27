@@ -74,13 +74,29 @@ if type "ruby" > /dev/null 2>&1; then
     export GEM_HOME=$HOME/.gem
     PATH="$PATH:$GEM_HOME/bin"
 fi
-if type "python" > /dev/null 2>&1; then
-    export AIRFLOW_GPL_UNIDECODE='yes'
-fi
 if type "pyenv" > /dev/null 2>&1; then
 	export PYENV_ROOT="$HOME/.pyenv"
 	PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
+fi
+# We use sqlcl instead of sqlplus (it must be manually installed to this dir)
+if [ -d "$HOME/.local/sqlcl" ]; then
+    PATH="$PATH:$HOME/.local/sqlcl/bin"
+fi
+# Prepend python virtual env to path if exists (this is useful when spawning a
+# new terminal form within neovim). Note: this must be the very last PATH mod
+if [ ! -z $VIRTUAL_ENV ]; then
+    PATH="$VIRTUAL_ENV/bin:$PATH"
+    # Also set airflow home to this dir (pipenv shell reads .env file)
+    export AIRFLOW_HOME="$VIRTUAL_ENV/airflow"
+fi
+
+# Remove duplicate path entries
+PATH=$(printf "%s" "$PATH" | awk -v RS=':' '!a[$1]++ { if (NR > 1) printf RS; printf $1 }')
+
+# Language/binaries environmental variables
+if type "python" > /dev/null 2>&1; then
+    export AIRFLOW_GPL_UNIDECODE='yes'
 fi
 if type "pipenv" > /dev/null 2>&1; then
     eval "$(pipenv --completion)"
@@ -94,23 +110,13 @@ fi
 if type "sqlplus" > /dev/null 2>&1; then
     export SQLPATH="$HOME/.config/sqlplus"
 fi
-# We use sqlcl instead of sqlplus (it must be manually installed to this dir)
-if [ -d "$HOME/.local/sqlcl" ]; then
-    PATH="$PATH:$HOME/.local/sqlcl/bin"
-fi
 if type "mssql-cli" > /dev/null 2>&1; then
     export MSSQL_CLI_TELEMETRY_OPTOUT=1
 fi
-# Prepend python virtual env to path if exists (this is useful when spawning a
-# new terminal form within neovim). Note: this must be the very last PATH mod
-if [ ! -z $VIRTUAL_ENV ]; then
-    PATH="$VIRTUAL_ENV/bin:$PATH"
-    # Also set airflow home to this dir (pipenv shell reads .env file)
-    export AIRFLOW_HOME="$VIRTUAL_ENV/airflow"
+if type "gpg" > /dev/null 2>&1; then
+    GPG_TTY=$(tty)
+    export GPG_TTY
 fi
-
-# Remove duplicate path entries
-PATH=$(printf "%s" "$PATH" | awk -v RS=':' '!a[$1]++ { if (NR > 1) printf RS; printf $1 }')
 
 # Set editor to nvim and use it as a manpager
 export EDITOR=nvim
