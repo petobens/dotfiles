@@ -111,7 +111,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
-    call dein#add('petobens/vim-virtualenv')
+    call dein#add('petobens/vim-virtualenv', {'on_ft': 'python'})
 
     " R
     call dein#add('jalvesaq/Nvim-R')
