@@ -104,7 +104,7 @@ $yay_cmd pavucontrol
 $yay_cmd playerctl
 $yay_cmd polybar
 $yay_cmd reflector
-$yay_cmd rofi-git
+$yay_cmd rofi
 $yay_cmd rofi-dmenu
 $yay_cmd tabbed
 $yay_cmd tlp
