@@ -1732,6 +1732,10 @@ endif
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
             \ '.gitignore': '', 'bashrc': '', '.bashrc': '',
             \ 'bash_profile': '', '.bash_profile': ''}
+if !exists('g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols')
+    let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}
+endif
+let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['r'] = 'ﳒ'
 
 " Disable denite integration (because it makes denite really slow)
 let g:webdevicons_enable_denite = 0
@@ -1830,14 +1834,14 @@ augroup ps_fugitive
     au Filetype git setlocal foldlevel=1
     " Complete with issues from github and gitlab
     au Filetype gitcommit
-        \ if fugitive#buffer().repo().config('remote.origin.url') =~#
+        \ if fugitive.repo().config('remote.origin.url') =~#
             \ 'gitlab.com' |
             \ setlocal omnifunc=gitlab#omnifunc |
         \ else |
             \ setlocal omnifunc=rhubarb#omnifunc |
         \ endif
     au BufEnter *.{git/COMMIT_EDITMSG,gitcommit}
-        \ if fugitive#buffer().repo().config('remote.origin.url') =~#
+        \ if fugitive.repo().config('remote.origin.url') =~#
             \ 'gitlab.com' |
             \ setlocal omnifunc=gitlab#omnifunc |
         \ else |
