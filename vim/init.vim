@@ -1351,21 +1351,35 @@ augroup END
 " Maps
 " FIXME: Size is not shown taken into account the winwidth
 nnoremap <silent> <Leader>xf :Defx -split=vertical -winwidth=40
-            \ -columns=git:icons:filename:type:size -show-ignored-files
+            \ -columns=icons:filename:type:size:git -show-ignored-files
             \ -direction=topleft `expand('%:p:h')` -search=`expand('%:p')`<CR>
+nnoremap <silent> <Leader>xdf :Defx -split=vertical -winwidth=40
+            \ -columns=icons:filename:type:size:git -show-ignored-files
+            \ -direction=topleft `expand('%:p:h')` -search=`expand('%:p')`<CR>
+            \ :Defx -new -split=horizontal
+            \ -columns=icons:filename:type:size:git -show-ignored-files<CR>
+            \ :wincmd p<CR>
 
 " Devicons
-" TODO: Add better colors
 let g:defx_icons_enable_syntax_highlight = 0
-let g:defx_icons_column_length = 2
-let g:defx_icons_directory_icon = ''
-let g:defx_icons_mark_icon = '*'
-let g:defx_icons_parent_icon = ''
-let g:defx_icons_default_icon = ''
-let g:defx_icons_directory_symlink_icon = ''
+let g:defx_icons_extensions = {
+            \ 'tex': {'icon': ''},
+            \ 'bib': {'icon': ''},
+            \ 'gitcommit': {'icon': ''},
+            \ 'r': {'icon': 'ﳒ'},
+            \ 'R': {'icon': 'ﳒ'},
+            \ }
+let g:defx_icons_exact_matches = {
+            \ '.gitconfig': {'icon': ''},
+            \ '.gitignore': {'icon':''},
+            \ 'bashrc': {'icon': ''},
+            \ '.bashrc': {'icon': ''},
+            \ 'bash_profile': {'icon':''},
+            \ '.bash_profile': {'icon':''},
+            \ }
 
 " Git
-" TODO: Add better colors
+" TODO: Add better colors and the ability to enable and disable
 let g:defx_git#indicators = {
   \ 'Modified'  : '✚',
   \ 'Staged'    : '●',
@@ -1738,7 +1752,7 @@ if !exists('g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols')
     let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}
 endif
 let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {'tex': '',
-            \ 'bib':'', 'gitcommit': ''}
+            \ 'bib':'', 'gitcommit': '', 'r': 'ﳒ', 'R': 'ﳒ'}
 
 " Add or override individual specific files
 if !exists('g:WebDevIconsUnicodeDecorateFileNodesExactSymbols')
@@ -1747,10 +1761,6 @@ endif
 let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
             \ '.gitignore': '', 'bashrc': '', '.bashrc': '',
             \ 'bash_profile': '', '.bash_profile': ''}
-if !exists('g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols')
-    let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}
-endif
-let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols['r'] = 'ﳒ'
 
 " Disable denite integration (because it makes denite really slow)
 let g:webdevicons_enable_denite = 0
