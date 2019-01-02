@@ -149,13 +149,10 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
+    " Unite/denite
     call dein#add('Shougo/denite.nvim')
     " call dein#add('petobens/denite.nvim')
     call dein#add('Shougo/unite.vim')
-    call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
-    call dein#add('Shougo/defx.nvim')
-    call dein#add('Shougo/deoplete.nvim')
-    " Unite/denite sources
     call dein#add('chemzqm/denite-extra')
     call dein#add('raghur/fruzzy')
     call dein#add('Shougo/neomru.vim')
@@ -163,12 +160,18 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('kopischke/unite-spell-suggest')
     call dein#add('rafi/vim-denite-z')
     call dein#add('tsukkee/unite-tag')
-    " For deoplete
+    " Deoplete
+    call dein#add('Shougo/deoplete.nvim')
     call dein#add('Shougo/context_filetype.vim')
     call dein#add('Shougo/echodoc.vim')
     call dein#add('Shougo/neco-vim', {'name' : 'neco-vim'})
     call dein#add('Shougo/neco-syntax')
     call dein#add('Shougo/neoinclude.vim')
+    " Defx
+    call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
+    call dein#add('Shougo/defx.nvim')
+    call dein#add('kristijanhusak/defx-icons')
+    call dein#add('kristijanhusak/defx-git')
 
     " Filetype plugins
     if executable('i3')
@@ -1348,8 +1351,30 @@ augroup END
 " Maps
 " FIXME: Size is not shown taken into account the winwidth
 nnoremap <silent> <Leader>xf :Defx -split=vertical -winwidth=40
-            \ -columns=mark:filename:type:size -show-ignored-files
+            \ -columns=git:icons:filename:type:size -show-ignored-files
             \ -direction=topleft `expand('%:p:h')` -search=`expand('%:p')`<CR>
+
+" Devicons
+" TODO: Add better colors
+let g:defx_icons_enable_syntax_highlight = 0
+let g:defx_icons_column_length = 2
+let g:defx_icons_directory_icon = ''
+let g:defx_icons_mark_icon = '*'
+let g:defx_icons_parent_icon = ''
+let g:defx_icons_default_icon = ''
+let g:defx_icons_directory_symlink_icon = ''
+
+" Git
+" TODO: Add better colors
+let g:defx_git#indicators = {
+  \ 'Modified'  : '✚',
+  \ 'Staged'    : '●',
+  \ 'Untracked' : '…',
+  \ 'Renamed'   : '➜',
+  \ 'Unmerged'  : '═',
+  \ 'Deleted'   : '✖',
+  \ 'Unknown'   : '?'
+  \ }
 
 " Filetype settings
 augroup ps_def
@@ -1364,9 +1389,7 @@ function! s:defx_settings()
     nnoremap <silent><buffer><expr> Q defx#do_action('quit')
     " nmap <buffer> <C-c> <Plug>(vimfiler_hide)
     " Edit and open with external program
-    nnoremap <silent><buffer><expr> <CR>
-        \ defx#do_action('open', 'wincmd w \| drop')
-
+    nnoremap <silent><buffer><expr> <CR> defx#do_action('drop')
     nnoremap <silent><buffer><expr> l defx#do_action('open')
     nnoremap <silent><buffer><expr> o defx#do_action('execute_system')
     " Open files in splits
