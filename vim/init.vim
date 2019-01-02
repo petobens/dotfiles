@@ -154,14 +154,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/unite.vim')
     call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
     call dein#add('Shougo/defx.nvim')
-    " Note: We need vimproc in neovim for grep source to work
-    let s:vimproc_make = 'make -f make_mac.mak'
-    if s:is_win
-        let s:vimproc_make = 'tools\\update-dll-mingw'
-    elseif s:is_linux
-        let s:vimproc_make = 'make'
-    endif
-    call dein#add('Shougo/vimproc.vim', {'build' : s:vimproc_make})
     call dein#add('Shougo/deoplete.nvim')
     " Unite/denite sources
     call dein#add('chemzqm/denite-extra')
@@ -1834,14 +1826,14 @@ augroup ps_fugitive
     au Filetype git setlocal foldlevel=1
     " Complete with issues from github and gitlab
     au Filetype gitcommit
-        \ if fugitive.repo().config('remote.origin.url') =~#
+        \ if fugitive#repo().config('remote.origin.url') =~#
             \ 'gitlab.com' |
             \ setlocal omnifunc=gitlab#omnifunc |
         \ else |
             \ setlocal omnifunc=rhubarb#omnifunc |
         \ endif
     au BufEnter *.{git/COMMIT_EDITMSG,gitcommit}
-        \ if fugitive.repo().config('remote.origin.url') =~#
+        \ if fugitive#repo().config('remote.origin.url') =~#
             \ 'gitlab.com' |
             \ setlocal omnifunc=gitlab#omnifunc |
         \ else |
