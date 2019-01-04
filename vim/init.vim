@@ -111,7 +111,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
-    call dein#add('petobens/vim-virtualenv', {'on_ft': 'python'})
+    call dein#add('petobens/vim-virtualenv')  " won't work if loaded on_ft
 
     " R
     call dein#add('jalvesaq/Nvim-R')
@@ -1348,16 +1348,26 @@ augroup END
 " }}}
 " Defx {{{
 
+call defx#custom#option('_', {
+            \ 'show_ignored_files': 1,
+            \ 'winwidth': 41,
+            \ 'split': 'vertical',
+            \ 'direction': 'topleft',
+            \ 'columns': 'icons:filename:type:size:git',
+            \ })
+
+" Fit text to window width
+call defx#custom#column('filename', {
+        \ 'min_width': 20,
+        \ 'max_width': 20,
+        \ })
+
 " Maps
-" FIXME: Size is not shown taken into account the winwidth
-nnoremap <silent> <Leader>xf :Defx -split=vertical -winwidth=40
-            \ -columns=icons:filename:type:size:git -show-ignored-files
-            \ -direction=topleft `expand('%:p:h')` -search=`expand('%:p')`<CR>
-nnoremap <silent> <Leader>xdf :Defx -split=vertical -winwidth=40
-            \ -columns=icons:filename:type:size:git -show-ignored-files
-            \ -direction=topleft `expand('%:p:h')` -search=`expand('%:p')`<CR>
-            \ :Defx -new -split=horizontal
-            \ -columns=icons:filename:type:size:git -show-ignored-files<CR>
+nnoremap <silent> <Leader>xfe :Defx<CR>
+nnoremap <silent> <Leader>xff :Defx `expand('%:p:h')`
+            \ -search=`expand('%:p')`<CR>
+nnoremap <silent> <Leader>xdf :Defx `expand('%:p:h')`<CR>
+            \ :Defx -new -split=horizontal -direction=<CR>
             \ :wincmd p<CR>
 
 " Devicons
@@ -1391,7 +1401,7 @@ let g:defx_git#indicators = {
   \ }
 
 " Filetype settings
-augroup ps_def
+augroup ps_defx
     au!
     au FileType defx call s:defx_settings()
 augroup END
