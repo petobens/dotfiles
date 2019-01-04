@@ -415,7 +415,10 @@ alias mpssh='TERM=xterm-256color; sshpass -p '\
 '"$(pass minprod/ssh/microstrategy)" ssh minprod'
 
 # Humber
-alias hdb='mongo mongodb://humberDbRead:"$(pass humber/mongodb/humberDbRead)"'\
+alias hdbr='mongo mongodb://humberDbRead:"$(pass humber/mongodb/humberDbRead)"'\
+'@db1.humber.com.ar:37117,db2.humber.com.ar:37117,'\
+'arbiter.humber.com.ar:37117/humberPro001?replicaSet=humber-replica-set'
+alias hdbw='mongo mongodb://pedroFerrari:"$(pass humber/mongodb/pedroFerrari)"'\
 '@db1.humber.com.ar:37117,db2.humber.com.ar:37117,'\
 'arbiter.humber.com.ar:37117/humberPro001?replicaSet=humber-replica-set'
 
