@@ -160,6 +160,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('kopischke/unite-spell-suggest')
     call dein#add('rafi/vim-denite-z')
     call dein#add('tsukkee/unite-tag')
+    call dein#add('petobens/denite-dirmark')
     " Deoplete
     call dein#add('Shougo/deoplete.nvim')
     call dein#add('Shougo/context_filetype.vim')
@@ -1369,6 +1370,7 @@ nnoremap <silent> <Leader>xff :Defx `expand('%:p:h')`
 nnoremap <silent> <Leader>xdf :Defx `expand('%:p:h')`<CR>
             \ :Defx -new -split=horizontal -direction=<CR>
             \ :wincmd p<CR>
+nnoremap <silent> <Leader>xfb :Defx<CR>:Denite defx/bookmarks<CR>
 
 " Devicons
 let g:defx_icons_enable_syntax_highlight = 0
@@ -1448,6 +1450,10 @@ function! s:defx_settings()
         nmap <silent><buffer><expr>ge defx#do_action('change_vim_cwd',
                     \ "TmuxRanger")
     endif
+    " History source
+    nnoremap <silent><buffer> <C-h> :Denite defx/history<CR>
+    " Bookmarks source
+    nnoremap <silent><buffer> b :Denite defx/bookmarks<CR>
 endfunction
 
 " }}}
@@ -1528,6 +1534,10 @@ if executable('rg')
     call denite#custom#var('grep', 'final_opts', [])
 endif
 
+" Bookmarks source (dirmark)
+call g:dirmark#set_cache_directory_path($CACHE .
+            \ '/plugins/denite/denite-dirmark')
+
 " Functions
 function! s:DeniteScanDir()
     let narrow_dir = input('Input narrowing directory: ', '', 'file')
@@ -1561,6 +1571,8 @@ function! s:DeniteTasklist(...)
     call denite#start([{'name': 'grep',
                 \ 'args': [target, '','TODO:\s|FIXME:\s']}])
 endfunction
+command! -nargs=? -complete=file DeniteBookmarkAdd
+        \ :Denite dirmark/add -default-action=add -immediately-1 -path=<q-args>
 
 " Mappings
 nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
@@ -1585,6 +1597,7 @@ nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
+nnoremap <silent> <Leader>bm :Denite dirmark<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :<C-U>execute 'Denite -resume  -immediately ' .
             \ -cursor-pos=+'. v:count1<CR>
@@ -2451,7 +2464,7 @@ let g:unite_enable_auto_select = 0                " Don't skip first line
 let g:unite_source_buffer_time_format = ''
 
 " Mappings (sources):
-nnoremap <silent> <Leader>bm :Unite -profile-name=bookmark -default-action=rec
+nnoremap <silent> <Leader>ubm :Unite -profile-name=bookmark -default-action=rec
             \ -buffer-name=my-directories bookmark<CR>
 nnoremap <silent> <Leader>ube :Unite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>me :Unite mapping<CR>
