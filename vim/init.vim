@@ -1440,6 +1440,8 @@ function! s:defx_settings()
     " Toggle hidden files
     nnoremap <silent><buffer><expr> <Leader>th
         \ defx#do_action('toggle_ignored_files')
+    " Toggle sorting from filename to time (with last modified first)
+    nnoremap <silent><buffer><expr> S defx#do_action('toggle_sort', 'Time')
     " Open in external file browser
     if s:is_linux && executable('ranger')
         command! -nargs=1 TmuxRanger call s:TmuxSplitCmd('ranger', <q-args>)
