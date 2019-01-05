@@ -1390,16 +1390,17 @@ let g:defx_icons_exact_matches = {
             \ }
 
 " Git
-" TODO: Add better colors and the ability to enable and disable
 let g:defx_git#indicators = {
   \ 'Modified'  : '✚',
   \ 'Staged'    : '●',
-  \ 'Untracked' : '…',
+  \ 'Untracked' : '?',
   \ 'Renamed'   : '➜',
   \ 'Unmerged'  : '═',
   \ 'Deleted'   : '✖',
   \ 'Unknown'   : '?'
   \ }
+hi Defx_git_Modified guifg=#e06c75
+hi Defx_git_Staged guifg=#98c379
 
 function! s:QuitAllDefx(context) abort
     let buffers = filter(range(1, bufnr('$')),
