@@ -1352,17 +1352,18 @@ augroup END
 
 call defx#custom#option('_', {
             \ 'show_ignored_files': 1,
-            \ 'winwidth': 41,
+            \ 'winwidth': 40,
             \ 'split': 'vertical',
             \ 'direction': 'topleft',
-            \ 'columns': 'icons:filename:type:size:git',
+            \ 'columns': 'icons:filename:size:git',
             \ })
 
-" Fit text to window width
+" Fit text to window width and set time format
 call defx#custom#column('filename', {
-        \ 'min_width': 20,
-        \ 'max_width': 20,
+        \ 'min_width': 23,
+        \ 'max_width': 23,
         \ })
+call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 
 " Maps
 nnoremap <silent> <Leader>xfe :Defx<CR>
@@ -1445,6 +1446,9 @@ function! s:defx_settings()
         \ defx#do_action('toggle_ignored_files')
     " Toggle sorting from filename to time (with last modified first)
     nnoremap <silent><buffer><expr> S defx#do_action('toggle_sort', 'Time')
+    " Toggle columns to show time
+	nnoremap <silent><buffer><expr> T defx#do_action('toggle_columns',
+        \ 'icons:filename:time')
     " Open in external file browser
     if s:is_linux && executable('ranger')
         command! -nargs=1 TmuxRanger call s:TmuxSplitCmd('ranger', <q-args>)
