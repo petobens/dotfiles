@@ -1359,10 +1359,7 @@ call defx#custom#option('_', {
             \ })
 
 " Fit text to window width and set time format
-call defx#custom#column('filename', {
-        \ 'min_width': 23,
-        \ 'max_width': 23,
-        \ })
+call defx#custom#column('filename', {'min_width': 23, 'max_width': 23})
 call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 
 " Maps
@@ -1404,20 +1401,28 @@ let g:defx_git#indicators = {
   \ 'Unknown'   : '?'
   \ }
 
+function! s:QuitAllDefx(context) abort
+    let buffers = filter(range(1, bufnr('$')),
+                \ 'getbufvar(v:val, "&filetype") ==# "defx"')
+    if !empty(buffers)
+        silent execute 'bwipeout' join(buffers)
+    endif
+endfunction
+
 " Filetype settings
 augroup ps_defx
     au!
     au FileType defx call s:defx_settings()
 augroup END
 
+
 function! s:defx_settings()
-    " Exit with escape key and q, Q; hide with <C-c>
+    " Exit with escape key and q, Q
     nnoremap <silent><buffer><expr> <ESC> defx#do_action('quit')
     nnoremap <silent><buffer><expr> q defx#do_action('quit')
-    nnoremap <silent><buffer><expr> Q defx#do_action('quit')
-    " nmap <buffer> <C-c> <Plug>(vimfiler_hide)
+    nnoremap <silent><buffer><expr> Q defx#do_action('call', '<SID>QuitAllDefx')
     " Edit and open with external program
-    nnoremap <silent><buffer><expr> <CR> defx#do_action('drop')
+    nnoremap <silent><buffer><expr> <CR>  defx#do_action('open', 'wincmd w \| drop')
     nnoremap <silent><buffer><expr> l defx#do_action('open')
     nnoremap <silent><buffer><expr> o defx#do_action('execute_system')
     " Open files in splits
@@ -1444,13 +1449,19 @@ function! s:defx_settings()
     " Toggle hidden files
     nnoremap <silent><buffer><expr> <Leader>th
         \ defx#do_action('toggle_ignored_files')
+    " Redraw
+    nnoremap <silent><buffer><expr> <C-r> defx#do_action('redraw')
     " Toggle sorting from filename to time (with last modified first)
     nnoremap <silent><buffer><expr> S defx#do_action('toggle_sort', 'Time')
     " Toggle columns to show time
 	nnoremap <silent><buffer><expr> T defx#do_action('toggle_columns',
         \ 'icons:filename:time')
+    " Open new defx buffer
+    nnoremap <silent><buffer> <Leader>sp :Defx -new -split=horizontal
+        \ -direction=<CR>:wincmd p<CR>
+
     " Open in external file browser
-    if s:is_linux && executable('ranger')
+    if executable('ranger')
         command! -nargs=1 TmuxRanger call s:TmuxSplitCmd('ranger', <q-args>)
         nmap <silent><buffer><expr>ge defx#do_action('change_vim_cwd',
                     \ "TmuxRanger")
