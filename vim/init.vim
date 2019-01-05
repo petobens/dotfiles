@@ -1276,7 +1276,8 @@ let g:airline#extensions#tabline#buffer_min_count = 2
 let airline#extensions#tabline#disable_refresh = 1
 let g:airline#extensions#tabline#show_tab_type = 1
 " Don't show some filetypes in the tabline
-let g:airline#extensions#tabline#excludes = ['denite']
+let g:airline#extensions#tabline#ignore_bufadd_pat =
+            \ 'gundo|undotree|vimfiler|tagbar|^\[defx\]|^\[denite\]'
 
 " Show superindex numbers in tabline that allow to select buffer directly
 let g:airline#extensions#tabline#buffer_idx_mode = 1
