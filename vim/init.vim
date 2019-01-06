@@ -75,7 +75,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#begin(expand('$DOTVIM/bundle/'))
 
     " Plugins we are using
-    call dein#add('vim-airline/vim-airline')
+    " call dein#add('vim-airline/vim-airline')
+    call dein#add('petobens/vim-airline')
     call dein#add('junegunn/vim-easy-align')
     call dein#add('airblade/vim-gitgutter')
     call dein#add('jamessan/vim-gnupg')
@@ -1423,12 +1424,12 @@ function! s:defx_settings()
     nnoremap <silent><buffer><expr> q defx#do_action('quit')
     nnoremap <silent><buffer><expr> Q defx#do_action('call', '<SID>QuitAllDefx')
     " Edit and open with external program
-    nnoremap <silent><buffer><expr> <CR>  defx#do_action('open', 'wincmd w \| drop')
-    nnoremap <silent><buffer><expr> l defx#do_action('open')
+    nnoremap <silent><buffer><expr> <CR>  defx#do_action('drop')
+    nnoremap <silent><buffer><expr> l defx#do_action('drop')
     nnoremap <silent><buffer><expr> o defx#do_action('execute_system')
     " Open files in splits
-    nnoremap <silent><buffer><expr> s defx#do_action('open', 'split')
-    nnoremap <silent><buffer><expr> v defx#do_action('open', 'vsplit')
+    nnoremap <silent><buffer><expr> s defx#do_action('drop', 'split')
+    nnoremap <silent><buffer><expr> v defx#do_action('drop', 'vsplit')
     " Copy, move, paste and remove
     nnoremap <silent><buffer><expr> c defx#do_action('copy')
     nnoremap <silent><buffer><expr> m defx#do_action('move')
