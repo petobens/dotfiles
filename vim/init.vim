@@ -1601,8 +1601,8 @@ nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
-nnoremap <silent> <Leader>rg :call <SID>DeniteGrep()<CR>
-nnoremap <silent> <Leader>dg :DeniteCursorWord grep<CR>
+nnoremap <silent> <Leader>rg :lcd %:p:h<CR>:call <SID>DeniteGrep()<CR>
+nnoremap <silent> <Leader>dg :lcd %:p:h<CR>:DeniteCursorWord grep<CR>
 nnoremap <silent> <Leader>he :Denite help<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>sh :Denite history:search<CR>
