@@ -2,6 +2,8 @@
 *.swp
 *.swo
 .cache/
+tmp/
+scratch/
 
 # Windows
 *.dll
