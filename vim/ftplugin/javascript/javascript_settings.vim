@@ -1,10 +1,10 @@
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
-if exists('b:my_js_settings_file')
-    finish
-endif
-let b:my_js_settings_file = 1
+" if exists('b:my_js_settings_file')
+    " finish
+" endif
+" let b:my_js_settings_file = 1
 
 " }}}
 " Helpers {{{
@@ -351,7 +351,7 @@ augroup show_js_output
 augroup END
 
 " }}}
-" Linting {{{
+" Linting and formatting {{{
 
 function! s:UpdateJsBuffer()
     " Only run this function for javascript files
@@ -361,10 +361,50 @@ function! s:UpdateJsBuffer()
     checktime
 endfunction
 
+function! s:RunPrettier(...)
+    " Don't run prettier if it is not installed
+    if !executable('prettier')
+        echoerr 'prettier is not installed or not in your path.'
+        return
+    endif
+    " Don't run prettier if there is only one empty line or we are in a Gdiff
+    " (when file path includes .git)
+    if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
+        return
+    endif
+
+    " Save working directory and get current file
+    let l:save_pwd = getcwd()
+    lcd %:p:h
+    let current_file = expand('%:p:t')
+
+    " Change shellredir to avoid inserting error output into the buffer (i.e
+    " don't include stderr in output buffer)
+    let shrd = &shellredir
+    set shellredir=>%s
+    let old_formatprg = &l:formatprg
+    let &l:formatprg = 'prettier --tab-width 4 --stdin --stdin-filepath ' . current_file
+    let save_cursor = getcurpos()
+    if a:0 && a:1 ==# 'visual'
+        execute 'silent! normal! gvgq'
+    else
+        execute 'silent! normal! gggqG'
+    endif
+    if v:shell_error == 1
+        silent undo
+    endif
+    call setpos('.', save_cursor)
+    let &shellredir = shrd
+    let &l:formatprg = old_formatprg
+    execute 'lcd ' . l:save_pwd
+endfunction
+
+
 " Run eslint and reload buffer for style autofixing
 augroup js_linting
     au!
-    au BufWritePost *.js silent Neomake
+    au BufWritePost *.js lclose | call s:RunPrettier() | silent noautocmd update |
+                \ silent Neomake
     au User NeomakeJobFinished call s:UpdateJsBuffer()
 augroup END
 
@@ -386,5 +426,6 @@ nnoremap <silent> <buffer> <F5> :call
 inoremap <silent> <buffer> <F5> <ESC>:call
             \ <SID>RunJS('normal', 'foreground_os')<CR>
 vnoremap <silent> <buffer> <F5> :EvalVisualJSForeground<CR>
+nnoremap <silent> <buffer> <Leader>fc :call <SID>RunPrettier()<CR>
 
 " }}}
