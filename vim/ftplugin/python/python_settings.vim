@@ -99,7 +99,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
     lcd %:p:h
 
     " Set compiler (prefer python3)
-    if a:compiler == 'python'
+    if a:compiler ==# 'python'
         let compiler = 'python3'
         if !executable(compiler)
             let compiler = 'python2'
@@ -480,8 +480,8 @@ function! s:RuniSort(...)
     let shrd = &shellredir
     set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let &l:formatprg = "isort --trailing-comma --multi-line 3 "
-                \. "--line-width 88 -"
+    let &l:formatprg = 'isort --trailing-comma --multi-line 3 '
+                \. '--line-width 88 -'
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'silent! normal! gvgq'
@@ -518,7 +518,7 @@ function! s:RunBlack(...)
     let shrd = &shellredir
     set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let &l:formatprg = "black -S -l 88 -"
+    let &l:formatprg = 'black -S -l 88 -'
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'silent! normal! gvgq'
@@ -616,15 +616,6 @@ function! s:PyDoc()
     nnoremap <silent> <buffer> Q :bd!<CR>
     nnoremap <silent> <buffer>  <C-]> :call <SID>PyDoc()<CR>
     nnoremap <silent> <buffer> <S-k> :call <SID>PyDoc()<CR>
-
-    " Highlight python code within rst
-    unlet! b:current_syntax
-    syn include @rstPythonScript syntax/python.vim
-    syn region rstPythonRegion start=/^\v {4}/ end=/\v^( {4}|\n)@!/
-                \ contains=@rstPythonScript
-    syn region rstPythonRegion matchgroup=pythonDoctest start=/^>>>\s*/
-                \ end=/\n/ contains=@rstPythonScript
-    let b:current_syntax = 'rst'
 endfunction
 
 augroup py_doc_rst
@@ -716,7 +707,7 @@ function! s:RunPyTest(level, compilation)
                 let coveragerc_file = ''
             endif
         endif
-        if coveragerc_file != ''
+        if coveragerc_file !=# ''
             let cov_config = ' --cov-config ' . coveragerc_file
         else
             let cov_config = ''
@@ -858,7 +849,7 @@ function! s:ShowPyTestCoverage()
     if has_errors == 1
         let coverage_start = 0
         for entry in qflist
-            if entry.type == 'E'
+            if entry.type ==# 'E'
                 let coverage_end = index(qflist, entry) - 1
                 break
             endif
