@@ -12,9 +12,7 @@
 // Chrome version. See https://github.com/brookhong/Surfingkeys/issues/511 and
 // https://brookhong.github.io/2017/10/15/surfingkeys-across-all-pages.html
 
-unmapAllExcept( [
-    'f', '/', '*', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm',
-]);
+unmapAllExcept(['f', '/', '*', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm']);
 
 // }}}
 // Options and Appearance {{{
@@ -29,7 +27,7 @@ settings.editableBodyCare = false;
 Hints.characters = 'asdfghjkl';
 
 // Disable PDF viewer (note that ;s toggle that does this doesn't seem to work)
-chrome.storage.local.set({'noPdfViewer': 1});
+chrome.storage.local.set({ noPdfViewer: 1 });
 
 // Theme (uses Onedark colors)
 settings.theme = `
@@ -79,30 +77,32 @@ mapkey(',me', 'Mapping explorer (show usage)', function() {
 
 // View and add bookmarks
 mapkey(',bm', 'Open bookmarks', function() {
-    Front.openOmnibar(({type: 'Bookmarks'}));
+    Front.openOmnibar({ type: 'Bookmarks' });
 });
 mapkey(',ab', 'Bookmark current page to selected folder', function() {
     let page = {
         url: window.location.href,
         title: document.title
     };
-    Front.openOmnibar(({type: 'AddBookmark', extra: page}));
+    Front.openOmnibar({ type: 'AddBookmark', extra: page });
 });
 
 // Quickmarks (own implementation)
 const qmarksMapKey = function(prefix, urls) {
-    const newTab = (prefix !== '\'');
+    const newTab = prefix !== "'";
     const openLink = function(link, newTab) {
         return function() {
             RUNTIME('openLink', {
-                tab: {tabbed: newTab},
+                tab: { tabbed: newTab },
                 url: link
             });
         };
     };
     for (var key in urls) {
         mapkey(
-            prefix + key, 'qmark: ' + urls[key], openLink(urls[key], newTab)
+            prefix + key,
+            'qmark: ' + urls[key],
+            openLink(urls[key], newTab)
         );
     }
 };
@@ -110,7 +110,6 @@ const qmarksMapKey = function(prefix, urls) {
 const qmarksUrls = {
     b: 'www.bitbucket.com',
     c: 'www.utdt.edu/campusvirtual',
-    // d: 'https://drive.google.com/drive/my-drive',
     d: 'https://drive.google.com/drive/u/1/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
     e: 'https://yts.am/browse-movies',
     f: 'www.facebook.com',
@@ -128,7 +127,7 @@ const qmarksUrls = {
     v: 'http://virtual.econ.uba.ar/',
     y: 'www.yahoo.com/mail',
     // Printing (arch)
-    q: 'http://localhost:631/jobs',
+    q: 'http://localhost:631/jobs'
 };
 qmarksMapKey('"', qmarksUrls);
 qmarksMapKey('\'', qmarksUrls);
@@ -141,7 +140,7 @@ mapkey('`', 'Jump to vim-like mark in current tab', function(mark) {
 // Normal.jumpVIMark(mark, true);
 // });
 mapkey(',qm', 'Open URL from vim-like marks', function() {
-    Front.openOmnibar({type: 'VIMarks'});
+    Front.openOmnibar({ type: 'VIMarks' });
 });
 
 // }}}
@@ -149,16 +148,16 @@ mapkey(',qm', 'Open URL from vim-like marks', function() {
 
 // Page navigation (and opening links)
 mapkey('r', 'Refresh', function() {
-    RUNTIME('reloadTab', {nocache: false});
+    RUNTIME('reloadTab', { nocache: false });
 });
-mapkey ('H', 'Backward', function() {
+mapkey('H', 'Backward', function() {
     history.go(-1);
 });
-mapkey ('L', 'Forward', function() {
+mapkey('L', 'Forward', function() {
     history.go(1);
 });
 mapkey('F', 'Open a link in non-active new tab', function() {
-    Hints.create('', Hints.dispatchMouseClick, {tabbed: true, active: false});
+    Hints.create('', Hints.dispatchMouseClick, { tabbed: true, active: false });
 });
 
 // Page movement (and searching)
@@ -180,16 +179,16 @@ mapkey('<Ctrl-u>', 'Scroll up half a page', function() {
 mapkey('<Ctrl-d>', 'Scroll down half a page', function() {
     Normal.scroll('pageDown');
 });
-mapkey ('gg', 'Jump to the top of the page', function() {
+mapkey('gg', 'Jump to the top of the page', function() {
     Normal.scroll('top');
 });
-mapkey ('G', 'Jump to the bottom of the page', function() {
+mapkey('G', 'Jump to the bottom of the page', function() {
     Normal.scroll('bottom');
 });
-mapkey ('n', 'Next search result', function() {
+mapkey('n', 'Next search result', function() {
     Visual.next(false);
 });
-mapkey ('N', 'Previous search result', function() {
+mapkey('N', 'Previous search result', function() {
     Visual.next(true);
 });
 
@@ -197,7 +196,7 @@ mapkey ('N', 'Previous search result', function() {
 mapkey(',nt', 'Open new tab', function() {
     tabOpenLink('www.google.com.ar');
 });
-mapkey ('<Ctrl-c>', 'Close tab', function() {
+mapkey('<Ctrl-c>', 'Close tab', function() {
     RUNTIME('closeTab');
 });
 map(',wd', '<Ctrl-c>');
@@ -210,13 +209,13 @@ mapkey('<Alt-p>', 'Go one tab left', function() {
     RUNTIME('previousTab');
 });
 mapkey('<Alt-h>', 'Move current tab to left', function() {
-    RUNTIME('moveTab', {step: -1});
+    RUNTIME('moveTab', { step: -1 });
 });
 mapkey('<Alt-l>', 'Move current tab to right', function() {
-    RUNTIME('moveTab', {step: 1});
+    RUNTIME('moveTab', { step: 1 });
 });
 mapkey(',be', 'Choose a tab with omnibar', function() {
-    Front.openOmnibar({type: 'Tabs'});
+    Front.openOmnibar({ type: 'Tabs' });
 });
 mapkey(',bc', 'Choose a tab', function() {
     Front.chooseTab();
@@ -230,21 +229,23 @@ mapkey('M', 'Mute/unmute current tab', function() {
 });
 
 // Yanking and pasting
-mapkey('y', 'Copy current page\'s URL', function() {
+mapkey('y', "Copy current page's URL", function() {
     Clipboard.write(window.location.href);
 });
 mapkey('p', 'Open the clipboard in the current tab', function() {
     let data;
     Clipboard.read(function(response) {
-        if (response.data.startsWith('http://') ||
+        if (
+            response.data.startsWith('http://') ||
             response.data.startsWith('https://') ||
-            response.data.startsWith('www.')) {
+            response.data.startsWith('www.')
+        ) {
             data = response.data;
         } else {
             data = 'https://www.google.com/search?q=' + response.data;
         }
         RUNTIME('openLink', {
-            tab: {tabbed: false},
+            tab: { tabbed: false },
             url: data
         });
     });
@@ -252,15 +253,17 @@ mapkey('p', 'Open the clipboard in the current tab', function() {
 mapkey('P', 'Open the clipboard in a new tab', function() {
     let data;
     Clipboard.read(function(response) {
-        if (response.data.startsWith('http://') ||
+        if (
+            response.data.startsWith('http://') ||
             response.data.startsWith('https://') ||
-            response.data.startsWith('www.')) {
+            response.data.startsWith('www.')
+        ) {
             data = response.data;
         } else {
             data = 'https://www.google.com/search?q=' + response.data;
         }
         RUNTIME('openLink', {
-            tab: {tabbed: true},
+            tab: { tabbed: true },
             url: data
         });
     });
@@ -271,7 +274,7 @@ mapkey('P', 'Open the clipboard in a new tab', function() {
 
 // Map ; to :
 mapkey(';', 'Open commands', function() {
-    Front.openOmnibar({type: 'Commands'});
+    Front.openOmnibar({ type: 'Commands' });
 });
 
 // Move in omnibar (first candidate is in the bottom)
@@ -282,50 +285,55 @@ cmap('<Ctrl-j>', '<Shift-Tab>');
 
 // URLs
 mapkey('o', 'Open a URL in current tab', function() {
-    Front.openOmnibar({type: 'URLs', extra: 'getAllSites', tabbed: false});
+    Front.openOmnibar({ type: 'URLs', extra: 'getAllSites', tabbed: false });
 });
 mapkey('t', 'Open a URL in a new tab', function() {
-    Front.openOmnibar({type: 'URLs', extra: 'getAllSites'});
+    Front.openOmnibar({ type: 'URLs', extra: 'getAllSites' });
 });
 mapkey('u', 'Open recently closed URL', function() {
-    Front.openOmnibar({type: 'URLs', extra: 'getRecentlyClosed'});
+    Front.openOmnibar({ type: 'URLs', extra: 'getRecentlyClosed' });
 });
 
 // Search engines (see https://github.com/b0o/surfingkeys-conf to add extra
 // completions)
 mapkey('s', 'Search in google in current tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'g', tabbed: false});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'g', tabbed: false });
 });
 mapkey('S', 'Search in google in new tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'g'});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'g' });
 });
-addSearchAliasX('s', 'StackOverflow',
+addSearchAliasX(
+    's',
+    'StackOverflow',
     'https://stackoverflow.com/search?q=',
     's',
-    ('https://api.stackexchange.com/2.2/search/advanced?pagesize=10&' +
-     'order=desc&sort=relevance&site=stackoverflow&q='),
+    'https://api.stackexchange.com/2.2/search/advanced?pagesize=10&' +
+        'order=desc&sort=relevance&site=stackoverflow&q=',
     function(response) {
         var res = JSON.parse(response.text)['items'];
-        return res.map(function(r){
+        return res.map(function(r) {
             return {
                 title: '[' + r.score + '] ' + r.title,
                 url: r.link
             };
         });
-    });
+    }
+);
 mapkey(',ss', 'Search in StackOverflow in current tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 's', tabbed: false});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 's', tabbed: false });
 });
 mapkey(',Ss', 'Search in StackOverflow in new tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 's'});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 's' });
 });
-addSearchAliasX('h', 'GitHub',
+addSearchAliasX(
+    'h',
+    'GitHub',
     'https://github.com/search?q=',
     's',
     'https://api.github.com/search/repositories?order=desc&q=',
     function(response) {
         var res = JSON.parse(response.text)['items'];
-        return res.map(function(r){
+        return res.map(function(r) {
             var prefix = '';
             if (r.stargazers_count) {
                 prefix += '[★' + r.stargazers_count + '] ';
@@ -335,52 +343,63 @@ addSearchAliasX('h', 'GitHub',
                 url: r.html_url
             };
         });
-    });
+    }
+);
 mapkey(',sg', 'Search in Github in current tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'h', tabbed: false});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'h', tabbed: false });
 });
 mapkey(',Sg', 'Search in Github in new tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'h'});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'h' });
 });
-addSearchAliasX('w', 'Wikipedia',
+addSearchAliasX(
+    'w',
+    'Wikipedia',
     'https://en.wikipedia.org/w/index.php?search=',
     's',
-    ('https://en.wikipedia.org/w/api.php?action=query&format=json' +
-    '&list=prefixsearch&utf8&pssearch='),
+    'https://en.wikipedia.org/w/api.php?action=query&format=json' +
+        '&list=prefixsearch&utf8&pssearch=',
     function(response) {
-        const res = JSON.parse(response.text).
-            query.prefixsearch.map(r => r.title);
+        const res = JSON.parse(response.text).query.prefixsearch.map(
+            r => r.title
+        );
         return res;
-    });
+    }
+);
 mapkey(',sw', 'Search in Wikpedia in current tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'w', tabbed: false});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'w', tabbed: false });
 });
 mapkey(',Sw', 'Search in Wikpedia in new tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'w'});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'w' });
 });
-addSearchAliasX('y', 'YouTube',
-    'https://www.youtube.com/results?search_query=');
+addSearchAliasX(
+    'y',
+    'YouTube',
+    'https://www.youtube.com/results?search_query='
+);
 mapkey(',sy', 'Search in Youtube in current tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'y', tabbed: false});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'y', tabbed: false });
 });
 mapkey(',Sy', 'Search in Youtube in new tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'y'});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'y' });
 });
-addSearchAliasX('m', 'MercadoLibre',
-    'http://www.mercadolibre.com.ar/jm/search?as_word=');
+addSearchAliasX(
+    'm',
+    'MercadoLibre',
+    'http://www.mercadolibre.com.ar/jm/search?as_word='
+);
 mapkey(',sm', 'Search in MercadoLibre in current tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'm', tabbed: false});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'm', tabbed: false });
 });
 mapkey(',Sm', 'Search in MercadoLibre in new tab', function() {
-    Front.openOmnibar({type: 'SearchEngine', extra: 'm'});
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'm' });
 });
 
 // History
 mapkey(',hs', 'Open URL from history', function() {
-    Front.openOmnibar({type: 'History', tabbed: false});
+    Front.openOmnibar({ type: 'History', tabbed: false });
 });
 mapkey(',th', 'Open URL from history in a new tab', function() {
-    Front.openOmnibar({type: 'History'});
+    Front.openOmnibar({ type: 'History' });
 });
 // FIXME: Not working?
 mapkey(',dh', 'Delete history older than 30 days', function() {
@@ -433,16 +452,26 @@ mapkey(',pt', 'Enter PassThrough mode', function() {
     Normal.passThrough();
 });
 
-imapkey('<Alt-p>', 'Previous Tab', function () {
-    RUNTIME('previousTab');
-}, {
-    domain: /.*docs\.google\.com.*/i
-});
-imapkey('<Alt-n>', 'Next Tab', function () {
-    RUNTIME('nextTab');
-}, {
-    domain: /.*docs\.google\.com.*/i
-});
+imapkey(
+    '<Alt-p>',
+    'Previous Tab',
+    function() {
+        RUNTIME('previousTab');
+    },
+    {
+        domain: /.*docs\.google\.com.*/i
+    }
+);
+imapkey(
+    '<Alt-n>',
+    'Next Tab',
+    function() {
+        RUNTIME('nextTab');
+    },
+    {
+        domain: /.*docs\.google\.com.*/i
+    }
+);
 
 // }}}
 // Convenient mappings {{{
@@ -462,7 +491,7 @@ mapkey(',ps', 'Restore previous session', function() {
 
 // View page source
 mapkey(',vs', 'View page source', function() {
-    RUNTIME('viewSource', {tab: {tabbed: true}});
+    RUNTIME('viewSource', { tab: { tabbed: true } });
 });
 
 // Chrome specific
@@ -470,7 +499,7 @@ mapkey(',dl', 'Open Chrome Downloads', function() {
     tabOpenLink('chrome://downloads/');
 });
 mapkey(',cd', 'Close Downloads Shelf', function() {
-    RUNTIME('closeDownloadsShelf', {clearHistory: true});
+    RUNTIME('closeDownloadsShelf', { clearHistory: true });
 });
 mapkey(',ad', 'Open Chrome Extensions', function() {
     tabOpenLink('chrome://extensions/');
