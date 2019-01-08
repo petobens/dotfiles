@@ -1371,6 +1371,7 @@ nnoremap <silent> <Leader>xdf :Defx `expand('%:p:h')`<CR>
             \ :Defx -new -split=horizontal -direction=<CR>
             \ :wincmd p<CR>
 nnoremap <silent> <Leader>xfb :Defx<CR>:Denite defx/bookmarks<CR>
+nnoremap <silent> <Leader>fm :call <SID>TmuxSplitCmd('ranger', '')<CR>
 
 " Devicons
 let g:defx_icons_enable_syntax_highlight = 0
