@@ -1389,6 +1389,18 @@ let g:defx_icons_exact_matches = {
             \ 'bash_profile': {'icon':''},
             \ '.bash_profile': {'icon':''},
             \ }
+let g:defx_icon_exact_dir_matches = {
+            \ '.git'     : {'icon': ''},
+            \ 'desktop'  : {'icon': ''},
+            \ 'documents': {'icon': ''},
+            \ 'downloads': {'icon': ''},
+            \ 'dropbox'  : {'icon': ''},
+            \ 'music'    : {'icon': ''},
+            \ 'pictures' : {'icon': ''},
+            \ 'public'   : {'icon': ''},
+            \ 'templates': {'icon': ''},
+            \ 'videos'   : {'icon': ''},
+            \ }
 
 " Git
 let g:defx_git#indicators = {
