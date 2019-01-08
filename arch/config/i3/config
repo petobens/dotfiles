@@ -171,7 +171,8 @@ bindsym $mod+Control+v $nexec raiseorlaunch -c Vimiv -W $ws6 -C \
 
 # Standalone terminal apps in floating window in the current workspace
 bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -e \
-    'alacritty -t QuickTerm -e /usr/bin/bash -i'
+    'alacritty -t QuickTerm -e sh -c "cd $(tmux display -p "#{pane_current_path}") && exec bash -i"'
+
 bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -e \
     'alacritty -t numbers -e ipython3'
 bindsym $mod+Control+f $nexec raiseorlaunch -t 'ranger' -e \
