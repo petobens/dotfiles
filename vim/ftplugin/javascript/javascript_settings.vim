@@ -1,10 +1,10 @@
 " Initialization {{{
 
 " Check if this file exists and avoid loading it twice
-" if exists('b:my_js_settings_file')
-    " finish
-" endif
-" let b:my_js_settings_file = 1
+if exists('b:my_js_settings_file')
+    finish
+endif
+let b:my_js_settings_file = 1
 
 " }}}
 " Helpers {{{
@@ -391,7 +391,7 @@ function! s:RunPrettier(...)
     else
         execute 'silent! normal! gggqG'
     endif
-    if v:shell_error == 1
+    if v:shell_error != 0
         silent undo
     endif
     call setpos('.', save_cursor)

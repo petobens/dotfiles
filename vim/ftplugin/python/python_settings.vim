@@ -525,7 +525,7 @@ function! s:RunBlack(...)
     else
         execute 'silent! normal! gggqG'
     endif
-    if v:shell_error == 1
+    if v:shell_error != 0
         silent undo
     endif
     call setpos('.', save_cursor)
