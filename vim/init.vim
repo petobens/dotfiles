@@ -1391,15 +1391,15 @@ let g:defx_icons_exact_matches = {
             \ }
 let g:defx_icon_exact_dir_matches = {
             \ '.git'     : {'icon': ''},
-            \ 'desktop'  : {'icon': ''},
-            \ 'documents': {'icon': ''},
-            \ 'downloads': {'icon': ''},
-            \ 'dropbox'  : {'icon': ''},
-            \ 'music'    : {'icon': ''},
-            \ 'pictures' : {'icon': ''},
-            \ 'public'   : {'icon': ''},
-            \ 'templates': {'icon': ''},
-            \ 'videos'   : {'icon': ''},
+            \ 'Desktop'  : {'icon': ''},
+            \ 'Documents': {'icon': ''},
+            \ 'Downloads': {'icon': ''},
+            \ 'Dropbox'  : {'icon': ''},
+            \ 'Music'    : {'icon': ''},
+            \ 'Pictures' : {'icon': ''},
+            \ 'Public'   : {'icon': ''},
+            \ 'Templates': {'icon': ''},
+            \ 'Videos'   : {'icon': ''},
             \ }
 
 " Git
