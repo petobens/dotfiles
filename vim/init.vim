@@ -1610,6 +1610,7 @@ nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
 nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <A-z> :Denite -default-action=narrow z<CR>
+nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite directory_rec<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
