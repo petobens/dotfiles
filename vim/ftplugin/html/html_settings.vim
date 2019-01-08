@@ -27,12 +27,12 @@ endfunction
 " Formatting {{{
 
 function! s:RunHtmlBeautify(...)
-    " Don't run tidy if it is not installed
+    " Don't run if it is not installed
     if !executable('html-beautify')
         echoerr 'js-beautify is not installed or not in your path.'
         return
     endif
-    " Don't run yapf if there is only one empty line or we are in a Gdiff
+    " Don't run if there is only one empty line or we are in a Gdiff
     " (when file path includes .git)
     if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
         return
@@ -56,5 +56,10 @@ augroup html_linting
     au BufWritePost *.html call s:RunHtmlBeautify() | silent noautocmd update |
                 \ silent Neomake
 augroup END
+
+" }}}
+" Mappings {{{
+
+nnoremap <silent> <buffer> <Leader>fc :call <SID>RunHtmlBeautify()<CR>
 
 " }}}

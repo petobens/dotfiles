@@ -826,7 +826,7 @@ vnoremap <silent> <buffer> <F5> :EvalVisualRForeground<CR>
 
 " Linting and format R
 nnoremap <buffer> <silent> <Leader>rl :call <SID>LintR()<CR>
-nnoremap <buffer> <silent> <Leader>fr :call <SID>FormatR()<CR>
+nnoremap <buffer> <silent> <Leader>fc :call <SID>FormatR()<CR>
 
 " (Open) Interpreter (we mostly use nvim-r for this now)
 if exists(':Topen')

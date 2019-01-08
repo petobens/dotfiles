@@ -1250,7 +1250,7 @@ nnoremap <silent> <buffer> <Leader>rl :Neomake<CR>
 nnoremap <buffer> <silent> <Leader>is :call <SID>RuniSort()<CR>
 " Note: The visual map messes up proper comment indentation/formatting:
 vnoremap <silent> <buffer> Q :call <SID>RunBlack('visual')<CR>
-nnoremap <silent> <buffer> <Leader>bf :call <SID>RunBlack()<CR>
+nnoremap <silent> <buffer> <Leader>fc :call <SID>RunBlack()<CR>
 
 " Tests and coverage (py.test dependant)
 nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite', 'background')<CR>

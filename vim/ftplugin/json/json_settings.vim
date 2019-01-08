@@ -48,8 +48,12 @@ endfunction
 
 augroup json_linting
     au!
-    au BufWritePost *.json silent Neomake
-    au User NeomakeJobFinished call s:RunJsonFormat()
+    au BufWritePost *.json call s:RunJsonFormat()
 augroup END
+
+" }}}
+" Mappings {{{
+
+nnoremap <silent> <buffer> <Leader>fc :call <SID>RunJsonFormat()<CR>
 
 " }}}
