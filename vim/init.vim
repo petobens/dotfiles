@@ -1103,8 +1103,6 @@ augroup ft_py
     " Highlight all python functions
     au Filetype python syn match pythonAttribute2 /\.\h\w*(/hs=s+1,he=e-1
     au Filetype python hi def link pythonAttribute2 Function
-    " Add some keywords
-    au Filetype python syn keyword pythonBuiltinFunc breakpoint
 augroup END
 
 " }}}
