@@ -166,6 +166,7 @@ $yay_cmd universal-ctags-git
 $yay_cmd unrar
 $yay_cmd unzip
 $yay_cmd w3m
+$yay_cmd wget
 $yay_cmd zip
 
 # Z (jump around)
