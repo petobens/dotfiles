@@ -142,7 +142,7 @@ $yay_cmd fd
 $yay_cmd fzf
 $yay_cmd gnupg
 $yay_cmd htop
-$yay_cmd neofetch-git
+$yay_cmd neofetch
 $yay_cmd neomutt
 $yay_cmd openconnect-git
 $yay_cmd openssh
