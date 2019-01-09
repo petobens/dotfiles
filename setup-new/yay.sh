@@ -90,6 +90,7 @@ $yay_cmd acpi_call
 $yay_cmd alsa-tools
 $yay_cmd compton
 $yay_cmd connman
+$yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
 $yay_cmd i3-gaps
