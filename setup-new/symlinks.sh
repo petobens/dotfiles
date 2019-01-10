@@ -187,6 +187,7 @@ else
         echo Created bin folder symlink
     fi
     if type "pacman" > /dev/null 2>&1; then
+        sudo rm /etc/pacman.conf
         sudo $ln_cmd -fTs "$dotfiles_dir/arch/config/pacman.conf" "/etc/pacman.conf"
         echo Created /etc/pacman.conf symlink
     fi
