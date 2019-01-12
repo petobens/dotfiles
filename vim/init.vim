@@ -1934,6 +1934,7 @@ augroup ps_fugitive
         \ else |
             \ setlocal omnifunc=rhubarb#omnifunc |
         \ endif
+   au BufEnter,WinEnter *.git/index execute '15 wincmd _'
 augroup END
 
 " Gitlab
