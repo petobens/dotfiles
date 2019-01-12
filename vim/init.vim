@@ -925,6 +925,9 @@ if exists(':tnoremap')
     tnoremap <c-h> <C-\><C-n><C-w>h
     tnoremap <c-l> <C-\><C-n><C-w>l
     tnoremap <c-j> <C-\><C-n><C-w>j
+    " Move between buffers
+    tnoremap <C-A-p> <C-\><C-n>:bp<CR>
+    tnoremap <C-A-n> <C-\><C-n>:bn<CR>
 endif
 
 " }}}
