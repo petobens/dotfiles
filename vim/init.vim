@@ -75,8 +75,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#begin(expand('$DOTVIM/bundle/'))
 
     " Plugins we are using
-    " call dein#add('vim-airline/vim-airline')
-    call dein#add('petobens/vim-airline')
+    call dein#add('vim-airline/vim-airline')
     call dein#add('junegunn/vim-easy-align')
     call dein#add('airblade/vim-gitgutter')
     call dein#add('jamessan/vim-gnupg')
@@ -1687,6 +1686,7 @@ call denite#custom#map('insert', '<C-q>',
             \ ',denite:do_action:quickfix>', 'noremap')
 call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
+call denite#custom#map('insert', '<A-p>', '<denite:move_up_path>', 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 
 " Custom actions
@@ -1701,6 +1701,8 @@ call denite#custom#action('buffer,directory,file', 'context_split',
             \ function('s:my_split'))
 call denite#custom#action('file', 'narrow',
       \ {context -> denite#do_action(context, 'open', context['targets'])})
+call denite#custom#action('buffer,directory,file,openable', 'defx',
+      \ {context -> execute('Defx ' . context['targets'][0]['action__path'])})
 
 " }}}
 " Deoplete {{{
