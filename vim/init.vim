@@ -928,6 +928,8 @@ if exists(':tnoremap')
     " Move between buffers
     tnoremap <C-A-p> <C-\><C-n>:bp<CR>
     tnoremap <C-A-n> <C-\><C-n>:bn<CR>
+    " Jump to previous prompt
+    tnoremap <silent> <C-[> <C-\><C-n>:normal! 0<CR>:call search(' ', 'b')<CR>
 endif
 
 " }}}
