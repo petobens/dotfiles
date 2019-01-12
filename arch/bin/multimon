@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 import os
-import sys
 import subprocess
-
-from time import sleep
+import sys
 from collections.abc import Sequence
+from time import sleep
 
 import i3ipc
 
@@ -31,9 +30,7 @@ def _xrandr(how):
         # FIXME: Must run `sudo udevadm control --reload`?
         sleep(1)
 
-    xrandr_out = [
-        line.decode('ascii').split() for line in _sh('xrandr').splitlines()
-    ]
+    xrandr_out = [line.decode('ascii').split() for line in _sh('xrandr').splitlines()]
     monitors = [e[0] for e in xrandr_out if not e[0][0].isdigit()]
     conn = [l for l in xrandr_out if l[1] == 'connected']
     nr_monitors = len(conn)
@@ -62,23 +59,23 @@ def _xrandr(how):
 
     if how == 'primary':
         cmd = f'xrandr --output {prim_n} --primary --dpi {PRIM_DPI}'
-        turn_off = [
-            i for i in monitors if i not in ('Screen', 'VIRTUAL1', prim_n)
-        ]
+        turn_off = [i for i in monitors if i not in ('Screen', 'VIRTUAL1', prim_n)]
         for m in turn_off:
             cmd += f' --output {m} --off'
 
     elif how == 'mirror':
-        mirror_scale = f'{prim_w/sec_w:.2f}x{prim_h/sec_h:.2f}'
-        mode = f'--mode {sec_w}x{sec_h}' if forced_res else '--auto'
-        cmd = f'xrandr --output {sec_n} --scale {mirror_scale} {mode} '  \
+        cmd = (
+            f'xrandr --output {sec_n} --scale-from {prim_w}x{prim_h} --auto '
             f'--output {prim_n} --dpi {PRIM_DPI}'
+        )
 
     elif how == 'dual':
         mode = f'--mode {sec_w}x{sec_h}' if forced_res else '--auto'
-        cmd = f'xrandr --output {sec_n} --scale {FIXED_SCALE}x{FIXED_SCALE} ' \
-              f'{mode} --pos 0x0 --output {prim_n} --primary --dpi '\
-              f'{PRIM_DPI} --pos {FIXED_SCALE * sec_w}x0'
+        cmd = (
+            f'xrandr --output {sec_n} --scale {FIXED_SCALE}x{FIXED_SCALE} '
+            f'{mode} --pos 0x0 --output {prim_n} --primary --dpi '
+            f'{PRIM_DPI} --pos {FIXED_SCALE * sec_w}x0'
+        )
 
     print(f"Running the following xrandr command: {cmd}")
     _sh(cmd)
@@ -166,8 +163,10 @@ def _resize_win(i3, x, y, w, h):
         y = POLYBAR_HEIGHT
     w = int(max_w * w)
     h = int(max_h * h)
-    cmd = f"fullscreen disable, floating enable, " \
-          f"move position {x} {y}, resize set {w} {h}"
+    cmd = (
+        f"fullscreen disable, floating enable, "
+        f"move position {x} {y}, resize set {w} {h}"
+    )
     i3.command(cmd)
     return
 
@@ -190,9 +189,7 @@ def _get_name_and_res(xrandr_out, mon_info):
 
 
 def _sh(cmd, *args, **kwargs):
-    res, err = _sh_no_block(
-        cmd, *args, stdout=subprocess.PIPE, **kwargs
-    ).communicate()
+    res, err = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
     return res
 
 
