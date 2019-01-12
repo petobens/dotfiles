@@ -8,7 +8,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 
     # Path settings
-    PATH="$HOME/local/bin:$HOME/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
     PATH="$base_pkg_dir/bin:$base_pkg_dir/sbin:$PATH" # homebrew
     if [ -d "/Library/TeX/texbin" ]; then
         PATH="/Library/TeX/texbin:$PATH" # basictex
