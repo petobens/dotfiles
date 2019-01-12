@@ -1958,7 +1958,7 @@ nnoremap <silent> <Leader>gi :Denite output:echo\ system("git\ init")<cr>
 nnoremap <silent> <Leader>gd :Gdiff<cr>:wincmd x<CR>
 nnoremap <silent> <Leader>gs :botright Gstatus<CR>:wincmd J<bar>:15 wincmd _<CR>
 nnoremap <silent> <Leader>gw :Gwrite<cr>
-nnoremap <silent> <Leader>gb :Gblame<cr>
+nnoremap <silent> <Leader>gB :Gblame<cr>
 nnoremap <silent> <Leader>gc :w!<CR>:Gcommit<cr>
 nnoremap <Leader>gm :Gmove<space>
 nnoremap <silent> <Leader>gr :Gremove<cr>
