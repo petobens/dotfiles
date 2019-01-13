@@ -4,25 +4,6 @@
 sudo bash -c "echo $(command -v bash) >> /etc/shells"
 sudo chsh -s "$(command -v bash)"
 
-# Alacritty
-if type "cargo" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m--> Installing Alacritty...\\033[0m"
-    git clone https://github.com/jwilm/alacritty.git
-    (
-        cd alacritty || exit
-        cargo build --release
-        if [[  "$OSTYPE" == 'darwin'* ]]; then
-            echo "Moving Alacritty.app to Applications folder..."
-            make app
-            cp -r target/release/osx/Alacritty.app /Applications/
-        else
-            sudo rm -rf /usr/local/bin/alacritty
-            sudo cp target/release/alacritty /usr/local/bin
-        fi
-    )
-    rm -rf alacritty
-fi
-
 # Mongo db improvements
 if type "mongo" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing mongo-hacker...\\033[0m"
