@@ -1690,6 +1690,9 @@ call denite#custom#map('insert', '<C-q>',
 call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
 call denite#custom#map('insert', '<A-p>', '<denite:move_up_path>', 'noremap')
+call denite#custom#map('insert', '<C-w>', '<denite:wincmd:p>', 'noremap')
+call denite#custom#map('insert', '<A-v>', '<denite:do_action:preview>',
+            \ 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 
 " Custom actions
