@@ -619,7 +619,7 @@ nnoremap <A-m> M
 nnoremap <A-b> L
 
 " Move to the end of the line when using G (and open existing fold)
-nnoremap <silent> G Gzo$
+nnoremap <silent> G :silent! execute 'normal! Gzo$'<CR>
 
 " }}}
 " Word, line and paragraph operations {{{
