@@ -1628,20 +1628,18 @@ nnoremap <silent> <Leader>dl :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
-nnoremap <silent> <Leader>do :Denite -auto-preview -vertical-preview outline<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
 nnoremap <silent> <Leader>bm :Denite dirmark<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
-nnoremap <silent> ]d :<C-U>execute 'Denite -resume  -immediately ' .
-            \ -cursor-pos=+'. v:count1<CR>
-nnoremap <silent> [d :<C-U>execute 'Denite -resume -immediately ' .
-            \ -cursor-pos=-'. v:count1<CR>
+nnoremap <silent> ]d :Denite -resume -immediately -cursor-pos=+1<CR>
+nnoremap <silent> [d :Denite -resume -immediately -cursor-pos=-1<CR>
 nnoremap ]D :<C-u>Denite -resume -cursor-pos=$<CR>
 nnoremap [D :<C-u>Denite -resume -cursor-pos=0<CR>
 " NeoInclude and Denite tag
 nnoremap <silent> <Leader>dte :NeoIncludeMakeCache<CR>:Denite
             \ tag:include<CR>
+nnoremap <silent> <Leader>te :Denite outline<CR>
 " FIXME: This should be improved
 augroup ps_denite_tag
     au!
@@ -2503,12 +2501,10 @@ let g:unite_source_buffer_time_format = ''
 " Mappings (sources):
 nnoremap <silent> <Leader>ubm :Unite -profile-name=bookmark -default-action=rec
             \ -buffer-name=my-directories bookmark<CR>
-nnoremap <silent> <Leader>ube :Unite -default-action=switch buffer<CR>
 nnoremap <silent> <Leader>me :Unite mapping<CR>
 nnoremap <silent> <Leader>uf :Unite function<CR>
-nnoremap <silent> <Leader>ur :UniteResume -force-redraw -immediately<CR>
 " NeoInclude and Unite tag
-nnoremap <silent> <Leader>te :NeoIncludeMakeCache<CR>:Unite
+nnoremap <silent> <Leader>tE :NeoIncludeMakeCache<CR>:Unite
             \ tag/include<CR>
 augroup ps_unite_tag
     au!
