@@ -618,8 +618,8 @@ nnoremap <A-t> H
 nnoremap <A-m> M
 nnoremap <A-b> L
 
-" Move to the end of the line when using G (and open existing fold)
-nnoremap <silent> G :silent! execute 'normal! Gzo$'<CR>
+" Open folds when using G
+nnoremap <silent> G :<C-U>silent! execute 'normal! ' . v:count . 'Gzo'<CR>
 
 " }}}
 " Word, line and paragraph operations {{{
