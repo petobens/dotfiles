@@ -168,6 +168,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/neco-vim', {'name' : 'neco-vim'})
     call dein#add('Shougo/neco-syntax')
     call dein#add('Shougo/neoinclude.vim')
+    call dein#add('tbodt/deoplete-tabnine', {'build': './install.sh'})
     " Defx
     call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
     call dein#add('Shougo/defx.nvim')
@@ -1555,6 +1556,9 @@ let g:neomru#time_format = ''
 if executable('fd')
     call denite#custom#var('file/rec', 'command',
         \ ['fd', '--type', 'f', '--follow', '--hidden', '--exclude', '.git',
+        \ ''])
+    call denite#custom#var('directory_rec', 'command',
+        \ ['fd', '--type', 'd', '--follow', '--hidden', '--exclude', '.git',
         \ ''])
 endif
 if executable('rg')
