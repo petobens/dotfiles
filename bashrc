@@ -178,6 +178,7 @@ bind -m vi-command '"L": end-of-line'
 bind -m vi-command '"k": ""'
 bind -m vi-command '"j": ""'
 bind -m vi-command '"v": ""' # Don't edit command with default editor (nvim)
+bind -m vi-command '"\C-e": edit-and-execute-command'
 
 # Paste with p if in a tmux session
 if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
