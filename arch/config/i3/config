@@ -165,24 +165,24 @@ bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws5 -m terminal \
     -e 'alacritty -e /usr/bin/bash -i -c "tm"'
 bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -f -W $ws5
 # WS6 PDFs and images
-bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -W $ws6 -C
-bindsym $mod+Control+v $nexec raiseorlaunch -c Vimiv -W $ws6 -C \
+bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -f -W $ws6 -C
+bindsym $mod+Control+v $nexec raiseorlaunch -c Vimiv -f -W $ws6 -C \
     -e 'vimiv --no-library --start-from-desktop'
 
 # Standalone terminal apps in floating window in the current workspace
-bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -f -W $ws5 -e \
+bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -f -e \
     'alacritty -t QuickTerm -e sh -c "cd $(tmux display -p "#{pane_current_path}") && exec bash -i"'
-bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -f -W $ws5 -e \
+bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -f -e \
     'alacritty -t numbers -e ipython3'
-bindsym $mod+Control+f $nexec raiseorlaunch -t 'ranger' -f -W $ws5 -e \
+bindsym $mod+Control+f $nexec raiseorlaunch -t 'ranger' -f -e \
     'alacritty -t ranger -e sh -c "ranger $(tmux display -p "#{pane_current_path}")"'
-bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -f -W $ws5 -e \
+bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -f -e \
     'alacritty -t Downloads -e ranger ~/Downloads'
-bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -f -W $ws5 -e \
+bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -f -e \
     'alacritty -t htop -e htop'
-bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -f -W $ws5 -e \
+bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -f -e \
     'alacritty -t "OneDrive" -e sh -c "journalctl --user-unit onedrive -f"'
-bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -f -W $ws5 -e \
+bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -f -e \
     'alacritty -t "Trash Can" -e sh -c "trash-list | less"'
 
 # Sizing and position rules (use `xprop` to get the window info)
