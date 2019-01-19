@@ -1373,7 +1373,7 @@ nnoremap <silent> <Leader>xff :Defx `expand('%:p:h')`
 nnoremap <silent> <Leader>xdf :Defx `expand('%:p:h')`<CR>
             \ :Defx -new -split=horizontal -direction=<CR>
             \ :wincmd p<CR>
-nnoremap <silent> <Leader>xfb :Defx<CR>:Denite defx/bookmarks<CR>
+nnoremap <silent> <Leader>xfb :Defx<CR>:Denite defx/dirmark<CR>
 nnoremap <silent> <Leader>fm :call <SID>TmuxSplitCmd('ranger', '')<CR>
 
 " Devicons
@@ -1487,7 +1487,7 @@ function! s:defx_settings()
     " History source
     nnoremap <silent><buffer> <C-h> :Denite defx/history<CR>
     " Bookmarks source
-    nnoremap <silent><buffer> b :Denite defx/bookmarks<CR>
+    nnoremap <silent><buffer> b :Denite defx/dirmark<CR>
 endfunction
 
 " }}}
