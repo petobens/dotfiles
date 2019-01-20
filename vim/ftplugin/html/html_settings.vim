@@ -26,40 +26,55 @@ endfunction
 " }}}
 " Formatting {{{
 
-function! s:RunHtmlBeautify(...)
-    " Don't run if it is not installed
-    if !executable('html-beautify')
-        echoerr 'js-beautify is not installed or not in your path.'
+function! s:RunPrettier(...)
+    " Don't run prettier if it is not installed
+    if !executable('prettier')
+        echoerr 'prettier is not installed or not in your path.'
         return
     endif
-    " Don't run if there is only one empty line or we are in a Gdiff
+    " Don't run prettier if there is only one empty line or we are in a Gdiff
     " (when file path includes .git)
     if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
         return
     endif
+
+    " Save working directory and get current file
+    let l:save_pwd = getcwd()
+    lcd %:p:h
+    let current_file = expand('%:p:t')
+
+    " Change shellredir to avoid inserting error output into the buffer (i.e
+    " don't include stderr in output buffer)
+    let shrd = &shellredir
+    set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let &l:formatprg = 'html-beautify --indent-size 2 --wrap-line-length 80 ' .
-                \ '--no-preserve-newlines'
+    let &l:formatprg = 'prettier --tab-width 4 --stdin --single-quote ' .
+                \ '--stdin-filepath ' . current_file
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
-        execute 'normal! gvgq'
+        execute 'silent! normal! gvgq'
     else
         execute 'silent! normal! gggqG'
     endif
+    if v:shell_error != 0
+        silent undo
+    endif
     call setpos('.', save_cursor)
+    let &shellredir = shrd
     let &l:formatprg = old_formatprg
+    execute 'lcd ' . l:save_pwd
 endfunction
 
-" Automatically run html-beautify formatter and htmlhint linter on save
+" Automatically run prettier formatter and htmlhint linter on save
 augroup html_linting
     au!
-    au BufWritePost *.html call s:RunHtmlBeautify() | silent noautocmd update |
+    au BufWritePost *.html call s:RunPrettier() | silent noautocmd update |
                 \ silent Neomake
 augroup END
 
 " }}}
 " Mappings {{{
 
-nnoremap <silent> <buffer> <Leader>fc :call <SID>RunHtmlBeautify()<CR>
+nnoremap <silent> <buffer> <Leader>fc :call <SID>RunPrettier(()<CR>
 
 " }}}
