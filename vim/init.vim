@@ -160,7 +160,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('kopischke/unite-spell-suggest')
     call dein#add('rafi/vim-denite-z')
     call dein#add('tsukkee/unite-tag')
-    call dein#add('petobens/denite-dirmark')
+    call dein#add('kmnk/denite-dirmark')
     " Deoplete
     call dein#add('Shougo/deoplete.nvim')
     call dein#add('Shougo/context_filetype.vim')
