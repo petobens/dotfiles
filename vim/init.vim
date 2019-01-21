@@ -1782,6 +1782,9 @@ if !empty('$TMUX')
     let g:tmuxcomplete#trigger = ''
 endif
 
+" Reduce tabine rank
+call deoplete#custom#source('tabnine', 'rank', 101)
+
 " Mappings
 " Close popup and delete backward character
 inoremap <expr><BS> deoplete#smart_close_popup()."\<BS>"
