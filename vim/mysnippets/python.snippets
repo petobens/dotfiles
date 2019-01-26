@@ -223,10 +223,8 @@ endsnippet
 # Add upper directory to path
 snippet iu "Import upper directory" b
 import sys
-import os
-sys.path.append(
-	os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
-)$0
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))$0
 endsnippet
 
 # Check if file exists
