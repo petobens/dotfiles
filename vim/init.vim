@@ -2092,8 +2092,6 @@ let g:neomake_virtualtext_prefix = ' '
 
 " Python
 let g:neomake_python_enabled_makers = ['flake8', 'mypy', 'pylint']
-let g:neomake_python_mypy_args = ['--ignore-missing-imports',
-            \ '--follow-imports=skip']
 
 " Javascript
 let g:neomake_javascript_enabled_makers = ['eslint']

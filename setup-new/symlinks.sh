@@ -65,6 +65,10 @@ if type "python" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/python/flake8" "$HOME/.config/flake8"
         echo Created .config/flake8 symlink
     fi
+    if type "mypy" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/python/mypy.ini" "$HOME/.mypy.ini"
+        echo Created .mypy.ini symlink
+    fi
 fi
 if type "ipython" > /dev/null 2>&1; then
     mkdir -p "$HOME/.ipython/profile_default/startup"
