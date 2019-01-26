@@ -28,6 +28,7 @@ fi
 echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
 pipx install flake8 --spec git+https://github.com/PyCQA/flake8 --verbose
 pipx inject flake8 flake8-bugbear --verbose
+pipx inject flake8 flake8-docstrings --verbose
 pipx install beautysh --verbose
 pipx install black --verbose
 pipx install ipython --verbose
