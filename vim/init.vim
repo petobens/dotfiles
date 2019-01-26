@@ -2121,7 +2121,8 @@ let g:neomake_sql_enabled_makers = ['sqlint']
 " other specific filetype settings in ftplugin folder)
 augroup pl_neomake
     au!
-    au BufWritePost *.{vim,yaml,yml,markdown,md} silent Neomake
+    au BufWritePost *.{vim,yaml,yml,markdown,md,bashrc,bash_profile},bashrc,
+                \bash_profile silent Neomake
 augroup END
 
 " }}}

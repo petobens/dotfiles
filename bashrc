@@ -75,8 +75,8 @@ if type "ruby" > /dev/null 2>&1; then
     PATH="$PATH:$GEM_HOME/bin"
 fi
 if type "pyenv" > /dev/null 2>&1; then
-	export PYENV_ROOT="$HOME/.pyenv"
-	PATH="$PYENV_ROOT/bin:$PATH"
+    export PYENV_ROOT="$HOME/.pyenv"
+    PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
 fi
 # We use sqlcl instead of sqlplus (it must be manually installed to this dir)
@@ -85,7 +85,7 @@ if [ -d "$HOME/.local/sqlcl" ]; then
 fi
 # Prepend python virtual env to path if exists (this is useful when spawning a
 # new terminal form within neovim). Note: this must be the very last PATH mod
-if [ ! -z $VIRTUAL_ENV ]; then
+if [ -n "$VIRTUAL_ENV" ]; then
     PATH="$VIRTUAL_ENV/bin:$PATH"
     # Also set airflow home to this dir (pipenv shell reads .env file)
     export AIRFLOW_HOME="$VIRTUAL_ENV/airflow"
@@ -116,6 +116,9 @@ fi
 if type "gpg" > /dev/null 2>&1; then
     GPG_TTY=$(tty)
     export GPG_TTY
+fi
+if type "shellcheck" > /dev/null 2>&1; then
+    export SHELLCHECK_OPTS="-e SC1090"
 fi
 
 # Set editor to nvim and use it as a manpager
@@ -152,8 +155,8 @@ export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 # --replace`)
 if type "powerline-daemon" > /dev/null 2>&1; then
     powerline-daemon -q
-    POWERLINE_BASH_CONTINUATION=1
-    POWERLINE_BASH_SELECT=1
+    export POWERLINE_BASH_CONTINUATION=1
+    export POWERLINE_BASH_SELECT=1
     .  "$base_pkg_dir/lib/python3.7/site-packages/powerline/bindings/bash/powerline.sh"
 fi
 
@@ -279,12 +282,13 @@ if type "R" > /dev/null 2>&1; then
     alias R='R --no-save --quiet'
 fi
 if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
-    if [ $USER = 'pedro' ]; then
+    if [ "$USER" = 'pedro' ]; then
         tmux_session_name='petobens'
     else
         tmux_session_name="$USER"
     fi
-    alias tm="tmux -f "$HOME/.tmux/tmux.conf" new -A -s $tmux_session_name"
+    # shellcheck disable=SC2139
+    alias tm="tmux -f $HOME/.tmux/tmux.conf new -A -s $tmux_session_name"
     unset tmux_session_name
 fi
 if type "mpv" > /dev/null 2>&1; then
@@ -455,7 +459,7 @@ if type "fzf" > /dev/null 2>&1; then
 
     # Alt-p mapping to cd to selected parent directory (sister to Alt-c)
     __fzf_cd_parent__() {
-        local declare dirs=()
+        local dirs=()
         get_parent_dirs() {
             if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
             if [[ "${1}" == '/' ]]; then
@@ -464,25 +468,29 @@ if type "fzf" > /dev/null 2>&1; then
                 get_parent_dirs "$(dirname "$1")"
             fi
     }
-        local start_dir="$(dirname "$PWD")"  # start with parent dir
-        local DIR=$(get_parent_dirs $(realpath "${1:-$start_dir}") | \
+        local start_dir=""
+        local DIR=""
+        start_dir="$(dirname "$PWD")"  # start with parent dir
+        DIR=$(get_parent_dirs "$(realpath "${1:-$start_dir}")" | \
             fzf --preview 'tree -C -d -L 2 {} | head -200')
-        if [[ ! -z $DIR ]]; then
+        if [[ -n $DIR ]]; then
             printf 'cd %q' "$DIR"
         else
             return 1
         fi
     }
+    # shellcheck disable=SC2016
     bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
+    # shellcheck disable=SC2016
     bind -m vi-command '"\ep": "ddi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
 
     # Tmux session switcher (`tms foo` attaches to `foo` it exists, else creates
     # it)
     tms() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
-    if [ $1 ]; then
+    if [ "$1" ]; then
         tmux $change -t "$1" 2>/dev/null || \
-            (tmux -f "$HOME/.tmux/tmux.conf" new-session -d -s $1 && \
+            (tmux -f "$HOME/.tmux/tmux.conf" new-session -d -s "$1" && \
             tmux $change -t "$1");
         return
     fi
@@ -506,13 +514,15 @@ if type "fzf" > /dev/null 2>&1; then
         [ $# -gt 0 ] && _z "$*" && return
         dir="$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse \
             --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
-        if [[ ! -z $dir ]]; then
+        if [[ -n $dir ]]; then
             printf 'cd %q' "$dir"
         else
             return 1
         fi
     }
+    # shellcheck disable=SC2016
     bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
+    # shellcheck disable=SC2016
     bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
 
     # Forgit (git and fzf)
@@ -567,10 +577,9 @@ sys_update_all() {
     if type "python3" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Python user modules...\033[0m"
         outdated="$(pip list --user --outdated)"
-        if [ ! -z "$outdated" ]; then
+        if [ -n "$outdated" ]; then
             echo "$outdated"
-            u_list=$(pip list --user --outdated --format=freeze | \
-                        grep -v ‘^\-e’ | cut -d = -f 1)
+            u_list=$(pip list --user --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1)
             for i in $u_list; do
                 read -p "Do you want to update $i (y/n)? " -n 1 -r
                 echo
