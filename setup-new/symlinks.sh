@@ -57,6 +57,10 @@ if type "python" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/config/pip" "$HOME/.config/pip"
         echo Created .config/pip folder symlink
     fi
+    if type "pylint" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/python/pylintrc" "$HOME/.pylintrc"
+        echo Created .pylintrc symlink
+    fi
 fi
 if type "ipython" > /dev/null 2>&1; then
     mkdir -p "$HOME/.ipython/profile_default/startup"
