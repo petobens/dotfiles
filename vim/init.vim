@@ -981,7 +981,7 @@ augroup ft_config
     au!
     au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc,*.dirs,
                 \zathurarc,*mpv/*.conf,*onedrive/config,*fdignore,*vimivrc,
-                \*pylintrc,*.conf
+                \*pylintrc,*flake8,*.conf
                 \ set filetype=config foldmethod=marker
 augroup END
 
@@ -2092,10 +2092,6 @@ let g:neomake_virtualtext_prefix = ' '
 
 " Python
 let g:neomake_python_enabled_makers = ['flake8', 'mypy', 'pylint']
-let g:neomake_python_flake8_args = [
-            \ '--ignore=E402,E203,E501,W503,B006,D107',
-            \ '--max-line-length=88',
-            \ '--select=C,E,F,W,B,B950,D']
 let g:neomake_python_mypy_args = ['--ignore-missing-imports',
             \ '--follow-imports=skip']
 

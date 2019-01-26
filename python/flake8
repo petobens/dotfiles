@@ -1,0 +1,19 @@
+[flake8]
+
+ignore =
+    E402,
+    E203,
+    E501,
+    W503,
+    B006, # Mutable data structures in argument defaults
+    D107, # Missing docstring in init
+select =
+    C,
+    E,
+    F,
+    W,
+    B,  # Bugbear plugin
+    B950,
+    D,  # pydocstyle plugin
+max-line-length = 88
+
