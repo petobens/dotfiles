@@ -15,6 +15,11 @@ let b:my_json_settings_file = 1
 " Linting and formatting {{{
 
 function! s:RunJsonFormat(...)
+    " Don't run jsolint if it is not installed
+    if !executable('jsonlint')
+        echoerr 'jsonlint is not installed or not in your path.'
+        return
+    endif
     " Only run this function for json files
     if &filetype !=# 'json'
         return
@@ -33,6 +38,7 @@ function! s:RunJsonFormat(...)
 
     " Set the format program
     let old_formatprg = &l:formatprg
+    " Note: there is no config file for this
     let &l:formatprg = 'jsonlint --indent 4 --pretty-print ' . current_file
     if a:0 && a:1 ==# 'visual'
         execute 'normal! gvgq'
