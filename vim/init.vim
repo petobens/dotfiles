@@ -1693,7 +1693,7 @@ call denite#custom#map('insert', '<C-q>',
             \ ',denite:do_action:quickfix>', 'noremap')
 call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
-call denite#custom#map('insert', '<A-p>', '<denite:move_up_path>', 'noremap')
+call denite#custom#map('insert', '<A-p>', '<denite:restore_sources>', 'noremap')
 call denite#custom#map('insert', '<C-w>', '<denite:wincmd:p>', 'noremap')
 call denite#custom#map('insert', '<A-v>', '<denite:do_action:preview>',
             \ 'noremap')
