@@ -44,8 +44,10 @@ function! s:RunSqlFormat(...)
     endif
 
     let old_formatprg = &l:formatprg
-    let &l:formatprg = 'sqlformat --reindent --use_space_around_operators ' .
-                \ '--keywords upper --identifiers lower --indent_width 2 -'
+    let &l:formatprg = 'sqlformat ' .
+                \ '--indent_columns --indent_width 2 --reindent ' .
+                \ '--keywords upper --identifiers lower ' .
+                \ '--use_space_around_operators - '
     if a:0 && a:1 ==# 'visual'
         execute 'normal! gvgq'
     else
