@@ -150,6 +150,10 @@ if type "markdownlint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/markdownlint.json" "$HOME/.markdownlint.json"
     echo Created .markdownlint.json symlink
 fi
+if type "prettier" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/prettierrc.yaml" "$HOME/.prettierrc.yaml"
+    echo Created .prettierrc.yaml symlink
+fi
 
 # Terminal programs
 if type "less" > /dev/null 2>&1; then

@@ -383,8 +383,9 @@ function! s:RunPrettier(...)
     let shrd = &shellredir
     set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let &l:formatprg = 'prettier --tab-width 4 --stdin --single-quote ' .
-                \ '--stdin-filepath ' . current_file
+    let &l:formatprg = 'prettier '
+                \ . '--config ' . expand($HOME . '/.prettierrc.yaml')
+                \ . ' --stdin --stdin-filepath ' . current_file
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'silent! normal! gvgq'
