@@ -44,6 +44,8 @@ function! s:RunSqlFormat(...)
     endif
 
     let old_formatprg = &l:formatprg
+    " Note: sqlformat doesn't allow to load from a config file
+    " https://github.com/andialbrecht/sqlparse/issues/465
     let &l:formatprg = 'sqlformat ' .
                 \ '--indent_columns --indent_width 2 --reindent ' .
                 \ '--keywords upper --identifiers lower ' .
