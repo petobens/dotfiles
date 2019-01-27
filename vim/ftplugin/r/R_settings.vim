@@ -387,6 +387,8 @@ function! s:LintR()
     " Set compiler
     let flags = '--slave --no-save --no-restore -e '
     let set_wd = 'setwd(''' . current_dir . ''');'
+    " Note: we cannot set a global config file:
+    " https://github.com/jimhester/lintr/issues/124
     let lintr_opts = 'with_defaults('
                 \. 'line_length_linter(80), '
                 \. 'commented_code_linter = NULL, '
