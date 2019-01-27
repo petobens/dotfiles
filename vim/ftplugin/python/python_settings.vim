@@ -517,7 +517,7 @@ function! s:RunBlack(...)
     let shrd = &shellredir
     set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let &l:formatprg = 'black -S -l 88 -'
+    let &l:formatprg = 'black --config ' . expand($HOME . '/.black.toml') . ' -'
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'silent! normal! gvgq'
