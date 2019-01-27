@@ -69,6 +69,10 @@ if type "python" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/python/mypy.ini" "$HOME/.mypy.ini"
         echo Created .mypy.ini symlink
     fi
+    if type "isort" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/python/isort.cfg" "$HOME/.isort.cfg"
+        echo Created .isort.cfg symlink
+    fi
 fi
 if type "ipython" > /dev/null 2>&1; then
     mkdir -p "$HOME/.ipython/profile_default/startup"

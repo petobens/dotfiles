@@ -480,8 +480,7 @@ function! s:RuniSort(...)
     let shrd = &shellredir
     set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let &l:formatprg = 'isort --trailing-comma --multi-line 3 '
-                \. '--line-width 88 -'
+    let &l:formatprg = 'isort -'
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'silent! normal! gvgq'
