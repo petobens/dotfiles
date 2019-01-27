@@ -50,6 +50,8 @@ pipx install ranger-fm --verbose
 pipx install sqlparse --spec git+https://github.com/andialbrecht/sqlparse --verbose
 pipx install trash-cli --verbose
 pipx install unimatrix --spec git+https://github.com/will8211/unimatrix --verbose
+pipx install vimiv --spec git+https://github.com/karlch/vimiv-qt --verbose
+pipx inject vimiv pyqt5 --verbose
 pipx install vim-vint --verbose
 pipx install yamllint --verbose
 # TODO: Replace this once there is a new (fixed) mssql-cli release
@@ -57,10 +59,19 @@ pipx install yamllint --verbose
 # pipx install --spec git+https://github.com/cs01/mssql-cli mssql-cli --verbose
 
 pipx_home="$HOME/.local/pipx/venvs"
+
+# Set some mime defaults
 if [ -d "$pipx_home/ranger-fm" ]; then
     echo "Adding desktop entry for ranger-fm..."
     xdg-desktop-menu install --novendor "$pipx_home"/ranger-fm/share/applications/ranger.desktop
     echo "xdg-mime query default inode/directory is: $(xdg-mime query default inode/directory)"
+fi
+if [ -d "$pipx_home/vimiv" ]; then
+    echo "Adding desktop entry for vimiv..."
+    mkdir -p "$pipx_home"/vimiv/share
+    wget -P  "$pipx_home"/vimiv/share https://raw.githubusercontent.com/karlch/vimiv-qt/master/misc/vimiv.desktop
+    xdg-desktop-menu install --novendor "$pipx_home"/vimiv/share/vimiv.desktop
+    echo "xdg-mime query default image/png is: $(xdg-mime query default image/png)"
 fi
 
 # Copy pygment onedarkish style

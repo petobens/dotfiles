@@ -166,8 +166,7 @@ bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws5 -m terminal \
 bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -f -W $ws5
 # WS6 PDFs and images
 bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -f -W $ws6 -C
-bindsym $mod+Control+v $nexec raiseorlaunch -c Vimiv -f -W $ws6 -C \
-    -e 'vimiv --no-library --start-from-desktop'
+bindsym $mod+Control+v $nexec raiseorlaunch -c vimiv -f -C
 
 # Standalone terminal apps in floating window in the current workspace
 bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -f -e \
@@ -201,7 +200,7 @@ for_window [title="^(QuickTerm|numbers|About Arch)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle
-for_window [class="^(feh|Skype|Matplotlib|Zathura|Vimiv)$"] \
+for_window [class="^(feh|Skype|Matplotlib|Zathura|vimiv)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
 for_window [window_type="dialog" class="^(?!Gtk_dialog).+" window_role="^(?!GtkFileChooserDialog).+"] \

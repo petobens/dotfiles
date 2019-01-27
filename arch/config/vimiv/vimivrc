@@ -1,5 +1,0 @@
-[LIBRARY]
-start_show_library: no
-expand_lib: no
-# This allows xdg-open to work: https://github.com/karlch/vimiv/issues/72
-desktop_start_dir: .

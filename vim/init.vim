@@ -975,7 +975,7 @@ augroup ft_bib
 augroup END
 
 " }}}
-" Config {{{
+" Config/Ini {{{
 
 augroup ft_config
     au!
@@ -983,6 +983,8 @@ augroup ft_config
                 \zathurarc,*mpv/*.conf,*onedrive/config,*fdignore,*vimivrc,
                 \*pylintrc,*flake8,*.conf
                 \ set filetype=config foldmethod=marker
+    au BufNewFile,BufReadPost vimiv.conf
+            \ set filetype=dosini
 augroup END
 
 " }}}
