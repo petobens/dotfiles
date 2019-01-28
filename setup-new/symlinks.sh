@@ -239,8 +239,8 @@ else
         echo Created .Xmodmap symlink
     fi
     if type "compton" > /dev/null 2>&1; then
-        $ln_cmd -fTs "$dotfiles_dir/arch/config/compton" "$HOME/.config/compton"
-        echo Created .config/compton folder symlink
+        $ln_cmd -fTs "$dotfiles_dir/arch/config/compton.conf" "$HOME/.config/compton.conf"
+        echo Created .config/compton.conf symlink
     fi
     if type "connmanctl" > /dev/null 2>&1; then
         sudo mkdir -p "/etc/connman"
