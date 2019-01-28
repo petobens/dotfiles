@@ -2096,7 +2096,7 @@ let g:neomake_highlight_columns = 0 " Don't hl columns with the error
 let g:airline#extensions#neomake#enabled = 0 " Don't show on Airline
 let g:neomake_virtualtext_current_error = 1
 let g:neomake_virtualtext_prefix = ' '
-" call neomake#quickfix#enable()  " enable experimental quickfix formatting
+call neomake#quickfix#enable()  " enable experimental quickfix formatting
 
 " Python
 let g:neomake_python_enabled_makers = ['flake8', 'mypy', 'pylint']
