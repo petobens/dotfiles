@@ -664,7 +664,7 @@ nnoremap - <C-x>
 
 " Change map to start macro recording
 noremap <Leader>q q
-nmap q <Nop>
+map q <Nop>
 
 " }}}
 " Window and buffer manipulation {{{
