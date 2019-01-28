@@ -39,8 +39,10 @@ def resize_win(i3, x, y, w, h):
     y = int(max_y + (max_h * y))
     w = int(max_w * w)
     h = int(max_h * h)
-    cmd = f"fullscreen disable, floating enable, " \
-          f"move position {x} {y}, resize set {w} {h}"
+    cmd = (
+        f"fullscreen disable, floating enable, "
+        f"move position {x} {y}, resize set {w} {h}"
+    )
     i3.command(cmd)
 
 

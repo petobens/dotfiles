@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import sys
 import subprocess
+import sys
 
 
 def control_volume(how, level):
@@ -36,30 +36,34 @@ def _send_notification():
 
     not_icon = 'audio-speakers' if device == 'speaker' else 'audio-headphones'
     not_cmd = [
-        'dunstify', '-i', not_icon, '-t', '2000', '-r', '1743', '-u', 'normal',
-        f'   {bar}  {vol}%'
+        'dunstify',
+        '-i',
+        not_icon,
+        '-t',
+        '2000',
+        '-r',
+        '1743',
+        '-u',
+        'normal',
+        f'   {bar}  {vol}%',
     ]
     _sh_no_block(not_cmd)
 
 
 def get_vol_and_output_device():
     pactl_out = [
-        line.decode('ascii').split()
-        for line in _sh('pactl list sinks').splitlines()
+        line.decode('ascii').split() for line in _sh('pactl list sinks').splitlines()
     ]
     vol_list = [e for e in pactl_out if 'Volume:' in e[0]][0]
     curr_vol = next(i for i in vol_list if i.endswith('%')).split('%')[0]
 
-    out_list = [e for e in pactl_out
-                if 'Active' in e[0] and 'Port:' in e[1]][0]
+    out_list = [e for e in pactl_out if 'Active' in e[0] and 'Port:' in e[1]][0]
     device = out_list[-1].split('-')[-1]
     return int(curr_vol), device
 
 
 def _sh(cmd, *args, **kwargs):
-    res, err = _sh_no_block(
-        cmd, *args, stdout=subprocess.PIPE, **kwargs
-    ).communicate()
+    res, _ = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
     return res
 
 

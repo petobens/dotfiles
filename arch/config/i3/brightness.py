@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-import sys
 import subprocess
-
+import sys
 from pathlib import Path
 
 BRIGHTNESS_DIR = Path('/sys/class/backlight/intel_backlight')
@@ -27,8 +26,16 @@ def _send_notification():
     bar = '─' * int(bright_perc / 5)
 
     not_cmd = [
-        'dunstify', '-i', 'display-brightness', '-t', '2000', '-r', '1753',
-        '-u', 'normal', f'   {bar}  {bright_perc}%'
+        'dunstify',
+        '-i',
+        'display-brightness',
+        '-t',
+        '2000',
+        '-r',
+        '1753',
+        '-u',
+        'normal',
+        f'   {bar}  {bright_perc}%',
     ]
     _sh_no_block(not_cmd)
 
@@ -42,9 +49,7 @@ def _get_brightness(maximum=False):
 
 
 def _sh(cmd, *args, **kwargs):
-    res, err = _sh_no_block(
-        cmd, *args, stdout=subprocess.PIPE, **kwargs
-    ).communicate()
+    res, _ = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
     return res
 
 

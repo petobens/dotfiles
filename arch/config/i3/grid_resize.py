@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 import sys
-
 from time import sleep
 
 import i3ipc
-
-from resize import LAYOUT_DICT
 from multimon_move import _get_resize_map
+from resize import LAYOUT_DICT
 
 
 def adjust(i3, how, orient, size=20):
@@ -20,8 +18,10 @@ def adjust(i3, how, orient, size=20):
         _grow_or_shrink(i3, how, orient, size)
         break
 
-    if focused_layout in ('Full', 'Center', 'Rectangle',
-                          'Semi Full') or len(layout) == 1:
+    if (
+        focused_layout in ('Full', 'Center', 'Rectangle', 'Semi Full')
+        or len(layout) == 1
+    ):
         # These are pure floating windows (or unique one) so we don't make any
         # adjustments to other windows
         return

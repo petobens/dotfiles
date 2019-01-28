@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 import sys
-
 from subprocess import Popen
 
 import gi
+from gi.repository import Playerctl
 
 gi.require_version('Playerctl', '1.0')
 
-from gi.repository import Playerctl
 
 player = Playerctl.Player()
 title = player.get_title()
@@ -23,7 +22,5 @@ elif status.startswith('Paused'):
 elif status.startswith('Stopped'):
     playing = '⏹'
 
-Popen(
-    ['dunstify', '-a', 'Spotify', f'{playing} {title}', f'{artist}\n{album}']
-)
+Popen(['dunstify', '-a', 'Spotify', f'{playing} {title}', f'{artist}\n{album}'])
 sys.exit(0)

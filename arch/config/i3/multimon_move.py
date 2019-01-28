@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 import sys
-
 from time import sleep
 
 import i3ipc
-
 from resize import resize_win
 
 
 def move_and_resize(i3, direction=None, move_win=True, workspace=None):
     resize_map = _get_resize_map(i3)
 
+    cmd = 'fullscreen disable, '
     if direction is not None:
-        cmd = f'move {"container" if move_win else "workspace"} to ' \
-              f'output {direction}, focus output {direction}'
+        cmd += (
+            f'move {"container" if move_win else "workspace"} to '
+            f'output {direction}, focus output {direction}'
+        )
     if workspace is not None:
-        cmd = f'move container to workspace {workspace}, workspace {workspace}'
+        cmd += f'move container to workspace {workspace}, workspace {workspace}'
     i3.command(cmd)
     sleep(0.2)
 
@@ -85,9 +86,6 @@ if __name__ == '__main__':
 
     i3 = i3ipc.Connection()
     move_and_resize(
-        i3,
-        direction=args.direction,
-        move_win=args.move_win,
-        workspace=args.workspace
+        i3, direction=args.direction, move_win=args.move_win, workspace=args.workspace
     )
     sys.exit(0)
