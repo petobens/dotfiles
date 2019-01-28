@@ -811,6 +811,9 @@ noremap duu "_dd
 noremap Y y$
 " Ignore end of line character (carriage return, ^M) when yanking with yy
 noremap yy mz0y$`z
+" Put (paste) text after or before current line
+noremap <silent> <Leader>p :put<CR>
+noremap <silent> <Leader>P :put!<CR>
 
 " Pastetoggle doesn't redraw the screen (thus the status bar doesn't change)
 " :set paste! does, so we use that (paste mode disables automatic reindenting)
