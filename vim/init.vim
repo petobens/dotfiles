@@ -857,7 +857,7 @@ inoremap <A-j> <Esc>:m .+1<CR>==gi
 inoremap <A-k> <Esc>:m .-2<CR>==gi
 
 " Paste system clipboard
-inoremap <A-p> <C-R>*
+inoremap <A-p> <C-R>"
 
 " Change case (it overwrites contents of z mark): use it at end of word
 inoremap <A-u> <esc>mzgUiw`za
@@ -913,8 +913,7 @@ cnoremap <A-b> <S-Left>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'
 
 " Paste system clipboard to command line
-" Note: to yank a commmand, call Unite history/yank + <C-y> (yank action)
-cnoremap <A-p> <C-R>*
+cnoremap <A-p> <C-R>"
 
 " }}}
 " Terminal mode {{{
