@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import os
-import sys
 import subprocess
-
+import sys
 from time import sleep
 
 
@@ -13,9 +12,7 @@ def sh_no_block(cmd, *args, **kwargs):
 
 
 def sh(cmd, *args, **kwargs):
-    res, err = sh_no_block(
-        cmd, *args, stdout=subprocess.PIPE, **kwargs
-    ).communicate()
+    res, _ = sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
     return res
 
 
