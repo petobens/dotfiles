@@ -198,6 +198,11 @@ if type "mssql-cli" > /dev/null 2>&1; then
     sudo $ln_cmd -fTs "$dotfiles_dir/dbs/mssqlcli_config" "$HOME/.config/mssqlcli/config"
     echo Created ".config/mssqlcli/config" symlink
 fi
+if type "litecli" > /dev/null 2>&1; then
+    sudo mkdir -p "$HOME/.config/litecli"
+    sudo $ln_cmd -fTs "$dotfiles_dir/dbs/sqlite_config" "$HOME/.config/litecli/config"
+    echo Created ".config/litecli/config" symlink
+fi
 
 # OS dependent
 if [[ "$OSTYPE" == 'darwin'* ]]; then

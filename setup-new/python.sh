@@ -35,6 +35,7 @@ pipx inject ipython numpy --verbose
 pipx install isort --spec git+https://github.com/timothycrosley/isort@develop --verbose
 pipx install jupyter-core --verbose
 pipx inject jupyter-core jupyter --verbose
+pipx install litecli --verbose
 pipx install mycli --verbose
 pipx install mypy --verbose
 if type "nvim" > /dev/null 2>&1; then
@@ -89,7 +90,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-for dbcli in mycli pgcli mssql-cli
+for dbcli in litecli mycli pgcli mssql-cli
 do
     if [ -d "$pipx_home/$dbcli" ]; then
         styles_dir="$pipx_home/$dbcli/lib/python3.7/site-packages/pygments/styles"
