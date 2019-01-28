@@ -662,6 +662,10 @@ nnoremap <Leader>sr :%s/
 nnoremap + <C-a>
 nnoremap - <C-x>
 
+" Change map to start macro recording
+noremap <Leader>q q
+nmap q <Nop>
+
 " }}}
 " Window and buffer manipulation {{{
 
