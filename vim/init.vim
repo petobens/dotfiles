@@ -2091,12 +2091,16 @@ map <Leader>ac <Plug>NERDCommenterAppend
 
 let g:neomake_open_list = 2  " Open qf and preserve cusor position
 let g:neomake_echo_current_error = 0 " Don't echo error for cusor line
-let g:neomake_place_signs = 0  " Don't place signs
 let g:neomake_highlight_columns = 0 " Don't hl columns with the error
 let g:airline#extensions#neomake#enabled = 0 " Don't show on Airline
 let g:neomake_virtualtext_current_error = 1
 let g:neomake_virtualtext_prefix = ' '
 call neomake#quickfix#enable()  " enable experimental quickfix formatting
+
+" Set sign symbols
+let g:neomake_place_signs = 0  " Don't place signs
+let g:neomake_error_sign = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = {'text': ' ', 'texthl': 'NeomakeWarningSign'}
 
 " Python
 let g:neomake_python_enabled_makers = ['flake8', 'mypy', 'pylint']
