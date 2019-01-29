@@ -11,3 +11,12 @@ SELECT * FROM (
 SELECT *
 FROM dummy_table$0
 endsnippet
+
+snippet slcdt "Sqlite create dummy table" b
+CREATE TABLE ${1:name} (
+	name TEXT NOT NULL,
+	age integer NOT NULL,
+	experience integer NOT NULL,
+	UNIQUE(name)
+);$0
+endsnippet
