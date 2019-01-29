@@ -658,6 +658,9 @@ nnoremap <A-u> mzg~iw`z
 " Search and replace
 nnoremap <Leader>sr :%s/
 
+" Quickfix replace with cdo (i.e for every file in quickfix)
+nnoremap <Leader>qr :cdo %s/
+
 " Increment and decrement
 nnoremap + <C-a>
 nnoremap - <C-x>
