@@ -137,6 +137,7 @@ $yay_cmd sqlite3
 
 # CLI
 $yay_cmd bat
+$yay_cmd diff-so-fancy
 $yay_cmd docker
 $yay_cmd docker-compose
 $yay_cmd fd

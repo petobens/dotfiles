@@ -40,6 +40,12 @@ if type "pass" > /dev/null 2>&1; then
     echo "Created .gitlab_access_token file"
 fi
 
+# Make git use diff-so-fancy
+if type "diff-so-fancy" > /dev/null 2>&1; then
+    echo -e "\\033[1;34m--> Setting diff-so-fancy as default git diff tool...\\033[0m"
+    diff-so-fancy --set-defaults
+fi
+
 # Mac
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if [ -d "/Applications/Skim.app/" ]; then
