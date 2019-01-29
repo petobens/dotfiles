@@ -335,6 +335,8 @@ if type "git" > /dev/null 2>&1; then
     browser = start
 [credential]
     helper = $credential_helper
+[diff]
+	algorithm = histogram
 EOF
         echo Created .gitconfig file
     fi

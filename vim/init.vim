@@ -408,6 +408,9 @@ augroup no_ro_warn
     au FileChangedRO * set noreadonly
 augroup END
 
+" Diff algorithm
+set diffopt=internal,filler,indent-heuristic,algorithm:histogram
+
 " }}}
 " Search, jumps and matching pairs {{{
 
