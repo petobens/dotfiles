@@ -273,7 +273,7 @@ logging.basicConfig(
 endsnippet
 
 snippet gl "Get logger" b
-logger = logging.getLogger(${1:__name__})$0
+logger = logging.getLogger(${1:f'{PARENT_LOGGER}.{__name__}'})
 endsnippet
 
 snippet cd "Current dir" w
