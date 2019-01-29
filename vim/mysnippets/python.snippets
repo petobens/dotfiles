@@ -285,12 +285,12 @@ with open(${1:filepath}, '${2:r}') as f:
 	$0
 endsnippet
 
-snippet nq "Don't lint" w
+snippet nq "Don't lint (flake8)" w
 # noqa$0
 endsnippet
 
 snippet nl "Don't lint (flake8 and mypy)" w
-# pylint:disable=$1 # type: ignore # noqa$0
+${1:# pylint:disable=${2:code}}# type: ignore # noqa$0
 endsnippet
 
 snippet pld "Pylint disable" w
