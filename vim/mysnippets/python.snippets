@@ -290,7 +290,7 @@ snippet nq "Don't lint (flake8)" w
 endsnippet
 
 snippet nl "Don't lint (flake8 and mypy)" w
-${1:# pylint:disable=${2:code}}# type: ignore # noqa$0
+${1:# pylint:disable=${2:code}}${3:# type: ignore }${4:# noqa}$0
 endsnippet
 
 snippet pld "Pylint disable" w
