@@ -103,7 +103,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Python
     call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
     if has('nvim')
-        call dein#add('zchee/deoplete-jedi')
+        call dein#add('deoplete-plugins/deoplete-jedi')
     endif
     call dein#add('jeetsukumaran/vim-pythonsense', {'on_ft' : 'python'})
     if has('nvim')
