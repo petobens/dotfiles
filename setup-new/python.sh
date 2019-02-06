@@ -8,6 +8,7 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd numpy
     $pip_install_cmd pandas
     $pip_install_cmd pdbpp
+    $pip_install_cmd pipx
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
     fi
@@ -21,10 +22,6 @@ fi
 
 # Python binaries (can also be mostly installed with a package manager but we
 # do it with pipx to avoid dependency clash)
-if ! type "pipx" > /dev/null 2>&1; then
-    mkdir -p "$HOME"/.local/pipx/venvs
-    curl https://raw.githubusercontent.com/cs01/pipx/master/get-pipx.py | python3
-fi
 echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
 pipx install flake8 --spec git+https://github.com/PyCQA/flake8 --verbose
 pipx inject flake8 flake8-bugbear flake8-docstrings --verbose
