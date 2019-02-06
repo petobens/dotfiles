@@ -1247,6 +1247,8 @@ set noshowmode                  " Don't show the current mode
 let g:airline_powerline_fonts = 1
 " Rounded right sep
 let g:airline_right_sep = '' " U+E0B6
+" Don't draw separators in empty sections (such as warning/errors)
+let g:airline_skip_empty_sections = 1
 
 " Short form mode text
 let g:airline_mode_map = {
