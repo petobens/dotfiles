@@ -1647,6 +1647,8 @@ nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>sh :Denite history:search<CR>
 nnoremap <silent> <Leader>ch :Denite history:cmd<CR>
 nnoremap <silent> <Leader>sm :Denite output:messages<CR>
+nnoremap <silent> <Leader>me :Denite output:map<CR>
+nnoremap <silent> <Leader>uf :Denite output:function<CR>
 nnoremap <silent> <Leader>dl :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
@@ -2532,8 +2534,6 @@ let g:unite_source_buffer_time_format = ''
 " Mappings (sources):
 nnoremap <silent> <Leader>ubm :Unite -profile-name=bookmark -default-action=rec
             \ -buffer-name=my-directories bookmark<CR>
-nnoremap <silent> <Leader>me :Unite mapping<CR>
-nnoremap <silent> <Leader>uf :Unite function<CR>
 " NeoInclude and Unite tag
 nnoremap <silent> <Leader>tE :NeoIncludeMakeCache<CR>:Unite
             \ tag/include<CR>
