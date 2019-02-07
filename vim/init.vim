@@ -1742,7 +1742,9 @@ call denite#custom#action('buffer,directory,file,openable', 'defx',
 
 " Vim completion settings
 set pumheight=15                          " Popup menu max height
-set pumblend=20                           " Popup menu transparency
+if has('nvim')
+    set pumblend=20                       " Popup menu transparency
+endif
 set complete=.                            " Scan only the current buffer
 set completeopt=menuone,preview,noinsert
 
