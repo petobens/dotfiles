@@ -1498,7 +1498,6 @@ function! s:defx_settings()
     " Open new defx buffer
     nnoremap <silent><buffer> <Leader>sp :Defx -new -split=horizontal
         \ -direction=<CR>:wincmd p<CR>
-
     " Open in external file browser
     if executable('ranger')
         command! -nargs=1 TmuxRanger call s:TmuxSplitCmd('ranger', <q-args>)
@@ -1719,6 +1718,8 @@ call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
 call denite#custom#map('insert', '<A-p>', '<denite:restore_sources>', 'noremap')
 call denite#custom#map('insert', '<C-w>', '<denite:wincmd:p>', 'noremap')
 call denite#custom#map('insert', '<A-v>', '<denite:do_action:preview>',
+            \ 'noremap')
+call denite#custom#map('insert', '<A-f>', '<denite:do_action:defx>',
             \ 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 
