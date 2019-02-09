@@ -534,7 +534,7 @@ set nolist
 nnoremap <Leader>i :set list!<cr>
 " If shown (it disables linebreak option) use the following symbols for
 " tabstops, end of lines, etc
-set listchars=tab:▸\ ,eol:¬,trail:.,extends:»,precedes:«,nbsp:.
+set listchars=tab:▸\ ,eol:¬,trail:•,extends:»,precedes:«,nbsp:␣
 
 " Tab settings
 set tabstop=4      " A tab is four columns
