@@ -1,19 +1,18 @@
 [flake8]
 
 ignore =
-    E402,
-    E203,
-    E501,
-    W503,
+    E203, # Whitespace before ':'
+    E402, # Import not at top of file
+    E501, # Line too long
+    W503, # Line break before binary operator
     B006, # Mutable data structures in argument defaults
     D107, # Missing docstring in init
 select =
-    C,
-    E,
-    F,
-    W,
+    C, # McCabe complexity
+    E, # pep8 errors
+    F, # pyflakes
+    W, # pep8 warnings
     B,  # Bugbear plugin
     B950,
     D,  # pydocstyle plugin
 max-line-length = 88
-
