@@ -9,7 +9,6 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd pandas
     $pip_install_cmd pdbpp
     $pip_install_cmd pipx
-    $pip_install_cmd pre-commit
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
     fi
@@ -39,6 +38,7 @@ pipx install mypy --verbose
 if type "nvim" > /dev/null 2>&1; then
     pipx install neovim-remote --verbose
 fi
+pipx install pre-commit --verbose
 pipx install pgcli --verbose
 pipx install pylint --verbose
 if type "i3" > /dev/null 2>&1; then
