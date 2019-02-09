@@ -1606,12 +1606,22 @@ function! s:DeniteScanDir()
     endif
     call denite#start([{'name': 'file/rec', 'args': [narrow_dir]}])
 endfunction
-function! s:DeniteGrep()
+function! s:DeniteGrep(...)
+    if !executable('rg')
+        echoerr 'ripgrep is not installed or not in  your path.'
+        return
+    endif
     let l:save_pwd = getcwd()
     lcd %:p:h
     let narrow_dir = input('Target: ', '.', 'file')
     if narrow_dir ==# ''
         return
+    endif
+    " Don't search gitignored files by default
+    let extra_args = ''
+    let git_ignore = get(a:, 1, 1)
+    if git_ignore == 0
+        let extra_args = '--no-ignore-vcs '
     endif
     let filetype = input('Filetype: ', '')
     if filetype ==# ''
@@ -1620,7 +1630,8 @@ function! s:DeniteGrep()
         let ft_filter = '--type ' . filetype
     endif
     execute 'lcd ' . l:save_pwd
-    call denite#start([{'name': 'grep', 'args': [narrow_dir, ft_filter]}])
+    call denite#start([{'name': 'grep',
+                \ 'args': [narrow_dir, extra_args . ft_filter]}])
 endfunction
 function! s:DeniteTasklist(...)
     if a:0 >=1  && a:1 ==# '.'
@@ -1645,6 +1656,7 @@ nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
 nnoremap <silent> <Leader>rg :lcd %:p:h<CR>:call <SID>DeniteGrep()<CR>
+nnoremap <silent> <Leader>rG :lcd %:p:h<CR>:call <SID>DeniteGrep(0)<CR>
 nnoremap <silent> <Leader>dg :lcd %:p:h<CR>:DeniteCursorWord grep<CR>
 nnoremap <silent> <Leader>he :Denite help<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
