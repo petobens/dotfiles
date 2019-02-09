@@ -416,8 +416,9 @@ set diffopt=internal,filler,indent-heuristic,algorithm:histogram
 " }}}
 " Search, jumps and matching pairs {{{
 
-if executable('ag')
-    set grepprg=ag\ --smart-case\ --line-numbers\ --nocolor\ --nogroup\ --follow
+if executable('rg')
+    set grepprg=rg\ --smart-case\ --vimgrep\ --no-heading
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
 endif
 
 " Use sane (Perl/Python like) regexes (very magic): all characters except
