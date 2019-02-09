@@ -554,7 +554,7 @@ set wildignorecase                   " Ignore case
 " Complete longest common string first and then show full alternatives
 set wildmode=longest:full,full
 " Stuff to ignore when tab completing
-set wildignore=*.ini,*~,*.o,*.obj,*.dll,*.dat,*.swp,*.zip,*.exe
+set wildignore=*~,*.o,*.obj,*.dll,*.dat,*.swp,*.zip,*.exe
 set wildignore+=*.DS_Store,*.out,*.toc
 
 " }}}
