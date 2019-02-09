@@ -74,10 +74,9 @@ let g:dein#enable_name_conversion = 1
 if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#begin(expand('$DOTVIM/bundle/'))
 
-    " Plugins we are using
+    " General coding/editing
     call dein#add('vim-airline/vim-airline')
     call dein#add('junegunn/vim-easy-align')
-    call dein#add('airblade/vim-gitgutter')
     call dein#add('jamessan/vim-gnupg')
     call dein#add('Yggdroot/indentLine')
     call dein#add('simnalamburt/vim-mundo', {'on_cmd' : 'MundoToggle'})
@@ -87,23 +86,46 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
-    if !empty('$TMUX')
-        call dein#add('christoomey/vim-tmux-navigator')
-        call dein#add('wellle/tmux-complete.vim')
-        call dein#add('tmux-plugins/vim-tmux-focus-events')
-    endif
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
     call dein#add('SirVer/ultisnips')
+
+    " Colorschemes
+    call dein#add('petobens/colorish', {'frozen': 1})
+
+    " Tim Pope editing/coding plugins
+    call dein#add('tpope/vim-abolish')
+    call dein#add('tpope/vim-dispatch')
+    call dein#add('tpope/vim-repeat')
+    call dein#add('tpope/vim-rhubarb')
+    call dein#add('tpope/vim-surround')
+
+    " Git
+    call dein#add('airblade/vim-gitgutter')
+    call dein#add('junegunn/gv.vim')
+    call dein#add('tpope/vim-fugitive')
+    call dein#add('tommcdo/vim-fubitive')
+    call dein#add('shumphrey/fugitive-gitlab.vim')
+
+    " i3
+    if executable('i3')
+        call dein#add('mboughaba/i3config.vim')
+    endif
+
+    " Javascript
+    call dein#add('pangloss/vim-javascript', {'on_ft' : 'javascript'})
+    call dein#add('carlitux/deoplete-ternjs', {'on_ft' : 'javascript'})
+    call dein#add('ternjs/tern_for_vim',
+                \ {'on_ft' : 'javascript', 'build': 'npm install'})
+    call dein#add('chrisbra/Colorizer', {'on_cmd': 'ColorToggle'})
+
+    " Latex
     call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})
 
-    " (my) Colorschemes
-    call dein#add('petobens/colorish', {'frozen': 1})
+    " Markdown
+    call dein#add('plasticboy/vim-markdown', {'on_ft' : 'markdown'})
 
     " Python
     call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
-    if has('nvim')
-        call dein#add('deoplete-plugins/deoplete-jedi')
-    endif
     call dein#add('jeetsukumaran/vim-pythonsense', {'on_ft' : 'python'})
     if has('nvim')
         call dein#add('numirias/semshi', {'on_ft': 'python'})
@@ -115,23 +137,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " R
     call dein#add('jalvesaq/Nvim-R')
 
-    " Javascript
-    call dein#add('pangloss/vim-javascript', {'on_ft' : 'javascript'})
-    call dein#add('carlitux/deoplete-ternjs', {'on_ft' : 'javascript'})
-    call dein#add('ternjs/tern_for_vim',
-                \ {'on_ft' : 'javascript', 'build': 'npm install'})
-    call dein#add('chrisbra/Colorizer', {'on_cmd': 'ColorToggle'})
-
-    " Git
-    call dein#add('junegunn/gv.vim')
-    call dein#add('tpope/vim-fugitive')
-    call dein#add('tommcdo/vim-fubitive')
-    call dein#add('shumphrey/fugitive-gitlab.vim')
-    call dein#add('neoclide/denite-git')
-
-    " Markdown
-    call dein#add('plasticboy/vim-markdown', {'on_ft' : 'markdown'})
-
     " SQL (and database related)
     call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
     call dein#add('tpope/vim-dadbod')
@@ -139,21 +144,14 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " TOML
     call dein#add('cespare/vim-toml', {'on_ft': 'toml'})
 
-    " Tim Pope plugins
-    call dein#add('tpope/vim-abolish')
-    call dein#add('tpope/vim-dispatch')
-    call dein#add('tpope/vim-repeat')
-    call dein#add('tpope/vim-rhubarb')
-    call dein#add('tpope/vim-surround')
-
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
     " Unite/denite
     call dein#add('Shougo/denite.nvim')
-    " call dein#add('petobens/denite.nvim')
     call dein#add('Shougo/unite.vim')
     call dein#add('neoclide/denite-extra')
     call dein#add('raghur/fruzzy')
+    call dein#add('neoclide/denite-git')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('kopischke/unite-spell-suggest')
@@ -164,6 +162,9 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/deoplete.nvim')
     call dein#add('Shougo/context_filetype.vim')
     call dein#add('Shougo/echodoc.vim')
+    if has('nvim')
+        call dein#add('deoplete-plugins/deoplete-jedi')
+    endif
     call dein#add('Shougo/neco-vim', {'name' : 'neco-vim'})
     call dein#add('Shougo/neco-syntax')
     call dein#add('Shougo/neoinclude.vim')
@@ -174,12 +175,14 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('kristijanhusak/defx-icons')
     call dein#add('kristijanhusak/defx-git')
 
-    " Filetype plugins
-    if executable('i3')
-        call dein#add('mboughaba/i3config.vim')
+    " Tmux
+    if !empty('$TMUX')
+        call dein#add('christoomey/vim-tmux-navigator')
+        call dein#add('wellle/tmux-complete.vim')
+        call dein#add('tmux-plugins/vim-tmux-focus-events')
     endif
 
-    " Temp
+    " Workarounds
      if has('nvim')
         if s:is_linux
             " This allows to write without sudo
