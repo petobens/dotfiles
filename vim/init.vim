@@ -1761,12 +1761,19 @@ function! s:my_split(context)
     endif
     call denite#do_action(a:context, split_action, a:context['targets'])
 endfunction
+function! s:defx_open(context)
+    let path = a:context['targets'][0]['action__path']
+    let file = fnamemodify(path, ':p')
+    let file_search = filereadable(expand(file)) ? ' -search=' . file : ''
+    let dir = denite#util#path2directory(path)
+    execute('Defx ' . dir . file_search)
+endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
-            \ function('s:my_split'))
-call denite#custom#action('file', 'narrow',
-      \ {context -> denite#do_action(context, 'open', context['targets'])})
+        \ function('s:my_split'))
 call denite#custom#action('buffer,directory,file,openable', 'defx',
-      \ {context -> execute('Defx ' . context['targets'][0]['action__path'])})
+        \ function('s:defx_open'))
+call denite#custom#action('file', 'narrow',
+        \ {context -> denite#do_action(context, 'open', context['targets'])})
 
 " }}}
 " Deoplete {{{
