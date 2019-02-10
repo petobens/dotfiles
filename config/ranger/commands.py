@@ -1,3 +1,4 @@
+"""Ranger custom commands."""
 import os
 import re
 import subprocess
@@ -9,28 +10,34 @@ from ranger.ext.get_executables import get_executables
 
 
 class fzf_select(Command):
-    """
-    :fzf_select
-
-    Find a file or directory using fzf and fd.
+    """Find a file or directory using fzf and fd.
 
     With a prefix argument select only directories else only files.
     """
 
     def execute(self):
+        """Execute the command."""
         fd_cmd = 'fd'
         if fd_cmd not in get_executables():
             self.fm.notify(f"Couldn't find {fd_cmd} on the PATH.", bad=True)
             return
 
-        only_dirs = True if self.arg(1) else False
+        only_dirs = True if self.arg(1) == '-d' else False
         command = (
             f"{fd_cmd} --type {'d' if only_dirs else 'f'} --hidden --follow "
-            "--exclude .git | fzf +m"
+            '--exclude .git '
         )
+        no_git_ignore = (
+            True
+            if self.arg(1) == '-d' and self.arg(2) or self.arg(1) == '-ngi'
+            else False
+        )
+        if no_git_ignore:
+            command += '--no-ignore-vcs '
+        command += '| fzf +m'
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
-        stdout, stderr = fzf.communicate()
+        stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
             fzf_file = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
             if os.path.isdir(fzf_file):
@@ -40,13 +47,10 @@ class fzf_select(Command):
 
 
 class fzf_z(Command):
-    """
-    :fzf_z
-
-    Find a directory using fzf and z.
-    """
+    """Find a directory using fzf and z."""
 
     def execute(self):
+        """Execute the command."""
         z_sh = None
         if sys.platform == 'darwin':
             z_sh = '/usr/local/etc/profile.d/z.sh'
@@ -62,20 +66,17 @@ class fzf_z(Command):
         )
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
-        stdout, stderr = fzf.communicate()
+        stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
             fzf_dir = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
             self.fm.cd(fzf_dir)
 
 
 class show_files_in_finder(Command):
-    """
-    :show_files_in_finder
-
-    Present selected files in finder
-    """
+    """Present selected files in finder."""
 
     def execute(self):
+        """Execute the command."""
         if sys.platform != 'darwin':
             return
         files = ",".join(
@@ -94,7 +95,10 @@ class show_files_in_finder(Command):
 
 
 class trash_with_confirmation(Command):
+    """Send to trash but ask for confirmation first."""
+
     def execute(self):
+        """Execute the command."""
         trash_cmd = 'trash-put'
         if trash_cmd not in get_executables():
             self.fm.notify(f"Couldn't find {trash_cmd} on the PATH.", bad=True)
@@ -116,4 +120,4 @@ class trash_with_confirmation(Command):
                 file = re.escape(f)
                 cmd = f'trash-put {file}'
                 trash_cli = self.fm.execute_command(cmd, stdout=subprocess.PIPE)
-                stdout, stderr = trash_cli.communicate()
+                trash_cli.communicate()
