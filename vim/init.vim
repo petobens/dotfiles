@@ -1483,6 +1483,9 @@ function! s:defx_settings()
     nnoremap <silent><buffer><expr> D defx#do_action('new_directory')
     " Move up a directory
     nnoremap <silent><buffer><expr> u defx#do_action('cd', ['..'])
+    nnoremap <silent><buffer><expr> 2u defx#do_action('cd', ['../..'])
+    nnoremap <silent><buffer><expr> 3u defx#do_action('cd', ['../../..'])
+    nnoremap <silent><buffer><expr> 4u defx#do_action('cd', ['../../../..'])
     " Home directory
     nnoremap <silent><buffer><expr> h defx#do_action('cd')
     " Mark a file
