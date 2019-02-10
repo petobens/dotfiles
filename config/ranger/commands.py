@@ -12,7 +12,7 @@ from ranger.ext.get_executables import get_executables
 class fzf_select(Command):
     """Find a file or directory using fzf and fd.
 
-    With a prefix argument select only directories else only files.
+    Add -d to select only dirs and/or -ngi to ignore gitignore.
     """
 
     def execute(self):
@@ -95,7 +95,7 @@ class show_files_in_finder(Command):
 
 
 class trash_with_confirmation(Command):
-    """Send to trash but ask for confirmation first."""
+    """Send to trash asking for confirmation first."""
 
     def execute(self):
         """Execute the command."""
