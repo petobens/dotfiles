@@ -1608,12 +1608,14 @@ call g:dirmark#set_cache_directory_path($CACHE .
             \ '/plugins/denite/denite-dirmark')
 
 " Functions
-function! s:DeniteScanDir()
+function! s:DeniteScanDir(...)
     let narrow_dir = input('Input narrowing directory: ', '', 'file')
     if narrow_dir ==# ''
         return
     endif
-    call denite#start([{'name': 'file/rec', 'args': [narrow_dir]}])
+    let git_ignore = get(a:, 1, 1)
+    let source = git_ignore == 1 ? 'file/rec' : 'file/rec/noignore'
+    call denite#start([{'name': source, 'args': [narrow_dir]}])
 endfunction
 function! s:DeniteGrep(...)
     if !executable('rg')
@@ -1660,6 +1662,7 @@ nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
 nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
+nnoremap <silent> <Leader>sD :call <SID>DeniteScanDir(0)<CR>
 nnoremap <silent> <A-z> :Denite -default-action=narrow z<CR>
 nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite directory_rec<CR>
 nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite directory_rec/noignore<CR>
