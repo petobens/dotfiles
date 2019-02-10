@@ -1583,6 +1583,15 @@ if executable('fd')
     call denite#custom#var('directory_rec', 'command',
         \ ['fd', '--type', 'd', '--follow', '--hidden', '--exclude', '.git',
         \ ''])
+    " Define alias that don't ignore vcs files
+    call denite#custom#alias('source', 'file/rec/noignore', 'file/rec')
+    call denite#custom#var('file/rec/noignore', 'command',
+        \ ['fd', '--type', 'f', '--follow', '--hidden', '--exclude', '.git',
+        \ '--no-ignore-vcs', ''])
+    call denite#custom#alias('source', 'directory_rec/noignore', 'directory_rec')
+    call denite#custom#var('directory_rec/noignore', 'command',
+        \ ['fd', '--type', 'd', '--follow', '--hidden', '--exclude', '.git',
+        \ '--no-ignore-vcs', ''])
 endif
 if executable('rg')
     call denite#custom#var('grep', 'command', ['rg'])
@@ -1647,10 +1656,13 @@ command! -nargs=? -complete=file DeniteBookmarkAdd
 
 " Mappings
 nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <A-z> :Denite -default-action=narrow z<CR>
 nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite directory_rec<CR>
+nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite directory_rec/noignore<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
