@@ -1588,7 +1588,8 @@ if executable('fd')
     call denite#custom#var('file/rec/noignore', 'command',
         \ ['fd', '--type', 'f', '--follow', '--hidden', '--exclude', '.git',
         \ '--no-ignore-vcs', ''])
-    call denite#custom#alias('source', 'directory_rec/noignore', 'directory_rec')
+    call denite#custom#alias('source', 'directory_rec/noignore',
+        \ 'directory_rec')
     call denite#custom#var('directory_rec/noignore', 'command',
         \ ['fd', '--type', 'd', '--follow', '--hidden', '--exclude', '.git',
         \ '--no-ignore-vcs', ''])
@@ -1686,7 +1687,8 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
 nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
-nnoremap <silent> <Leader>bm :Denite dirmark<CR>
+nnoremap <silent> <Leader>bm :Denite dirmark
+            \ -default-action=candidate_file_rec<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :Denite -resume -immediately -cursor-pos=+1<CR>
 nnoremap <silent> [d :Denite -resume -immediately -cursor-pos=-1<CR>
@@ -1751,6 +1753,8 @@ call denite#custom#map('insert', '<A-v>', '<denite:do_action:preview>',
             \ 'noremap')
 call denite#custom#map('insert', '<A-f>', '<denite:do_action:defx>',
             \ 'noremap')
+call denite#custom#map('insert', '<C-t>',
+            \ '<denite:do_action:candidate_file_rec>', 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 
 " Custom actions
@@ -1768,10 +1772,17 @@ function! s:defx_open(context)
     let dir = denite#util#path2directory(path)
     execute('Defx ' . dir . file_search)
 endfunction
+function! s:candidate_file_rec(context)
+    let path = a:context['targets'][0]['action__path']
+    let narrow_dir = denite#util#path2directory(path)
+    call denite#start([{'name': 'file/rec', 'args': [narrow_dir]}])
+endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
-call denite#custom#action('buffer,directory,file,openable', 'defx',
+call denite#custom#action('buffer,directory,file,openable,dirmark', 'defx',
         \ function('s:defx_open'))
+call denite#custom#action('buffer,directory,file,openable,dirmark',
+        \ 'candidate_file_rec', function('s:candidate_file_rec'))
 call denite#custom#action('file', 'narrow',
         \ {context -> denite#do_action(context, 'open', context['targets'])})
 
