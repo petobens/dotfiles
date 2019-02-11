@@ -1667,7 +1667,7 @@ nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
 nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>sD :call <SID>DeniteScanDir(0)<CR>
-nnoremap <silent> <A-z> :Denite -default-action=narrow z<CR>
+nnoremap <silent> <A-z> :Denite -default-action=candidate_file_rec z<CR>
 nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite directory_rec<CR>
 nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite directory_rec/noignore<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
@@ -1691,7 +1691,7 @@ nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
 nnoremap <silent> <Leader>bm :Denite dirmark
-            \ -default-action=candidate_file_rec<CR>
+            \ -default-action=candidate_file_rec -quick-move<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> ]d :Denite -resume -immediately -cursor-pos=+1<CR>
 nnoremap <silent> [d :Denite -resume -immediately -cursor-pos=-1<CR>
