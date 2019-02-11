@@ -17,6 +17,7 @@ __pycache__/
 /venv/
 .coverage
 .ipynb_checkpoints
+pip-wheel-metadata/
 
 # OSX
 .DS_Store*
