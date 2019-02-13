@@ -233,8 +233,8 @@ endfunction
 augroup session
     au!
     au VimLeave * call s:SaveSession()
-    au BufWinLeave {*.*,vimrc}  mkview
-    au BufWinEnter {*.*,vimrc}  silent! loadview
+    au BufWinLeave {*.*,vimrc,bashrc}  mkview
+    au BufWinEnter {*.*,vimrc,bashrc}  silent! loadview
 augroup END
 nnoremap <silent> <Leader>ps :so $CACHE/tmp/session/vim_session.vim<CR>
 
