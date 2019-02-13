@@ -621,7 +621,7 @@ nnoremap <silent> M :execute 'normal! ' . (virtcol('$')/2) . '\|'<CR>
 
 " Use alt to replace the original mappings to move to head the, middle and bottom
 " of window
-nnoremap <A-g> H
+nnoremap <A-0> H
 nnoremap <A-m> M
 nnoremap <A-b> L
 
