@@ -162,7 +162,7 @@ bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -W $ws4 -e \
 # Note: We use fixed DPI scaling as per:
 # https://github.com/jwilm/alacritty/pull/1403#issuecomment-417876005
 bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws5 -m terminal \
-    -e 'alacritty -e /usr/bin/bash -i'
+    -e 'alacritty -e /usr/bin/bash -i -c "tm"'
 bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -f -W $ws5
 # WS6 PDFs and images
 bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -f -W $ws6 -C
