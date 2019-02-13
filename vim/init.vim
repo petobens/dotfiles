@@ -1514,6 +1514,33 @@ function! s:defx_settings()
     nnoremap <silent><buffer> <C-h> :Denite defx/history<CR>
     " Bookmarks source
     nnoremap <silent><buffer> b :Denite defx/dirmark<CR>
+
+    " Custom actions
+    function! s:denite_rec(context) abort
+        let narrow_dir = denite#util#path2directory(a:context.targets[0])
+        execute('Denite -default-action=defx file/rec:' . narrow_dir)
+    endfunction
+    function! s:denite_rec_no_ignore(context) abort
+        let narrow_dir = denite#util#path2directory(a:context.targets[0])
+        execute('Denite -default-action=defx file/rec/noignore:' . narrow_dir)
+    endfunction
+    function! s:denite_dir_rec(context) abort
+        let narrow_dir = denite#util#path2directory(a:context.targets[0])
+        execute('Denite -default-action=defx directory_rec:' . narrow_dir)
+    endfunction
+    function! s:denite_dir_rec_no_ignore(context) abort
+        let narrow_dir = denite#util#path2directory(a:context.targets[0])
+        execute('Denite -default-action=defx directory_rec/noignore:' .
+                    \ narrow_dir)
+    endfunction
+    nnoremap <silent><buffer><expr> <C-t>
+                \ defx#do_action('call', '<SID>denite_rec')
+    nnoremap <silent><buffer><expr> <A-t>
+                \ defx#do_action('call', '<SID>denite_rec_no_ignore')
+    nnoremap <silent><buffer><expr> <A-c>
+                \ defx#do_action('call', '<SID>denite_dir_rec')
+    nnoremap <silent><buffer><expr> <A-d>
+                \ defx#do_action('call', '<SID>denite_dir_rec_no_ignore')
 endfunction
 
 " }}}
