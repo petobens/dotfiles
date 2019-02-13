@@ -619,8 +619,8 @@ noremap L $
 " window)
 nnoremap <silent> M :execute 'normal! ' . (virtcol('$')/2) . '\|'<CR>
 
-" Use alt to replace the original mappings to move to head the, middle and bottom
-" of window
+" Use alt to replace the original mappings to move to the top , middle and
+" bottom of the screen
 nnoremap <A-0> H
 nnoremap <A-m> M
 nnoremap <A-b> L
