@@ -1525,7 +1525,7 @@ let g:dein#install_max_processes = 16
 " Function to open denite buffer with updates as updates finish
 function! s:dein_update()
   call dein#update()
-  Denite -no-quit -mode=normal dein_log:!
+  Denite -post-action=suspend -mode=normal dein_log:!
 endfunction
 
 " Maps
@@ -1687,7 +1687,7 @@ nnoremap <silent> <Leader>uf :Denite output:function<CR>
 nnoremap <silent> <Leader>dl :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
-nnoremap <silent> <Leader>dq :Denite -no-quit quickfix<CR>
+nnoremap <silent> <Leader>dq :Denite -post-action=suspend quickfix<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
 nnoremap <silent> <Leader>bm :Denite dirmark
