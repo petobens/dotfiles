@@ -275,7 +275,7 @@ if type "ranger" > /dev/null 2>&1; then
 fi
 if type "bat" > /dev/null 2>&1; then
     # Colorized cat
-    alias dog='bat --style numbers --theme TwoDark'
+    alias dog='bat --color always --style numbers --theme TwoDark'
 fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
@@ -448,6 +448,10 @@ if type "fzf" > /dev/null 2>&1; then
     # Use fd for files and dirs
     export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    if type "bat" > /dev/null 2>&1; then
+        export FZF_CTRL_T_OPTS="--preview 'bat --color always --style numbers \
+--theme TwoDark --line-range :200 {}'"
+    fi
     export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
     if type "tree" > /dev/null 2>&1; then
         export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
