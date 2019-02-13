@@ -539,6 +539,13 @@ if type "fzf" > /dev/null 2>&1; then
         "#{session_name}" 2>/dev/null | fzf --exit-0) && \
         tmux $change -t "$session" || echo "No sessions found."
     }
+    # Tmux session killer
+    tmk() {
+        local session
+        session=$(tmux list-sessions -F "#{session_name}" | \
+            fzf --query="$1" --exit-0) &&
+        tmux kill-session -t "$session"
+    }
 
     # Z
     if [[ "$OSTYPE" == 'darwin'* ]]; then
