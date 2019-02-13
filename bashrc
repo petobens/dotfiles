@@ -434,7 +434,6 @@ alias hdbw='mongo mongodb://pedroFerrari:"$(pass humber/mongodb/pedroFerrari)"'\
 
 if type "fzf" > /dev/null 2>&1; then
     # Enable completion and key bindings
-
     if [[ "$OSTYPE" == 'darwin'* ]]; then
         [[ $- == *i* ]] && . "$base_pkg_dir/opt/fzf/shell/completion.bash" 2> /dev/null
         . "$base_pkg_dir/opt/fzf/shell/key-bindings.bash"
@@ -458,6 +457,43 @@ if type "fzf" > /dev/null 2>&1; then
 
     # Extend list of commands with fuzzy completion (basically add our aliases)
     complete -F _fzf_path_completion -o default -o bashdefault v o dog
+
+    # Alt-t mapping to select files without ignoring gitignored ones
+    # shellcheck disable=SC2120
+    __fzf_select_noignore__() {
+        local cmd dir
+        cmd="$FZF_CTRL_T_COMMAND --no-ignore-vcs"
+        eval "$cmd" | \
+            FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} \
+            --reverse $FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf -m "$@" | \
+            while read -r item; do
+                printf '%q ' "$item"
+            done
+        echo
+    }
+    fzf-file-widget-no-ignore() {
+        local selected=""
+        # shellcheck disable=SC2119
+        selected="$(__fzf_select_noignore__)"
+        READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
+        READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
+    }
+    # shellcheck disable=SC2016
+    bind -x '"\et": "fzf-file-widget-no-ignore"'
+    bind -m vi-command '"\et": "i\et"'
+
+    # Alt-d mapping to cd without ignoring gitignored dirs
+    __fzf_cd_noignore__() {
+        local cmd dir
+        cmd="$FZF_ALT_C_COMMAND --no-ignore-vcs"
+        dir=$(eval "$cmd" | \
+            FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} \
+            --reverse $FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" $(__fzfcmd) +m) \
+            && printf 'cd %q' "$dir"
+    }
+    # shellcheck disable=SC2016
+    bind '"\ed": "\C-x\C-addi`__fzf_cd_noignore__`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ed": "i\ed"'
 
     # Alt-p mapping to cd to selected parent directory (sister to Alt-c)
     __fzf_cd_parent__() {
@@ -483,8 +519,7 @@ if type "fzf" > /dev/null 2>&1; then
     }
     # shellcheck disable=SC2016
     bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
-    # shellcheck disable=SC2016
-    bind -m vi-command '"\ep": "ddi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ep": "i\ep"'
 
     # Tmux session switcher (`tms foo` attaches to `foo` it exists, else creates
     # it)
