@@ -619,9 +619,9 @@ noremap L $
 " window)
 nnoremap <silent> M :execute 'normal! ' . (virtcol('$')/2) . '\|'<CR>
 
-" Use alt to replace the original mappings to move to the top, middle and bottom
+" Use alt to replace the original mappings to move to head the, middle and bottom
 " of window
-nnoremap <A-t> H
+nnoremap <A-g> H
 nnoremap <A-m> M
 nnoremap <A-b> L
 
@@ -1688,8 +1688,8 @@ command! -nargs=? -complete=file DeniteBookmarkAdd
         \ :Denite dirmark/add -default-action=add -immediately-1 -path=<q-args>
 
 " Mappings
-nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
-nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
+nnoremap <silent> <C-t> :lcd %:p:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <A-t> :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
 nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
