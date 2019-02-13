@@ -15,4 +15,7 @@ select =
     B,  # Bugbear plugin
     B950,
     D,  # pydocstyle plugin
+per-file-ignores =
+    # Don't ask for docstring in test files
+    test_*.py: D103
 max-line-length = 88
