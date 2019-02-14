@@ -247,7 +247,7 @@ endfunction
 " Save and load viewoptions and previous session
 augroup session
     au!
-    au BufReadPost,VimLeavePre * call s:SaveSession()
+    au VimLeavePre * call s:SaveSession()
     " au VimEnter * nested call s:LoadSession()
     au BufWinLeave {*.*,vimrc,bashrc}  mkview
     au BufWinEnter {*.*,vimrc,bashrc}  silent! loadview
