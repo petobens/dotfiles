@@ -76,6 +76,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " General coding/editing
     call dein#add('vim-airline/vim-airline')
+    call dein#add('gioele/vim-autoswap')
     call dein#add('junegunn/vim-easy-align')
     call dein#add('jamessan/vim-gnupg')
     call dein#add('Yggdroot/indentLine')
@@ -223,20 +224,31 @@ set viewdir=$CACHE/tmp/view
 set sessionoptions-=options,tabpages
 set sessionoptions+=winpos,resize
 
-function! s:SaveSession()
+function! s:SessionFileName()
     let session_dir = $CACHE . '/tmp/session/'
     silent! call s:MakeDirIfNoExists(session_dir)
-    execute 'mksession! ' . session_dir . 'vim_session.vim'
+    let session_file = 'vim_session'
+    if !empty('$TMUX')
+        let tmux_session = trim(system("tmux display-message -p '#S'"))
+        let session_file .= '_' . tmux_session
+    endif
+    let session_file .= '.vim'
+    return session_dir . session_file
+endfunction
+function! s:SaveSession()
+    let session_file = s:SessionFileName()
+    execute 'mksession! ' . session_file
 endfunction
 
 " Save and load viewoptions and previous session
 augroup session
     au!
-    au VimLeave * call s:SaveSession()
+    au VimLeavePre * call s:SaveSession()
     au BufWinLeave {*.*,vimrc,bashrc}  mkview
     au BufWinEnter {*.*,vimrc,bashrc}  silent! loadview
 augroup END
-nnoremap <silent> <Leader>ps :so $CACHE/tmp/session/vim_session.vim<CR>
+let my_session_file = s:SessionFileName()
+nnoremap <Leader>ps :execute 'source  ' . my_session_file<CR>
 
 " Change viminfo directory
 if !has('nvim')
