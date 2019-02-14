@@ -1,23 +1,12 @@
 #!/usr/bin/env python3
 """Custom killing of apps."""
-import subprocess
 import sys
 
 import i3ipc
+from i3_helpers import sh
 
 CTRL_Q = ['Skype', 'Slack']
 CUSTOM = ['Chromium']
-
-
-def _sh(cmd, *args, **kwargs):
-    res, _ = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
-    return res
-
-
-def _sh_no_block(cmd, *args, **kwargs):
-    if isinstance(cmd, str):
-        cmd = cmd.split()
-    return subprocess.Popen(cmd, *args, **kwargs)
 
 
 def kill_custom(i3, which):
@@ -33,9 +22,9 @@ def kill_custom(i3, which):
         win_class = win.window_class
         if win_class in CUSTOM:
             if win_class == 'Chromium':
-                _sh(f'xdotool key --window {win.window} comma+k+v')
+                sh(f'xdotool key --window {win.window} comma+k+v')
         elif win_class in CTRL_Q:
-            _sh(f'xdotool key --window {win.window} Control+q')
+            sh(f'xdotool key --window {win.window} Control+q')
         else:
             i3.command('kill')
 

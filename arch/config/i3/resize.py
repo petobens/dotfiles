@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Resize windows easily."""
 import sys
 
 import i3ipc
@@ -25,6 +26,7 @@ LAYOUT_DICT = {
 
 
 def resize_win(i3, x, y, w, h):
+    """Resize focused window."""
     win = i3.get_tree().find_focused()
     ws = win.workspace()
     max_h = ws.rect.height
@@ -54,6 +56,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     how = args.how
 
-    i3 = i3ipc.Connection()
-    resize_win(i3, *LAYOUT_DICT[how])
+    i3_conn = i3ipc.Connection()
+    resize_win(i3_conn, *LAYOUT_DICT[how])
     sys.exit(0)

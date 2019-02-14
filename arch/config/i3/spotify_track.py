@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Control Spotify with i3."""
 import sys
 from subprocess import Popen
 

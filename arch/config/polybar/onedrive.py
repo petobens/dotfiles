@@ -1,3 +1,4 @@
+"""Show OneDrive status in Polybar."""
 import re
 import subprocess
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Module to resize i3 windows in a tilingish manner."""
 import sys
 from time import sleep
 
@@ -8,6 +9,7 @@ from resize import LAYOUT_DICT
 
 
 def adjust(i3, how, orient, size=20):
+    """Adjust window and adjacent ones to mimic tiling behaviour."""
     layout = _get_layout(i3)
 
     for win_id, win_data in layout.items():
@@ -46,7 +48,7 @@ def adjust(i3, how, orient, size=20):
 
 def _get_layout(i3):
     rmap = _get_resize_map(i3)
-    for win_id, win_data in rmap.items():
+    for _, win_data in rmap.items():
         actual_layout = [round(float(i), 2) for i in win_data['how']]
         min_distance = 1e10
         for name, vals in LAYOUT_DICT.items():
@@ -186,6 +188,6 @@ if __name__ == '__main__':
     parser.add_argument('--size', '-s', type=int, default=20)
     args = parser.parse_args()
 
-    i3 = i3ipc.Connection()
-    adjust(i3, args.action, args.orient, args.size)
+    i3_conn = i3ipc.Connection()
+    adjust(i3_conn, args.action, args.orient, args.size)
     sys.exit(0)

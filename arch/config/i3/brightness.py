@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-import subprocess
+"""Control brightness with keyboard."""
 import sys
 from pathlib import Path
+
+from i3_helpers import sh, sh_no_block
 
 BRIGHTNESS_DIR = Path('/sys/class/backlight/intel_backlight')
 if not BRIGHTNESS_DIR.is_dir():
@@ -9,6 +11,7 @@ if not BRIGHTNESS_DIR.is_dir():
 
 
 def control_brightness(how, level):
+    """Control brightness level."""
     _change_brightness(how, level)
     _send_notification()
     return 0
@@ -16,7 +19,7 @@ def control_brightness(how, level):
 
 def _change_brightness(how, level):
     cmd = f'xbacklight -{how} {level}'
-    _sh(cmd)
+    sh(cmd)
 
 
 def _send_notification():
@@ -37,7 +40,7 @@ def _send_notification():
         'normal',
         f'   {bar}  {bright_perc}%',
     ]
-    _sh_no_block(not_cmd)
+    sh_no_block(not_cmd)
 
 
 def _get_brightness(maximum=False):
@@ -46,17 +49,6 @@ def _get_brightness(maximum=False):
     with brightness_file.open() as f:
         brightness = f.read()
     return int(brightness)
-
-
-def _sh(cmd, *args, **kwargs):
-    res, _ = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
-    return res
-
-
-def _sh_no_block(cmd, *args, **kwargs):
-    if isinstance(cmd, str):
-        cmd = cmd.split()
-    return subprocess.Popen(cmd, *args, **kwargs)
 
 
 if __name__ == '__main__':

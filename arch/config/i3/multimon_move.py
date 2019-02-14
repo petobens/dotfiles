@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Move containers and workspaces between monitos (i.e outputs)."""
 import sys
 from time import sleep
 
@@ -7,6 +8,7 @@ from resize import resize_win
 
 
 def move_and_resize(i3, direction=None, move_win=True, workspace=None):
+    """Move windows and container between monitors resizing/rescaling appropiately."""
     resize_map = _get_resize_map(i3)
 
     cmd = 'fullscreen disable, '
@@ -84,8 +86,11 @@ if __name__ == '__main__':
     parser.add_argument('--workspace', '-w')
     args = parser.parse_args()
 
-    i3 = i3ipc.Connection()
+    i3_conn = i3ipc.Connection()
     move_and_resize(
-        i3, direction=args.direction, move_win=args.move_win, workspace=args.workspace
+        i3_conn,
+        direction=args.direction,
+        move_win=args.move_win,
+        workspace=args.workspace,
     )
     sys.exit(0)
