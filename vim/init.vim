@@ -241,7 +241,7 @@ function! s:SaveSession()
 endfunction
 function! s:LoadSession()
     let session_file = s:SessionFileName()
-    execute 'source ' . session_file
+    silent! execute 'source ' . session_file
 endfunction
 
 " Save and load viewoptions and previous session
@@ -252,7 +252,7 @@ augroup session
     au BufWinLeave {*.*,vimrc,bashrc}  mkview
     au BufWinEnter {*.*,vimrc,bashrc}  silent! loadview
 augroup END
-nnoremap <Leader>ps :call <SID>LoadSession()<CR>
+nnoremap <silent><Leader>ps :call <SID>LoadSession()<CR>
 
 " Change viminfo directory
 if !has('nvim')
