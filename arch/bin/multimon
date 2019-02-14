@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Control multiple monitors with xrandr."""
 import os
 import subprocess
 import sys
@@ -9,6 +10,7 @@ import i3ipc
 
 
 def multi(how):
+    """Set up multiple monitors using xrandr."""
     if how == 'init':
         _xrandr(how)
         return
@@ -189,7 +191,7 @@ def _get_name_and_res(xrandr_out, mon_info):
 
 
 def _sh(cmd, *args, **kwargs):
-    res, err = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
+    res, _ = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
     return res
 
 
@@ -212,13 +214,12 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('how')
-    args = parser.parse_args()
-    how = args.how
+    parse_args = parser.parse_args()
 
     # Constants
     PRIM_DPI = 192
     FIXED_SCALE = 2
     POLYBAR_HEIGHT = 55
 
-    multi(how)
+    multi(parse_args.how)
     sys.exit(0)

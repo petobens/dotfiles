@@ -1,17 +1,21 @@
 #!/usr/bin/env python
+"""Create GTK confirmation dialog."""
 from subprocess import Popen
 
 import gi
 
 gi.require_version('Gtk', '3.0')
 
-from PIL import ImageFont
-from gi.repository import Gtk, Pango
+if True:
+    from gi.repository import Gtk, Pango
+    from PIL import ImageFont
+
 
 FONT, FONT_SIZE = 'NotoSans-Regular.ttf', 11
 
 
 def confirmation_dialog(title, msg, action, shell=False):
+    """Create confirmation dialog that triggers an action."""
     win = Gtk.Window()
     win.connect('destroy', Gtk.main_quit)
     dialog = Gtk.Dialog(parent=win)
@@ -23,10 +27,7 @@ def confirmation_dialog(title, msg, action, shell=False):
 
     dialog.set_property('title', title)
     dialog.add_buttons(
-        Gtk.STOCK_OK,
-        Gtk.ResponseType.OK,
-        Gtk.STOCK_CANCEL,
-        Gtk.ResponseType.CANCEL,
+        Gtk.STOCK_OK, Gtk.ResponseType.OK, Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL
     )
     dialog.action_area.set_property('halign', Gtk.Align.CENTER)
 
