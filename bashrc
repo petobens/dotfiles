@@ -252,6 +252,7 @@ alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
 alias ds='du -shc * | sort -rh'
 alias diff='diff -u --color'
+alias dsf='git diff --no-index'
 alias ur='unrar x'
 alias uz='unzip'
 
