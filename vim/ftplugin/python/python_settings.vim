@@ -1332,6 +1332,6 @@ nnoremap <buffer> <silent> <Leader>vm :call <SID>ViewPyModule()<CR>
 nnoremap <buffer> <silent> <Leader>oc :silent! bdelete python_output<CR>
 
 " Commit hook
-nnoremap <buffer> <silent> <Leader>gh :call <SID>RunPreCommitHook()<CR>
+nnoremap <buffer> <silent> <Leader>rh :call <SID>RunPreCommitHook()<CR>
 
 " }}}
