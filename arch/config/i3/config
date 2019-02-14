@@ -260,12 +260,12 @@ bindsym Print $nexec shots full
 bindsym $mod+Shift+9 $nexec shots selection
 bindsym $mod+Shift+0 $nexec shots active
 
-# Kill focused window (as in mac); note that this quit apps that are minimized
-# to sys tray (in this cases, such as slack, use ctrl-q to actually kill them)
-bindsym $mod+q kill
+# Kill focused window
+bindsym $mod+q $nexec $HOME/.config/i3/custom_kill.py
 # Kill all windows on all workspaces (match any class string)
 bindsym $mod+Shift+q $nexec gtk_dialog -t "App Management" \
-    -m "Do you want to quit all apps?" -a 'i3-msg [class="^.*"] kill'
+    -m "Do you want to quit all apps?" --shell \
+    -a '$HOME/.config/i3/custom_kill.py -w all'
 
 # Shutdown, restart and lock
 bindsym $mod+Shift+s $nexec gtk_dialog -t "Power Management" \
