@@ -249,8 +249,8 @@ augroup session
     au!
     au VimLeavePre * call s:SaveSession()
     " au VimEnter * nested call s:LoadSession()
-    au BufWinLeave {*.*,vimrc,bashrc}  mkview
-    au BufWinEnter {*.*,vimrc,bashrc}  silent! loadview
+    au BufWinLeave {*.*,vimrc,bashrc,config}  mkview
+    au BufWinEnter {*.*,vimrc,bashrc,config}  silent! loadview
 augroup END
 nnoremap <silent><Leader>ps :call <SID>LoadSession()<CR>
 
