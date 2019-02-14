@@ -286,9 +286,7 @@ bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \
 # Empty Trash Can
 bindsym $mod+Shift+b $nexec gtk_dialog \
     -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
-    -a "trash-empty & pkill -f 'trash-list' & "\
-"xdotool key Super_L+Control+b & "\
-"dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
+    -a "trash-empty && dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
 
 # }}}
 # Startup {{{
