@@ -284,9 +284,11 @@ bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \
     -m "Do you want to eject media drive?" -a "udiskie-umount -a"
 
 # Empty Trash Can
-bindsym $mod+Shift+b $nexec gtk_dialog \
+bindsym $mod+Shift+b exec gtk_dialog \
     -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
-    -a "trash-empty && dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
+    -a "trash-empty && pkill -INT -f trash-list && "\
+"xdotool key Super_L+Control+b && "\
+"dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
 
 # }}}
 # Startup {{{
