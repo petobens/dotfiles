@@ -504,5 +504,8 @@ mapkey(',cd', 'Close Downloads Shelf', function() {
 mapkey(',ad', 'Open Chrome Extensions', function() {
     tabOpenLink('chrome://extensions/');
 });
+mapkey(',hc', 'Open Chrome History', function() {
+    tabOpenLink('chrome://history/');
+});
 
 // }}}
