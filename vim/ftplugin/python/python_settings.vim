@@ -1197,6 +1197,49 @@ function! s:RemoveBreakPoint()
 endfunction
 
 " }}}
+" Pre-commit {{{
+
+function! s:RunPreCommitHook()
+    " Check if pre-commit is installed
+    if !executable('pre-commit')
+        echoerr 'pre-commit is not installed or not in your path.'
+        return
+    endif
+
+    " Close qf and location list, save and change working directory
+    cclose
+    lclose
+    let l:save_pwd = getcwd()
+    lcd %:p:h
+
+    " Set compiler
+    let compiler = 'pre-commit run'
+
+    " Set makeprg and error format when running make or Make (background
+    " compilation)
+    let &l:makeprg = compiler
+    let old_efm = &l:efm
+    " FIXME: Find a way to output full path
+    setlocal errorformat=%f:%l:%c:%m
+
+    " Use Dispatch for background async compilation if available
+    if exists(':Dispatch')
+        echon 'running bash with dispatch ...'
+        " Make
+        if s:is_win
+            call s:NoShellSlash('Make')
+        else
+            execute 'silent Make'
+        endif
+    else
+        return
+    endif
+
+    let &l:efm = old_efm
+    execute 'lcd ' . save_pwd
+endfunction
+
+" }}}
 
 " }}}
 " Mappings {{{
@@ -1287,5 +1330,8 @@ nnoremap <buffer> <silent> <Leader>vm :call <SID>ViewPyModule()<CR>
 
 " Close output buffer
 nnoremap <buffer> <silent> <Leader>oc :silent! bdelete python_output<CR>
+
+" Commit hook
+nnoremap <buffer> <silent> <Leader>gh :call <SID>RunPreCommitHook()<CR>
 
 " }}}
