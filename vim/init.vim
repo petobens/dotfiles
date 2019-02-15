@@ -1737,8 +1737,8 @@ nnoremap <silent> <Leader>dl :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
             \ line:forward<CR>
 nnoremap <silent> <Leader>dq :Denite -post-action=suspend quickfix<CR>
-nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
-nnoremap <silent> <Leader>gL :Denite gitlog<CR>
+nnoremap <silent> <Leader>gl :Denite -auto-preview gitlog:all<CR>
+nnoremap <silent> <Leader>gL :Denite -auto-preview gitlog<CR>
 nnoremap <silent> <Leader>bm :Denite dirmark
             \ -default-action=candidate_file_rec -quick-move=immediately<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
