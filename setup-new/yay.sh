@@ -94,6 +94,7 @@ $yay_cmd connman
 $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
+$yay_cmd gcolor3
 $yay_cmd i3-gaps
 $yay_cmd i3ipc-python-git
 $yay_cmd i3lock-color-git
