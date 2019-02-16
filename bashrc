@@ -77,7 +77,7 @@ fi
 if type "pyenv" > /dev/null 2>&1; then
     export PYENV_ROOT="$HOME/.pyenv"
     PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init -)"
+    eval "$(pyenv init - --no-rehash bash)"
 fi
 # We use sqlcl instead of sqlplus (it must be manually installed to this dir)
 if [ -d "$HOME/.local/sqlcl" ]; then
