@@ -99,7 +99,6 @@ if type "python" > /dev/null 2>&1; then
     export AIRFLOW_GPL_UNIDECODE='yes'
 fi
 if type "pipenv" > /dev/null 2>&1; then
-    eval "$(pipenv --completion)"
     # Always create a pipenv venv (useful when running from vim)
     export PIPENV_IGNORE_VIRTUALENVS=1
 fi

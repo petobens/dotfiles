@@ -4,6 +4,20 @@
 sudo bash -c "echo $(command -v bash) >> /etc/shells"
 sudo chsh -s "$(command -v bash)"
 
+# Pipenv completions (see: https://github.com/pypa/pipenv/issues/1247)
+if type "pipenv" > /dev/null 2>&1; then
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        if type "brew" > /dev/null 2>&1; then
+            base_pkg_dir=$(brew --prefix)
+        else
+            base_pkg_dir='/usr/local'
+        fi
+    else
+        base_pkg_dir='/usr'
+    fi
+    pipenv --completion | sudo tee "$base_pkg_dir/share/bash-completion/completions/pipenv"
+fi
+
 # Mongo db improvements
 if type "mongo" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing mongo-hacker...\\033[0m"
