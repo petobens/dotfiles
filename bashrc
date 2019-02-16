@@ -255,6 +255,7 @@ alias diff='diff -u --color'
 alias dsf='git diff --no-index'
 alias ur='unrar x'
 alias uz='unzip'
+alias rsync='rsync -auP'
 
 # Other binaries
 if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
