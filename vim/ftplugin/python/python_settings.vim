@@ -1212,6 +1212,11 @@ function! s:RunPreCommitHook()
     let l:save_pwd = getcwd()
     lcd %:p:h
 
+    " Since pre-commit outputs relative paths will use a mark to find absolute
+    " paths to be used in the quickfix later on
+    silent! delmarks P
+    silent execute 'mark P'
+
     " Set compiler
     let compiler = 'pre-commit run'
 
@@ -1238,6 +1243,52 @@ function! s:RunPreCommitHook()
     let &l:efm = old_efm
     execute 'lcd ' . save_pwd
 endfunction
+
+function! s:FixPreCommitQfPaths()
+    " Only call this function after a pre-commit run
+    let compiler = split(&makeprg, '')[0]
+    if compiler !=# 'pre-commit'
+        return
+    endif
+
+    " Get file that called the pre-commit using P mark
+    let precommit_file = bufname(getpos("'P")[0])
+    " Get root dir by looking for pre-commit.yaml file
+    let precommit_yaml_file = '.pre-commit-config.yaml'
+    let dir_level = ':p:h'
+    let precommit_root = ''
+    for i in [1, 2, 3]
+        let curr_dir = fnamemodify(precommit_file, dir_level)
+        if filereadable(expand(curr_dir . '/' . precommit_yaml_file))
+            let precommit_root = curr_dir
+            break
+        else
+            let dir_level .= ':h'
+        endif
+    endfor
+
+    " Get current qflist and fix paths
+    let qflist = getqflist()
+    for entry in qflist
+        if entry.valid == 1
+            let file_tail =  bufname(entry.bufnr)
+            let full_file_path = precommit_root . '/' . file_tail
+            if filereadable(full_file_path)
+                silent execute 'badd ' . full_file_path
+                let entry.bufnr = bufnr(full_file_path)
+            endif
+        endif
+    endfor
+    call setqflist(qflist, 'r')
+
+    silent! delmarks P
+endfunction
+
+augroup fix_pre_commit_paths_qf
+    au!
+    " We use cgetfile for Dispatch
+    au QuickFixCmdPost {make,cgetfile} call s:FixPreCommitQfPaths()
+augroup END
 
 " }}}
 
