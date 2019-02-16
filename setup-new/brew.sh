@@ -90,6 +90,7 @@ $brew_install_cmd fd
 $brew_install_cmd fzf
 $brew_install_cmd gnupg
 $brew_install_cmd htop
+$brew_install_cmd hyperfine
 $brew_install_cmd imgcat
 $brew_install_cmd neofetch --HEAD
 $brew_install_cmd neomutt --HEAD --with-sidebar-patch --with-notmuch-patch
