@@ -101,6 +101,8 @@ fi
 if type "pipenv" > /dev/null 2>&1; then
     # Always create a pipenv venv (useful when running from vim)
     export PIPENV_IGNORE_VIRTUALENVS=1
+    # Don't lock dependencies automatically when install/uninstall commands
+    export PIPENV_SKIP_LOCK=1
 fi
 if type "pipx" > /dev/null 2>&1; then
     export PIPX_HOME=$HOME/.local/pipx/venvs
@@ -336,7 +338,9 @@ if type "python" > /dev/null 2>&1; then
     fi
     if type "pipenv" > /dev/null 2>&1; then
         alias pel='pipenv run pip list'
-        alias pei='pipenv install --skip-lock'
+        alias pei='pipenv install'
+        alias peu='pipenv uninstall'
+        alias peg='pipenv graph'
         alias pes='pipenv shell'
         alias pep='pipenv run python'
     fi
