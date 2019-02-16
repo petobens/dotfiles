@@ -1224,7 +1224,6 @@ function! s:RunPreCommitHook()
     " compilation)
     let &l:makeprg = compiler
     let old_efm = &l:efm
-    " FIXME: Find a way to output full path
     setlocal errorformat=%f:%l:%c:%m
 
     " Use Dispatch for background async compilation if available
