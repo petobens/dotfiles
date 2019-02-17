@@ -141,9 +141,11 @@ stty -ixon
 # Update values of lines and columns after running each command
 shopt -s checkwinsize
 
-# History settings
-HISTCONTROL=ignoreboth:erasedups  # era duplicate entries
-HISTIGNORE='?:??' # don't save one and two character commands (q, ls, aliases)
+# History settings (don't save lines beginning with space or matching the
+# previous entry, remove duplicates and don't save one and two character
+# commands)
+HISTCONTROL=ignoreboth:erasedups
+HISTIGNORE='?:??'
 HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
