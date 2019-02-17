@@ -24,7 +24,7 @@ def kill_custom(i3, which):
             if win_class == 'Chromium':
                 sh(f'xdotool key --window {win.window} comma+k+v')
         elif win_class in CTRL_Q:
-            sh(f'xdotool key --window {win.window} Control+q')
+            sh(f'xkill -id {win.window}')
         else:
             i3.command('kill')
 
