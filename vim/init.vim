@@ -1712,6 +1712,8 @@ command! -nargs=? -complete=file DeniteBookmarkAdd
 " Mappings
 nnoremap <silent> <C-t> :lcd %:p:h<CR>:Denite file/rec<CR>
 nnoremap <silent> <A-t> :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
+nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
 nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
