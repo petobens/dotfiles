@@ -150,6 +150,10 @@ HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
 
+# Save multiline commands in same history entry with embedded newlines
+shopt -s cmdhist
+shopt -s lithist
+
 # Unset the prompt so we can set it properly afterwards
 unset PROMPT_COMMAND
 export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
