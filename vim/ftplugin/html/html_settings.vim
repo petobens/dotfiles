@@ -76,6 +76,6 @@ augroup END
 " }}}
 " Mappings {{{
 
-nnoremap <silent> <buffer> <Leader>fc :call <SID>RunPrettier(()<CR>
+nnoremap <silent> <buffer> <Leader>fc :call <SID>RunPrettier()<CR>
 
 " }}}
