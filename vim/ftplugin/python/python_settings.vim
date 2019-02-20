@@ -694,12 +694,16 @@ function! s:RunPyTest(level, compilation)
     " perform test coverage.
     if a:level ==# 'suite'
         " We want to get coverage when running the full test suite (assume here
-        " that we want to run coverage for all files)
+        " that we want to run coverage for all files and let the config file
+        " determine which files to omit)
         let compiler = compiler . '--cov-report term-missing --cov=. '
 
         " Check if we have a coveragerc file
         let search_path = fnamemodify(test_dir, ':p:h') . '/**'
-        let coveragerc_file = globpath(search_path, '*coveragerc*')
+        let coveragerc_file = globpath(search_path, '.coveragerc*')
+        if coveragerc_file ==# ''
+            let coveragerc_file = globpath(search_path, '*coveragerc*')
+        endif
         if !filereadable(coveragerc_file)
             let coveragerc_file = input('Enter coveragerc path: ', '', 'file')
             if empty(coveragerc_file)
@@ -715,10 +719,9 @@ function! s:RunPyTest(level, compilation)
     elseif a:level ==# 'file'
         " Also run test coverage here but only for this file
         let compiler = compiler . '--cov-report term-missing --cov='
-        execute 'lcd ' . test_dir . '/tests'
         " We already ensured that the current file has `test_` preprended
         let cov_file = split(fnamemodify(current_file, ':t:r'), 'test_')[-1]
-        let &l:makeprg = compiler . cov_file . ' ' . current_file
+        let &l:makeprg = compiler . cov_file . ' tests/' . current_file
     else
         " When not running for the whole suite or a test file then get current
         " tag using Tagbar plugin
@@ -894,7 +897,7 @@ function! s:ShowPyTestCoverage()
     if project !=# '.'
         for i in range(1, bufnr('$'))
             let buf_name = fnamemodify(bufname(i), ':p')
-            if fnamemodify(buf_name, ':h:t') ==# project
+            if fnamemodify(buf_name, ':t:r') ==# project
                 let base_dir = fnamemodify(buf_name, ':h')
                 break
             endif
@@ -927,7 +930,7 @@ function! s:ShowPyTestCoverage()
             " Get first missing line of the file (and report in the message all
             " missing line numbers)
             let missing_file = matchstr(line, '^\w*.*\.py')
-            let uncovered_file = base_dir . '/' . missing_file
+            let uncovered_file = base_dir . '/' . fnamemodify(missing_file, ':t')
             let entry.bufnr = bufnr(uncovered_file)
             if entry.bufnr == -1 && filereadable(uncovered_file)
                 silent execute 'badd ' . uncovered_file
