@@ -656,6 +656,10 @@ function! s:RunPyTest(level, compilation)
     lcd %:p:h
     let current_file = expand('%:p:t')
 
+    " Use a mark to find path be used in the quickfix later on
+    silent! delmarks C
+    silent execute 'mark C'
+
     " Check if we have a tests dir and change lcd to it (essentially move up
     " from the current directory until we find a `tests` directory)
     " Note: this assumes we have a tests dir outside the application code (i.e
@@ -858,6 +862,7 @@ function! s:ShowPyTestCoverage()
         endfor
         call remove(qflist, coverage_start, coverage_end)
         call setqflist(qflist, 'r')
+        silent! delmarks C
         return
     endif
 
@@ -890,33 +895,21 @@ function! s:ShowPyTestCoverage()
         call add(cov_qflist, entry)
     endfor
 
-    " Set our base dir (note that we cannot directly read it from the --cov
-    " parameter since it is either `.` or just `basename`)
-    let project = matchstr(&makeprg, '-cov=\zs.*\ze\s\w')
+    " Get file that called the tests using C mark
+    let test_call_file = bufname(getpos("'C")[0])
+    silent! delmarks C
+    " Get root dir by looking for a tests dir
     let base_dir = ''
-    if project !=# '.'
-        for i in range(1, bufnr('$'))
-            let buf_name = fnamemodify(bufname(i), ':p')
-            if fnamemodify(buf_name, ':t:r') ==# project
-                let base_dir = fnamemodify(buf_name, ':h')
-                break
-            endif
-        endfor
-    else
-        for line in output
-            let project_file = matchstr(line, '^\w*.*\.py')
-            if project_file !=# ''
-                for i in range(1, bufnr('$'))
-                    let buf_name = fnamemodify(bufname(i), ':p')
-                    if (fnamemodify(buf_name, ':t:r') ==#
-                                \ fnamemodify(project_file, ':t:r'))
-                        let base_dir = fnamemodify(buf_name, ':h')
-                        break
-                    endif
-                endfor
-            endif
-        endfor
-    endif
+    let dir_level = ':p:h'
+    for i in [1, 2, 3]
+        let curr_dir = fnamemodify(test_call_file, dir_level)
+        if isdirectory(curr_dir . '/tests')
+            let base_dir = curr_dir
+            break
+        else
+            let dir_level .= ':h'
+        endif
+    endfor
 
     " Get those lines with missing coverage and add them to the quickfix list
     " as valid entries (so we can jump directly to the line)
@@ -930,7 +923,7 @@ function! s:ShowPyTestCoverage()
             " Get first missing line of the file (and report in the message all
             " missing line numbers)
             let missing_file = matchstr(line, '^\w*.*\.py')
-            let uncovered_file = base_dir . '/' . fnamemodify(missing_file, ':t')
+            let uncovered_file = base_dir . '/' . missing_file
             let entry.bufnr = bufnr(uncovered_file)
             if entry.bufnr == -1 && filereadable(uncovered_file)
                 silent execute 'badd ' . uncovered_file
