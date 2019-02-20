@@ -721,11 +721,23 @@ function! s:RunPyTest(level, compilation)
         endif
         let &l:makeprg = compiler . 'tests/' . cov_config
     elseif a:level ==# 'file'
-        " Also run test coverage here but only for this file
+        " Also run test coverage here but only for this file/module
         let compiler = compiler . '--cov-report term-missing --cov='
-        " We already ensured that the current file has `test_` preprended
-        let cov_file = split(fnamemodify(current_file, ':t:r'), 'test_')[-1]
-        let &l:makeprg = compiler . cov_file . ' tests/' . current_file
+        " We already ensured that the current file has `test_` preprended so get
+        " module name by stripping the prefix
+        let cov_module = split(fnamemodify(current_file, ':t:r'), 'test_')[-1]
+        " Check if the module is in the current dir otherwise look for it and
+        " modify it's name accordingly (i.e if the module is foo and foo exists
+        " in the current dir do nothing but if foo is inside bar then define
+        " module as foo.bar)
+        let base_file = cov_module . '.py'
+        if !filereadable(test_dir . '/' . base_file)
+            let base_file = globpath(test_dir . '/**', base_file)
+            if filereadable(base_file)
+                let cov_module = fnamemodify(base_file, ':p:.:r:s?/?\.?')
+            endif
+        endif
+        let &l:makeprg = compiler . cov_module . ' tests/' . current_file
     else
         " When not running for the whole suite or a test file then get current
         " tag using Tagbar plugin
