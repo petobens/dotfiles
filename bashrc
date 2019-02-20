@@ -542,9 +542,14 @@ if type "fzf" > /dev/null 2>&1; then
     tms() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
     if [ "$1" ]; then
-        tmux $change -t "$1" 2>/dev/null || \
-            (tmux -f "$HOME/.tmux/tmux.conf" new-session -d -s "$1" && \
-            tmux $change -t "$1");
+        if [ "$1" = "-ask" ]; then
+            read -r -p "New tmux session name: " session_name
+        else
+            session_name="$1"
+        fi
+        tmux $change -t "$session_name" 2>/dev/null || \
+            (tmux -f "$HOME/.tmux/tmux.conf" new-session -d -s "$session_name" && \
+            tmux $change -t "$session_name");
         return
     fi
     session=$(tmux list-sessions -F \
