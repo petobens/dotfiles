@@ -1486,12 +1486,18 @@ function! s:defx_settings()
     nnoremap <silent><buffer><expr> q defx#do_action('quit')
     nnoremap <silent><buffer><expr> Q defx#do_action('call', '<SID>QuitAllDefx')
     " Edit and open with external program
-    nnoremap <silent><buffer><expr> <CR>  defx#do_action('drop')
-    nnoremap <silent><buffer><expr> l defx#do_action('drop')
+    nnoremap <silent><buffer><expr> <CR>
+        \ defx#is_directory() ? defx#do_action('open') :
+        \ defx#do_action('multi', ['drop', 'quit'])
+    nnoremap <silent><buffer><expr> l
+        \ defx#is_directory() ? defx#do_action('open') :
+        \ defx#do_action('multi', ['drop', 'quit'])
     nnoremap <silent><buffer><expr> o defx#do_action('execute_system')
     " Open files in splits
-    nnoremap <silent><buffer><expr> s defx#do_action('drop', 'split')
-    nnoremap <silent><buffer><expr> v defx#do_action('drop', 'vsplit')
+    nnoremap <silent><buffer><expr> s
+        \ defx#do_action('multi', [['drop', 'split'], 'quit'])
+    nnoremap <silent><buffer><expr> v
+        \ defx#do_action('multi', [['drop', 'vsplit'], 'quit'])
     " Copy, move, paste and remove
     nnoremap <silent><buffer><expr> c defx#do_action('copy')
     nnoremap <silent><buffer><expr> m defx#do_action('move')
