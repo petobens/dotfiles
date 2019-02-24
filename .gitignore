@@ -1,0 +1,18 @@
+# Dotfiles gitignore
+
+# Vim
+vim/bundle/
+vim/cache/
+vim/vimrc_min
+
+# Tmux
+tmux/plugins/
+tmux/resurrect/
+
+# Arch
+arch/config/onedrive/items*
+arch/config/onedrive/refresh_token
+
+# Ranger
+config/ranger/plugins/
+config/ranger/devicons.py
