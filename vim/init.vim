@@ -757,6 +757,8 @@ nnoremap <silent> gf :call <SID>GoToFileSplit()<CR>
 
 " Diff in split window
 function! s:DiffFileSplit()
+    let l:save_pwd = getcwd()
+    lcd %:p:h
     let win_id = win_getid()
     let other_file = input('Input file for diffing: ', '', 'file')
     if other_file ==# ''
@@ -770,6 +772,7 @@ function! s:DiffFileSplit()
     execute diff_cmd . other_file
     call win_gotoid(win_id)
     normal! gg]c
+    execute 'lcd ' . l:save_pwd
 endfunction
 nnoremap <silent> <Leader>ds :call <SID>DiffFileSplit()<CR>
 nnoremap <silent> <Leader>de :diffoff!<CR>
