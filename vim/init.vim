@@ -2576,11 +2576,12 @@ augroup ps_ultisnips
     au!
     " au BufNewFile,BufRead *.{bib,py,snippets,tex,txt,vim,m,R,r,src,js,sh,yaml}
                 " \ call s:ExpandHeader()
-    au BufNewFile *.py call s:ExpandHeader('python')
+    au BufNewFile,BufRead *.py call s:ExpandHeader('python')
 augroup END
 function! s:ExpandHeader(ft)
     " Don't try to expand a header from a Gdiff (when file path includes .git)
-    if expand('%:p') =~# "/\\.git/"
+    " or if the file is not empty
+    if expand('%:p') =~# "/\\.git/" || line('$') > 1 || getline(1) !=# ''
         return
     endif
     let snippet_trigger = a:ft ==# 'python' ? 'md' : 'hea'
