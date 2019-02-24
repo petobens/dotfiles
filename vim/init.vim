@@ -155,7 +155,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('neoclide/denite-git')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
-    call dein#add('kopischke/unite-spell-suggest')
     call dein#add('rafi/vim-denite-z')
     call dein#add('tsukkee/unite-tag')
     call dein#add('kmnk/denite-dirmark')
@@ -503,10 +502,10 @@ set spellfile=$DOTVIM/spell/custom-dictionary.utf-8.add
 nnoremap <silent> <Leader>ew :e $DOTVIM/spell/custom-dictionary.utf-8.add<CR>
 
 " Spell suggest and spell fix (replaces all words with same spelling mistake)
-nnoremap <silent> <Leader>sg :Unite -default-action=replace_all
-            \ spell_suggest<CR>
-nnoremap <silent> <Leader>sf k$]s :Unite -default-action=replace_all
-            \ spell_suggest<CR>
+" with denite
+nnoremap <silent> <Leader>sg :Denite spell_suggest<CR>
+nnoremap <silent> <Leader>sf 0]s :Denite
+            \ -default-action=replace_misspelled_all spell_suggest<CR>
 
 " Edit abbreviations quickly (with abolish plugin)
 nnoremap <silent> <Leader>ea :e $DOTVIM/after/plugin/abolish.vim<CR>
