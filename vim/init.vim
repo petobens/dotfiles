@@ -1546,20 +1546,28 @@ function! s:defx_settings()
     nnoremap <silent><buffer> b :Denite defx/dirmark<CR>
 
     " Custom actions
+    function! s:GetDefxBaseDir(candidate) abort
+        if line('.') == 1
+            let path_mod  = 'h'
+        else
+            let path_mod = isdirectory(a:candidate) ? 'h:h' : 'h'
+        endif
+        return fnamemodify(a:candidate, ':p:' . path_mod)
+    endfunction
     function! s:denite_rec(context) abort
-        let narrow_dir = denite#util#path2directory(a:context.targets[0])
+        let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
         execute('Denite -default-action=defx file/rec:' . narrow_dir)
     endfunction
     function! s:denite_rec_no_ignore(context) abort
-        let narrow_dir = denite#util#path2directory(a:context.targets[0])
+        let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
         execute('Denite -default-action=defx file/rec/noignore:' . narrow_dir)
     endfunction
     function! s:denite_dir_rec(context) abort
-        let narrow_dir = denite#util#path2directory(a:context.targets[0])
+        let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
         execute('Denite -default-action=defx directory_rec:' . narrow_dir)
     endfunction
     function! s:denite_dir_rec_no_ignore(context) abort
-        let narrow_dir = denite#util#path2directory(a:context.targets[0])
+        let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
         execute('Denite -default-action=defx directory_rec/noignore:' .
                     \ narrow_dir)
     endfunction
