@@ -44,17 +44,39 @@ endsnippet
 # Function/Class **{
 
 snippet def "Function" b
-def ${1:function_name}(${2:arguments separated by ','}):`!p snip.rv= '\n    '`${3:"""${4:one-line docstring.}"""}`!p snip.rv= '\n    ' if t[3] else ''`${5:${VISUAL:pass}}$0
+def ${1:function_name}(${2:arguments separated by ','}):`!p snip.rv= '\n '`${3:"""${4:one-line docstring}."""}`!p snip.rv= '\n    ' if t[3] else ''`${5:${VISUAL:pass}}$0
 endsnippet
 
-snippet class "class with docstrings" b
+snippet dec "Decorator" b
+def ${1:my_decorator}(${2:func}):
+	@wraps(func)
+	def ${3:wrapper}(${4:*args, **kwargs}):
+		$0
+	return $5
+endsnippet
+
+snippet class "Class with docstrings" b
 class ${1:MyClass}${2:(${3:parent})}:
-	def __init__(self${4:, args}):
-		${5:${VISUAL:}}$0
+	${4:"""${5:one-line docstring}."""}
+
+	def __init__(self${6:, ${7:args}}):
+		${8:${VISUAL:}}$0
 endsnippet
 
 snippet cm "Class method" b
-def ${1:method_name}(self${2:, args}):`!p snip.rv= '\n\t'`${4:"""${5:one-line docstring.}"""}`!p snip.rv= '\n\t' if t[4] else ''`${6:${VISUAL:pass}}$0
+def ${1:method_name}(self${2:, ${3:args}}):`!p snip.rv= '\n        '`${4:"""${5:one-line docstring}."""}`!p snip.rv= '\n        ' if t[4] else ''`${6:${VISUAL:pass}}$0
+endsnippet
+
+snippet cpm "Class private method" b
+def _${1:method_name}(self${2:, ${3:args}}):`!p snip.rv= '\n        '`${4:${VISUAL:pass}}$0
+endsnippet
+
+snippet ds "Single line docstring" b
+"""$1."""$0
+endsnippet
+
+snippet md "Module docstring" b
+"""${1:Module docstring}."""$0
 endsnippet
 
 snippet mld "Multiline docstring" b
@@ -70,18 +92,6 @@ endsnippet
 
 snippet dp "Docstring parameter" b
 ${1:param_name}${2: (${3:type})}: ${4:description}$0
-endsnippet
-
-snippet md "Module docstring" b
-"""${1:Module docstring}."""$0
-endsnippet
-
-snippet dec "Decorator" b
-def ${1:my_decorator}(${2:func}):
-	@wraps(func)
-	def ${3:wrapper}(${4:*args, **kwargs}):
-		$0
-	return $5
 endsnippet
 
 # **}
@@ -164,10 +174,6 @@ endsnippet
 # **}
 # Miscellaneous **{
 
-snippet pri "Print" b
-print($1)$0
-endsnippet
-
 snippet pdb "Set PDB breakpoint" b
 # fmt: off
 import pdb; pdb.set_trace() # noqa
@@ -189,7 +195,6 @@ import sys
 sys.exit()$0
 endsnippet
 
-# Pickle dump and load
 snippet pd "Pickle dump" b
 with open(${1:directory  +}'${2:file name}.pkl', 'wb') as f:
 	pickle.dump(${3:variable or list}, f)$0
@@ -200,14 +205,10 @@ with open(${1:directory +}'${2:file name}.pkl', 'rb') as f:
 		${3:variable or tuple} = pickle.load(f)$0
 endsnippet
 
-# Check if a directory exists and create it if it doesn't (create missing
-# directory)
-snippet cmd "Check and make directory" b
-if not os.path.exists('${1:directory}'):
-	os.makedirs('$1')$0
+snippet pri "Print" b
+print($1)$0
 endsnippet
 
-# Print results to text file
 snippet ptt "Print to text file" b
 with open('${1:filename}.txt', 'w+') as outfile:
 	print(${2:variable}, file=outfile)
@@ -224,25 +225,30 @@ if True:
 	${1:${VISUAL:pass}}$0
 endsnippet
 
-# Add upper directory to path
 snippet iu "Import upper directory" b
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))$0
 endsnippet
 
-# Check if file exists
-snippet cf "Check if file exists" b
-if not os.path.isfile(${1:file})$0
+snippet cmd "Make directory if it doesn't exists" b
+Path.mkdir(Path(${1:directory}), exist_ok=True, parents=True)$0
 endsnippet
 
-# Pandas maximum rows and columns
+snippet cfe "Check if file exists" b
+if ${1:Pathlib file_path}.is_file():$0
+endsnippet
+
 snippet mr "Pandas max rows" b
 pd.set_option('display.max_rows', ${1:500})$0
 endsnippet
 
 snippet mc "Pandas max columns" b
 pd.set_option('display.width', ${1:1000})$0
+endsnippet
+
+snippet mw "Pandas max width in each column" b
+pd.set_option('display.max_colwidth', -1)$0
 endsnippet
 
 snippet pdf "Pandas DataFrame" w
@@ -252,6 +258,13 @@ endsnippet
 snippet rdf "Random Pandas DataFrame" w
 pd.DataFrame(np.random.randint(0, 100, size=(${1:10}, ${2:3})), columns=`!p snip.rv=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'][:int(t[2])] if t[2] else ''`)
 endsnippet
+
+snippet sdf "Scratch DataFrame" b
+df = pd.DataFrame(
+	[['a', 1, 'i'], ['b', 2, 'ii'], ['c', 3, 'iii']], columns=['l', 'n', 'r']
+)
+endsnippet
+
 
 snippet li "Logger info" b
 logger.info(${1:text})$0
@@ -285,16 +298,20 @@ with open(${1:filepath}, '${2:r}') as f:
 	$0
 endsnippet
 
-snippet nq "Don't lint (flake8)" w
-# noqa$0
-endsnippet
-
 snippet nl "Don't lint (flake8 and mypy)" w
 ${1:# pylint:disable=${2:code}}${3:# type: ignore }${4:# noqa}$0
 endsnippet
 
+snippet nq "noqa (flake8)" w
+# noqa$0
+endsnippet
+
 snippet pld "Pylint disable" w
 # pylint:disable=$0
+endsnippet
+
+snippet mpi "mypy ignore" w
+# type: ignore$0
 endsnippet
 
 snippet iss "iSort skip" w
