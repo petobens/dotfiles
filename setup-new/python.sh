@@ -39,6 +39,7 @@ if type "nvim" > /dev/null 2>&1; then
 fi
 pipx install pre-commit --verbose
 pipx install pgcli --verbose
+pipx install pipenv --verbose
 pipx install pylint --verbose
 if type "i3" > /dev/null 2>&1; then
     pipx install raiseorlaunch --verbose

@@ -50,7 +50,6 @@ $yay_cmd openblas
 # Languages
 $yay_cmd python
 $yay_cmd python-pip
-$yay_cmd python-pipenv
 $yay_cmd pyenv
 $yay_cmd ruby
 $yay_cmd rust

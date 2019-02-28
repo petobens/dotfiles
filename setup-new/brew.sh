@@ -41,7 +41,6 @@ $brew_install_cmd coreutils  # (realpath, ln, etc)
 
 # Languages: Rust, Python3, R, latex, node, java
 $brew_install_cmd python3
-$brew_install_cmd pipenv
 $brew_install_cmd pyenv
 $brew_install_cmd rust
 if ! type "tlmgr" > /dev/null 2>&1; then
