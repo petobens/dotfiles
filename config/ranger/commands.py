@@ -34,7 +34,12 @@ class fzf_select(Command):
         )
         if no_git_ignore:
             command += '--no-ignore-vcs '
-        command += '| fzf +m'
+        preview_cmd = (
+            'bat --color always --style numbers --theme TwoDark --line-range :200 {}'
+        )
+        if self.arg(1) == '-d':
+            preview_cmd = 'tree -C {} | head -200'
+        command += f"| fzf --preview '{preview_cmd}' +m"
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
@@ -62,6 +67,7 @@ class fzf_z(Command):
             f'. {z_sh} &&  '
             '_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse '
             '--inline-info +s --tac --query "${*##-* }" '
+            '--preview "tree -C {2..} | head -200" '
             '| sed "s/^[0-9,.]* *//"'
         )
 
