@@ -578,7 +578,8 @@ if type "fzf" > /dev/null 2>&1; then
     z() {
         [ $# -gt 0 ] && _z "$*" && return
         dir="$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse \
-            --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
+            --inline-info +s --tac --query "${*##-* }" \
+            --preview 'tree -C {2..} | head -200' | sed 's/^[0-9,.]* *//')"
         if [[ -n $dir ]]; then
             printf 'cd %q' "$dir"
         else
