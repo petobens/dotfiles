@@ -1117,6 +1117,10 @@ augroup ft_markdown
     au Filetype markdown setlocal textwidth=90 nolinebreak spell
 augroup END
 
+" Fast editing of todos files
+nnoremap <silent> <Leader>tm :e $HOME/OneDrive/varios/todos_mutt.md<CR>
+nnoremap <silent> <Leader>ts :e $HOME/OneDrive/varios/todos_coding_setup.md<CR>
+
 " }}}
 " Matlab {{{
 
