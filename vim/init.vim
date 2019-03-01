@@ -1624,7 +1624,8 @@ call denite#custom#option('default', {
             \ 'prompt_highlight': 'Function',
             \ 'highlight_matched_char': 'Operator',
             \ 'highlight_matched_range': 'None',
-            \ 'highlight_mode_insert': 'WildMenu'
+            \ 'highlight_mode_insert': 'WildMenu',
+            \ 'vertical_preview': 1
             \ })
 
 " Change some hl groups
@@ -1763,8 +1764,7 @@ nnoremap <silent> <Leader>sm :Denite output:messages<CR>
 nnoremap <silent> <Leader>me :Denite output:map<CR>
 nnoremap <silent> <Leader>uf :Denite output:function<CR>
 nnoremap <silent> <Leader>dl :Denite line:forward<CR>
-nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview -vertical-preview
-            \ line:forward<CR>
+nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-preview line:forward<CR>
 nnoremap <silent> <Leader>dq :Denite -post-action=suspend quickfix<CR>
 nnoremap <silent> <Leader>gl :Denite -auto-preview gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite -auto-preview gitlog<CR>
