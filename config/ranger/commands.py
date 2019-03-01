@@ -4,6 +4,7 @@ import re
 import subprocess
 import sys
 from functools import partial
+from pathlib import Path
 
 from ranger.api.commands import Command
 from ranger.ext.get_executables import get_executables
@@ -49,6 +50,28 @@ class fzf_select(Command):
                 self.fm.cd(fzf_file)
             else:
                 self.fm.select_file(fzf_file)
+
+
+class fzf_parents(Command):
+    """Show parent dirs with fzf."""
+
+    def execute(self):
+        """Execute the command."""
+        selection = [str(f) for f in self.fm.thistab.get_selection()][0]
+        path = Path(selection).parent
+        parents = [str(path)]
+        while str(path) != '/':
+            path = path.parent
+            parents.append(str(path))
+        parents = '\\n'.join(parents)  # type: ignore
+
+        preview_cmd = 'tree -C {} | head -200'
+        command = f"printf '{parents}' | fzf --preview '{preview_cmd}'"
+        fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
+        stdout, _ = fzf.communicate()
+        if fzf.returncode == 0:
+            fzf_dir = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
+            self.fm.cd(fzf_dir)
 
 
 class fzf_z(Command):
