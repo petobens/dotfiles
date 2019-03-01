@@ -148,7 +148,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
     " Unite/denite
-    call dein#add('Shougo/denite.nvim')
+    " call dein#add('Shougo/denite.nvim')
+    call dein#add('petobens/denite.nvim')
     call dein#add('Shougo/unite.vim')
     call dein#add('neoclide/denite-extra')
     call dein#add('raghur/fruzzy')
@@ -1118,8 +1119,8 @@ augroup ft_markdown
 augroup END
 
 " Fast editing of todos files
-nnoremap <silent> <Leader>tm :e $HOME/OneDrive/varios/todos_mutt.md<CR>
-nnoremap <silent> <Leader>ts :e $HOME/OneDrive/varios/todos_coding_setup.md<CR>
+nnoremap <silent> <Leader>etm :e $HOME/OneDrive/varios/todos_mutt.md<CR>
+nnoremap <silent> <Leader>ets :e $HOME/OneDrive/varios/todos_coding_setup.md<CR>
 
 " }}}
 " Matlab {{{
@@ -1777,6 +1778,7 @@ nnoremap [D :<C-u>Denite -resume -cursor-pos=0<CR>
 nnoremap <silent> <Leader>dte :NeoIncludeMakeCache<CR>:Denite
             \ tag:include<CR>
 nnoremap <silent> <Leader>te :Denite outline<CR>
+nnoremap <silent> <Leader>tE :NeoIncludeMakeCache<CR>:Denite tag:include<CR>
 " FIXME: This should be improved
 augroup ps_denite_tag
     au!
@@ -2669,15 +2671,15 @@ let g:unite_source_buffer_time_format = ''
 nnoremap <silent> <Leader>ubm :Unite -profile-name=bookmark -default-action=rec
             \ -buffer-name=my-directories bookmark<CR>
 " NeoInclude and Unite tag
-nnoremap <silent> <Leader>tE :NeoIncludeMakeCache<CR>:Unite
-            \ tag/include<CR>
-augroup ps_unite_tag
-    au!
-    au BufNewFile,BufRead *.{vim,tex,bib,r,R} nnoremap <buffer> <silent> <C-]>
-                \ :NeoIncludeMakeCache<CR>
-                \ :UniteWithCursorWord -immediately -sync
-                \ -default-action=context_split tag/include<CR>
-augroup END
+" nnoremap <silent> <Leader>tE :NeoIncludeMakeCache<CR>:Unite
+            " \ tag/include<CR>
+" augroup ps_unite_tag
+    " au!
+    " au BufNewFile,BufRead *.{vim,tex,bib,r,R} nnoremap <buffer> <silent> <C-]>
+                " \ :NeoIncludeMakeCache<CR>
+                " \ :UniteWithCursorWord -immediately -sync
+                " \ -default-action=context_split tag/include<CR>
+" augroup END
 " Unite Next/Last (similar to cnext and cprev):
 nnoremap <silent> ]u :<C-U>execute v:count1 . 'UniteNext'<CR>
 nnoremap <silent> [u :<C-U>execute v:count1 . 'UnitePrevious'<CR>
