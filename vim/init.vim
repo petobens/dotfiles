@@ -1747,6 +1747,7 @@ nnoremap <silent> <Leader>sD :call <SID>DeniteScanDir(0)<CR>
 nnoremap <silent> <A-z> :Denite -default-action=candidate_file_rec z<CR>
 nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite directory_rec<CR>
 nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite directory_rec/noignore<CR>
+nnoremap <silent> <A-p> :lcd %:p:h<CR>:Denite parent_dirs<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
@@ -2453,12 +2454,12 @@ let g:sneak#s_next = 1
 let g:sneak#target_labels = 'asdfghjkl;'
 
 " Vim mappings: use Alt-n  to replace the original ';' mapping (i.e next f,F,
-" t or T match) and Alt-p to replace ',' (previous match)
+" t or T match) and Alt-x to replace ',' (previous match)
 nnoremap <A-n> ;
-nnoremap <A-p> ,
+nnoremap <A-x> ,
 " Make Sneak behaviour consistent with previous mappings
 nmap <A-n> <Plug>SneakNext
-nmap <A-p> <Plug>SneakPrevious
+nmap <A-x> <Plug>SneakPrevious
 
 " Enhanced f,F,t and T motions (move vertically and highlight matches)
 nmap f <Plug>Sneak_f
