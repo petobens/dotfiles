@@ -1579,6 +1579,9 @@ function! s:defx_settings()
     function! s:denite_z(context) abort
         execute('Denite -default-action=defx z')
     endfunction
+    function! s:denite_parents_dirs(context) abort
+        execute('Denite -default-action=defx parent_dirs')
+    endfunction
     nnoremap <silent><buffer><expr> <C-t>
                 \ defx#do_action('call', '<SID>denite_rec')
     nnoremap <silent><buffer><expr> <A-t>
@@ -1589,6 +1592,8 @@ function! s:defx_settings()
                 \ defx#do_action('call', '<SID>denite_dir_rec_no_ignore')
     nnoremap <silent><buffer><expr> <A-z>
                 \ defx#do_action('call', '<SID>denite_z')
+    nnoremap <silent><buffer><expr> <A-p>
+                \ defx#do_action('call', '<SID>denite_parents_dirs')
 endfunction
 
 " }}}
