@@ -1852,7 +1852,12 @@ function! s:defx_open(context)
     let file = fnamemodify(path, ':p')
     let file_search = filereadable(expand(file)) ? ' -search=' . file : ''
     let dir = denite#util#path2directory(path)
-    execute('Defx ' . dir . file_search)
+    if &filetype ==# 'defx'
+      call defx#call_action('cd', [dir])
+      call defx#call_action('search', [file])
+    else
+        execute('Defx ' . dir . file_search)
+    endif
 endfunction
 function! s:candidate_file_rec(context)
     let path = a:context['targets'][0]['action__path']
