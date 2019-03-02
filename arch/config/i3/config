@@ -153,8 +153,6 @@ bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -W $ws3
 # WS4: Other
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'libreoffice-calc' -W $ws4 -e \
     "libreoffice --calc" -l 30
-bindsym $mod+Control+w $nexec raiseorlaunch -c 'libreoffice-writer' -W $ws4 -e \
-    "libreoffice --writer" -l 30
 
 # WS5 (terminal and those interacting with it; in secondary monitor)
 # Note: we use marks terminal to avoid focusing on other windows of the same
@@ -169,6 +167,7 @@ bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -f -W $ws6 -C
 bindsym $mod+Control+v $nexec raiseorlaunch -c vimiv -f -C
 
 # Standalone terminal apps in floating window in the current workspace
+bindsym $mod+Control+w $nexec raiseorlaunch -c 'Connman-gtk'
 bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -f -e \
     'alacritty -t QuickTerm -e sh -c '\
 '"cd $(tmux display -p "#{pane_current_path}") && exec bash -i"'
