@@ -4,9 +4,10 @@ import sys
 from subprocess import Popen
 
 import gi
-from gi.repository import Playerctl
 
-gi.require_version('Playerctl', '1.0')
+if True:
+    gi.require_version('Playerctl', '2.0')
+    from gi.repository import Playerctl
 
 
 player = Playerctl.Player()
