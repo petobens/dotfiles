@@ -135,7 +135,7 @@ stack_duplicates = true
 hide_duplicate_count = false
 
 # Display indicators for URLs (U) and actions (A).
-show_indicators = no
+show_indicators = yes
 
 # Align icons left/right/off
 icon_position = right
@@ -172,6 +172,9 @@ class = Dunst
 # This is mainly for error detection, since dbus (re-)starts dunst
 # automatically after a crash.
 startup_notification = false
+
+# Mouse
+mouse_left_click = do_action
 
 
 [experimental]
