@@ -553,7 +553,7 @@ function! s:PyDoc()
     " function to retrieve docs; otherwise use pydoc
     let object = expand('<cword>')
     if !empty(object)
-        call jedi#show_documentation()
+        silent call jedi#show_documentation()
         return
     else
     " Note that here the  object should be entered without parenthesis, i.e
