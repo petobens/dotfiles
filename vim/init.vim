@@ -1469,8 +1469,6 @@ let g:defx_git#indicators = {
   \ 'Deleted'   : '✖',
   \ 'Unknown'   : '?'
   \ }
-hi Defx_git_Modified guifg=#e06c75
-hi Defx_git_Staged guifg=#98c379
 
 function! s:QuitAllDefx(context) abort
     let buffers = filter(range(1, bufnr('$')),
@@ -1632,9 +1630,6 @@ call denite#custom#option('default', {
             \ 'highlight_mode_insert': 'WildMenu',
             \ 'vertical_preview': 1
             \ })
-
-" Change some hl groups
-hi default link deniteSource_grepFile Directory
 
 " Fruzzy matcher
 let g:fruzzy#usenative = 0
