@@ -102,7 +102,7 @@ __fzf_cd_action_key__() {
             printf 'ranger %q' "$dir"
         elif [[ "$key" = ctrl-t ]]; then
             # FIXME: This doesn't return the candidate
-            fzf-file-widget-custom "ignore" "$dir"
+            fzf-file-widget-custom "no-ignore" "$dir"
         elif [[ "$key" = alt-c ]]; then
             __fzf_cd_custom__ "no-ignore" "$dir"
         else
