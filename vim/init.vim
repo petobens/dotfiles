@@ -148,8 +148,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
     " Unite/denite
-    " call dein#add('Shougo/denite.nvim')
-    call dein#add('petobens/denite.nvim')
+    call dein#add('Shougo/denite.nvim')
+    " call dein#add('petobens/denite.nvim')
     call dein#add('Shougo/unite.vim')
     call dein#add('neoclide/denite-extra')
     call dein#add('raghur/fruzzy')
@@ -171,7 +171,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/neoinclude.vim')
     call dein#add('tbodt/deoplete-tabnine', {'build': './install.sh'})
     " Defx
-    call dein#add('Shougo/vimfiler', {'on_path' : '.*'})
     call dein#add('Shougo/defx.nvim')
     call dein#add('kristijanhusak/defx-icons')
     call dein#add('kristijanhusak/defx-git')
@@ -1334,7 +1333,7 @@ let airline#extensions#tabline#disable_refresh = 1
 let g:airline#extensions#tabline#show_tab_type = 1
 " Don't show some filetypes in the tabline
 let g:airline#extensions#tabline#ignore_bufadd_pat =
-            \ 'gundo|undotree|vimfiler|tagbar|^\[defx\]|^\[denite\]'
+            \ 'gundo|undotree|tagbar|^\[defx\]|^\[denite\]'
 
 " Show superindex numbers in tabline that allow to select buffer directly
 let g:airline#extensions#tabline#buffer_idx_mode = 1
@@ -1409,24 +1408,31 @@ augroup END
 
 call defx#custom#option('_', {
             \ 'show_ignored_files': 1,
-            \ 'winwidth': 40,
+            \ 'winwidth': 41,
             \ 'split': 'vertical',
             \ 'direction': 'topleft',
-            \ 'columns': 'icons:filename:size:git',
+            \ 'columns': 'mark:filename:icons:size:git',
             \ })
 
-" Fit text to window width and set time format
-call defx#custom#column('filename', {'min_width': 23, 'max_width': 23})
+" Fit text to window width, set time format and define custom marks
+call defx#custom#column('filename', {'min_width': 22, 'max_width': 22})
 call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
+call defx#custom#column('mark', {
+            \ 'directory_icon': '▸',
+            \ 'opened_icon': '▾',
+            \ 'readonly_icon': '✗',
+            \ 'root_icon': ' ',
+            \ 'selected_icon': '✓',
+            \ })
 
 " Maps
-nnoremap <silent> <Leader>xfe :Defx<CR>
-nnoremap <silent> <Leader>xff :Defx `expand('%:p:h')`
+nnoremap <silent> <Leader>fe :Defx<CR>
+nnoremap <silent> <Leader>ff :Defx `expand('%:p:h')`
             \ -search=`expand('%:p')`<CR>
-nnoremap <silent> <Leader>xdf :Defx `expand('%:p:h')`<CR>
+nnoremap <silent> <Leader>df :Defx `expand('%:p:h')`<CR>
             \ :Defx -new -split=horizontal -direction=<CR>
             \ :wincmd p<CR>
-nnoremap <silent> <Leader>xfb :Defx<CR>:Denite defx/dirmark<CR>
+nnoremap <silent> <Leader>fb :Defx<CR>:Denite defx/dirmark<CR>
 nnoremap <silent> <Leader>fm :call <SID>TmuxSplitCmd('ranger', '')<CR>
 
 " Devicons
@@ -1498,6 +1504,12 @@ function! s:defx_settings()
         \ defx#is_directory() ? defx#do_action('open') :
         \ defx#do_action('multi', ['drop', 'quit'])
     nnoremap <silent><buffer><expr> o defx#do_action('execute_system')
+   " Tree editing, opening and closing
+   nnoremap <silent><buffer><expr> e
+        \ defx#is_directory() ? defx#do_action('open_tree') :
+        \ defx#do_action('multi', ['drop', 'quit'])
+    nnoremap <silent><buffer><expr> zo defx#do_action('open_tree')
+    nnoremap <silent><buffer><expr> zc defx#do_action('close_tree')
     " Open files in splits
     nnoremap <silent><buffer><expr> s
         \ defx#do_action('multi', [['drop', 'split'], 'quit'])
@@ -2711,9 +2723,6 @@ function! s:unite_settings()
     " Opening in splits
     inoremap <silent><buffer><expr> <C-s> unite#do_action('split')
     inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-    " Change directory and open vimfiler
-    " inoremap <silent><buffer><expr> <C-c> unite#do_action('cd')
-    inoremap <silent><buffer><expr> <C-f> unite#do_action('vimfiler')
     " Choose action
      imap <silent><buffer> <C-a> <Plug>(unite_choose_action)
      " Mark candidates
@@ -2744,130 +2753,6 @@ if dein#tap('unite') == 1
     call unite#custom_action('openable', 'context_split', s:my_split)
 endif
 unlet s:my_split
-
-" }}}
-" Vimfiler {{{
-
-" Note: on Mac to delete files to the trash install rmtrash
-
-if dein#tap('vimfiler') == 1
-    function! VimfilerHookOpts() abort
-        call vimfiler#custom#profile('default', 'context', {
-                    \ 'direction' : 'topleft',
-                    \ 'split': 1,
-                    \ 'winwidth' : 40,
-                    \ 'force_quit': 1,
-                    \ 'status' : 1,
-                    \ 'columns' : 'devicons:size',
-                    \ 'safe': 0
-                    \ })
-
-        " Open certain filetypes with external programs
-        let g:vimfiler_execute_file_list = {}
-        if s:is_win
-            call vimfiler#set_execute_file('pdf,PDF', 'SumatraPDF')
-            call vimfiler#set_execute_file('xlsx,xls,xlsm',
-                \ 'C:\Program Files\Microsoft Office\root\Office16\EXCEL.exe')
-            call vimfiler#set_execute_file('docx,doc',
-                \ 'C:\Program Files\Microsoft Office\root\Office16\WINWORD.exe')
-        elseif s:is_mac
-            call vimfiler#set_execute_file('pdf,PDF,doc,docx,xls,xlsx,xlsm,png',
-                \ 'open')
-        else
-            call vimfiler#set_execute_file('pdf,PDF,doc,docx,xls,xlsx,xlsm,png',
-                \ 'xdg-open')
-        endif
-    endfunction
-    call dein#set_hook('vimfiler', 'hook_source', function('VimfilerHookOpts'))
-endif
-
-" Disable netrw.vim and use vimfiler as default explorer
-let g:loaded_netrwPlugin = 1
-let g:vimfiler_as_default_explorer = 1
-
-" Nerdtree-like appeareance
-let g:vimfiler_tree_opened_icon = '▾'
-let g:vimfiler_tree_closed_icon = '▸'
-let g:vimfiler_tree_leaf_icon = ''
-let g:vimfiler_marked_file_icon = '✓'
-let g:vimfiler_tree_indentation = 3
-
-" Ignore certain files and folders (pattern is not case sensitive)
-" Note that we can write this as a list rather than a (long) string
-let g:vimfiler_ignore_pattern = '\%(\.sys\|\.bat\|\.bak\)$\|'.
-            \ '^\%(\.git\|\.DS_Store\)$'
-
-" Set next variable to 0 if there are conflicts with Airline
-let g:vimfiler_force_overwrite_statusline = 1
-
-" Maps
-nnoremap <silent> <Leader>fe :VimFilerBufferDir<CR>
-nnoremap <silent> <Leader>fb :VimFiler bookmark:<CR>
-nnoremap <silent> <Leader>df :VimFilerBufferDir -double<CR>
-nnoremap <silent> <Leader>ff :lcd %:h<CR>:VimFiler -find<CR>
-
-" Filetype settings
-augroup ps_vimfiler
-    au!
-    au FileType vimfiler call s:vimfiler_settings()
-augroup END
-
-function! s:vimfiler_settings()
-    " Exit with escape key and q, Q; hide with <C-c>
-    nmap <buffer> <ESC> <Plug>(vimfiler_exit)
-    nmap <buffer> q <Plug>(vimfiler_exit)
-    nmap <buffer> Q <Plug>(vimfiler_exit)
-    nmap <buffer> <C-c> <Plug>(vimfiler_hide)
-    " Expand tree and edit files with e
-    nmap  <buffer><expr> e vimfiler#smart_cursor_map(
-        \ "\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
-    " Open files with external programs (such as a PDF viewer)
-    nmap <buffer> o <Plug>(vimfiler_execute_vimfiler_associated)
-    " Open and close tree with fold commands
-    nmap <buffer> zo <Plug>(vimfiler_expand_tree)
-    nmap <buffer> zc <Plug>(vimfiler_expand_tree)
-    nmap <buffer> zm <Plug>(vimfiler_expand_tree_recursive)
-    nmap <buffer> zr <Plug>(vimfiler_expand_tree_recursive)
-    " Open files in splits
-    nnoremap <buffer><expr><silent> s vimfiler#do_switch_action('split')
-    nnoremap <buffer><expr><silent> v vimfiler#do_switch_action('vsplit')
-    " Copy, move, paste and delete mappings (paste executes move or copy
-    " operations i.e first move and then paste to move)
-    nmap <buffer> c
-    \ <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_clipboard_copy_file)
-    nmap <buffer> m
-    \ <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_clipboard_move_file)
-    nmap <buffer> p <Plug>(vimfiler_clipboard_paste)
-    nmap <buffer> d
-    \ <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_delete_file)
-    " New file and directory
-    nmap <buffer> F <Plug>(vimfiler_new_file)
-    nmap <buffer> D <Plug>(vimfiler_make_directory)
-    " Move up a directory
-    nmap <buffer> u <Plug>(vimfiler_switch_to_parent_directory)
-    " Home directory
-    nmap <buffer> h <Plug>(vimfiler_switch_to_home_directory)
-    " Change window and redraw screen
-    nmap <buffer> <C-j> <C-w>j
-    nmap <buffer> <C-h> <C-w>h
-    nmap <buffer> <C-k> <C-w>k
-    nmap <buffer> <C-l> <C-w>l
-    nmap <buffer> <C-r> <Plug>(vimfiler_redraw_screen)
-    " Open external filer at current direction
-    if !s:is_linux
-        nmap <buffer> ge <Plug>(vimfiler_cd_vim_current_dir)
-                    \ <Plug>(vimfiler_execute_external_filer)
-    else
-        " Note: we cannot simply run `!xdg-open`.
-        " See https://github.com/neovim/neovim/issues/1496
-        if executable('ranger')
-            nmap <buffer>ge <Plug>(vimfiler_cd_vim_current_dir)
-                        \ <C-u>:call <SID>TmuxSplitCmd('ranger', '')<CR>
-        endif
-    endif
-    " Bookmarks (reuses vimfiler buffer)
-    nmap <buffer>b <Plug>(vimfiler_cd_input_directory)<C-u>bookmark:/<CR>
-endfunction
 
 " }}}
 " vim-markdown {{{
