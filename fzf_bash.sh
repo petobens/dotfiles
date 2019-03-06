@@ -69,7 +69,7 @@ __fzf_select_custom() {
         elif [[ "$key" = ctrl-o ]]; then
             printf 'open %q' "$file"
         elif [[ "$key" = alt-f ]]; then
-            # FIXME: Not working
+            # FIXME: Not working due to ranger bug
             printf 'ranger %q' "$file"
         else
             printf '%q' "$file"
@@ -101,8 +101,9 @@ __fzf_cd_action_key__() {
         if [[ "$key" = alt-f ]]; then
             printf 'ranger %q' "$dir"
         elif [[ "$key" = ctrl-t ]]; then
-            # FIXME: This doesn't return the candidate
-            fzf-file-widget-custom "no-ignore" "$dir"
+            # Note: this will execute an action directly (paste, with <CR>,
+            # won't work)
+            __fzf_select_custom "no-ignore" "$dir"
         elif [[ "$key" = alt-c ]]; then
             __fzf_cd_custom__ "no-ignore" "$dir"
         else
