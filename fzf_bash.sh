@@ -1,3 +1,5 @@
+# Options {{{
+
 # Set base dir
 base_pkg_dir='/usr'
 if [[ "$OSTYPE" == 'darwin'* ]]; then
@@ -8,7 +10,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-# Enable completion and key bindings
+# Enable completion and key bindings (note: we override some of these mappings
+# below)
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     [[ $- == *i* ]] && . "$base_pkg_dir/opt/fzf/shell/completion.bash" 2> /dev/null
     . "$base_pkg_dir/opt/fzf/shell/key-bindings.bash"
@@ -19,60 +22,111 @@ fi
 
 # Change default options (show 15 lines, use top-down layout)
 export FZF_DEFAULT_OPTS='--height 15 --reverse --bind=ctrl-space:toggle+down'
+
 # Use fd for files and dirs
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 if type "bat" > /dev/null 2>&1; then
     export FZF_CTRL_T_OPTS="--preview 'bat --color always --style numbers \
 --theme TwoDark --line-range :200 {}' \
---header=ctrl-e=vim,\ ctrl-o=open,\ enter=paste"
+--header=enter=paste,\ ctrl-e=vim,\ ctrl-o=open,\ alt-f=ranger"
 fi
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 if type "tree" > /dev/null 2>&1; then
     export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200' \
---header=enter=cd"
+--header=enter=cd,\ alt-f=ranger,\ ctrl-t=fzf"
 fi
+
 # Disable tmux integration (use ncurses directly)
 export FZF_TMUX='0'
 
 # Extend list of commands with fuzzy completion (basically add our aliases)
 complete -F _fzf_path_completion -o default -o bashdefault v o dog
 
-# Alt-t mapping to select files without ignoring gitignored ones
-# shellcheck disable=SC2120
-__fzf_select_noignore__() {
+# }}}
+# File and dirs {{{
+
+# Custom Ctrl-t mapping (Alt-t to ignore git-ignored files)
+__fzf_select_custom() {
     local cmd dir
-    cmd="$FZF_CTRL_T_COMMAND --no-ignore-vcs"
-    eval "$cmd" | \
-        FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} \
-        --reverse $FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf -m "$@" | \
-        while read -r item; do
-        printf '%q ' "$item"
-    done
-    echo
+    cmd="$FZF_CTRL_T_COMMAND"
+    if [ "$1" == 'no-ignore' ]; then
+        cmd="$cmd --no-ignore-vcs"
+    fi
+    if [ "$2" ]; then
+        cmd="$cmd . $2"  # use narrow dir
+    fi
+    out=$(eval "$cmd" |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS
+    --expect=ctrl-e,ctrl-o,alt-f" fzf +m)
+    key=$(head -1 <<< "$out")
+    file=$(head -2 <<< "$out" | tail -1)
+
+    if [[ -n $file ]]; then
+        if [[ "$key" = ctrl-e ]]; then
+            printf 'v %q' "$file"
+        elif [[ "$key" = ctrl-o ]]; then
+            printf 'open %q' "$file"
+        elif [[ "$key" = alt-f ]]; then
+            # FIXME: Not working
+            printf 'ranger %q' "$file"
+        else
+            printf '%q' "$file"
+        fi
+    else
+        return 1
+    fi
 }
-fzf-file-widget-no-ignore() {
+fzf-file-widget-custom() {
     local selected=""
     # shellcheck disable=SC2119
-    selected="$(__fzf_select_noignore__)"
+    selected="$(__fzf_select_custom "$1" "$2")"
     READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
     READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
 }
 # shellcheck disable=SC2016
-bind -x '"\et": "fzf-file-widget-no-ignore"'
+bind -x '"\C-t": "fzf-file-widget-custom"'
+bind -m vi-command '"\C-t": "i\C-t"'
+bind -x '"\et": "fzf-file-widget-custom no-ignore"'
 bind -m vi-command '"\et": "i\et"'
 
-# Alt-d mapping to cd without ignoring gitignored dirs
-__fzf_cd_noignore__() {
+
+# Helper that defines actions for keys in directory-like maps
+__fzf_cd_action_key__() {
+    out="$1"
+    key=$(head -1 <<< "$out")
+    dir=$(head -2 <<< "$out" | tail -1)
+    if [[ -n $dir ]]; then
+        if [[ "$key" = alt-f ]]; then
+            printf 'ranger %q' "$dir"
+        elif [[ "$key" = ctrl-t ]]; then
+            # FIXME: This doesn't return the candidate
+            fzf-file-widget-custom "$dir"
+        else
+            printf 'cd %q' "$dir"
+        fi
+    else
+        return 1
+    fi
+}
+
+# Custom Alt-c maps (Alt-d to ignore git-ignored dirs)
+__fzf_cd_custom__() {
     local cmd dir
-    cmd="$FZF_ALT_C_COMMAND --no-ignore-vcs"
-    dir=$(eval "$cmd" | \
-            FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} \
-        --reverse $FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" $(__fzfcmd) +m) \
-        && printf 'cd %q' "$dir"
+    cmd="$FZF_ALT_C_COMMAND"
+    if [ "$1" == 'no-ignore' ]; then
+        cmd="$cmd --no-ignore-vcs"
+    fi
+    out=$(eval "$cmd" | \
+            FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS
+    --expect=alt-f,ctrl-t" fzf +m)
+    __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
-bind '"\ed": "\C-x\C-addi`__fzf_cd_noignore__`\C-x\C-e\C-x\C-r\C-m"'
+bind '"\ec": "\C-x\C-addi`__fzf_cd_custom__`\C-x\C-e\C-x\C-r\C-m"'
+bind -m vi-command '"\ec": "i\ec"'
+# shellcheck disable=SC2016
+bind '"\ed": "\C-x\C-addi`__fzf_cd_custom__ no-ignore`\C-x\C-e\C-x\C-r\C-m"'
 bind -m vi-command '"\ed": "i\ed"'
 
 # Alt-p mapping to cd to selected parent directory (sister to Alt-c)
@@ -86,22 +140,46 @@ __fzf_cd_parent__() {
             get_parent_dirs "$(dirname "$1")"
         fi
     }
-    local start_dir=""
-    local DIR=""
     start_dir="$(dirname "$PWD")"  # start with parent dir
-    DIR=$(get_parent_dirs "$(realpath "${1:-$start_dir}")" | \
-        fzf --preview 'tree -C -d -L 2 {} | head -200')
-    if [[ -n $DIR ]]; then
-        printf 'cd %q' "$DIR"
-    else
-        return 1
-    fi
+    cmd="get_parent_dirs $(realpath "${1:-$start_dir}")"
+    out=$(eval "$cmd" | \
+            FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS
+    --expect=alt-f,ctrl-t" fzf +m)
+    __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
 bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
 bind -m vi-command '"\ep": "i\ep"'
 
-# Tmux session switcher (`tms foo` attaches to `foo` it exists, else creates
+# Z
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if [ -f "$base_pkg_dir/etc/profile.d/z.sh" ]; then
+        . "$base_pkg_dir/etc/profile.d/z.sh"
+    fi
+else
+    if [ -f "$HOME/.local/bin/z.sh" ]; then
+        . "$HOME/.local/bin/z.sh"
+    fi
+fi
+unalias z 2> /dev/null
+z() {
+    [ $# -gt 0 ] && _z "$*" && return
+    out="$(_z -l 2>&1 | fzf --nth 2..  --inline-info +s --tac \
+        --expect=alt-f,ctrl-t --query "${*##-* }" \
+        --preview 'tree -C {2..} | head -200' \
+        --header=enter=cd,\ alt-f=ranger,\ ctrl-t=fzf | \
+        sed 's/^[0-9,.]* *//')"
+    __fzf_cd_action_key__ "$out"
+}
+# shellcheck disable=SC2016
+bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
+# shellcheck disable=SC2016
+bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
+
+# }}}
+# Tmux {{{
+
+# Tmux session switcher (`tms foo` attaches to `foo` if exists, else creates
 # it)
 tms() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
@@ -128,32 +206,8 @@ tmk() {
     tmux kill-session -t "$session"
 }
 
-# Z
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if [ -f "$base_pkg_dir/etc/profile.d/z.sh" ]; then
-        . "$base_pkg_dir/etc/profile.d/z.sh"
-    fi
-else
-    if [ -f "$HOME/.local/bin/z.sh" ]; then
-        . "$HOME/.local/bin/z.sh"
-    fi
-fi
-unalias z 2> /dev/null
-z() {
-    [ $# -gt 0 ] && _z "$*" && return
-    dir="$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse \
-        --inline-info +s --tac --query "${*##-* }" \
-        --preview 'tree -C {2..} | head -200' | sed 's/^[0-9,.]* *//')"
-    if [[ -n $dir ]]; then
-        printf 'cd %q' "$dir"
-    else
-        return 1
-    fi
-}
-# shellcheck disable=SC2016
-bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
-# shellcheck disable=SC2016
-bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
+# }}}
+# Git {{{
 
 # Forgit (git and fzf)
 export FORGIT_NO_ALIASES="1"
@@ -165,3 +219,5 @@ alias gsv=__forgit_stash_show
 if [ -f "$HOME/.local/bin/forgit.plugin.sh" ]; then
     . "$HOME/.local/bin/forgit.plugin.sh"
 fi
+
+# }}}
