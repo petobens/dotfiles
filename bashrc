@@ -35,17 +35,16 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 else
     base_pkg_dir='/usr'
 
-    # PATH is originally defined in /etc/profile
-    # export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin"
+    # Local paths first (note that path is originally defined in /etc/profile)
+    PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
+    export MANPATH="$HOME/local/share/man:$HOME/.local/share/man:$MANPATH"
+
+    # Texlive
     if [ -d "$base_pkg_dir/local/texlive" ]; then
-        PATH="/usr/local/texlive/2018/bin/x86_64-linux:$PATH"
+        PATH="$PATH:/usr/local/texlive/2018/bin/x86_64-linux"
         export MANPATH="$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man"
         export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
     fi
-
-    # Local paths first
-    PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
-    export MANPATH="$HOME/local/share/man:$HOME/.local/share/man:$MANPATH"
 
     # Highlight directories in blue, symbolic links in purple and executable
     # files in red
