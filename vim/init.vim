@@ -1425,6 +1425,12 @@ call defx#custom#column('mark', {
             \ 'selected_icon': '✓',
             \ })
 
+" Shown only current directory in root
+function! Root(path) abort
+    return fnamemodify(a:path, ':t')
+endfunction
+call defx#custom#source('file', {'root': 'Root'})
+
 " Maps
 nnoremap <silent> <Leader>fe :Defx<CR>
 nnoremap <silent> <Leader>ff :Defx `expand('%:p:h')`
