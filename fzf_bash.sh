@@ -34,7 +34,8 @@ fi
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 if type "tree" > /dev/null 2>&1; then
     export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200' \
---header=enter=cd,\ alt-f=ranger,\ ctrl-t=fzf"
+--expect=ctrl-t,alt-c,alt-f \
+--header=enter=cd,\ ctrl-t=fzf-file,\ alt-c=fzf-dir,\ alt-f=ranger"
 fi
 
 # Disable tmux integration (use ncurses directly)
@@ -101,7 +102,9 @@ __fzf_cd_action_key__() {
             printf 'ranger %q' "$dir"
         elif [[ "$key" = ctrl-t ]]; then
             # FIXME: This doesn't return the candidate
-            fzf-file-widget-custom "$dir"
+            fzf-file-widget-custom "ignore" "$dir"
+        elif [[ "$key" = alt-c ]]; then
+            __fzf_cd_custom__ "no-ignore" "$dir"
         else
             printf 'cd %q' "$dir"
         fi
@@ -117,9 +120,11 @@ __fzf_cd_custom__() {
     if [ "$1" == 'no-ignore' ]; then
         cmd="$cmd --no-ignore-vcs"
     fi
+    if [ "$2" ]; then
+        cmd="$cmd . $2"  # use narrow dir
+    fi
     out=$(eval "$cmd" | \
-            FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS
-    --expect=alt-f,ctrl-t" fzf +m)
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf +m)
     __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
@@ -143,8 +148,7 @@ __fzf_cd_parent__() {
     start_dir="$(dirname "$PWD")"  # start with parent dir
     cmd="get_parent_dirs $(realpath "${1:-$start_dir}")"
     out=$(eval "$cmd" | \
-            FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS
-    --expect=alt-f,ctrl-t" fzf +m)
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf +m)
     __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
@@ -165,7 +169,7 @@ unalias z 2> /dev/null
 z() {
     [ $# -gt 0 ] && _z "$*" && return
     out="$(_z -l 2>&1 | fzf --nth 2..  --inline-info +s --tac \
-        --expect=alt-f,ctrl-t --query "${*##-* }" \
+        --expect=ctrl-t,alt-c,alt-f --query "${*##-* }" \
         --preview 'tree -C {2..} | head -200' \
         --header=enter=cd,\ alt-f=ranger,\ ctrl-t=fzf | \
         sed 's/^[0-9,.]* *//')"
