@@ -29,7 +29,7 @@ pipx install beautysh --verbose
 pipx install black --verbose
 pipx install ipython --verbose
 pipx inject ipython numpy pandas --verbose
-pipx install isort --spec git+https://github.com/timothycrosley/isort@develop#egg=isort[pyproject] --verbose
+pipx install isort --verbose
 pipx install jupyter --include-deps --verbose
 pipx install litecli --verbose
 pipx install mycli --verbose
