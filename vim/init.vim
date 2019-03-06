@@ -1412,15 +1412,20 @@ call defx#custom#option('_', {
             \ 'split': 'vertical',
             \ 'direction': 'topleft',
             \ 'columns': 'mark:filename:icons:size:git',
+            \ 'root_marker': '﬌ '
             \ })
 
 " Fit text to window width, set time format and define custom marks
-call defx#custom#column('filename', {'min_width': 22, 'max_width': 22})
+call defx#custom#column('filename', {
+            \ 'min_width': 22,
+            \ 'max_width': 22,
+            \ 'indent': '  ',
+            \ })
 call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 call defx#custom#column('mark', {
-            \ 'directory_icon': '▸',
-            \ 'opened_icon': '▾',
-            \ 'readonly_icon': '✗',
+            \ 'directory_icon': '',
+            \ 'opened_icon': '',
+            \ 'readonly_icon': '',
             \ 'root_icon': ' ',
             \ 'selected_icon': '✓',
             \ })
