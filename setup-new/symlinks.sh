@@ -44,6 +44,11 @@ if type "bash" > /dev/null 2>&1; then
     echo Created .bashrc symlink
     $ln_cmd -fTs "$dotfiles_dir/bash_profile" "$HOME/.bash_profile"
     echo Created .bash_profile symlink
+    # Load fzf settings
+    if type "fzf" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/fzf_bash.sh" "$HOME/.fzf_bash.sh"
+        echo Created .fzf_bash.sh symlink
+    fi
 fi
 . "$HOME/.bashrc"
 
