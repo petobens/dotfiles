@@ -1855,6 +1855,8 @@ call denite#custom#map('insert', '<A-f>', '<denite:do_action:defx>',
             \ 'noremap')
 call denite#custom#map('insert', '<C-t>',
             \ '<denite:do_action:candidate_file_rec>', 'noremap')
+call denite#custom#map('insert', '<A-c>',
+            \ '<denite:do_action:candidate_directory_rec>', 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 
 " Custom actions
@@ -1880,7 +1882,12 @@ endfunction
 function! s:candidate_file_rec(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
-    call denite#start([{'name': 'file/rec', 'args': [narrow_dir]}])
+    call denite#start([{'name': 'file/rec/noignore', 'args': [narrow_dir]}])
+endfunction
+function! s:candidate_directory_rec(context)
+    let path = a:context['targets'][0]['action__path']
+    let narrow_dir = denite#util#path2directory(path)
+    call denite#start([{'name': 'directory_rec/noignore', 'args': [narrow_dir]}])
 endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
@@ -1888,6 +1895,8 @@ call denite#custom#action('buffer,directory,file,openable,dirmark', 'defx',
         \ function('s:defx_open'))
 call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'candidate_file_rec', function('s:candidate_file_rec'))
+call denite#custom#action('buffer,directory,file,openable,dirmark',
+        \ 'candidate_directory_rec', function('s:candidate_directory_rec'))
 call denite#custom#action('file', 'narrow',
         \ {context -> denite#do_action(context, 'open', context['targets'])})
 
