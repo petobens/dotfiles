@@ -135,6 +135,11 @@ bind -m vi-command '"\ec": "i\ec"'
 bind '"\ed": "\C-x\C-addi`__fzf_cd_custom__ no-ignore`\C-x\C-e\C-x\C-r\C-m"'
 bind -m vi-command '"\ed": "i\ed"'
 
+# Alt-h map to cd from home dir
+# shellcheck disable=SC2016
+bind '"\eh": "\C-x\C-addi`__fzf_cd_custom__ no-ignore ~`\C-x\C-e\C-x\C-r\C-m"'
+bind -m vi-command '"\eh": "i\eh"'
+
 # Alt-p mapping to cd to selected parent directory (sister to Alt-c)
 __fzf_cd_parent__() {
     local dirs=()
