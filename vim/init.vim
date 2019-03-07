@@ -1606,7 +1606,8 @@ function! s:defx_settings()
         execute('Denite -default-action=defx z')
     endfunction
     function! s:denite_parents_dirs(context) abort
-        execute('Denite -default-action=defx parent_dirs')
+        let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
+        execute('Denite -default-action=defx parent_dirs:' . narrow_dir)
     endfunction
     nnoremap <silent><buffer><expr> <C-t>
                 \ defx#do_action('call', '<SID>denite_rec')
