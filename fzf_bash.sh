@@ -69,8 +69,7 @@ __fzf_select_custom() {
         elif [[ "$key" = ctrl-o ]]; then
             printf 'open %q' "$file"
         elif [[ "$key" = alt-f ]]; then
-            # FIXME: Not working due to ranger bug
-            printf 'ranger %q' "$file"
+            printf 'ranger --selectfile %q' "$file"
         else
             printf '%q' "$file"
         fi
