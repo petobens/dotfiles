@@ -29,6 +29,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 if type "bat" > /dev/null 2>&1; then
     export FZF_CTRL_T_OPTS="--preview 'bat --color always --style numbers \
 --theme TwoDark --line-range :200 {}' \
+--expect=ctrl-e,ctrl-o,alt-f \
 --header=enter=paste,\ ctrl-e=vim,\ ctrl-o=open,\ alt-f=ranger"
 fi
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
@@ -47,7 +48,7 @@ complete -F _fzf_path_completion -o default -o bashdefault v o dog
 # }}}
 # File and dirs {{{
 
-# Custom Ctrl-t mapping (Alt-t to ignore git-ignored files)
+# Custom Ctrl-t mapping (also Alt-t to ignore git-ignored files)
 __fzf_select_custom() {
     local cmd dir
     cmd="$FZF_CTRL_T_COMMAND"
@@ -58,8 +59,7 @@ __fzf_select_custom() {
         cmd="$cmd . $2"  # use narrow dir
     fi
     out=$(eval "$cmd" |
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS
-    --expect=ctrl-e,ctrl-o,alt-f" fzf +m)
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf +m)
     key=$(head -1 <<< "$out")
     file=$(head -2 <<< "$out" | tail -1)
 
@@ -114,7 +114,7 @@ __fzf_cd_action_key__() {
     fi
 }
 
-# Custom Alt-c maps (Alt-d to ignore git-ignored dirs)
+# Custom Alt-c maps (also Alt-d to ignore git-ignored dirs)
 __fzf_cd_custom__() {
     local cmd dir
     cmd="$FZF_ALT_C_COMMAND"
@@ -157,16 +157,6 @@ bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
 bind -m vi-command '"\ep": "i\ep"'
 
 # Z
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if [ -f "$base_pkg_dir/etc/profile.d/z.sh" ]; then
-        . "$base_pkg_dir/etc/profile.d/z.sh"
-    fi
-else
-    if [ -f "$HOME/.local/bin/z.sh" ]; then
-        . "$HOME/.local/bin/z.sh"
-    fi
-fi
-unalias z 2> /dev/null
 z() {
     [ $# -gt 0 ] && _z "$*" && return
     out="$(_z -l 2>&1 | fzf --nth 2..  --inline-info +s --tac \

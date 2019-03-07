@@ -441,8 +441,21 @@ alias hdbw='mongo mongodb://pedroFerrari:"$(pass humber/mongodb/pedroFerrari)"'\
 'arbiter.humber.com.ar:37117/humberPro001?replicaSet=humber-replica-set'
 
 # }}}
-# Fzf {{{
+# Fzf and cli apps {{{
 
+# Z (load it but unalias it to override it with fzf version)
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if [ -f "$base_pkg_dir/etc/profile.d/z.sh" ]; then
+        . "$base_pkg_dir/etc/profile.d/z.sh"
+    fi
+else
+    if [ -f "$HOME/.local/bin/z.sh" ]; then
+        . "$HOME/.local/bin/z.sh"
+    fi
+fi
+unalias z 2> /dev/null
+
+# Fzf
 if type "fzf" > /dev/null 2>&1; then
     if [ -f "$HOME/.fzf_bash.sh" ]; then
         . "$HOME/.fzf_bash.sh"
