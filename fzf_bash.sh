@@ -31,7 +31,7 @@ export FZF_DEFAULT_OPTS='
 --bind=ctrl-space:toggle+down
 --color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff
 --color=prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd
---color=marker:#98c379,spinner:#c678dd,border:#282c34
+--color=marker:#98c379,spinner:#e06c75,border:#282c34
 '
 
 # Use fd for files and dirs
@@ -174,9 +174,10 @@ bind -m vi-command '"\ep": "i\ep"'
 # Z
 z() {
     [ $# -gt 0 ] && _z "$*" && return
-    out="$(_z -l 2>&1 | fzf --nth 2..  --inline-info +s --tac \
-        --expect=ctrl-t,alt-c,alt-f --query "${*##-* }" \
-        --preview 'tree -C {2..} | head -200' \
+    cmd="_z -l 2>&1"
+    out="$(eval "$cmd"| fzf --no-sort --tac \
+        --preview 'tree -C {2} | head -200' \
+        --expect=ctrl-t,alt-c,alt-f \
         --header=enter=cd,\ alt-f=ranger,\ ctrl-t=fzf | \
         sed 's/^[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
