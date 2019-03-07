@@ -1278,6 +1278,11 @@ set noshowmode                  " Don't show the current mode
 let g:airline_powerline_fonts = 1
 " Rounded right sep
 let g:airline_right_sep = '' " U+E0B6
+" Better readonly icon
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline_symbols.readonly = ''
 " Don't draw separators in empty sections (such as warning/errors)
 let g:airline_skip_empty_sections = 1
 
