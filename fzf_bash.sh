@@ -40,8 +40,8 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 if type "bat" > /dev/null 2>&1; then
     export FZF_CTRL_T_OPTS="
 --preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {}'
---expect=ctrl-e,ctrl-o,alt-f
---header=enter=paste,\ ctrl-e=vim,\ ctrl-o=open,\ alt-f=ranger
+--expect=ctrl-e,ctrl-o,alt-c,alt-f
+--header=enter=paste,\ ctrl-e=vim,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-f=ranger
 "
 fi
 
@@ -82,6 +82,8 @@ __fzf_select_custom() {
             printf 'open %q' "$file"
         elif [[ "$key" = alt-f ]]; then
             printf 'ranger --selectfile %q' "$file"
+        elif [[ "$key" = alt-c ]]; then
+            printf 'cd %q' "$(dirname "$file")"
         else
             printf '%q' "$file"
         fi
