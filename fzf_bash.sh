@@ -13,34 +13,46 @@ fi
 # Enable completion and key bindings (note: we override some of these mappings
 # below)
 if [[ "$OSTYPE" == 'darwin'* ]]; then
-    [[ $- == *i* ]] && . "$base_pkg_dir/opt/fzf/shell/completion.bash" 2> /dev/null
+    [[ $- == *i* ]] &&
+    . "$base_pkg_dir/opt/fzf/shell/completion.bash" 2> /dev/null
     . "$base_pkg_dir/opt/fzf/shell/key-bindings.bash"
 else
-    [[ $- == *i* ]] && . "$base_pkg_dir/share/fzf/completion.bash" 2> /dev/null
+    [[ $- == *i* ]] &&
+    . "$base_pkg_dir/share/fzf/completion.bash" 2> /dev/null
     . "$base_pkg_dir/share/fzf/key-bindings.bash"
 fi
 
-# Change default options (show 15 lines, use top-down layout)
-export FZF_DEFAULT_OPTS='--height 15 --reverse --bind=ctrl-space:toggle+down'
+# Change default options  and colors
+export FZF_DEFAULT_OPTS='
+--height 15
+--reverse
+--inline-info
+--prompt="❯ "
+--bind=ctrl-space:toggle+down
+--color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff
+--color=prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd
+--color=marker:#98c379,spinner:#c678dd,border:#282c34
+'
 
 # Use fd for files and dirs
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 if type "bat" > /dev/null 2>&1; then
-    export FZF_CTRL_T_OPTS="--preview 'bat --color always --style numbers \
---theme TwoDark --line-range :200 {}' \
---expect=ctrl-e,ctrl-o,alt-f \
---header=enter=paste,\ ctrl-e=vim,\ ctrl-o=open,\ alt-f=ranger"
-fi
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-if type "tree" > /dev/null 2>&1; then
-    export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200' \
---expect=ctrl-t,alt-c,alt-f \
---header=enter=cd,\ ctrl-t=fzf-file,\ alt-c=fzf-dir,\ alt-f=ranger"
+    export FZF_CTRL_T_OPTS="
+--preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {}'
+--expect=ctrl-e,ctrl-o,alt-f
+--header=enter=paste,\ ctrl-e=vim,\ ctrl-o=open,\ alt-f=ranger
+"
 fi
 
-# Disable tmux integration (use ncurses directly)
-export FZF_TMUX='0'
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+if type "tree" > /dev/null 2>&1; then
+    export FZF_ALT_C_OPTS="
+--preview 'tree -C {} | head -200'
+--expect=ctrl-t,alt-c,alt-f
+--header=enter=cd,\ ctrl-t=fzf-file,\ alt-c=fzf-dir,\ alt-f=ranger
+"
+fi
 
 # Extend list of commands with fuzzy completion (basically add our aliases)
 complete -F _fzf_path_completion -o default -o bashdefault v o dog
@@ -79,7 +91,6 @@ __fzf_select_custom() {
 }
 fzf-file-widget-custom() {
     local selected=""
-    # shellcheck disable=SC2119
     selected="$(__fzf_select_custom "$1" "$2")"
     READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
     READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
