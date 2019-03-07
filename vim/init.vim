@@ -2529,7 +2529,7 @@ let g:tagbar_show_linenumbers = 2          " Relative line numbers
 let g:tagbar_autopreview = 0               " Don't autopreview, enable it with P
 let g:tagbar_previewwin_pos = 'belowright'
 
-let g:tagbar_iconchars = ['▸', '▾']
+let g:tagbar_iconchars = ['', '']
 
 let g:tagbar_type_tex = {
     \ 'sort' : 1,
