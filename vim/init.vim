@@ -1432,7 +1432,7 @@ call defx#custom#column('mark', {
             \ 'opened_icon': '',
             \ 'readonly_icon': '',
             \ 'root_icon': ' ',
-            \ 'selected_icon': '✓',
+            \ 'selected_icon': '',
             \ })
 
 " Shown only current directory in root
@@ -1445,9 +1445,9 @@ call defx#custom#source('file', {'root': 'Root'})
 nnoremap <silent> <Leader>fe :Defx<CR>
 nnoremap <silent> <Leader>ff :Defx `expand('%:p:h')`
             \ -search=`expand('%:p')`<CR>
-nnoremap <silent> <Leader>df :Defx `expand('%:p:h')`<CR>
-            \ :Defx -new -split=horizontal -direction=<CR>
-            \ :wincmd p<CR>
+nnoremap <silent> <Leader>df :Defx `expand('%:p:h')`<CR>:execute
+            \ 'Defx -new -split=horizontal -direction= ' . b:defx.paths[0]<CR>
+            \ :wincmd p<CR>:execute float2nr(&lines /2) . 'wincmd _ '<CR>
 nnoremap <silent> <Leader>fb :Defx<CR>:Denite defx/dirmark<CR>
 nnoremap <silent> <Leader>fm :call <SID>TmuxSplitCmd('ranger', '')<CR>
 
@@ -1526,6 +1526,7 @@ function! s:defx_settings()
         \ defx#do_action('multi', ['drop', 'quit'])
     nnoremap <silent><buffer><expr> zo defx#do_action('open_tree')
     nnoremap <silent><buffer><expr> zc defx#do_action('close_tree')
+    nnoremap <silent><buffer><expr> zr defx#do_action('open_tree_recursive')
     " Open files in splits
     nnoremap <silent><buffer><expr> s
         \ defx#do_action('multi', [['drop', 'split'], 'quit'])
@@ -1563,8 +1564,9 @@ function! s:defx_settings()
 	nnoremap <silent><buffer><expr> T defx#do_action('toggle_columns',
         \ 'icons:filename:time')
     " Open new defx buffer
-    nnoremap <silent><buffer> <Leader>sp :Defx -new -split=horizontal
-        \ -direction=<CR>:wincmd p<CR>
+    nnoremap <silent><buffer> <Leader>sp :execute
+        \ 'Defx -new -split=horizontal -direction= ' . b:defx.paths[0]<CR>
+        \ :wincmd p<CR>:execute float2nr(&lines /2) . 'wincmd _ '<CR>
     " Open in external file browser
     if executable('ranger')
         command! -nargs=1 TmuxRanger call s:TmuxSplitCmd('ranger', <q-args>)
