@@ -1449,6 +1449,7 @@ nnoremap <silent> <Leader>df :Defx `expand('%:p:h')`<CR>:execute
             \ 'Defx -new -split=horizontal -direction= ' . b:defx.paths[0]<CR>
             \ :wincmd p<CR>:execute float2nr(&lines /2) . 'wincmd _ '<CR>
 nnoremap <silent> <Leader>fb :Defx<CR>:Denite defx/dirmark<CR>
+nnoremap <silent> <Leader>fr :Defx -resume<CR>
 nnoremap <silent> <Leader>fm :call <SID>TmuxSplitCmd('ranger', '')<CR>
 
 " Devicons
@@ -1495,9 +1496,15 @@ let g:defx_git#indicators = {
 function! s:QuitAllDefx(context) abort
     let buffers = filter(range(1, bufnr('$')),
                 \ 'getbufvar(v:val, "&filetype") ==# "defx"')
-    if !empty(buffers)
-        silent execute 'bwipeout' join(buffers)
-    endif
+    let win_id = -1
+    for i in buffers
+        call defx#call_action('quit')
+        if win_id == -1
+            let win_id = win_getid()
+            wincmd p
+        endif
+    endfor
+    call win_gotoid(win_id)
 endfunction
 
 " Filetype settings
