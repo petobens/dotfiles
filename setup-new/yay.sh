@@ -128,8 +128,8 @@ $yay_cmd papirus-icon-theme
 $yay_cmd oracle-instantclient-basic
 $yay_cmd oracle-instantclient-sqlplus
 $yay_cmd python-pymysql  # python version of mysql
-$yay_cmd mongodb
-$yay_cmd mongodb-tools
+$yay_cmd mongodb-bin
+$yay_cmd mongodb-tools-bin
 $yay_cmd postgresql
 $yay_cmd protobuf # Required by python's mysql-connector
 $yay_cmd redis
