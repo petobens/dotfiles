@@ -1419,25 +1419,23 @@ call defx#custom#option('_', {
             \ 'columns': 'mark:filename:icons:size:git',
             \ 'root_marker': '﬌ '
             \ })
-
-" Fit text to window width, set time format and define custom marks
 call defx#custom#column('filename', {
+            \ 'root_icon': ' ',
+            \ 'directory_icon': '',
+            \ 'opened_icon': '',
+            \ 'indent': '  ',
             \ 'min_width': 22,
             \ 'max_width': 22,
-            \ 'indent': '  ',
             \ })
 call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 call defx#custom#column('mark', {
-            \ 'directory_icon': '',
-            \ 'opened_icon': '',
             \ 'readonly_icon': '',
-            \ 'root_icon': ' ',
             \ 'selected_icon': '',
             \ })
 
 " Shown only current directory in root
 function! Root(path) abort
-    return fnamemodify(a:path, ':t')
+    return fnamemodify(a:path, ':t') . '/'
 endfunction
 call defx#custom#source('file', {'root': 'Root'})
 
