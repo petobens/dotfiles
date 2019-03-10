@@ -64,10 +64,10 @@ complete -F _fzf_path_completion -o default -o bashdefault v o dog
 __fzf_select_custom() {
     local cmd dir
     cmd="$FZF_CTRL_T_COMMAND"
-    if [ "$1" == 'no-ignore' ]; then
+    if [[ "$1" == 'no-ignore' ]]; then
         cmd="$cmd --no-ignore-vcs"
     fi
-    if [ "$2" ]; then
+    if [[ "$2" ]]; then
         cmd="$cmd . $2"  # use narrow dir
     fi
     out=$(eval "$cmd" |
@@ -75,21 +75,21 @@ __fzf_select_custom() {
     key=$(head -1 <<< "$out")
     file=$(head -2 <<< "$out" | tail -1)
 
-    if [[ -n $file ]]; then
-        if [[ "$key" = ctrl-e ]]; then
-            printf 'v %q' "$file"
-        elif [[ "$key" = ctrl-o ]]; then
-            printf 'open %q' "$file"
-        elif [[ "$key" = alt-f ]]; then
-            printf 'ranger --selectfile %q' "$file"
-        elif [[ "$key" = alt-c ]]; then
-            printf 'cd %q' "$(dirname "$file")"
-        else
-            printf '%q' "$file"
-        fi
-    else
+    if [[ -z $file ]]; then
         return 1
     fi
+    case "$key" in
+        ctrl-e)
+            printf 'v %q' "$file" ;;
+        ctrl-o)
+            printf 'open %q' "$file" ;;
+        alt-f)
+            printf 'ranger --selectfile %q' "$file" ;;
+        alt-c)
+            printf 'cd %q' "$(dirname "$file")" ;;
+        *)
+            printf '%q' "$file" ;;
+    esac
 }
 fzf-file-widget-custom() {
     local selected=""
@@ -109,31 +109,31 @@ __fzf_cd_action_key__() {
     out="$1"
     key=$(head -1 <<< "$out")
     dir=$(head -2 <<< "$out" | tail -1)
-    if [[ -n $dir ]]; then
-        if [[ "$key" = alt-f ]]; then
-            printf 'ranger %q' "$dir"
-        elif [[ "$key" = ctrl-t ]]; then
-            # Note: this will execute an action directly (paste, with <CR>,
-            # won't work)
-            __fzf_select_custom "no-ignore" "$dir"
-        elif [[ "$key" = alt-c ]]; then
-            __fzf_cd_custom__ "no-ignore" "$dir"
-        else
-            printf 'cd %q' "$dir"
-        fi
-    else
+    if [[ -z $dir ]]; then
         return 1
     fi
+    case "$key" in
+        alt-f)
+            printf 'ranger %q' "$dir" ;;
+        ctrl-t)
+            # Note: this will execute an action directly (paste, with <CR>,
+            # won't work)
+            __fzf_select_custom "no-ignore" "$dir" ;;
+        alt-c)
+            __fzf_cd_custom__ "no-ignore" "$dir" ;;
+        *)
+            printf 'cd %q' "$dir" ;;
+    esac
 }
 
 # Custom Alt-c maps (also Alt-d to ignore git-ignored dirs)
 __fzf_cd_custom__() {
     local cmd dir
     cmd="$FZF_ALT_C_COMMAND"
-    if [ "$1" == 'no-ignore' ]; then
+    if [[ "$1" == 'no-ignore' ]]; then
         cmd="$cmd --no-ignore-vcs"
     fi
-    if [ "$2" ]; then
+    if [[ "$2" ]]; then
         cmd="$cmd . $2"  # use narrow dir
     fi
     out=$(eval "$cmd" | \
@@ -163,7 +163,7 @@ __fzf_cd_parent__() {
             get_parent_dirs "$(dirname "$1")"
         fi
     }
-    start_dir="$(dirname "$PWD")"  # start with parent dir
+    start_dir="$(dirname "$PWD")"
     cmd="get_parent_dirs $(realpath "${1:-$start_dir}")"
     out=$(eval "$cmd" | \
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf +m)
@@ -196,8 +196,8 @@ bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
 # it)
 tms() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
-    if [ "$1" ]; then
-        if [ "$1" = "-ask" ]; then
+    if [[ "$1" ]]; then
+        if [[ "$1" = "-ask" ]]; then
             read -r -p "New tmux session name: " session_name
         else
             session_name="$1"
