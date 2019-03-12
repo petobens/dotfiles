@@ -25,7 +25,6 @@ fi
 # Change default options  and colors
 export FZF_DEFAULT_OPTS='
 --height 15
---reverse
 --inline-info
 --prompt="❯ "
 --bind=ctrl-space:toggle+down
