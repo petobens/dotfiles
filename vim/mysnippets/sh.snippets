@@ -55,10 +55,10 @@ snippet sb "Shebang (bash)" b
 #!/usr/bin/env bash$0
 endsnippet
 
-snippet here "here document (here)" b
-<<-${2:'${1:TOKEN}'}
-	$0
-${1/['"`](.+)['"`]/$1/}
+snippet mlv "Multine variable" b
+read -r -d '' ${1:var_name} <<- EOM
+${2:${VISUAL:text}}
+EOM$0
 endsnippet
 
 snippet sd "Shellcheck disable" w
