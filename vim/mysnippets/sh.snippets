@@ -55,10 +55,14 @@ snippet sb "Shebang (bash)" b
 #!/usr/bin/env bash$0
 endsnippet
 
-snippet here "here document (here)"
+snippet here "here document (here)" b
 <<-${2:'${1:TOKEN}'}
 	$0
 ${1/['"`](.+)['"`]/$1/}
+endsnippet
+
+snippet sd "Shellcheck disable" w
+# shellcheck disable=SC$1
 endsnippet
 
 # **}
