@@ -22,7 +22,7 @@ else
     . "$base_pkg_dir/share/fzf/key-bindings.bash"
 fi
 
-# Change default options  and colors
+# Change default options and colors
 export FZF_DEFAULT_OPTS='
 --height 15
 --inline-info
@@ -38,7 +38,8 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 if type "bat" > /dev/null 2>&1; then
     export FZF_CTRL_T_OPTS="
---preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {}'
+--multi
+--preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
 --expect=ctrl-e,ctrl-o,alt-c,alt-f
 --header=enter=paste,\ ctrl-e=vim,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-f=ranger
 "
@@ -48,7 +49,7 @@ export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 if type "lsd" > /dev/null 2>&1; then
     FZF_ALT_C_OPTS="
 --no-multi
---preview 'lsd -F --tree --depth 2 --color=always --icon=always {} | head -200'
+--preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
 --expect=ctrl-t,alt-c,alt-f
 --header=enter=cd,\ ctrl-t=fzf-file,\ alt-c=fzf-dir,\ alt-f=ranger
 "
@@ -70,14 +71,17 @@ __fzf_select_custom() {
     if [[ "$2" ]]; then
         cmd="$cmd . $2"  # use narrow dir
     fi
-    out=$(eval "$cmd" |
-    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf +m)
+    out=$(eval "$cmd" | devicon-lookup |
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)
     key=$(head -1 <<< "$out")
     file=$(head -2 <<< "$out" | tail -1)
 
     if [[ -z $file ]]; then
         return 1
+    else
+        file="${file#* }"
     fi
+
     case "$key" in
         ctrl-e)
             printf 'v %q' "$file" ;;
@@ -109,9 +113,13 @@ __fzf_cd_action_key__() {
     out="$1"
     key=$(head -1 <<< "$out")
     dir=$(head -2 <<< "$out" | tail -1)
+
     if [[ -z $dir ]]; then
         return 1
+    else
+        dir="${dir#* }"
     fi
+
     case "$key" in
         alt-f)
             printf 'ranger %q' "$dir" ;;
@@ -136,8 +144,8 @@ __fzf_cd_custom__() {
     if [[ "$2" ]]; then
         cmd="$cmd . $2"  # use narrow dir
     fi
-    out=$(eval "$cmd" | \
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf +m)
+    out=$(eval "$cmd" | devicon-lookup |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
     __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
@@ -165,8 +173,7 @@ __fzf_cd_parent__() {
     }
     start_dir="$(dirname "$PWD")"
     cmd="get_parent_dirs $(realpath "${1:-$start_dir}")"
-    out=$(eval "$cmd" | \
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf +m)
+    out=$(eval "$cmd" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
     __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
@@ -177,11 +184,11 @@ bind -m vi-command '"\ep": "i\ep"'
 z() {
     [ $# -gt 0 ] && _z "$*" && return
     cmd="_z -l 2>&1"
-    out="$(eval "$cmd"| fzf --no-sort --tac \
-        --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200' \
+    out="$(eval "$cmd" | devicon-lookup | fzf --no-sort --tac \
+        --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200' \
         --expect=ctrl-t,alt-c,alt-f \
         --header=enter=cd,\ alt-f=ranger,\ ctrl-t=fzf | \
-        sed 's/^[0-9,.]* *//')"
+        sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
