@@ -45,7 +45,7 @@ if type "i3" > /dev/null 2>&1; then
     pipx install raiseorlaunch --verbose
 fi
 pipx install ranger-fm --verbose
-pipx install sqlparse --spec git+https://github.com/andialbrecht/sqlparse --verbose
+pipx install sqlparse --verbose
 pipx install trash-cli --verbose
 pipx install unimatrix --spec git+https://github.com/will8211/unimatrix --verbose
 pipx install vimiv --spec git+https://github.com/karlch/vimiv-qt --verbose
