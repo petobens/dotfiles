@@ -29,9 +29,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export LANG=en_US.UTF-8
 
     # Enable terminal colors and highlight directories in blue, symbolic links
-    # in purple and executable files in red
+    # in purple, executable files in red and sticky dirs in green
     export CLICOLOR=1
-    export LSCOLORS=exfxCxDxbxegedabagaced
+    export LSCOLORS=exfxCxDxbxegedabagcxed
 else
     base_pkg_dir='/usr'
 
@@ -46,9 +46,9 @@ else
         export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
     fi
 
-    # Highlight directories in blue, symbolic links in purple and executable
-    # files in red
-    export LS_COLORS="di=0;34:ln=0;35:ex=0;31:"
+    # Highlight directories in blue, symbolic links in purple, executable
+    # files in red and sticky dirs in green
+    export LS_COLORS="di=0;34:ln=0;35:ex=0;31:tw=0;32"
 
     export BROWSER='chromium'
 
