@@ -45,9 +45,10 @@ if type "bat" > /dev/null 2>&1; then
 fi
 
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-if type "tree" > /dev/null 2>&1; then
-    export FZF_ALT_C_OPTS="
---preview 'tree -C {} | head -200'
+if type "lsd" > /dev/null 2>&1; then
+    FZF_ALT_C_OPTS="
+--no-multi
+--preview 'lsd -F --tree --depth 2 --color=always --icon=always {} | head -200'
 --expect=ctrl-t,alt-c,alt-f
 --header=enter=cd,\ ctrl-t=fzf-file,\ alt-c=fzf-dir,\ alt-f=ranger
 "
@@ -177,7 +178,7 @@ z() {
     [ $# -gt 0 ] && _z "$*" && return
     cmd="_z -l 2>&1"
     out="$(eval "$cmd"| fzf --no-sort --tac \
-        --preview 'tree -C {2} | head -200' \
+        --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200' \
         --expect=ctrl-t,alt-c,alt-f \
         --header=enter=cd,\ alt-f=ranger,\ ctrl-t=fzf | \
         sed 's/^[0-9,.]* *//')"
