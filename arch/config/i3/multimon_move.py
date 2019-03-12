@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Move containers and workspaces between monitos (i.e outputs)."""
+"""Move containers and workspaces between monitors (i.e outputs)."""
+
 import sys
 from time import sleep
 
@@ -30,8 +31,13 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
             i3.command(f'[con_id={win_id}] focus')
             while not i3.get_tree().find_focused().id == win_id:
                 sleep(0.1)
-        x, y, w, h = win_data['how']
-        resize_win(i3, x, y, w, h)
+
+        is_fullscreen = True if win_data['fullscreen'] == 1 else False
+        if is_fullscreen:
+            i3.command('fullscreen enable')
+        else:
+            x, y, w, h = win_data['how']
+            resize_win(i3, x, y, w, h)
     return
 
 
@@ -45,6 +51,7 @@ def _get_resize_map(i3):
             'win': w,
             'focused': w.focused,
             'how': _find_how_to_resize(i3, w),
+            'fullscreen': w.fullscreen_mode,
         }
     return res_map
 
