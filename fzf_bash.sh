@@ -40,8 +40,8 @@ if type "bat" > /dev/null 2>&1; then
     export FZF_CTRL_T_OPTS="
 --multi
 --preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
---expect=ctrl-e,ctrl-o,alt-c,alt-f
---header=enter=paste,\ ctrl-e=vim,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-f=ranger
+--expect=tab,ctrl-o,alt-c,alt-f
+--header=enter=vim,\ tab=insert,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-f=ranger
 "
 fi
 
@@ -50,8 +50,8 @@ if type "lsd" > /dev/null 2>&1; then
     FZF_ALT_C_OPTS="
 --no-multi
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
---expect=ctrl-t,alt-c,alt-f
---header=enter=cd,\ ctrl-t=fzf-file,\ alt-c=fzf-dir,\ alt-f=ranger
+--expect=tab,ctrl-t,alt-c,alt-f
+--header=enter=fzf-file,\ tab=cd,\ alt-c=fzf-dir,\ alt-f=ranger
 "
 fi
 
@@ -86,16 +86,16 @@ __fzf_select_custom() {
     fi
 
     case "$key" in
-        ctrl-e)
-            printf 'v %q' "${files[@]}" ;;
+        tab)
+            printf '%q ' "${files[@]}" ;;
         ctrl-o)
             printf 'open %q' "${files[0]}" ;;
-        alt-f)
-            printf 'ranger --selectfile %q' "${files[0]}" ;;
         alt-c)
             printf 'cd %q' "$(dirname "${files[0]}")" ;;
+        alt-f)
+            printf 'ranger --selectfile %q' "${files[0]}" ;;
         *)
-            printf '%q ' "${files[@]}" ;;
+            printf 'v %q' "${files[@]}" ;;
     esac
 }
 fzf-file-widget-custom() {
@@ -124,16 +124,14 @@ __fzf_cd_action_key__() {
     fi
 
     case "$key" in
+        tab)
+            printf 'cd %q' "$dir" ;;
         alt-f)
             printf 'ranger %q' "$dir" ;;
-        ctrl-t)
-            # Note: this will execute an action directly (paste, with <CR>,
-            # won't work)
-            __fzf_select_custom "no-ignore" "$dir" ;;
         alt-c)
             __fzf_cd_custom__ "no-ignore" "$dir" ;;
         *)
-            printf 'cd %q' "$dir" ;;
+            __fzf_select_custom "no-ignore" "$dir" ;;
     esac
 }
 
@@ -190,8 +188,8 @@ z() {
     cmd="_z -l 2>&1"
     out="$(eval "$cmd" | devicon-lookup | fzf --no-sort --tac \
         --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200' \
-        --expect=ctrl-t,alt-c,alt-f \
-        --header=enter=cd,\ alt-f=ranger,\ ctrl-t=fzf | \
+        --expect=tab,ctrl-t,alt-c,alt-f \
+        --header=enter=fzf-file,\ tab=cd,\ alt-c=fzf-dir,\ alt-f=ranger |
         sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
 }
@@ -208,7 +206,7 @@ bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
 tms() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
     if [[ "$1" ]]; then
-        if [[ "$1" = "-ask" ]]; then
+        if [[ "$1" == "-ask" ]]; then
             read -r -p "New tmux session name: " session_name
         else
             session_name="$1"
