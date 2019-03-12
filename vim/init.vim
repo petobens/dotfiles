@@ -87,7 +87,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
-    call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarToggle'})
+    call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarOpen'})
     call dein#add('SirVer/ultisnips')
 
     " Colorschemes
@@ -2597,7 +2597,7 @@ let g:tagbar_map_closeallfolds = 'zm'
 let g:tagbar_map_openallfolds = 'zr'
 
 " Mappings
-nnoremap <silent> <Leader>tb :TagbarToggle<CR>
+nnoremap <silent> <Leader>tb :TagbarOpen jc<CR>
 
 " }}}
 " Tern {{{
