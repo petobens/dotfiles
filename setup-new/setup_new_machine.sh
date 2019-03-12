@@ -71,11 +71,20 @@ if type "R" > /dev/null 2>&1; then
 fi
 
 if type "npm" > /dev/null 2>&1; then
-    read -p $'\033[1mDo you want to install node libraries (y/n)? \033[0m' -n 1 -r
+    read -p $'\033[1mDo you want to install node libraries and binaries (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo -e "\\033[1;34m-> Installing Node.js libraries...\\033[0m"
         . "$current_dir/npm.sh"
+    fi
+fi
+
+if type "cargo" > /dev/null 2>&1; then
+    read -p $'\033[1mDo you want to install rust binaries (y/n)? \033[0m' -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "\\033[1;34m-> Installing rust binaries...\\033[0m"
+        . "$current_dir/rust.sh"
     fi
 fi
 

@@ -67,6 +67,9 @@ if type "go" > /dev/null 2>&1; then
     export GOPATH=$HOME/go
     PATH=$PATH:$GOPATH/bin
 fi
+if type "cargo" > /dev/null 2>&1; then
+    PATH=$PATH:$HOME/.cargo/bin
+fi
 if type "ruby" > /dev/null 2>&1; then
     export GEM_HOME=$HOME/.gem
     PATH="$PATH:$GEM_HOME/bin"
@@ -538,6 +541,10 @@ sys_update_all() {
     if type "npm" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Node packages...\033[0m"
         npm update -g
+    fi
+    if type "cargo-install-update" > /dev/null 2>&1; then
+        echo -e "\033[1;34m\n-> Updating rust binaries...\033[0m"
+        cargo install-update --all
     fi
 }
 

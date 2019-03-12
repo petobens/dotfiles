@@ -29,7 +29,7 @@ if type "mongo" > /dev/null 2>&1; then
     # rm -rf mongo-hacker # (this erases config file)
 fi
 
-# Sqlint
+# Ruby packages
 if type "gem" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing sqlint...\\033[0m"
     gem install sqlint
