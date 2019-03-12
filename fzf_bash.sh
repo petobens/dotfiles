@@ -27,7 +27,7 @@ export FZF_DEFAULT_OPTS='
 --height 15
 --inline-info
 --prompt="❯ "
---bind=ctrl-space:toggle+down
+--bind=ctrl-space:toggle+up
 --color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff
 --color=prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd
 --color=marker:#98c379,spinner:#e06c75,border:#282c34
@@ -74,25 +74,28 @@ __fzf_select_custom() {
     out=$(eval "$cmd" | devicon-lookup |
     FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)
     key=$(head -1 <<< "$out")
-    file=$(head -2 <<< "$out" | tail -1)
+    mapfile -t _files <<< "$(tail -n+2 <<< "$out")"
 
-    if [[ -z $file ]]; then
+    if [ ${#_files[@]} -eq 0 ]; then
         return 1
     else
-        file="${file#* }"
+        files=();
+        for f in "${_files[@]}"; do
+            files+=("${f#* }")
+        done
     fi
 
     case "$key" in
         ctrl-e)
-            printf 'v %q' "$file" ;;
+            printf 'v %q' "${files[@]}" ;;
         ctrl-o)
-            printf 'open %q' "$file" ;;
+            printf 'open %q' "${files[0]}" ;;
         alt-f)
-            printf 'ranger --selectfile %q' "$file" ;;
+            printf 'ranger --selectfile %q' "${files[0]}" ;;
         alt-c)
-            printf 'cd %q' "$(dirname "$file")" ;;
+            printf 'cd %q' "$(dirname "${files[0]}")" ;;
         *)
-            printf '%q' "$file" ;;
+            printf '%q ' "${files[@]}" ;;
     esac
 }
 fzf-file-widget-custom() {
