@@ -76,7 +76,7 @@ __fzf_select_custom() {
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(tail -n+2 <<< "$out")"
 
-    if [ ${#_files[@]} -eq 0 ]; then
+    if [ ${#_files[@]} -eq 1 ] && [[ -z "${_files[0]}" ]]; then
         return 1
     else
         files=();
