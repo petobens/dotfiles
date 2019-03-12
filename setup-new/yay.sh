@@ -167,6 +167,7 @@ $yay_cmd tree
 $yay_cmd universal-ctags-git
 $yay_cmd unrar
 $yay_cmd unzip
+$yay_cmd vivid
 $yay_cmd w3m
 $yay_cmd wget
 $yay_cmd zip

@@ -1,0 +1,61 @@
+# yamllint disable rule:braces rule:commas rule:colons rule:comments-indentation
+---
+colors:
+    black:        '24272e'
+    comment_grey: '5c6370'
+    red:          'e06c75'
+    green:        '98c379'
+    yellow:       'e5c07b'
+    blue:         '528bff'
+    light_blue:   '61afef'
+    magenta:      'c678dd'
+    cyan:         '56b6c2'
+    white:        'abb2bf'
+
+# LS_COLORS regular
+core:
+    regular_file: {}
+    directory:
+        foreground: light_blue
+    executable_file:
+        foreground: red
+        # font-style: bold
+    symlink:
+        foreground: magenta
+    broken_symlink:
+        foreground: black
+        background: magenta
+    fifo:
+        foreground: cyan
+    socket:
+        foreground: yellow
+    sticky_writable:
+        foreground: green
+    normal_text: {}
+
+# File extensions (see filetypes.yml); basically disable this highlighting
+text:
+    special: {}
+    todo: {}
+    licenses: {}
+    configuration:
+        foreground: white
+    other: {}
+markup:
+    foreground: white
+programming:
+    source:
+        foreground: white
+    tooling:
+        foreground: white
+media:
+    foreground: white
+office:
+    foreground: white
+archives:
+    foreground: white
+executable:
+    foreground: red
+unimportant:
+    foreground: comment_grey
+...

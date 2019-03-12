@@ -131,6 +131,10 @@ if type "fd" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/fdignore" "$HOME/.fdignore"
     echo Created .fdignore symlink
 fi
+if type "vivid" > /dev/null 2>&1; then
+    sudo $ln_cmd -fTs "$dotfiles_dir/config/vivid/onedarkish.yml" "/usr/share/vivid/themes/onedarkish.yml"
+    echo Created /usr/share/vivid/themes/onedarkish.yml symlink
+fi
 # Browser
 $ln_cmd -fTs "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 echo Created .surfingkeysrc symlink

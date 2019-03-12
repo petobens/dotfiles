@@ -30,8 +30,10 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 
     # Enable terminal colors and highlight directories in blue, symbolic links
     # in purple, executable files in red and sticky dirs in green
-    export CLICOLOR=1
-    export LSCOLORS=exfxCxDxbxegedabagcxed
+    if ! type "gls" > /dev/null 2>&1; then
+        export CLICOLOR=1
+        export LSCOLORS=exfxCxDxbxegedabagcxed
+    fi
 else
     base_pkg_dir='/usr'
 
@@ -45,10 +47,6 @@ else
         export MANPATH="$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man"
         export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
     fi
-
-    # Highlight directories in blue, symbolic links in purple, executable
-    # files in red and sticky dirs in green
-    export LS_COLORS="di=0;34:ln=0;35:ex=0;31:tw=0;32"
 
     export BROWSER='chromium'
 
@@ -94,6 +92,14 @@ fi
 PATH=$(printf "%s" "$PATH" | awk -v RS=':' '!a[$1]++ { if (NR > 1) printf RS; printf $1 }')
 
 # Language/binaries environmental variables
+if type "vivid" > /dev/null 2>&1; then
+    # shellcheck disable=SC2155
+    export LS_COLORS="$(vivid generate onedarkish)"
+else
+    # Highlight directories in blue, symbolic links in purple, executable
+    # files in red and sticky dirs in green
+    export LS_COLORS="di=0;34:ln=0;35:ex=0;31:tw=0;32"
+fi
 if type "python" > /dev/null 2>&1; then
     export AIRFLOW_GPL_UNIDECODE='yes'
 fi
@@ -368,12 +374,17 @@ fi
 # Update system (and language libraries); see function below
 alias ua=sys_update_all
 
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    # Differentiate and use colors for directories, symbolic links, etc.
-    alias ls='ls -GF'
 
-    # Change directory and list files
-    cd() { builtin cd "$@" && ls -GF; }
+# Platform dependent aliases
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    # Use coreutils ls
+    if type "gls" > /dev/null 2>&1; then
+        alias ls="gls -F --color=auto"
+        # Change directory and list files
+        cd() { builtin cd "$@" && gls -F --color=auto; }
+    else
+        cd() { builtin cd "$@" && ls -GF; }
+    fi
 
     # Matlab
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\

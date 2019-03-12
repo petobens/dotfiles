@@ -112,6 +112,7 @@ $brew_install_cmd tree
 $brew_install_cmd universal-ctags/universal-ctags/universal-ctags --HEAD
 $brew_install_cmd unrar
 $brew_install_cmd unzip
+$brew_install_cmd vivid
 $brew_install_cmd zip
 $brew_install_cmd z
 
