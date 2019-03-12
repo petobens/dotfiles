@@ -173,7 +173,8 @@ __fzf_cd_parent__() {
     }
     start_dir="$(dirname "$PWD")"
     cmd="get_parent_dirs $(realpath "${1:-$start_dir}")"
-    out=$(eval "$cmd" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
+    out=$(eval "$cmd" | devicon-lookup |
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
     __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
