@@ -41,8 +41,8 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
 --multi
 --preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
---expect=tab,ctrl-o,alt-c,alt-p,alt-f
---header=enter=vim,\ tab=insert,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-p=parent-dirs,\ alt-f=ranger
+--expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
+--header=enter=vim,\ tab=insert,\ ctrl-t=fzf-files,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-p=parent-dirs,\ alt-f=ranger
 "
 
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
@@ -50,7 +50,7 @@ FZF_ALT_C_OPTS="
 --no-multi
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
 --expect=tab,ctrl-t,alt-c,alt-p,alt-f
---header=enter=fzf-file,\ tab=cd,\ alt-c=fzf-dir,\ alt-p=parent-dirs,\ alt-f=ranger
+--header=enter=fzf-files,\ tab=cd,\ alt-c=fzf-dirs,\ alt-p=parent-dirs,\ alt-f=ranger
 "
 
 # Extend list of commands with fuzzy completion (basically add our aliases)
@@ -60,7 +60,7 @@ complete -F _fzf_path_completion -o default -o bashdefault v o dog
 # File and dirs {{{
 
 # Custom Ctrl-t mapping (also Alt-t to ignore git-ignored files)
-__fzf_select_custom() {
+__fzf_select_custom__() {
     local cmd dir
     cmd="$FZF_CTRL_T_COMMAND"
     if [[ "$1" == 'no-ignore' ]]; then
@@ -86,6 +86,8 @@ __fzf_select_custom() {
     case "$key" in
         tab)
             printf '%q ' "${files[@]}" ;;
+        ctrl-t)
+            __fzf_select_custom__ "no-ignore" "$(dirname "${files[0]}")" ;;
         ctrl-o)
             printf 'open %q' "${files[0]}" ;;
         alt-c)
@@ -100,7 +102,7 @@ __fzf_select_custom() {
 }
 fzf-file-widget-custom() {
     local selected=""
-    selected="$(__fzf_select_custom "$1" "$2")"
+    selected="$(__fzf_select_custom__ "$1" "$2")"
     READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
     READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
 }
@@ -133,7 +135,7 @@ __fzf_cd_action_key__() {
         alt-p)
             __fzf_cd_parent__ "$dir" ;;
         *)
-            __fzf_select_custom "no-ignore" "$dir" ;;
+            __fzf_select_custom__ "no-ignore" "$dir" ;;
     esac
 }
 
