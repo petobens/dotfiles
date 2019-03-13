@@ -1,4 +1,4 @@
-# Note: this uses rust binaries: fd, bat and lsd
+# Note: this uses rust binaries: fd, bat, lsd and devicon-lookup
 
 # Options {{{
 
@@ -49,8 +49,8 @@ export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 FZF_ALT_C_OPTS="
 --no-multi
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
---expect=tab,ctrl-t,alt-c,alt-p,alt-f
---header=enter=fzf-files,\ tab=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\ A-f=ranger
+--expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f
+--header=enter=fzf-files,\ C-o=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\ A-f=ranger
 "
 
 # Extend list of commands with fuzzy completion (basically add our aliases)
@@ -126,7 +126,7 @@ __fzf_cd_action_key__() {
     fi
 
     case "$key" in
-        tab)
+        ctrl-o)
             printf 'cd %q' "$dir" ;;
         alt-f)
             printf 'ranger %q' "$dir" ;;
@@ -198,8 +198,8 @@ z() {
     cmd="_z -l 2>&1"
     out="$(eval "$cmd" | devicon-lookup | fzf --no-sort --tac \
         --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200' \
-        --expect=tab,ctrl-t,alt-c,alt-p,alt-f \
-        --header=enter=fzf-file,\ tab=cd,\ A-c=fzf-dir,\ A-p=parent-dirs,\ A-f=ranger |
+        --expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f \
+        --header=enter=fzf-file,\ ctrl-o=cd,\ A-c=fzf-dir,\ A-p=parent-dirs,\ A-f=ranger |
         sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
 }
