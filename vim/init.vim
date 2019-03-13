@@ -881,9 +881,15 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
-" Move left and right
-inoremap <C-l> <C-o>l
+" Emacs/readline bindings (similar to rsi.vim)
+inoremap <C-a> <C-o>^
+inoremap <expr><C-e> pumvisible() ? "\<C-e>" : "\<C-o>$"
 inoremap <C-h> <C-o>h
+inoremap <C-l> <C-o>l
+inoremap <A-f> <C-o>w
+inoremap <A-b> <C-o>b
+inoremap <A-x> <C-W>
+inoremap <C-x> <C-U>
 
 " Move lines up and down
 inoremap <A-j> <Esc>:m .+1<CR>==gi
@@ -891,10 +897,6 @@ inoremap <A-k> <Esc>:m .-2<CR>==gi
 
 " Paste system clipboard
 inoremap <A-p> <C-R>"
-
-" Change case (it overwrites contents of z mark): use it at end of word
-inoremap <A-u> <esc>mzgUiw`za
-inoremap <A-l> <esc>mzguiw`za
 
 " }}}
 " Visual mode {{{
@@ -934,13 +936,15 @@ vnoremap <silent> G G$
 " }}}
 " Command mode {{{
 
-" Emacs bindings in command line mode (similar to rsi.vim)
-cnoremap <c-a> <home>
-cnoremap <c-e> <end>
-cnoremap <c-h> <left>
-cnoremap <c-l> <right>
+" Emacs/readline bindings (similar to rsi.vim)
+cnoremap <C-a> <home>
+cnoremap <C-e> <end>
+cnoremap <C-h> <left>
+cnoremap <C-l> <right>
 cnoremap <A-f> <S-Right>
 cnoremap <A-b> <S-Left>
+cnoremap <A-x> <C-W>
+cnoremap <C-x> <C-U>
 
 " Insert the directory of the current buffer in command line mode
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'
