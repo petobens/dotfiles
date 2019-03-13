@@ -1782,11 +1782,14 @@ nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>sD :call <SID>DeniteScanDir(0)<CR>
 nnoremap <silent> <A-z> :Denite -default-action=candidate_file_rec z<CR>
-nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite directory_rec<CR>
-nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite directory_rec/noignore<CR>
-nnoremap <silent> <A-p> :lcd %:p:h<CR>:Denite parent_dirs<CR>
+nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite
+            \ -default-action=candidate_file_rec directory_rec<CR>
+nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite
+            \ -default-action=candidate_file_rec directory_rec/noignore<CR>
+nnoremap <silent> <A-p> :lcd %:p:h<CR>:Denite
+            \ -default-action=candidate_file_rec parent_dirs<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
-nnoremap <silent> <Leader>be :Denite buffer<CR>
+nnoremap <silent> <Leader>be :Denite buffer -quick-move=immediately<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
 nnoremap <silent> <Leader>rg :lcd %:p:h<CR>:call <SID>DeniteGrep()<CR>
@@ -1865,7 +1868,7 @@ call denite#custom#map('insert', '<C-q>',
             \ ',denite:do_action:quickfix>', 'noremap')
 call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
-call denite#custom#map('insert', '<A-p>', '<denite:restore_sources>', 'noremap')
+call denite#custom#map('insert', '<A-u>', '<denite:restore_sources>', 'noremap')
 call denite#custom#map('insert', '<C-w>', '<denite:wincmd:p>', 'noremap')
 call denite#custom#map('insert', '<A-v>', '<denite:do_action:preview>',
             \ 'noremap')
@@ -1875,6 +1878,8 @@ call denite#custom#map('insert', '<C-t>',
             \ '<denite:do_action:candidate_file_rec>', 'noremap')
 call denite#custom#map('insert', '<A-c>',
             \ '<denite:do_action:candidate_directory_rec>', 'noremap')
+call denite#custom#map('insert', '<A-p>',
+            \ '<denite:do_action:candidate_parent_dir>', 'noremap')
 call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
 
 " Custom actions
@@ -1905,7 +1910,14 @@ endfunction
 function! s:candidate_directory_rec(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
-    call denite#start([{'name': 'directory_rec/noignore', 'args': [narrow_dir]}])
+    call denite#start([{'name': 'directory_rec/noignore', 'args': [narrow_dir]}],
+                \ {'default_action': 'candidate_file_rec'})
+endfunction
+function! s:candidate_parent_dir(context)
+    let path = a:context['targets'][0]['action__path']
+    let narrow_dir = denite#util#path2directory(path)
+    call denite#start([{'name': 'parent_dirs', 'args': [narrow_dir]}],
+                \ {'default_action': 'candidate_file_rec'})
 endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
@@ -1915,6 +1927,8 @@ call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'candidate_file_rec', function('s:candidate_file_rec'))
 call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'candidate_directory_rec', function('s:candidate_directory_rec'))
+call denite#custom#action('buffer,directory,file,openable,dirmark',
+        \ 'candidate_parent_dir', function('s:candidate_parent_dir'))
 call denite#custom#action('file', 'narrow',
         \ {context -> denite#do_action(context, 'open', context['targets'])})
 
