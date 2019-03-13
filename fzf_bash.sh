@@ -42,7 +42,7 @@ export FZF_CTRL_T_OPTS="
 --multi
 --preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
 --expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
---header=enter=vim,\ tab=insert,\ ctrl-t=fzf-files,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-p=parent-dirs,\ alt-f=ranger
+--header=enter=vim,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\ A-p=parent-dirs,\ A-f=ranger
 "
 
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
@@ -50,7 +50,7 @@ FZF_ALT_C_OPTS="
 --no-multi
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
 --expect=tab,ctrl-t,alt-c,alt-p,alt-f
---header=enter=fzf-files,\ tab=cd,\ alt-c=fzf-dirs,\ alt-p=parent-dirs,\ alt-f=ranger
+--header=enter=fzf-files,\ tab=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\ A-f=ranger
 "
 
 # Extend list of commands with fuzzy completion (basically add our aliases)
@@ -199,7 +199,7 @@ z() {
     out="$(eval "$cmd" | devicon-lookup | fzf --no-sort --tac \
         --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200' \
         --expect=tab,ctrl-t,alt-c,alt-p,alt-f \
-        --header=enter=fzf-file,\ tab=cd,\ alt-c=fzf-dir,\ alt-p=parent-dirs,\ alt-f=ranger |
+        --header=enter=fzf-file,\ tab=cd,\ A-c=fzf-dir,\ A-p=parent-dirs,\ A-f=ranger |
         sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
 }
