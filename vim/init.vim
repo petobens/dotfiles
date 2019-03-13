@@ -273,13 +273,9 @@ if !has('nvim')
         set clipboard=autoselectplus,unnamedplus
     endif
 else
-    if s:is_win || s:is_mac
-        set clipboard=unnamed
-    else
-        set clipboard=unnamedplus
-    endif
+    set clipboard+=unnamedplus
     " This mimicks autoselect in neovim
-    vmap <Esc> "*ygv<C-c>
+    vmap <Esc> "+ygv<C-c>
 endif
 
 " Persistent undo (i.e vim remembers undo actions even if file is closed and
