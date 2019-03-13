@@ -1417,7 +1417,7 @@ augroup END
 
 call defx#custom#option('_', {
             \ 'show_ignored_files': 1,
-            \ 'winwidth': 41,
+            \ 'winwidth': 42,
             \ 'split': 'vertical',
             \ 'direction': 'topleft',
             \ 'columns': 'mark:filename:icons:size:git',
