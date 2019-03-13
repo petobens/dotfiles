@@ -1,3 +1,5 @@
+# Note: this uses rust binaries: fd, bat and lsd
+
 # Options {{{
 
 # Set base dir
@@ -36,24 +38,20 @@ export FZF_DEFAULT_OPTS='
 # Use fd for files and dirs
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-if type "bat" > /dev/null 2>&1; then
-    export FZF_CTRL_T_OPTS="
+export FZF_CTRL_T_OPTS="
 --multi
 --preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
---expect=tab,ctrl-o,alt-c,alt-f
---header=enter=vim,\ tab=insert,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-f=ranger
+--expect=tab,ctrl-o,alt-c,alt-p,alt-f
+--header=enter=vim,\ tab=insert,\ ctrl-o=open,\ alt-c=cd-file-dir,\ alt-p=parent-dirs,\ alt-f=ranger
 "
-fi
 
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-if type "lsd" > /dev/null 2>&1; then
-    FZF_ALT_C_OPTS="
+FZF_ALT_C_OPTS="
 --no-multi
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
---expect=tab,ctrl-t,alt-c,alt-f
---header=enter=fzf-file,\ tab=cd,\ alt-c=fzf-dir,\ alt-f=ranger
+--expect=tab,ctrl-t,alt-c,alt-p,alt-f
+--header=enter=fzf-file,\ tab=cd,\ alt-c=fzf-dir,\ alt-p=parent-dirs,\ alt-f=ranger
 "
-fi
 
 # Extend list of commands with fuzzy completion (basically add our aliases)
 complete -F _fzf_path_completion -o default -o bashdefault v o dog
@@ -72,7 +70,7 @@ __fzf_select_custom() {
         cmd="$cmd . $2"  # use narrow dir
     fi
     out=$(eval "$cmd" | devicon-lookup |
-    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(tail -n+2 <<< "$out")"
 
@@ -92,6 +90,8 @@ __fzf_select_custom() {
             printf 'open %q' "${files[0]}" ;;
         alt-c)
             printf 'cd %q' "$(dirname "${files[0]}")" ;;
+        alt-p)
+            __fzf_cd_parent__ "$(dirname "${files[0]}")" ;;
         alt-f)
             printf 'ranger --selectfile %q' "${files[0]}" ;;
         *)
@@ -130,6 +130,8 @@ __fzf_cd_action_key__() {
             printf 'ranger %q' "$dir" ;;
         alt-c)
             __fzf_cd_custom__ "no-ignore" "$dir" ;;
+        alt-p)
+            __fzf_cd_parent__ "$dir" ;;
         *)
             __fzf_select_custom "no-ignore" "$dir" ;;
     esac
@@ -165,9 +167,15 @@ bind -m vi-command '"\eh": "i\eh"'
 __fzf_cd_parent__() {
     local dirs=()
     get_parent_dirs() {
-        if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+        if [[ -d "${1}" ]]; then
+            dirs+=("$1")
+        else
+            return
+        fi
         if [[ "${1}" == '/' ]]; then
-            for _dir in "${dirs[@]}"; do echo "$_dir"; done
+            for _dir in "${dirs[@]}"; do
+                echo "$_dir"
+            done
         else
             get_parent_dirs "$(dirname "$1")"
         fi
@@ -175,7 +183,7 @@ __fzf_cd_parent__() {
     start_dir="$(dirname "$PWD")"
     cmd="get_parent_dirs $(realpath "${1:-$start_dir}")"
     out=$(eval "$cmd" | devicon-lookup |
-    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
     __fzf_cd_action_key__ "$out"
 }
 # shellcheck disable=SC2016
@@ -188,8 +196,8 @@ z() {
     cmd="_z -l 2>&1"
     out="$(eval "$cmd" | devicon-lookup | fzf --no-sort --tac \
         --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200' \
-        --expect=tab,ctrl-t,alt-c,alt-f \
-        --header=enter=fzf-file,\ tab=cd,\ alt-c=fzf-dir,\ alt-f=ranger |
+        --expect=tab,ctrl-t,alt-c,alt-p,alt-f \
+        --header=enter=fzf-file,\ tab=cd,\ alt-c=fzf-dir,\ alt-p=parent-dirs,\ alt-f=ranger |
         sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
 }
