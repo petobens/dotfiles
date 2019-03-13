@@ -79,6 +79,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('gioele/vim-autoswap')
     call dein#add('junegunn/vim-easy-align')
     call dein#add('jamessan/vim-gnupg')
+    call dein#add('machakann/vim-highlightedyank')
     call dein#add('Yggdroot/indentLine')
     call dein#add('simnalamburt/vim-mundo', {'on_cmd' : 'MundoToggle'})
     call dein#add('neomake/neomake')
@@ -2208,6 +2209,12 @@ vnoremap <silent> <Leader>gb :Gbrowse<cr>
 " Commit explorer/browser (from gv.vim plugin)
 nnoremap <silent> <Leader>cb :GV<cr>
 nnoremap <silent> <Leader>cB :GV!<cr>  " only current file
+
+" }}}
+" HighlightedYank {{{
+
+let g:highlightedyank_highlight_duration = 550
+let g:highlightedyank_max_lines = 1500
 
 " }}}
 " GitGutter {{{
