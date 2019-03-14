@@ -107,6 +107,7 @@ __fzf_select_custom__() {
             files+=("${f#* }")
         done
     fi
+    printf -v files_str "%s " "${files[@]}"
 
     case "$key" in
         tab)
@@ -122,10 +123,9 @@ __fzf_select_custom__() {
         alt-f)
             printf 'ranger --selectfile %q' "${files[0]}" ;;
         ctrl-y)
-            printf -v files_str "%s " "${files[@]}"
             printf 'echo %s | xsel --clipboard' "$files_str" ;;
         *)
-            printf 'v %q' "${files[@]}" ;;
+            printf 'v %s' "$files_str" ;;
     esac
 }
 fzf-file-widget-custom() {
