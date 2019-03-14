@@ -3,7 +3,7 @@
 
 # Setup {{{
 
-# Set base dir
+# Set base dir and copy command
 base_pkg_dir='/usr'
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "brew" > /dev/null 2>&1; then
@@ -11,10 +11,12 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     else
         base_pkg_dir='/usr/local'
     fi
+    COPY_CMD='pbcopy'
+else
+    COPY_CMD='xsel --clipboard'
 fi
 
-# Enable completion and key bindings (note: we override some of these mappings
-# below)
+# Enable completions
 if [[ $- == *i* ]]; then
     if [[ "$OSTYPE" == 'darwin'* ]]; then
         completion_base_dir="$base_pkg_dir/opt/fzf/shell"
@@ -123,7 +125,7 @@ __fzf_select_custom__() {
         alt-f)
             printf 'ranger --selectfile %q' "${files[0]}" ;;
         ctrl-y)
-            printf 'echo %s | xsel --clipboard' "$files_str" ;;
+            printf 'echo %s | %s' "$files_str" "$COPY_CMD";;
         *)
             printf 'v %s' "$files_str" ;;
     esac
@@ -165,7 +167,7 @@ __fzf_cd_action_key__() {
         alt-p)
             __fzf_cd_parent__ "$dir" ;;
         ctrl-y)
-            printf 'echo %s | xsel --clipboard' "$dir" ;;
+            printf 'echo %s | %s' "$dir" "$COPY_CMD" ;;
         *)
             __fzf_select_custom__ "no-ignore" "$dir" ;;
     esac
