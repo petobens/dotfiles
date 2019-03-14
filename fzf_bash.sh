@@ -1,6 +1,7 @@
 # Note: this uses rust binaries: fd, bat, lsd and devicon-lookup
+# It also assumes (for bindings) that bash is used in vi-mode
 
-# Options {{{
+# Setup {{{
 
 # Set base dir
 base_pkg_dir='/usr'
@@ -14,15 +15,17 @@ fi
 
 # Enable completion and key bindings (note: we override some of these mappings
 # below)
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    [[ $- == *i* ]] &&
-    . "$base_pkg_dir/opt/fzf/shell/completion.bash" 2> /dev/null
-    . "$base_pkg_dir/opt/fzf/shell/key-bindings.bash"
-else
-    [[ $- == *i* ]] &&
-    . "$base_pkg_dir/share/fzf/completion.bash" 2> /dev/null
-    . "$base_pkg_dir/share/fzf/key-bindings.bash"
+if [[ $- == *i* ]]; then
+    if [[ "$OSTYPE" == 'darwin'* ]]; then
+        completion_base_dir="$base_pkg_dir/opt/fzf/shell"
+    else
+        completion_base_dir="$base_pkg_dir/share/fzf"
+    fi
+    . "$completion_base_dir/completion.bash" 2> /dev/null
 fi
+
+# }}}
+# Options {{{
 
 # Change default options and colors
 export FZF_DEFAULT_OPTS='
@@ -44,17 +47,38 @@ export FZF_CTRL_T_OPTS="
 --expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
 --header=enter=vim,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\ A-p=parent-dirs,\ A-f=ranger
 "
-
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-FZF_ALT_C_OPTS="
+FZF_ALT_C_OPTS_BASE="
 --no-multi
---preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
 --expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f
 --header=enter=fzf-files,\ C-o=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\ A-f=ranger
 "
+export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE\
+--preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
+"
+export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
+--no-sort
+--tac
+--preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
+"
+# History options
+export FZF_CTRL_R_OPTS="--tac --sync -n2..,.. --tiebreak=index"
 
 # Extend list of commands with fuzzy completion (basically add our aliases)
 complete -F _fzf_path_completion -o default -o bashdefault v o dog
+
+# }}}
+# Bindings {{{
+
+# Helpers {{{
+
+# Bind unused key, "\C-x\C-a", to enter vi-movement-mode quickly and then use
+# that thereafter.
+bind '"\C-x\C-a": vi-movement-mode'
+
+bind '"\C-x\C-e": shell-expand-line'
+bind '"\C-x\C-r": redraw-current-line'
+bind '"\C-x^": history-expand-line'
 
 # }}}
 # File and dirs {{{
@@ -119,7 +143,7 @@ __fzf_cd_action_key__() {
     key=$(head -1 <<< "$out")
     dir=$(head -2 <<< "$out" | tail -1)
 
-    if [[ -z $dir ]]; then
+    if [[ -z "$dir" ]]; then
         return 1
     else
         dir="${dir#* }"
@@ -196,10 +220,8 @@ bind -m vi-command '"\ep": "i\ep"'
 z() {
     [ $# -gt 0 ] && _z "$*" && return
     cmd="_z -l 2>&1"
-    out="$(eval "$cmd" | devicon-lookup | fzf --no-sort --tac \
-        --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200' \
-        --expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f \
-        --header=enter=fzf-file,\ ctrl-o=cd,\ A-c=fzf-dir,\ A-p=parent-dirs,\ A-f=ranger |
+    out="$(eval "$cmd" | devicon-lookup |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_Z_OPTS" fzf |
         sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
 }
@@ -207,6 +229,23 @@ z() {
 bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
 # shellcheck disable=SC2016
 bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
+
+# }}}
+# History {{{
+
+__fzf_history__() (
+    local line
+    shopt -u nocaseglob nocasematch
+    cmd="HISTTIMEFORMAT= history"
+    line=$(eval "$cmd" |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_R_OPTS" fzf |
+        command grep '^ *[0-9]'
+    )
+    sed 's/^ *\([0-9]*\)\** .*/!\1/' <<< "$line"
+)
+# shellcheck disable=SC2016
+bind '"\C-r": "\C-x\C-addi`__fzf_history__`\C-x\C-e\C-x\C-r\C-x^\C-x\C-a$a"'
+bind -m vi-command '"\C-r": "i\C-r"'
 
 # }}}
 # Tmux {{{
@@ -232,7 +271,6 @@ tms() {
 }
 # Tmux session killer
 tmk() {
-    local session
     session=$(tmux list-sessions -F "#{session_name}" | \
         fzf --query="$1" --exit-0) &&
     tmux kill-session -t "$session"
@@ -251,5 +289,7 @@ alias gsv=__forgit_stash_show
 if [ -f "$HOME/.local/bin/forgit.plugin.sh" ]; then
     . "$HOME/.local/bin/forgit.plugin.sh"
 fi
+
+# }}}
 
 # }}}
