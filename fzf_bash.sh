@@ -44,14 +44,14 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
 --multi
 --preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
---expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
---header=enter=vim,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\ A-p=parent-dirs,\ A-f=ranger
+--expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,ctrl-y
+--header=enter=vim,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\ A-p=parent-dirs,\ A-f=ranger,\ C-y=yank
 "
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 FZF_ALT_C_OPTS_BASE="
 --no-multi
---expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f
---header=enter=fzf-files,\ C-o=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\ A-f=ranger
+--expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f,ctrl-y
+--header=enter=fzf-files,\ C-o=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\ A-f=ranger,\ C-y=yank
 "
 export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE\
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
@@ -120,6 +120,9 @@ __fzf_select_custom__() {
             __fzf_cd_parent__ "$(dirname "${files[0]}")" ;;
         alt-f)
             printf 'ranger --selectfile %q' "${files[0]}" ;;
+        ctrl-y)
+            printf -v files_str "%s " "${files[@]}"
+            printf 'echo %s | xsel --clipboard' "$files_str" ;;
         *)
             printf 'v %q' "${files[@]}" ;;
     esac
@@ -130,6 +133,8 @@ fzf-file-widget-custom() {
     READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
     READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
 }
+# Note this will insert output to the prompt and there is no way to choose to
+# execute it instead: https://github.com/junegunn/fzf/issues/477
 # shellcheck disable=SC2016
 bind -x '"\C-t": "fzf-file-widget-custom"'
 bind -m vi-command '"\C-t": "i\C-t"'
@@ -158,6 +163,8 @@ __fzf_cd_action_key__() {
             __fzf_cd_custom__ "no-ignore" "$dir" ;;
         alt-p)
             __fzf_cd_parent__ "$dir" ;;
+        ctrl-y)
+            printf 'echo %s | xsel --clipboard' "$dir" ;;
         *)
             __fzf_select_custom__ "no-ignore" "$dir" ;;
     esac
