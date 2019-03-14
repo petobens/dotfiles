@@ -64,7 +64,8 @@ export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
 # History options
 export FZF_CTRL_R_OPTS="--tac --sync -n2..,.. --tiebreak=index"
 
-# Extend list of commands with fuzzy completion (basically add our aliases)
+# Completions
+export FZF_COMPLETION_TRIGGER='jk'
 complete -F _fzf_path_completion -o default -o bashdefault v o dog
 
 # }}}
