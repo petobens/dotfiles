@@ -35,7 +35,7 @@ export FZF_DEFAULT_OPTS='
 --inline-info
 --prompt="❯ "
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
---bind=alt-j:preview-down,alt-k:preview-up
+--bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up
 --color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff
 --color=prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd
 --color=marker:#98c379,spinner:#e06c75,border:#282c34
