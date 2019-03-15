@@ -291,14 +291,16 @@ tmk() {
 # Git {{{
 
 # Forgit (git and fzf)
+export FORGIT_COPY_CMD="$COPY_CMD "
+export FORGIT_FZF_DEFAULT_OPTS="--preview-window='right'"
 export FORGIT_NO_ALIASES="1"
-alias gl=__forgit_log
-alias gd=__forgit_diff
-alias ga=__forgit_add
-alias gcu=__forgit_restore
-alias gsv=__forgit_stash_show
-if [ -f "$HOME/.local/bin/forgit.plugin.sh" ]; then
-    . "$HOME/.local/bin/forgit.plugin.sh"
+alias gl=forgit::log
+alias gd=forgit::diff
+alias ga=forgit::add
+alias gu=forgit::restore
+alias gsv=forgit::stash::show
+if [ -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
+    . "$HOME/.local/bin/forgit.plugin.zsh"
 fi
 
 # }}}

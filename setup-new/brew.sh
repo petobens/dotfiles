@@ -117,12 +117,6 @@ $brew_install_cmd vivid
 $brew_install_cmd zip
 $brew_install_cmd z
 
-# Forgit (fzf and git integration)
-if [ ! -f "$HOME/.local/bin/forgit.plugin.sh" ]; then
-    sudo mkdir -p ~/.local/bin/
-    wget https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.sh -P ~/.local/bin
-fi
-
 # Apps
 $brew_cask_install_cmd alacritty
 $brew_cask_install_cmd docker

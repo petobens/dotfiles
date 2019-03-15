@@ -179,12 +179,6 @@ if ! type "z" > /dev/null 2>&1; then
     wget https://raw.githubusercontent.com/rupa/z/master/z.sh -P ~/.local/bin
 fi
 
-# Forgit (fzf and git integration)
-if [ ! -f "$HOME/.local/bin/forgit.plugin.sh" ]; then
-    sudo mkdir -p ~/.local/bin/
-    wget https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.sh -P ~/.local/bin
-fi
-
 # Apps
 $yay_cmd chromium
 $yay_cmd chromium-widevine

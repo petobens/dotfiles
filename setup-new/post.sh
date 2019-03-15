@@ -4,6 +4,38 @@
 sudo bash -c "echo $(command -v bash) >> /etc/shells"
 sudo chsh -s "$(command -v bash)"
 
+# Extra packages
+if [ ! -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
+    # Forgit (fzf and git integration)
+    sudo mkdir -p ~/.local/bin/
+    wget https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.zsh -P ~/.local/bin
+fi
+
+if type "gem" > /dev/null 2>&1; then
+    echo -e "\\033[1;34m--> Installing sqlint...\\033[0m"
+    gem install sqlint
+fi
+if type "mongo" > /dev/null 2>&1; then
+    echo -e "\\033[1;34m--> Installing mongo-hacker...\\033[0m"
+    git clone https://github.com/TylerBrock/mongo-hacker
+    (
+        cd mongo-hacker || exit
+        make install
+    )
+    # rm -rf mongo-hacker # (this erases config file)
+fi
+if type "ranger" > /dev/null 2>&1; then
+    # Install ranger plugins and scope.sh executable
+    echo -e "\\033[1;34m--> Installing ranger devicons...\\033[0m"
+    git clone https://github.com/alexanderjeurissen/ranger_devicons
+    (
+        cd ranger_devicons || exit
+        make install
+    )
+    rm -rf ranger_devicons
+    ranger --copy-config=scope
+fi
+
 # Pipenv completions (see: https://github.com/pypa/pipenv/issues/1247)
 if type "pipenv" > /dev/null 2>&1; then
     if [[ "$OSTYPE" == 'darwin'* ]]; then
@@ -18,49 +50,19 @@ if type "pipenv" > /dev/null 2>&1; then
     pipenv --completion | sudo tee "$base_pkg_dir/share/bash-completion/completions/pipenv"
 fi
 
-# Mongo db improvements
-if type "mongo" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m--> Installing mongo-hacker...\\033[0m"
-    git clone https://github.com/TylerBrock/mongo-hacker
-    (
-        cd mongo-hacker || exit
-        make install
-    )
-    # rm -rf mongo-hacker # (this erases config file)
-fi
-
-# Ruby packages
-if type "gem" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m--> Installing sqlint...\\033[0m"
-    gem install sqlint
-fi
-
-# Install ranger plugins and scope.sh executable
-if type "ranger" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m--> Installing ranger devicons...\\033[0m"
-    git clone https://github.com/alexanderjeurissen/ranger_devicons
-    (
-        cd ranger_devicons || exit
-        make install
-    )
-    rm -rf ranger_devicons
-    ranger --copy-config=scope
-fi
-
 # Git access tokens
 if type "pass" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Generating gitlab access token file...\\033[0m"
     pass git/gitlab/access_token > "$HOME/.gitlab_access_token"
     echo "Created .gitlab_access_token file"
 fi
-
 # Make git use diff-so-fancy
 if type "diff-so-fancy" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Setting diff-so-fancy as default git diff tool...\\033[0m"
     diff-so-fancy --set-defaults
 fi
 
-# Mac
+# OS-Specific
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if [ -d "/Applications/Skim.app/" ]; then
         # Auto reload files
@@ -70,10 +72,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         defaults write -app Skim SKTeXEditorCommand  "nvr"
         defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line\'\' %file"
     fi
-fi
-
-# Linux
-if [ "$OSTYPE" == 'linux-gnu' ]; then
+else
     # Create XDG directories
     if type "xdg-user-dirs-update" > /dev/null 2>&1; then
         echo -e "\\033[1;34m--> Creating missing XDG directories...\\033[0m"
