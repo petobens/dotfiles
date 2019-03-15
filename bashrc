@@ -131,7 +131,7 @@ if type "shellcheck" > /dev/null 2>&1; then
 fi
 
 # Set editor to nvim and use it as a manpager
-export EDITOR=nvim
+export EDITOR='nvim --listen /tmp/nvimsocket'
 export MANPAGER='nvim +Man!'
 
 # Set shell to latest bash (check "$(command -v bash)")
@@ -285,7 +285,7 @@ if type "htop" > /dev/null 2>&1; then
     alias ht='htop'
 fi
 if type "nvim" > /dev/null 2>&1; then
-    alias v='NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim'
+    alias v='nvim --listen /tmp/nvimsocket'
     if [ -f "$HOME/git-repos/private/dotfiles/vim/vimrc_min" ]; then
         alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
     fi
