@@ -48,7 +48,7 @@ export FZF_CTRL_T_OPTS="
 --multi
 --preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
 --expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,ctrl-y
---header=enter=vim,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\ A-p=parent-dirs,\ A-f=ranger,\ C-y=yank
+--header=enter=edit,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\ A-p=parent-dirs,\ A-f=ranger,\ C-y=yank
 "
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 FZF_ALT_C_OPTS_BASE="
@@ -128,7 +128,7 @@ __fzf_select_custom__() {
         ctrl-y)
             printf 'echo %s | %s' "$files_str" "$COPY_CMD";;
         *)
-            printf 'v %s' "$files_str" ;;
+            printf '%s %s' "${EDITOR:-nvim}" "$files_str" ;;
     esac
 }
 fzf-file-widget-custom() {
