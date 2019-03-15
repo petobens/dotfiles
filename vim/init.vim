@@ -1873,6 +1873,8 @@ call denite#custom#map('insert', '<A-u>', '<denite:restore_sources>', 'noremap')
 call denite#custom#map('insert', '<C-w>', '<denite:wincmd:p>', 'noremap')
 call denite#custom#map('insert', '<A-v>', '<denite:do_action:preview>',
             \ 'noremap')
+call denite#custom#map('insert', '<A-e>', '<denite:do_action:delete>',
+            \ 'noremap')
 call denite#custom#map('insert', '<A-f>', '<denite:do_action:defx>',
             \ 'noremap')
 call denite#custom#map('insert', '<C-t>',
