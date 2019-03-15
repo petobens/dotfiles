@@ -153,7 +153,7 @@ shopt -s checkwinsize
 # previous entry, remove duplicates and don't save one and two character
 # commands)
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE='?:??'
+HISTIGNORE='?:??:cd*:ls*:ranger*:v*'
 HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
