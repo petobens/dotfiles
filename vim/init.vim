@@ -90,6 +90,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('justinmk/vim-sneak')
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarOpen'})
     call dein#add('SirVer/ultisnips')
+    call dein#add('petobens/vim-zoom')
 
     " Colorschemes
     call dein#add('petobens/colorish', {'frozen': 1})
@@ -2893,6 +2894,23 @@ augroup pl_venv_python
     " Auto activate when entering a window with a python file
     au WinEnter,BufWinEnter *.py call virtualenv#activate('', 1)
 augroup END
+
+" }}}
+" Vim-Zoom {{{
+
+let g:vim_zoom_statusline = '🔍'
+nmap <Leader>zw <Plug>(zoom-toggle)
+
+if dein#tap('zoom') == 1
+    function! s:AirlineZoomIndicator()
+        let g:airline_section_c = g:airline_section_c .
+                    \ '%{airline#util#wrap(zoom#statusline(),0)}'
+    endfunction
+    augroup ps_airline_zoom_indicator
+        au!
+        au User AirlineAfterInit call s:AirlineZoomIndicator()
+    augroup END
+endif
 
 " }}}
 
