@@ -1,4 +1,4 @@
-# Note: this uses rust binaries: fd, bat, lsd and devicon-lookup
+# Note: this uses several rust binaries: fd, rg, bat, lsd and devicon-lookup
 # It also assumes (for bindings) that bash is used in vi-mode
 
 # Setup {{{
@@ -41,20 +41,23 @@ export FZF_DEFAULT_OPTS='
 --color=marker:#98c379,spinner:#e06c75,border:#282c34
 '
 
-# Use fd for files and dirs
+# fd for files and dirs
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
 --multi
---preview 'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
+--preview 'bat --color always --style numbers --theme TwoDark \
+    --line-range :200 {2}'
 --expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,ctrl-y
---header=enter=edit,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\ A-p=parent-dirs,\ A-f=ranger,\ C-y=yank
+--header=enter=edit,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\
+\ A-p=parent-dirs,\ A-f=ranger,\ C-y=yank
 "
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 FZF_ALT_C_OPTS_BASE="
 --no-multi
 --expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f,ctrl-y
---header=enter=fzf-files,\ C-o=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\ A-f=ranger,\ C-y=yank
+--header=enter=fzf-files,\ C-o=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\
+\ A-f=ranger,\ C-y=yank
 "
 export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE\
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
@@ -64,15 +67,26 @@ export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
 --tac
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
 "
+
 # History options
 export FZF_CTRL_R_OPTS="--tac --sync -n2..,.. --tiebreak=index"
+
+# rg for grep
+FZF_GREP_COMMAND='rg --smart-case --vimgrep --no-heading --color=always'
+FZF_GREP_OPTS="
+--multi
+--ansi
+--delimiter=:
+--preview 'bat --color always --style numbers --theme TwoDark \
+    --line-range {2}: --highlight-line {2} {1} | head -200'
+"
 
 # Completions
 export FZF_COMPLETION_TRIGGER='jk'
 complete -F _fzf_path_completion -o default -o bashdefault v o dog
 
 # }}}
-# Bindings {{{
+# Bindings/Functions {{{
 
 # Helpers {{{
 
@@ -240,6 +254,31 @@ z() {
 bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
 # shellcheck disable=SC2016
 bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
+
+# }}}
+# Grep {{{
+
+rgz() {
+    cmd="$FZF_GREP_COMMAND"
+    out="$(eval "$cmd" "$@" |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" fzf)"
+    key=$(head -1 <<< "$out")
+    mapfile -t _files <<< "$(head -2 <<< "$out")"
+
+    if [ ${#_files[@]} -eq 1 ] && [[ -z "${_files[0]}" ]]; then
+        return 1
+    else
+        files=();
+        for f in "${_files[@]}"; do
+            # We need real path for vim to work
+            file="$(realpath "$(echo "$f" | cut -d ':' -f 1)")"
+            line_nr=$(echo "$f" | cut -d ':' -f 2)
+            files+=("+'e +$line_nr $file'")
+        done
+    fi
+    printf -v files_str "%s " "${files[@]}"
+    eval "$(printf "nvim %s" "$files_str")"
+}
 
 # }}}
 # History {{{
