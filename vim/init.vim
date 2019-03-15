@@ -2195,7 +2195,6 @@ endif
 nnoremap <silent> <Leader>gi :Denite output:echo\ system("git\ init")<cr>
 nnoremap <silent> <Leader>gd :Gdiff<cr>:wincmd x<CR>
 nnoremap <silent> <Leader>gs :botright Gstatus<CR>:wincmd J<bar>:15 wincmd _<CR>
-nnoremap <silent> <Leader>gB :Gblame<cr>
 nnoremap <silent> <Leader>gc :w!<CR>:Gcommit<cr>
 nnoremap <Leader>gm :Gmove<space>
 nnoremap <silent> <Leader>gr :Gremove<cr>
@@ -2203,6 +2202,8 @@ nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Gpush')<CR>
 nnoremap <silent> <Leader>gP :Gpull<CR>
 nnoremap <silent> <Leader>gb :Gbrowse<cr>
 vnoremap <silent> <Leader>gb :Gbrowse<cr>
+nnoremap <silent> <Leader>gB :Gbrowse!<cr>
+vnoremap <silent> <Leader>gB :Gbrowse!<cr>
 
 " Commit explorer/browser (from gv.vim plugin)
 nnoremap <silent> <Leader>cb :GV<cr>
