@@ -90,7 +90,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('justinmk/vim-sneak')
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarOpen'})
     call dein#add('SirVer/ultisnips')
-    call dein#add('petobens/vim-zoom')
+    call dein#add('dhruvasagar/vim-zoom')
 
     " Colorschemes
     call dein#add('petobens/colorish', {'frozen': 1})
@@ -2896,9 +2896,9 @@ augroup pl_venv_python
 augroup END
 
 " }}}
-" Vim-Zoom {{{
+" Zoom {{{
 
-let g:vim_zoom_statusline = '🔍'
+let g:zoom#statustext = '🔍'
 nmap <Leader>zw <Plug>(zoom-toggle)
 
 if dein#tap('zoom') == 1
