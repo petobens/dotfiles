@@ -465,8 +465,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         . "$base_pkg_dir/etc/profile.d/z.sh"
     fi
 else
-    if [ -f "$HOME/.local/bin/z.sh" ]; then
-        . "$HOME/.local/bin/z.sh"
+    if  [[ -f "/usr/share/z/z.sh" ]]; then
+        .  '/usr/share/z/z.sh'
     fi
 fi
 unalias z 2> /dev/null

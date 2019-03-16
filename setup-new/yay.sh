@@ -171,13 +171,8 @@ $yay_cmd unzip
 $yay_cmd vivid
 $yay_cmd w3m
 $yay_cmd wget
+$yay_cmd z
 $yay_cmd zip
-
-# Z (jump around)
-if ! type "z" > /dev/null 2>&1; then
-    sudo mkdir -p ~/.local/bin/
-    wget https://raw.githubusercontent.com/rupa/z/master/z.sh -P ~/.local/bin
-fi
 
 # Apps
 $yay_cmd chromium
