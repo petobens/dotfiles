@@ -566,6 +566,8 @@ set wildmenu                         " Better command-line completion with tab
 set wildignorecase                   " Ignore case
 " Complete longest common string first and then show full alternatives
 set wildmode=longest:full,full
+" Use popmenu instead of horizontal statusline for wildmenu completion
+set wildoptions=pum
 " Stuff to ignore when tab completing
 set wildignore=*~,*.o,*.obj,*.dll,*.dat,*.swp,*.zip,*.exe
 set wildignore+=*.DS_Store,*.out,*.toc
