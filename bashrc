@@ -274,6 +274,7 @@ alias ur='unrar x'
 alias uz='unzip'
 alias rsync='rsync -auP'
 alias ti='hyperfine'
+alias ping='prettyping --nolegend --last 30'
 
 # Other binaries
 if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
