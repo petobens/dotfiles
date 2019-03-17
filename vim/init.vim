@@ -1056,6 +1056,14 @@ augroup ft_js
 augroup END
 
 " }}}
+" Json {{{
+
+augroup ft_json
+    au!
+    au FileType json setlocal foldmethod=syntax
+augroup END
+
+" }}}
 " (La)TeX {{{
 
 " Note: Most LaTeX settings are in the ftplugin folder
