@@ -36,16 +36,19 @@ class fzf_select(Command):
         if no_git_ignore:
             command += '--no-ignore-vcs '
         preview_cmd = (
-            'bat --color always --style numbers --theme TwoDark --line-range :200 {}'
+            'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
         )
         if self.arg(1) == '-d':
-            preview_cmd = 'tree -C {} | head -200'
-        command += f"| fzf --preview '{preview_cmd}' +m"
+            preview_cmd = (
+                'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
+            )
+        command += f"| devicon-lookup | fzf --preview '{preview_cmd}' +m"
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
-            fzf_file = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
+            out = stdout.decode('utf-8').rstrip('\n')[2:]  # due todevicons
+            fzf_file = os.path.abspath(out)
             if os.path.isdir(fzf_file):
                 self.fm.cd(fzf_file)
             else:
@@ -65,12 +68,15 @@ class fzf_parents(Command):
             parents.append(str(path))
         parents = '\\n'.join(parents)  # type: ignore
 
-        preview_cmd = 'tree -C {} | head -200'
-        command = f"printf '{parents}' | fzf --preview '{preview_cmd}'"
+        preview_cmd = (
+            'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
+        )
+        command = f"printf '{parents}' | devicon-lookup | fzf --preview '{preview_cmd}'"
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
-            fzf_dir = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
+            out = stdout.decode('utf-8').rstrip('\n')[2:]  # due todevicons
+            fzf_dir = os.path.abspath(out)
             self.fm.cd(fzf_dir)
 
 
@@ -83,16 +89,16 @@ class fzf_z(Command):
         if sys.platform == 'darwin':
             z_sh = '/usr/local/etc/profile.d/z.sh'
         else:
-            z_sh = '/home/pedro/.local/bin/z.sh'
+            z_sh = '/usr/share/z/z.sh'
         if not os.path.isfile(z_sh) or z_sh is None:
             return
-        command = (
-            f'. {z_sh} &&  '
-            '_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse '
-            '--inline-info +s --tac --query "${*##-* }" '
-            '--preview "tree -C {2..} | head -200" '
-            '| sed "s/^[0-9,.]* *//"'
+
+        command = f'. {z_sh} && _z -l 2>&1'
+        preview_cmd = (
+            'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
         )
+        command += f" | devicon-lookup | fzf  --no-sort --tac --preview='{preview_cmd}'"
+        command += ' | sed "s/^\\W\\s[0-9,.]* *//"'
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
