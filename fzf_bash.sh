@@ -69,7 +69,13 @@ export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
 "
 
 # History options
-export FZF_CTRL_R_OPTS="--tac --sync -n2..,.. --tiebreak=index"
+export FZF_CTRL_R_OPTS="
+--bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort'
+--header 'C-y=yank'
+--tac
+--sync -n2..,..
+--tiebreak=index
+"
 
 # rg for grep
 FZF_GREP_COMMAND='rg --smart-case --vimgrep --no-heading --color=always'
