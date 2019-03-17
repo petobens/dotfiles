@@ -1,3 +1,6 @@
+"""My ipython config."""
+# pylint:disable=W0212
+
 import sys
 from operator import attrgetter
 
@@ -17,7 +20,7 @@ from pygments.token import (
     Token,
 )
 
-c = get_config()  # type: ignore # noqa
+c = get_config()  # type: ignore # noqa # pylint:disable=E0602
 
 # Options
 c.TerminalInteractiveShell.true_color = True
@@ -26,13 +29,15 @@ c.TerminalInteractiveShell.confirm_exit = False
 c.TerminalIPythonApp.display_banner = False
 
 
-# Change cursor shape depending on mode
-# https://github.com/jonathanslenders/python-prompt-toolkit/issues/192
 def set_input_mode(self, mode):
+    """Change cursor shape relative to vi mode.
+
+    See: https://github.com/jonathanslenders/python-prompt-toolkit/issues/192
+    """
     shape = {InputMode.NAVIGATION: 2, InputMode.REPLACE: 4}.get(mode, 6)
     raw = u'\x1b[{} q'.format(shape)
     if hasattr(sys.stdout, '_cli'):
-        out = sys.stdout._cli.output.write_raw
+        out = sys.stdout._cli.output.write_raw  # type: ignore # pylint:disable=E1101
     else:
         out = sys.stdout.write
     out(raw)
@@ -45,9 +50,10 @@ ViState.input_mode = property(attrgetter('_input_mode'), set_input_mode)
 
 
 class MyPrompt(prompts.Prompts):
-    """Custom prompt with vi mode indicator"""
+    """Custom prompt with vi mode indicator."""
 
     def in_prompt_tokens(self):
+        """Return in prompt."""
         mode = 'I' if get_app().vi_state.input_mode == InputMode.INSERT else 'N'
         return [
             (prompts.Token.Prompt, f'({mode})['),
@@ -56,6 +62,7 @@ class MyPrompt(prompts.Prompts):
         ]
 
     def out_prompt_tokens(self):
+        """Return out prompt."""
         return []
 
 
@@ -114,6 +121,7 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Token.OutPromptNum: f'{blue} bold',
     # The following requires a modified pygments style_from_pygments_dict function
     # See: https://github.com/ipython/ipython/issues/11526
+    # and https://github.com/ipython/ipython/issues/11209
     # 'completion-menu.completion.current': f'bg:{light_blue} {black}',
     # 'completion-menu.completion': f'bg:{pmenu} {white}',
     # 'completion-menu.meta.completion.current': f'bg:{light_blue} {black}',
