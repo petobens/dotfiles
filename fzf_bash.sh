@@ -46,23 +46,26 @@ export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
 --multi
+--bind 'ctrl-y:execute-silent(echo -n {+2} | $COPY_CMD)+abort'
 --preview 'bat --color always --style numbers --theme TwoDark \
     --line-range :200 {2}'
---expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,ctrl-y
---header=enter=edit,\ tab=insert,\ C-t=fzf-files,\ C-o=open,\ A-c=cd-file-dir,\
-\ A-p=parent-dirs,\ A-f=ranger,\ C-y=yank
+--expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
+--header='enter=edit, tab=insert, C-t=fzf-files, C-o=open, A-c=cd-file-dir, \
+    A-p=parent-dirs, A-f=ranger, C-y=yank'
 "
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 FZF_ALT_C_OPTS_BASE="
 --no-multi
---expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f,ctrl-y
---header=enter=fzf-files,\ C-o=cd,\ A-c=fzf-dirs,\ A-p=parent-dirs,\
-\ A-f=ranger,\ C-y=yank
+--expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f
+--header='enter=fzf-files, C-o=cd, A-c=fzf-dirs, A-p=parent-dirs, \
+    A-f=ranger, C-y=yank'
 "
 export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE\
+--bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort'
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
 "
 export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
+--bind 'ctrl-y:execute-silent(echo -n {3..} | $COPY_CMD)+abort'
 --no-sort
 --tac
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
@@ -70,10 +73,11 @@ export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
 
 # History options
 export FZF_CTRL_R_OPTS="
---bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort'
---header 'C-y=yank'
+--bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort,tab:accept'
+--header 'enter=insert, tab=insert, C-y=yank'
 --tac
---sync -n2..,..
+--sync
+--nth=2..,..
 --tiebreak=index
 "
 
@@ -145,8 +149,6 @@ __fzf_select_custom__() {
             __fzf_cd_parent__ "$(dirname "${files[0]}")" ;;
         alt-f)
             printf 'ranger --selectfile %q' "${files[0]}" ;;
-        ctrl-y)
-            printf 'echo %s | %s' "$files_str" "$COPY_CMD";;
         *)
             printf '%s %s' "${EDITOR:-nvim}" "$files_str" ;;
     esac
@@ -187,8 +189,6 @@ __fzf_cd_action_key__() {
             __fzf_cd_custom__ "no-ignore" "$dir" ;;
         alt-p)
             __fzf_cd_parent__ "$dir" ;;
-        ctrl-y)
-            printf 'echo %s | %s' "$dir" "$COPY_CMD" ;;
         *)
             __fzf_select_custom__ "no-ignore" "$dir" ;;
     esac
