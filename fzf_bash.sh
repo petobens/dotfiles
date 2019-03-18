@@ -51,14 +51,14 @@ export FZF_CTRL_T_OPTS="
     --line-range :200 {2}'
 --expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
 --header='enter=edit, tab=insert, C-t=fzf-files, C-o=open, A-c=cd-file-dir, \
-    A-p=parent-dirs, A-f=ranger, C-y=yank'
+A-p=parent-dirs, A-f=ranger, C-y=yank'
 "
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 FZF_ALT_C_OPTS_BASE="
 --no-multi
 --expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f
 --header='enter=fzf-files, C-o=cd, A-c=fzf-dirs, A-p=parent-dirs, \
-    A-f=ranger, C-y=yank'
+A-f=ranger, C-y=yank'
 "
 export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE\
 --bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort'
