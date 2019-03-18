@@ -135,6 +135,10 @@ if type "vivid" > /dev/null 2>&1; then
     sudo $ln_cmd -fTs "$dotfiles_dir/config/vivid/onedarkish.yml" "/usr/share/vivid/themes/onedarkish.yml"
     echo Created /usr/share/vivid/themes/onedarkish.yml symlink
 fi
+if type "rg" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/config/ripgrep" "$HOME/.config/ripgrep"
+    echo Created .config/ripgrep folder symlink
+fi
 # Browser
 $ln_cmd -fTs "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 echo Created .surfingkeysrc symlink

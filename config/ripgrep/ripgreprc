@@ -1,0 +1,6 @@
+# Colors
+--colors=path:fg:97,175,239
+--colors=line:fg:92,99,112
+--colors=column:fg:92,99,112
+--colors=match:fg:229,192,123
+--colors=match:style:bold

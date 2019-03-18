@@ -129,6 +129,9 @@ fi
 if type "shellcheck" > /dev/null 2>&1; then
     export SHELLCHECK_OPTS="-e SC1090"
 fi
+if type "rg" > /dev/null 2>&1; then
+    export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
+fi
 
 # Set editor to nvim and use it as a manpager
 export EDITOR='nvim --listen /tmp/nvimsocket'
