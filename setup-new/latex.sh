@@ -67,6 +67,8 @@ sudo tlmgr install logreq
 sudo tlmgr install minted
 sudo tlmgr install moderncv
 sudo tlmgr install multirow
+sudo tlmgr install parskip
+sudo tlmgr install pdfpages
 sudo tlmgr install pgfplots
 sudo tlmgr install silence
 sudo tlmgr install siunitx
