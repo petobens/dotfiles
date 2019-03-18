@@ -4,6 +4,6 @@ fi
 
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     if [[ ! $DISPLAY &&  "$(tty)" == '/dev/tty1' ]]; then
-        exec startx; exit
+        exec startx &> /tmp/startx.log; exit
     fi
 fi
