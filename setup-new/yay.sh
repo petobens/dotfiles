@@ -143,6 +143,7 @@ $yay_cmd docker-compose
 $yay_cmd fd
 $yay_cmd fzf
 $yay_cmd gnupg
+$yay_cmd gobject-introspection
 $yay_cmd htop
 $yay_cmd hyperfine-bin
 $yay_cmd lsd

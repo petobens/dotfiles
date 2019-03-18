@@ -28,7 +28,7 @@ pipx inject flake8 flake8-bugbear flake8-docstrings --verbose
 pipx install beautysh --verbose
 pipx install black --verbose
 pipx install ipython --verbose
-pipx inject ipython numpy pandas --verbose
+pipx inject ipython numpy pandas matplotlib cairocffi PyGObject --verbose
 pipx install isort --verbose
 pipx install jupyter --include-deps --verbose
 pipx install litecli --verbose
