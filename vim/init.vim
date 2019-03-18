@@ -1024,7 +1024,7 @@ augroup ft_config
     au!
     au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc,*.dirs,
                 \zathurarc,*mpv/*.conf,*onedrive/config,*fdignore,*vimivrc,
-                \*pylintrc,*flake8,*.conf
+                \*pylintrc,*flake8,*ripgreprc,*.conf
                 \ set filetype=config foldmethod=marker
     au BufNewFile,BufReadPost vimiv.conf
             \ set filetype=dosini
