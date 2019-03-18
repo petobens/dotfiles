@@ -183,6 +183,7 @@ $yay_cmd cups
 $yay_cmd cups-pdf
 $yay_cmd firefox
 $yay_cmd flashplugin  # flash player for firefox
+$yay_cmd gnome-font-viewer
 $yay_cmd hplip-plugin
 $yay_cmd libreoffice-fresh
 $yay_cmd onedrive-abraunegg-git
