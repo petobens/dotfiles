@@ -151,6 +151,10 @@ fi
 stty -ixon
 # Update values of lines and columns after running each command
 shopt -s checkwinsize
+# cd into a dir by just typing its name
+shopt -s autocd
+# Fix cd spell mistakes (minor typos actually)
+shopt -s cdspell
 
 # History settings (don't save lines beginning with space or matching the
 # previous entry, remove duplicates and don't save one and two character
@@ -222,7 +226,11 @@ fi
 bind "set completion-ignore-case on"
 bind "set menu-complete-display-prefix on" # show candidates before cycling
 bind "set show-all-if-ambiguous on"
-bind "set colored-stats on" # color completion candidates
+bind "set skip-completed-text on"
+bind "set colored-stats on"
+bind "set blink-matching-paren on"
+bind "set colored-completion-prefix on"  # uses so color from LS_COLORS
+bind "set mark-symlinked-directories on"
 
 # Show mode in command prompt (note: 38 is fg color and 48 bg color; 2 means
 # truecolor (i.e rgb) and 5 256color)
@@ -267,6 +275,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
         alias iv='vimiv'
     fi
 fi
+alias cp='cp -i'
 alias rm='rm -v'
 alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
