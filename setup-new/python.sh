@@ -9,6 +9,7 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd pandas
     $pip_install_cmd pdbpp
     $pip_install_cmd pipx
+    $pip_install_cmd pycairo
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
     fi
@@ -28,7 +29,7 @@ pipx inject flake8 flake8-bugbear flake8-docstrings --verbose
 pipx install beautysh --verbose
 pipx install black --verbose
 pipx install ipython --verbose
-pipx inject ipython numpy pandas matplotlib cairocffi PyGObject --verbose
+pipx inject ipython numpy pandas matplotlib pycairo PyGObject --verbose
 pipx install isort --verbose
 pipx install jupyter --include-deps --verbose
 pipx install litecli --verbose
