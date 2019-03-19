@@ -306,11 +306,17 @@ bind -m vi-command '"\C-r": "i\C-r"'
 # }}}
 # Tmux {{{
 
+__tmux_fzf_get_session__() {
+    session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null |
+        fzf --exit-0 --preview='tmux_tree {} | bat --theme TwoDark --style plain')
+    echo "$session"
+}
+
 # Tmux session switcher (`tms foo` attaches to `foo` if exists, else creates
 # it)
 tms() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
-    if [[ "$1" ]]; then
+    if [[ -n "$1" ]]; then
         if [[ "$1" == "-ask" ]]; then
             read -r -p "New tmux session name: " session_name
         else
@@ -321,14 +327,12 @@ tms() {
             tmux $change -t "$session_name");
         return
     fi
-    session=$(tmux list-sessions -F \
-        "#{session_name}" 2>/dev/null | fzf --exit-0) && \
-        tmux $change -t "$session" || echo "No sessions found."
+    session=$(eval __tmux_fzf_get_session__)
+    tmux $change -t "$session" || echo "No sessions found."
 }
 # Tmux session killer
 tmk() {
-    session=$(tmux list-sessions -F "#{session_name}" | \
-        fzf --query="$1" --exit-0) &&
+    session=$(eval __tmux_fzf_get_session__)
     tmux kill-session -t "$session"
 }
 

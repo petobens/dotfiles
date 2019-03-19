@@ -111,6 +111,8 @@ fi
 if type "tmux" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/tmux" "$HOME/.tmux"
     echo Created .tmux folder symlink
+    $ln_cmd -fTs "$dotfiles_dir/tmux/tmux_tree" "$HOME/bin/tmux_tree"
+    echo Created bin/tmux_tree symlink
 fi
 if type "powerline-daemon" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/config/powerline" "$HOME/.config/powerline"
