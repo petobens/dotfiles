@@ -138,6 +138,7 @@ type = custom/script
 exec = ~/.config/polybar/bluetooth.sh
 interval = 5.0
 click-left = alacritty -t bluetooth -d 100 30 -e bash -ci "i3-msg -q move position center && bt;exit"
+click-right = bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
 
 [module/pulseaudio]
 type = internal/pulseaudio
