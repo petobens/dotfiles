@@ -1425,7 +1425,7 @@ augroup END
 
 call defx#custom#option('_', {
             \ 'show_ignored_files': 1,
-            \ 'winwidth': 42,
+            \ 'winwidth': 40,
             \ 'split': 'vertical',
             \ 'direction': 'topleft',
             \ 'columns': 'mark:filename:icons:size:git',
@@ -1436,8 +1436,8 @@ call defx#custom#column('filename', {
             \ 'directory_icon': '',
             \ 'opened_icon': '',
             \ 'indent': '  ',
-            \ 'min_width': 22,
-            \ 'max_width': 22,
+            \ 'min_width': 24,
+            \ 'max_width': 24,
             \ })
 call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 call defx#custom#column('mark', {
