@@ -353,5 +353,17 @@ if [ -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
 fi
 
 # }}}
+# Bluetooth {{{
+
+bt() {
+    device=$(bluetoothctl devices |
+                       fzf -q "$1" -1 --with-nth=3.. | cut -d ' ' -f 2)
+    [[ $device ]] && bluetoothctl connect "$device"
+}
+btoff() {
+    bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
+}
+
+# }}}
 
 # }}}

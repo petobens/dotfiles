@@ -23,7 +23,7 @@ padding = 0
 module-margin-left = 2
 modules-left = arch title
 modules-center = i3
-modules-right = docker onedrive xkeyboard vpn wifi ethernet pulseaudio battery date
+modules-right = docker onedrive xkeyboard vpn wifi ethernet bluetooth pulseaudio battery date
 tray-position = ${env:TRAY_POS:}
 tray-maxsize = 32
 ; Font definition
@@ -120,7 +120,6 @@ label-disconnected-font = 4
 label-connected = 直  %{T3}%signal%%%{T-}
 label-connected-font = 4
 label-disconnected = 睊
-label-disconnected-foreground = ${colors.fg-urg}
 
 [module/ethernet]
 ; See: https://github.com/jaagr/polybar/issues/1164
@@ -133,6 +132,12 @@ label-connected = 
 label-connected-font = 5
 label-disconnected = 
 label-disconnected-foreground = ${colors.fg-urg}
+
+[module/bluetooth]
+type = custom/script
+exec = ~/.config/polybar/bluetooth.sh
+interval = 5.0
+click-left = alacritty -t bluetooth -d 100 30 -e bash -ci "i3-msg -q move position center && bt;exit"
 
 [module/pulseaudio]
 type = internal/pulseaudio

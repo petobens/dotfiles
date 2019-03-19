@@ -88,6 +88,7 @@ $yay_cmd python-powerline-gitstatus
 # Arch specific and window manager
 $yay_cmd acpi_call
 $yay_cmd alsa-tools
+$yay_cmd bluez-utils
 $yay_cmd compton
 $yay_cmd connman
 $yay_cmd downgrade
@@ -101,6 +102,8 @@ $yay_cmd maim
 $yay_cmd mpv
 $yay_cmd ntfs-3g
 $yay_cmd pulseaudio
+$yay_cmd pulseaudio-alsa
+$yay_cmd pulseaudio-bluetooth
 $yay_cmd pavucontrol
 $yay_cmd playerctl
 $yay_cmd polybar
@@ -124,7 +127,6 @@ $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
 
 # Databases
-
 $yay_cmd oracle-instantclient-basic
 $yay_cmd oracle-instantclient-sqlplus
 $yay_cmd python-pymysql  # python version of mysql

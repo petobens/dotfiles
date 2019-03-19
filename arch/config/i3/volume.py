@@ -37,7 +37,7 @@ def _send_notification():
     vol = max(0, min(vol, 100))
     bar = "─" * int(vol / 5)
 
-    not_icon = 'audio-speakers' if device == 'speaker' else 'audio-headphones'
+    not_icon = 'audio-speakers' if 'speaker' in device else 'audio-headphones'
     not_cmd = [
         'dunstify',
         '-i',
@@ -57,11 +57,14 @@ def _get_vol_and_output_device():
     pactl_out = [
         line.decode('ascii').split() for line in sh('pactl list sinks').splitlines()
     ]
-    vol_list = [e for e in pactl_out if 'Volume:' in e[0]][0]
+    active_index = pactl_out.index([e for e in pactl_out if 'RUNNING' in e][0])
+    pactl_out = pactl_out[active_index:]
+
+    vol_list = [e for e in pactl_out if 'Volume:' in e][0]
     curr_vol = next(i for i in vol_list if i.endswith('%')).split('%')[0]
 
-    out_list = [e for e in pactl_out if 'Active' in e[0] and 'Port:' in e[1]][0]
-    device = out_list[-1].split('-')[-1]
+    out_list = [e for e in pactl_out if 'Port:' in e][0]
+    device = out_list[-1]
     return int(curr_vol), device
 
 
