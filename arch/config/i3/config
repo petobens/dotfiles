@@ -227,7 +227,7 @@ bindsym $mod+Shift+t $nexec $HOME/.config/i3/spotify_track.py
 bindsym $mod+Shift+plus $nexec $HOME/.config/i3/volume.py -d up -l 5
 bindsym $mod+Shift+minus $nexec $HOME/.config/i3/volume.py -d down -l 5
 bindsym $mod+Shift+m $nexec $HOME/.config/i3/volume.py -d mute
-bindsym $mod+Shift+v exec pavucontrol
+bindsym $mod+Shift+v $nexec raiseorlaunch -c pavucontrol -f
 
 # }}}
 # Theme and fonts {{{
