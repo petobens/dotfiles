@@ -91,6 +91,12 @@ FZF_GREP_OPTS="
     --line-range {2}: --highlight-line {2} {1} | head -200'
 "
 
+# Bluetooth
+FZF_BT_OPTS="
+--with-nth=3..
+--preview='bluetoothctl info {2} | bat --theme TwoDark --style plain'
+"
+
 # Completions
 export FZF_COMPLETION_TRIGGER='jk'
 complete -F _fzf_path_completion -o default -o bashdefault v o dog
@@ -356,10 +362,13 @@ fi
 # Bluetooth {{{
 
 bt() {
-    device=$(bluetoothctl devices |
-                       fzf -q "$1" -1 --with-nth=3.. | cut -d ' ' -f 2)
+    cmd="bluetoothctl devices"
+    device=$(eval "$cmd" |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_BT_OPTS" fzf |
+        cut -d ' ' -f 2)
     [[ $device ]] && bluetoothctl connect "$device"
 }
+
 btoff() {
     bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
 }
