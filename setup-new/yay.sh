@@ -81,7 +81,7 @@ fi
 # Alacritty, neovim and tmux and more bash
 $yay_cmd alacritty
 $yay_cmd neovim-git
-$yay_cmd tmux
+$yay_cmd tmux-git
 $yay_cmd powerline
 $yay_cmd python-powerline-gitstatus
 
