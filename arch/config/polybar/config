@@ -85,7 +85,7 @@ exec = ~/.config/polybar/docker.sh
 interval = 5.0
 label-font = 5
 format-padding = 1
-click-left = alacritty -t Docker -d 150 30 -e sh -c "i3-msg -q move position center && docker info | less +F"
+click-left = alacritty -t docker-info -d 150 30 -e sh -c "docker info | less +F"
 
 [module/onedrive]
 type = custom/script
