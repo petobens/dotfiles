@@ -160,7 +160,7 @@ shopt -s cdspell
 # previous entry, remove duplicates and don't save one and two character
 # commands)
 HISTCONTROL=ignoreboth:erasedups
-HISTIGNORE='?:??:cd*:ls*:ranger*:v*'
+HISTIGNORE='?:??:cd*:ranger*:v*'
 HISTSIZE=100000
 HISTFILESIZE=200000
 shopt -s histappend # append to history i.e don't overwrite it
