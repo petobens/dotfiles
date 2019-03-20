@@ -2067,10 +2067,11 @@ let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
             \ '.gitignore': '', 'bashrc': '', '.bashrc': '',
             \ 'bash_profile': '', '.bash_profile': ''}
 
-" Disable denite integration (because it makes denite really slow)
+" Disable denite integration (and enable our own filter)
 let g:webdevicons_enable_denite = 0
-call denite#custom#source('file_mru,buffer',
-            \ 'converters', ['devicons_denite_converter'])
+call denite#custom#source('file/rec,file/rec/noignore,file_mru,buffer,'
+            \ .'directory_rec,directory_rec/noignore,parent_dirs,grep,z',
+            \ 'converters', ['denite_devicons_converter'])
 
 " }}}
 " Dispatch {{{
