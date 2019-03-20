@@ -263,14 +263,17 @@ bindsym $mod+Shift+0 $nexec shots active
 # Kill focused window
 bindsym $mod+q $nexec $HOME/.config/i3/custom_kill.py
 # Kill all windows on all workspaces (match any class string)
-bindsym $mod+Shift+q $nexec gtk_dialog -t "App Management" \
+bindsym $mod+Shift+q $nexec i3-msg 'fullscreen disable', $nexec \
+    gtk_dialog -t "App Management" \
     -m "Do you want to quit all apps?" --shell \
     -a '$HOME/.config/i3/custom_kill.py -w all'
 
 # Shutdown, restart and lock
-bindsym $mod+Shift+s $nexec gtk_dialog -t "Power Management" \
+bindsym $mod+Shift+s $nexec i3-msg 'fullscreen disable', $nexec \
+    gtk_dialog -t "Power Management" \
     -m "Do you want to poweroff?" -a "systemctl poweroff"
-bindsym $mod+Shift+r $nexec gtk_dialog -t "Power Management" \
+bindsym $mod+Shift+r $nexec i3-msg 'fullscreen disable', $nexec \
+    gtk_dialog -t "Power Management" \
     -m "Do you want to reboot?" -a "systemctl reboot"
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
@@ -279,12 +282,13 @@ bindsym $mod+Shift+Up $nexec $HOME/.config/i3/brightness.py -d inc
 bindsym $mod+Shift+Down $nexec $HOME/.config/i3/brightness.py -d dec
 
 # Eject mounted media (usb drives)
-bindsym $mod+Shift+e $nexec gtk_dialog -t "Media Management" \
+bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec \
+    gtk_dialog -t "Media Management" \
     -m "Do you want to eject media drive?" -a "udiskie-umount -a"
 
 # Empty Trash Can
-bindsym $mod+Shift+b exec gtk_dialog \
-    -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
+bindsym $mod+Shift+b $nexec i3-msg 'fullscreen disable', $nexec \
+    gtk_dialog -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
     -a "trash-empty && pkill -INT -f trash-list && "\
 "xdotool key Super_L+Control+b && "\
 "dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
