@@ -93,8 +93,11 @@ FZF_GREP_OPTS="
 
 # Bluetooth
 FZF_BT_OPTS="
+--expect=alt-p,alt-d
+--header='enter=connect, A-p=pair, A-d=disconnect'
 --with-nth=3..
---preview='bluetoothctl info {2} | bat --theme TwoDark --style plain'
+--preview 'bluetoothctl info {2} | bat --theme TwoDark --style plain \
+    --line-range 2: --highlight-line 6 --highlight-line 8'
 "
 
 # Completions
@@ -363,14 +366,24 @@ fi
 
 bt() {
     cmd="bluetoothctl devices"
-    device=$(eval "$cmd" |
+    out=$(eval "$cmd" |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_BT_OPTS" fzf |
         cut -d ' ' -f 2)
-    [[ $device ]] && bluetoothctl connect "$device"
-}
+    key=$(head -1 <<< "$out")
+    device=$(head -2 <<< "$out" | tail -1)
 
-btoff() {
-    bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
+    if [[ -z "$device" ]]; then
+        return 1
+    fi
+    case "$key" in
+        alt-p)
+            sub_cmd="pair" ;;
+        alt-d)
+            sub_cmd="disconnect" ;;
+        *)
+            sub_cmd="connect" ;;
+    esac
+    bluetoothctl "$sub_cmd" "$device"
 }
 
 # }}}

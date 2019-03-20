@@ -137,7 +137,7 @@ label-disconnected-foreground = ${colors.fg-urg}
 type = custom/script
 exec = ~/.config/polybar/bluetooth.sh
 interval = 5.0
-click-left = alacritty -t bluetooth -d 100 30 -e bash -ci "i3-msg -q move position center && bt;exit"
+click-left = alacritty -t bluetooth-fzf -d 100 30 -e bash -ci "bt;exit"
 click-right = bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
 
 [module/pulseaudio]
