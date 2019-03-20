@@ -12,6 +12,7 @@ tmux/resurrect/
 # Arch
 arch/config/onedrive/items*
 arch/config/onedrive/refresh_token
+arch/bin/tmux_tree
 
 # Ranger
 config/ranger/plugins/
