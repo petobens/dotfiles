@@ -264,7 +264,6 @@ alias 2u='cd ../..'
 alias 3u='cd ../../..'
 alias 4u='cd ../../../..'
 alias h='cd ~'
-alias ll='ls -lah'
 alias q='exit'
 alias c='clear'
 alias o='open'
@@ -299,6 +298,11 @@ if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
 fi
 if type "htop" > /dev/null 2>&1; then
     alias ht='htop'
+fi
+if type "lsd" > /dev/null 2>&1; then
+    alias ls='lsd -F --color=auto'
+    alias ll='lsd -F -lah --color=always | fzf --ansi'
+    cd() { builtin cd "$@" && lsd -F --color=auto; }
 fi
 if type "nvim" > /dev/null 2>&1; then
     alias v='nvim --listen /tmp/nvimsocket'
@@ -396,24 +400,10 @@ alias ua=sys_update_all
 
 # Platform dependent aliases
 if [[ "$OSTYPE" == 'darwin'* ]]; then
-    # Use coreutils ls
-    if type "gls" > /dev/null 2>&1; then
-        alias ls="gls -F --color=auto"
-        # Change directory and list files
-        cd() { builtin cd "$@" && gls -F --color=auto; }
-    else
-        cd() { builtin cd "$@" && ls -GF; }
-    fi
-
     # Matlab
     alias matlab='/Applications/MATLAB_R2015b.app/bin/matlab -nodisplay '\
 '-nodesktop -nosplash '
 else
-    # Differentiate and use colors for directories, symbolic links, etc.
-    alias ls='ls -F --color=auto'
-    # Change directory and list files
-    cd() { builtin cd "$@" && ls -F --color=auto; }
-
     if [ -f "$HOME/bin/multimon" ]; then
         # Dual monitor
         alias mm=multimon
