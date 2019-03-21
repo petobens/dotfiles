@@ -268,7 +268,7 @@ rgz() {
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
 
-    if [ ${#_files[@]} -eq 1 ] && [[ -z "${_files[0]}" ]]; then
+    if [[ ${#_files[@]} -eq 1 ]] && [[ -z "${_files[0]}" ]]; then
         return 1
     else
         files=();
@@ -356,9 +356,10 @@ tms() {
 # Bluetooth {{{
 
 FZF_BT_OPTS="
+--multi
 --tac
---expect=alt-t,alt-p,alt-d
---header='enter=connect, A-t=trust, A-p=pair, A-d=disconnect'
+--expect=alt-t,alt-u,alt-p,alt-d
+--header='enter=connect, A-t=trust, A-u=untrust, A-p=pair, A-d=disconnect'
 --with-nth=3..
 --preview 'bluetoothctl info {2} | bat --color always --theme TwoDark \
     --style plain --line-range 2: -H 6 -H 7 -H 9'
@@ -370,9 +371,9 @@ bt() {
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_BT_OPTS" fzf |
         cut -d ' ' -f 2)
     key=$(head -1 <<< "$out")
-    device=$(head -2 <<< "$out" | tail -1)
+    mapfile -t devices <<< "$(tail -n+2 <<< "$out")"
 
-    if [[ -z "$device" ]]; then
+    if [[ ${#devices[@]} -eq 1 ]] && [[ -z "${devices[0]}" ]]; then
         return 1
     fi
     case "$key" in
@@ -380,12 +381,16 @@ bt() {
             sub_cmd="pair" ;;
         alt-t)
             sub_cmd="trust" ;;
+        alt-u)
+            sub_cmd="untrust" ;;
         alt-d)
             sub_cmd="disconnect" ;;
         *)
             sub_cmd="connect" ;;
     esac
-    bluetoothctl "$sub_cmd" "$device"
+    for d in "${devices[@]}"; do
+        bluetoothctl "$sub_cmd" "$d"
+    done
 }
 
 # }}}
