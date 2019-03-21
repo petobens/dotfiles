@@ -1584,12 +1584,6 @@ function! s:defx_settings()
     nnoremap <silent><buffer> <Leader>sp :execute
         \ 'Defx -new -split=horizontal -direction= ' . b:defx.paths[0]<CR>
         \ :wincmd p<CR>:execute float2nr(&lines /2) . 'wincmd _ '<CR>
-    " Open in external file browser
-    if executable('ranger')
-        command! -nargs=1 TmuxRanger call s:TmuxSplitCmd('ranger', <q-args>)
-        nmap <silent><buffer><expr>ge defx#do_action('change_vim_cwd',
-                    \ "TmuxRanger")
-    endif
     " History source
     nnoremap <silent><buffer> <C-h> :Denite defx/history<CR>
     " Bookmarks source
@@ -1628,6 +1622,10 @@ function! s:defx_settings()
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
         execute('Denite -default-action=defx parent_dirs:' . narrow_dir)
     endfunction
+    function! s:defx_ranger(context) abort
+        let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
+        call s:TmuxSplitCmd('ranger', narrow_dir)
+    endfunction
     nnoremap <silent><buffer><expr> <C-t>
                 \ defx#do_action('call', '<SID>denite_rec')
     nnoremap <silent><buffer><expr> <A-t>
@@ -1640,6 +1638,8 @@ function! s:defx_settings()
                 \ defx#do_action('call', '<SID>denite_z')
     nnoremap <silent><buffer><expr> <A-p>
                 \ defx#do_action('call', '<SID>denite_parents_dirs')
+    nnoremap <silent><buffer><expr> ge
+                \ defx#do_action('call', '<SID>defx_ranger')
 endfunction
 
 " }}}
