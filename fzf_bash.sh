@@ -315,16 +315,17 @@ bind -m vi-command '"\C-r": "i\C-r"'
 # }}}
 # Tmux {{{
 
-__tmux_fzf_get_session__() {
-    session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null |
-        fzf --exit-0 --preview='tmux_tree {} | bat --theme TwoDark --style plain')
-    echo "$session"
-}
+FZF_TMUX_OPTS="
+--multi
+--exit-0
+--expect=alt-k
+--header='enter=switch, A-k=kill'
+--preview='tmux_tree {} | bat --theme TwoDark --style plain'
+"
 
-# Tmux session switcher (`tms foo` attaches to `foo` if exists, else creates
-# it)
 tms() {
     [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+
     if [[ -n "$1" ]]; then
         if [[ "$1" == "-ask" ]]; then
             read -r -p "New tmux session name: " session_name
@@ -336,13 +337,22 @@ tms() {
             tmux $change -t "$session_name");
         return
     fi
-    session=$(eval __tmux_fzf_get_session__)
-    tmux $change -t "$session" || echo "No sessions found."
-}
-# Tmux session killer
-tmk() {
-    session=$(eval __tmux_fzf_get_session__)
-    tmux kill-session -t "$session"
+
+    # If no arg is given use fzf to choose a session to switch or kill
+    cmd='tmux list-sessions -F "#{session_name}"'
+    out=$(eval "$cmd" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_TMUX_OPTS" fzf)
+    key=$(head -1 <<< "$out")
+    mapfile -t sessions <<< "$(tail -n+2 <<< "$out")"
+
+    case "$key" in
+        alt-k)
+            for s in "${sessions[@]}"; do
+                tmux kill-session -t "$s"
+            done
+            ;;
+        *)
+            tmux "$change" -t "${sessions[0]}" ;;
+    esac
 }
 
 # }}}
