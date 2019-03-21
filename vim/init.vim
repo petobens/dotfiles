@@ -2226,8 +2226,8 @@ nnoremap <silent> <Leader>cB :GV!<cr>  " only current file
 " }}}
 " HighlightedYank {{{
 
-let g:highlightedyank_highlight_duration = 550
-let g:highlightedyank_max_lines = 1500
+let g:highlightedyank_highlight_duration = 500
+let g:highlightedyank_max_lines = 2000
 
 " }}}
 " GitGutter {{{
