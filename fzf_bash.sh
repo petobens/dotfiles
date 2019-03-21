@@ -356,11 +356,12 @@ tms() {
 # Bluetooth {{{
 
 FZF_BT_OPTS="
+--tac
 --expect=alt-t,alt-p,alt-d
 --header='enter=connect, A-t=trust, A-p=pair, A-d=disconnect'
 --with-nth=3..
---preview 'bluetoothctl info {2} | bat --theme TwoDark --style plain \
-    --line-range 2: --highlight-line 6 --highlight-line 8'
+--preview 'bluetoothctl info {2} | bat --color always --theme TwoDark \
+    --style plain --line-range 2: -H 6 -H 7 -H 9'
 "
 
 bt() {
