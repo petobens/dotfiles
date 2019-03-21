@@ -1918,6 +1918,20 @@ function! s:defx_open(context)
         execute('Defx ' . dir . file_search)
     endif
 endfunction
+function! s:defx_preview(context)
+    let path = a:context['targets'][0]['action__path']
+    let file = fnamemodify(path, ':p')
+    let file_search = filereadable(expand(file)) ? ' -search=' . file : ''
+    let dir = denite#util#path2directory(path)
+    let denite_winwidth = &columns
+    execute 'silent rightbelow vertical pedit! defx_tmp'
+    wincmd P
+    silent! setlocal nobuflisted
+    execute 'vert resize ' . (denite_winwidth / 3)
+    execute 'Defx -split=no ' .  dir . file_search
+    call defx#call_action('open_tree')
+    wincmd p
+endfunction
 function! s:candidate_file_rec(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
@@ -1939,6 +1953,8 @@ call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
 call denite#custom#action('buffer,directory,file,openable,dirmark', 'defx',
         \ function('s:defx_open'))
+call denite#custom#action('buffer,directory,file,openable,dirmark',
+        \ 'defx_preview', function('s:defx_preview'), {'is_quit': 0})
 call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'candidate_file_rec', function('s:candidate_file_rec'))
 call denite#custom#action('buffer,directory,file,openable,dirmark',
