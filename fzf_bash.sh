@@ -356,8 +356,8 @@ tms() {
 # Bluetooth {{{
 
 FZF_BT_OPTS="
---expect=alt-p,alt-d
---header='enter=connect, A-p=pair, A-d=disconnect'
+--expect=alt-t,alt-p,alt-d
+--header='enter=connect, A-t=trust, A-p=pair, A-d=disconnect'
 --with-nth=3..
 --preview 'bluetoothctl info {2} | bat --theme TwoDark --style plain \
     --line-range 2: --highlight-line 6 --highlight-line 8'
@@ -377,6 +377,8 @@ bt() {
     case "$key" in
         alt-p)
             sub_cmd="pair" ;;
+        alt-t)
+            sub_cmd="trust" ;;
         alt-d)
             sub_cmd="disconnect" ;;
         *)
