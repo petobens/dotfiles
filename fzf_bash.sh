@@ -41,7 +41,7 @@ export FZF_DEFAULT_OPTS='
 --color=marker:#98c379,spinner:#e06c75,border:#282c34
 '
 
-# fd for files and dirs
+# Override FZF stock commands (ctrl-t,al-tc) and their options
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
@@ -64,41 +64,6 @@ export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE\
 --bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort'
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
 "
-export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
---bind 'ctrl-y:execute-silent(echo -n {3..} | $COPY_CMD)+abort'
---no-sort
---tac
---preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
-"
-
-# History options
-export FZF_CTRL_R_OPTS="
---bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort,tab:accept'
---header 'enter=insert, tab=insert, C-y=yank'
---tac
---sync
---nth=2..,..
---tiebreak=index
-"
-
-# rg for grep
-FZF_GREP_COMMAND='rg --smart-case --vimgrep --no-heading --color=always'
-FZF_GREP_OPTS="
---multi
---ansi
---delimiter=:
---preview 'bat --color always --style numbers --theme TwoDark \
-    --line-range {2}: --highlight-line {2} {1} | head -200'
-"
-
-# Bluetooth
-FZF_BT_OPTS="
---expect=alt-p,alt-d
---header='enter=connect, A-p=pair, A-d=disconnect'
---with-nth=3..
---preview 'bluetoothctl info {2} | bat --theme TwoDark --style plain \
-    --line-range 2: --highlight-line 6 --highlight-line 8'
-"
 
 # Completions
 export FZF_COMPLETION_TRIGGER='jk'
@@ -110,15 +75,17 @@ complete -F _fzf_path_completion -o default -o bashdefault v o dog
 # Helpers {{{
 
 # Bind unused key, "\C-x\C-a", to enter vi-movement-mode quickly and then use
-# that thereafter.
+# that thereafter
 bind '"\C-x\C-a": vi-movement-mode'
-
+# Define other bindings to be used in mappings
 bind '"\C-x\C-e": shell-expand-line'
 bind '"\C-x\C-r": redraw-current-line'
 bind '"\C-x^": history-expand-line'
 
 # }}}
 # File and dirs {{{
+
+# Files {{{
 
 # Custom Ctrl-t mapping (also Alt-t to ignore git-ignored files)
 __fzf_select_custom__() {
@@ -176,6 +143,8 @@ bind -m vi-command '"\C-t": "i\C-t"'
 bind -x '"\et": "fzf-file-widget-custom no-ignore"'
 bind -m vi-command '"\et": "i\et"'
 
+# }}}
+# Dirs {{{
 
 # Helper that defines actions for keys in directory-like maps
 __fzf_cd_action_key__() {
@@ -256,7 +225,16 @@ __fzf_cd_parent__() {
 bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
 bind -m vi-command '"\ep": "i\ep"'
 
-# Z
+# }}}
+# Z {{{
+
+export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
+--bind 'ctrl-y:execute-silent(echo -n {3..} | $COPY_CMD)+abort'
+--no-sort
+--tac
+--preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
+
+"
 z() {
     [ $# -gt 0 ] && _z "$*" && return
     cmd="_z -l 2>&1"
@@ -271,10 +249,20 @@ bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
 bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
 
 # }}}
+
+# }}}
 # Grep {{{
 
+FZF_GREP_OPTS="
+--multi
+--ansi
+--delimiter=:
+--preview 'bat --color always --style numbers --theme TwoDark \
+    --line-range {2}: --highlight-line {2} {1} | head -200'
+"
+
 rgz() {
-    cmd="$FZF_GREP_COMMAND"
+    cmd="rg --smart-case --vimgrep --no-heading --color=always"
     out="$(eval "$cmd" "$@" |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" fzf)"
     key=$(head -1 <<< "$out")
@@ -297,6 +285,15 @@ rgz() {
 
 # }}}
 # History {{{
+
+export FZF_CTRL_R_OPTS="
+--bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort,tab:accept'
+--header 'enter=insert, tab=insert, C-y=yank'
+--tac
+--sync
+--nth=2..,..
+--tiebreak=index
+"
 
 __fzf_history__() (
     local line
@@ -356,23 +353,15 @@ tms() {
 }
 
 # }}}
-# Git {{{
-
-# Forgit (git and fzf)
-export FORGIT_COPY_CMD="$COPY_CMD "
-export FORGIT_FZF_DEFAULT_OPTS="--preview-window='right'"
-export FORGIT_NO_ALIASES="1"
-alias gl=forgit::log
-alias gd=forgit::diff
-alias ga=forgit::add
-alias gu=forgit::restore
-alias gsv=forgit::stash::show
-if [ -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
-    . "$HOME/.local/bin/forgit.plugin.zsh"
-fi
-
-# }}}
 # Bluetooth {{{
+
+FZF_BT_OPTS="
+--expect=alt-p,alt-d
+--header='enter=connect, A-p=pair, A-d=disconnect'
+--with-nth=3..
+--preview 'bluetoothctl info {2} | bat --theme TwoDark --style plain \
+    --line-range 2: --highlight-line 6 --highlight-line 8'
+"
 
 bt() {
     cmd="bluetoothctl devices"
@@ -395,6 +384,22 @@ bt() {
     esac
     bluetoothctl "$sub_cmd" "$device"
 }
+
+# }}}
+# Git {{{
+
+# Forgit (git and fzf)
+export FORGIT_COPY_CMD="$COPY_CMD "
+export FORGIT_FZF_DEFAULT_OPTS="--preview-window='right'"
+export FORGIT_NO_ALIASES="1"
+alias gl=forgit::log
+alias gd=forgit::diff
+alias ga=forgit::add
+alias gu=forgit::restore
+alias gsv=forgit::stash::show
+if [ -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
+    . "$HOME/.local/bin/forgit.plugin.zsh"
+fi
 
 # }}}
 
