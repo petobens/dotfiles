@@ -167,7 +167,7 @@ bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -f -W $ws6 -C
 bindsym $mod+Control+v $nexec raiseorlaunch -c vimiv -f -C
 
 # Standalone terminal apps in floating window in the current workspace
-bindsym $mod+Control+w $nexec raiseorlaunch -c 'Connman-gtk'
+bindsym $mod+Control+w $nexec raiseorlaunch -c 'Connman-gtk' -f
 bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -f -e \
     'alacritty -t QuickTerm -e sh -c '\
 '"cd $(tmux display -p "#{pane_current_path}") && exec bash -i"'
