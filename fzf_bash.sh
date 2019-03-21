@@ -358,11 +358,13 @@ tms() {
 FZF_BT_OPTS="
 --multi
 --tac
+--bind 'ctrl-y:execute-silent(echo -n {2} | $COPY_CMD)+abort,tab:accept'
 --expect=alt-t,alt-u,alt-p,alt-d
---header='enter=connect, A-t=trust, A-u=untrust, A-p=pair, A-d=disconnect'
+--header='enter=connect, A-t=trust, A-u=untrust, A-p=pair,
+A-d=disconnect, C-y=yank'
 --with-nth=3..
 --preview 'bluetoothctl info {2} | bat --color always --theme TwoDark \
-    --style plain --line-range 2: -H 6 -H 7 -H 9'
+    --style plain -H 6 -H 7 -H 9'
 "
 
 bt() {
