@@ -1584,6 +1584,8 @@ function! s:defx_settings()
     nnoremap <silent><buffer> <Leader>sp :execute
         \ 'Defx -new -split=horizontal -direction= ' . b:defx.paths[0]<CR>
         \ :wincmd p<CR>:execute float2nr(&lines /2) . 'wincmd _ '<CR>
+    " change local window working dir to current dir
+    nnoremap <silent><buffer> <Leader>cd :execute 'lcd' . b:defx.paths[0]<CR>
     " History source
     nnoremap <silent><buffer> <C-h> :Denite defx/history<CR>
     " Bookmarks source
