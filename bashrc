@@ -276,6 +276,8 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
 fi
 alias cp='cp -i'
 alias rm='rm -v'
+alias md='mkdir -p'
+alias rd='rmdir'
 alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
 ds() {
@@ -360,6 +362,7 @@ fi
 
 # Python
 if type "python" > /dev/null 2>&1; then
+    alias py='python'
     if [ ! -f "$base_pkg_dir"/bin/python2 ]; then
         alias python='python3'
         alias pip='pip3'
