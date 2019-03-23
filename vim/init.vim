@@ -1455,9 +1455,10 @@ call defx#custom#source('file', {'root': 'Root'})
 nnoremap <silent> <Leader>fe :Defx<CR>
 nnoremap <silent> <Leader>ff :Defx `expand('%:p:h')`
             \ -search=`expand('%:p')`<CR>
-nnoremap <silent> <Leader>df :Defx `expand('%:p:h')`<CR>:execute
-            \ 'Defx -new -split=horizontal -direction= ' . b:defx.paths[0]<CR>
-            \ :wincmd p<CR>:execute float2nr(&lines /2) . 'wincmd _ '<CR>
+nnoremap <silent> <Leader>df :Defx `expand('%:p:h') ` -search=`expand('%:p')`<CR>
+            \ :execute 'Defx -new -split=horizontal -direction= '
+            \ . b:defx.paths[0]<CR>:wincmd p<CR>
+            \ :execute float2nr(&lines /2) . 'wincmd _ '<CR>
 nnoremap <silent> <Leader>fb :Defx<CR>:Denite defx/dirmark<CR>
 nnoremap <silent> <Leader>fr :Defx -resume<CR>
 nnoremap <silent> <Leader>fm :call <SID>TmuxSplitCmd('ranger', '')<CR>
