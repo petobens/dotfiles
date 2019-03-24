@@ -1544,7 +1544,8 @@ function! s:defx_settings()
         \ defx#do_action('multi', ['drop', 'quit'])
     nnoremap <silent><buffer><expr> zo defx#do_action('open_tree')
     nnoremap <silent><buffer><expr> zc defx#do_action('close_tree')
-    nnoremap <silent><buffer><expr> zr defx#do_action('open_tree_recursive')
+    nnoremap <silent><buffer><expr> zr defx#do_action('open_tree_recursive',
+                \ [3])
     " Open files in splits
     nnoremap <silent><buffer><expr> s
         \ defx#do_action('multi', [['drop', 'split'], 'quit'])
@@ -1940,7 +1941,7 @@ function! s:defx_preview(context)
     wincmd P
     silent! setlocal nobuflisted
     execute 'vert resize ' . (denite_winwidth / 3)
-    execute 'Defx -new -split=no ' .  dir . file_search
+    execute 'Defx -new -split=no -auto-recursive-level=1 ' .  dir . file_search
     call defx#call_action('open_tree')
     wincmd p
 endfunction
