@@ -249,9 +249,10 @@ endfunction
 augroup session
     au!
     au VimLeavePre * call s:SaveSession()
-    " au VimEnter * nested call s:LoadSession()
-    au BufWinLeave {*.*,vimrc,bashrc,config}  mkview
-    au BufWinEnter {*.*,vimrc,bashrc,config}  silent! loadview
+    au BufWinLeave {*.*,vimrc,bashrc,config}
+        \ if &previewwindow != 1 | mkview | endif
+    au BufWinEnter {*.*,vimrc,bashrc,config}
+        \ if &previewwindow != 1 | silent! loadview | endif
 augroup END
 nnoremap <silent><Leader>ps :call <SID>LoadSession()<CR>
 
@@ -1791,12 +1792,17 @@ command! -nargs=? -complete=file DeniteBookmarkAdd
         \ :Denite dirmark/add -default-action=add -immediately-1 -path=<q-args>
 
 " Mappings
-nnoremap <silent> <C-t> :lcd %:p:h<CR>:Denite file/rec<CR>
-nnoremap <silent> <A-t> :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
-nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
-nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
-nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
-nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
+nnoremap <silent> <C-t> :lcd %:p:h<CR>:Denite file/rec -auto-action=preview<CR>
+nnoremap <silent> <A-t> :lcd %:p:h<CR>:Denite file/rec/noignore
+            \ -auto-action=preview<CR>
+nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec
+            \ -auto-action=preview<CR>
+nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore
+            \ -auto-action=preview<CR>
+nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec
+            \ -auto-action=preview<CR>
+nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore
+            \ -auto-action=preview<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>sD :call <SID>DeniteScanDir(0)<CR>
 nnoremap <silent> <A-z> :Denite -default-action=candidate_file_rec
@@ -1810,8 +1816,8 @@ nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite
 nnoremap <silent> <A-p> :lcd %:p:h<CR>:Denite
             \ -default-action=candidate_file_rec -auto-action=defx_preview
             \ parent_dirs<CR>
-nnoremap <silent> <Leader>rd :Denite file_mru<CR>
-nnoremap <silent> <Leader>be :Denite buffer -quick-move=immediately<CR>
+nnoremap <silent> <Leader>rd :Denite -auto-action=preview file_mru<CR>
+nnoremap <silent> <Leader>be :Denite buffer -auto-action=preview<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
 nnoremap <silent> <Leader>rg :lcd %:p:h<CR>:call <SID>DeniteGrep()<CR>
@@ -2952,7 +2958,8 @@ augroup pl_venv_python
     au Filetype python nnoremap <buffer> <Leader>ved
         \ :VirtualEnvDeactivate<CR>
     " Auto activate when entering a window with a python file
-    au WinEnter,BufWinEnter *.py call virtualenv#activate('', 1)
+    au WinEnter,BufWinEnter *.py
+        \ if &previewwindow != 1 | call virtualenv#activate('', 1) | endif
 augroup END
 
 " }}}
