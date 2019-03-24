@@ -1605,11 +1605,13 @@ function! s:defx_settings()
     endfunction
     function! s:denite_rec(context) abort
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
-        execute 'Denite -default-action=defx file/rec:' . narrow_dir
+        execute 'Denite -default-action=defx -auto-action=preview ' .
+                    \ 'file/rec:' . narrow_dir
     endfunction
     function! s:denite_rec_no_ignore(context) abort
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
-        execute 'Denite -default-action=defx file/rec/noignore:' . narrow_dir
+        execute 'Denite -default-action=defx -auto-action=preview ' .
+                    \ 'file/rec/noignore:' . narrow_dir
     endfunction
     function! s:denite_dir_rec(context) abort
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
@@ -1955,7 +1957,8 @@ endfunction
 function! s:candidate_file_rec(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
-    call denite#start([{'name': 'file/rec/noignore', 'args': [narrow_dir]}])
+    call denite#start([{'name': 'file/rec/noignore', 'args': [narrow_dir]}],
+                \ {'auto_action': 'preview'})
 endfunction
 function! s:candidate_directory_rec(context)
     let path = a:context['targets'][0]['action__path']
