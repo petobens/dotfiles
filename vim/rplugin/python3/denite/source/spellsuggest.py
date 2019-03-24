@@ -1,6 +1,6 @@
 """Show and replace spelling mistakes with Denite."""
+from denite.base.source import Base
 from denite.kind.command import Kind as Command
-from denite.source.base import Base
 
 
 class Source(Base):

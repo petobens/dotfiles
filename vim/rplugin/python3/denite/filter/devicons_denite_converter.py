@@ -1,7 +1,7 @@
 """Filter to prepend devicons to denite candidates."""
 from os.path import isdir
 
-from denite.source.base import Base
+from denite.base.filter import Base
 
 
 class Filter(Base):
