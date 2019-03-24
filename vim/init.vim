@@ -1884,9 +1884,13 @@ call denite#custom#map('insert', '<C-q>',
 call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
             \ 'noremap')
 call denite#custom#map('insert', '<A-u>', '<denite:restore_sources>', 'noremap')
-call denite#custom#map('insert', '<C-w>', '<denite:wincmd:p>', 'noremap')
+call denite#custom#map('insert', '<C-w>', '<denite:wincmd:P>', 'noremap')
 call denite#custom#map('insert', '<A-v>', '<denite:do_action:preview>',
             \ 'noremap')
+call denite#custom#map('insert', '<A-j>',
+            \ '<denite:do_action:scroll_preview_down>', 'noremap')
+call denite#custom#map('insert', '<A-k>',
+            \ '<denite:do_action:scroll_preview_up>', 'noremap')
 call denite#custom#map('insert', '<A-e>', '<denite:do_action:delete>',
             \ 'noremap')
 call denite#custom#map('insert', '<A-f>', '<denite:do_action:defx>',
@@ -1950,6 +1954,16 @@ function! s:candidate_parent_dir(context)
     call denite#start([{'name': 'parent_dirs', 'args': [narrow_dir]}],
                 \ {'default_action': 'candidate_file_rec'})
 endfunction
+function! s:scroll_preview_down(context)
+    wincmd P
+    execute 'normal! 10j'
+    wincmd p
+endfunction
+function! s:scroll_preview_up(context)
+    wincmd P
+    execute 'normal! 10k'
+    wincmd p
+endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
 call denite#custom#action('buffer,directory,file,openable,dirmark', 'defx',
@@ -1964,6 +1978,12 @@ call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'candidate_parent_dir', function('s:candidate_parent_dir'))
 call denite#custom#action('file', 'narrow',
         \ {context -> denite#do_action(context, 'open', context['targets'])})
+call denite#custom#action('buffer,directory,file,openable,dirmark',
+        \ 'scroll_preview_down', function('s:scroll_preview_down'),
+        \ {'is_quit': 0})
+call denite#custom#action('buffer,directory,file,openable,dirmark',
+        \ 'scroll_preview_up', function('s:scroll_preview_up'),
+        \ {'is_quit': 0})
 
 " }}}
 " Deoplete {{{
