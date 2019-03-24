@@ -1676,6 +1676,7 @@ call denite#custom#option('default', {
             \ 'auto_resume': 1,
             \ 'statusline': 0,
             \ 'winheight': 15,
+            \ 'winminheight': 10,
             \ 'updatetime': 100,
             \ 'reversed': 1,
             \ 'prompt': '❯',
