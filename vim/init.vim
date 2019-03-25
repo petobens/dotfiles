@@ -1932,27 +1932,31 @@ function! s:defx_open(context)
     endif
 endfunction
 function! s:defx_preview(context)
+    let path = a:context['targets'][0]['action__path']
+    let dir = denite#util#path2directory(path)
     let has_preview_win = 0
+    let defx_path = 0
     for nr in range(1, winnr('$'))
         if getwinvar(nr, '&previewwindow') == 1
             let has_preview_win = 1
+            let defx_var = getbufvar(winbufnr(nr), 'defx')
+            let defx_path =  defx_var.paths[0]
         endif
     endfor
-    if has_preview_win == 1
+    if has_preview_win == 1 && defx_path ==# (dir . '/')
         pclose!
         return
     endif
 
-    let path = a:context['targets'][0]['action__path']
     let file = fnamemodify(path, ':p')
     let file_search = filereadable(expand(file)) ? ' -search=' . file : ''
-    let dir = denite#util#path2directory(path)
     let denite_winwidth = &columns
     execute 'silent rightbelow vertical pedit! defx_tmp'
     wincmd P
     silent! setlocal nobuflisted
     execute 'vert resize ' . (denite_winwidth / 3)
     execute 'Defx -no-show-ignored-files -new -split=no ' .
+                \ '-ignored-files=.*,__pycache__ ' .
                 \ '-auto-recursive-level=1 ' .  dir . file_search
     call defx#call_action('open_tree')
     wincmd p
