@@ -1605,30 +1605,30 @@ function! s:defx_settings()
     endfunction
     function! s:denite_rec(context) abort
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
-        execute 'Denite -default-action=defx -auto-action=preview ' .
+        execute 'Denite -default-action=defx ' .
                     \ 'file/rec:' . narrow_dir
     endfunction
     function! s:denite_rec_no_ignore(context) abort
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
-        execute 'Denite -default-action=defx -auto-action=preview ' .
+        execute 'Denite -default-action=defx ' .
                     \ 'file/rec/noignore:' . narrow_dir
     endfunction
     function! s:denite_dir_rec(context) abort
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
-        execute 'Denite -default-action=defx -auto-action=defx_preview ' .
+        execute 'Denite -default-action=defx ' .
                     \ 'directory_rec:' . narrow_dir
     endfunction
     function! s:denite_dir_rec_no_ignore(context) abort
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
-        execute 'Denite -default-action=defx -auto-action=defx_preview ' .
+        execute 'Denite -default-action=defx ' .
                     \ 'directory_rec/noignore:' . narrow_dir
     endfunction
     function! s:denite_z(context) abort
-        execute 'Denite -default-action=defx -auto-action=defx_preview z'
+        execute 'Denite -default-action=defx z'
     endfunction
     function! s:denite_parents_dirs(context) abort
         let narrow_dir = s:GetDefxBaseDir(a:context.targets[0])
-        execute 'Denite -default-action=defx -auto-action=defx_preview ' .
+        execute 'Denite -default-action=defx ' .
                     \ 'parent_dirs:' . narrow_dir
     endfunction
     function! s:defx_ranger(context) abort
@@ -1678,7 +1678,7 @@ call denite#custom#option('default', {
             \ 'auto_resume': 1,
             \ 'statusline': 0,
             \ 'winheight': 15,
-            \ 'winminheight': 10,
+            \ 'winminheight': -1,
             \ 'updatetime': 100,
             \ 'reversed': 1,
             \ 'prompt': '❯',
@@ -1795,30 +1795,21 @@ command! -nargs=? -complete=file DeniteBookmarkAdd
         \ :Denite dirmark/add -default-action=add -immediately-1 -path=<q-args>
 
 " Mappings
-nnoremap <silent> <C-t> :lcd %:p:h<CR>:Denite file/rec -auto-action=preview<CR>
-nnoremap <silent> <A-t> :lcd %:p:h<CR>:Denite file/rec/noignore
-            \ -auto-action=preview<CR>
-nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec
-            \ -auto-action=preview<CR>
-nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore
-            \ -auto-action=preview<CR>
-nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec
-            \ -auto-action=preview<CR>
-nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore
-            \ -auto-action=preview<CR>
+nnoremap <silent> <C-t> :lcd %:p:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <A-t> :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
+nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
+nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
+nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>sD :call <SID>DeniteScanDir(0)<CR>
-nnoremap <silent> <A-z> :Denite -default-action=candidate_file_rec
-            \ -auto-action=defx_preview z<CR>
+nnoremap <silent> <A-z> :Denite -default-action=candidate_file_rec z<CR>
 nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite
-            \ -default-action=candidate_file_rec -auto-action=defx_preview
-            \ directory_rec<CR>
+            \ -default-action=candidate_file_rec directory_rec<CR>
 nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite
-            \ -default-action=candidate_file_rec -auto-action=defx_preview
-            \ directory_rec/noignore<CR>
+            \ -default-action=candidate_file_rec directory_rec/noignore<CR>
 nnoremap <silent> <A-p> :lcd %:p:h<CR>:Denite
-            \ -default-action=candidate_file_rec -auto-action=defx_preview
-            \ parent_dirs<CR>
+            \ -default-action=candidate_file_rec parent_dirs<CR>
 nnoremap <silent> <Leader>rd :Denite file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
@@ -1957,22 +1948,19 @@ endfunction
 function! s:candidate_file_rec(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
-    call denite#start([{'name': 'file/rec/noignore', 'args': [narrow_dir]}],
-                \ {'auto_action': 'preview'})
+    call denite#start([{'name': 'file/rec/noignore', 'args': [narrow_dir]}])
 endfunction
 function! s:candidate_directory_rec(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
     call denite#start([{'name': 'directory_rec/noignore', 'args': [narrow_dir]}],
-                \ {'default_action': 'candidate_file_rec',
-                \ 'auto_action': 'defx_preview'})
+                \ {'default_action': 'candidate_file_rec'})
 endfunction
 function! s:candidate_parent_dir(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
     call denite#start([{'name': 'parent_dirs', 'args': [narrow_dir]}],
-                \ {'default_action': 'candidate_file_rec',
-                \ 'auto_action': 'defx_preview'})
+                \ {'default_action': 'candidate_file_rec'})
 endfunction
 function! s:scroll_preview_down(context)
     wincmd P
