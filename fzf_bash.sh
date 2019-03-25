@@ -42,9 +42,8 @@ export FZF_DEFAULT_OPTS='
 '
 
 # Override FZF stock commands (ctrl-t,al-tc) and their options
-export FZF_DEFAULT_COMMAND="
-fd --type f --hidden --follow --exclude .git --color=always
-"
+export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git \
+    --color=always"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
 --multi
