@@ -1819,8 +1819,8 @@ nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite
 nnoremap <silent> <A-p> :lcd %:p:h<CR>:Denite
             \ -default-action=candidate_file_rec -auto-action=defx_preview
             \ parent_dirs<CR>
-nnoremap <silent> <Leader>rd :Denite -auto-action=preview file_mru<CR>
-nnoremap <silent> <Leader>be :Denite buffer -auto-action=preview<CR>
+nnoremap <silent> <Leader>rd :Denite file_mru<CR>
+nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
 nnoremap <silent> <Leader>rg :lcd %:p:h<CR>:call <SID>DeniteGrep()<CR>
