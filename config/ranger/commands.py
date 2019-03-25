@@ -26,7 +26,7 @@ class fzf_select(Command):
         only_dirs = True if self.arg(1) == '-d' else False
         command = (
             f"{fd_cmd} --type {'d' if only_dirs else 'f'} --hidden --follow "
-            '--exclude .git '
+            f"--exclude .git {'--color=always ' if not only_dirs else ''}"
         )
         no_git_ignore = (
             True
@@ -42,7 +42,10 @@ class fzf_select(Command):
             preview_cmd = (
                 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
             )
-        command += f"| devicon-lookup | fzf --preview '{preview_cmd}' +m"
+        command += (
+            f"| devicon-lookup {'--color' if not only_dirs else ''} | "
+            f"fzf {'--ansi' if not only_dirs else ''} --preview '{preview_cmd}' +m"
+        )
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
