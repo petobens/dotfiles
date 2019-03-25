@@ -1932,6 +1932,17 @@ function! s:defx_open(context)
     endif
 endfunction
 function! s:defx_preview(context)
+    let has_preview_win = 0
+    for nr in range(1, winnr('$'))
+        if getwinvar(nr, '&previewwindow') == 1
+            let has_preview_win = 1
+        endif
+    endfor
+    if has_preview_win == 1
+        pclose!
+        return
+    endif
+
     let path = a:context['targets'][0]['action__path']
     let file = fnamemodify(path, ':p')
     let file_search = filereadable(expand(file)) ? ' -search=' . file : ''
@@ -1976,8 +1987,8 @@ call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
 call denite#custom#action('buffer,directory,file,openable,dirmark', 'defx',
         \ function('s:defx_open'))
-call denite#custom#action('buffer,directory,file,openable,dirmark',
-        \ 'defx_preview', function('s:defx_preview'), {'is_quit': 0})
+call denite#custom#action('directory,directory_rec,directory_rec/noignore',
+        \ 'preview', function('s:defx_preview'), {'is_quit': 0})
 call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'candidate_file_rec', function('s:candidate_file_rec'))
 call denite#custom#action('buffer,directory,file,openable,dirmark',
