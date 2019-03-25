@@ -1952,7 +1952,8 @@ function! s:defx_preview(context)
     wincmd P
     silent! setlocal nobuflisted
     execute 'vert resize ' . (denite_winwidth / 3)
-    execute 'Defx -new -split=no -auto-recursive-level=1 ' .  dir . file_search
+    execute 'Defx -no-show-ignored-files -new -split=no ' .
+                \ '-auto-recursive-level=1 ' .  dir . file_search
     call defx#call_action('open_tree')
     wincmd p
 endfunction
