@@ -42,10 +42,13 @@ export FZF_DEFAULT_OPTS='
 '
 
 # Override FZF stock commands (ctrl-t,al-tc) and their options
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_DEFAULT_COMMAND="
+fd --type f --hidden --follow --exclude .git --color=always
+"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
 --multi
+--ansi
 --bind 'ctrl-y:execute-silent(echo -n {+2} | $COPY_CMD)+abort'
 --preview 'bat --color always --style numbers --theme TwoDark \
     --line-range :200 {2}'
@@ -97,7 +100,7 @@ __fzf_select_custom__() {
     if [[ "$2" ]]; then
         cmd="$cmd . $2"  # use narrow dir
     fi
-    out=$(eval "$cmd" | devicon-lookup |
+    out=$(eval "$cmd" | devicon-lookup --color |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(tail -n+2 <<< "$out")"
