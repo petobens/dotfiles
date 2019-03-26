@@ -1944,6 +1944,7 @@ function! s:defx_preview(context)
         endif
     endfor
     if has_preview_win == 1 && defx_path ==# (dir . '/')
+        call defx#custom#column('filename', {'min_width': 24, 'max_width': 24})
         pclose!
         return
     endif
@@ -1955,6 +1956,8 @@ function! s:defx_preview(context)
     wincmd P
     silent! setlocal nobuflisted
     execute 'vert resize ' . (denite_winwidth / 3)
+
+    call defx#custom#column('filename', {'min_width': 40, 'max_width': 40})
     execute 'Defx -no-show-ignored-files -new -split=no ' .
                 \ '-ignored-files=.*,__pycache__ ' .
                 \ '-auto-recursive-level=1 ' .  dir . file_search
