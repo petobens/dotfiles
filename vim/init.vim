@@ -149,17 +149,15 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
-    " Unite/denite
-    call dein#add('Shougo/denite.nvim')
-    " call dein#add('petobens/denite.nvim')
-    call dein#add('Shougo/unite.vim')
+    " Denite
+    " call dein#add('Shougo/denite.nvim')
+    call dein#add('petobens/denite.nvim')
     call dein#add('neoclide/denite-extra')
     call dein#add('raghur/fruzzy')
     call dein#add('neoclide/denite-git')
     call dein#add('Shougo/neomru.vim')
     call dein#add('Shougo/neoyank.vim')
     call dein#add('rafi/vim-denite-z')
-    call dein#add('tsukkee/unite-tag')
     call dein#add('kmnk/denite-dirmark')
     " Deoplete
     call dein#add('Shougo/deoplete.nvim')
@@ -2361,7 +2359,7 @@ let g:jedi#use_splits_not_buffers = 'winwidth'
 let g:jedi#smart_auto_mappings = 0
 
 " Change/disable some mappings
-let g:jedi#goto_assignments_command = '<C-]>' " Similar to ,st unite mapping
+let g:jedi#goto_assignments_command = '<C-]>'
 let g:jedi#goto_command = '<Leader>jd'
 let g:jedi#rename_command = '<Leader>rn'
 let g:jedi#documentation_command = ''  " We use K mapping in our ftplugin file
@@ -2774,120 +2772,6 @@ inoremap <silent> (( ((<C-R>=UltiSnips#Anon('(${1:${VISUAL}})', '((',
             \ '', 'i')<cr>
 inoremap <silent> [[ [[<C-R>=UltiSnips#Anon('[${1:${VISUAL}}]', '[[',
             \ '', 'i')<cr>
-
-" }}}
-" Unite {{{
-
-if dein#tap('unite') == 1
-    " Default appearance options
-    call unite#custom#profile('default', 'context', {
-                \ 'silent' : 1, 'update_time' : 200,
-                \ 'prompt' : '❯ ', 'start_insert' : 1, 'prompt_focus' : 1,
-                \ 'winheight' : 15, 'auto_resize' : 1,
-                \ 'direction' : 'botright', 'prompt_direction': 'top',
-                \ })
-    " Use no-quit in grep and vimgrep sources
-    " call unite#custom#profile('source/grep, source/vimgrep',
-                " \ 'context', {'no_quit' : 1}
-                " \ )
-    " Use the fuzzy matcher
-    call unite#filters#matcher_default#use(['matcher_fuzzy'])
-    " Use the rank sorter
-    call unite#filters#sorter_default#use(['sorter_rank'])
-
-    " Ignore some type of files
-    call unite#custom#source('file_rec, file_rec/async, file_rec/neovim, file' .
-                \ ',buffer', 'ignore_pattern', join(['\.git\/', 'tmp\/'], '\|')
-                \ )
-    call unite#custom#source('file_mru',
-                \ 'ignore_pattern', join(['\.git\/', 'tmp\/', 'doc\/'], '\|')
-                \ )
-
-    " Sort bookmarks alphabetically (ignoring case?)
-    call unite#custom#source('bookmark', 'sorters', 'sorter_word')
-    " Show relative path in buffer source
-    call unite#custom#source('buffer', 'converters',
-                \ ['converter_uniq_word', 'converter_word_abbr'])
-    " Sort candidates in buffer source by word
-    call unite#custom#source('buffer', 'sorters',
-                \ ['converter_word', 'sorter_word'])
-endif
-
-let g:unite_data_directory = $CACHE . '/plugins/unite'
-let g:unite_force_overwrite_statusline = 0        " Avoid conflicts with Airline
-let g:unite_enable_auto_select = 0                " Don't skip first line
-
-" Buffer settings (don't show time)
-let g:unite_source_buffer_time_format = ''
-
-" Mappings (sources):
-nnoremap <silent> <Leader>ubm :Unite -profile-name=bookmark -default-action=rec
-            \ -buffer-name=my-directories bookmark<CR>
-" NeoInclude and Unite tag
-" nnoremap <silent> <Leader>tE :NeoIncludeMakeCache<CR>:Unite
-            " \ tag/include<CR>
-" augroup ps_unite_tag
-    " au!
-    " au BufNewFile,BufRead *.{vim,tex,bib,r,R} nnoremap <buffer> <silent> <C-]>
-                " \ :NeoIncludeMakeCache<CR>
-                " \ :UniteWithCursorWord -immediately -sync
-                " \ -default-action=context_split tag/include<CR>
-" augroup END
-" Unite Next/Last (similar to cnext and cprev):
-nnoremap <silent> ]u :<C-U>execute v:count1 . 'UniteNext'<CR>
-nnoremap <silent> [u :<C-U>execute v:count1 . 'UnitePrevious'<CR>
-nnoremap <silent> [U :UniteFirst<CR>
-nnoremap <silent> ]U :UniteLast<CR>
-nnoremap <silent> <Leader>uc :UniteClose<CR>
-
-" Filetype settings
-augroup ps_unite
-    au!
-    au FileType unite call s:unite_settings()
-augroup END
-
-function! s:unite_settings()
-    " Exit unite with escape key
-    nmap <buffer> <ESC> <Plug>(unite_exit)
-    imap <buffer> <ESC> <Plug>(unite_exit)
-    " Enable navigation with control-j and control-k in insert mode (and tab)
-    imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-    imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-    imap <buffer> <TAB>   <Plug>(unite_select_next_line)
-    imap <buffer> <S-TAB>  <Plug>(unite_select_previous_line)
-    " Opening in splits
-    inoremap <silent><buffer><expr> <C-s> unite#do_action('split')
-    inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-    " Choose action
-     imap <silent><buffer> <C-a> <Plug>(unite_choose_action)
-     " Mark candidates
-     imap <buffer> <C-SPACE> <Plug>(unite_toggle_mark_current_candidate)
-    " Redraw screen
-    imap <silent><buffer> <C-r> <Plug>(unite_redraw)
-    " Change window and redraw screen
-    nmap <buffer> <C-j> <C-w>j
-    nmap <buffer> <C-h> <C-w>h
-    nmap <buffer> <C-k> <C-w>k
-    nmap <buffer> <C-l> <C-w>l
-    " Toggle matcher/converter (to filter ctags by kind)
-    inoremap <silent><buffer><expr> <C-c> unite#mappings#set_current_matchers(
-            \ empty(unite#mappings#get_current_matchers()) ?
-            \ ['converter_abbr_word', 'matcher_default'] : [])
-endfunction
-
-" Custom split action
-let s:my_split = {'is_selectable': 1}
-function! s:my_split.func(candidate)
-    let split_action = 'vsplit'
-    if winwidth(winnr('#')) <= 2 * (&textwidth ? &textwidth : 80)
-        let split_action = 'split'
-    endif
-    call unite#take_action(split_action, a:candidate)
-endfunction
-if dein#tap('unite') == 1
-    call unite#custom_action('openable', 'context_split', s:my_split)
-endif
-unlet s:my_split
 
 " }}}
 " vim-markdown {{{
