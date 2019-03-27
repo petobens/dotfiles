@@ -13,8 +13,10 @@ class Source(Base):
 
     def gather_candidates(self, context):  # pylint:disable=W0613
         """Gather spell suggestions."""
-        mispelled_word = self.vim.call('expand', '<cword>')
-        spell_suggestions = self.vim.call('spellsuggest', mispelled_word)
+        mispelled_word = (
+            context['args'][0] if context['args'] else self.vim.funcs.expand('<cword>')
+        )
+        spell_suggestions = self.vim.funcs.spellsuggest(mispelled_word)
         candidates = [
             {'word': w, 'index': i + 1} for i, w in enumerate(spell_suggestions)
         ]
@@ -30,12 +32,12 @@ class Kind(Command):
         self.default_action = 'replace_misspelled'
 
     def action_replace_misspelled(self, context):
-        """Replace misspelled word under the cursor with correctly spelled one."""
+        """Replace misspelled word with correctly spelled one."""
         index = context['targets'][0]['index']
         self.vim.command(f'silent normal! {index}z=')
 
     def action_replace_misspelled_all(self, context):
-        """Replace all occurrences of misspelled word under the cursor."""
+        """Replace all occurrences of misspelled word."""
         index = context['targets'][0]['index']
         self.vim.command(f'silent normal! {index}z=')
         try:
