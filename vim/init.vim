@@ -150,8 +150,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
     " Denite
-    " call dein#add('Shougo/denite.nvim')
-    call dein#add('petobens/denite.nvim')
+    call dein#add('Shougo/denite.nvim')
     call dein#add('neoclide/denite-extra')
     call dein#add('raghur/fruzzy')
     call dein#add('neoclide/denite-git')
