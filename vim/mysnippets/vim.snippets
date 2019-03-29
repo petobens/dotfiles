@@ -97,4 +97,9 @@ set runtimepath+=\$DOTVIM/bundle/repos/github.com/${1:plugin_author}
 ${2:set runtimepath+=\$DOTVIM/bundle/repos/github.com/${3:plugin_author_2}}`!p snip.rv = '\n' if t[2] else ''`filetype plugin indent on$0
 endsnippet
 
+snippet wtf "Write var to file" b
+call system('touch ${1:path}')
+call writefile(split(${2:var}, '\n', 1), glob('$1'), 'a')$0
+endsnippet
+
 # **}
