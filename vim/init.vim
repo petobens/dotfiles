@@ -1990,8 +1990,8 @@ function! s:scroll_preview_up(context)
 endfunction
 function! s:yank_commit(context)
     let candidate = a:context['targets'][0]['word']
-    let commit_message = matchstr(candidate, '*\s\zs\w*\ze\s-')
-    call setreg('+', commit_message)
+    let commit_hash = matchstr(candidate, '*\s\zs\w*\ze\s-')
+    call setreg('+', commit_hash)
 endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
@@ -2288,10 +2288,6 @@ vnoremap <silent> <Leader>gb :Gbrowse<cr>
 nnoremap <silent> <Leader>gB :Gbrowse!<cr>
 vnoremap <silent> <Leader>gB :Gbrowse!<cr>
 
-" Commit explorer/browser (from gv.vim plugin)
-nnoremap <silent> <Leader>cb :GV<cr>
-nnoremap <silent> <Leader>cB :GV!<cr>  " only current file
-
 " }}}
 " HighlightedYank {{{
 
@@ -2330,6 +2326,22 @@ if has('python3')
 endif
 
 nnoremap <silent> <Leader>gu :MundoToggle<CR>
+
+" }}}
+" GV {{{
+
+function! s:GVYankCommit()
+    let commit_hash = matchstr(getline('.'), '-\d\+\s\zs\w*\ze\s')
+    call setreg('+', commit_hash)
+endfunction
+
+augroup ps_gv
+    au!
+    au FileType GV nmap <silent> <buffer> <C-y> :call <SID>GVYankCommit()<CR>
+augroup END
+
+nnoremap <silent> <Leader>cb :GV<cr>
+nnoremap <silent> <Leader>cB :GV!<cr>  " only current file
 
 " }}}
 " Indentline {{{
