@@ -354,6 +354,8 @@ if type "git" > /dev/null 2>&1; then
     __git_complete gb _git_branch
     alias gp='git push'
     __git_complete gp _git_push
+    alias gF='git push --force-with-lease'
+    __git_complete gF _git_push
     alias gP='git pull'
     __git_complete gp _git_pull
     alias gdr='git push origin --delete'

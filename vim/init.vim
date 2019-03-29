@@ -2274,6 +2274,8 @@ nnoremap <silent> <Leader>gc :w!<CR>:Gcommit<cr>
 nnoremap <Leader>gm :Gmove<space>
 nnoremap <silent> <Leader>gr :Gremove<cr>
 nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Gpush')<CR>
+nnoremap <silent> <Leader>gF :call
+            \ <SID>NoShellSlash('Gpush --force-with-lease')<CR>
 nnoremap <silent> <Leader>gP :Gpull<CR>
 nnoremap <silent> <Leader>gb :Gbrowse<cr>
 vnoremap <silent> <Leader>gb :Gbrowse<cr>

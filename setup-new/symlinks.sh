@@ -355,9 +355,17 @@ if type "git" > /dev/null 2>&1; then
     browser = start
 [credential]
     helper = $credential_helper
+[alias]
+    pushf = push --force-with-lease
 [diff]
 	algorithm = histogram
 EOF
         echo Created .gitconfig file
+
+        # Make git use diff-so-fancy (i.e do corresponding changes in gitconfig)
+        if type "diff-so-fancy" > /dev/null 2>&1; then
+            echo -e "\\033[1;34m--> Setting diff-so-fancy as default git diff tool...\\033[0m"
+            diff-so-fancy --set-defaults
+        fi
     fi
 fi
