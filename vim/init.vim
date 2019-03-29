@@ -1988,6 +1988,11 @@ function! s:scroll_preview_up(context)
     execute 'normal! 10k'
     wincmd p
 endfunction
+function! s:yank_commit(context)
+    let candidate = a:context['targets'][0]['word']
+    let commit_message = matchstr(candidate, '*\s\zs\w*\ze\s-')
+    call setreg('+', commit_message)
+endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
 call denite#custom#action('buffer,directory,file,openable,dirmark', 'defx',
@@ -2008,6 +2013,7 @@ call denite#custom#action('buffer,directory,file,openable,dirmark',
 call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'scroll_preview_up', function('s:scroll_preview_up'),
         \ {'is_quit': 0})
+call denite#custom#action('gitlog', 'yank', function('s:yank_commit'))
 
 " }}}
 " Deoplete {{{
