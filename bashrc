@@ -303,7 +303,6 @@ if type "htop" > /dev/null 2>&1; then
 fi
 if type "lsd" > /dev/null 2>&1; then
     alias ls='lsd -F --color=auto'
-    alias ll='lsd -F -lah --color=always | fzf --ansi'
     cd() { builtin cd "$@" && lsd -F --color=auto; }
 fi
 if type "nvim" > /dev/null 2>&1; then

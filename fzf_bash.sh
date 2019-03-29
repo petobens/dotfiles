@@ -87,6 +87,41 @@ bind '"\C-x^": history-expand-line'
 # }}}
 # File and dirs {{{
 
+# ls-like {{{
+
+FZF_LL_OPTS="
+--ansi
+--bind 'ctrl-y:execute-silent(echo -n {-1} | $COPY_CMD)+abort'
+--header='enter=open, C-y=yank'
+"
+
+ll() {
+    cmd="lsd -F -lah --color=always"
+    out="$(eval "$cmd" "$@" |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_LL_OPTS" fzf)"
+    key=$(head -1 <<< "$out")
+    res=$(head -2 <<< "$out" | tail -1)
+
+    if [[ -z "$res" ]]; then
+        return 1
+    else
+        curr_dir="$(realpath "$PWD")"
+        res=$(echo "$res" | rev | cut -d ' ' -f 1 | rev)
+        path="$curr_dir/$res"
+        if [[ -d "$path" ]]; then
+            cmd="cd"
+        else
+            cmd="${EDITOR:-nvim}"
+        fi
+    fi
+
+    case "$key" in
+        **)
+            eval "$(printf "%s %s" "$cmd" "$path")" ;;
+    esac
+}
+
+# }}}
 # Files {{{
 
 # Custom Ctrl-t mapping (also Alt-t to ignore git-ignored files)
