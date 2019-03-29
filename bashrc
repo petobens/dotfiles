@@ -356,10 +356,14 @@ if type "git" > /dev/null 2>&1; then
     __git_complete gp _git_push
     alias gF='git push --force-with-lease'
     __git_complete gF _git_push
-    alias gP='git pull'
-    __git_complete gp _git_pull
     alias gdr='git push origin --delete'
     __git_complete gdr _git_push
+    alias gP='git pull'
+    __git_complete gp _git_pull
+    alias gf='git fetch'
+    __git_complete gf _git_fetch
+    alias gr='git rebase'
+    __git_complete gr _git_rebase
 fi
 
 # Python
