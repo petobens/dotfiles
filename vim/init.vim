@@ -2007,10 +2007,10 @@ call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'candidate_parent_dir', function('s:candidate_parent_dir'))
 call denite#custom#action('file', 'narrow',
         \ {context -> denite#do_action(context, 'open', context['targets'])})
-call denite#custom#action('buffer,directory,file,openable,dirmark',
+call denite#custom#action('buffer,directory,file,openable,dirmark,gitlog',
         \ 'scroll_preview_down', function('s:scroll_preview_down'),
         \ {'is_quit': 0})
-call denite#custom#action('buffer,directory,file,openable,dirmark',
+call denite#custom#action('buffer,directory,file,openable,dirmark,gitlog',
         \ 'scroll_preview_up', function('s:scroll_preview_up'),
         \ {'is_quit': 0})
 call denite#custom#action('gitlog', 'yank', function('s:yank_commit'))
