@@ -24,52 +24,52 @@ fi
 # Python binaries (can also be mostly installed with a package manager but we
 # do it with pipx to avoid dependency clash)
 echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
-pipx install flake8 --spec git+https://github.com/PyCQA/flake8 --verbose
-pipx inject flake8 flake8-bugbear flake8-docstrings --verbose
-pipx install beautysh --verbose
-pipx install black --verbose
-pipx install ipython --verbose
-pipx inject ipython numpy pandas matplotlib pycairo PyGObject --verbose
-pipx install isort --verbose
-pipx install jupyter --include-deps --verbose
-pipx install litecli --verbose
-pipx install mycli --verbose
-pipx install mypy --verbose
-if type "nvim" > /dev/null 2>&1; then
-    pipx install neovim-remote --verbose
-fi
-pipx install pre-commit --verbose
-pipx install pgcli --verbose
-pipx install pipenv --verbose
-pipx install pylint --verbose
-if type "i3" > /dev/null 2>&1; then
-    pipx install raiseorlaunch --verbose
-fi
-pipx install ranger-fm --verbose
-pipx install sqlparse --verbose
-pipx install trash-cli --verbose
-pipx install unimatrix --spec git+https://github.com/will8211/unimatrix --verbose
-pipx install vimiv --spec git+https://github.com/karlch/vimiv-qt --verbose
-pipx inject vimiv pyqt5 --verbose
-pipx install vim-vint --verbose
-pipx install yamllint --verbose
-# TODO: Replace this once there is a new (fixed) mssql-cli release
-# See https://github.com/dbcli/mssql-cli/pull/229
-# pipx install --spec git+https://github.com/cs01/mssql-cli mssql-cli --verbose
+pipx_install_cmd='pipx install --force --verbose'
+pipx_inject_cmd='pipx inject --verbose'
 
-pipx_home="$HOME/.local/pipx/venvs"
+$pipx_install_cmd flake8 --spec git+https://github.com/PyCQA/flake8
+$pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
+$pipx_install_cmd beautysh
+$pipx_install_cmd black
+$pipx_install_cmd ipython
+$pipx_inject_cmd ipython numpy pandas matplotlib pycairo PyGObject
+$pipx_install_cmd isort
+$pipx_install_cmd jupyter --include-deps
+$pipx_install_cmd litecli
+$pipx_install_cmd mycli
+$pipx_install_cmd mypy
+if type "nvim" > /dev/null 2>&1; then
+    $pipx_install_cmd neovim-remote
+fi
+$pipx_install_cmd pre-commit
+$pipx_install_cmd pgcli
+$pipx_install_cmd pipenv
+$pipx_install_cmd pylint
+if type "i3" > /dev/null 2>&1; then
+    $pipx_install_cmd raiseorlaunch
+fi
+$pipx_install_cmd ranger-fm
+$pipx_install_cmd sqlparse
+$pipx_install_cmd trash-cli
+$pipx_install_cmd unimatrix --spec git+https://github.com/will8211/unimatrix
+$pipx_install_cmd vimiv --spec git+https://github.com/karlch/vimiv-qt
+$pipx_inject_cmd vimiv pyqt5
+$pipx_install_cmd vim-vint
+$pipx_install_cmd yamllint
+
+pipx_venvs="$PIPX_HOME/venvs"
 
 # Set some mime defaults
-if [ -d "$pipx_home/ranger-fm" ]; then
+if [ -d "$pipx_venvs/ranger-fm" ]; then
     echo "Adding desktop entry for ranger-fm..."
-    xdg-desktop-menu install --novendor "$pipx_home"/ranger-fm/share/applications/ranger.desktop
+    xdg-desktop-menu install --novendor "$pipx_venvs/ranger-fm/share/applications/ranger.desktop"
     echo "xdg-mime query default inode/directory is: $(xdg-mime query default inode/directory)"
 fi
-if [ -d "$pipx_home/vimiv" ]; then
+if [ -d "$pipx_venvs/vimiv" ]; then
     echo "Adding desktop entry for vimiv..."
-    mkdir -p "$pipx_home"/vimiv/share
-    wget -P  "$pipx_home"/vimiv/share https://raw.githubusercontent.com/karlch/vimiv-qt/master/misc/vimiv.desktop
-    xdg-desktop-menu install --novendor "$pipx_home"/vimiv/share/vimiv.desktop
+    mkdir -p "$pipx_venvs/vimiv/share"
+    wget -P  "$pipx_venvs/vimiv/share" "https://raw.githubusercontent.com/karlch/vimiv-qt/master/misc/vimiv.desktop"
+    xdg-desktop-menu install --novendor "$pipx_venvs/vimiv/share/vimiv.desktop"
     echo "xdg-mime query default image/png is: $(xdg-mime query default image/png)"
 fi
 
@@ -91,8 +91,8 @@ fi
 
 for dbcli in litecli mycli pgcli mssql-cli
 do
-    if [ -d "$pipx_home/$dbcli" ]; then
-        styles_dir="$pipx_home/$dbcli/lib/python3.7/site-packages/pygments/styles"
+    if [ -d "$pipx_venvs/$dbcli" ]; then
+        styles_dir="$pipx_venvs/$dbcli/lib/python3.7/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then
             $ln_cmd -fTs "$python_dir/onedarkish.py" "$styles_dir/onedarkish.py"
             echo Created symlink in "$styles_dir/onedarkish.py"

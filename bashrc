@@ -113,7 +113,7 @@ if type "pipenv" > /dev/null 2>&1; then
     export PIPENV_SKIP_LOCK=1
 fi
 if type "pipx" > /dev/null 2>&1; then
-    export PIPX_HOME=$HOME/.local/pipx/venvs
+    export PIPX_HOME=$HOME/.local/pipx
     export PIPX_BIN_DIR=$HOME/.local/bin
 fi
 if type "sqlplus" > /dev/null 2>&1; then
