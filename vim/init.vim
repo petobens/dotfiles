@@ -150,7 +150,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " Shougo plugins
     call dein#add('Shougo/dein.vim')
     " Denite
-    call dein#add('Shougo/denite.nvim')
+    " call dein#add('Shougo/denite.nvim')
+    call dein#add('petobens/denite.nvim')
     call dein#add('neoclide/denite-extra')
     call dein#add('raghur/fruzzy')
     call dein#add('neoclide/denite-git')
@@ -1834,9 +1835,6 @@ nnoremap <silent> ]d :Denite -resume -immediately -cursor-pos=+1<CR>
 nnoremap <silent> [d :Denite -resume -immediately -cursor-pos=-1<CR>
 nnoremap ]D :<C-u>Denite -resume -cursor-pos=$<CR>
 nnoremap [D :<C-u>Denite -resume -cursor-pos=0<CR>
-" NeoInclude and Denite tag
-nnoremap <silent> <Leader>dte :NeoIncludeMakeCache<CR>:Denite
-            \ tag:include<CR>
 nnoremap <silent> <Leader>te :Denite outline<CR>
 nnoremap <silent> <Leader>tE :NeoIncludeMakeCache<CR>:Denite tag:include<CR>
 " FIXME: This should be improved
