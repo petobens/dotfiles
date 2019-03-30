@@ -1424,7 +1424,7 @@ augroup END
 
 call defx#custom#option('_', {
             \ 'show_ignored_files': 1,
-            \ 'winwidth': 40,
+            \ 'winwidth': 43,
             \ 'split': 'vertical',
             \ 'direction': 'topleft',
             \ 'columns': 'mark:filename:icons:size:git',
@@ -1435,8 +1435,8 @@ call defx#custom#column('filename', {
             \ 'directory_icon': '',
             \ 'opened_icon': '',
             \ 'indent': '  ',
-            \ 'min_width': 24,
-            \ 'max_width': 24,
+            \ 'min_width': 23,
+            \ 'max_width': 23,
             \ })
 call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 call defx#custom#column('mark', {
@@ -1521,6 +1521,7 @@ endfunction
 augroup ps_defx
     au!
     au FileType defx call s:defx_settings()
+    au FileType defx setlocal relativenumber
 augroup END
 
 
@@ -1939,7 +1940,7 @@ function! s:defx_preview(context)
         endif
     endfor
     if has_preview_win == 1 && defx_path ==# (dir . '/')
-        call defx#custom#column('filename', {'min_width': 24, 'max_width': 24})
+        call defx#custom#column('filename', {'min_width': 23, 'max_width': 23})
         pclose!
         return
     endif
@@ -1950,9 +1951,12 @@ function! s:defx_preview(context)
     execute 'silent rightbelow vertical pedit! defx_tmp'
     wincmd P
     silent! setlocal nobuflisted
-    execute 'vert resize ' . (denite_winwidth / 3)
+    let defx_width = float2nr(denite_winwidth / 2.5)
+    execute 'vert resize ' . defx_width
 
-    call defx#custom#column('filename', {'min_width': 40, 'max_width': 40})
+    let fn_width = float2nr(defx_width * 0.65)
+    call defx#custom#column('filename',
+        \ {'min_width': fn_width, 'max_width': fn_width })
     execute 'Defx -no-show-ignored-files -new -split=no ' .
                 \ '-ignored-files=.*,__pycache__ ' .
                 \ '-auto-recursive-level=1 ' .  dir . file_search
