@@ -363,6 +363,7 @@ if type "git" > /dev/null 2>&1; then
     __git_complete gf _git_fetch
     alias gr='git rebase'
     __git_complete gr _git_rebase
+    alias gra='git remote add'
 fi
 
 # Python
