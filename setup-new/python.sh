@@ -64,6 +64,12 @@ if [ -d "$pipx_venvs/ranger-fm" ]; then
     echo "Adding desktop entry for ranger-fm..."
     xdg-desktop-menu install --novendor "$pipx_venvs/ranger-fm/share/applications/ranger.desktop"
     echo "xdg-mime query default inode/directory is: $(xdg-mime query default inode/directory)"
+    echo "Adding man pages ranger-fm..."
+    local_man_path="$HOME/.local/share/man/man1"
+    mkdir -p "$local_man_path"
+    cp -a "$pipx_venvs/ranger-fm/share/man/man1/." "$local_man_path"
+    echo "Updating man's internal db..."
+    sudo mandb
 fi
 if [ -d "$pipx_venvs/vimiv" ]; then
     echo "Adding desktop entry for vimiv..."
