@@ -61,3 +61,4 @@ manipulate.bg = {color.black}
 manipulate.bar.bg = {color.cursor_grey}
 manipulate.bar.fg = {color.light_blue}
 manipulate.bar.border = 0px solid
+keyhint.suffix_color = {color.white}
