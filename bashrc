@@ -364,6 +364,7 @@ if type "git" > /dev/null 2>&1; then
     alias gr='git rebase'
     __git_complete gr _git_rebase
     alias gra='git remote add'
+    alias gst='git stash'
     alias gsp='git stash pop'
 fi
 
