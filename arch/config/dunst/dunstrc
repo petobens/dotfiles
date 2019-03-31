@@ -176,6 +176,8 @@ startup_notification = false
 # Mouse
 mouse_left_click = do_action
 
+# Round corners
+corner_radius = 20
 
 [experimental]
 per_monitor_dpi = false
