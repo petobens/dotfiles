@@ -1,1 +1,1 @@
-backend : GTK3Agg  # change to TkAgg if errors
+# backend : GTK3Agg  # change to TkAgg if errors
