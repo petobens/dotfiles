@@ -6,8 +6,11 @@ set window-title-basename true
 set incremental-search true
 set n-completion-items 12
 set selection-clipboard clipboard
+set sandbox none
+
+# Synctex (activates with ctrl+click)
 set synctex true
-set synctex-editor-command "nvr --remote-silent +\%{line} \%{input}"
+set synctex-editor-command "nvr --remote-silent +\%{line}|foldo\! \%{input}"
 
 # Mappings
 map n navigate next
@@ -20,9 +23,14 @@ map b adjust_window best-fit
 map > rotate
 map < rotate rotate-ccw
 unmap q
-unmap [presentation] q
 map i toggle_index
 map r recolor
+# Presentation mode
+map [normal] P toggle_presentation
+map [presentation] q toggle_presentation
+map [presentation] P toggle_presentation
+map [presentation] n navigate next
+map [presentation] p navigate previous
 
 # Black background
 set recolor-lightcolor "#24272e"
