@@ -796,7 +796,7 @@ endfunction
 function! s:RemoveBreakPoint()
     let save_cursor = getcurpos()
     execute 'g/browser()/d'
-    silent update
+    silent noautocmd update
     call setpos('.', save_cursor)
 endfunction
 
@@ -833,7 +833,7 @@ nnoremap <buffer> <silent> <Leader>fc :call <SID>FormatR()<CR>
 " (Open) Interpreter (we mostly use nvim-r for this now)
 if exists(':Topen')
     nnoremap <silent><buffer> <Leader>oi :lcd %:p:h<CR>:T
-                \ R --ess --no-save --no-restore<CR>
+                \ R --no-save --no-restore<CR>
 endif
 
 " Documentation

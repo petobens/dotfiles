@@ -2509,11 +2509,14 @@ augroup END
 " }}}
 " Nvim-R {{{
 
+" Note: to use this plugin with packrat we need first to run:
+" `packrat::set_opts(external.packages = c("nvimcom"))`
+
 " Console settings (using tmux)
 let R_args = ['--no-save', '--quiet']
 let R_in_buffer = 0
-let R_source = '$DOTVIM/bundle/repos/github.com/jalvesaq/Nvim-R/' .
-            \  'R/tmux_split.vim'
+let R_source = expand('$DOTVIM/bundle/repos/github.com/jalvesaq/Nvim-R/' .
+            \  'R/tmux_split.vim')
 let R_tmux_title = 'automatic'
 let R_rconsole_width = 0  " Always use horizontal split
 let R_rconsole_height = 12
@@ -2525,12 +2528,12 @@ let rout_follow_colorscheme = 1
 
 " Object browser
 let R_objbr_place = 'LEFT'
-let R_objbr_w = 30
+let R_objbr_w = 40
 
 function! s:RunR(mode)
-    if g:rplugin_nvimcom_port == 0
+    if g:rplugin.nvimcom_port == 0
         call StartR('R')
-        while g:rplugin_nvimcom_port == 0
+        while g:rplugin.nvimcom_port == 0
             sleep 300m
         endwhile
     endif
@@ -2543,14 +2546,14 @@ endfunction
 
 augroup plugin_R
     au!
-    au FileType r nmap <Leader>rs <Plug>RStart
-    au FileType r nmap <Leader>rq <Plug>RClose
-    au FileType r nmap <Leader>rr <Plug>RClearAll
-    au FileType r nmap <Leader>rc <Plug>RClearConsole
-    au FileType r nmap <Leader>rf :call <SID>RunR('file')<CR>
-    au FileType r vmap <Leader>rf <Esc>:call <SID>RunR('visual')<CR>
-    au FileType r nmap <Leader>ro <Plug>RUpdateObjBrowser
-    au FileType r nmap <Leader>rv <Plug>RViewDF
+    au FileType r nmap <silent> <Leader>rs <Plug>RStart
+    au FileType r nmap <silent> <Leader>rq <Plug>RClose
+    au FileType r nmap <silent> <Leader>rr <Plug>RClearAll
+    au FileType r nmap <silent> <Leader>rc <Plug>RClearConsole
+    au FileType r nmap <silent> <Leader>rf :call <SID>RunR('file')<CR>
+    au FileType r vmap <silent> <Leader>rf <Esc>:call <SID>RunR('visual')<CR>
+    au FileType r nmap <silent> <Leader>ro <Plug>RUpdateObjBrowser
+    au FileType r nmap <silent> <Leader>rv <Plug>RViewDF
     " Object browser mappings
     au FileType rbrowser nmap <buffer> q <Plug>RUpdateObjBrowser
     au FileType rbrowser nmap <silent><buffer> zo :call RBrOpenCloseLs(1)<CR>
