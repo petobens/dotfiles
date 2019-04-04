@@ -72,5 +72,6 @@ augroup END
 " Linter and formatting
 nnoremap <buffer> <Leader>rl :Neomake<CR>
 nnoremap <buffer> <Leader>fc :call <SID>RunSqlFormat()<CR>
+vnoremap <buffer> <silent> <Leader>fc :call <SID>RunSqlFormat('visual')<CR>
 
 " }}}
