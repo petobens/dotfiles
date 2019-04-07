@@ -1,5 +1,5 @@
 devtools
+stringi
 formatR
 lintr
 packrat
-stringi

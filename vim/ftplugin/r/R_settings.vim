@@ -395,7 +395,8 @@ function! s:LintR()
                 \. 'camel_case_linter, '
                 \. 'snake_case_linter = NULL'
                 \. ')'
-    let lint_command = 'suppressPackageStartupMessages(library(lintr));'
+    let lint_command = 'suppressPackageStartupMessages(library(lintr, '
+                \. "lib.loc = '" . expand($R_LIBS_USER) . "'));"
                 \. 'lint(cache = FALSE, commandArgs(TRUE), '
                 \. lintr_opts . ')'
     let file_args = ' --args ' . current_file
@@ -487,8 +488,10 @@ function! s:FormatR(...)
     " Set compiler
     let flags = '--slave --no-save --no-restore -e '
     " TODO: Consider using styler instead of formatr
-    let tidy_command = 'library(formatR);x <- tidy_source(source = ' .
-                \ '\"clipboard\", width.cutoff = 80, arrow = TRUE)'
+    let tidy_command = 'library(formatR, '
+                \. "lib.loc = '" . expand($R_LIBS_USER) . "');"
+                \. 'x <- tidy_source(source = \"clipboard\", '
+                \. 'width.cutoff = 80, arrow = TRUE)'
     let compiler = 'R ' . flags . '"' . tidy_command . '"'
 
     " Run the command
