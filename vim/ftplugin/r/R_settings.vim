@@ -348,7 +348,7 @@ augroup show_R_output
 augroup END
 
 " }}}
-" Linting {{{
+" Linting and formatting {{{
 
 " TODO: Run this without calling R (i.e as an external tool) because otherwise
 " it is slow
@@ -395,8 +395,9 @@ function! s:LintR()
                 \. 'camel_case_linter, '
                 \. 'snake_case_linter = NULL'
                 \. ')'
-    let lint_command = 'library(lintr);lint(cache = FALSE, commandArgs(TRUE), '
-                \  . lintr_opts . ')'
+    let lint_command = 'suppressPackageStartupMessages(library(lintr));'
+                \. 'lint(cache = FALSE, commandArgs(TRUE), '
+                \. lintr_opts . ')'
     let file_args = ' --args ' . current_file
     let compiler = 'R ' . flags . '"' . set_wd . lint_command . '"' . file_args
     let &l:makeprg = compiler
@@ -476,8 +477,12 @@ function! s:FormatR(...)
     " Save cursor position
     let save_cursor = getcurpos()
 
-    " Yank the whole buffer
-    silent normal! ggyG
+    " Yank selection or buffer
+    if a:0 && a:1 ==# 'visual'
+        silent normal! gv"*y
+    else
+        silent normal! gg"*yG
+    endif
 
     " Set compiler
     let flags = '--slave --no-save --no-restore -e '
@@ -501,19 +506,28 @@ function! s:FormatR(...)
         return
     endif
 
-    silent normal! ggdG
-    call append(line('$'), output)
-
-    " Delete extra lines at the beginning and set markdown filetype with folding
-    " at subsection level
-    silent normal! ggdd
+    if a:0 && a:1 ==# 'visual'
+        let visual_line_nr = getpos("'<")[1]
+        silent normal! gvx
+        let curr_line = line('.')
+        if curr_line < visual_line_nr
+            call append(line('.'), output)
+        else
+            call append(line('.') - 1, output)
+        endif
+    else
+        silent normal! ggdG
+        call append(line('$'), output)
+        " Delete extra lines at the beginning and set markdown filetype with
+        " folding at subsection level
+        silent normal! ggdd
+    endif
 
     " Save file and restore cursor position
     silent noautocmd update
     call setpos('.', save_cursor)
 endfunction
 
-" Automatically run formatR and lintr on save
 augroup R_linting
     au!
     au BufWritePost *.{r,R} call s:LintR()
@@ -829,6 +843,7 @@ vnoremap <silent> <buffer> <F5> :EvalVisualRForeground<CR>
 " Linting and format R
 nnoremap <buffer> <silent> <Leader>rl :call <SID>LintR()<CR>
 nnoremap <buffer> <silent> <Leader>fc :call <SID>FormatR()<CR>
+vnoremap <buffer> <silent> <Leader>fc :call <SID>FormatR('visual')<CR>
 
 " (Open) Interpreter (we mostly use nvim-r for this now)
 if exists(':Topen')
