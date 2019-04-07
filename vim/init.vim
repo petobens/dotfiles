@@ -887,7 +887,6 @@ inoremap <C-l> <C-o>l
 inoremap <A-f> <C-o>w
 inoremap <A-b> <C-o>b
 inoremap <A-x> <C-W>
-inoremap <C-x> <C-U>
 
 " Move lines up and down
 inoremap <A-j> <Esc>:m .+1<CR>==gi
@@ -2522,6 +2521,7 @@ let R_rconsole_width = 0  " Always use horizontal split
 let R_rconsole_height = 12
 
 let R_assign = 0  " Disable _ conversion
+let R_show_args = 0  " Disable preview window completion
 let r_syntax_folding = 1
 let Rout_more_colors = 1
 let rout_follow_colorscheme = 1
