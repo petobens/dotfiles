@@ -31,9 +31,10 @@ $pipx_install_cmd flake8 --spec git+https://github.com/PyCQA/flake8
 $pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
 $pipx_install_cmd beautysh
 $pipx_install_cmd black
+$pipx_install_cmd httpie
 $pipx_install_cmd ipython
 $pipx_inject_cmd ipython numpy pandas matplotlib pycairo PyGObject
-$pipx_install_cmd isort
+$pipx_install_cmd isort[pyproject]
 $pipx_install_cmd jupyter --include-deps
 $pipx_install_cmd litecli
 $pipx_install_cmd mycli
