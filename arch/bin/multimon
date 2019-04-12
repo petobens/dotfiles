@@ -19,7 +19,7 @@ def multi(how):
     rmap = _get_resize_map(i3)
     _xrandr(how)
     sleep(0.5)
-    _restart_dunst_and_polybar()
+    _restart_dunst_and_polybar(how)
     sleep(0.5)
     _adjust_windows(i3, rmap)
     return
@@ -60,25 +60,28 @@ def _xrandr(how):
         how = 'dual' if nr_monitors == 2 else 'primary'
 
     if how == 'primary':
-        cmd = f'xrandr --output {prim_n} --primary --dpi {PRIM_DPI}'
+        cmd = f'--output {prim_n} --primary --dpi {PRIM_DPI}'
         turn_off = [i for i in monitors if i not in ('Screen', 'VIRTUAL1', prim_n)]
         for m in turn_off:
             cmd += f' --output {m} --off'
 
     elif how == 'mirror':
+        # FIXME: We seem to need to run this from the dual monitor (i.e after running
+        # `multimon dual`) since the monitor won't get enabled otherwise
         cmd = (
-            f'xrandr --output {sec_n} --scale-from {prim_w}x{prim_h} --auto '
+            f'--output {sec_n} --scale-from {prim_w}x{prim_h} --same-as {prim_n} '
             f'--output {prim_n} --dpi {PRIM_DPI}'
         )
 
     elif how == 'dual':
         mode = f'--mode {sec_w}x{sec_h}' if forced_res else '--auto'
         cmd = (
-            f'xrandr --output {sec_n} --scale {FIXED_SCALE}x{FIXED_SCALE} '
+            f'--output {sec_n} --scale {FIXED_SCALE}x{FIXED_SCALE} '
             f'{mode} --pos 0x0 --output {prim_n} --primary --dpi '
             f'{PRIM_DPI} --pos {FIXED_SCALE * sec_w}x0'
         )
 
+    cmd = f'xrandr {cmd}'
     print(f"Running the following xrandr command: {cmd}")
     _sh(cmd)
 
@@ -111,9 +114,10 @@ def _adjust_windows(i3, resize_map):
     return
 
 
-def _restart_dunst_and_polybar():
+def _restart_dunst_and_polybar(how):
+    how = 'xrandr' if how != 'mirror' else how
     polybar_launch_file = os.path.expanduser('~/.config/polybar/launch.py')
-    os.system(f'python {polybar_launch_file}')
+    os.system(f'python {polybar_launch_file} -m {how}')
     sleep(0.2)
     _sh('pkill -f dunst')
     _sh_no_block('nohup dunst &', stdout=subprocess.DEVNULL)
