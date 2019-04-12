@@ -375,8 +375,8 @@ if type "python" > /dev/null 2>&1; then
         alias python='python3'
         alias pip='pip3'
     fi
-    if type "jupyter" > /dev/null 2>&1; then
-        alias jn='jupyter notebook'
+    if type "jupyter-notebook" > /dev/null 2>&1; then
+        alias jn='jupyter-notebook'
     fi
     if type "pip" > /dev/null 2>&1; then
         alias piu='pip install --user'
