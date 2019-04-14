@@ -1425,22 +1425,24 @@ call defx#custom#option('_', {
             \ 'winwidth': 43,
             \ 'split': 'vertical',
             \ 'direction': 'topleft',
-            \ 'columns': 'mark:filename:icons:size:git',
+            \ 'columns': 'mark:indent:icon:filename:icons:size:git',
             \ 'root_marker': '﬌ '
             \ })
-call defx#custom#column('filename', {
-            \ 'root_icon': ' ',
-            \ 'directory_icon': '',
-            \ 'opened_icon': '',
-            \ 'indent': '  ',
-            \ 'min_width': 23,
-            \ 'max_width': 23,
-            \ })
-call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 call defx#custom#column('mark', {
             \ 'readonly_icon': '',
             \ 'selected_icon': '',
             \ })
+call defx#custom#column('indent', { 'indent': '  '})
+call defx#custom#column('icon', {
+            \ 'root_icon': ' ',
+            \ 'directory_icon': '',
+            \ 'opened_icon': '',
+            \ })
+call defx#custom#column('filename', {
+            \ 'min_width': 23,
+            \ 'max_width': 23,
+            \ })
+call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 
 " Shown only current directory in root
 function! Root(path) abort
