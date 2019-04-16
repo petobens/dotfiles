@@ -2046,7 +2046,7 @@ call deoplete#custom#option({
     \ 'sources': {
         \ 'bib': ['ultisnips'],
         \ 'snippets': ['ultisnips'],
-        \ 'tex' : ['buffer', 'dictionary', 'ultisnips', 'file', 'omni'],
+        \ 'tex' : ['buffer', 'ultisnips', 'file', 'omni'],
         \ 'r' : ['buffer', 'ultisnips', 'file', 'omni']
     \ },
     \ 'omni_patterns':  {
