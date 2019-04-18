@@ -998,6 +998,8 @@ endif
 " }}}
 " Bash {{{
 
+nnoremap <silent> <Leader>eb :e $HOME/git-repos/private/dotfiles/bashrc<CR>
+
 augroup ft_bash
     au!
     au BufNewFile,BufReadPost {bash_profile,bashrc,fzf_bash.sh} set filetype=sh
