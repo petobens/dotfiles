@@ -71,8 +71,6 @@ brew tap neovim/neovim
 $brew_install_cmd neovim --HEAD
 $brew_install_cmd neovim-remote
 $brew_install_cmd tmux --HEAD
-$brew_install_cmd socat  # for faster powerline
-$brew_install_cmd powerline
 
 # Databases
 $brew_install_cmd mongodb

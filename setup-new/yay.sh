@@ -82,8 +82,6 @@ fi
 $yay_cmd alacritty
 $yay_cmd neovim-git
 $yay_cmd tmux-git
-$yay_cmd powerline
-$yay_cmd python-powerline-gitstatus
 
 # Arch specific and window manager
 $yay_cmd acpi_call

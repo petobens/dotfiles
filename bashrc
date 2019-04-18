@@ -169,18 +169,158 @@ shopt -s histappend # append to history i.e don't overwrite it
 shopt -s cmdhist
 shopt -s lithist
 
-# Unset the prompt so we can set it properly afterwards
-unset PROMPT_COMMAND
-export PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
+# }}}
+# Prompt {{{
 
-# Powerline prompt (to see changes when customizing use `powerline-daemon
-# --replace`)
-if type "powerline-daemon" > /dev/null 2>&1; then
-    powerline-daemon -q
-    export POWERLINE_BASH_CONTINUATION=1
-    export POWERLINE_BASH_SELECT=1
-    .  "$base_pkg_dir/lib/python3.7/site-packages/powerline/bindings/bash/powerline.sh"
-fi
+# Show vi-mode in command prompt (note: 38 is fg color and 48 bg color; 2 means
+# truecolor (i.e rgb) and 5 256color; 1m is bold and 2m is normal)
+bind "set show-mode-in-prompt on"
+bind 'set vi-ins-mode-string \1\e[38;5;235;48;2;97;175;239;1m\2 I '\
+'\1\e[38;2;97;175;239;48;2;208;208;208;1m\2\1\e[0m\2\1\e[6 q\2'
+bind 'set vi-cmd-mode-string \1\e[38;5;235;48;2;152;195;121;1m\2 N '\
+'\1\e[38;2;152;195;121;48;2;208;208;208;1m\2\1\e[0m\2\1\e[2 q\2'
+# Switch to block cursor before executing a command
+bind -m vi-insert 'RETURN: "\e\n"'
+
+
+declare -A _ps1_colors=(
+    [Black]='36;39;46' #24272e
+    [White]='208;208;208' #d0d0d0
+    [Purple]='198;120;221' #c678dd
+    [SpecialGrey]='59;64;72' #3b4048
+    [CursorGrey]='40;44;52' #282c34
+    [Grey]='171;178;191' #abb2bf
+    [Red]='224;108;117' #e06c75
+    [Mono]='130;137;151' #828997
+)
+_ps1_content() {
+    fg_c="${_ps1_colors[$1]}"
+    bg_c="${_ps1_colors[$2]}"
+    style="$3m" # 1 for bold; 2 for normal
+    content="$4"
+    echo "\033[38;2;$fg_c;48;2;$bg_c;$style$content\033[0m"
+}
+
+_ps1_has_ssh(){
+    if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+        echo 'has_ssh'
+    fi
+}
+_ps1_user() {
+    venv="$1"
+    branch="$2"
+    has_ssh="$3"
+
+    user="$USER"
+    if [[ -n "$has_ssh" ]]; then
+        user="$user@$HOSTNAME"
+    fi
+    segment="$(_ps1_content Black White 1 " $user ")"
+
+    bg_color="Purple"
+    if [[ -z "$venv" ]]; then
+        if [[ -n "$branch" ]]; then
+            bg_color="SpecialGrey"
+        else
+            bg_color="CursorGrey"
+        fi
+    fi
+    segment+="$(_ps1_content White $bg_color 1 )"
+    echo -e "$segment"
+}
+
+_ps1_has_venv(){
+    printf "%s" "${VIRTUAL_ENV##*/}"
+}
+_ps1_venv() {
+    venv="$1"
+    branch="$2"
+    if [[ -n "$venv" ]]; then
+        venv=$(printf " %s" "$venv")
+        segment="$(_ps1_content Black Purple 1 " $venv ")"
+        bg_color="CursorGrey"
+        if [[ -n "$branch" ]]; then
+            bg_color="SpecialGrey"
+        fi
+        segment+="$(_ps1_content Purple $bg_color 1 )"
+        echo -e "$segment"
+    fi
+}
+
+_ps1_has_git_branch() {
+    printf "%s" "$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
+}
+_ps1_branch() {
+    branch="$1"
+    if [[ -n $branch ]]; then
+        branch=$(printf " %s" "$branch")
+        segment="$(_ps1_content Grey SpecialGrey 2 " $branch ")"
+        mod_files="$(git diff --name-only --diff-filter=M 2> /dev/null | wc -l )"
+        if [ ! "$mod_files" -eq 0 ]; then
+            segment+="$(_ps1_content Red SpecialGrey 2 "✚ $mod_files ")"
+        fi
+        segment+="$(_ps1_content SpecialGrey CursorGrey 1 )"
+        echo -e "$segment"
+    fi
+}
+
+_ps1_path() {
+    p="$PWD"
+    p="${p/$HOME/ }"
+    IFS='/' read -r -a arr <<< "$p"
+    path_size="${#arr[@]}"
+    if [ "$path_size" -eq 1 ]; then
+        segment="\033[1m${arr[0]:=/}"
+    elif [ "$path_size" -eq 2 ]; then
+        segment="${arr[0]:=/}  \033[1m${arr[-1]}"
+    else
+        if [ "$path_size" -gt 3 ]; then
+            p="…/"$(echo "$p" | rev | cut -d '/' -f-3 | rev)
+        fi
+        curr=$(basename "$p")
+        p=$(dirname "$p")
+        segment="${p//\//  }  \033[1m$curr"
+        if [[ "${p:0:1}" = '/' ]]; then
+            segment="/$segment"
+        fi
+    fi
+    segment="$(_ps1_content Mono CursorGrey 2 " $segment ")"
+    echo -e "$segment"
+}
+
+_ps1_status() {
+    status="$1"
+    if [ "$status" != 0 ]; then
+        segment="$(_ps1_content CursorGrey Red 1 )"
+        segment+="$(_ps1_content Black Red 1 " $status ")"
+        segment+="$(_ps1_content Red Black 1 )"
+    else
+        segment="$(_ps1_content CursorGrey Black 1 )"
+    fi
+    echo -e "$segment"
+}
+
+_ps1_command() {
+    exit_status="$?"
+    git_branch="$(_ps1_has_git_branch)"
+    venv="$(_ps1_has_venv)"
+    has_ssh="$(_ps1_has_ssh)"
+
+    # Note: we seem to need to call _ps1_path without printf to have proper
+    # rendering (especially when cycling through history)
+    PS1=""
+    PS1+='\[$(printf "%s" "$(_ps1_user "$venv" "$git_branch" "$has_ssh")")\]'
+    PS1+='\[$(printf "%s" "$(_ps1_venv "$venv" "$git_branch")")\]'
+    PS1+='\[$(printf "%s" "$(_ps1_branch "$git_branch")")\]'
+    PS1+='$(_ps1_path)'
+    PS1+='\[$(printf "%s " "$(_ps1_status "$exit_status")")\]'
+}
+unset PROMPT_COMMAND
+PROMPT_COMMAND=_ps1_command
+PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
+
+# Continuation prompt
+PS2=" ﬌ "
 
 # }}}
 # Bindings {{{
@@ -231,16 +371,6 @@ bind "set colored-stats on"
 bind "set blink-matching-paren on"
 bind "set colored-completion-prefix on"  # uses so color from LS_COLORS
 bind "set mark-symlinked-directories on"
-
-# Show mode in command prompt (note: 38 is fg color and 48 bg color; 2 means
-# truecolor (i.e rgb) and 5 256color)
-bind "set show-mode-in-prompt on"
-bind 'set vi-ins-mode-string \1\e[38;5;235;48;2;97;175;239;1m\2 I '\
-'\1\e[38;2;97;175;239;48;2;208;208;208;1m\2\1\e[0m\2\1\e[6 q\2'
-bind 'set vi-cmd-mode-string \1\e[38;5;235;48;2;152;195;121;1m\2 N '\
-'\1\e[38;2;152;195;121;48;2;208;208;208;1m\2\1\e[0m\2\1\e[2 q\2'
-# Switch to block cursor before executing a command
-bind -m vi-insert 'RETURN: "\e\n"'
 
 # Cycle forward with TAB and backwards with S-Tab when using menu-complete
 bind -m vi-insert '"\C-i": menu-complete'
@@ -498,9 +628,9 @@ fi
 # }}}
 # Functions {{{
 
-# Save and reload the history after each command finishes (we wrap it in a
-# function to preserve exit status when using powerline on tmux)
-# See: https://unix.stackexchange.com/a/18443
+# Save and reload the history after each command finishes (this must be called
+# by the PROMPT_COMMAND; see: https://unix.stackexchange.com/a/18443)
+# Note that we need to save the last_exit_status to be reused by the prompt
 save_reload_hist() {
     local last_exit_status=$?
     history -n; history -w; history -c; history -r
