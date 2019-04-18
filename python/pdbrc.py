@@ -1,3 +1,6 @@
+"""pdbpp config."""
+# pylint:disable=E1101,W0212
+
 import pdb
 
 from pygments.formatters import TerminalTrueColorFormatter
@@ -40,6 +43,8 @@ syntax_fold_bg = comment_grey
 
 
 class OneDarkish(Style):
+    """OneDarkish pygments style."""
+
     styles = {
         Text: syntax_fg,
         Error: red,
@@ -65,18 +70,21 @@ class OneDarkish(Style):
     }
 
 
-class Config(pdb.DefaultConfig):
+class Config(pdb.DefaultConfig):  # type: ignore
+    """Actual pdbpp config."""
+
     prompt = '(Pdb++)> '
     sticky_by_default = True
 
     highlight = True
     use_pygments = True
     use_terminal256formatter = True
-    filename_color = pdb.Color.yellow
-    line_number_color = pdb.Color.darkgray
-    current_line_color = 40  # black
+    filename_color = pdb.Color.yellow  # type: ignore
+    line_number_color = pdb.Color.darkgray  # type: ignore
+    current_line_color = '48;2;40;44;52'  # 282c34
 
-    def setup(self, pdb):
+    def setup(self, pdb):  # pylint:disable=W0621
+        """Override pdbpp mappings and colors."""
         # See https://github.com/antocuni/pdb/issues/36
         pdb_class = pdb.__class__
         # Aliases
