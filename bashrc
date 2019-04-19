@@ -183,6 +183,7 @@ bind 'set vi-cmd-mode-string \1\e[38;5;235;48;2;152;195;121;1m\2 N '\
 bind -m vi-insert 'RETURN: "\e\n"'
 
 
+_ps1_separator=''
 declare -A _ps1_colors=(
     [Black]='36;39;46' #24272e
     [White]='208;208;208' #d0d0d0
@@ -191,6 +192,7 @@ declare -A _ps1_colors=(
     [CursorGrey]='40;44;52' #282c34
     [Grey]='171;178;191' #abb2bf
     [Red]='224;108;117' #e06c75
+    [Orange]='209;154;102' #d19a66
     [Mono]='130;137;151' #828997
 )
 _ps1_content() {
@@ -213,7 +215,7 @@ _ps1_user() {
 
     user="$USER"
     if [[ -n "$has_ssh" ]]; then
-        user="$user@$HOSTNAME"
+        user=" $user@$HOSTNAME"
     fi
     segment="$(_ps1_content Black White 1 " $user ")"
 
@@ -225,7 +227,7 @@ _ps1_user() {
             bg_color="CursorGrey"
         fi
     fi
-    segment+="$(_ps1_content White $bg_color 1 )"
+    segment+="$(_ps1_content White $bg_color 1 $_ps1_separator)"
     echo -e "$segment"
 }
 
@@ -242,7 +244,7 @@ _ps1_venv() {
         if [[ -n "$branch" ]]; then
             bg_color="SpecialGrey"
         fi
-        segment+="$(_ps1_content Purple $bg_color 1 )"
+        segment+="$(_ps1_content Purple $bg_color 1 $_ps1_separator)"
         echo -e "$segment"
     fi
 }
@@ -259,14 +261,13 @@ _ps1_branch() {
         if [ ! "$mod_files" -eq 0 ]; then
             segment+="$(_ps1_content Red SpecialGrey 2 "✚ $mod_files ")"
         fi
-        segment+="$(_ps1_content SpecialGrey CursorGrey 1 )"
+        segment+="$(_ps1_content SpecialGrey CursorGrey 1 $_ps1_separator)"
         echo -e "$segment"
     fi
 }
 
 _ps1_path() {
-    p="$PWD"
-    p="${p/$HOME/ }"
+    p="${1/$HOME/ }"
     IFS='/' read -r -a arr <<< "$p"
     path_size="${#arr[@]}"
     if [ "$path_size" -eq 1 ]; then
@@ -275,7 +276,7 @@ _ps1_path() {
         segment="${arr[0]:=/}  \033[1m${arr[-1]}"
     else
         if [ "$path_size" -gt 3 ]; then
-            p="…/"$(echo "$p" | rev | cut -d '/' -f-3 | rev)
+            p="/"$(echo "$p" | rev | cut -d '/' -f-3 | rev)
         fi
         curr=$(basename "$p")
         p=$(dirname "$p")
@@ -285,26 +286,57 @@ _ps1_path() {
         fi
     fi
     segment="$(_ps1_content Mono CursorGrey 2 " $segment ")"
+
+    read_only="$2"
+    status="$3"
+    if [[ -n $read_only ]]; then
+        bg_color="Orange"
+    else
+        bg_color="Black"
+        if [ "$status" != 0 ]; then
+            bg_color="Red"
+        fi
+    fi
+    segment+="$(_ps1_content CursorGrey $bg_color 1 $_ps1_separator)"
     echo -e "$segment"
+}
+
+
+_ps1_is_read_only(){
+    if [[ ! -w $1 ]]; then
+        echo 'read_only'
+    fi
+}
+_ps1_read_only() {
+    read_only="$1"
+    status="$2"
+    if [[ -n $read_only ]]; then
+        segment+="$(_ps1_content Black Orange 1 "  ")"
+        bg_color="Black"
+        if [ "$status" != 0 ]; then
+            bg_color="Red"
+        fi
+        segment+="$(_ps1_content Orange $bg_color 1 $_ps1_separator)"
+        echo -e "$segment"
+    fi
 }
 
 _ps1_status() {
     status="$1"
     if [ "$status" != 0 ]; then
-        segment="$(_ps1_content CursorGrey Red 1 )"
         segment+="$(_ps1_content Black Red 1 " $status ")"
-        segment+="$(_ps1_content Red Black 1 )"
-    else
-        segment="$(_ps1_content CursorGrey Black 1 )"
+        segment+="$(_ps1_content Red Black 1 $_ps1_separator)"
+        echo -e "$segment"
     fi
-    echo -e "$segment"
 }
 
 _ps1_command() {
     exit_status="$?"
+    curr_dir="$PWD"
     git_branch="$(_ps1_has_git_branch)"
     venv="$(_ps1_has_venv)"
     has_ssh="$(_ps1_has_ssh)"
+    is_read_only="$(_ps1_is_read_only "$curr_dir")"
 
     # Note: we seem to need to call _ps1_path without printf to have proper
     # rendering (especially when cycling through history)
@@ -312,7 +344,8 @@ _ps1_command() {
     PS1+='\[$(printf "%s" "$(_ps1_user "$venv" "$git_branch" "$has_ssh")")\]'
     PS1+='\[$(printf "%s" "$(_ps1_venv "$venv" "$git_branch")")\]'
     PS1+='\[$(printf "%s" "$(_ps1_branch "$git_branch")")\]'
-    PS1+='$(_ps1_path)'
+    PS1+='$(_ps1_path "$curr_dir" "$is_read_only" "$exit_status")'
+    PS1+='\[$(printf "%s" "$(_ps1_read_only "$is_read_only" "$exit_status")")\]'
     PS1+='\[$(printf "%s " "$(_ps1_status "$exit_status")")\]'
 }
 unset PROMPT_COMMAND
