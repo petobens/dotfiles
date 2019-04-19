@@ -998,7 +998,7 @@ endif
 " }}}
 " Bash {{{
 
-nnoremap <silent> <Leader>eb :e $HOME/git-repos/private/dotfiles/bashrc<CR>
+nnoremap <silent> <Leader>eb :e <C-r>=resolve(expand("$HOME/.bashrc"))<CR><CR>
 
 augroup ft_bash
     au!
