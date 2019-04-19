@@ -1340,6 +1340,22 @@ let g:airline#extensions#neomake#enabled = 1 " Don't show on Airline
 let airline#extensions#neomake#error_symbol = ' '
 let airline#extensions#neomake#warning_symbol = ' '
 
+" Git branch/remote
+let g:airline_symbols.branch = ''
+let g:airline#extensions#branch#format = 'BranchWithRemote'
+function! BranchWithRemote(name)
+    let branch_icon = ''
+    let remote = fugitive#repo().config('remote.origin.url')
+    if remote =~# 'github'
+        let branch_icon = ' '
+    elseif remote =~# 'gitlab'
+        let branch_icon = ' '
+    elseif remote =~# 'bitbucket'
+        let branch_icon = ' '
+    endif
+    return branch_icon . ' ' . a:name
+endfunction
+
 " Tabline (minibufexpl replacement)
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
