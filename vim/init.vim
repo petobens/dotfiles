@@ -1269,9 +1269,10 @@ augroup ft_vim
     au FileType vim setlocal formatoptions-=ro
 
     " Help settings
-    au FileType help setlocal textwidth=78
+    au FileType help setlocal textwidth=78 relativenumber
     " Place help window at the bottom
     au BufWinEnter *.txt if &ft == 'help' | wincmd J | endif
+    au BufWinEnter *.txt if &ft == 'help' | 20 wincmd _ | endif
 augroup END
 
 " }}}
