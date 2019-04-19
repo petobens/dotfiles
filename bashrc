@@ -172,8 +172,8 @@ shopt -s lithist
 # }}}
 # Prompt {{{
 
-# Show vi-mode in command prompt (note: 38 is fg color and 48 bg color; 2 means
-# truecolor (i.e rgb) and 5 256color; 1m is bold and 2m is normal)
+# Show vi-mode in command prompt
+# See: https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters
 bind "set show-mode-in-prompt on"
 bind 'set vi-ins-mode-string \1\e[38;5;235;48;2;97;175;239;1m\2 I '\
 '\1\e[38;2;97;175;239;48;2;208;208;208;1m\2\1\e[0m\2\1\e[6 q\2'
@@ -257,7 +257,7 @@ _ps1_git_mod_files() {
 }
 _ps1_git_remote_icon() {
     remote=$(command git ls-remote --get-url 2> /dev/null)
-    remote_icon=''
+    remote_icon=''
     if [[ "$remote" =~ "github" ]]; then
         remote_icon=' '
     elif [[ "$remote" =~ "bitbucket" ]]; then
@@ -270,8 +270,7 @@ _ps1_git_remote_icon() {
 _ps1_git() {
     branch="$1"
     if [[ -n $branch ]]; then
-        remote_icon="$(_ps1_git_remote_icon)"
-        branch_icon="$remote_icon"
+        branch_icon="$(_ps1_git_remote_icon)"
         segment="$(_ps1_content Grey SpecialGrey 2 " $branch_icon $branch ")"
         mod_files="$(_ps1_git_mod_files)"
         if [ ! "$mod_files" -eq 0 ]; then
