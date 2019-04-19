@@ -252,11 +252,28 @@ _ps1_venv() {
 _ps1_has_git_branch() {
     printf "%s" "$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
 }
-_ps1_branch() {
+_ps1_git_mod_files() {
+    printf "%s" "$(git diff --name-only --diff-filter=M 2> /dev/null | wc -l )"
+}
+_ps1_git_remote_icon() {
+    remote=$(command git ls-remote --get-url 2> /dev/null)
+    remote_icon=''
+    if [[ "$remote" =~ "github" ]]; then
+        remote_icon=' '
+    elif [[ "$remote" =~ "bitbucket" ]]; then
+        remote_icon=' '
+    elif [[ "$remote" =~ "gitlab" ]]; then
+        remote_icon=' '
+    fi
+    echo "$remote_icon"
+}
+_ps1_git() {
     branch="$1"
     if [[ -n $branch ]]; then
-        segment="$(_ps1_content Grey SpecialGrey 2 "  $branch ")"
-        mod_files="$(git diff --name-only --diff-filter=M 2> /dev/null | wc -l )"
+        remote_icon="$(_ps1_git_remote_icon)"
+        branch_icon="$remote_icon"
+        segment="$(_ps1_content Grey SpecialGrey 2 " $branch_icon $branch ")"
+        mod_files="$(_ps1_git_mod_files)"
         if [ ! "$mod_files" -eq 0 ]; then
             segment+="$(_ps1_content Red SpecialGrey 2 "✚ $mod_files ")"
         fi
@@ -340,7 +357,7 @@ _ps1_command() {
     PS1=""
     PS1+=$(_ps1_user "$venv" "$git_branch" "$has_ssh")
     PS1+=$(_ps1_venv "$venv" "$git_branch")
-    PS1+=$(_ps1_branch "$git_branch")
+    PS1+=$(_ps1_git "$git_branch")
     PS1+=$(_ps1_path "$curr_dir" "$is_read_only" "$exit_status")
     PS1+=$(_ps1_read_only "$is_read_only" "$exit_status")
     PS1+=$(_ps1_status "$exit_status")
