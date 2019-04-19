@@ -200,7 +200,8 @@ _ps1_content() {
     bg_c="${_ps1_colors[$2]}"
     style="$3m" # 1 for bold; 2 for normal
     content="$4"
-    echo "\033[38;2;$fg_c;48;2;$bg_c;$style$content\033[0m"
+    # See https://superuser.com/a/1279348/328256
+    echo "\[$(printf "%s" "\033[38;2;$fg_c;48;2;$bg_c;$style\]$content\[\033[0m")\]"
 }
 
 _ps1_has_ssh(){
@@ -228,7 +229,7 @@ _ps1_user() {
         fi
     fi
     segment+="$(_ps1_content White $bg_color 1 $_ps1_separator)"
-    echo -e "$segment"
+    echo "$segment"
 }
 
 _ps1_has_venv(){
@@ -238,14 +239,13 @@ _ps1_venv() {
     venv="$1"
     branch="$2"
     if [[ -n "$venv" ]]; then
-        venv=$(printf " %s" "$venv")
-        segment="$(_ps1_content Black Purple 1 " $venv ")"
+        segment="$(_ps1_content Black Purple 1 "  $venv ")"
         bg_color="CursorGrey"
         if [[ -n "$branch" ]]; then
             bg_color="SpecialGrey"
         fi
         segment+="$(_ps1_content Purple $bg_color 1 $_ps1_separator)"
-        echo -e "$segment"
+        echo "$segment"
     fi
 }
 
@@ -255,14 +255,13 @@ _ps1_has_git_branch() {
 _ps1_branch() {
     branch="$1"
     if [[ -n $branch ]]; then
-        branch=$(printf " %s" "$branch")
-        segment="$(_ps1_content Grey SpecialGrey 2 " $branch ")"
+        segment="$(_ps1_content Grey SpecialGrey 2 "  $branch ")"
         mod_files="$(git diff --name-only --diff-filter=M 2> /dev/null | wc -l )"
         if [ ! "$mod_files" -eq 0 ]; then
             segment+="$(_ps1_content Red SpecialGrey 2 "✚ $mod_files ")"
         fi
         segment+="$(_ps1_content SpecialGrey CursorGrey 1 $_ps1_separator)"
-        echo -e "$segment"
+        echo "$segment"
     fi
 }
 
@@ -298,7 +297,7 @@ _ps1_path() {
         fi
     fi
     segment+="$(_ps1_content CursorGrey $bg_color 1 $_ps1_separator)"
-    echo -e "$segment"
+    echo "$segment"
 }
 
 
@@ -338,15 +337,14 @@ _ps1_command() {
     has_ssh="$(_ps1_has_ssh)"
     is_read_only="$(_ps1_is_read_only "$curr_dir")"
 
-    # Note: we seem to need to call _ps1_path without printf to have proper
-    # rendering (especially when cycling through history)
     PS1=""
-    PS1+='\[$(printf "%s" "$(_ps1_user "$venv" "$git_branch" "$has_ssh")")\]'
-    PS1+='\[$(printf "%s" "$(_ps1_venv "$venv" "$git_branch")")\]'
-    PS1+='\[$(printf "%s" "$(_ps1_branch "$git_branch")")\]'
-    PS1+='$(_ps1_path "$curr_dir" "$is_read_only" "$exit_status")'
-    PS1+='\[$(printf "%s" "$(_ps1_read_only "$is_read_only" "$exit_status")")\]'
-    PS1+='\[$(printf "%s " "$(_ps1_status "$exit_status")")\]'
+    PS1+=$(_ps1_user "$venv" "$git_branch" "$has_ssh")
+    PS1+=$(_ps1_venv "$venv" "$git_branch")
+    PS1+=$(_ps1_branch "$git_branch")
+    PS1+=$(_ps1_path "$curr_dir" "$is_read_only" "$exit_status")
+    PS1+=$(_ps1_read_only "$is_read_only" "$exit_status")
+    PS1+=$(_ps1_status "$exit_status")
+    PS1+=" "  # non-breakable space
 }
 unset PROMPT_COMMAND
 PROMPT_COMMAND=_ps1_command
