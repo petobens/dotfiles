@@ -645,12 +645,15 @@ nnoremap <silent> G :<C-U>silent! execute 'normal! ' . v:count . 'Gzo'<CR>
 " Word, line and paragraph operations {{{
 
 " Swap current word with previous one (push word to the left)
-nnoremap <silent> <A-h> "_yiw?\k\+\%(\k\@!\_.\)\+\%#<CR>
-            \:s/\(\%#\k\+\)\(\%(\k\@!\_.\)\+\)\(\k\+\)/\3\2\1/<CR>
-            \<c-o><c-l>:noh<CR>
+nnoremap <silent> <A-h> :execute "silent normal! ms"<CR>
+            \"_yiw?\k\+\%(\k\@!\_.\)\+\%#<CR>
+            \:s/\(\%#\k\+\)\(\%(\k\@!\_.\)\+\)\(\k\+\)/\3\2\1/<CR><c-l>:noh<CR>
+            \:execute "silent normal! `s"<CR>
 " Swap current word with the next one (push word to the right)
-nnoremap <silent> <A-l> "_yiw:s/\(\%#\k\+\)\(\%(\k\@!\_.\)\+\)\(\k\+\)/\3\2\1/
-            \<CR><c-o>/\k\+\%(\k\@!\_.\)\+<CR><c-l>:noh<CR>
+nnoremap <silent> <A-l> :execute "silent normal! ms"<CR>
+            \"_yiw:s/\(\%#\k\+\)\(\%(\k\@!\_.\)\+\)\(\k\+\)/\3\2\1/
+            \<CR>/\k\+\%(\k\@!\_.\)\+<CR><c-l>:noh<CR>
+            \:execute "silent normal! `s"<CR>
 
 " Move lines up/down (and reindent afterwards)
 nnoremap <silent> <A-j> :<C-U>silent execute 'move+' . v:count1<CR>zO==
