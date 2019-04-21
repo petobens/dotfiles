@@ -169,10 +169,15 @@ shopt -s histappend # append to history i.e don't overwrite it
 shopt -s cmdhist
 shopt -s lithist
 
+# Improved bash completion
+if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
+    . $base_pkg_dir/share/bash-completion/bash_completion
+fi
+
 # }}}
 # Prompt {{{
 
-# Show vi-mode in command prompt
+# Show vi-mode in command prompt (this is actually a readline setting)
 # See: https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters
 bind "set show-mode-in-prompt on"
 bind 'set vi-ins-mode-string \1\e[38;5;235;48;2;97;175;239;1m\2 I '\
@@ -385,6 +390,9 @@ bind -m vi-insert '"\C-x": backward-kill-line'
 bind -m vi-insert '"\ex": backward-kill-word'
 bind -m vi-insert '"\ef": forward-word'
 bind -m vi-insert '"\eb": backward-word'
+# Cycle forward with TAB and backwards with S-Tab when using menu-complete
+bind -m vi-insert '"\C-i": menu-complete'
+bind -m vi-insert '"\e[Z": menu-complete-backward'
 
 # Command (normal) mode
 bind -m vi-command '"H": beginning-of-line'
@@ -394,42 +402,11 @@ bind -m vi-command '"j": ""'
 bind -m vi-command '"v": ""' # Don't edit command with default editor (nvim)
 bind -m vi-command '"\C-e": edit-and-execute-command'
 
-# Paste with p if in a tmux session
-if { [[ "$OSTYPE" == 'darwin'* ]] && [[ "$TMUX" ]]; } then
-    bind -m vi-command -x '"p": "pbpaste | tmux load-buffer - && tmux paste-buffer"'
-fi
-
-# }}}
-# Completion (readline) {{{
-
-# Improved bash completion (install them with `brew install bash-completion@2`)
-if [ -f $base_pkg_dir/share/bash-completion/bash_completion ]; then
-    . $base_pkg_dir/share/bash-completion/bash_completion
-fi
-
-# Note: we pass Readline commands as a single argument to
-# bind built in function instead of adding them to inputrc file)
-# TODO: Consider moving all this to inputrc
-bind "set completion-ignore-case on"
-bind "set menu-complete-display-prefix on" # show candidates before cycling
-bind "set show-all-if-ambiguous on"
-bind "set skip-completed-text on"
-bind "set colored-stats on"
-bind "set blink-matching-paren on"
-bind "set colored-completion-prefix on"  # uses so color from LS_COLORS
-bind "set mark-symlinked-directories on"
-
-# Cycle forward with TAB and backwards with S-Tab when using menu-complete
-bind -m vi-insert '"\C-i": menu-complete'
-bind -m vi-insert '"\e[Z": menu-complete-backward'
-
 # Bind C-p and C-n to search the history conditional on input (like zsh) instead
-# of simply going up or down
+# of simply going up or down (note: we cannot seem to set this in the inputrc so
+# we do it here instead)
 bind '"\C-p": history-search-backward'
 bind '"\C-n": history-search-forward'
-
-# Use bracketed paste (i.e distinguish between typed and pasted text)
-bind 'set enable-bracketed-paste on'
 
 # }}}
 # Aliases {{{

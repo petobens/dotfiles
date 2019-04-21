@@ -51,6 +51,9 @@ if type "bash" > /dev/null 2>&1; then
     fi
 fi
 . "$HOME/.bashrc"
+# Readline
+$ln_cmd -fTs "$dotfiles_dir/inputrc" "$HOME/.inputrc"
+echo Created .inputrc symlink
 
 # Language related
 if type "python" > /dev/null 2>&1; then
