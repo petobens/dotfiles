@@ -367,7 +367,7 @@ PROMPT_COMMAND=_ps1_command
 PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # Continuation prompt
-PS2=" ﬌ "
+PS2=$(_ps1_content Black White 1 " ... ")$(_ps1_content White Black 1 "$_ps1_separator ")
 
 # }}}
 # Bindings {{{
