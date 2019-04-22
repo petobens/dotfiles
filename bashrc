@@ -258,7 +258,29 @@ _ps1_has_git_branch() {
     printf "%s" "$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
 }
 _ps1_git_mod_files() {
-    printf "%s" "$(git diff --name-only --diff-filter=M 2> /dev/null | wc -l )"
+    nr_mod_files="$(git diff --name-only --diff-filter=M 2> /dev/null | wc -l )"
+    mod_files=''
+    if [ ! "$nr_mod_files" -eq 0 ]; then
+        mod_files="✚ $nr_mod_files "
+    fi
+    echo "$mod_files"
+}
+_ps1_git_behind_ahead() {
+    branch="$1"
+    upstream="$(git config --get branch."$branch".merge)"
+    if [[ -n $upstream ]]; then
+        nr_behind_ahead="$(git rev-list --count --left-right '@{upstream}...HEAD' 2>/dev/null)" || nr_behind_ahead=''
+        nr_behind="${nr_behind_ahead%	*}"
+        nr_ahead="${nr_behind_ahead#*	}"
+        git_behind_ahead=''
+        if [ ! "$nr_behind" -eq 0 ]; then
+        git_behind_ahead+=" $nr_behind "
+        fi
+        if [ ! "$nr_ahead" -eq 0 ]; then
+        git_behind_ahead+=" $nr_ahead "
+        fi
+        echo "$git_behind_ahead"
+    fi
 }
 _ps1_git_remote_icon() {
     remote=$(command git ls-remote --get-url 2> /dev/null)
@@ -278,8 +300,12 @@ _ps1_git() {
         branch_icon="$(_ps1_git_remote_icon)"
         segment="$(_ps1_content Grey SpecialGrey 2 " $branch_icon $branch ")"
         mod_files="$(_ps1_git_mod_files)"
-        if [ ! "$mod_files" -eq 0 ]; then
-            segment+="$(_ps1_content Red SpecialGrey 2 "✚ $mod_files ")"
+        if [[ -n "$mod_files" ]]; then
+            segment+="$(_ps1_content Red SpecialGrey 2 "$mod_files")"
+        fi
+        behind_ahead="$(_ps1_git_behind_ahead "$branch")"
+        if [[ -n "$behind_ahead" ]]; then
+            segment+="$(_ps1_content Purple SpecialGrey 2 "$behind_ahead")"
         fi
         segment+="$(_ps1_content SpecialGrey CursorGrey 1 $_ps1_separator)"
         echo "$segment"
