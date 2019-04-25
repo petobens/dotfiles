@@ -70,7 +70,7 @@ fi
 brew tap neovim/neovim
 $brew_install_cmd neovim --HEAD
 $brew_install_cmd neovim-remote
-$brew_install_cmd tmux --HEAD
+$brew_install_cmd tmux
 
 # Databases
 $brew_install_cmd mongodb
