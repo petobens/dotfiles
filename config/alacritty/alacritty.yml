@@ -47,6 +47,9 @@ colors:
     cursor:
         text: '#0b0b0b'    # black
         cursor: '#528bff'
+    selection:
+        text: '#abb2bf'
+        background: '#3e4452'
     normal:
         black:   '#24272e'
         red:     '#e06c75'
