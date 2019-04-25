@@ -465,7 +465,7 @@ ds() {
     du -shc ${1:-*} | sort -rh | fzf
 }
 alias diff='diff -u --color'
-alias dsf='git diff'
+alias dsf='git diff --no-index'
 alias ur='unrar x'
 alias uz='unzip'
 alias rsync='rsync -auP'
