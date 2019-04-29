@@ -503,6 +503,7 @@ if type "unimatrix" > /dev/null 2>&1; then
 fi
 if type "R" > /dev/null 2>&1; then
     alias R='R --no-save --quiet'
+    alias rs='Rscript'
 fi
 if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
     if [ "$USER" = 'pedro' ]; then
