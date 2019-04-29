@@ -392,7 +392,7 @@ function! s:LintR()
     let lintr_opts = 'with_defaults('
                 \. 'line_length_linter(80), '
                 \. 'commented_code_linter = NULL, '
-                \. 'camel_case_linter, '
+                \. 'camel_case_linter = NULL, '
                 \. 'snake_case_linter = NULL'
                 \. ')'
     let lint_command = 'suppressPackageStartupMessages(library(lintr));'
