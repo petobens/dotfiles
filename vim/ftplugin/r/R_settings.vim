@@ -358,16 +358,6 @@ function! s:LintR()
         echoerr 'R is not installed or not in your path.'
         return
     endif
-    " Check if the formatR library is installed (using $R_LIBS_USER env variable)
-    if empty($R_LIBS_USER) == 1
-        echoerr 'Please set R_LIBS_USER env variable.'
-    endif
-    let lintr_dir = expand($R_LIBS_USER . '/lintr')
-    if !isdirectory(lintr_dir)
-        echoerr "The library 'lintr' was not found in " . lintr_dir
-        return
-    endif
-
     " Don't run lintr if there is only one empty line or we are in a Gdiff (when
     " file path includes .git)
     if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
@@ -384,8 +374,18 @@ function! s:LintR()
     let current_file = expand('%:p:t')
     let current_dir = expand('%:p:h')
 
-    " Set compiler
+
+    " Check if the lintR library is installed in our lib paths
     let flags = '--slave --no-save --no-restore -e '
+    let lib_dir = split(system('R ' . flags . '".libPaths()"'), '\n')[0]
+    let lib_dir = matchstr(lib_dir, '"\zs.*\ze"')
+    let lintr_dir = expand(lib_dir . '/lintr')
+    if !isdirectory(lintr_dir)
+        echoerr "The library 'lintr' was not found in " . lintr_dir
+        return
+    endif
+
+    " Set compiler
     let set_wd = 'setwd(''' . current_dir . ''');'
     " Note: we cannot set a global config file:
     " https://github.com/jimhester/lintr/issues/124
@@ -449,16 +449,6 @@ function! s:FormatR(...)
         echoerr 'R is not installed or not in your path.'
         return
     endif
-    " Check if the formatR library is installed (using $R_LIBS_USER env variable)
-    if empty($R_LIBS_USER) == 1
-        echoerr 'Please set R_LIBS_USER env variable.'
-    endif
-    let formatr_dir = expand($R_LIBS_USER . '/formatR')
-    if !isdirectory(formatr_dir)
-        echoerr "The library 'formatR' was not found in " . formatr_dir
-        return
-    endif
-
     " Don't run formatR if there is only one empty line or we are in a Gdiff
     " (when file path includes .git)
     if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
@@ -473,6 +463,16 @@ function! s:FormatR(...)
     lcd %:p:h
     let current_file = expand('%:p:t')
     let current_dir = expand('%:p:h')
+
+    " Check if the formatR library is installed in our lib paths
+    let flags = '--slave --no-save --no-restore -e '
+    let lib_dir = split(system('R ' . flags . '".libPaths()"'), '\n')[0]
+    let lib_dir = matchstr(lib_dir, '"\zs.*\ze"')
+    let formatr_dir = expand(lib_dir . '/formatR')
+    if !isdirectory(formatr_dir)
+        echoerr "The library 'formatR' was not found in " . formatr_dir
+        return
+    endif
 
     " Save cursor position
     let save_cursor = getcurpos()
