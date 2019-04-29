@@ -1345,6 +1345,7 @@ let airline#extensions#neomake#warning_symbol = ' '
 
 " Git branch/remote
 let g:airline_symbols.branch = ''
+let g:airline_symbols.dirty = ''
 let g:airline#extensions#branch#format = 'BranchWithRemote'
 function! BranchWithRemote(name)
     let branch_icon = ''
