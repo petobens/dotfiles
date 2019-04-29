@@ -590,10 +590,11 @@ set number
 set relativenumber
 
 " Only show cursorline in the current window
-set cursorline
 augroup cline
     au!
-    au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    " FIXME: Don't set cursorline since higlighting is broken
+    " See: https://github.com/neovim/neovim/issues/9019
+    " au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
     au WinLeave * setlocal nocursorline
 augroup END
 
