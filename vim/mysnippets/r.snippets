@@ -48,6 +48,20 @@ endsnippet
 # **}
 # Code blocks **{
 
+snippet rc "RefClass" b
+${1:name} <- setRefClass(
+	"$1",
+	fields = list(${2:attribute = type}),
+
+	methods = list(
+
+		${3:function_name} = function() {
+			$4
+		}
+	)
+)$0
+endsnippet
+
 snippet if "If statement"
 if (${1:condition}) {
 	${2}
