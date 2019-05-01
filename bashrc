@@ -43,9 +43,9 @@ else
 
     # Texlive
     if [ -d "$base_pkg_dir/local/texlive" ]; then
-        PATH="$PATH:/usr/local/texlive/2018/bin/x86_64-linux"
-        export MANPATH="$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man"
-        export INFOPATH="$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info"
+        PATH="$PATH:/usr/local/texlive/2019/bin/x86_64-linux"
+        export MANPATH="$MANPATH:/usr/local/texlive/2019/texmf-dist/doc/man"
+        export INFOPATH="$INFOPATH:/usr/local/texlive/2019/texmf-dist/doc/info"
     fi
 
     export BROWSER='chromium'
