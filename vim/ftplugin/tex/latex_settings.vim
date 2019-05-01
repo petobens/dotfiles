@@ -380,7 +380,7 @@ function! s:DeleteAuxFiles()
     " by globpath function. Thus we first save and empty the wildignore setting
     let old_wig = &wildignore
     set wildignore=
-    let extensions = 'aux,bbl,bcf,blg,idx,log,xml,toc,nav,out,snm,gz,ilg,ind'
+    let extensions = 'aux,bbl,bcf,blg,idx,log,xml,toc,nav,out,snm,gz,ilg,ind,vrb'
     let path = b:vimtex.root
     let file_list = globpath(path,'*.{' . extensions . '}', 0, 1)
     let nr_filetypes = len(file_list)
