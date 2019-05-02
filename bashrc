@@ -205,8 +205,7 @@ _ps1_content() {
     bg_c="${_ps1_colors[$2]}"
     style="$3m" # 1 for bold; 2 for normal
     content="$4"
-    # See https://superuser.com/a/1279348/328256
-    echo "\[$(printf "%s" "\033[38;2;$fg_c;48;2;$bg_c;$style\]$content\[\033[0m")\]"
+    echo "\[\033[38;2;$fg_c;48;2;$bg_c;$style\]$content\[\033[0m\]"
 }
 
 _ps1_has_ssh(){
@@ -317,16 +316,16 @@ _ps1_path() {
     IFS='/' read -r -a arr <<< "$p"
     path_size="${#arr[@]}"
     if [ "$path_size" -eq 1 ]; then
-        segment="\033[1m${arr[0]:=/}"
+        segment="\[\033[1m\]${arr[0]:=/}"
     elif [ "$path_size" -eq 2 ]; then
-        segment="${arr[0]:=/}  \033[1m${arr[-1]}"
+        segment="${arr[0]:=/}  \[\033[1m\]${arr[-1]}"
     else
         if [ "$path_size" -gt 3 ]; then
             p="/"$(echo "$p" | rev | cut -d '/' -f-3 | rev)
         fi
         curr=$(basename "$p")
         p=$(dirname "$p")
-        segment="${p//\//  }  \033[1m$curr"
+        segment="${p//\//  }  \[\033[1m\]$curr"
         if [[ "${p:0:1}" = '/' ]]; then
             segment="/$segment"
         fi
@@ -363,7 +362,7 @@ _ps1_read_only() {
             bg_color="Red"
         fi
         segment+="$(_ps1_content Orange $bg_color 1 $_ps1_separator)"
-        echo -e "$segment"
+        echo "$segment"
     fi
 }
 
@@ -372,7 +371,7 @@ _ps1_status() {
     if [ "$status" != 0 ]; then
         segment+="$(_ps1_content Black Red 1 " $status ")"
         segment+="$(_ps1_content Red Black 1 $_ps1_separator)"
-        echo -e "$segment"
+        echo "$segment"
     fi
 }
 
