@@ -1345,6 +1345,7 @@ let airline#extensions#neomake#error_symbol = ' '
 let airline#extensions#neomake#warning_symbol = ' '
 
 " Git branch/remote
+let g:airline#extensions#branch#vcs_checks = ['untracked']
 let g:airline_symbols.branch = ''
 let g:airline_symbols.dirty = ''
 let g:airline#extensions#branch#format = 'BranchWithRemote'
