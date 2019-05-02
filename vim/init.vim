@@ -162,6 +162,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('Shougo/deoplete.nvim')
     call dein#add('Shougo/context_filetype.vim')
     call dein#add('Shougo/echodoc.vim')
+    call dein#add('deoplete-plugins/deoplete-docker')
     if has('nvim')
         call dein#add('deoplete-plugins/deoplete-jedi')
     endif
