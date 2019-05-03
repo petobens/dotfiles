@@ -653,6 +653,10 @@ alias hdbw='mongo mongodb://pedroFerrari:"$(pass humber/mongodb/pedroFerrari)"'\
 '@db1.humber.com.ar:37117,db2.humber.com.ar:37117,'\
 'arbiter.humber.com.ar:37117/humberPro001?replicaSet=humber-replica-set'
 
+# Azure server
+alias assh='TERM=xterm-256color; sshpass -p "$(pass azure/ssh/pedroazurevm)" '\
+'ssh azurevm'
+
 # }}}
 # Fzf and cli apps {{{
 
