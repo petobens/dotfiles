@@ -616,7 +616,8 @@ alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc"'
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
 # enabled)
 alias cvpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
-'--background --authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
+'--background --servercert pin-sha256:"$(pass claro/vpn/sha-cert)" '\
+'--authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
 alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
 'ssh mjolnir'
 alias cvssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/varas)" '\
