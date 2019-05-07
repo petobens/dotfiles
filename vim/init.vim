@@ -108,6 +108,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('tpope/vim-fugitive')
     call dein#add('tommcdo/vim-fubitive')
     call dein#add('shumphrey/fugitive-gitlab.vim')
+    call dein#add('rhysd/git-messenger.vim', {'on_cmd' : 'GitMessenger',
+        \ 'on_map' : '<Plug>(git-messenger)'})
 
     " i3
     if executable('i3')
@@ -2342,6 +2344,20 @@ nmap [h <Plug>GitGutterPrevHunk<bar>zvzz
 " We could stage and remove individual hunks with GitGutterStage(Revert)Hunk but
 " we can also do this with Gdiff: i) use d[p]ut from working file and d[o]btain
 " index file to stage individual hunks, ii) save the index file and iii) commit
+
+" }}}
+" GitMessenger {{{
+
+nmap <silent> <Leader>gm <Plug>(git-messenger)
+
+function! s:setup_gitmessengerpopup() abort
+    nmap <buffer><C-p> o
+    nmap <buffer><C-n> O
+endfunction
+augroup ps_gitmessenger
+    au!
+    au FileType gitmessengerpopup call <SID>setup_gitmessengerpopup()
+augroup END
 
 " }}}
 " G(M)undo {{{
