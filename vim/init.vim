@@ -114,12 +114,13 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('mboughaba/i3config.vim')
     endif
 
-    " Javascript
+    " Javascript and html
     call dein#add('pangloss/vim-javascript', {'on_ft' : 'javascript'})
     call dein#add('carlitux/deoplete-ternjs', {'on_ft' : 'javascript'})
     call dein#add('ternjs/tern_for_vim',
                 \ {'on_ft' : 'javascript', 'build': 'npm install'})
     call dein#add('chrisbra/Colorizer', {'on_cmd': 'ColorToggle'})
+    call dein#add('Glench/Vim-Jinja2-Syntax')
 
     " Latex
     call dein#add('lervag/vimtex', {'on_ft' : ['tex', 'bib']})
