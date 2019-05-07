@@ -1234,8 +1234,9 @@ augroup ft_sql
     au Filetype sql setlocal commentstring=--%s
     au Filetype sql setlocal shiftwidth=2 tabstop=2 softtabstop=2
     au BufNewFile,BufReadPost sqlplus_login set filetype=sql
-    au BufNewFile,BufReadPost *.{pgsql,mssql,mysql} set filetype=sql
+    au BufNewFile,BufRead *.{pgsql,mssql,mysql} set filetype=sql
     " Add highlighting of some keywords
+    au BufNewFile,BufRead *.sql set syntax=sql_jinja
     au Filetype sql syn keyword sqlKeyword INNER RIGHT LEFT OUTER JOIN OVER
                 \ PARTITION
     au Filetype sql syn keyword sqlFunction DATE_PARSE DATE_DIFF DATE_TRUNC
