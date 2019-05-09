@@ -792,9 +792,6 @@ nnoremap <silent> <Leader>vh <C-W>K
 " Jump to newer entry in jumplist (C-o jumps to older one)
 nnoremap <silent> <C-y> <C-i>
 
-" Jump to previous/older entry in tag stack (since C-] jumps to the tag)
-nnoremap <silent> <C-[> :pop<CR>
-
 " }}}
 " Write, save and quit {{{
 
