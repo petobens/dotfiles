@@ -2345,6 +2345,8 @@ nmap [h <Plug>GitGutterPrevHunk<bar>zvzz
 " }}}
 " GitMessenger {{{
 
+let g:git_messenger_always_into_popup = v:true
+
 nmap <silent> <Leader>gm <Plug>(git-messenger)
 
 function! s:setup_gitmessengerpopup() abort
