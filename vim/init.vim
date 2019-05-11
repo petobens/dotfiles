@@ -2493,7 +2493,7 @@ let g:neomake_sql_enabled_makers = ['sqlint']
 augroup pl_neomake
     au!
     au BufWritePost *.{vim,yaml,yml,markdown,md,bashrc,bash_profile},bashrc,
-                \bash_profile silent Neomake
+                \bash_profile,Dockerfile,dockerfile silent Neomake
 augroup END
 
 " }}}
