@@ -548,6 +548,13 @@ if type "git" > /dev/null 2>&1; then
     alias gsp='git stash pop'
 fi
 
+# Docker
+if type "docker" > /dev/null 2>&1; then
+    alias db='docker build -t'
+    alias dr='docker run'
+    alias dcr='docker container rename'
+fi
+
 # Python
 if type "python" > /dev/null 2>&1; then
     alias py='python'

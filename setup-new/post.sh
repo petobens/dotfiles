@@ -10,7 +10,6 @@ if [ ! -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
     sudo mkdir -p ~/.local/bin/
     wget https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.zsh -P ~/.local/bin
 fi
-
 if type "gem" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing sqlint...\\033[0m"
     gem install sqlint

@@ -449,5 +449,80 @@ if [ -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
 fi
 
 # }}}
+# Docker {{{
+
+FZF_DOCKER_OPTS_BASE="
+--multi
+--exit-0
+--bind 'ctrl-y:execute-silent(echo -n {1} | $COPY_CMD)+abort'
+"
+
+FZF_DOCKER_IMAGE_OPTS="$FZF_DOCKER_OPTS_BASE
+--expect=ctrl-i
+--header='enter=run, C-i=interactive, C-y=yank'
+"
+di() {
+    cmd="docker images | tail -n +2"
+    out=$(eval "$cmd" |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_DOCKER_IMAGE_OPTS" fzf |
+        cut -d ' ' -f 1)
+    key=$(head -1 <<< "$out")
+    image=$(head -2 <<< "$out" | tail -1)
+
+    if [[ -z "$image" ]]; then
+        return 1
+    fi
+
+    case "$key" in
+        ctrl-i)
+            image_cmd="docker run --rm -ti --entrypoint /bin/bash" ;;
+        **)
+            image_cmd="docker run";;
+    esac
+    eval "$image_cmd $image"
+}
+
+
+FZF_DOCKER_CONTAINER_OPTS="$FZF_DOCKER_OPTS_BASE
+--expect=ctrl-a,ctrl-e,ctrl-s,ctrl-b,alt-k,alt-d,ctrl-r
+--header='enter=logs, C-e=exec, C-a=attach, C-b=start, C-s=stop, A-k=kill, \
+A-d=rm, C-r=rename'
+"
+dc() {
+    cmd="docker container ls -a | tail -n +2"
+    out=$(eval "$cmd" |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_DOCKER_CONTAINER_OPTS" fzf |
+        cut -d ' ' -f 1)
+    key=$(head -1 <<< "$out")
+    container=$(head -2 <<< "$out" | tail -1)
+
+    if [[ -z "$container" ]]; then
+        return 1
+    fi
+
+    post_cmd=''
+    case "$key" in
+        ctrl-a)
+            sub_cmd="attach" ;;
+        ctrl-e)
+            sub_cmd="exec -ti"
+            post_cmd="/bin/bash" ;;
+        ctrl-s)
+            sub_cmd="stop" ;;
+        ctrl-b)
+            sub_cmd="start" ;;
+        alt-k)
+            sub_cmd="kill" ;;
+        alt-d)
+            sub_cmd="rm" ;;
+        ctrl-r)
+            sub_cmd="rename" ;;
+        **)
+            sub_cmd="logs";;
+    esac
+    eval "docker container $sub_cmd $container $post_cmd"
+}
+
+# }}}
 
 # }}}
