@@ -486,9 +486,9 @@ di() {
 
 
 FZF_DOCKER_CONTAINER_OPTS="$FZF_DOCKER_OPTS_BASE
---expect=ctrl-a,ctrl-e,ctrl-s,ctrl-b,alt-k,alt-d,ctrl-r
+--expect=ctrl-a,ctrl-e,ctrl-s,ctrl-b,alt-k,alt-d
 --header='enter=logs, C-e=exec, C-a=attach, C-b=start, C-s=stop, A-k=kill, \
-A-d=rm, C-r=rename'
+A-d=rm'
 "
 dc() {
     cmd="docker container ls -a | tail -n +2"
@@ -517,8 +517,6 @@ dc() {
             sub_cmd="kill" ;;
         alt-d)
             sub_cmd="rm" ;;
-        ctrl-r)
-            sub_cmd="rename" ;;
         **)
             sub_cmd="logs";;
     esac
