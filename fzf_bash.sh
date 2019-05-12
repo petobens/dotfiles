@@ -458,11 +458,11 @@ FZF_DOCKER_OPTS_BASE="
 "
 
 FZF_DOCKER_IMAGE_OPTS="$FZF_DOCKER_OPTS_BASE
---expect=ctrl-i
---header='enter=run, C-i=interactive, C-y=yank'
+--expect=ctrl-i,alt-d
+--header='enter=run, C-i=interactive, A-d=rm, C-y=yank'
 "
 di() {
-    cmd="docker images | tail -n +2"
+    cmd="docker image ls | tail -n +2"
     out=$(eval "$cmd" |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_DOCKER_IMAGE_OPTS" fzf |
         cut -d ' ' -f 1)
@@ -476,6 +476,8 @@ di() {
     case "$key" in
         ctrl-i)
             image_cmd="docker run --rm -ti --entrypoint /bin/bash" ;;
+        alt-d)
+            image_cmd="docker image rm" ;;
         **)
             image_cmd="docker run";;
     esac
