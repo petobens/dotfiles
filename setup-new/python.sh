@@ -19,6 +19,9 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd Send2Trash
     $pip_install_cmd scikit-learn
     $pip_install_cmd scipy
+    if [ "$OSTYPE" == 'linux-gnu' ]; then
+        $pip_install_cmd Xlib
+    fi
 fi
 
 # Python binaries (can also be mostly installed with a package manager but we
