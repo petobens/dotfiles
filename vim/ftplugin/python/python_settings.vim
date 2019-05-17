@@ -74,6 +74,9 @@ function! s:RunPython(compiler, mode, compilation, ...)
         return
     endif
 
+    " Get debugger argument (first optional argument)
+    let debugger_mode = get(a:, 1, 0)
+
     " Place uppercase marks at i) the beginning of visual selection and ii)
     " counting how many lines there are importing modules in order to compute
     " correct line numbers in the quickfix later
@@ -124,6 +127,11 @@ function! s:RunPython(compiler, mode, compilation, ...)
     endif
 
     let compiler = compiler . ' '
+
+    " Add debugging flags (allows post-mortem debugging)
+    if debugger_mode
+        let compiler .= '-m pdb -cc '
+    endif
 
     " Define file to run
     if a:mode ==# 'visual' && a:0 >= 2 && strlen(a:1) && strlen(a:2)
@@ -1333,6 +1341,11 @@ nnoremap <silent> <buffer> <F5> :call
 inoremap <silent> <buffer> <F5> <ESC>:call
             \ <SID>RunPython('python3', 'normal', 'foreground_os')<CR>
 vnoremap <silent> <buffer> <F5> :EvalVisualPyForeground python3<CR>
+" Debugger run
+nnoremap <silent> <buffer> <F6> :call
+            \ <SID>RunPython('python3', 'normal', 'foreground_os', 1)<CR>
+inoremap <silent> <buffer> <F6> <ESC>:call
+            \ <SID>RunPython('python3', 'normal', 'foreground_os', 1)<CR>
 " Python 2 compilation
 nnoremap <silent> <buffer> <F2> :call
             \ <SID>RunPython('python2', 'normal', 'background')<CR>
