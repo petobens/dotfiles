@@ -557,11 +557,10 @@ fi
 
 # Python
 if type "python" > /dev/null 2>&1; then
+    alias python='python3'
     alias py='python'
-    if [ ! -f "$base_pkg_dir"/bin/python2 ]; then
-        alias python='python3'
-        alias pip='pip3'
-    fi
+    alias pyd='python3 -m pdb -cc'
+    alias pip='pip3'
     if type "jupyter-notebook" > /dev/null 2>&1; then
         alias jn='jupyter-notebook'
     fi
@@ -578,6 +577,7 @@ if type "python" > /dev/null 2>&1; then
         alias peg='pipenv graph'
         alias pes='pipenv shell'
         alias pep='pipenv run python'
+        alias ped='pipenv run python -m pdb -cc'
     fi
 fi
 
