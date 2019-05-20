@@ -468,6 +468,26 @@ augroup show_py_output
     au QuickFixCmdPost {make,cgetfile} call s:ShowPyOutput()
 augroup END
 
+function! s:LoadTracebackFromTmux(tmux_win_nr)
+    " Note: we assume we want the first (unique) pane from the tmux window
+    let pane_id = matchstr(split(trim(system('tmux list-panes -t ' .
+                \ a:tmux_win_nr)), '\n')[0], '\zs%\d\+\ze')
+    let pane_content = split(trim(system('tmux capture-pane -p -t ' . pane_id)),
+                \ '\n')
+    let tmp_file = expand('%:t:r') . '_qf_tmp.txt'
+    call writefile(pane_content[:-2], tmp_file)
+    let old_efm = &l:efm
+    call s:SetPyEfm()
+    silent doautocmd QuickFixCmdPre cgetfile
+    call setqflist([], 'r')
+    execute 'cgetfile ' . tmp_file
+    silent doautocmd QuickFixCmdPost cgetfile
+    call delete(tmp_file)
+    copen
+    let &l:efm = old_efm
+endfunction
+command! -nargs=1 LoadTraceFromTmux call s:LoadTracebackFromTmux(<f-args>)
+
 " }}}
 " Formatting {{{
 
@@ -1357,6 +1377,8 @@ nnoremap <silent> <buffer> <F3> :call
 inoremap <silent> <buffer> <F3> <ESC>:call
             \ <SID>RunPython('python2', 'normal', 'foreground_os')<CR>
 vnoremap <silent> <buffer> <F3> :EvalVisualPyForeground python2<CR>
+" Load traceback from tmux window
+nnoremap <buffer> <Leader>lt :LoadTraceFromTmux<space>
 
 " Linting, formatting and import sorting
 nnoremap <silent> <buffer> <Leader>rl :Neomake<CR>
