@@ -104,9 +104,6 @@ function! s:RunPython(compiler, mode, compilation, ...)
     " Set compiler (prefer python3)
     if a:compiler ==# 'python'
         let compiler = 'python3'
-        if !executable(compiler)
-            let compiler = 'python2'
-        endif
     else
         let compiler = a:compiler
     endif
@@ -295,7 +292,7 @@ command! -range -nargs=* EvalVisualPyForeground
 function! s:ShowPyOutput()
     " Only call this function after a python run
     let compiler = split(split(&makeprg, '')[0], '/')[-1]
-    if compiler !=# 'python3' && compiler !=# 'python2' && compiler !=# 'python'
+    if compiler !=# 'python3' && compiler !=# 'python'
         return
     endif
 
@@ -1366,17 +1363,6 @@ nnoremap <silent> <buffer> <F6> :call
             \ <SID>RunPython('python3', 'normal', 'foreground_os', 1)<CR>
 inoremap <silent> <buffer> <F6> <ESC>:call
             \ <SID>RunPython('python3', 'normal', 'foreground_os', 1)<CR>
-" Python 2 compilation
-nnoremap <silent> <buffer> <F2> :call
-            \ <SID>RunPython('python2', 'normal', 'background')<CR>
-inoremap <silent> <buffer> <F2> <ESC>:call
-            \ <SID>RunPython('python2', 'normal', 'background')<CR>
-vnoremap <silent> <buffer> <F2> :EvalVisualPyBackground python2<CR>
-nnoremap <silent> <buffer> <F3> :call
-            \ <SID>RunPython('python2', 'normal', 'foreground_os')<CR>
-inoremap <silent> <buffer> <F3> <ESC>:call
-            \ <SID>RunPython('python2', 'normal', 'foreground_os')<CR>
-vnoremap <silent> <buffer> <F3> :EvalVisualPyForeground python2<CR>
 " Load traceback from tmux window
 nnoremap <buffer> <Leader>lt :LoadTraceFromTmux<space>
 
