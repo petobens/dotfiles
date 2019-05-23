@@ -9,3 +9,6 @@ alias ia print(vars((%1)))
 
 # Print self attributes
 alias sa ia self
+
+# Print type of var
+alias wi whatis %1
