@@ -171,13 +171,19 @@ label-charging =   %{T3}%percentage%%%{T-}
 label-discharging = %{T3}%percentage%%%{T-}
 label-charging-font = 6
 label-discharging-font = 6
-label-full = %{T6}%{T-} %{T3}100%%{T-}
-ramp-capacity-0 = 
+label-full = %{T6}%{T-} %{T3}100%%{T-}
+ramp-capacity-0 = 
 ramp-capacity-0-foreground = ${colors.fg-urg}
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
+ramp-capacity-1 = 
+ramp-capacity-1-foreground = ${colors.fg-warn}
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-5 = 
+ramp-capacity-6 = 
+ramp-capacity-7 = 
+ramp-capacity-8 = 
+ramp-capacity-9 = 
 
 [module/date]
 type = internal/date
