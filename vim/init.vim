@@ -854,7 +854,7 @@ noremap <silent> <Leader>P :put!<CR>
 nnoremap <silent> <F12> :set paste!<cr>
 
 " Visually reselect what was just pasted (gv reselects previous selection)
-nnoremap <expr> <Leader>V '`[' . strpart(getregtype(), 0, 1) . '`]'
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 " Yank error messages to system clipboard
 nnoremap <silent> <Leader>ym :redir @*\|messages\|:redir END<CR>
