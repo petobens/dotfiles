@@ -3159,16 +3159,29 @@ nnoremap <silent> <Leader>si :call <SID>SelectIndent()<CR>
 " }}}
 " Google it {{{
 
-function! s:goog(pat, lucky)
-  let q = '"'.substitute(a:pat, '["\n]', ' ', 'g').'"'
-  let q = substitute(q, '[[:punct:] ]',
+function! s:goog(mode, lucky)
+    if a:mode ==# 'visual'
+        let pat = getline("'<")[getpos("'<")[2] - 1:getpos("'>")[2] - 1]
+    else
+        let pat = expand('<cWORD>')
+    endif
+    let q = '"'.substitute(pat, '["\n]', ' ', 'g').'"'
+    let q = substitute(q, '[[:punct:] ]',
        \ '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
-  call system(printf('open "https://www.google.com/search?%sq=%s"',
-                   \ a:lucky ? 'btnI&' : '', q))
+    let open_command = 'open '
+    if s:is_win
+        let open_command = 'start '
+    elseif s:is_linux
+        let open_command = 'xdg-open '
+    endif
+    call system(printf(open_command . '"https://www.google.com/search?%sq=%s"',
+                    \ a:lucky ? 'btnI&' : '', q))
 endfunction
 
-nnoremap <leader>? :call <SID>goog(expand("<cWORD>"), 0)<cr>
-nnoremap <leader>! :call <SID>goog(expand("<cWORD>"), 1)<cr>
+nnoremap <silent><Leader>? :call <SID>goog('cword', 0)<CR>
+nnoremap <silent><Leader>! :call <SID>goog('cword', 1)<CR>
+vnoremap <silent> ? :call <SID>goog('visual', 0)<CR>
+vnoremap <silent> ! :call <SID>goog('visual', 1)<CR>
 
 " }}}
 " Tmux run in split window {{{
