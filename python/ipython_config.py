@@ -28,8 +28,6 @@ c.TerminalInteractiveShell.true_color = True
 c.TerminalInteractiveShell.editing_mode = 'vi'
 c.TerminalInteractiveShell.confirm_exit = False
 c.TerminalIPythonApp.display_banner = False
-c.InteractiveShellApp.matplotlib = 'gtk3'
-os.environ['GTK_THEME'] = 'Adwaita:dark'
 
 
 def set_input_mode(self, mode):

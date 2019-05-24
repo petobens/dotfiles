@@ -9,7 +9,6 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd pandas
     $pip_install_cmd pdbpp
     $pip_install_cmd pipx
-    $pip_install_cmd pycairo
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
     fi
@@ -36,7 +35,7 @@ $pipx_install_cmd beautysh
 $pipx_install_cmd black
 $pipx_install_cmd httpie
 $pipx_install_cmd ipython
-$pipx_inject_cmd ipython numpy pandas matplotlib pycairo PyGObject
+$pipx_inject_cmd ipython numpy pandas matplotlib
 $pipx_install_cmd isort[pyproject]
 $pipx_install_cmd jupyter --include-deps
 $pipx_install_cmd litecli
