@@ -1,40 +1,5 @@
-snippet pl "Python logger config" b
-logger:
-    version: 1
-
-    # Set disable existing loggers to true to avoid logging from modules not
-    # written by us.
-    # Note: we cannot use the root logger with this (instead we need to define
-    # our main logger)
-    disable_existing_loggers: true
-
-    formatters:
-        standard:
-            format: "%(asctime)s-%(name)s-%(levelname)s: %(message)s"
-
-    handlers:
-        console:
-            class: logging.StreamHandler
-            level: DEBUG
-            formatter: standard
-            stream: ext://sys.stdout
-        file:
-            class: logging.handlers.RotatingFileHandler
-            level: INFO
-            formatter: standard
-            filename: ${1:log_file}
-            maxBytes: 20971520  # (20 MB)
-            backupCount: 9
-            encoding: utf8
-
-    loggers:
-        main_logger:
-            level: DEBUG
-            handlers: [console, file]
-        module_logger:
-            level: DEBUG
-            handlers: [console]
-...
+snippet wp "Yaml wrapper symbols" b
+---
+${1:${VISUAL}}
+...$0
 endsnippet
-
-
