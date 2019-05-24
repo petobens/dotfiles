@@ -655,17 +655,35 @@ augroup END
 " (Py)Tests {{{
 
 function! s:RunPyTest(level, compilation)
-    " Don't run if pytest if it is not installed
-    if !executable('py.test')
-        echoerr 'py.test is not installed or not in your path.'
-        return
-    endif
-    " Also exit if coverage is not installed (note we also need pytest-cov)
+    " Don't run if pytest or coverage are not installed
     " TODO: Find a way to check if pytest-cov is installed
-    if !executable('coverage')
-        echoerr 'coverage is not installed or not in your path.'
-        return
+    let compiler = 'py.test'
+    let coverage_exe = 'coverage'
+    if isdirectory($VIRTUAL_ENV)
+        let compiler_bin = $VIRTUAL_ENV . '/bin'
+        if compiler_bin !=# ''
+            let compiler = compiler_bin . '/' . compiler
+            if ! filereadable(expand(compiler))
+                echoerr 'py.test not found in ' . compiler_bin
+                return
+            endif
+            let coverage_exe = compiler_bin . '/' . coverage_exe
+            if ! filereadable(expand(coverage_exe))
+                echoerr 'coverage not found in ' . compiler_bin
+                return
+            endif
+        endif
+    else
+        if !executable(compiler)
+            echoerr 'py.test is not installed or not in your path.'
+            return
+        endif
+        if !executable(coverage_exe)
+            echoerr 'coverage is not installed or not in your path.'
+            return
+        endif
     endif
+
     " Don't run py.test if we are in a Gdiff (when file path includes .git)
     if expand('%:p') =~# "/\\.git/"
         return
@@ -716,7 +734,7 @@ function! s:RunPyTest(level, compilation)
     endif
 
     " Set compiler (Use short traceback print mode and decrease verbosity)
-    let compiler = 'py.test --tb=short -q '
+    let compiler = compiler . ' --tb=short -q '
 
     " Allow to run the whole test suite, just one test file (module) or specific
     " classes or methods inside a test file. When running the whole suite also
