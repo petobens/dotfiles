@@ -13,12 +13,15 @@ class Filter(Base):
 
     def filter(self, context):
         """Parse candidates and prepend devicons."""
-        for candidate in context['candidates']:
-            if 'bufnr' in candidate:
+        for i, candidate in enumerate(context['candidates']):
+            if i > 60:
+                break
+
+            if 'word' in candidate and 'action__path' in candidate:
+                filename = candidate['action__path']
+            elif 'bufnr' in candidate:
                 bufname = self.vim.funcs.bufname(candidate['bufnr'])
                 filename = self.vim.funcs.fnamemodify(bufname, ':p:t')
-            elif 'word' in candidate and 'action__path' in candidate:
-                filename = candidate['action__path']
 
             icon = self.vim.funcs.WebDevIconsGetFileTypeSymbol(
                 filename, isdir(filename)

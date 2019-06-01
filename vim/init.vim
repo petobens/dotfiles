@@ -503,8 +503,8 @@ nnoremap <silent> <Leader>ew :e $DOTVIM/spell/custom-dictionary.utf-8.add<CR>
 
 " Spell suggest and spell fix (replaces all words with same spelling mistake)
 " with denite
-nnoremap <silent> <Leader>sg :Denite spell_suggest<CR>
-nnoremap <silent> <Leader>sf 0]s :Denite
+nnoremap <silent> <Leader>sg :Denite -no-start-filter spell_suggest<CR>
+nnoremap <silent> <Leader>sf 0]s :Denite --no-start-filter
             \ -default-action=replace_misspelled_all spell_suggest<CR>
 
 " Edit abbreviations quickly (with abolish plugin)
@@ -597,7 +597,7 @@ set relativenumber
 augroup cline
     au!
     au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-    au WinLeave * setlocal nocursorline
+    au WinLeave * if &filetype !=# 'denite' | setlocal nocursorline | endif
 augroup END
 
 " When the page starts to scroll, keep the cursor 3 lines from the top and 3
@@ -1685,7 +1685,7 @@ let g:dein#install_max_processes = 16
 " Function to open denite buffer with updates as updates finish
 function! s:dein_update()
   call dein#update()
-  Denite -post-action=open -mode=normal dein/log:!
+  Denite -no-start-filter -post-action=open dein/log:!
 endfunction
 
 " Maps
@@ -1707,11 +1707,12 @@ call denite#custom#option('default', {
             \ 'updatetime': 100,
             \ 'reversed': 1,
             \ 'prompt': '❯',
-            \ 'prompt_highlight': 'Function',
+            \ 'highlight_prompt': 'Function',
             \ 'highlight_matched_char': 'Operator',
             \ 'highlight_matched_range': 'None',
-            \ 'highlight_mode_insert': 'WildMenu',
-            \ 'vertical_preview': 1
+            \ 'vertical_preview': 1,
+            \ 'start_filter': 1,
+            \ 'filter_updatetime': 150,
             \ })
 
 " Fruzzy matcher
@@ -1736,6 +1737,8 @@ call denite#custom#var('buffer', 'date_format', '')
 " Neomru
 let g:neomru#file_mru_limit = 750
 let g:neomru#time_format = ''
+let g:neomru#do_validate = 1
+let g:neomru#update_interval = 300
 
 " Use fd for file_rec and ripgrep for grep
 if executable('fd')
@@ -1805,10 +1808,11 @@ function! s:DeniteGrep(...)
     endif
     execute 'lcd ' . l:save_pwd
     call denite#start([{'name': 'grep',
-                \ 'args': [narrow_dir, extra_args . ft_filter]}])
+                \ 'args': [narrow_dir, extra_args . ft_filter]}],
+                \ {'start_filter': 0})
 endfunction
 function! s:DeniteTasklist(...)
-    if a:0 >=1  && a:1 ==# '.'
+    if a:0 >=1 && a:1 ==# '.'
         let target = a:1
     else
         let target = expand('%')
@@ -1820,28 +1824,30 @@ command! -nargs=? -complete=file DeniteBookmarkAdd
         \ :Denite dirmark/add -default-action=add -immediately-1 -path=<q-args>
 
 " Mappings
-nnoremap <silent> <C-t> :lcd %:p:h<CR>:Denite file/rec<CR>
-nnoremap <silent> <A-t> :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
-nnoremap <silent> <Leader>ls :lcd %:p:h<CR>:Denite file/rec<CR>
-nnoremap <silent> <Leader>lS :lcd %:p:h<CR>:Denite file/rec/noignore<CR>
-nnoremap <silent> <Leader>lu :lcd %:p:h:h<CR>:Denite file/rec<CR>
-nnoremap <silent> <Leader>lU :lcd %:p:h:h<CR>:Denite file/rec/noignore<CR>
+nnoremap <silent> <C-t> :DeniteBufferDir file/rec<CR>
+nnoremap <silent> <A-t> :DeniteBufferDir file/rec/noignore<CR>
+nnoremap <silent> <Leader>ls :DeniteBufferDir file/rec<CR>
+nnoremap <silent> <Leader>lS :DeniteBufferDir file/rec/noignore<CR>
+nnoremap <silent> <Leader>lu :execute 'Denite file/rec:' . expand('%:p:h:h')<CR>
+nnoremap <silent> <Leader>lU :execute 'Denite file/rec/noignore:' .
+            \ expand('%:p:h:h')<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>sD :call <SID>DeniteScanDir(0)<CR>
 nnoremap <silent> <A-z> :Denite -default-action=candidate_file_rec z<CR>
-nnoremap <silent> <A-c> :lcd %:p:h<CR>:Denite
+nnoremap <silent> <A-c> :DeniteBufferDir
             \ -default-action=candidate_file_rec directory_rec<CR>
-nnoremap <silent> <A-d> :lcd %:p:h<CR>:Denite
+nnoremap <silent> <A-d> :DeniteBufferDir
             \ -default-action=candidate_file_rec directory_rec/noignore<CR>
-nnoremap <silent> <A-p> :lcd %:p:h<CR>:Denite
+nnoremap <silent> <A-p> :DeniteBufferDir -no-start-filter
             \ -default-action=candidate_file_rec parent_dirs<CR>
-nnoremap <silent> <Leader>rd :Denite file_mru<CR>
+nnoremap <silent> <Leader>rd :Denite fast_file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
 nnoremap <silent> <Leader>rg :lcd %:p:h<CR>:call <SID>DeniteGrep()<CR>
 nnoremap <silent> <Leader>rG :lcd %:p:h<CR>:call <SID>DeniteGrep(0)<CR>
-nnoremap <silent> <Leader>dg :lcd %:p:h<CR>:DeniteCursorWord grep<CR>
+nnoremap <silent> <Leader>dg :lcd %:p:h<CR>:DeniteCursorWord -no-start-filter
+            \ grep<CR>
 nnoremap <silent> <Leader>he :Denite help<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>sh :Denite history:search<CR>
@@ -1851,13 +1857,14 @@ nnoremap <silent> <Leader>me :Denite output:map<CR>
 nnoremap <silent> <Leader>uf :Denite output:function<CR>
 nnoremap <silent> <Leader>dl :Denite line:forward<CR>
 nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-action=preview
-            \ line:forward<CR>
+            \ line:forward -no-start-filter<CR>
 nnoremap <silent> <Leader>dq :Denite -post-action=suspend quickfix<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
-nnoremap <silent> <Leader>bm :Denite dirmark
+nnoremap <silent> <Leader>bm :Denite dirmark -no-start-filter
             \ -default-action=candidate_file_rec<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
+nnoremap <silent> <Leader>dR :Denite -resume -no-start-filter<CR>
 nnoremap <silent> ]d :Denite -resume -immediately -cursor-pos=+1<CR>
 nnoremap <silent> [d :Denite -resume -immediately -cursor-pos=-1<CR>
 nnoremap ]D :<C-u>Denite -resume -cursor-pos=$<CR>
@@ -1873,65 +1880,96 @@ augroup ps_denite_tag
                 \ -default-action=context_split tag:include<CR>
 augroup END
 
-" Prompt Mappings
-call denite#custom#map('insert', '<ESC>', '<denite:quit>',
-    \ 'noremap')
-call denite#custom#map('insert', 'jj', '<denite:enter_mode:normal>',
-    \ 'noremap')
-call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>',
-    \ 'noremap')
-call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>',
-    \ 'noremap')
-call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>',
-    \ 'noremap')
-call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>',
-    \ 'noremap')
-call denite#custom#map('insert', '<C-d>', '<denite:scroll_window_downwards>',
-            \ 'noremap')
-call denite#custom#map('insert', '<C-u>', '<denite:scroll_window_upwards>',
-            \ 'noremap')
-call denite#custom#map('insert', '<C-h>', '<denite:move_caret_to_left>',
-            \ 'noremap')
-call denite#custom#map('insert', '<C-l>', '<denite:move_caret_to_right>',
-            \ 'noremap')
-call denite#custom#map('insert', '<A-b>',
-            \ '<denite:move_caret_to_one_word_left>', 'noremap')
-call denite#custom#map('insert', '<A-f>',
-            \ '<denite:move_caret_to_one_word_right>', 'noremap')
-call denite#custom#map('insert', '<C-a>', '<denite:move_caret_to_head>',
-            \ 'noremap')
-call denite#custom#map('insert', '<C-e>', '<denite:move_caret_to_tail>',
-            \ 'noremap')
-call denite#custom#map('insert', '<C-s>', '<denite:do_action:split>', 'noremap')
-call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
-    \ 'noremap')
-call denite#custom#map('insert', '<C-r>', '<denite:redraw>', 'noremap')
-call denite#custom#map('insert', '<C-x>', '<denite:choose_action>', 'noremap')
-call denite#custom#map('insert', '<C-y>', '<denite:do_action:yank>', 'noremap')
-call denite#custom#map('insert', '<C-q>',
-            \ '<denite:multiple_mappings:denite:toggle_select_all' .
-            \ ',denite:do_action:quickfix>', 'noremap')
-call denite#custom#map('insert', '<C-Space>', '<denite:toggle_select_up>',
-            \ 'noremap')
-call denite#custom#map('insert', '<A-u>', '<denite:restore_sources>', 'noremap')
-call denite#custom#map('insert', '<C-w>', '<denite:wincmd:P>', 'noremap')
-call denite#custom#map('insert', '<A-v>', '<denite:do_action:preview>',
-            \ 'noremap')
-call denite#custom#map('insert', '<A-j>',
-            \ '<denite:do_action:scroll_preview_down>', 'noremap')
-call denite#custom#map('insert', '<A-k>',
-            \ '<denite:do_action:scroll_preview_up>', 'noremap')
-call denite#custom#map('insert', '<A-e>', '<denite:do_action:delete>',
-            \ 'noremap')
-call denite#custom#map('insert', '<A-f>', '<denite:do_action:defx>',
-            \ 'noremap')
-call denite#custom#map('insert', '<C-t>',
-            \ '<denite:do_action:candidate_file_rec>', 'noremap')
-call denite#custom#map('insert', '<A-c>',
-            \ '<denite:do_action:candidate_directory_rec>', 'noremap')
-call denite#custom#map('insert', '<A-p>',
-            \ '<denite:do_action:candidate_parent_dir>', 'noremap')
-call denite#custom#map('normal', '<C-k>', '<denite:wincmd:k>', 'noremap')
+augroup ps_denite_setup
+    au!
+    au FileType denite call s:denite_mappings()
+    au FileType denite-filter call s:denite_filter_mappings()
+    au FileType denite-filter
+       \ call deoplete#custom#buffer_option('auto_complete', v:false)
+augroup END
+
+" Buffer mappings (note that the denite buffer only has normal mode)
+function! s:denite_mappings() abort
+    " Denite buffer
+    nnoremap <silent><buffer><expr> <ESC> denite#do_map('quit')
+    nnoremap <silent><buffer><expr> <C-c> denite#do_map('quit')
+    nnoremap <silent><buffer><expr> q denite#do_map('quit')
+    nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
+    " Actions
+    nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+    nnoremap <silent><buffer> <C-p> k
+    nnoremap <silent><buffer> <C-n> j
+    nnoremap <silent><buffer><expr> <C-v> denite#do_map('do_action', 'vsplit')
+    nnoremap <silent><buffer><expr> <C-s> denite#do_map('do_action', 'split')
+    nnoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
+    nnoremap <silent><buffer><expr> <C-x> denite#do_map('choose_action')
+    nnoremap <silent><buffer><expr> <C-y> denite#do_map('do_action', 'yank')
+    nnoremap <silent><buffer><expr> <C-Space> denite#do_map('toggle_select') . 'k'
+    nnoremap <silent><buffer><expr> <A-v> denite#do_map('do_action', 'preview')
+    nnoremap <silent><buffer> <A-w> <C-w>P
+    nnoremap <silent><buffer><expr> <A-u> denite#do_map('restore_sources')
+    nnoremap <silent><buffer> <C-q> :call <SID>denite_quickfix()<CR>
+    " Custom actions
+    nnoremap <silent><buffer><expr> <A-j> denite#do_map('do_action',
+                \ 'scroll_preview_down')
+    nnoremap <silent><buffer><expr> <A-k> denite#do_map('do_action',
+                \ 'scroll_preview_up')
+    nnoremap <silent><buffer><expr> <A-f> denite#do_map('do_action', 'defx')
+    nnoremap <silent><buffer><expr> <C-t> denite#do_map('do_action',
+                \ 'candidate_file_rec')
+    nnoremap <silent><buffer><expr> <A-c> denite#do_map('do_action',
+                \ 'candidate_directory_rec')
+    nnoremap <silent><buffer><expr> <A-p> denite#do_map('do_action',
+                \ 'candidate_parent_dir')
+endfunction
+function! s:denite_filter_mappings() abort
+    " Denite filter buffer
+    inoremap <silent><buffer><expr> <C-c> denite#do_map('quit')
+    inoremap <silent><buffer><expr> <ESC> denite#do_map('quit')
+    nnoremap <silent><buffer><expr> <C-c> denite#do_map('quit')
+    nnoremap <silent><buffer><expr> <ESC> denite#do_map('quit')
+    nnoremap <silent><buffer><expr> q denite#do_map('quit')
+    imap <buffer> <C-e> jj<Plug>(denite_filter_quit)
+    " Actions
+    inoremap <silent><buffer> <C-j>
+                \ <Esc><C-w>p:call cursor(line('.')+1, 0)<CR><C-w>pA
+    inoremap <silent><buffer> <C-n>
+                \ <Esc><C-w>p:call cursor(line('.')+1, 0)<CR><C-w>pA
+    inoremap <silent><buffer> <C-k>
+                \ <Esc><C-w>p:call cursor(line('.')-1, 0)<CR><C-w>pA
+    inoremap <silent><buffer> <C-p>
+                \ <Esc><C-w>p:call cursor(line('.')-1, 0)<CR><C-w>pA
+    inoremap <silent><buffer> <C-u>
+                \ <Esc><C-w>p:call cursor(line('.')-12, 0)<CR><C-w>pA
+    inoremap <silent><buffer> <C-d>
+                \ <Esc><C-w>p:call cursor(line('.')+12, 0)<CR><C-w>pA
+    inoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+    nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
+    inoremap <silent><buffer><expr> <C-v> denite#do_map('do_action', 'vsplit')
+    inoremap <silent><buffer><expr> <C-s> denite#do_map('do_action', 'split')
+    inoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
+    inoremap <silent><buffer><expr> <C-x> denite#do_map('choose_action')
+    inoremap <silent><buffer><expr> <C-y> denite#do_map('do_action', 'yank')
+    inoremap <silent><buffer> <C-Space>
+        \ <ESC>:call denite#call_map('toggle_select')<CR><C-w>p
+        \ :call cursor(line('.')-1, 0)<CR><C-w>pA
+    inoremap <silent><buffer><expr> <A-v> denite#do_map('do_action', 'preview')
+    inoremap <silent><buffer> <A-w> <Esc><C-w>P
+    inoremap <silent><buffer><expr> <A-u> denite#do_map('restore_sources')
+    imap <silent><buffer> <C-q> jj:call <SID>denite_quickfix()<CR>
+    " Custom actions
+    inoremap <silent><buffer><expr> <A-j> denite#do_map('do_action',
+                \ 'scroll_preview_down')
+    inoremap <silent><buffer><expr> <A-k> denite#do_map('do_action',
+                \ 'scroll_preview_up')
+    inoremap <silent><buffer><expr> <A-f> denite#do_map('do_action', 'defx')
+    inoremap <silent><buffer><expr> <C-t> denite#do_map('do_action',
+                \ 'candidate_file_rec')
+    inoremap <silent><buffer><expr> <A-c> denite#do_map('do_action',
+                \ 'candidate_directory_rec')
+    inoremap <silent><buffer><expr> <A-p> denite#do_map('do_action',
+                \ 'candidate_parent_dir')
+endfunction
 
 " Custom actions
 function! s:my_split(context)
@@ -1992,7 +2030,10 @@ endfunction
 function! s:candidate_file_rec(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
-    call denite#start([{'name': 'file/rec/noignore', 'args': [narrow_dir]}])
+    let sources_queue = a:context['sources_queue'] + [[
+            \ {'name': 'file/rec/noignore', 'args': [narrow_dir]},
+            \ ]]
+    return {'sources_queue': sources_queue}
 endfunction
 function! s:candidate_directory_rec(context)
     let path = a:context['targets'][0]['action__path']
@@ -2021,12 +2062,16 @@ function! s:yank_commit(context)
     let commit_hash = matchstr(candidate, '*\s\zs\w*\ze\s-')
     call setreg('+', commit_hash)
 endfunction
+function! s:denite_quickfix()
+  call denite#call_map('toggle_select_all')
+  call denite#call_map('do_action', 'quickfix')
+endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
 call denite#custom#action('buffer,directory,file,openable,dirmark', 'defx',
         \ function('s:defx_open'))
-call denite#custom#action('directory,directory_rec,directory_rec/noignore',
-        \ 'preview', function('s:defx_preview'), {'is_quit': 0})
+call denite#custom#action('directory,directory_rec,directory_rec/noignore,' .
+        \'dirmark', 'preview', function('s:defx_preview'), {'is_quit': 0})
 call denite#custom#action('buffer,directory,file,openable,dirmark',
         \ 'candidate_file_rec', function('s:candidate_file_rec'))
 call denite#custom#action('buffer,directory,file,openable,dirmark',
@@ -2166,7 +2211,7 @@ let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
 
 " Disable denite integration (and enable our own filter)
 let g:webdevicons_enable_denite = 0
-call denite#custom#source('file/rec,file/rec/noignore,file_mru,buffer,'
+call denite#custom#source('file/rec,buffer,fast_file_mru,'
             \ .'directory_rec,directory_rec/noignore,parent_dirs,grep,z',
             \ 'converters', ['denite_devicons_converter'])
 
