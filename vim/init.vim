@@ -699,7 +699,7 @@ map q <Nop>
 
 " Change window easily
 nnoremap <C-j> <C-w>j
-nnoremap <C-h> <C-w>h
+nnoremap <BS> <C-w>h
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
