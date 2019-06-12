@@ -204,7 +204,7 @@ hs.hotkey.bind(cmd_ctrl, "d", function()
 
 -- Alacritty
 hs.hotkey.bind(cmd_ctrl, "c", function()
-    hs.application.launchOrFocus("Alacritty")
+    hs.execute('alacritty -e /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"')
     local console_app = hs.application.find("Alacritty")
     while not console_app:isFrontmost() do
         console_app:activate()
