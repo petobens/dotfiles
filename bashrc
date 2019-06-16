@@ -72,6 +72,7 @@ bind '"\C-n": history-search-forward'
 
 # Bash
 alias sh='bash'
+alias sbp='source ~/.bash_profile'
 alias u='cd ..'
 alias 2u='cd ../..'
 alias 3u='cd ../../..'
