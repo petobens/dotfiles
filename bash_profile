@@ -3,9 +3,9 @@
 # OS dependent settings
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "brew" > /dev/null 2>&1; then
-        BASE_PKG_DIR=$(brew --prefix)
+        export BASE_PKG_DIR=$(brew --prefix)
     else
-        BASE_PKG_DIR='/usr/local'
+        export BASE_PKG_DIR='/usr/local'
     fi
 
     # Path settings
@@ -21,7 +21,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     export LC_ALL=en_US.UTF-8
     export LANG=en_US.UTF-8
 else
-    BASE_PKG_DIR='/usr'
+    export BASE_PKG_DIR='/usr'
 
     # Local paths first (note that path is originally defined in /etc/profile)
     PATH="$HOME/local/bin:$HOME/.local/bin:$PATH"
