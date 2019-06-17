@@ -1,5 +1,8 @@
 # yamllint disable rule:braces rule:commas rule:colons rule:comments-indentation
 ---
+env:
+    WINIT_HIDPI_FACTOR: '2'
+
 window:
     # Blank space added around the window in pixels
     padding:
