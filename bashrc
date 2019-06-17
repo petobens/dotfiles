@@ -30,7 +30,8 @@ fi
 # }}}
 # Prompt {{{
 
-source /home/pedro/git-repos/private/trueline/trueline.sh
+export TRUELINE_SHOW_VIMODE=true
+source ~/git-repos/private/trueline/trueline.sh
 PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # }}}
