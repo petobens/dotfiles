@@ -30,7 +30,8 @@ fi
 # }}}
 # Prompt {{{
 
-export TRUELINE_SHOW_VIMODE=true
+# shellcheck disable=SC2034
+TRUELINE_SHOW_VIMODE=true
 source ~/git-repos/private/trueline/trueline.sh
 PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 

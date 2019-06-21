@@ -5,6 +5,9 @@ sudo bash -c "echo $(command -v bash) >> /etc/shells"
 sudo chsh -s "$(command -v bash)"
 
 # Extra packages
+if [ ! -f "$HOME/git-repos/private/trueline/trueline.sh" ]; then
+    git clone https://github.com/petobens/trueline ~/git-repos/private/trueline
+fi
 if [ ! -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
     # Forgit (fzf and git integration)
     sudo mkdir -p ~/.local/bin/
