@@ -2471,6 +2471,7 @@ let g:jedi#smart_auto_mappings = 0
 " Change/disable some mappings
 let g:jedi#goto_assignments_command = '<C-]>'
 let g:jedi#goto_command = '<Leader>jd'
+let g:jedi#goto_stubs_command = '<Leader>js'
 let g:jedi#rename_command = '<Leader>rn'
 let g:jedi#documentation_command = ''  " We use K mapping in our ftplugin file
 let g:jedi#usages_command = '<Leader>ap' " Appearances of word under cursor
