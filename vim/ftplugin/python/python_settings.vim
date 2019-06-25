@@ -1247,6 +1247,20 @@ function! s:RemoveBreakPoint()
     call setpos('.', save_cursor)
 endfunction
 
+function! s:ListBreakpoints(...)
+    if !exists(':Denite')
+        echoerr 'Denite plugin is needed to list breakpoints.'
+        return
+    endif
+    if a:0 >=1 && a:1 ==# '.'
+        let target = a:1
+    else
+        let target = expand('%')
+    endif
+    call denite#start([{'name': 'grep',
+                \ 'args': [target, '--type python','breakpoint()']}])
+endfunction
+
 " }}}
 " Pre-commit {{{
 
@@ -1354,6 +1368,7 @@ endif
 " Breakpoints
 nnoremap <silent> <buffer> <Leader>bp :call <SID>AddBreakPoint()<CR>
 nnoremap <silent> <buffer> <Leader>rb :call <SID>RemoveBreakPoint()<CR>
+nnoremap <silent> <buffer> <Leader>lb :call <SID>ListBreakpoints()<CR>
 
 " Background compilation
 nnoremap <silent> <buffer> <F7> :call
