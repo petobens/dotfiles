@@ -1368,7 +1368,8 @@ endif
 " Breakpoints
 nnoremap <silent> <buffer> <Leader>bp :call <SID>AddBreakPoint()<CR>
 nnoremap <silent> <buffer> <Leader>rb :call <SID>RemoveBreakPoint()<CR>
-nnoremap <silent> <buffer> <Leader>lb :call <SID>ListBreakpoints()<CR>
+nnoremap <silent> <buffer> <Leader>lb :call <SID>ListBreakpoints('.')<CR>
+nnoremap <silent> <buffer> <Leader>lB :call <SID>ListBreakpoints()<CR>
 
 " Background compilation
 nnoremap <silent> <buffer> <F7> :call
