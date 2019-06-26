@@ -610,6 +610,11 @@ nnoremap <Leader>C :let &scrolloff=999-&scrolloff<cr>
 " 'all' breaks placeholders position in Ultisnips)
 set virtualedit=block,onemore
 
+" Add transparency for floating windows
+if has('nvim')
+    set winblend=5
+endif
+
 " }}}
 
 " }}}
@@ -2094,7 +2099,7 @@ call denite#custom#action('gitlog', 'yank', function('s:yank_commit'))
 " Vim completion settings
 set pumheight=15                          " Popup menu max height
 if has('nvim')
-    set pumblend=20                       " Popup menu transparency
+    set pumblend=10                       " Popup menu transparency
 endif
 set complete=.                            " Scan only the current buffer
 set completeopt=menuone,preview,noinsert
