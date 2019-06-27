@@ -67,7 +67,7 @@ function! s:SetPyEfm()
     " setlocal errorformat+=%-G%.%#warnings%.%#
 endfunction
 
-function! s:RunPython(compiler, mode, compilation, ...)
+function! s:RunPython(compiler, mode, compilation, debugging, ...)
     " Check if python is installed
     if !executable(a:compiler)
         echoerr a:compiler . 'is not installed or not in your path.'
@@ -75,7 +75,7 @@ function! s:RunPython(compiler, mode, compilation, ...)
     endif
 
     " Get debugger argument (first optional argument)
-    let debugger_mode = get(a:, 1, 0)
+    let debugger_mode = a:debugging
 
     " Place uppercase marks at i) the beginning of visual selection and ii)
     " counting how many lines there are importing modules in order to compute
@@ -278,11 +278,14 @@ endfunction
 
 " Define commands to run visual selections (always in python3)
 command! -range -nargs=* EvalVisualPyVimshell
-      \ call s:RunPython(<f-args>, 'visual', 'foreground', <line1>, <line2>)
+      \ call s:RunPython(<f-args>, 'visual', 'foreground', 0, <line1>, <line2>)
 command! -range -nargs=* EvalVisualPyBackground
-      \ call s:RunPython(<f-args>, 'visual', 'background', <line1>, <line2>)
+      \ call s:RunPython(<f-args>, 'visual', 'background', 0, <line1>, <line2>)
 command! -range -nargs=* EvalVisualPyForeground
-            \ call s:RunPython(<f-args>, 'visual', 'foreground_os', <line1>,
+            \ call s:RunPython(<f-args>, 'visual', 'foreground_os', 0, <line1>,
+            \ <line2>)
+command! -range -nargs=* EvalVisualPyDebug
+            \ call s:RunPython(<f-args>, 'visual', 'foreground_os', 1, <line1>,
             \ <line2>)
 
 " }}}
@@ -1373,30 +1376,31 @@ nnoremap <silent> <buffer> <Leader>lB :call <SID>ListBreakpoints()<CR>
 
 " Background compilation
 nnoremap <silent> <buffer> <F7> :call
-            \ <SID>RunPython('python3', 'normal', 'background')<CR>
+            \ <SID>RunPython('python3', 'normal', 'background', 0)<CR>
 inoremap <silent> <buffer> <F7> <ESC>:call
-            \ <SID>RunPython('python3', 'normal', 'background')<CR>
+            \ <SID>RunPython('python3', 'normal', 'background', 0)<CR>
 vnoremap <silent> <buffer> <F7> :EvalVisualPyBackground python3<CR>
 " Foreground compilation
 nnoremap <silent> <buffer> <Leader>rf :call
-            \ <SID>RunPython('python3', 'normal', 'foreground')<CR>
+            \ <SID>RunPython('python3', 'normal', 'foreground', 0)<CR>
 vnoremap <silent> <buffer> <Leader>rf :EvalVisualPyVimshell python3<CR>
 if executable('ipython') || executable('ipython3')
         nnoremap <silent> <buffer> <Leader>ri :call
-            \ <SID>RunPython('ipython3', 'normal', 'foreground')<CR>
+            \ <SID>RunPython('ipython3', 'normal', 'foreground', 0)<CR>
         vnoremap <silent> <buffer> <Leader>ri :call <SID>IPyREPL()<CR>
 endif
 " Run in the command line (useful when input is required)
 nnoremap <silent> <buffer> <F5> :call
-            \ <SID>RunPython('python3', 'normal', 'foreground_os')<CR>
+            \ <SID>RunPython('python3', 'normal', 'foreground_os', 0)<CR>
 inoremap <silent> <buffer> <F5> <ESC>:call
-            \ <SID>RunPython('python3', 'normal', 'foreground_os')<CR>
+            \ <SID>RunPython('python3', 'normal', 'foreground_os', 0)<CR>
 vnoremap <silent> <buffer> <F5> :EvalVisualPyForeground python3<CR>
 " Debugger run
 nnoremap <silent> <buffer> <F6> :call
             \ <SID>RunPython('python3', 'normal', 'foreground_os', 1)<CR>
 inoremap <silent> <buffer> <F6> <ESC>:call
             \ <SID>RunPython('python3', 'normal', 'foreground_os', 1)<CR>
+vnoremap <silent> <buffer> <F6> :EvalVisualPyDebug python3<CR>
 " Load traceback from tmux window
 nnoremap <buffer> <Leader>lt :LoadTraceFromTmux<space>
 
