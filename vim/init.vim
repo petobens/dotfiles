@@ -462,9 +462,10 @@ set wrapscan
 set gdefault
 
 " Don't jump to first match when searching with * and #
-nmap * *<C-o>
-nmap <kMultiply> <kMultiply><C-o>
-nmap # #<C-o>
+nmap <silent> * :let @/ = '\<'.expand('<cword>').'\>'\|set hlsearch<CR>
+nmap <kMultiply> *
+nmap <silent> g* :let @/ = expand('<cword>')\|set hlsearch<CR>
+nmap # #``
 
 " Keep search matches and jumps in the middle of the window (zv allows it to
 " work with folds)
