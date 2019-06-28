@@ -1928,6 +1928,14 @@ function! s:denite_mappings() abort
     nnoremap <silent><buffer><expr> <A-p> denite#do_map('do_action',
                 \ 'candidate_parent_dir')
 endfunction
+
+function! s:DeniteMoveCursorCandidateWindow(dir, lines) abort
+    call win_gotoid(win_findbuf(g:denite#_filter_parent)[0])
+    execute 'normal! ' . a:lines . a:dir
+    call win_gotoid(g:denite#_filter_winid)
+    startinsert!
+endfunction
+
 function! s:denite_filter_mappings() abort
     " Denite filter buffer
     inoremap <silent><buffer><expr> <C-c> denite#do_map('quit')
@@ -1938,17 +1946,17 @@ function! s:denite_filter_mappings() abort
     imap <buffer> <C-e> jj<Plug>(denite_filter_quit)
     " Actions
     inoremap <silent><buffer> <C-j>
-                \ <Esc><C-w>p:call cursor(line('.')+1, 0)<CR><C-w>pA
+                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1)<CR>
     inoremap <silent><buffer> <C-n>
-                \ <Esc><C-w>p:call cursor(line('.')+1, 0)<CR><C-w>pA
+                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1)<CR>
     inoremap <silent><buffer> <C-k>
-                \ <Esc><C-w>p:call cursor(line('.')-1, 0)<CR><C-w>pA
+                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 1)<CR>
     inoremap <silent><buffer> <C-p>
-                \ <Esc><C-w>p:call cursor(line('.')-1, 0)<CR><C-w>pA
+                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 1)<CR>
     inoremap <silent><buffer> <C-u>
-                \ <Esc><C-w>p:call cursor(line('.')-12, 0)<CR><C-w>pA
+                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 12)<CR>
     inoremap <silent><buffer> <C-d>
-                \ <Esc><C-w>p:call cursor(line('.')+12, 0)<CR><C-w>pA
+                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 12)<CR>
     inoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
     nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
     inoremap <silent><buffer><expr> <C-v> denite#do_map('do_action', 'vsplit')
