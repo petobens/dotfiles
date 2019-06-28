@@ -23,6 +23,19 @@ function! s:NoShellSlash(command)
     let &l:shellslash = old_shellslash
 endfunction
 
+function! s:Dedent(lines)
+    " Reindent this lines (i.e make first line have 0 indent)
+    " First get number of spaces in the first line and remove those spaces
+    let indent_length = match(a:lines[0], '\w')
+    let new_lines = []
+    for line in a:lines
+        let line = substitute(line, '^\s\{' . indent_length . '}\ze\s*\S',
+                    \ '', '')
+        call add(new_lines, line)
+    endfor
+    return new_lines
+endfunction
+
 " }}}
 " Options {{{
 
@@ -136,15 +149,7 @@ function! s:RunPython(compiler, mode, compilation, debugging, ...)
         " imported modules)
         let current_file = expand('%:t:r') . '_tmpvisual.py'
         let visual_lines = getline(a:1, a:2)
-        " Reindent this lines (i.e make first line have 0 indent)
-        " First get number of spaces in the first line and remove those spaces
-        let indent_length = match(visual_lines[0], '\w')
-        let new_visual_lines = []
-        for line in visual_lines
-            let line = substitute(line, '^\s\{' . indent_length . '}\ze\s*\S',
-                        \ '', '')
-            call add(new_visual_lines, line)
-        endfor
+        let new_visual_lines = s:Dedent(visual_lines)
         " Add import lines and write it to a temp file
         let lines = import_lines + new_visual_lines
         call writefile(lines, current_file)
@@ -1203,6 +1208,7 @@ function! s:IPythonSelection()
     let [l:lnum1, l:col1] = getpos("'<")[1:2]
     let [l:lnum2, l:col2] = getpos("'>")[1:2]
     let l:lines = getline(l:lnum1, l:lnum2)
+    let l:lines = s:Dedent(l:lines)
     let l:lines[-1] = l:lines[-1][:l:col2 - 1]
     let l:lines[0] = l:lines[0][l:col1 - 1:]
     let l:lines[0] = "\e[200~" . l:lines[0]
