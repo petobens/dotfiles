@@ -1379,6 +1379,11 @@ nnoremap <silent> <buffer> <Leader>bp :call <SID>AddBreakPoint()<CR>
 nnoremap <silent> <buffer> <Leader>rb :call <SID>RemoveBreakPoint()<CR>
 nnoremap <silent> <buffer> <Leader>lb :call <SID>ListBreakpoints('.')<CR>
 nnoremap <silent> <buffer> <Leader>lB :call <SID>ListBreakpoints()<CR>
+augroup ft_quickfix_py
+    au!
+    au Filetype qf nnoremap <silent> <buffer> <Leader>rB
+        \ :cdo g/breakpoint()/d<bar>silent noautocmd update<CR>:cclose<CR><C-o>
+augroup END
 
 " Background compilation
 nnoremap <silent> <buffer> <F7> :call
