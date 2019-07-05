@@ -1731,6 +1731,11 @@ call denite#custom#source('_', 'matchers', ['matcher/fruzzy',
 call denite#custom#source('line', 'matchers', ['matcher/regexp'])
 call denite#custom#source('default', 'sorters', ['sorter/rank'])
 
+" Devicon converter
+call denite#custom#source('file/rec,file/rec/noignore,buffer,fast_file_mru,'
+            \ .'directory_rec,directory_rec/noignore,parent_dirs,grep,z',
+            \ 'converters', ['converter/devicons'])
+
 " Ignore some files and directories
 " FIXME: This is not quite working
 call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
@@ -2223,11 +2228,8 @@ let g:WebDevIconsUnicodeDecorateFileNodesExactSymbols = {'.gitconfig': '',
             \ '.gitignore': '', 'bashrc': '', '.bashrc': '',
             \ 'bash_profile': '', '.bash_profile': ''}
 
-" Disable denite integration (and enable our own filter)
+" Disable denite integration (we enable our own filter)
 let g:webdevicons_enable_denite = 0
-call denite#custom#source('file/rec,buffer,fast_file_mru,'
-            \ .'directory_rec,directory_rec/noignore,parent_dirs,grep,z',
-            \ 'converters', ['denite_devicons_converter'])
 
 " }}}
 " Dispatch {{{
