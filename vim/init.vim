@@ -1530,7 +1530,7 @@ let g:defx_git#indicators = {
   \ 'Staged'    : '●',
   \ 'Untracked' : '?',
   \ 'Renamed'   : '➜',
-  \ 'Unmerged'  : '═',
+  \ 'Unmerged'  : 'שּׁ',
   \ 'Deleted'   : '✖',
   \ 'Unknown'   : '?'
   \ }
