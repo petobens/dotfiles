@@ -2253,6 +2253,7 @@ let g:dispatch_tmux_height = 1
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
 vmap <CR> <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. <Leader>aip)
+" e.g: to align around all `|` press `<Leader>aip*|`
 nmap <Leader>a <Plug>(EasyAlign)
 
 " Define new delimiters
@@ -2267,21 +2268,24 @@ nmap <silent> <Leader>a<Space> :execute
             \ "silent normal mz\<Plug>(EasyAlign)ip*<Space>`z"<CR>
 vmap <silent> <Leader>a<Space> mz:<C-u>execute
             \ "silent normal gv\<Plug>(EasyAlign)*<Space>"<CR>`z
-nmap <silent> <Leader>& :execute "silent normal mz\<Plug>(EasyAlign)ip*&`z"<CR>
-vmap <silent> <Leader>& :mz<C-u>execute
+nmap <silent> <Leader>a, :execute "silent normal mz\<Plug>(EasyAlign)ip*,`z"<CR>
+vmap <silent> <Leader>a, :mz<C-u>execute
+            \ "silent normal gv\<Plug>(EasyAlign)*,"<CR>`z
+nmap <silent> <Leader>a& :execute "silent normal mz\<Plug>(EasyAlign)ip*&`z"<CR>
+vmap <silent> <Leader>a& :mz<C-u>execute
             \ "silent normal gv\<Plug>(EasyAlign)*&"<CR>`z
-nmap <silent> <Leader>= :execute "silent normal mz\<Plug>(EasyAlign)ip*=`z"<CR>
-vmap <silent> <Leader>= mz:<C-u>execute
+nmap <silent> <Leader>a= :execute "silent normal mz\<Plug>(EasyAlign)ip*=`z"<CR>
+vmap <silent> <Leader>a= mz:<C-u>execute
             \ "silent normal gv\<Plug>(EasyAlign)*="<CR>`z
-nnoremap <silent> <Leader>: mzvip:<C-U>silent '<,'>EasyAlign*:>l1<CR>`z
-vnoremap <silent> <Leader>: mz:<C-U>silent '<,'>EasyAlign*:>l1<CR>`z
+nnoremap <silent> <Leader>a: mzvip:<C-U>silent '<,'>EasyAlign*:>l1<CR>`z
+vnoremap <silent> <Leader>a: mz:<C-U>silent '<,'>EasyAlign*:>l1<CR>`z
 
 " Python and vim comments
-nmap <silent> <Leader># :execute "silent normal mz\<Plug>(EasyAlign)ip*#`z"<CR>
-vmap <silent> <Leader># :mz<C-u>execute
+nmap <silent> <Leader>a# :execute "silent normal mz\<Plug>(EasyAlign)ip*#`z"<CR>
+vmap <silent> <Leader>a# :mz<C-u>execute
             \ "silent normal gv\<Plug>(EasyAlign)*#"<CR>`z
-nmap <silent> <Leader>" :execute "silent normal mz\<Plug>(EasyAlign)ip*\"`z"<CR>
-vmap <silent> <Leader>" mz:<C-u>execute
+nmap <silent> <Leader>a" :execute "silent normal mz\<Plug>(EasyAlign)ip*\"`z"<CR>
+vmap <silent> <Leader>a" mz:<C-u>execute
             \ "silent normal gv\<Plug>(EasyAlign)*\""<CR>`z
 
 " }}}
