@@ -1710,7 +1710,6 @@ call denite#custom#option('default', {
             \ 'statusline': 0,
             \ 'winheight': 15,
             \ 'winminheight': -1,
-            \ 'updatetime': 100,
             \ 'reversed': 1,
             \ 'prompt': '❯',
             \ 'highlight_prompt': 'Function',
@@ -1737,12 +1736,10 @@ call denite#custom#source('file/rec,file/rec/noignore,buffer,fast_file_mru,'
             \ 'converters', ['converter/devicons'])
 
 " Ignore some files and directories
-" FIXME: This is not quite working
 call denite#custom#filter('matcher/ignore_globs', 'ignore_globs',
-        \ ['.git/', '__pycache__/', 'venv/',  'tmp/', 'doc/'])
+        \ ['.git/', '__pycache__/', 'venv/',  'tmp/', 'doc/', 'man://*'])
 
 " Buffer source settings
-" TODO: Use converter_uniq_word
 call denite#custom#var('buffer', 'date_format', '')
 
 " Neomru
@@ -1949,6 +1946,7 @@ function! s:denite_filter_mappings() abort
     nnoremap <silent><buffer><expr> <ESC> denite#do_map('quit')
     nnoremap <silent><buffer><expr> q denite#do_map('quit')
     imap <buffer> <C-e> jj<Plug>(denite_filter_quit)
+    imap <buffer> <C-h> <C-o>h
     " Actions
     inoremap <silent><buffer> <C-j>
                 \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1)<CR>
