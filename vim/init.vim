@@ -1896,6 +1896,7 @@ augroup ps_denite_setup
     au FileType denite-filter call s:denite_filter_mappings()
     au FileType denite-filter
        \ call deoplete#custom#buffer_option('auto_complete', v:false)
+    au FileType denite-filter setlocal nocursorline
 augroup END
 
 " Buffer mappings (note that the denite buffer only has normal mode)
