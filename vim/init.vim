@@ -3284,7 +3284,7 @@ function! s:TmuxSplitCmd(cmd, cwd)
     else
         let cwd = a:cwd
     endif
-   silent execute '!tmux split-window -p 30 -c '. cwd . ' ' . a:cmd
+   silent execute '!tmux split-window -p 30 -c '. cwd . ' ' . a:cmd | redraw!
 endfunction
 
 " }}}
