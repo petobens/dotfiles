@@ -2338,6 +2338,7 @@ augroup ps_fugitive
             \ setlocal omnifunc=rhubarb#omnifunc |
         \ endif
    au BufEnter,WinEnter *.git/index execute '15 wincmd _'
+   au FileType fugitive nnoremap <buffer><silent> q :call <SID>QuitGstatus()<CR>
 augroup END
 
 " Gitlab
@@ -2353,6 +2354,14 @@ function! s:BufEnterCommit()
     if getline('.') ==# ''
         startinsert
     endif
+endfunction
+
+function! s:QuitGstatus()
+    wincmd p
+    let win_id = win_getid()
+    wincmd p
+    bdelete
+    call win_gotoid(win_id)
 endfunction
 
 " The following command is needed for Gbrowse to work since netrw fails to open
