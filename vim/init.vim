@@ -89,6 +89,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
     call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarOpen'})
+    call dein#add('liuchengxu/vista.vim')
     call dein#add('SirVer/ultisnips')
     call dein#add('dhruvasagar/vim-zoom')
 
@@ -1500,6 +1501,7 @@ let g:defx_icons_extensions = {
             \ 'tex': {'icon': ''},
             \ 'bib': {'icon': ''},
             \ 'gitcommit': {'icon': ''},
+            \ 'pdf': {'icon': ''},
             \ 'r': {'icon': 'ﳒ'},
             \ 'R': {'icon': 'ﳒ'},
             \ }
@@ -2992,6 +2994,17 @@ augroup pl_venv_python
     au WinEnter,BufWinEnter *.py
         \ if &previewwindow != 1 | call virtualenv#activate('', 1) | endif
 augroup END
+
+" }}}
+" Vista {{{
+
+let g:vista_sidebar_position = 'vertical topleft'
+let g:vista_sidebar_width = 45
+let g:vista_echo_cursor = 0  " Don't echo when moving cursor
+" FIXME: Not working?
+let g:vista_icon_indent = ['', '']
+let g:vista_blink = [0, 0]
+let g:vista_top_level_blink = [0, 0]
 
 " }}}
 " Zoom {{{
