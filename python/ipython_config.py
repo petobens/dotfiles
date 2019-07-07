@@ -1,7 +1,6 @@
 """My ipython config."""
 # pylint:disable=W0212
 
-import os
 import sys
 from operator import attrgetter
 
