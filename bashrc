@@ -101,7 +101,6 @@ ds() {
     du -shc ${1:-*} | sort -rh | fzf
 }
 alias diff='diff -u --color'
-alias dsf='git diff --no-index'
 alias ur='unrar x'
 alias uz='unzip'
 alias rsync='rsync -auP'
@@ -184,6 +183,10 @@ if type "git" > /dev/null 2>&1; then
     alias gst='git stash'
     alias gsp='git stash pop'
     alias gap='git apply'
+    gdp() {
+        git diff > "$1"
+    }
+    alias dsf='git diff --no-index'
 fi
 
 # Docker
