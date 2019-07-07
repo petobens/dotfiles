@@ -1915,11 +1915,13 @@ function! s:denite_mappings() abort
     nnoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
     nnoremap <silent><buffer><expr> <C-x> denite#do_map('choose_action')
     nnoremap <silent><buffer><expr> <C-y> denite#do_map('do_action', 'yank')
+    nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select') . 'k'
     nnoremap <silent><buffer><expr> <C-Space> denite#do_map('toggle_select') . 'k'
     nnoremap <silent><buffer><expr> <A-v> denite#do_map('do_action', 'preview')
     nnoremap <silent><buffer> <A-w> <C-w>P
     nnoremap <silent><buffer><expr> <A-u> denite#do_map('restore_sources')
-    nnoremap <silent><buffer> <C-q> :call <SID>denite_quickfix()<CR>
+    nnoremap <silent><buffer><expr> <C-q> denite#do_map('do_action', 'quickfix')
+    nnoremap <silent><buffer> <A-q> :call <SID>denite_quickfix_all()<CR>
     " Custom actions
     nnoremap <silent><buffer><expr> <A-j> denite#do_map('do_action',
                 \ 'scroll_preview_down')
@@ -1976,7 +1978,8 @@ function! s:denite_filter_mappings() abort
     inoremap <silent><buffer><expr> <A-v> denite#do_map('do_action', 'preview')
     inoremap <silent><buffer> <A-w> <Esc><C-w>P
     inoremap <silent><buffer><expr> <A-u> denite#do_map('restore_sources')
-    imap <silent><buffer> <C-q> jj:call <SID>denite_quickfix()<CR>
+    inoremap <silent><buffer><expr> <C-q> denite#do_map('do_action', 'quickfix')
+    imap <silent><buffer> <A-q> jj:call <SID>denite_quickfix_all()<CR>
     " Custom actions
     inoremap <silent><buffer><expr> <A-j> denite#do_map('do_action',
                 \ 'scroll_preview_down')
@@ -2082,7 +2085,7 @@ function! s:yank_commit(context)
     let commit_hash = matchstr(candidate, '*\s\zs\w*\ze\s-')
     call setreg('+', commit_hash)
 endfunction
-function! s:denite_quickfix()
+function! s:denite_quickfix_all()
   call denite#call_map('toggle_select_all')
   call denite#call_map('do_action', 'quickfix')
 endfunction
