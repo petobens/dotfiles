@@ -183,6 +183,7 @@ if type "git" > /dev/null 2>&1; then
     alias gra='git remote add'
     alias gst='git stash'
     alias gsp='git stash pop'
+    alias gap='git apply'
 fi
 
 # Docker
