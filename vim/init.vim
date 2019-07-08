@@ -1950,7 +1950,7 @@ function! s:denite_filter_mappings() abort
     nnoremap <silent><buffer><expr> <C-c> denite#do_map('quit')
     nnoremap <silent><buffer><expr> <ESC> denite#do_map('quit')
     nnoremap <silent><buffer><expr> q denite#do_map('quit')
-    imap <buffer> <C-e> jj<Plug>(denite_filter_quit)
+    imap <buffer> <C-e> <Plug>(denite_filter_quit)
     imap <buffer> <C-h> <C-o>h
     " Actions
     inoremap <silent><buffer> <C-j>
