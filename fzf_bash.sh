@@ -76,13 +76,19 @@ complete -F _fzf_path_completion -o default -o bashdefault v o dog
 
 # Helpers {{{
 
-# Bind unused key, "\C-x\C-a", to enter vi-movement-mode quickly and then use
-# that thereafter
-bind '"\C-x\C-a": vi-movement-mode'
-# Define other bindings to be used in mappings
-bind '"\C-x\C-e": shell-expand-line'
-bind '"\C-x\C-r": redraw-current-line'
-bind '"\C-x^": history-expand-line'
+if [[ -o vi ]]; then
+    # Bind unused key, "\C-x\C-a", to enter vi-movement-mode quickly and then
+    # use that thereafter
+    bind '"\C-x\C-a": vi-movement-mode'
+    # Define other bindings to be used in mappings
+    bind '"\C-x\C-e": shell-expand-line'
+    bind '"\C-x\C-r": redraw-current-line'
+    bind '"\C-x^": history-expand-line'
+else
+    # To refresh the prompt after fzf
+    bind '"\er": redraw-current-line'
+    bind '"\e^": history-expand-line'
+fi
 
 # }}}
 # File and dirs {{{
@@ -174,11 +180,12 @@ fzf-file-widget-custom() {
 }
 # Note this will insert output to the prompt and there is no way to choose to
 # execute it instead: https://github.com/junegunn/fzf/issues/477
-# shellcheck disable=SC2016
 bind -x '"\C-t": "fzf-file-widget-custom"'
-bind -m vi-command '"\C-t": "i\C-t"'
 bind -x '"\et": "fzf-file-widget-custom no-ignore"'
-bind -m vi-command '"\et": "i\et"'
+if [[ -o vi ]]; then
+    bind -m vi-command '"\C-t": "i\C-t"'
+    bind -m vi-command '"\et": "i\et"'
+fi
 
 # }}}
 # Dirs {{{
@@ -223,17 +230,30 @@ __fzf_cd_custom__() {
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
     __fzf_cd_action_key__ "$out"
 }
-# shellcheck disable=SC2016
-bind '"\ec": "\C-x\C-addi`__fzf_cd_custom__`\C-x\C-e\C-x\C-r\C-m"'
-bind -m vi-command '"\ec": "i\ec"'
-# shellcheck disable=SC2016
-bind '"\ed": "\C-x\C-addi`__fzf_cd_custom__ no-ignore`\C-x\C-e\C-x\C-r\C-m"'
-bind -m vi-command '"\ed": "i\ed"'
+
+if [[ -o vi ]]; then
+    # shellcheck disable=SC2016
+    bind '"\ec": "\C-x\C-addi`__fzf_cd_custom__`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ec": "i\ec"'
+    # shellcheck disable=SC2016
+    bind '"\ed": "\C-x\C-addi`__fzf_cd_custom__ no-ignore`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ed": "i\ed"'
+else
+    # shellcheck disable=SC2016
+    bind '"\ec": " \C-e\C-u`__fzf_cd_custom__`\e\C-e\er\C-m"'
+    # shellcheck disable=SC2016
+    bind '"\ed": " \C-e\C-u`__fzf_cd_custom__ no-ignore`\e\C-e\er\C-m"'
+fi
 
 # Alt-h map to cd from home dir
-# shellcheck disable=SC2016
-bind '"\eh": "\C-x\C-addi`__fzf_cd_custom__ no-ignore ~`\C-x\C-e\C-x\C-r\C-m"'
-bind -m vi-command '"\eh": "i\eh"'
+if [[ -o vi ]]; then
+    # shellcheck disable=SC2016
+    bind '"\eh": "\C-x\C-addi`__fzf_cd_custom__ no-ignore ~`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\eh": "i\eh"'
+else
+    # shellcheck disable=SC2016
+    bind '"\eh": " \C-e\C-u`__fzf_cd_custom__ no-ignore ~`\e\C-e\er\C-m"'
+fi
 
 # Alt-p mapping to cd to selected parent directory (sister to Alt-c)
 __fzf_cd_parent__() {
@@ -258,9 +278,14 @@ __fzf_cd_parent__() {
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
     __fzf_cd_action_key__ "$out"
 }
-# shellcheck disable=SC2016
-bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
-bind -m vi-command '"\ep": "i\ep"'
+if [[ -o vi ]]; then
+    # shellcheck disable=SC2016
+    bind '"\ep": "\C-x\C-addi`__fzf_cd_parent__`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ep": "i\ep"'
+else
+    # shellcheck disable=SC2016
+    bind '"\ep": " \C-e\C-u`__fzf_cd_parent__`\e\C-e\er\C-m"'
+fi
 
 # }}}
 # Z {{{
@@ -280,10 +305,15 @@ z() {
         sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
 }
-# shellcheck disable=SC2016
-bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
-# shellcheck disable=SC2016
-bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
+if [[ -o vi ]]; then
+    # shellcheck disable=SC2016
+    bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
+    # shellcheck disable=SC2016
+    bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
+else
+    # shellcheck disable=SC2016
+    bind '"\ez": " \C-e\C-u`z`\e\C-e\er\C-m"'
+fi
 
 # }}}
 
