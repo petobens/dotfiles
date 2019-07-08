@@ -1719,7 +1719,7 @@ call denite#custom#option('default', {
             \ 'highlight_matched_range': 'None',
             \ 'vertical_preview': 1,
             \ 'start_filter': 1,
-            \ 'filter_updatetime': 150,
+            \ 'filter_updatetime': 100,
             \ })
 
 " Fruzzy matcher
