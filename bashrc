@@ -28,14 +28,6 @@ if [[ -f "$BASE_PKG_DIR/share/bash-completion/bash_completion" ]]; then
 fi
 
 # }}}
-# Prompt {{{
-
-# shellcheck disable=SC2034
-TRUELINE_SHOW_VIMODE=true
-source ~/git-repos/private/trueline/trueline.sh
-PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
-
-# }}}
 # Bindings {{{
 
 # Set vi mode
@@ -391,5 +383,13 @@ sys_update_all() {
         cargo install-update --all
     fi
 }
+
+# }}}
+# Prompt {{{
+
+# shellcheck disable=SC2034
+TRUELINE_SHOW_VIMODE=true
+source ~/git-repos/private/trueline/trueline.sh
+PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # }}}
