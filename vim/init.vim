@@ -676,7 +676,7 @@ nnoremap <silent> <A-s> i<cr><esc>^mwgk:silent! s/\v +$//<cr>:noh<cr>`w
 
 " Select until last character when starting visual mode linewise (i.e don't
 " select extra blank character even when using `virtualedit=onemore`)
-nnoremap V 0vg_
+nnoremap vV 0vg_
 " Select the contents of the current line, excluding indentation.
 nnoremap vv ^vg_
 
