@@ -3018,6 +3018,12 @@ augroup END
 " }}}
 " Vista {{{
 
+augroup ps_vista
+    au!
+    au FileType vista setlocal relativenumber
+    au FileType vista nnoremap <buffer> q :call vista#sidebar#Close()<CR>
+augroup END
+
 let g:vista_sidebar_position = 'vertical topleft'
 let g:vista_sidebar_width = 45
 let g:vista_echo_cursor = 0  " Don't echo when moving cursor
