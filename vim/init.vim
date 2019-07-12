@@ -1865,7 +1865,7 @@ nnoremap <silent> <Leader>dg :lcd %:p:h<CR>:DeniteCursorWord -no-start-filter
 nnoremap <silent> <Leader>he :Denite help<CR>
 nnoremap <silent> <Leader>yh :Denite neoyank<CR>
 nnoremap <silent> <Leader>sh :Denite history:search<CR>
-nnoremap <silent> <Leader>ch :Denite history:cmd<CR>
+nnoremap <silent> <Leader>ch :Denite command_history<CR>
 nnoremap <silent> <Leader>sm :Denite output:messages<CR>
 nnoremap <silent> <Leader>me :Denite output:map<CR>
 nnoremap <silent> <Leader>uf :Denite output:function<CR>
