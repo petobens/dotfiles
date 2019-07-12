@@ -96,11 +96,19 @@ else
         fi
     fi
 
-    # Manage docker as non-root
+    # Manage docker as non-root and change image directory
     if type "docker" > /dev/null 2>&1; then
         echo -e "\\033[1;34m--> Managing docker as non-root...\\033[0m"
         sudo groupadd docker
         sudo usermod -aG docker "$USER"
+        echo -e "\\033[1;34m--> Changing image cache dir...\\033[0m"
+        sudo -E /usr/bin/bash -c 'cat > /etc/docker/daemon.json << EOF
+        {
+          "data-root": "$HOME/.cache/docker"
+        }
+        EOF'
+        sudo systemctl enable docker
+        sudo systemctl restart docker
     fi
 
     # Enable some services
