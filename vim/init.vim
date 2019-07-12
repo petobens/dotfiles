@@ -88,7 +88,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
-    call dein#add('majutsushi/tagbar', {'on_cmd' : 'TagbarOpen'})
+    call dein#add('majutsushi/tagbar')
     call dein#add('liuchengxu/vista.vim')
     call dein#add('SirVer/ultisnips')
     call dein#add('dhruvasagar/vim-zoom')
@@ -1350,7 +1350,8 @@ let g:airline#extensions#wordcount#enabled = 0
 let g:airline#extensions#cursormode#enabled = 0
 
 " Enable some extensions
-let g:airline#extensions#neomake#enabled = 1 " Don't show on Airline
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline#extensions#neomake#enabled = 1
 let airline#extensions#neomake#error_symbol = ' '
 let airline#extensions#neomake#warning_symbol = ' '
 
