@@ -87,7 +87,7 @@ function! s:RunPython(compiler, mode, compilation, debugging, ...)
         return
     endif
 
-    " Get debugger argument (first optional argument)
+    " Get debugger argument
     let debugger_mode = a:debugging
 
     " Place uppercase marks at i) the beginning of visual selection and ii)
@@ -662,7 +662,7 @@ augroup END
 " }}}
 " (Py)Tests {{{
 
-function! s:RunPyTest(level, compilation)
+function! s:RunPyTest(level, compilation, ...)
     " Don't run if pytest or coverage are not installed
     " TODO: Find a way to check if pytest-cov is installed
     let compiler = 'py.test'
@@ -741,7 +741,12 @@ function! s:RunPyTest(level, compilation)
         let need_prefix = 1
     endif
 
-    " Set compiler (Use short traceback print mode and decrease verbosity)
+    " Set compiler options (run in parallel (requires pytest-xdist), use short
+    " traceback print mode and decrease verbosity)
+    let parallel = get(a:, 1, 0)
+    if parallel
+        let compiler = compiler . ' -n auto'
+    endif
     let compiler = compiler . ' --tb=short -q '
 
     " Allow to run the whole test suite, just one test file (module) or specific
@@ -1424,6 +1429,7 @@ nnoremap <silent> <buffer> <Leader>fc :call <SID>RunBlack()<CR>
 
 " Tests and coverage (py.test dependant)
 nnoremap <buffer> <Leader>pts :call <SID>RunPyTest('suite', 'background')<CR>
+nnoremap <buffer> <Leader>Pts :call <SID>RunPyTest('suite', 'background', 1)<CR>
 nnoremap <buffer> <Leader>ptf :call <SID>RunPyTest('file', 'background')<CR>
 nnoremap <buffer> <Leader>Ptf :call <SID>RunPyTest('file', 'foreground')<CR>
 nnoremap <buffer> <Leader>ptc :call <SID>RunPyTest('class', 'background')<CR>
@@ -1432,6 +1438,8 @@ nnoremap <buffer> <Leader>ptm :call <SID>RunPyTest('method', 'background')<CR>
 nnoremap <buffer> <Leader>Ptm :call <SID>RunPyTest('method', 'foreground')<CR>
 nnoremap <buffer> <silent> <Leader>rt :call
             \ <SID>RunPyTest('suite', 'foreground')<CR>
+nnoremap <buffer> <silent> <Leader>rT :call
+            \ <SID>RunPyTest('suite', 'foreground', 1)<CR>
 nnoremap <buffer> <silent> <Leader>et :call <SID>EditTestFile()<CR>
 
 " (Open) and run visual selection in the interpreter (in neovim terminal) and

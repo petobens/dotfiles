@@ -14,6 +14,7 @@ if type "pip3" > /dev/null 2>&1; then
     fi
     $pip_install_cmd pytest-cov
     $pip_install_cmd pytest
+    $pip_install_cmd pytest-xdist
     $pip_install_cmd requests
     $pip_install_cmd Send2Trash
     $pip_install_cmd scikit-learn
