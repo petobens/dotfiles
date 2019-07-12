@@ -109,4 +109,8 @@ else
         sudo systemctl enable sleeplock.service
         sudo systemctl start sleeplock.service
     fi
+
+    # Remove previous pacman cache dir (we changed it in pacman.conf)
+    echo -e "\\033[1;34m--> Removing old pacman cache dir...\\033[0m"
+    sudo rm -rf /var/cache/pacman
 fi
