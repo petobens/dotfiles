@@ -809,9 +809,9 @@ nnoremap <silent> <C-y> <C-i>
 nnoremap <silent> <Leader>kv :qall<cr>
 
 " Fast saving
-nnoremap <Leader>w :w!<CR>
+nnoremap <silent><Leader>w :w!<CR>
 " Save and close window
-nnoremap <Leader>wc :w!<CR><C-w>c
+nnoremap <silent> <Leader>wc :w!<CR>:silent close<CR>
 " Save and quit
 nnoremap <Leader>wq :w!<CR>:q!<CR>
 " No autocommand write
