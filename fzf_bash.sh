@@ -507,7 +507,7 @@ di() {
         ctrl-i)
             image_cmd="docker run --rm -ti --entrypoint /bin/bash" ;;
         alt-d)
-            image_cmd="docker image rm" ;;
+            image_cmd="docker image rm --force" ;;
         **)
             image_cmd="docker run";;
     esac
