@@ -494,12 +494,12 @@ FZF_DOCKER_IMAGE_OPTS="$FZF_DOCKER_OPTS_BASE
 di() {
     cmd="docker image ls | tail -n +2"
     out=$(eval "$cmd" |
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_DOCKER_IMAGE_OPTS" fzf |
-        cut -d ' ' -f 1)
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_DOCKER_IMAGE_OPTS" fzf)
     key=$(head -1 <<< "$out")
-    image=$(head -2 <<< "$out" | tail -1)
+    out="$(echo "$out" | awk '{print $3}')"
+    mapfile -t images <<< "$(tail -n+2 <<< "$out")"
 
-    if [[ -z "$image" ]]; then
+    if [[ ${#images[@]} -eq 1 ]] && [[ -z "${images[0]}" ]]; then
         return 1
     fi
 
@@ -511,7 +511,10 @@ di() {
         **)
             image_cmd="docker run";;
     esac
-    eval "$image_cmd $image"
+
+    for image in "${images[@]}"; do
+        eval "$image_cmd $image"
+    done
 }
 
 
@@ -526,9 +529,8 @@ dc() {
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_DOCKER_CONTAINER_OPTS" fzf |
         cut -d ' ' -f 1)
     key=$(head -1 <<< "$out")
-    container=$(head -2 <<< "$out" | tail -1)
-
-    if [[ -z "$container" ]]; then
+    mapfile -t containers <<< "$(tail -n+2 <<< "$out")"
+    if [[ ${#containers[@]} -eq 1 ]] && [[ -z "${containers[0]}" ]]; then
         return 1
     fi
 
@@ -550,7 +552,9 @@ dc() {
         **)
             sub_cmd="logs";;
     esac
-    eval "docker container $sub_cmd $container $post_cmd"
+    for container in "${containers[@]}"; do
+        eval "docker container $sub_cmd $container $post_cmd"
+    done
 }
 
 # }}}
