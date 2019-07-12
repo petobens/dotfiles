@@ -37,9 +37,11 @@ $pipx_install_cmd black
 $pipx_install_cmd httpie
 $pipx_install_cmd ipython
 $pipx_inject_cmd ipython numpy pandas matplotlib
+# shellcheck disable=SC2102
 $pipx_install_cmd isort[pyproject]
 $pipx_install_cmd jupyter --include-deps
 $pipx_install_cmd litecli
+$pipx_install_cmd mssql-cli --spec git+https://github.com/dbcli/mssql-cli
 $pipx_install_cmd mycli
 $pipx_install_cmd mypy
 if type "nvim" > /dev/null 2>&1; then
@@ -107,5 +109,16 @@ do
             $ln_cmd -fTs "$python_dir/onedarkish.py" "$styles_dir/onedarkish.py"
             echo Created symlink in "$styles_dir/onedarkish.py"
         fi
+    fi
+
+    # Workaround to fix mssql-cli
+    if [[ "$dbcli" == 'mssql-cli' ]]; then
+        package_dir="$pipx_venvs/$dbcli/lib/python3.7/site-packages/mssqlcli/mssqltoolsservice"
+        wget https://github.com/dbcli/mssql-cli/raw/master/sqltoolsservice/manylinux1/Microsoft.SqlTools.ServiceLayer-linux-x64-netcoreapp2.1.tar.gz -P "$package_dir/bin"
+        (
+            cd "$package_dir/bin" || exit
+            tar xf Microsoft.SqlTools.ServiceLayer-linux-x64-netcoreapp2.1.tar.gz
+            rm -rf Microsoft.SqlTools.ServiceLayer-linux-x64-netcoreapp2.1.tar.gz
+        )
     fi
 done
