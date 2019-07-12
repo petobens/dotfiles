@@ -186,6 +186,7 @@ if type "docker" > /dev/null 2>&1; then
     alias db='docker build -t'
     alias dr='docker run'
     alias dcr='docker container rename'
+    alias drd='docker rmi -f $(docker images -f "dangling=true" -q)'
 fi
 
 # Python
