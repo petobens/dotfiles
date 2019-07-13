@@ -937,6 +937,10 @@ function! s:ShowPyTestCoverage()
     " If there are no errors get output text (i.e coverage report) and then
     " remove this output entries from the quickfix list (i.e empty qflist)
     for entry in qflist
+        if match(entry.text, '^no tests ran\s*.') != -1
+            " There is nothing to do in this case, therefore exit
+            break
+        endif
         if entry.valid == 0
             if s:is_win
                 let entry.text = iconv(entry.text, 'latin1', 'utf-8')
