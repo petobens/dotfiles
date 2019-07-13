@@ -3022,7 +3022,8 @@ augroup END
 augroup ps_vista
     au!
     au FileType vista setlocal relativenumber
-    au FileType vista nnoremap <buffer> q :call vista#sidebar#Close()<CR>
+    au VimEnter * call vista#RunForNearestMethodOrFunction()
+    au FileType vista nnoremap <silent><buffer> q :call vista#sidebar#Close()<CR>
 augroup END
 
 let g:vista_sidebar_position = 'vertical topleft'
