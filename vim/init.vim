@@ -1697,12 +1697,12 @@ let g:dein#install_max_processes = 16
 " Function to open denite buffer with updates as updates finish
 function! s:dein_update()
   call dein#update()
-  Denite -no-start-filter dein/log:!
+  Denite -no-start-filter -post-action=open dein/log:!
 endfunction
 
 " Maps
 nnoremap <silent> <Leader>ul :execute "edit +" g:dein#install_log_filename<CR>
-nnoremap <Leader>bu :call dein#update()<CR>
+nnoremap <Leader>bu :call <SID>dein_update()<CR>
 nnoremap <Leader>rp :call dein#recache_runtimepath()<CR>
 nnoremap <silent> <Leader>bl :Denite dein<CR>
 
