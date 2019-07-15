@@ -213,6 +213,7 @@ if type "python" > /dev/null 2>&1; then
         alias pes='pipenv shell'
         alias pep='pipenv run python'
         alias ped='pipenv run python -m pdb -cc'
+        alias pet='pipenv run pytest'
     fi
 fi
 
