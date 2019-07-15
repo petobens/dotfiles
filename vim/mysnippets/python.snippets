@@ -164,16 +164,15 @@ def ${1:name}():
 	$0
 endsnippet
 
-snippet mp "Monkeypatch" b
+snippet ptm "Monkeypatch" b
 @pytest.fixture
 def ${1:name}(monkeypatch):
 	monkeypatch.setattr('${2:full_import_path}', Mock())
 	return $2$0
 endsnippet
 
-snippet te "Test exception" b
-${1:method}.side_effect = ${2:Exception}(${3:expected_value})
-with pytest.raises($2):
+snippet ptr "Test exception" b
+${1:${2:method}.side_effect = ${3:Exception}(${4:expected_value})}`!p snip.rv='\n\t' if t[2] else ''`with pytest.raises($5):
 	$0
 endsnippet
 
