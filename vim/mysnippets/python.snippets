@@ -158,6 +158,12 @@ endsnippet
 # **}
 # Tests **{
 
+snippet ptf "Pytest fixture" b
+@pytest.fixture
+def ${1:name}():
+	$0
+endsnippet
+
 snippet mp "Monkeypatch" b
 @pytest.fixture
 def ${1:name}(monkeypatch):
