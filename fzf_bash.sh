@@ -295,7 +295,6 @@ export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
 --no-sort
 --tac
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
-
 "
 z() {
     [ $# -gt 0 ] && _z "$*" && return

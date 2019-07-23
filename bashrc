@@ -296,28 +296,6 @@ alias assh='TERM=xterm-256color; sshpass -p "$(pass azure/ssh/pedroazurevm)" '\
 'ssh azurevm'
 
 # }}}
-# Fzf and cli apps {{{
-
-# Z (load it but unalias it to override it with fzf version)
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if [ -f "$BASE_PKG_DIR/etc/profile.d/z.sh" ]; then
-        . "$BASE_PKG_DIR/etc/profile.d/z.sh"
-    fi
-else
-    if  [[ -f "/usr/share/z/z.sh" ]]; then
-        .  '/usr/share/z/z.sh'
-    fi
-fi
-unalias z 2> /dev/null
-
-# Fzf
-if type "fzf" > /dev/null 2>&1; then
-    if [ -f "$HOME/.fzf_bash.sh" ]; then
-        . "$HOME/.fzf_bash.sh"
-    fi
-fi
-
-# }}}
 # Functions {{{
 
 # Save and reload the history after each command finishes (this must be called
@@ -394,5 +372,28 @@ sys_update_all() {
 TRUELINE_SHOW_VIMODE=true
 source ~/git-repos/private/trueline/trueline.sh
 PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
+
+# }}}
+# Fzf and cli apps {{{
+
+# Z (load it but unalias it to override it with fzf version). Note: we must load
+# if after the prompt since it modifies the prompt command
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if [ -f "$BASE_PKG_DIR/etc/profile.d/z.sh" ]; then
+        . "$BASE_PKG_DIR/etc/profile.d/z.sh"
+    fi
+else
+    if  [[ -f "/usr/share/z/z.sh" ]]; then
+        source /usr/share/z/z.sh
+    fi
+fi
+unalias z 2> /dev/null
+
+# Fzf
+if type "fzf" > /dev/null 2>&1; then
+    if [ -f "$HOME/.fzf_bash.sh" ]; then
+        . "$HOME/.fzf_bash.sh"
+    fi
+fi
 
 # }}}
