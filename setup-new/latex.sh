@@ -90,6 +90,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     sudo tlmgr install fancyvrb
     sudo tlmgr install float
     sudo tlmgr install jknapltx
+    sudo tlmgr install l3backend
     sudo tlmgr install l3kernel
     sudo tlmgr install l3packages
     sudo tlmgr install lineno
