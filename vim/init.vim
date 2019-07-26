@@ -871,7 +871,11 @@ nnoremap <silent> <Leader>ym :redir @*\|messages\|:redir END<CR>
 
 " Yank output of a command
 function! s:YankOutput()
-    redir @*
+    if s:is_win || s:is_mac
+        redir @*
+    else
+        redir @+
+    endif
     let cmd = input('Enter command whose output will be yanked: ')
     silent execute cmd
     redir END
