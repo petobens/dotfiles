@@ -270,30 +270,12 @@ alias cowdb='rlwrap -a"$(pass claro/oracle/rac8/cti22156)" -N '\
 alias cpdb=' PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
 '-h tcalt-01.claro.amx -p 5432 -U airflow -d delver'
 
-# AUSA
-alias avpn='sudo vpnc ausa_vpn.conf && '\
-'sudo \ip route add 172.25.0.0/16 dev tun0 scope link &&'\
-'sudo \ip route del default dev tun0 scope link'
-alias adb='mssql-cli -S 172.25.1.70 -U pfarina -P '\
-'"$(pass ausa/sqlserver/pfarina)"'
-
-# Min Prod
-alias mpvpn='sudo pkill -INT -f openvpn; sudo openvpn --daemon --cd '\
-'~/OneDrive/arch/vpn --config microstrategy.ovpn'
-alias mpssh='TERM=xterm-256color; sshpass -p '\
-'"$(pass minprod/ssh/microstrategy)" ssh minprod'
-
-# Humber
-alias hdbr='mongo mongodb://humberDbRead:"$(pass humber/mongodb/humberDbRead)"'\
-'@db1.humber.com.ar:37117,db2.humber.com.ar:37117,'\
-'arbiter.humber.com.ar:37117/humberPro001?replicaSet=humber-replica-set'
-alias hdbw='mongo mongodb://pedroFerrari:"$(pass humber/mongodb/pedroFerrari)"'\
-'@db1.humber.com.ar:37117,db2.humber.com.ar:37117,'\
-'arbiter.humber.com.ar:37117/humberPro001?replicaSet=humber-replica-set'
-
-# Azure server
-alias assh='TERM=xterm-256color; sshpass -p "$(pass azure/ssh/pedroazurevm)" '\
-'ssh azurevm'
+# Habitat
+alias hssh='TERM=xterm-256color; ssh -i ~/.ssh/delorean.pem '\
+'ec2-user@ec2-3-82-243-107.compute-1.amazonaws.com'
+alias hdb='PGPASSWORD="$(pass habitat/postgres)" pgcli -h '\
+'habitat-main-warehouse.cmk8k7a2tkea.us-east-1.rds.amazonaws.com -U airflow '\
+'-d habitat_main_warehouse'
 
 # }}}
 # Functions {{{
