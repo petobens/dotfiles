@@ -311,6 +311,10 @@ else
         $ln_cmd -fTs "$dotfiles_dir/arch/config/zathura" "$HOME/.config/zathura"
         echo Created .config/zathura folder symlink
     fi
+    if type "pdfpc" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/arch/config/pdfpc" "$HOME/.config/pdfpc"
+        echo Created .config/pdfpc folder symlink
+    fi
     if type "mpv" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/arch/config/mpv" "$HOME/.config/mpv"
         echo Created .config/mpv folder symlink

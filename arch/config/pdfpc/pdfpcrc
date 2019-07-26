@@ -1,0 +1,26 @@
+bind n next
+bind p prev
+bind C+d next10
+bind C+u prev10
+bind N nextOverlay
+bind P prevOverlay
+bind s goto
+bind g gotoFirst
+bind G gotoLast
+
+bind t pause
+bind T resetTimer
+bind P start
+
+bind o overview
+bind N switchMode normal
+bind L switchMode pointer
+bind D switchMode pen
+bind E switchMode eraser
+bind u clearDrawing
+
+bind A note
+bind m toggleToolbox
+bind Q quit
+bind h hide
+bind b blank

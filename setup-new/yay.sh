@@ -190,6 +190,7 @@ $yay_cmd gnome-font-viewer
 $yay_cmd hplip-plugin
 $yay_cmd libreoffice-fresh
 $yay_cmd onedrive-abraunegg
+$yay_cmd pdfpc
 $yay_cmd peek
 $yay_cmd pepper-flash  # flash player for chromimum
 $yay_cmd slack-desktop
