@@ -1536,7 +1536,7 @@ let g:defx_icon_exact_dir_matches = {
             \ }
 
 " Git
-let g:defx_git#indicators = {
+call defx#custom#column('git', 'indicators', {
   \ 'Modified'  : '✚',
   \ 'Staged'    : '●',
   \ 'Untracked' : '?',
@@ -1544,7 +1544,7 @@ let g:defx_git#indicators = {
   \ 'Unmerged'  : 'שּׁ',
   \ 'Deleted'   : '✖',
   \ 'Unknown'   : '?'
-  \ }
+  \ })
 
 function! s:QuitAllDefx(context) abort
     let buffers = filter(range(1, bufnr('$')),
