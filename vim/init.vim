@@ -1852,13 +1852,10 @@ nnoremap <silent> <Leader>lU :execute 'Denite file/rec/noignore:' .
             \ expand('%:p:h:h')<CR>
 nnoremap <silent> <Leader>sd :call <SID>DeniteScanDir()<CR>
 nnoremap <silent> <Leader>sD :call <SID>DeniteScanDir(0)<CR>
-nnoremap <silent> <A-z> :Denite -default-action=candidate_file_rec z<CR>
-nnoremap <silent> <A-c> :DeniteBufferDir
-            \ -default-action=candidate_file_rec directory_rec<CR>
-nnoremap <silent> <A-d> :DeniteBufferDir
-            \ -default-action=candidate_file_rec directory_rec/noignore<CR>
-nnoremap <silent> <A-p> :DeniteBufferDir -no-start-filter
-            \ -default-action=candidate_file_rec parent_dirs<CR>
+nnoremap <silent> <A-z> :Denite z<CR>
+nnoremap <silent> <A-c> :DeniteBufferDir directory_rec<CR>
+nnoremap <silent> <A-d> :DeniteBufferDir directory_rec/noignore<CR>
+nnoremap <silent> <A-p> :DeniteBufferDir -no-start-filter parent_dirs<CR>
 nnoremap <silent> <Leader>rd :Denite fast_file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
@@ -1880,8 +1877,7 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-action=preview
 nnoremap <silent> <Leader>dq :Denite -post-action=suspend quickfix<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
-nnoremap <silent> <Leader>bm :Denite dirmark -no-start-filter
-            \ -default-action=candidate_file_rec<CR>
+nnoremap <silent> <Leader>bm :Denite -no-start-filter dirmark<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> <Leader>dR :Denite -resume -no-start-filter<CR>
 nnoremap <silent> ]d :Denite -resume -immediately -cursor-pos=+1<CR>
@@ -2119,6 +2115,11 @@ call denite#custom#action('buffer,directory,file,openable,dirmark,gitlog',
         \ 'scroll_preview_up', function('s:scroll_preview_up'),
         \ {'is_quit': 0})
 call denite#custom#action('gitlog', 'yank', function('s:yank_commit'))
+
+" Define default actions (don't do this in mapping definitions because it will
+" overwrite any other override)
+call denite#custom#source('directory_rec,directory_rec/noignore,parent_dirs,' .
+        \ 'z,dirmark', 'default_action', 'candidate_file_rec')
 
 " }}}
 " Deoplete {{{
