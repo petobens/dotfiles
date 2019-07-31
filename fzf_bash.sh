@@ -1,5 +1,4 @@
-# Note: this uses several rust binaries: fd, rg, bat, lsd and devicon-lookup
-# It also assumes (for bindings) that bash is used in vi-mode
+# Note: this uses several rust binaries: skim, fd, rg, bat, lsd and devicon-lookup
 
 # Setup {{{
 
@@ -319,18 +318,33 @@ fi
 # }}}
 # Grep {{{
 
-FZF_GREP_OPTS="
---multi
---ansi
---delimiter=:
+# We use skim for this (since it has an interactive mode)
+
+export SKIM_DEFAULT_OPTS="\
+--height 15 \
+--inline-info \
+--prompt='❯ ' \
+--bind=ctrl-i:toggle-interactive \
+--bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up \
+--bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up \
+--color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff,\
+prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd,marker:#98c379,\
+spinner:#e06c75,border:#282c34\
+"
+SKIM_GREP_OPTS="\
+--header 'enter=open' \
+--multi \
+--ansi \
+--delimiter=: \
 --preview 'bat --color always --style numbers --theme TwoDark \
-    --line-range {2}: --highlight-line {2} {1} | head -200'
+--line-range {2}: --highlight-line {2} {1} | head -200'\
 "
 
-rgz() {
-    cmd="rg --smart-case --vimgrep --no-heading --color=always"
-    out="$(eval "$cmd" "$@" |
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" fzf)"
+ig() {
+    # shellcheck disable=SC2124
+    grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@"
+    sk_cmd="sk $SKIM_DEFAULT_OPTS $SKIM_GREP_OPTS -i -c '$grep_cmd {}'"
+    out=$(eval "$sk_cmd")
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
 
@@ -346,7 +360,7 @@ rgz() {
         done
     fi
     printf -v files_str "%s " "${files[@]}"
-    eval "$(printf "nvim %s" "$files_str")"
+    eval "$(printf "${EDITOR:-nvim} %s" "$files_str")"
 }
 
 # }}}
@@ -369,6 +383,7 @@ __fzf_history__() (
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_R_OPTS" fzf |
         command grep '^ *[0-9]'
     )
+    # shellcheck disable=SC2001
     sed 's/^ *\([0-9]*\)\** .*/!\1/' <<< "$line"
 )
 # shellcheck disable=SC2016

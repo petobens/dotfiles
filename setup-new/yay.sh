@@ -164,6 +164,7 @@ $yay_cmd ripgrep
 $yay_cmd rlwrap
 $yay_cmd rsync
 $yay_cmd shellcheck
+$yay_cmd skim
 $yay_cmd socat
 $yay_cmd sshpass
 $yay_cmd stoken-git
