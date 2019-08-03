@@ -94,6 +94,9 @@ else
         if type "mpv" > /dev/null 2>&1; then
             xdg-mime default mpv.desktop image/gif
         fi
+        if type "freeoffice-textmaker" > /dev/null 2>&1; then
+            xdg-mime default freeoffice-textmaker.desktop application/octet-stream
+        fi
     fi
 
     # Manage docker as non-root and change image directory
