@@ -156,6 +156,7 @@ if type "git" > /dev/null 2>&1; then
     alias gcl='git clone'
     alias gco='git checkout'
     __git_complete gco _git_checkout
+    alias gcb='git checkout $(git branch | fzf | tr -d "*")'
     alias gcp='git cherry-pick'
     alias gb='git branch'
     __git_complete gb _git_branch
