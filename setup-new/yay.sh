@@ -163,6 +163,7 @@ $yay_cmd qrencode
 $yay_cmd ripgrep
 $yay_cmd rlwrap
 $yay_cmd rsync
+$yay_cmd sd
 $yay_cmd shellcheck
 $yay_cmd skim
 $yay_cmd socat

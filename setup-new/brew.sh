@@ -106,6 +106,7 @@ $brew_install_cmd reattach-to-user-namespace
 $brew_install_cmd ripgrep
 $brew_install_cmd rlwrap
 $brew_install_cmd rsync
+$brew_install_cmd sd
 $brew_install_cmd shellcheck
 $brew_install_cmd shellpass
 $brew_install_cmd sk
