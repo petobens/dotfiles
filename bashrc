@@ -249,27 +249,27 @@ fi
 # Work Aliases {{{
 
 # Mostly vpn and databases; ssh hosts are defined in .ssh/config
-alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc"'
+alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 
 # Claro
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
 # enabled)
-alias cvpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
-'--background --authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
+alias cvpn='sudo pkill -INT -f snx; stoken | '\
+'snx -s vpn3.claro.com.ar -u EXB77159'
 alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
 'ssh mjolnir'
-alias cvssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/varas)" '\
-'ssh varas'
 alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
 'ssh tcal'
 alias codb='rlwrap -a"$(pass claro/oracle/rac8/dracing)" -N '\
-'sql CTI22156/"$(pass claro/oracle/rac8/cti22156)"'\
+'sql dracing/"$(pass claro/oracle/rac8/dracing)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD'
-alias cowdb='rlwrap -a"$(pass claro/oracle/rac8/cti22156)" -N '\
-'sql CTI22156/"$(pass claro/oracle/rac8/cti22156)"'\
+alias cowdb='rlwrap -a"$(pass claro/oracle/rac8/delver)" -N '\
+'sql DELVER/"$(pass claro/oracle/rac8/delver)"'\
 '@exa1-scan.claro.amx:1521/RAC8.WORLD'
+alias coldb='sql system/oracle@localhost:49161/xe'
 alias cpdb=' PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
-'-h tcalt-01.claro.amx -p 5432 -U airflow -d delver'
+'-h 10.93.11.218 -p 5432 -U airflow -d delver'
+alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
 
 # Habitat
 alias hssh='TERM=xterm-256color; ssh -i ~/.ssh/delorean.pem '\
@@ -277,6 +277,12 @@ alias hssh='TERM=xterm-256color; ssh -i ~/.ssh/delorean.pem '\
 alias hdb='PGPASSWORD="$(pass habitat/postgres)" pgcli -h '\
 'habitat-main-warehouse.cmk8k7a2tkea.us-east-1.rds.amazonaws.com -U airflow '\
 '-d habitat_main_warehouse'
+
+# Efecty
+alias evpn='echo "$(pass biwares/efecty/vpn/matmonmo)" | snx '\
+'-s 190.85.158.226 -u matmonmo'
+alias edb='mssql-cli -U Userbigdata -P "$(pass biwares/efecty/db/Userbigdata)" '\
+'-S 192.168.245.77 -d DB_DATA2'
 
 # }}}
 # Functions {{{

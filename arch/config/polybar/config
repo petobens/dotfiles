@@ -104,7 +104,7 @@ label-layout-padding = 1
 [module/vpn]
 type = custom/script
 exec = echo ﯴ
-exec-if = pgrep -x "openconnect|openvpn|vpnc"
+exec-if = pgrep -x "openconnect|openvpn|vpnc|snx"
 interval = 5
 label-font = 4
 format-padding = 1

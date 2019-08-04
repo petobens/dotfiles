@@ -166,6 +166,7 @@ $yay_cmd rsync
 $yay_cmd sd
 $yay_cmd shellcheck
 $yay_cmd skim
+$yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd socat
 $yay_cmd sshpass
 $yay_cmd stoken-git
