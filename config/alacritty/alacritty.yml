@@ -81,8 +81,11 @@ selection:
     save_to_clipboard: true
 
 # Default shell
+# For osx uncomment the following
     # shell:
         # program: /usr/local/bin/bash  # osx
+    # args:
+    # - --login
 
 # Key bindings
 key_bindings:

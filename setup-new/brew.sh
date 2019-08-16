@@ -68,6 +68,7 @@ fi
 
 # Neovim and tmux and more bash
 brew tap neovim/neovim
+brew unlink neovim
 $brew_install_cmd neovim --HEAD
 $brew_install_cmd neovim-remote
 $brew_install_cmd tmux

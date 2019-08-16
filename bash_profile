@@ -146,3 +146,12 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
 fi
 
 # }}}
+# OSX {{{
+
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if [ -f ~/.bashrc ]; then
+        source ~/.bashrc
+    fi
+fi
+
+# }}}
