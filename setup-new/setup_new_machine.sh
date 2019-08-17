@@ -80,8 +80,12 @@ if type "npm" > /dev/null 2>&1; then
 fi
 
 if type "cargo" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m-> Installing rust binaries...\\033[0m"
-    . "$current_dir/rust.sh"
+    read -p $'\033[1mDo you want to install rust binaries (y/n)? \033[0m' -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "\\033[1;34m-> Installing rust binaries...\\033[0m"
+        . "$current_dir/rust.sh"
+    fi
 fi
 
 read -p $'\033[1mDo you want to generate symlinks to these dotfiles (y/n)? \033[0m' -n 1 -r
