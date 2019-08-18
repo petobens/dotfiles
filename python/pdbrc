@@ -12,3 +12,6 @@ alias sa ia self
 
 # Print type of var
 alias wi whatis %1
+
+# More pandas rows
+alias pr pd.set_option('display.max_rows', 200)
