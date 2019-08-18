@@ -27,6 +27,9 @@ fi
 # Python binaries (can also be mostly installed with a package manager but we
 # do it with pipx to avoid dependency clash)
 echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
+if ! type "pipx" > /dev/null 2>&1; then
+    python3 -m pipx ensurepath
+fi
 pipx_install_cmd='pipx install --force --verbose'
 pipx_inject_cmd='pipx inject --verbose'
 
