@@ -89,13 +89,16 @@ selection:
 
 # Key bindings
 key_bindings:
-    - { key: V,        mods: Super,     action: Paste                }
-    - { key: C,        mods: Super,     action: Copy                 }
-    - { key: Q,        mods: Super,     action: Quit                 }
-    - { key: W,        mods: Super,     action: Quit                 }
-    - { key: Equals,   mods: Super,     action: IncreaseFontSize     }
-    - { key: Subtract, mods: Super,     action: DecreaseFontSize     }
-    - { key: Key0,     mods: Super,     action: ResetFontSize        }
-    - { key: End,      mods: Shift,     action: ScrollToBottom       }
-    - { key: Home,     mods: Shift,     action: ScrollToTop          }
+    - { key: V,        mods: Super, action: Paste                }
+    - { key: C,        mods: Super, action: Copy                 }
+    - { key: Q,        mods: Super, action: Quit                 }
+    - { key: W,        mods: Super, action: Quit                 }
+    - { key: Equals,   mods: Super, action: IncreaseFontSize     }
+    - { key: Subtract, mods: Super, action: DecreaseFontSize     }
+    - { key: Key0,     mods: Super, action: ResetFontSize        }
+    - { key: End,      mods: Shift, action: ScrollToBottom       }
+    - { key: Home,     mods: Shift, action: ScrollToTop          }
+    # On OSX uncomment the following to enable alt maps
+    # - { key: D,        mods: Alt,   chars: "\x1bd"               }
+    # - { key: Z,        mods: Alt,   chars: "\x1bz"               }
 ...

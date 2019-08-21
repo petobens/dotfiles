@@ -31,6 +31,10 @@ if ! type "pipx" > /dev/null 2>&1; then
     python3 -m pipx ensurepath
 fi
 pipx_install_cmd='pipx install --force --verbose'
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    # We seem to need sudo on osx
+    pipx_install_cmd="sudo $pipx_install_cmd"
+fi
 pipx_inject_cmd='pipx inject --verbose'
 
 $pipx_install_cmd flake8 --spec git+https://github.com/PyCQA/flake8

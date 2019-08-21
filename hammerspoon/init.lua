@@ -201,15 +201,8 @@ hs.hotkey.bind(cmd_ctrl, "m", function()
                 hs.application.launchOrFocus("Spotify") end)
 hs.hotkey.bind(cmd_ctrl, "d", function()
                 hs.execute("open ~/Downloads/") end)
-
--- Alacritty
 hs.hotkey.bind(cmd_ctrl, "c", function()
-    hs.execute('alacritty -e /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"')
-    local console_app = hs.application.find("Alacritty")
-    while not console_app:isFrontmost() do
-        console_app:activate()
-    end
-end)
+                hs.application.launchOrFocus("Alacritty") end)
 
 -- }}}
 -- Spotify and volume {{{
