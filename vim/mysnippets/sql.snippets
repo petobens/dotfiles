@@ -1,3 +1,26 @@
+# Oracle **{
+
+snippet ost "Oracle show tables" b
+SELECT owner, table_name FROM all_tables
+${1:${2:WHERE table_name LIKE 'STG_%'}
+FETCH FIRST ${3:10} ROWS ONLY}
+endsnippet
+
+snippet ol "Oracle Limit" w
+FETCH FIRST ${1:10} ROWS ONLY$0
+endsnippet
+
+snippet obs "Oracle blocked session" b
+select s1.username || '@' || s1.machine ||
+	' ( SID=' || s1.sid || ' )  is blocking '
+	|| s2.username || '@' || s2.machine || ' ( SID=' || s2.sid || ' ) ' AS blocking_status
+	from v$lock l1 join v$lock l2 on (l1.id1 = l2.id1 and l2.id2 = l2.id2)
+					JOIN v$session s1 ON (s1.sid = l1.sid)
+					JOIN v$session s2 ON (s2.sid = l2.sid)
+	WHERE l1.BLOCK=1 and l2.request > 0;$0
+endsnippet
+
+# **}
 # Postgres **{
 
 snippet pgbq "Postgres blocked queries" b
@@ -10,8 +33,15 @@ FROM pg_stat_activity
 WHERE cardinality(pg_blocking_pids(pid)) > 0;
 endsnippet
 
-snippet pgkq "Kill query" b
+snippet pgkq "Postgres kill query" b
 SELECT pg_terminate_backend(${1:pid});$0
+endsnippet
+
+snippet pgct "Postgres create table" b
+CREATE TABLE ${1:table_name} (
+	${2:col1_name} ${3:varchar(20)} NOT NULL,
+	${4:col2_name} ${5:integer} NOT NULL
+)$0
 endsnippet
 
 # **}
