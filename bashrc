@@ -286,6 +286,8 @@ alias hdb='PGPASSWORD="$(pass habitat/postgres)" pgcli -h '\
 # Efecty
 alias evpn='echo "$(pass biwares/efecty/vpn/matmonmo)" | snx '\
 '-s 190.85.158.226 -u matmonmo'
+alias evpn2='echo "$(pass biwares/efecty/vpn/valdamda)" | snx '\
+'-s 190.85.158.226 -u valdamda'
 alias edb='mssql-cli -U Userbigdata -P "$(pass biwares/efecty/db/Userbigdata)" '\
 '-S 192.168.245.77 -d DB_DATA2'
 
