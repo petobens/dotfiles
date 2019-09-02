@@ -2594,6 +2594,7 @@ let g:neoterm_keep_term_open = 0
 let g:neoterm_autoscroll = 1
 let g:neoterm_default_mod = 'botright'
 let g:neoterm_fixedsize = 1
+let g:neoterm_marker = ''
 if executable('ipython3')
     let g:neoterm_repl_python = 'ipython3'
 else
