@@ -74,3 +74,18 @@ FROM dummy_table$0
 endsnippet
 
 # **}
+# Jinja **{
+
+snippet jm "Jinja macro" b
+{% macro ${1:macro_name}(${2:args})} %}
+$0
+{% endmacro %}
+endsnippet
+
+snippet ji "Jinja if" b
+{% if ${1:condition} %}
+	$0
+{% endif %}
+endsnippet
+
+# **}
