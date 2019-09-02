@@ -296,6 +296,7 @@ alias pvpn='sudo openvpn --config ~/OneDrive/arch/vpn/prex/client.ovpn --daemon'
 alias pssh='TERM=xterm-256color; ssh -i ~/.ssh/prex.pem ec2-user@172.33.121.134'
 alias pdb='TERM=xterm-256color; ssh -i ~/.ssh/prex.pem '\
 "-L33060:contact-analysis-db.paigo.local:3306 ec2-user@172.33.121.134 -t 'mycli'"
+
 # }}}
 # Functions {{{
 
