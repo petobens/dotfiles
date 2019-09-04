@@ -254,9 +254,7 @@ alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 # Claro
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
 # enabled)
-alias cvpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
-'--background --authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
-alias cnvpn='sudo pkill -INT -f snx; stoken | '\
+alias cvpn='sudo pkill -INT -f snx; stoken | '\
 'snx -s vpn3.claro.com.ar -u EXB77159'
 alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
 'ssh mjolnir'
@@ -264,15 +262,12 @@ alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
 'ssh tcal'
 alias cordb='rlwrap -a"$(pass claro/oracle/rac8/dracing)" -N '\
 'sql dracing/"$(pass claro/oracle/rac8/dracing)"'\
-'@exa1-scan.claro.amx:1521/RAC8.WORLD'
+'@10.92.78.31:1521/RAC8.WORLD'
 alias coddb='rlwrap -a"$(pass claro/oracle/rac8/delver)" -N '\
 'sql DELVER/"$(pass claro/oracle/rac8/delver)"'\
-'@exa1-scan.claro.amx:1521/RAC8.WORLD'
-alias cofdb='rlwrap -a"$(pass claro/oracle/rac8/cti22156)" -N '\
-'sql CTI22156/"$(pass claro/oracle/rac8/cti22156)"'\
-'@exa1-scan.claro.amx:1521/RAC8.WORLD'
+'@10.92.78.31:1521/RAC8.WORLD'
 alias coldb='sql system/oracle@localhost:49161/xe'
-alias cpdb=' PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
+alias cptdb=' PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
 '-h 10.93.11.218 -p 5432 -U airflow -d delver'
 alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
 
@@ -284,9 +279,7 @@ alias hdb='PGPASSWORD="$(pass habitat/postgres)" pgcli -h '\
 '-d habitat_main_warehouse'
 
 # Efecty
-alias evpn='echo "$(pass biwares/efecty/vpn/matmonmo)" | snx '\
-'-s 190.85.158.226 -u matmonmo'
-alias evpn2='echo "$(pass biwares/efecty/vpn/valdamda)" | snx '\
+alias evpn='echo "$(pass biwares/efecty/vpn/valdamda)" | snx '\
 '-s 190.85.158.226 -u valdamda'
 alias edb='mssql-cli -U Userbigdata -P "$(pass biwares/efecty/db/Userbigdata)" '\
 '-S 192.168.245.77 -d DB_DATA2'
