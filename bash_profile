@@ -34,7 +34,7 @@ else
         export INFOPATH="$INFOPATH:/usr/local/texlive/2019/texmf-dist/doc/info"
     fi
 
-    export BROWSER='chromium'
+    export BROWSER='brave'
 
     # Scaling
     export GDK_SCALE=2

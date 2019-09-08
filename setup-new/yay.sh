@@ -182,8 +182,7 @@ $yay_cmd z
 $yay_cmd zip
 
 # Apps
-$yay_cmd chromium
-$yay_cmd chromium-widevine
+$yay_cmd brave-bin
 $yay_cmd connman-gtk
 $yay_cmd cups
 $yay_cmd cups-pdf
@@ -195,7 +194,6 @@ $yay_cmd hplip-plugin
 $yay_cmd onedrive-abraunegg
 $yay_cmd pdfpc
 $yay_cmd peek-git
-$yay_cmd pepper-flash  # flash player for chromimum
 $yay_cmd slack-desktop
 $yay_cmd skypeforlinux-preview-bin
 $yay_cmd spotify

@@ -6,7 +6,7 @@ import i3ipc
 from i3_helpers import sh
 
 CTRL_Q = ['Skype', 'Slack']
-CUSTOM = ['Chromium']
+CUSTOM = ['Chromium', 'Brave-browser']
 
 
 def _get_windows(i3, which='all'):
@@ -25,7 +25,7 @@ def kill_custom(i3, which):
         i3.command(f'[con_id={win.id}] focus')
         win_class = win.window_class
         if win_class in CUSTOM:
-            if win_class == 'Chromium':
+            if win_class == 'Chromium' or win_class == 'Brave-browser':
                 sh(f'xdotool key --window {win.window} comma+k+v')
                 # If the window was not killed using xdotool then do kill it with i3
                 remaining_window_classes = [

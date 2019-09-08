@@ -2,15 +2,14 @@
 // Preamble {{{
 
 // To load this local config file:
-// i) In the extenions settings check `Advanced mode` box and the path to this
+// i) Check `Allow access to file URLS` for surfingkeys in the general extensions
+// view
+// ii) In the extensions settings check `Advanced mode` box and add path to this
 // file
-// ii) Check `Allow access to file URLS` for surfingkeys in the extension view
 
 // To ensure that surfingkeys keys works when starting Chrome or creating a
 // new tab set the starting page and the new tab page to something other than
-// Chrome's default `chrome//newtab` (for instance google.com) or install patch
-// Chrome version. See https://github.com/brookhong/Surfingkeys/issues/511 and
-// https://brookhong.github.io/2017/10/15/surfingkeys-across-all-pages.html
+// Chrome's default `chrome//newtab` (for instance google.com)
 
 unmapAllExcept(['f', '/', '*', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm']);
 
@@ -110,14 +109,14 @@ const qmarksMapKey = function(prefix, urls) {
 const qmarksUrls = {
     b: 'www.bitbucket.com',
     c: 'www.utdt.edu/campusvirtual',
-    d: 'https://drive.google.com/drive/u/1/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
+    d: 'https://drive.google.com/drive/u/0/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
     e: 'https://yts.am/browse-movies',
     f: 'www.facebook.com',
     g: 'www.github.com',
     h: 'www.google.com.ar',
     i: 'www.infobae.com.ar',
     l: 'www.lanacion.com.ar',
-    m: 'www.mercadolibre.com.ar',
+    m: 'https://meet.google.com',
     n: 'www.netflix.com',
     p: 'http://pirateproxy.net',
     r: 'www.reddit.com',

@@ -136,10 +136,11 @@ bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+s $nexec "rofi -combi-modi drun,run -show combi"
 bindsym $mod+z $nexec "passmenu"
 
-# WS1: browser and agenda
-bindsym $mod+Control+i $nexec raiseorlaunch -c Chromium -W $ws1 -m browser
-bindsym $mod+Control+a $nexec raiseorlaunch -c Chromium -W $ws1 -m cal -e \
-    "chromium --new-window https://calendar.google.com/calendar/b/1/r"
+# WS1: browser and agenda (to have a black theme in calendar use Stylus
+# extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
+bindsym $mod+Control+i $nexec raiseorlaunch -c Brave -W $ws1 -m browser
+bindsym $mod+Control+a $nexec raiseorlaunch -c Brave -W $ws1 -m cal -e \
+    "brave --new-window https://calendar.google.com/calendar/b/0/r"
 # WS2: chat/communication related (i.e mail)
 # FIXME: Waiting not quite working
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30

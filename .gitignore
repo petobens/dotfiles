@@ -17,3 +17,7 @@ arch/bin/tmux_tree
 # Ranger
 config/ranger/plugins/
 config/ranger/devicons.py
+
+# Onedrive
+arch/config/onedrive/.config.backup
+arch/config/onedrive/.config.hash

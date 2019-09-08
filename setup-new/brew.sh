@@ -122,9 +122,9 @@ $brew_install_cmd z
 
 # Apps
 $brew_cask_install_cmd alacritty
+$brew_cask_install_cmd brave
 $brew_cask_install_cmd docker
 $brew_install_cmd docker-compose
-$brew_cask_install_cmd google-chrome
 $brew_cask_install_cmd firefox
 $brew_cask_install_cmd skype
 $brew_cask_install_cmd spotify
