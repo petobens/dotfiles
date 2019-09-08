@@ -17,11 +17,8 @@ LAYOUT_DICT = {
     'Center': (0.25, 0.25, 0.5, 0.5),
     'Rectangle': (0.125, 0.2, 0.75, 0.6),
     'Dialog': (0.33, 0.3, 0.35, 0.25),
-    # This is hack to resize windows in HiDPI screens that were downscaled
-    # to 1920x1080 and (for some strange reason) incorrectly rendered when
-    # using `Full`:
-    # FIXME: Obviously find a better way of doing this
-    'Semi Full': (0.016, 0, 0.965, 0.975),
+    # This is hack to resize windows in screens that can't correctly parse window sizes
+    'Semi Full': (0.01, 0, 0.985, 0.99),
 }
 
 
