@@ -66,10 +66,8 @@ def _xrandr(how):
             cmd += f' --output {m} --off'
 
     elif how == 'mirror':
-        # FIXME: We seem to need to run this from the dual monitor (i.e after running
-        # `multimon dual`) since the monitor won't get enabled otherwise
         cmd = (
-            f'--output {sec_n} --scale-from {prim_w}x{prim_h} --same-as {prim_n} '
+            f'--output {sec_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '
             f'--output {prim_n} --dpi {PRIM_DPI}'
         )
 
