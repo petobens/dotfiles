@@ -88,6 +88,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('scrooloose/nerdcommenter')
     call dein#add('justinmk/vim-sneak')
+    call dein#add('aymericbeaumet/vim-symlink')
     call dein#add('majutsushi/tagbar')
     call dein#add('liuchengxu/vista.vim')
     call dein#add('SirVer/ultisnips')
