@@ -549,7 +549,7 @@ nnoremap k gk
 " Don't show invisible characters
 set nolist
 " Toggle [i]nvisible characters
-nnoremap <Leader>i :set list!<cr>
+nnoremap <Leader>ic :set list!<cr>
 " If shown (it disables linebreak option) use the following symbols for
 " tabstops, end of lines, etc
 set listchars=tab:▸\ ,eol:¬,trail:•,extends:»,precedes:«,nbsp:␣
@@ -1826,10 +1826,15 @@ function! s:DeniteGrep(...)
     else
         let ft_filter = '--type ' . filetype
     endif
+    " Allow to run in interactive mode (or require an input pattern)
+    let grep_args = [narrow_dir, extra_args . ft_filter]
+    let interactive = get(a:, 2, 0)
+    if interactive == 1
+        call add (grep_args, '!')
+    endif
     execute 'lcd ' . l:save_pwd
-    call denite#start([{'name': 'grep',
-                \ 'args': [narrow_dir, extra_args . ft_filter]}],
-                \ {'start_filter': 0})
+    call denite#start([{'name': 'grep', 'args': grep_args}],
+                \ {'start_filter': interactive})
 endfunction
 function! s:DeniteTasklist(...)
     if a:0 >=1 && a:1 ==# '.'
@@ -1861,8 +1866,10 @@ nnoremap <silent> <Leader>rd :Denite fast_file_mru<CR>
 nnoremap <silent> <Leader>be :Denite buffer<CR>
 nnoremap <silent> <Leader>tl :call <SID>DeniteTasklist()<CR>
 nnoremap <silent> <Leader>tL :call <SID>DeniteTasklist('.')<CR>
-nnoremap <silent> <Leader>rg :lcd %:p:h<CR>:call <SID>DeniteGrep()<CR>
+nnoremap <silent> <Leader>rg :lcd %:p:h<CR>:call <SID>DeniteGrep(1)<CR>
 nnoremap <silent> <Leader>rG :lcd %:p:h<CR>:call <SID>DeniteGrep(0)<CR>
+nnoremap <silent> <Leader>ig :lcd %:p:h<CR>:call <SID>DeniteGrep(1, 1)<CR>
+nnoremap <silent> <Leader>iG :lcd %:p:h<CR>:call <SID>DeniteGrep(0, 1)<CR>
 nnoremap <silent> <Leader>dg :lcd %:p:h<CR>:DeniteCursorWord -no-start-filter
             \ grep<CR>
 nnoremap <silent> <Leader>he :Denite help<CR>
