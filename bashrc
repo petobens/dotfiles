@@ -255,10 +255,15 @@ alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 # Claro
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
 # enabled)
+ alias covpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
+'--background --authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
 alias cvpn='sudo pkill -INT -f snx; stoken | '\
 'snx -s vpn3.claro.com.ar -u EXB77159'
 alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
 'ssh mjolnir'
+alias cpfssh='sshpass -p "$(pass arch/localhost)" ssh -N -D 54321 localhost'
+alias cmtssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
+'ssh -R 9090:127.0.0.1:54321 mjolnir'
 alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
 'ssh tcal'
 alias cordb='rlwrap -a"$(pass claro/oracle/rac8/dracing)" -N '\
@@ -267,7 +272,7 @@ alias cordb='rlwrap -a"$(pass claro/oracle/rac8/dracing)" -N '\
 alias coddb='rlwrap -a"$(pass claro/oracle/rac8/delver)" -N '\
 'sql DELVER/"$(pass claro/oracle/rac8/delver)"'\
 '@10.92.78.31:1521/RAC8.WORLD'
-alias coldb='sql system/oracle@localhost:49161/xe'
+alias coldb='rlwrap -a -N sql system/oracle@localhost:49161/xe'
 alias cptdb=' PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
 '-h 10.93.11.218 -p 5432 -U airflow -d delver'
 alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
