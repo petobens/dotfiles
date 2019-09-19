@@ -171,6 +171,7 @@ if type "git" > /dev/null 2>&1; then
     alias gf='git fetch'
     __git_complete gf _git_fetch
     alias gr='git rebase'
+    alias grc='git rebase --continue'
     __git_complete gr _git_rebase
     alias gra='git remote add'
     alias gst='git stash'
