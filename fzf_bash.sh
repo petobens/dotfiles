@@ -332,7 +332,7 @@ prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd,marker:#98c379,\
 spinner:#e06c75,border:#282c34\
 "
 SKIM_GREP_OPTS="\
---header 'enter=open' \
+--header 'enter=open, ctrl-i=toggle-interactive' \
 --multi \
 --ansi \
 --delimiter=: \
