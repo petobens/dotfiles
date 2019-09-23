@@ -1255,7 +1255,7 @@ augroup ft_sql
                 \ PARTITION
     au Filetype sql syn keyword sqlFunction DATE_PARSE DATE_DIFF DATE_TRUNC
                 \ LAG ARBITRARY COUNT_IF LEAD JSON_EXTRACT
-    au Filetype sql syn keyword sqlType INT
+    au Filetype sql syn keyword sqlType INT TEXT
 augroup END
 
 " }}}
@@ -1636,6 +1636,10 @@ function! s:defx_settings()
     nnoremap <silent><buffer> <C-h> :Denite defx/history<CR>
     " Bookmarks source
     nnoremap <silent><buffer> b :Denite defx/dirmark<CR>
+
+    " Resize window
+    nnoremap <silent><buffer><expr> <A-l>  defx#do_action('resize', winwidth(0) + 5)
+    nnoremap <silent><buffer><expr> <A-h>  defx#do_action('resize', winwidth(0) - 5)
 
     " Custom actions
     function! s:GetDefxBaseDir(candidate) abort
