@@ -387,8 +387,12 @@ __fzf_history__() (
     sed 's/^ *\([0-9]*\)\** .*/!\1/' <<< "$line"
 )
 # shellcheck disable=SC2016
-bind '"\C-r": "\C-x\C-addi`__fzf_history__`\C-x\C-e\C-x\C-r\C-x^\C-x\C-a$a"'
-bind -m vi-command '"\C-r": "i\C-r"'
+if [[ -o vi ]]; then
+    bind '"\C-r": "\C-x\C-addi`__fzf_history__`\C-x\C-e\C-x\C-r\C-x^\C-x\C-a$a"'
+    bind -m vi-command '"\C-r": "i\C-r"'
+else
+    bind '"\C-r": " \C-e\C-u\C-y\ey\C-u`__fzf_history__`\e\C-e\er\e^"'
+fi
 
 # }}}
 # Tmux {{{
