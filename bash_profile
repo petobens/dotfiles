@@ -3,6 +3,7 @@
 # OS dependent settings
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "brew" > /dev/null 2>&1; then
+        # shellcheck disable=SC2155
         export BASE_PKG_DIR=$(brew --prefix)
     else
         export BASE_PKG_DIR='/usr/local'
@@ -33,8 +34,6 @@ else
         export MANPATH="$MANPATH:/usr/local/texlive/2019/texmf-dist/doc/man"
         export INFOPATH="$INFOPATH:/usr/local/texlive/2019/texmf-dist/doc/info"
     fi
-
-    export BROWSER='brave'
 
     # Scaling
     export GDK_SCALE=2
