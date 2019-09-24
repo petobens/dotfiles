@@ -2436,6 +2436,7 @@ let g:gitgutter_terminal_reports_focus = 0
 nnoremap <silent> <Leader>gg :GitGutterSignsToggle<CR>
 nmap ]h <Plug>(GitGutterNextHunk)<bar>zvzz
 nmap [h <Plug>(GitGutterPrevHunk)<bar>zvzz
+nmap <Leader>hp <Plug>(GitGutterPreviewHunk)
 
 " Note:
 " We could stage and remove individual hunks with GitGutterStage(Revert)Hunk but
