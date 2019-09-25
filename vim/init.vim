@@ -1638,8 +1638,10 @@ function! s:defx_settings()
     nnoremap <silent><buffer> b :Denite defx/dirmark<CR>
 
     " Resize window
-    nnoremap <silent><buffer><expr> <A-l>  defx#do_action('resize', winwidth(0) + 5)
-    nnoremap <silent><buffer><expr> <A-h>  defx#do_action('resize', winwidth(0) - 5)
+	nnoremap <silent><buffer><expr> <A-l> defx#do_action('resize',
+        \ defx#get_context().winwidth + 5)
+	nnoremap <silent><buffer><expr> <A-h> defx#do_action('resize',
+        \ defx#get_context().winwidth - 5)
 
     " Custom actions
     function! s:GetDefxBaseDir(candidate) abort
