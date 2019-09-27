@@ -93,6 +93,7 @@ class Config(pdb.DefaultConfig):  # type: ignore
         pdb_class.do_st = pdb_class.do_sticky
         pdb_class.do_ev = pdb_class.do_edit
         pdb_class.do_ip = pdb_class.do_interact
+        pdb_class.do_gf = pdb_class.do_frame
         # Colors
         pdb_class._lexer = Python3Lexer()
         pdb_class._fmt = TerminalTrueColorFormatter(style=OneDarkish)
