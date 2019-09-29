@@ -252,9 +252,9 @@ endfunction
 augroup session
     au!
     au VimLeavePre * call s:SaveSession()
-    au BufWinLeave {*.*,vimrc,bashrc,config}
+    au BufWinLeave {*.*,vimrc,vimrc_min,bashrc,config}
         \ if &previewwindow != 1 | mkview | endif
-    au BufWinEnter {*.*,vimrc,bashrc,config}
+    au BufWinEnter {*.*,vimrc,vimrc_min,bashrc,config}
         \ if &previewwindow != 1 | silent! loadview | endif
 augroup END
 nnoremap <silent><Leader>ps :call <SID>LoadSession()<CR>
@@ -826,9 +826,9 @@ elseif s:is_linux && has('nvim') && dein#tap('suda') == 1
 endif
 
 " Fast editing and reloading of the vimrc file
-nnoremap <silent> <Leader>ev :e $DOTVIM/init.vim<CR>
+nnoremap <silent> <Leader>ev :e <C-r>=resolve(expand("$DOTVIM/init.vim"))<CR><CR>
 nnoremap <silent> <Leader>rv :so $DOTVIM/init.vim<CR>
-nnoremap <silent> <Leader>em :e $DOTVIM/vimrc_min<CR>
+nnoremap <silent> <Leader>em :e <C-r>=resolve(expand("$DOTVIM/vimrc_min"))<CR><CR>
 
 " Change working directory to that of the current file (autochdir seems to
 " conflict with some plugins)
@@ -1006,11 +1006,14 @@ augroup ft_ahk_hs_i3
 augroup END
 
 if s:is_mac
-    nnoremap <silent> <Leader>eh :e $HOME/.config/hammerspoon/init.lua<CR>
+    nnoremap <silent> <Leader>eh :e
+        \ <C-r>=resolve(expand("$HOME/.config/hammerspoon/init.lua"))<CR><CR>
 elseif s:is_win
-    nnoremap <silent> <Leader>eh :e $HOME/autohotkey.ahk<CR>
+    nnoremap <silent> <Leader>eh :e
+        \ <C-r>=resolve(expand("$HOME/autohotkey.ahk"))<CR><CR>
 else
-    nnoremap <silent> <Leader>eh :e $HOME/.config/i3/config<CR>
+    nnoremap <silent> <Leader>eh :e
+        \ <C-r>=resolve(expand("$HOME/.config/i3/config"))<CR><CR>
 endif
 
 " }}}
