@@ -1,4 +1,0 @@
---langdef=bibtex
---langmap=bibtex:.bib
---regex-bibtex=/@(article|book|booklet|inbook|incollection|inproceedings|manual|masterthesis|misc|phdthesis|proceedings|techreport|unpublished)\{([^,]+),/\2/c,cite-keys/i
---regex-bibtex=/[[:space:]]*title[[:space:]]*=[[:space:]]*["\{](\{[:word:]+\}.+|.+)(["}][[:space:]]*,[[:space:]]*$|$)/\1/t,titles/i

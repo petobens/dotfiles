@@ -127,11 +127,6 @@ if type "nvim" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/vim" "$HOME/.config/nvim"
     echo Created .config/nvim folder symlink
 fi
-if type "ctags" > /dev/null 2>&1; then
-    mkdir -p "$HOME/.ctags.d"
-    $ln_cmd -fTs "$dotfiles_dir/ctags" "$HOME/.ctags.d/default.ctags"
-    echo Created .ctags.d/default.ctags symlink
-fi
 if type "fd" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/fdignore" "$HOME/.fdignore"
     echo Created .fdignore symlink
