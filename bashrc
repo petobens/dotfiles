@@ -280,9 +280,9 @@ alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
 # Habitat
 alias hssh='TERM=xterm-256color; ssh -i ~/.ssh/delorean.pem '\
 'ec2-user@ec2-3-82-243-107.compute-1.amazonaws.com'
-alias hdb='PGPASSWORD="$(pass habitat/postgres)" pgcli -h '\
-'habitat-main-warehouse.cmk8k7a2tkea.us-east-1.rds.amazonaws.com -U airflow '\
-'-d habitat_main_warehouse'
+alias hdb='PGPASSWORD="$(pass habitat/postgres2)" pgcli -h '\
+'habitat.cmk8k7a2tkea.us-east-1.rds.amazonaws.com -U mutt '\
+'-d habitat'
 
 # Efecty
 alias evpn='echo "$(pass biwares/efecty/vpn/valdamda)" | snx '\
