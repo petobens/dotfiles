@@ -14,4 +14,4 @@ alias sa ia self
 alias wi whatis %1
 
 # More pandas rows
-alias pr pd.set_option('display.max_rows', 200)
+alias pr import pandas as pd; pd.set_option('display.max_rows', 500)
