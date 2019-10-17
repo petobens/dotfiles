@@ -199,7 +199,7 @@ $yay_cmd thunderbird
 $yay_cmd transmission-gtk
 $yay_cmd xfce4-power-manager
 $yay_cmd zathura
-$yay_cmd zathura-pdf-mupdf
+$yay_cmd zathura-pdf-poppler
 
 # Cleanup
 yay -c
