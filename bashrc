@@ -256,45 +256,35 @@ alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
 # enabled)
  alias covpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
-'--background --authgroup=1 --user=EXB77159 --passwd-on-stdin vpn.claro.com.ar'
+'--background --authgroup=1 --user="$(pass claro/vpn/user)" '\
+'--passwd-on-stdin "$(pass claro/vpn/host-old)"'
 alias cvpn='sudo pkill -INT -f snx; stoken | '\
-'snx -s vpn3.claro.com.ar -u EXB77159'
+'snx -s "$(pass claro/vpn/host)" -u "$(pass claro/vpn/user)"'
 alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
 'ssh mjolnir'
-alias cpfssh='sshpass -p "$(pass arch/localhost)" ssh -N -D 54321 localhost'
+alias cpfssh='sshpass -p "$(pass arch/localhost)" ssh localhost -N -D 54321'
 alias cmtssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
-'ssh -R 9090:127.0.0.1:54321 mjolnir'
+'ssh mjolnir -R 9090:127.0.0.1:54321'
 alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
 'ssh tcal'
-alias cordb='rlwrap -a"$(pass claro/oracle/rac8/dracing)" -N '\
-'sql dracing/"$(pass claro/oracle/rac8/dracing)"'\
-'@10.92.78.31:1521/RAC8.WORLD'
-alias coddb='rlwrap -a"$(pass claro/oracle/rac8/delver)" -N '\
-'sql DELVER/"$(pass claro/oracle/rac8/delver)"'\
-'@10.92.78.31:1521/RAC8.WORLD'
+alias coddb='rlwrap -a"$(pass claro/oracle/delver/pass)" -N '\
+'sql DELVER/"$(pass claro/oracle/delver/pass)"'\
+'@"$(pass claro/oracle/delver/host)":1521/RAC8.WORLD'
 alias coldb='rlwrap -a -N sql system/oracle@localhost:49161/xe'
-alias cptdb=' PGPASSWORD="$(pass claro/postgres/tcal)" pgcli '\
-'-h 10.93.11.218 -p 5432 -U airflow -d delver'
+alias cptdb=' PGPASSWORD="$(pass claro/postgres/tcalt/pass)" pgcli '\
+'-h "$(pass claro/postgres/tcalt/host)" -p 5432 -U airflow -d delver'
 alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
 
 # Habitat
-alias hssh='TERM=xterm-256color; ssh -i ~/.ssh/delorean.pem '\
-'ec2-user@ec2-3-82-243-107.compute-1.amazonaws.com'
-alias hdb='PGPASSWORD="$(pass habitat/postgres2)" pgcli -h '\
-'habitat.cmk8k7a2tkea.us-east-1.rds.amazonaws.com -U mutt '\
-'-d habitat'
-
-# Efecty
-alias evpn='echo "$(pass biwares/efecty/vpn/valdamda)" | snx '\
-'-s 190.85.158.226 -u valdamda'
-alias edb='mssql-cli -U Userbigdata -P "$(pass biwares/efecty/db/Userbigdata)" '\
-'-S 192.168.245.77 -d DB_DATA2'
+alias hssh='TERM=xterm-256color; ssh habitat-server'
+alias hdb='PGPASSWORD="$(pass habitat/postgres/pass)" pgcli -h '\
+'"$(pass habitat/postgres/host)" -U mutt -d habitat'
 
 # Prex
 alias pvpn='sudo openvpn --config ~/OneDrive/arch/vpn/prex/client.ovpn --daemon'
-alias pssh='TERM=xterm-256color; ssh -i ~/.ssh/prex.pem ec2-user@172.33.121.134'
-alias pdb='TERM=xterm-256color; ssh -i ~/.ssh/prex.pem '\
-"-L33060:contact-analysis-db.paigo.local:3306 ec2-user@172.33.121.134 -t 'mycli'"
+alias pssh='TERM=xterm-256color; ssh prex-server'
+alias pdb='TERM=xterm-256color; ssh prex-server '\
+"-L33060:contact-analysis-db.paigo.local:3306 -t 'mycli'"
 
 # }}}
 # Functions {{{
