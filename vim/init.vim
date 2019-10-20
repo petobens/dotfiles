@@ -1046,8 +1046,8 @@ augroup ft_config
                 \zathurarc,*mpv/*.conf,*onedrive/config,*fdignore,*vimivrc,
                 \*pylintrc,*flake8,*ripgreprc,matplotlibrc,*.conf
                 \ set filetype=config foldmethod=marker
-    au BufNewFile,BufReadPost vimiv.conf
-            \ set filetype=dosini
+    au BufNewFile,BufReadPost vimiv.conf set filetype=dosini
+    au BufNewFile,BufReadPost */.ssh/config,*/ssh/config set filetype=sshconfig
 augroup END
 
 " }}}
