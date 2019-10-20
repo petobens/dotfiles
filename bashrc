@@ -329,11 +329,7 @@ sys_update_all() {
             echo "$outdated"
             u_list=$(pip list --user --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1)
             for i in $u_list; do
-                read -p "Do you want to update $i (y/n)? " -n 1 -r
-                echo
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    pip install --user -U "$i"
-                fi
+                pip install --user -U "$i"
             done
         fi
     fi
