@@ -121,7 +121,7 @@ $brew_install_cmd zip
 $brew_install_cmd z
 
 # Apps
-$brew_cask_install_cmd alacritty
+$brew_cask_install_cmd alacritty --HEAD
 $brew_cask_install_cmd brave
 $brew_cask_install_cmd docker
 $brew_install_cmd docker-compose

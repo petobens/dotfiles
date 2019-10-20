@@ -79,7 +79,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Alacritty, neovim and tmux and more bash
-$yay_cmd alacritty
+$yay_cmd alacritty-git
 $yay_cmd neovim-git
 $yay_cmd tmux
 
