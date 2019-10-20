@@ -1,6 +1,5 @@
 # Options
 set font "Noto Sans Mono 10"
-set smooth-scroll true
 set statusbar-home-tilde true
 set window-title-basename true
 set incremental-search true
