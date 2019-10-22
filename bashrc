@@ -267,6 +267,8 @@ alias cmtssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
 'ssh mjolnir -R 9090:127.0.0.1:54321'
 alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
 'ssh tcal'
+alias cttssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
+'ssh tcal -R 9090:127.0.0.1:54321'
 alias coddb='rlwrap -a"$(pass claro/oracle/delver/pass)" -N '\
 'sql DELVER/"$(pass claro/oracle/delver/pass)"'\
 '@"$(pass claro/oracle/delver/host)":1521/RAC8.WORLD'
