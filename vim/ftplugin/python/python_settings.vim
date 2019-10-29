@@ -1270,6 +1270,7 @@ function! s:ListBreakpoints(...)
         echoerr 'Denite plugin is needed to list breakpoints.'
         return
     endif
+    lcd %:p:h
     if a:0 >=1 && a:1 ==# '.'
         let target = a:1
     else
