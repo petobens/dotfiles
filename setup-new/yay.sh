@@ -78,8 +78,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     $yay_cmd npm
 fi
 
-# Alacritty, neovim and tmux and more bash
+# Alacritty, kitty, neovim and tmux and more bash
 $yay_cmd alacritty-git
+$yay_cmd kitty
 $yay_cmd neovim-git
 $yay_cmd tmux
 

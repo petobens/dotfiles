@@ -111,6 +111,11 @@ if type "alacritty" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/config/alacritty" "$HOME/.config/alacritty"
     echo Created .config/alacritty folder symlink
 fi
+if type "kitty" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.config/kitty"
+    $ln_cmd -fTs "$dotfiles_dir/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
+    echo Created .config/kitty/kitty.conf symlink
+fi
 if type "tmux" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/tmux" "$HOME/.tmux"
     echo Created .tmux folder symlink
