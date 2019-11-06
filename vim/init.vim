@@ -2906,9 +2906,6 @@ let g:UltiSnipsSnippetDirectories = [$DOTVIM . '/mysnippets']
 let g:UltiSnipsSnippetsDir = $DOTVIM . '/mysnippets'
 let g:UltiSnipsEditSplit = 'context'
 let g:UltiSnipsEnableSnipMate = 0
-if has('python3')
-    let g:UltiSnipsUsePythonVersion = 3
-endif
 
 " Automatically insert header when creating new files (Note: the header snippet
 " is defined in all.snippets file) or when we opening a blank file (if we only
