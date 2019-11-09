@@ -193,7 +193,7 @@ bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -f -e \
 for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv)$" title="^(?!webcam).+"] \
     $nexec $HOME/.config/i3/resize.py Full
 # We seem to need this hack for Alacritty (i.e use title instead of mark)
-for_window [title="^(Alacritty)$"] \
+for_window [title="^(Alacritty|kitty)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [con_mark="^(browser|cal)$"] \
     $nexec $HOME/.config/i3/resize.py Full
