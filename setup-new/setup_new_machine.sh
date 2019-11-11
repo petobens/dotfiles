@@ -45,11 +45,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     . "$current_dir/python.sh"
 fi
 
-read -p $'\033[1mDo you want to install tmux terminfo with italics support (y/n)? \033[0m' -n 1 -r
+read -p $'\033[1mDo you want to install tmux terminfo with italics and undercurl support (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo -e "\\033[1;34m-> Installing Italics tmux terminfo ...\\033[0m"
-    tic "$parent_dir/tmux-xterm-256color-italic.terminfo"
+    tic -x "$parent_dir/tmux-xterm-256color-italic.terminfo"
 fi
 
 if type "tlmgr" > /dev/null 2>&1; then
