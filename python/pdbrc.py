@@ -80,7 +80,8 @@ class Config(pdb.DefaultConfig):  # type: ignore
     use_pygments = True
     use_terminal256formatter = True
     filename_color = pdb.Color.yellow  # type: ignore
-    line_number_color = pdb.Color.darkgray  # type: ignore
+    # This also defines the color for echoed output (note it's an SRG code)
+    line_number_color = '38;2;99;109;131'  # 636d83
     current_line_color = '48;2;40;44;52'  # 282c34
 
     def setup(self, pdb):  # pylint:disable=W0621
