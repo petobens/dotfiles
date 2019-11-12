@@ -44,6 +44,12 @@ CREATE TABLE ${1:table_name} (
 )$0
 endsnippet
 
+snippet pgp "Postgres priveleges" b
+SELECT grantee, privilege_type
+FROM information_schema.role_table_grants
+WHERE table_name = '${1:tablename}'$0
+endsnippet
+
 # **}
 # Sqlite **{
 
