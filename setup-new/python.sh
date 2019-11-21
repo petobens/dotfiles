@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+if type "pyenv" > /dev/null 2>&1; then
+    pyenv rehash
+fi
+
 if type "pip3" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing Python3 modules...\\033[0m"
     pip_install_cmd='pip3 install --user '
@@ -8,6 +12,7 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd numpy
     $pip_install_cmd pandas
     $pip_install_cmd pdbpp
+    $pip_install_cmd pillow
     $pip_install_cmd pipx
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
@@ -111,7 +116,7 @@ fi
 for dbcli in litecli mycli pgcli mssql-cli
 do
     if [ -d "$pipx_venvs/$dbcli" ]; then
-        styles_dir="$pipx_venvs/$dbcli/lib/python3.7/site-packages/pygments/styles"
+        styles_dir="$pipx_venvs/$dbcli/lib/python3.8/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then
             $ln_cmd -fTs "$python_dir/onedarkish.py" "$styles_dir/onedarkish.py"
             echo Created symlink in "$styles_dir/onedarkish.py"
