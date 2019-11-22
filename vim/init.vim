@@ -1277,7 +1277,7 @@ augroup END
 
 augroup ft_toml
     au!
-    au BufNewFile,BufReadPost Pipfile set filetype=toml
+    au BufNewFile,BufReadPost Pipfile,poetry.lock set filetype=toml
 augroup END
 
 " }}}
