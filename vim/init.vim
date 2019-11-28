@@ -3059,7 +3059,7 @@ let g:vista_top_level_blink = [0, 0]
 " }}}
 " Zoom {{{
 
-let g:zoom#statustext = '🔍'
+let g:zoom#statustext = ' '
 nmap <Leader>zw <Plug>(zoom-toggle)
 
 if dein#tap('zoom') == 1
