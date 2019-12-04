@@ -613,6 +613,9 @@ nnoremap <Leader>C :let &scrolloff=999-&scrolloff<cr>
 " 'all' breaks placeholders position in Ultisnips)
 set virtualedit=block,onemore
 
+" Move the cursor to the first non-blank of the line
+set startofline
+
 " Add transparency for floating windows
 if has('nvim')
     set winblend=5
