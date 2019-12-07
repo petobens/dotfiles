@@ -32,6 +32,8 @@ core:
     sticky_writable:
         foreground: green
     normal_text: {}
+    character_device: {}
+    block_device: {}
 
 # File extensions (see filetypes.yml); basically disable this highlighting
 text:
