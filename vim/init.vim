@@ -12,6 +12,7 @@ if !has('nvim')
         let $DOTVIM = expand('$HOME/vimfiles')
     else
         let $DOTVIM = expand('$HOME/.vim')
+        let $MANPATH = expand('$MANPATH:/usr/local/texlive/2019/texmf-dist/doc/man')
     endif
 else
     let $DOTVIM = expand('$HOME/.config/nvim')
@@ -2518,9 +2519,6 @@ nnoremap <silent> <leader>I :IndentLinesToggle<cr>
 " }}}
 " Jedi {{{
 
-if has('python3')
-    let g:jedi#force_py_version = 3
-endif
 " For deoplete to work
 let g:jedi#completions_enabled = 0
 let g:jedi#auto_vim_configuration = 0

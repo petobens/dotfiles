@@ -31,7 +31,8 @@ else
     # Texlive
     if [ -d "$BASE_PKG_DIR/local/texlive" ]; then
         PATH="$PATH:/usr/local/texlive/2019/bin/x86_64-linux"
-        export MANPATH="$MANPATH:/usr/local/texlive/2019/texmf-dist/doc/man"
+        # FIXME: If we set this then we cannot jump between Man tags with nvim
+        # export MANPATH="$MANPATH:/usr/local/texlive/2019/texmf-dist/doc/man"
         export INFOPATH="$INFOPATH:/usr/local/texlive/2019/texmf-dist/doc/info"
     fi
 
