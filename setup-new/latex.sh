@@ -87,16 +87,20 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     sudo tlmgr install booktabs
     sudo tlmgr install breqn
     sudo tlmgr install caption
+    sudo tlmgr install embedfile
     sudo tlmgr install fancyvrb
     sudo tlmgr install float
+    sudo tlmgr install infwarerr
     sudo tlmgr install jknapltx
     sudo tlmgr install l3backend
     sudo tlmgr install l3kernel
     sudo tlmgr install l3packages
+    sudo tlmgr install letltxmacro
     sudo tlmgr install lineno
     sudo tlmgr install listings
     sudo tlmgr install mathtools
     sudo tlmgr install microtype
+    sudo tlmgr install pdftexcmds
     sudo tlmgr install setspace
     sudo tlmgr install translator
     sudo tlmgr install ulem
