@@ -84,9 +84,11 @@ sudo tlmgr install xstring
 # Linux specific (i.e not included in basic texlive installation)
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     sudo tlmgr install beamer
+    sudo tlmgr install bitset
     sudo tlmgr install booktabs
     sudo tlmgr install breqn
     sudo tlmgr install caption
+    sudo tlmgr install catchfile
     sudo tlmgr install embedfile
     sudo tlmgr install fancyvrb
     sudo tlmgr install float
@@ -100,6 +102,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     sudo tlmgr install listings
     sudo tlmgr install mathtools
     sudo tlmgr install microtype
+    sudo tlmgr install pdfescape
     sudo tlmgr install pdftexcmds
     sudo tlmgr install setspace
     sudo tlmgr install translator
