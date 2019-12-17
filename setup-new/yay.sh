@@ -139,6 +139,7 @@ $yay_cmd redis
 $yay_cmd sqlite3
 
 # CLI
+$yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd bat
 $yay_cmd cronie
 $yay_cmd diff-so-fancy
@@ -148,6 +149,7 @@ $yay_cmd fd
 $yay_cmd fzf
 $yay_cmd gnupg
 $yay_cmd gobject-introspection
+$yay_cmd gopass
 $yay_cmd hadolint-bin
 $yay_cmd htop
 $yay_cmd hyperfine-bin
@@ -159,8 +161,6 @@ $yay_cmd openssh
 $yay_cmd openvpn
 $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
-$yay_cmd pass
-$yay_cmd pass-update
 $yay_cmd prettyping
 $yay_cmd qrencode
 $yay_cmd ripgrep
@@ -169,7 +169,6 @@ $yay_cmd rsync
 $yay_cmd sd
 $yay_cmd shellcheck
 $yay_cmd skim
-$yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd socat
 $yay_cmd sshpass
 $yay_cmd stoken-git

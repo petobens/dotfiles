@@ -226,6 +226,10 @@ if type "litecli" > /dev/null 2>&1; then
     sudo $ln_cmd -fTs "$dotfiles_dir/dbs/sqlite_config" "$HOME/.config/litecli/config"
     echo Created ".config/litecli/config" symlink
 fi
+if type "gopass" > /dev/null 2>&1; then
+    sudo $ln_cmd -fTs "$(command -v gopass)" "$HOME/.local/bin/pass"
+    echo Created "$HOME/.local/bin/pass" symlink to gopass
+fi
 
 # OS dependent
 if [[ "$OSTYPE" == 'darwin'* ]]; then

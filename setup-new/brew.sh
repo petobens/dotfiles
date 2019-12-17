@@ -87,20 +87,19 @@ $brew_install_cmd diff-so-fancy
 $brew_install_cmd fd
 $brew_install_cmd fzf
 $brew_install_cmd gnupg
+$brew_install_cmd gopass
 $brew_install_cmd hadolint
 $brew_install_cmd htop
 $brew_install_cmd hyperfine
-$brew_install_cmd lsd
 $brew_install_cmd imgcat
+$brew_install_cmd lsd
 $brew_install_cmd neofetch --HEAD
 $brew_install_cmd neomutt --HEAD --with-sidebar-patch --with-notmuch-patch
 $brew_install_cmd openconnect --HEAD --with-stoken
-$brew_install_cmd openvpn
 $brew_install_cmd openssh
+$brew_install_cmd openvpn
 $brew_install_cmd pandoc
 $brew_install_cmd pandoc-citeproc
-$brew_install_cmd pass
-$brew_install_cmd pass-update
 $brew_install_cmd prettyping
 $brew_install_cmd qrendcode
 $brew_install_cmd reattach-to-user-namespace
@@ -117,8 +116,8 @@ $brew_install_cmd universal-ctags/universal-ctags/universal-ctags --HEAD
 $brew_install_cmd unrar
 $brew_install_cmd unzip
 $brew_install_cmd vivid
-$brew_install_cmd zip
 $brew_install_cmd z
+$brew_install_cmd zip
 
 # Apps
 $brew_cask_install_cmd alacritty

@@ -52,10 +52,14 @@ if type "pipenv" > /dev/null 2>&1; then
     pipenv --completion | sudo tee "$base_pkg_dir/share/bash-completion/completions/pipenv"
 fi
 
-# Git access tokens
-if type "pass" > /dev/null 2>&1; then
+# Git access tokens and (go)pass settings
+if type "gopass" > /dev/null 2>&1; then
+    # Set some gopass settings
+    echo -e "\\033[1;34m--> Setting (go)pass options...\\033[0m"
+    gopass config autosync false
+    gopass config noconfirm true
     echo -e "\\033[1;34m--> Generating gitlab access token file...\\033[0m"
-    pass git/gitlab/access_token > "$HOME/.gitlab_access_token"
+    gopass git/gitlab/access_token > "$HOME/.gitlab_access_token"
     echo "Created .gitlab_access_token file"
 fi
 

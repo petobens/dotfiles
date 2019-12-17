@@ -134,7 +134,8 @@ bindsym $alt+grave focus output right
 # Rofi (application launcher / switcher)
 bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
 bindsym $mod+s $nexec "rofi -combi-modi drun,run -show combi"
-bindsym $mod+z $nexec "passmenu"
+bindsym $mod+z $nexec \
+"gopass ls --flat | rofi -dmenu -p gopass | xargs --no-run-if-empty gopass show -c"
 
 # WS1: browser and agenda (to have a black theme in calendar use Stylus
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)

@@ -386,4 +386,9 @@ if type "fzf" > /dev/null 2>&1; then
     fi
 fi
 
+# Pass
+if type "gopass" > /dev/null 2>&1; then
+    source <(pass completion bash)
+fi
+
 # }}}
