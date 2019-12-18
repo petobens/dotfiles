@@ -101,6 +101,7 @@ $yay_cmd i3lock-color-git
 $yay_cmd maim
 $yay_cmd mpv
 $yay_cmd networkmanager
+$yay_cmd nmap
 $yay_cmd ntfs-3g
 $yay_cmd pavucontrol
 $yay_cmd playerctl
