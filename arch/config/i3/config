@@ -142,6 +142,7 @@ bindsym $mod+z $nexec \
 bindsym $mod+Control+i $nexec raiseorlaunch -c Brave -W $ws1 -m browser
 bindsym $mod+Control+a $nexec raiseorlaunch -c Brave -W $ws1 -m cal -e \
     "brave --new-window https://calendar.google.com/calendar/b/0/r"
+bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
 # WS2: chat/communication related (i.e mail)
 # FIXME: Waiting not quite working
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30
