@@ -128,7 +128,6 @@ $brew_cask_install_cmd kitty
 $brew_cask_install_cmd skype
 $brew_cask_install_cmd spotify
 $brew_cask_install_cmd thunderbird
-$brew_cask_install_cmd skim
 $brew_cask_install_cmd slack
 $brew_cask_install_cmd vlc
 $brew_cask_install_cmd vuze
