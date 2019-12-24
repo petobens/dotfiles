@@ -319,22 +319,23 @@ fi
 # Grep {{{
 
 # TODO: add binding to toggle interactive mode https://github.com/junegunn/fzf/issues/1798
-FZF_GREP_COMMAND="rg --smart-case --vimgrep --no-heading --color=always "
 FZF_GREP_OPTS="
 --header 'enter=open'
 --multi
 --ansi
 --phony
 --query=''
---bind 'change:reload:$FZF_GREP_COMMAND {q} || true'
 --delimiter=:
 --preview 'bat --color always --style numbers --theme TwoDark \
     --line-range {2}: --highlight-line {2} {1} | head -200'
 "
 
 ig() {
+    # shellcheck disable=SC2124
+    grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@"
     cmd="true"
-    out=$(eval "$cmd" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" fzf)
+    out=$(eval "$cmd" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
+        fzf --bind "change:reload:$grep_cmd {q} || true")
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
 
