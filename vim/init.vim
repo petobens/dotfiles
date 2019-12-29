@@ -141,7 +141,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
-    call dein#add('petobens/vim-virtualenv')  " won't work if loaded on_ft
+    call dein#add('petobens/poet-v')  " won't work if loaded on_ft
 
     " R
     call dein#add('jalvesaq/Nvim-R')
@@ -3026,19 +3026,16 @@ augroup ps_vimlatex
 augroup END
 
 " }}}
-" Virtualenv {{{
+" Virtualenv (poetv) {{{
 
-let g:airline#extensions#virtualenv#enabled = 1
-let g:virtualenv_auto_activate = 0  " We do it manually below
+let g:airline#extensions#poetv#enabled = 1
+let g:poetv_auto_activate = 1
+let g:poetv_statusline_symbol = ' '
 
 augroup pl_venv_python
     au!
-    au Filetype python nnoremap <buffer> <Leader>vea :call setbufvar(
-        \ bufname('%'), 'pipenv_dir', 'unknown')<CR>:VirtualEnvActivate<CR>
-    au Filetype python nnoremap <buffer> <Leader>ved :VirtualEnvDeactivate<CR>
-    " Auto activate when entering a window with a python file
-    au WinEnter,BufWinEnter *.py
-        \ if &previewwindow != 1 | call virtualenv#activate('', 1) | endif
+    au Filetype python nnoremap <silent><buffer> <Leader>pva :PoetvActivate<CR>
+    au Filetype python nnoremap <silent><buffer> <Leader>pvd :PoetvDeactivate<CR>
 augroup END
 
 " }}}

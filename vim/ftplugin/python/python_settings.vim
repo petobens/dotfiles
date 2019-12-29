@@ -122,17 +122,8 @@ function! s:RunPython(compiler, mode, compilation, debugging, ...)
     endif
 
     " If we are inside a venv then override the compiler
-    let compiler_bin = ''
     if isdirectory($VIRTUAL_ENV)
         let compiler_bin = $VIRTUAL_ENV . '/bin'
-    else
-        " Look for pipenv venv if VIRTUAL_ENV var is not set
-        let pipenv_venv_path = system('pipenv --venv')
-        if v:shell_error == 0
-            let compiler_bin = trim(pipenv_venv_path) . '/bin'
-        endif
-    endif
-    if compiler_bin !=# ''
         let compiler = compiler_bin . '/' . compiler
     endif
 
