@@ -38,18 +38,21 @@ if type "ranger" > /dev/null 2>&1; then
     ranger --copy-config=scope
 fi
 
-# Pipenv completions (see: https://github.com/pypa/pipenv/issues/1247)
-if type "pipenv" > /dev/null 2>&1; then
-    if [[ "$OSTYPE" == 'darwin'* ]]; then
-        if type "brew" > /dev/null 2>&1; then
-            base_pkg_dir=$(brew --prefix)
-        else
-            base_pkg_dir='/usr/local'
-        fi
+# Bash completions (see: https://github.com/pypa/pipenv/issues/1247)
+if [[ "$OSTYPE" == 'darwin'* ]]; then
+    if type "brew" > /dev/null 2>&1; then
+        base_pkg_dir=$(brew --prefix)
     else
-        base_pkg_dir='/usr'
+        base_pkg_dir='/usr/local'
     fi
+else
+    base_pkg_dir='/usr'
+fi
+if type "pipenv" > /dev/null 2>&1; then
     pipenv --completion | sudo tee "$base_pkg_dir/share/bash-completion/completions/pipenv"
+fi
+if type "poetry" > /dev/null 2>&1; then
+    poetry completions bash | sudo tee "$base_pkg_dir/share/bash-completion/completions/poetry"
 fi
 
 # Git access tokens and (go)pass settings

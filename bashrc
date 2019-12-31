@@ -218,6 +218,17 @@ if type "python" > /dev/null 2>&1; then
         alias pet='pipenv run pytest'
         alias pej='pipenv run jupyter notebook'
     fi
+    if type "poetry" > /dev/null 2>&1; then
+        alias pol='poetry run pip list'
+        alias poa='poetry add'
+        alias por='poetry remove'
+        alias pos='poetry shell'
+        alias poe='poetry env list'
+        alias pop='poetry run python'
+        alias pop='poetry run python -m pdb -cc'
+        alias pot='poetry run pytest'
+        alias poj='poetry run jupyter notebook'
+    fi
 fi
 
 # Package manager
