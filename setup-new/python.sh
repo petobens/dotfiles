@@ -60,7 +60,7 @@ if type "nvim" > /dev/null 2>&1; then
     $pipx_install_cmd neovim-remote
 fi
 $pipx_install_cmd pre-commit
-$pipx_install_cmd pgcli --spec git+https://github.com/dbcli/pgcli
+$pipx_install_cmd pgcli
 $pipx_install_cmd pipenv
 $pipx_install_cmd --pip-args=--pre poetry
 $pipx_install_cmd pylint
