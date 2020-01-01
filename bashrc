@@ -221,10 +221,12 @@ if type "python" > /dev/null 2>&1; then
     if type "poetry" > /dev/null 2>&1; then
         alias pol='poetry run pip list'
         alias poa='poetry add'
+        alias poi='poetry install'
+        alias pou='poetry update'
         alias por='poetry remove'
-        alias poe='poetry env list'
+        alias poe='poetry env'
         alias pop='poetry run python'
-        alias pop='poetry run python -m pdb -cc'
+        alias pod='poetry run python -m pdb -cc'
         alias pot='poetry run pytest'
         alias poj='poetry run jupyter notebook'
         pos() {
