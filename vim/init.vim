@@ -1299,6 +1299,9 @@ augroup ft_vim
     " Place help window at the bottom
     au BufWinEnter *.txt if &ft == 'help' | wincmd J | endif
     au BufWinEnter *.txt if &ft == 'help' | 20 wincmd _ | endif
+    " Mappings
+    au FileType help nmap <buffer><silent>q :bd<CR>
+    au Filetype help nmap <buffer><silent><Leader>tc gO
     " Man settings
     au Filetype man nmap <buffer><silent><Leader>tc gO
 augroup END
