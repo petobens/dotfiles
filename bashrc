@@ -222,12 +222,31 @@ if type "python" > /dev/null 2>&1; then
         alias pol='poetry run pip list'
         alias poa='poetry add'
         alias por='poetry remove'
-        alias pos='poetry shell'
         alias poe='poetry env list'
         alias pop='poetry run python'
         alias pop='poetry run python -m pdb -cc'
         alias pot='poetry run pytest'
         alias poj='poetry run jupyter notebook'
+        pos() {
+            # Load .env file before launching poetry shell
+            cur_dir="$PWD"
+            pyproject_base='pyproject.toml'
+            for _ in 1 2; do
+                pyproject_file="$cur_dir/$pyproject_base"
+                if [ -f "$pyproject_file" ]; then
+                    break
+                else
+                    cur_dir="$(dirname "$cur_dir")"
+                fi
+            done
+            pyproject_dir="$(dirname "$pyproject_file")"
+            if [ -f "$pyproject_dir/.env" ]; then
+                set -a
+                source "$pyproject_dir/.env"
+                set +a
+            fi
+            poetry shell -q
+        }
     fi
 fi
 
