@@ -42,16 +42,16 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 fi
 pipx_inject_cmd='pipx inject --verbose'
 
-$pipx_install_cmd flake8 --spec git+https://github.com/PyCQA/flake8
+$pipx_install_cmd git+https://github.com/PyCQA/flake8
 $pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
 $pipx_install_cmd beautysh
 $pipx_install_cmd black
 $pipx_install_cmd httpie
-$pipx_install_cmd ipython
-$pipx_inject_cmd ipython numpy pandas matplotlib
 # shellcheck disable=SC2102
 $pipx_install_cmd isort[pyproject]
 $pipx_install_cmd jupyter --include-deps
+$pipx_install_cmd ipython
+$pipx_inject_cmd ipython numpy pandas matplotlib
 $pipx_install_cmd litecli
 $pipx_install_cmd mssql-cli
 $pipx_install_cmd mycli
@@ -70,8 +70,8 @@ fi
 $pipx_install_cmd ranger-fm
 $pipx_install_cmd sqlparse
 $pipx_install_cmd trash-cli
-$pipx_install_cmd unimatrix --spec git+https://github.com/will8211/unimatrix
-$pipx_install_cmd vimiv --spec git+https://github.com/karlch/vimiv-qt
+$pipx_install_cmd git+https://github.com/will8211/unimatrix
+$pipx_install_cmd git+https://github.com/karlch/vimiv-qt
 $pipx_inject_cmd vimiv pyqt5
 $pipx_install_cmd vim-vint
 $pipx_install_cmd yamllint
