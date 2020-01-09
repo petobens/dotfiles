@@ -2419,7 +2419,7 @@ nnoremap <silent> <Leader>gi :Denite output:echo\ system("git\ init")<cr>
 nnoremap <silent> <Leader>gd :Gdiff<cr>:wincmd x<CR>
 nnoremap <silent> <Leader>gs :botright Gstatus<CR>:wincmd J<bar>:15 wincmd _<CR>
 nnoremap <silent> <Leader>gc :w!<CR>:Gcommit<cr>
-nnoremap <Leader>gm :Gmove<space>
+nnoremap <Leader>gM :Git! mergetool<CR>
 nnoremap <Leader>gr :Grebase -i<space>
 nnoremap <silent> <Leader>gR :Gremove<cr>
 nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Gpush')<CR>
