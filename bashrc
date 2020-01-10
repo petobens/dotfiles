@@ -224,6 +224,7 @@ if type "python" > /dev/null 2>&1; then
         alias poi='poetry install'
         alias pou='poetry update'
         alias por='poetry remove'
+        alias pog='poetry show --tree'
         alias poe='poetry env'
         alias pop='poetry run python'
         alias pod='poetry run python -m pdb -cc'
