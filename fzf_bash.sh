@@ -391,8 +391,8 @@ fi
 FZF_TMUX_OPTS="
 --multi
 --exit-0
---expect=alt-k
---header='enter=switch, A-k=kill'
+--expect=alt-k,alt-r
+--header='enter=switch, A-k=kill, A-r=rename'
 --preview='tmux_tree {} | bat --theme TwoDark --style plain'
 "
 
@@ -421,6 +421,12 @@ tms() {
         alt-k)
             for s in "${sessions[@]}"; do
                 tmux kill-session -t "$s"
+            done
+            ;;
+        alt-r)
+            for s in "${sessions[@]}"; do
+                read -r -p "Rename tmux session '$s' to: " new_session_name
+                tmux rename-session -t "$s" "$new_session_name"
             done
             ;;
         *)
