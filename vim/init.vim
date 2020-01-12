@@ -2092,14 +2092,18 @@ endfunction
 function! s:candidate_directory_rec(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
-    call denite#start([{'name': 'directory_rec/noignore', 'args': [narrow_dir]}],
-                \ {'default_action': 'candidate_file_rec'})
+    let sources_queue = a:context['sources_queue'] + [[
+            \ {'name': 'directory_rec/noignore', 'args': [narrow_dir]},
+            \ ]]
+    return {'sources_queue': sources_queue}
 endfunction
 function! s:candidate_parent_dir(context)
     let path = a:context['targets'][0]['action__path']
     let narrow_dir = denite#util#path2directory(path)
-    call denite#start([{'name': 'parent_dirs', 'args': [narrow_dir]}],
-                \ {'default_action': 'candidate_file_rec'})
+    let sources_queue = a:context['sources_queue'] + [[
+            \ {'name': 'parent_dirs', 'args': [narrow_dir]},
+            \ ]]
+    return {'sources_queue': sources_queue}
 endfunction
 function! s:scroll_preview_down(context)
     wincmd P
