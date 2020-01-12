@@ -1946,6 +1946,7 @@ function! s:denite_mappings() abort
     nnoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
     nnoremap <silent><buffer><expr> <C-x> denite#do_map('choose_action')
     nnoremap <silent><buffer><expr> <C-y> denite#do_map('do_action', 'yank')
+    nnoremap <silent><buffer><expr> <Tab> denite#do_map('do_action', 'feedkeys')
     nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select') . 'k'
     nnoremap <silent><buffer><expr> <C-Space> denite#do_map('toggle_select') . 'k'
     nnoremap <silent><buffer><expr> <A-v> denite#do_map('do_action', 'preview')
@@ -2003,6 +2004,7 @@ function! s:denite_filter_mappings() abort
     inoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
     inoremap <silent><buffer><expr> <C-x> denite#do_map('choose_action')
     inoremap <silent><buffer><expr> <C-y> denite#do_map('do_action', 'yank')
+    inoremap <silent><buffer><expr> <Tab> denite#do_map('do_action', 'feedkeys')
     inoremap <silent><buffer> <C-Space>
         \ <ESC>:call denite#call_map('toggle_select')<CR><C-w>p
         \ :call cursor(line('.')-1, 0)<CR><C-w>pA
