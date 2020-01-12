@@ -1750,6 +1750,18 @@ call denite#custom#option('default', {
             \ 'filter_updatetime': 100,
             \ })
 
+" Set cursorline hl
+augroup ps_denite_cursorline
+    au!
+    au WinEnter * if &filetype ==# 'denite'
+        \ |   highlight CursorLineDenite guibg=#282c34 gui=bold
+        \ |   highlight! link CursorLine CursorLineDenite
+        \ | endif
+    au WinLeave * if &filetype ==# 'denite'
+        \ |   highlight! link CursorLine NONE
+        \ | endif
+augroup END
+
 " Fruzzy matcher
 let g:fruzzy#usenative = 0
 let g:fruzzy#sortonempty = 0
@@ -1969,9 +1981,10 @@ function! s:denite_mappings() abort
 endfunction
 
 function! s:DeniteMoveCursorCandidateWindow(dir, lines) abort
-    call win_gotoid(win_findbuf(g:denite#_filter_parent)[0])
+    " noautocmd is needed to preserve proper cursorline highlight
+    noautocmd call win_gotoid(win_findbuf(g:denite#_filter_parent)[0])
     execute 'normal! ' . a:lines . a:dir
-    call win_gotoid(g:denite#_filter_winid)
+    noautocmd call win_gotoid(g:denite#_filter_winid)
     startinsert!
 endfunction
 
