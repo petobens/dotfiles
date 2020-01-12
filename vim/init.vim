@@ -1984,6 +1984,12 @@ function! s:DeniteMoveCursorCandidateWindow(dir, lines) abort
     " noautocmd is needed to preserve proper cursorline highlight
     noautocmd call win_gotoid(win_findbuf(g:denite#_filter_parent)[0])
     execute 'normal! ' . a:lines . a:dir
+    for nr in range(1, winnr('$'))
+        if getwinvar(nr, '&previewwindow') == 1
+            call denite#call_map('do_action', 'preview')
+            break
+        endif
+    endfor
     noautocmd call win_gotoid(g:denite#_filter_winid)
     startinsert!
 endfunction
