@@ -1958,7 +1958,7 @@ function! s:denite_mappings() abort
     nnoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
     nnoremap <silent><buffer><expr> <C-x> denite#do_map('choose_action')
     nnoremap <silent><buffer><expr> <C-y> denite#do_map('do_action', 'yank')
-    nnoremap <silent><buffer><expr> <Tab> denite#do_map('do_action', 'feedkeys')
+    nnoremap <silent><buffer> <Tab> :call <SID>denite_tab_action()<CR>
     nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select') . 'k'
     nnoremap <silent><buffer><expr> <C-Space> denite#do_map('toggle_select') . 'k'
     nnoremap <silent><buffer><expr> <A-v> denite#do_map('do_action', 'preview')
@@ -2023,7 +2023,7 @@ function! s:denite_filter_mappings() abort
     inoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
     inoremap <silent><buffer><expr> <C-x> denite#do_map('choose_action')
     inoremap <silent><buffer><expr> <C-y> denite#do_map('do_action', 'yank')
-    inoremap <silent><buffer><expr> <Tab> denite#do_map('do_action', 'feedkeys')
+    inoremap <silent><buffer> <Tab> <ESC>:call <SID>denite_tab_action()<CR>
     inoremap <silent><buffer> <C-Space>
         \ <ESC>:call denite#call_map('toggle_select')<CR><C-w>p
         \ :call cursor(line('.')-1, 0)<CR><C-w>pA
@@ -2142,8 +2142,17 @@ function! s:yank_commit(context)
     call setreg('+', commit_hash)
 endfunction
 function! s:denite_quickfix_all()
-  call denite#call_map('toggle_select_all')
-  call denite#call_map('do_action', 'quickfix')
+    call denite#call_map('toggle_select_all')
+    call denite#call_map('do_action', 'quickfix')
+endfunction
+function! s:denite_tab_action()
+    let source_name = b:denite_statusline.sources
+    if match(source_name, '^history') != -1
+        " Edit action in history search source is called feedkeys
+        call denite#call_map('do_action', 'feedkeys')
+    else
+        call denite#call_map('do_action', 'edit')
+    endif
 endfunction
 call denite#custom#action('buffer,directory,file', 'context_split',
         \ function('s:my_split'))
