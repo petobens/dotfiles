@@ -1771,6 +1771,7 @@ call denite#custom#source('_', 'matchers', ['matcher/fruzzy',
 " Other matcher and sorting options
 call denite#custom#source('line', 'matchers', ['matcher/regexp'])
 call denite#custom#source('default', 'sorters', ['sorter/rank'])
+call denite#custom#source('z', 'sorters', ['sorter_z'])
 
 " Devicon converter
 call denite#custom#source('file/rec,file/rec/noignore,buffer,fast_file_mru,'
