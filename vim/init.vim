@@ -134,7 +134,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('plasticboy/vim-markdown', {'on_ft' : 'markdown'})
 
     " Python
-    call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
+    " call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
+    call dein#add('blueyed/jedi-vim', {'rev': 'envs'})
     call dein#add('jeetsukumaran/vim-pythonsense', {'on_ft' : 'python'})
     if has('nvim')
         call dein#add('numirias/semshi', {'on_ft': 'python'})
@@ -2569,6 +2570,17 @@ let g:jedi#use_splits_not_buffers = 'winwidth'
 " Show call signature in command line instead of a popup window
 " let g:jedi#show_call_signatures = 2
 let g:jedi#smart_auto_mappings = 0
+
+" Virtualenvs
+if executable('pyenv')
+    call add(g:jedi#environment_paths, expand('$HOME/.pyenv/versions'))
+endif
+if executable('pipenv')
+    call add(g:jedi#environment_paths, expand('$HOME/.local/share/virtualenvs'))
+endif
+if executable('poetry')
+    call add(g:jedi#environment_paths, expand('$HOME/.cache/pypoetry/virtualenvs'))
+endif
 
 " Change/disable some mappings
 let g:jedi#goto_assignments_command = '<C-]>'
