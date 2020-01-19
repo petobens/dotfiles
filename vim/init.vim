@@ -1729,7 +1729,7 @@ endfunction
 nnoremap <silent> <Leader>ul :execute "edit +" g:dein#install_log_filename<CR>
 nnoremap <Leader>bu :call <SID>dein_update()<CR>
 nnoremap <Leader>rp :call dein#recache_runtimepath()<CR>
-nnoremap <silent> <Leader>bl :Denite -default-action=defx dein<CR>
+nnoremap <silent> <Leader>bl :Denite dein<CR>
 
 " }}}
 " Denite {{{
@@ -2182,6 +2182,7 @@ call denite#custom#action('gitlog', 'yank', function('s:yank_commit'))
 " overwrite any other override)
 call denite#custom#source('directory_rec,directory_rec/noignore,parent_dirs,' .
         \ 'z,dirmark', 'default_action', 'candidate_file_rec')
+call denite#custom#source('dein', 'default_action', 'defx')
 
 " }}}
 " Deoplete {{{
