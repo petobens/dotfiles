@@ -2583,18 +2583,28 @@ if executable('poetry')
     call add(g:jedi#environment_paths, expand('$HOME/.cache/pypoetry/virtualenvs'))
 endif
 
-" Change/disable some mappings
-let g:jedi#goto_assignments_command = '<C-]>'
-let g:jedi#goto_command = '<Leader>jd'
-let g:jedi#goto_stubs_command = '<Leader>js'
-let g:jedi#rename_command = '<Leader>rn'
+" Change/disable some mappings (to be enabled later on)
+let g:jedi#goto_assignments_command = ''
+let g:jedi#goto_command = ''
+let g:jedi#goto_stubs_command = ''
+let g:jedi#rename_command = ''
 let g:jedi#documentation_command = ''  " We use K mapping in our ftplugin file
-let g:jedi#usages_command = '<Leader>ap' " Appearances of word under cursor
+let g:jedi#usages_command = ''
 
 augroup ps_jedi
     au!
+    " Jedi mappings (we do it here so they are silent mappings)
+    au Filetype python nnoremap <buffer><silent> <C-]>
+        \ :call jedi#goto_assignments()<CR>
+    au Filetype python nnoremap <buffer><silent> <Leader>jd
+        \ :call jedi#goto()<CR>
+    au Filetype python nnoremap <buffer><silent> <Leader>js
+        \ :call jedi#goto_stubs()<CR>
+    au Filetype python nnoremap <buffer><silent> <Leader>rn
+        \ :call jedi#rename()<CR>
+    au Filetype python nnoremap <buffer><silent> <Leader>ap
+        \ :call jedi#usages()<CR>
     " Set jedi completion to work with deoplete
-    " au FileType python setlocal omnifunc=jedi#completions
     au BufRead,BufNewFile *.py setlocal omnifunc=jedi#completions
 augroup END
 
