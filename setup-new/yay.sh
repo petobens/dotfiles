@@ -146,6 +146,7 @@ $yay_cmd cronie
 $yay_cmd diff-so-fancy
 $yay_cmd docker
 $yay_cmd docker-compose
+$yay_cmd dust
 $yay_cmd fd
 $yay_cmd fzf
 $yay_cmd gnupg
