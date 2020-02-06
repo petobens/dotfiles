@@ -526,7 +526,7 @@ di() {
         alt-d)
             image_cmd="docker image rm --force" ;;
         **)
-            image_cmd="docker run";;
+            image_cmd="docker run -td";;
     esac
 
     for image in "${images[@]}"; do
