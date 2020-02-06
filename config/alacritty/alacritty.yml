@@ -30,8 +30,7 @@ font:
         family: SauceCodePro Nerd Font
         style: Bold
     italic:
-        # FIXME: https://github.com/ryanoasis/nerd-fonts/issues/236
-        family: SourceCode Pro
+        family: SauceCodePro Nerd Font
         style: Italic
 
     # Point size of the font
