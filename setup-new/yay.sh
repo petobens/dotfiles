@@ -91,6 +91,7 @@ $yay_cmd bluez-utils
 $yay_cmd capnet-assist
 $yay_cmd compton
 $yay_cmd connman
+$yay_cmd debtap
 $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
