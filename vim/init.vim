@@ -187,6 +187,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
         call dein#add('christoomey/vim-tmux-navigator')
         call dein#add('wellle/tmux-complete.vim')
         call dein#add('tmux-plugins/vim-tmux-focus-events')
+        call dein#add('ericpruitt/tmux.vim')
     endif
 
     " Workarounds
@@ -1049,10 +1050,11 @@ augroup ft_config
     au!
     au BufNewFile,BufReadPost *polybar/config,*rofi/config,dunstrc,*.dirs,
                 \zathurarc,*mpv/*.conf,*onedrive/config,*fdignore,*vimivrc,
-                \*pylintrc,*flake8,*ripgreprc,matplotlibrc,*.conf
+                \*pylintrc,*flake8,*ripgreprc,matplotlibrc
                 \ set filetype=config foldmethod=marker
     au BufNewFile,BufReadPost vimiv.conf set filetype=dosini
     au BufNewFile,BufReadPost */.ssh/config,*/ssh/config set filetype=sshconfig
+    au BufNewFile,BufReadPost tmux.conf set filetype=tmux
 augroup END
 
 " }}}
