@@ -145,6 +145,7 @@ $yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd bat
 $yay_cmd cronie
 $yay_cmd diff-so-fancy
+$yay_cmd dmidecode
 $yay_cmd docker
 $yay_cmd docker-compose
 $yay_cmd dust
@@ -174,6 +175,7 @@ $yay_cmd shellcheck
 $yay_cmd socat
 $yay_cmd sshpass
 $yay_cmd stoken-git
+$yay_cmd strace
 $yay_cmd tk
 $yay_cmd tree
 $yay_cmd universal-ctags-git
@@ -182,6 +184,7 @@ $yay_cmd unzip
 $yay_cmd vivid
 $yay_cmd w3m
 $yay_cmd wget
+$yay_cmd xxd-standalone
 $yay_cmd z
 $yay_cmd zip
 
