@@ -118,6 +118,7 @@ const qmarksUrls = {
     i: 'www.infobae.com.ar',
     l: 'www.lanacion.com.ar',
     m: 'https://meet.google.com',
+    M: 'https://mail.google.com',
     n: 'www.netflix.com',
     p: 'http://pirateproxy.net',
     r: 'www.reddit.com',
