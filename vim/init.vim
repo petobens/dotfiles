@@ -172,6 +172,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('deoplete-plugins/deoplete-docker')
     if has('nvim')
         call dein#add('deoplete-plugins/deoplete-jedi')
+        call dein#add('ncm2/float-preview.nvim')
     endif
     call dein#add('Shougo/neco-vim', {'name' : 'neco-vim'})
     call dein#add('Shougo/neco-syntax')
@@ -621,7 +622,7 @@ set startofline
 
 " Add transparency for floating windows
 if has('nvim')
-    set winblend=5
+    set winblend=7
 endif
 
 " }}}
@@ -2251,7 +2252,7 @@ call deoplete#custom#var('omni', 'input_patterns', {
 \)
 
 " External sources
-let deoplete#sources#jedi#show_docstring = 0
+let deoplete#sources#jedi#show_docstring = 1
 if !empty('$TMUX')
     " Tmux completion (with tmux-complete plugin)
     let g:tmuxcomplete#trigger = ''
@@ -2388,6 +2389,40 @@ endfunction
 
 augroup ps_echodoc
     au! FileType * call s:disable_echodoc()
+augroup END
+
+" }}}
+" Float preview {{{
+
+set completeopt-=preview
+let g:float_preview#docked = 0
+let g:float_preview#max_width = 60
+
+function! s:MoveFloatPreview(direction)
+    let buffer_lines =
+        \ len(getbufline(nvim_win_get_buf(g:float_preview#win), 1, '$'))
+    let cursor_line = nvim_win_get_cursor(g:float_preview#win)[0]
+    if a:direction ==# 'down'
+        let cursor_line += &previewheight
+    else
+        let cursor_line -= &previewheight
+    endif
+    if cursor_line <= 1
+        let cursor_line = 1
+    endif
+    if cursor_line >= buffer_lines
+        let cursor_line = buffer_lines
+    endif
+    call nvim_win_set_cursor(g:float_preview#win, [cursor_line, 0])
+    return ''
+endfunction
+
+augroup ps_float_preview
+    au!
+    au User FloatPreviewWinOpen inoremap <silent><expr> <A-j>
+        \ <SID>MoveFloatPreview('down')
+    au User FloatPreviewWinOpen inoremap <silent><expr> <A-k>
+        \ <SID>MoveFloatPreview('up')
 augroup END
 
 " }}}
