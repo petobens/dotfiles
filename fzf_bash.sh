@@ -536,9 +536,9 @@ di() {
 
 
 FZF_DOCKER_CONTAINER_OPTS="$FZF_DOCKER_OPTS_BASE
---expect=ctrl-a,ctrl-e,ctrl-s,ctrl-b,alt-k,alt-d
---header='enter=logs, C-e=exec, C-a=attach, C-b=start, C-s=stop, A-k=kill, \
-A-d=rm'
+--expect=ctrl-a,ctrl-e,ctrl-s,ctrl-r,ctrl-b,alt-k,alt-d
+--header='enter=logs, C-e=exec, C-a=attach, C-b=start, C-s=stop, C-r=restart, \
+A-k=kill, A-d=rm'
 "
 dc() {
     cmd="docker container ls -a | tail -n +2"
@@ -562,6 +562,8 @@ dc() {
             sub_cmd="stop" ;;
         ctrl-b)
             sub_cmd="start" ;;
+        ctrl-r)
+            sub_cmd="restart" ;;
         alt-k)
             sub_cmd="kill" ;;
         alt-d)
