@@ -2455,6 +2455,7 @@ augroup ps_fugitive
             \ setlocal omnifunc=rhubarb#omnifunc |
         \ endif
    au BufEnter,WinEnter *.git/index execute '15 wincmd _'
+   au BufEnter,WinEnter *.git/COMMIT_EDITMSG execute '15 wincmd _'
    au FileType fugitive nnoremap <buffer><silent> q :call <SID>QuitGstatus()<CR>
 augroup END
 
