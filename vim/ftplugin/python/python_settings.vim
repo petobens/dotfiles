@@ -1234,6 +1234,20 @@ function! s:IPyREPL() range
     call neoterm#repl#set('ipython')
 endfunction
 
+function! s:TmuxPdbDebugger(...)
+    let visual_lines = s:Dedent(getline(a:1, a:2))
+    let tmux_lines = []
+    for l in visual_lines
+        " Pdb only accepts a single line so trim starting indent spaces
+        call add(tmux_lines, trim(l))
+    endfor
+    let tmux_text = shellescape(join(tmux_lines, ''), 1)
+    " Assumes this is the max window in current session
+    let pane_id = trim(system("tmux display-message -p '#{session_windows}'"))
+    silent! execute '!tmux send-keys -t '. pane_id . ' ' . tmux_text | redraw!
+endfunction
+command! -range TmuxDebug silent call s:TmuxPdbDebugger(<line1>, <line2>)
+
 " }}}
 " Debugging {{{
 
@@ -1413,6 +1427,8 @@ nnoremap <silent> <buffer> <F6> :call
 inoremap <silent> <buffer> <F6> <ESC>:call
             \ <SID>RunPython('python3', 'normal', 'foreground_os', 1)<CR>
 vnoremap <silent> <buffer> <F6> :EvalVisualPyDebug python3<CR>
+" Send line to tmux pdb
+vnoremap <silent> <buffer> <Leader>td :TmuxDebug<CR>
 " Load traceback from tmux window
 nnoremap <buffer> <Leader>lt :LoadTraceFromTmux<space>
 
