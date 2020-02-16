@@ -2274,6 +2274,8 @@ inoremap <silent><expr><CR> pumvisible() ?
 " Move in preview window with tab (and map shift-tab to detab)
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<C-d>"
+" Use Ctrl-C to end completion
+imap <C-c> <C-e>
 
 " Edit dictionary files
 function! s:Edit_Dict()
