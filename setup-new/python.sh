@@ -16,6 +16,7 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd pipx
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
+        $pip_install_cmd -U msgpack
     fi
     $pip_install_cmd pytest-cov
     $pip_install_cmd pytest
