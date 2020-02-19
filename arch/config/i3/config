@@ -148,6 +148,8 @@ bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30
 bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
+bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws1 -m hangouts -e \
+    "brave --new-window https://hangouts.google.com/?authuser=2"
 bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws2
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
@@ -184,8 +186,8 @@ bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -f -e \
     'alacritty -t Downloads -e ranger ~/Downloads'
 bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -f -e \
     'alacritty -t htop -e htop'
-bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -f -e \
-    'alacritty -t "OneDrive" -e sh -c "journalctl --user-unit onedrive -f"'
+# bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -f -e \
+    # 'alacritty -t "OneDrive" -e sh -c "journalctl --user-unit onedrive -f"'
 bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -f -e \
     'alacritty -t "Trash Can" -e sh -c "trash-list | less"'
 
@@ -197,7 +199,7 @@ for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv)$" 
 # We seem to need this hack for Alacritty (i.e use title instead of mark)
 for_window [title="^(Alacritty|kitty)$"] \
     $nexec $HOME/.config/i3/resize.py Full
-for_window [con_mark="^(browser|cal)$"] \
+for_window [con_mark="^(browser|cal|hangouts)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
