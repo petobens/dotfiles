@@ -205,7 +205,7 @@ if type "python" > /dev/null 2>&1; then
         alias piu='pip install --user'
     fi
     if type "ipython3" > /dev/null 2>&1; then
-        alias ip='ipython3'
+        alias ipy='ipython3'
     fi
     if type "pipenv" > /dev/null 2>&1; then
         alias pel='pipenv run pip list'
