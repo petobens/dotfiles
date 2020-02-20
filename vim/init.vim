@@ -2456,9 +2456,11 @@ augroup ps_fugitive
         \ else |
             \ setlocal omnifunc=rhubarb#omnifunc |
         \ endif
-   au BufEnter,WinEnter *.git/index execute '15 wincmd _'
-   au BufEnter,WinEnter *.git/COMMIT_EDITMSG execute '15 wincmd _'
-   au FileType fugitive nnoremap <buffer><silent> q :call <SID>QuitGstatus()<CR>
+    au BufEnter,WinEnter *.git/index execute '15 wincmd _'
+    au BufEnter,WinEnter *.git/COMMIT_EDITMSG execute '15 wincmd _'
+    au FileType fugitive nnoremap <buffer><silent> q :call <SID>QuitGstatus()<CR>
+    au FileType fugitive nmap <buffer><silent> ]h ]c
+    au FileType fugitive nmap <buffer><silent> [h [c
 augroup END
 
 " Gitlab
