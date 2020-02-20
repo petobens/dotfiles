@@ -422,6 +422,7 @@ fi
 # Pass
 if type "gopass" > /dev/null 2>&1; then
     source <(pass completion bash)
+    alias pass='TERM=xterm-256color; pass'
 fi
 
 # }}}
