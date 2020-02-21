@@ -319,11 +319,14 @@ alias hssh='TERM=xterm-256color; ssh habitat-server'
 alias hdb='PGPASSWORD="$(pass habitat/postgres/pass)" pgcli -h '\
 '"$(pass habitat/postgres/host)" -U mutt -d habitat'
 
-# Prex
-alias pvpn='sudo openvpn --config ~/OneDrive/arch/vpn/prex/client.ovpn --daemon'
-alias pssh='TERM=xterm-256color; ssh prex-server'
-alias pdb='TERM=xterm-256color; ssh prex-server '\
-"-L33060:contact-analysis-db.paigo.local:3306 -t 'mycli'"
+# Meli
+alias mgpc='echo "sudo service gpd start; "'\
+'"globalprotect connect --portal $(pass meli/vpn/portal) "'\
+'"--username $(pass meli/vpn/user); sleep 1"'
+alias mgpp='echo $(pass meli/vpn/pin)'\
+'$(oathtool --base32 --totp $(pass meli/vpn/secret))'
+alias mvssh='command cd $(pass meli/vpn/vagrant-path); vagrant ssh'
+alias mvp='command cd $(pass meli/vpn/vagrant-path); vagrant ssh -- -N -v -D 12345'
 
 # }}}
 # Functions {{{

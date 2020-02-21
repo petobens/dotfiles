@@ -143,6 +143,7 @@ $yay_cmd sqlite3
 # CLI
 $yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd bat
+$yay_cmd bind-tools
 $yay_cmd cronie
 $yay_cmd diff-so-fancy
 $yay_cmd dmidecode
@@ -160,6 +161,7 @@ $yay_cmd hyperfine-bin
 $yay_cmd lsd
 $yay_cmd neofetch
 $yay_cmd neomutt
+$yay_cmd oath-toolkit
 $yay_cmd openconnect-git
 $yay_cmd openssh
 $yay_cmd openvpn
@@ -181,11 +183,14 @@ $yay_cmd tree
 $yay_cmd universal-ctags-git
 $yay_cmd unrar
 $yay_cmd unzip
+$yay_cmd vagrant
+$yay_cmd virtualbox
 $yay_cmd vivid
 $yay_cmd w3m
 $yay_cmd wget
 $yay_cmd xxd-standalone
 $yay_cmd z
+$yay_cmd zbar
 $yay_cmd zip
 
 # Apps
