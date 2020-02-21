@@ -125,6 +125,9 @@ if type "bat" > /dev/null 2>&1; then
     # Colorized cat
     alias dog='bat --color always --style numbers --theme TwoDark'
 fi
+if type "dust" > /dev/null 2>&1; then
+    alias rds='dust -r -b'
+fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
 fi
