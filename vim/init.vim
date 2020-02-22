@@ -138,7 +138,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('blueyed/jedi-vim', {'rev': 'envs'})
     call dein#add('jeetsukumaran/vim-pythonsense', {'on_ft' : 'python'})
     if has('nvim')
-        call dein#add('numirias/semshi', {'on_ft': 'python'})
+        call dein#add('numirias/semshi')
     endif
     call dein#add('tmhedberg/SimpylFold', {'on_ft' : 'python'})
     call dein#add('vim-python/python-syntax', {'on_ft' : 'python'})
