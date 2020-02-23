@@ -1749,9 +1749,12 @@ call denite#custom#option('default', {
             \ 'highlight_prompt': 'Function',
             \ 'highlight_matched_char': 'Operator',
             \ 'highlight_matched_range': 'None',
-            \ 'vertical_preview': 1,
             \ 'start_filter': 1,
             \ 'filter_updatetime': 100,
+            \ 'vertical_preview': 1,
+            \ 'floating_preview': 1,
+            \ 'preview_width': 70,
+            \ 'preview_height': 15,
             \ })
 
 " Set cursorline hl
@@ -1945,6 +1948,7 @@ augroup ps_denite_setup
     au FileType denite-filter
        \ call deoplete#custom#buffer_option('auto_complete', v:false)
     au FileType denite-filter setlocal nocursorline
+    au User denite-preview setlocal number
 augroup END
 
 " Buffer mappings (note that the denite buffer only has normal mode)
