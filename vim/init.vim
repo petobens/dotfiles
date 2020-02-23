@@ -2499,21 +2499,21 @@ endif
 
 " Mappings
 nnoremap <silent> <Leader>gi :Denite output:echo\ system("git\ init")<cr>
-nnoremap <silent> <Leader>gd :Gdiff<cr>:wincmd x<CR>
-nnoremap <silent> <Leader>gs :botright Gstatus<CR>:wincmd J<bar>:15 wincmd _<CR>
-nnoremap <silent> <Leader>gc :w!<CR>:Gcommit<cr>
+nnoremap <silent> <Leader>gd :Gdiffsplit<CR>:wincmd x<CR>
+nnoremap <silent> <Leader>gs :botright Git<CR>:wincmd J<bar>:15 wincmd _<CR>
+nnoremap <silent> <Leader>gc :w!<CR>:Git commit<CR>
 nnoremap <Leader>gM :Git! mergetool<CR>
-nnoremap <Leader>gr :Grebase -i<space>
-nnoremap <silent> <Leader>gR :Gremove<cr>
-nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Gpush')<CR>
+nnoremap <Leader>gr :Git rebase -i<space>
+nnoremap <silent> <Leader>gR :GRemove<CR>
+nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Git push')<CR>
 nnoremap <silent> <Leader>gF :call
-            \ <SID>NoShellSlash('Gpush --force-with-lease')<CR>
-nnoremap <silent> <Leader>gP :Gpull<CR>
-nnoremap <Leader>gf :Gfetch<space>
-nnoremap <silent> <Leader>gb :Gbrowse<cr>
-vnoremap <silent> <Leader>gb :Gbrowse<cr>
-nnoremap <silent> <Leader>gB :Gbrowse!<cr>
-vnoremap <silent> <Leader>gB :Gbrowse!<cr>
+            \ <SID>NoShellSlash('Git push --force-with-lease')<CR>
+nnoremap <silent> <Leader>gP :Git pull<CR>
+nnoremap <Leader>gf :Git fetch<space>
+nnoremap <silent> <Leader>gb :GBrowse<CR>
+vnoremap <silent> <Leader>gb :GBrowse<CR>
+nnoremap <silent> <Leader>gB :GBrowse!<CR>
+vnoremap <silent> <Leader>gB :GBrowse!<CR>
 
 " }}}
 " HighlightedYank {{{
