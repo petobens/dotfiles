@@ -1,5 +1,6 @@
 # Set default CRAN mirror to USA
-options(repos = "http://cran.us.r-project.org")
+# options(repos = "http://cran.us.r-project.org")
+options(repos = "http://mirror.fcaglp.unlp.edu.ar/CRAN/")
 
 # Prompt (using ANSI escape sequences)
 options(prompt="\033[0;35mR>> \033[0m")
