@@ -1948,7 +1948,7 @@ augroup ps_denite_setup
     au FileType denite-filter
        \ call deoplete#custom#buffer_option('auto_complete', v:false)
     au FileType denite-filter setlocal nocursorline
-    au User denite-preview setlocal number
+    au User denite-preview setlocal number winblend=0
 augroup END
 
 " Buffer mappings (note that the denite buffer only has normal mode)
@@ -2206,7 +2206,7 @@ call denite#custom#source('dein', 'default_action', 'defx')
 " Vim completion settings
 set pumheight=15                          " Popup menu max height
 if has('nvim')
-    set pumblend=10                       " Popup menu transparency
+    set pumblend=7                       " Popup menu transparency
 endif
 set complete=.                            " Scan only the current buffer
 set completeopt=menuone,preview,noinsert
@@ -2413,6 +2413,9 @@ set completeopt-=preview
 let g:float_preview#docked = 0
 let g:float_preview#max_width = 60
 
+function! s:SetFloatPreviewWinOpts()
+    call nvim_win_set_option(g:float_preview#win, 'winblend', &pumblend)
+endfunction
 function! s:MoveFloatPreview(direction)
     let buffer_lines =
         \ len(getbufline(nvim_win_get_buf(g:float_preview#win), 1, '$'))
@@ -2434,6 +2437,7 @@ endfunction
 
 augroup ps_float_preview
     au!
+    au User FloatPreviewWinOpen call <SID>SetFloatPreviewWinOpts()
     au User FloatPreviewWinOpen inoremap <silent><expr> <A-j>
         \ <SID>MoveFloatPreview('down')
     au User FloatPreviewWinOpen inoremap <silent><expr> <A-k>
@@ -2557,6 +2561,7 @@ let g:git_messenger_always_into_popup = v:true
 nmap <silent> <Leader>gm <Plug>(git-messenger)
 
 function! s:setup_gitmessengerpopup() abort
+    setlocal winblend=3
     nmap <buffer><C-p> o
     nmap <buffer><C-n> O
 endfunction
@@ -3159,6 +3164,7 @@ augroup END
 
 augroup ps_vista
     au!
+    " TODO: Set floating preview hl (needs an unimplemented user defined au)
     au FileType vista setlocal relativenumber
     au VimEnter * call vista#RunForNearestMethodOrFunction()
     au FileType vista nnoremap <silent><buffer> q :call vista#sidebar#Close()<CR>
