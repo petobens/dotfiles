@@ -68,6 +68,9 @@ $pipx_install_cmd pylint
 if type "i3" > /dev/null 2>&1; then
     $pipx_install_cmd raiseorlaunch
 fi
+if type "R" > /dev/null 2>&1; then
+    $pipx_install_cmd git+https://github.com/randy3k/radian
+fi
 $pipx_install_cmd ranger-fm
 $pipx_install_cmd sqlparse
 $pipx_install_cmd trash-cli
@@ -115,10 +118,10 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-for dbcli in litecli mycli pgcli mssql-cli
+for cli in litecli mycli pgcli mssql-cli radian
 do
-    if [ -d "$pipx_venvs/$dbcli" ]; then
-        styles_dir="$pipx_venvs/$dbcli/lib/python3.8/site-packages/pygments/styles"
+    if [ -d "$pipx_venvs/$cli" ]; then
+        styles_dir="$pipx_venvs/$cli/lib/python3.8/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then
             $ln_cmd -fTs "$python_dir/onedarkish.py" "$styles_dir/onedarkish.py"
             echo Created symlink in "$styles_dir/onedarkish.py"

@@ -134,6 +134,9 @@ fi
 if type "R" > /dev/null 2>&1; then
     alias R='R --no-save --quiet'
     alias rs='Rscript'
+    if type "radian" > /dev/null 2>&1; then
+        alias r='radian --quiet'
+    fi
 fi
 if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
     if [ "$USER" = 'pedro' ]; then

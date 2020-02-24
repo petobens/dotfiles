@@ -1,0 +1,93 @@
+# Colorscheme
+options(radian.color_scheme = "native")
+
+# Either `"emacs"` (default) or `"vi"`.
+options(radian.editing_mode = "vi")
+
+# Indent continuation lines
+options(radian.indent_lines = TRUE)
+
+# Auto match brackets and quotes
+options(radian.auto_match = TRUE)
+
+# Highlight matching bracket
+options(radian.highlight_matching_bracket = TRUE)
+
+# Auto indentation for new line and curly braces
+options(radian.auto_indentation = TRUE)
+options(radian.tab_size = 4)
+
+# Pop up completion while typing
+options(radian.complete_while_typing = TRUE)
+# The minimum length of prefix to trigger auto completions
+options(radian.completion_prefix_length = 2)
+# Timeout in seconds to cancel completion if it takes too long
+# set it to 0 to disable it
+options(radian.completion_timeout = 0.05)
+
+# Automatically adjust R buffer size based on terminal width
+options(radian.auto_width = TRUE)
+
+# Insert new line between prompts
+options(radian.insert_new_line = TRUE)
+
+# When using history search (ctrl-r/ctrl-s in emacs mode), do not show duplicate results
+options(radian.history_search_no_duplicates = TRUE)
+# Ignore case in history search
+options(radian.history_search_ignore_case = TRUE)
+
+# Custom prompt for different modes
+options(radian.prompt = "\033[0;32mR>>\033[0m ")
+options(radian.shell_prompt = "\033[0;31m#!>\033[0m ")
+options(radian.browse_prompt = "\033[0;33mBrowse[{}]>\033[0m ")
+
+# Show vi mode state when radian.editing_mode is `vi`
+options(radian.show_vi_mode_prompt = TRUE)
+options(radian.vi_mode_prompt = "\033[0;32m({})\033[0m")
+
+# Stderr color format
+options(radian.stderr_format = "\033[0;31m{}\033[0m")
+
+# Suppress the loading message for reticulate
+options(radian.suppress_reticulate_message = FALSE)
+# Enable reticulate prompt and trigger `~`
+options(radian.enable_reticulate_prompt = TRUE)
+
+# Key bindings
+options(radian.on_load_hooks = list(function() {
+    getOption("rchitect.py_tools")$attach()
+
+    radian <- import("radian")
+    prompt_toolkit <- import("prompt_toolkit")
+
+    KeyPress <- prompt_toolkit$key_binding$key_processor$KeyPress
+    Keys <- prompt_toolkit$keys$Keys
+    NamedCommands <- prompt_toolkit$key_binding$bindings$named_commands
+
+    insert_mode <- radian$key_bindings$insert_mode
+    app <- radian$get_app()
+    kb <- app$session$modes$r$prompt_key_bindings
+
+    # Insert mode
+    kb$add("j", "j", filter = insert_mode)(function(event) {
+        event$app$key_processor$feed(KeyPress(Keys$Escape))
+    })
+    kb$add(Keys$Escape, "f", filter = insert_mode)(function(event) {
+        NamedCommands$forward_word(event)
+    })
+    kb$add(Keys$Escape, "b", filter = insert_mode)(function(event) {
+        NamedCommands$backward_word(event)
+    })
+    kb$add(Keys$ControlA, filter = insert_mode)(function(event) {
+        NamedCommands$beginning_of_line(event)
+    })
+    kb$add(Keys$ControlE, filter = insert_mode)(function(event) {
+        NamedCommands$end_of_line(event)
+    })
+    kb$add(Keys$ControlP, filter = insert_mode)(function(event) {
+        NamedCommands$previous_history(event)
+    })
+    kb$add(Keys$ControlN, filter = insert_mode)(function(event) {
+        NamedCommands$next_history(event)
+    })
+}))

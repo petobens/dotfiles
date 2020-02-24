@@ -3,7 +3,7 @@
 options(repos = "http://mirror.fcaglp.unlp.edu.ar/CRAN/")
 
 # Prompt (using ANSI escape sequences)
-options(prompt="\033[0;35mR>> \033[0m")
+options(prompt="\033[0;32mR>> \033[0m")
 options(continue="... ")
 
 # Don't convert strings to factor variables by default in a data.frame

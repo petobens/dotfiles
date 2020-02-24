@@ -1235,7 +1235,8 @@ nnoremap <silent> ]Q :clast<CR>
 augroup ft_R
     au!
     " Set the .Rprofile to R
-    au BufNewFile,BufRead {Rprofile,.Rprofile,*.R} set filetype=r
+    au BufNewFile,BufRead Rprofile,.Rprofile,*.R,
+        \radian_profile,.radian_profile set filetype=r
     au FileType r setlocal foldmethod=syntax
 augroup END
 
@@ -2788,7 +2789,15 @@ augroup END
 " `packrat::set_opts(external.packages = c("nvimcom"))`
 
 " Console settings (using tmux)
-let R_args = ['--no-save', '--quiet']
+if executable('radian')
+    let R_app = 'radian'
+    let R_cmd = 'R'
+    let R_args = ['--quiet']
+    let R_hl_term = 0
+    let R_bracketed_paste = 1
+else
+    let R_args = ['--no-save', '--quiet']
+endif
 let R_in_buffer = 0
 let R_source = expand('$DOTVIM/bundle/repos/github.com/jalvesaq/Nvim-R/' .
             \  'R/tmux_split.vim')
@@ -2824,7 +2833,7 @@ augroup plugin_R
     au!
     au FileType r nmap <silent> <Leader>rs :lcd %:p:h<CR><Plug>RStart
     au FileType r nmap <silent> <Leader>rq <Plug>RClose
-    au FileType r nmap <silent> <Leader>rr <Plug>RClearAll
+    au FileType r nmap <silent> <Leader>rw <Plug>RClearAll
     au FileType r nmap <silent> <Leader>rc <Plug>RClearConsole
     au FileType r nmap <silent> <Leader>rf :lcd %:p:h<CR>
                 \ :call <SID>RunR('file')<CR>
