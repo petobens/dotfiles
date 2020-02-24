@@ -2078,6 +2078,9 @@ endfunction
 function! s:defx_preview(context)
     let path = a:context['targets'][0]['action__path']
     let dir = denite#util#path2directory(path)
+    let file = fnamemodify(path, ':p')
+    let file_search = filereadable(expand(file)) ? ' -search=' . file : ''
+
     let has_preview_win = 0
     let defx_path = 0
     for nr in range(1, winnr('$'))
@@ -2093,22 +2096,28 @@ function! s:defx_preview(context)
         return
     endif
 
-    let file = fnamemodify(path, ':p')
-    let file_search = filereadable(expand(file)) ? ' -search=' . file : ''
-    let denite_winwidth = &columns
+    let pos = win_screenpos(win_getid())
+    let win_row = pos[0] - 1
+    let win_col = (pos[1] - 1) + winwidth(0) - a:context.preview_width
+
     execute 'silent rightbelow vertical pedit! defx_tmp'
     wincmd P
     silent! setlocal nobuflisted
-    let defx_width = float2nr(denite_winwidth / 2.5)
-    execute 'vert resize ' . defx_width
-
-    let fn_width = float2nr(defx_width * 0.65)
+    call nvim_win_set_config(win_getid(), {
+        \ 'relative': 'editor',
+        \ 'row': win_row,
+        \ 'col': win_col,
+        \ 'width': a:context.preview_width,
+        \ 'height': a:context.preview_height,
+        \ })
+    let fn_width = 45
     call defx#custom#column('filename',
         \ {'min_width': fn_width, 'max_width': fn_width })
     execute 'Defx -no-show-ignored-files -new -split=no ' .
                 \ '-ignored-files=.*,__pycache__ ' .
                 \ '-auto-recursive-level=1 ' .  dir . file_search
     call defx#call_action('open_tree')
+    silent! setlocal norelativenumber nonumber
     wincmd p
 endfunction
 function! s:candidate_file_rec(context)
