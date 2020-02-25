@@ -186,8 +186,6 @@ bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -f -e \
     'alacritty -t Downloads -e ranger ~/Downloads'
 bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -f -e \
     'alacritty -t htop -e htop'
-# bindsym $mod+Control+o $nexec raiseorlaunch -t 'OneDrive' -f -e \
-    # 'alacritty -t "OneDrive" -e sh -c "journalctl --user-unit onedrive -f"'
 bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -f -e \
     'alacritty -t "Trash Can" -e sh -c "trash-list | less"'
 

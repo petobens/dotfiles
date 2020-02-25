@@ -93,7 +93,7 @@ exec = python ~/.config/polybar/onedrive.py
 label-font = 5
 format-padding = 1
 interval = 5.0
-click-left = xdotool key Super_L+Control+o
+click-left = alacritty -t "OneDrive" -e sh -c "journalctl --user-unit onedrive -f"
 
 [module/xkeyboard]
 type = internal/xkeyboard
