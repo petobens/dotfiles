@@ -59,14 +59,16 @@ options(radian.on_load_hooks = list(function() {
 
     radian <- import("radian")
     prompt_toolkit <- import("prompt_toolkit")
+    operator <- import("operator")
+
+    insert_mode <- radian$key_bindings$insert_mode
+    normal_mode <- operator$inv(insert_mode)
+    app <- radian$get_app()
+    kb <- app$session$modes$r$prompt_key_bindings
 
     KeyPress <- prompt_toolkit$key_binding$key_processor$KeyPress
     Keys <- prompt_toolkit$keys$Keys
     NamedCommands <- prompt_toolkit$key_binding$bindings$named_commands
-
-    insert_mode <- radian$key_bindings$insert_mode
-    app <- radian$get_app()
-    kb <- app$session$modes$r$prompt_key_bindings
 
     # Insert mode
     kb$add("j", "j", filter = insert_mode)(function(event) {
@@ -89,5 +91,12 @@ options(radian.on_load_hooks = list(function() {
     })
     kb$add(Keys$ControlN, filter = insert_mode)(function(event) {
         NamedCommands$next_history(event)
+    })
+    # Normal mode
+    kb$add('H', filter = normal_mode)(function(event) {
+        NamedCommands$beginning_of_line(event)
+    })
+    kb$add('L', filter = normal_mode)(function(event) {
+        NamedCommands$end_of_line(event)
     })
 }))
