@@ -1189,10 +1189,6 @@ augroup ft_py
     " pdbrc is a python file and python notebooks and Pipfile.lock json files
     au BufNewFile,BufReadPost pdbrc set filetype=python
     au BufNewFile,BufReadPost *.ipynb,Pipfile.lock set filetype=json
-
-    " Highlight all python functions
-    au Filetype python syn match pythonAttribute2 /\.\h\w*(/hs=s+1,he=e-1
-    au Filetype python hi def link pythonAttribute2 Function
 augroup END
 
 " }}}
