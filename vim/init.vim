@@ -1750,7 +1750,7 @@ call denite#custom#option('default', {
             \ 'filter_updatetime': 100,
             \ 'vertical_preview': 1,
             \ 'floating_preview': 1,
-            \ 'preview_width': 70,
+            \ 'preview_width': float2nr(&columns / 2.3),
             \ 'preview_height': 15,
             \ })
 
