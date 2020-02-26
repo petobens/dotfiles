@@ -2115,6 +2115,7 @@ function! s:defx_preview(context)
                 \ '-auto-recursive-level=1 ' .  dir . file_search
     call defx#call_action('open_tree')
     silent! setlocal norelativenumber nonumber
+    doautocmd User denite-preview
     wincmd p
 endfunction
 function! s:candidate_file_rec(context)
