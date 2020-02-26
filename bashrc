@@ -269,6 +269,9 @@ if type "yay" > /dev/null 2>&1; then
 '--sort rate --save /etc/pacman.d/mirrorlist'
     fi
 fi
+if type "vagrant" > /dev/null 2>&1; then
+    alias vg='vagrant'
+fi
 
 # Update system (and language libraries); see function below
 alias ua=sys_update_all
@@ -323,13 +326,29 @@ alias hdb='PGPASSWORD="$(pass habitat/postgres/pass)" pgcli -h '\
 '"$(pass habitat/postgres/host)" -U mutt -d habitat'
 
 # Meli
-alias mgpc='echo "sudo service gpd start; "'\
-'"globalprotect connect --portal $(pass meli/vpn/portal) "'\
-'"--username $(pass meli/vpn/user); sleep 1"'
 alias mgpp='echo $(pass meli/vpn/pin)'\
 '$(oathtool --base32 --totp $(pass meli/vpn/secret))'
-alias mvssh='command cd $(pass meli/vpn/vagrant-path); vagrant ssh'
-alias mvp='command cd $(pass meli/vpn/vagrant-path); vagrant ssh -- -N -v -D 12345'
+mvssh() {
+    (
+        command cd "/home/pedro/OneDrive/mutt/meli/vpn" || exit
+        vg_status=$(vagrant status | grep -P "^default\S*\W" | rev | cut -d ' ' -f 2 | rev)
+        if [[ "$vg_status" != 'running' ]]; then
+            vagrant up
+        fi
+        vg_ssh_cmd="vagrant ssh"
+        if [[ "$1" ]]; then
+            case "$1" in
+                proxy)
+                    vg_ssh_cmd="$vg_ssh_cmd -- -N -v -D 12345" ;;
+                *)
+                    vg_ssh_cmd="$vg_ssh_cmd -t -c '$1'" ;;
+            esac
+        fi
+        eval "$vg_ssh_cmd"
+    )
+}
+alias mvp='mvssh proxy'
+alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
 
 # }}}
 # Functions {{{
