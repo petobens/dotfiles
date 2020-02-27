@@ -98,6 +98,7 @@ alias uz='unzip'
 alias rsync='rsync -auP'
 alias ti='hyperfine'
 alias ping='prettyping --nolegend --last 30'
+alias wbs='curl v2.wttr.in/Buenos_Aires'
 
 # Other binaries
 if [[ -f "$BASE_PKG_DIR/share/bash-completion/bash_completion" ]]; then
