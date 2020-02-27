@@ -2881,7 +2881,7 @@ let g:semshi#error_sign = v:false
 
 augroup ps_semshi
     au!
-    au! FileType python call PythonSemshiHl()
+    au FileType python call PythonSemshiHl()
 augroup END
 
 function PythonSemshiHl()

@@ -556,11 +556,12 @@ function! s:RunBlack(...)
     let &l:formatprg = old_formatprg
 endfunction
 
-" Automatically run black and flake8 on save
+" Automatically run black and flake8 on save. After that run semantic higlighter
+" (it needs to be done after Neomake otherwise hl won't work)
 augroup py_linting
     au!
     au BufWritePost *.py lclose | call s:RunBlack() | silent noautocmd update |
-                \ silent Neomake
+                \ silent Neomake | silent Semshi enable
 augroup END
 
 " }}}
