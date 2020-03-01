@@ -1237,6 +1237,15 @@ augroup ft_R
 augroup END
 
 " }}}
+" Ruby {{{
+
+augroup ft_ruby
+    au!
+    " Vagrant files are ruby files
+    au BufNewFile,BufRead Vagrantfile set filetype=ruby
+augroup END
+
+" }}}
 " Snippets {{{
 
 augroup ft_snippets

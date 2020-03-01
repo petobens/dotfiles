@@ -277,6 +277,8 @@ if type "yay" > /dev/null 2>&1; then
 fi
 if type "vagrant" > /dev/null 2>&1; then
     alias vg='vagrant'
+    alias vgs='vagrant global-status'
+    alias vgh='vagrant halt'
 fi
 
 # Update system (and language libraries); see function below
@@ -345,7 +347,7 @@ mvssh() {
         if [[ "$1" ]]; then
             case "$1" in
                 proxy)
-                    vg_ssh_cmd="$vg_ssh_cmd -- -N -v -D 12345" ;;
+                    vg_ssh_cmd="$vg_ssh_cmd -- -v -N -D $2" ;;
                 *)
                     vg_ssh_cmd="$vg_ssh_cmd -t -c '$1'" ;;
             esac
@@ -353,7 +355,7 @@ mvssh() {
         eval "$vg_ssh_cmd"
     )
 }
-alias mvp='mvssh proxy'
+alias mvp='mvssh proxy 12345'
 alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
 
 # }}}
