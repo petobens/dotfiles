@@ -157,6 +157,7 @@ $yay_cmd gobject-introspection
 $yay_cmd gopass
 $yay_cmd hadolint-bin
 $yay_cmd htop
+$yay_cmd httping
 $yay_cmd hyperfine-bin
 $yay_cmd lsd
 $yay_cmd neofetch
@@ -168,6 +169,7 @@ $yay_cmd openvpn
 $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
 $yay_cmd prettyping
+$yay_cmd proxychains-ng
 $yay_cmd qrencode
 $yay_cmd ripgrep
 $yay_cmd rlwrap
@@ -180,7 +182,6 @@ $yay_cmd stoken-git
 $yay_cmd strace
 $yay_cmd tk
 $yay_cmd tree
-$yay_cmd tsocks
 $yay_cmd universal-ctags-git
 $yay_cmd unrar
 $yay_cmd unzip

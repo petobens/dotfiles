@@ -109,6 +109,11 @@ fi
 if type "htop" > /dev/null 2>&1; then
     alias ht='htop'
 fi
+if type "proxychains" > /dev/null 2>&1; then
+    pc() {
+        proxychains -q "$@"
+    }
+fi
 if type "lsd" > /dev/null 2>&1; then
     alias ls='lsd -F --color=auto'
     cd() { builtin cd "$@" && lsd -F --color=auto; }
