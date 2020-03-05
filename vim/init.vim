@@ -1198,7 +1198,7 @@ augroup END
 
 augroup ft_quickfix
     au!
-    au Filetype qf setlocal colorcolumn="" textwidth=0
+    au Filetype qf setlocal colorcolumn="" textwidth=0 nospell
     au Filetype qf call s:AdjustWindowHeight(1, 15)
     au Filetype qf nnoremap <buffer><silent> q :bdelete<CR>
     au Filetype qf nnoremap <buffer><silent> Q :bdelete<CR>
