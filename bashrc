@@ -357,6 +357,7 @@ mvssh() {
 }
 alias mvp='mvssh proxy 12345'
 alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
+alias mvtt='vagrant ssh -- -L 127.0.0.1:1025:$(pass meli/teradata/host):1025 -v -N'
 
 # }}}
 # Functions {{{
