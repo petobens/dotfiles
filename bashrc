@@ -329,7 +329,8 @@ alias cptdb=' PGPASSWORD="$(pass claro/postgres/tcalt/pass)" pgcli '\
 alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
 
 # Habitat
-alias hssh='TERM=xterm-256color; ssh habitat-server'
+alias hsshp='TERM=xterm-256color; ssh habitat-server-prd'
+alias hsshs='TERM=xterm-256color; ssh habitat-server-stg'
 alias hdb='PGPASSWORD="$(pass habitat/postgres/pass)" pgcli -h '\
 '"$(pass habitat/postgres/host)" -U mutt -d habitat'
 
