@@ -33,6 +33,13 @@ fi
 # Set vi mode
 set -o vi
 
+# Switch between vi and emacs mode (first unbind ctrl-w)
+stty werase undef
+bind -m vi-command '"\C-w": emacs-editing-mode'
+bind -m vi-insert '"\C-w": emacs-editing-mode'
+bind -m emacs-standard '"\C-w": vi-editing-mode'
+
+
 # Insert mode
 bind -m vi-insert '"jj": vi-movement-mode'
 bind -m vi-insert '"\C-p": previous-history'
