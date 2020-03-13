@@ -179,12 +179,12 @@ fzf-file-widget-custom() {
 }
 # Note this will insert output to the prompt and there is no way to choose to
 # execute it instead: https://github.com/junegunn/fzf/issues/477
-bind -x '"\C-t": "fzf-file-widget-custom"'
-bind -x '"\et": "fzf-file-widget-custom no-ignore"'
-if [[ -o vi ]]; then
-    bind -m vi-command '"\C-t": "i\C-t"'
-    bind -m vi-command '"\et": "i\et"'
-fi
+bind -m emacs-standard -x '"\C-t": "fzf-file-widget-custom"'
+bind -m emacs-standard -x '"\et": "fzf-file-widget-custom no-ignore"'
+bind -m vi-command -x '"\C-t": fzf-file-widget-custom'
+bind -m vi-command -x '"\et": fzf-file-widget-custom no-ignore'
+bind -m vi-insert -x '"\C-t": fzf-file-widget-custom'
+bind -m vi-insert -x '"\et": fzf-file-widget-custom no-ignore'
 
 # }}}
 # Dirs {{{
@@ -360,30 +360,30 @@ ig() {
 export FZF_CTRL_R_OPTS="
 --bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort,tab:accept'
 --header 'enter=insert, tab=insert, C-y=yank'
---tac
---sync
 --nth=2..,..
 --tiebreak=index
+--no-multi
+--read0
 "
 
-__fzf_history__() (
-    local line
-    shopt -u nocaseglob nocasematch
-    cmd="HISTTIMEFORMAT= history"
-    line=$(eval "$cmd" |
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_R_OPTS" fzf |
-        command grep '^ *[0-9]'
-    )
-    # shellcheck disable=SC2001
-    sed 's/^ *\([0-9]*\)\** .*/!\1/' <<< "$line"
-)
-# shellcheck disable=SC2016
-if [[ -o vi ]]; then
-    bind '"\C-r": "\C-x\C-addi`__fzf_history__`\C-x\C-e\C-x\C-r\C-x^\C-x\C-a$a"'
-    bind -m vi-command '"\C-r": "i\C-r"'
-else
-    bind '"\C-r": " \C-e\C-u\C-y\ey\C-u`__fzf_history__`\e\C-e\er\e^"'
-fi
+__fzf_history__() {
+    local output
+    output=$(
+            builtin fc -lnr -2147483648 |
+            last_hist=$(HISTTIMEFORMAT='' builtin history 1) perl -p -l0 -e 'BEGIN { getc; $/ = "\n\t"; $HISTCMD = $ENV{last_hist} + 1 } s/^[ *]//; $_ = $HISTCMD - $. . "\t$_"' |
+            FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_R_OPTS" fzf --query "$READLINE_LINE"
+    ) || return
+    READLINE_LINE=${output#*$'\t'}
+    if [ -z "$READLINE_POINT" ]; then
+        echo "$READLINE_LINE"
+    else
+        READLINE_POINT=0x7fffffff
+    fi
+}
+
+bind -m emacs-standard -x '"\C-r": __fzf_history__'
+bind -m vi-command -x '"\C-r": __fzf_history__'
+bind -m vi-insert -x '"\C-r": __fzf_history__'
 
 # }}}
 # Tmux {{{
