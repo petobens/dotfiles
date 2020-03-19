@@ -1212,12 +1212,19 @@ function! s:AdjustWindowHeight(minheight, maxheight)
                 \ 'wincmd _'
 endfunction
 
+function! s:CloseAllLocation()
+    let win_id = win_getid()
+    noautocmd windo if &buftype == 'quickfix' | lclose | endif
+    call win_gotoid(win_id)
+endfunction
+
 " Maps (for both quickfix and location list)
 nnoremap <silent> <Leader>pc :pclose<cr>
 nnoremap <silent> <Leader>qf :copen<cr>
 nnoremap <silent> <Leader>ll :lopen<cr>
 nnoremap <silent> <Leader>qc :cclose<cr>
-nnoremap <silent> <Leader>lc :lclose<cr>
+nnoremap <silent> <Leader>lc :call <SID>CloseAllLocation()<CR>
+nnoremap <silent> <Leader>lC :lclose<cr>
 nnoremap <silent> ]q :<C-U>execute v:count1 . 'cnext'<CR>
 nnoremap <silent> [q :<C-U>execute v:count1 . 'cprevious'<CR>
 nnoremap <silent> ]l :<C-U>execute v:count1 . 'lnext'<CR>
