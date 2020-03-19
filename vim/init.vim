@@ -1966,8 +1966,14 @@ function! s:denite_mappings() abort
     nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
     " Actions
     nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
-    nnoremap <silent><buffer> <C-p> k
-    nnoremap <silent><buffer> <C-n> j
+    nnoremap <silent><buffer> j
+        \ :call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'normal')<CR>
+    nnoremap <silent><buffer> <C-n>
+        \ :call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'normal')<CR>
+    nnoremap <silent><buffer> k
+        \ :call <SID>DeniteMoveCursorCandidateWindow('k', 1, 'normal')<CR>
+    nnoremap <silent><buffer> <C-p>
+        \ :call <SID>DeniteMoveCursorCandidateWindow('k', 1, 'normal')<CR>
     nnoremap <silent><buffer><expr> <C-v> denite#do_map('do_action', 'vsplit')
     nnoremap <silent><buffer><expr> <C-s> denite#do_map('do_action', 'split')
     nnoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
@@ -1995,9 +2001,11 @@ function! s:denite_mappings() abort
                 \ 'candidate_parent_dir')
 endfunction
 
-function! s:DeniteMoveCursorCandidateWindow(dir, lines) abort
+function! s:DeniteMoveCursorCandidateWindow(dir, lines, mode) abort
     " noautocmd is needed to preserve proper cursorline highlight
-    noautocmd call win_gotoid(win_findbuf(g:denite#_filter_parent)[0])
+    if a:mode ==# 'filter'
+        noautocmd call win_gotoid(win_findbuf(g:denite#_filter_parent)[0])
+    endif
     execute 'normal! ' . a:lines . a:dir
     for nr in range(1, winnr('$'))
         if getwinvar(nr, '&previewwindow') == 1
@@ -2005,8 +2013,10 @@ function! s:DeniteMoveCursorCandidateWindow(dir, lines) abort
             break
         endif
     endfor
-    noautocmd call win_gotoid(g:denite#_filter_winid)
-    startinsert!
+    if a:mode ==# 'filter'
+        noautocmd call win_gotoid(g:denite#_filter_winid)
+        startinsert!
+    endif
 endfunction
 
 function! s:denite_filter_mappings() abort
@@ -2020,17 +2030,17 @@ function! s:denite_filter_mappings() abort
     imap <buffer> <C-h> <C-o>h
     " Actions
     inoremap <silent><buffer> <C-j>
-                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1)<CR>
+        \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'filter')<CR>
     inoremap <silent><buffer> <C-n>
-                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1)<CR>
+        \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'filter')<CR>
     inoremap <silent><buffer> <C-k>
-                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 1)<CR>
+        \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 1, 'filter')<CR>
     inoremap <silent><buffer> <C-p>
-                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 1)<CR>
+        \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 1, 'filter')<CR>
     inoremap <silent><buffer> <C-u>
-                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 12)<CR>
+        \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('k', 12, 'filter')<CR>
     inoremap <silent><buffer> <C-d>
-                \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 12)<CR>
+        \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 12, 'filter')<CR>
     inoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
     nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
     inoremap <silent><buffer><expr> <C-v> denite#do_map('do_action', 'vsplit')
