@@ -76,13 +76,15 @@ class Config(pdb.DefaultConfig):  # type: ignore
     prompt = '(Pdb++)> '
     sticky_by_default = True
 
+    # Colors
     highlight = True
     use_pygments = True
-    use_terminal256formatter = True
     filename_color = '38;2;229;192;123'  # e5c07b
     # This also defines the color for echoed output (note it's an SRG code)
     line_number_color = '38;2;99;109;131'  # 636d83
     current_line_color = '48;2;40;44;52'  # 282c34
+    pygments_formatter_class = "pygments.formatters.TerminalTrueColorFormatter"
+    pygments_formatter_kwargs = {"style": OneDarkish}
 
     def setup(self, pdb):  # pylint:disable=W0621
         """Override pdbpp mappings and colors."""
@@ -95,6 +97,8 @@ class Config(pdb.DefaultConfig):  # type: ignore
         pdb_class.do_ev = pdb_class.do_edit
         pdb_class.do_ip = pdb_class.do_interact
         pdb_class.do_gf = pdb_class.do_frame
+
         # Colors
+        # TODO: Needed only for versions <= 0.10.2. Remove once this versions is deprecated
         pdb_class._lexer = Python3Lexer()
         pdb_class._fmt = TerminalTrueColorFormatter(style=OneDarkish)
