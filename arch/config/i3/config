@@ -28,9 +28,6 @@ floating_modifier $mod
 # Leave fullscreen when a popup appears in order to display it
 popup_during_fullscreen leave_fullscreen
 
-# Toggle floating and tiling
-# bindsym $mod+f floating toggle
-
 # Full screen
 bindsym $mod+e fullscreen toggle
 
@@ -225,6 +222,10 @@ for_window [urgent=latest] focus
 # Jump to last focused app/window (needs to have focus_last script initiated
 # at startup)
 bindsym $mod+Control+j $nexec $HOME/.config/i3/focus_last.py --switch
+
+# Mark a window and jump to it (note that this will override existing marks)
+bindsym $mod+$alt+m mark markedwin
+bindsym $mod+Control+k [con_mark="markedwin"] focus
 
 # }}}
 #  Spotify and volume {{{
