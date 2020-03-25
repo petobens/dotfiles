@@ -147,7 +147,7 @@ bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
 bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws1 -m hangouts -e \
-    "brave --new-window https://hangouts.google.com/?authuser=2"
+    "brave --new-window https://hangouts.google.com/?authuser=1"
 bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws2
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \

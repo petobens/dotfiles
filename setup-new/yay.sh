@@ -8,6 +8,10 @@ parent_dir="$(dirname "$current_dir")"
 if type "pacman" > /dev/null 2>&1; then
     sudo ln -fTs "$parent_dir/arch/config/pacman.conf" "/etc/pacman.conf"
     echo Created /etc/pacman.conf symlink
+    sudo pacman -Sy --needed reflector
+    sudo reflector --verbose --latest 25 -p http -p https --sort rate --save /etc/pacman.d/mirrorlist
+    sudo pacman -Syu
+
 fi
 
 # Install yay if not installed
@@ -26,7 +30,7 @@ yay -Syu --nodiffmenu --answerclean N --devel --timeupdate --combinedupgrade \
     --removemake
 yay -c
 
-yay_cmd='yay -S --nodiffmenu --answerclean N --needed --force --removemake'
+yay_cmd='yay -S --nodiffmenu --answerclean N --needed --removemake'
 
 # Fonts
 $yay_cmd adobe-source-code-pro-fonts
@@ -53,19 +57,6 @@ $yay_cmd python-pip
 $yay_cmd pyenv
 $yay_cmd ruby
 $yay_cmd rust
-if ! type "tlmgr" > /dev/null 2>&1; then
-    read -p $'\033[1mDo you want to install LaTeX (y/n)? \033[0m' -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-        tar xvzf install-tl-unx.tar.gz
-        (
-            builtin cd install-tl-*/ || exit
-            sudo ./install-tl
-        )
-        rm -rf install-tl-*/
-    fi
-fi
 read -p $'\033[1mDo you want to install R (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -89,28 +80,27 @@ $yay_cmd acpi_call
 $yay_cmd alsa-tools
 $yay_cmd bluez-utils
 $yay_cmd capnet-assist
-$yay_cmd compton
 $yay_cmd connman
 $yay_cmd debtap
 $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
-$yay_cmd gcolor3
 $yay_cmd i3-gaps
 $yay_cmd i3ipc-python-git
 $yay_cmd i3lock-color-git
 $yay_cmd maim
+$yay_cmd mesa-demos
 $yay_cmd mpv
 $yay_cmd networkmanager
 $yay_cmd nmap
 $yay_cmd ntfs-3g
 $yay_cmd pavucontrol
+$yay_cmd picom
 $yay_cmd playerctl
 $yay_cmd polybar
 $yay_cmd pulseaudio
 $yay_cmd pulseaudio-alsa
 $yay_cmd pulseaudio-bluetooth
-$yay_cmd reflector
 $yay_cmd rofi
 $yay_cmd rofi-dmenu
 $yay_cmd tabbed
@@ -126,6 +116,7 @@ $yay_cmd xsel
 $yay_cmd xsendkey
 
 # Themes
+$yay_cmd adwaita-dark
 $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
 
@@ -200,14 +191,16 @@ $yay_cmd brave-bin
 $yay_cmd connman-gtk
 $yay_cmd cups
 $yay_cmd cups-pdf
+$yay_cmd firefox
 $yay_cmd freeoffice
+$yay_cmd gcolor3
 $yay_cmd gnome-font-viewer
 $yay_cmd hplip-plugin
 $yay_cmd onedrive-abraunegg
 $yay_cmd pdfpc
 $yay_cmd peek-git
-$yay_cmd slack-desktop
 $yay_cmd skypeforlinux-preview-bin
+$yay_cmd slack-desktop
 $yay_cmd spotify
 $yay_cmd thunderbird
 $yay_cmd transmission-gtk

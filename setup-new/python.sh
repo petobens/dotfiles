@@ -36,12 +36,12 @@ echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
 if ! type "pipx" > /dev/null 2>&1; then
     python3 -m pipx ensurepath
 fi
-pipx_install_cmd='pipx install --force --verbose'
+pipx_install_cmd="$HOME/.local/bin/pipx install --force --verbose"
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     # We seem to need sudo on osx
     pipx_install_cmd="sudo $pipx_install_cmd"
 fi
-pipx_inject_cmd='pipx inject --verbose'
+pipx_inject_cmd="$HOME/.local/bin/pipx inject --verbose"
 
 $pipx_install_cmd git+https://github.com/PyCQA/flake8
 $pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
@@ -119,6 +119,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
+sudo chown -R "$USER" "$HOME/.config" # seems to be needed for db logs to work
 for cli in litecli mycli pgcli mssql-cli radian
 do
     if [ -d "$pipx_venvs/$cli" ]; then

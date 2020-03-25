@@ -112,6 +112,7 @@ else
         sudo groupadd docker
         sudo usermod -aG docker "$USER"
         echo -e "\\033[1;34m--> Changing image cache dir...\\033[0m"
+        # Note we can check that this worked with `docker info`
         sudo -E /usr/bin/bash -c 'cat > /etc/docker/daemon.json << EOF
         {
           "data-root": "$HOME/.cache/docker"
@@ -124,8 +125,18 @@ else
     # Enable some services
     if [ -f /etc/systemd/system/sleeplock.service ]; then
         echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
+        # Lock
         sudo systemctl enable sleeplock.service
         sudo systemctl start sleeplock.service
+        # Bluetooth
+        sudo systemctl enable bluetooth.service
+        sudo systemctl start bluetooth.service
+        # TLP
+        sudo systemctl enable tlp.service
+        sudo systemctl start tlp.service
+        # Printer
+        sudo systemctl enable org.cups.cupsd.service
+        sudo systemctl start org.cups.cupsd.service
     fi
 
     # Remove previous pacman cache dir (we changed it in pacman.conf)

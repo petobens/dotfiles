@@ -191,8 +191,10 @@ fi
 if type "ssh" > /dev/null 2>&1; then
     if [ -f "$HOME"/OneDrive/arch/ssh/config ]; then
         sudo mkdir -p "$HOME/.ssh"
-        $ln_cmd -fTs "$HOME/OneDrive/arch/ssh/config" "$HOME/.ssh/config"
+        sudo $ln_cmd -fTs "$HOME/OneDrive/arch/ssh/config" "$HOME/.ssh/config"
         echo Created .ssh/config symlink
+        sudo $ln_cmd -fTs "$HOME/OneDrive/arch/ssh/id_rsa.pub" "$HOME/.ssh/id_rsa.pub"
+        echo Created .ssh/id_rsa.pub symlink
     fi
 fi
 if type "arara" > /dev/null 2>&1; then
