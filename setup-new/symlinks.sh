@@ -357,7 +357,7 @@ if type "git" > /dev/null 2>&1; then
         if [[ "$OSTYPE" == 'darwin'* ]]; then
             credential_helper='osxkeychain'
         else
-            credential_helper='/usr/share/git/credential/netrc/git-credential-netrc'
+            credential_helper='/usr/share/git/credential/netrc/git-credential-netrc.perl -f ~/.netrc.gpg'
         fi
         cat > "$HOME/.gitconfig" << EOF
 [user]
