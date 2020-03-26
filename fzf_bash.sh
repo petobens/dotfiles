@@ -391,7 +391,7 @@ bind -m vi-insert -x '"\C-r": __fzf_history__'
 FZF_TMUX_OPTS="
 --multi
 --exit-0
---expect=alt-k,alt-r
+--expect=alt-k,alt-r,enter
 --header='enter=switch, A-k=kill, A-r=rename'
 --preview='tmux_tree {} | bat --theme TwoDark --style plain'
 "
@@ -429,7 +429,7 @@ tms() {
                 tmux rename-session -t "$s" "$new_session_name"
             done
             ;;
-        *)
+        enter)
             tmux "$change" -t "${sessions[0]}" ;;
     esac
 }
