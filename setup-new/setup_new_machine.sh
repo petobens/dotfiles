@@ -8,7 +8,6 @@ fi
 # Ask for sudo right away and get this script directory
 sudo echo -n
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-parent_dir="$(dirname "$current_dir")"
 
 # We need xcode command tools on Mac
 if [[  "$OSTYPE" == 'darwin'* ]]; then
@@ -43,13 +42,6 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo -e "\\033[1;34m-> Installing python modules and binaries (with pipx)...\\033[0m"
     . "$current_dir/python.sh"
-fi
-
-read -p $'\033[1mDo you want to install tmux terminfo with italics and undercurl support (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\\033[1;34m-> Installing Italics tmux terminfo ...\\033[0m"
-    tic -x "$parent_dir/tmux-xterm-256color-italic.terminfo"
 fi
 
 if type "tlmgr" > /dev/null 2>&1; then
