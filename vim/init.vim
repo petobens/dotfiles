@@ -1936,7 +1936,7 @@ nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-action=preview
 nnoremap <silent> <Leader>dq :Denite -post-action=suspend quickfix<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
-nnoremap <silent> <Leader>bm :Denite -no-start-filter dirmark<CR>
+nnoremap <silent> <Leader>bm :Denite dirmark<CR>
 nnoremap <silent> <Leader>dr :Denite -resume<CR>
 nnoremap <silent> <Leader>dR :Denite -resume -no-start-filter<CR>
 nnoremap <silent> ]d :Denite -resume -immediately -cursor-pos=+1<CR>
