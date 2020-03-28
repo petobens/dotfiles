@@ -193,7 +193,7 @@ $yay_cmd connman-gtk
 $yay_cmd cups
 $yay_cmd cups-pdf
 $yay_cmd firefox
-$yay_cmd freeoffice
+$yay_cmd --mflags --skipinteg freeoffice
 $yay_cmd gcolor3
 $yay_cmd gnome-font-viewer
 $yay_cmd hplip-plugin
