@@ -15,13 +15,6 @@ window:
     # Disable border and title bar
     decorations: none
 
-scrolling:
-    # Scroll to the bottom when new text is written to the terminal
-    auto_scroll: true
-
-# Set tab width
-tabspaces: 4
-
 font:
     normal:
         family: SauceCodePro Nerd Font
