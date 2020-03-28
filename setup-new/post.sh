@@ -125,6 +125,10 @@ else
     # Enable some services
     if [ -f /etc/systemd/system/sleeplock.service ]; then
         echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
+        # Start pulseaudio (if daemon is not already running which it should)
+        pulseaudio --start
+        # Connman
+        sudo systemctl enable connman.service
         # Lock
         sudo systemctl enable sleeplock.service
         sudo systemctl start sleeplock.service
