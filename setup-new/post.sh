@@ -98,8 +98,8 @@ else
         if type "zathura" > /dev/null 2>&1; then
             xdg-mime default org.pwmt.zathura-pdf-mupdf.desktop application/pdf
         fi
-        if type "mpv" > /dev/null 2>&1; then
-            xdg-mime default mpv.desktop image/gif
+        if type "vimiv" > /dev/null 2>&1; then
+            xdg-mime default vimiv.desktop image/gif
         fi
         if type "freeoffice-textmaker" > /dev/null 2>&1; then
             xdg-mime default freeoffice-textmaker.desktop application/octet-stream
