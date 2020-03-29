@@ -103,7 +103,6 @@ $yay_cmd pulseaudio-alsa
 $yay_cmd pulseaudio-bluetooth
 $yay_cmd rofi
 $yay_cmd rofi-dmenu
-$yay_cmd tabbed
 $yay_cmd tlp
 $yay_cmd udiskie
 $yay_cmd unclutter-xfixes-git
@@ -183,7 +182,6 @@ $yay_cmd virtualbox
 $yay_cmd vivid
 $yay_cmd w3m
 $yay_cmd wget
-$yay_cmd xxd-standalone
 $yay_cmd z
 $yay_cmd zbar
 $yay_cmd zip
