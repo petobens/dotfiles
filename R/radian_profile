@@ -1,5 +1,5 @@
 # Colorscheme
-options(radian.color_scheme = "native")
+options(radian.color_scheme = "onedarkish")
 
 # Either `"emacs"` (default) or `"vi"`.
 options(radian.editing_mode = "vi")
