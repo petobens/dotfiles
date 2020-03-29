@@ -142,6 +142,9 @@ else
         # Printer
         sudo systemctl enable org.cups.cupsd.service
         sudo systemctl start org.cups.cupsd.service
+        # Disable rfkill (for tlp)
+        sudo systemctl mask systemd-rfkill.service 
+        sudo systemctl mask systemd-rfkill.socket
     fi
 
     # Remove previous pacman cache dir (we changed it in pacman.conf)
