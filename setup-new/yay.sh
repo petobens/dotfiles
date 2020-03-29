@@ -150,6 +150,7 @@ $yay_cmd hadolint-bin
 $yay_cmd htop
 $yay_cmd httping
 $yay_cmd hyperfine-bin
+$yay_cmd lsb-release
 $yay_cmd lsd
 $yay_cmd neofetch
 $yay_cmd neomutt
