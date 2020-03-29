@@ -118,6 +118,7 @@ else
           "data-root": "$HOME/.cache/docker"
         }
         EOF'
+        mkdir -p "$HOME/.cache/docker"
         sudo systemctl enable docker
         sudo systemctl restart docker
     fi
