@@ -549,8 +549,10 @@ else:
 \useinnertheme{circles}
 
 % Itemize
+\newcommand*\smallcircled[1]{\tikz{
+	\node[shape=circle,draw,inner sep=1.6pt] (char) {#1};}}
 \setbeamertemplate{itemize item}{\large{$\bullet$}}
-\setbeamertemplate{itemize subitem}{\scriptsize{\textbf{\textcircled{}}}}
+\setbeamertemplate{itemize subitem}{\smallcircled{}}
 \setbeamertemplate{itemize subsubitem}{--}
 \setbeamercolor*{itemize item}{fg=$2}
 \setbeamercolor*{itemize subitem}{fg=$2}
