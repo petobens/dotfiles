@@ -28,6 +28,10 @@ snippet ig "Install from Github"
 devtools::install_github("${1:repository}")$0
 endsnippet
 
+snippet pl "Package list"
+df <- as.data.frame(installed.packages()[, c(1, 3)])
+endsnippet
+
 snippet source "Source a file"
 source("${1:file}")$0
 endsnippet
