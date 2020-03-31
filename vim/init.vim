@@ -1532,7 +1532,8 @@ nnoremap <silent> <Leader>df :Defx `expand('%:p:h') ` -search=`expand('%:p')`<CR
             \ :execute float2nr(&lines /2) . 'wincmd _ '<CR>
 nnoremap <silent> <Leader>fb :Defx<CR>:Denite defx/dirmark<CR>
 nnoremap <silent> <Leader>fr :Defx -resume<CR>
-nnoremap <silent> <Leader>fm :call <SID>TmuxSplitCmd('ranger', '')<CR>
+nnoremap <silent> <Leader>fm :execute 'lcd' . b:defx.paths[0]<CR>
+            \ :call <SID>TmuxSplitCmd('ranger', '')<CR>
 
 " Devicons
 let g:defx_icons_enable_syntax_highlight = 0
