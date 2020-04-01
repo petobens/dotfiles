@@ -1512,7 +1512,7 @@ call defx#custom#column('icon', {
             \ })
 call defx#custom#column('filename', {
             \ 'min_width': 23,
-            \ 'max_width': 23,
+            \ 'max_width': -55,
             \ })
 call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 
@@ -1667,10 +1667,10 @@ function! s:defx_settings()
     " Bookmarks source
     nnoremap <silent><buffer> b :Denite defx/dirmark<CR>
 
-    " Resize window
-	nnoremap <silent><buffer><expr> <A-l> defx#do_action('resize',
+    " Resize window (increasing truncated filename)
+    nnoremap <silent><buffer><expr> <C-A-l> defx#do_action('resize',
         \ defx#get_context().winwidth + 5)
-	nnoremap <silent><buffer><expr> <A-h> defx#do_action('resize',
+    nnoremap <silent><buffer><expr> <C-A-h> defx#do_action('resize',
         \ defx#get_context().winwidth - 5)
 
     " Custom actions
@@ -2115,7 +2115,7 @@ function! s:defx_preview(context)
         endif
     endfor
     if has_preview_win == 1 && defx_path ==# (dir . '/')
-        call defx#custom#column('filename', {'min_width': 23, 'max_width': 23})
+        call defx#custom#column('filename', {'min_width': 23, 'max_width': -55})
         pclose!
         return
     endif
