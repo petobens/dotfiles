@@ -326,16 +326,17 @@ FZF_GREP_OPTS="
 --phony
 --query=''
 --delimiter=:
---preview 'bat --color always --style numbers --theme TwoDark \
-    --line-range {2}: --highlight-line {2} {1} | head -200'
 "
 
 ig() {
     # shellcheck disable=SC2124
-    grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@"
-    cmd="true"
-    out=$(eval "$cmd" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
-        fzf --bind "change:reload:$grep_cmd {q} || true")
+    grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@ {q}"
+    grep_cmd+=" | devicon-lookup --color --prefix :"
+    # shellcheck disable=SC2016
+    preview_cmd='bat --color always --style numbers --theme TwoDark '\
+'--line-range {2}: --highlight-line {2} $(echo {1} | sed "s/[^ ] //") | head -200'
+    out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
+        fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd")
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
 
@@ -344,7 +345,9 @@ ig() {
     else
         files=();
         for f in "${_files[@]}"; do
-            # We need real path for vim to work
+            # We need real path for vim to work (the first line removes devicon
+            # icon from the filename)
+            f="${f#* }"
             file="$(realpath "$(echo "$f" | cut -d ':' -f 1)")"
             line_nr=$(echo "$f" | cut -d ':' -f 2)
             files+=("+'e +$line_nr $file'")
