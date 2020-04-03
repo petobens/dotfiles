@@ -145,6 +145,9 @@ else
         # Disable rfkill (for tlp)
         sudo systemctl mask systemd-rfkill.service 
         sudo systemctl mask systemd-rfkill.socket
+        # SSH
+        sudo systemctl enable sshd.service
+        sudo systemctl start sshd.service
     fi
 
     # Remove previous pacman cache dir (we changed it in pacman.conf)
