@@ -740,7 +740,7 @@ function! s:GetLibraries()
             let curline = substitute(curline, '\s*', '', '')
             let library_lines = add(library_lines, curline)
             let library_names = add(library_names, matchstr(curline,
-                        \ '(\zs\w*\ze)\|(\W\zs\w*\ze\W)'))
+                        \ '(\zs\w*\ze)\|(\W\zs\w*\ze\W)\|(\W\zs\w*\W\w*\ze\W)'))
         endif
         let line_nr = line_nr + 1
     endwhile
