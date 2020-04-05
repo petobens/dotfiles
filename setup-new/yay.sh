@@ -88,6 +88,7 @@ $yay_cmd feh
 $yay_cmd i3-gaps
 $yay_cmd i3ipc-python-git
 $yay_cmd i3lock-color-git
+$yay_cmd intltool
 $yay_cmd maim
 $yay_cmd mesa-demos
 $yay_cmd mpv
