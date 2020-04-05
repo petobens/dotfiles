@@ -12,11 +12,12 @@ set synctex true
 set synctex-editor-command "nvr --remote-silent +\%{line}|foldo\! \%{input}"
 
 # Mappings
+map Q quit
 map n navigate next
 map p navigate previous
 map = zoom in
 map - zoom out
-map 0 zoom original
+map <C-0> zoom original
 map w adjust_window width
 map b adjust_window best-fit
 map > rotate
@@ -25,11 +26,26 @@ unmap q
 map i toggle_index
 map r recolor
 # Presentation mode
-map [normal] P toggle_presentation
+map [normal] P toggle_presentation  # we can also do this with <F5>
 map [presentation] q toggle_presentation
 map [presentation] P toggle_presentation
 map [presentation] n navigate next
 map [presentation] p navigate previous
+map [presentation] <C-d> navigate next
+map [presentation] <C-u> navigate previous
+map [presentation] gg goto top
+map [presentation] G goto bottom
+map [presentation] f follow
+map [presentation] i toggle_index
+# Index mode
+map [index] n navigate_index down
+map [index] <C-n> navigate_index down
+map [index] p navigate_index up
+map [index] <C-p> navigate_index up
+map [index] zo navigate_index expand
+map [index] zc navigate_index collapse
+map [index] zm navigate_index collapse-all
+map [index] zr navigate_index expand-all
 
 # Black background
 set recolor-lightcolor "#24272e"
