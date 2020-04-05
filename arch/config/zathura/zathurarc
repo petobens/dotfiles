@@ -6,6 +6,7 @@ set incremental-search true
 set n-completion-items 12
 set selection-clipboard clipboard
 set sandbox none
+set highlight-transparency 0.35
 
 # Synctex (activates with ctrl+click)
 set synctex true
@@ -23,8 +24,10 @@ map b adjust_window best-fit
 map > rotate
 map < rotate rotate-ccw
 unmap q
+map q quit
 map i toggle_index
 map r recolor
+map <C-Space> feedkeys ":nohlsearch <Return>"
 # Presentation mode
 map [normal] P toggle_presentation  # we can also do this with <F5>
 map [presentation] q toggle_presentation
@@ -37,7 +40,9 @@ map [presentation] gg goto top
 map [presentation] G goto bottom
 map [presentation] f follow
 map [presentation] i toggle_index
+map [presentation] r recolor
 # Index mode
+map [index] q toggle_index
 map [index] n navigate_index down
 map [index] <C-n> navigate_index down
 map [index] p navigate_index up
