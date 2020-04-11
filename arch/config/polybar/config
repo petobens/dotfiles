@@ -4,8 +4,8 @@ fg = #abb2bf
 fg-urg = #e06c75
 fg-warn = #d19a66
 fg-under = #61afef
-bg-focused-i3 = #2c323c
-fg-unfocused-i3 = #5c6370
+fg-unfocused-i3 = #3b4048
+fg-visible-i3 = #6d768b
 
 [bar/main]
 bottom = false
@@ -49,7 +49,7 @@ click-left = /home/pedro/.config/polybar/arch_dmenu.sh
 type = internal/xwindow
 label-maxlen = 30
 label-font = 3
-format-padding = 0
+format-padding = 4
 
 [module/i3]
 type = internal/i3
@@ -62,19 +62,21 @@ ws-icon-3 = 4;﬿
 ws-icon-4 = 5;ﲵ
 ws-icon-5 = 6;龎
 ws-icon-default = ﬿
-label-focused = %icon% %{T7}%index%%{T-}
+label-focused = %icon%    %{T7}%index%%{T-}
 label-focused-font = 4
 label-focused-padding = 2
-label-focused-background = ${colors.bg-focused-i3}
-label-unfocused = %icon% %{T7}%index%%{T-}
+label-focused-foreground = ${colors.fg}
+; Hidden
+label-unfocused = %icon%    %{T7}%index%%{T-}
 label-unfocused-font = 4
 label-unfocused-margin = 2
 label-unfocused-foreground = ${colors.fg-unfocused-i3}
-label-visible = %icon% %{T7}%index%%{T-}
+; Visible but unfocused
+label-visible = %icon%    %{T7}%index%%{T-}
 label-visible-font = 4
 label-visible-margin = 2
-label-visible-foreground = ${colors.fg}
-label-urgent = %icon% %{T7}%index%%{T-}
+label-visible-foreground = ${colors.fg-visible-i3}
+label-urgent = %icon%    %{T7}%index%%{T-}
 label-urgent-font = 4
 label-urgent-margin = 2
 label-urgent-foreground = ${colors.fg-urg}
@@ -84,22 +86,22 @@ type = custom/script
 exec = ~/.config/polybar/docker.sh
 interval = 5.0
 label-font = 5
-format-padding = 1
 click-left = alacritty -t docker-info -d 150 30 -e sh -c "docker info | less +F"
+label-padding-right = 6
 
 [module/onedrive]
 type = custom/script
 exec = python ~/.config/polybar/onedrive.py
 label-font = 5
-format-padding = 1
 interval = 5.0
 click-left = alacritty -t "OneDrive" -e sh -c "journalctl --user-unit onedrive -f"
+label-padding-right = 5
 
 [module/xkeyboard]
 type = internal/xkeyboard
 format = <label-layout>
 label-layout-font = 2
-label-layout-padding = 1
+label-layout-padding-right = 1
 
 [module/vpn]
 type = custom/script
@@ -107,19 +109,22 @@ exec = echo ﯴ
 exec-if = pgrep -x "openconnect|openvpn|vpnc|snx"
 interval = 5
 label-font = 4
-format-padding = 1
+label-padding-right = 4
 
 [module/wifi]
 type = internal/network
 ; Get interface with `command ip link`
 interface = wlan0
 ping-interval = 3
-format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}
-format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
+format-connected = %{A1:connman-gtk &:} <label-connected>%{A}
+format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>%{A}
 label-disconnected-font = 4
-label-connected = 直  %{T3}%signal%%%{T-}
+label-connected = 直     %{T3}%signal%%%{T-}
 label-connected-font = 4
 label-disconnected = 睊
+label-connected-padding-right = 1
+label-connected-padding-left = 1
+label-disconnected-padding-right = 5
 
 [module/ethernet]
 ; See: https://github.com/jaagr/polybar/issues/1164
@@ -132,6 +137,8 @@ label-connected = 
 label-connected-font = 5
 label-disconnected = 
 label-disconnected-foreground = ${colors.fg-urg}
+label-connected-padding-right = 1
+label-disconnected-padding-right = 3
 
 [module/bluetooth]
 type = custom/script
@@ -139,6 +146,7 @@ exec = ~/.config/polybar/bluetooth.sh
 interval = 5.0
 click-left = alacritty -t bluetooth-fzf -d 100 30 -e bash -ci "bt;exit"
 click-right = bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
+label-padding-right = 3
 
 [module/pulseaudio]
 type = internal/pulseaudio
@@ -155,6 +163,8 @@ ramp-volume-1 = 奔
 ramp-volume-2 = 墳
 ramp-volume-3 = 
 ramp-volume-font = 5
+ramp-volume-padding-right = 3
+label-muted-padding-right = 3
 
 [module/battery]
 ; Use the following command to list batteries and adapters:
@@ -164,10 +174,10 @@ full-at = 100
 battery = BAT0
 adapter = AC0
 poll-interval = 5
-format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>  %{A}
-format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>  <label-discharging>  %{A}
-format-full = %{A1:xfce4-power-manager-settings &:}<label-full>  %{A}
-label-charging =   %{T3}%percentage%%%{T-}
+format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>%{A}
+format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>   <label-discharging>%{A}
+format-full = %{A1:xfce4-power-manager-settings &:}<label-full>%{A}
+label-charging =      %{T3}%percentage%%%{T-}
 label-discharging = %{T3}%percentage%%%{T-}
 label-charging-font = 6
 label-discharging-font = 6
@@ -183,6 +193,9 @@ ramp-capacity-6 = 
 ramp-capacity-7 = 
 ramp-capacity-8 = 
 ramp-capacity-9 = 
+label-charging-padding-right = 2
+label-discharging-padding-right = 2
+label-full-padding-right = 2
 
 [module/date]
 type = internal/date
@@ -191,6 +204,6 @@ date = %a %d
 time = %H:%M
 date-alt = %A %d %b %Y
 time-alt = %H:%M:%S
-label = %{A1:xdotool key Super_L+Control+a:}%{T4}%{T-}%{T3} %date% %time%%{T-}%{A}
+label = %{A1:xdotool key Super_L+Control+a:}%{T4}      %{T-}%{T3}%date% %time%%{T-}%{A}
 label-font = 3
 label-padding-right = 2
