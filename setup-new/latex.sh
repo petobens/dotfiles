@@ -67,6 +67,7 @@ sudo tlmgr install texcount
 
 # Install additional latex packages
 sudo tlmgr install biblatex
+sudo tlmgr install changepage
 sudo tlmgr install cleveref
 sudo tlmgr install csquotes
 sudo tlmgr install emptypage
