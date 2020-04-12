@@ -731,6 +731,10 @@ function! s:RunPyTest(level, compilation, ...)
     if match(current_file, '^test_') == -1
         let current_file = 'test_' . current_file
         let need_prefix = 1
+    else
+        " If the current file is already a test file it might be inside nested
+        " inner dirs so get here those inner dirs
+        let current_file = split(expand('%:p'), 'tests')[-1]
     endif
 
     " Set compiler options (run in parallel (requires pytest-xdist), use short
