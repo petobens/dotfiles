@@ -90,6 +90,22 @@ snippet gd "Google Docstring" b
 ${1:Args:`!p snip.rv= '\n\t'`${2:param_name}${3: (${4:type})}: ${5:description}`!p snip.rv = of(t, 6,'\n\t')`${6:${7:param_name}${8: (${9:type})}: ${10:description}}}`!p snip.rv = of(t, 1,'\n\n    ')`Returns:`!p snip.rv= '\n\t'`${11:type: }`!p snip.rv = of(t, 11,' ')`${12:description}`!p snip.rv= '\n\n' if t[13] else ''`${13:`!p snip.rv= '    '`Raises:`!p snip.rv= '\n\t'`${14:ExceptionType}: ${15:description}}$0
 endsnippet
 
+snippet npd "Numpy Docstring" b
+Parameters
+----------
+${1:arg} : ${2:type}
+	${3:description}
+
+${4:Examples
+--------
+>> $5}
+
+Returns
+-------
+${6:object}: ${7:type}
+	${8:description}
+endsnippet
+
 snippet dp "Docstring parameter" b
 ${1:param_name}${2: (${3:type})}: ${4:description}$0
 endsnippet
