@@ -603,8 +603,9 @@ set relativenumber
 " Only show cursorline in the current window
 augroup cline
     au!
-    au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
     au WinLeave * if &filetype !=# 'denite' | setlocal nocursorline | endif
+    au VimEnter,WinEnter,BufWinEnter *
+                \ if &filetype !=# 'denite-filter' | setlocal cursorline | endif
 augroup END
 
 " When the page starts to scroll, keep the cursor 3 lines from the top and 3
@@ -1760,6 +1761,7 @@ call denite#custom#option('default', {
             \ 'winminheight': -1,
             \ 'reversed': 1,
             \ 'prompt': '❯',
+            \ 'match_highlight': 1,
             \ 'highlight_prompt': 'Function',
             \ 'highlight_matched_char': 'Operator',
             \ 'highlight_matched_range': 'None',
@@ -1777,9 +1779,6 @@ augroup ps_denite_cursorline
     au WinEnter * if &filetype ==# 'denite'
         \ |   highlight CursorLineDenite guibg=#282c34 gui=bold
         \ |   highlight! link CursorLine CursorLineDenite
-        \ | endif
-    au WinLeave * if &filetype ==# 'denite'
-        \ |   highlight! link CursorLine NONE
         \ | endif
 augroup END
 
