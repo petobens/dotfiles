@@ -1,4 +1,3 @@
----
 !config
 
 # Define key to minimize number of runs.
@@ -20,4 +19,3 @@ preambles:
         % arara: pdflatex: {interaction: batchmode, synctex: yes, shell: yes,
         % arara: --> options: ["-file-line-error"]}
         % arara: --> if found('log', '(undefined references|Please rerun|Rerun to get)')
-...
