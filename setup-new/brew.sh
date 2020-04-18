@@ -43,6 +43,9 @@ $brew_install_cmd coreutils  # (realpath, ln, etc)
 $brew_install_cmd python3
 $brew_install_cmd pyenv
 $brew_install_cmd rust
+if ! java -version >/dev/null 2>&1;  then
+    $brew_cask_install_cmd java
+fi
 if ! type "tlmgr" > /dev/null 2>&1; then
     read -p $'\033[1mDo you want to install LaTeX (y/n)? \033[0m' -n 1 -r
     echo

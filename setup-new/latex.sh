@@ -46,18 +46,7 @@ sudo tlmgr option docfiles 1
 sudo tlmgr install --reinstall "$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')"
 
 # Install arara (needs java)
-read -p $'\033[1mDo you want to install arara (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    if ! java -version >/dev/null 2>&1;  then
-        if [[  "$OSTYPE" == 'darwin'* ]]; then
-            brew cask install java
-        else
-            yay -S jdk10-openjdk
-        fi
-    fi
-    sudo tlmgr install arara
-fi
+sudo tlmgr install arara
 
 # Install additional binaries: linter, word counter, fonts and biber
 sudo tlmgr install biber

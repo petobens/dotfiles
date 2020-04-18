@@ -57,6 +57,7 @@ $yay_cmd python-pip
 $yay_cmd pyenv
 $yay_cmd ruby
 $yay_cmd rust
+$yay_cmd jdk-openjdk
 read -p $'\033[1mDo you want to install R (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
