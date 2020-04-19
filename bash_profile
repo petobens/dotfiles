@@ -30,10 +30,10 @@ else
 
     # Texlive
     if [ -d "$BASE_PKG_DIR/local/texlive" ]; then
-        PATH="$PATH:/usr/local/texlive/2019/bin/x86_64-linux"
+        PATH="$PATH:/usr/local/texlive/2020/bin/x86_64-linux"
         # FIXME: If we set this then we cannot jump between Man tags with nvim
-        # export MANPATH="$MANPATH:/usr/local/texlive/2019/texmf-dist/doc/man"
-        export INFOPATH="$INFOPATH:/usr/local/texlive/2019/texmf-dist/doc/info"
+        # export MANPATH="$MANPATH:/usr/local/texlive/2020/texmf-dist/doc/man"
+        export INFOPATH="$INFOPATH:/usr/local/texlive/2020/texmf-dist/doc/info"
     fi
 
     # GTK scaling and themes
