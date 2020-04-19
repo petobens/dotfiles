@@ -2687,7 +2687,7 @@ augroup ps_jedi
     au Filetype python nnoremap <buffer><silent> <Leader>rn
         \ :call jedi#rename()<CR>
     au Filetype python nnoremap <buffer><silent> <Leader>ap
-        \ :call jedi#usages()<CR>
+        \ :call jedi#usages()<CR>:cclose<CR>:Denite -post-action=suspend quickfix<CR>
     " Set jedi completion to work with deoplete
     au BufRead,BufNewFile *.py setlocal omnifunc=jedi#completions
 augroup END
