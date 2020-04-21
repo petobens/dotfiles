@@ -2858,9 +2858,9 @@ augroup plugin_R
     au FileType r nmap <silent> <Leader>rq <Plug>RClose
     au FileType r nmap <silent> <Leader>rw <Plug>RClearAll
     au FileType r nmap <silent> <Leader>rc <Plug>RClearConsole
-    au FileType r nmap <silent> <Leader>rf :lcd %:p:h<CR>
+    au FileType r nnoremap <silent> <Leader>rf :lcd %:p:h<CR>
                 \ :call <SID>RunR('file')<CR>
-    au FileType r vmap <silent> <Leader>rf <Esc>:lcd %:p:h<CR>
+    au FileType r vnoremap <silent> <Leader>rf <Esc>:lcd %:p:h<CR>
                 \ :call <SID>RunR('visual')<CR>
     au FileType r nmap <silent> <Leader>ro <Plug>RUpdateObjBrowser
     au FileType r nmap <silent> <Leader>rv <Plug>RViewDF
