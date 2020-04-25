@@ -78,10 +78,10 @@ function! s:RunR(mode, compilation, ...)
     endif
 
     " Define R flags and commands
-    " We use '--slave' to make R run as quiet as possible,  '--no-save' to avoid
+    " We use '--no-echo' to make R run as quiet as possible,  '--no-save' to avoid
     " asking if we want to save the workspace, '--no-restore' to avoid loading a
     " saved image from the workspace and '-e' to execute a command an exit.
-    let flags = '--slave --no-save --no-restore -e '
+    let flags = '--no-echo --no-save --no-restore -e '
     " Force warnings to become errors?
     " let error_options = 'options(show.error.locations=TRUE,warn=2);'
     let error_options = 'options(show.error.locations=TRUE);'
@@ -376,7 +376,7 @@ function! s:LintR()
 
 
     " Check if the lintR library is installed in our lib paths
-    let flags = '--slave --no-save --no-restore -e '
+    let flags = '--no-echo --no-save --no-restore -e '
     let lib_dir = split(system('R ' . flags . '".libPaths()"'), '\n')[0]
     let lib_dir = matchstr(lib_dir, '"\zs.*\ze"')
     let lintr_dir = expand(lib_dir . '/lintr')
@@ -465,7 +465,7 @@ function! s:FormatR(...)
     let current_dir = expand('%:p:h')
 
     " Check if the formatR library is installed in our lib paths
-    let flags = '--slave --no-save --no-restore -e '
+    let flags = '--no-echo --no-save --no-restore -e '
     let lib_dir = split(system('R ' . flags . '".libPaths()"'), '\n')[0]
     let lib_dir = matchstr(lib_dir, '"\zs.*\ze"')
     let formatr_dir = expand(lib_dir . '/formatR')
@@ -485,7 +485,7 @@ function! s:FormatR(...)
     endif
 
     " Set compiler
-    let flags = '--slave --no-save --no-restore -e '
+    let flags = '--no-echo --no-save --no-restore -e '
     " TODO: Consider using styler instead of formatr
     let tidy_command = 'library(formatR);x <- tidy_source(source = ' .
                 \ '\"clipboard\", width.cutoff = 80, arrow = TRUE)'
@@ -603,7 +603,7 @@ function! s:ViewRDoc(...)
         let help_command = 'cat(readLines(file.path(find.package(''' .
                     \ help_arg . '''), ''INDEX'')), sep = ''\\\n'')'
     endif
-    let flags = '--slave --no-save --no-restore -e '
+    let flags = '--no-echo --no-save --no-restore -e '
     let compiler = 'R ' . flags . '"' . help_command . '"'
     let output = split(system(compiler), '\n')
 

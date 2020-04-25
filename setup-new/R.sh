@@ -11,7 +11,7 @@ export R_LIBS_USER="$HOME/.local/lib/R/site-library"
 # repos = "http://rdatatable.github.io/data.table")`)
 sudo mkdir -p "$R_LIBS_USER"
 sudo chmod -R 777 "$(dirname "$R_LIBS_USER")"
-R --slave --no-save << EOF
+R --no-echo --no-save << EOF
 packages <- readLines("$parent_dir/R/r_libraries.txt")
 new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
 if (length(new_packages)) {
