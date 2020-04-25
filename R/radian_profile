@@ -38,8 +38,8 @@ options(radian.history_search_ignore_case = TRUE)
 
 # Custom prompt for different modes
 options(radian.prompt = "\033[0;32mR>>\033[0m ")
-options(radian.shell_prompt = "\033[0;31m#!>\033[0m ")
-options(radian.browse_prompt = "\033[0;33mBrowse[{}]>\033[0m ")
+options(radian.shell_prompt = "\033[0;31m#!>>\033[0m ")
+options(radian.browse_prompt = "\033[0;33m[B]>>\033[0m ")
 
 # Show vi mode state when radian.editing_mode is `vi`
 options(radian.show_vi_mode_prompt = TRUE)
