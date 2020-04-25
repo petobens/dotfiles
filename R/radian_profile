@@ -64,7 +64,7 @@ options(radian.on_load_hooks = list(function() {
     insert_mode <- radian$key_bindings$insert_mode
     normal_mode <- operator$inv(insert_mode)
     app <- radian$get_app()
-    kb <- app$session$modes$r$prompt_key_bindings
+    kb <- app$session$modes$r$key_bindings
 
     KeyPress <- prompt_toolkit$key_binding$key_processor$KeyPress
     Keys <- prompt_toolkit$keys$Keys
