@@ -103,6 +103,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     call dein#add('tpope/vim-dispatch')
     call dein#add('tpope/vim-repeat')
     call dein#add('tpope/vim-rhubarb')
+    call dein#add('tpope/vim-scriptease')
     call dein#add('tpope/vim-surround')
 
     " Git
@@ -2905,6 +2906,19 @@ augroup ps_pythonsense
     au Filetype python map <buffer> [F
                 \ <Plug>(PythonsenseEndOfPreviousPythonFunction)
 augroup END
+
+" }}}
+" Scriptease {{{
+
+augroup ps_scriptease
+    au!
+    au Filetype vim nnoremap <silent> <F7> :Runtime<CR>
+    au Filetype vim nnoremap <silent> <Leader>oi :PP<CR>
+    au Filetype vim nnoremap <silent> <Leader>bp :Breakadd here<CR>
+    au Filetype vim nnoremap <silent> <Leader>rb :Breakdel *<CR>
+    au Filetype vim nnoremap <silent> <Leader>lb :breaklist<CR>
+augroup END
+
 
 " }}}
 " Semshi {{{
