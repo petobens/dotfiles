@@ -694,7 +694,7 @@ function! s:ViewRDoc(...)
     " Delete extra lines at the beginning and set markdown filetype with folding
     " at subsection level
     silent normal! ggdd
-    setlocal nomodifiable nomodified filetype=markdown foldlevel=2
+    setlocal nomodifiable nomodified filetype=markdown foldlevel=3
 
     " Resize the buffer height
     let height = len(output_md)
