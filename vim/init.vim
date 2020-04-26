@@ -1896,6 +1896,14 @@ function! s:DeniteTasklist(...)
     call denite#start([{'name': 'grep',
                 \ 'args': [target, '','TODO:\s|FIXME:\s']}])
 endfunction
+function! s:DeniteVisualSearch(direction)
+    let temp = @s
+    norm! gv"sy
+    let visual_selection = @s
+    let @s = temp
+    call denite#start([{'name': 'line', 'args': [a:direction]}],
+                \ {'input': visual_selection})
+endfunction
 command! -nargs=? -complete=file DeniteBookmarkAdd
         \ :Denite dirmark/add -default-action=add -immediately-1 -path=<q-args>
 
@@ -1931,8 +1939,8 @@ nnoremap <silent> <Leader>sm :Denite output:messages<CR>
 nnoremap <silent> <Leader>me :Denite output:map<CR>
 nnoremap <silent> <Leader>uf :Denite output:function<CR>
 nnoremap <silent> <Leader>dl :Denite line:forward<CR>
-nnoremap <silent> <Leader>dw :DeniteCursorWord -auto-action=preview
-            \ line:forward -no-start-filter<CR>
+nnoremap <silent> <Leader>dw :DeniteCursorWord line:forward<CR>
+vnoremap <silent> <Leader>dw :call <SID>DeniteVisualSearch('forward')<CR>
 nnoremap <silent> <Leader>dq :Denite -post-action=suspend quickfix<CR>
 nnoremap <silent> <Leader>gl :Denite gitlog:all<CR>
 nnoremap <silent> <Leader>gL :Denite gitlog<CR>
