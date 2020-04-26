@@ -736,11 +736,13 @@ function! s:GetLibraries()
         " Match libraries (also matches libraries loaded with leading spaces,
         " such as those in conditionals; for these cases remove these leading
         " space before saving the line)
-        if match(curline, '^\s*\(library\|require\)') != -1
+        if match(curline, '^\s*\(library\|require\|import\|'.
+                    \ 'suppressPackageStartupMessages\)') != -1
             let curline = substitute(curline, '\s*', '', '')
             let library_lines = add(library_lines, curline)
             let library_names = add(library_names, matchstr(curline,
-                        \ '(\zs\w*\ze)\|(\W\zs\w*\ze\W)\|(\W\zs\w*\W\w*\ze\W)'))
+                \ '(\zs\w*\ze)\|(\W\zs\w*\ze\W)\|(\W\zs\w*\W\w*\ze\W\|' .
+                \ 'import::from(\W\zs\w*\ze\W'))
         endif
         let line_nr = line_nr + 1
     endwhile
