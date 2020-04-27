@@ -2865,6 +2865,7 @@ augroup plugin_R
     au!
     au FileType r nmap <silent> <Leader>rs :lcd %:p:h<CR><Plug>RStart
     au FileType r nmap <silent> <Leader>rq <Plug>RClose
+    au FileType r nnoremap <silent> <Leader>rk :RKill<CR>
     au FileType r nmap <silent> <Leader>rw <Plug>RClearAll
     au FileType r nmap <silent> <Leader>rc <Plug>RClearConsole
     au FileType r nnoremap <silent> <Leader>rf :lcd %:p:h<CR>
