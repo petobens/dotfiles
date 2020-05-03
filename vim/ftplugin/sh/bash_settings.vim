@@ -342,15 +342,15 @@ augroup show_sh_output
 augroup END
 
 " }}}
-" Linting {{{
+" Formatter {{{
 
-function! s:RunBeautySh(...)
-    " Don't run beautysh if it is not installed
-    if !executable('beautysh')
-        echoerr 'beautysh is not installed or not in your path.'
+function! s:RunFormatter(...)
+    " Don't run shfmt if it is not installed
+    if !executable('shfmt')
+        echoerr 'shfmt is not installed or not in your path.'
         return
     endif
-    " Don't run beautysh if there is only one empty line or we are in a Gdiff
+    " Don't run shfmt if there is only one empty line or we are in a Gdiff
     " (when file path includes .git)
     if (line('$') == 1 && getline(1) ==# '') || expand('%:p') =~# "/\\.git/"
         return
@@ -361,7 +361,7 @@ function! s:RunBeautySh(...)
     let shrd = &shellredir
     set shellredir=>%s
     let old_formatprg = &l:formatprg
-    let &l:formatprg = 'beautysh -f -'
+    let &l:formatprg = 'shfmt -i 4 -ci -sr -'
     let save_cursor = getcurpos()
     if a:0 && a:1 ==# 'visual'
         execute 'normal! gvgq'
@@ -376,10 +376,10 @@ function! s:RunBeautySh(...)
     let &l:formatprg = old_formatprg
 endfunction
 
-" Automatically run beautysh and shellcheck on save
+" Automatically run shfmt and shellcheck on save
 augroup sh_linting
     au!
-    au BufWritePost *.sh call s:RunBeautySh() | silent noautocmd update |
+    au BufWritePost *.sh call s:RunFormatter() | silent noautocmd update |
                 \ silent Neomake
 augroup END
 
@@ -433,7 +433,7 @@ vnoremap <silent> <buffer> <F5> :EvalVisualShForeground<CR>
 
 " Linting
 nnoremap <silent> <buffer> <Leader>rl :silent Neomake<CR>
-nnoremap <silent> <buffer> <Leader>fc :call <SID>RunBeautySh()<CR>
+nnoremap <silent> <buffer> <Leader>fc :call <SID>RunFormatter()<CR>
 
 " Documentation
 nnoremap <silent> <buffer> <S-k> :call <SID>ViewShDoc()<CR>

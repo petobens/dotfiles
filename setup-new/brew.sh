@@ -114,6 +114,7 @@ $brew_install_cmd rsync
 $brew_install_cmd sd
 $brew_install_cmd shellcheck
 $brew_install_cmd shellpass
+$brew_install_cmd shfmt
 $brew_install_cmd sk
 $brew_install_cmd stoken
 $brew_install_cmd tldr
