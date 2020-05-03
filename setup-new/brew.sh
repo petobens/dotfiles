@@ -86,6 +86,7 @@ $brew_install_cmd sqlite3
 
 # Other useful binaries
 $brew_install_cmd bat
+$brew_install_cmd ctop
 $brew_install_cmd diff-so-fancy
 $brew_install_cmd dust
 $brew_install_cmd fd

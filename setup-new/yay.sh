@@ -137,6 +137,7 @@ $yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd bat
 $yay_cmd bind-tools
 $yay_cmd cronie
+$yay_cmd ctop
 $yay_cmd diff-so-fancy
 $yay_cmd dmidecode
 $yay_cmd docker

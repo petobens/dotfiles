@@ -116,6 +116,9 @@ fi
 if type "htop" > /dev/null 2>&1; then
     alias ht='htop'
 fi
+if type "ctop" > /dev/null 2>&1; then
+    alias ct='TERM=xterm-256 ctop'
+fi
 if type "proxychains" > /dev/null 2>&1; then
     pc() {
         proxychains -q "$@"
