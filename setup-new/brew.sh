@@ -106,6 +106,7 @@ $brew_install_cmd openvpn
 $brew_install_cmd pandoc
 $brew_install_cmd pandoc-citeproc
 $brew_install_cmd prettyping
+$brew_install_cmd progress
 $brew_install_cmd qrendcode
 $brew_install_cmd reattach-to-user-namespace
 $brew_install_cmd ripgrep
