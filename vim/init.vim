@@ -1616,12 +1616,11 @@ function! s:defx_settings()
     nnoremap <silent><buffer><expr> o defx#do_action('execute_system')
    " Tree editing, opening and closing
    nnoremap <silent><buffer><expr> e
-        \ defx#is_directory() ? defx#do_action('open_tree') :
+        \ defx#is_directory() ? defx#do_action('open_tree', 'toggle') :
         \ defx#do_action('multi', ['drop', 'quit'])
-    nnoremap <silent><buffer><expr> zo defx#do_action('open_tree')
+    nnoremap <silent><buffer><expr> zo defx#do_action('open_tree', 'toggle')
     nnoremap <silent><buffer><expr> zc defx#do_action('close_tree')
-    nnoremap <silent><buffer><expr> zr defx#do_action('open_tree_recursive',
-                \ [3])
+    nnoremap <silent><buffer><expr> zr defx#do_action('open_tree', 'recursive:3')
     " Open files in splits
     nnoremap <silent><buffer><expr> s
         \ defx#do_action('multi', [['drop', 'split'], 'quit'])
@@ -2148,7 +2147,7 @@ function! s:defx_preview(context)
     execute 'Defx -no-show-ignored-files -new -split=no ' .
                 \ '-ignored-files=.*,__pycache__ ' .
                 \ '-auto-recursive-level=1 ' .  dir . file_search
-    call defx#call_action('open_tree')
+    call defx#call_action('open_tree', 'toggle')
     silent! setlocal norelativenumber nonumber
     doautocmd User denite-preview
     wincmd p
