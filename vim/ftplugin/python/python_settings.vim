@@ -709,7 +709,7 @@ function! s:RunPyTest(level, compilation, ...)
     " at the same level as the application code)
     let test_dir = ''
     let dir_level = ':p:h'
-    for i in [1, 2, 3]
+    for i in [1, 2, 3, 4]
         let curr_dir = fnamemodify(current_file, dir_level)
         if !isdirectory(curr_dir . '/tests')
             let dir_level = dir_level . ':h'
