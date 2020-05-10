@@ -60,7 +60,9 @@ if type "gopass" > /dev/null 2>&1; then
     # Set some gopass settings
     echo -e "\\033[1;34m--> Setting (go)pass options...\\033[0m"
     gopass config autosync false
+    gopass config autoclip false
     gopass config noconfirm true
+    gopass config notifications false
     echo -e "\\033[1;34m--> Generating gitlab access token file...\\033[0m"
     gopass git/gitlab/access_token > "$HOME/.gitlab_access_token"
     echo "Created .gitlab_access_token file"
@@ -73,7 +75,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         defaults write -app Skim SKAutoReloadFileUpdate -boolean true
         # Synctex (with neovim)
         defaults write -app Skim SKTeXEditorPreset "Custom"
-        defaults write -app Skim SKTeXEditorCommand  "nvr"
+        defaults write -app Skim SKTeXEditorCommand "nvr"
         defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line\'\' %file"
     fi
 else
@@ -81,9 +83,9 @@ else
     if type "xdg-user-dirs-update" > /dev/null 2>&1; then
         echo -e "\\033[1;34m--> Creating missing XDG directories...\\033[0m"
         dirs=("Desktop" "Documents" "Downloads" "Music" "Pictures" "Videos"
-        "Public" "Templates")
+            "Public" "Templates")
         for dir in "${dirs[@]}"; do
-            if [ "$dir" ==  "Templates" ]; then
+            if [ "$dir" == "Templates" ]; then
                 xdg-user-dirs-update --set "${dir^^}" "$HOME"
                 continue
             fi
@@ -143,7 +145,7 @@ else
         sudo systemctl enable org.cups.cupsd.service
         sudo systemctl start org.cups.cupsd.service
         # Disable rfkill (for tlp)
-        sudo systemctl mask systemd-rfkill.service 
+        sudo systemctl mask systemd-rfkill.service
         sudo systemctl mask systemd-rfkill.socket
         # SSH
         sudo systemctl enable sshd.service
