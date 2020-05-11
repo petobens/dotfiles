@@ -1755,7 +1755,6 @@ nnoremap <silent> <Leader>bl :Denite dein<CR>
 " Change default UI settings and highlighting
 call denite#custom#option('default', {
             \ 'auto_resize': 1,
-            \ 'auto_resume': 1,
             \ 'statusline': 0,
             \ 'winheight': 15,
             \ 'winminheight': -1,
