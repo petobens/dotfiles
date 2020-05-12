@@ -98,7 +98,7 @@ else
     if type "xdg-mime" > /dev/null 2>&1; then
         echo -e "\\033[1;34m--> Setting default apps for specific filetypes...\\033[0m"
         if type "zathura" > /dev/null 2>&1; then
-            xdg-mime default org.pwmt.zathura-pdf-mupdf.desktop application/pdf
+            xdg-mime default org.pwmt.zathura-pdf-poppler.desktop application/pdf
         fi
         if type "vimiv" > /dev/null 2>&1; then
             xdg-mime default vimiv.desktop image/gif
