@@ -30,6 +30,9 @@ function! s:PandocConversion(extension)
         return
     endif
 
+    let l:save_pwd = getcwd()
+    lcd %:p:h
+
     silent update!
     let mdfile = fnameescape(expand('%:p'))
     let new_file = fnamemodify(fnameescape(expand('%:p')), ':r') .
@@ -51,6 +54,7 @@ function! s:PandocConversion(extension)
             call system('displayline -r -g ' . line('.') . ' ' . new_file)
         endif
     endif
+    execute 'lcd ' . save_pwd
 endfunction
 
 function! s:DeletePreviewFiles()
