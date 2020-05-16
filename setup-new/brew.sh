@@ -92,6 +92,7 @@ $brew_install_cmd dust
 $brew_install_cmd fd
 $brew_install_cmd fzf
 $brew_install_cmd gnupg
+$brew_install_cmd graphviz
 $brew_install_cmd gopass
 $brew_install_cmd hadolint
 $brew_install_cmd htop

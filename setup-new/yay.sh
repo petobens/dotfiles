@@ -148,6 +148,7 @@ $yay_cmd fzf
 $yay_cmd gnupg
 $yay_cmd gobject-introspection
 $yay_cmd gopass
+$yay_cmd graphviz
 $yay_cmd hadolint-bin
 $yay_cmd htop
 $yay_cmd httping
