@@ -2962,10 +2962,10 @@ let g:sneak#target_labels = 'asdfghjkl;'
 " Vim mappings: use Alt-n  to replace the original ';' mapping (i.e next f,F,
 " t or T match) and Alt-x to replace ',' (previous match)
 nnoremap <A-n> ;
-nnoremap <A-x> ,
+nnoremap <A-b> ,
 " Make Sneak behaviour consistent with previous mappings
 nmap <A-n> <Plug>SneakNext
-nmap <A-x> <Plug>SneakPrevious
+nmap <A-b> <Plug>SneakPrevious
 
 " Enhanced f,F,t and T motions (move vertically and highlight matches)
 nmap f <Plug>Sneak_f
