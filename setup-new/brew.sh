@@ -37,13 +37,13 @@ $brew_install_cmd gcc
 $brew_install_cmd llvm
 $brew_install_cmd libomp
 $brew_install_cmd openblas
-$brew_install_cmd coreutils  # (realpath, ln, etc)
+$brew_install_cmd coreutils # (realpath, ln, etc)
 
 # Languages: Rust, Python3, R, latex, node, java
 $brew_install_cmd python3
 $brew_install_cmd pyenv
 $brew_install_cmd rust
-if ! java -version >/dev/null 2>&1;  then
+if ! java -version > /dev/null 2>&1; then
     $brew_cask_install_cmd java
 fi
 if ! type "tlmgr" > /dev/null 2>&1; then
@@ -118,6 +118,7 @@ $brew_install_cmd shellcheck
 $brew_install_cmd shellpass
 $brew_install_cmd shfmt
 $brew_install_cmd sk
+$brew_install_cmd sshfs
 $brew_install_cmd stoken
 $brew_install_cmd tldr
 $brew_install_cmd tree

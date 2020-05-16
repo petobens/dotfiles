@@ -147,6 +147,9 @@ fi
 if type "dust" > /dev/null 2>&1; then
     alias rds='dust -r -b'
 fi
+if type "fusermount3" > /dev/null 2>&1; then
+    alias fu='fusermount3 -zu'
+fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
 fi

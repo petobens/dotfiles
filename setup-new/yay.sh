@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Ask for sudo right away and get this script directory
 sudo echo -n
-current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 parent_dir="$(dirname "$current_dir")"
 
 # Use our pacman conf
@@ -124,7 +124,7 @@ $yay_cmd papirus-icon-theme
 # Databases
 $yay_cmd oracle-instantclient-basic
 $yay_cmd oracle-instantclient-sqlplus
-$yay_cmd python-pymysql  # python version of mysql
+$yay_cmd python-pymysql # python version of mysql
 $yay_cmd mongodb-bin
 $yay_cmd mongodb-tools-bin
 $yay_cmd postgresql
@@ -175,6 +175,7 @@ $yay_cmd sd
 $yay_cmd shellcheck
 $yay_cmd shfmt
 $yay_cmd socat
+$yay_cmd sshfs
 $yay_cmd sshpass
 $yay_cmd stoken-git
 $yay_cmd strace
