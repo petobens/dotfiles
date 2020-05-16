@@ -11,10 +11,10 @@ fi
 
 # Actual locking (use `--blur 15` instead of the `c` option to blur images;
 # note however that it is terrible slow)
-B='#24272EFF'  # inside color
-T='#ABB2BFFF'  # text
-W='#E06C75FF'  # wrong
-K='#528BFFFF'  # key press
+B='24272EFF'  # inside color
+T='ABB2BFFF'  # text
+W='E06C75FF'  # wrong
+K='528BFFFF'  # key press
 i3lock \
     --insidevercolor=$B              \
     --ringvercolor=$K                \
@@ -44,7 +44,7 @@ i3lock \
     --ring-width=3.0                 \
     --radius=100                     \
     \
-    --color="24272e"                 \
+    --color="24272eff"               \
     --nofork
 
 
