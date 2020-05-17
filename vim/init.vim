@@ -1840,7 +1840,7 @@ if executable('rg')
 endif
 
 " Bookmarks source (dirmark)
-call g:dirmark#set_cache_directory_path($CACHE .
+call g:dirmark#set_data_directory_path($CACHE .
             \ '/plugins/denite/denite-dirmark')
 
 " Functions
