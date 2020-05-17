@@ -121,6 +121,7 @@ $brew_install_cmd sk
 $brew_install_cmd sshfs
 $brew_install_cmd stoken
 $brew_install_cmd tldr
+$brew_install_cmd tokei
 $brew_install_cmd tree
 $brew_install_cmd universal-ctags/universal-ctags/universal-ctags --HEAD
 $brew_install_cmd unrar

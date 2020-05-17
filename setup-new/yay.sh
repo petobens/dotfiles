@@ -181,6 +181,7 @@ $yay_cmd stoken-git
 $yay_cmd strace
 $yay_cmd tk
 $yay_cmd tldr
+$yay_cmd tokei
 $yay_cmd tree
 $yay_cmd universal-ctags-git
 $yay_cmd unrar
