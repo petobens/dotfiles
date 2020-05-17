@@ -165,6 +165,7 @@ $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
 $yay_cmd pandoc-crossref
 $yay_cmd prettyping
+$yay_cmd procs-bin
 $yay_cmd progress
 $yay_cmd proxychains-ng
 $yay_cmd qrencode
