@@ -172,8 +172,8 @@ if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
 fi
 if type "mpv" > /dev/null 2>&1; then
     # (P)hot(b)ooth (webcam)
-    alias pb='mpv tv:// --tv-height=500 --tv-width=400 --tv-fps=60 '\
-'--really-quiet --title=webcam --screenshot-directory=~/Pictures/Screenshots'
+    alias pb='mpv av://v4l2:/dev/video0 --really-quiet --title=webcam '\
+'--screenshot-directory=~/Pictures/Screenshots'
 fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
