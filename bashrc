@@ -210,6 +210,11 @@ if type "git" > /dev/null 2>&1; then
     }
     alias dsf='git diff --no-index'
 fi
+if type "gh" > /dev/null 2>&1; then
+    alias ghi='gh issue'
+    alias ghp='gh pr'
+    alias ghr='gh repo'
+fi
 
 # Docker
 if type "docker" > /dev/null 2>&1; then

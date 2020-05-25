@@ -145,6 +145,7 @@ $yay_cmd docker-compose
 $yay_cmd dust
 $yay_cmd fd
 $yay_cmd fzf
+$yay_cmd github-cli
 $yay_cmd gnupg
 $yay_cmd gobject-introspection
 $yay_cmd gopass
