@@ -7,21 +7,21 @@ sudo echo -n
 bash_version=${BASH_VERSION:0:1}
 
 # Ask for dotfiles dir (the -i flag is only available on Bash 4)
-cur_dir="$(dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )")"
+cur_dir="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
 if [[ $bash_version -gt 3 ]]; then
     read -r -e -p "Enter dotfiles directory: " -i "$cur_dir" dotfiles_dir
 else
     read -r -e -p "Enter dotfiles directory: " dotfiles_dir
 fi
 while [ ! -d "$dotfiles_dir" ]; do
-    (>&2 echo "$dotfiles_dir: No such directory")
+    (echo >&2 "$dotfiles_dir: No such directory")
     if [[ $bash_version -gt 3 ]]; then
         read -r -e -p "Enter dotfiles directory: " -i "$HOME/" dotfiles_dir
     else
         read -r -e -p "Enter dotfiles directory: " dotfiles_dir
     fi
 done
-dotfiles_dir=${dotfiles_dir%/}   # Strip last (potential) slash
+dotfiles_dir=${dotfiles_dir%/} # Strip last (potential) slash
 
 # Creating missing dirs
 echo Creating symlinks under "$HOME"/
@@ -239,7 +239,7 @@ fi
 
 # OS dependent
 if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if open -Ra "hammerspoon" ; then
+    if open -Ra "hammerspoon"; then
         $ln_cmd -fTs "$dotfiles_dir/hammerspoon" "$HOME/.hammerspoon"
         echo Created .hammerspoon folder symlink
     fi
@@ -365,6 +365,8 @@ if type "git" > /dev/null 2>&1; then
     email = $mail
 [push]
     default = simple
+[pull]
+	rebase = false
 [core]
     editor = nvim
     excludesfile = ~/.gitignore
