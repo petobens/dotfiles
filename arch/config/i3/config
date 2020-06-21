@@ -35,8 +35,8 @@ bindsym $mod+e fullscreen toggle
 bindsym $mod+Up $nexec $HOME/.config/i3/resize.py Full
 bindsym $mod+Left $nexec $HOME/.config/i3/resize.py Left
 bindsym $mod+Right $nexec $HOME/.config/i3/resize.py Right
-bindsym $mod+Control+Up $nexec $HOME/.config/i3/resize.py Top
-bindsym $mod+Control+Down $nexec $HOME/.config/i3/resize.py Bottom
+bindsym $mod+$alt+Up $nexec $HOME/.config/i3/resize.py Top
+bindsym $mod+$alt+Down $nexec $HOME/.config/i3/resize.py Bottom
 bindsym $mod+Control+1 $nexec $HOME/.config/i3/resize.py 'Top Left'
 bindsym $mod+Control+2 $nexec $HOME/.config/i3/resize.py 'Top Right'
 bindsym $mod+Control+3 $nexec $HOME/.config/i3/resize.py 'Bottom Left'
@@ -68,6 +68,7 @@ set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
+set $ws9 "9"
 
 # Move to next and previous workspace
 bindsym $mod+n workspace next
@@ -82,6 +83,7 @@ bindsym $mod+5 workspace $ws5
 bindsym $mod+6 workspace $ws6
 bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
 
 # Move focused container to specific workspace and switch focus to that
 # container
@@ -93,37 +95,47 @@ bindsym $mod+Shift+5 $nexec $HOME/.config/i3/multimon_move.py -w "5"
 bindsym $mod+Shift+6 $nexec $HOME/.config/i3/multimon_move.py -w "6"
 bindsym $mod+Shift+7 $nexec $HOME/.config/i3/multimon_move.py -w "7"
 bindsym $mod+Shift+8 $nexec $HOME/.config/i3/multimon_move.py -w "8"
+bindsym $mod+Shift+9 $nexec $HOME/.config/i3/multimon_move.py -w "9"
 
-# Activate primary or dual monitor
+# Activate primary or multi monitor
 bindsym $mod+Return $nexec multimon primary
-bindsym $mod+Control+Return $nexec multimon dual
+bindsym $mod+Control+Return $nexec multimon multi
 
 # Move window (container) in monitor (output) direction and switch focus
 bindsym $mod+Control+Right $nexec $HOME/.config/i3/multimon_move.py -d "right"
 bindsym $mod+Control+Left $nexec $HOME/.config/i3/multimon_move.py -d "left"
+bindsym $mod+Control+Down $nexec $HOME/.config/i3/multimon_move.py -d "down"
+bindsym $mod+Control+Up $nexec $HOME/.config/i3/multimon_move.py -d "up"
 
 # Move workspace in monitor (output) direction and switch focus
 bindsym $mod+Shift+Right \
     $nexec $HOME/.config/i3/multimon_move.py -d "right" --move-ws
 bindsym $mod+Shift+Left \
     $nexec $HOME/.config/i3/multimon_move.py -d "left" --move-ws
+bindsym $mod+Shift+Down \
+    $nexec $HOME/.config/i3/multimon_move.py -d "down" --move-ws
+bindsym $mod+Shift+Up \
+    $nexec $HOME/.config/i3/multimon_move.py -d "up" --move-ws
 
 # Assign workspaces to specific monitors
 # TODO: Do this dynamically (i.e don't harcode monitor names)
 # We seem to need an ugly hack: https://github.com/i3/i3/issues/2387
 set $primary "eDP1"
 set $secondary "DP1"
-workspace $ws1 output $primary
+set $third "DP2"
+workspace $ws1 output $third
 workspace $ws2 output $primary
 workspace $ws3 output $primary
-workspace $ws4 output $primary
+workspace $ws4 output $third
 workspace $ws5 output $secondary
 workspace $ws6 output $secondary
 workspace $ws7 output $secondary
-workspace $ws8 output $secondary
+workspace $ws8 output $primary
+workspace $ws9 output $third
 
 # Focus next monitor (with wrapping): this also switches mouse cursor
 bindsym $alt+grave focus output right
+bindsym $alt+Escape focus output down
 
 # }}}
 # Run or activate apps and rules {{{
@@ -268,7 +280,7 @@ client.background       $border
 
 # Screenshots
 bindsym Print $nexec shots full
-bindsym $mod+Shift+9 $nexec shots selection
+bindsym $mod+Shift+c $nexec shots selection
 bindsym $mod+Shift+0 $nexec shots active
 
 # Kill focused window
@@ -289,8 +301,8 @@ bindsym $mod+Shift+r $nexec i3-msg 'fullscreen disable', $nexec \
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
-bindsym $mod+Shift+Up $nexec $HOME/.config/i3/brightness.py -d inc
-bindsym $mod+Shift+Down $nexec $HOME/.config/i3/brightness.py -d dec
+bindsym $mod+$alt+Right $nexec $HOME/.config/i3/brightness.py -d inc
+bindsym $mod+$alt+Left $nexec $HOME/.config/i3/brightness.py -d dec
 
 # Eject mounted media (usb drives)
 bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec \

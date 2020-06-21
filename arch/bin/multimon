@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Control multiple monitors with xrandr."""
+
 import os
 import subprocess
 import sys
@@ -9,15 +10,15 @@ from time import sleep
 import i3ipc
 
 
-def multi(how):
+def multi(how, direction):
     """Set up multiple monitors using xrandr."""
     if how == 'init':
-        _xrandr(how)
+        _xrandr(how, direction)
         return
 
     i3 = i3ipc.Connection()
     rmap = _get_resize_map(i3)
-    _xrandr(how)
+    _xrandr(how, direction)
     sleep(0.5)
     _restart_dunst_and_polybar(how)
     sleep(0.5)
@@ -25,16 +26,16 @@ def multi(how):
     return
 
 
-def _xrandr(how):
-    if how == 'hotplug':
-        # When plugging and unplugging (using udev rules) wait a bit before
-        # querying xrandr (because xrandr lags behind udev)
-        # FIXME: Must run `sudo udevadm control --reload`?
-        sleep(1)
+def _xrandr(how, direction):
+    if how == 'init' or how == 'hotplug':
+        # When starting or plugging and unplugging (using udev rules) wait a bit before
+        # querying xrandr (because xrandr seems to lag)
+        # FIXME: Must run `sudo udevadm control --reload` for hotplug?
+        sleep(0.5)
 
     xrandr_out = [line.decode('ascii').split() for line in _sh('xrandr').splitlines()]
     monitors = [e[0] for e in xrandr_out if not e[0][0].isdigit()]
-    conn = [l for l in xrandr_out if l[1] == 'connected']
+    conn = [lst for lst in xrandr_out if lst[1] == 'connected']
     nr_monitors = len(conn)
 
     # Primary monitor (assume it's the first connected monitor if it isn't
@@ -44,15 +45,23 @@ def _xrandr(how):
         prim = conn[0]
     prim_n, prim_w, prim_h = _get_name_and_res(xrandr_out, prim)
     print(f"Primary monitor: {prim_n}-{prim_w}x{prim_h}")
+    conn.remove(prim)
 
-    # Secondary
-    if nr_monitors == 2:
-        sec = list(_flatten([i for i in conn if i != prim]))
+    # Multiple monitors
+    # TODO: Use EDID for unique ordering?
+    if nr_monitors > 1:
+        sec = conn[0]
         sec_n, sec_w, sec_h = _get_name_and_res(xrandr_out, sec)
         print(f"Secondary monitor: {sec_n}-{sec_w}x{sec_h}")
+        conn.remove(sec)
+        if len(conn) > 0:
+            third = conn[0]
+            third_n, third_w, third_h = _get_name_and_res(xrandr_out, third)
+            print(f"Third monitor: {third_n}-{third_w}x{third_h}")
+            conn.remove(third)
 
     if how == 'init' or how == 'hotplug':
-        how = 'dual' if nr_monitors == 2 else 'primary'
+        how = 'primary' if nr_monitors == 1 else 'multi'
 
     if how == 'primary':
         cmd = f'--output {prim_n} --primary --dpi {PRIM_DPI}'
@@ -61,18 +70,31 @@ def _xrandr(how):
             cmd += f' --output {m} --off'
 
     elif how == 'mirror':
-        cmd = (
-            f'--output {sec_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '
-            f'--output {prim_n} --dpi {PRIM_DPI}'
-        )
+        cmd = f'--output {sec_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '
+        if nr_monitors == 3:
+            cmd += f'--output {third_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '  # noqa
+        cmd += f'--output {prim_n} --dpi {PRIM_DPI}'
 
-    elif how == 'dual':
-        scale = f'--scale {FIXED_SCALE}x{FIXED_SCALE}' if sec_w <= HD_WIDTH else ''
-        sec_w_pos = (FIXED_SCALE * sec_w) if sec_w <= HD_WIDTH else sec_w
-        cmd = (
-            f'--output {sec_n} {scale} --auto --pos 0x0 '
-            f'--output {prim_n} --primary --dpi {PRIM_DPI} --pos {sec_w_pos}x0'
-        )
+    elif how == 'multi':
+        # Assume the first monitor goes to the far left
+        sec_scale = f'--scale {FIXED_SCALE}x{FIXED_SCALE}' if sec_w <= HD_WIDTH else ''
+        cmd = f'--output {sec_n} {sec_scale} --auto --pos 0x0 '
+        wpos = (FIXED_SCALE * sec_w) if sec_w <= HD_WIDTH else sec_w
+        hpos = 0 if direction == 'right' else (FIXED_SCALE * sec_h)
+        if nr_monitors == 3:
+            # The second monitor is right to the first monitor
+            third_scale = (
+                f'--scale {FIXED_SCALE}x{FIXED_SCALE}' if third_w <= HD_WIDTH else ''
+            )
+            cmd += f'--output {third_n} {third_scale} --auto --pos {wpos}x0 '
+            # Primary is in the middle below the 2 monitors
+            wpos = int(wpos / 2)
+            hpos = FIXED_SCALE * sec_h
+        elif nr_monitors == 2:
+            # With only 1 extra monitor place the primary monitor below or to the right
+            # depending on direction value
+            wpos = wpos if direction == 'right' else 0
+        cmd += f'--output {prim_n} --primary --dpi {PRIM_DPI} --pos {wpos}x{hpos}'
 
     cmd = f'xrandr {cmd}'
     print(f"Running the following xrandr command: {cmd}")
@@ -176,14 +198,18 @@ def _get_name_and_res(xrandr_out, mon_info):
     mon_name = mon_info[0]
     start_index = xrandr_out.index(mon_info) + 1
     resolutions = xrandr_out[start_index:]
-    for l in resolutions:
-        res = l[0]
-        if any('*' in e or '+' in e for e in l):
+
+    for r in resolutions:
+        res = r[0]
+        # If the resolution doesn't start with a digit then we exausted all possible resolutions
+        if not res[0].isdigit():
+            used_res = resolutions[0][0]
             break
-    else:
-        # If there is no line marked then use the first (highest) resolution
-        res = resolutions[0][0]
-    mon_w, mon_h = tuple([int(i) for i in res.split('x')])
+        if any('*' in e or '+' in e for e in r):
+            used_res = res
+            break
+
+    mon_w, mon_h = tuple([int(i) for i in used_res.split('x')])
     return mon_name, mon_w, mon_h
 
 
@@ -198,8 +224,8 @@ def _sh_no_block(cmd, *args, **kwargs):
     return subprocess.Popen(cmd, *args, **kwargs)
 
 
-def _flatten(l):
-    for i in l:
+def _flatten(lst):
+    for i in lst:
         if isinstance(i, Sequence) and not isinstance(i, (str, bytes)):
             yield from _flatten(i)
         else:
@@ -211,6 +237,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('how')
+    parser.add_argument('direction', nargs='?', default='right')
     parse_args = parser.parse_args()
 
     # Constants
@@ -218,6 +245,19 @@ if __name__ == '__main__':
     FIXED_SCALE = 2
     HD_WIDTH = 1920
     POLYBAR_HEIGHT = 55
+    VALID_MODES = ['init', 'hotplug', 'primary', 'mirror', 'multi']
+    VALID_DIRECTIONS = ['right', 'below']
 
-    multi(parse_args.how)
+    chosen_mode = parse_args.how
+    if chosen_mode not in VALID_MODES:
+        raise ValueError(
+            f"{chosen_mode} invalid! Valid modes are: {', '.join(VALID_MODES)}"
+        )
+    chosen_direction = parse_args.direction
+    if chosen_direction not in VALID_DIRECTIONS:
+        raise ValueError(
+            f"{chosen_direction} invalid! Valid directions are: {', '.join(VALID_DIRECTIONS)}"
+        )
+
+    multi(chosen_mode, chosen_direction)
     sys.exit(0)
