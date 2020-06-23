@@ -100,7 +100,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Tim Pope editing/coding plugins
     call dein#add('tpope/vim-abolish')
-    call dein#add('tpope/vim-dispatch')
+    " call dein#add('tpope/vim-dispatch')
+    call dein#add('blueyed/vim-dispatch', {'rev': 'echospace'})
     call dein#add('tpope/vim-repeat')
     call dein#add('tpope/vim-rhubarb')
     call dein#add('tpope/vim-scriptease')
@@ -151,6 +152,8 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     " SQL (and database related)
     call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
     call dein#add('tpope/vim-dadbod')
+    call dein#add('kristijanhusak/vim-dadbod-ui')
+    call dein#add('kristijanhusak/vim-dadbod-completion')
 
     " TOML
     call dein#add('cespare/vim-toml', {'on_ft': 'toml'})
@@ -1489,7 +1492,35 @@ augroup END
 " }}}
 " Dadbod {{{
 
-" let g:db = 'mysql://blah'
+" Dadbod-UI
+let g:db_ui_winwidth = 40
+let g:db_ui_use_nerd_fonts = 1
+let g:db_ui_show_database_icon = 1
+let g:db_ui_show_help = 0
+let g:db_ui_auto_execute_table_helpers = 1
+let g:db_ui_execute_on_save = 0
+
+let g:db_ui_icons = {
+    \ 'collapsed' : {
+        \ 'db': ' ',
+    \ },
+\ }
+
+let g:dbs = {
+\ 'name': 'postgres:',
+\ }
+
+" Mappings
+nnoremap <silent> <Leader>db :DBUIToggle<CR>
+augroup ps_dadbodui
+    au!
+    au Filetype dbui nmap <silent><buffer> <CR> <Plug>(DBUI_SelectLine)
+    au Filetype dbui nmap <silent><buffer> zo <Plug>(DBUI_SelectLine)
+    au Filetype dbui nmap <silent><buffer> zc <Plug>(DBUI_SelectLine)
+    au Filetype dbui nmap <silent><buffer> <C-r> <Plug>(DBUI_Redraw)
+    au Filetype sql nmap <silent><buffer> <Leader>rf <Plug>(DBUI_ExecuteQuery)
+    au Filetype sql nmap <silent><buffer> <F7> <Plug>(DBUI_ExecuteQuery)
+augroup END
 
 " }}}
 " Defx {{{
