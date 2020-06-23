@@ -13,7 +13,7 @@ dpi = -1
 enable-ipc = true
 monitor = ${env:MONITOR:}
 width = 100%
-height = 55
+height = ${env:POLYHEIGHT:}
 offset-x = 0
 offset-y = 0
 background = ${colors.bg}
@@ -25,15 +25,15 @@ modules-left = arch title
 modules-center = i3
 modules-right = docker onedrive xkeyboard vpn wifi ethernet bluetooth pulseaudio battery date
 tray-position = ${env:TRAY_POS:}
-tray-maxsize = 32
+tray-maxsize = ${env:TRAY_SIZE:}
 ; Font definition
-font-0 = Noto Sans:size=11;3
-font-1 = Noto Sans:size=11:weight=bold;2
-font-2 = Noto Sans Mono:size=10:weight=bold;2
-font-3 = Symbols Nerd Font:size=13;4
-font-4 = Symbols Nerd Font:size=14;4
-font-5 = Symbols Nerd Font:size=12;4
-font-6 = Noto Sans:size=7:weight=bold;-10
+font-0 = ${env:POLYFONT0:}
+font-1 = ${env:POLYFONT1:}
+font-2 = ${env:POLYFONT2:}
+font-3 = ${env:POLYFONT3:}
+font-4 = ${env:POLYFONT4:}
+font-5 = ${env:POLYFONT5:}
+font-6 = ${env:POLYFONT6:}
 
 [global/wm]
 margin-bottom = 0

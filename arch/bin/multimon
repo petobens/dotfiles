@@ -77,24 +77,24 @@ def _xrandr(how, direction):
 
     elif how == 'multi':
         # Assume the first monitor goes to the far left
-        sec_scale = f'--scale {FIXED_SCALE}x{FIXED_SCALE}' if sec_w <= HD_WIDTH else ''
+        sec_scale = f'--scale {UP_SCALE}x{UP_SCALE}' if sec_w <= HD_WIDTH else ''
         cmd = f'--output {sec_n} {sec_scale} --auto --pos 0x0 '
-        wpos = (FIXED_SCALE * sec_w) if sec_w <= HD_WIDTH else sec_w
-        hpos = 0 if direction == 'right' else (FIXED_SCALE * sec_h)
+        wpos = int(UP_SCALE * sec_w) if sec_w <= HD_WIDTH else sec_w
+        hpos = 0 if direction == 'right' else int(UP_SCALE * sec_h)
         if nr_monitors == 3:
             # The second monitor is right to the first monitor
             third_scale = (
-                f'--scale {FIXED_SCALE}x{FIXED_SCALE}' if third_w <= HD_WIDTH else ''
+                f'--scale {UP_SCALE}x{UP_SCALE}' if third_w <= HD_WIDTH else ''
             )
             cmd += f'--output {third_n} {third_scale} --auto --pos {wpos}x0 '
             # Primary is in the middle below the 2 monitors
             wpos = int(wpos / 2)
-            hpos = FIXED_SCALE * sec_h
+            hpos = int(UP_SCALE * sec_h)
         elif nr_monitors == 2:
             # With only 1 extra monitor place the primary monitor below or to the right
             # depending on direction value
             wpos = wpos if direction == 'right' else 0
-        cmd += f'--output {prim_n} --primary --dpi {PRIM_DPI} --pos {wpos}x{hpos}'
+        cmd += f'--output {prim_n} --scale {DOWN_SCALE}x{DOWN_SCALE} --primary --pos {wpos}x{hpos}'
 
     cmd = f'xrandr {cmd}'
     print(f"Running the following xrandr command: {cmd}")
@@ -241,10 +241,10 @@ if __name__ == '__main__':
     parse_args = parser.parse_args()
 
     # Constants
-    PRIM_DPI = 192
-    FIXED_SCALE = 2
+    PRIM_DPI = 96
+    UP_SCALE = 1
+    DOWN_SCALE = 1
     HD_WIDTH = 1920
-    POLYBAR_HEIGHT = 55
     VALID_MODES = ['init', 'hotplug', 'primary', 'mirror', 'multi']
     VALID_DIRECTIONS = ['right', 'below']
 
@@ -259,5 +259,6 @@ if __name__ == '__main__':
             f"{chosen_direction} invalid! Valid directions are: {', '.join(VALID_DIRECTIONS)}"
         )
 
+    POLYBAR_HEIGHT = 55
     multi(chosen_mode, chosen_direction)
     sys.exit(0)

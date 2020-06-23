@@ -154,7 +154,8 @@ bindsym $mod+Control+a $nexec raiseorlaunch -c Brave -W $ws1 -m cal -e \
 bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
 # WS2: chat/communication related (i.e mail)
 # FIXME: Waiting not quite working
-bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
+    "slack --force-device-scale-factor=2"
 bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30

@@ -37,8 +37,8 @@ else
     fi
 
     # GTK scaling and themes
-    export GDK_SCALE=2
-    export GDK_DPI_SCALE=0.5
+    # export GDK_SCALE=2
+    # export GDK_DPI_SCALE=0.5
     export GTK_THEME=Adwaita:dark
 fi
 
