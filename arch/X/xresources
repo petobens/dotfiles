@@ -7,5 +7,5 @@ Xft.hintstyle: hintfull
 Xft.rgba: rgb
 
 ! Cursor
-Xcursor.size: 24
+Xcursor.size: 48
 Xcursor.theme: capitaine-cursors

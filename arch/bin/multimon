@@ -88,7 +88,7 @@ def _xrandr(how, direction):
             )
             cmd += f'--output {third_n} {third_scale} --auto --pos {wpos}x0 '
             # Primary is in the middle below the 2 monitors
-            wpos = int(wpos / 2)
+            wpos = wpos - int(prim_w / 2)
             hpos = int(UP_SCALE * sec_h)
         elif nr_monitors == 2:
             # With only 1 extra monitor place the primary monitor below or to the right
