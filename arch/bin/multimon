@@ -2,6 +2,7 @@
 """Control multiple monitors with xrandr."""
 
 import os
+from pathlib import Path
 import subprocess
 import sys
 from collections.abc import Sequence
@@ -64,7 +65,7 @@ def _xrandr(how, direction):
         how = 'primary' if nr_monitors == 1 else 'multi'
 
     if how == 'primary':
-        cmd = f'--output {prim_n} --primary --dpi {PRIM_DPI}'
+        cmd = f'--output {prim_n} --primary --dpi {PRIM_DPI * 2}'
         turn_off = [i for i in monitors if i not in ('Screen', 'VIRTUAL1', prim_n)]
         for m in turn_off:
             cmd += f' --output {m} --off'
@@ -94,11 +95,21 @@ def _xrandr(how, direction):
             # With only 1 extra monitor place the primary monitor below or to the right
             # depending on direction value
             wpos = wpos if direction == 'right' else 0
-        cmd += f'--output {prim_n} --scale {DOWN_SCALE}x{DOWN_SCALE} --primary --pos {wpos}x{hpos}'
+        cmd += (
+            f'--output {prim_n} --scale {DOWN_SCALE}x{DOWN_SCALE} --primary '
+            f'--pos {wpos}x{hpos} --dpi {PRIM_DPI}'
+        )
 
     cmd = f'xrandr {cmd}'
     print(f"Running the following xrandr command: {cmd}")
     _sh(cmd)
+
+    # Ensure correct XResources
+    xrdb_cmd = f'xrdb -merge {str(Path.home())}/.Xresources'
+    if how == 'primary':
+        xrdb_cmd += '_hidpi'
+    print(f"Running the following xrdb command: {xrdb_cmd}")
+    _sh(xrdb_cmd)
 
 
 def _get_resize_map(i3):

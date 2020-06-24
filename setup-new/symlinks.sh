@@ -273,6 +273,8 @@ else
         echo Created .xinitrc symlink
         $ln_cmd -fTs "$dotfiles_dir/arch/X/xresources" "$HOME/.Xresources"
         echo Created .Xresources symlink
+        $ln_cmd -fTs "$dotfiles_dir/arch/X/xresources_hidpi" "$HOME/.Xresources_hidpi"
+        echo Created .Xresources_hidpi symlink
         $ln_cmd -fTs "$dotfiles_dir/arch/X/xmodmap" "$HOME/.Xmodmap"
         echo Created .Xmodmap symlink
     fi
