@@ -152,7 +152,7 @@ bindsym $mod+Control+i $nexec raiseorlaunch -c Brave -W $ws1 -m browser
 bindsym $mod+Control+a $nexec raiseorlaunch -c Brave -W $ws1 -m cal -e \
     "brave --new-window https://calendar.google.com/calendar/b/0/r"
 bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
-# WS2: chat/communication related (i.e mail)
+# WS2: chat/communication related
 # FIXME: Waiting not quite working
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
     "slack --force-device-scale-factor=2"
@@ -161,12 +161,12 @@ bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
 bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws1 -m hangouts -e \
     "brave --new-window https://hangouts.google.com/?authuser=1"
-bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws2
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
 bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -W $ws3
 # WS4: Other
+bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws4
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
     "freeoffice-planmaker" -l 30
 

@@ -41,14 +41,14 @@ def launch_polybar(monitors):
             monitor = line[0]
             env = os.environ.copy()
             env['MONITOR'] = monitor
-            env['POLYHEIGHT'] = '55' if 'primary' in line else '34'
+            env['POLYHEIGHT'] = '55' if 'primary' in line else '28'
             env['TRAY_SIZE'] = '32' if 'primary' in line else '20'
             if nr_monitors > 1 and 'primary' in line:
                 fontmap_index = 2
             else:
                 fontmap_index = 1
             for i in range(7):
-                env[f'POLYFONT{i}'] = FONT_MAP[i][0].format(FONT_MAP[i][fontmap_index])
+                env[f'POLYFONT{i}'] = FONT_MAP[i][0].format(*FONT_MAP[i][fontmap_index])
             # Hack to avoid i3 workspaces are not shown on polybar when using mirroring
             # See: https://github.com/jaagr/polybar/issues/1191
             env['POLYBAR_I3_PIN'] = 'false' if monitors == 'mirror' else 'true'
@@ -68,13 +68,13 @@ if __name__ == '__main__':
     parse_args = parser.parse_args()
 
     FONT_MAP = {
-        0: ('Noto Sans:size={};3', '11', '21'),
-        1: ('Noto Sans:size={}:weight=bold;2', '11', '21'),
-        2: ('Noto Sans Mono:size={}:weight=bold;2', '10', '20'),
-        3: ('Symbols Nerd Font:size={};4', '13', '26'),
-        4: ('Symbols Nerd Font:size={};4', '14', '28'),
-        5: ('Symbols Nerd Font:size={};4', '12', '24'),
-        6: ('Noto Sans:size={}:weight=bold;-10', '7', '14'),
+        0: ('Noto Sans:size={};3', ['11'], ['21']),
+        1: ('Noto Sans:size={}:weight=bold;2', ['11'], ['21']),
+        2: ('Noto Sans Mono:size={}:weight=bold;2', ['10'], ['20']),
+        3: ('Symbols Nerd Font:size={};4', ['13'], ['26']),
+        4: ('Symbols Nerd Font:size={};4', ['14'], ['28']),
+        5: ('Symbols Nerd Font:size={};4', ['12'], ['24']),
+        6: ('Noto Sans:size={}:weight=bold;{}', ['7', '-5'], ['14', '-10']),
     }
 
     launch_polybar(parse_args.monitors)
