@@ -36,9 +36,11 @@ else
         export INFOPATH="$INFOPATH:/usr/local/texlive/2020/texmf-dist/doc/info"
     fi
 
-    # GTK scaling (when upscaling) and themes
+    # GTK scaling and themes (we don't do this here because we use the Xft.dpi
+    # setting to scale most GTK apps (note: i) we might need to restart the app
+    # to see the effect and ii) this won't work for all apps/dialogs))
     # export GDK_SCALE=2
-    # export GDK_DPI_SCALE=0.5
+    # export GDK_DPI_SCALE=0.5 #
     export GTK_THEME=Adwaita:dark
 fi
 
