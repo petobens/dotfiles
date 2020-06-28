@@ -142,9 +142,8 @@ bindsym $alt+Escape focus output down
 
 # Rofi (application launcher / switcher)
 bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
-bindsym $mod+s $nexec "rofi -combi-modi drun,run -show combi"
-bindsym $mod+z $nexec \
-"gopass ls --flat | rofi -dmenu -p gopass | xargs --no-run-if-empty gopass show -c"
+bindsym $mod+s $nexec $HOME/.config/i3/font_aware_launcher.py rofi apps
+bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
 
 # WS1: browser and agenda (to have a black theme in calendar use Stylus
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
@@ -160,11 +159,11 @@ bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
 bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws1 -m hangouts -e \
     "brave --new-window https://hangouts.google.com/?authuser=1"
-bindsym $mod+Control+t $nexec $HOME/.config/i3/gtk_qt_launcher.py thunderbird
+bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
-bindsym $mod+Control+u $nexec $HOME/.config/i3/gtk_qt_launcher.py transmission
+bindsym $mod+Control+u $nexec $HOME/.config/i3/font_aware_launcher.py transmission
 # WS4: Other
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
     "freeoffice-planmaker" -l 30
@@ -180,10 +179,10 @@ bindsym $mod+Control+c $nexec raiseorlaunch -c kitty -W $ws5 -m terminal \
     -e 'kitty /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"'
 
 # Standalone terminal apps in floating window in the current workspace
-bindsym $mod+Control+p $nexec $HOME/.config/i3/gtk_qt_launcher.py zathura
-bindsym $mod+Control+v $nexec $HOME/.config/i3/gtk_qt_launcher.py vimiv
-bindsym $mod+Control+g $nexec $HOME/.config/i3/gtk_qt_launcher.py peek
-bindsym $mod+Control+w $nexec $HOME/.config/i3/gtk_qt_launcher.py connman
+bindsym $mod+Control+p $nexec $HOME/.config/i3/font_aware_launcher.py zathura
+bindsym $mod+Control+v $nexec $HOME/.config/i3/font_aware_launcher.py vimiv
+bindsym $mod+Control+g $nexec $HOME/.config/i3/font_aware_launcher.py peek
+bindsym $mod+Control+w $nexec $HOME/.config/i3/font_aware_launcher.py connman
 bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -f -e \
     'alacritty -t QuickTerm -e /usr/bin/bash -l -c '\
 '"cd $(tmux display -p "#{pane_current_path}") && exec /usr/bin/bash -i"'
@@ -249,7 +248,7 @@ bindsym $mod+Shift+t $nexec $HOME/.config/i3/spotify_track.py
 bindsym $mod+Shift+plus $nexec $HOME/.config/i3/volume.py -d up -l 5
 bindsym $mod+Shift+minus $nexec $HOME/.config/i3/volume.py -d down -l 5
 bindsym $mod+Shift+m $nexec $HOME/.config/i3/volume.py -d mute
-bindsym $mod+Shift+v $nexec $HOME/.config/i3/gtk_qt_launcher.py pavucontrol
+bindsym $mod+Shift+v $nexec $HOME/.config/i3/font_aware_launcher.py pavucontrol
 
 # }}}
 # Theme and fonts {{{
@@ -286,13 +285,13 @@ bindsym $mod+Shift+0 $nexec shots active
 bindsym $mod+q $nexec $HOME/.config/i3/custom_kill.py
 # Kill all windows on all workspaces (match any class string)
 bindsym $mod+Shift+q $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/gtk_qt_launcher.py gtk_qt_dialog quit
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog quit
 
 # Shutdown, restart and lock
 bindsym $mod+Shift+s $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/gtk_qt_launcher.py gtk_qt_dialog poweroff
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog poweroff
 bindsym $mod+Shift+r $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/gtk_qt_launcher.py gtk_qt_dialog reboot
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog reboot
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
@@ -301,11 +300,11 @@ bindsym $mod+$alt+Left $nexec $HOME/.config/i3/brightness.py -d dec
 
 # Eject mounted media (usb drives)
 bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/gtk_qt_launcher.py gtk_qt_dialog usb
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog usb
 
 # Empty Trash Can
 bindsym $mod+Shift+b $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/gtk_qt_launcher.py gtk_qt_dialog trash
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog trash
 
 # }}}
 # Startup {{{

@@ -1,5 +1,5 @@
 # Options
-rofi.font:            Noto Sans Mono 10
+rofi.font:            Noto Sans Mono 11
 rofi.hide-scrollbar:  true
 rofi.show-icons:      true
 rofi.drun-icon-theme: Papirus-Dark
@@ -7,7 +7,7 @@ rofi.matching:        fuzzy
 rofi.separator-style: solid
 rofi.location:        0
 rofi.yoffset:         -50
-rofi.dpi:             1  # autodetect based on size of monitor (not X11 screen size)
+rofi.dpi:             0
 rofi.terminal:        alacritty
 
 # Maps

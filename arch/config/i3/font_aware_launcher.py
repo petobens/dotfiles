@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Launch a gtk program adjusting fonts if necessary."""
+"""Launch programs adjusting fonts if necessary."""
 
 import os
 import subprocess
@@ -19,7 +19,7 @@ def _sh(cmd, *args, **kwargs):
     return res
 
 
-def run_app(app, dialog):
+def run_app(app, subcmd):
     """Run gdk app adjusting font size if necessary."""
     i3 = i3ipc.Connection()
     ws = i3.get_tree().find_focused().workspace()
@@ -89,10 +89,10 @@ def run_app(app, dialog):
             ]
         )
     elif app == 'gtk_dialog':
-        if dialog is None:
+        if subcmd is None:
             raise ValueError('Missing type of dialog!')
         gtk_dialog = ['gtk_dialog', '-t']
-        if dialog == 'poweroff':
+        if subcmd == 'poweroff':
             gtk_dialog += [
                 "Power Management",
                 '-m',
@@ -100,7 +100,7 @@ def run_app(app, dialog):
                 '-a',
                 'systemctl poweroff',
             ]
-        elif dialog == 'reboot':
+        elif subcmd == 'reboot':
             gtk_dialog += [
                 "Power Management",
                 '-m',
@@ -108,7 +108,7 @@ def run_app(app, dialog):
                 '-a',
                 'systemctl reboot',
             ]
-        elif dialog == 'quit':
+        elif subcmd == 'quit':
             gtk_dialog += [
                 "App Management",
                 '-m',
@@ -117,7 +117,7 @@ def run_app(app, dialog):
                 '-a',
                 '$HOME/.config/i3/custom_kill.py -w all',
             ]
-        elif dialog == 'usb':
+        elif subcmd == 'usb':
             gtk_dialog += [
                 "Media Management",
                 '-m',
@@ -125,7 +125,7 @@ def run_app(app, dialog):
                 '-a',
                 'udiskie-umount -a',
             ]
-        elif dialog == 'trash':
+        elif subcmd == 'trash':
             gtk_dialog += [
                 "Trash Management",
                 '-m',
@@ -145,6 +145,23 @@ def run_app(app, dialog):
         _sh_no_block(
             ['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'],
         )
+    elif app == 'rofi':
+        if subcmd is None:
+            raise ValueError('Missing rofi subcommand!')
+        rofi_fsize = 11
+        rofi_yoffset = -50
+        if is_hidpi & (nr_monitors > 1):
+            rofi_fsize *= 2
+            rofi_yoffset *= 2
+        rofi_base = f'rofi -font "Noto Sans Mono {rofi_fsize}" -yoffset {rofi_yoffset}'
+        if subcmd == 'apps':
+            rofi_cmd = [f'{rofi_base} -combi-modi drun,run -show combi']
+        elif subcmd == 'pass':
+            rofi_cmd = [
+                f"gopass ls --flat | {rofi_base} -dmenu -p gopass | "
+                "xargs --no-run-if-empty gopass show -c"
+            ]
+        _sh_no_block(rofi_cmd, shell=True)
 
 
 if __name__ == '__main__':
@@ -152,8 +169,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('application')
-    parser.add_argument('dialog', nargs='?', default=None)
+    parser.add_argument('subcommand', nargs='?', default=None)
     parse_args = parser.parse_args()
 
-    run_app(parse_args.application, parse_args.dialog)
+    run_app(parse_args.application, parse_args.subcommand)
     sys.exit(0)
