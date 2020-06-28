@@ -4,7 +4,6 @@ import subprocess
 from subprocess import Popen
 
 import gi
-import i3ipc
 
 gi.require_version('Gtk', '3.0')
 
@@ -30,29 +29,14 @@ def _sh(cmd, *args, **kwargs):
 
 def confirmation_dialog(title, msg, action, shell=False):
     """Create confirmation dialog that triggers an action."""
-    i3 = i3ipc.Connection()
-    ws = i3.get_tree().find_focused().workspace()
-    is_hidpi = ws.ipc_data['output'] == 'eDP1'
-    nr_monitors = int(
-        [
-            line.decode('ascii').split()
-            for line in _sh('xrandr --listactivemonitors').splitlines()
-        ][0][-1]
-    )
-    fsize = FONT_SIZE
-    if nr_monitors > 1 and is_hidpi:
-        fsize = FONT_SIZE * 2
-
     win = Gtk.Window()
     win.connect('destroy', Gtk.main_quit)
     dialog = Gtk.Dialog(parent=win)
 
-    font = ImageFont.truetype(FONT, fsize)
+    font = ImageFont.truetype(FONT, FONT_SIZE)
     w, _ = font.getsize(msg)
-    actual_w = w + 80
-    actual_h = 110
-    final_w = actual_w * 2 if is_hidpi else actual_w
-    final_h = actual_h * 2 if is_hidpi else actual_h
+    final_w = w + 80
+    final_h = 110
     dialog.set_default_size(final_w, final_h)
 
     dialog.set_property('title', title)
@@ -62,7 +46,7 @@ def confirmation_dialog(title, msg, action, shell=False):
     dialog.action_area.set_property('halign', Gtk.Align.CENTER)
 
     label = Gtk.Label()
-    label.override_font(Pango.FontDescription(f'Noto Sans {fsize}'))
+    label.override_font(Pango.FontDescription(f'Noto Sans {FONT_SIZE}'))
     label.set_text(msg)
     box = dialog.get_content_area()
     box.add(label)
