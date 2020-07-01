@@ -50,6 +50,18 @@ def run_app(app, subcmd):
         _sh_no_block(
             ['raiseorlaunch', '-c', 'pavucontrol', '-f', '-e', f'"{gdk}pavucontrol"']
         )
+    elif app == 'power-manager':
+        # It might open in a hidpi screen or not
+        _sh_no_block(
+            [
+                'raiseorlaunch',
+                '-c',
+                'xfcer-power-manager-settings',
+                '-f',
+                '-e',
+                f'"{gdk}xfce4-power-manager-settings"',
+            ]
+        )
     elif app == 'transmission':
         # It always opens in hidpi screen
         gdk += 'GDK_SCALE=2 '
