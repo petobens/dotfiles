@@ -176,11 +176,25 @@ def run_app(app, subcmd):
                 "-kb-row-up 'ISO_Left_Tab,Ctrl-p' & "
             ]
         elif subcmd == 'arch-init':
-            yoffset = 25 
+            yoffset = 25
             if is_hidpi:
                 yoffset *= 2
             rofi_cmd = [f"$HOME/.config/polybar/arch_dmenu.sh {rofi_fsize} {yoffset}"]
         _sh_no_block(rofi_cmd, shell=True)
+    elif app == 'alacritty':
+        if subcmd is None:
+            raise ValueError('Missing alacritty subcommand!')
+        alacritty_scale = 1
+        if is_hidpi:
+            alacritty_scale = 2
+        alacritty_cmd = f'WINIT_X11_SCALE_FACTOR={alacritty_scale} alacritty -t '
+        if subcmd == 'onedrive':
+            alacritty_cmd += '"OneDrive" -e sh -c "journalctl --user-unit onedrive -f"'
+        elif subcmd == 'bluetooth':
+            alacritty_cmd += '"bluetooth-fzf" -d 100 30 -e bash -ci "bt;exit"'
+        elif subcmd == 'docker':
+            alacritty_cmd += '"docker-info" -d 150 30 -e sh -c "docker info | less +F"'
+        _sh_no_block([alacritty_cmd], shell=True)
 
 
 if __name__ == '__main__':

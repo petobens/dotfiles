@@ -85,7 +85,7 @@ exec = ~/.config/polybar/docker.sh
 interval = 5.0
 label-font = 5
 format-padding = 1
-click-left = alacritty -t docker-info -d 150 30 -e sh -c "docker info | less +F"
+click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty docker
 
 [module/onedrive]
 type = custom/script
@@ -93,7 +93,7 @@ exec = python ~/.config/polybar/onedrive.py
 label-font = 5
 format-padding = 1
 interval = 5.0
-click-left = alacritty -t "OneDrive" -e sh -c "journalctl --user-unit onedrive -f"
+click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty onedrive
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -137,7 +137,7 @@ label-disconnected-foreground = ${colors.fg-urg}
 type = custom/script
 exec = ~/.config/polybar/bluetooth.sh
 interval = 5.0
-click-left = alacritty -t bluetooth-fzf -d 100 30 -e bash -ci "bt;exit"
+click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty bluetooth
 click-right = bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
 
 [module/pulseaudio]
