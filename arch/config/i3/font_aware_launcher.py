@@ -202,12 +202,10 @@ def run_app(app, subcmd):
             alacritty_cmd = f"raiseorlaunch -t 'numbers' -f -e '{alacritty_cmd} numbers -e ipython3'"  # noqa
         elif subcmd == 'ranger':
             alacritty_cmd = f'raiseorlaunch -t "ranger" -f -e \'{alacritty_cmd} ranger -e sh -c "ranger $(tmux display -p \"#{{pane_current_path}}\")"\''  # noqa
-        elif subcmd == 'downloads':
-            alacritty_cmd = f'raiseorlaunch -t "Downloads" -f -e \'{alacritty_cmd} ranger -e sh -c "ranger ~/Downloads"\''  # noqa
         elif subcmd == 'trash':
             alacritty_cmd = f'raiseorlaunch -t "Trash Can" -f -e \'{alacritty_cmd} "Trash Can" -e sh -c "trash-list | less"\''  # noqa
         elif subcmd == 'quickterm':
-            alacritty_cmd = f'raiseorlaunch -t "Quick Term" -f -e \'{alacritty_cmd} "QuickTerm" -e /usr/bin/bash -l -c "cd $(tmux display -p \"#{{pane_current_path}}\") && exec /usr/bin/bash -i"\''  # noqa
+            alacritty_cmd = f'raiseorlaunch -t "QuickTerm" -f -e \'{alacritty_cmd} "QuickTerm" -e /usr/bin/bash -l -c "cd $(tmux display -p \"#{{pane_current_path}}\") && exec /usr/bin/bash -i"\''  # noqa
         _sh_no_block([alacritty_cmd], shell=True)
 
 
