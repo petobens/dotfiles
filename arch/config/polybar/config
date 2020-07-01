@@ -43,7 +43,7 @@ margin-top = 0
 type = custom/text
 content = %{T6} %{T-}
 content-padding = 1
-click-left = /home/pedro/.config/polybar/arch_dmenu.sh
+click-left = /home/pedro/.config/i3/font_aware_launcher.py rofi arch-init
 
 [module/title]
 type = internal/xwindow

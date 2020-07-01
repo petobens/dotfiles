@@ -175,6 +175,11 @@ def run_app(app, subcmd):
                 "-kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' "
                 "-kb-row-up 'ISO_Left_Tab,Ctrl-p' & "
             ]
+        elif subcmd == 'arch-init':
+            yoffset = 25 
+            if is_hidpi:
+                yoffset *= 2
+            rofi_cmd = [f"$HOME/.config/polybar/arch_dmenu.sh {rofi_fsize} {yoffset}"]
         _sh_no_block(rofi_cmd, shell=True)
 
 
