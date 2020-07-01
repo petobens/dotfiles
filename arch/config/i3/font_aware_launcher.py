@@ -194,6 +194,20 @@ def run_app(app, subcmd):
             alacritty_cmd += '"bluetooth-fzf" -d 100 30 -e bash -ci "bt;exit"'
         elif subcmd == 'docker':
             alacritty_cmd += '"docker-info" -d 150 30 -e sh -c "docker info | less +F"'
+        elif subcmd == 'htop':
+            alacritty_cmd = (
+                f"raiseorlaunch -t 'htop' -f -e '{alacritty_cmd} htop -e htop'"
+            )
+        elif subcmd == 'numbers':
+            alacritty_cmd = f"raiseorlaunch -t 'numbers' -f -e '{alacritty_cmd} numbers -e ipython3'"  # noqa
+        elif subcmd == 'ranger':
+            alacritty_cmd = f'raiseorlaunch -t "ranger" -f -e \'{alacritty_cmd} ranger -e sh -c "ranger $(tmux display -p \"#{{pane_current_path}}\")"\''  # noqa
+        elif subcmd == 'downloads':
+            alacritty_cmd = f'raiseorlaunch -t "Downloads" -f -e \'{alacritty_cmd} ranger -e sh -c "ranger ~/Downloads"\''  # noqa
+        elif subcmd == 'trash':
+            alacritty_cmd = f'raiseorlaunch -t "Trash Can" -f -e \'{alacritty_cmd} "Trash Can" -e sh -c "trash-list | less"\''  # noqa
+        elif subcmd == 'quickterm':
+            alacritty_cmd = f'raiseorlaunch -t "Quick Term" -f -e \'{alacritty_cmd} "QuickTerm" -e /usr/bin/bash -l -c "cd $(tmux display -p \"#{{pane_current_path}}\") && exec /usr/bin/bash -i"\''  # noqa
         _sh_no_block([alacritty_cmd], shell=True)
 
 

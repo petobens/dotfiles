@@ -178,24 +178,17 @@ bindsym $mod+Control+x $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
 bindsym $mod+Control+c $nexec raiseorlaunch -c kitty -W $ws5 -m terminal \
     -e 'kitty /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"'
 
-# Standalone terminal apps in floating window in the current workspace
+# Standalone apps in floating window in the current workspace
 bindsym $mod+Control+p $nexec $HOME/.config/i3/font_aware_launcher.py zathura
 bindsym $mod+Control+v $nexec $HOME/.config/i3/font_aware_launcher.py vimiv
 bindsym $mod+Control+g $nexec $HOME/.config/i3/font_aware_launcher.py peek
 bindsym $mod+Control+w $nexec $HOME/.config/i3/font_aware_launcher.py connman
-bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -f -e \
-    'alacritty -t QuickTerm -e /usr/bin/bash -l -c '\
-'"cd $(tmux display -p "#{pane_current_path}") && exec /usr/bin/bash -i"'
-bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -f -e \
-    'alacritty -t numbers -e ipython3'
-bindsym $mod+Control+f $nexec raiseorlaunch -t 'ranger' -f -e 'alacritty -t '\
-'ranger -e sh -c "ranger $(tmux display -p "#{pane_current_path}")"'
-bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -f -e \
-    'alacritty -t Downloads -e ranger ~/Downloads'
-bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -f -e \
-    'alacritty -t htop -e htop'
-bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -f -e \
-    'alacritty -t "Trash Can" -e sh -c "trash-list | less"'
+bindsym $mod+Control+q $nexec $HOME/.config/i3/font_aware_launcher.py alacritty quickterm
+bindsym $mod+Control+n $nexec $HOME/.config/i3/font_aware_launcher.py alacritty numbers
+bindsym $mod+Control+f $nexec $HOME/.config/i3/font_aware_launcher.py alacritty ranger
+bindsym $mod+Control+d $nexec $HOME/.config/i3/font_aware_launcher.py alacritty downloads
+bindsym $mod+Control+h $nexec $HOME/.config/i3/font_aware_launcher.py alacritty htop
+bindsym $mod+Control+b $nexec $HOME/.config/i3/font_aware_launcher.py alacritty trash
 
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
