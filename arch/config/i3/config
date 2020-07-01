@@ -141,7 +141,7 @@ bindsym $alt+Escape focus output down
 # Run or activate apps and rules {{{
 
 # Rofi (application launcher / switcher)
-bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
+bindsym $alt+Tab $nexec $HOME/.config/i3/font_aware_launcher.py rofi tab
 bindsym $mod+s $nexec $HOME/.config/i3/font_aware_launcher.py rofi apps
 bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
 

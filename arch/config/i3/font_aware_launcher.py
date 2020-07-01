@@ -22,14 +22,9 @@ def _sh(cmd, *args, **kwargs):
 def run_app(app, subcmd):
     """Run gdk app adjusting font size if necessary."""
     i3 = i3ipc.Connection()
+    nr_monitors = len([i for i in i3.get_outputs() if i.active])
     ws = i3.get_tree().find_focused().workspace()
     is_hidpi = ws.ipc_data['output'] == 'eDP1'
-    nr_monitors = int(
-        [
-            line.decode('ascii').split()
-            for line in _sh('xrandr --listactivemonitors').splitlines()
-        ][0][-1]
-    )
 
     gdk = ''
     qt = ''
@@ -152,7 +147,7 @@ def run_app(app, subcmd):
         rofi_yoffset = -50
         if is_hidpi & (nr_monitors > 1):
             rofi_fsize *= 2
-            rofi_yoffset *= 2
+            rofi_yoffset = int(rofi_yoffset * 1.5)
         rofi_base = f'rofi -font "Noto Sans Mono {rofi_fsize}" -yoffset {rofi_yoffset}'
         if subcmd == 'apps':
             rofi_cmd = [f'{rofi_base} -combi-modi drun,run -show combi']
@@ -160,6 +155,13 @@ def run_app(app, subcmd):
             rofi_cmd = [
                 f"gopass ls --flat | {rofi_base} -dmenu -p gopass | "
                 "xargs --no-run-if-empty gopass show -c"
+            ]
+        elif subcmd == 'tab':
+            # Note: add `monitor primary` if we want to show always in the same monitor
+            rofi_cmd = [
+                f"{rofi_base} -show window  -no-fixed-num-lines "
+                "-kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' "
+                "-kb-row-up 'ISO_Left_Tab,Ctrl-p' & "
             ]
         _sh_no_block(rofi_cmd, shell=True)
 
