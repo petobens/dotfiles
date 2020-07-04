@@ -43,6 +43,10 @@ def launch_polybar(monitors):
             env['MONITOR'] = monitor
             env['POLYHEIGHT'] = '55' if 'primary' in line else '28'
             env['TRAY_SIZE'] = '32' if 'primary' in line else '20'
+            if monitors == 'mirror':
+                # We always mirror from our hidpi screen
+                env['POLYHEIGHT'] = '55'
+                env['TRAY_SIZE'] = '32'
             if nr_monitors > 1 and 'primary' in line:
                 fontmap_index = 2
             else:

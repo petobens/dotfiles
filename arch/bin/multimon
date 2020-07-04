@@ -74,7 +74,7 @@ def _xrandr(how, direction):
         cmd = f'--output {sec_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '
         if nr_monitors == 3:
             cmd += f'--output {third_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '  # noqa
-        cmd += f'--output {prim_n} --dpi {PRIM_DPI}'
+        cmd += f'--output {prim_n} --dpi {PRIM_DPI * 2}'
 
     elif how == 'multi':
         # Assume the first monitor goes to the far left
@@ -106,7 +106,7 @@ def _xrandr(how, direction):
 
     # Ensure correct XResources
     xrdb_cmd = f'xrdb -merge {str(Path.home())}/.Xresources'
-    if how == 'primary':
+    if how == 'primary' or how == 'mirror':
         xrdb_cmd += '_hidpi'
     print(f"Running the following xrdb command: {xrdb_cmd}")
     _sh(xrdb_cmd)
@@ -178,8 +178,10 @@ def _find_how_to_resize(i3, win=None):
 
 
 def _resize_win(i3, x, y, w, h):
+    outputs = [i for i in i3.get_outputs() if i.active]
     win = i3.get_tree().find_focused()
     ws = win.workspace()
+    output_width = [o.rect.width for o in outputs if o.name == ws.ipc_data['output']][0]
     max_h = ws.rect.height
     max_w = ws.rect.width
     max_x = ws.rect.x
@@ -191,7 +193,7 @@ def _resize_win(i3, x, y, w, h):
     x -= 1
     y = int(max_y + (max_h * y))
 
-    polybar_height = 55 if ws.ipc_data['output'] == 'eDP1' else 28
+    polybar_height = 55 if (output_width > 1920) else 28
     if y < polybar_height:
         # We always want to leave space for polybar
         y = polybar_height

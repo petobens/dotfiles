@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Launch programs adjusting fonts if necessary."""
-
 import os
 import subprocess
 import sys
@@ -22,9 +21,11 @@ def _sh(cmd, *args, **kwargs):
 def run_app(app, subcmd):
     """Run gdk app adjusting font size if necessary."""
     i3 = i3ipc.Connection()
-    nr_monitors = len([i for i in i3.get_outputs() if i.active])
+    outputs = [i for i in i3.get_outputs() if i.active]
+    nr_monitors = len(outputs)
     ws = i3.get_tree().find_focused().workspace()
-    is_hidpi = ws.ipc_data['output'] == 'eDP1'
+    output_width = [o.rect.width for o in outputs if o.name == ws.ipc_data['output']][0]
+    is_hidpi = output_width > 1920
 
     gdk = ''
     qt = ''
