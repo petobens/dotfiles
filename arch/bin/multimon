@@ -224,7 +224,7 @@ def _get_name_and_res(xrandr_out, mon_info):
 
 def _scale(width):
     # For external monitors we scale to full hd (i.e upscale low resolution and
-    # downscale hi ones)
+    # downscale hi res since our gpu lags otherwise)
     hd_width = 1920
     scale_factor = 1
     if width < hd_width:
