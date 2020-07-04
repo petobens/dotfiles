@@ -360,7 +360,7 @@ alias mgpp='echo $(pass meli/vpn/pin)'\
 '$(oathtool --base32 --totp $(pass meli/vpn/secret))'
 mvssh() {
     (
-        command cd "/home/pedro/OneDrive/mutt/meli/vpn" || exit
+        command cd "/home/pedro/OneDrive/mutt/clients/meli/vpn" || exit
         vg_status=$(vagrant status | grep -P "^default\S*\W" | rev | cut -d ' ' -f 2 | rev)
         if [[ "$vg_status" != 'running' ]]; then
             vagrant up
@@ -380,6 +380,7 @@ mvssh() {
 alias mvp='mvssh proxy 12345'
 alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
 alias mvtt='vagrant ssh -- -L 127.0.0.1:1025:$(pass meli/teradata/host):1025 -v -N'
+alias mvpt='vagrant ssh -- -L 127.0.0.1:8443:$(pass meli/presto/host):443 -v -N'
 
 # }}}
 # Functions {{{

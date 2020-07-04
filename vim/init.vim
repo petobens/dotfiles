@@ -1531,7 +1531,11 @@ call defx#custom#option('_', {
             \ 'split': 'vertical',
             \ 'direction': 'topleft',
             \ 'columns': 'mark:indent:icon:filename:icons:size:git',
-            \ 'root_marker': '﬌ '
+            \ 'root_marker': '﬌ ',
+            \ 'floating_preview': 1,
+            \ 'vertical_preview': 1,
+            \ 'preview_width': 80,
+            \ 'preview_height': 15
             \ })
 call defx#custom#column('mark', {
             \ 'readonly_icon': '',
@@ -1682,6 +1686,8 @@ function! s:defx_settings()
     nnoremap <silent><buffer><expr> <Leader>th
         \ defx#do_action('toggle_ignored_files')
     " Redraw
+    nnoremap <silent><buffer><expr> <A-v> defx#do_action('preview')
+    " Preview
     nnoremap <silent><buffer><expr> <C-r> defx#do_action('redraw')
     " Toggle sorting from filename to time (with last modified first)
     nnoremap <silent><buffer><expr> S defx#do_action('toggle_sort', 'Time')

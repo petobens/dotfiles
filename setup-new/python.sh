@@ -26,6 +26,7 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd scikit-learn
     $pip_install_cmd scipy
     if [ "$OSTYPE" == 'linux-gnu' ]; then
+        $pip_install_cmd ueberzug
         $pip_install_cmd Xlib
     fi
 fi
@@ -48,7 +49,7 @@ $pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
 $pipx_install_cmd black
 $pipx_install_cmd httpie
 # shellcheck disable=SC2102
-$pipx_install_cmd isort[pyproject]
+$pipx_install_cmd isort
 $pipx_install_cmd jupyter --include-deps
 $pipx_install_cmd ipython
 $pipx_inject_cmd ipython numpy pandas matplotlib
