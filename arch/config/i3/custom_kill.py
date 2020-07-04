@@ -3,24 +3,29 @@
 import sys
 
 import i3ipc
+
 from i3_helpers import sh
 
 CTRL_Q = ['Skype', 'Slack']
 CUSTOM = ['Chromium', 'Brave-browser']
 
 
-def _get_windows(i3, which='all'):
+def _get_windows(i3, which='all', get_ws=False):
     tree = i3.get_tree()
+    focused_win = tree.find_focused()
     if which == 'focused':
-        windows = [tree.find_focused()]
+        windows = [focused_win]
     elif which == 'all':
         windows = [win for ws in tree.workspaces() for win in ws.leaves()]
-    return windows
+    if get_ws:
+        return windows, focused_win.workspace().name
+    else:
+        return windows
 
 
 def kill_custom(i3, which):
     """Kill apps differently according to their class."""
-    windows = _get_windows(i3, which)
+    windows, focused_ws = _get_windows(i3, which, get_ws=True)
     for win in windows:
         i3.command(f'[con_id={win.id}] focus')
         win_class = win.window_class
@@ -37,6 +42,7 @@ def kill_custom(i3, which):
             sh(f'xkill -id {win.window}')
         else:
             i3.command('kill')
+    i3.command(f'workspace {focused_ws}')
 
 
 if __name__ == '__main__':
