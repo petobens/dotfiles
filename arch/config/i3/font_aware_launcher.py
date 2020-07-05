@@ -7,19 +7,8 @@ import sys
 import i3ipc
 
 
-def _sh_no_block(cmd, *args, **kwargs):
-    if isinstance(cmd, str):
-        cmd = cmd.split()
-    return subprocess.Popen(cmd, *args, **kwargs)
-
-
-def _sh(cmd, *args, **kwargs):
-    res, _ = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
-    return res
-
-
 def run_app(app, subcmd):
-    """Run gdk app adjusting font size if necessary."""
+    """Run application adjusting font size if necessary."""
     i3 = i3ipc.Connection()
     outputs = [i for i in i3.get_outputs() if i.active]
     nr_monitors = len(outputs)
@@ -153,6 +142,7 @@ def run_app(app, subcmd):
         _sh_no_block(
             ['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'],
         )
+
     elif app == 'rofi':
         if subcmd is None:
             raise ValueError('Missing rofi subcommand!')
@@ -162,32 +152,35 @@ def run_app(app, subcmd):
             rofi_fsize *= 2
             rofi_yoffset = int(rofi_yoffset * 1.5)
         rofi_base = f'rofi -font "Noto Sans Mono {rofi_fsize}" -yoffset {rofi_yoffset}'
+
         if subcmd == 'apps':
-            rofi_cmd = [f'{rofi_base} -combi-modi drun,run -show combi']
+            rofi_cmd = f'{rofi_base} -combi-modi drun,run -show combi'
         elif subcmd == 'pass':
-            rofi_cmd = [
+            rofi_cmd = (
                 f"gopass ls --flat | {rofi_base} -dmenu -p gopass | "
                 "xargs --no-run-if-empty gopass show -c"
-            ]
+            )
         elif subcmd == 'tab':
             # Note: add `monitor primary` if we want to show always in the same monitor
-            rofi_cmd = [
+            rofi_cmd = (
                 f"{rofi_base} -show window  -no-fixed-num-lines "
                 "-kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' "
                 "-kb-row-up 'ISO_Left_Tab,Ctrl-p' & "
-            ]
+            )
         elif subcmd == 'arch-init':
             yoffset = 25
             if is_hidpi:
                 yoffset *= 2
-            rofi_cmd = [f"$HOME/.config/polybar/arch_dmenu.sh {rofi_fsize} {yoffset}"]
-        _sh_no_block(rofi_cmd, shell=True)
+            rofi_cmd = f"$HOME/.config/polybar/arch_dmenu.sh {rofi_fsize} {yoffset}"
+        _sh_no_block([rofi_cmd], shell=True)
+
     elif app == 'alacritty':
         if subcmd is None:
             raise ValueError('Missing alacritty subcommand!')
         alacritty_scale = 1
         if is_hidpi:
             alacritty_scale = 2
+
         alacritty_cmd = f'WINIT_X11_SCALE_FACTOR={alacritty_scale} alacritty -t '
         if subcmd == 'onedrive':
             alacritty_cmd += '"OneDrive" -e sh -c "journalctl --user-unit onedrive -f"'
@@ -195,6 +188,7 @@ def run_app(app, subcmd):
             alacritty_cmd += '"bluetooth-fzf" -d 100 30 -e bash -ci "bt;exit"'
         elif subcmd == 'docker':
             alacritty_cmd += '"docker-info" -d 150 30 -e sh -c "docker info | less +F"'
+
         elif subcmd == 'htop':
             alacritty_cmd = (
                 f"raiseorlaunch -t 'htop' -f -e '{alacritty_cmd} htop -e htop'"
@@ -208,6 +202,12 @@ def run_app(app, subcmd):
         elif subcmd == 'quickterm':
             alacritty_cmd = f'raiseorlaunch -t "QuickTerm" -f -e \'{alacritty_cmd} "QuickTerm" -e /usr/bin/bash -l -c "cd $(tmux display -p \"#{{pane_current_path}}\") && exec /usr/bin/bash -i"\''  # noqa
         _sh_no_block([alacritty_cmd], shell=True)
+
+
+def _sh_no_block(cmd, *args, **kwargs):
+    if isinstance(cmd, str):
+        cmd = cmd.split()
+    return subprocess.Popen(cmd, *args, **kwargs)
 
 
 if __name__ == '__main__':
