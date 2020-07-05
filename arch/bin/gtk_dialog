@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 """Create GTK confirmation dialog."""
-import subprocess
 from subprocess import Popen
 
 import gi
@@ -14,17 +13,6 @@ if True:
 
 FONT = 'NotoSans-Regular.ttf'
 FONT_SIZE = 11
-
-
-def _sh_no_block(cmd, *args, **kwargs):
-    if isinstance(cmd, str):
-        cmd = cmd.split()
-    return subprocess.Popen(cmd, *args, **kwargs)
-
-
-def _sh(cmd, *args, **kwargs):
-    res, _ = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
-    return res
 
 
 def confirmation_dialog(title, msg, action, shell=False):
