@@ -215,6 +215,9 @@ mapkey('<Alt-h>', 'Move current tab to left', function() {
 mapkey('<Alt-l>', 'Move current tab to right', function() {
     RUNTIME('moveTab', { step: 1 });
 });
+mapkey('<Alt-w>', 'New window with current tab',  function() {
+    RUNTIME("newWindow");
+});
 mapkey(',be', 'Choose a tab with omnibar', function() {
     Front.openOmnibar({ type: 'Tabs' });
 });
