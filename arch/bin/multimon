@@ -48,7 +48,6 @@ def _xrandr(how, direction):
     conn.remove(prim)
 
     # Multiple monitors
-    # TODO: Use EDID for unique ordering?
     if nr_monitors > 1:
         sec = conn[0]
         sec_n, sec_w, sec_h = _get_name_and_res(xrandr_out, sec)
@@ -65,14 +64,14 @@ def _xrandr(how, direction):
 
     if how == 'primary':
         cmd = f'--output {prim_n} --primary --dpi {DPI * 2}'
-        turn_off = [i for i in monitors if i not in ('Screen', 'VIRTUAL1', prim_n)]
-        for m in turn_off:
-            cmd += f' --output {m} --off'
+        keep_turnon = [prim_n]
 
     elif how == 'mirror':
         cmd = f'--output {sec_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '
+        keep_turnon = [prim_n, sec_n]
         if nr_monitors == 3:
             cmd += f'--output {third_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '  # noqa
+            keep_turnon += [third_n]
         cmd += f'--output {prim_n} --dpi {DPI * 2}'
 
     elif how == 'multi':
@@ -81,6 +80,7 @@ def _xrandr(how, direction):
         cmd = f'--output {sec_n} {sec_scale} --auto --pos 0x0 '
         wpos = int(sec_scale_factor * sec_w)
         hpos = 0 if direction == 'right' else int(sec_scale_factor * sec_h)
+        keep_turnon = [prim_n, sec_n]
         if nr_monitors == 3:
             # The second external monitor is right to the first monitor
             _, third_scale = _scale(third_w)
@@ -88,12 +88,20 @@ def _xrandr(how, direction):
             # Primary is in the middle below the 2 monitors
             wpos = wpos - int(prim_w / 2)
             hpos = int(sec_scale_factor * sec_h)
+            keep_turnon += [third_n]
         elif nr_monitors == 2:
             # With only 1 extra monitor place the primary monitor below or to the right
             # depending on direction value
             wpos = wpos if direction == 'right' else 0
         cmd += f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI}'
 
+
+    # Turn off unused monitors
+    turn_off = [i for i in monitors if i not in ('Screen', *keep_turnon)]
+    for m in turn_off:
+        cmd += f' --output {m} --off'
+
+    # Actually run xrandr command
     cmd = f'xrandr {cmd}'
     print(f"Running the following xrandr command: {cmd}")
     _sh(cmd)
