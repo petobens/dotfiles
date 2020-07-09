@@ -217,8 +217,8 @@ for_window [window_role="^(GtkFileChooserDialog)$"] \
 
 # Assign to specific workspaces (for apps opened with ranger)
 for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
-# for_window [class="^(pm|tm|pr)$"] \
-    # $nexec $HOME/.config/i3/multimon_move.py -w "4"
+for_window [class="^(pm|tm|pr)$"] \
+    $nexec $HOME/.config/i3/multimon_move.py -w "4"
 
 # Automatically switch to windows that raise an urgent flag
 for_window [urgent=latest] focus
