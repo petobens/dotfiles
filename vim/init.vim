@@ -1394,6 +1394,7 @@ let g:airline#extensions#tagbar#enabled = 1
 let g:airline#extensions#neomake#enabled = 1
 let airline#extensions#neomake#error_symbol = ' '
 let airline#extensions#neomake#warning_symbol = ' '
+let g:airline#extensions#poetv#enabled = 1
 
 " Git branch/remote
 let g:airline#extensions#branch#vcs_checks = ['untracked']
