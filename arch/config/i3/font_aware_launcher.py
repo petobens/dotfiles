@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Launch programs adjusting fonts if necessary."""
 import os
-import subprocess
 import sys
 
 import i3ipc
+
+from i3_helpers import sh_no_block
 
 
 def run_app(app, subcmd):
@@ -27,22 +28,22 @@ def run_app(app, subcmd):
 
     if app == 'connman':
         # It might open in a hidpi screen or not
-        _sh_no_block(
+        sh_no_block(
             ['raiseorlaunch', '-c', 'Connman-gtk', '-f', '-e', f'"{gdk}connman-gtk"']
         )
     elif app == 'zathura':
         # It might open in a hidpi screen or not
-        _sh_no_block(
+        sh_no_block(
             ['raiseorlaunch', '-c', 'Zathura', '-C', '-f', '-e', f'"{gdk}zathura"']
         )
     elif app == 'pavucontrol':
         # It might open in a hidpi screen or not
-        _sh_no_block(
+        sh_no_block(
             ['raiseorlaunch', '-c', 'pavucontrol', '-f', '-e', f'"{gdk}pavucontrol"']
         )
     elif app == 'power-manager':
         # It might open in a hidpi screen or not
-        _sh_no_block(
+        sh_no_block(
             [
                 'raiseorlaunch',
                 '-c',
@@ -55,7 +56,7 @@ def run_app(app, subcmd):
     elif app == 'transmission':
         # It always opens in hidpi screen
         gdk += 'GDK_SCALE=2 '
-        _sh_no_block(
+        sh_no_block(
             [
                 'raiseorlaunch',
                 '-c',
@@ -69,11 +70,11 @@ def run_app(app, subcmd):
         )
     elif app == 'peek':
         # It might open in a hidpi screen or not
-        _sh_no_block(['raiseorlaunch', '-c', 'Peek', '-f', '-e', f'"{gdk}peek"'])
+        sh_no_block(['raiseorlaunch', '-c', 'Peek', '-f', '-e', f'"{gdk}peek"'])
     elif app == 'thunderbird':
         # It always opens in hidpi screen
         gdk += 'GDK_SCALE=2 '
-        _sh_no_block(
+        sh_no_block(
             [
                 'raiseorlaunch',
                 '-c',
@@ -134,14 +135,12 @@ def run_app(app, subcmd):
                 "dunstify -t 2500 -i trashindicator 'Trash Can emptied!'",
             ]
         gtk_env = dict([i.split('=') for i in gdk.split()])  # type: ignore
-        _sh_no_block(
+        sh_no_block(
             gtk_dialog, env={**os.environ, **gtk_env},
         )
     elif app == 'vimiv':
         # It might open in a hidpi screen or not
-        _sh_no_block(
-            ['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'],
-        )
+        sh_no_block(['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'],)
 
     elif app == 'rofi':
         if subcmd is None:
@@ -172,7 +171,7 @@ def run_app(app, subcmd):
             if is_hidpi:
                 yoffset *= 2
             rofi_cmd = f"$HOME/.config/polybar/arch_dmenu.sh {rofi_fsize} {yoffset}"
-        _sh_no_block([rofi_cmd], shell=True)
+        sh_no_block([rofi_cmd], shell=True)
 
     elif app == 'alacritty':
         if subcmd is None:
@@ -201,13 +200,7 @@ def run_app(app, subcmd):
             alacritty_cmd = f'raiseorlaunch -t "Trash Can" -f -e \'{alacritty_cmd} "Trash Can" -e sh -c "trash-list | less"\''  # noqa
         elif subcmd == 'quickterm':
             alacritty_cmd = f'raiseorlaunch -t "QuickTerm" -f -e \'{alacritty_cmd} "QuickTerm" -e /usr/bin/bash -l -c "cd $(tmux display -p \"#{{pane_current_path}}\") && exec /usr/bin/bash -i"\''  # noqa
-        _sh_no_block([alacritty_cmd], shell=True)
-
-
-def _sh_no_block(cmd, *args, **kwargs):
-    if isinstance(cmd, str):
-        cmd = cmd.split()
-    return subprocess.Popen(cmd, *args, **kwargs)
+        sh_no_block([alacritty_cmd], shell=True)
 
 
 if __name__ == '__main__':
