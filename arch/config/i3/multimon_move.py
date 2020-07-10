@@ -47,7 +47,7 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
         win_output_width = win_data['output_width']
         win_class = win_data['class']
         if (win_output_width != new_output_width) and (
-            win_class in ('kitty', 'Alacritty', 'Brave-browser')
+            win_class in ('kitty', 'Alacritty', 'Brave-browser', 'firefox')
         ):
             zoom_dir = 'u' if new_output_width > win_output_width else 'd'
             if win_class in ('kitty', 'Alacritty'):

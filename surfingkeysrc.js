@@ -1,7 +1,8 @@
 /* eslint-disable no-undef */
 // Preamble {{{
 
-// To load this local config file:
+// To load this local config file on chromium like browsers (on firefox we need
+// to manually copy and paste):
 // i) Check `Allow access to file URLS` for surfingkeys in the general extensions
 // view
 // ii) In the extensions settings check `Advanced mode` box and add path to this
