@@ -158,7 +158,7 @@ bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
 bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird
-bindsym $mod+Control+semicolon $nexec raiseorlaunch -c Brave -W $ws1 -m \
+bindsym $mod+Control+semicolon $nexec raiseorlaunch -c Brave -W $ws2 -m \
     hangouts -e "brave --new-window --app=https://hangouts.google.com/?authuser=1"
 bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws2 -m meet -e \
     "brave --new-window --app=https://meet.google.com"
@@ -205,7 +205,7 @@ for_window [con_mark="^(browser|cal|hangouts|meet)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(QuickTerm|numbers|About Arch|bluetooth-fzf)$"] \
+for_window [title="^(QuickTerm|numbers|About Arch|bluetooth-fzf|Zoom - Free Account)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle
@@ -217,7 +217,9 @@ for_window [window_type="dialog" class="^(?!gtk_qt_dialog).+" window_role="^(?!G
 for_window [window_role="^(GtkFileChooserDialog)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle
 
-# Assign to specific workspaces (for apps opened with ranger)
+# Assign to specific workspaces (for apps opened with ranger or those that don't
+# respect startup workspaces)
+for_window [class="^(zoom)$"] $nexec $HOME/.config/i3/multimon_move.py -w "2"
 for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
 for_window [class="^(pm|tm|pr)$"] \
     $nexec $HOME/.config/i3/multimon_move.py -w "4"
