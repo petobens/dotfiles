@@ -192,6 +192,7 @@ bindsym $mod+Control+n $nexec $HOME/.config/i3/font_aware_launcher.py alacritty 
 bindsym $mod+Control+f $nexec $HOME/.config/i3/font_aware_launcher.py alacritty ranger
 bindsym $mod+Control+h $nexec $HOME/.config/i3/font_aware_launcher.py alacritty htop
 bindsym $mod+Control+b $nexec $HOME/.config/i3/font_aware_launcher.py alacritty trash
+bindsym Control+$alt+Delete $nexec $HOME/.config/i3/font_aware_launcher.py alacritty prockiller
 
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
@@ -205,7 +206,7 @@ for_window [con_mark="^(browser|cal|hangouts|meet)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(QuickTerm|numbers|About Arch|bluetooth-fzf|Zoom - Free Account)$"] \
+for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle

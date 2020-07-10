@@ -2,10 +2,11 @@
 """Launch programs adjusting fonts if necessary."""
 import os
 import sys
+from time import sleep
 
 import i3ipc
 
-from i3_helpers import sh_no_block
+from i3_helpers import sh, sh_no_block
 
 
 def run_app(app, subcmd):
@@ -215,7 +216,14 @@ def run_app(app, subcmd):
             alacritty_cmd = f'raiseorlaunch -t "Trash Can" -f -e \'{alacritty_cmd} "Trash Can" -e sh -c "trash-list | less"\''  # noqa
         elif subcmd == 'quickterm':
             alacritty_cmd = f'raiseorlaunch -t "QuickTerm" -f -e \'{alacritty_cmd} "QuickTerm" -e /usr/bin/bash -l -c "cd $(tmux display -p \"#{{pane_current_path}}\") && exec /usr/bin/bash -i"\''  # noqa
+        elif subcmd == 'prockiller':
+            alacritty_cmd = f'raiseorlaunch -t "ProcKiller" -f -e \'{alacritty_cmd} "ProcKiller" -e /usr/bin/bash -l -c "exec /usr/bin/bash -i"\''  # noqa
         sh_no_block([alacritty_cmd], shell=True)
+
+        if subcmd == 'prockiller':
+            sleep(1)
+            sh('xdotool type kill')
+            sh('xdotool key space+Tab')
 
 
 if __name__ == '__main__':
