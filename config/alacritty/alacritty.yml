@@ -87,6 +87,43 @@ key_bindings:
     - { key: Key0,     mods: Super, action: ResetFontSize        }
     - { key: End,      mods: Shift, action: ScrollToBottom       }
     - { key: Home,     mods: Shift, action: ScrollToTop          }
+    # Since we cannot set zoom factor we bind keys multiple times
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: U,        mods: Super, action: IncreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: D,        mods: Super, action: DecreaseFontSize     }
     # On OSX uncomment the following to enable alt maps
     # - { key: D,        mods: Alt,   chars: "\x1bd"               }
     # - { key: Z,        mods: Alt,   chars: "\x1bz"               }
