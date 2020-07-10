@@ -275,27 +275,27 @@ mapkey('P', 'Open the clipboard in a new tab', function () {
 });
 
 // Zoom
-mapkey(',zr', 'Zoom reset', function () {
+mapkey('<Meta-0>', 'Zoom reset', function () {
     RUNTIME('setZoom', {
         zoomFactor: 0,
     });
 });
-mapkey(',zi', 'Zoom in', function () {
+mapkey('<Meta-=>', 'Zoom in', function () {
     RUNTIME('setZoom', {
         zoomFactor: 0.1,
     });
 });
-mapkey(',zo', 'Zoom out', function () {
+mapkey('<Meta-->', 'Zoom out', function () {
     RUNTIME('setZoom', {
         zoomFactor: -0.1,
     });
 });
-mapkey(',zu', 'Zoom up when changing monitors', function () {
+mapkey('<Meta-u>', 'Zoom up when changing monitors', function () {
     RUNTIME('setZoom', {
         zoomFactor: 1,
     });
 });
-mapkey(',zd', 'Zoom down when changing monitors', function () {
+mapkey('<Meta-d>', 'Zoom down when changing monitors', function () {
     RUNTIME('setZoom', {
         zoomFactor: -1,
     });

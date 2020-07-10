@@ -50,10 +50,7 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
             win_class in ('kitty', 'Alacritty', 'Brave-browser', 'firefox')
         ):
             zoom_dir = 'u' if new_output_width > win_output_width else 'd'
-            if win_class in ('kitty', 'Alacritty'):
-                sh(f'xdotool key Super+{zoom_dir}')
-            else:
-                sh(f'xdotool key comma+z+{zoom_dir}')
+            sh(f'xdotool key Super+{zoom_dir}')
     return
 
 
