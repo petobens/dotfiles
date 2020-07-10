@@ -28,7 +28,7 @@ follow = keyboard
 # the top and down respectively.
 # The width can be negative.  In this case the actual width is the
 # screen width minus the width defined in within the geometry option.
-geometry = "600x5-0+58"
+geometry = "380x7-0+42"
 
 # Show how many messages are currently hidden (because of geometry).
 indicate_hidden = yes
@@ -50,7 +50,7 @@ notification_height = 0
 # Draw a line of "separator_height" pixel height between two
 # notifications.
 # Set to 0 to disable.
-separator_height = 10
+separator_height = 5
 
 # Padding between text and separator.
 padding = 12
@@ -141,10 +141,10 @@ show_indicators = yes
 icon_position = right
 
 # Scale larger icons down to this size, set to 0 to disable
-max_icon_size = 64
+max_icon_size = 48
 
 # Paths to default icons.
-icon_path = /usr/share/icons/Papirus-Dark/64x64/apps:/usr/share/icons/Papirus-Dark/64x64/categories:/usr/share/icons/Papirus-Dark/64x64/devices:/usr/share/icons/Papirus-Dark/64x64/emblems:/usr/share/icons/Papirus-Dark/64x64/mimetypes:/usr/share/icons/Papirus-Dark/64x64/places:/usr/share/icons/Papirus-Dark/64x64/status
+icon_path = /usr/share/icons/Papirus-Dark/48x48/apps:/usr/share/icons/Papirus-Dark/48x48/categories:/usr/share/icons/Papirus-Dark/48x48/devices:/usr/share/icons/Papirus-Dark/48x48/emblems:/usr/share/icons/Papirus-Dark/48x48/mimetypes:/usr/share/icons/Papirus-Dark/48x48/places:/usr/share/icons/Papirus-Dark/48x48/status
 
 # Should a notification popped up from history be sticky or timeout
 # as if it would normally do.
@@ -177,10 +177,10 @@ startup_notification = false
 mouse_left_click = do_action
 
 # Round corners
-corner_radius = 20
+corner_radius = 10
 
 [experimental]
-per_monitor_dpi = false
+per_monitor_dpi = true
 
 
 [shortcuts]

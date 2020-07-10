@@ -13,7 +13,7 @@ dpi = -1
 enable-ipc = true
 monitor = ${env:MONITOR:}
 width = 100%
-height = 55
+height = ${env:POLYHEIGHT:}
 offset-x = 0
 offset-y = 0
 background = ${colors.bg}
@@ -25,15 +25,15 @@ modules-left = arch title
 modules-center = i3
 modules-right = docker onedrive xkeyboard vpn wifi ethernet bluetooth pulseaudio battery date
 tray-position = ${env:TRAY_POS:}
-tray-maxsize = 32
+tray-maxsize = ${env:TRAY_SIZE:}
 ; Font definition
-font-0 = Noto Sans:size=11;3
-font-1 = Noto Sans:size=11:weight=bold;2
-font-2 = Noto Sans Mono:size=10:weight=bold;2
-font-3 = Symbols Nerd Font:size=13;4
-font-4 = Symbols Nerd Font:size=14;4
-font-5 = Symbols Nerd Font:size=12;4
-font-6 = Noto Sans:size=7:weight=bold;-10
+font-0 = ${env:POLYFONT0:}
+font-1 = ${env:POLYFONT1:}
+font-2 = ${env:POLYFONT2:}
+font-3 = ${env:POLYFONT3:}
+font-4 = ${env:POLYFONT4:}
+font-5 = ${env:POLYFONT5:}
+font-6 = ${env:POLYFONT6:}
 
 [global/wm]
 margin-bottom = 0
@@ -43,7 +43,7 @@ margin-top = 0
 type = custom/text
 content = %{T6} %{T-}
 content-padding = 1
-click-left = /home/pedro/.config/polybar/arch_dmenu.sh
+click-left = /home/pedro/.config/i3/font_aware_launcher.py rofi arch-init
 
 [module/title]
 type = internal/xwindow
@@ -85,7 +85,7 @@ exec = ~/.config/polybar/docker.sh
 interval = 5.0
 label-font = 5
 format-padding = 1
-click-left = alacritty -t docker-info -d 150 30 -e sh -c "docker info | less +F"
+click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty docker
 
 [module/onedrive]
 type = custom/script
@@ -93,7 +93,7 @@ exec = python ~/.config/polybar/onedrive.py
 label-font = 5
 format-padding = 1
 interval = 5.0
-click-left = alacritty -t "OneDrive" -e sh -c "journalctl --user-unit onedrive -f"
+click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty onedrive
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -114,8 +114,8 @@ type = internal/network
 ; Get interface with `command ip link`
 interface = wlan0
 ping-interval = 3
-format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}
-format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
+format-connected = %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
+format-disconnected =  %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-disconnected>  %{A}
 label-disconnected-font = 4
 label-connected = 直  %{T3}%signal%%%{T-}
 label-connected-font = 4
@@ -125,8 +125,8 @@ label-disconnected = 睊
 ; See: https://github.com/jaagr/polybar/issues/1164
 type = internal/network
 interface = eth0
-format-connected = %{A1:connman-gtk &:} <label-connected>  %{A}
-format-disconnected =  %{A1:connman-gtk &:} <label-disconnected>  %{A}
+format-connected = %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
+format-disconnected =  %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-disconnected>  %{A}
 label-disconnected-font = 5
 label-connected = 
 label-connected-font = 5
@@ -137,7 +137,7 @@ label-disconnected-foreground = ${colors.fg-urg}
 type = custom/script
 exec = ~/.config/polybar/bluetooth.sh
 interval = 5.0
-click-left = alacritty -t bluetooth-fzf -d 100 30 -e bash -ci "bt;exit"
+click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty bluetooth
 click-right = bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
 
 [module/pulseaudio]
@@ -146,8 +146,8 @@ type = internal/pulseaudio
 ; We show the normalized (100%) version
 use-ui-max = false
 interval = 10
-format-volume = %{A1:pavucontrol &:}<ramp-volume>  %{A}
-format-muted = %{A1:pavucontrol &:}<label-muted>  %{A}
+format-volume = %{A1:/home/pedro/.config/i3/font_aware_launcher.py pavucontrol &:}<ramp-volume>  %{A}
+format-muted = %{A1:/home/pedro/.config/i3/font_aware_launcher.py pavucontrol &:}<label-muted>  %{A}
 label-muted = 
 label-muted-font = 4
 ramp-volume-0 = 
@@ -164,9 +164,9 @@ full-at = 100
 battery = BAT0
 adapter = AC0
 poll-interval = 5
-format-charging = %{A1:xfce4-power-manager-settings &:}<label-charging>  %{A}
-format-discharging = %{A1:xfce4-power-manager-settings &:}<ramp-capacity>  <label-discharging>  %{A}
-format-full = %{A1:xfce4-power-manager-settings &:}<label-full>  %{A}
+format-charging = %{A1:/home/pedro/.config/i3/font_aware_launcher.py power-manager &:}<label-charging>  %{A}
+format-discharging = %{A1:/home/pedro/.config/i3/font_aware_launcher.py power-manager &:}<ramp-capacity>  <label-discharging>  %{A}
+format-full = %{A1:/home/pedro/.config/i3/font_aware_launcher.py power-manager &:}<label-full>  %{A}
 label-charging =   %{T3}%percentage%%%{T-}
 label-discharging = %{T3}%percentage%%%{T-}
 label-charging-font = 6

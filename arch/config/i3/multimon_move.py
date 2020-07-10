@@ -5,6 +5,8 @@ import sys
 from time import sleep
 
 import i3ipc
+
+from i3_helpers import sh
 from resize import resize_win
 
 
@@ -23,6 +25,8 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
     i3.command(cmd)
     sleep(0.2)
 
+    new_output_width = _get_output_width(i3)
+
     for win_id, win_data in resize_map.items():
         if cmd.startswith('move container'):
             if not win_data['focused']:
@@ -38,22 +42,39 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
         else:
             x, y, w, h = win_data['how']
             resize_win(i3, x, y, w, h)
+
+        new_output_width = _get_output_width(i3)
+        win_output_width = win_data['output_width']
+        win_class = win_data['class']
+        if (win_output_width != new_output_width) and (
+            win_class in ('kitty', 'Alacritty', 'Brave-browser', 'firefox')
+        ):
+            zoom_dir = 'u' if new_output_width > win_output_width else 'd'
+            sh(f'xdotool key Super+{zoom_dir}')
     return
 
 
 def _get_resize_map(i3):
     res_map = {}
-    tree = i3.get_tree()
-    focused_win = tree.find_focused()
-    ws = focused_win.workspace()
+    ws = i3.get_tree().find_focused().workspace()
+    output_width = _get_output_width(i3, ws)
     for w in ws.leaves():
         res_map[w.id] = {
             'win': w,
             'focused': w.focused,
             'how': _find_how_to_resize(i3, w),
             'fullscreen': w.fullscreen_mode,
+            'class': w.window_class,
+            'output_width': output_width,
         }
     return res_map
+
+
+def _get_output_width(i3, ws=None):
+    if ws is None:
+        ws = i3.get_tree().find_focused().workspace()
+    outputs = [i for i in i3.get_outputs() if i.active]
+    return [o.rect.width for o in outputs if o.name == ws.ipc_data['output']][0]
 
 
 def _find_how_to_resize(i3, win=None):

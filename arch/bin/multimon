@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Control multiple monitors with xrandr."""
-
 import os
 import subprocess
 import sys
 from collections.abc import Sequence
+from pathlib import Path
 from time import sleep
 
 import i3ipc
@@ -48,7 +48,6 @@ def _xrandr(how, direction):
     conn.remove(prim)
 
     # Multiple monitors
-    # TODO: Use EDID for unique ordering?
     if nr_monitors > 1:
         sec = conn[0]
         sec_n, sec_w, sec_h = _get_name_and_res(xrandr_out, sec)
@@ -64,41 +63,55 @@ def _xrandr(how, direction):
         how = 'primary' if nr_monitors == 1 else 'multi'
 
     if how == 'primary':
-        cmd = f'--output {prim_n} --primary --dpi {PRIM_DPI}'
-        turn_off = [i for i in monitors if i not in ('Screen', 'VIRTUAL1', prim_n)]
-        for m in turn_off:
-            cmd += f' --output {m} --off'
+        cmd = f'--output {prim_n} --primary --dpi {DPI * 2}'
+        keep_turnon = [prim_n]
 
     elif how == 'mirror':
         cmd = f'--output {sec_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '
+        keep_turnon = [prim_n, sec_n]
         if nr_monitors == 3:
             cmd += f'--output {third_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '  # noqa
-        cmd += f'--output {prim_n} --dpi {PRIM_DPI}'
+            keep_turnon += [third_n]
+        cmd += f'--output {prim_n} --dpi {DPI * 2}'
 
     elif how == 'multi':
         # Assume the first monitor goes to the far left
-        sec_scale = f'--scale {FIXED_SCALE}x{FIXED_SCALE}' if sec_w <= HD_WIDTH else ''
+        sec_scale_factor, sec_scale = _scale(sec_w)
         cmd = f'--output {sec_n} {sec_scale} --auto --pos 0x0 '
-        wpos = (FIXED_SCALE * sec_w) if sec_w <= HD_WIDTH else sec_w
-        hpos = 0 if direction == 'right' else (FIXED_SCALE * sec_h)
+        wpos = int(sec_scale_factor * sec_w)
+        hpos = 0 if direction == 'right' else int(sec_scale_factor * sec_h)
+        keep_turnon = [prim_n, sec_n]
         if nr_monitors == 3:
-            # The second monitor is right to the first monitor
-            third_scale = (
-                f'--scale {FIXED_SCALE}x{FIXED_SCALE}' if third_w <= HD_WIDTH else ''
-            )
+            # The second external monitor is right to the first monitor
+            _, third_scale = _scale(third_w)
             cmd += f'--output {third_n} {third_scale} --auto --pos {wpos}x0 '
             # Primary is in the middle below the 2 monitors
-            wpos = int(wpos / 2)
-            hpos = FIXED_SCALE * sec_h
+            wpos = wpos - int(prim_w / 2)
+            hpos = int(sec_scale_factor * sec_h)
+            keep_turnon += [third_n]
         elif nr_monitors == 2:
             # With only 1 extra monitor place the primary monitor below or to the right
             # depending on direction value
             wpos = wpos if direction == 'right' else 0
-        cmd += f'--output {prim_n} --primary --dpi {PRIM_DPI} --pos {wpos}x{hpos}'
+        cmd += f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI}'
 
+
+    # Turn off unused monitors
+    turn_off = [i for i in monitors if i not in ('Screen', *keep_turnon)]
+    for m in turn_off:
+        cmd += f' --output {m} --off'
+
+    # Actually run xrandr command
     cmd = f'xrandr {cmd}'
     print(f"Running the following xrandr command: {cmd}")
     _sh(cmd)
+
+    # Ensure correct XResources
+    xrdb_cmd = f'xrdb -merge {str(Path.home())}/.Xresources'
+    if how == 'primary' or how == 'mirror':
+        xrdb_cmd += '_hidpi'
+    print(f"Running the following xrdb command: {xrdb_cmd}")
+    _sh(xrdb_cmd)
 
 
 def _get_resize_map(i3):
@@ -167,8 +180,10 @@ def _find_how_to_resize(i3, win=None):
 
 
 def _resize_win(i3, x, y, w, h):
+    outputs = [i for i in i3.get_outputs() if i.active]
     win = i3.get_tree().find_focused()
     ws = win.workspace()
+    output_width = [o.rect.width for o in outputs if o.name == ws.ipc_data['output']][0]
     max_h = ws.rect.height
     max_w = ws.rect.width
     max_x = ws.rect.x
@@ -179,9 +194,11 @@ def _resize_win(i3, x, y, w, h):
     # TODO: Find a better way of doing this
     x -= 1
     y = int(max_y + (max_h * y))
-    if y < POLYBAR_HEIGHT:
+
+    polybar_height = 55 if (output_width > 1920) else 28
+    if y < polybar_height:
         # We always want to leave space for polybar
-        y = POLYBAR_HEIGHT
+        y = polybar_height
     w = int(max_w * w)
     h = int(max_h * h)
     cmd = (
@@ -213,6 +230,19 @@ def _get_name_and_res(xrandr_out, mon_info):
     return mon_name, mon_w, mon_h
 
 
+def _scale(width):
+    # For external monitors we scale to full hd (i.e upscale low resolution and
+    # downscale hi res since our gpu lags otherwise)
+    hd_width = 1920
+    scale_factor = 1
+    if width < hd_width:
+        scale_factor += 0.5  # type: ignore
+    elif width > hd_width:
+        scale_factor /= 2  # type: ignore
+    scale_str = f'--scale {scale_factor}x{scale_factor}' if scale_factor != 1 else ''
+    return scale_factor, scale_str
+
+
 def _sh(cmd, *args, **kwargs):
     res, _ = _sh_no_block(cmd, *args, stdout=subprocess.PIPE, **kwargs).communicate()
     return res
@@ -237,14 +267,11 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('how')
-    parser.add_argument('direction', nargs='?', default='right')
+    parser.add_argument('direction', nargs='?', default='below')
     parse_args = parser.parse_args()
 
     # Constants
-    PRIM_DPI = 192
-    FIXED_SCALE = 2
-    HD_WIDTH = 1920
-    POLYBAR_HEIGHT = 55
+    DPI = 96
     VALID_MODES = ['init', 'hotplug', 'primary', 'mirror', 'multi']
     VALID_DIRECTIONS = ['right', 'below']
 

@@ -141,33 +141,36 @@ bindsym $alt+Escape focus output down
 # Run or activate apps and rules {{{
 
 # Rofi (application launcher / switcher)
-bindsym $alt+Tab $nexec $HOME/.config/i3/tab_switcher.sh
-bindsym $mod+s $nexec "rofi -combi-modi drun,run -show combi"
-bindsym $mod+z $nexec \
-"gopass ls --flat | rofi -dmenu -p gopass | xargs --no-run-if-empty gopass show -c"
+bindsym $alt+Tab $nexec $HOME/.config/i3/font_aware_launcher.py rofi tab
+bindsym $mod+s $nexec $HOME/.config/i3/font_aware_launcher.py rofi apps
+bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
 
 # WS1: browser and agenda (to have a black theme in calendar use Stylus
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
 bindsym $mod+Control+i $nexec raiseorlaunch -c Brave -W $ws1 -m browser
 bindsym $mod+Control+a $nexec raiseorlaunch -c Brave -W $ws1 -m cal -e \
-    "brave --new-window https://calendar.google.com/calendar/b/0/r"
+    "brave --new-window --app=https://calendar.google.com/calendar/b/0/r"
 bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
-# WS2: chat/communication related (i.e mail)
-# FIXME: Waiting not quite working
-bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30
+# WS2: chat/communication related
+bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
+    "slack --force-device-scale-factor=2"
 bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
-bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws1 -m hangouts -e \
-    "brave --new-window https://hangouts.google.com/?authuser=1"
-bindsym $mod+Control+t $nexec raiseorlaunch -c Thunderbird -W $ws2
+bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird
+bindsym $mod+Control+semicolon $nexec raiseorlaunch -c Brave -W $ws2 -m \
+    hangouts -e "brave --new-window --app=https://hangouts.google.com/?authuser=1"
+bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws2 -m meet -e \
+    "brave --new-window --app=https://meet.google.com"
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
-bindsym $mod+Control+u $nexec raiseorlaunch -c Transmission-gtk -W $ws3
+bindsym $mod+Control+u $nexec $HOME/.config/i3/font_aware_launcher.py transmission
 # WS4: Other
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
     "freeoffice-planmaker" -l 30
+bindsym $mod+Control+d $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
+    "freeoffice-textmaker" -l 30
 
 # WS5 (terminal and those interacting with it; in secondary monitor)
 # Note: we use marks terminal to avoid focusing on other windows of the same
@@ -178,26 +181,18 @@ bindsym $mod+Control+x $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
     # -e 'alacritty -e /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"'
 bindsym $mod+Control+c $nexec raiseorlaunch -c kitty -W $ws5 -m terminal \
     -e 'kitty /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"'
-bindsym $mod+Control+g $nexec raiseorlaunch -c Peek -f -W $ws5
-# WS6 PDFs and images
-bindsym $mod+Control+p $nexec raiseorlaunch -c Zathura -f -W $ws6 -C
-bindsym $mod+Control+v $nexec raiseorlaunch -c vimiv -f -C
 
-# Standalone terminal apps in floating window in the current workspace
-bindsym $mod+Control+w $nexec raiseorlaunch -c 'Connman-gtk' -f
-bindsym $mod+Control+q $nexec raiseorlaunch -t 'QuickTerm' -f -e \
-    'alacritty -t QuickTerm -e /usr/bin/bash -l -c '\
-'"cd $(tmux display -p "#{pane_current_path}") && exec /usr/bin/bash -i"'
-bindsym $mod+Control+n $nexec raiseorlaunch -t 'numbers' -f -e \
-    'alacritty -t numbers -e ipython3'
-bindsym $mod+Control+f $nexec raiseorlaunch -t 'ranger' -f -e 'alacritty -t '\
-'ranger -e sh -c "ranger $(tmux display -p "#{pane_current_path}")"'
-bindsym $mod+Control+d $nexec raiseorlaunch -t 'Downloads' -f -e \
-    'alacritty -t Downloads -e ranger ~/Downloads'
-bindsym $mod+Control+h $nexec raiseorlaunch -t 'htop' -f -e \
-    'alacritty -t htop -e htop'
-bindsym $mod+Control+b $nexec raiseorlaunch -t 'Trash Can' -f -e \
-    'alacritty -t "Trash Can" -e sh -c "trash-list | less"'
+# Standalone apps in floating window in the current workspace
+bindsym $mod+Control+p $nexec $HOME/.config/i3/font_aware_launcher.py zathura
+bindsym $mod+Control+v $nexec $HOME/.config/i3/font_aware_launcher.py vimiv
+bindsym $mod+Control+g $nexec $HOME/.config/i3/font_aware_launcher.py peek
+bindsym $mod+Control+w $nexec $HOME/.config/i3/font_aware_launcher.py connman
+bindsym $mod+Control+q $nexec $HOME/.config/i3/font_aware_launcher.py alacritty quickterm
+bindsym $mod+Control+n $nexec $HOME/.config/i3/font_aware_launcher.py alacritty numbers
+bindsym $mod+Control+f $nexec $HOME/.config/i3/font_aware_launcher.py alacritty ranger
+bindsym $mod+Control+h $nexec $HOME/.config/i3/font_aware_launcher.py alacritty htop
+bindsym $mod+Control+b $nexec $HOME/.config/i3/font_aware_launcher.py alacritty trash
+bindsym Control+$alt+Delete $nexec $HOME/.config/i3/font_aware_launcher.py alacritty prockiller
 
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
@@ -207,23 +202,25 @@ for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv)$" 
 # We seem to need this hack for Alacritty (i.e use title instead of mark)
 for_window [title="^(Alacritty|kitty)$"] \
     $nexec $HOME/.config/i3/resize.py Full
-for_window [con_mark="^(browser|cal|hangouts)$"] \
+for_window [con_mark="^(browser|cal|hangouts|meet)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(QuickTerm|numbers|About Arch|bluetooth-fzf)$"] \
+for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] \
     $nexec $HOME/.config/i3/resize.py Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle
 for_window [class="^(feh|Skype|Matplotlib|Zathura|vimiv)$"] \
     $nexec $HOME/.config/i3/resize.py Right
 for_window [window_type="splash"] floating enable, move position center
-for_window [window_type="dialog" class="^(?!Gtk_dialog).+" window_role="^(?!GtkFileChooserDialog).+"] \
+for_window [window_type="dialog" class="^(?!gtk_qt_dialog).+" window_role="^(?!GtkFileChooserDialog).+"] \
     $nexec $HOME/.config/i3/resize.py Dialog
 for_window [window_role="^(GtkFileChooserDialog)$"] \
     $nexec $HOME/.config/i3/resize.py Rectangle
 
-# Assign to specific workspaces (for apps opened with ranger)
+# Assign to specific workspaces (for apps opened with ranger or those that don't
+# respect startup workspaces)
+for_window [class="^(zoom)$"] $nexec $HOME/.config/i3/multimon_move.py -w "2"
 for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
 for_window [class="^(pm|tm|pr)$"] \
     $nexec $HOME/.config/i3/multimon_move.py -w "4"
@@ -250,7 +247,7 @@ bindsym $mod+Shift+t $nexec $HOME/.config/i3/spotify_track.py
 bindsym $mod+Shift+plus $nexec $HOME/.config/i3/volume.py -d up -l 5
 bindsym $mod+Shift+minus $nexec $HOME/.config/i3/volume.py -d down -l 5
 bindsym $mod+Shift+m $nexec $HOME/.config/i3/volume.py -d mute
-bindsym $mod+Shift+v $nexec raiseorlaunch -c pavucontrol -f
+bindsym $mod+Shift+v $nexec $HOME/.config/i3/font_aware_launcher.py pavucontrol
 
 # }}}
 # Theme and fonts {{{
@@ -287,17 +284,13 @@ bindsym $mod+Shift+0 $nexec shots active
 bindsym $mod+q $nexec $HOME/.config/i3/custom_kill.py
 # Kill all windows on all workspaces (match any class string)
 bindsym $mod+Shift+q $nexec i3-msg 'fullscreen disable', $nexec \
-    gtk_dialog -t "App Management" \
-    -m "Do you want to quit all apps?" --shell \
-    -a '$HOME/.config/i3/custom_kill.py -w all'
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog quit
 
 # Shutdown, restart and lock
 bindsym $mod+Shift+s $nexec i3-msg 'fullscreen disable', $nexec \
-    gtk_dialog -t "Power Management" \
-    -m "Do you want to poweroff?" -a "systemctl poweroff"
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog poweroff
 bindsym $mod+Shift+r $nexec i3-msg 'fullscreen disable', $nexec \
-    gtk_dialog -t "Power Management" \
-    -m "Do you want to reboot?" -a "systemctl reboot"
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog reboot
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
@@ -306,15 +299,11 @@ bindsym $mod+$alt+Left $nexec $HOME/.config/i3/brightness.py -d dec
 
 # Eject mounted media (usb drives)
 bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec \
-    gtk_dialog -t "Media Management" \
-    -m "Do you want to eject media drive?" -a "udiskie-umount -a"
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog usb
 
 # Empty Trash Can
 bindsym $mod+Shift+b $nexec i3-msg 'fullscreen disable', $nexec \
-    gtk_dialog -t 'Trash' -m 'Do you want to empty the Trash?' --shell \
-    -a "trash-empty && pkill -INT -f trash-list && "\
-"xdotool key Super_L+Control+b && "\
-"dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
+    $HOME/.config/i3/font_aware_launcher.py gtk_dialog trash
 
 # }}}
 # Startup {{{

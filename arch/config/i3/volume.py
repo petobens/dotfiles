@@ -57,7 +57,10 @@ def _get_vol_and_output_device():
     pactl_out = [
         line.decode('ascii').split() for line in sh('pactl list sinks').splitlines()
     ]
-    active_index = pactl_out.index([e for e in pactl_out if 'RUNNING' in e][0])
+    try:
+        active_index = pactl_out.index([e for e in pactl_out if 'RUNNING' in e][0])
+    except IndexError:
+        active_index = 1
     pactl_out = pactl_out[active_index:]
 
     vol_list = [e for e in pactl_out if 'Volume:' in e][0]

@@ -4,6 +4,7 @@
 vim/bundle/
 vim/cache/
 vim/vimrc_min
+.tern-port
 
 # Tmux
 tmux/plugins/

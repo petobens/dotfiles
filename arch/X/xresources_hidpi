@@ -1,5 +1,5 @@
 ! Font
-Xft.dpi: 96
+Xft.dpi: 192
 Xft.antialias: 1
 Xft.autohint: 0
 Xft.lcdfilter: lcddefault
