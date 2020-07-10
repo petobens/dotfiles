@@ -175,6 +175,12 @@ if type "mpv" > /dev/null 2>&1; then
     alias pb='mpv av://v4l2:/dev/video0 --really-quiet --title=webcam '\
 '--screenshot-directory=~/Pictures/Screenshots'
 fi
+if type "gnome-font-viewer" > /dev/null 2>&1; then
+    alias gnf='$HOME/.config/i3/font_aware_launcher.py gnome-font'
+fi
+if type "gcolor3" > /dev/null 2>&1; then
+    alias gpc='$HOME/.config/i3/font_aware_launcher.py color-picker'
+fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
 # alias

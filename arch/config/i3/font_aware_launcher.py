@@ -36,6 +36,21 @@ def run_app(app, subcmd):
         sh_no_block(
             ['raiseorlaunch', '-c', 'Zathura', '-C', '-f', '-e', f'"{gdk}zathura"']
         )
+    elif app == 'gnome-font':
+        # It might open in a hidpi screen or not
+        sh_no_block(
+            [
+                'raiseorlaunch',
+                '-c',
+                'gnome-font-viewer',
+                '-f',
+                '-e',
+                f'"{gdk}gnome-font-viewer"',
+            ]
+        )
+    elif app == 'color-picker':
+        # It might open in a hidpi screen or not
+        sh_no_block(['raiseorlaunch', '-c', 'gcolor3', '-f', '-e', f'"{gdk}gcolor3"'])
     elif app == 'pavucontrol':
         # It might open in a hidpi screen or not
         sh_no_block(
