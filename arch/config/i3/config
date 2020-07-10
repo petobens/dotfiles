@@ -157,9 +157,11 @@ bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
 bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
     "skypeforlinux"
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
-bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws1 -m hangouts -e \
-    "brave --new-window https://hangouts.google.com/?authuser=1"
 bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird
+bindsym $mod+Control+semicolon $nexec raiseorlaunch -c Brave -W $ws1 -m \
+    hangouts -e "brave --new-window https://hangouts.google.com/?authuser=1"
+bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws2 -m meet -e \
+    "brave --new-window https://meet.google.com"
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
@@ -199,7 +201,7 @@ for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv)$" 
 # We seem to need this hack for Alacritty (i.e use title instead of mark)
 for_window [title="^(Alacritty|kitty)$"] \
     $nexec $HOME/.config/i3/resize.py Full
-for_window [con_mark="^(browser|cal|hangouts)$"] \
+for_window [con_mark="^(browser|cal|hangouts|meet)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
