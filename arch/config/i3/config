@@ -149,7 +149,7 @@ bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
 bindsym $mod+Control+i $nexec raiseorlaunch -c Brave -W $ws1 -m browser
 bindsym $mod+Control+a $nexec raiseorlaunch -c Brave -W $ws1 -m cal -e \
-    "brave --new-window https://calendar.google.com/calendar/b/0/r"
+    "brave --new-window --app=https://calendar.google.com/calendar/b/0/r"
 bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
 # WS2: chat/communication related
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
@@ -159,9 +159,9 @@ bindsym $mod+Control+s $nexec raiseorlaunch -c Skype -W $ws2 -l 30 -C -e \
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
 bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird
 bindsym $mod+Control+semicolon $nexec raiseorlaunch -c Brave -W $ws1 -m \
-    hangouts -e "brave --new-window https://hangouts.google.com/?authuser=1"
+    hangouts -e "brave --new-window --app=https://hangouts.google.com/?authuser=1"
 bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws2 -m meet -e \
-    "brave --new-window https://meet.google.com"
+    "brave --new-window --app=https://meet.google.com"
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
