@@ -12,7 +12,7 @@ if !has('nvim')
         let $DOTVIM = expand('$HOME/vimfiles')
     else
         let $DOTVIM = expand('$HOME/.vim')
-        let $MANPATH = expand('$MANPATH:/usr/local/texlive/2019/texmf-dist/doc/man')
+        let $MANPATH = expand('$MANPATH:/usr/local/texlive/2020/texmf-dist/doc/man')
     endif
 else
     let $DOTVIM = expand('$HOME/.config/nvim')
