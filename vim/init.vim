@@ -1961,8 +1961,13 @@ function! s:DeniteVisualSearch(direction)
     call denite#start([{'name': 'line', 'args': [a:direction]}],
                 \ {'input': visual_selection})
 endfunction
-command! -nargs=? -complete=file DeniteBookmarkAdd
-        \ :Denite dirmark/add -default-action=add -immediately-1 -path=<q-args>
+function! s:DeniteBookmarkAddFunc(path)
+    execute 'Denite dirmark/add -default-action=add -immediately-1 -path=' .
+                \ expand(a:path)
+endfunction
+" Note: we need to pass the parent dir of the candidate we want to bookmark
+command -nargs=1 -complete=file DeniteBookmarkAdd
+            \ call s:DeniteBookmarkAddFunc(<q-args>)
 
 " Mappings
 nnoremap <silent> <C-t> :DeniteBufferDir file/rec<CR>
