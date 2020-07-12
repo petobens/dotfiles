@@ -1236,6 +1236,7 @@ nnoremap <silent> ]l :<C-U>execute v:count1 . 'lnext'<CR>
 nnoremap <silent> [l :<C-U>execute v:count1 . 'lprevious'<CR>
 nnoremap <silent> [Q :cfirst<CR>
 nnoremap <silent> ]Q :clast<CR>
+nnoremap <expr><A-w>  &previewwindow ? "\<C-w>p" : "\<A-w>"
 
 " }}}
 " R {{{
@@ -1629,15 +1630,29 @@ function! s:QuitAllDefx(context) abort
     call win_gotoid(win_id)
 endfunction
 
+function! s:DefxUpdatePreview(dir) abort
+    execute 'normal! ' . a:dir
+    for nr in range(1, winnr('$'))
+        if getwinvar(nr, '&previewwindow') == 1
+            call defx#call_action('preview')
+            break
+        endif
+    endfor
+endfunction
+
 " Filetype settings
 augroup ps_defx
     au!
     au FileType defx call s:defx_settings()
     au FileType defx setlocal relativenumber
+    au User defx-preview setlocal number winblend=4
 augroup END
 
 
 function! s:defx_settings()
+    " Move updating preview
+    nnoremap <silent><buffer> j :call <SID>DefxUpdatePreview('j')<CR>
+    nnoremap <silent><buffer> k :call <SID>DefxUpdatePreview('k')<CR>
     " Exit with escape key and q, Q
     nnoremap <silent><buffer><expr> <ESC> defx#do_action('quit')
     nnoremap <silent><buffer><expr> q defx#do_action('quit')
@@ -1686,9 +1701,10 @@ function! s:defx_settings()
     " Toggle hidden files
     nnoremap <silent><buffer><expr> <Leader>th
         \ defx#do_action('toggle_ignored_files')
-    " Redraw
-    nnoremap <silent><buffer><expr> <A-v> defx#do_action('preview')
     " Preview
+    nnoremap <silent><buffer><expr> <A-v> defx#do_action('preview')
+    nnoremap <silent><buffer> <A-w> <C-w>P
+    " Redraw
     nnoremap <silent><buffer><expr> <C-r> defx#do_action('redraw')
     " Toggle sorting from filename to time (with last modified first)
     nnoremap <silent><buffer><expr> S defx#do_action('toggle_sort', 'Time')
@@ -1767,6 +1783,10 @@ function! s:defx_settings()
                 \ defx#do_action('call', '<SID>denite_parents_dirs')
     nnoremap <silent><buffer><expr> ge
                 \ defx#do_action('call', '<SID>defx_ranger')
+    nnoremap <silent><buffer><expr> <A-j>
+                \ defx#do_action('call', '<SID>scroll_preview_down')
+    nnoremap <silent><buffer><expr> <A-k>
+                \ defx#do_action('call', '<SID>scroll_preview_up')
 endfunction
 
 " }}}
@@ -2105,6 +2125,7 @@ function! s:denite_filter_mappings() abort
         \ <ESC>:call denite#call_map('toggle_select')<CR><C-w>p
         \ :call cursor(line('.')-1, 0)<CR><C-w>pA
     inoremap <silent><buffer><expr> <A-v> denite#do_map('do_action', 'preview')
+    nnoremap <silent><buffer><expr> <A-v> denite#do_map('do_action', 'preview')
     inoremap <silent><buffer> <A-w> <Esc><C-w>P
     inoremap <silent><buffer><expr> <A-u> denite#do_map('restore_sources')
     inoremap <silent><buffer><expr> <C-q> denite#do_map('do_action', 'quickfix')
