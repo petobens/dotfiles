@@ -6,7 +6,7 @@ import i3ipc
 
 from i3_helpers import sh
 
-CTRL_Q = ['Skype', 'Slack']
+CTRL_Q = ['Slack']
 CUSTOM = ['Chromium', 'Brave-browser']
 
 

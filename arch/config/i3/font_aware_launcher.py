@@ -102,6 +102,21 @@ def run_app(app, subcmd):
                 f'"{gdk}thunderbird"',
             ]
         )
+    elif app == 'skype':
+        # It always opens in hidpi screen
+        gdk += 'GDK_SCALE=2 '
+        sh_no_block(
+            [
+                'raiseorlaunch',
+                '-c',
+                'Skype',
+                '-W',
+                '2',
+                '-f',
+                '-e',
+                f'"{gdk}skypeforlinux"',
+            ]
+        )
     elif app == 'gtk_dialog':
         if subcmd is None:
             raise ValueError('Missing type of dialog!')
