@@ -1630,8 +1630,8 @@ function! s:QuitAllDefx(context) abort
     call win_gotoid(win_id)
 endfunction
 
-function! s:DefxUpdatePreview(dir) abort
-    execute 'normal! ' . a:dir
+function! s:DefxUpdatePreview(dir, lines) abort
+    execute 'normal! ' . a:lines . a:dir
     for nr in range(1, winnr('$'))
         if getwinvar(nr, '&previewwindow') == 1
             call defx#call_action('preview')
@@ -1651,8 +1651,8 @@ augroup END
 
 function! s:defx_settings()
     " Move updating preview
-    nnoremap <silent><buffer> j :call <SID>DefxUpdatePreview('j')<CR>
-    nnoremap <silent><buffer> k :call <SID>DefxUpdatePreview('k')<CR>
+    nnoremap <silent><buffer> j :<C-u>call <SID>DefxUpdatePreview('j', v:count1)<CR>
+    nnoremap <silent><buffer> k :<C-u>call <SID>DefxUpdatePreview('k', v:count1)<CR>
     " Exit with escape key and q, Q
     nnoremap <silent><buffer><expr> <ESC> defx#do_action('quit')
     nnoremap <silent><buffer><expr> q defx#do_action('quit')
@@ -2043,14 +2043,14 @@ function! s:denite_mappings() abort
     nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
     " Actions
     nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
-    nnoremap <silent><buffer> j
-        \ :call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'normal')<CR>
-    nnoremap <silent><buffer> <C-n>
-        \ :call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'normal')<CR>
-    nnoremap <silent><buffer> k
-        \ :call <SID>DeniteMoveCursorCandidateWindow('k', 1, 'normal')<CR>
-    nnoremap <silent><buffer> <C-p>
-        \ :call <SID>DeniteMoveCursorCandidateWindow('k', 1, 'normal')<CR>
+    nnoremap <silent><buffer> j :<C-u>call
+        \ <SID>DeniteMoveCursorCandidateWindow('j', v:count1, 'normal')<CR>
+    nnoremap <silent><buffer> <C-n> :<C-u>call
+        \ <SID>DeniteMoveCursorCandidateWindow('j', v:count1, 'normal')<CR>
+    nnoremap <silent><buffer> k :<C-u>call
+        \ <SID>DeniteMoveCursorCandidateWindow('k', v:count1, 'normal')<CR>
+    nnoremap <silent><buffer> <C-p> :<C-u>call
+        \ <SID>DeniteMoveCursorCandidateWindow('k', v:count1, 'normal')<CR>
     nnoremap <silent><buffer><expr> <C-v> denite#do_map('do_action', 'vsplit')
     nnoremap <silent><buffer><expr> <C-s> denite#do_map('do_action', 'split')
     nnoremap <silent><buffer><expr> <C-r> denite#do_map('redraw')
