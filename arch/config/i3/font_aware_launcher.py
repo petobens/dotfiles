@@ -87,6 +87,11 @@ def run_app(app, subcmd):
     elif app == 'peek':
         # It might open in a hidpi screen or not
         sh_no_block(['raiseorlaunch', '-c', 'Peek', '-f', '-e', f'"{gdk}peek"'])
+    elif app == 'scanner':
+        # It might open in a hidpi screen or not
+        sh_no_block(
+            ['raiseorlaunch', '-c', 'Simple-scan', '-f', '-e', f'"{gdk}simple-scan"']
+        )
     elif app == 'thunderbird':
         # It always opens in hidpi screen
         gdk += 'GDK_SCALE=2 '

@@ -105,6 +105,7 @@ $yay_cmd pulseaudio-alsa
 $yay_cmd pulseaudio-bluetooth
 $yay_cmd rofi
 $yay_cmd rofi-dmenu
+$yay_cmd sane-airscan
 $yay_cmd tlp
 $yay_cmd udiskie
 $yay_cmd unclutter-xfixes-git
@@ -210,6 +211,7 @@ $yay_cmd hplip-plugin
 $yay_cmd onedrive-abraunegg
 $yay_cmd pdfpc
 $yay_cmd peek-git
+$yay_cmd simple-scan
 $yay_cmd skypeforlinux-preview-bin
 $yay_cmd slack-desktop
 $yay_cmd spotify
