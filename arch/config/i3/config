@@ -186,13 +186,15 @@ bindsym $mod+Control+p $nexec $HOME/.config/i3/font_aware_launcher.py zathura
 bindsym $mod+Control+v $nexec $HOME/.config/i3/font_aware_launcher.py vimiv
 bindsym $mod+Control+g $nexec $HOME/.config/i3/font_aware_launcher.py peek
 bindsym $mod+Control+w $nexec $HOME/.config/i3/font_aware_launcher.py connman
-bindsym $mod+Control+bracketleft $nexec $HOME/.config/i3/font_aware_launcher.py scanner
 bindsym $mod+Control+q $nexec $HOME/.config/i3/font_aware_launcher.py alacritty quickterm
 bindsym $mod+Control+n $nexec $HOME/.config/i3/font_aware_launcher.py alacritty numbers
 bindsym $mod+Control+f $nexec $HOME/.config/i3/font_aware_launcher.py alacritty ranger
 bindsym $mod+Control+h $nexec $HOME/.config/i3/font_aware_launcher.py alacritty htop
 bindsym $mod+Control+b $nexec $HOME/.config/i3/font_aware_launcher.py alacritty trash
 bindsym Control+$alt+Delete $nexec $HOME/.config/i3/font_aware_launcher.py alacritty prockiller
+bindsym $mod+Control+comma $nexec $HOME/.config/i3/font_aware_launcher.py scanner
+bindsym $mod+Control+period $nexec $HOME/.config/i3/font_aware_launcher.py color-picker
+bindsym $mod+Control+slash $nexec $HOME/.config/i3/font_aware_launcher.py gnome-font
 
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
@@ -233,8 +235,12 @@ for_window [urgent=latest] focus
 bindsym $mod+Control+j $nexec $HOME/.config/i3/focus_last.py --switch
 
 # Mark a window and jump to it (note that this will override existing marks)
-bindsym $mod+$alt+m mark markedwin
-bindsym $mod+Control+k [con_mark="markedwin"] focus
+bindsym $mod+$alt+m mark markedwin1
+bindsym $mod+$alt+n mark markedwin2
+bindsym $mod+$alt+b mark markedwin3
+bindsym $mod+Control+k [con_mark="markedwin1"] focus
+bindsym $mod+Control+bracketleft [con_mark="markedwin2"] focus
+bindsym $mod+Control+bracketright [con_mark="markedwin3"] focus
 
 # }}}
 #  Spotify and volume {{{

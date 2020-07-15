@@ -43,7 +43,7 @@ def run_app(app, subcmd):
             [
                 'raiseorlaunch',
                 '-c',
-                'gnome-font-viewer',
+                'Gnome-font-viewer',
                 '-f',
                 '-e',
                 f'"{gdk}gnome-font-viewer"',
@@ -174,6 +174,7 @@ def run_app(app, subcmd):
         sh_no_block(
             gtk_dialog, env={**os.environ, **gtk_env},
         )
+
     elif app == 'vimiv':
         # It might open in a hidpi screen or not
         sh_no_block(['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'],)
@@ -241,7 +242,7 @@ def run_app(app, subcmd):
         sh_no_block([alacritty_cmd], shell=True)
 
         if subcmd == 'prockiller':
-            sleep(1)
+            sleep(0.8)
             sh('xdotool type kill')
             sh('xdotool key space+Tab')
 
