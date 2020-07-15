@@ -61,7 +61,7 @@ FZF_ALT_C_OPTS_BASE="
 --header='enter=fzf-files, C-o=cd, A-c=fzf-dirs, A-p=parent-dirs, \
 A-f=ranger, C-y=yank'
 "
-export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE\
+export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE
 --bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort'
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
 "
@@ -122,7 +122,8 @@ ll() {
 
     case "$key" in
         **)
-            eval "$(printf "%s %s" "$cmd" "$path")" ;;
+            eval "$(printf "%s %s" "$cmd" "$path")"
+            ;;
     esac
 }
 
@@ -137,7 +138,7 @@ __fzf_select_custom__() {
         cmd="$cmd --no-ignore-vcs"
     fi
     if [[ "$2" ]]; then
-        cmd="$cmd . $2"  # use narrow dir
+        cmd="$cmd . $2" # use narrow dir
     fi
     out=$(eval "$cmd" | devicon-lookup --color |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)
@@ -147,7 +148,7 @@ __fzf_select_custom__() {
     if [ ${#_files[@]} -eq 1 ] && [[ -z "${_files[0]}" ]]; then
         return 1
     else
-        files=();
+        files=()
         for f in "${_files[@]}"; do
             files+=("${f#* }")
         done
@@ -156,26 +157,33 @@ __fzf_select_custom__() {
 
     case "$key" in
         tab)
-            printf '%q ' "${files[@]}" ;;
+            printf '%q ' "${files[@]}"
+            ;;
         ctrl-t)
-            __fzf_select_custom__ "no-ignore" "$(dirname "${files[0]}")" ;;
+            __fzf_select_custom__ "no-ignore" "$(dirname "${files[0]}")"
+            ;;
         ctrl-o)
-            printf 'open %q' "${files[0]}" ;;
+            printf 'open %q' "${files[0]}"
+            ;;
         alt-c)
-            printf 'cd %q' "$(dirname "${files[0]}")" ;;
+            printf 'cd %q' "$(dirname "${files[0]}")"
+            ;;
         alt-p)
-            __fzf_cd_parent__ "$(dirname "${files[0]}")" ;;
+            __fzf_cd_parent__ "$(dirname "${files[0]}")"
+            ;;
         alt-f)
-            printf 'ranger --selectfile %q' "${files[0]}" ;;
+            printf 'ranger --selectfile %q' "${files[0]}"
+            ;;
         *)
-            printf '%s %s' "${EDITOR:-nvim}" "$files_str" ;;
+            printf '%s %s' "${EDITOR:-nvim}" "$files_str"
+            ;;
     esac
 }
 fzf-file-widget-custom() {
     local selected=""
     selected="$(__fzf_select_custom__ "$1" "$2")"
     READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
-    READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
+    READLINE_POINT=$((READLINE_POINT + ${#selected}))
 }
 # Note this will insert output to the prompt and there is no way to choose to
 # execute it instead: https://github.com/junegunn/fzf/issues/477
@@ -203,15 +211,20 @@ __fzf_cd_action_key__() {
 
     case "$key" in
         ctrl-o)
-            printf 'cd %q' "$dir" ;;
+            printf 'cd %q' "$dir"
+            ;;
         alt-f)
-            printf 'ranger %q' "$dir" ;;
+            printf 'ranger %q' "$dir"
+            ;;
         alt-c)
-            __fzf_cd_custom__ "no-ignore" "$dir" ;;
+            __fzf_cd_custom__ "no-ignore" "$dir"
+            ;;
         alt-p)
-            __fzf_cd_parent__ "$dir" ;;
+            __fzf_cd_parent__ "$dir"
+            ;;
         *)
-            __fzf_select_custom__ "no-ignore" "$dir" ;;
+            __fzf_select_custom__ "no-ignore" "$dir"
+            ;;
     esac
 }
 
@@ -223,7 +236,7 @@ __fzf_cd_custom__() {
         cmd="$cmd --no-ignore-vcs"
     fi
     if [[ "$2" ]]; then
-        cmd="$cmd . $2"  # use narrow dir
+        cmd="$cmd . $2" # use narrow dir
     fi
     out=$(eval "$cmd" | devicon-lookup |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
@@ -289,7 +302,7 @@ fi
 # }}}
 # Z {{{
 
-export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE\
+export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE
 --bind 'ctrl-y:execute-silent(echo -n {3..} | $COPY_CMD)+abort'
 --no-sort
 --tac
@@ -333,8 +346,8 @@ ig() {
     grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@ {q}"
     grep_cmd+=" | devicon-lookup --color --prefix :"
     # shellcheck disable=SC2016
-    preview_cmd='bat --color always --style numbers --theme TwoDark '\
-'--line-range {2}: --highlight-line {2} $(echo {1} | sed "s/[^ ] //") | head -200'
+    preview_cmd='bat --color always --style numbers --theme TwoDark ' \
+        '--line-range {2}: --highlight-line {2} $(echo {1} | sed "s/[^ ] //") | head -200'
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
         fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd")
     key=$(head -1 <<< "$out")
@@ -343,7 +356,7 @@ ig() {
     if [[ ${#_files[@]} -eq 1 ]] && [[ -z "${_files[0]}" ]]; then
         return 1
     else
-        files=();
+        files=()
         for f in "${_files[@]}"; do
             # We need real path for vim to work (the first line removes devicon
             # icon from the filename)
@@ -372,7 +385,7 @@ export FZF_CTRL_R_OPTS="
 __fzf_history__() {
     local output
     output=$(
-            builtin fc -lnr -2147483648 |
+        builtin fc -lnr -2147483648 |
             last_hist=$(HISTTIMEFORMAT='' builtin history 1) perl -n -l0 -e 'BEGIN { getc; $/ = "\n\t"; $HISTCMD = $ENV{last_hist} + 1 } s/^[ *]//; print $HISTCMD - $. . "\t$_" if !$seen{$_}++' |
             FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_R_OPTS" fzf --query "$READLINE_LINE"
     ) || return
@@ -408,9 +421,9 @@ tms() {
         else
             session_name="$1"
         fi
-        tmux $change -t "$session_name" 2>/dev/null || \
-            (tmux -f "$HOME/.tmux/tmux.conf" new-session -d -s "$session_name" && \
-            tmux $change -t "$session_name");
+        tmux $change -t "$session_name" 2> /dev/null ||
+            (tmux -f "$HOME/.tmux/tmux.conf" new-session -d -s "$session_name" &&
+                tmux $change -t "$session_name")
         return
     fi
 
@@ -433,7 +446,8 @@ tms() {
             done
             ;;
         enter)
-            tmux "$change" -t "${sessions[0]}" ;;
+            tmux "$change" -t "${sessions[0]}"
+            ;;
     esac
 }
 
@@ -465,17 +479,23 @@ bt() {
     fi
     case "$key" in
         alt-p)
-            sub_cmd="pair" ;;
+            sub_cmd="pair"
+            ;;
         alt-t)
-            sub_cmd="trust" ;;
+            sub_cmd="trust"
+            ;;
         alt-u)
-            sub_cmd="untrust" ;;
+            sub_cmd="untrust"
+            ;;
         alt-d)
-            sub_cmd="disconnect" ;;
+            sub_cmd="disconnect"
+            ;;
         alt-r)
-            sub_cmd="remove" ;;
+            sub_cmd="remove"
+            ;;
         *)
-            sub_cmd="connect" ;;
+            sub_cmd="connect"
+            ;;
     esac
     for d in "${devices[@]}"; do
         bluetoothctl "$sub_cmd" "$d"
@@ -525,18 +545,20 @@ di() {
 
     case "$key" in
         ctrl-i)
-            image_cmd="docker run --rm -ti --entrypoint /bin/bash" ;;
+            image_cmd="docker run --rm -ti --entrypoint /bin/bash"
+            ;;
         alt-d)
-            image_cmd="docker image rm --force" ;;
+            image_cmd="docker image rm --force"
+            ;;
         **)
-            image_cmd="docker run -td";;
+            image_cmd="docker run -td"
+            ;;
     esac
 
     for image in "${images[@]}"; do
         eval "$image_cmd $image"
     done
 }
-
 
 FZF_DOCKER_CONTAINER_OPTS="$FZF_DOCKER_OPTS_BASE
 --expect=ctrl-a,ctrl-e,ctrl-s,ctrl-r,ctrl-b,alt-k,alt-d
@@ -557,26 +579,50 @@ dc() {
     post_cmd=''
     case "$key" in
         ctrl-a)
-            sub_cmd="attach" ;;
+            sub_cmd="attach"
+            ;;
         ctrl-e)
             sub_cmd="exec -ti"
-            post_cmd="/bin/bash" ;;
+            post_cmd="/bin/bash"
+            ;;
         ctrl-s)
-            sub_cmd="stop" ;;
+            sub_cmd="stop"
+            ;;
         ctrl-b)
-            sub_cmd="start" ;;
+            sub_cmd="start"
+            ;;
         ctrl-r)
-            sub_cmd="restart" ;;
+            sub_cmd="restart"
+            ;;
         alt-k)
-            sub_cmd="kill" ;;
+            sub_cmd="kill"
+            ;;
         alt-d)
-            sub_cmd="rm" ;;
+            sub_cmd="rm"
+            ;;
         **)
-            sub_cmd="logs";;
+            sub_cmd="logs"
+            ;;
     esac
     for container in "${containers[@]}"; do
         eval "docker container $sub_cmd $container $post_cmd"
     done
+}
+
+# }}}
+# Man (Search) {{{
+
+# TODO: Open man directly if exact match and switch alias to m
+FZF_MAN_OPTS='
+--header "enter=open"
+--preview="man -Pcat {1} 2>/dev/null | bat -l man --color always --style numbers"
+'
+ms() {
+    manual=$(apropos . | grep -v -E '^.+ \(0\)' | awk '{print $1 " "$2}' |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_MAN_OPTS" fzf --query "${@:-}" |
+        awk '{print $1}')
+    [ -z "$manual" ] && return 1
+    man "$manual"
 }
 
 # }}}
