@@ -348,6 +348,7 @@ ig() {
     # shellcheck disable=SC2016
     preview_cmd='bat --color always --style numbers --theme TwoDark ' \
         '--line-range {2}: --highlight-line {2} $(echo {1} | sed "s/[^ ] //") | head -200'
+    # shellcheck disable=SC2154
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
         fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd")
     key=$(head -1 <<< "$out")
@@ -612,15 +613,17 @@ dc() {
 # }}}
 # Man (Search) {{{
 
-# TODO: Open man directly if exact match and switch alias to m
 FZF_MAN_OPTS='
 --header "enter=open"
 --preview="man -Pcat {1} 2>/dev/null | bat -l man --color always --style numbers"
 '
-ms() {
-    manual=$(apropos . | grep -v -E '^.+ \(0\)' | awk '{print $1 " "$2}' |
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_MAN_OPTS" fzf --query "${@:-}" |
-        awk '{print $1}')
+m() {
+    query_str="$1"
+    [ -n "$query_str" ] && man "$query_str" && return 0 ||
+        manual=$(
+            apropos . | grep -v -E '^.+ \(0\)' | awk '{print $1 " "$2}' |
+                FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_MAN_OPTS" fzf --query "$query_str" | awk '{print $1}'
+        )
     [ -z "$manual" ] && return 1
     man "$manual"
 }

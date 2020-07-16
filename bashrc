@@ -110,8 +110,7 @@ alias wbs='curl v2.wttr.in/Buenos_Aires'
 # Other binaries
 if [[ -f "$BASE_PKG_DIR/share/bash-completion/bash_completion" ]]; then
     . "$BASE_PKG_DIR/share/bash-completion/completions/man"
-    alias m='man'
-    complete -F _man m ms
+    complete -F _man m # this is actually defined in fzf_bash file
 fi
 if type "htop" > /dev/null 2>&1; then
     alias ht='htop'
