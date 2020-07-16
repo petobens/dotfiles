@@ -20,7 +20,7 @@ def multi(how, direction):
     rmap = _get_resize_map(i3)
     _xrandr(how, direction)
     sleep(0.5)
-    _restart_dunst_and_polybar(how)
+    _restart_dunst_and_polybar_and_feh(how)
     sleep(0.5)
     _adjust_windows(i3, rmap)
     return
@@ -95,7 +95,6 @@ def _xrandr(how, direction):
             wpos = wpos if direction == 'right' else 0
         cmd += f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI}'
 
-
     # Turn off unused monitors
     turn_off = [i for i in monitors if i not in ('Screen', *keep_turnon)]
     for m in turn_off:
@@ -142,13 +141,16 @@ def _adjust_windows(i3, resize_map):
     return
 
 
-def _restart_dunst_and_polybar(how):
+def _restart_dunst_and_polybar_and_feh(how):
     how = 'xrandr' if how != 'mirror' else how
     polybar_launch_file = os.path.expanduser('~/.config/polybar/launch.py')
     os.system(f'python {polybar_launch_file} -m {how}')
     sleep(0.2)
     _sh('pkill -f dunst')
     _sh_no_block('nohup dunst &', stdout=subprocess.DEVNULL)
+    _sh('pkill -f feh')
+    feh_file = os.path.expanduser('~/.fehbg')
+    _sh_no_block(f'nohup {feh_file} &', stdout=subprocess.DEVNULL)
     return
 
 
