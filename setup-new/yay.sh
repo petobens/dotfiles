@@ -219,6 +219,7 @@ $yay_cmd thunderbird
 $yay_cmd transmission-gtk
 $yay_cmd xfce4-power-manager
 $yay_cmd zathura
+$yay_cmd zathura-djvu
 $yay_cmd zathura-pdf-poppler
 $yay_cmd zoom
 
