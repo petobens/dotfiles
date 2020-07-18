@@ -232,7 +232,7 @@ for_window [urgent=latest] focus
 
 # Jump to last focused app/window (needs to have focus_last script initiated
 # at startup)
-bindsym $mod+Control+j $nexec $HOME/.config/i3/focus_last.py --switch
+bindsym $mod+Control+j $nexec $HOME/.config/i3/recency_switcher.py --switch
 
 # Mark a window and jump to it (note that this will override existing marks)
 bindsym $mod+$alt+m mark markedwin1
@@ -323,6 +323,6 @@ exec_always --no-startup-id "[[ -f ~/.fehbg ]] && ~/.fehbg &"
 exec_always --no-startup-id $HOME/.config/polybar/launch.py
 
 # Run script that monitors window history and allows to jump to last focused
-exec_always --no-startup-id $HOME/.config/i3/focus_last.py
+exec_always --no-startup-id $HOME/.config/i3/focus_watcher.py
 
 # }}}

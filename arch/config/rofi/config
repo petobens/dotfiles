@@ -9,6 +9,7 @@ rofi.location:        0
 rofi.yoffset:         -50
 rofi.dpi:             0
 rofi.terminal:        alacritty
+rofi.fixed-num-lines: false
 
 # Maps
 rofi.kb-remove-to-eol:
