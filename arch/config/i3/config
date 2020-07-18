@@ -168,7 +168,7 @@ bindsym $mod+Control+u $nexec $HOME/.config/i3/font_aware_launcher.py transmissi
 # WS4: Other
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
     "freeoffice-planmaker" -l 30
-bindsym $mod+Control+d $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
+bindsym $mod+Control+d $nexec raiseorlaunch -c 'tm' -W $ws4 -e \
     "freeoffice-textmaker" -l 30
 
 # WS5 (terminal and those interacting with it; in secondary monitor)
