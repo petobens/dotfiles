@@ -12,7 +12,6 @@ if !has('nvim')
         let $DOTVIM = expand('$HOME/vimfiles')
     else
         let $DOTVIM = expand('$HOME/.vim')
-        let $MANPATH = expand('$MANPATH:/usr/local/texlive/2020/texmf-dist/doc/man')
     endif
 else
     let $DOTVIM = expand('$HOME/.config/nvim')
@@ -1327,6 +1326,7 @@ augroup ft_vim
     au Filetype help nmap <buffer><silent><Leader>tc gO
     " Man settings
     au Filetype man nmap <buffer><silent><Leader>tc gO
+    au FileType man setlocal iskeyword+=-
 augroup END
 
 " }}}
