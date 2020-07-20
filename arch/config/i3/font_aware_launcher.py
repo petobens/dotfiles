@@ -189,7 +189,9 @@ def run_app(app, subcmd):
         rofi_base = f"rofi -font 'Noto Sans Mono {rofi_fsize}' -yoffset {rofi_yoffset}"
 
         if subcmd == 'apps':
-            rofi_cmd = f'{rofi_base} -combi-modi drun,run -show combi'
+            rofi_cmd = (
+                f'{rofi_base} -combi-modi drun,run -show combi -display-combi apps'
+            )
         elif subcmd == 'pass':
             rofi_cmd = (
                 f"gopass ls --flat | {rofi_base} -dmenu -p gopass | "
@@ -218,6 +220,10 @@ def run_app(app, subcmd):
             alacritty_cmd += '"bluetooth-fzf" -d 100 30 -e bash -ci "bt;exit"'
         elif subcmd == 'docker':
             alacritty_cmd += '"docker-info" -d 150 30 -e sh -c "docker info | less +F"'
+        if subcmd == 'about-arch':
+            alacritty_cmd += (
+                '"About Arch" -e /usr/bin/bash -i -c "neofetch; read -p \'\'"'
+            )
 
         elif subcmd == 'htop':
             alacritty_cmd = (
