@@ -150,7 +150,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " SQL (and database related)
     call dein#add('chrisbra/csv.vim', {'on_ft': 'csv'})
-    call dein#add('tpope/vim-dadbod')
+    call dein#add('kristijanhusak/vim-dadbod', {'rev': 'async-query'})
     call dein#add('kristijanhusak/vim-dadbod-ui')
     call dein#add('kristijanhusak/vim-dadbod-completion')
 
@@ -1501,16 +1501,33 @@ let g:db_ui_show_database_icon = 1
 let g:db_ui_show_help = 0
 let g:db_ui_auto_execute_table_helpers = 1
 let g:db_ui_execute_on_save = 0
+let g:db_async = 1
 
 let g:db_ui_icons = {
-    \ 'collapsed' : {
-        \ 'db': ' ',
-    \ },
+    \ 'expanded': '',
+    \ 'collapsed': '',
 \ }
 
-let g:dbs = {
-\ 'name': 'postgres:',
-\ }
+function! s:ReadEnvVars(filepath)
+    if !filereadable(expand(a:filepath))
+        echoerr a:filepath . 'not found!'
+        return
+    endif
+    let connections = readfile(expand(a:filepath))
+    let conn_dict = {}
+    for i in connections
+        let split_str = split(i, '=')
+        " Ignore comments
+        if match(split_str[0], '^#.*') != -1
+            continue
+        endif
+        let conn_dict[split_str[0]] = split_str[1]
+    endfor
+    return conn_dict
+endfunction
+if filereadable(expand('$HOME/.db-conns/.conns'))
+    let g:dbs = s:ReadEnvVars(expand('$HOME/.db-conns/.conns'))
+endif
 
 " Mappings
 nnoremap <silent> <Leader>db :DBUIToggle<CR>
