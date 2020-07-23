@@ -25,7 +25,7 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
     i3.command(cmd)
     sleep(0.2)
 
-    new_output_width = _get_output_width(i3)
+    new_output_width, _ = get_output_width(i3)
 
     for win_id, win_data in resize_map.items():
         if cmd.startswith('move container'):
@@ -43,7 +43,7 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
             x, y, w, h = win_data['how']
             resize_win(i3, x, y, w, h)
 
-        new_output_width = _get_output_width(i3)
+        new_output_width, _ = get_output_width(i3)
         win_output_width = win_data['output_width']
         win_class = win_data['class']
         if (win_output_width != new_output_width) and (
@@ -57,7 +57,7 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
 def _get_resize_map(i3):
     res_map = {}
     ws = i3.get_tree().find_focused().workspace()
-    output_width = _get_output_width(i3, ws)
+    output_width, _ = get_output_width(i3, ws)
     for w in ws.leaves():
         res_map[w.id] = {
             'win': w,
@@ -70,11 +70,15 @@ def _get_resize_map(i3):
     return res_map
 
 
-def _get_output_width(i3, ws=None):
+def get_output_width(i3, ws=None):
+    """Get current workspace output width (and list of outputs)."""
     if ws is None:
         ws = i3.get_tree().find_focused().workspace()
     outputs = [i for i in i3.get_outputs() if i.active]
-    return [o.rect.width for o in outputs if o.name == ws.ipc_data['output']][0]
+    current_output_width = [
+        o.rect.width for o in outputs if o.name == ws.ipc_data['output']
+    ][0]
+    return current_output_width, outputs
 
 
 def _find_how_to_resize(i3, win=None):

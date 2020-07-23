@@ -5,17 +5,17 @@ import sys
 from time import sleep
 
 import i3ipc
+
 from i3_helpers import sh, sh_no_block
+from multimon_move import get_output_width
 
 
 def run_app(app, subcmd):
     """Run application adjusting font size if necessary."""
     i3 = i3ipc.Connection()
-    outputs = [i for i in i3.get_outputs() if i.active]
-    nr_monitors = len(outputs)
-    ws = i3.get_tree().find_focused().workspace()
-    output_width = [o.rect.width for o in outputs if o.name == ws.ipc_data['output']][0]
+    output_width, outputs = get_output_width(i3)
     is_hidpi = output_width > 1920
+    nr_monitors = len(outputs)
 
     gdk = ''
     qt = ''
@@ -177,6 +177,32 @@ def run_app(app, subcmd):
     elif app == 'vimiv':
         # It might open in a hidpi screen or not
         sh_no_block(['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'],)
+
+    elif app == 'brave':
+        # It might open in a hidpi screen or not
+        if subcmd is None:
+            raise ValueError('Missing brave subcommand!')
+        brave_cmd = (
+            f'raiseorlaunch -c Brave -W {{workspace}} -m {subcmd} -e '
+            f'"brave --new-window --app=https://{subcmd}.google.com{{extra}}"'
+        )
+        if subcmd == 'calendar':
+            brave_cmd = brave_cmd.format(workspace='1', extra='/calendar/b/0/r')
+        elif subcmd == 'hangouts':
+            brave_cmd = brave_cmd.format(workspace='2', extra='/?authuser=1')
+        elif subcmd == 'meet':
+            brave_cmd = brave_cmd.format(workspace='2', extra='')
+        sh_no_block([brave_cmd], shell=True)
+        if subcmd not in i3.get_marks():  # run this only on first open
+            sleep(2.5)
+            # This could open in a workspace different to the current one so we need to
+            # check if this new workspace is in a hidpi monitor or not
+            output_width, outputs = get_output_width(i3)
+            is_hidpi = output_width > 1920
+            nr_monitors = len(outputs)
+            sh('xdotool key Super+0')
+            if is_hidpi and nr_monitors > 1:
+                sh('xdotool key Super+u')
 
     elif app == 'rofi':
         if subcmd is None:

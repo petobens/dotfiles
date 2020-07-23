@@ -148,8 +148,7 @@ bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
 # WS1: browser and agenda (to have a black theme in calendar use Stylus
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
 bindsym $mod+Control+i $nexec raiseorlaunch -c Brave -W $ws1 -m browser
-bindsym $mod+Control+a $nexec raiseorlaunch -c Brave -W $ws1 -m cal -e \
-    "brave --new-window --app=https://calendar.google.com/calendar/b/0/r"
+bindsym $mod+Control+a $nexec $HOME/.config/i3/font_aware_launcher.py brave calendar
 bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
 # WS2: chat/communication related
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
@@ -157,10 +156,8 @@ bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
 bindsym $mod+Control+s $nexec $HOME/.config/i3/font_aware_launcher.py skype
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
 bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird
-bindsym $mod+Control+semicolon $nexec raiseorlaunch -c Brave -W $ws2 -m \
-    hangouts -e "brave --new-window --app=https://hangouts.google.com/?authuser=1"
-bindsym $mod+Control+o $nexec raiseorlaunch -c Brave -W $ws2 -m meet -e \
-    "brave --new-window --app=https://meet.google.com"
+bindsym $mod+Control+semicolon $nexec $HOME/.config/i3/font_aware_launcher.py brave hangouts
+bindsym $mod+Control+o $nexec $HOME/.config/i3/font_aware_launcher.py brave meet
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
@@ -204,7 +201,7 @@ for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv|Sim
 # We seem to need this hack for Alacritty (i.e use title instead of mark)
 for_window [title="^(Alacritty|kitty)$"] \
     $nexec $HOME/.config/i3/resize.py Full
-for_window [con_mark="^(browser|cal|hangouts|meet)$"] \
+for_window [con_mark="^(browser|calendar|hangouts|meet)$"] \
     $nexec $HOME/.config/i3/resize.py Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
     $nexec $HOME/.config/i3/resize.py Center
