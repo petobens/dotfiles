@@ -381,6 +381,14 @@ alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
 alias mvtt='vagrant ssh -- -L 127.0.0.1:1025:$(pass meli/teradata/host):1025 -v -N'
 alias mvpt='vagrant ssh -- -L 127.0.0.1:8443:$(pass meli/presto/host):443 -v -N'
 
+# UC
+uvpn() {
+    vpn_cmd="openvpn --daemon --config $(pass urban/vpn/config-path)"
+    vpn_cmd+=" --auth-user-pass <(echo -e \"$(pass urban/vpn/user)\n$(pass urban/vpn/pass)\")"
+    cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
+    eval "$cmd"
+}
+
 # }}}
 # Functions {{{
 
