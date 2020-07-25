@@ -345,9 +345,9 @@ ig() {
     # shellcheck disable=SC2124
     grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@ {q}"
     grep_cmd+=" | devicon-lookup --color --prefix :"
-    # shellcheck disable=SC2016
-    preview_cmd='bat --color always --style numbers --theme TwoDark ' \
-        '--line-range {2}: --highlight-line {2} $(echo {1} | sed "s/[^ ] //") | head -200'
+    # shellcheck disable=SC2016,SC1004
+    preview_cmd='bat --color always --style numbers --theme TwoDark\
+        --line-range {2}: --highlight-line {2} $(echo {1} | sed "s/[^ ] //") | head -200'
     # shellcheck disable=SC2154
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
         fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd")
