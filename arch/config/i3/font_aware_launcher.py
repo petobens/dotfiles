@@ -27,17 +27,17 @@ def run_app(app, subcmd):
             qt += 'QT_SCALE_FACTOR=2 '
 
     if app == 'connman':
-        # It might open in a hidpi screen or not
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(
             ['raiseorlaunch', '-c', 'Connman-gtk', '-f', '-e', f'"{gdk}connman-gtk"']
         )
     elif app == 'zathura':
-        # It might open in a hidpi screen or not
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(
             ['raiseorlaunch', '-c', 'Zathura', '-C', '-f', '-e', f'"{gdk}zathura"']
         )
     elif app == 'gnome-font':
-        # It might open in a hidpi screen or not
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(
             [
                 'raiseorlaunch',
@@ -49,15 +49,15 @@ def run_app(app, subcmd):
             ]
         )
     elif app == 'color-picker':
-        # It might open in a hidpi screen or not
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(['raiseorlaunch', '-c', 'gcolor3', '-f', '-e', f'"{gdk}gcolor3"'])
     elif app == 'pavucontrol':
-        # It might open in a hidpi screen or not
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(
             ['raiseorlaunch', '-c', 'pavucontrol', '-f', '-e', f'"{gdk}pavucontrol"']
         )
     elif app == 'power-manager':
-        # It might open in a hidpi screen or not
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(
             [
                 'raiseorlaunch',
@@ -69,30 +69,30 @@ def run_app(app, subcmd):
             ]
         )
     elif app == 'transmission':
-        # It always opens in hidpi screen
-        gdk += 'GDK_SCALE=2 '
+        #  Opens in ws 4 which chould be or not a hidpi screen (depends on the number of
+        # connected monitors)
         sh_no_block(
             [
                 'raiseorlaunch',
                 '-c',
                 'Transmission-gtk',
                 '-W',
-                '3',
+                '4',
                 '-f',
                 '-e',
                 f'"{gdk}transmission-gtk"',
             ]
         )
     elif app == 'peek':
-        # It might open in a hidpi screen or not
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(['raiseorlaunch', '-c', 'Peek', '-f', '-e', f'"{gdk}peek"'])
     elif app == 'scanner':
-        # It might open in a hidpi screen or not
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(
             ['raiseorlaunch', '-c', 'Simple-scan', '-f', '-e', f'"{gdk}simple-scan"']
         )
     elif app == 'thunderbird':
-        # It always opens in hidpi screen
+        # Opens in ws 3 which is always in a hidpi screen
         gdk += 'GDK_SCALE=2 '
         sh_no_block(
             [
@@ -107,7 +107,7 @@ def run_app(app, subcmd):
             ]
         )
     elif app == 'skype':
-        # It always opens in hidpi screen
+        # Opens in ws 3 which is always in a hidpi screen
         gdk += 'GDK_SCALE=2 '
         sh_no_block(
             [
@@ -122,6 +122,7 @@ def run_app(app, subcmd):
             ]
         )
     elif app == 'gtk_dialog':
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         if subcmd is None:
             raise ValueError('Missing type of dialog!')
         gtk_dialog = ['gtk_dialog', '-t']
@@ -175,11 +176,12 @@ def run_app(app, subcmd):
         )
 
     elif app == 'vimiv':
-        # It might open in a hidpi screen or not
-        sh_no_block(['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'],)
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
+        sh_no_block(['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'])
 
     elif app == 'brave':
-        # It might open in a hidpi screen or not
+        # Might open in hidpi screen or not but there is no way to adjust font before
+        # actually open the application so we adjust zoom after the apps opens
         if subcmd is None:
             raise ValueError('Missing brave subcommand!')
         brave_cmd = (
@@ -205,6 +207,7 @@ def run_app(app, subcmd):
                 sh('xdotool key Super+u')
 
     elif app == 'rofi':
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         if subcmd is None:
             raise ValueError('Missing rofi subcommand!')
         rofi_fsize = 11
@@ -233,6 +236,7 @@ def run_app(app, subcmd):
         sh_no_block([rofi_cmd], shell=True)
 
     elif app == 'alacritty':
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         if subcmd is None:
             raise ValueError('Missing alacritty subcommand!')
         alacritty_scale = 1

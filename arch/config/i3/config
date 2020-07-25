@@ -220,8 +220,8 @@ for_window [window_role="^(GtkFileChooserDialog)$"] \
 # Assign to specific workspaces (for apps opened with ranger or those that don't
 # respect startup workspaces)
 for_window [class="^(zoom)$"] $nexec $HOME/.config/i3/multimon_move.py -w "2"
-for_window [class="^(mpv|Transmission-gtk)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
-for_window [class="^(pm|tm|pr)$"] \
+for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
+for_window [class="^(pm|tm|pr|Transmission-gtk)$"] \
     $nexec $HOME/.config/i3/multimon_move.py -w "4"
 
 # Automatically switch to windows that raise an urgent flag
