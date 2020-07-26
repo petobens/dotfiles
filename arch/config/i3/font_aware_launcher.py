@@ -211,7 +211,7 @@ def run_app(app, subcmd):
         if subcmd is None:
             raise ValueError('Missing rofi subcommand!')
         rofi_fsize = 11
-        rofi_yoffset = -150
+        rofi_yoffset = -110
         if is_hidpi & (nr_monitors > 1):
             rofi_fsize *= 2
             rofi_yoffset = int(rofi_yoffset * 1.5)
