@@ -245,11 +245,15 @@ def run_app(app, subcmd):
 
         alacritty_cmd = f'WINIT_X11_SCALE_FACTOR={alacritty_scale} alacritty -t '
         if subcmd == 'onedrive':
-            alacritty_cmd += '"OneDrive" -e sh -c "journalctl --user-unit onedrive -f"'
+            alacritty_cmd += (
+                '"OneDrive" -e /usr/bin/bash -c "journalctl --user-unit onedrive -f"'
+            )
         elif subcmd == 'bluetooth':
-            alacritty_cmd += '"bluetooth-fzf" -d 100 30 -e bash -ci "bt;exit"'
+            alacritty_cmd += '"bluetooth-fzf" -d 100 30 -e /usr/bin/bash -ci "bt;exit"'
         elif subcmd == 'docker':
-            alacritty_cmd += '"docker-info" -d 150 30 -e sh -c "docker info | less +F"'
+            alacritty_cmd += (
+                '"docker-info" -d 150 30 -e /usr/bin/bash -c "docker info | less +F"'
+            )
         if subcmd == 'about-arch':
             alacritty_cmd += (
                 '"About Arch" -e /usr/bin/bash -i -c "neofetch; read -p \'\'"'
@@ -262,9 +266,9 @@ def run_app(app, subcmd):
         elif subcmd == 'numbers':
             alacritty_cmd = f"raiseorlaunch -t 'numbers' -f -e '{alacritty_cmd} numbers -e ipython3'"  # noqa
         elif subcmd == 'ranger':
-            alacritty_cmd = f'raiseorlaunch -t "ranger" -f -e \'{alacritty_cmd} ranger -e sh -c "ranger $(tmux display -p \"#{{pane_current_path}}\")"\''  # noqa
+            alacritty_cmd = f'raiseorlaunch -t "ranger" -f -e \'{alacritty_cmd} ranger -e /usr/bin/bash -c "ranger $(tmux display -p \"#{{pane_current_path}}\")"\''  # noqa
         elif subcmd == 'trash':
-            alacritty_cmd = f'raiseorlaunch -t "Trash Can" -f -e \'{alacritty_cmd} "Trash Can" -e sh -c "trash-list | less"\''  # noqa
+            alacritty_cmd = f'raiseorlaunch -t "Trash Can" -f -e \'{alacritty_cmd} "Trash Can" -e /usr/bin/bash -c "trash-list | less"\''  # noqa
         elif subcmd == 'quickterm':
             alacritty_cmd = f'raiseorlaunch -t "QuickTerm" -f -e \'{alacritty_cmd} "QuickTerm" -e /usr/bin/bash -l -c "cd $(tmux display -p \"#{{pane_current_path}}\") && exec /usr/bin/bash -i"\''  # noqa
         elif subcmd == 'prockiller':

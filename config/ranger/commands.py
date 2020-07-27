@@ -9,6 +9,15 @@ from pathlib import Path
 from ranger.api.commands import Command
 from ranger.ext.get_executables import get_executables
 
+FZF_DEFAULT_OPTS = """\
+--height=30 --inline-info --prompt="❯ " \
+--bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up \
+--bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up \
+--color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff \
+--color=prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd \
+--color=marker:#98c379,spinner:#e06c75,border:#282c34 \
+"""
+
 
 class fzf_select(Command):
     """Find a file or directory using fzf and fd.
@@ -42,15 +51,16 @@ class fzf_select(Command):
             preview_cmd = (
                 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
             )
+        fzf_cmd = f"FZF_DEFAULT_OPTS='{FZF_DEFAULT_OPTS}' fzf"
         command += (
             f"| devicon-lookup {'--color' if not only_dirs else ''} | "
-            f"fzf {'--ansi' if not only_dirs else ''} --preview '{preview_cmd}' +m"
+            f"{fzf_cmd} {'--ansi' if not only_dirs else ''} --preview '{preview_cmd}' +m"
         )
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
-            out = stdout.decode('utf-8').rstrip('\n')[2:]  # due todevicons
+            out = stdout.decode('utf-8').rstrip('\n')[2:]  # due to devicons
             fzf_file = os.path.abspath(out)
             if os.path.isdir(fzf_file):
                 self.fm.cd(fzf_file)
@@ -74,7 +84,10 @@ class fzf_parents(Command):
         preview_cmd = (
             'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'
         )
-        command = f"printf '{parents}' | devicon-lookup | fzf --preview '{preview_cmd}'"
+        fzf_cmd = f"FZF_DEFAULT_OPTS='{FZF_DEFAULT_OPTS}' fzf"
+        command = (
+            f"printf '{parents}' | devicon-lookup | {fzf_cmd} --preview '{preview_cmd}'"
+        )
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
@@ -100,7 +113,10 @@ class fzf_z(Command):
         preview_cmd = (
             'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
         )
-        command += f" | devicon-lookup | fzf  --no-sort --tac --preview='{preview_cmd}'"
+        fzf_cmd = f"FZF_DEFAULT_OPTS='{FZF_DEFAULT_OPTS}' fzf"
+        command += (
+            f" | devicon-lookup | {fzf_cmd} --no-sort --tac --preview='{preview_cmd}'"
+        )
         command += ' | sed "s/^\\W\\s[0-9,.]* *//"'
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
@@ -124,7 +140,7 @@ class show_files_in_finder(Command):
             ]
         )
         reveal_script = "tell application \"Finder\" to reveal {{{0}}}".format(files)
-        activate_script = "tell application \"Finder\" to set frontmost to " "true"
+        activate_script = "tell application \"Finder\" to set frontmost to true"
         script = "osascript -e '{0}' -e '{1}'".format(reveal_script, activate_script)
         self.fm.notify(script)
         subprocess.check_output(
