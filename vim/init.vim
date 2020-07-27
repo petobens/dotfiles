@@ -1316,17 +1316,17 @@ augroup ft_vim
     " Don't insert comment leader automatically
     au FileType vim setlocal formatoptions-=ro
 
-    " Help settings
+    " Help/man settings
     au FileType help setlocal textwidth=78 relativenumber
+    au FileType man setlocal iskeyword+=-
     " Place help window at the bottom
     au BufWinEnter *.txt if &ft == 'help' | wincmd J | endif
     au BufWinEnter *.txt if &ft == 'help' | 20 wincmd _ | endif
     " Mappings
     au FileType help nmap <buffer><silent>q :bd<CR>
-    au Filetype help nmap <buffer><silent><Leader>tc gO
-    " Man settings
-    au Filetype man nmap <buffer><silent><Leader>tc gO
-    au FileType man setlocal iskeyword+=-
+    au Filetype help,man nmap <buffer><silent><Leader>tc gO
+    au Filetype help,man nmap <buffer><silent><Leader>tC
+                \ :execute 'normal gO' <bar> bd<CR>
 augroup END
 
 " }}}
