@@ -4,9 +4,13 @@
 import sys
 from operator import attrgetter
 
+import IPython
 import IPython.terminal.prompts as prompts
+import prompt_toolkit
 from prompt_toolkit.application import get_app
 from prompt_toolkit.key_binding.vi_state import InputMode, ViState
+from prompt_toolkit.styles.pygments import pygments_token_to_classname
+from prompt_toolkit.styles.style import Style
 from pygments.token import (
     Comment,
     Error,
@@ -68,6 +72,23 @@ class MyPrompt(prompts.Prompts):
 
 c.TerminalInteractiveShell.prompts_class = MyPrompt
 
+
+# Fix completion highlighting as per https://github.com/ipython/ipython/issues/11526
+def my_style_from_pygments_dict(pygments_dict):
+    """Monkey patch prompt toolkit style function to fix completion colors."""
+    pygments_style = []
+    for token, style in pygments_dict.items():
+        if isinstance(token, str):
+            pygments_style.append((token, style))
+        else:
+            pygments_style.append((pygments_token_to_classname(token), style))
+    return Style(pygments_style)
+
+
+prompt_toolkit.styles.pygments.style_from_pygments_dict = my_style_from_pygments_dict
+IPython.terminal.interactiveshell.style_from_pygments_dict = my_style_from_pygments_dict
+
+
 # Palette (onedarkish)
 white = '#abb2bf'
 mono_2 = '#828997'
@@ -119,16 +140,15 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Token.PromptNum: f'{green} bold',
     Token.OutPrompt: blue,
     Token.OutPromptNum: f'{blue} bold',
-    # The following requires a modified pygments style_from_pygments_dict function
-    # See: https://github.com/ipython/ipython/issues/11526
-    # and https://github.com/ipython/ipython/issues/11209
-    # 'completion-menu.completion.current': f'bg:{light_blue} {black}',
-    # 'completion-menu.completion': f'bg:{pmenu} {white}',
-    # 'completion-menu.meta.completion.current': f'bg:{light_blue} {black}',
-    # 'completion-menu.meta.completion': f'bg:{pmenu} {white}',
-    # 'completion-menu.multi-column-meta': f'bg:{pmenu} {white}',
     Token.MatchingBracket.Other: blue,
+    'completion-menu': f'bg:{pmenu} {white}',
+    'completion-menu.completion.current': f'bg:{light_blue} {black}',
+    'completion-menu.completion': f'bg:{pmenu} {white}',
+    'completion-menu.meta.completion.current': f'bg:{light_blue} {black}',
+    'completion-menu.meta.completion': f'bg:{pmenu} {white}',
+    'completion-menu.multi-column-meta': f'bg:{pmenu} {white}',
 }
+
 
 # Always import some modules
 c.InteractiveShellApp.exec_lines = ['import numpy as np']
