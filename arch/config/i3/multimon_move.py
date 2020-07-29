@@ -49,6 +49,7 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
         if (win_output_width != new_output_width) and (
             win_class in ('kitty', 'Alacritty', 'Brave-browser', 'firefox')
         ):
+            # Note: firefox meta key not working
             zoom_dir = 'u' if new_output_width > win_output_width else 'd'
             sh(f'xdotool key Super+{zoom_dir}')
     return
@@ -75,9 +76,9 @@ def get_output_width(i3, ws=None):
     if ws is None:
         ws = i3.get_tree().find_focused().workspace()
     outputs = [i for i in i3.get_outputs() if i.active]
-    current_output_width = [
+    current_output_width = next(
         o.rect.width for o in outputs if o.name == ws.ipc_data['output']
-    ][0]
+    )
     return current_output_width, outputs
 
 

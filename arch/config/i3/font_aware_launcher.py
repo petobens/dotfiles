@@ -10,10 +10,13 @@ from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
 
-def run_app(app, subcmd):
+def run_app(app, subcmd, workspace_name=None):
     """Run application adjusting font size if necessary."""
     i3 = i3ipc.Connection()
-    output_width, outputs = get_output_width(i3)
+    ws = None
+    if workspace_name is not None:
+        ws = _get_workspace(i3, workspace_name)
+    output_width, outputs = get_output_width(i3, ws)
     is_hidpi = output_width > 1920
     nr_monitors = len(outputs)
 
@@ -77,7 +80,7 @@ def run_app(app, subcmd):
                 '-c',
                 'Transmission-gtk',
                 '-W',
-                '4',
+                f'{workspace_name}',
                 '-f',
                 '-e',
                 f'"{gdk}transmission-gtk"',
@@ -100,7 +103,7 @@ def run_app(app, subcmd):
                 '-c',
                 'Thunderbird',
                 '-W',
-                '2',
+                f'{workspace_name}',
                 '-f',
                 '-e',
                 f'"{gdk}thunderbird"',
@@ -115,7 +118,7 @@ def run_app(app, subcmd):
                 '-c',
                 'Skype',
                 '-W',
-                '2',
+                f'{workspace_name}',
                 '-f',
                 '-e',
                 f'"{gdk}skypeforlinux"',
@@ -185,25 +188,22 @@ def run_app(app, subcmd):
         if subcmd is None:
             raise ValueError('Missing brave subcommand!')
         brave_cmd = (
-            f'raiseorlaunch -c Brave -W {{workspace}} -m {subcmd} -e '
+            f'raiseorlaunch -c Brave -W {workspace_name} -m {subcmd} -e '
             f'"brave --new-window --app=https://{subcmd}.google.com{{extra}}"'
         )
         if subcmd == 'calendar':
-            brave_cmd = brave_cmd.format(workspace='1', extra='/calendar/b/0/r')
+            brave_cmd = brave_cmd.format(extra='/calendar/b/0/r')
         elif subcmd == 'hangouts':
-            brave_cmd = brave_cmd.format(workspace='2', extra='/?authuser=1')
+            brave_cmd = brave_cmd.format(extra='/?authuser=1')
         elif subcmd == 'meet':
-            brave_cmd = brave_cmd.format(workspace='2', extra='')
+            brave_cmd = brave_cmd.format(extra='')
         sh_no_block([brave_cmd], shell=True)
         if subcmd not in i3.get_marks():  # run this only on first open
             sleep(2.5)
-            # This could open in a workspace different to the current one so we need to
-            # check if this new workspace is in a hidpi monitor or not
-            output_width, outputs = get_output_width(i3)
-            is_hidpi = output_width > 1920
+            # Ensure we have proper scaling
             nr_monitors = len(outputs)
             sh('xdotool key Super+0')
-            if is_hidpi and nr_monitors > 1:
+            if is_hidpi:
                 sh('xdotool key Super+u')
 
     elif app == 'rofi':
@@ -281,13 +281,23 @@ def run_app(app, subcmd):
             sh('xdotool key space+Tab')
 
 
+def _get_workspace(i3, name):
+    workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
+    if workspace is None:
+        i3.command(f'workspace {name}')
+        sleep(0.1)
+        workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
+    return workspace
+
+
 if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
     parser.add_argument('application')
     parser.add_argument('subcommand', nargs='?', default=None)
-    parse_args = parser.parse_args()
+    parser.add_argument('--workspace', '-W', required=False, type=str, default=None)
+    parsed_args = parser.parse_args()
 
-    run_app(parse_args.application, parse_args.subcommand)
+    run_app(parsed_args.application, parsed_args.subcommand, parsed_args.workspace)
     sys.exit(0)

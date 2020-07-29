@@ -148,33 +148,26 @@ bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
 # WS1: browser and agenda (to have a black theme in calendar use Stylus
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
 bindsym $mod+Control+i $nexec raiseorlaunch -c Brave -W $ws1 -m browser
-bindsym $mod+Control+a $nexec $HOME/.config/i3/font_aware_launcher.py brave calendar
+bindsym $mod+Control+a $nexec $HOME/.config/i3/font_aware_launcher.py brave calendar -W $ws1
 bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
 # WS2: chat/communication related
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
     "slack --force-device-scale-factor=2"
-bindsym $mod+Control+s $nexec $HOME/.config/i3/font_aware_launcher.py skype
+bindsym $mod+Control+s $nexec $HOME/.config/i3/font_aware_launcher.py skype -W $ws2
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
-bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird
-bindsym $mod+Control+semicolon $nexec $HOME/.config/i3/font_aware_launcher.py brave hangouts
-bindsym $mod+Control+o $nexec $HOME/.config/i3/font_aware_launcher.py brave meet
+bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird -W $ws2
+bindsym $mod+Control+semicolon $nexec $HOME/.config/i3/font_aware_launcher.py brave hangouts -W $ws2
+bindsym $mod+Control+o $nexec $HOME/.config/i3/font_aware_launcher.py brave meet -W $ws2
 # WS3: Music, video, torrents
 bindsym $mod+Control+m $nexec raiseorlaunch -c Spotify -W $ws3 -e \
     "spotify --force-device-scale-factor=2"
-bindsym $mod+Control+u $nexec $HOME/.config/i3/font_aware_launcher.py transmission
 # WS4: Other
+bindsym $mod+Control+u $nexec $HOME/.config/i3/font_aware_launcher.py transmission -W $ws4
 bindsym $mod+Control+x $nexec raiseorlaunch -c 'pm' -W $ws4 -e \
     "freeoffice-planmaker" -l 30
 bindsym $mod+Control+d $nexec raiseorlaunch -c 'tm' -W $ws4 -e \
     "freeoffice-textmaker" -l 30
-
-# WS5 (terminal and those interacting with it; in secondary monitor)
-# Note: we use marks terminal to avoid focusing on other windows of the same
-# class. See https://github.com/open-dynaMIX/raiseorlaunch/issues/17
-# Note: We use fixed DPI scaling as per:
-# https://github.com/jwilm/alacritty/pull/1403#issuecomment-417876005
-# bindsym $mod+Control+c $nexec raiseorlaunch -c Alacritty -W $ws5 -m terminal \
-    # -e 'alacritty -e /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"'
+# WS5 (terminal)
 bindsym $mod+Control+c $nexec raiseorlaunch -c kitty -W $ws5 -m terminal \
     -e 'kitty /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"'
 
