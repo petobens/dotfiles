@@ -215,6 +215,7 @@ $yay_cmd simple-scan
 $yay_cmd skypeforlinux-preview-bin
 $yay_cmd slack-desktop
 $yay_cmd spotify
+$yay_cmd teams
 $yay_cmd thunderbird
 $yay_cmd transmission-gtk
 $yay_cmd xfce4-power-manager
