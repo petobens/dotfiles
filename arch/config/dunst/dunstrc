@@ -187,8 +187,8 @@ per_monitor_dpi = true
 close = ctrl+space
 close_all = ctrl+shift+space
 history = ctrl+grave
-# Context menu (to operate on notification)
-context = ctrl+shift+period
+# Context menu (to jump to notification)
+context = ctrl+shift+j
 
 
 [urgency_low]
