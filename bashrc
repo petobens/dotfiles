@@ -388,6 +388,7 @@ uvpn() {
     cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
     eval "$cmd"
 }
+alias ussh='TERM=xterm-256color; sshpass -p "$(pass urban/server/187/pass)" ssh urban'
 
 # }}}
 # Functions {{{
