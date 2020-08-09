@@ -399,7 +399,7 @@ if !has('nvim')
 endif
 
 " }}}
-" Folding {{{
+" Folding and signs {{{
 
 set foldlevelstart=0          " Start with everything folded
 set foldopen+=insert,jump     " Commands that auto-unfold
@@ -412,6 +412,9 @@ nnoremap zr zR
 
 " Map to use marker folding
 nnoremap <silent> <Leader>mf :set foldmethod=marker<CR>zv
+
+" Show signs in number column
+set signcolumn=number
 
 " }}}
 " Read and write (buffers) {{{
