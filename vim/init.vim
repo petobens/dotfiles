@@ -1542,6 +1542,8 @@ augroup ps_dadbodui
     au Filetype dbui nmap <silent><buffer> <C-r> <Plug>(DBUI_Redraw)
     au Filetype sql nmap <silent><buffer> <Leader>rf <Plug>(DBUI_ExecuteQuery)
     au Filetype sql nmap <silent><buffer> <F7> <Plug>(DBUI_ExecuteQuery)
+    au Filetype sql nmap <buffer> <Leader>rq :DBUIRenameBuffer<CR>
+    au Filetype sql nmap <buffer> <Leader>fq :DBUIFindBuffer<CR>
 augroup END
 
 " }}}
