@@ -230,7 +230,7 @@ endif
 " Backups and undo {{{
 
 " What things Vim saves and restores (sessions)
-set viewoptions=cursor,folds,unix,slash,curdir
+set viewoptions=cursor,folds,curdir
 set viewdir=$CACHE/tmp/view
 set sessionoptions-=options,tabpages
 set sessionoptions+=winpos,resize
