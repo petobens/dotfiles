@@ -201,9 +201,8 @@ def run_app(app, subcmd, workspace_name=None):
         if subcmd not in i3.get_marks():  # run this only on first open
             sleep(2.5)
             # Ensure we have proper scaling
-            nr_monitors = len(outputs)
             sh('xdotool key Super+0')
-            if is_hidpi:
+            if is_hidpi and nr_monitors > 1:
                 sh('xdotool key Super+u')
 
     elif app == 'rofi':
