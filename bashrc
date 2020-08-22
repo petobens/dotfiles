@@ -90,6 +90,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     fi
 fi
 alias cp='cp -i'
+alias mv='mv -i'
 alias rm='rm -v'
 alias md='mkdir -p'
 alias rd='rmdir'
@@ -99,6 +100,7 @@ ds() {
     # shellcheck disable=SC2086
     du -shc ${1:-*} | sort -rh | fzf
 }
+alias df='df -h'
 alias diff='diff -u --color'
 alias ur='unrar x'
 alias uz='unzip'
