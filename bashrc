@@ -107,6 +107,34 @@ alias ti='hyperfine'
 alias ping='prettyping --nolegend --last 30'
 alias wbs='curl v2.wttr.in/Buenos_Aires'
 
+# Unpack helper
+up() {
+    if [[ -f "$1" ]]; then
+        case $1 in
+            *.tar.bz2) cmd="tar xjf" ;;
+            *.tar.gz) cmd="tar xzf" ;;
+            *.bz2) cmd="bunzip2" ;;
+            *.rar) cmd="unrar x" ;;
+            *.gz) cmd="gunzip" ;;
+            *.tar) cmd="tar xf " ;;
+            *.tbz2) cmd="tar xjf" ;;
+            *.tgz) cmd="tar xzf" ;;
+            *.zip) cmd="unzip" ;;
+            *.Z) cmd="uncompress" ;;
+            *.7z) cmd="7z x" ;;
+            *.deb) cmd="ar x" ;;
+            *.tar.xz) cmd="tar xf" ;;
+            *.tar.zst) cmd="unzstd" ;;
+            *) echo "'$1' cannot be extracted via unpack function" ;;
+        esac
+        if [[ -n "$cmd" ]]; then
+            eval "$cmd $1"
+        fi
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
 # Other binaries
 if [[ -f "$BASE_PKG_DIR/share/bash-completion/bash_completion" ]]; then
     . "$BASE_PKG_DIR/share/bash-completion/completions/man"
