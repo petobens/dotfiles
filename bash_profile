@@ -143,8 +143,9 @@ fi
 # Xorg {{{
 
 if [ "$OSTYPE" == 'linux-gnu' ]; then
-    if [[ ! $DISPLAY &&  "$(tty)" == '/dev/tty1' ]]; then
-        exec startx &> /tmp/startx.log; exit
+    if [[ ! $DISPLAY && "$(tty)" == '/dev/tty1' ]]; then
+        exec startx &> /tmp/startx.log
+        exit
     fi
 fi
 

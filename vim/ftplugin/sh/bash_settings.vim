@@ -379,8 +379,8 @@ endfunction
 " Automatically run shfmt and shellcheck on save
 augroup sh_linting
     au!
-    au BufWritePost *.sh call s:RunFormatter() | silent noautocmd update |
-                \ silent Neomake
+    au BufWritePost {bash_profile,bashrc,*.sh} call s:RunFormatter() |
+                \ silent noautocmd update | silent Neomake
 augroup END
 
 " }}}

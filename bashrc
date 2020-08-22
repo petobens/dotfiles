@@ -39,7 +39,6 @@ bind -m vi-command '"\C-w": emacs-editing-mode'
 bind -m vi-insert '"\C-w": emacs-editing-mode'
 bind -m emacs-standard '"\C-w": vi-editing-mode'
 
-
 # Insert mode
 bind -m vi-insert '"jj": vi-movement-mode'
 bind -m vi-insert '"\C-p": previous-history'
@@ -201,8 +200,8 @@ if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
 fi
 if type "mpv" > /dev/null 2>&1; then
     # (P)hot(b)ooth (webcam)
-    alias pb='mpv av://v4l2:/dev/video0 --really-quiet --title=webcam '\
-'--screenshot-directory=~/Pictures/Screenshots'
+    alias pb='mpv av://v4l2:/dev/video0 --really-quiet --title=webcam ' \
+        '--screenshot-directory=~/Pictures/Screenshots'
 fi
 
 # Git (similar to vim's fugitive); also bind auto-complete functions to each
@@ -321,8 +320,7 @@ if type "yay" > /dev/null 2>&1; then
     alias yay='yay --nodiffmenu --answerclean N --removemake'
     # Update pacman mirrorlist
     if type "reflector" > /dev/null 2>&1; then
-        alias upm='sudo reflector --verbose --latest 25 -p http -p https '\
-'--sort rate --save /etc/pacman.d/mirrorlist'
+        alias upm='sudo reflector --verbose --latest 25 -p http -p https --sort rate --save /etc/pacman.d/mirrorlist'
     fi
 fi
 if type "vagrant" > /dev/null 2>&1; then
@@ -342,8 +340,7 @@ if [[ "$OSTYPE" != 'darwin'* ]]; then
     fi
 
     if type "pacman" > /dev/null 2>&1; then
-        alias lsip='comm -23 <(pacman -Qqett | sort) <(pacman -Qqg base'\
-' -g base-devel -g xorg | sort | uniq)'
+        alias lsip='comm -23 <(pacman -Qqett | sort) <(pacman -Qqg base -g base-devel -g xorg | sort | uniq)'
     fi
 fi
 
@@ -356,7 +353,7 @@ alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 # Claro
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
 # enabled)
- alias covpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
+alias covpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
 '--background --authgroup=1 --user="$(pass claro/vpn/user)" '\
 '--passwd-on-stdin "$(pass claro/vpn/host-old)"'
 alias cvpn='sudo pkill -INT -f snx; stoken | '\
@@ -398,9 +395,11 @@ mvssh() {
         if [[ "$1" ]]; then
             case "$1" in
                 proxy)
-                    vg_ssh_cmd="$vg_ssh_cmd -- -v -N -D $2" ;;
+                    vg_ssh_cmd="$vg_ssh_cmd -- -v -N -D $2"
+                    ;;
                 *)
-                    vg_ssh_cmd="$vg_ssh_cmd -t -c '$1'" ;;
+                    vg_ssh_cmd="$vg_ssh_cmd -t -c '$1'"
+                    ;;
             esac
         fi
         eval "$vg_ssh_cmd"
@@ -428,7 +427,10 @@ alias ussh='TERM=xterm-256color; sshpass -p "$(pass urban/server/187/pass)" ssh 
 # Note that we need to save the last_exit_status to be reused by the prompt
 save_reload_hist() {
     local last_exit_status=$?
-    history -n; history -w; history -c; history -r
+    history -n
+    history -w
+    history -c
+    history -r
     return $last_exit_status
 }
 
@@ -470,7 +472,7 @@ sys_update_all() {
     if type "R" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating R packages...\033[0m"
         R --slave --no-save --no-restore -e \
-'update.packages(ask=TRUE, checkBuilt=TRUE, lib.loc=Sys.getenv("R_LIBS_USER"))'
+            'update.packages(ask=TRUE, checkBuilt=TRUE, lib.loc=Sys.getenv("R_LIBS_USER"))'
     fi
     if type "tlmgr" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Latex packages...\033[0m"
@@ -504,7 +506,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         . "$BASE_PKG_DIR/etc/profile.d/z.sh"
     fi
 else
-    if  [[ -f "/usr/share/z/z.sh" ]]; then
+    if [[ -f "/usr/share/z/z.sh" ]]; then
         source /usr/share/z/z.sh
     fi
 fi
