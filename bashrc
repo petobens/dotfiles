@@ -354,36 +354,36 @@ alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 # Note: this requires a passwordless stoken (use token-mode=rsa if password is
 # enabled)
 alias covpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
-'--background --authgroup=1 --user="$(pass claro/vpn/user)" '\
-'--passwd-on-stdin "$(pass claro/vpn/host-old)"'
+'--background --authgroup=1 --user="$(pass show claro/vpn/user)" '\
+'--passwd-on-stdin "$(pass show claro/vpn/host-old)"'
 alias cvpn='sudo pkill -INT -f snx; stoken | '\
-'snx -s "$(pass claro/vpn/host)" -u "$(pass claro/vpn/user)"'
-alias cmssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
+'snx -s "$(pass show claro/vpn/host)" -u "$(pass show claro/vpn/user)"'
+alias cmssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/pytonp01)" '\
 'ssh mjolnir'
-alias cpfssh='sshpass -p "$(pass arch/localhost)" ssh localhost -N -D 54321'
-alias cmtssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/pytonp01)" '\
+alias cpfssh='sshpass -p "$(pass show arch/localhost)" ssh localhost -N -D 54321'
+alias cmtssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/pytonp01)" '\
 'ssh mjolnir -R 9090:127.0.0.1:54321'
-alias ctssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
+alias ctssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/tcal)" '\
 'ssh tcal'
-alias cttssh='TERM=xterm-256color; sshpass -p "$(pass claro/ssh/tcal)" '\
+alias cttssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/tcal)" '\
 'ssh tcal -R 9090:127.0.0.1:54321'
-alias coddb='rlwrap -a"$(pass claro/oracle/delver/pass)" -N '\
-'sql DELVER/"$(pass claro/oracle/delver/pass)"'\
-'@"$(pass claro/oracle/delver/host)":1521/RAC8.WORLD'
+alias coddb='rlwrap -a"$(pass show claro/oracle/delver/pass)" -N '\
+'sql DELVER/"$(pass show claro/oracle/delver/pass)"'\
+'@"$(pass show claro/oracle/delver/host)":1521/RAC8.WORLD'
 alias coldb='rlwrap -a -N sql system/oracle@localhost:49161/xe'
-alias cptdb=' PGPASSWORD="$(pass claro/postgres/tcalt/pass)" pgcli '\
-'-h "$(pass claro/postgres/tcalt/host)" -p 5432 -U airflow -d delver'
+alias cptdb=' PGPASSWORD="$(pass show claro/postgres/tcalt/pass)" pgcli '\
+'-h "$(pass show claro/postgres/tcalt/host)" -p 5432 -U airflow -d delver'
 alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
 
 # Habitat
 alias hsshp='TERM=xterm-256color; ssh habitat-server-prd'
 alias hsshs='TERM=xterm-256color; ssh habitat-server-stg'
-alias hdb='PGPASSWORD="$(pass habitat/postgres/pass)" pgcli -h '\
-'"$(pass habitat/postgres/host)" -U mutt -d habitat'
+alias hdb='PGPASSWORD="$(pass show habitat/postgres/pass)" pgcli -h '\
+'"$(pass show habitat/postgres/host)" -U mutt -d habitat'
 
 # Meli
-alias mgpp='echo $(pass meli/vpn/pin)'\
-'$(oathtool --base32 --totp $(pass meli/vpn/secret))'
+alias mgpp='echo $(pass show meli/vpn/pin)'\
+'$(oathtool --base32 --totp $(pass show meli/vpn/secret))'
 mvssh() {
     (
         command cd "/home/pedro/OneDrive/mutt/clients/meli/vpn" || exit
@@ -407,17 +407,17 @@ mvssh() {
 }
 alias mvp='mvssh proxy 12345'
 alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
-alias mvtt='vagrant ssh -- -L 127.0.0.1:1025:$(pass meli/teradata/host):1025 -v -N'
-alias mvpt='vagrant ssh -- -L 127.0.0.1:8443:$(pass meli/presto/host):443 -v -N'
+alias mvtt='vagrant ssh -- -L 127.0.0.1:1025:$(pass show meli/teradata/host):1025 -v -N'
+alias mvpt='vagrant ssh -- -L 127.0.0.1:8443:$(pass show meli/presto/host):443 -v -N'
 
 # UC
 uvpn() {
-    vpn_cmd="openvpn --daemon --config $(pass urban/vpn/config-path)"
-    vpn_cmd+=" --auth-user-pass <(echo -e \"$(pass urban/vpn/user)\n$(pass urban/vpn/pass)\")"
+    vpn_cmd="openvpn --daemon --config $(pass show urban/vpn/config-path)"
+    vpn_cmd+=" --auth-user-pass <(echo -e \"$(pass show urban/vpn/user)\n$(pass show urban/vpn/pass)\")"
     cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
     eval "$cmd"
 }
-alias ussh='TERM=xterm-256color; sshpass -p "$(pass urban/server/187/pass)" ssh urban'
+alias ussh='TERM=xterm-256color; sshpass -p "$(pass show urban/server/187/pass)" ssh urban'
 
 # }}}
 # Functions {{{
@@ -521,7 +521,8 @@ fi
 
 # Pass
 if type "gopass" > /dev/null 2>&1; then
-    source <(pass completion bash)
+    # FIXME: Completion not working
+    # source <(gopass completion bash)
     alias pass='TERM=xterm-256color; pass'
 fi
 
