@@ -521,9 +521,8 @@ fi
 
 # Pass
 if type "gopass" > /dev/null 2>&1; then
-    # FIXME: Completion not working
-    # source <(gopass completion bash)
-    alias pass='TERM=xterm-256color; pass'
+    source <(pass completion bash)
+    alias pass='TERM=xterm-256color; gopass'
 fi
 
 # }}}
