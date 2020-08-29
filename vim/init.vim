@@ -716,7 +716,7 @@ nnoremap + <C-a>
 nnoremap - <C-x>
 
 " Change map to start macro recording
-noremap <Leader>q q
+noremap <Leader>mr q
 map q <Nop>
 
 " }}}
