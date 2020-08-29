@@ -2156,7 +2156,7 @@ function! s:denite_filter_mappings() abort
     inoremap <silent><buffer> <A-w> <Esc><C-w>P
     inoremap <silent><buffer><expr> <A-u> denite#do_map('restore_sources')
     inoremap <silent><buffer><expr> <C-q> denite#do_map('do_action', 'quickfix')
-    imap <silent><buffer> <A-q> jj:call <SID>denite_quickfix_all()<CR>
+    inoremap <silent><buffer> <A-q> <ESC>:call <SID>denite_quickfix_all()<CR>
     " Custom actions
     inoremap <silent><buffer><expr> <A-j> denite#do_map('do_action',
                 \ 'scroll_preview_down')
