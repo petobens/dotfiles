@@ -465,6 +465,10 @@ sys_update_all() {
             echo "$outdated"
             u_list=$(pip list --user --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1)
             for i in $u_list; do
+                # FIXME: remove this once jedi upgrades
+                if [[ "$i" == 'parso' ]]; then
+                    continue
+                fi
                 pip install --user -U "$i"
             done
         fi
