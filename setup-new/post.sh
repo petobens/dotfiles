@@ -122,31 +122,34 @@ else
     fi
 
     # Enable some services
+    echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
+    # Start pulseaudio (if daemon is not already running which it should)
+    pulseaudio --start
+    # Time Sync (ntp)
+    sudo systemctl enable systemd-timesyncd.service
+    sudo systemctl start systemd-timesyncd.service
+    # Connman
+    sudo systemctl enable connman.service
+    # Lock
     if [ -f /etc/systemd/system/sleeplock.service ]; then
-        echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
-        # Start pulseaudio (if daemon is not already running which it should)
-        pulseaudio --start
-        # Connman
-        sudo systemctl enable connman.service
-        # Lock
         sudo systemctl enable sleeplock.service
         sudo systemctl start sleeplock.service
-        # Bluetooth
-        sudo systemctl enable bluetooth.service
-        sudo systemctl start bluetooth.service
-        # TLP
-        sudo systemctl enable tlp.service
-        sudo systemctl start tlp.service
-        # Printer
-        sudo systemctl enable org.cups.cupsd.service
-        sudo systemctl start org.cups.cupsd.service
-        # Disable rfkill (for tlp)
-        sudo systemctl mask systemd-rfkill.service
-        sudo systemctl mask systemd-rfkill.socket
-        # SSH
-        sudo systemctl enable sshd.service
-        sudo systemctl start sshd.service
     fi
+    # Bluetooth
+    sudo systemctl enable bluetooth.service
+    sudo systemctl start bluetooth.service
+    # TLP
+    sudo systemctl enable tlp.service
+    sudo systemctl start tlp.service
+    # Printer
+    sudo systemctl enable org.cups.cupsd.service
+    sudo systemctl start org.cups.cupsd.service
+    # Disable rfkill (for tlp)
+    sudo systemctl mask systemd-rfkill.service
+    sudo systemctl mask systemd-rfkill.socket
+    # SSH
+    sudo systemctl enable sshd.service
+    sudo systemctl start sshd.service
 
     # Remove previous pacman cache dir (we changed it in pacman.conf)
     echo -e "\\033[1;34m--> Removing old pacman cache dir...\\033[0m"
