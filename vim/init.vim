@@ -2273,7 +2273,7 @@ function! s:scroll_preview_up(context)
 endfunction
 function! s:yank_commit(context)
     let candidate = a:context['targets'][0]['word']
-    let commit_hash = matchstr(candidate, '*\s\zs\w*\ze\s-')
+    let commit_hash = matchstr(candidate, '*\s\+\zs\w*\ze\s-')
     call setreg('+', commit_hash)
 endfunction
 function! s:denite_quickfix_all()
