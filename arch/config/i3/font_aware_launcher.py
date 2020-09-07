@@ -175,7 +175,8 @@ def run_app(app, subcmd, workspace_name=None):
             ]
         gtk_env = dict([i.split('=') for i in gdk.split()])  # type: ignore
         sh_no_block(
-            gtk_dialog, env={**os.environ, **gtk_env},
+            gtk_dialog,
+            env={**os.environ, **gtk_env},
         )
 
     elif app == 'vimiv':
@@ -211,10 +212,13 @@ def run_app(app, subcmd, workspace_name=None):
             raise ValueError('Missing rofi subcommand!')
         rofi_fsize = 11
         rofi_yoffset = -110
+        rofi_icon_size = 1.8
         if is_hidpi & (nr_monitors > 1):
             rofi_fsize *= 2
             rofi_yoffset = int(rofi_yoffset * 1.5)
+            rofi_icon_size = 2.0
         rofi_base = f"rofi -font 'Noto Sans Mono {rofi_fsize}' -yoffset {rofi_yoffset}"
+        rofi_base += f" -theme-str 'element-icon {{ size: {rofi_icon_size}ch; }}'"
 
         if subcmd == 'apps':
             rofi_cmd = (

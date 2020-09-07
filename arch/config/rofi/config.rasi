@@ -1,0 +1,22 @@
+configuration {
+	font: "Noto Sans Mono 11";
+	location: 0;
+	yoffset: -50;
+	fixed-num-lines: false;
+	show-icons: true;
+    icon-theme: "Papirus-Dark";
+	terminal: "alacritty";
+	matching: "fuzzy";
+	separator-style: "solid";
+	hide-scrollbar: true;
+	dpi: 0;
+	color-normal: "#24272e, #abb2bf, #24272e, #61afef, #24272e";
+	color-urgent: "#24272e, #abb2bf, #24272e, #e06c75, #24272e";
+	color-active: "#24272e, #abb2bf, #24272e, #c678dd, #24272e";
+	color-window: "#24272e, #282c34, #282c34";
+	kb-remove-to-eol: "";
+	kb-accept-entry: "Return";
+	kb-row-up: "Shift_L+Left_Tab,Ctrl-p,Up,Ctrl-k";
+	kb-row-down: "Ctrl-n,Down,Ctrl-j";
+	kb-cancel: "Ctrl-c,Escape";
+}
