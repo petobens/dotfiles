@@ -3090,7 +3090,8 @@ let g:tagbar_type_tex = {
     \ 'sort' : 1,
     \ 'kinds' : [
         \ 'i:includes:1:0',
-        \ 'l:labels:0:0'
+        \ 'l:labels:0:0',
+        \ 'f:frames'
     \ ]
 \ }
 
