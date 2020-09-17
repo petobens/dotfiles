@@ -70,7 +70,7 @@ class Menu:
                 focused_index = i
             rows[w['window']] = [
                 w['workspace'],
-                w['window_class'],
+                w['window_class'] if w['window_class'] is not None else '',
                 w['window_title'],
             ]
         widths = [max(map(len, col)) for col in zip(*rows.values())]
