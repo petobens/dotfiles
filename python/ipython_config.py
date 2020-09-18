@@ -2,12 +2,12 @@
 # pylint:disable=W0212
 
 import sys
-from operator import attrgetter
 
 import IPython
 import IPython.terminal.prompts as prompts
 import prompt_toolkit
 from prompt_toolkit.application import get_app
+from prompt_toolkit.application.current import get_app as get_current_app
 from prompt_toolkit.key_binding.vi_state import InputMode, ViState
 from prompt_toolkit.styles.pygments import pygments_token_to_classname
 from prompt_toolkit.styles.style import Style
@@ -33,6 +33,15 @@ c.TerminalInteractiveShell.confirm_exit = False
 c.TerminalIPythonApp.display_banner = False
 
 
+def get_input_mode(self):
+    """Get input mode and reduce input flush timeout."""
+    # https://github.com/prompt-toolkit/python-prompt-toolkit/issues/192#issuecomment-557800620
+    app = get_current_app()
+    app.ttimeoutlen = 0.01
+    app.timeoutlen = 0.2
+    return self._input_mode
+
+
 def set_input_mode(self, mode):
     """Change cursor shape relative to vi mode.
 
@@ -50,7 +59,7 @@ def set_input_mode(self, mode):
 
 
 ViState._input_mode = InputMode.INSERT
-ViState.input_mode = property(attrgetter('_input_mode'), set_input_mode)
+ViState.input_mode = property(get_input_mode, set_input_mode)
 
 
 class MyPrompt(prompts.Prompts):
