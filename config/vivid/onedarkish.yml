@@ -25,12 +25,17 @@ core:
     broken_symlink:
         foreground: black
         background: magenta
+    missing_symlink_target:
+        foreground: black
+        background: magenta
     fifo:
         foreground: cyan
     socket:
         foreground: yellow
-    sticky_writable:
+    sticky:
         foreground: green
+    sticky_other_writable: {}
+    other_writable: {}
     normal_text: {}
     character_device: {}
     block_device: {}
