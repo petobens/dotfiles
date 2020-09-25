@@ -97,6 +97,7 @@ $yay_cmd mpv
 $yay_cmd networkmanager
 $yay_cmd nmap
 $yay_cmd ntfs-3g
+$yay_cmd obs-studio
 $yay_cmd pavucontrol
 $yay_cmd picom
 $yay_cmd playerctl
