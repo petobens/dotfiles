@@ -1079,7 +1079,6 @@ augroup END
 augroup ft_html
     au!
     au Filetype html setlocal shiftwidth=2 tabstop=2 softtabstop=2
-    " au FileType html nnoremap <buffer><silent> <F7> :silent! ! start %<CR>
 augroup END
 
 " }}}
@@ -3505,6 +3504,9 @@ function! s:OpenLink()
     let line = getline ('.')
     let url = matchstr(line, '\(http\|www\.\)[^ ]*')
     let url = escape(url, '#!?&;|%')
+    if url ==# ''
+        let url = '%'
+    endif
     let open_command = 'open '
     if s:is_win
         let open_command = 'start '
