@@ -2048,6 +2048,7 @@ augroup END
 augroup ps_denite_setup
     au!
     au FileType denite call s:denite_mappings()
+    au FileType denite setlocal signcolumn=no
     au FileType denite-filter call s:denite_filter_mappings()
     au FileType denite-filter
        \ call deoplete#custom#buffer_option('auto_complete', v:false)
