@@ -39,7 +39,7 @@ def kill_custom(i3, which):
                 if win_class in remaining_window_classes:
                     i3.command('kill')
         elif win_class in CTRL_Q:
-            sh(f'xkill -id {win.window}')
+            sh(f'xdotool key --window {win.window} ctrl+q')
         else:
             i3.command('kill')
     i3.command(f'workspace {focused_ws}')
