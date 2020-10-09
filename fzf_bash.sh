@@ -35,6 +35,7 @@ export FZF_DEFAULT_OPTS='
 --prompt="❯ "
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
 --bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up
+--bind=alt-d:preview-half-page-down,alt-u:preview-half-page-up
 --color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff
 --color=prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd
 --color=marker:#98c379,spinner:#e06c75,border:#282c34
@@ -347,10 +348,11 @@ ig() {
     grep_cmd+=" | devicon-lookup --color --prefix :"
     # shellcheck disable=SC2016,SC1004
     preview_cmd='bat --color always --style numbers --theme TwoDark\
-        --line-range {2}: --highlight-line {2} $(echo {1} | sed "s/[^ ] //") | head -200'
+        --highlight-line {2} $(echo {1} | sed "s/[^ ] //")'
     # shellcheck disable=SC2154
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
-        fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd")
+        fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd" \
+        --preview-window "+{2}-/2")
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
 
