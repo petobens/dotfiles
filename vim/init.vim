@@ -3502,9 +3502,13 @@ nnoremap <silent> <Leader>h6 :call <SID>HiInterestingWord(6)<cr>
 " }}}
 " Open web links {{{
 
-function! s:OpenLink()
-    let line = getline ('.')
-    let url = matchstr(line, '\(http\|www\.\)[^ ]*')
+function! s:OpenLink(mode)
+    if a:mode ==# 'visual'
+        let url = getline("'<")[getpos("'<")[2] - 1:getpos("'>")[2] - 1]
+    else
+        let line = getline ('.')
+        let url = matchstr(line, '\(http\|www\.\)[^ ]:\?[[:alnum:]%\/_#.-]*')
+    endif
     let url = escape(url, '#!?&;|%')
     if url ==# ''
         let url = '%'
@@ -3519,7 +3523,8 @@ function! s:OpenLink()
     redraw!
 endfunction
 
-nnoremap <silent> <Leader>ol :call <SID>OpenLink()<CR>
+nnoremap <silent> <Leader>ol :call <SID>OpenLink('normal')<CR>
+vnoremap <silent> <Leader>ol :call <SID>OpenLink('visual')<CR>
 
 " }}}
 " Visual search {{{
