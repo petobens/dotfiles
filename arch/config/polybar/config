@@ -43,7 +43,7 @@ margin-top = 0
 type = custom/text
 content = %{T6} %{T-}
 content-padding = 1
-click-left = /home/pedro/.config/i3/font_aware_launcher.py rofi arch-init
+click-left = ~/.config/i3/font_aware_launcher.py rofi arch-init
 
 [module/i3-windows]
 type = custom/script
@@ -91,7 +91,7 @@ exec = ~/.config/polybar/docker.sh
 interval = 5.0
 label-font = 5
 format-padding = 1
-click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty docker
+click-left = ~/.config/i3/font_aware_launcher.py alacritty docker
 
 [module/onedrive]
 type = custom/script
@@ -99,7 +99,7 @@ exec = python ~/.config/polybar/onedrive.py
 label-font = 5
 format-padding = 1
 interval = 5.0
-click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty onedrive
+click-left = ~/.config/i3/font_aware_launcher.py alacritty onedrive
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -120,8 +120,8 @@ type = internal/network
 # Get interface with `command ip link`
 interface = wlan0
 ping-interval = 3
-format-connected = %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
-format-disconnected =  %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-disconnected>  %{A}
+format-connected = %{A1:~/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
+format-disconnected =  %{A1:~/.config/i3/font_aware_launcher.py connman &:} <label-disconnected>  %{A}
 label-disconnected-font = 4
 label-connected = 直  %{T3}%signal%%%{T-}
 label-connected-font = 4
@@ -131,8 +131,8 @@ label-disconnected = 睊
 # See: https://github.com/jaagr/polybar/issues/1164
 type = internal/network
 interface = eth0
-format-connected = %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
-format-disconnected =  %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-disconnected>  %{A}
+format-connected = %{A1:~/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
+format-disconnected =  %{A1:~/.config/i3/font_aware_launcher.py connman &:} <label-disconnected>  %{A}
 label-disconnected-font = 5
 label-connected = 
 label-connected-font = 5
@@ -143,7 +143,7 @@ label-disconnected-foreground = ${colors.fg-urg}
 type = custom/script
 exec = ~/.config/polybar/bluetooth.sh
 interval = 5.0
-click-left = /home/pedro/.config/i3/font_aware_launcher.py alacritty bluetooth
+click-left = ~/.config/i3/font_aware_launcher.py alacritty bluetooth
 click-right = bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
 
 [module/pulseaudio]
@@ -152,8 +152,8 @@ type = internal/pulseaudio
 # We show the normalized (100%) version
 use-ui-max = false
 interval = 10
-format-volume = %{A1:/home/pedro/.config/i3/font_aware_launcher.py pavucontrol &:}<ramp-volume>  %{A}
-format-muted = %{A1:/home/pedro/.config/i3/font_aware_launcher.py pavucontrol &:}<label-muted>  %{A}
+format-volume = %{A1:~/.config/i3/font_aware_launcher.py pavucontrol &:}<ramp-volume>  %{A}
+format-muted = %{A1:~/.config/i3/font_aware_launcher.py pavucontrol &:}<label-muted>  %{A}
 label-muted = 
 label-muted-font = 4
 ramp-volume-0 = 
@@ -170,9 +170,9 @@ full-at = 100
 battery = BAT0
 adapter = AC0
 poll-interval = 5
-format-charging = %{A1:/home/pedro/.config/i3/font_aware_launcher.py power-manager &:}<label-charging>  %{A}
-format-discharging = %{A1:/home/pedro/.config/i3/font_aware_launcher.py power-manager &:}<ramp-capacity>  <label-discharging>  %{A}
-format-full = %{A1:/home/pedro/.config/i3/font_aware_launcher.py power-manager &:}<label-full>  %{A}
+format-charging = %{A1:~/.config/i3/font_aware_launcher.py power-manager &:}<label-charging>  %{A}
+format-discharging = %{A1:~/.config/i3/font_aware_launcher.py power-manager &:}<ramp-capacity>  <label-discharging>  %{A}
+format-full = %{A1:~/.config/i3/font_aware_launcher.py power-manager &:}<label-full>  %{A}
 label-charging =   %{T3}%percentage%%%{T-}
 label-discharging = %{T3}%percentage%%%{T-}
 label-charging-font = 6
