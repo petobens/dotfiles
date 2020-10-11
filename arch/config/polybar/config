@@ -26,7 +26,7 @@ modules-center = i3
 modules-right = docker onedrive xkeyboard vpn wifi ethernet bluetooth pulseaudio battery date
 tray-position = ${env:TRAY_POS:}
 tray-maxsize = ${env:TRAY_SIZE:}
-; Font definition
+# Font definition
 font-0 = ${env:POLYFONT0:}
 font-1 = ${env:POLYFONT1:}
 font-2 = ${env:POLYFONT2:}
@@ -117,7 +117,7 @@ format-padding = 1
 
 [module/wifi]
 type = internal/network
-; Get interface with `command ip link`
+# Get interface with `command ip link`
 interface = wlan0
 ping-interval = 3
 format-connected = %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
@@ -128,7 +128,7 @@ label-connected-font = 4
 label-disconnected = 睊
 
 [module/ethernet]
-; See: https://github.com/jaagr/polybar/issues/1164
+# See: https://github.com/jaagr/polybar/issues/1164
 type = internal/network
 interface = eth0
 format-connected = %{A1:/home/pedro/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
@@ -148,8 +148,8 @@ click-right = bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
 
 [module/pulseaudio]
 type = internal/pulseaudio
-; Note: max vol might go beyond 100% (but it is amplified and hence distorted).
-; We show the normalized (100%) version
+# Note: max vol might go beyond 100% (but it is amplified and hence distorted).
+# We show the normalized (100%) version
 use-ui-max = false
 interval = 10
 format-volume = %{A1:/home/pedro/.config/i3/font_aware_launcher.py pavucontrol &:}<ramp-volume>  %{A}
@@ -163,8 +163,8 @@ ramp-volume-3 = 
 ramp-volume-font = 5
 
 [module/battery]
-; Use the following command to list batteries and adapters:
-; $ ls -1 /sys/class/power_supply/
+# Use the following command to list batteries and adapters:
+# $ ls -1 /sys/class/power_supply/
 type = internal/battery
 full-at = 100
 battery = BAT0
