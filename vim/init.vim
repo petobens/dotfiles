@@ -1978,6 +1978,7 @@ function! s:DeniteVisualSearch(direction)
     let temp = @s
     norm! gv"sy
     let visual_selection = @s
+    let visual_selection = escape(visual_selection, '$+%\.{*|@^')
     let @s = temp
     call denite#start([{'name': 'line', 'args': [a:direction]}],
                 \ {'input': visual_selection})
