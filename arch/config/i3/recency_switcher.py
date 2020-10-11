@@ -120,18 +120,32 @@ if __name__ == '__main__':
         help='Switch to the previous window',
         default=False,
     )
+    parser.add_argument(
+        '--active-ws',
+        dest='active_ws',
+        action='store_true',
+        help='Only show windows in active workspace.',
+        default=False,
+    )
     args = parser.parse_args()
 
     sockets = Sockets(SOCKET_FILE)
     containers_history = sockets.get_containers_history()
+
     i3_conn = i3ipc.Connection()
 
     if args.switch:
         i3_conn.command(f"[con_id={containers_history[1]['id']}] focus")
     else:
-        # Note: add `monitor primary` if we want to show always in the same monitor
+        selected_row = 1
+        if args.active_ws:
+            selected_row = 0
+            ws = i3_conn.get_tree().find_focused().workspace()
+            containers_history = [
+                i for i in containers_history if i['workspace'] == ws.name
+            ]
         dmenu_cmd = (
-            "-dmenu -p window -i -selected-row 1 "
+            f"-dmenu -p window -i -selected-row {selected_row} "
             "-kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' "
             "-kb-row-up 'ISO_Left_Tab,Ctrl-p'"
         )

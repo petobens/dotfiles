@@ -231,6 +231,10 @@ def run_app(app, subcmd, workspace_name=None):
             )
         elif subcmd == 'tab':
             rofi_cmd = f'$HOME/.config/i3/recency_switcher.py --menu="{rofi_base}"'
+        elif subcmd == 'ws-win':
+            rofi_cmd = (
+                f'$HOME/.config/i3/recency_switcher.py --active-ws --menu="{rofi_base}"'
+            )
         elif subcmd == 'arch-init':
             yoffset = 25
             if is_hidpi:

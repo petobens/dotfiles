@@ -21,7 +21,7 @@ foreground = ${colors.fg}
 line-size = 2
 padding = 0
 module-margin-left = 2
-modules-left = arch title
+modules-left = arch i3-windows title
 modules-center = i3
 modules-right = docker onedrive xkeyboard vpn wifi ethernet bluetooth pulseaudio battery date
 tray-position = ${env:TRAY_POS:}
@@ -44,6 +44,12 @@ type = custom/text
 content = %{T6} %{T-}
 content-padding = 1
 click-left = /home/pedro/.config/i3/font_aware_launcher.py rofi arch-init
+
+[module/i3-windows]
+type = custom/script
+exec = ~/.config/polybar/i3_windows.py
+tail = true
+format-padding = 1
 
 [module/title]
 type = internal/xwindow

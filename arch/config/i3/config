@@ -142,6 +142,7 @@ bindsym $alt+Escape focus output down
 
 # Rofi (application launcher / switcher)
 bindsym $alt+Tab $nexec $HOME/.config/i3/font_aware_launcher.py rofi tab
+bindsym $mod+w $nexec $HOME/.config/i3/font_aware_launcher.py rofi ws-win
 bindsym $mod+s $nexec $HOME/.config/i3/font_aware_launcher.py rofi apps
 bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
 
