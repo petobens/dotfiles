@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Show OneDrive status in Polybar."""
 import re
 import subprocess

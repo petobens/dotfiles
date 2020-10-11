@@ -17,8 +17,8 @@ def ws_win_number(i3_conn, e):  # pylint:disable=unused-argument
         if ws.name == curr_workspace.name
     ]
     nr_windows = len(windows)
-    label = f" %{{T7}}{nr_windows}%{{T-}}"
-    action_label = f"%{{A1:/home/pedro/.config/i3/font_aware_launcher.py rofi ws-win &:}}{label}%{{A}}"
+    label = f"%{{T6}} %{{T-}}%{{T7}}{nr_windows}%{{T-}}"
+    action_label = f"%{{A1:/home/pedro/.config/i3/font_aware_launcher.py rofi ws-win &:}}{label}%{{A}}"  # noqa
     print(action_label, flush=True)
 
 
