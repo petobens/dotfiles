@@ -29,7 +29,63 @@ def run_app(app, subcmd, workspace_name=None):
         if nr_monitors > 1:
             qt += 'QT_SCALE_FACTOR=2 '
 
-    if app == 'connman':
+    if app == 'rofi':
+        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
+        if subcmd is None:
+            raise ValueError('Missing rofi subcommand!')
+        rofi_fsize = 11
+        rofi_yoffset = -110
+        rofi_icon_size = 1.8
+        if is_hidpi & (nr_monitors > 1):
+            rofi_fsize *= 2
+            rofi_yoffset = int(rofi_yoffset * 1.5)
+            rofi_icon_size = 2.0
+        if subcmd == 'apps':
+            rofi_base = [
+                'rofi',
+                '-font',
+                f"Noto Sans Mono {rofi_fsize}",
+                '-yoffset',
+                f'{rofi_yoffset}',
+                '-theme-str',
+                f"element-icon {{ size: {rofi_icon_size}ch; }}",  # we use double quotes due to spaces # noqa
+            ]
+            rofi_cmd = rofi_base + [
+                '-combi-modi',
+                'drun,run',
+                '-show',
+                'combi',
+                '-modi',
+                'combi',
+                '-display-combi',
+                'apps',
+            ]
+            sh_no_block(rofi_cmd)
+        else:
+            rofi_base = (
+                f"rofi -font 'Noto Sans Mono {rofi_fsize}' -yoffset {rofi_yoffset}"
+            )
+            rofi_base += f" -theme-str 'element-icon {{ size: {rofi_icon_size}ch; }}'"
+            if subcmd == 'pass':
+                rofi_cmd = (
+                    f"gopass ls --flat | {rofi_base} -dmenu -p gopass | "
+                    "xargs --no-run-if-empty gopass show -c"
+                )
+            elif subcmd == 'tab':
+                rofi_cmd = f'$HOME/.config/i3/recency_switcher.py --menu="{rofi_base}"'
+            elif subcmd == 'ws-win':
+                rofi_cmd = (
+                    '$HOME/.config/i3/recency_switcher.py --active-ws '
+                    f'--menu="{rofi_base} -p ws-window"'
+                )
+            elif subcmd == 'arch-init':
+                yoffset = 25
+                if is_hidpi:
+                    yoffset *= 2
+                rofi_cmd = f"$HOME/.config/polybar/arch_dmenu.sh {rofi_fsize} {yoffset}"
+            sh_no_block([rofi_cmd], shell=True)
+
+    elif app == 'connman':
         # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(
             ['raiseorlaunch', '-c', 'Connman-gtk', '-f', '-e', f'"{gdk}connman-gtk"']
@@ -205,42 +261,6 @@ def run_app(app, subcmd, workspace_name=None):
             sh('xdotool key Super+0')
             if is_hidpi and nr_monitors > 1:
                 sh('xdotool key Super+u')
-
-    elif app == 'rofi':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        if subcmd is None:
-            raise ValueError('Missing rofi subcommand!')
-        rofi_fsize = 11
-        rofi_yoffset = -110
-        rofi_icon_size = 1.8
-        if is_hidpi & (nr_monitors > 1):
-            rofi_fsize *= 2
-            rofi_yoffset = int(rofi_yoffset * 1.5)
-            rofi_icon_size = 2.0
-        rofi_base = f"rofi -font 'Noto Sans Mono {rofi_fsize}' -yoffset {rofi_yoffset}"
-        rofi_base += f" -theme-str 'element-icon {{ size: {rofi_icon_size}ch; }}'"
-
-        if subcmd == 'apps':
-            rofi_cmd = (
-                f'{rofi_base} -combi-modi drun,run -show combi -display-combi apps'
-            )
-        elif subcmd == 'pass':
-            rofi_cmd = (
-                f"gopass ls --flat | {rofi_base} -dmenu -p gopass | "
-                "xargs --no-run-if-empty gopass show -c"
-            )
-        elif subcmd == 'tab':
-            rofi_cmd = f'$HOME/.config/i3/recency_switcher.py --menu="{rofi_base}"'
-        elif subcmd == 'ws-win':
-            rofi_cmd = (
-                f'$HOME/.config/i3/recency_switcher.py --active-ws --menu="{rofi_base}"'
-            )
-        elif subcmd == 'arch-init':
-            yoffset = 25
-            if is_hidpi:
-                yoffset *= 2
-            rofi_cmd = f"$HOME/.config/polybar/arch_dmenu.sh {rofi_fsize} {yoffset}"
-        sh_no_block([rofi_cmd], shell=True)
 
     elif app == 'alacritty':
         # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
