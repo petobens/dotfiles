@@ -2344,6 +2344,7 @@ call deoplete#custom#option({
     \ 'max_list': 150,
     \ 'refresh_always': v:true,
     \ 'auto_complete_delay': 100,
+    \ 'num_processes': 4,
     \ 'sources': {
         \ 'bib': ['ultisnips'],
         \ 'snippets': ['ultisnips'],
