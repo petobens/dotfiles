@@ -192,7 +192,7 @@ bindsym $mod+Control+slash $nexec $HOME/.config/i3/font_aware_launcher.py gnome-
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
 # re-focusing it)
-for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv|Simple-scan)$" title="^(?!webcam).+"] \
+for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv|Simple-scan|discord)$" title="^(?!webcam).+"] \
     $nexec $HOME/.config/i3/resize.py Full
 # We seem to need this hack for Alacritty (i.e use title instead of mark)
 for_window [title="^(Alacritty|kitty)$"] \
