@@ -118,20 +118,18 @@ bindsym $mod+Shift+Up \
     $nexec $HOME/.config/i3/multimon_move.py -d "up" --move-ws
 
 # Assign workspaces to specific monitors
-# TODO: Do this dynamically (i.e don't harcode monitor names)
-# We seem to need an ugly hack: https://github.com/i3/i3/issues/2387
 set $primary "eDP1"
 set $secondary "DP1"
 set $third "DP2"
-workspace $ws1 output $third
+workspace $ws1 output $third $primary
 workspace $ws2 output $primary
 workspace $ws3 output $primary
-workspace $ws4 output $third
-workspace $ws5 output $secondary
-workspace $ws6 output $secondary
-workspace $ws7 output $secondary
+workspace $ws4 output $third $secondary
+workspace $ws5 output $secondary $third
+workspace $ws6 output $secondary $third
+workspace $ws7 output $secondary $third
 workspace $ws8 output $primary
-workspace $ws9 output $third
+workspace $ws9 output $third $secondary
 
 # Focus next monitor (with wrapping): this also switches mouse cursor
 bindsym $alt+grave focus output right
@@ -148,7 +146,7 @@ bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
 
 # WS1: browser and agenda (to have a black theme in calendar use Stylus
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
-bindsym $mod+Control+i $nexec raiseorlaunch -c Brave -W $ws1 -m browser
+bindsym $mod+Control+i $nexec $HOME/.config/i3/font_aware_launcher.py brave browser -W $ws1
 bindsym $mod+Control+a $nexec $HOME/.config/i3/font_aware_launcher.py brave calendar -W $ws1
 bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
 # WS2: chat/communication related

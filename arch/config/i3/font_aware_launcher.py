@@ -244,10 +244,14 @@ def run_app(app, subcmd, workspace_name=None):
         # actually open the application so we adjust zoom after the apps opens
         if subcmd is None:
             raise ValueError('Missing brave subcommand!')
-        brave_cmd = (
-            f'raiseorlaunch -c Brave -W {workspace_name} -m {subcmd} -e '
-            f'"brave --new-window --app=https://{subcmd}.google.com{{extra}}"'
-        )
+
+        brave_cmd = f'raiseorlaunch -c Brave -W {workspace_name} -m {subcmd} -e "brave'
+        if is_hidpi and nr_monitors > 1:
+            brave_cmd += ' --force-device-scale-factor=2'
+        if subcmd != 'browser':
+            brave_cmd += f' --new-window --app=https://{subcmd}.google.com{{extra}}'
+        brave_cmd += '"'
+
         if subcmd == 'calendar':
             brave_cmd = brave_cmd.format(extra='/calendar/b/0/r')
         elif subcmd == 'hangouts':
@@ -259,7 +263,10 @@ def run_app(app, subcmd, workspace_name=None):
             sleep(2.5)
             # Ensure we have proper scaling
             sh('xdotool key Super+0')
-            if is_hidpi and nr_monitors > 1:
+            # If we have only 1 external monitor then the brave main window will be
+            # scaled using the `--force-device..` flag so only rescale the zoom when we
+            # have more monitors than that
+            if is_hidpi and nr_monitors > 2:
                 sh('xdotool key Super+u')
 
     elif app == 'alacritty':
