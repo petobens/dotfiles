@@ -282,15 +282,18 @@ if type "python" > /dev/null 2>&1; then
     if type "poetry" > /dev/null 2>&1; then
         alias pol='poetry run pip list'
         alias poa='poetry add'
+        alias poad='poetry add --dev'
         alias poi='poetry install'
         alias pou='poetry update'
         alias por='poetry remove'
+        alias pord='poetry remove --dev'
         alias pog='poetry show --tree'
         alias poe='poetry env'
         alias pop='poetry run python'
         alias pod='poetry run python -m pdb -cc'
         alias pot='poetry run pytest'
         alias poj='poetry run jupyter notebook'
+        alias poh='poetry run pre-commit run --all-files'
         pos() {
             # Load .env file before launching poetry shell
             cur_dir="$PWD"
