@@ -3085,6 +3085,7 @@ let g:tagbar_foldlevel = 2                 " Folds with higher level are closed
 let g:tagbar_show_linenumbers = 2          " Relative line numbers
 let g:tagbar_autopreview = 0               " Don't autopreview, enable it with P
 let g:tagbar_previewwin_pos = 'belowright'
+let g:tagbar_show_tag_linenumbers = 1
 
 let g:tagbar_iconchars = ['', '']
 
