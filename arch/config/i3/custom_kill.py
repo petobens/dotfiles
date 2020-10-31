@@ -30,16 +30,15 @@ def kill_custom(i3, which):
         i3.command(f'[con_id={win.id}] focus')
         win_class = win.window_class
         if win_class in CUSTOM:
-            if win_class == 'Chromium' or win_class == 'Brave-browser':
-                sh(f'xdotool key --window {win.window} comma+k+v')
-                # If the window was not killed using xdotool then do kill it with i3
-                remaining_window_classes = [
-                    win.window_class for win in _get_windows(i3)
-                ]
-                if win_class in remaining_window_classes:
-                    i3.command('kill')
+            sh(f'xdotool key --window {win.window} comma+k+v')
+            # If the window was not killed using xdotool then do kill it with i3
+            remaining_window_classes = [win.window_class for win in _get_windows(i3)]
+            if win_class in remaining_window_classes:
+                i3.command('kill')
         elif win_class in CTRL_Q:
             sh(f'xdotool key --window {win.window} ctrl+q')
+            # FIXME: For some reason keyboard gets stuck so press q again to release it
+            sh('xdotool key q')
         else:
             i3.command('kill')
     i3.command(f'workspace {focused_ws}')
