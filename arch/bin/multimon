@@ -75,15 +75,15 @@ def _xrandr(how, direction):
         cmd += f'--output {prim_n} --dpi {DPI * 2}'
 
     elif how == 'multi':
-        # Assume the first monitor goes to the far left
-        sec_scale_factor, sec_scale = _scale(sec_w)
+        sec_scale_factor, sec_scale = _scale(sec_w, nr_monitors)
         cmd = f'--output {sec_n} {sec_scale} --auto --pos 0x0 '
         wpos = int(sec_scale_factor * sec_w)
         hpos = 0 if direction == 'right' else int(sec_scale_factor * sec_h)
         keep_turnon = [prim_n, sec_n]
+        dpi_scale = 1
         if nr_monitors == 3:
-            # The second external monitor is right to the first monitor
-            _, third_scale = _scale(third_w)
+            # The second external monitor is to the right of the first monitor
+            _, third_scale = _scale(third_w, nr_monitors)
             cmd += f'--output {third_n} {third_scale} --auto --pos {wpos}x0 '
             # Primary is in the middle below the 2 monitors
             wpos = wpos - int(prim_w / 2)
@@ -93,7 +93,10 @@ def _xrandr(how, direction):
             # With only 1 extra monitor place the primary monitor below or to the right
             # depending on direction value
             wpos = wpos if direction == 'right' else 0
-        cmd += f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI}'
+            # If the extra monitor is also hidpi then adjust dpi accordingly
+            if sec_w > HD_WIDTH:
+                dpi_scale = 2
+        cmd += f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI * dpi_scale}'
 
     # Turn off unused monitors
     turn_off = [i for i in monitors if i not in ('Screen', *keep_turnon)]
@@ -107,7 +110,7 @@ def _xrandr(how, direction):
 
     # Ensure correct XResources
     xrdb_cmd = f'xrdb -merge {str(Path.home())}/.Xresources'
-    if how == 'primary' or how == 'mirror':
+    if how == 'primary' or how == 'mirror' or (nr_monitors == 2 and sec_w > HD_WIDTH):
         xrdb_cmd += '_hidpi'
     print(f"Running the following xrdb command: {xrdb_cmd}")
     _sh(xrdb_cmd)
@@ -259,14 +262,14 @@ def _get_name_and_res(xrandr_out, mon_info):
     return mon_name, mon_w, mon_h
 
 
-def _scale(width):
-    # For external monitors we scale to full hd (i.e upscale low resolution and
-    # downscale hi res since our gpu lags otherwise)
-    hd_width = 1920
+def _scale(width, nr_monitors):
+    # For external monitors we scale to full hd
+    # (upscale low resolution and downscale hi res when we have more than 1 external
+    # monitor since our gpu lags otherwise)
     scale_factor = 1
-    if width < hd_width:
+    if width < HD_WIDTH:
         scale_factor += 0.5  # type: ignore
-    elif width > hd_width:
+    elif width > HD_WIDTH and nr_monitors > 2:
         scale_factor /= 2  # type: ignore
     scale_str = f'--scale {scale_factor}x{scale_factor}' if scale_factor != 1 else ''
     return scale_factor, scale_str
@@ -300,6 +303,7 @@ if __name__ == '__main__':
     parse_args = parser.parse_args()
 
     # Constants
+    HD_WIDTH = 1920
     DPI = 96
     VALID_MODES = ['init', 'hotplug', 'primary', 'mirror', 'multi']
     VALID_DIRECTIONS = ['right', 'below']

@@ -16,17 +16,20 @@ def run_app(app, subcmd, workspace_name=None):
     ws = None
     if workspace_name is not None:
         ws = _get_workspace(i3, workspace_name)
-    output_width, outputs = get_output_width(i3, ws)
+    output_width, other_output_width, outputs = get_output_width(i3, ws)
     is_hidpi = output_width > 1920
+    other_is_hidpi = other_output_width > 1920
     nr_monitors = len(outputs)
 
     gdk = ''
     qt = ''
     if is_hidpi:
         gdk += 'GDK_SCALE=2 '
-        if nr_monitors == 1:
+        if nr_monitors == 1 or other_is_hidpi:
+            # If everything is hidpi also scale icons
             gdk += 'GDK_DPI_SCALE=0.5 '
-        if nr_monitors > 1:
+        if nr_monitors > 1 and not other_is_hidpi:
+            # Only scale if we have a mix of hd and hidpi monitors
             qt += 'QT_SCALE_FACTOR=2 '
 
     if app == 'rofi':
@@ -36,7 +39,7 @@ def run_app(app, subcmd, workspace_name=None):
         rofi_fsize = 11
         rofi_yoffset = -110
         rofi_icon_size = 1.8
-        if is_hidpi & (nr_monitors > 1):
+        if is_hidpi & (nr_monitors > 1) and not other_is_hidpi:
             rofi_fsize *= 2
             rofi_yoffset = int(rofi_yoffset * 1.5)
             rofi_icon_size = 2.0
@@ -240,13 +243,13 @@ def run_app(app, subcmd, workspace_name=None):
         sh_no_block(['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'])
 
     elif app == 'brave':
-        # Might open in hidpi screen or not but there is no way to adjust font before
-        # actually open the application so we adjust zoom after the apps opens
+        # Might open in hidpi screen or not but there is no way to adjust fonts before
+        # actually opening the application so we adjust zoom after the apps opens
         if subcmd is None:
             raise ValueError('Missing brave subcommand!')
 
         brave_cmd = f'raiseorlaunch -c Brave -W {workspace_name} -m {subcmd} -e "brave'
-        if is_hidpi and nr_monitors > 1:
+        if is_hidpi and nr_monitors > 1 and not other_is_hidpi:
             brave_cmd += ' --force-device-scale-factor=2'
         if subcmd != 'browser':
             brave_cmd += f' --new-window --app=https://{subcmd}.google.com{{extra}}'
@@ -263,10 +266,12 @@ def run_app(app, subcmd, workspace_name=None):
             sleep(2.5)
             # Ensure we have proper scaling
             sh('xdotool key Super+0')
-            # If we have only 1 external monitor then the brave main window will be
-            # scaled using the `--force-device..` flag so only rescale the zoom when we
-            # have more monitors than that
-            if is_hidpi and nr_monitors > 2:
+            # If we have 1 external monitor then all brave windows live on the
+            # primary monitory which is hidpi. If we have 2 or more then the main brave
+            # window will live in a (potentially) non hidpi screen and be
+            # scaled using the `--force-device..` flag so we need to rescale this window
+            # in a hidpi screen using the zoom keybinding
+            if is_hidpi and nr_monitors > 2 and not other_is_hidpi:
                 sh('xdotool key Super+u')
 
     elif app == 'alacritty':

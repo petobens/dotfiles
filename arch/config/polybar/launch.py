@@ -29,31 +29,40 @@ def launch_polybar(monitors):
     # Launch the main bar in each monitor but try to set the systray always in
     # primary one (overrides polybar's first come first serve rule. See:
     # https://github.com/jaagr/polybar/issues/1070)
-    nr_monitors = int(
-        [
-            line.decode('ascii').split()
-            for line in _sh('xrandr --listactivemonitors').splitlines()
-        ][0][-1]
-    )
+    active_monitors = [
+        line.decode('ascii').split()
+        for line in _sh('xrandr --listactivemonitors').splitlines()
+    ]
+    nr_monitors = int(active_monitors[0][-1])
+    sec_w = 0
+    if nr_monitors > 1:
+        sec_w = int(active_monitors[-1][2].split('/')[0])
     xrandr = [line.decode('ascii').split() for line in _sh('xrandr').splitlines()]
     for line in xrandr:
         if 'connected' in line:
             monitor = line[0]
+            width_index = 3 if 'primary' in line else 2
+            try:
+                width = int(line[width_index].split('x')[0])
+            except ValueError:
+                # If there is no resolution info then the monitor is connected but inactive
+                continue
             env = os.environ.copy()
             env['MONITOR'] = monitor
-            env['POLYHEIGHT'] = '55' if 'primary' in line else '28'
-            env['TRAY_SIZE'] = '32' if 'primary' in line else '20'
+            env['POLYHEIGHT'] = '55' if (width > HD_WIDTH) else '28'
+            env['TRAY_SIZE'] = '32' if (width > HD_WIDTH) else '20'
             if monitors == 'mirror':
                 # We always mirror from our hidpi screen
                 env['POLYHEIGHT'] = '55'
                 env['TRAY_SIZE'] = '32'
-            if nr_monitors > 1 and 'primary' in line:
+            # If we have more than one monitor and at least one of the exterenal
+            # monitors  is hd then we need to scale our primary hidpi monitor fonts
+            fontmap_index = 1
+            if nr_monitors > 1 and 'primary' in line and sec_w <= HD_WIDTH:
                 fontmap_index = 2
-            else:
-                fontmap_index = 1
             for i in range(7):
                 env[f'POLYFONT{i}'] = FONT_MAP[i][0].format(*FONT_MAP[i][fontmap_index])
-            # Hack to avoid i3 workspaces are not shown on polybar when using mirroring
+            # Hack to avoid i3 workspaces not shown on polybar when using mirroring
             # See: https://github.com/jaagr/polybar/issues/1191
             env['POLYBAR_I3_PIN'] = 'false' if monitors == 'mirror' else 'true'
             if monitors == 'xrandr':
@@ -71,6 +80,7 @@ if __name__ == '__main__':
     parser.add_argument('--monitors', '-m', nargs='?', default='xrandr')
     parse_args = parser.parse_args()
 
+    HD_WIDTH = 1920
     FONT_MAP = {
         0: ('Noto Sans:size={};3', ['11'], ['21']),
         1: ('Noto Sans:size={}:weight=bold;2', ['11'], ['21']),

@@ -25,8 +25,6 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
     i3.command(cmd)
     sleep(0.2)
 
-    new_output_width, _ = get_output_width(i3)
-
     for win_id, win_data in resize_map.items():
         if cmd.startswith('move container'):
             if not win_data['focused']:
@@ -43,22 +41,29 @@ def move_and_resize(i3, direction=None, move_win=True, workspace=None):
             x, y, w, h = win_data['how']
             resize_win(i3, x, y, w, h)
 
-        new_output_width, _ = get_output_width(i3)
+        new_output_width, _, __ = get_output_width(i3)
         win_output_width = win_data['output_width']
         win_class = win_data['class']
-        if (win_output_width != new_output_width) and (
-            win_class in ('kitty', 'Alacritty', 'Brave-browser', 'firefox')
-        ):
-            # Note: firefox meta key not working
-            zoom_dir = 'u' if new_output_width > win_output_width else 'd'
-            sh(f'xdotool key Super+{zoom_dir}')
+        if win_output_width != new_output_width:
+            width_diff = min(win_output_width, new_output_width) / max(
+                win_output_width, new_output_width
+            )
+            # Only zoom (i.e correct font differences) if there is a big width
+            # difference between the monitors (for example between a hd screen and a
+            # hidpi screen but not between 2 hidpi screens)
+            if (width_diff < 0.7) and (
+                win_class in ('kitty', 'Alacritty', 'Brave-browser', 'firefox')
+            ):
+                # Note: firefox meta key not working
+                zoom_dir = 'u' if new_output_width > win_output_width else 'd'
+                sh(f'xdotool key Super+{zoom_dir}')
     return
 
 
 def _get_resize_map(i3):
     res_map = {}
     ws = i3.get_tree().find_focused().workspace()
-    output_width, _ = get_output_width(i3, ws)
+    output_width, _, __ = get_output_width(i3, ws)
     for w in ws.leaves():
         res_map[w.id] = {
             'win': w,
@@ -79,7 +84,14 @@ def get_output_width(i3, ws=None):
     current_output_width = next(
         o.rect.width for o in outputs if o.name == ws.ipc_data['output']
     )
-    return current_output_width, outputs
+    other_output_width = 0
+    if len(outputs) > 1:
+        # If we have more than one monitor we want to know if the other monitor/s are
+        # hidpi or not
+        other_output_width = next(
+            o.rect.width for o in outputs if o.name != ws.ipc_data['output']
+        )
+    return current_output_width, other_output_width, outputs
 
 
 def _find_how_to_resize(i3, win=None):
