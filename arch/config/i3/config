@@ -152,8 +152,7 @@ bindsym $mod+Control+e $nexec raiseorlaunch -c firefox -W $ws1 -m ffox
 # WS2: chat/communication related
 bindsym $mod+Control+l $nexec raiseorlaunch -c Slack -W $ws2 -l 30 -e \
     "slack --force-device-scale-factor=2"
-bindsym $mod+Control+s $nexec $HOME/.config/i3/font_aware_launcher.py skype -W $ws2
-bindsym $mod+Control+apostrophe $nexec raiseorlaunch -c Teams -W $ws2 -l 30 -e \
+bindsym $mod+Control+s $nexec raiseorlaunch -c Teams -W $ws2 -l 30 -e \
     "teams --force-device-scale-factor=2"
 bindsym $mod+Control+z $nexec raiseorlaunch -c Zoom -W $ws2 -l 30
 bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird -W $ws2

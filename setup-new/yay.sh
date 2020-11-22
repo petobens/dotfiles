@@ -217,7 +217,6 @@ $yay_cmd onedrive-abraunegg
 $yay_cmd pdfpc
 $yay_cmd peek-git
 $yay_cmd simple-scan
-$yay_cmd skypeforlinux-preview-bin
 $yay_cmd slack-desktop
 $yay_cmd spotify
 $yay_cmd teams

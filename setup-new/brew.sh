@@ -138,7 +138,6 @@ $brew_cask_install_cmd docker
 $brew_install_cmd docker-compose
 $brew_cask_install_cmd kitty
 $brew_cask_install_cmd microsoft-teams
-$brew_cask_install_cmd skype
 $brew_cask_install_cmd slack
 $brew_cask_install_cmd spotify
 $brew_cask_install_cmd thunderbird
