@@ -116,14 +116,14 @@ def font_aware_menu(cmd_menu):
         description = info.get('desc')
         if description:
             candidate += (
-                f"<span color='#7e838e' size='small'> <i>({description})</i></span>"
+                f"<span color='#5f636f' size='small'> <i>({description})</i></span>"
             )
         candidates += rf"{candidate}{icon_str}\n"
 
     menu_cmd = rf'echo -e "{candidates[:-2]}" | '  # strips trailing newline
     menu_cmd += rf'{cmd_menu} -dmenu -p apps -i -markup-rows'
     selected = check_output(menu_cmd, shell=True).decode().strip()
-    selected = selected.split('(')[0].strip()  # Remove the description
+    selected = selected.split('<')[0].strip()  # Remove the description
     selected = APPS[selected]  # type: ignore
     run_app(selected.get('cmd'), selected.get('subcmd'), None)  # type: ignore
 
