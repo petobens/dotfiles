@@ -61,7 +61,7 @@ def run_app(app, subcmd, workspace_name=None):
                 '-modi',
                 'combi',
                 '-display-combi',
-                'apps',
+                'runner',
             ]
             sh_no_block(rofi_cmd)
         else:
@@ -81,6 +81,8 @@ def run_app(app, subcmd, workspace_name=None):
                     '$HOME/.config/i3/recency_switcher.py --active-ws '
                     f'--menu="{rofi_base} -p ws-window"'
                 )
+            elif subcmd == 'font-aware-apps':
+                rofi_cmd = f'$HOME/.config/i3/font_aware_menu.py --menu="{rofi_base}"'
             elif subcmd == 'arch-init':
                 yoffset = 25
                 if is_hidpi:
@@ -133,18 +135,17 @@ def run_app(app, subcmd, workspace_name=None):
     elif app == 'transmission':
         #  Opens in ws 4 which chould be or not a hidpi screen (depends on the number of
         # connected monitors)
-        sh_no_block(
-            [
-                'raiseorlaunch',
-                '-c',
-                'Transmission-gtk',
-                '-W',
-                f'{workspace_name}',
-                '-f',
-                '-e',
-                f'"{gdk}transmission-gtk"',
-            ]
-        )
+        cmd = [
+            'raiseorlaunch',
+            '-c',
+            'Transmission-gtk',
+            '-f',
+            '-e',
+            f'"{gdk}transmission-gtk"',
+        ]
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
     elif app == 'peek':
         # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(['raiseorlaunch', '-c', 'Peek', '-f', '-e', f'"{gdk}peek"'])
@@ -156,33 +157,17 @@ def run_app(app, subcmd, workspace_name=None):
     elif app == 'thunderbird':
         # Opens in ws 3 which is always in a hidpi screen
         gdk += 'GDK_SCALE=2 '
-        sh_no_block(
-            [
-                'raiseorlaunch',
-                '-c',
-                'Thunderbird',
-                '-W',
-                f'{workspace_name}',
-                '-f',
-                '-e',
-                f'"{gdk}thunderbird"',
-            ]
-        )
-    elif app == 'skype':
-        # Opens in ws 3 which is always in a hidpi screen
-        gdk += 'GDK_SCALE=2 '
-        sh_no_block(
-            [
-                'raiseorlaunch',
-                '-c',
-                'Skype',
-                '-W',
-                f'{workspace_name}',
-                '-f',
-                '-e',
-                f'"{gdk}skypeforlinux"',
-            ]
-        )
+        cmd = [
+            'raiseorlaunch',
+            '-c',
+            'Thunderbird',
+            '-f',
+            '-e',
+            f'"{gdk}thunderbird"',
+        ]
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
     elif app == 'gtk_dialog':
         # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         if subcmd is None:
@@ -248,12 +233,14 @@ def run_app(app, subcmd, workspace_name=None):
         if subcmd is None:
             raise ValueError('Missing brave subcommand!')
 
-        brave_cmd = f'raiseorlaunch -c Brave -W {workspace_name} -m {subcmd} -e "brave'
+        brave_cmd = f'raiseorlaunch -c Brave -m {subcmd} -e "brave'
         if is_hidpi and nr_monitors > 1 and not other_is_hidpi:
             brave_cmd += ' --force-device-scale-factor=2'
         if subcmd != 'browser':
             brave_cmd += f' --new-window --app=https://{subcmd}.google.com{{extra}}'
         brave_cmd += '"'
+        if workspace_name is not None:
+            brave_cmd += f' -W {workspace_name}'
 
         if subcmd == 'calendar':
             brave_cmd = brave_cmd.format(extra='/calendar/b/0/r')
@@ -318,6 +305,95 @@ def run_app(app, subcmd, workspace_name=None):
             sleep(0.8)
             sh('xdotool type kill')
             sh('xdotool key space+Tab')
+
+    elif app == 'firefox':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = ['raiseorlaunch', '-c', 'firefox', '-m', 'ffox']
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
+    elif app == 'slack':
+        # Opens in hidpi screen
+        cmd = 'raiseorlaunch -c Slack -l 30 -e "slack --force-device-scale-factor=2"'
+        if workspace_name is not None:
+            cmd += f' -W {workspace_name}'
+        sh_no_block([cmd], shell=True)
+    elif app == 'teams':
+        # Opens in hidpi screen
+        cmd = 'raiseorlaunch -c Teams -l 30 -e "teams --force-device-scale-factor=2"'
+        if workspace_name is not None:
+            cmd += f' -W {workspace_name}'
+        sh_no_block([cmd], shell=True)
+    elif app == 'zoom':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = ['raiseorlaunch', '-c', 'Zoom', '-l', '30']
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
+    elif app == 'spotify':
+        # Opens in hidpi screen
+        cmd = (
+            'raiseorlaunch -c Spotify -l 30 -e "spotify --force-device-scale-factor=2"'
+        )
+        if workspace_name is not None:
+            cmd += f' -W {workspace_name}'
+        sh_no_block([cmd], shell=True)
+    elif app == 'planmaker':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = ['raiseorlaunch', '-c', 'pm', '-l', '30', '-e', '"freeoffice-planmaker"']
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
+    elif app == 'textmaker':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = ['raiseorlaunch', '-c', 'pm', '-l', '30', '-e', '"freeoffice-textmaker"']
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
+    elif app == 'presentations':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = [
+            'raiseorlaunch',
+            '-c',
+            'pm',
+            '-l',
+            '30',
+            '-e',
+            '"freeoffice-presentations"',
+        ]
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
+    elif app == 'kitty':
+        # Opens in hidpi screen or not
+        cmd = 'raiseorlaunch -c kitty -m terminal -e \'kitty /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"\''
+        if workspace_name is not None:
+            cmd += f' -W {workspace_name}'
+        sh_no_block([cmd], shell=True)
+    elif app == 'discord':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = ['raiseorlaunch', '-c', 'discord', '-l', '30']
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
+    elif app == 'kodi':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = ['raiseorlaunch', '-c', 'kodi']
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
+    elif app == 'globalprotect-vpn':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = ['raiseorlaunch', '-c', 'gpclient', '-f', '-e', f'"{qt}gpclient"']
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
+    elif app == 'obs':
+        # Opens in ws which might be a hidpi screen or not
+        cmd = ['raiseorlaunch', '-c', 'obs', '-f', '-e', f'"{qt}obs"']
+        if workspace_name is not None:
+            cmd += ['-W', f'{workspace_name}']
+        sh_no_block(cmd)
 
 
 def _get_workspace(i3, name):

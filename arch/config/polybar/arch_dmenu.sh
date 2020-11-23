@@ -21,7 +21,7 @@ listview {
 }"
 
 menulist=" About This Arch
- App Launcher  (Super+s)
+ App Launcher  (Super+a)
  Reboot        (Super+Ctrl+r)
 襤 Shut Down     (Super+Ctrl+s)"
 
@@ -41,7 +41,7 @@ fi
 
 case "$category" in
     App)
-        sub_cmd="rofi apps"
+        sub_cmd="rofi font-aware-apps"
         ;;
     Reboot)
         sub_cmd="gtk_dialog reboot"

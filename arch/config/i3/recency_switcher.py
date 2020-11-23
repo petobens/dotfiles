@@ -104,6 +104,10 @@ class Menu:
                 icon_name = 'htop'
             elif 'ranger' in win_title:
                 icon_name = 'xfce-filemanager'
+            elif 'Trash' in win_title:
+                icon_name = 'user-trash'
+            elif 'ProcKiller' in win_title:
+                icon_name = 'view-process-all'
         if icon_name is None:
             win_class_lower = win_class.lower()
             icon_name = ICON_MAP.get(win_class_lower, win_class_lower)
