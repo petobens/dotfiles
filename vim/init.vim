@@ -1074,11 +1074,12 @@ augroup ft_crontab
 augroup END
 
 " }}}
-" Html {{{
+" Html and CSS {{{
 
 augroup ft_html
     au!
     au Filetype html setlocal shiftwidth=2 tabstop=2 softtabstop=2
+    au BufNewFile,BufReadPost *.rasi set filetype=css
 augroup END
 
 " }}}
