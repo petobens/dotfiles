@@ -99,7 +99,7 @@ key_bindings:
     - { key: Q,        mods: Super, action: Quit                 }
     - { key: W,        mods: Super, action: Quit                 }
     - { key: Equals,   mods: Super, action: IncreaseFontSize     }
-    - { key: Subtract, mods: Super, action: DecreaseFontSize     }
+    - { key: Minus,    mods: Super, action: DecreaseFontSize     }
     - { key: Key0,     mods: Super, action: ResetFontSize        }
     - { key: End,      mods: Shift, action: ScrollToBottom       }
     - { key: Home,     mods: Shift, action: ScrollToTop          }
