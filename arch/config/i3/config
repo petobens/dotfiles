@@ -178,6 +178,11 @@ bindsym $mod+Control+h $nexec $HOME/.config/i3/font_aware_launcher.py alacritty 
 bindsym $mod+Control+b $nexec $HOME/.config/i3/font_aware_launcher.py alacritty trash
 bindsym Control+$alt+Delete $nexec $HOME/.config/i3/font_aware_launcher.py alacritty prockiller
 
+# Paramount: we want to have the ability to open a terminal without relying on python
+# (python might break and without the following binding we basically lose
+# control of the system since all of our prior bindings rely on python)
+bindsym $mod+x $nexec kitty
+
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
 # re-focusing it)

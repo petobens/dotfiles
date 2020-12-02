@@ -7,6 +7,9 @@ if type "pip3" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing Python3 modules...\\033[0m"
     pip_install_cmd='pip3 install --user '
     $pip_install_cmd cython
+    if type "i3" > /dev/null 2>&1; then
+        $pip_install_cmd i3ipc
+    fi
     $pip_install_cmd jedi
     $pip_install_cmd matplotlib
     $pip_install_cmd numpy
@@ -33,6 +36,9 @@ fi
 
 # Python binaries (can also be mostly installed with a package manager but we
 # do it with pipx to avoid dependency clash)
+# Note: when upgrading python minor version we might need to remove the
+# ~/.local/pipx folder and reinstall all packages
+# See https://github.com/pipxproject/pipx/issues/278#issuecomment-557132753
 echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
 if ! type "pipx" > /dev/null 2>&1; then
     python3 -m pipx ensurepath
@@ -44,6 +50,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 fi
 pipx_inject_cmd="$HOME/.local/bin/pipx inject --verbose"
 
+$pipx_install_cmd aws
 $pipx_install_cmd git+https://github.com/PyCQA/flake8
 $pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
 $pipx_install_cmd black
@@ -99,14 +106,14 @@ fi
 if [ -d "$pipx_venvs/vimiv" ]; then
     echo "Adding desktop entry for vimiv..."
     mkdir -p "$pipx_venvs/vimiv/share"
-    wget -P  "$pipx_venvs/vimiv/share" "https://raw.githubusercontent.com/karlch/vimiv-qt/master/misc/vimiv.desktop"
+    wget -P "$pipx_venvs/vimiv/share" "https://raw.githubusercontent.com/karlch/vimiv-qt/master/misc/vimiv.desktop"
     xdg-desktop-menu install --novendor "$pipx_venvs/vimiv/share/vimiv.desktop"
     echo "xdg-mime query default image/png is: $(xdg-mime query default image/png)"
 fi
 
 # Copy pygment onedarkish style
 echo -e "\\033[1;34m--> Installing onedarkish pygment style...\\033[0m"
-current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 parent_dir="$(dirname "$current_dir")"
 python_dir="$parent_dir/python"
 
@@ -121,8 +128,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 fi
 
 sudo chown -R "$USER" "$HOME/.config" # seems to be needed for db logs to work
-for cli in litecli mycli pgcli mssql-cli radian
-do
+for cli in litecli mycli pgcli mssql-cli radian; do
     if [ -d "$pipx_venvs/$cli" ]; then
         styles_dir="$pipx_venvs/$cli/lib/python3.8/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then
