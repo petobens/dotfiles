@@ -347,8 +347,8 @@ ig() {
     grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@ {q}"
     grep_cmd+=" | devicon-lookup --color --prefix :"
     # shellcheck disable=SC2016,SC1004
-    preview_cmd='bat --color always --style numbers --theme TwoDark\
-        --highlight-line {2} $(echo {1} | sed "s/[^ ] //")'
+    preview_cmd='bat --color always --style numbers --theme TwoDark \
+--highlight-line {2} $(echo {1} | sed "s/[^ ] //")'
     # shellcheck disable=SC2154
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
         fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd" \
@@ -407,7 +407,7 @@ bind -m vi-insert -x '"\C-r": __fzf_history__'
 # }}}
 # Tmux {{{
 
-FZF_TMUX_OPTS="
+FZF_TMUX_OPTIONS="
 --multi
 --exit-0
 --expect=alt-k,alt-r,enter
@@ -432,7 +432,7 @@ tms() {
 
     # If no arg is given use fzf to choose a session to switch or kill
     cmd='tmux list-sessions -F "#{session_name}"'
-    out=$(eval "$cmd" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_TMUX_OPTS" fzf)
+    out=$(eval "$cmd" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_TMUX_OPTIONS" fzf)
     key=$(head -1 <<< "$out")
     mapfile -t sessions <<< "$(tail -n+2 <<< "$out")"
 
@@ -466,7 +466,7 @@ FZF_BT_OPTS="
 A-d=disconnect, A-r=remove/unpair, C-y=yank'
 --with-nth=3..
 --preview 'bluetoothctl info {2} | bat --color always --theme TwoDark \
-    --style plain -H 6 -H 7 -H 9'
+--style plain -H 6 -H 7 -H 9'
 "
 
 bt() {
