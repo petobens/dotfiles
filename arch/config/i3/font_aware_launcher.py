@@ -114,11 +114,11 @@ def run_app(app, subcmd, workspace_name=None):
         )
     elif app == 'color-picker':
         # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(['raiseorlaunch', '-c', 'gcolor3', '-f', '-e', f'"{gdk}gcolor3"'])
+        sh_no_block(['raiseorlaunch', '-c', 'Gcolor3', '-f', '-e', f'"{gdk}gcolor3"'])
     elif app == 'pavucontrol':
         # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
         sh_no_block(
-            ['raiseorlaunch', '-c', 'pavucontrol', '-f', '-e', f'"{gdk}pavucontrol"']
+            ['raiseorlaunch', '-c', 'Pavucontrol', '-f', '-e', f'"{gdk}pavucontrol"']
         )
     elif app == 'power-manager':
         # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
@@ -126,7 +126,7 @@ def run_app(app, subcmd, workspace_name=None):
             [
                 'raiseorlaunch',
                 '-c',
-                'xfcer-power-manager-settings',
+                'Xfce4-power-manager-settings',
                 '-f',
                 '-e',
                 f'"{gdk}xfce4-power-manager-settings"',
