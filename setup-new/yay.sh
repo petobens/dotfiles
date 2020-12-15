@@ -55,6 +55,7 @@ $yay_cmd openblas
 $yay_cmd python
 $yay_cmd python-pip
 $yay_cmd pyenv
+$yay_cmd pyenv-virtualenv
 $yay_cmd ruby
 $yay_cmd rust
 $yay_cmd jdk-openjdk
