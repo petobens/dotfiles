@@ -33,6 +33,9 @@ fi
 # Set vi mode
 set -o vi
 
+# Disable bracketed-paste (which annoyingly highlights pasted text)
+bind 'set enable-bracketed-paste off'
+
 # Switch between vi and emacs mode (first unbind ctrl-w)
 stty werase undef
 bind -m vi-command '"\C-w": emacs-editing-mode'
