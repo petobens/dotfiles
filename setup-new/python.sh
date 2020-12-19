@@ -117,6 +117,12 @@ current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 parent_dir="$(dirname "$current_dir")"
 python_dir="$parent_dir/python"
 
+# Get python version
+python_version=$(python --version | cut -d ' ' -f2)
+python_major=$(echo "$python_version" | cut -d '.' -f1)
+python_minor=$(echo "$python_version" | cut -d '.' -f2)
+python_version="$python_major.$python_minor"
+
 ln_cmd='ln'
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if type "gln" > /dev/null 2>&1; then
@@ -130,7 +136,8 @@ fi
 sudo chown -R "$USER" "$HOME/.config" # seems to be needed for db logs to work
 for cli in litecli mycli pgcli mssql-cli radian; do
     if [ -d "$pipx_venvs/$cli" ]; then
-        styles_dir="$pipx_venvs/$cli/lib/python3.8/site-packages/pygments/styles"
+        # FIXME: Get python version automatically
+        styles_dir="$pipx_venvs/$cli/lib/python$python_version/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then
             $ln_cmd -fTs "$python_dir/onedarkish.py" "$styles_dir/onedarkish.py"
             echo Created symlink in "$styles_dir/onedarkish.py"
