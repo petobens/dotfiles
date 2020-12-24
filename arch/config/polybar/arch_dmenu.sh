@@ -4,12 +4,16 @@
 # - https://forum.manjaro.org/t/rofi-based-application-launcher-menu-with-categories/43113/7
 # - https://github.com/Chrysostomus/rofi-scripts/blob/master/bin/rofimenu
 
+font_size="$1"
+yoffset="$2"
+char_width="$3ch"
+
 THEME="\
     window {
     location: northwest;
     anchor: northwest;
-    width: 34ch;
-    y-offset: $2;
+    width: $char_width;
+    y-offset: $yoffset;
     x-offset: 0;
 }
 mainbox {
@@ -31,9 +35,9 @@ category=$(echo -e "$menulist" |
     rofi -dmenu \
         -no-custom \
         -select "$category" \
-        -font "Noto Sans Mono $1" \
+        -font "Noto Sans Mono $font_size" \
         -theme-str "$THEME" |
-    awk '{print $2}')
+    awk '{print $yoffset}')
 
 if [ -z "$category" ]; then
     exit
@@ -41,16 +45,16 @@ fi
 
 case "$category" in
     App)
-        sub_cmd="rofi font-aware-apps"
+        sub_cmd="rofi-font-aware-apps"
         ;;
     Reboot)
-        sub_cmd="gtk_dialog reboot"
+        sub_cmd="reboot-dialog"
         ;;
     Shut)
-        sub_cmd="gtk_dialog poweroof"
+        sub_cmd="poweroff-dialog"
         ;;
     About)
-        sub_cmd="alacritty about-arch"
+        sub_cmd="about-arch"
         ;;
 esac
 eval "$HOME"/.config/i3/font_aware_launcher.py "$sub_cmd"

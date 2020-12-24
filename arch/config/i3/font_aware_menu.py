@@ -8,26 +8,22 @@ from font_aware_launcher import run_app
 # TODO: Should we open in a specific workspace?
 APPS = {
     'Alacritty': {
-        'cmd': 'alacritty',
-        'subcmd': 'quickterm',
+        'cmd': 'quickterm',
         'icon': 'Alacritty',
         'desc': 'Terminal',
     },
     'Brave': {
-        'cmd': 'brave',
-        'subcmd': 'browser',
+        'cmd': 'browser',
         'icon': 'brave',
         'desc': 'Web Browser',
     },
     'Calculator': {
-        'cmd': 'alacritty',
-        'subcmd': 'numbers',
+        'cmd': 'numbers',
         'icon': 'calc',
         'desc': 'IPython Based Calculator',
     },
     'Calendar': {
-        'cmd': 'brave',
-        'subcmd': 'calendar',
+        'cmd': 'calendar',
         'icon': 'google-agenda',
         'desc': 'Google Calendar',
     },
@@ -57,15 +53,15 @@ APPS = {
         'desc': 'Word Processor',
     },
     'GlobalProtect VPN': {'cmd': 'globalprotect-vpn', 'icon': 'network-vpn'},
+    'Hangouts': {'cmd': 'hangouts', 'icon': 'google-chat', 'desc': 'Google Hangouts'},
     'Htop': {
-        'cmd': 'alacritty',
-        'subcmd': 'htop',
+        'cmd': 'htop',
         'icon': 'htop',
         'desc': 'Process Viewer',
     },
     'Kitty': {'cmd': 'kitty', 'icon': 'kitty', 'desc': 'Terminal Emulator'},
     'Kodi': {'cmd': 'kodi', 'icon': 'kodi', 'desc': 'Media Center'},
-    'Meet': {'cmd': 'brave', 'icon': 'google-meet', 'desc': 'Google Meet'},
+    'Meet': {'cmd': 'meet', 'icon': 'google-meet', 'desc': 'Google Meet'},
     'Microsoft Teams': {'cmd': 'teams', 'icon': 'teams'},
     'OBS Studio': {'cmd': 'obs', 'icon': 'obs', 'desc': 'Streaming/Recording Software'},
     'Peek': {'cmd': 'peek', 'icon': 'peek', 'desc': 'Animated GIF Recorder'},
@@ -76,16 +72,14 @@ APPS = {
         'desc': 'Audio Control',
     },
     'Ranger': {
-        'cmd': 'alacritty',
-        'subcmd': 'ranger',
+        'cmd': 'ranger',
         'icon': 'xfce-filemanager',
         'desc': 'File Manager',
     },
     'Slack': {'cmd': 'slack', 'icon': 'slack', 'desc': 'Internet Messaging'},
     'Spotify': {'cmd': 'spotify', 'icon': 'spotify', 'desc': 'Music Player'},
     'Task Manager': {
-        'cmd': 'alacritty',
-        'subcmd': 'prockiller',
+        'cmd': 'prockiller',
         'icon': 'view-process-all',
         'desc': 'FZF Based Process Killer',
     },
@@ -96,8 +90,7 @@ APPS = {
         'desc': 'BitTorrent Client',
     },
     'Trash': {
-        'cmd': 'alacritty',
-        'subcmd': 'trash',
+        'cmd': 'trash',
         'icon': 'user-trash',
         'desc': 'Show Trash',
     },
@@ -125,7 +118,7 @@ def font_aware_menu(cmd_menu):
     selected = check_output(menu_cmd, shell=True).decode().strip()
     selected = selected.split('<')[0].strip()  # Remove the description
     selected = APPS[selected]  # type: ignore
-    run_app(selected.get('cmd'), selected.get('subcmd'), None)  # type: ignore
+    run_app(selected.get('cmd'), None)  # type: ignore
 
 
 if __name__ == '__main__':

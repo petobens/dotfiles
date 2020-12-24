@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Launch programs adjusting fonts if necessary."""
 import os
-import sys
 from time import sleep
 
 import i3ipc
@@ -9,247 +8,495 @@ import i3ipc
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
-
-def run_app(app, subcmd, workspace_name=None):
-    """Run application adjusting font size if necessary."""
-    i3 = i3ipc.Connection()
-    ws = None
-    if workspace_name is not None:
-        ws = _get_workspace(i3, workspace_name)
-    output_width, other_output_width, outputs = get_output_width(i3, ws)
-    is_hidpi = output_width > 1920
-    other_is_hidpi = other_output_width > 1920
-    nr_monitors = len(outputs)
-
-    gdk = ''
-    qt = ''
-    if is_hidpi:
-        gdk += 'GDK_SCALE=2 '
-        if nr_monitors == 1 or other_is_hidpi:
-            # If everything is hidpi also scale icons
-            gdk += 'GDK_DPI_SCALE=0.5 '
-        if nr_monitors > 1 and not other_is_hidpi:
-            # Only scale if we have a mix of hd and hidpi monitors
-            qt += 'QT_SCALE_FACTOR=2 '
-
-    if app == 'rofi':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        if subcmd is None:
-            raise ValueError('Missing rofi subcommand!')
-        rofi_fsize = 11
-        rofi_yoffset = -110
-        rofi_icon_size = 1.8
-        if is_hidpi & (nr_monitors > 1) and not other_is_hidpi:
-            rofi_fsize *= 2
-            rofi_yoffset = int(rofi_yoffset * 1.5)
-            rofi_icon_size = 2.0
-        if subcmd == 'apps':
-            rofi_base = [
-                'rofi',
-                '-font',
-                f"Noto Sans Mono {rofi_fsize}",
-                '-yoffset',
-                f'{rofi_yoffset}',
-                '-theme-str',
-                f"element-icon {{ size: {rofi_icon_size}ch; }}",  # we use double quotes due to spaces # noqa
-            ]
-            rofi_cmd = rofi_base + [
-                '-combi-modi',
-                'drun,run',
-                '-show',
-                'combi',
-                '-modi',
-                'combi',
-                '-display-combi',
-                'runner',
-            ]
-            sh_no_block(rofi_cmd)
-        else:
-            rofi_base = (
-                f"rofi -font 'Noto Sans Mono {rofi_fsize}' -yoffset {rofi_yoffset}"
-            )
-            rofi_base += f" -theme-str 'element-icon {{ size: {rofi_icon_size}ch; }}'"
-            if subcmd == 'pass':
-                rofi_cmd = (
-                    f"gopass ls --flat | {rofi_base} -dmenu -p gopass | "
-                    "xargs --no-run-if-empty gopass show -c"
-                )
-            elif subcmd == 'tab':
-                rofi_cmd = f'$HOME/.config/i3/recency_switcher.py --menu="{rofi_base}"'
-            elif subcmd == 'ws-win':
-                rofi_cmd = (
-                    '$HOME/.config/i3/recency_switcher.py --active-ws '
-                    f'--menu="{rofi_base} -p ws-window"'
-                )
-            elif subcmd == 'font-aware-apps':
-                rofi_cmd = f'$HOME/.config/i3/font_aware_menu.py --menu="{rofi_base}"'
-            elif subcmd == 'arch-init':
-                yoffset = 25
-                if is_hidpi:
-                    yoffset *= 2
-                rofi_cmd = f"$HOME/.config/polybar/arch_dmenu.sh {rofi_fsize} {yoffset}"
-            sh_no_block([rofi_cmd], shell=True)
-
-    elif app == 'connman':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(
-            ['raiseorlaunch', '-c', 'Connman-gtk', '-f', '-e', f'"{gdk}connman-gtk"']
-        )
-    elif app == 'zathura':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(
-            ['raiseorlaunch', '-c', 'Zathura', '-C', '-f', '-e', f'"{gdk}zathura"']
-        )
-    elif app == 'gnome-font':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(
-            [
-                'raiseorlaunch',
-                '-c',
-                'Gnome-font-viewer',
-                '-f',
-                '-e',
-                f'"{gdk}gnome-font-viewer"',
-            ]
-        )
-    elif app == 'color-picker':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(['raiseorlaunch', '-c', 'Gcolor3', '-f', '-e', f'"{gdk}gcolor3"'])
-    elif app == 'pavucontrol':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(
-            ['raiseorlaunch', '-c', 'Pavucontrol', '-f', '-e', f'"{gdk}pavucontrol"']
-        )
-    elif app == 'power-manager':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(
-            [
-                'raiseorlaunch',
-                '-c',
-                'Xfce4-power-manager-settings',
-                '-f',
-                '-e',
-                f'"{gdk}xfce4-power-manager-settings"',
-            ]
-        )
-    elif app == 'transmission':
-        #  Opens in ws 4 which chould be or not a hidpi screen (depends on the number of
-        # connected monitors)
-        cmd = [
-            'raiseorlaunch',
-            '-c',
-            'Transmission-gtk',
-            '-f',
-            '-e',
-            f'"{gdk}transmission-gtk"',
-        ]
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'peek':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(['raiseorlaunch', '-c', 'Peek', '-f', '-e', f'"{gdk}peek"'])
-    elif app == 'scanner':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(
-            ['raiseorlaunch', '-c', 'Simple-scan', '-f', '-e', f'"{gdk}simple-scan"']
-        )
-    elif app == 'thunderbird':
-        # Opens in ws 3 which is always in a hidpi screen
-        gdk += 'GDK_SCALE=2 '
-        cmd = [
-            'raiseorlaunch',
-            '-c',
-            'Thunderbird',
-            '-f',
-            '-e',
-            f'"{gdk}thunderbird"',
-        ]
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'gtk_dialog':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        if subcmd is None:
-            raise ValueError('Missing type of dialog!')
-        gtk_dialog = ['gtk_dialog', '-t']
-        if subcmd == 'poweroff':
-            gtk_dialog += [
-                "Power Management",
-                '-m',
-                "Do you want to poweroff?",
-                '-a',
-                'systemctl poweroff',
-            ]
-        elif subcmd == 'reboot':
-            gtk_dialog += [
-                "Power Management",
-                '-m',
-                "Do you want to reboot?",
-                '-a',
-                'systemctl reboot',
-            ]
-        elif subcmd == 'quit':
-            gtk_dialog += [
-                "App Management",
-                '-m',
-                "Do you want to quit all apps?",
-                '--shell',
-                '-a',
-                '$HOME/.config/i3/custom_kill.py -w all',
-            ]
-        elif subcmd == 'usb':
-            gtk_dialog += [
-                "Media Management",
-                '-m',
-                "Do you want to eject media drive?",
-                '-a',
-                'udiskie-umount -a',
-            ]
-        elif subcmd == 'trash':
-            gtk_dialog += [
-                "Trash Management",
-                '-m',
-                "Do you want to empty the trash?",
-                '--shell',
-                '-a',
+APPS = {
+    'about-arch': {
+        'type': 'tui',
+        'args': {
+            'title': 'About Arch',
+            'cmd': "neofetch; read -p ''",
+            'use_rol': False,
+            'interactive_bash': True,
+        },
+    },
+    'bluetooth': {
+        'type': 'tui',
+        'args': {
+            'title': 'bluetooth-fzf',
+            'cmd': 'bt;exit',
+            'use_rol': False,
+            'interactive_bash': True,
+            'dimensions': (100, 30),
+        },
+    },
+    'browser': {
+        'type': 'electron',
+        'args': {'class_name': 'Brave', 'mark': 'browser', 'post_cmd': True},
+    },
+    'calendar': {
+        'type': 'electron',
+        'args': {
+            'class_name': 'Brave',
+            'mark': 'calendar',
+            'subcmd': 'calendar',
+            'post_cmd': True,
+        },
+    },
+    'color-picker': {'type': 'gtk', 'args': {'class_name': 'Gcolor3'}},
+    'connman': {'type': 'gtk', 'args': {'class_name': 'Connman-gtk'}},
+    'discord': {'type': 'rol', 'args': {'class_name': 'discord', 'event_delay': 30}},
+    'docker': {
+        'type': 'tui',
+        'args': {
+            'title': 'docker-info',
+            'cmd': 'docker info | less +F',
+            'use_rol': False,
+            'dimensions': (150, 30),
+        },
+    },
+    'firefox': {'type': 'rol', 'args': {'class_name': 'firefox', 'mark': 'ffox'}},
+    'globalprotect-vpn': {'type': 'qt', 'args': {'class_name': 'gpclient'}},
+    'gnome-font': {'type': 'gtk', 'args': {'class_name': 'Gnome-font-viewer'}},
+    'hangouts': {
+        'type': 'electron',
+        'args': {
+            'class_name': 'Brave',
+            'mark': 'hangouts',
+            'subcmd': 'hangouts',
+            'post_cmd': True,
+        },
+    },
+    'htop': {'type': 'tui', 'args': {'title': 'htop', 'cmd': 'htop'}},
+    'kitty': {
+        'type': 'rol_custom',
+        'args': {
+            'class_name': 'kitty',
+            'mark': 'terminal',
+            'cmd': 'kitty /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"',
+        },
+    },
+    'kodi': {'type': 'rol', 'args': {'class_name': 'kodi'}},
+    'meet': {
+        'type': 'electron',
+        'args': {
+            'class_name': 'Brave',
+            'mark': 'meet',
+            'subcmd': 'meet',
+            'post_cmd': True,
+        },
+    },
+    'numbers': {'type': 'tui', 'args': {'title': 'numbers', 'cmd': 'ipython3'}},
+    'obs': {'type': 'qt', 'args': {'class_name': 'obs'}},
+    'onedrive': {
+        'type': 'tui',
+        'args': {
+            'title': 'OneDrive',
+            'cmd': 'journalctl --user-unit onedrive -f',
+            'use_rol': False,
+        },
+    },
+    'pavucontrol': {'type': 'gtk', 'args': {'class_name': 'Pavucontrol'}},
+    'peek': {'type': 'gtk', 'args': {'class_name': 'Peek'}},
+    'planmaker': {
+        'type': 'rol_custom',
+        'args': {'class_name': 'pm', 'cmd': 'freeoffice-planmaker', 'event_delay': 30},
+    },
+    'power-manager': {
+        'type': 'gtk',
+        'args': {'class_name': 'Xfce4-power-manager-settings'},
+    },
+    'poweroff-dialog': {
+        'type': 'gtk',
+        'args': {
+            'is_dialog': True,
+            'class_name': 'Power Management',
+            'title': 'Do you want to poweroff?',
+            'cmd': 'systemctl poweroff',
+        },
+    },
+    'presentations': {
+        'type': 'rol_custom',
+        'args': {
+            'class_name': 'pr',
+            'cmd': 'freeoffice-presentations',
+            'event_delay': 30,
+        },
+    },
+    'prockiller': {
+        'type': 'tui',
+        'args': {
+            'title': 'ProcKiller',
+            'cmd': '/usr/bin/bash -l -c "exec /usr/bin/bash -i"',
+            'post_cmd': True,
+        },
+    },
+    'quickterm': {
+        'type': 'tui',
+        'args': {
+            'title': 'QuickTerm',
+            'cmd': '/usr/bin/bash -l -c "cd $(tmux display -p \"#{pane_current_path}\") && exec /usr/bin/bash -i"',  # noqa
+        },
+    },
+    'quit-dialog': {
+        'type': 'gtk',
+        'args': {
+            'is_dialog': True,
+            'class_name': 'App Management',
+            'title': 'Do you want to quit all apps?',
+            'shell': True,
+            'cmd': '$HOME/.config/i3/custom_kill.py -w all',
+        },
+    },
+    'ranger': {
+        'type': 'tui',
+        'args': {
+            'title': 'ranger',
+            'cmd': '/usr/bin/bash -c "ranger $(tmux display -p \"#{pane_current_path}\")"',
+        },
+    },
+    'reboot-dialog': {
+        'type': 'gtk',
+        'args': {
+            'is_dialog': True,
+            'class_name': 'Power Management',
+            'title': 'Do you want to reboot?',
+            'cmd': 'systemctl reboot',
+        },
+    },
+    'rofi-arch-init': {'type': 'rofi', 'args': {'class_name': 'rofi-arch-init'}},
+    'rofi-font-aware-apps': {
+        'type': 'rofi',
+        'args': {'class_name': 'rofi-font-aware-apps'},
+    },
+    'rofi-pass': {'type': 'rofi', 'args': {'class_name': 'rofi-pass'}},
+    'rofi-runner': {'type': 'rofi', 'args': {'class_name': 'rofi-runner'}},
+    'rofi-tab': {'type': 'rofi', 'args': {'class_name': 'rofi-tab'}},
+    'rofi-ws-win': {'type': 'rofi', 'args': {'class_name': 'rofi-ws-win'}},
+    'scanner': {'type': 'gtk', 'args': {'class_name': 'Simple-scan'}},
+    'slack': {'type': 'electron', 'args': {'class_name': 'Slack', 'event_delay': 30}},
+    'spotify': {
+        'type': 'electron',
+        'args': {'class_name': 'Spotify', 'event_delay': 30},
+    },
+    'teams': {'type': 'electron', 'args': {'class_name': 'Teams', 'event_delay': 30}},
+    'textmaker': {
+        'type': 'rol_custom',
+        'args': {'class_name': 'tm', 'cmd': 'freeoffice-textmaker', 'event_delay': 30},
+    },
+    'thunderbird': {'type': 'gtk', 'args': {'class_name': 'thunderbird'}},
+    'transmission': {'type': 'gtk', 'args': {'class_name': 'Transmission-gtk'}},
+    'trash': {
+        'type': 'tui',
+        'args': {'title': 'Trash Can', 'cmd': '/usr/bin/bash -c "trash-list | less"'},
+    },
+    'trash-dialog': {
+        'type': 'gtk',
+        'args': {
+            'is_dialog': True,
+            'class_name': 'Trash Management',
+            'title': 'Do you want to empty the trash?',
+            'shell': True,
+            'cmd': (
                 "trash-empty && pkill -INT -f trash-list && "
                 "xdotool key Super_L+Control+b && "
-                "dunstify -t 2500 -i trashindicator 'Trash Can emptied!'",
+                "dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
+            ),
+        },
+    },
+    'usb-dialog': {
+        'type': 'gtk',
+        'args': {
+            'is_dialog': True,
+            'class_name': 'Media Management',
+            'title': 'Do you want to eject media drive?',
+            'cmd': 'udiskie-umount -a',
+        },
+    },
+    'vimiv': {'type': 'qt', 'args': {'class_name': 'vimiv', 'cycle': True}},
+    'zathura': {'type': 'gtk', 'args': {'class_name': 'Zathura', 'cycle': True}},
+    'zoom': {'type': 'rol', 'args': {'class_name': 'Zoom', 'event_delay': 30}},
+}
+
+
+class Screen:
+    """Get screens context using i3."""
+
+    HD_WIDTH = 1920
+
+    def __init__(self):
+        self.is_hidpi = None
+        self.other_is_hidpi = None
+        self.nr_monitors = None
+        self.i3 = i3ipc.Connection()
+
+    def get_monitors_context(self, ws_name):
+        """Actually compute monitor context."""
+        ws = None
+        if ws_name is not None:
+            ws = self._get_workspace(self.i3, ws_name)
+        output_width, other_output_width, outputs = get_output_width(self.i3, ws)
+        self.is_hidpi = output_width > self.HD_WIDTH
+        self.other_is_hidpi = other_output_width > self.HD_WIDTH
+        self.nr_monitors = len(outputs)
+        return
+
+    @staticmethod
+    def _get_workspace(i3, name):
+        workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
+        if workspace is None:
+            i3.command(f'workspace {name}')
+            sleep(0.1)
+            workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
+        return workspace
+
+
+class ROLApp:
+    """Wrapper around raiseorlaunch command."""
+
+    def __init__(
+        self,
+        class_name=None,
+        shell=False,
+        ws=None,
+        cycle=False,
+        leave_fullscreen=True,
+        event_delay=2,
+        mark=None,
+        title=None,
+        cmd=None,
+        subcmd=None,
+        post_cmd=False,
+    ):
+        # raiseorlaunch flags
+        self.class_name = class_name
+        self.shell = shell
+        self.ws = ws
+        self.cycle = cycle
+        self.leave_fullscreen = leave_fullscreen
+        self.event_delay = event_delay
+        self.mark = mark
+        self.title = title
+        self.cmd = cmd if cmd is not None else class_name.lower()
+        self.subcmd = subcmd
+        self.post_cmd = post_cmd
+        self.cmd_args = {}
+        # xrandr/i3 context
+        self.screen = Screen()
+
+    def launch(self):
+        """Launch app adjusting fonts if monitory context demands it."""
+        self.screen.get_monitors_context(self.ws)
+        cmd = self._build_cmd()
+        if self.shell:
+            cmd = [cmd]
+        print(cmd)
+        sh_no_block(cmd, shell=self.shell, **self.cmd_args)
+        if self.post_cmd:
+            self._run_post_cmd()
+
+    def _build_cmd(self):
+        return self._raiseorlauch_cmd()
+
+    def _run_post_cmd(self):
+        pass
+
+    def _raiseorlauch_cmd(self):
+        cmd = ['raiseorlaunch']
+        if self.class_name is not None:
+            cmd += ['-c', self.class_name]
+        if self.ws is not None:
+            cmd += ['-W', f'{self.ws}']
+        if self.cycle:
+            cmd += ['-C']
+        if self.leave_fullscreen:
+            cmd += ['-f']
+        if self.mark is not None:
+            cmd += ['-m', self.mark]
+        if self.title is not None:
+            cmd += ['-t', f"'{self.title}'"]
+        if self.event_delay != 2:  # default value
+            cmd += ['-l', f'{self.event_delay}']
+        if self.shell:
+            cmd = ' '.join(cmd)  # type: ignore
+        return cmd
+
+
+class ROLCustomApp(ROLApp):
+    """Use raiseorlaunch but specify executable to run."""
+
+    def _build_cmd(self):
+        cmd = self._raiseorlauch_cmd()
+        cmd += ['-e', f'{self.cmd}']
+        return cmd
+
+
+class GTKApp(ROLApp):
+    """Launch GTK apps."""
+
+    def __init__(self, is_dialog=False, **kwargs):
+        super().__init__(**kwargs)
+        self.is_dialog = is_dialog
+
+    def _build_cmd(self):
+        gdk = ''
+        if self.screen.is_hidpi:
+            gdk += 'GDK_SCALE=2 '
+            if self.screen.nr_monitors == 1 or self.screen.other_is_hidpi:
+                # If everything is hidpi also scale icons
+                gdk += 'GDK_DPI_SCALE=0.5 '
+
+        if not self.is_dialog:
+            cmd = self._raiseorlauch_cmd()
+            cmd += ['-e', f'"{gdk}{self.cmd}"']
+        else:
+            gtk_env = dict([i.split('=') for i in gdk.split()])  # type: ignore
+            self.cmd_args = {'env': {**os.environ, **gtk_env}}
+            cmd = [
+                'gtk_dialog',
+                '-t',
+                f"{self.class_name}",
+                '-m',
+                f"{self.title}",
+                '-a',
+                self.cmd,
             ]
-        gtk_env = dict([i.split('=') for i in gdk.split()])  # type: ignore
-        sh_no_block(
-            gtk_dialog,
-            env={**os.environ, **gtk_env},
+            if self.shell:
+                cmd += ['--shell']
+                self.shell = False
+        return cmd
+
+
+class QTApp(ROLApp):
+    """Launch QT apps."""
+
+    def _build_cmd(self):
+        cmd = self._raiseorlauch_cmd()
+        qt = ''
+        if self.screen.is_hidpi and self.screen.nr_monitors > 1 and not self.screen.other_is_hidpi:  # type: ignore # noqa
+            # Only scale if we have a mix of hd and hidpi monitors
+            qt += 'QT_SCALE_FACTOR=2 '
+        cmd += ['-e', f'"{qt}{self.cmd}"']
+        return cmd
+
+
+class TUIApp(ROLApp):
+    """Launch TUI apps."""
+
+    def __init__(self, use_rol=True, interactive_bash=False, dimensions=(), **kwargs):
+        super().__init__(shell=True, **kwargs)
+        self.use_rol = use_rol
+        self.interactive_bash = interactive_bash
+        self.dimensions = dimensions
+
+    def _build_cmd(self):
+        alacritty_scale = 2 if self.screen.is_hidpi else 1
+        alacritty_cmd = (
+            f'WINIT_X11_SCALE_FACTOR={alacritty_scale} alacritty -t "{self.title}"'
+        )
+        if self.use_rol:
+            cmd = self._raiseorlauch_cmd()
+            cmd += f" -e '{alacritty_cmd} -e {self.cmd}'"
+        else:
+            cmd = alacritty_cmd
+            if self.dimensions:
+                cols, lines = self.dimensions
+                cmd += f' -d {cols} {lines}'
+            cmd += ' -e /usr/bin/bash -c '
+            if self.interactive_bash:
+                cmd += '-i '
+            cmd += f'"{self.cmd}"'
+        return cmd
+
+    def _run_post_cmd(self):
+        if self.title == 'ProcKiller':
+            sleep(0.8)
+            sh('xdotool type kill')
+            sh('xdotool key space+Tab')
+
+
+class RofiApp(ROLApp):
+    """Launch Rofi apps."""
+
+    def __init__(self, **kwargs):
+        super().__init__(shell=True, **kwargs)
+        self.font_size = 11
+        self.yoffset = -110
+        self.icon_size = 1.8
+
+    def _build_cmd(self):
+        if (
+            self.screen.is_hidpi
+            and (self.screen.nr_monitors > 1)  # type: ignore
+            and not self.screen.other_is_hidpi
+        ):
+            self.font_size *= 2
+            self.yoffset = int(self.yoffset * 1.5)
+            self.icon_size = 2.0
+        base_cmd = (
+            f"rofi -font 'noto sans mono {self.font_size}' -yoffset {self.yoffset} "
+            f"-theme-str 'element-icon {{ size: {self.icon_size}ch; }}'"
         )
 
-    elif app == 'vimiv':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        sh_no_block(['raiseorlaunch', '-c', 'vimiv', '-C', '-f', '-e', f'"{qt}vimiv"'])
+        if self.class_name == 'rofi-runner':
+            cmd = (
+                f"{base_cmd} -combi-modi drun,run -show combi "
+                "-modi combi -display-combi runner"
+            )
+        elif self.class_name == 'rofi-pass':
+            cmd = (
+                f"gopass ls --flat | {base_cmd} -dmenu -p gopass | "
+                "xargs --no-run-if-empty gopass show -c"
+            )
+        elif self.class_name == 'rofi-tab':
+            cmd = f'$HOME/.config/i3/recency_switcher.py --menu="{base_cmd}"'
+        elif self.class_name == 'rofi-ws-win':
+            cmd = (
+                '$HOME/.config/i3/recency_switcher.py --active-ws '
+                f'--menu="{base_cmd} -p ws-window"'
+            )
+        elif self.class_name == 'rofi-font-aware-apps':
+            cmd = f'$HOME/.config/i3/font_aware_menu.py --menu="{base_cmd}"'
+        elif self.class_name == 'rofi-arch-init':
+            yoffset = 25
+            width = 35
+            if self.screen.is_hidpi:
+                yoffset *= 2
+                width -= 1
+            cmd = f"$HOME/.config/polybar/arch_dmenu.sh {self.font_size} {yoffset} {width}"
+        return cmd
 
-    elif app == 'brave':
-        # Might open in hidpi screen or not but there is no way to adjust fonts before
-        # actually opening the application so we adjust zoom after the apps opens
-        if subcmd is None:
-            raise ValueError('Missing brave subcommand!')
 
-        brave_cmd = f'raiseorlaunch -c Brave -m {subcmd} -e "brave'
-        if is_hidpi and nr_monitors > 1 and not other_is_hidpi:
-            brave_cmd += ' --force-device-scale-factor=2'
-        if subcmd != 'browser':
-            brave_cmd += f' --new-window --app=https://{subcmd}.google.com{{extra}}'
-        brave_cmd += '"'
-        if workspace_name is not None:
-            brave_cmd += f' -W {workspace_name}'
+class ElectronApp(ROLApp):
+    """Launch Electron apps."""
 
-        if subcmd == 'calendar':
-            brave_cmd = brave_cmd.format(extra='/calendar/b/0/r')
-        elif subcmd == 'hangouts':
-            brave_cmd = brave_cmd.format(extra='/?authuser=1')
-        elif subcmd == 'meet':
-            brave_cmd = brave_cmd.format(extra='')
-        sh_no_block([brave_cmd], shell=True)
-        if subcmd not in i3.get_marks():  # run this only on first open
+    def __init__(self, **kwargs):
+        super().__init__(shell=True, **kwargs)
+
+    def _build_cmd(self):
+        cmd = self._raiseorlauch_cmd()
+        cmd += f' -e "{self.class_name.lower()}'
+        if (
+            self.screen.is_hidpi
+            and (self.screen.nr_monitors > 1)  # type: ignore
+            and not self.screen.other_is_hidpi
+        ):
+            cmd += ' --force-device-scale-factor=2'
+
+        if self.class_name == 'Brave' and self.subcmd is not None:
+            cmd += f' --new-window --app=https://{self.subcmd}.google.com{{extra}}'
+            if self.subcmd == 'calendar':
+                cmd = cmd.format(extra='/calendar/b/0/r')
+            elif self.subcmd == 'hangouts':
+                cmd = cmd.format(extra='/?authuser=1')
+            elif self.subcmd == 'meet':
+                cmd = cmd.format(extra='')
+
+        cmd += '"'
+        return cmd
+
+    def _run_post_cmd(self):
+        if (
+            self.class_name == 'Brave' and self.mark not in self.screen.i3.get_marks()
+        ):  # run this only on first open
             sleep(2.5)
             # Ensure we have proper scaling
             sh('xdotool key Super+0')
@@ -258,151 +505,30 @@ def run_app(app, subcmd, workspace_name=None):
             # window will live in a (potentially) non hidpi screen and be
             # scaled using the `--force-device..` flag so we need to rescale this window
             # in a hidpi screen using the zoom keybinding
-            if is_hidpi and nr_monitors > 2 and not other_is_hidpi:
+            if (
+                self.screen.is_hidpi
+                and self.screen.nr_monitors > 2  # type: ignore
+                and not self.screen.other_is_hidpi
+            ):
                 sh('xdotool key Super+u')
 
-    elif app == 'alacritty':
-        # Opens in current ws which might be a hidpi screen or not (i.e no fixed ws)
-        if subcmd is None:
-            raise ValueError('Missing alacritty subcommand!')
-        alacritty_scale = 1
-        if is_hidpi:
-            alacritty_scale = 2
 
-        alacritty_cmd = f'WINIT_X11_SCALE_FACTOR={alacritty_scale} alacritty -t '
-        if subcmd == 'onedrive':
-            alacritty_cmd += (
-                '"OneDrive" -e /usr/bin/bash -c "journalctl --user-unit onedrive -f"'
-            )
-        elif subcmd == 'bluetooth':
-            alacritty_cmd += '"bluetooth-fzf" -d 100 30 -e /usr/bin/bash -ci "bt;exit"'
-        elif subcmd == 'docker':
-            alacritty_cmd += (
-                '"docker-info" -d 150 30 -e /usr/bin/bash -c "docker info | less +F"'
-            )
-        if subcmd == 'about-arch':
-            alacritty_cmd += (
-                '"About Arch" -e /usr/bin/bash -i -c "neofetch; read -p \'\'"'
-            )
-
-        elif subcmd == 'htop':
-            alacritty_cmd = (
-                f"raiseorlaunch -t 'htop' -f -e '{alacritty_cmd} htop -e htop'"
-            )
-        elif subcmd == 'numbers':
-            alacritty_cmd = f"raiseorlaunch -t 'numbers' -f -e '{alacritty_cmd} numbers -e ipython3'"  # noqa
-        elif subcmd == 'ranger':
-            alacritty_cmd = f'raiseorlaunch -t "ranger" -f -e \'{alacritty_cmd} ranger -e /usr/bin/bash -c "ranger $(tmux display -p \"#{{pane_current_path}}\")"\''  # noqa
-        elif subcmd == 'trash':
-            alacritty_cmd = f'raiseorlaunch -t "Trash Can" -f -e \'{alacritty_cmd} "Trash Can" -e /usr/bin/bash -c "trash-list | less"\''  # noqa
-        elif subcmd == 'quickterm':
-            alacritty_cmd = f'raiseorlaunch -t "QuickTerm" -f -e \'{alacritty_cmd} "QuickTerm" -e /usr/bin/bash -l -c "cd $(tmux display -p \"#{{pane_current_path}}\") && exec /usr/bin/bash -i"\''  # noqa
-        elif subcmd == 'prockiller':
-            alacritty_cmd = f'raiseorlaunch -t "ProcKiller" -f -e \'{alacritty_cmd} "ProcKiller" -e /usr/bin/bash -l -c "exec /usr/bin/bash -i"\''  # noqa
-        sh_no_block([alacritty_cmd], shell=True)
-
-        if subcmd == 'prockiller':
-            sleep(0.8)
-            sh('xdotool type kill')
-            sh('xdotool key space+Tab')
-
-    elif app == 'firefox':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = ['raiseorlaunch', '-c', 'firefox', '-m', 'ffox']
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'slack':
-        # Opens in hidpi screen
-        cmd = 'raiseorlaunch -c Slack -l 30 -e "slack --force-device-scale-factor=2"'
-        if workspace_name is not None:
-            cmd += f' -W {workspace_name}'
-        sh_no_block([cmd], shell=True)
-    elif app == 'teams':
-        # Opens in hidpi screen
-        cmd = 'raiseorlaunch -c Teams -l 30 -e "teams --force-device-scale-factor=2"'
-        if workspace_name is not None:
-            cmd += f' -W {workspace_name}'
-        sh_no_block([cmd], shell=True)
-    elif app == 'zoom':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = ['raiseorlaunch', '-c', 'Zoom', '-l', '30']
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'spotify':
-        # Opens in hidpi screen
-        cmd = (
-            'raiseorlaunch -c Spotify -l 30 -e "spotify --force-device-scale-factor=2"'
-        )
-        if workspace_name is not None:
-            cmd += f' -W {workspace_name}'
-        sh_no_block([cmd], shell=True)
-    elif app == 'planmaker':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = ['raiseorlaunch', '-c', 'pm', '-l', '30', '-e', '"freeoffice-planmaker"']
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'textmaker':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = ['raiseorlaunch', '-c', 'pm', '-l', '30', '-e', '"freeoffice-textmaker"']
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'presentations':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = [
-            'raiseorlaunch',
-            '-c',
-            'pm',
-            '-l',
-            '30',
-            '-e',
-            '"freeoffice-presentations"',
-        ]
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'kitty':
-        # Opens in hidpi screen or not
-        cmd = 'raiseorlaunch -c kitty -m terminal -e \'kitty /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"\''
-        if workspace_name is not None:
-            cmd += f' -W {workspace_name}'
-        sh_no_block([cmd], shell=True)
-    elif app == 'discord':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = ['raiseorlaunch', '-c', 'discord', '-l', '30']
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'kodi':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = ['raiseorlaunch', '-c', 'kodi']
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'globalprotect-vpn':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = ['raiseorlaunch', '-c', 'gpclient', '-f', '-e', f'"{qt}gpclient"']
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-    elif app == 'obs':
-        # Opens in ws which might be a hidpi screen or not
-        cmd = ['raiseorlaunch', '-c', 'obs', '-f', '-e', f'"{qt}obs"']
-        if workspace_name is not None:
-            cmd += ['-W', f'{workspace_name}']
-        sh_no_block(cmd)
-
-
-def _get_workspace(i3, name):
-    workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
-    if workspace is None:
-        i3.command(f'workspace {name}')
-        sleep(0.1)
-        workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
-    return workspace
+def run_app(application, workspace=None):
+    """Run application adjusting font size if necessary."""
+    APP_TYPES = {
+        'electron': ElectronApp,
+        'gtk': GTKApp,
+        'qt': QTApp,
+        'rofi': RofiApp,
+        'rol': ROLApp,
+        'rol_custom': ROLCustomApp,
+        'tui': TUIApp,
+    }
+    app = APPS[application]
+    app = APP_TYPES[app['type']](**app['args'])  # type: ignore
+    if workspace is not None:
+        app.ws = workspace  # type: ignore
+    return app.launch()  # type: ignore
 
 
 if __name__ == '__main__':
@@ -410,9 +536,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('application')
-    parser.add_argument('subcommand', nargs='?', default=None)
     parser.add_argument('--workspace', '-W', required=False, type=str, default=None)
     parsed_args = parser.parse_args()
 
-    run_app(parsed_args.application, parsed_args.subcommand, parsed_args.workspace)
-    sys.exit(0)
+    run_app(parsed_args.application, parsed_args.workspace)

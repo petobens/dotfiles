@@ -13,6 +13,13 @@ bindsym $mod+Control+r restart
 # Reload polybar
 bindsym $mod+b $nexec $HOME/.config/polybar/launch.py
 
+# Path to executable scripts
+set $resize $HOME/.config/i3/resize.py
+set $grid_resize $HOME/.config/i3/grid_resize.py
+set $multimon_move $HOME/.config/i3/multimon_move.py
+set $font_aware_launcher $HOME/.config/i3/font_aware_launcher.py
+set $volume $HOME/.config/i3/volume.py
+
 # }}}
 # Window handling {{{
 
@@ -28,33 +35,50 @@ floating_modifier $mod
 # Leave fullscreen when a popup appears in order to display it
 popup_during_fullscreen leave_fullscreen
 
+# Automatically switch to windows that raise an urgent flag
+for_window [urgent=latest] focus
+
 # Full screen
 bindsym $mod+e fullscreen toggle
 
 # Floating resizing (spanning)
-bindsym $mod+Up $nexec $HOME/.config/i3/resize.py Full
-bindsym $mod+Left $nexec $HOME/.config/i3/resize.py Left
-bindsym $mod+Right $nexec $HOME/.config/i3/resize.py Right
-bindsym $mod+$alt+Up $nexec $HOME/.config/i3/resize.py Top
-bindsym $mod+$alt+Down $nexec $HOME/.config/i3/resize.py Bottom
-bindsym $mod+Control+1 $nexec $HOME/.config/i3/resize.py 'Top Left'
-bindsym $mod+Control+2 $nexec $HOME/.config/i3/resize.py 'Top Right'
-bindsym $mod+Control+3 $nexec $HOME/.config/i3/resize.py 'Bottom Left'
-bindsym $mod+Control+4 $nexec $HOME/.config/i3/resize.py 'Bottom Right'
-bindsym $mod+Control+5 $nexec $HOME/.config/i3/resize.py Center
-bindsym $mod+Control+6 $nexec $HOME/.config/i3/resize.py Rectangle
-bindsym $mod+Control+7 $nexec $HOME/.config/i3/resize.py Dialog
-bindsym $mod+Control+8 $nexec $HOME/.config/i3/resize.py 'Semi Full'
+bindsym $mod+Up $nexec $resize Full
+bindsym $mod+Left $nexec $resize Left
+bindsym $mod+Right $nexec $resize Right
+bindsym $mod+$alt+Up $nexec $resize Top
+bindsym $mod+$alt+Down $nexec $resize Bottom
+bindsym $mod+Control+1 $nexec $resize 'Top Left'
+bindsym $mod+Control+2 $nexec $resize 'Top Right'
+bindsym $mod+Control+3 $nexec $resize 'Bottom Left'
+bindsym $mod+Control+4 $nexec $resize 'Bottom Right'
+bindsym $mod+Control+5 $nexec $resize Center
+bindsym $mod+Control+6 $nexec $resize Rectangle
+bindsym $mod+Control+7 $nexec $resize Dialog
+bindsym $mod+Control+8 $nexec $resize'Semi Full'
 
 # Resize (grid-like)
-bindsym $mod+l $nexec $HOME/.config/i3/grid_resize.py -a grow -o right
-bindsym $mod+$alt+h $nexec $HOME/.config/i3/grid_resize.py -a shrink -o right
-bindsym $mod+h $nexec $HOME/.config/i3/grid_resize.py -a grow -o left
-bindsym $mod+$alt+l $nexec $HOME/.config/i3/grid_resize.py -a shrink -o left
-bindsym $mod+k $nexec $HOME/.config/i3/grid_resize.py -a grow -o up
-bindsym $mod+$alt+j $nexec $HOME/.config/i3/grid_resize.py -a shrink -o up
-bindsym $mod+j $nexec $HOME/.config/i3/grid_resize.py -a grow -o down
-bindsym $mod+$alt+k $nexec $HOME/.config/i3/grid_resize.py -a shrink -o down
+bindsym $mod+l $nexec $grid_resize -a grow -o right
+bindsym $mod+$alt+h $nexec $grid_resize -a shrink -o right
+bindsym $mod+h $nexec $grid_resize -a grow -o left
+bindsym $mod+$alt+l $nexec $grid_resize -a shrink -o left
+bindsym $mod+k $nexec $grid_resize -a grow -o up
+bindsym $mod+$alt+j $nexec $grid_resize -a shrink -o up
+bindsym $mod+j $nexec $grid_resize -a grow -o down
+bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down
+
+# Sizing and position rules (use `xprop` to get the window info)
+# Note: `for_window` applies the first time i3 encounters a window (i.e not when
+# re-focusing it)
+for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv|Simple-scan|discord)$" title="^(?!webcam).+"] $nexec $resize Full
+for_window [title="^(Alacritty|kitty)$"] $nexec $resize Full
+for_window [con_mark="^(browser|calendar|hangouts|meet)$"] $nexec $resize Full
+for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] $nexec $resize Center
+for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] $nexec $resize Center
+for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] $nexec $resize Rectangle
+for_window [class="^(feh|Matplotlib|Zathura|vimiv)$"] $nexec $resize Right
+for_window [window_type="splash"] floating enable, move position center
+for_window [window_type="dialog" class="^(?!gtk_qt_dialog).+" window_role="^(?!GtkFileChooserDialog).+"] $nexec $reize Dialog
+for_window [window_role="^(GtkFileChooserDialog)$"] $nexec $resize Rectangle
 
 #  }}}
 #  Multiple monitors and workspaces {{{
@@ -87,35 +111,31 @@ bindsym $mod+9 workspace $ws9
 
 # Move focused container to specific workspace and switch focus to that
 # container
-bindsym $mod+Shift+1 $nexec $HOME/.config/i3/multimon_move.py -w "1"
-bindsym $mod+Shift+2 $nexec $HOME/.config/i3/multimon_move.py -w "2"
-bindsym $mod+Shift+3 $nexec $HOME/.config/i3/multimon_move.py -w "3"
-bindsym $mod+Shift+4 $nexec $HOME/.config/i3/multimon_move.py -w "4"
-bindsym $mod+Shift+5 $nexec $HOME/.config/i3/multimon_move.py -w "5"
-bindsym $mod+Shift+6 $nexec $HOME/.config/i3/multimon_move.py -w "6"
-bindsym $mod+Shift+7 $nexec $HOME/.config/i3/multimon_move.py -w "7"
-bindsym $mod+Shift+8 $nexec $HOME/.config/i3/multimon_move.py -w "8"
-bindsym $mod+Shift+9 $nexec $HOME/.config/i3/multimon_move.py -w "9"
+bindsym $mod+Shift+1 $nexec $multimon_move -w "1"
+bindsym $mod+Shift+2 $nexec $multimon_move -w "2"
+bindsym $mod+Shift+3 $nexec $multimon_move -w "3"
+bindsym $mod+Shift+4 $nexec $multimon_move -w "4"
+bindsym $mod+Shift+5 $nexec $multimon_move -w "5"
+bindsym $mod+Shift+6 $nexec $multimon_move -w "6"
+bindsym $mod+Shift+7 $nexec $multimon_move -w "7"
+bindsym $mod+Shift+8 $nexec $multimon_move -w "8"
+bindsym $mod+Shift+9 $nexec $multimon_move -w "9"
 
 # Activate primary or multi monitor
 bindsym $mod+Return $nexec multimon primary
 bindsym $mod+Control+Return $nexec multimon multi
 
 # Move window (container) in monitor (output) direction and switch focus
-bindsym $mod+Control+Right $nexec $HOME/.config/i3/multimon_move.py -d "right"
-bindsym $mod+Control+Left $nexec $HOME/.config/i3/multimon_move.py -d "left"
-bindsym $mod+Control+Down $nexec $HOME/.config/i3/multimon_move.py -d "down"
-bindsym $mod+Control+Up $nexec $HOME/.config/i3/multimon_move.py -d "up"
+bindsym $mod+Control+Right $nexec $multimon_move -d "right"
+bindsym $mod+Control+Left $nexec $multimon_move -d "left"
+bindsym $mod+Control+Down $nexec $multimon_move -d "down"
+bindsym $mod+Control+Up $nexec $multimon_move -d "up"
 
 # Move workspace in monitor (output) direction and switch focus
-bindsym $mod+Shift+Right \
-    $nexec $HOME/.config/i3/multimon_move.py -d "right" --move-ws
-bindsym $mod+Shift+Left \
-    $nexec $HOME/.config/i3/multimon_move.py -d "left" --move-ws
-bindsym $mod+Shift+Down \
-    $nexec $HOME/.config/i3/multimon_move.py -d "down" --move-ws
-bindsym $mod+Shift+Up \
-    $nexec $HOME/.config/i3/multimon_move.py -d "up" --move-ws
+bindsym $mod+Shift+Right $nexec $multimon_move -d "right" --move-ws
+bindsym $mod+Shift+Left $nexec $multimon_move -d "left" --move-ws
+bindsym $mod+Shift+Down $nexec $multimon_move -d "down" --move-ws
+bindsym $mod+Shift+Up $nexec $multimon_move -d "up" --move-ws
 
 # Assign workspaces to specific monitors
 set $primary "eDP1"
@@ -135,93 +155,65 @@ workspace $ws9 output $third $secondary
 bindsym $alt+grave focus output right
 bindsym $alt+Escape focus output down
 
+# Assign windows to specific workspaces (for apps opened with ranger or those that
+# don't respect startup workspaces)
+for_window [class="^(zoom)$"] $nexec $multimon_move -w "2"
+for_window [class="^(mpv)$"] $nexec $multimon_move -w "3"
+for_window [class="^(pm|tm|pr|Transmission-gtk)$"] $nexec $multimon_move -w "4"
+
 # }}}
-# Run or activate apps and rules {{{
+# Run or activate apps {{{
 
 # Rofi (application launcher / switcher)
-bindsym $alt+Tab $nexec $HOME/.config/i3/font_aware_launcher.py rofi tab
-bindsym $mod+w $nexec $HOME/.config/i3/font_aware_launcher.py rofi ws-win
-bindsym $mod+s $nexec $HOME/.config/i3/font_aware_launcher.py rofi apps
-bindsym $mod+a $nexec $HOME/.config/i3/font_aware_launcher.py rofi font-aware-apps
-bindsym $mod+z $nexec $HOME/.config/i3/font_aware_launcher.py rofi pass
+bindsym $alt+Tab $nexec $font_aware_launcher rofi-tab
+bindsym $mod+w $nexec $font_aware_launcher rofi-ws-win
+bindsym $mod+s $nexec $font_aware_launcher rofi-runner
+bindsym $mod+a $nexec $font_aware_launcher rofi-font-aware-apps
+bindsym $mod+z $nexec $font_aware_launcher rofi-pass
 
 # WS1: browser and agenda (to have a black theme in calendar use Stylus
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
-bindsym $mod+Control+i $nexec $HOME/.config/i3/font_aware_launcher.py brave browser -W $ws1
-bindsym $mod+Control+a $nexec $HOME/.config/i3/font_aware_launcher.py brave calendar -W $ws1
-bindsym $mod+Control+e $nexec $HOME/.config/i3/font_aware_launcher.py firefox -W $ws1
+bindsym $mod+Control+i $nexec $font_aware_launcher browser -W $ws1
+bindsym $mod+Control+a $nexec $font_aware_launcher calendar -W $ws1
+bindsym $mod+Control+e $nexec $font_aware_launcher firefox -W $ws1
 # WS2: chat/communication related
-bindsym $mod+Control+l $nexec $HOME/.config/i3/font_aware_launcher.py slack -W $ws2
-bindsym $mod+Control+s $nexec $HOME/.config/i3/font_aware_launcher.py teams -W $ws2
-bindsym $mod+Control+z $nexec $HOME/.config/i3/font_aware_launcher.py zoom -W $ws2
-bindsym $mod+Control+t $nexec $HOME/.config/i3/font_aware_launcher.py thunderbird -W $ws2
-bindsym $mod+Control+semicolon $nexec $HOME/.config/i3/font_aware_launcher.py brave hangouts -W $ws2
-bindsym $mod+Control+o $nexec $HOME/.config/i3/font_aware_launcher.py brave meet -W $ws2
+bindsym $mod+Control+l $nexec $font_aware_launcher -W $ws2
+bindsym $mod+Control+s $nexec $font_aware_launcher -W $ws2
+bindsym $mod+Control+z $nexec $font_aware_launcher -W $ws2
+bindsym $mod+Control+t $nexec $font_aware_launcher -W $ws2
+bindsym $mod+Control+semicolon $nexec $font_aware_launcher hangouts -W $ws2
+bindsym $mod+Control+o $nexec $font_aware_launcher meet -W $ws2
 # WS3: Music, video, torrents
-bindsym $mod+Control+m $nexec $HOME/.config/i3/font_aware_launcher.py spotify -W $ws3
+bindsym $mod+Control+m $nexec $font_aware_launcher spotify -W $ws3
 # WS4: Other
-bindsym $mod+Control+u $nexec $HOME/.config/i3/font_aware_launcher.py transmission -W $ws4
-bindsym $mod+Control+x $nexec $HOME/.config/i3/font_aware_launcher.py planmaker -W $ws4
-bindsym $mod+Control+d $nexec $HOME/.config/i3/font_aware_launcher.py textmaker -W $ws4
+bindsym $mod+Control+u $nexec $font_aware_launcher transmission -W $ws4
+bindsym $mod+Control+x $nexec $font_aware_launcher planmaker -W $ws4
+bindsym $mod+Control+d $nexec $font_aware_launcher textmaker -W $ws4
 # WS5 (terminal)
-bindsym $mod+Control+c $nexec $HOME/.config/i3/font_aware_launcher.py kitty -W $ws5
+bindsym $mod+Control+c $nexec $font_aware_launcher kitty -W $ws5
 
 # Standalone apps in floating window in the current workspace
-bindsym $mod+Control+p $nexec $HOME/.config/i3/font_aware_launcher.py zathura
-bindsym $mod+Control+v $nexec $HOME/.config/i3/font_aware_launcher.py vimiv
-bindsym $mod+Control+g $nexec $HOME/.config/i3/font_aware_launcher.py peek
-bindsym $mod+Control+w $nexec $HOME/.config/i3/font_aware_launcher.py connman
-bindsym $mod+Control+q $nexec $HOME/.config/i3/font_aware_launcher.py alacritty quickterm
-bindsym $mod+Control+n $nexec $HOME/.config/i3/font_aware_launcher.py alacritty numbers
-bindsym $mod+Control+f $nexec $HOME/.config/i3/font_aware_launcher.py alacritty ranger
-bindsym $mod+Control+h $nexec $HOME/.config/i3/font_aware_launcher.py alacritty htop
-bindsym $mod+Control+b $nexec $HOME/.config/i3/font_aware_launcher.py alacritty trash
-bindsym Control+$alt+Delete $nexec $HOME/.config/i3/font_aware_launcher.py alacritty prockiller
+bindsym $mod+Control+p $nexec $font_aware_launcher zathura
+bindsym $mod+Control+v $nexec $font_aware_launcher vimiv
+bindsym $mod+Control+g $nexec $font_aware_launcher peek
+bindsym $mod+Control+w $nexec $font_aware_launcher connman
+bindsym $mod+Control+q $nexec $font_aware_launcher quickterm
+bindsym $mod+Control+n $nexec $font_aware_launcher numbers
+bindsym $mod+Control+f $nexec $font_aware_launcher ranger
+bindsym $mod+Control+h $nexec $font_aware_launcher htop
+bindsym $mod+Control+b $nexec $font_aware_launcher trash
+bindsym Control+$alt+Delete $nexec $font_aware_launcher prockiller
 
 # Paramount: we want to have the ability to open a terminal without relying on python
 # (python might break and without the following binding we basically lose
 # control of the system since all of our prior bindings rely on python)
 bindsym $mod+x $nexec kitty
 
-# Sizing and position rules (use `xprop` to get the window info)
-# Note: `for_window` applies the first time i3 encounters a window (i.e not when
-# re-focusing it)
-for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv|Simple-scan|discord)$" title="^(?!webcam).+"] \
-    $nexec $HOME/.config/i3/resize.py Full
-# We seem to need this hack for Alacritty (i.e use title instead of mark)
-for_window [title="^(Alacritty|kitty)$"] \
-    $nexec $HOME/.config/i3/resize.py Full
-for_window [con_mark="^(browser|calendar|hangouts|meet)$"] \
-    $nexec $HOME/.config/i3/resize.py Full
-for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] \
-    $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] \
-    $nexec $HOME/.config/i3/resize.py Center
-for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] \
-    $nexec $HOME/.config/i3/resize.py Rectangle
-for_window [class="^(feh|Matplotlib|Zathura|vimiv)$"] \
-    $nexec $HOME/.config/i3/resize.py Right
-for_window [window_type="splash"] floating enable, move position center
-for_window [window_type="dialog" class="^(?!gtk_qt_dialog).+" window_role="^(?!GtkFileChooserDialog).+"] \
-    $nexec $HOME/.config/i3/resize.py Dialog
-for_window [window_role="^(GtkFileChooserDialog)$"] \
-    $nexec $HOME/.config/i3/resize.py Rectangle
-
-# Assign to specific workspaces (for apps opened with ranger or those that don't
-# respect startup workspaces)
-for_window [class="^(zoom)$"] $nexec $HOME/.config/i3/multimon_move.py -w "2"
-for_window [class="^(mpv)$"] $nexec $HOME/.config/i3/multimon_move.py -w "3"
-for_window [class="^(pm|tm|pr|Transmission-gtk)$"] \
-    $nexec $HOME/.config/i3/multimon_move.py -w "4"
-
-# Automatically switch to windows that raise an urgent flag
-for_window [urgent=latest] focus
-
 # Jump to last focused app/window (needs to have focus_last script initiated
 # at startup)
 bindsym $mod+Control+j $nexec $HOME/.config/i3/recency_switcher.py --switch
 
-# Mark a window and jump to it (note that this will override existing marks)
+# Mark a window/app and jump to it (note that this will override existing marks)
 bindsym $mod+$alt+m mark markedwin1
 bindsym $mod+$alt+n mark markedwin2
 bindsym $mod+$alt+b mark markedwin3
@@ -239,10 +231,10 @@ bindsym $mod+Shift+j $nexec playerctl --player spotify next
 bindsym $mod+Shift+k $nexec playerctl --player spotify previous
 bindsym $mod+Shift+t $nexec $HOME/.config/i3/spotify_track.py
 
-bindsym $mod+Shift+plus $nexec $HOME/.config/i3/volume.py -d up -l 5
-bindsym $mod+Shift+minus $nexec $HOME/.config/i3/volume.py -d down -l 5
-bindsym $mod+Shift+m $nexec $HOME/.config/i3/volume.py -d mute
-bindsym $mod+Shift+v $nexec $HOME/.config/i3/font_aware_launcher.py pavucontrol
+bindsym $mod+Shift+plus $nexec $volume -d up -l 5
+bindsym $mod+Shift+minus $nexec $volume -d down -l 5
+bindsym $mod+Shift+m $nexec $volume -d mute
+bindsym $mod+Shift+v $nexec $font_aware_launcher pavucontrol
 
 # }}}
 # Theme and fonts {{{
@@ -278,14 +270,11 @@ bindsym $mod+Shift+0 $nexec shots active
 # Kill focused window
 bindsym $mod+q $nexec $HOME/.config/i3/custom_kill.py
 # Kill all windows on all workspaces (match any class string)
-bindsym $mod+Shift+q $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/font_aware_launcher.py gtk_dialog quit
+bindsym $mod+Shift+q $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher quit-dialog
 
 # Shutdown, restart and lock
-bindsym $mod+Shift+s $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/font_aware_launcher.py gtk_dialog poweroff
-bindsym $mod+Shift+r $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/font_aware_launcher.py gtk_dialog reboot
+bindsym $mod+Shift+s $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher poweroff-dialog
+bindsym $mod+Shift+r $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher reboot-dialog
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
 # Screen brightness
@@ -293,12 +282,10 @@ bindsym $mod+$alt+Right $nexec $HOME/.config/i3/brightness.py -d inc
 bindsym $mod+$alt+Left $nexec $HOME/.config/i3/brightness.py -d dec
 
 # Eject mounted media (usb drives)
-bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/font_aware_launcher.py gtk_dialog usb
+bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher usb-dialog
 
 # Empty Trash Can
-bindsym $mod+Shift+b $nexec i3-msg 'fullscreen disable', $nexec \
-    $HOME/.config/i3/font_aware_launcher.py gtk_dialog trash
+bindsym $mod+Shift+b $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher trash-dialog
 
 # }}}
 # Startup {{{

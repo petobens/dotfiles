@@ -16,6 +16,7 @@ ICON_MAP = {
     'gnome-font-viewer': 'org.gnome.font-viewer',
     'kodi': 'kodi',
     'pm': 'freeoffice-planmaker',
+    'pr': 'freeoffice-presentations',
     'simple-scan': 'org.gnome.SimpleScan',
     'tm': 'freeoffice-textmaker',
     'vimiv': 'image-viewer',

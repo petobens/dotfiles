@@ -43,7 +43,7 @@ margin-top = 0
 type = custom/text
 content = %{T6} %{T-}
 content-padding = 1
-click-left = ~/.config/i3/font_aware_launcher.py rofi arch-init
+click-left = ~/.config/i3/font_aware_launcher.py rofi-arch-init
 
 [module/i3-windows]
 type = custom/script
@@ -91,7 +91,7 @@ exec = ~/.config/polybar/docker.sh
 interval = 5.0
 label-font = 5
 format-padding = 1
-click-left = ~/.config/i3/font_aware_launcher.py alacritty docker
+click-left = ~/.config/i3/font_aware_launcher.py docker
 
 [module/onedrive]
 type = custom/script
@@ -99,7 +99,7 @@ exec = python ~/.config/polybar/onedrive.py
 label-font = 5
 format-padding = 1
 interval = 5.0
-click-left = ~/.config/i3/font_aware_launcher.py alacritty onedrive
+click-left = ~/.config/i3/font_aware_launcher.py onedrive
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -143,7 +143,7 @@ label-disconnected-foreground = ${colors.fg-urg}
 type = custom/script
 exec = ~/.config/polybar/bluetooth.sh
 interval = 5.0
-click-left = ~/.config/i3/font_aware_launcher.py alacritty bluetooth
+click-left = ~/.config/i3/font_aware_launcher.py bluetooth
 click-right = bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect
 
 [module/pulseaudio]
