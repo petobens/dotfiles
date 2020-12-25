@@ -121,7 +121,7 @@ $yay_cmd xsel
 $yay_cmd xsendkey
 
 # Themes
-$yay_cmd adwaita-dark
+$yay_cmd gnome-themes-extra # includes adwaita-dark theme
 $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
 
@@ -158,7 +158,7 @@ $yay_cmd graphviz
 $yay_cmd hadolint-bin
 $yay_cmd htop
 $yay_cmd httping
-$yay_cmd hyperfine-bin
+$yay_cmd hyperfine
 $yay_cmd inetutils
 $yay_cmd jq
 $yay_cmd lsb-release
