@@ -330,6 +330,8 @@ if type "yay" > /dev/null 2>&1; then
     if type "reflector" > /dev/null 2>&1; then
         alias upm='sudo reflector --verbose --latest 25 -p http -p https --sort rate --save /etc/pacman.d/mirrorlist'
     fi
+    # List installed packages (query the database)
+    alias yl='yay -Q'
 fi
 if type "vagrant" > /dev/null 2>&1; then
     alias vg='vagrant'
