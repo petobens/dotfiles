@@ -41,7 +41,7 @@ $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
 $yay_cmd ttf-nerd-fonts-symbols
 $yay_cmd ttf-ms-fonts
-$yay_cmd freetype2-infinality
+$yay_cmd freetype2-ultimate5
 
 # Bash related
 $yay_cmd bash-completion
