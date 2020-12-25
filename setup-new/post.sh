@@ -142,8 +142,8 @@ else
     sudo systemctl enable tlp.service
     sudo systemctl start tlp.service
     # Printer
-    sudo systemctl enable org.cups.cupsd.service
-    sudo systemctl start org.cups.cupsd.service
+    sudo systemctl enable cups.service
+    sudo systemctl start cups.service
     # Disable rfkill (for tlp)
     sudo systemctl mask systemd-rfkill.service
     sudo systemctl mask systemd-rfkill.socket
