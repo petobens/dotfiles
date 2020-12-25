@@ -177,10 +177,10 @@ bindsym $mod+Control+i $nexec $font_aware_launcher browser -W $ws1
 bindsym $mod+Control+a $nexec $font_aware_launcher calendar -W $ws1
 bindsym $mod+Control+e $nexec $font_aware_launcher firefox -W $ws1
 # WS2: chat/communication related
-bindsym $mod+Control+l $nexec $font_aware_launcher -W $ws2
-bindsym $mod+Control+s $nexec $font_aware_launcher -W $ws2
-bindsym $mod+Control+z $nexec $font_aware_launcher -W $ws2
-bindsym $mod+Control+t $nexec $font_aware_launcher -W $ws2
+bindsym $mod+Control+l $nexec $font_aware_launcher slack -W $ws2
+bindsym $mod+Control+s $nexec $font_aware_launcher teams -W $ws2
+bindsym $mod+Control+z $nexec $font_aware_launcher zoom -W $ws2
+bindsym $mod+Control+t $nexec $font_aware_launcher thunderbird -W $ws2
 bindsym $mod+Control+semicolon $nexec $font_aware_launcher hangouts -W $ws2
 bindsym $mod+Control+o $nexec $font_aware_launcher meet -W $ws2
 # WS3: Music, video, torrents
