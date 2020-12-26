@@ -40,6 +40,9 @@ def launch_polybar(monitors):
     xrandr = [line.decode('ascii').split() for line in _sh('xrandr').splitlines()]
     for line in xrandr:
         if 'connected' in line:
+            if monitors == 'mirror' and 'primary' not in line:
+                # When mirroring it's enough to show the bar on the primary monitor
+                continue
             monitor = line[0]
             width_index = 3 if 'primary' in line else 2
             try:
@@ -51,10 +54,6 @@ def launch_polybar(monitors):
             env['MONITOR'] = monitor
             env['POLYHEIGHT'] = '55' if (width > HD_WIDTH) else '28'
             env['TRAY_SIZE'] = '32' if (width > HD_WIDTH) else '20'
-            if monitors == 'mirror':
-                # We always mirror from our hidpi screen
-                env['POLYHEIGHT'] = '55'
-                env['TRAY_SIZE'] = '32'
             # If we have more than one monitor and at least one of the exterenal
             # monitors  is hd then we need to scale our primary hidpi monitor fonts
             fontmap_index = 1
@@ -62,13 +61,7 @@ def launch_polybar(monitors):
                 fontmap_index = 2
             for i in range(7):
                 env[f'POLYFONT{i}'] = FONT_MAP[i][0].format(*FONT_MAP[i][fontmap_index])
-            # Hack to avoid i3 workspaces not shown on polybar when using mirroring
-            # See: https://github.com/jaagr/polybar/issues/1191
-            env['POLYBAR_I3_PIN'] = 'false' if monitors == 'mirror' else 'true'
-            if monitors == 'xrandr':
-                env['TRAY_POS'] = 'right' if 'primary' in line else ''
-            elif monitors == 'mirror':
-                env['TRAY_POS'] = 'right'
+            env['TRAY_POS'] = 'right' if 'primary' in line else ''
 
             _sh_no_block('polybar --reload main', env=env)
 

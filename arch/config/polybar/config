@@ -59,7 +59,7 @@ format-padding = 0
 
 [module/i3]
 type = internal/i3
-pin-workspaces = ${env:POLYBAR_I3_PIN:}
+pin-workspaces = true
 index-sort = true
 ws-icon-0 = 1;爵
 ws-icon-1 = 2;
