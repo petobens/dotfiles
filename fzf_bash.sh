@@ -513,6 +513,7 @@ export FORGIT_COPY_CMD="$COPY_CMD "
 export FORGIT_FZF_DEFAULT_OPTS="--preview-window='right'"
 export FORGIT_NO_ALIASES="1"
 alias gl=forgit::log
+alias glg='gl -G'
 alias gd=forgit::diff
 alias ga=forgit::add
 alias gu=forgit::restore
