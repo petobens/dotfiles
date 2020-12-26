@@ -1573,7 +1573,7 @@ call defx#custom#column('icon', {
             \ })
 call defx#custom#column('filename', {
             \ 'min_width': 23,
-            \ 'max_width': -55,
+            \ 'max_width_percent': 55,
             \ })
 call defx#custom#column('time', {'format': '%Y%m%d %H:%M'})
 
