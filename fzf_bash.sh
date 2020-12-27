@@ -510,8 +510,14 @@ bt() {
 
 # Forgit (git and fzf)
 export FORGIT_COPY_CMD="$COPY_CMD "
-export FORGIT_FZF_DEFAULT_OPTS="--preview-window='right'"
 export FORGIT_NO_ALIASES="1"
+export FORGIT_FZF_DEFAULT_OPTS="--preview-window='right'"
+export FORGIT_LOG_FZF_OPTS='
+--header="enter=view, C-o=nvim, C-y=yank"
+--bind="ctrl-y:execute-silent(echo {} |grep -Eo [a-f0-9]+ | head -1 | tr -d '\n' | $FORGIT_COPY_CMD)"
+--bind="ctrl-o:execute(echo {} | grep -Eo [a-f0-9]+ | head -1 | xargs git show | nvim -)"
+'
+
 alias gl=forgit::log
 alias glg='gl -G'
 alias gd=forgit::diff
