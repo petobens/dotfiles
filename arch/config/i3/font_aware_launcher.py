@@ -239,6 +239,26 @@ class Screen:
         self.nr_monitors = len(outputs)
         return
 
+    @property
+    def gdk_env(self):
+        """Set GDK environmental variables conditional on monitor context."""
+        gdk = ''
+        if self.is_hidpi:
+            gdk += 'GDK_SCALE=2 '
+            if self.nr_monitors == 1 or self.other_is_hidpi:
+                # If everything is hidpi also scale icons
+                gdk += 'GDK_DPI_SCALE=0.5 '
+        return gdk
+
+    @property
+    def qt_env(self):
+        """Set QT environmental variables conditional on monitor context."""
+        qt = ''
+        if self.is_hidpi and self.nr_monitors > 1 and not self.other_is_hidpi:  # type: ignore
+            # Only scale if we have a mix of hd and hidpi monitors
+            qt += 'QT_SCALE_FACTOR=2 '
+        return qt
+
     @staticmethod
     def _get_workspace(i3, name):
         workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
@@ -337,18 +357,11 @@ class GTKApp(ROLApp):
         self.is_dialog = is_dialog
 
     def _build_cmd(self):
-        gdk = ''
-        if self.screen.is_hidpi:
-            gdk += 'GDK_SCALE=2 '
-            if self.screen.nr_monitors == 1 or self.screen.other_is_hidpi:
-                # If everything is hidpi also scale icons
-                gdk += 'GDK_DPI_SCALE=0.5 '
-
         if not self.is_dialog:
             cmd = self._raiseorlauch_cmd()
-            cmd += ['-e', f'"{gdk}{self.cmd}"']
+            cmd += ['-e', f'"{self.screen.gdk_env}{self.cmd}"']
         else:
-            gtk_env = dict([i.split('=') for i in gdk.split()])  # type: ignore
+            gtk_env = dict([i.split('=') for i in self.screen.gdk_env.split()])  # type: ignore
             self.cmd_args = {'env': {**os.environ, **gtk_env}}
             cmd = [
                 'gtk_dialog',
@@ -370,11 +383,7 @@ class QTApp(ROLApp):
 
     def _build_cmd(self):
         cmd = self._raiseorlauch_cmd()
-        qt = ''
-        if self.screen.is_hidpi and self.screen.nr_monitors > 1 and not self.screen.other_is_hidpi:  # type: ignore # noqa
-            # Only scale if we have a mix of hd and hidpi monitors
-            qt += 'QT_SCALE_FACTOR=2 '
-        cmd += ['-e', f'"{qt}{self.cmd}"']
+        cmd += ['-e', f'"{self.screen.qt_env}{self.cmd}"']
         return cmd
 
 
@@ -473,7 +482,9 @@ class ElectronApp(ROLApp):
 
     def _build_cmd(self):
         cmd = self._raiseorlauch_cmd()
-        cmd += f' -e "{self.class_name.lower()}'
+        # Note: we set gdk env variables so that gtk dialogs spawned by these
+        # apps have correct font size
+        cmd += f' -e "{self.screen.gdk_env}{self.class_name.lower()}'
         if (
             self.screen.is_hidpi
             and (self.screen.nr_monitors > 1)  # type: ignore
