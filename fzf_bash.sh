@@ -519,7 +519,7 @@ export FORGIT_LOG_FZF_OPTS='
 '
 
 alias gl=forgit::log
-alias glg='gl -G'
+alias glg='FORGIT_LOG_GRAPH_ENABLE=false gl -G'
 alias gd=forgit::diff
 alias ga=forgit::add
 alias gu=forgit::restore
