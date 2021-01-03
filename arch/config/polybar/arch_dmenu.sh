@@ -37,7 +37,7 @@ category=$(echo -e "$menulist" |
         -select "$category" \
         -font "Noto Sans Mono $font_size" \
         -theme-str "$THEME" |
-    awk '{print $yoffset}')
+    awk '{print $2}')
 
 if [ -z "$category" ]; then
     exit
