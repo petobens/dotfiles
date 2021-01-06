@@ -834,8 +834,8 @@ nnoremap <Leader>nw :noautocmd w!<CR>
 if s:is_mac
     nnoremap <Leader>sw :w !sudo tee % >/dev/null<CR>
 elseif s:is_linux && has('nvim') && dein#tap('suda') == 1
-    nnoremap <Leader>sw :w suda://%<CR>
-    nnoremap <Leader>se :e suda://
+    nnoremap <Leader>sw :SudaWrite<CR>
+    nnoremap <Leader>se :SudaRead<space>
 endif
 
 " Fast editing and reloading of the vimrc file
