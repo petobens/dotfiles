@@ -1681,9 +1681,11 @@ function! s:defx_settings()
     " Edit and open with external program
     nnoremap <silent><buffer><expr> <CR>
         \ defx#is_directory() ? defx#do_action('open') :
+        \ defx#is_binary() ? defx#do_action('execute_system') :
         \ defx#do_action('multi', ['drop', 'quit'])
     nnoremap <silent><buffer><expr> l
         \ defx#is_directory() ? defx#do_action('open') :
+        \ defx#is_binary() ? defx#do_action('execute_system') :
         \ defx#do_action('multi', ['drop', 'quit'])
     nnoremap <silent><buffer><expr> o defx#do_action('execute_system')
    " Tree editing, opening and closing
