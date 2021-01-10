@@ -158,7 +158,7 @@ bindsym $alt+Escape focus output down
 # Assign windows to specific workspaces (for apps opened with ranger or those that
 # don't respect startup workspaces)
 for_window [class="^(zoom)$"] $nexec $multimon_move -w "2"
-for_window [class="^(mpv)$"] $nexec $multimon_move -w "3"
+for_window [class="^(mpv|Spotify)$"] $nexec $multimon_move -w "3"
 for_window [class="^(pm|tm|pr|Transmission-gtk)$"] $nexec $multimon_move -w "4"
 
 # }}}
