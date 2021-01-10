@@ -337,7 +337,7 @@ FZF_GREP_OPTS="
 --header 'enter=open'
 --multi
 --ansi
---phony
+--disabled
 --query=''
 --delimiter=:
 "
@@ -512,9 +512,10 @@ bt() {
 export FORGIT_COPY_CMD="$COPY_CMD "
 export FORGIT_NO_ALIASES="1"
 export FORGIT_FZF_DEFAULT_OPTS="--preview-window='right'"
+# shellcheck disable=SC2016
 export FORGIT_LOG_FZF_OPTS='
 --header="enter=view, C-o=nvim, C-y=yank"
---bind="ctrl-y:execute-silent(echo {} |grep -Eo [a-f0-9]+ | head -1 | tr -d '\n' | $FORGIT_COPY_CMD)"
+--bind="ctrl-y:execute-silent(echo {} |grep -Eo [a-f0-9]+ | head -1 | tr -d ''\n'' | $FORGIT_COPY_CMD)"
 --bind="ctrl-o:execute(echo {} | grep -Eo [a-f0-9]+ | head -1 | xargs git show | nvim -)"
 '
 
