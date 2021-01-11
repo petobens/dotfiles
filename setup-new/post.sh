@@ -64,6 +64,12 @@ if type "gopass" > /dev/null 2>&1; then
     echo "Created .gitlab_access_token file"
 fi
 
+# Reload GPG agent since we change the gpg config
+if type "gpg-connect-agent" > /dev/null 2>&1; then
+    echo -e "\\033[1;34m--> Reloading GPG agent...\\033[0m"
+    gpg-connect-agent reloadagent /bye
+fi
+
 # OS-Specific
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if [ -d "/Applications/Skim.app/" ]; then

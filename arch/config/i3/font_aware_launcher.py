@@ -453,7 +453,7 @@ class RofiApp(ROLApp):
         elif self.class_name == 'rofi-pass':
             cmd = (
                 f"gopass ls --flat | {base_cmd} -dmenu -p gopass | "
-                "xargs --no-run-if-empty gopass show -c"
+                f"PINENTRY_USER_DATA={self.screen.qt_env} xargs --no-run-if-empty gopass show -c"  # noqa
             )
         elif self.class_name == 'rofi-tab':
             cmd = f'$HOME/.config/i3/recency_switcher.py --menu="{base_cmd}"'

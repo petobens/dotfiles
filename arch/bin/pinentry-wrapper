@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Note: set the proper theme (adwaita) from the qt5ct app
+cmd="QT_QPA_PLATFORMTHEME=qt5ct /usr/bin/pinentry-qt"
+if [[ -n "$PINENTRY_USER_DATA" ]]; then
+    # Font aware launche will set the correct value of the env variable
+    cmd="$PINENTRY_USER_DATA $cmd"
+fi
+eval "$cmd $@"

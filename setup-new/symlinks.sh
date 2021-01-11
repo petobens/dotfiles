@@ -236,6 +236,10 @@ if type "gopass" > /dev/null 2>&1; then
     sudo $ln_cmd -fTs "$(command -v gopass)" "$HOME/.local/bin/pass"
     echo Created "$HOME/.local/bin/pass" symlink to gopass
 fi
+if [ -d "$HOME/.gnupg" ]; then
+    sudo $ln_cmd -fTs "$dotfiles_dir/config/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
+    echo Created ".gnupg/gpg-agent.conf" symlink
+fi
 
 # OS dependent
 if [[ "$OSTYPE" == 'darwin'* ]]; then

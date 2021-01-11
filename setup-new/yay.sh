@@ -124,6 +124,8 @@ $yay_cmd xsendkey
 $yay_cmd gnome-themes-extra # includes adwaita-dark theme
 $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
+$yay_cmd adwaita-qt
+$yay_cmd qt5ct
 
 # Databases
 $yay_cmd oracle-instantclient-basic
