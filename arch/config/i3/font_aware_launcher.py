@@ -408,7 +408,7 @@ class TUIApp(ROLApp):
             cmd = alacritty_cmd
             if self.dimensions:
                 cols, lines = self.dimensions
-                cmd += f' -d {cols} {lines}'
+                cmd += f' --option window.dimensions.columns={cols} --option window.dimensions.lines={lines}'  # noqa
             cmd += ' -e /usr/bin/bash -c '
             if self.interactive_bash:
                 cmd += '-i '
