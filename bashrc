@@ -429,6 +429,9 @@ uvpn() {
 }
 alias ussh='TERM=xterm-256color; sshpass -p "$(pass show urban/server/187/pass)" ssh urban'
 
+# Etermax
+alias eaws='oathtool --base32 --totp $(pass show etermax/aws/secret)'
+
 # }}}
 # Functions {{{
 
