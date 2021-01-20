@@ -357,6 +357,8 @@ fi
 # }}}
 # Work Aliases {{{
 
+alias g2f='oathtool --base32 --totp $(pass show git/gitlab/secret)'
+
 # Mostly vpn and databases; ssh hosts are defined in .ssh/config
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 
