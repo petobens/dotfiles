@@ -23,10 +23,9 @@ if ! type "tlmgr" > /dev/null 2>&1; then
     fi
 fi
 
-
 # Install mybibformat style
 echo -e "\\033[1;34m--> Installing mybibformat biblatex style...\\033[0m"
-if [[  "$OSTYPE" == 'darwin'* ]]; then
+if [[ "$OSTYPE" == 'darwin'* ]]; then
     rm -rf ~/Library/texmf
     mkdir -p ~/Library/texmf
     git clone https://github.com/petobens/mybibformat ~/Library/texmf
@@ -92,6 +91,7 @@ sudo tlmgr install xstring
 
 # Linux specific (i.e not included in basic texlive installation)
 if [ "$OSTYPE" == 'linux-gnu' ]; then
+    sudo tlmgr install algorithm2e
     sudo tlmgr install beamer
     sudo tlmgr install bitset
     sudo tlmgr install booktabs
@@ -101,6 +101,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     sudo tlmgr install embedfile
     sudo tlmgr install fancyvrb
     sudo tlmgr install float
+    sudo tlmgr install ifoddpage
     sudo tlmgr install infwarerr
     sudo tlmgr install jknapltx
     sudo tlmgr install l3backend
@@ -109,10 +110,12 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     sudo tlmgr install letltxmacro
     sudo tlmgr install lineno
     sudo tlmgr install listings
+    sudo tlmgr install mathabx
     sudo tlmgr install mathtools
     sudo tlmgr install microtype
     sudo tlmgr install pdfescape
     sudo tlmgr install pdftexcmds
+    sudo tlmgr install relsize
     sudo tlmgr install setspace
     sudo tlmgr install translator
     sudo tlmgr install ulem
