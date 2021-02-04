@@ -433,6 +433,11 @@ alias ussh='TERM=xterm-256color; sshpass -p "$(pass show urban/server/187/pass)"
 
 # Etermax
 alias eaws='oathtool --base32 --totp $(pass show etermax/aws/secret)'
+evpn() {
+    vpn_cmd="openvpn --daemon --config $(pass show etermax/vpn/ovpn) --cert $(pass show etermax/vpn/cert) --key $(pass show etermax/vpn/key)"
+    cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
+    eval "$cmd"
+}
 
 # }}}
 # Functions {{{
