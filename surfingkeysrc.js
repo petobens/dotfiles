@@ -121,6 +121,7 @@ const qmarksUrls = {
     m: 'https://meet.google.com',
     M: 'https://mail.google.com',
     n: 'www.netflix.com',
+    N: 'synology-ds:5000',
     p: 'http://pirateproxy.net',
     r: 'www.reddit.com',
     s: 'http://stackoverflow.com',

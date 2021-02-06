@@ -354,6 +354,10 @@ if [[ "$OSTYPE" != 'darwin'* ]]; then
     fi
 fi
 
+# NFS
+alias mnfs='sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
+alias unfs='sudo umount /mnt/nfs'
+
 # }}}
 # Work Aliases {{{
 
