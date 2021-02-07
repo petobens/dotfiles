@@ -1846,7 +1846,7 @@ call denite#custom#option('default', {
             \ 'highlight_matched_char': 'Operator',
             \ 'highlight_matched_range': 'None',
             \ 'start_filter': 1,
-            \ 'filter_updatetime': 100,
+            \ 'filter_updatetime': 30,
             \ 'vertical_preview': 1,
             \ 'floating_preview': 1,
             \ 'preview_width': float2nr(&columns / 2.3),
@@ -2130,6 +2130,8 @@ function! s:denite_filter_mappings() abort
     nnoremap <silent><buffer><expr> q denite#do_map('quit')
     imap <buffer> <C-e> <Plug>(denite_filter_quit)
     imap <buffer> <C-h> <C-o>h
+    " Prevent backspace to move cursor from filter to buffer window
+    iunmap <buffer> <BS>
     " Actions
     inoremap <silent><buffer> <C-j>
         \ <Esc>:call <SID>DeniteMoveCursorCandidateWindow('j', 1, 'filter')<CR>
