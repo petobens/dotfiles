@@ -89,6 +89,7 @@ $pipx_install_cmd git+https://github.com/karlch/vimiv-qt
 $pipx_inject_cmd vimiv pyqt5
 $pipx_install_cmd vim-vint
 $pipx_install_cmd yamllint
+$pipx_install_cmd youtube-dl
 
 pipx_venvs="$PIPX_HOME/venvs"
 
