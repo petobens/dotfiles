@@ -357,7 +357,7 @@ fi
 # NFS
 alias mnfs='sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
 alias unfs='sudo umount /mnt/nfs'
-alias nssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology'
+alias nssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology -t "cd /volume1/Shared-DS220; bash --login"'
 
 # }}}
 # Work Aliases {{{
