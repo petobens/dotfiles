@@ -41,6 +41,15 @@ APPS = {
             'post_cmd': True,
         },
     },
+    'clickup': {
+        'type': 'electron',
+        'args': {
+            'class_name': 'Brave',
+            'mark': 'clickup',
+            'subcmd': 'clickup',
+            'post_cmd': True,
+        },
+    },
     'color-picker': {'type': 'gtk', 'args': {'class_name': 'Gcolor3'}},
     'connman': {'type': 'gtk', 'args': {'class_name': 'Connman-gtk'}},
     'discord': {'type': 'rol', 'args': {'class_name': 'discord', 'event_delay': 30}},
@@ -493,13 +502,15 @@ class ElectronApp(ROLApp):
             cmd += ' --force-device-scale-factor=2'
 
         if self.class_name == 'Brave' and self.subcmd is not None:
-            cmd += f' --new-window --app=https://{self.subcmd}.google.com{{extra}}'
+            cmd += ' --new-window --app=https://{url}'
             if self.subcmd == 'calendar':
-                cmd = cmd.format(extra='/calendar/b/0/r')
+                cmd = cmd.format(url=f'{self.subcmd}.google.com/calendar/b/0/r')
             elif self.subcmd == 'hangouts':
-                cmd = cmd.format(extra='/?authuser=1')
+                cmd = cmd.format(url=f'{self.subcmd}.google.com/?authuser=1')
             elif self.subcmd == 'meet':
-                cmd = cmd.format(extra='')
+                cmd = cmd.format(url=f'{self.subcmd}.google.com')
+            elif self.subcmd == 'clickup':
+                cmd = cmd.format(url=f'app.{self.subcmd}.com')
 
         cmd += '"'
         return cmd

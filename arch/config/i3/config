@@ -71,7 +71,7 @@ bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down
 # re-focusing it)
 for_window [class="^(Spotify|Slack|pm|tm|pr|Thunderbird|Transmission-gtk|mpv|Simple-scan|discord)$" title="^(?!webcam).+"] $nexec $resize Full
 for_window [title="^(Alacritty|kitty)$"] $nexec $resize Full
-for_window [con_mark="^(browser|calendar|hangouts|meet)$"] $nexec $resize Full
+for_window [con_mark="^(browser|calendar|hangouts|meet|clickup)$"] $nexec $resize Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] $nexec $resize Center
 for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] $nexec $resize Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] $nexec $resize Rectangle
@@ -175,6 +175,7 @@ bindsym $mod+z $nexec $font_aware_launcher rofi-pass
 # extension with https://userstyles.org/styles/143026/dark-google-calendar-2019)
 bindsym $mod+Control+i $nexec $font_aware_launcher browser -W $ws1
 bindsym $mod+Control+a $nexec $font_aware_launcher calendar -W $ws1
+bindsym $mod+Control+comma $nexec $font_aware_launcher clickup -W $ws1
 bindsym $mod+Control+e $nexec $font_aware_launcher firefox -W $ws1
 # WS2: chat/communication related
 bindsym $mod+Control+l $nexec $font_aware_launcher slack -W $ws2
@@ -215,9 +216,9 @@ bindsym $mod+Control+j $nexec $HOME/.config/i3/recency_switcher.py --switch
 
 # Mark a window/app and jump to it (note that this will override existing marks)
 bindsym $mod+$alt+m mark markedwin1
-bindsym $mod+$alt+n mark markedwin2
-bindsym $mod+$alt+b mark markedwin3
-bindsym $mod+$alt+comma mark markedwin4
+bindsym $mod+$alt+bracketleft mark markedwin2
+bindsym $mod+$alt+bracketright mark markedwin3
+bindsym $mod+$alt+period mark markedwin4
 bindsym $mod+Control+k [con_mark="markedwin1"] focus
 bindsym $mod+Control+bracketleft [con_mark="markedwin2"] focus
 bindsym $mod+Control+bracketright [con_mark="markedwin3"] focus

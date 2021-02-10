@@ -27,6 +27,11 @@ APPS = {
         'icon': 'google-agenda',
         'desc': 'Google Calendar',
     },
+    'Clickup': {
+        'cmd': 'clickup',
+        'icon': 'tracker',
+        'desc': 'Project Management App',
+    },
     'Color Picker': {'cmd': 'color-picker', 'icon': 'gcolor3'},
     'Connman Settings': {
         'cmd': 'connman',
