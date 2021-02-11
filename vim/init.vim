@@ -2128,7 +2128,8 @@ function! s:denite_filter_mappings() abort
     nnoremap <silent><buffer><expr> <C-c> denite#do_map('quit')
     nnoremap <silent><buffer><expr> <ESC> denite#do_map('quit')
     nnoremap <silent><buffer><expr> q denite#do_map('quit')
-    imap <buffer> <C-e> <Plug>(denite_filter_quit)
+    " Quit filter buffer if line is empty
+    imap <buffer> <C-e> <Plug>(denite_filter_backspace) 
     imap <buffer> <C-h> <C-o>h
     " Prevent backspace to move cursor from filter to buffer window
     iunmap <buffer> <BS>
