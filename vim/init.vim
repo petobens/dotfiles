@@ -1806,6 +1806,8 @@ function! s:defx_settings()
                 \ defx#do_action('call', '<SID>denite_parents_dirs')
     nnoremap <silent><buffer><expr> ge
                 \ defx#do_action('call', '<SID>defx_ranger')
+    nnoremap <silent><buffer><expr> od
+                \ defx#do_action('execute_command', ['dragon-drag-and-drop -a -x *', 'async'])
     nnoremap <silent><buffer><expr> <A-j>
                 \ defx#do_action('call', '<SID>scroll_preview_down')
     nnoremap <silent><buffer><expr> <A-k>
