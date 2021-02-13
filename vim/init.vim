@@ -2644,11 +2644,11 @@ nnoremap <silent> <Leader>gc :w!<CR>:Git commit<CR>
 nnoremap <Leader>gM :Git! mergetool<CR>
 nnoremap <Leader>gr :Git rebase -i<space>
 nnoremap <silent> <Leader>gR :GRemove<CR>
-nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Git push')<CR>
+nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Dispatch git push')<CR>
 nnoremap <silent> <Leader>gF :call
-            \ <SID>NoShellSlash('Git push --force-with-lease')<CR>
-nnoremap <silent> <Leader>gP :Git pull<CR>
-nnoremap <Leader>gf :Git fetch<space>
+            \ <SID>NoShellSlash('Dispatch git push --force-with-lease')<CR>
+nnoremap <silent> <Leader>gP :Dispatch git pull<CR>
+nnoremap <Leader>gf :Dispatch git fetch<space>
 nnoremap <silent> <Leader>gb :GBrowse<CR>
 vnoremap <silent> <Leader>gb :GBrowse<CR>
 nnoremap <silent> <Leader>gB :GBrowse!<CR>
