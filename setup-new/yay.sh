@@ -143,6 +143,7 @@ $yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd bat
 $yay_cmd bind-tools
 $yay_cmd cronie
+$yay_cmd ctags
 $yay_cmd ctop
 $yay_cmd diff-so-fancy
 $yay_cmd dmidecode
@@ -195,7 +196,6 @@ $yay_cmd tk
 $yay_cmd tldr
 $yay_cmd tokei
 $yay_cmd tree
-$yay_cmd universal-ctags-git
 $yay_cmd unrar
 $yay_cmd unzip
 $yay_cmd vagrant
