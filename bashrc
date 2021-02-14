@@ -339,6 +339,11 @@ if type "vagrant" > /dev/null 2>&1; then
     alias vgh='vagrant halt'
 fi
 
+# AWS
+if type "aws" > /dev/null 2>&1; then
+    alias as3='aws s3'
+fi
+
 # Update system (and language libraries); see function below
 alias ua=sys_update_all
 
@@ -362,6 +367,7 @@ alias nssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology
 # }}}
 # Work Aliases {{{
 
+# Gitlab 2fa
 alias g2f='oathtool --base32 --totp $(pass show git/gitlab/secret)'
 
 # Mostly vpn and databases; ssh hosts are defined in .ssh/config
@@ -437,7 +443,9 @@ uvpn() {
 alias ussh='TERM=xterm-256color; sshpass -p "$(pass show urban/server/187/pass)" ssh urban'
 
 # Etermax
-alias eaws='oathtool --base32 --totp $(pass show etermax/aws/secret)'
+alias emfa='aws-mfa --profile etermax'
+alias eas='oathtool --base32 --totp $(pass show etermax/aws/secret)'
+alias eap='export AWS_PROFILE=etermax'
 evpn() {
     vpn_cmd="openvpn --daemon --config $(pass show etermax/vpn/ovpn) --cert $(pass show etermax/vpn/cert) --key $(pass show etermax/vpn/key)"
     cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
