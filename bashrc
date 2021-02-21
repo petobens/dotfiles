@@ -369,7 +369,7 @@ alias nssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology
 # Work Aliases {{{
 
 # Gitlab 2fa
-alias g2f='oathtool --base32 --totp $(pass show git/gitlab/secret)'
+alias g2f='oathtool --base32 --totp $(pass show git/gitlab/secret) | xclip -r -selection clipboard'
 
 # Mostly vpn and databases; ssh hosts are defined in .ssh/config
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
@@ -407,7 +407,7 @@ alias hdb='PGPASSWORD="$(pass show habitat/postgres/pass)" pgcli -h '\
 
 # Meli
 alias mgpp='echo $(pass show meli/vpn/pin)'\
-'$(oathtool --base32 --totp $(pass show meli/vpn/secret))'
+'$(oathtool --base32 --totp $(pass show meli/vpn/secret)) | xclip -r -selection clipboard'
 mvssh() {
     (
         command cd "/home/pedro/OneDrive/mutt/clients/meli/vpn" || exit
@@ -445,7 +445,7 @@ alias ussh='TERM=xterm-256color; sshpass -p "$(pass show urban/server/187/pass)"
 
 # Etermax
 alias emfa='aws-mfa --profile etermax'
-alias eas='oathtool --base32 --totp $(pass show etermax/aws/secret)'
+alias eas='oathtool --base32 --totp $(pass show etermax/aws/secret) | xclip -r -selection clipboard'
 alias eap='export AWS_PROFILE=etermax'
 evpn() {
     vpn_cmd="openvpn --daemon --config $(pass show etermax/vpn/ovpn) --cert $(pass show etermax/vpn/cert) --key $(pass show etermax/vpn/key)"
