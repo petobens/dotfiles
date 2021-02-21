@@ -245,6 +245,7 @@ if type "gh" > /dev/null 2>&1; then
     alias ghi='gh issue'
     alias ghp='gh pr'
     alias ghr='gh repo'
+    alias ghcp='gh pr checkout'
 fi
 
 # Docker
