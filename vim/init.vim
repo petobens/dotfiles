@@ -2639,8 +2639,10 @@ endif
 " Mappings
 nnoremap <silent> <Leader>gi :Denite output:echo\ system("git\ init")<cr>
 nnoremap <silent> <Leader>gd :Gdiffsplit<CR>:wincmd x<CR>
+nnoremap <Leader>gD :Git diff<space>
 nnoremap <silent> <Leader>gs :botright Git<CR>:wincmd J<bar>:15 wincmd _<CR>
 nnoremap <silent> <Leader>gc :w!<CR>:Git commit<CR>
+nnoremap <Leader>gC :ShowGitChanges<space>
 nnoremap <Leader>gM :Git! mergetool<CR>
 nnoremap <Leader>gr :Git rebase -i<space>
 nnoremap <silent> <Leader>gR :GRemove<CR>
@@ -2653,6 +2655,40 @@ nnoremap <silent> <Leader>gb :GBrowse<CR>
 vnoremap <silent> <Leader>gb :GBrowse<CR>
 nnoremap <silent> <Leader>gB :GBrowse!<CR>
 vnoremap <silent> <Leader>gB :GBrowse!<CR>
+
+
+" Show Git Changes against any git object (i.e commit, branch, etc)
+command! -nargs=1 ShowGitChanges silent! call s:ShowGitChanges(<f-args>)
+
+function! s:ShowGitChanges(git_object) abort
+  execute 'Git difftool --name-only ' . a:git_object
+  call s:GDiffQfEntry()
+  copen
+  nnoremap <buffer> <CR> <CR><BAR>:call <sid>GDiffQfEntry()<CR>
+  wincmd p
+  wincmd x
+endfunction
+
+function s:GDiffQfEntry() abort
+  for window in getwininfo()
+    if window.winnr !=? winnr() && bufname(window.bufnr) =~? '^fugitive:'
+      execute 'bdelete' window.bufnr
+    endif
+  endfor
+  cc
+  diffoff!
+  let qf = getqflist({'context': 0, 'idx': 0})
+  if get(qf, 'idx') && type(get(qf, 'context')) == type({}) && type(get(qf.context, 'items')) == type([])
+    let diff = get(qf.context.items[qf.idx - 1], 'diff', [])
+    for i in reverse(range(len(diff)))
+        execute (i ? 'leftabove' : 'rightbelow') 'vert diffsplit' fnameescape(diff[i].filename)
+        wincmd x
+        11copen
+        wincmd p
+        wincmd h
+    endfor
+  endif
+endfunction
 
 " }}}
 " HighlightedYank {{{
