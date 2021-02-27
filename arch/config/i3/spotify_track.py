@@ -10,7 +10,13 @@ if True:
     from gi.repository import Playerctl
 
 
-player = Playerctl.Player()
+try:
+    player = Playerctl.Player.new('spotify')
+except:  # noqa # pylint:disable=bare-except
+    try:
+        player = Playerctl.Player.new('spotifyd')
+    except:  # noqa # pylint:disable=bare-except
+        sys.exit(1)
 title = player.get_title()
 artist = player.get_artist()
 album = player.get_album()

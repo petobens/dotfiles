@@ -224,6 +224,8 @@ $yay_cmd peek-git
 $yay_cmd simple-scan
 $yay_cmd slack-desktop
 $yay_cmd spotify
+$yay_cmd spotifyd
+$yay_cmd spotify-tui-bin
 $yay_cmd teams
 $yay_cmd thunderbird
 $yay_cmd transmission-gtk

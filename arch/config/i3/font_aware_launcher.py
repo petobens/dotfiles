@@ -186,6 +186,7 @@ APPS = {
         'type': 'electron',
         'args': {'class_name': 'Spotify', 'event_delay': 30},
     },
+    'spotify-tui': {'type': 'tui', 'args': {'title': 'Spotify-TUI', 'cmd': 'spt'}},
     'teams': {'type': 'electron', 'args': {'class_name': 'Teams', 'event_delay': 30}},
     'textmaker': {
         'type': 'rol_custom',

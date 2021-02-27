@@ -240,6 +240,16 @@ if [ -d "$HOME/.gnupg" ]; then
     sudo $ln_cmd -fTs "$dotfiles_dir/config/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
     echo Created ".gnupg/gpg-agent.conf" symlink
 fi
+if type "spotifyd" > /dev/null 2>&1; then
+    sudo mkdir -p "$HOME/.config/spotifyd"
+    sudo $ln_cmd -fTs "$dotfiles_dir/config/spotifyd/spotifyd.conf" "$HOME/.config/spotifyd/spotifyd.conf"
+    echo Created "$HOME/.config/spotifyd/spotifyd.conf"
+fi
+if type "spt" > /dev/null 2>&1; then
+    sudo mkdir -p "$HOME/.config/spotify-tui"
+    sudo $ln_cmd -fTs "$dotfiles_dir/config/spotify-tui/config.yml" "$HOME/.config/spotify-tui/config.yml"
+    echo Created "$HOME/.config/spotify-tui/config.yml"
+fi
 
 # OS dependent
 if [[ "$OSTYPE" == 'darwin'* ]]; then
