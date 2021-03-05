@@ -186,7 +186,10 @@ APPS = {
         'type': 'electron',
         'args': {'class_name': 'Spotify', 'event_delay': 30},
     },
-    'spotify-tui': {'type': 'tui', 'args': {'title': 'Spotify-TUI', 'cmd': 'spt'}},
+    'spotify-tui': {
+        'type': 'tui',
+        'args': {'title': 'Spotify-TUI', 'cmd': 'bash -c "spotifyd && spt && killall spotifyd"'},
+    },
     'teams': {'type': 'electron', 'args': {'class_name': 'Teams', 'event_delay': 30}},
     'textmaker': {
         'type': 'rol_custom',
