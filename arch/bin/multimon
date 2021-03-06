@@ -63,7 +63,8 @@ def _xrandr(how, direction):
         how = 'primary' if nr_monitors == 1 else 'multi'
 
     if how == 'primary':
-        cmd = f'--output {prim_n} --primary --dpi {DPI * 2}'
+        dpi_scale = 2 if prim_w > HD_WIDTH else 1
+        cmd = f'--output {prim_n} --primary --dpi {DPI * dpi_scale}'
         keep_turnon = [prim_n]
 
     elif how == 'mirror':
@@ -72,7 +73,8 @@ def _xrandr(how, direction):
         if nr_monitors == 3:
             cmd += f'--output {third_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '  # noqa
             keep_turnon += [third_n]
-        cmd += f'--output {prim_n} --dpi {DPI * 2}'
+        dpi_scale = 2 if prim_w > HD_WIDTH else 1
+        cmd += f'--output {prim_n} --dpi {DPI * dpi_scale}'
 
     elif how == 'multi':
         sec_scale_factor, sec_scale = _scale(sec_w, nr_monitors)
@@ -94,9 +96,11 @@ def _xrandr(how, direction):
             # depending on direction value
             wpos = wpos if direction == 'right' else 0
             # If the extra monitor is also hidpi then adjust dpi accordingly
-            if sec_w > HD_WIDTH:
+            if prim_w > HD_WIDTH and sec_w > HD_WIDTH:
                 dpi_scale = 2
-        cmd += f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI * dpi_scale}'
+        cmd += (
+            f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI * dpi_scale}'
+        )
 
     # Turn off unused monitors
     turn_off = [i for i in monitors if i not in ('Screen', *keep_turnon)]
@@ -110,7 +114,9 @@ def _xrandr(how, direction):
 
     # Ensure correct XResources
     xrdb_cmd = f'xrdb -merge {str(Path.home())}/.Xresources'
-    if how == 'primary' or how == 'mirror' or (nr_monitors == 2 and sec_w > HD_WIDTH):
+    if (how == 'primary' or how == 'mirror' and prim_w > HD_WIDTH) or (
+        nr_monitors == 2 and prim_w > HD_WIDTH and sec_w > HD_WIDTH
+    ):
         xrdb_cmd += '_hidpi'
     print(f"Running the following xrdb command: {xrdb_cmd}")
     _sh(xrdb_cmd)

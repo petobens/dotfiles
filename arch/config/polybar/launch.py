@@ -54,10 +54,9 @@ def launch_polybar(monitors):
             env['MONITOR'] = monitor
             env['POLYHEIGHT'] = '55' if (width > HD_WIDTH) else '28'
             env['TRAY_SIZE'] = '32' if (width > HD_WIDTH) else '20'
-            # If we have more than one monitor and at least one of the exterenal
-            # monitors  is hd then we need to scale our primary hidpi monitor fonts
+            # If we have a mix of hd and hidpi monitors then we need to scale
             fontmap_index = 1
-            if nr_monitors > 1 and 'primary' in line and sec_w <= HD_WIDTH:
+            if width > HD_WIDTH and nr_monitors > 1 and sec_w <= HD_WIDTH:
                 fontmap_index = 2
             for i in range(7):
                 env[f'POLYFONT{i}'] = FONT_MAP[i][0].format(*FONT_MAP[i][fontmap_index])
