@@ -56,9 +56,7 @@ fi
 if type "gopass" > /dev/null 2>&1; then
     # Set some gopass settings
     echo -e "\\033[1;34m--> Setting (go)pass options...\\033[0m"
-    gopass config autosync false
     gopass config autoclip false
-    gopass config noconfirm true
     gopass config notifications false
     echo -e "\\033[1;34m--> Generating gitlab access token file...\\033[0m"
     gopass git/gitlab/access_token > "$HOME/.gitlab_access_token"
@@ -119,10 +117,10 @@ else
         echo -e "\\033[1;34m--> Changing image cache dir...\\033[0m"
         # Note we can check that this worked with `docker info`
         sudo -E /usr/bin/bash -c 'cat > /etc/docker/daemon.json << EOF
-        {
-          "data-root": "$HOME/.cache/docker"
-        }
-        EOF'
+{
+    "data-root": "$HOME/.cache/docker"
+}
+EOF'
         mkdir -p "$HOME/.cache/docker"
         sudo systemctl enable docker
         sudo systemctl restart docker
@@ -145,6 +143,8 @@ else
     # Bluetooth
     sudo systemctl enable bluetooth.service
     sudo systemctl start bluetooth.service
+    sudo rfkill unblock all # unblock all devices
+    sudo systemctl restart bluetooth.service
     # TLP
     sudo systemctl enable tlp.service
     sudo systemctl start tlp.service
