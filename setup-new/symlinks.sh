@@ -140,6 +140,7 @@ if type "fd" > /dev/null 2>&1; then
     echo Created .fdignore symlink
 fi
 if type "vivid" > /dev/null 2>&1; then
+    sudo mkdir -p /usr/share/vivid/themes
     sudo $ln_cmd -fTs "$dotfiles_dir/config/vivid/onedarkish.yml" "/usr/share/vivid/themes/onedarkish.yml"
     echo Created /usr/share/vivid/themes/onedarkish.yml symlink
 fi
