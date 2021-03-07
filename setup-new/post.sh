@@ -30,7 +30,7 @@ if type "ranger" > /dev/null 2>&1; then
     # Install ranger plugins and scope.sh executable
     echo -e "\\033[1;34m--> Installing ranger devicons...\\033[0m"
     mkdir -p "$HOME/.config/ranger/plugins"
-    git clone https://github.com/alexanderjeurissen/ranger_devicons $HOME/.config/ranger/plugins/ranger_devicons
+    git clone https://github.com/alexanderjeurissen/ranger_devicons "$HOME/.config/ranger/plugins/ranger_devicons"
     ranger --copy-config=scope
 fi
 
@@ -52,6 +52,7 @@ if type "poetry" > /dev/null 2>&1; then
 fi
 
 # Git access tokens and (go)pass settings
+# Note: this won't work unless a password store is initialized first
 if type "gopass" > /dev/null 2>&1; then
     # Set some gopass settings
     echo -e "\\033[1;34m--> Setting (go)pass options...\\033[0m"

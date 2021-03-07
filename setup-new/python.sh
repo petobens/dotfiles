@@ -114,7 +114,7 @@ if [ -d "$pipx_venvs/vimiv" ]; then
 fi
 
 # Copy pygment onedarkish style
-echo -e "\\033[1;34m--> Installing onedarkish pygment style...\\033[0m"
+echo -e "\\033[1;34m--> Installing onedarkish pygment styles...\\033[0m"
 current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 parent_dir="$(dirname "$current_dir")"
 python_dir="$parent_dir/python"
@@ -135,7 +135,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-sudo chown -R "$USER" "$HOME/.config" # seems to be needed for db logs to work
 for cli in litecli mycli pgcli mssql-cli radian; do
     if [ -d "$pipx_venvs/$cli" ]; then
         # FIXME: Get python version automatically

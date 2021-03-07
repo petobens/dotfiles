@@ -25,7 +25,6 @@ dotfiles_dir=${dotfiles_dir%/} # Strip last (potential) slash
 
 # Creating missing dirs
 echo Creating symlinks under "$HOME"/
-mkdir -p "$HOME/.config/"
 
 # Always use coreutils ln command
 ln_cmd='ln'
