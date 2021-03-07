@@ -7,10 +7,17 @@ fi
 
 # Ask for sudo right away and get this script directory
 sudo echo -n
-current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Create needed dirs and set proper permissions
+for d in .cache .config .local; do
+    mkdir -p "$HOME/$d"
+    sudo chown -R "$USER" "$HOME/$d"
+    echo "Created $HOME/$d"
+done
 
 # We need xcode command tools on Mac
-if [[  "$OSTYPE" == 'darwin'* ]]; then
+if [[ "$OSTYPE" == 'darwin'* ]]; then
     if ! xcode-select --print-path > /dev/null 2>&1; then
         echo -e "\\033[1;34m-> Installing Xcode Command Line Tools...\\033[0m"
         xcode-select --install &> /dev/null
@@ -21,7 +28,7 @@ if [[  "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-if [[  "$OSTYPE" == 'darwin'* ]]; then
+if [[ "$OSTYPE" == 'darwin'* ]]; then
     read -p $'\033[1mDo you want to install brew packages (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -44,13 +51,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     . "$current_dir/python.sh"
 fi
 
-if type "tlmgr" > /dev/null 2>&1; then
-    read -p $'\033[1mDo you want to install LaTeX packages (y/n)? \033[0m' -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "\\033[1;34m-> Installing Latex packages...\\033[0m"
-        . "$current_dir/latex.sh"
-    fi
+read -p $'\033[1mDo you want to install LaTeX and packages (y/n)? \033[0m' -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo -e "\\033[1;34m-> Installing Latex...\\033[0m"
+    . "$current_dir/latex.sh"
 fi
 
 if type "R" > /dev/null 2>&1; then
@@ -87,7 +92,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     . "$current_dir/symlinks.sh"
 fi
 
-read -p $'\033[1mDo you want to install vim packages (y/n)? \033[0m' -n 1 -r
+read -p $'\033[1mDo you want to install nvim packages (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo -e "\\033[1;34m-> Installing nvim packages...\\033[0m"

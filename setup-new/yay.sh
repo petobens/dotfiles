@@ -9,7 +9,11 @@ if type "pacman" > /dev/null 2>&1; then
     sudo ln -fTs "$parent_dir/arch/config/pacman.conf" "/etc/pacman.conf"
     echo Created /etc/pacman.conf symlink
     sudo pacman -Sy --needed reflector
-    sudo reflector --verbose --latest 25 -p http -p https --sort rate --save /etc/pacman.d/mirrorlist
+    read -p $'\033[1mDo you want to update package mirrorlist (y/n)? \033[0m' -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        sudo reflector --verbose --latest 25 -p http -p https --sort rate --save /etc/pacman.d/mirrorlist
+    fi
     sudo pacman -Syu
 
 fi
@@ -30,7 +34,7 @@ yay -Syu --nodiffmenu --answerclean N --devel --timeupdate --combinedupgrade \
     --removemake
 yay -c
 
-yay_cmd='yay -S --nodiffmenu --answerclean N --needed --removemake'
+yay_cmd='yay -S --nodiffmenu --answerclean N --needed --removemake --noconfirm --answerdiff=None'
 
 # Fonts
 $yay_cmd adobe-source-code-pro-fonts
@@ -41,7 +45,7 @@ $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
 $yay_cmd ttf-nerd-fonts-symbols
 $yay_cmd ttf-ms-fonts
-$yay_cmd freetype2-ultimate5
+yay -S --answerclean N --nodiffmenu freetype2-ultimate5 # manually resolve conflicts with freetyp2
 
 # Bash related
 $yay_cmd bash-completion
@@ -98,7 +102,6 @@ $yay_cmd mpv
 $yay_cmd networkmanager
 $yay_cmd nmap
 $yay_cmd ntfs-3g
-$yay_cmd obs-studio
 $yay_cmd pavucontrol
 $yay_cmd picom
 $yay_cmd playerctl
@@ -170,14 +173,13 @@ $yay_cmd lsd
 $yay_cmd neofetch
 $yay_cmd neomutt
 $yay_cmd oath-toolkit
-$yay_cmd openconnect-git
 $yay_cmd openssh
 $yay_cmd openvpn
 $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
 $yay_cmd pandoc-crossref
 $yay_cmd prettyping
-$yay_cmd procs-bin
+$yay_cmd procs
 $yay_cmd progress
 $yay_cmd proxychains-ng
 $yay_cmd qrencode
@@ -190,7 +192,6 @@ $yay_cmd shfmt
 $yay_cmd socat
 $yay_cmd sshfs
 $yay_cmd sshpass
-$yay_cmd stoken-git
 $yay_cmd strace
 $yay_cmd tk
 $yay_cmd tldr
@@ -218,6 +219,7 @@ $yay_cmd --mflags --skipinteg freeoffice
 $yay_cmd gcolor3
 $yay_cmd gnome-font-viewer
 $yay_cmd hplip-plugin
+$yay_cmd obs-studio
 $yay_cmd onedrive-abraunegg
 $yay_cmd pdfpc
 $yay_cmd peek-git

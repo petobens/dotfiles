@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-mkdir -p "$HOME/.node_modules"
-chown -R "$USER" "$HOME/.node_modules"
-PATH="$HOME/.node_modules/bin:$PATH"
+global_npm_dir="$HOME/.npm-global"
+mkdir -p "$global_npm_dir"
+chown -R "$USER" "$global_npm_dir"
+npm config set prefix "$global_npm_dir"
+PATH="$global_npm_dir/bin:$PATH"
 
 npm install -g eslint
 npm install -g htmlhint

@@ -49,8 +49,8 @@ if [[ -d "$HOME/bin" ]]; then
     PATH="$HOME/bin:$PATH"
 fi
 if type "npm" > /dev/null 2>&1; then
-    PATH="$HOME/.node_modules/bin:$PATH"
-    export npm_config_prefix="$HOME/.node_modules"
+    PATH="$HOME/.npm-global/bin:$PATH"
+    export npm_config_prefix="$HOME/.npm-global"
 fi
 if type "go" > /dev/null 2>&1; then
     export GOPATH=$HOME/go

@@ -6,21 +6,17 @@
 # `brew cask reinstall basictex`)
 
 # Define path for initial install (which won't read env variable)
-PATH="$PATH:/usr/local/texlive/2019/bin/x86_64-linux"
+PATH="$PATH:/usr/local/texlive/2020/bin/x86_64-linux"
 
 # Install texlive
 if ! type "tlmgr" > /dev/null 2>&1; then
-    read -p $'\033[1mDo you want to install LaTeX (y/n)? \033[0m' -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-        tar xvzf install-tl-unx.tar.gz
-        (
-            builtin cd install-tl-*/ || exit
-            sudo ./install-tl
-        )
-        rm -rf install-tl-*/
-    fi
+    wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+    tar xvzf install-tl-unx.tar.gz
+    (
+        builtin cd install-tl-*/ || exit
+        sudo ./install-tl
+    )
+    rm -rf install-tl-*/
 fi
 
 # Install mybibformat style

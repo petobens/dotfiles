@@ -25,7 +25,6 @@ dotfiles_dir=${dotfiles_dir%/} # Strip last (potential) slash
 
 # Creating missing dirs
 echo Creating symlinks under "$HOME"/
-mkdir -p "$HOME/.config/"
 
 # Always use coreutils ln command
 ln_cmd='ln'
@@ -239,6 +238,11 @@ fi
 if [ -d "$HOME/.gnupg" ]; then
     sudo $ln_cmd -fTs "$dotfiles_dir/config/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
     echo Created ".gnupg/gpg-agent.conf" symlink
+fi
+
+if [ -f "$HOME/OneDrive/arch/git/.netrc.gpg" ]; then
+    sudo $ln_cmd -fTs "$HOME/OneDrive/arch/git/.netrc.gpg" "$HOME/.netrc.gpg"
+    echo "Created $HOME/.netrc.gpg symlink"
 fi
 if type "spotifyd" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/spotifyd"
