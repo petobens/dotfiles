@@ -138,6 +138,13 @@ fi
 if type "rg" > /dev/null 2>&1; then
     export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
 fi
+if type "upower" > /dev/null 2>&1; then
+    # Read and set battery and adapter types
+    UPOWER_BATTERY="$(upower -e | grep battery | cut -d '_' -f2)"
+    export UPOWER_BATTERY
+    UPOWER_ADAPTER="$(upower -e | grep line | cut -d '_' -f3)"
+    export UPOWER_ADAPTER
+fi
 
 # }}}
 # Xorg {{{

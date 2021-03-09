@@ -167,8 +167,8 @@ ramp-volume-font = 5
 # $ ls -1 /sys/class/power_supply/
 type = internal/battery
 full-at = 100
-battery = BAT0
-adapter = AC0
+battery = ${env:UPOWER_BATTERY:}
+adapter = ${env:UPOWER_ADAPTER:}
 poll-interval = 5
 format-charging = %{A1:~/.config/i3/font_aware_launcher.py power-manager &:}<label-charging>  %{A}
 format-discharging = %{A1:~/.config/i3/font_aware_launcher.py power-manager &:}<ramp-capacity>  <label-discharging>  %{A}
