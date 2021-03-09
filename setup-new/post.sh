@@ -52,12 +52,12 @@ if type "poetry" > /dev/null 2>&1; then
 fi
 
 # Git access tokens and (go)pass settings
-# Note: this won't work unless a password store is initialized first
 if type "gopass" > /dev/null 2>&1; then
     # Set some gopass settings
     echo -e "\\033[1;34m--> Setting (go)pass options...\\033[0m"
     gopass config autoclip false
     gopass config notifications false
+    gopass config path "$HOME/.password-store"
     echo -e "\\033[1;34m--> Generating gitlab access token file...\\033[0m"
     gopass git/gitlab/access_token > "$HOME/.gitlab_access_token"
     echo "Created .gitlab_access_token file"
