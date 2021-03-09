@@ -38,7 +38,15 @@ sudo tlmgr update all
 # Install texdoc and enable automatic build of documentation
 sudo tlmgr install texdoc
 sudo tlmgr option docfiles 1
-sudo tlmgr install --reinstall "$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')"
+
+# Add documentation to already installed packages
+installed_packages=$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')
+for i in $installed_packages; do
+    if [[ "$i" =~ "zapfding" ]]; then
+        continue
+    fi
+    sudo tlmgr install --reinstall "$i"
+done
 
 # Install arara (needs java)
 sudo tlmgr install arara
