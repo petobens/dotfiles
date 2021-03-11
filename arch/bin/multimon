@@ -114,7 +114,7 @@ def _xrandr(how, direction):
 
     # Ensure correct XResources
     xrdb_cmd = f'xrdb -merge {str(Path.home())}/.Xresources'
-    if (how == 'primary' or how == 'mirror' and prim_w > HD_WIDTH) or (
+    if ((how == 'primary' or how == 'mirror') and prim_w > HD_WIDTH) or (
         nr_monitors == 2 and prim_w > HD_WIDTH and sec_w > HD_WIDTH
     ):
         xrdb_cmd += '_hidpi'
