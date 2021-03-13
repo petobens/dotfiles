@@ -100,6 +100,7 @@ $yay_cmd maim
 $yay_cmd mesa-demos
 $yay_cmd mpv
 $yay_cmd networkmanager
+$yay_cmd nfs-utils
 $yay_cmd nmap
 $yay_cmd ntfs-3g
 $yay_cmd pavucontrol
