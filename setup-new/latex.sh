@@ -40,13 +40,17 @@ sudo tlmgr install texdoc
 sudo tlmgr option docfiles 1
 
 # Add documentation to already installed packages
-installed_packages=$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')
-for i in $installed_packages; do
-    if [[ "$i" =~ "zapfding" ]]; then
-        continue
-    fi
-    sudo tlmgr install --reinstall "$i"
-done
+read -p $'\033[1mDo you want to re-install all packages (y/n)? \033[0m' -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    installed_packages=$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')
+    for i in $installed_packages; do
+        if [[ "$i" =~ "zapfding" ]]; then
+            continue
+        fi
+        sudo tlmgr install --reinstall "$i"
+    done
+fi
 
 # Install arara (needs java)
 sudo tlmgr install arara
