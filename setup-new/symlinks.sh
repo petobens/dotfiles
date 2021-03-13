@@ -294,6 +294,8 @@ else
         echo Created .Xresources symlink
         $ln_cmd -fTs "$dotfiles_dir/arch/X/xresources_hidpi" "$HOME/.Xresources_hidpi"
         echo Created .Xresources_hidpi symlink
+        $ln_cmd -fTs "$dotfiles_dir/arch/X/xresources_hd_cursor" "$HOME/.Xresources_hd_cursor"
+        echo Created .Xresources_hd_cursor symlink
         $ln_cmd -fTs "$dotfiles_dir/arch/X/xmodmap" "$HOME/.Xmodmap"
         echo Created .Xmodmap symlink
     fi

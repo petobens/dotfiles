@@ -120,6 +120,20 @@ def _xrandr(how, direction):
         xrdb_cmd += '_hidpi'
     print(f"Running the following xrdb command: {xrdb_cmd}")
     _sh(xrdb_cmd)
+    # If all monitors are HD then change cursor size
+    if (
+        ((how == 'primary' or how == 'mirror') and prim_w <= HD_WIDTH)
+        or (nr_monitors == 2 and prim_w <= HD_WIDTH and sec_w <= HD_WIDTH)
+        or (
+            nr_monitors == 3
+            and prim_w <= HD_WIDTH
+            and sec_w <= HD_WIDTH
+            and third_w <= HD_WIDTH
+        )
+    ):
+        xrdb_cmd += '_hd_cursor'
+        print(f"Running the following xrdb command: {xrdb_cmd}")
+        _sh(xrdb_cmd)
 
 
 def _get_resize_map(i3):
