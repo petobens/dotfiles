@@ -227,8 +227,8 @@ if type "git" > /dev/null 2>&1; then
     __git_complete gdr _git_push
     alias gP='git pull'
     __git_complete gP _git_pull
-    alias gpr='git pull --rebase'
-    __git_complete gpr _git_pull
+    alias gPr='git pull --rebase'
+    __git_complete gPr _git_pull
     alias gf='git fetch'
     __git_complete gf _git_fetch
     alias gr='git rebase'
