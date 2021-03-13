@@ -150,6 +150,14 @@ fi
 # Xorg {{{
 
 if [ "$OSTYPE" == 'linux-gnu' ]; then
+    # Define laptop brightness (will be read by Xresource upon starting X)
+    LAPTOP_XBRIGHTNESS=90
+    if [[ "$HOSTNAME" == 'Matebook-X-Pro' ]]; then
+        LAPTOP_XBRIGHTNESS=30
+    fi
+    export LAPTOP_XBRIGHTNESS
+
+    # Immediately startx after login
     if [[ ! $DISPLAY && "$(tty)" == '/dev/tty1' ]]; then
         exec startx &> /tmp/startx.log
         exit
