@@ -3,7 +3,6 @@
 import sys
 
 import i3ipc
-
 from i3_helpers import sh
 
 CTRL_Q = ['Slack', 'discord']
@@ -37,8 +36,6 @@ def kill_custom(i3, which):
                 i3.command('kill')
         elif win_class in CTRL_Q:
             sh(f'xdotool key --window {win.window} ctrl+q')
-            # FIXME: For some reason keyboard gets stuck so press q again to release it
-            sh('xdotool key q')
         else:
             i3.command('kill')
     i3.command(f'workspace {focused_ws}')
