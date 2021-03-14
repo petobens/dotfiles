@@ -34,9 +34,15 @@ def launch_polybar(monitors):
         for line in _sh('xrandr --listactivemonitors').splitlines()
     ]
     nr_monitors = int(active_monitors[0][-1])
-    sec_w = 0
+    prim_w = int(active_monitors[1][2].split('/')[0])
+    all_hidpi = prim_w > HD_WIDTH
     if nr_monitors > 1:
-        sec_w = int(active_monitors[-1][2].split('/')[0])
+        sec_w = int(active_monitors[2][2].split('/')[0])
+        all_hidpi = all_hidpi and sec_w > HD_WIDTH
+        if nr_monitors > 2:
+            third_w = int(active_monitors[3][2].split('/')[0])
+            all_hidpi = all_hidpi and third_w > HD_WIDTH
+
     xrandr = [line.decode('ascii').split() for line in _sh('xrandr').splitlines()]
     for line in xrandr:
         if 'connected' in line:
@@ -56,7 +62,7 @@ def launch_polybar(monitors):
             env['TRAY_SIZE'] = '32' if (width > HD_WIDTH) else '20'
             # If we have a mix of hd and hidpi monitors then we need to scale
             fontmap_index = 1
-            if width > HD_WIDTH and nr_monitors > 1 and sec_w <= HD_WIDTH:
+            if width > HD_WIDTH and not all_hidpi:
                 fontmap_index = 2
             for i in range(7):
                 env[f'POLYFONT{i}'] = FONT_MAP[i][0].format(*FONT_MAP[i][fontmap_index])
