@@ -80,7 +80,7 @@ APPS = {
         'args': {
             'class_name': 'kitty',
             'mark': 'terminal',
-            'cmd': 'kitty /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"',
+            'cmd': 'kitty',
         },
     },
     'kodi': {'type': 'rol', 'args': {'class_name': 'kodi'}},
@@ -188,7 +188,10 @@ APPS = {
     },
     'spotify-tui': {
         'type': 'tui',
-        'args': {'title': 'Spotify-TUI', 'cmd': 'bash -c "spotifyd && spt && killall spotifyd"'},
+        'args': {
+            'title': 'Spotify-TUI',
+            'cmd': 'bash -c "spotifyd && spt && killall spotifyd"',
+        },
     },
     'teams': {'type': 'electron', 'args': {'class_name': 'Teams', 'event_delay': 30}},
     'textmaker': {
@@ -358,6 +361,14 @@ class ROLCustomApp(ROLApp):
 
     def _build_cmd(self):
         cmd = self._raiseorlauch_cmd()
+        if self.class_name == 'kitty':
+            if (
+                self.screen.is_hidpi
+                and self.screen.nr_monitors > 1  # type: ignore
+                and not self.screen.other_is_hidpi
+            ):
+                self.cmd += ' -o font_size=22'
+            self.cmd += ' /usr/bin/bash -l -c "/usr/bin/bash -i -c tm"'
         cmd += ['-e', f'{self.cmd}']
         return cmd
 
