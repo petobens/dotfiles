@@ -279,8 +279,9 @@ class Screen:
     def _get_workspace(i3, name):
         workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
         if workspace is None:
+            # If the workspace doesn't exist create and switch to it
             i3.command(f'workspace {name}')
-            sleep(0.1)
+            sleep(0.01)
             workspace = next((i for i in i3.get_workspaces() if i.name == name), None)
         return workspace
 
