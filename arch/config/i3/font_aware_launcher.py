@@ -511,11 +511,7 @@ class ElectronApp(ROLApp):
         # Note: we set gdk env variables so that gtk dialogs spawned by these
         # apps have correct font size
         cmd += f' -e "{self.screen.gdk_env}{self.class_name.lower()}'
-        if (
-            self.screen.is_hidpi
-            and (self.screen.nr_monitors > 1)  # type: ignore
-            and not self.screen.other_is_hidpi
-        ):
+        if self.screen.is_hidpi and not self.screen.other_is_hidpi:
             cmd += ' --force-device-scale-factor=2'
 
         if self.class_name == 'Brave' and self.subcmd is not None:
