@@ -424,7 +424,8 @@ class TUIApp(ROLApp):
     def _build_cmd(self):
         alacritty_scale = 2 if self.screen.is_hidpi else 1
         alacritty_cmd = (
-            f'WINIT_X11_SCALE_FACTOR={alacritty_scale} alacritty -t "{self.title}"'
+            f'PINENTRY_USER_DATA={self.screen.qt_env} WINIT_X11_SCALE_FACTOR={alacritty_scale} '
+            f'alacritty -t "{self.title}"'
         )
         if self.use_rol:
             cmd = self._raiseorlauch_cmd()
