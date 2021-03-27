@@ -143,6 +143,8 @@ $yay_cmd redis
 $yay_cmd sqlite3
 
 # CLI
+$yay_cmd aws-cli
+$yay_cmd aws-session-manager-plugin
 $yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd bat
 $yay_cmd bind-tools

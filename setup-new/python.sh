@@ -50,7 +50,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 fi
 pipx_inject_cmd="$HOME/.local/bin/pipx inject --verbose"
 
-$pipx_install_cmd awscli
 $pipx_install_cmd aws-mfa
 $pipx_install_cmd git+https://github.com/PyCQA/flake8
 $pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
