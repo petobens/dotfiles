@@ -151,7 +151,7 @@ fi
 
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     # Define laptop brightness (will be read by Xresource upon starting X)
-    LAPTOP_XBRIGHTNESS=90
+    LAPTOP_XBRIGHTNESS=60
     if [[ "$HOSTNAME" == 'Matebook-X-Pro' ]]; then
         LAPTOP_XBRIGHTNESS=30
     fi
