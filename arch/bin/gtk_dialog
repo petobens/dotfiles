@@ -6,9 +6,8 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 
-if True:
-    from gi.repository import Gtk, Pango
-    from PIL import ImageFont
+from PIL import ImageFont
+from gi.repository import Gtk, Pango
 
 
 FONT = 'NotoSans-Regular.ttf'
