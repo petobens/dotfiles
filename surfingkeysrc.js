@@ -118,7 +118,7 @@ const qmarksUrls = {
     h: 'www.google.com.ar',
     i: 'www.infobae.com.ar',
     l: 'www.lanacion.com.ar',
-    m: 'https://meet.google.com',
+    m: 'https://mercadolibre.com.ar',
     M: 'https://mail.google.com',
     n: 'www.netflix.com',
     N: 'synology-ds:5000',
