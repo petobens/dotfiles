@@ -140,16 +140,18 @@ bindsym $mod+Shift+Up $nexec $multimon_move -d "up" --move-ws
 # Assign workspaces to specific monitors
 set $primary "eDP1"
 set $secondary "DP1"
+set $secondary_bis "HDMI1"
 set $third "DP2"
-workspace $ws1 output $third $primary
+set $third_bis "DVI-I-1-1"
+workspace $ws1 output $third $third_bis $primary
 workspace $ws2 output $primary
 workspace $ws3 output $primary
-workspace $ws4 output $third $secondary
-workspace $ws5 output $secondary $third
-workspace $ws6 output $secondary $third
-workspace $ws7 output $secondary $third
+workspace $ws4 output $third $third_bis $secondary $secondary_bis
+workspace $ws5 output $secondary $secondary_bis $third $third_bis
+workspace $ws6 output $secondary $secondary_bis $third $third_bis
+workspace $ws7 output $secondary $secondary_bis $third $third_bis
 workspace $ws8 output $primary
-workspace $ws9 output $third $secondary
+workspace $ws9 output $third $third_bis $secondary $secondary_bis
 
 # Focus next monitor (with wrapping): this also switches mouse cursor
 bindsym $alt+grave focus output right

@@ -34,7 +34,14 @@ def _xrandr(how, direction):
         sleep(0.5)
 
     xrandr_out = [line.decode('ascii').split() for line in _sh('xrandr').splitlines()]
-    monitors = [e[0] for e in xrandr_out if not e[0][0].isdigit()]
+    monitors = [
+        e[0]
+        for e in xrandr_out
+        if not e[0][0].isdigit() or e[0].startswith(('h:', 'v:'))
+    ]
+    monitors = [
+        m for m in monitors if not m.startswith(('h:', 'v:'))
+    ]  # Removes displaylink resolutions
     conn = [lst for lst in xrandr_out if lst[1] == 'connected']
     nr_monitors = len(conn)
 
