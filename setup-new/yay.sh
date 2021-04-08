@@ -172,6 +172,7 @@ $yay_cmd httping
 $yay_cmd hyperfine
 $yay_cmd inetutils
 $yay_cmd jq
+$yay_cmd libgit2
 $yay_cmd lsb-release
 $yay_cmd lsd
 $yay_cmd neofetch
