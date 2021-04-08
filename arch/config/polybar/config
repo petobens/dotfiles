@@ -130,7 +130,7 @@ label-disconnected = 睊
 [module/ethernet]
 # See: https://github.com/jaagr/polybar/issues/1164
 type = internal/network
-interface = eth0
+interface = ${env:DEFAULT_ETHERNET_INTERFACE:}
 format-connected = %{A1:~/.config/i3/font_aware_launcher.py connman &:} <label-connected>  %{A}
 format-disconnected =  %{A1:~/.config/i3/font_aware_launcher.py connman &:} <label-disconnected>  %{A}
 label-disconnected-font = 5

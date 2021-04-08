@@ -147,7 +147,7 @@ if type "upower" > /dev/null 2>&1; then
 fi
 
 # }}}
-# Xorg {{{
+# Xorg (and linux specific) {{{
 
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     # Define laptop brightness (will be read by Xresource upon starting X)
@@ -156,6 +156,13 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
         LAPTOP_XBRIGHTNESS=30
     fi
     export LAPTOP_XBRIGHTNESS
+
+    # Override default ethernet interface (for polybar)
+    DEFAULT_ETHERNET_INTERFACE='eth0'
+    if [[ "$HOSTNAME" == 'Aspire3' ]]; then
+        DEFAULT_ETHERNET_INTERFACE='eth1'
+    fi
+    export DEFAULT_ETHERNET_INTERFACE
 
     # Immediately startx after login
     if [[ ! $DISPLAY && "$(tty)" == '/dev/tty1' ]]; then
