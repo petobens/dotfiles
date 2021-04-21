@@ -99,8 +99,7 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
 
     " Tim Pope editing/coding plugins
     call dein#add('tpope/vim-abolish')
-    " call dein#add('tpope/vim-dispatch')
-    call dein#add('blueyed/vim-dispatch', {'rev': 'echospace'})
+    call dein#add('tpope/vim-dispatch')
     call dein#add('tpope/vim-repeat')
     call dein#add('tpope/vim-rhubarb')
     call dein#add('tpope/vim-scriptease')
