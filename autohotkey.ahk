@@ -238,16 +238,28 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
         WinActivate, %WinTitle%
     }
 }
-^#i:: RoA("Pentadactyl", "C:\Program Files (x86)\Mozilla Firefox\firefox.exe")
+
+RoAE(Exe, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
+    If WinExist("ahk_exe" Exe)
+    {
+		WinActivate, ahk_exe %Exe%
+    }
+	else
+    {
+		Run, %Target%, %WorkingDir% ,%Size%
+        WinWait, ahk_exe %Exe%, , 2
+        WinActivate, ahk_exe %Exe%
+    }
+}
+^#i:: RoA("Brave", "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe")
 ^#u:: RoA("Vuze", "C:\Program Files\Vuze\Azureus.exe")
 ^#t:: RoA("Mozilla Thunderbird", "thunderbird")
-^#s:: RoA("Skype", "C:\Program Files (x86)\Skype\Phone\Skype.exe",,"")
 ^#g:: RoA("GifCam", "C:\OD\OneDrive\apps\GifCam.exe",,"")
 ^#x:: RoA("Excel", "excel")
 ^#w:: RoA("Word", "winword")
-^#l:: RoA("Slack", "C:\Users\Pedro\AppData\Local\slack\Update.exe --processStart slack.exe")
-^#c:: RoA("cmd.exe", "cmd",,"")
-; ^#c:: RoA("cmd", "C:\Program Files\ConEmu\ConEmu64.exe")
+^#l:: RoAE("slack.exe", "C:\Users\User\AppData\Local\slack\slack.exe")
+^#z:: RoAE("Zoom", "C:\Users\User\AppData\Roaming\Zoom\bin\Zoom.exe")
+^#c:: RoAE("alacritty.exe", "C:\Program Files\Alacritty\alacritty.exe")
 ^#d:: RoA("Downloads", "C:\Users\Pedro\Downloads",,"")
 ^#f:: RoA("This PC", "explorer")
 ^#p:: RoA("SumatraPDF", "SumatraPDF")
@@ -267,14 +279,14 @@ RoA(WinTitle, Target, WorkingDir = "%A_WorkinDir%", Size = "max") {
 ^#v:: RoA("GVIM", "gvim", "C:\OD\OneDrive\vimfiles")
 
 ; Restart gvim and load previous session
-^#r::
-    Send :wall!{Enter}
-    Send {,}kv
-    Sleep 150
-    RoA("GVIM", "gvim", "C:\OD\OneDrive\vimfiles")
-    Sleep 150
-    Send {,}ps
-    Return
+; ^#r::
+    ; Send :wall!{Enter}
+    ; Send {,}kv
+    ; Sleep 150
+    ; RoA("GVIM", "gvim", "C:\OD\OneDrive\vimfiles")
+    ; Sleep 150
+    ; Send {,}ps
+    ; Return
 
 ; Open Gvim sourcing the minimal vimrc
 ; ^#m:: Run, gvim -u C:/OD/OneDrive/vimfiles/vimrc_min, C:/OD/OneDrive/vimfiles, max
@@ -400,5 +412,7 @@ Capslock::Tab
         Shutdown, 2
     }
     Return
+; Lock screen
+#+l::DllCall("LockWorkStation")
 
 ; }}}
