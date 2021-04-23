@@ -35,27 +35,27 @@ export FZF_DEFAULT_OPTS='
 --prompt="❯ "
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
 --bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up
---bind=alt-d:preview-half-page-down,alt-u:preview-half-page-up
+--bind=alt-d:preview-page-down,alt-u:preview-page-up
 --color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff
 --color=prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd
 --color=marker:#98c379,spinner:#e06c75,border:#282c34
 '
 
 # Override FZF stock commands (ctrl-t,al-tc) and their options
-export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git \
+export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git \
     --color=always"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
 --multi
 --ansi
 --bind 'ctrl-y:execute-silent(echo -n {+2} | $COPY_CMD)+abort'
---preview 'bat --color always --style numbers --theme TwoDark \
+--preview 'batcat --color always --style numbers --theme TwoDark \
     --line-range :200 {2}'
 --expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
 --header='enter=edit, tab=insert, C-t=fzf-files, C-o=open, A-c=cd-file-dir, \
 A-p=parent-dirs, A-f=ranger, C-y=yank'
 "
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_ALT_C_COMMAND='fdfind --type d --hidden --follow --exclude .git'
 FZF_ALT_C_OPTS_BASE="
 --no-multi
 --expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f
@@ -337,7 +337,6 @@ FZF_GREP_OPTS="
 --header 'enter=open'
 --multi
 --ansi
---disabled
 --query=''
 --delimiter=:
 "
@@ -347,12 +346,11 @@ ig() {
     grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@ {q}"
     grep_cmd+=" | devicon-lookup --color --prefix :"
     # shellcheck disable=SC2016,SC1004
-    preview_cmd='bat --color always --style numbers --theme TwoDark \
+    preview_cmd='batcat --color always --style numbers --theme TwoDark \
 --highlight-line {2} $(echo {1} | sed "s/[^ ] //")'
     # shellcheck disable=SC2154
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
-        fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd" \
-        --preview-window "+{2}-/2")
+        fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd")
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
 
@@ -412,7 +410,7 @@ FZF_TMUX_OPTIONS="
 --exit-0
 --expect=alt-k,alt-r,enter
 --header='enter=switch, A-k=kill, A-r=rename'
---preview='tmux_tree {} | bat --theme TwoDark --style plain'
+--preview='tmux_tree {} | batcat --theme TwoDark --style plain'
 "
 
 tms() {
@@ -465,7 +463,7 @@ FZF_BT_OPTS="
 --header='enter=connect, A-t=trust, A-u=untrust, A-p=pair,
 A-d=disconnect, A-r=remove/unpair, C-y=yank'
 --with-nth=3..
---preview 'bluetoothctl info {2} | bat --color always --theme TwoDark \
+--preview 'bluetoothctl info {2} | batcat --color always --theme TwoDark \
 --style plain -H 6 -H 7 -H 9'
 "
 
@@ -625,7 +623,7 @@ dc() {
 
 FZF_MAN_OPTS='
 --header "enter=open"
---preview="man -Pcat {1} 2>/dev/null | bat -l man --color always --style numbers"
+--preview="man -Pcat {1} 2>/dev/null | batcat -l man --color always --style numbers"
 '
 m() {
     query_str="$1"

@@ -3,7 +3,7 @@
 current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 parent_dir="$(dirname "$current_dir")"
 
-# Ensure lib dir is defined 
+# Ensure lib dir is defined
 export R_LIBS_USER="$HOME/.local/lib/R/site-library"
 
 # Actually install libraries (to install from source use devtools or something

@@ -110,10 +110,11 @@ if type "ruby" > /dev/null 2>&1; then
 fi
 
 # Coding environment
-if type "alacritty" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/config/alacritty" "$HOME/.config/alacritty"
-    echo Created .config/alacritty folder symlink
-fi
+# if type "alacritty" > /dev/null 2>&1; then
+rm "/mnt/c/Users/User/AppData/Roaming/alacritty/alacritty.yml"
+cp -rf "$dotfiles_dir/config/alacritty/alacritty.yml" "/mnt/c/Users/User/AppData/Roaming/alacritty/alacritty.yml"
+echo Copied .config/alacritty.yml symlink
+# fi
 if type "kitty" > /dev/null 2>&1; then
     mkdir -p "$HOME/.config/kitty"
     $ln_cmd -fTs "$dotfiles_dir/config/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"

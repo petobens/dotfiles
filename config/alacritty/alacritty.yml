@@ -10,17 +10,18 @@ window:
     dynamic_padding: true
 
     # Disable border and title bar
-    decorations: none
+    # Snapping broken on windows
+    # decorations: none
 
 font:
     normal:
-        family: SauceCodePro Nerd Font
+        family: SauceCodePro NF
         style: Regular
     bold:
-        family: SauceCodePro Nerd Font
+        family: SauceCodePro NF
         style: Bold
     italic:
-        family: SauceCodePro Nerd Font
+        family: SauceCodePro NF
         style: Italic
 
     # Point size of the font
@@ -91,6 +92,9 @@ cursor:
         # program: /usr/local/bin/bash  # osx
     # args:
     # - --login
+# For WSL
+shell:
+    program: "C:\\Windows\\System32\\wsl.exe"
 
 # Key bindings
 key_bindings:
