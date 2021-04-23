@@ -119,7 +119,7 @@ parent_dir="$(dirname "$current_dir")"
 python_dir="$parent_dir/python"
 
 # Get python version
-python_version=$(python --version | cut -d ' ' -f2)
+python_version=$(python3 --version | cut -d ' ' -f2)
 python_major=$(echo "$python_version" | cut -d '.' -f1)
 python_minor=$(echo "$python_version" | cut -d '.' -f2)
 python_version="$python_major.$python_minor"

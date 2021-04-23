@@ -260,7 +260,7 @@ if type "docker" > /dev/null 2>&1; then
 fi
 
 # Python
-if type "python" > /dev/null 2>&1; then
+if type "python3" > /dev/null 2>&1; then
     alias python='python3'
     alias py='python'
     alias pyd='python3 -m pdb -cc'
@@ -454,6 +454,9 @@ evpn() {
     cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
     eval "$cmd"
 }
+
+# Open in window explorer
+alias we="explorer.exe ."
 
 # }}}
 # Functions {{{
