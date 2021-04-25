@@ -2953,10 +2953,10 @@ let R_rconsole_width = 0  " Always use horizontal split
 let R_rconsole_height = 12
 
 let R_assign = 0  " Disable _ conversion
-let R_show_args = 0  " Disable preview window completion
 let r_syntax_folding = 1
 let Rout_more_colors = 1
 let rout_follow_colorscheme = 1
+let g:R_debug = 0   " Don't jump to the line being debugged
 
 " Object browser
 let R_objbr_place = 'LEFT'
