@@ -189,7 +189,6 @@ if dein#load_state(expand('$DOTVIM/bundle/'))
     if !empty('$TMUX')
         call dein#add('christoomey/vim-tmux-navigator')
         call dein#add('wellle/tmux-complete.vim')
-        call dein#add('tmux-plugins/vim-tmux-focus-events')
         call dein#add('ericpruitt/tmux.vim')
     endif
 
