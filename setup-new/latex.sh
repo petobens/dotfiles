@@ -6,7 +6,7 @@
 # `brew cask reinstall basictex`)
 
 # Define path for initial install (which won't read env variable)
-PATH="$PATH:/usr/local/texlive/2020/bin/x86_64-linux"
+PATH="$PATH:/usr/local/texlive/2021/bin/x86_64-linux"
 
 # Install texlive
 if ! type "tlmgr" > /dev/null 2>&1; then
@@ -36,11 +36,12 @@ sudo tlmgr update --self
 sudo tlmgr update all
 
 # Install texdoc and enable automatic build of documentation
-sudo tlmgr install texdoc
+tlmgr_install='sudo tlmgr install'
+$tlmgr_install texdoc
 sudo tlmgr option docfiles 1
 
 # Add documentation to already installed packages
-read -p $'\033[1mDo you want to re-install all packages (y/n)? \033[0m' -n 1 -r
+read -p $'\033[1mDo you want to re-install all existing LaTeX packages (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     installed_packages=$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')
@@ -48,88 +49,88 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         if [[ "$i" =~ "zapfding" ]]; then
             continue
         fi
-        sudo tlmgr install --reinstall "$i"
+        $tlmgr_install --reinstall "$i"
     done
 fi
 
 # Install arara (needs java)
-sudo tlmgr install arara
+$tlmgr_install arara
 
 # Install additional binaries: linter, word counter, fonts and biber
-sudo tlmgr install biber
-sudo tlmgr install chktex
-sudo tlmgr install collection-fontsrecommended
-sudo tlmgr install texcount
+$tlmgr_install biber
+$tlmgr_install chktex
+$tlmgr_install collection-fontsrecommended
+$tlmgr_install texcount
 
 # Install additional latex packages
-sudo tlmgr install biblatex
-sudo tlmgr install changepage
-sudo tlmgr install cleveref
-sudo tlmgr install csquotes
-sudo tlmgr install emptypage
-sudo tlmgr install enumitem
-sudo tlmgr install environ
-sudo tlmgr install etoolbox
-sudo tlmgr install floatrow
-sudo tlmgr install fontawesome
-sudo tlmgr install footmisc
-sudo tlmgr install framed
-sudo tlmgr install fvextra
-sudo tlmgr install ifplatform
-sudo tlmgr install imakeidx
-sudo tlmgr install import
-sudo tlmgr install lipsum
-sudo tlmgr install logreq
-sudo tlmgr install minted
-sudo tlmgr install moderncv
-sudo tlmgr install multirow
-sudo tlmgr install parskip
-sudo tlmgr install pdfpages
-sudo tlmgr install pgfplots
-sudo tlmgr install silence
-sudo tlmgr install siunitx
-sudo tlmgr install spreadtab
-sudo tlmgr install standalone
-sudo tlmgr install tcolorbox
-sudo tlmgr install titlesec
-sudo tlmgr install trimspaces
-sudo tlmgr install wrapfig
-sudo tlmgr install xpatch
-sudo tlmgr install xstring
+$tlmgr_install biblatex
+$tlmgr_install changepage
+$tlmgr_install cleveref
+$tlmgr_install csquotes
+$tlmgr_install emptypage
+$tlmgr_install enumitem
+$tlmgr_install environ
+$tlmgr_install etoolbox
+$tlmgr_install floatrow
+$tlmgr_install fontawesome
+$tlmgr_install footmisc
+$tlmgr_install framed
+$tlmgr_install fvextra
+$tlmgr_install ifplatform
+$tlmgr_install imakeidx
+$tlmgr_install import
+$tlmgr_install lipsum
+$tlmgr_install logreq
+$tlmgr_install minted
+$tlmgr_install moderncv
+$tlmgr_install multirow
+$tlmgr_install parskip
+$tlmgr_install pdfpages
+$tlmgr_install pgfplots
+$tlmgr_install silence
+$tlmgr_install siunitx
+$tlmgr_install spreadtab
+$tlmgr_install standalone
+$tlmgr_install tcolorbox
+$tlmgr_install titlesec
+$tlmgr_install trimspaces
+$tlmgr_install wrapfig
+$tlmgr_install xpatch
+$tlmgr_install xstring
 
 # Linux specific (i.e not included in basic texlive installation)
 if [ "$OSTYPE" == 'linux-gnu' ]; then
-    sudo tlmgr install algorithm2e
-    sudo tlmgr install beamer
-    sudo tlmgr install bitset
-    sudo tlmgr install booktabs
-    sudo tlmgr install breqn
-    sudo tlmgr install caption
-    sudo tlmgr install catchfile
-    sudo tlmgr install embedfile
-    sudo tlmgr install fancyvrb
-    sudo tlmgr install float
-    sudo tlmgr install ifoddpage
-    sudo tlmgr install infwarerr
-    sudo tlmgr install jknapltx
-    sudo tlmgr install l3backend
-    sudo tlmgr install l3kernel
-    sudo tlmgr install l3packages
-    sudo tlmgr install letltxmacro
-    sudo tlmgr install lineno
-    sudo tlmgr install listings
-    sudo tlmgr install mathabx
-    sudo tlmgr install mathtools
-    sudo tlmgr install microtype
-    sudo tlmgr install pdfescape
-    sudo tlmgr install pdftexcmds
-    sudo tlmgr install relsize
-    sudo tlmgr install setspace
-    sudo tlmgr install translator
-    sudo tlmgr install ulem
-    sudo tlmgr install upquote
-    sudo tlmgr install xcolor
-    sudo tlmgr install xkeyval
+    $tlmgr_install algorithm2e
+    $tlmgr_install beamer
+    $tlmgr_install bitset
+    $tlmgr_install booktabs
+    $tlmgr_install breqn
+    $tlmgr_install caption
+    $tlmgr_install catchfile
+    $tlmgr_install embedfile
+    $tlmgr_install fancyvrb
+    $tlmgr_install float
+    $tlmgr_install ifoddpage
+    $tlmgr_install infwarerr
+    $tlmgr_install jknapltx
+    $tlmgr_install l3backend
+    $tlmgr_install l3kernel
+    $tlmgr_install l3packages
+    $tlmgr_install letltxmacro
+    $tlmgr_install lineno
+    $tlmgr_install listings
+    $tlmgr_install mathabx
+    $tlmgr_install mathtools
+    $tlmgr_install microtype
+    $tlmgr_install pdfescape
+    $tlmgr_install pdftexcmds
+    $tlmgr_install relsize
+    $tlmgr_install setspace
+    $tlmgr_install translator
+    $tlmgr_install ulem
+    $tlmgr_install upquote
+    $tlmgr_install xcolor
+    $tlmgr_install xkeyval
 fi
 
 # Update all recently installed packages

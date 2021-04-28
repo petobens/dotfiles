@@ -4,6 +4,26 @@ sudo echo -n
 current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 parent_dir="$(dirname "$current_dir")"
 
+# Ask whether to install optional dependencies
+install_r=false
+read -p $'\033[1mDo you want to install R (y/n)? \033[0m' -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    install_r=true
+fi
+install_node=false
+read -p $'\033[1mDo you want to install Node.js (y/n)? \033[0m' -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    install_node=true
+fi
+install_displaylink=false
+read -p $'\033[1mDo you want to install Displaylink (y/n)? \033[0m' -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    install_displaylink=true
+fi
+
 # Use our pacman conf
 if type "pacman" > /dev/null 2>&1; then
     sudo ln -fTs "$parent_dir/arch/config/pacman.conf" "/etc/pacman.conf"
@@ -63,14 +83,10 @@ $yay_cmd pyenv-virtualenv
 $yay_cmd ruby
 $yay_cmd rust
 $yay_cmd jdk-openjdk
-read -p $'\033[1mDo you want to install R (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [[ "$install_r" = true ]]; then
     $yay_cmd r
 fi
-read -p $'\033[1mDo you want to install Node.js (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [[ "$install_node" = true ]]; then
     $yay_cmd nodejs
     $yay_cmd npm
 fi
@@ -88,7 +104,9 @@ $yay_cmd bluez-utils
 $yay_cmd capnet-assist
 $yay_cmd connman
 $yay_cmd debtap
-$yay_cmd displaylink
+if [[ "$install_displaylink" = true ]]; then
+    $yay_cmd displaylink
+fi
 $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh

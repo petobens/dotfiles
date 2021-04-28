@@ -114,8 +114,9 @@ else
         echo -e "\\033[1;34m--> Managing docker as non-root...\\033[0m"
         sudo groupadd docker
         sudo usermod -aG docker "$USER"
-        echo -e "\\033[1;34m--> Changing image cache dir...\\033[0m"
+        echo -e "\\033[1;34m--> Changing docker image cache dir...\\033[0m"
         # Note we can check that this worked with `docker info`
+        sudo mkdir -p /etc/docker
         sudo -E /usr/bin/bash -c 'cat > /etc/docker/daemon.json << EOF
 {
     "data-root": "$HOME/.cache/docker"

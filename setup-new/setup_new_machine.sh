@@ -11,9 +11,12 @@ current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Create needed dirs and set proper permissions
 for d in .cache .config .local; do
-    mkdir -p "$HOME/$d"
-    sudo chown -R "$USER" "$HOME/$d"
-    echo "Created $HOME/$d"
+    d="$HOME/$d"
+    if [ ! -d "$d" ]; then
+        mkdir -p "$d"
+        sudo chown -R "$USER" "$d"
+        echo "Created $d"
+    fi
 done
 
 # We need xcode command tools on Mac
