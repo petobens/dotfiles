@@ -126,6 +126,7 @@ up() {
             *.zip) cmd="unzip" ;;
             *.Z) cmd="uncompress" ;;
             *.7z) cmd="7z x" ;;
+            *.7Z) cmd="7z x" ;;
             *.deb) cmd="ar x" ;;
             *.tar.xz) cmd="tar xf" ;;
             *.tar.zst) cmd="unzstd" ;;

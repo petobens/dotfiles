@@ -198,6 +198,7 @@ $yay_cmd neomutt
 $yay_cmd oath-toolkit
 $yay_cmd openssh
 $yay_cmd openvpn
+$yay_cmd p7zip
 $yay_cmd pandoc
 $yay_cmd pandoc-citeproc
 $yay_cmd pandoc-crossref
