@@ -1390,6 +1390,7 @@ let g:airline#extensions#whitespace#symbol = 'Ξ'
 let g:airline#extensions#wordcount#enabled = 0
 let g:airline#extensions#cursormode#enabled = 0
 let g:airline#extensions#vista#enabled = 0
+let g:airline#extensions#scrollbar#enabled = 0
 
 " Enable some extensions
 let g:airline#extensions#tagbar#enabled = 1
