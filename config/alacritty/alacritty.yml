@@ -69,10 +69,6 @@ colors:
 
 mouse:
     hide_when_typing: true
-    url:
-        # These are the modifiers that need to be held down for opening URLs
-        # when clicking
-        modifiers: Shift
 
 selection:
     # When set to `true`, selected text will be copied to the primary
