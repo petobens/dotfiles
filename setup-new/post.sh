@@ -8,11 +8,6 @@ sudo chsh -s "$(command -v bash)"
 if [ ! -f "$HOME/git-repos/private/trueline/trueline.sh" ]; then
     git clone https://github.com/petobens/trueline ~/git-repos/private/trueline
 fi
-if [ ! -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
-    # Forgit (fzf and git integration)
-    sudo mkdir -p ~/.local/bin/
-    wget https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.zsh -P ~/.local/bin
-fi
 if type "gem" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing sqlint...\\033[0m"
     gem install sqlint

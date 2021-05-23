@@ -177,6 +177,7 @@ $yay_cmd docker-compose
 $yay_cmd dragon-drag-and-drop-git
 $yay_cmd dust
 $yay_cmd fd
+$yay_cmd forgit-git
 $yay_cmd fzf
 $yay_cmd github-cli
 $yay_cmd globalprotect-openconnect

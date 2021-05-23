@@ -526,8 +526,10 @@ alias gd=forgit::diff
 alias ga=forgit::add
 alias gu=forgit::restore
 alias gsv=forgit::stash::show
-if [ -f "$HOME/.local/bin/forgit.plugin.zsh" ]; then
-    . "$HOME/.local/bin/forgit.plugin.zsh"
+
+# Load
+if [ -f "/usr/share/zsh/plugins/forgit-git/forgit.plugin.zsh" ]; then
+    . "/usr/share/zsh/plugins/forgit-git/forgit.plugin.zsh"
 fi
 
 # }}}
