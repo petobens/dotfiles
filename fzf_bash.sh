@@ -332,9 +332,8 @@ fi
 # }}}
 # Grep {{{
 
-# TODO: add binding to toggle interactive mode https://github.com/junegunn/fzf/issues/1798
 FZF_GREP_OPTS="
---header 'enter=open'
+--header 'enter=open, alt-q=quit-search'
 --multi
 --ansi
 --disabled
@@ -352,6 +351,8 @@ ig() {
     # shellcheck disable=SC2154
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
         fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd" \
+        --bind "alt-q:unbind(change,alt-q)+change-prompt(fzf> )+enable-search+clear-query" \
+        --prompt 'rg> ' \
         --preview-window "+{2}-/2")
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
