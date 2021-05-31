@@ -2347,7 +2347,6 @@ let g:deoplete#enable_at_startup = 1
 
 " Options
 call deoplete#custom#option({
-    \ 'smart_case': v:true,
     \ 'max_list': 150,
     \ 'refresh_always': v:true,
     \ 'auto_complete_delay': 100,
@@ -2364,6 +2363,7 @@ call deoplete#custom#option({
 \ })
 
 " Source specific
+call deoplete#custom#source('_', 'smart_case', v:true)
 " Use auto delimiter and autoparen (not in omni source)
 call deoplete#custom#source('_', 'converters',
     \ ['converter_auto_delimiter', 'remove_overlap'])
