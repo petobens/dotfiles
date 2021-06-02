@@ -456,6 +456,11 @@ evpn() {
     eval "$cmd"
 }
 
+# Trafi
+alias tdb='PGPASSWORD="$(pass show trafilea/redshift/pass)" pgcli -h '\
+'"$(pass show trafilea/redshift/host)" -U "$(pass show trafilea/redshift/user)"'\
+' -d dev -p 5439'
+
 # }}}
 # Functions {{{
 
