@@ -1,3 +1,5 @@
+# shellcheck disable=SC1091
+
 # Options {{{
 
 # Disable control flow (necessary to enable C-s bindings in vim)
@@ -215,7 +217,13 @@ if type "git" > /dev/null 2>&1; then
     alias gs='git status'
     alias gcl='git clone'
     alias gco='git checkout'
-    __git_complete gco _git_checkout
+    _comp_gco() {
+        # As per https://github.com/scop/bash-completion/issues/545
+        # shellcheck disable=SC2034
+        local __git_cmd_idx=0
+        _git_checkout
+    }
+    __git_complete gco _comp_gco
     alias gcb='git checkout $(git branch | fzf | tr -d "*")'
     alias gcp='git cherry-pick'
     alias gb='git branch'
