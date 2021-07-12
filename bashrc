@@ -395,6 +395,8 @@ alias cvpn='sudo pkill -INT -f snx; stoken | '\
 'snx -s "$(pass show claro/vpn/host)" -u "$(pass show claro/vpn/user)"'
 alias cmssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/pytonp01)" '\
 'ssh mjolnir'
+alias cpssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/python01prd)" '\
+'ssh claro-prd'
 alias cpfssh='sshpass -p "$(pass show arch/localhost)" ssh localhost -N -D 54321'
 alias cmtssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/pytonp01)" '\
 'ssh mjolnir -R 9090:127.0.0.1:54321'
