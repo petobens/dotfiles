@@ -1568,8 +1568,8 @@ call defx#custom#column('mark', {
 call defx#custom#column('indent', { 'indent': '  '})
 call defx#custom#column('icon', {
             \ 'root_icon': ' ',
-            \ 'directory_icon': '',
-            \ 'opened_icon': '',
+            \ 'directory_icon': ' ',
+            \ 'opened_icon': ' ',
             \ })
 call defx#custom#column('filename', {
             \ 'min_width': 23,
