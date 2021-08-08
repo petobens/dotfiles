@@ -1,1 +1,2 @@
 monitor_interval = "180"
+skip_file = "~*|.~*|*.tmp|*.swp|4913"
