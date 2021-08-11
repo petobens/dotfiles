@@ -250,6 +250,9 @@ if type "git" > /dev/null 2>&1; then
     gdp() {
         git diff > "$1"
     }
+    gdcp() {
+        git diff --cached > "$1"
+    }
     alias dsf='git diff --no-index'
 fi
 if type "gh" > /dev/null 2>&1; then
