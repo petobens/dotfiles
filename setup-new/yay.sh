@@ -65,7 +65,7 @@ $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
 $yay_cmd ttf-nerd-fonts-symbols
 $yay_cmd ttf-ms-fonts
-yay -S --answerclean N --nodiffmenu freetype2-ultimate5 # manually resolve conflicts with freetyp2
+yay -S --mflags --skipinteg --answerclean N --nodiffmenu freetype2-ultimate5 # manually resolve conflicts with freetype2
 
 # Bash related
 $yay_cmd bash-completion
