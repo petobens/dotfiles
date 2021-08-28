@@ -84,6 +84,7 @@ $tlmgr_install logreq
 $tlmgr_install minted
 $tlmgr_install moderncv
 $tlmgr_install multirow
+$tlmgr_install newfloat
 $tlmgr_install parskip
 $tlmgr_install pdfpages
 $tlmgr_install pgfplots
@@ -93,6 +94,7 @@ $tlmgr_install spreadtab
 $tlmgr_install standalone
 $tlmgr_install tcolorbox
 $tlmgr_install titlesec
+$tlmgr_install todonotes
 $tlmgr_install trimspaces
 $tlmgr_install wrapfig
 $tlmgr_install xpatch
