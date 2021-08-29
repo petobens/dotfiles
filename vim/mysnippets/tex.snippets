@@ -1196,6 +1196,15 @@ ${VISUAL}$0
 \end{minted}
 endsnippet
 
+snippet mtc "Minted with captions" b
+\begin{listing}[H]
+	\begin{minted}{${1:language}}
+		${VISUAL}$2
+	\end{minted}
+\caption{${3:caption}}
+\end{listing}$0
+endsnippet
+
 # Todonotes package:
 snippet td "Todo" i
 \todo{${1:${VISUAL:text}}}$0

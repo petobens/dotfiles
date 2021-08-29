@@ -164,6 +164,8 @@ else:
 % Code insertion (note: requires pygment python library and shell pdflatex flag)
 % \usepackage{minted}
 % \setminted{style=default, autogobble}
+% \SetupFloatingEnvironment{listing}{name=`!p snip.rv= 'Código' if t[1] == 'spanish' else 'Code'`}
+% \numberwithin{listing}{section}
 
 % \usepackage[`!p snip.rv= 'spanish,' if t[1] == 'spanish' else ''`colorinlistoftodos,textsize=small,figheight=5cm,
 % figwidth=10cm,color=red!85]{todonotes}
