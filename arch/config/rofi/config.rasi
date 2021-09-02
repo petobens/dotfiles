@@ -7,16 +7,41 @@ configuration {
     icon-theme: "Papirus-Dark";
 	terminal: "alacritty";
 	matching: "fuzzy";
-	separator-style: "solid";
-	hide-scrollbar: true;
 	dpi: 0;
-	color-normal: "#24272e, #abb2bf, #24272e, #61afef, #24272e";
-	color-urgent: "#24272e, #abb2bf, #24272e, #e06c75, #24272e";
-	color-active: "#24272e, #abb2bf, #24272e, #c678dd, #24272e";
-	color-window: "#24272e, #282c34, #282c34";
 	kb-remove-to-eol: "";
 	kb-accept-entry: "Return";
 	kb-row-up: "Shift_L+Left_Tab,Ctrl-p,Up,Ctrl-k";
 	kb-row-down: "Ctrl-n,Down,Ctrl-j";
 	kb-cancel: "Ctrl-c,Escape";
+}
+
+
+/* Theme overrides */
+@theme "default"
+* {
+    background: #24272e;
+    background-color: #24272e;
+    normal-background: #24272e;
+    active-background: #24272e;
+    urgent-background: #24272e;
+    selected-normal-background: #61afef;
+    selected-active-background: #c678dd;
+    selected-urgent-background: #e06c75;
+    alternate-normal-background: #24272e;
+    alternate-active-background: #24272e;
+    alternate-urgent-background: #24272e;
+    foreground: #24272e;
+    foreground-color: #abb2bf;
+    normal-foreground: #abb2bf;
+    active-foreground: #abb2bf;
+    urgent-foreground: #abb2bf;
+    selected-normal-foreground: #24272e;
+    selected-active-foreground: #24272e;
+    selected-urgent-foreground: #24272e;
+    alternate-normal-foreground: #abb2bf;
+    alternate-active-foreground: #abb2bf;
+    alternate-urgent-foreground: #abb2bf;
+}
+listview {
+    scrollbar: false;
 }
