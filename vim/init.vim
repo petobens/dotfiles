@@ -2645,11 +2645,12 @@ nnoremap <Leader>gC :ShowGitChanges<space>
 nnoremap <Leader>gM :Git! mergetool<CR>
 nnoremap <Leader>gr :Git rebase -i<space>
 nnoremap <silent> <Leader>gR :GRemove<CR>
-nnoremap <silent> <Leader>gp :call <SID>NoShellSlash('Dispatch git push')<CR>
-nnoremap <silent> <Leader>gF :call
+nnoremap <silent> <Leader>gp :lcd %:p:h<CR>:call
+            \ <SID>NoShellSlash('Dispatch git push')<CR>
+nnoremap <silent> <Leader>gF :lcd %:p:h<CR>:call
             \ <SID>NoShellSlash('Dispatch git push --force-with-lease')<CR>
-nnoremap <silent> <Leader>gP :Dispatch git pull<CR>
-nnoremap <Leader>gf :Dispatch git fetch<space>
+nnoremap <silent> <Leader>gP :lcd %:p:h<CR>:Dispatch git pull<CR>
+nnoremap <Leader>gf :lcd %:p:h<CR>:Dispatch git fetch<space>
 nnoremap <silent> <Leader>gb :GBrowse<CR>
 vnoremap <silent> <Leader>gb :GBrowse<CR>
 nnoremap <silent> <Leader>gB :GBrowse!<CR>
