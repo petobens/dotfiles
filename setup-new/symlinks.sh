@@ -133,6 +133,12 @@ if type "nvim" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/vim" "$HOME/.config/nvim"
     echo Created .config/nvim folder symlink
 fi
+if type "code" > /dev/null 2>&1; then
+    for f in settings.json keybindings.json extensions.txt; do
+        $ln_cmd -fTs "$dotfiles_dir/vscode/$f" "$HOME/.config/Code/User/$f"
+        echo "Created .config/Code/User/$f symlink"
+    done
+fi
 if type "fd" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/fdignore" "$HOME/.fdignore"
     echo Created .fdignore symlink

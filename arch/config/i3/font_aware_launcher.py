@@ -4,7 +4,6 @@ import os
 from time import sleep
 
 import i3ipc
-
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
@@ -228,6 +227,7 @@ APPS = {
         },
     },
     'vimiv': {'type': 'qt', 'args': {'class_name': 'vimiv', 'cycle': True}},
+    'vscode': {'type': 'electron', 'args': {'class_name': 'Code', 'event_delay': 30}},
     'zathura': {'type': 'gtk', 'args': {'class_name': 'Zathura', 'cycle': True}},
     'zoom': {'type': 'rol', 'args': {'class_name': 'Zoom', 'event_delay': 30}},
 }

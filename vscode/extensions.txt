@@ -1,0 +1,12 @@
+batisteo.vscode-django
+be5invis.toml
+donjayamanne.python-extension-pack
+magicstack.MagicPython
+ms-python.python
+ms-python.vscode-pylance
+ms-toolsai.jupyter
+ms-toolsai.jupyter-keymap
+VisualStudioExptTeam.vscodeintellicode
+vscodevim.vim
+wholroyd.jinja
+zhuangtongfa.material-theme

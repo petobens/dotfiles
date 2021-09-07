@@ -64,6 +64,14 @@ if type "gpg-connect-agent" > /dev/null 2>&1; then
     gpg-connect-agent reloadagent /bye
 fi
 
+# VSCode Extensions
+if type "code" > /dev/null 2>&1; then
+    if [ -f "$HOME/.config/Code/User/extensions.txt" ]; then
+        echo -e "\\033[1;34m--> Installing VSCode Extensions...\\033[0m"
+        xargs -a "$HOME/.config/Code/User/extensions.txt" -n 1 code --install-extension
+    fi
+fi
+
 # OS-Specific
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if [ -d "/Applications/Skim.app/" ]; then

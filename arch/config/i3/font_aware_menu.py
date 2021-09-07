@@ -101,6 +101,7 @@ APPS = {
         'desc': 'Show Trash',
     },
     'vimiv': {'cmd': 'vimiv', 'icon': 'image-viewer', 'desc': 'Image Viewer'},
+    'Visual Studio Code': {'cmd': 'vscode', 'icon': 'code', 'desc': 'Text Editor'},
     'Zathura': {'cmd': 'zathura', 'icon': 'zathura', 'desc': 'PDF Viewer'},
     'Zoom': {'cmd': 'zoom', 'icon': 'Zoom'},
 }

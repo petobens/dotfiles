@@ -255,6 +255,7 @@ $yay_cmd spotify-tui-bin
 $yay_cmd teams
 $yay_cmd thunderbird
 $yay_cmd transmission-gtk
+$yay_cmd visual-studio-code-bin
 $yay_cmd xfce4-power-manager
 $yay_cmd zathura
 $yay_cmd zathura-djvu
