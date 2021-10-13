@@ -470,8 +470,11 @@ evpn() {
 }
 
 # Trafi
-alias tdb='PGPASSWORD="$(pass show trafilea/redshift/pass)" pgcli -h '\
+alias tdbp='PGPASSWORD="$(pass show trafilea/redshift/pass)" pgcli -h '\
 '"$(pass show trafilea/redshift/host)" -U "$(pass show trafilea/redshift/user)"'\
+' -d dev -p 5439'
+alias tdbd='PGPASSWORD="$(pass show trafilea/redshift_dev/pass)" pgcli -h '\
+'"$(pass show trafilea/redshift_dev/host)" -U "$(pass show trafilea/redshift_dev/user)"'\
 ' -d dev -p 5439'
 
 # }}}
