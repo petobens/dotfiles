@@ -336,11 +336,14 @@ if type "python" > /dev/null 2>&1; then
         }
     fi
 fi
+# This is needed for vscode:
+eval "$(pyenv init -)"
 
 # Package manager
 if type "yay" > /dev/null 2>&1; then
     # Note yay will prompt twice: https://github.com/Jguer/yay/issues/170
     alias yay='yay --nodiffmenu --answerclean N --removemake'
+    alias yunv='yay -Syu --mflags --skipinteg --answerclean N --nodiffmenu --combinedupgrade'
     # Update pacman mirrorlist
     if type "reflector" > /dev/null 2>&1; then
         alias upm='sudo reflector --verbose --latest 25 -p http -p https --sort rate --save /etc/pacman.d/mirrorlist'
