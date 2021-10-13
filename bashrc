@@ -336,8 +336,8 @@ if type "python" > /dev/null 2>&1; then
         }
     fi
 fi
-# This is needed for vscode:
-eval "$(pyenv init -)"
+# FIXME: This seems to be needed by vscode:
+# eval "$(pyenv init -)"
 
 # Package manager
 if type "yay" > /dev/null 2>&1; then
