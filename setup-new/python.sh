@@ -85,7 +85,6 @@ $pipx_install_cmd sqlparse
 $pipx_install_cmd trash-cli
 $pipx_install_cmd git+https://github.com/will8211/unimatrix
 $pipx_install_cmd vimiv
-$pipx_inject_cmd vimiv pyqt5
 $pipx_install_cmd vim-vint
 $pipx_install_cmd yamllint
 $pipx_install_cmd youtube-dl
