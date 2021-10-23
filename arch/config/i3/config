@@ -291,6 +291,12 @@ bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec $font_aware_laun
 # Empty Trash Can
 bindsym $mod+Shift+b $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher trash-dialog
 
+# Dunst Notifications
+bindsym Control+space $nexec "dunstctl close"
+bindsym Control+Shift+space $nexec "dunstctl close-all"
+bindsym Control+grave $nexec "dunstctl history-pop"
+bindsym Control+Shift+j $nexec "dunstctl context"
+
 # }}}
 # Startup {{{
 
