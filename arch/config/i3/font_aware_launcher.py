@@ -4,6 +4,7 @@ import os
 from time import sleep
 
 import i3ipc
+
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
@@ -511,7 +512,11 @@ class ElectronApp(ROLApp):
         # Note: we set gdk env variables so that gtk dialogs spawned by these
         # apps have correct font size
         cmd += f' -e "{self.screen.gdk_env}{self.class_name.lower()}'
-        if self.screen.is_hidpi and not self.screen.other_is_hidpi:
+        if (self.screen.is_hidpi and not self.screen.other_is_hidpi) or (
+            self.screen.is_hidpi
+            and self.screen.other_is_hidpi
+            and self.class_name == 'Spotify'
+        ):
             cmd += ' --force-device-scale-factor=2'
 
         if self.class_name == 'Brave' and self.subcmd is not None:
