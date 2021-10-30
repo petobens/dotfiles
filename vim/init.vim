@@ -1822,7 +1822,7 @@ let g:dein#install_max_processes = 16
 " Function to open denite buffer with updates as updates finish
 function! s:dein_update()
   call dein#update()
-  Denite -no-start-filter -post-action=open dein/log:!
+  " Denite -no-start-filter -post-action=open dein/log:!
 endfunction
 
 " Maps
