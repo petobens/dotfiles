@@ -123,15 +123,14 @@ if type "tmux" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/tmux" "$HOME/.tmux"
     echo Created .tmux folder symlink
 fi
-if type "vim" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/vim" "$HOME/.vim"
-    echo Created .vim folder symlink
-    $ln_cmd -fTs "$dotfiles_dir/vimrc" "$HOME/.vimrc"
-    echo Created .vimrc symlink
-fi
 if type "nvim" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/vim" "$HOME/.config/nvim"
-    echo Created .config/nvim folder symlink
+    if [ -d "$dotfiles_dir/nvim" ]; then
+        $ln_cmd -fTs "$dotfiles_dir/nvim" "$HOME/.config/nvim"
+        echo Created .config/nvim folder symlink
+    else
+        $ln_cmd -fTs "$dotfiles_dir/vim" "$HOME/.config/nvim"
+        echo Created .config/nvim folder symlink from vim folder
+    fi
 fi
 if type "code" > /dev/null 2>&1; then
     for f in settings.json keybindings.json extensions.txt; do
