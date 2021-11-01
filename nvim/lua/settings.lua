@@ -1,9 +1,12 @@
 local opt = require('utils').opt
 
-opt('wo', 'number', true)
-opt('wo', 'relativenumber', true)
+opt('o', 'number', true)
+opt('o', 'relativenumber', true)
 opt('o', 'splitright', true)
 opt('o', 'clipboard', 'unnamedplus')
+
+-- Syntax
+opt('o', 'termguicolors', true)
 
 -- Tab settings
 opt('o', 'tabstop', 4)
