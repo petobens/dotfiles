@@ -23,6 +23,10 @@ while [ ! -d "$dotfiles_dir" ]; do
 done
 dotfiles_dir=${dotfiles_dir%/} # Strip last (potential) slash
 
+# Ask if we want to create a new gitconfig file
+read -p "Do you want to create new gitconfig file (y/n)? " -n 1 -r
+echo
+
 # Creating missing dirs
 echo Creating symlinks under "$HOME"/
 
@@ -124,7 +128,7 @@ if type "tmux" > /dev/null 2>&1; then
     echo Created .tmux folder symlink
 fi
 if type "nvim" > /dev/null 2>&1; then
-    if [ -d "$dotfiles_dir/nvim" ]; then
+    if [ -f "$dotfiles_dir/nvim/init.lua" ]; then
         $ln_cmd -fTs "$dotfiles_dir/nvim" "$HOME/.config/nvim"
         echo Created .config/nvim folder symlink
     else
@@ -378,8 +382,6 @@ if type "git" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/gitignore" "$HOME/.gitignore"
     echo Created .gitignore symlink
 
-    read -p "Do you want to create new gitconfig file (y/n)? " -n 1 -r
-    echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         rm -rf "$HOME/.gitconfig"
         read -r -e -p "Enter git user name: " username
