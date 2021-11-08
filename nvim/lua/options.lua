@@ -81,4 +81,4 @@ opt('o', 'wildmode', 'longest:full,full')
 
 -- Misc
 opt('o', 'spelllang', 'en,es')
--- TODO: spellfile
+opt('o', 'spellfile', vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add')

@@ -67,15 +67,17 @@ u.keymap('n', 'yy', 'mz0y$`z',  {noremap = false})
 u.keymap('n', '/', '/\\v', {silent = false, noremap = false})
 u.keymap('n', '?', '?\\v', {silent = false, noremap = false})
 u.keymap('n', '<C-o>', '<C-o>zvzz')
-u.keymap('n', '<C-y>', '<C-i>') -- Jump to newer entry in jumplist
+u.keymap('n', '<C-y>', '<C-i>zvzz') -- Jump to newer entry in jumplist
 u.keymap('n', '<Leader><Space>', ':nohlsearch<CR>:call clearmatches()<CR>')
 u.keymap('n', '<Leader>qr', ':cdo %s/', {silent = false})
 u.keymap('n', '<Leader>sr', ':%s/', {silent = false})
-u.keymap('n', 'n', 'nzzzv') -- keep matches window middle (opening folds)
+u.keymap('n', 'n', 'nzzzv') -- keep matches window in the middle (while opening folds)
 u.keymap('n', 'N', 'Nzzzv')
 u.keymap('n', "'", '`',  {noremap = false})
 u.keymap('n', '<Leader>dm', ':delmarks!<CR>:delmarks A-Z0-9<CR>')
 u.keymap('n', '<tab>', '%',  {noremap = false})
+u.keymap('n', '*', [[:let @/ = '\<' . expand('<cword>') . '\>'<bar>set hlsearch<CR>]], {noremap = false}) -- don't jump to first match with * and #
+u.keymap('n', '#', '#``', {noremap = false})
 
 -- Folding
 u.keymap('n', '<Leader>z', 'zMzvzz')
@@ -145,10 +147,7 @@ u.keymap('t', '<C-l>', '<C-\\><C-n><C-w>l')
 u.keymap('t', 'kj', '<C-\\><C-n>')
 
 
--- Commented
--- u.keymap('n', '<Leader>cu', 'v:lua.require("commented").commented()', {expr = true})
-vim.api.nvim_set_keymap('n', '<Leader>xx', "v:lua.require'commented'.commented()", {
-				expr = true,
-				silent = true,
-				noremap = true,
-			})
+-- Commented plugin
+-- TODO: move this to its own file
+u.keymap('n', '<Leader>cu', 'v:lua.require("commented").commented_line()', {expr = true})
+u.keymap('v', '<Leader>cu', 'v:lua.require("commented").commented()', {expr = true})
