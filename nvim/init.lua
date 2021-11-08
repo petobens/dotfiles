@@ -1,4 +1,5 @@
 require('env')
 require('plugins')
+require('udfs')
 require('settings')
 require('mappings')

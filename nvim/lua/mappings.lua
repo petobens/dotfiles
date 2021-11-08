@@ -10,6 +10,7 @@ utils.keymap('n', '<Leader>nw', ':noautocmd w!<CR>')
 utils.keymap('n', '<Leader>w', ':w!<CR>')
 utils.keymap('n', '<Leader>wc', ':w!<CR>:silent close<CR>')
 utils.keymap('n', '<Leader>wq', ':w!<CR>:q!<CR>')
+utils.keymap('n', '<Leader>ps', ':silent! source ' .. _G.udfs.session_fn() .. '<CR>')
 
 -- Buffer manipulation
 utils.keymap('n', '<C-n>', ':bn<CR>')
@@ -28,10 +29,10 @@ utils.keymap('n', '<C-A-j>', '<C-W>2+')
 utils.keymap('n', '<C-A-k>', '<C-W>2-')
 utils.keymap('n', '<C-A-l>', '<C-W>2>')
 utils.keymap('n', '<C-c>', '<C-W>c')
-utils.keymap('n', '<C-h>', '<C-W>h')
-utils.keymap('n', '<C-j>', '<C-W>j')
-utils.keymap('n', '<C-k>', '<C-W>k')
-utils.keymap('n', '<C-l>', '<C-W>l')
+utils.keymap('n', '<C-h>', [[<cmd>lua require('tmux').move_left()<CR>]])
+utils.keymap('n', '<C-j>', [[<cmd>lua require('tmux').move_down()<CR>]])
+utils.keymap('n', '<C-k>', [[<cmd>lua require('tmux').move_up()<CR>]])
+utils.keymap('n', '<C-l>', [[<cmd>lua require('tmux').move_right()<CR>]])
 utils.keymap('n', '<C-x>', '<C-W>xzz')
 utils.keymap('n', '<Leader>sp', ':split<CR>')
 utils.keymap('n', '<Leader>vs', ':vsplit<CR>')
@@ -63,7 +64,7 @@ utils.keymap('n', 'vv', '^vg_', {noremap = false}) -- Visual selection excluding
 
 -- Yanking and pasting
 utils.keymap('n', '<Leader>P', ':put!<CR>')
-utils.keymap('n', '<Leader>p', ':put<CR>')
+-- utils.keymap('n', '<Leader>p', ':put<CR>')
 utils.keymap('n', 'Y', 'y$',  {noremap = false})
 utils.keymap('n', 'yy', 'mz0y$`z',  {noremap = false})
 

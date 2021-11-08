@@ -19,6 +19,8 @@ return require('packer').startup(function(use)
         }) end
     }
 
+    use("nathom/tmux.nvim")
+
     if packer_bootstrap then
         require('packer').sync()
    end

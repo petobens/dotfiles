@@ -48,6 +48,7 @@ vim.opt.sessionoptions:append({'winpos', 'resize'})
 vim.cmd [[
 augroup session
     au!
+    au VimLeavePre * execute 'mksession! ' . v:lua.udfs.session_fn()
     au BufWinLeave {*.*,vimrc,vimrc_min,bashrc,config}
         \ if &previewwindow != 1 | mkview | endif
     au BufWinEnter {*.*,vimrc,vimrc_min,bashrc,config}
