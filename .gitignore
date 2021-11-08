@@ -7,7 +7,7 @@ vim/vimrc_min
 .tern-port
 
 # Nvim
-nvim/plugins
+nvim/plugin/
 nvim/cache/
 
 # Tmux

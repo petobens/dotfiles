@@ -1,6 +1,6 @@
 local udfs = {}
 
-function udfs.session_fn()
+function udfs.session_name()
     session_dir = vim.env.CACHE .. '/tmp/session/'
     vim.fn.mkdir(session_dir, 'p')
     session_file = 'vim_session'
@@ -12,3 +12,5 @@ function udfs.session_fn()
 end
 
 _G.udfs = udfs
+
+return udfs

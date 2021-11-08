@@ -12,7 +12,7 @@ return require('packer').startup(function(use)
     config = function() require('commented').setup({
             comment_padding = " ", 
             keybindings = {
-                n = "<Leader>cc", 
+                n = "<Leader>cc",
                 v = "<Leader>cc", 
                 nl = "<Leader>cc"
             }

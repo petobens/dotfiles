@@ -2,7 +2,7 @@ local opt = require('utils').opt
 
 -- Syntax
 vim.cmd('filetype plugin indent on')
-vim.cmd('syntax on')
+vim.cmd('syntax enable')
 opt('o', 'iskeyword', vim.o.iskeyword .. ',:')
 opt('o', 'termguicolors', true)
 
@@ -18,14 +18,13 @@ opt('o', 'lazyredraw', true)
 opt('o', 'modeline', false)
 opt('o', 'shortmess', 'aoOtTIc')
 opt('o', 'signcolumn', 'number')
-opt('o', 'timeoutlen', 550)
 opt('o', 'title', true)
+opt('o', 'timeoutlen', 550)
 opt('o', 'ttimeoutlen', 0)
 opt('o', 'updatetime', 500)
 opt('o', 'visualbell', true)
 
 -- Appearance
--- TODO: only show cursorline in current window
 opt('o', 'cursorline', true)
 opt('o', 'number', true)
 opt('o', 'relativenumber', true)
@@ -45,23 +44,19 @@ opt('o', 'undofile', true)
 opt('o', 'viewdir', vim.env.CACHE .. '/tmp/view//')
 vim.opt.sessionoptions:remove('tabpages')
 vim.opt.sessionoptions:append({'winpos', 'resize'})
-vim.cmd [[
-augroup session
-    au!
-    au VimLeavePre * execute 'mksession! ' . v:lua.udfs.session_fn()
-    au BufWinLeave {*.*,vimrc,vimrc_min,bashrc,config}
-        \ if &previewwindow != 1 | mkview | endif
-    au BufWinEnter {*.*,vimrc,vimrc_min,bashrc,config}
-        \ if &previewwindow != 1 | silent! loadview | endif
-augroup END
-]]
 
 -- Search, matching and substitution
 opt('o', 'gdefault', true)
 opt('o', 'ignorecase', true)
+opt('o', 'hlsearch', true)
 opt('o', 'matchtime', 1)
 opt('o', 'showmatch', true)
 opt('o', 'smartcase', true)
+if vim.fn.executable('rg') then
+    opt('o', 'grepprg', 'rg --smart-case --vimgrep --no-heading')
+    opt('o', 'grepformat', '%f:%l:%c:%m,%f:%l:%m')
+end
+
 
 -- Tab and indent
 opt('o', 'autoindent', true)

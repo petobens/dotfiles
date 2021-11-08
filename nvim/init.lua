@@ -1,5 +1,6 @@
 require('env')
 require('plugins')
 require('udfs')
-require('settings')
+require('options')
+require('autocmds')
 require('mappings')
