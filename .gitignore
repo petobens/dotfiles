@@ -6,6 +6,10 @@ vim/cache/
 vim/vimrc_min
 .tern-port
 
+# Nvim
+nvim/plugins
+nvim/cache/
+
 # Tmux
 tmux/plugins/
 tmux/resurrect/
