@@ -45,6 +45,7 @@ u.keymap('n', '+', '<C-a>')
 u.keymap('n', '-', '<C-x>')
 u.keymap('n', '<A-0>', 'H')
 u.keymap('n', '<A-b>', 'L')
+-- FIXME: not quite working (neither count not indentation)
 u.keymap('n', '<A-j>', ':execute "move+" . v:count1<CR>zO==')
 u.keymap('n', '<A-k>', ':execute "move--" . v:count1<CR>zO==')
 u.keymap('n', '<A-m>', 'M')
@@ -86,15 +87,24 @@ u.keymap('n', '<tab>', '%',  {noremap = false})
 u.keymap('n', '*', [[:let @/ = '\<' . expand('<cword>') . '\>'<bar>set hlsearch<CR>]], {noremap = false}) -- don't jump to first match with * and #
 u.keymap('n', '#', '#``', {noremap = false})
 
--- Folding
+-- Folds
 u.keymap('n', '<Leader>z', 'zMzvzz')
 u.keymap('n', 'zm', 'zM')
 u.keymap('n', 'zr', 'zR')
 u.keymap('n', '<Leader>mf', ':set foldmethod=marker<CR>zv')
 
+-- Diffs
+u.keymap('n', '<Leader>de', ':diffoff!<CR>')
+u.keymap('n', '<Leader>ds', ':call v:lua.udfs.diff_file_split()<CR>')
+u.keymap('n', '<Leader>du', ':diffupdate<CR>')
+u.keymap('n', '[h', "&diff ? '[c' : '[h'", {expr = true})
+u.keymap('n', ']h', "&diff ? ']c' : ']h'", {expr = true})
+
 -- Bookmarks
 u.keymap('n', '<Leader>ev', ':e $MYVIMRC<CR>')
 u.keymap('n', '<Leader>ew', ':e ' .. vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add<CR>')
+u.keymap('n', '<Leader>etm', ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_mutt.md<CR>')
+u.keymap('n', '<Leader>ets', ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_coding_setup.md<CR>')
 u.keymap('n', '<Leader>dd', ':e $HOME/Desktop/', {silent = false})
 u.keymap('n', '<Leader>sb', ':e  ' .. vim.fn.expand('%:p:h') .. '/scratch/', {silent = false})
 
@@ -114,6 +124,7 @@ u.keymap('i', '<A-f>', '<C-o>w')
 u.keymap('i', '<A-p>', '<C-R>"')
 u.keymap('i', '<A-x>', '<C-W>')
 u.keymap('i', '<C-a>', '<C-o>^')
+u.keymap('i', '<C-e>', 'pumvisible() ? "<C-e>" : "<C-o>$"', {expr = true})
 u.keymap('i', '<C-h>', '<C-o>h')
 u.keymap('i', '<C-l>', '<C-o>l')
 
@@ -151,6 +162,7 @@ u.keymap('c', '<C-e>', '<end>', {silent = false})
 u.keymap('c', '<C-h>', '<left>', {silent = false})
 u.keymap('c', '<C-l>', '<right>', {silent = false})
 u.keymap('c', '<C-x>', '<C-U>', {silent = false})
+u.keymap('c', '%%', "getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'", {silent = false, expr = true})
 
 -- Terminal mode
 u.keymap('t', '<C-A-n>', '<C-\\><C-n>:bn<CR>')
@@ -159,6 +171,7 @@ u.keymap('t', '<C-h>', '<C-\\><C-n><C-W>h')
 u.keymap('t', '<C-j>', '<C-\\><C-n><C-W>j')
 u.keymap('t', '<C-k>', '<C-\\><C-n><C-W>k')
 u.keymap('t', '<C-l>', '<C-\\><C-n><C-W>l')
+u.keymap('t', '<C-[>', '<C-\\><C-n>:normal! 0<CR>:call search(" ", "b")<CR>')
 u.keymap('t', 'kj', '<C-\\><C-n>')
 
 -- Commented plugin
