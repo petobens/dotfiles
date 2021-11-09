@@ -13,10 +13,10 @@ u.keymap('n', '<C-n>', ':bn<CR>')
 u.keymap('n', '<C-p>', ':bp<CR>')
 u.keymap('n', '<Leader>bd', ':bp|bd #<CR>')
 u.keymap('n', '<Leader>cd', ':lcd %:h<CR>')
-u.keymap('n', '<Leader>dd', ':e $HOME/Desktop/', {silent = false})
 u.keymap('n', '<Leader>rr', ':checktime<CR>')
 u.keymap('n', '<Leader>so', ':update<CR>:luafile %<CR>', {silent = false})
 u.keymap('n', '<Leader>wd', ':bd<CR>')
+u.keymap('n', 'gf', ':call v:lua.udfs.goto_file_insplit()<CR>')
 
 -- Window manipulation
 u.keymap('n', '<A-o>', '<C-W>ozv')
@@ -30,11 +30,13 @@ u.keymap('n', '<C-j>', [[<cmd>lua require('tmux').move_down()<CR>]])
 u.keymap('n', '<C-k>', [[<cmd>lua require('tmux').move_up()<CR>]])
 u.keymap('n', '<C-l>', [[<cmd>lua require('tmux').move_right()<CR>]])
 u.keymap('n', '<C-x>', '<C-W>xzz')
+u.keymap('n', '<Leader>hv', '<C-W>H<C-W>x') -- make horizantal vertical and viceversa
+u.keymap('n', '<Leader>vh', '<C-W>K')
+u.keymap('n', '<Leader>pu', ':wincmd J<bar>15 wincmd _<CR>')  -- Resize win as popup
 u.keymap('n', '<Leader>sp', ':split<CR>')
 u.keymap('n', '<Leader>vs', ':vsplit<CR>')
 
 -- Line edit/movement
--- FIXME: virtcol not working
 u.keymap('n', '<down>', '<nop>')
 u.keymap('n', '<left>', '<nop>')
 u.keymap('n', '<right>', '<nop>')
@@ -43,23 +45,28 @@ u.keymap('n', '+', '<C-a>')
 u.keymap('n', '-', '<C-x>')
 u.keymap('n', '<A-0>', 'H')
 u.keymap('n', '<A-b>', 'L')
+u.keymap('n', '<A-j>', ':execute "move+" . v:count1<CR>zO==')
+u.keymap('n', '<A-k>', ':execute "move--" . v:count1<CR>zO==')
 u.keymap('n', '<A-m>', 'M')
-u.keymap('n', '<A-j>', ':move +1<CR>')
-u.keymap('n', '<A-k>', ':move -2<CR>')
 u.keymap('n', '<A-s>', 'i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>`w') -- Split line
 u.keymap('n', '<A-u>', 'mzg~iw`z', {noremap = false}) -- Upper case inner word
 u.keymap('n', '<Leader>mr', 'q') -- Macro recording
 u.keymap('n', 'H', '^')
 u.keymap('n', 'L', '$')
-u.keymap('n', 'M', [[:execute 'normal! ' . (virtcol('$')/2) . '\|'<CR>]], {silent = false, noremap = false})
+u.keymap('n', 'M', [[:execute 'normal! ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('n', 'j', 'gj')
 u.keymap('n', 'k', 'gk')
+u.keymap('n', 'J', 'mzJ`z')  -- Keep the cursor in place while joining lines
 u.keymap('n', 'q', '<nop>')
+u.keymap('n', 'Q', 'gwap')
 u.keymap('n', 'vv', '^vg_', {noremap = false}) -- Visual selection excluding indentation
+-- FIXME: https://github.com/neovim/neovim/issues/12544 we cannot use vim.go.scrolloff here
+u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>')
 
 -- Yank and paste
 u.keymap('n', '<Leader>P', ':put!<CR>')
-u.keymap('n', '<Leader>p', ':put<CR>', {nowait = false})
+u.keymap('n', '<Leader>p', ':put<CR>', {nowait = false}) 
+u.keymap('n', 'gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]') -- Visually reselect what was just pasted
 u.keymap('n', 'Y', 'y$',  {noremap = false})
 u.keymap('n', 'yy', 'mz0y$`z',  {noremap = false})
 
@@ -87,6 +94,9 @@ u.keymap('n', '<Leader>mf', ':set foldmethod=marker<CR>zv')
 
 -- Bookmarks
 u.keymap('n', '<Leader>ev', ':e $MYVIMRC<CR>')
+u.keymap('n', '<Leader>ew', ':e ' .. vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add<CR>')
+u.keymap('n', '<Leader>dd', ':e $HOME/Desktop/', {silent = false})
+u.keymap('n', '<Leader>sb', ':e  ' .. vim.fn.expand('%:p:h') .. '/scratch/', {silent = false})
 
 -- Misc commands
 u.keymap('n', '<Leader>ic', ':set list!<CR>')
@@ -112,6 +122,8 @@ u.keymap('v', '<down>', '<nop>')
 u.keymap('v', '<left>', '<nop>')
 u.keymap('v', '<right>', '<nop>')
 u.keymap('v', '<up>', '<nop>')
+u.keymap('v', '+', '<C-a>')
+u.keymap('v', '-', '<C-x>')
 u.keymap('v', '/', '/\\v', {silent = false, noremap = false})
 u.keymap('v', '?', '?\\v', {silent = false, noremap = false})
 u.keymap('v', '<', '<gv')
@@ -120,10 +132,13 @@ u.keymap('v', '<A-j>', ":m '>+1<CR>gv=gv")
 u.keymap('v', '<A-k>', ":m '<-2<CR>gv=gv")
 u.keymap('v', '<ESC>', '"+ygv<C-c>') -- mimicks autoselect
 u.keymap('v', '<Leader>sa', ':sort i<CR>')
+u.keymap('v', '<Leader>sr', ':%s/', {silent = false})
 u.keymap('v', 'G', 'G$')
 u.keymap('v', 'H', '^')
 u.keymap('v', 'L', 'g_')
+u.keymap('v', 'M', [[:<C-U>execute 'normal! gv ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('v', 'Q', 'gq')
+u.keymap('v', '.', ':normal .<CR>')
 
 -- Command mode
 u.keymap('n', ';', ':', {silent = false})
@@ -140,12 +155,11 @@ u.keymap('c', '<C-x>', '<C-U>', {silent = false})
 -- Terminal mode
 u.keymap('t', '<C-A-n>', '<C-\\><C-n>:bn<CR>')
 u.keymap('t', '<C-A-p>', '<C-\\><C-n>:bp<CR>')
-u.keymap('t', '<C-h>', '<C-\\><C-n><C-w>h')
-u.keymap('t', '<C-j>', '<C-\\><C-n><C-w>j')
-u.keymap('t', '<C-k>', '<C-\\><C-n><C-w>k')
-u.keymap('t', '<C-l>', '<C-\\><C-n><C-w>l')
+u.keymap('t', '<C-h>', '<C-\\><C-n><C-W>h')
+u.keymap('t', '<C-j>', '<C-\\><C-n><C-W>j')
+u.keymap('t', '<C-k>', '<C-\\><C-n><C-W>k')
+u.keymap('t', '<C-l>', '<C-\\><C-n><C-W>l')
 u.keymap('t', 'kj', '<C-\\><C-n>')
-
 
 -- Commented plugin
 -- TODO: move this to its own file
