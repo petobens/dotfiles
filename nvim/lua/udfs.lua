@@ -1,40 +1,78 @@
+local fn = vim.fn
+local cmd = vim.cmd
+
 local udfs = {}
 
+function udfs.mk_non_dir()
+    local dir = fn.expand('%:p:h')
+    if fn.isdirectory(dir) == 0 then
+        fn.mkdir(dir, 'p')
+    end
+end
+
+function udfs.delete_trailing_whitespace ()
+    local pos = vim.api.nvim_win_get_cursor(0)
+    local trailing = vim.fn.search([[\s$]], 'nw')
+    if trailing ~= 0 then
+        vim.cmd[[keepjumps keeppatterns %s/\s\+$//e]]
+        vim.api.nvim_win_set_cursor(0, pos)
+    end
+end
+
 function udfs.session_name()
-    session_dir = vim.env.CACHE .. '/tmp/session/'
-    vim.fn.mkdir(session_dir, 'p')
-    session_file = 'vim_session'
+    local session_dir = vim.env.CACHE .. '/tmp/session/'
+    udfs.mk_non_dir(session_dir)
+    local session_file = 'vim_session'
     if vim.env.TMUX ~= nil then
-        tmux_session = vim.fn.trim(vim.fn.system("tmux display-message -p '#S'"))
+        local tmux_session = fn.trim(fn.system("tmux display-message -p '#S'"))
         session_file = session_file .. '_' .. tmux_session
     end
-    return session_dir .. session_file .. '.vim'
+    return (session_dir .. session_file .. '.vim')
 end
 
 function udfs.goto_file_insplit()
-    wincmd = 'wincmd f'
-    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+    local wincmd = 'wincmd f'
+    if fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
         wincmd = 'vertical ' .. wincmd
     end
-    vim.cmd(wincmd)
+    cmd(wincmd)
 end
 
 function udfs.diff_file_split()
-    save_pwd = vim.fn.getcwd()
-    vim.cmd('lcd %:p:h')
-    win_id = vim.fn.win_getid()
-    other_file = vim.fn.input('Input file for diffing: ', '', 'file')
+    local save_pwd = fn.getcwd()
+    cmd('lcd %:p:h')
+    local win_id = fn.win_getid()
+    local other_file = fn.input('Input file for diffing: ', '', 'file')
     if other_file == '' then
         return
     end
-    diffcmd = 'diffsplit '
-    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+    local diffcmd = 'diffsplit '
+    if fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
        diffcmd = 'vertical ' .. diffcmd
     end
-    vim.cmd(diffcmd .. other_file)
-    vim.fn.win_gotoid(win_id)
-    vim.cmd('normal gg]c') -- move to first hunk
-    vim.cmd('lcd ' .. save_pwd)
+    cmd(diffcmd .. other_file)
+    fn.win_gotoid(win_id)
+    cmd('normal gg]c') -- move to first hunk
+    cmd('lcd ' .. save_pwd)
+end
+
+function udfs.open_links(mode)
+    local url
+    if mode == 'v' then
+        url = string.sub(fn.getline("'<"), fn.getpos("'<")[2] + 2, fn.getpos("'>")[3])
+    else
+        url = vim.fn.matchstr(vim.fn.getline('.'), [[\(http\|www\.\)[^ ]:\?[[:alnum:]%\/_#.-]*]])
+    end
+    url = fn.escape(url, '#!?&;|%')
+    cmd('silent! !xdg-open ' .. url)
+    cmd('redraw!')
+end
+
+
+function udfs.visual_search(direction)
+    local tmp_register = fn.getreg('@s')
+    print(tmp_register)
+    fn.setreg('s', tmp_register)
 end
 
 

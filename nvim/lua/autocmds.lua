@@ -43,3 +43,19 @@ augroup cline
     au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
 augroup END
 ]]
+
+-- Create non-existing parent directory on save
+vim.cmd [[
+augroup create_dir_before_write
+    au!
+    au BufWritePre * call v:lua.udfs.mk_non_dir()
+augroup END
+]]
+
+-- Delete trailing whitespace
+vim.cmd [[
+augroup create_dir_before_write
+    au!
+    au BufWritePre * call v:lua.udfs.delete_trailing_whitespace()
+augroup END
+]]

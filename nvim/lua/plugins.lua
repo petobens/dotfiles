@@ -10,14 +10,15 @@ return require('packer').startup(function(use)
 
     use{'winston0410/commented.nvim',
     config = function() require('commented').setup({
-            comment_padding = " ", 
+            comment_padding = " ",
             keybindings = {
                 n = "<Leader>cc",
-                v = "<Leader>cc", 
+                v = "<Leader>cc",
                 nl = "<Leader>cc"
             }
         }) end
     }
+    -- TODO Add https://github.com/Pocco81/HighStr.nvim
 
     use("nathom/tmux.nvim")
 

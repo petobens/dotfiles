@@ -54,7 +54,7 @@ u.keymap('n', '<A-u>', 'mzg~iw`z', {noremap = false}) -- Upper case inner word
 u.keymap('n', '<Leader>mr', 'q') -- Macro recording
 u.keymap('n', 'H', '^')
 u.keymap('n', 'L', '$')
-u.keymap('n', 'M', [[:execute 'normal! ' . (virtcol('$')/2) . '<bar>'<CR>]])
+u.keymap('n', 'M', [[<cmd>execute 'normal! ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('n', 'j', 'gj')
 u.keymap('n', 'k', 'gk')
 u.keymap('n', 'J', 'mzJ`z')  -- Keep the cursor in place while joining lines
@@ -66,7 +66,7 @@ u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>')
 
 -- Yank and paste
 u.keymap('n', '<Leader>P', ':put!<CR>')
-u.keymap('n', '<Leader>p', ':put<CR>', {nowait = false}) 
+u.keymap('n', '<Leader>p', ':put<CR>', {nowait = false})
 u.keymap('n', 'gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]') -- Visually reselect what was just pasted
 u.keymap('n', 'Y', 'y$',  {noremap = false})
 u.keymap('n', 'yy', 'mz0y$`z',  {noremap = false})
@@ -108,7 +108,10 @@ u.keymap('n', '<Leader>ets', ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_co
 u.keymap('n', '<Leader>dd', ':e $HOME/Desktop/', {silent = false})
 u.keymap('n', '<Leader>sb', ':e  ' .. vim.fn.expand('%:p:h') .. '/scratch/', {silent = false})
 
--- Misc commands
+-- Misc
+u.keymap('n', '<Leader>dt', ':call v:lua.udfs.delete_trailing_whitespace()<CR>')
+u.keymap('n', '<Leader>ol', ':call v:lua.udfs.open_links("n")<CR>')
+u.keymap('v', '<Leader>ol', ':call v:lua.udfs.open_links("v")<CR>')
 u.keymap('n', '<Leader>ic', ':set list!<CR>')
 u.keymap('n', '<Leader>sa', ':sort i<CR>')
 u.keymap('n', '<Leader>sc', ':set spell!<CR>')
@@ -147,9 +150,10 @@ u.keymap('v', '<Leader>sr', ':%s/', {silent = false})
 u.keymap('v', 'G', 'G$')
 u.keymap('v', 'H', '^')
 u.keymap('v', 'L', 'g_')
-u.keymap('v', 'M', [[:<C-U>execute 'normal! gv ' . (virtcol('$')/2) . '<bar>'<CR>]])
+u.keymap('v', 'M', [[<cmd>execute 'normal! gv ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('v', 'Q', 'gq')
 u.keymap('v', '.', ':normal .<CR>')
+u.keymap('x', '*', ':<C-U>call v:lua.udfs.visual_search("/")<CR>', {silent = false})
 
 -- Command mode
 u.keymap('n', ';', ':', {silent = false})

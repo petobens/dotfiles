@@ -26,6 +26,7 @@ opt('o', 'visualbell', true)
 
 -- Appearance
 opt('o', 'cursorline', true)
+opt('o', 'mouse', 'a')
 opt('o', 'number', true)
 opt('o', 'relativenumber', true)
 opt('o', 'scrolloff', 3)
