@@ -213,6 +213,7 @@ $yay_cmd rsync
 $yay_cmd sd
 $yay_cmd shellcheck
 $yay_cmd shfmt
+$yay_cmd slides-bin
 $yay_cmd socat
 $yay_cmd sshfs
 $yay_cmd sshpass
