@@ -112,7 +112,7 @@ ll() {
         return 1
     else
         curr_dir="$(realpath "$PWD")"
-        res=$(echo "$res" | rev | tr -s ' ' | cut -d ' ' -f 2 | rev)
+        res=$(echo "$res" | rev | tr -s ' ' | cut -d ' ' -f 1 | rev)
         path="$curr_dir/$res"
         if [[ -d "$path" ]]; then
             cmd="cd"
