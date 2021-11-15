@@ -115,6 +115,7 @@ u.keymap('v', '<Leader>ol', ':call v:lua.udfs.open_links("v")<CR>')
 u.keymap('n', '<Leader>ic', ':set list!<CR>')
 u.keymap('n', '<Leader>sa', ':sort i<CR>')
 u.keymap('n', '<Leader>sc', ':set spell!<CR>')
+u.keymap('n', '<Leader>fm', ':call v:lua.udfs.tmux_split_cmd("ranger")<CR>')
 
 -- Insert mode
 u.keymap('i', 'jj', '<ESC>')
@@ -153,7 +154,8 @@ u.keymap('v', 'L', 'g_')
 u.keymap('v', 'M', [[<cmd>execute 'normal! gv ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('v', 'Q', 'gq')
 u.keymap('v', '.', ':normal .<CR>')
-u.keymap('x', '*', ':<C-U>call v:lua.udfs.visual_search("/")<CR>', {silent = false})
+u.keymap('x', '*', ':<C-U>call v:lua.udfs.visual_search("/")<CR>/<C-R>=@/<CR><CR><C-o>')
+u.keymap('x', '#', ':<C-U>call v:lua.udfs.visual_search("?")<CR>?<C-R>=@/<CR><CR><C-o>')
 
 -- Command mode
 u.keymap('n', ';', ':', {silent = false})

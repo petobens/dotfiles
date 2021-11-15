@@ -10,7 +10,7 @@ function udfs.mk_non_dir()
     end
 end
 
-function udfs.delete_trailing_whitespace ()
+function udfs.delete_trailing_whitespace()
     local pos = vim.api.nvim_win_get_cursor(0)
     local trailing = vim.fn.search([[\s$]], 'nw')
     if trailing ~= 0 then
@@ -68,11 +68,20 @@ function udfs.open_links(mode)
     cmd('redraw!')
 end
 
-
 function udfs.visual_search(direction)
-    local tmp_register = fn.getreg('@s')
-    print(tmp_register)
+    local tmp_register = fn.getreg('s')
+    cmd('normal! gv"sy')
+    fn.setreg('/', '\\V' .. fn.substitute(fn.escape(fn.getreg('s'), direction .. '\\'),
+             '\\n', '\\\\n', 'g'))
     fn.setreg('s', tmp_register)
+end
+
+function udfs.tmux_split_cmd(tmux_cmd, cwd)
+    if vim.env.TMUX == nil then
+        return
+    end
+    local cwd = cwd or fn.getcwd()
+    cmd('silent! !tmux split-window -p 30 -c ' .. cwd .. ' ' .. tmux_cmd)
 end
 
 
