@@ -7,6 +7,7 @@ u.keymap('n', '<Leader>ps', ':silent! source ' .. udfs.session_name() .. '<CR>')
 u.keymap('n', '<Leader>w', ':w!<CR>')
 u.keymap('n', '<Leader>wc', ':w!<CR>:silent close<CR>')
 u.keymap('n', '<Leader>wq', ':w!<CR>:q!<CR>')
+-- TODO: add sudo write and edit and edit minimal lua file
 
 -- Buffer manipulation
 u.keymap('n', '<C-n>', ':bn<CR>')
@@ -45,9 +46,8 @@ u.keymap('n', '+', '<C-a>')
 u.keymap('n', '-', '<C-x>')
 u.keymap('n', '<A-0>', 'H')
 u.keymap('n', '<A-b>', 'L')
--- FIXME: not quite working (neither count not indentation)
-u.keymap('n', '<A-j>', ':execute "move+" . v:count1<CR>zO==')
-u.keymap('n', '<A-k>', ':execute "move--" . v:count1<CR>zO==')
+u.keymap('n', '<A-j>', ':<C-U>execute "move+" . v:count1<CR>:silent! normal! zO==<CR>')
+u.keymap('n', '<A-k>', ':<C-U>execute "move--" . v:count1<CR>:silent! normal! zO==<CR>')
 u.keymap('n', '<A-m>', 'M')
 u.keymap('n', '<A-s>', 'i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>`w') -- Split line
 u.keymap('n', '<A-u>', 'mzg~iw`z', {noremap = false}) -- Upper case inner word
@@ -63,6 +63,7 @@ u.keymap('n', 'Q', 'gwap')
 u.keymap('n', 'vv', '^vg_', {noremap = false}) -- Visual selection excluding indentation
 -- FIXME: https://github.com/neovim/neovim/issues/12544 we cannot use vim.go.scrolloff here
 u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>')
+-- TODO: add mapping to swap words
 
 -- Yank and paste
 u.keymap('n', '<Leader>P', ':put!<CR>')
