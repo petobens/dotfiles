@@ -8,17 +8,40 @@ return require('packer').startup(function(use)
     -- TODO: automatically install plugins
     use('wbthomason/packer.nvim')
 
-    use{'winston0410/commented.nvim',
-    config = function() require('commented').setup({
-            comment_padding = " ",
-            keybindings = {
-                n = "<Leader>cc",
-                v = "<Leader>cc",
-                nl = "<Leader>cc"
-            }
-        }) end
+    use{
+        'winston0410/commented.nvim',
+        config = function()
+            require('plugins/commented')
+        end,
     }
-    -- TODO Add https://github.com/Pocco81/HighStr.nvim
+
+    use{
+        'navarasu/onedark.nvim',
+        config = function()
+            require('plugins/onedark')
+        end,
+    }
+
+    use{
+        'norcalli/nvim-colorizer.lua',
+        config = function()
+            require('plugins/colorizer')
+        end,
+    }
+    use{
+        'Pocco81/HighStr.nvim',
+        config = function()
+            require('plugins/high_str')
+        end,
+    }
+
+    use{
+        'nvim-lualine/lualine.nvim',
+        requires = {'kyazdani42/nvim-web-devicons', opt = true},
+        config = function()
+            require('plugins/lualine')
+        end,
+    }
 
     use("nathom/tmux.nvim")
 

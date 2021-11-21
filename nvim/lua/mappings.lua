@@ -180,8 +180,3 @@ u.keymap('t', '<C-k>', '<C-\\><C-n><C-W>k')
 u.keymap('t', '<C-l>', '<C-\\><C-n><C-W>l')
 u.keymap('t', '<C-[>', '<C-\\><C-n>:normal! 0<CR>:call search(" ", "b")<CR>')
 u.keymap('t', 'kj', '<C-\\><C-n>')
-
--- Commented plugin
--- TODO: move this to its own file
-u.keymap('n', '<Leader>cu', 'v:lua.require("commented").commented_line()', {expr = true})
-u.keymap('v', '<Leader>cu', 'v:lua.require("commented").commented()', {expr = true})
