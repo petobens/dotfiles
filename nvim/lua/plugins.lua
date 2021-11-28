@@ -66,7 +66,10 @@ return require('packer').startup(function(use)
 
    use{
         'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate'
+        run = ':TSUpdate',
+        config = function()
+            require('plugins/treesitter')
+        end,
     }
 
     use("nathom/tmux.nvim")
