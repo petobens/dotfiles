@@ -16,6 +16,16 @@ return require('packer').startup(function(use)
     }
 
     use{
+        -- FIXME: doesn't allow for repeat?
+        'blackCauldron7/surround.nvim',
+        config = function()
+            require('surround').setup({
+                mappings_style = 'surround'
+            })
+        end
+    }
+
+    use{
         'navarasu/onedark.nvim',
         config = function()
             require('plugins/onedark')
@@ -49,6 +59,29 @@ return require('packer').startup(function(use)
     }
 
     use{
+        'neovim/nvim-lspconfig'
+    }
+
+    use{
+        'williamboman/nvim-lsp-installer',
+        config = function()
+            require('plugins/lsp_installer')
+        end,
+    }
+
+    use{
+        'hrsh7th/nvim-cmp',
+        requires = {
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-path',
+        },
+        config = function()
+          require('plugins/cmp_config')
+        end,
+      }
+
+    use{
         'kyazdani42/nvim-tree.lua',
         requires = {'kyazdani42/nvim-web-devicons'},
         config = function()
@@ -62,6 +95,13 @@ return require('packer').startup(function(use)
         config = function()
             require('plugins/telescope')
         end,
+    }
+    use{
+        'nvim-telescope/telescope-z.nvim',
+        requires = {
+            {'nvim-telescope/telescope.nvim'},
+            {'nvim-lua/popup.nvim'},
+        },
     }
 
    use{

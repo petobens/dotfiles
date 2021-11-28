@@ -13,6 +13,11 @@ require('telescope').setup({
   },
 })
 
+-- Extensions
+require('telescope').load_extension('z')
+
+
+-- Mappings
 u.keymap('n', '<Leader>ls', ':Telescope find_files<CR>')
 u.keymap('n', '<Leader>lu', ':Telescope find_files cwd=..<CR>')
 u.keymap('n', '<Leader>sd', ':Telescope find_files cwd=', {silent = false})
@@ -20,3 +25,4 @@ u.keymap('n', '<Leader>ig', ':Telescope live_grep<CR>')
 u.keymap('n', '<Leader>rd', ':Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', ':Telescope buffers<CR>')
 u.keymap('n', '<Leader>gl', ':Telescope git_commits<CR>')
+u.keymap('n', '<A-z>', [[<cmd>lua require('telescope').extensions.z.list()<CR>]])
