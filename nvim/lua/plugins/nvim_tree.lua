@@ -5,7 +5,7 @@ local map_list = {
     {key = '<CR>', cb = tree_cb('cd')},
     {key = 'v', cb = tree_cb('vsplit')},
     {key = 's', cb = tree_cb('split')},
-    {key = 'c', cb = tree_cb('create')},
+    {key = 'F', cb = tree_cb('create')},
     {key = 'd', cb = tree_cb('remove')},
     {key = 'r', cb = tree_cb('rename')},
     {key = 'y', cb = tree_cb('copy')},

@@ -70,6 +70,14 @@ return require('packer').startup(function(use)
     }
 
     use{
+        'folke/trouble.nvim',
+        requires = 'kyazdani42/nvim-web-devicons',
+        config = function()
+            require('plugins/trouble_conf')
+        end
+    }
+
+    use{
         'hrsh7th/nvim-cmp',
         requires = {
             'hrsh7th/cmp-nvim-lsp',
