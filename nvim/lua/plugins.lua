@@ -59,12 +59,12 @@ return require('packer').startup(function(use)
             require('plugins/high_str')
         end,
     })
-    use({
-        'lukas-reineke/indent-blankline.nvim',
-        config = function()
-            require('plugins/indent_lines')
-        end,
-    })
+    -- use({
+        -- 'lukas-reineke/indent-blankline.nvim',
+        -- config = function()
+            -- require('plugins/indent_lines')
+        -- end,
+    -- })
 
     -- LSP and completion
     use({
