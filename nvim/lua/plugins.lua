@@ -8,14 +8,37 @@ return require('packer').startup(function(use)
     -- TODO: automatically install plugins
     use('wbthomason/packer.nvim')
 
-    use{
+    -- Appearance
+    -- See https://github.com/lukas-reineke/onedark.nvim/blob/master/lua/onedark.lua
+    use({
+        'navarasu/onedark.nvim',
+        config = function()
+            require('plugins/onedark')
+        end,
+    })
+    use({
+        'nvim-lualine/lualine.nvim',
+        requires = {'kyazdani42/nvim-web-devicons'},
+        config = function()
+            require('plugins/lualine')
+        end,
+    })
+    use({
+        'romgrk/barbar.nvim',
+        requires = {'kyazdani42/nvim-web-devicons'},
+        config = function()
+            require('plugins/barbar')
+        end,
+    })
+
+    -- Editing
+    use({
         'winston0410/commented.nvim',
         config = function()
-            require('plugins/commented')
+            require('plugins/commented_cfg')
         end,
-    }
-
-    use{
+    })
+    use({
         -- FIXME: doesn't allow for repeat?
         'blackCauldron7/surround.nvim',
         config = function()
@@ -23,61 +46,44 @@ return require('packer').startup(function(use)
                 mappings_style = 'surround'
             })
         end
-    }
-
-    use{
-        'navarasu/onedark.nvim',
-        config = function()
-            require('plugins/onedark')
-        end,
-    }
-
-    use{
+    })
+    use({
         'norcalli/nvim-colorizer.lua',
         config = function()
             require('plugins/colorizer')
         end,
-    }
-    use{
+    })
+    use({
         'Pocco81/HighStr.nvim',
         config = function()
             require('plugins/high_str')
         end,
-    }
-
-    use{
-        'nvim-lualine/lualine.nvim',
-        requires = {'kyazdani42/nvim-web-devicons', opt = true},
+    })
+    use({
+        'lukas-reineke/indent-blankline.nvim',
         config = function()
-            require('plugins/lualine')
+            require('plugins/indent_lines')
         end,
-    }
+    })
 
-    use{
-        'romgrk/barbar.nvim',
-        requires = {'kyazdani42/nvim-web-devicons'},
-    }
-
-    use{
+    -- LSP and completion
+    use({
         'neovim/nvim-lspconfig'
-    }
-
-    use{
+    })
+    use({
         'williamboman/nvim-lsp-installer',
         config = function()
             require('plugins/lsp_installer')
         end,
-    }
-
-    use{
+    })
+    use({
         'folke/trouble.nvim',
         requires = 'kyazdani42/nvim-web-devicons',
         config = function()
-            require('plugins/trouble_conf')
+            require('plugins/trouble_cfg')
         end
-    }
-
-    use{
+    })
+    use({
         'hrsh7th/nvim-cmp',
         requires = {
             'hrsh7th/cmp-nvim-lsp',
@@ -85,40 +91,52 @@ return require('packer').startup(function(use)
             'hrsh7th/cmp-path',
         },
         config = function()
-          require('plugins/cmp_config')
+            require('plugins/cmp_cfg')
         end,
-      }
+    })
 
-    use{
-        'kyazdani42/nvim-tree.lua',
-        requires = {'kyazdani42/nvim-web-devicons'},
-        config = function()
-            require('plugins/nvim_tree')
-        end,
-    }
-
-    use{
-        'nvim-telescope/telescope.nvim',
-        requires = {{'nvim-lua/plenary.nvim'}},
-        config = function()
-            require('plugins/telescope')
-        end,
-    }
-    use{
-        'nvim-telescope/telescope-z.nvim',
-        requires = {
-            {'nvim-telescope/telescope.nvim'},
-            {'nvim-lua/popup.nvim'},
-        },
-    }
-
-   use{
+   use({
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate',
         config = function()
             require('plugins/treesitter')
         end,
-    }
+    })
+
+    -- Telescope and file exploring
+    use({
+        'nvim-telescope/telescope.nvim',
+        requires = {{'nvim-lua/plenary.nvim'}},
+        config = function()
+            require('plugins/telescope')
+        end,
+    })
+    use({
+        'nvim-telescope/telescope-z.nvim',
+        requires = {
+            {'nvim-telescope/telescope.nvim'},
+            {'nvim-lua/popup.nvim'},
+        },
+    })
+    use({
+        'kyazdani42/nvim-tree.lua',
+        requires = {'kyazdani42/nvim-web-devicons'},
+        config = function()
+            require('plugins/nvim_tree')
+        end,
+    })
+
+    -- Git
+    use({
+        'lewis6991/gitsigns.nvim',
+        requires = {
+            'nvim-lua/plenary.nvim'
+        },
+        config = function()
+            require('plugins/gitsigns_cfg')
+        end
+    })
+
 
     use("nathom/tmux.nvim")
 

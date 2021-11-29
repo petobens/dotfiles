@@ -10,8 +10,6 @@ u.keymap('n', '<Leader>wq', ':w!<CR>:q!<CR>')
 -- TODO: add sudo write and edit and edit minimal lua file
 
 -- Buffer manipulation
-u.keymap('n', '<C-n>', ':bn<CR>')
-u.keymap('n', '<C-p>', ':bp<CR>')
 u.keymap('n', '<Leader>bd', ':bp|bd #<CR>')
 u.keymap('n', '<Leader>cd', ':lcd %:h<CR>')
 u.keymap('n', '<Leader>rr', ':checktime<CR>')
