@@ -23,13 +23,13 @@ return require('packer').startup(function(use)
             require('plugins/lualine')
         end,
     })
-    use({
-        'romgrk/barbar.nvim',
-        requires = {'kyazdani42/nvim-web-devicons'},
-        config = function()
-            require('plugins/barbar')
-        end,
-    })
+    -- use({
+        -- 'romgrk/barbar.nvim',
+        -- requires = {'kyazdani42/nvim-web-devicons'},
+        -- config = function()
+            -- require('plugins/barbar')
+        -- end,
+    -- })
 
     -- Editing
     use({
