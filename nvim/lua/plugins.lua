@@ -22,12 +22,14 @@ return require('packer').startup(function(use)
             require('plugins/lualine')
         end,
     })
-    -- Maybe try https://github.com/akinsho/bufferline.nvim
     use({
-        'romgrk/barbar.nvim',
-        requires = {'kyazdani42/nvim-web-devicons'},
+        'kdheepak/tabline.nvim',
+        requires = {
+            {'hoob3rt/lualine.nvim'},
+            {'kyazdani42/nvim-web-devicons'} ,
+        },
         config = function()
-            require('plugins/barbar')
+            require('plugins/tabline')
         end,
     })
 

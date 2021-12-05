@@ -23,6 +23,7 @@ onedarkpro.setup({
         linenr_grey = '#4b5263',
         pmenu = '#333841',
         visual_grey = '#3e4452',
+        special_grey = '#3b4048',
 
         -- Some HL groups
         color_column = '#282c34',
@@ -46,6 +47,8 @@ onedarkpro.setup({
         Visual = {bg = '${visual_grey}'},
         VisualNOS = {link = 'Visual'},
         WildMenu = {link = 'PMenuSel'},
+        StatusLine = {fg = '${fg}', bg = '${cursorline}'},
+        StatusLineNC = {fg = '${cursorline}'},
 
         -- Syntax
         Comment = {fg = '${comment_grey}', style = 'italic'},
