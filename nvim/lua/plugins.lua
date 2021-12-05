@@ -9,9 +9,8 @@ return require('packer').startup(function(use)
     use('wbthomason/packer.nvim')
 
     -- Appearance
-    -- See https://github.com/lukas-reineke/onedark.nvim/blob/master/lua/onedark.lua
     use({
-        'navarasu/onedark.nvim',
+        'olimorris/onedarkpro.nvim',
         config = function()
             require('plugins/onedark')
         end,
@@ -24,13 +23,13 @@ return require('packer').startup(function(use)
         end,
     })
     -- Maybe try https://github.com/akinsho/bufferline.nvim
-    -- use({
-        -- 'romgrk/barbar.nvim',
-        -- requires = {'kyazdani42/nvim-web-devicons'},
-        -- config = function()
-            -- require('plugins/barbar')
-        -- end,
-    -- })
+    use({
+        'romgrk/barbar.nvim',
+        requires = {'kyazdani42/nvim-web-devicons'},
+        config = function()
+            require('plugins/barbar')
+        end,
+    })
 
     -- Editing
     use({
@@ -60,12 +59,12 @@ return require('packer').startup(function(use)
             require('plugins/high_str')
         end,
     })
-    -- use({
-        -- 'lukas-reineke/indent-blankline.nvim',
-        -- config = function()
-            -- require('plugins/indent_lines')
-        -- end,
-    -- })
+    use({
+        'lukas-reineke/indent-blankline.nvim',
+        config = function()
+            require('plugins/indent_lines')
+        end,
+    })
 
     -- LSP and completion
     use({
