@@ -12,14 +12,14 @@ return require('packer').startup(function(use)
     use({
         'olimorris/onedarkpro.nvim',
         config = function()
-            require('plugins/onedark')
+            require('plugin-config/onedark_config')
         end,
     })
     use({
         'nvim-lualine/lualine.nvim',
         requires = {'kyazdani42/nvim-web-devicons'},
         config = function()
-            require('plugins/lualine')
+            require('plugin-config/lualine_config')
         end,
     })
 
@@ -27,7 +27,7 @@ return require('packer').startup(function(use)
     use({
         'winston0410/commented.nvim',
         config = function()
-            require('plugins/commented_cfg')
+            require('plugin-config/commented_config')
         end,
     })
     use({
@@ -42,21 +42,21 @@ return require('packer').startup(function(use)
     use({
         'norcalli/nvim-colorizer.lua',
         config = function()
-            require('plugins/colorizer')
+            require('plugin-config/colorizer_config')
         end,
     })
     use({
         'Pocco81/HighStr.nvim',
         config = function()
-            require('plugins/high_str')
+            require('plugin-config/highstr_config')
         end,
     })
-    -- use({
-        -- 'lukas-reineke/indent-blankline.nvim',
-        -- config = function()
-            -- require('plugins/indent_lines')
-        -- end,
-    -- })
+    use({
+        'lukas-reineke/indent-blankline.nvim',
+        config = function()
+            require('plugin-config/indentlines_config')
+        end,
+    })
 
     -- LSP and completion
     use({
@@ -65,14 +65,14 @@ return require('packer').startup(function(use)
     use({
         'williamboman/nvim-lsp-installer',
         config = function()
-            require('plugins/lsp_installer')
+            require('plugin-config/lspinstaller_config')
         end,
     })
     use({
         'folke/trouble.nvim',
         requires = 'kyazdani42/nvim-web-devicons',
         config = function()
-            require('plugins/trouble_cfg')
+            require('plugin-config/trouble_config')
         end
     })
     use({
@@ -83,7 +83,7 @@ return require('packer').startup(function(use)
             'hrsh7th/cmp-path',
         },
         config = function()
-            require('plugins/cmp_cfg')
+            require('plugin-config/cmp_config')
         end,
     })
 
@@ -91,7 +91,7 @@ return require('packer').startup(function(use)
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate',
         config = function()
-            require('plugins/treesitter')
+            require('plugin-config/treesitter_config')
         end,
     })
 
@@ -100,7 +100,7 @@ return require('packer').startup(function(use)
         'nvim-telescope/telescope.nvim',
         requires = {{'nvim-lua/plenary.nvim'}},
         config = function()
-            require('plugins/telescope')
+            require('plugin-config/telescope_config')
         end,
     })
     use({
@@ -114,7 +114,7 @@ return require('packer').startup(function(use)
         'kyazdani42/nvim-tree.lua',
         requires = {'kyazdani42/nvim-web-devicons'},
         config = function()
-            require('plugins/nvim_tree')
+            require('plugin-config/nvimtree_config')
         end,
     })
 
@@ -125,12 +125,12 @@ return require('packer').startup(function(use)
             'nvim-lua/plenary.nvim'
         },
         config = function()
-            require('plugins/gitsigns_cfg')
+            require('plugin-config/gitsigns_config')
         end
     })
 
 
-    use("nathom/tmux.nvim")
+    use('nathom/tmux.nvim')
 
     if packer_bootstrap then
         require('packer').sync()

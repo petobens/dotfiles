@@ -148,7 +148,7 @@ u.keymap('v', '<A-j>', ":m '>+1<CR>gv=gv")
 u.keymap('v', '<A-k>', ":m '<-2<CR>gv=gv")
 u.keymap('v', '<ESC>', '"+ygv<C-c>') -- mimicks autoselect
 u.keymap('v', '<Leader>sa', ':sort i<CR>')
-u.keymap('v', '<Leader>sr', ':%s/', {silent = false})
+u.keymap('v', '<Leader>sr', ':s/', {silent = false})
 u.keymap('v', 'G', 'G$')
 u.keymap('v', 'H', '^')
 u.keymap('v', 'L', 'g_')

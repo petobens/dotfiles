@@ -32,46 +32,48 @@ palette.cursorline = palette.cursor_grey
 palette.highlight = palette.orange
 palette.indentline = palette.comment_grey
 
+local p = palette
+
 onedarkpro.setup({
     theme = 'onedark',
     colors = palette,
     hlgroups = {
         -- See https://github.com/olimorris/onedarkpro.nvim/blob/main/lua/onedarkpro/theme.lua
         -- General UI
-        CursorLineNr = {fg = '${fg}', bg = '${black}', style = 'none'},
-        Cursor = {fg ='${black}', bg = '${blue}'}, -- actually set by terminal
-        Directory = {fg = '${light_blue}'},
-        NonText = {fg = '${comment_grey}', bg = '${black}'},
+        CursorLineNr = {fg = p.fg, bg = p.black, style = 'none'},
+        Cursor = {fg = p.black, bg = p.blue}, -- actually set by terminal
+        Directory = {fg = p.light_blue},
+        NonText = {fg = p.comment_grey, bg = p.black},
         EndOfBuffer = {link = 'NonText'},
-        FoldColumn = {fg = '${comment_grey}', bg = '${black}'},
-        Folded = {fg = '${comment_grey}', bg = '${black}'},
-        IncSearch = {fg = '${orange}', bg = '${black}'},
-        LineNr = {fg = '${linenr_grey}'},
-        PMenu = {fg = '${fg}', bg = '${pmenu}'},
-        PMenuSbar = {fg = '${fg}', bg = '${pmenu}'},
-        PMenuSel = {fg = '${black}', bg = '${light_blue}'},
-        PMenuThumb = {bg = '${white}'},
-        Search = {fg = '${black}', bg = '${yellow}'},
-        StatusLine = {fg = '${fg}', bg = '${cursorline}'},
-        StatusLineNC = {bg = '${cursorline}'},
-        VertSplit = {fg = '${cursorline}'},
-        Visual = {bg = '${visual_grey}'},
+        FoldColumn = {fg = p.comment_grey, bg = p.black},
+        Folded = {fg = p.comment_grey, bg = p.black},
+        IncSearch = {fg = p.orange, bg = p.black},
+        LineNr = {fg = p.linenr_grey},
+        PMenu = {fg = p.fg, bg = p.pmenu},
+        PMenuSbar = {fg = p.fg, bg = p.pmenu},
+        PMenuSel = {fg = p.black, bg = p.light_blue},
+        PMenuThumb = {bg = p.white},
+        Search = {fg = p.black, bg = p.yellow},
+        StatusLine = {fg = p.fg, bg = p.cursorline},
+        StatusLineNC = {bg = p.cursorline},
+        VertSplit = {fg = p.cursorline},
+        Visual = {bg = p.visual_grey},
         VisualNOS = {link = 'Visual'},
         WildMenu = {link = 'PMenuSel'},
-        TermCursor = {bg = '${blue}'},
-        TermCursorNC = {bg = '${gray}'},
-        ErrorMsg = {fg = '${red}'},
+        TermCursor = {bg = p.blue},
+        TermCursorNC = {bg = p.gray},
+        ErrorMsg = {fg = p.red},
         -- TODO: add transparency/window blend
-        NormalFloat = {fg = '${fg}', bg = '${bg}'},
-        SignColumn = {bg = '${bg}'},
-        Substitute = {fg = '${bg}', bg = '${yellow}'},
-        MatchParen = {fg = '${bg}', bg = '${light_blue}'},
+        NormalFloat = {fg = p.fg, bg = p.bg},
+        SignColumn = {bg = p.bg},
+        Substitute = {fg = p.bg, bg = p.yellow},
+        MatchParen = {fg = p.bg, bg = p.light_blue},
         ModeMsg = {link = 'Normal'},
         MoreMsg = {link = 'ModeMsg'},
-        Normal = {fg = '${fg}', bg = '${bg}'},
+        Normal = {fg = p.fg, bg = p.bg},
 
         -- Syntax
-        Comment = {fg = '${comment_grey}', style = 'italic'},
+        Comment = {fg = p.comment_grey, style = 'italic'},
     },
     options = {
         italic = false,
