@@ -3,8 +3,8 @@ local cmd = vim.cmd
 
 local udfs = {}
 
-function udfs.mk_non_dir()
-    local dir = fn.expand('%:p:h')
+function udfs.mk_non_dir(directory)
+    local dir = directory or fn.expand('%:p:h')
     if fn.isdirectory(dir) == 0 then
         fn.mkdir(dir, 'p')
     end

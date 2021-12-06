@@ -22,16 +22,16 @@ return require('packer').startup(function(use)
             require('plugins/lualine')
         end,
     })
-    use({
-        'kdheepak/tabline.nvim',
-        requires = {
-            {'hoob3rt/lualine.nvim'},
-            {'kyazdani42/nvim-web-devicons'} ,
-        },
-        config = function()
-            require('plugins/tabline')
-        end,
-    })
+    -- use({
+        -- 'kdheepak/tabline.nvim',
+        -- requires = {
+            -- {'hoob3rt/lualine.nvim'},
+            -- {'kyazdani42/nvim-web-devicons'} ,
+        -- },
+        -- config = function()
+            -- require('plugins/tabline')
+        -- end,
+    -- })
 
     -- Editing
     use({

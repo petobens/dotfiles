@@ -35,6 +35,7 @@ opt('o', 'splitright', true)
 opt('o', 'startofline', true)
 opt('o', 'virtualedit', 'block,onemore')
 opt('o', 'winblend', 7)
+-- opt('o', 'fillchars', 'vert:│,fold:·,eob:~')
 
 -- Backups, sessions and undo
 opt('o', 'backup', true)
