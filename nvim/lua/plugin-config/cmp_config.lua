@@ -64,6 +64,12 @@ cmp.setup({
             },
         },
         {name = 'vsnip'},
+        {
+            name = 'tmux',
+            options = {
+                all_panes = true,
+            },
+        },
     },
     snippet = {
       expand = function(args)

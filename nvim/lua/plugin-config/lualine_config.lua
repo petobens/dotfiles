@@ -21,6 +21,7 @@ require('lualine').setup({
         lualine_c = {'filename'},
         lualine_x = {
             {'encoding',  separator = ''},
+            {'fileformat', icons_enabled = true, separator = ''},
             {'filetype', icons_enabled = false, separator = ''},
         },
         lualine_y = {'progress'},
