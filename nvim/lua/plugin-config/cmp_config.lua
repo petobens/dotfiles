@@ -17,7 +17,12 @@ cmp.setup({
     mapping = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<C-e>'] = cmp.mapping.close(),
+        ['<A-k>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), {'i', 'c'}),
+        ['<A-j>'] = cmp.mapping(cmp.mapping.scroll_docs(4), {'i', 'c'}),
+        ['<C-e>'] = cmp.mapping({
+            i = cmp.mapping.abort(),
+            c = cmp.mapping.close(),
+        }),
         ['<C-y>'] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Insert,
             select = true,
@@ -49,7 +54,15 @@ cmp.setup({
     sources = {
         {name = 'nvim_lsp'},
         {name = 'path'},
-        {name = 'buffer', keyword_length = 3},
+        {
+            name = 'buffer',
+            keyword_length = 3,
+            options = {
+                get_bufnrs = function()
+                    return vim.api.nvim_list_bufs()
+                end
+            },
+        },
         {name = 'vsnip'},
     },
     snippet = {

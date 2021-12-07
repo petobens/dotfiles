@@ -1,3 +1,7 @@
+local function echo_buffers()
+  return 'buffers'
+end
+
 require('lualine').setup({
     options = {
         theme = 'onedarkish',
@@ -6,13 +10,22 @@ require('lualine').setup({
     sections = {
         lualine_a = {
             {
-            'mode',
-            fmt = function(str)
-                    return str:sub(1,1)
-                end
+                'mode',
+                fmt = function(str)
+                        return str:sub(1,1)
+                    end
             }
         },
     },
+    inactive_sections = {
+        lualine_c = {'filename'},
+        lualine_x = {
+            {'encoding',  separator = ''},
+            {'filetype', icons_enabled = false, separator = ''},
+        },
+        lualine_y = {'progress'},
+        lualine_z = {'location'}
+  },
     tabline = {
         lualine_a = {
             {
@@ -27,5 +40,7 @@ require('lualine').setup({
                 },
             },
         },
-    }
+        -- FIXME: not quite working
+        -- lualine_z = {echo_buffers}
+    },
 })

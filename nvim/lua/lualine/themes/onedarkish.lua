@@ -35,6 +35,9 @@ onedarkish.inactive = {
 	a = {fg = '#5c6370', bg = c.color_column},
 	b = {fg = '#5c6370', bg = c.color_column},
 	c = {fg = '#5c6370', bg = c.color_column},
+	x = {fg = '#5c6370', bg = c.color_column},
+	y = {fg = '#5c6370', bg = c.color_column},
+	z = {fg = '#5c6370', bg = c.color_column},
 }
 
 return onedarkish
