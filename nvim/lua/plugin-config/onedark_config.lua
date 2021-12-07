@@ -40,40 +40,58 @@ onedarkpro.setup({
     hlgroups = {
         -- See https://github.com/olimorris/onedarkpro.nvim/blob/main/lua/onedarkpro/theme.lua
         -- General UI
-        CursorLineNr = {fg = p.fg, bg = p.black, style = 'none'},
+        ColorColumn = {bg = p.cursor_grey},
+        Conceal = {fg = p.linenr_grey, bg = p.black},
         Cursor = {fg = p.black, bg = p.blue}, -- actually set by terminal
+        CursorColumn = {bg = p.gray},
+        CursorLine = {bg = p.cursor_grey},
+        CursorLineNr = {fg = p.fg, bg = p.black, style = 'none'},
         Directory = {fg = p.light_blue},
-        NonText = {fg = p.comment_grey, bg = p.black},
         EndOfBuffer = {link = 'NonText'},
+        ErrorMsg = {fg = p.red},
         FoldColumn = {fg = p.comment_grey, bg = p.black},
         Folded = {fg = p.comment_grey, bg = p.black},
         IncSearch = {fg = p.orange, bg = p.black},
         LineNr = {fg = p.linenr_grey},
+        MatchParen = {fg = p.cursor_grey, bg = p.light_blue},
+        ModeMsg = {fg = p.orange},
+        MoreMsg = {link = 'ModeMsg'},
+        NonText = {fg = p.comment_grey, bg = p.black},
+        Normal = {fg = p.fg, bg = p.bg},
+        NormalFloat = {link = 'Pmenu'},
         PMenu = {fg = p.fg, bg = p.pmenu},
         PMenuSbar = {fg = p.fg, bg = p.pmenu},
         PMenuSel = {fg = p.black, bg = p.light_blue},
         PMenuThumb = {bg = p.white},
         Search = {fg = p.black, bg = p.yellow},
+        SignColumn = {bg = p.bg},
         StatusLine = {fg = p.fg, bg = p.cursorline},
         StatusLineNC = {bg = p.cursorline},
+        Substitute = {fg = p.bg, bg = p.orange},
+        TermCursor = {bg = p.blue},
+        TermCursorNC = {bg = p.gray},
         VertSplit = {fg = p.cursorline},
         Visual = {bg = p.visual_grey},
         VisualNOS = {link = 'Visual'},
         WildMenu = {link = 'PMenuSel'},
-        TermCursor = {bg = p.blue},
-        TermCursorNC = {bg = p.gray},
-        ErrorMsg = {fg = p.red},
-        -- TODO: add transparency/window blend
-        NormalFloat = {fg = p.fg, bg = p.bg},
-        SignColumn = {bg = p.bg},
-        Substitute = {fg = p.bg, bg = p.yellow},
-        MatchParen = {fg = p.bg, bg = p.light_blue},
-        ModeMsg = {link = 'Normal'},
-        MoreMsg = {link = 'ModeMsg'},
-        Normal = {fg = p.fg, bg = p.bg},
 
         -- Syntax
         Comment = {fg = p.comment_grey, style = 'italic'},
+
+
+        -- Filetypes
+        ---- Diffs and Git
+		DiffAdd = {fg = p.green, bg = p.visual_grey},
+		DiffChange = {fg = p.orange, bg = p.visual_grey},
+		DiffDelete = {fg = p.red, bg = p.visual_grey},
+		DiffText = {fg = p.light_blue, bg = p.visual_grey},
+		DiffAdded = {link = 'DiffAdd'},
+		DiffChanged = {fg = p.orange, bg = p.visual_grey},
+		DiffRemoved = {fg = p.red, bg = p.visual_grey},
+        DiffLine = {fg = p.light_blue, bg = p.visual_grey},
+		DiffFile = {fg = p.red, bg = p.visual_grey},
+		DiffNewFile = {fg = p.green, bg = p.visual_grey},
+
     },
     options = {
         italic = false,

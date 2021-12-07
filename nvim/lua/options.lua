@@ -34,7 +34,11 @@ opt('o', 'splitbelow', true)
 opt('o', 'splitright', true)
 opt('o', 'startofline', true)
 opt('o', 'virtualedit', 'block,onemore')
-opt('o', 'winblend', 7)
+opt('o', 'winblend', 5)
+opt('o', 'pumblend', 5)
+opt('o', 'pumheight', 15)
+opt('o', 'completeopt', 'menu,menuone,noselect')
+opt('o', 'showmode', false)
 -- opt('o', 'fillchars', 'vert:│,fold:·,eob:~')
 
 -- Backups, sessions and undo

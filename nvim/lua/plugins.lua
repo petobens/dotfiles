@@ -81,6 +81,8 @@ return require('packer').startup(function(use)
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-path',
+            'hrsh7th/cmp-cmdline',
+            'hrsh7th/cmp-vsnip',
         },
         config = function()
             require('plugin-config/cmp_config')
@@ -116,6 +118,15 @@ return require('packer').startup(function(use)
         config = function()
             require('plugin-config/nvimtree_config')
         end,
+    })
+
+    -- Snippets
+    use({
+        'hrsh7th/vim-vsnip',
+        requires = {'hrsh7th/vim-vsnip-integ'},
+        config = function()
+            require('plugin-config/vsnip_config')
+        end
     })
 
     -- Git
