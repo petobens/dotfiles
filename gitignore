@@ -39,3 +39,6 @@ Icon?
 *.nav
 *.snm
 *.vrb
+
+# Nvim
+init_min.lua

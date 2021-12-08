@@ -103,6 +103,7 @@ u.keymap('n', ']h', "&diff ? ']c' : ']h'", {expr = true})
 
 -- Bookmarks
 u.keymap('n', '<Leader>ev', ':e $MYVIMRC<CR>')
+u.keymap('n', '<Leader>em', ':e ' .. vim.env.DOTVIM .. '/init_min.lua<CR>')
 u.keymap('n', '<Leader>ew', ':e ' .. vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add<CR>')
 u.keymap('n', '<Leader>etm', ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_mutt.md<CR>')
 u.keymap('n', '<Leader>ets', ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_coding_setup.md<CR>')
