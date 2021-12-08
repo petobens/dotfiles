@@ -85,7 +85,7 @@ u.keymap('n', 'N', 'Nzzzv')
 u.keymap('n', "'", '`',  {noremap = false})
 u.keymap('n', '<Leader>dm', ':delmarks!<CR>:delmarks A-Z0-9<CR>')
 u.keymap('n', '<tab>', '%',  {noremap = false})
-u.keymap('n', '*', [[:let @/ = '\<' . expand('<cword>') . '\>'<bar>set hlsearch<CR>]], {noremap = false}) -- don't jump to first match with * and #
+u.keymap('n', '*', [[:let @/ = '\v' . expand('<cword>')<bar>set hlsearch<CR>]], {noremap = false}) -- don't jump to first match with * and #
 u.keymap('n', '#', '#``', {noremap = false})
 
 -- Folds
@@ -156,8 +156,8 @@ u.keymap('v', 'L', 'g_')
 u.keymap('v', 'M', [[<cmd>execute 'normal! gv ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('v', 'Q', 'gq')
 u.keymap('v', '.', ':normal .<CR>')
-u.keymap('x', '*', ':<C-U>call v:lua.udfs.visual_search("/")<CR>/<C-R>=@/<CR><CR><C-o>')
-u.keymap('x', '#', ':<C-U>call v:lua.udfs.visual_search("?")<CR>?<C-R>=@/<CR><CR><C-o>')
+u.keymap('x', '*', 'mz:<C-U>call v:lua.udfs.visual_search("/")<CR>/<C-R>=@/<CR><CR>`z')
+u.keymap('x', '#', 'mz:<C-U>call v:lua.udfs.visual_search("?")<CR>?<C-R>=@/<CR><CR>`z')
 
 -- Command mode
 u.keymap('n', ';', ':', {silent = false})
