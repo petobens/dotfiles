@@ -52,22 +52,22 @@ onedarkpro.setup({
         FloatBorder = {link = 'VertSplit'},
         FoldColumn = {fg = p.comment_grey, bg = p.black},
         Folded = {fg = p.comment_grey, bg = p.black},
-        IncSearch = {fg = p.orange, bg = p.black},
+        IncSearch = {fg = p.bg, bg = p.orange},
         LineNr = {fg = p.linenr_grey},
         MatchParen = {fg = p.cursor_grey, bg = p.light_blue},
         ModeMsg = {link = 'Normal'},
         MoreMsg = {fg = p.orange},
         MsgArea = {link = 'ModeMsg'},
-        NonText = {fg = p.comment_grey, bg = p.black},
+        NonText = {fg = p.comment_grey},
         Normal = {fg = p.fg, bg = p.bg},
         NormalFloat = {link = 'Pmenu'},
         NormalNC = {link = 'Normal'},
-        PMenu = {fg = p.fg, bg = p.pmenu},
-        PMenuSbar = {fg = p.fg, bg = p.pmenu},
-        PMenuSel = {fg = p.black, bg = p.light_blue},
-        PMenuThumb = {bg = p.white},
+        Pmenu = {fg = p.fg, bg = p.pmenu},
+        PmenuSbar = {fg = p.fg, bg = p.pmenu}, -- scrolling bar space
+        PmenuSel = {fg = p.black, bg = p.light_blue},
+        PmenuThumb = {bg = p.linenr_grey}, -- scrollbar color
         Question = {fg = p.light_blue},
-        QuickFixLine = {link = 'Normal'},
+        QuickFixLine = {bg = p.cursor_grey},
         Search = {fg = p.black, bg = p.yellow},
         SignColumn = {bg = p.bg},
         SpecialKey = {fg = p.special_grey},
@@ -88,12 +88,12 @@ onedarkpro.setup({
         Visual = {bg = p.visual_grey},
         VisualNOS = {link = 'Visual'},
         WarningMsg = {fg = p.orange},
-        Whitespace = {fg = p.special_grey},
+        Whitespace = {fg = p.special_grey}, -- listchars
         WildMenu = {link = 'PMenuSel'},
 
         -- Syntax
         Comment = {fg = p.comment_grey, style = 'italic'},
-        Constant = {fg = p.green},
+        Constant = {fg = p.cyan},
         String = {fg = p.green},
         Character = {fg = p.green},
         Number = {fg = p.orange},
@@ -105,7 +105,7 @@ onedarkpro.setup({
         Conditional = {fg = p.purple},
         Repeat = {fg = p.purple},
         Label = {fg = p.purple},
-        Operator = {fg = p.blue},
+        Operator = {fg = p.cyan},
         Keyword = {fg = p.red},
         Exception = {fg = p.purple},
         PreProc = {fg = p.yellow},
@@ -118,19 +118,50 @@ onedarkpro.setup({
         Structure = {fg = p.yellow},
         TypeDef = {fg = p.yellow},
         Special = {fg = p.light_blue},
-        SpecialChar = {},
+        SpecialChar = {fg = p.orange},
         Tag = {},
         Delimiter = {fg = p.blue},
         SpecialComment = {fg = p.comment_grey},
         Debug = {},
         Ignore = {},
-        Underline = {style = 'underline'},
+        Underlined = {style = 'underline'},
         Bold = {style = 'bold'},
         Italic = {style = 'italic'},
         Error = {fg = p.red, bg = p.black, style = 'bold'},
         Todo = {fg = p.red, bg = p.black},
 
+        -- Diagnostics (and LSP)
+		DiagnosticError = {link = 'Error'},
+		DiagnosticWarn = {fg = p.orange},
+		DiagnosticInfo = {fg = p.light_blue},
+		DiagnosticHint = {fg = p.cyan},
+		DiagnosticSignError = {link = 'DiagnosticError'},
+		DiagnosticSignWarn = {link = 'DiagnosticWarn'},
+		DiagnosticSignInfo = {link = 'DiagnosticInfo'},
+		DiagnosticSignHint = {link = 'DiagnosticHint'},
+		DiagnosticUnderlineError = {link = 'DiagnosticError'},
+		DiagnosticUnderlineWarn = {link = 'DiagnosticWarn'},
+		DiagnosticUnderlineInfo = {link = 'DiagnosticInfo'},
+		DiagnosticUnderlineHint = {link = 'DiagnosticHint'},
+		DiagnosticVirtualTextError = {link = 'DiagnosticError'},
+		DiagnosticVirtualTextWarn = {link = 'DiagnosticWarn'},
+		DiagnosticVirtualTextInfo = {link = 'DiagnosticInfo'},
+		DiagnosticVirtualTextHint = {link = 'DiagnosticHint'},
+        LspReferenceText = {bg = p.visual_grey},
+		LspReferenceRead = {link = 'LspReferenceText'},
+		LspReferenceWrite = {link = 'LspReferenceText'},
+        -- TODO: add other lsp hls (as code lens)
+
+
+        -- TODO: Treesitter stuff
+
         -- Filetypes
+        ---- Vim help
+		helpCommand = {fg = p.yellow},
+		helpExample = {fg = p.yellow},
+		helpHeader = {fg = p.white, style = 'bold'},
+		helpSectionDelim = {fg = p.comment_grey},
+
         ---- Diffs and Git
 		DiffAdd = {fg = p.green, bg = p.visual_grey},
 		DiffChange = {fg = p.orange, bg = p.visual_grey},
@@ -151,4 +182,25 @@ onedarkpro.setup({
     },
 })
 
+
 onedarkpro.load()
+
+-- Embedded Terminal colors (don't really need to define these)
+vim.g.terminal_color_0 = p.black
+vim.g.terminal_color_1 = p.red
+vim.g.terminal_color_2 = p.green
+vim.g.terminal_color_3 = p.yellow
+vim.g.terminal_color_4 = p.light_blue
+vim.g.terminal_color_5 = p.purple
+vim.g.terminal_color_6 = p.cyan
+vim.g.terminal_color_7 = p.white
+vim.g.terminal_color_8 = p.visual_grey
+vim.g.terminal_color_9 = p.dark_red
+vim.g.terminal_color_10 = p.green
+vim.g.terminal_color_11 = p.orange
+vim.g.terminal_color_12 = p.light_blue
+vim.g.terminal_color_13 = p.purple
+vim.g.terminal_color_14 = p.cyan
+vim.g.terminal_color_15 = p.comment_grey
+vim.g.terminal_color_background = p.black
+vim.g.terminal_color_foreground = p.white
