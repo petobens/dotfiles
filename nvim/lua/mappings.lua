@@ -87,6 +87,7 @@ u.keymap('n', '<Leader>dm', ':delmarks!<CR>:delmarks A-Z0-9<CR>')
 u.keymap('n', '<tab>', '%',  {noremap = false})
 u.keymap('n', '*', [[:let @/ = '\v' . expand('<cword>')<bar>set hlsearch<CR>]], {noremap = false}) -- don't jump to first match with * and #
 u.keymap('n', '#', '#``', {noremap = false})
+u.keymap('n', '<Leader>ws', '/<><Left>', {silent = false, noremap = false})
 
 -- Folds
 u.keymap('n', '<Leader>z', 'zMzvzz')

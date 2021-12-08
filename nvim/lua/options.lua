@@ -63,12 +63,12 @@ if vim.fn.executable('rg') then
     opt('o', 'grepformat', '%f:%l:%c:%m,%f:%l:%m')
 end
 
-
--- Tab and indent
+-- Editing, tab and indent
 opt('o', 'autoindent', true)
 opt('o', 'breakindent', true)
 opt('o', 'colorcolumn', '+1')
 opt('o', 'expandtab', true)
+opt('o', 'formatoptions', 'jcql')
 opt('o', 'linebreak', true)
 opt('o', 'listchars', 'tab:▸\\ ,eol:¬,trail:•,extends:»,precedes:«,nbsp:␣')
 opt('o', 'shiftround', true)

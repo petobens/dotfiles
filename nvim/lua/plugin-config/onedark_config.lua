@@ -30,7 +30,6 @@ palette.comment_grey = palette.gray
 palette.color_column = palette.cursor_grey
 palette.cursorline = palette.cursor_grey
 palette.highlight = palette.orange
-palette.indentline = palette.comment_grey
 
 local p = palette
 
@@ -177,6 +176,12 @@ onedarkpro.setup({
         DiffLine = {fg = p.light_blue, bg = p.visual_grey},
 		DiffFile = {fg = p.red, bg = p.visual_grey},
 		DiffNewFile = {fg = p.green, bg = p.visual_grey},
+
+
+        -- Plugins
+        ---- IndentBlankline
+		IndentLine = {fg = p.comment_grey},
+		IndentBlanklineContextChar = {fg = p.white},
 
     },
     options = {
