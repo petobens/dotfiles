@@ -119,6 +119,12 @@ u.keymap('n', '<Leader>ic', ':set list!<CR>')
 u.keymap('n', '<Leader>sa', ':sort i<CR>')
 u.keymap('n', '<Leader>sc', ':set spell!<CR>')
 u.keymap('n', '<Leader>fm', ':call v:lua.udfs.tmux_split_cmd("ranger")<CR>')
+u.keymap('n', '<Leader>h1', ':call v:lua.udfs.highlight_word(1)<CR>')
+u.keymap('n', '<Leader>h2', ':call v:lua.udfs.highlight_word(2)<CR>')
+u.keymap('n', '<Leader>h3', ':call v:lua.udfs.highlight_word(3)<CR>')
+u.keymap('n', '<Leader>h4', ':call v:lua.udfs.highlight_word(4)<CR>')
+u.keymap('n', '<Leader>h5', ':call v:lua.udfs.highlight_word(5)<CR>')
+u.keymap('n', '<Leader>h6', ':call v:lua.udfs.highlight_word(6)<CR>')
 
 -- Insert mode
 u.keymap('i', 'jj', '<ESC>')

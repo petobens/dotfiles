@@ -84,6 +84,15 @@ function udfs.tmux_split_cmd(tmux_cmd, cwd)
     cmd('silent! !tmux split-window -p 30 -c ' .. cwd .. ' ' .. tmux_cmd)
 end
 
+function udfs.highlight_word(n)
+    cmd('normal! mz')
+    cmd('normal! "zyiw')
+    local mid = 86750 + n  -- arbitrary match id
+    cmd('silent! call matchdelete(' .. mid ..')')
+    local pat ='\\V\\<' .. fn.escape(fn.getreg('z'), '\\') .. '\\>'
+    fn.matchadd('HlWord' .. n, pat, 1, mid)
+    cmd('normal! `z')
+end
 
 _G.udfs = udfs
 

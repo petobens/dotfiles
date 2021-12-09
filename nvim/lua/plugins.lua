@@ -46,12 +46,6 @@ return require('packer').startup(function(use)
         end,
     })
     use({
-        'Pocco81/HighStr.nvim',
-        config = function()
-            require('plugin-config/highstr_config')
-        end,
-    })
-    use({
         'lukas-reineke/indent-blankline.nvim',
         config = function()
             require('plugin-config/indentlines_config')

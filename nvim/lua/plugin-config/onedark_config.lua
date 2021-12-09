@@ -183,6 +183,14 @@ onedarkpro.setup({
 		IndentLine = {fg = p.comment_grey},
 		IndentBlanklineContextChar = {fg = p.white},
 
+        ---- HlWords (in udfs)
+		HlWord1 = {fg = p.black, bg = p.yellow},
+		HlWord2 = {fg = p.black, bg = p.green},
+		HlWord3 = {fg = p.black, bg = p.purple},
+		HlWord4 = {fg = p.black, bg = p.orange},
+		HlWord5 = {fg = p.black, bg = p.light_blue},
+		HlWord6 = {fg = p.black, bg = p.white},
+
     },
     options = {
         italic = false,
