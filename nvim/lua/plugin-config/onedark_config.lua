@@ -199,25 +199,25 @@ onedarkpro.setup({
     },
 })
 
-
 onedarkpro.load()
 
 -- Embedded Terminal colors (don't really need to define these)
-vim.g.terminal_color_0 = p.black
-vim.g.terminal_color_1 = p.red
-vim.g.terminal_color_2 = p.green
-vim.g.terminal_color_3 = p.yellow
-vim.g.terminal_color_4 = p.light_blue
-vim.g.terminal_color_5 = p.purple
-vim.g.terminal_color_6 = p.cyan
-vim.g.terminal_color_7 = p.white
-vim.g.terminal_color_8 = p.visual_grey
-vim.g.terminal_color_9 = p.dark_red
-vim.g.terminal_color_10 = p.green
-vim.g.terminal_color_11 = p.orange
-vim.g.terminal_color_12 = p.light_blue
-vim.g.terminal_color_13 = p.purple
-vim.g.terminal_color_14 = p.cyan
-vim.g.terminal_color_15 = p.comment_grey
-vim.g.terminal_color_background = p.black
-vim.g.terminal_color_foreground = p.white
+local set = vim.g
+set.terminal_color_0 = p.black
+set.terminal_color_1 = p.red
+set.terminal_color_2 = p.green
+set.terminal_color_3 = p.yellow
+set.terminal_color_4 = p.light_blue
+set.terminal_color_5 = p.purple
+set.terminal_color_6 = p.cyan
+set.terminal_color_7 = p.white
+set.terminal_color_8 = p.visual_grey
+set.terminal_color_9 = p.dark_red
+set.terminal_color_10 = p.green
+set.terminal_color_11 = p.orange
+set.terminal_color_12 = p.light_blue
+set.terminal_color_13 = p.purple
+set.terminal_color_14 = p.cyan
+set.terminal_color_15 = p.comment_grey
+set.terminal_color_background = p.black
+set.terminal_color_foreground = p.white

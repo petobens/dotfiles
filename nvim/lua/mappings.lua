@@ -125,6 +125,7 @@ u.keymap('n', '<Leader>h3', ':call v:lua.udfs.highlight_word(3)<CR>')
 u.keymap('n', '<Leader>h4', ':call v:lua.udfs.highlight_word(4)<CR>')
 u.keymap('n', '<Leader>h5', ':call v:lua.udfs.highlight_word(5)<CR>')
 u.keymap('n', '<Leader>h6', ':call v:lua.udfs.highlight_word(6)<CR>')
+u.keymap('n', '<Leader>lp', ':lua put(', {silent = false})
 
 -- Insert mode
 u.keymap('i', 'jj', '<ESC>')

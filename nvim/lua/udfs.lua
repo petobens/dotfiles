@@ -94,6 +94,7 @@ function udfs.highlight_word(n)
     cmd('normal! `z')
 end
 
+
 _G.udfs = udfs
 
 return udfs

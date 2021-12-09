@@ -47,7 +47,8 @@ opt('o', 'backupdir', vim.env.CACHE .. '/tmp/backup//')
 opt('o', 'directory', vim.env.CACHE .. '/tmp/swap//')
 opt('o', 'undodir', vim.env.CACHE .. '/tmp/undo//')
 opt('o', 'undofile', true)
-opt('o', 'viewdir', vim.env.CACHE .. '/tmp/view//')
+-- FIXME: https://github.com/neovim/neovim/pull/14126#issuecomment-989453885
+-- opt('o', 'viewdir', vim.env.CACHE .. '/tmp/view//')
 vim.opt.sessionoptions:remove('tabpages')
 vim.opt.sessionoptions:append({'winpos', 'resize'})
 
