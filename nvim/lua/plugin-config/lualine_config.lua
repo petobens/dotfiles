@@ -20,6 +20,19 @@ local function spell_status()
     return spell_lang
 end
 
+local conds = {
+    hide_winwidth_leq_80 = function()
+        return vim.fn.winwidth(0) > 80
+    end,
+    hide_winwidth_leq_60 = function()
+        return vim.fn.winwidth(0) > 60
+    end,
+   hide_winwidth_leq_40 = function()
+        return vim.fn.winwidth(0) > 40
+    end,
+}
+
+
 require('lualine').setup({
     options = {
         theme = 'onedarkish',
@@ -33,46 +46,107 @@ require('lualine').setup({
                         return str:sub(1,1)
                     end
             },
-            {spell_status},
+            {
+                spell_status,
+                cond = conds.hide_winwidth_leq_80
+            },
         },
         lualine_b = {
-            {'branch', separator = ''},
+            {
+                'branch',
+                separator = '',
+                cond = conds.hide_winwidth_leq_80
+            },
             -- FIXME: diff numbers different size?
             {
                 'diff',
                 colored = true,
                 padding = {left = 0, right = 1},
                 sources = gitsigns_diff_source,
+                cond = conds.hide_winwidth_leq_80,
 
             },
         },
-        lualine_x = {{'filetype', colored = false}},
+        lualine_x = {
+            {
+                'filetype',
+                colored = false,
+                cond = conds.hide_winwidth_leq_60
+            }
+        },
         lualine_y = {
-            {'encoding', separator = ''},
-            {'fileformat', padding = {left = 0, right = 2}},
+            {
+                'encoding',
+                separator = '',
+                cond = conds.hide_winwidth_leq_60,
+            },
+            {
+                'fileformat',
+                padding = {left = 0, right = 2},
+                cond = conds.hide_winwidth_leq_60,
+            },
         },
         lualine_z = {
-            {'progress', separator = ''},
-            {'location', icon = ''},
+            {
+                'progress',
+                separator = '',
+                cond = conds.hide_winwidth_leq_40
+            },
+            {
+                function() return '%l' end,
+                icon = '',
+                separator = '',
+                padding = {left = 1, right = 0},
+                color = {gui = 'bold'},
+                cond = conds.hide_winwidth_leq_40,
+            },
+            {
+                function() return ':%v' end,
+                padding = {left = 0, right = 1},
+                cond = conds.hide_winwidth_leq_40,
+            },
             {
                 'diagnostics',
-                sources= {'nvim_lsp'},
+                sources = {'nvim_diagnostic'},
                 colored = false,
                 color = {fg = onedark_colors.black , bg = onedark_colors.orange},
-                separator = {left = '', right = ''},
+               separator = {left = '', right = ''},
+                cond = conds.hide_winwidth_leq_60,
             },
         },
     },
     inactive_sections = {
         lualine_c = {'filename'},
-        lualine_x = {{'filetype', colored = false}},
+        lualine_x = {
+            {
+                'filetype',
+                colored = false,
+                cond = conds.hide_winwidth_leq_60,
+            },
+        },
         lualine_y = {
-            {'encoding', separator = ''},
-            {'fileformat', padding = {left = 0, right = 2}},
+            {
+                'encoding',
+                separator = '',
+                cond = conds.hide_winwidth_leq_60,
+            },
+            {
+                'fileformat',
+                padding = {left = 0, right = 2},
+                cond = conds.hide_winwidth_leq_60,
+            },
         },
         lualine_z = {
-            {'progress', separator = ''},
-            {'location', icon = ''},
+            {
+                'progress',
+                separator = '',
+                cond = conds.hide_winwidth_leq_40,
+            },
+            {
+                'location',
+                icon = '',
+                cond = conds.hide_winwidth_leq_40,
+            },
         },
   },
     tabline = {
@@ -82,14 +156,18 @@ require('lualine').setup({
                 show_filename_only = true,
                 show_modified_status = true,
                 mode = 2, -- buffer name + buffer index (bufnr)
-                max_length = vim.o.columns * 1.1,
+                max_length = vim.o.columns * 0.98 - vim.fn.strlen('buffers'),
                 buffers_color = {
                     active = 'lualine_a_insert',
                     inactive = 'lualine_a_inactive',
                 },
             },
         },
-        -- FIXME: not quite working
-        -- lualine_z = {echo_buffers}
+        lualine_z = {
+            {
+                function() return 'buffers' end,
+                color = {gui = 'bold'},
+            },
+        }
     },
 })
