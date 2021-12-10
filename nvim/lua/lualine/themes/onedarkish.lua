@@ -40,4 +40,12 @@ onedarkish.inactive = {
 	z = {fg = '#5c6370', bg = c.color_column},
 }
 
+onedarkish.tabline = {
+	tab = {fg = c.white, bg = c.special_grey},
+	tabsel = {fg = c.bg, bg = c.light_blue, gui = 'bold'},
+	tabmod = {fg = c.bg, bg = c.red, gui = 'bold'},
+	tabmod_unsel = {fg = c.bg, bg = c.orange, gui = 'bold'},
+	tabhid = {fg = c.gray, bg = c.cursor_grey},
+}
+
 return onedarkish
