@@ -32,6 +32,56 @@ local conds = {
     end,
 }
 
+local function hl_buffer_state(bufnr)
+    local hl_group = ''
+    local buffers = vim.fn.tabpagebuflist(vim.fn.tabpagenr())
+    local mod_buffer = (vim.fn.getbufvar(bufnr, '&modified') ~= 0)
+    local cur_buffer = vim.fn.bufnr('%')
+
+    if cur_buffer == bufnr then
+        if mod_buffer then
+            hl_group = 'tabmod'
+        else
+            hl_group = 'tabsel'
+        end
+    else
+        if mod_buffer then
+            hl_group = 'tabmod_unsel'
+        elseif vim.fn.index(buffers, bufnr) > -1 then
+            hl_group = 'tab'
+        else
+            hl_group = 'tabhid'
+        end
+    end
+    hl_group = 'lualine_' .. hl_group .. '_tabline'
+    return '%#' .. hl_group .. '#'
+end
+
+-- Override tabline function
+require('lualine.components.buffers.buffer').render = function(self)
+    local apply_padding = require('lualine.components.buffers.buffer').apply_padding
+
+    local name = self:name()
+    local buf_hl_group = hl_buffer_state(self.bufnr)
+    if self.ellipse then
+        name = '...'
+    else
+        name = string.format('%s %s %s', self.bufnr, name, self.icon)
+    end
+    name = apply_padding(name, self.options.padding)
+    self.len = vim.fn.strchars(name)
+
+    local line = string.format('%%%s@LualineSwitchBuffer@%s%%T', self.bufnr, name)
+    line = buf_hl_group .. line
+
+    if not self.first then
+        local sep_before = self:separator_before()
+        line = sep_before .. line
+        self.len = self.len + vim.fn.strchars(sep_before)
+    end
+    return line
+end
+
 
 require('lualine').setup({
     options = {
