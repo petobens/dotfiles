@@ -35,20 +35,20 @@ local conds = {
 local function hl_buffer_state(bufnr)
     local hl_group = ''
     local buffers = vim.fn.tabpagebuflist(vim.fn.tabpagenr())
-    local mod_buffer = (vim.fn.getbufvar(bufnr, '&modified') ~= 0)
-    local cur_buffer = vim.fn.bufnr('%')
+    local mod_buf = (vim.fn.getbufvar(bufnr, '&modified') ~= 0)
+    local cur_buf = vim.fn.bufnr('%')
 
-    if cur_buffer == bufnr then
-        if mod_buffer then
+    if cur_buf == bufnr then
+        if mod_buf then
             hl_group = 'tabmod'
         else
             hl_group = 'tabsel'
         end
     else
-        if mod_buffer then
+        if mod_buf then
             hl_group = 'tabmod_unsel'
         elseif vim.fn.index(buffers, bufnr) > -1 then
-            hl_group = 'tab'
+            hl_group = 'tabvis'
         else
             hl_group = 'tabhid'
         end
@@ -62,7 +62,6 @@ require('lualine.components.buffers.buffer').render = function(self)
     local apply_padding = require('lualine.components.buffers.buffer').apply_padding
 
     local name = self:name()
-    local buf_hl_group = hl_buffer_state(self.bufnr)
     if self.ellipse then
         name = '...'
     else
@@ -72,6 +71,10 @@ require('lualine.components.buffers.buffer').render = function(self)
     self.len = vim.fn.strchars(name)
 
     local line = string.format('%%%s@LualineSwitchBuffer@%s%%T', self.bufnr, name)
+    local buf_hl_group = hl_buffer_state(self.bufnr)
+    -- local highlight = require('lualine.highlight')
+    -- print(highlight.component_format_highlight(buf_hl_group))
+    -- line = highlight.component_format_highlight(buf_hl_group) .. line
     line = buf_hl_group .. line
 
     if not self.first then
@@ -204,13 +207,7 @@ require('lualine').setup({
             {
                 'buffers',
                 show_filename_only = true,
-                show_modified_status = true,
-                mode = 2, -- buffer name + buffer index (bufnr)
                 max_length = vim.o.columns * 0.98 - vim.fn.strlen('buffers'),
-                buffers_color = {
-                    active = 'lualine_a_insert',
-                    inactive = 'lualine_a_inactive',
-                },
             },
         },
         lualine_z = {
