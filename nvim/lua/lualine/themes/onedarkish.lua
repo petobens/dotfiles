@@ -13,22 +13,27 @@ onedarkish.normal = {
 
 onedarkish.insert = {
 	a = {fg = c.bg, bg = c.light_blue, gui = 'bold'},
+	z = {fg = '#303030', bg = '#d0d0d0'},
 }
 
 onedarkish.visual = {
 	a = {fg = c.bg, bg = c.orange, gui = 'bold'},
+	z = {fg = '#303030', bg = '#d0d0d0'},
 }
 
 onedarkish.command = {
 	a = {fg = c.bg, bg = c.blue, gui = 'bold'},
+	z = {fg = '#303030', bg = '#d0d0d0'},
 }
 
 onedarkish.terminal = {
 	a = {fg = c.bg, bg = c.cyan, gui = 'bold'},
+	z = {fg = '#303030', bg = '#d0d0d0'},
 }
 
 onedarkish.replace = {
 	a = {fg = c.bg, bg = c.purple, gui = 'bold'},
+	z = {fg = '#303030', bg = '#d0d0d0'},
 }
 
 onedarkish.inactive = {

@@ -72,13 +72,19 @@ require('lualine.components.buffers.buffer').render = function(self)
 
     local line = string.format('%%%s@LualineSwitchBuffer@%s%%T', self.bufnr, name)
     local buf_hl_group = hl_buffer_state(self.bufnr)
-    -- local highlight = require('lualine.highlight')
-    -- print(highlight.component_format_highlight(buf_hl_group))
-    -- line = highlight.component_format_highlight(buf_hl_group) .. line
     line = buf_hl_group .. line
 
     if not self.first then
-        local sep_before = self:separator_before()
+        local sep_before = ''
+        -- local sep_before = self.options.section_separators.left
+        -- local sep_before ='%S{' .. self.options.section_separators.left .. '}'
+        -- local sep_before ='%S{' .. self.options.component_separators.left .. '}'
+        if self.current or self.aftercurrent then
+            sep_before = '%S{' .. self.options.section_separators.left .. '}'
+        else
+            sep_before = self.options.component_separators.left
+        end
+        -- local sep_before = self:separator_before()
         line = sep_before .. line
         self.len = self.len + vim.fn.strchars(sep_before)
     end
@@ -205,7 +211,7 @@ require('lualine').setup({
     tabline = {
         lualine_a = {
             {
-                'buffers',
+                'buffertab',
                 show_filename_only = true,
                 max_length = vim.o.columns * 0.98 - vim.fn.strlen('buffers'),
             },
