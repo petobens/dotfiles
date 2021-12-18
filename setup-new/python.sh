@@ -26,7 +26,6 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd pytest-xdist
     $pip_install_cmd requests
     $pip_install_cmd Send2Trash
-    $pip_install_cmd scikit-learn
     $pip_install_cmd scipy
     if [ "$OSTYPE" == 'linux-gnu' ]; then
         $pip_install_cmd ueberzug
