@@ -6,7 +6,7 @@ local function gitsigns_diff_source()
         return {
             added = gitsigns.added,
             modified = gitsigns.changed,
-            removed = gitsigns.removed
+            removed = gitsigns.removed,
         }
     end
 end
@@ -14,7 +14,9 @@ end
 local function spell_status()
     local spell_lang = ''
     if vim.opt.spell:get() then
-        local languages = vim.fn.toupper(vim.fn.substitute(vim.o.spelllang, ',', '/', 'g'))
+        local languages = vim.fn.toupper(
+            vim.fn.substitute(vim.o.spelllang, ',', '/', 'g')
+        )
         spell_lang = ' [' .. languages .. ']'
     end
     return spell_lang
@@ -27,7 +29,7 @@ local conds = {
     hide_winwidth_leq_60 = function()
         return vim.fn.winwidth(0) > 60
     end,
-   hide_winwidth_leq_40 = function()
+    hide_winwidth_leq_40 = function()
         return vim.fn.winwidth(0) > 40
     end,
 }
@@ -91,47 +93,45 @@ require('lualine.components.buffers.buffer').render = function(self)
     return line
 end
 
-
 require('lualine').setup({
     options = {
         theme = 'onedarkish',
-        section_separators = {left = '', right = ''},
+        section_separators = { left = '', right = '' },
     },
     sections = {
         lualine_a = {
             {
                 'mode',
                 fmt = function(str)
-                        return str:sub(1,1)
-                    end
+                    return str:sub(1, 1)
+                end,
             },
             {
                 spell_status,
-                cond = conds.hide_winwidth_leq_80
+                cond = conds.hide_winwidth_leq_80,
             },
         },
         lualine_b = {
             {
                 'branch',
                 separator = '',
-                cond = conds.hide_winwidth_leq_80
+                cond = conds.hide_winwidth_leq_80,
             },
             -- FIXME: diff numbers different size?
             {
                 'diff',
                 colored = true,
-                padding = {left = 0, right = 1},
+                padding = { left = 0, right = 1 },
                 sources = gitsigns_diff_source,
                 cond = conds.hide_winwidth_leq_80,
-
             },
         },
         lualine_x = {
             {
                 'filetype',
                 colored = false,
-                cond = conds.hide_winwidth_leq_60
-            }
+                cond = conds.hide_winwidth_leq_60,
+            },
         },
         lualine_y = {
             {
@@ -141,7 +141,7 @@ require('lualine').setup({
             },
             {
                 'fileformat',
-                padding = {left = 0, right = 2},
+                padding = { left = 0, right = 2 },
                 cond = conds.hide_winwidth_leq_60,
             },
         },
@@ -149,33 +149,37 @@ require('lualine').setup({
             {
                 'progress',
                 separator = '',
-                cond = conds.hide_winwidth_leq_40
-            },
-            {
-                function() return '%l' end,
-                icon = '',
-                separator = '',
-                padding = {left = 1, right = 0},
-                color = {gui = 'bold'},
                 cond = conds.hide_winwidth_leq_40,
             },
             {
-                function() return ':%v' end,
-                padding = {left = 0, right = 1},
+                function()
+                    return '%l'
+                end,
+                icon = '',
+                separator = '',
+                padding = { left = 1, right = 0 },
+                color = { gui = 'bold' },
+                cond = conds.hide_winwidth_leq_40,
+            },
+            {
+                function()
+                    return ':%v'
+                end,
+                padding = { left = 0, right = 1 },
                 cond = conds.hide_winwidth_leq_40,
             },
             {
                 'diagnostics',
-                sources = {'nvim_diagnostic'},
+                sources = { 'nvim_diagnostic' },
                 colored = false,
-                color = {fg = onedark_colors.black , bg = onedark_colors.orange},
-               separator = {left = '', right = ''},
+                color = { fg = onedark_colors.black, bg = onedark_colors.orange },
+                separator = { left = '', right = '' },
                 cond = conds.hide_winwidth_leq_60,
             },
         },
     },
     inactive_sections = {
-        lualine_c = {'filename'},
+        lualine_c = { 'filename' },
         lualine_x = {
             {
                 'filetype',
@@ -191,7 +195,7 @@ require('lualine').setup({
             },
             {
                 'fileformat',
-                padding = {left = 0, right = 2},
+                padding = { left = 0, right = 2 },
                 cond = conds.hide_winwidth_leq_60,
             },
         },
@@ -207,7 +211,7 @@ require('lualine').setup({
                 cond = conds.hide_winwidth_leq_40,
             },
         },
-  },
+    },
     tabline = {
         lualine_a = {
             {
@@ -218,9 +222,11 @@ require('lualine').setup({
         },
         lualine_z = {
             {
-                function() return 'buffers' end,
-                color = {gui = 'bold'},
+                function()
+                    return 'buffers'
+                end,
+                color = { gui = 'bold' },
             },
-        }
+        },
     },
 })
