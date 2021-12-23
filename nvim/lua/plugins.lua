@@ -1,7 +1,14 @@
 local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    packer_bootstrap = fn.system({
+        'git',
+        'clone',
+        '--depth',
+        '1',
+        'https://github.com/wbthomason/packer.nvim',
+        install_path,
+    })
 end
 
 return require('packer').startup(function(use)
@@ -37,9 +44,9 @@ return require('packer').startup(function(use)
         'blackCauldron7/surround.nvim',
         config = function()
             require('surround').setup({
-                mappings_style = 'surround'
+                mappings_style = 'surround',
             })
-        end
+        end,
     })
     use({
         'norcalli/nvim-colorizer.lua',
@@ -56,7 +63,7 @@ return require('packer').startup(function(use)
 
     -- LSP and completion
     use({
-        'neovim/nvim-lspconfig'
+        'neovim/nvim-lspconfig',
     })
     use({
         'williamboman/nvim-lsp-installer',
@@ -65,11 +72,17 @@ return require('packer').startup(function(use)
         end,
     })
     use({
+        'jose-elias-alvarez/null-ls.nvim',
+        config = function()
+            require('plugin-config/null_ls_config')
+        end,
+    })
+    use({
         'folke/trouble.nvim',
         requires = 'kyazdani42/nvim-web-devicons',
         config = function()
             require('plugin-config/trouble_config')
-        end
+        end,
     })
     use({
         'hrsh7th/nvim-cmp',
@@ -86,7 +99,7 @@ return require('packer').startup(function(use)
         end,
     })
 
-   use({
+    use({
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate',
         config = function()
@@ -97,7 +110,7 @@ return require('packer').startup(function(use)
     -- Telescope and file exploring
     use({
         'nvim-telescope/telescope.nvim',
-        requires = {{'nvim-lua/plenary.nvim'}},
+        requires = { { 'nvim-lua/plenary.nvim' } },
         config = function()
             require('plugin-config/telescope_config')
         end,
@@ -105,13 +118,13 @@ return require('packer').startup(function(use)
     use({
         'nvim-telescope/telescope-z.nvim',
         requires = {
-            {'nvim-telescope/telescope.nvim'},
-            {'nvim-lua/popup.nvim'},
+            { 'nvim-telescope/telescope.nvim' },
+            { 'nvim-lua/popup.nvim' },
         },
     })
     use({
         'kyazdani42/nvim-tree.lua',
-        requires = {'kyazdani42/nvim-web-devicons'},
+        requires = { 'kyazdani42/nvim-web-devicons' },
         config = function()
             require('plugin-config/nvimtree_config')
         end,
@@ -120,27 +133,26 @@ return require('packer').startup(function(use)
     -- Snippets
     use({
         'hrsh7th/vim-vsnip',
-        requires = {'hrsh7th/vim-vsnip-integ'},
+        requires = { 'hrsh7th/vim-vsnip-integ' },
         config = function()
             require('plugin-config/vsnip_config')
-        end
+        end,
     })
 
     -- Git
     use({
         'lewis6991/gitsigns.nvim',
         requires = {
-            'nvim-lua/plenary.nvim'
+            'nvim-lua/plenary.nvim',
         },
         config = function()
             require('plugin-config/gitsigns_config')
-        end
+        end,
     })
-
 
     use('nathom/tmux.nvim')
 
     if packer_bootstrap then
         require('packer').sync()
-   end
+    end
 end)

@@ -15,7 +15,7 @@ u.keymap('n', '<C-p>', ':bp<CR>')
 u.keymap('n', '<Leader>bd', ':bp|bd #<CR>')
 u.keymap('n', '<Leader>cd', ':lcd %:h<CR>')
 u.keymap('n', '<Leader>rr', ':checktime<CR>')
-u.keymap('n', '<Leader>so', ':update<CR>:luafile %<CR>', {silent = false})
+u.keymap('n', '<Leader>so', ':update<CR>:luafile %<CR>', { silent = false })
 u.keymap('n', '<Leader>wd', ':bd<CR>')
 u.keymap('n', 'gf', ':call v:lua.udfs.goto_file_insplit()<CR>')
 
@@ -33,7 +33,7 @@ u.keymap('n', '<C-l>', [[<cmd>lua require('tmux').move_right()<CR>]])
 u.keymap('n', '<C-x>', '<C-W>xzz')
 u.keymap('n', '<Leader>hv', '<C-W>H<C-W>x') -- make horizantal vertical and viceversa
 u.keymap('n', '<Leader>vh', '<C-W>K')
-u.keymap('n', '<Leader>pu', ':wincmd J<bar>15 wincmd _<CR>')  -- Resize win as popup
+u.keymap('n', '<Leader>pu', ':wincmd J<bar>15 wincmd _<CR>') -- Resize win as popup
 u.keymap('n', '<Leader>sp', ':split<CR>')
 u.keymap('n', '<Leader>vs', ':vsplit<CR>')
 
@@ -50,44 +50,49 @@ u.keymap('n', '<A-j>', ':<C-U>execute "move+" . v:count1<CR>:silent! normal! zO=
 u.keymap('n', '<A-k>', ':<C-U>execute "move--" . v:count1<CR>:silent! normal! zO==<CR>')
 u.keymap('n', '<A-m>', 'M')
 u.keymap('n', '<A-s>', 'i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>`w') -- Split line
-u.keymap('n', '<A-u>', 'mzg~iw`z', {noremap = false}) -- Upper case inner word
+u.keymap('n', '<A-u>', 'mzg~iw`z', { noremap = false }) -- Upper case inner word
 u.keymap('n', '<Leader>mr', 'q') -- Macro recording
 u.keymap('n', 'H', '^')
 u.keymap('n', 'L', '$')
 u.keymap('n', 'M', [[<cmd>execute 'normal! ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('n', 'j', 'gj')
 u.keymap('n', 'k', 'gk')
-u.keymap('n', 'J', 'mzJ`z')  -- Keep the cursor in place while joining lines
+u.keymap('n', 'J', 'mzJ`z') -- Keep the cursor in place while joining lines
 u.keymap('n', 'q', '<nop>')
 u.keymap('n', 'Q', 'gwap')
-u.keymap('n', 'vv', '^vg_', {noremap = false}) -- Visual selection excluding indentation
+u.keymap('n', 'vv', '^vg_', { noremap = false }) -- Visual selection excluding indentation
 -- FIXME: https://github.com/neovim/neovim/issues/12544 we cannot use vim.go.scrolloff here
 u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>')
 -- TODO: add mapping to swap words
 
 -- Yank and paste
 u.keymap('n', '<Leader>P', ':put!<CR>')
-u.keymap('n', '<Leader>p', ':put<CR>', {nowait = false})
+u.keymap('n', '<Leader>p', ':put<CR>', { nowait = false })
 u.keymap('n', 'gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]') -- Visually reselect what was just pasted
-u.keymap('n', 'Y', 'y$',  {noremap = false})
-u.keymap('n', 'yy', 'mz0y$`z',  {noremap = false})
+u.keymap('n', 'Y', 'y$', { noremap = false })
+u.keymap('n', 'yy', 'mz0y$`z', { noremap = false })
 
 -- Search, jumps and marks
-u.keymap('n', '/', '/\\v', {silent = false, noremap = false})
-u.keymap('n', '?', '?\\v', {silent = false, noremap = false})
+u.keymap('n', '/', '/\\v', { silent = false, noremap = false })
+u.keymap('n', '?', '?\\v', { silent = false, noremap = false })
 u.keymap('n', '<C-o>', '<C-o>zvzz')
 u.keymap('n', '<C-y>', '<C-i>zvzz') -- Jump to newer entry in jumplist
 u.keymap('n', '<Leader><Space>', ':nohlsearch<CR>:call clearmatches()<CR>')
-u.keymap('n', '<Leader>qr', ':cdo %s/', {silent = false})
-u.keymap('n', '<Leader>sr', ':%s/', {silent = false})
+u.keymap('n', '<Leader>qr', ':cdo %s/', { silent = false })
+u.keymap('n', '<Leader>sr', ':%s/', { silent = false })
 u.keymap('n', 'n', 'nzzzv') -- keep matches window in the middle (while opening folds)
 u.keymap('n', 'N', 'Nzzzv')
-u.keymap('n', "'", '`',  {noremap = false})
+u.keymap('n', "'", '`', { noremap = false })
 u.keymap('n', '<Leader>dm', ':delmarks!<CR>:delmarks A-Z0-9<CR>')
-u.keymap('n', '<tab>', '%',  {noremap = false})
-u.keymap('n', '*', [[:let @/ = '\v' . expand('<cword>')<bar>set hlsearch<CR>]], {noremap = false}) -- don't jump to first match with * and #
-u.keymap('n', '#', '#``', {noremap = false})
-u.keymap('n', '<Leader>ws', '/<><Left>', {silent = false, noremap = false})
+u.keymap('n', '<tab>', '%', { noremap = false })
+u.keymap(
+    'n',
+    '*',
+    [[:let @/ = '\v' . expand('<cword>')<bar>set hlsearch<CR>]],
+    { noremap = false }
+) -- don't jump to first match with * and #
+u.keymap('n', '#', '#``', { noremap = false })
+u.keymap('n', '<Leader>ws', '/<><Left>', { silent = false, noremap = false })
 
 -- Folds
 u.keymap('n', '<Leader>z', 'zMzvzz')
@@ -99,17 +104,34 @@ u.keymap('n', '<Leader>mf', ':set foldmethod=marker<CR>zv')
 u.keymap('n', '<Leader>de', ':diffoff!<CR>')
 u.keymap('n', '<Leader>ds', ':call v:lua.udfs.diff_file_split()<CR>')
 u.keymap('n', '<Leader>du', ':diffupdate<CR>')
-u.keymap('n', '[h', "&diff ? '[c' : '[h'", {expr = true})
-u.keymap('n', ']h', "&diff ? ']c' : ']h'", {expr = true})
+u.keymap('n', '[h', "&diff ? '[c' : '[h'", { expr = true })
+u.keymap('n', ']h', "&diff ? ']c' : ']h'", { expr = true })
 
 -- Bookmarks
 u.keymap('n', '<Leader>ev', ':e $MYVIMRC<CR>')
 u.keymap('n', '<Leader>em', ':e ' .. vim.env.DOTVIM .. '/init_min.lua<CR>')
-u.keymap('n', '<Leader>ew', ':e ' .. vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add<CR>')
-u.keymap('n', '<Leader>etm', ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_mutt.md<CR>')
-u.keymap('n', '<Leader>ets', ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_coding_setup.md<CR>')
-u.keymap('n', '<Leader>dd', ':e $HOME/Desktop/', {silent = false})
-u.keymap('n', '<Leader>sb', ':e  ' .. vim.fn.expand('%:p:h') .. '/scratch/', {silent = false})
+u.keymap(
+    'n',
+    '<Leader>ew',
+    ':e ' .. vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add<CR>'
+)
+u.keymap(
+    'n',
+    '<Leader>etm',
+    ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_mutt.md<CR>'
+)
+u.keymap(
+    'n',
+    '<Leader>ets',
+    ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_coding_setup.md<CR>'
+)
+u.keymap('n', '<Leader>dd', ':e $HOME/Desktop/', { silent = false })
+u.keymap(
+    'n',
+    '<Leader>sb',
+    ':e  ' .. vim.fn.expand('%:p:h') .. '/scratch/',
+    { silent = false }
+)
 
 -- Misc
 u.keymap('n', '<Leader>dt', ':call v:lua.udfs.delete_trailing_whitespace()<CR>')
@@ -125,7 +147,7 @@ u.keymap('n', '<Leader>h3', ':call v:lua.udfs.highlight_word(3)<CR>')
 u.keymap('n', '<Leader>h4', ':call v:lua.udfs.highlight_word(4)<CR>')
 u.keymap('n', '<Leader>h5', ':call v:lua.udfs.highlight_word(5)<CR>')
 u.keymap('n', '<Leader>h6', ':call v:lua.udfs.highlight_word(6)<CR>')
-u.keymap('n', '<Leader>lp', ':lua put(', {silent = false})
+u.keymap('n', '<Leader>lp', ':lua put(', { silent = false })
 
 -- Insert mode
 u.keymap('i', 'jj', '<ESC>')
@@ -138,7 +160,7 @@ u.keymap('i', '<A-f>', '<C-o>w')
 u.keymap('i', '<A-p>', '<C-R>"')
 u.keymap('i', '<A-x>', '<C-W>')
 u.keymap('i', '<C-a>', '<C-o>^')
-u.keymap('i', '<C-e>', 'pumvisible() ? "<C-e>" : "<C-o>$"', {expr = true})
+u.keymap('i', '<C-e>', 'pumvisible() ? "<C-e>" : "<C-o>$"', { expr = true })
 u.keymap('i', '<C-h>', '<C-o>h')
 u.keymap('i', '<C-l>', '<C-o>l')
 
@@ -149,15 +171,15 @@ u.keymap('v', '<right>', '<nop>')
 u.keymap('v', '<up>', '<nop>')
 u.keymap('v', '+', '<C-a>')
 u.keymap('v', '-', '<C-x>')
-u.keymap('v', '/', '/\\v', {silent = false, noremap = false})
-u.keymap('v', '?', '?\\v', {silent = false, noremap = false})
+u.keymap('v', '/', '/\\v', { silent = false, noremap = false })
+u.keymap('v', '?', '?\\v', { silent = false, noremap = false })
 u.keymap('v', '<', '<gv')
 u.keymap('v', '>', '>gv')
 u.keymap('v', '<A-j>', ":m '>+1<CR>gv=gv")
 u.keymap('v', '<A-k>', ":m '<-2<CR>gv=gv")
 u.keymap('v', '<ESC>', '"+ygv<C-c>') -- mimicks autoselect
 u.keymap('v', '<Leader>sa', ':sort i<CR>')
-u.keymap('v', '<Leader>sr', ':s/', {silent = false})
+u.keymap('v', '<Leader>sr', ':s/', { silent = false })
 u.keymap('v', 'G', 'G$')
 u.keymap('v', 'H', '^')
 u.keymap('v', 'L', 'g_')
@@ -168,17 +190,22 @@ u.keymap('x', '*', 'mz:<C-U>call v:lua.udfs.visual_search("/")<CR>/<C-R>=@/<CR><
 u.keymap('x', '#', 'mz:<C-U>call v:lua.udfs.visual_search("?")<CR>?<C-R>=@/<CR><CR>`z')
 
 -- Command mode
-u.keymap('n', ';', ':', {silent = false})
-u.keymap('c', '<A-b>', '<S-Left>', {silent = false})
-u.keymap('c', '<A-f>', '<S-Right>', {silent = false})
-u.keymap('c', '<A-p>', '<C-R>"', {silent = false})
-u.keymap('c', '<A-x>', '<C-W>', {silent = false})
-u.keymap('c', '<C-a>', '<home>', {silent = false})
-u.keymap('c', '<C-e>', '<end>', {silent = false})
-u.keymap('c', '<C-h>', '<left>', {silent = false})
-u.keymap('c', '<C-l>', '<right>', {silent = false})
-u.keymap('c', '<C-x>', '<C-U>', {silent = false})
-u.keymap('c', '%%', "getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'", {silent = false, expr = true})
+u.keymap('n', ';', ':', { silent = false })
+u.keymap('c', '<A-b>', '<S-Left>', { silent = false })
+u.keymap('c', '<A-f>', '<S-Right>', { silent = false })
+u.keymap('c', '<A-p>', '<C-R>"', { silent = false })
+u.keymap('c', '<A-x>', '<C-W>', { silent = false })
+u.keymap('c', '<C-a>', '<home>', { silent = false })
+u.keymap('c', '<C-e>', '<end>', { silent = false })
+u.keymap('c', '<C-h>', '<left>', { silent = false })
+u.keymap('c', '<C-l>', '<right>', { silent = false })
+u.keymap('c', '<C-x>', '<C-U>', { silent = false })
+u.keymap(
+    'c',
+    '%%',
+    "getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'",
+    { silent = false, expr = true }
+)
 
 -- Terminal mode
 u.keymap('t', '<C-A-n>', '<C-\\><C-n>:bn<CR>')

@@ -50,7 +50,7 @@ opt('o', 'undofile', true)
 -- FIXME: https://github.com/neovim/neovim/pull/14126#issuecomment-989453885
 -- opt('o', 'viewdir', vim.env.CACHE .. '/tmp/view//')
 vim.opt.sessionoptions:remove('tabpages')
-vim.opt.sessionoptions:append({'winpos', 'resize'})
+vim.opt.sessionoptions:append({ 'winpos', 'resize' })
 
 -- Search, matching and substitution
 opt('o', 'gdefault', true)
@@ -82,7 +82,11 @@ opt('o', 'whichwrap', vim.o.whichwrap .. ',<,>,h,l,[,]')
 opt('o', 'wrap', true)
 
 -- Wildmenu
-opt('o', 'wildignore', '*~,*.o,*.obj,*.dll,*.dat,*.swp,*.zip,*.exe,*.DS_Store,*.out,*.toc')
+opt(
+    'o',
+    'wildignore',
+    '*~,*.o,*.obj,*.dll,*.dat,*.swp,*.zip,*.exe,*.DS_Store,*.out,*.toc'
+)
 opt('o', 'wildignorecase', true)
 opt('o', 'wildmode', 'longest:full,full')
 

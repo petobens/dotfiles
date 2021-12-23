@@ -14,7 +14,7 @@ function udfs.delete_trailing_whitespace()
     local pos = vim.api.nvim_win_get_cursor(0)
     local trailing = vim.fn.search([[\s$]], 'nw')
     if trailing ~= 0 then
-        vim.cmd[[keepjumps keeppatterns %s/\s\+$//e]]
+        vim.cmd([[keepjumps keeppatterns %s/\s\+$//e]])
         vim.api.nvim_win_set_cursor(0, pos)
     end
 end
@@ -48,7 +48,7 @@ function udfs.diff_file_split()
     end
     local diffcmd = 'diffsplit '
     if fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
-       diffcmd = 'vertical ' .. diffcmd
+        diffcmd = 'vertical ' .. diffcmd
     end
     cmd(diffcmd .. other_file)
     fn.win_gotoid(win_id)
@@ -61,7 +61,10 @@ function udfs.open_links(mode)
     if mode == 'v' then
         url = string.sub(fn.getline("'<"), fn.getpos("'<")[2] + 2, fn.getpos("'>")[3])
     else
-        url = vim.fn.matchstr(vim.fn.getline('.'), [[\(http\|www\.\)[^ ]:\?[[:alnum:]%\/_#.-]*]])
+        url = vim.fn.matchstr(
+            vim.fn.getline('.'),
+            [[\(http\|www\.\)[^ ]:\?[[:alnum:]%\/_#.-]*]]
+        )
     end
     url = fn.escape(url, '#!?&;|%')
     cmd('silent! !xdg-open ' .. url)
@@ -71,8 +74,16 @@ end
 function udfs.visual_search(direction)
     local tmp_register = fn.getreg('s')
     cmd('normal! gv"sy')
-    fn.setreg('/', '\\V' .. fn.substitute(fn.escape(fn.getreg('s'), direction .. '\\'),
-             '\\n', '\\\\n', 'g'))
+    fn.setreg(
+        '/',
+        '\\V'
+            .. fn.substitute(
+                fn.escape(fn.getreg('s'), direction .. '\\'),
+                '\\n',
+                '\\\\n',
+                'g'
+            )
+    )
     fn.setreg('s', tmp_register)
 end
 
@@ -87,13 +98,12 @@ end
 function udfs.highlight_word(n)
     cmd('normal! mz')
     cmd('normal! "zyiw')
-    local mid = 86750 + n  -- arbitrary match id
-    cmd('silent! call matchdelete(' .. mid ..')')
-    local pat ='\\V\\<' .. fn.escape(fn.getreg('z'), '\\') .. '\\>'
+    local mid = 86750 + n -- arbitrary match id
+    cmd('silent! call matchdelete(' .. mid .. ')')
+    local pat = '\\V\\<' .. fn.escape(fn.getreg('z'), '\\') .. '\\>'
     fn.matchadd('HlWord' .. n, pat, 1, mid)
     cmd('normal! `z')
 end
-
 
 _G.udfs = udfs
 

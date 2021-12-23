@@ -1,19 +1,30 @@
 local M = {}
 
 function M.keymap(mode, lhs, rhs, opts)
-    return vim.api.nvim_set_keymap(mode, lhs, rhs, vim.tbl_extend('keep', opts or {}, {
-        nowait = true,
-        silent = true,
-        noremap = true,
-    }))
+    return vim.api.nvim_set_keymap(
+        mode,
+        lhs,
+        rhs,
+        vim.tbl_extend('keep', opts or {}, {
+            nowait = true,
+            silent = true,
+            noremap = true,
+        })
+    )
 end
 
 function M.buf_keymap(buf, mode, lhs, rhs, opts)
-    return vim.api.nvim_buf_set_keymap(buf, mode, lhs, rhs, vim.tbl_extend('keep', opts or {}, {
-        nowait = true,
-        silent = true,
-        noremap = true,
-    }))
+    return vim.api.nvim_buf_set_keymap(
+        buf,
+        mode,
+        lhs,
+        rhs,
+        vim.tbl_extend('keep', opts or {}, {
+            nowait = true,
+            silent = true,
+            noremap = true,
+        })
+    )
 end
 
 function M.unmap(mode, lhs)
@@ -34,8 +45,8 @@ function _G.put(...)
         table.insert(objects, vim.inspect(v))
     end
 
-  print(table.concat(objects, '\n'))
-  return ...
+    print(table.concat(objects, '\n'))
+    return ...
 end
 
 return M
