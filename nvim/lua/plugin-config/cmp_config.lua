@@ -79,6 +79,11 @@ cmp.setup({
             vim.fn['vsnip#anonymous'](args.body)
         end,
     },
+    formatting = {
+        format = require('lspkind').cmp_format({
+            with_text = true,
+        }),
+    },
     experimental = {
         ghost_text = true,
     },

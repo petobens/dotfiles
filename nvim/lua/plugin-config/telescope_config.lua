@@ -32,6 +32,7 @@ u.keymap('n', '<Leader>rd', ':Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', ':Telescope buffers<CR>')
 u.keymap('n', '<Leader>gl', ':Telescope git_commits<CR>')
 u.keymap('n', '<Leader>dr', ':Telescope resume<CR>')
+u.keymap('n', '<Leader>ch', ':Telescope command_history<CR>')
 u.keymap(
     'n',
     '<A-z>',

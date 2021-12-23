@@ -62,15 +62,14 @@ return require('packer').startup(function(use)
     })
 
     -- LSP and completion
-    use({
-        'neovim/nvim-lspconfig',
-    })
+    use({ 'neovim/nvim-lspconfig' })
     use({
         'williamboman/nvim-lsp-installer',
         config = function()
             require('plugin-config/lspinstaller_config')
         end,
     })
+    use({ 'folke/lua-dev.nvim' })
     use({
         'jose-elias-alvarez/null-ls.nvim',
         config = function()
@@ -93,6 +92,7 @@ return require('packer').startup(function(use)
             'hrsh7th/cmp-cmdline',
             'hrsh7th/cmp-vsnip',
             'andersevenrud/cmp-tmux',
+            'onsails/lspkind-nvim',
         },
         config = function()
             require('plugin-config/cmp_config')
