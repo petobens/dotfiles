@@ -63,6 +63,7 @@ local map_list = {
     { key = 'u', cb = ':lua NvimTreeConfig.up_dir()<CR>' },
     { key = 'zc', cb = tree_cb('close_node') },
     { key = 'zo', cb = tree_cb('edit') },
+    { key = 'zm', cb = ':lua require("nvim-tree.lib").collapse_all()<CR>' },
     { key = 'o', cb = tree_cb('system_open') },
 }
 
