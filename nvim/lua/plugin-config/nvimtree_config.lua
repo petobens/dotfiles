@@ -4,16 +4,50 @@ vim.g.nvim_tree_quit_on_open = 1
 vim.g.nvim_tree_disable_window_picker = 1
 
 _G.NvimTreeConfig = {}
+
+function NvimTreeConfig.find_file()
+    local nvim_tree = require('nvim-tree')
+    nvim_tree.find_file(true)
+    local lib = require('nvim-tree.lib')
+    local node = lib.get_node_at_cursor()
+    local curr_file = node.name
+    local parent_dir = vim.fn.fnamemodify(node.absolute_path, ':h:t')
+    nvim_tree.on_keypress('close_node')
+    nvim_tree.on_keypress('cd')
+    if vim.fn.line('.') > 1 then
+        local linenr = vim.fn.searchpos(curr_file)[1]
+        vim.cmd('normal! gg' .. (linenr - 1) .. 'j')
+    else
+        local linenr = vim.fn.searchpos(parent_dir)[1]
+        vim.cmd('normal! gg' .. (linenr - 1) .. 'j')
+        nvim_tree.on_keypress('cd')
+        linenr = vim.fn.searchpos(curr_file)[1]
+        vim.cmd('normal! gg' .. (linenr - 1) .. 'j')
+    end
+end
+
 function NvimTreeConfig.cd_or_open()
+    local nvim_tree = require('nvim-tree')
     local lib = require('nvim-tree.lib')
     local node = lib.get_node_at_cursor()
     if node then
         if node.entries then
-            require('nvim-tree').on_keypress('cd')
+            nvim_tree.on_keypress('cd')
         else
-            require('nvim-tree').on_keypress('edit')
+            nvim_tree.on_keypress('edit')
         end
     end
+end
+
+function NvimTreeConfig.up_dir()
+    local nvim_tree = require('nvim-tree')
+    local lib = require('nvim-tree.lib')
+    local node = lib.get_node_at_cursor()
+    local parent_dir = vim.fn.fnamemodify(node.absolute_path, ':h:t')
+    nvim_tree.on_keypress('close_node')
+    nvim_tree.on_keypress('cd')
+    local linenr = vim.fn.searchpos(parent_dir)[1]
+    vim.cmd('normal! gg' .. (linenr - 1) .. 'j')
 end
 
 local tree_cb = require('nvim-tree.config').nvim_tree_callback
@@ -26,7 +60,7 @@ local map_list = {
     { key = 'd', cb = tree_cb('remove') },
     { key = 'r', cb = tree_cb('rename') },
     { key = 'y', cb = tree_cb('copy') },
-    { key = 'u', cb = tree_cb('dir_up') },
+    { key = 'u', cb = ':lua NvimTreeConfig.up_dir()<CR>' },
     { key = 'zc', cb = tree_cb('close_node') },
     { key = 'zo', cb = tree_cb('edit') },
     { key = 'o', cb = tree_cb('system_open') },
@@ -34,7 +68,7 @@ local map_list = {
 
 require('nvim-tree').setup({
     view = {
-        width = 40,
+        width = 43,
         numbers = true,
         relativenumber = true,
         mappings = {
@@ -42,6 +76,10 @@ require('nvim-tree').setup({
             list = map_list,
         },
     },
+    update_focused_file = {
+        enable = true,
+        update_cwd = true,
+    },
 })
 
-u.keymap('n', '<Leader>ff', ':NvimTreeFindFile<CR>')
+u.keymap('n', '<Leader>ff', ':lua NvimTreeConfig.find_file()<CR>')
