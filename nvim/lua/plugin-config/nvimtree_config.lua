@@ -5,6 +5,11 @@ vim.g.nvim_tree_disable_window_picker = 1
 
 _G.NvimTreeConfig = {}
 
+function NvimTreeConfig.home()
+    local lib = require('nvim-tree.lib')
+    lib.change_dir(vim.env.HOME)
+end
+
 function NvimTreeConfig.find_file()
     local nvim_tree = require('nvim-tree')
     nvim_tree.find_file(true)
@@ -61,6 +66,7 @@ local map_list = {
     { key = 'r', cb = tree_cb('rename') },
     { key = 'y', cb = tree_cb('copy') },
     { key = 'u', cb = ':lua NvimTreeConfig.up_dir()<CR>' },
+    { key = 'h', cb = ':lua NvimTreeConfig.home()<CR>' },
     { key = 'zc', cb = tree_cb('close_node') },
     { key = 'zo', cb = tree_cb('edit') },
     { key = 'zm', cb = ':lua require("nvim-tree.lib").collapse_all()<CR>' },

@@ -132,6 +132,7 @@ u.keymap(
     ':e  ' .. vim.fn.expand('%:p:h') .. '/scratch/',
     { silent = false }
 )
+u.keymap('n', '<Leader>eb', ':e $HOME/.bashrc<CR>')
 
 -- Misc
 u.keymap('n', '<Leader>dt', ':call v:lua.udfs.delete_trailing_whitespace()<CR>')
