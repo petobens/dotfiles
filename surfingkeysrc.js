@@ -1,6 +1,30 @@
 /* eslint-disable no-undef */
 // Preamble {{{
 
+// For surfingkeys 1.0
+const {
+    aceVimMap,
+    mapkey,
+    imap,
+    imapkey,
+    getClickableElements,
+    vmapkey,
+    map,
+    unmap,
+    unmapAllExcept,
+    cmap,
+    vmap,
+    addSearchAlias,
+    removeSearchAlias,
+    tabOpenLink,
+    readText,
+    Clipboard,
+    Front,
+    Hints,
+    Visual,
+    RUNTIME
+} = api;
+
 // To load this local config file on chromium like browsers (on firefox we need
 // to manually copy and paste):
 // i) Check `Allow access to file URLS` for surfingkeys in the general extensions
@@ -24,7 +48,7 @@ settings.enableAutoFocus = true;
 settings.modeAfterYank = 'Normal';
 settings.hintAlign = 'left';
 settings.editableBodyCare = false;
-Hints.characters = 'asdfghjkl';
+Hints.setCharacters('asdfghjkl');
 
 // Disable PDF viewer (note that ;s toggle that does this doesn't seem to work)
 chrome.storage.local.set({ noPdfViewer: 1 });
@@ -165,28 +189,28 @@ mapkey('F', 'Open a link in non-active new tab', function () {
 
 // Page movement (and searching)
 mapkey('j', 'Roll down', function () {
-    Normal.scroll('down');
+    window.scrollTo(0, window.pageYOffset+25)
 });
 mapkey('k', 'Roll up', function () {
-    Normal.scroll('up');
+    window.scrollTo(0, window.pageYOffset-25)
 });
 mapkey('h', 'Roll left', function () {
-    Normal.scroll('left');
+    window.scrollTo(window.pageXOffset-25, 0)
 });
 mapkey('l', 'Roll right', function () {
-    Normal.scroll('right');
+    window.scrollTo(window.pageXOffset+25, 0)
 });
 mapkey('<Ctrl-u>', 'Scroll up half a page', function () {
-    Normal.scroll('pageUp');
+    window.scrollTo(0, window.pageYOffset-window.innerHeight*0.8)
 });
 mapkey('<Ctrl-d>', 'Scroll down half a page', function () {
-    Normal.scroll('pageDown');
+    window.scrollTo(0, window.pageYOffset+window.innerHeight*0.8)
 });
 mapkey('gg', 'Jump to the top of the page', function () {
-    Normal.scroll('top');
+    window.scrollTo(0, window.pageYOffset-1000000000)
 });
 mapkey('G', 'Jump to the bottom of the page', function () {
-    Normal.scroll('bottom');
+    window.scrollTo(0, window.pageYOffset+1000000000)
 });
 mapkey('n', 'Next search result', function () {
     Visual.next(false);
@@ -335,7 +359,7 @@ mapkey('s', 'Search in google in current tab', function () {
 mapkey('S', 'Search in google in new tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'g' });
 });
-addSearchAliasX(
+addSearchAlias(
     's',
     'StackOverflow',
     'https://stackoverflow.com/search?q=',
@@ -358,7 +382,7 @@ mapkey(',ss', 'Search in StackOverflow in current tab', function () {
 mapkey(',Ss', 'Search in StackOverflow in new tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 's' });
 });
-addSearchAliasX(
+addSearchAlias(
     'h',
     'GitHub',
     'https://github.com/search?q=',
@@ -384,7 +408,7 @@ mapkey(',sg', 'Search in Github in current tab', function () {
 mapkey(',Sg', 'Search in Github in new tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'h' });
 });
-addSearchAliasX(
+addSearchAlias(
     'w',
     'Wikipedia',
     'https://en.wikipedia.org/w/index.php?search=',
@@ -404,7 +428,7 @@ mapkey(',sw', 'Search in Wikpedia in current tab', function () {
 mapkey(',Sw', 'Search in Wikpedia in new tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'w' });
 });
-addSearchAliasX(
+addSearchAlias(
     'y',
     'YouTube',
     'https://www.youtube.com/results?search_query='
@@ -415,7 +439,7 @@ mapkey(',sy', 'Search in Youtube in current tab', function () {
 mapkey(',Sy', 'Search in Youtube in new tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'y' });
 });
-addSearchAliasX(
+addSearchAlias(
     'm',
     'MercadoLibre',
     'http://www.mercadolibre.com.ar/jm/search?as_word='
