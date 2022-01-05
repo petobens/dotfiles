@@ -59,8 +59,7 @@ cmp.setup({
         { name = 'path' },
         {
             name = 'buffer',
-            keyword_length = 3,
-            options = {
+            option = {
                 get_bufnrs = function()
                     return vim.api.nvim_list_bufs()
                 end,
@@ -69,7 +68,7 @@ cmp.setup({
         { name = 'vsnip' },
         {
             name = 'tmux',
-            options = {
+            option = {
                 all_panes = true,
             },
         },
