@@ -1,8 +1,6 @@
 local opt = require('utils').opt
 
 -- Syntax
-vim.cmd('filetype plugin indent on')
-vim.cmd('syntax enable')
 opt('o', 'iskeyword', vim.o.iskeyword .. ',:')
 opt('o', 'termguicolors', true)
 
