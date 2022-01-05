@@ -201,10 +201,10 @@ mapkey('l', 'Roll right', function () {
     window.scrollTo(window.pageXOffset+25, 0)
 });
 mapkey('<Ctrl-u>', 'Scroll up half a page', function () {
-    window.scrollTo(0, window.pageYOffset-window.innerHeight*0.8)
+    window.scrollTo(0, window.pageYOffset-window.innerHeight*0.6)
 });
 mapkey('<Ctrl-d>', 'Scroll down half a page', function () {
-    window.scrollTo(0, window.pageYOffset+window.innerHeight*0.8)
+    window.scrollTo(0, window.pageYOffset+window.innerHeight*0.6)
 });
 mapkey('gg', 'Jump to the top of the page', function () {
     window.scrollTo(0, window.pageYOffset-1000000000)
