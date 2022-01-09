@@ -188,6 +188,10 @@ if type "hadolint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/hadolint.yaml" "$HOME/.config/hadolint.yaml"
     echo Created .config/hadolint.yaml symlink
 fi
+if type "stylua" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/stylua.toml" "$HOME/.config/stylua.toml"
+    echo Created .config/stylua.toml symlink
+fi
 
 # Terminal programs
 if type "less" > /dev/null 2>&1; then

@@ -5,7 +5,7 @@ null_ls.setup({
     sources = {
         formatting.stylua.with({
             extra_args = {
-                '--config-path=/home/pedro/git-repos/private/dotfiles/config/stylua/stylua.toml',
+                '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml',
             },
         }),
     },
