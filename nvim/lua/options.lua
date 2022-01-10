@@ -39,16 +39,17 @@ opt('o', 'completeopt', 'menu,menuone,noselect')
 opt('o', 'showmode', false)
 -- opt('o', 'fillchars', 'vert:│,fold:·,eob:~')
 
--- Backups, sessions and undo
+-- Backups, sessions, undo and shada
 opt('o', 'backup', true)
 opt('o', 'backupdir', vim.env.CACHE .. '/tmp/backup//')
 opt('o', 'directory', vim.env.CACHE .. '/tmp/swap//')
 opt('o', 'undodir', vim.env.CACHE .. '/tmp/undo//')
 opt('o', 'undofile', true)
 -- FIXME: https://github.com/neovim/neovim/pull/14126#issuecomment-989453885
--- opt('o', 'viewdir', vim.env.CACHE .. '/tmp/view//')
+opt('o', 'viewdir', vim.env.CACHE .. '/tmp/view//')
 vim.opt.sessionoptions:remove('tabpages')
 vim.opt.sessionoptions:append({ 'winpos', 'resize' })
+opt('o', 'shadafile', vim.env.CACHE .. '/tmp/shada/main.shada')
 
 -- Search, matching and substitution
 opt('o', 'gdefault', true)
