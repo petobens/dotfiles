@@ -31,13 +31,6 @@ function M.unmap(mode, lhs)
     return vim.api.nvim_del_keymap(mode, lhs)
 end
 
-function M.opt(scope, key, value)
-    vim[scope][key] = value
-    if scope ~= 'o' then
-        vim['o'][key] = value
-    end
-end
-
 function _G.put(...)
     local objects = {}
     for i = 1, select('#', ...) do
