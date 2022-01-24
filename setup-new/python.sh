@@ -60,7 +60,7 @@ $pipx_install_cmd isort
 $pipx_install_cmd jupyter --include-deps
 $pipx_inject_cmd jupyter numpy pandas matplotlib
 $pipx_install_cmd ipython
-$pipx_inject_cmd ipython numpy pandas matplotlib
+$pipx_inject_cmd ipython numpy pandas matplotlib black
 $pipx_install_cmd litecli
 $pipx_install_cmd mssql-cli
 $pipx_install_cmd mycli
