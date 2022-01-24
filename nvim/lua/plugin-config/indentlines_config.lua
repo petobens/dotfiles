@@ -7,4 +7,4 @@ require('indent_blankline').setup({
     show_current_context = true,
 })
 
-u.keymap('n', '<Leader>I', ':IndentBlanklineToggle<CR>')
+u.keymap('n', '<Leader>I', '<Cmd>IndentBlanklineToggle<CR>')

@@ -1,23 +1,23 @@
 local u = require('utils')
 
 -- Save
-u.keymap('n', '<Leader>kv', ':qall<CR>')
-u.keymap('n', '<Leader>nw', ':noautocmd w!<CR>')
-u.keymap('n', '<Leader>ps', ':silent! source ' .. udfs.session_name() .. '<CR>')
-u.keymap('n', '<Leader>w', ':w!<CR>')
-u.keymap('n', '<Leader>wc', ':w!<CR>:silent close<CR>')
-u.keymap('n', '<Leader>wq', ':w!<CR>:q!<CR>')
--- TODO: add sudo write and edit and edit minimal lua file
+u.keymap('n', '<Leader>kv', '<Cmd>qall<CR>')
+u.keymap('n', '<Leader>nw', '<Cmd>noautocmd w!<CR>')
+u.keymap('n', '<Leader>ps', '<Cmd>silent! source ' .. udfs.session_name() .. '<CR>')
+u.keymap('n', '<Leader>w', '<Cmd>w!<CR>')
+u.keymap('n', '<Leader>wc', '<Cmd>w!<CR><Cmd>silent! close<CR>')
+u.keymap('n', '<Leader>wq', '<Cmd>w!<CR><Cmd>q!<CR>')
+-- TODO: add sudo write and edit
 
 -- Buffer manipulation
-u.keymap('n', '<C-n>', ':bn<CR>')
-u.keymap('n', '<C-p>', ':bp<CR>')
-u.keymap('n', '<Leader>bd', ':bp|bd #<CR>')
-u.keymap('n', '<Leader>cd', ':lcd %:h<CR>')
-u.keymap('n', '<Leader>rr', ':checktime<CR>')
-u.keymap('n', '<Leader>so', ':update<CR>:luafile %<CR>', { silent = false })
-u.keymap('n', '<Leader>wd', ':bd<CR>')
-u.keymap('n', 'gf', ':call v:lua.udfs.goto_file_insplit()<CR>')
+u.keymap('n', '<C-n>', '<Cmd>bn<CR>')
+u.keymap('n', '<C-p>', '<Cmd>bp<CR>')
+u.keymap('n', '<Leader>bd', '<Cmd>bp|bd #<CR>')
+u.keymap('n', '<Leader>cd', '<Cmd>lcd %:h<CR>')
+u.keymap('n', '<Leader>rr', '<Cmd>checktime<CR>')
+u.keymap('n', '<Leader>so', '<Cmd>update<CR>:luafile %<CR>', { silent = false })
+u.keymap('n', '<Leader>wd', '<Cmd>bd<CR>')
+u.keymap('n', 'gf', udfs.goto_file_insplit)
 
 -- Window manipulation
 u.keymap('n', '<A-o>', '<C-W>ozv')
@@ -26,33 +26,37 @@ u.keymap('n', '<C-A-j>', '<C-W>2+')
 u.keymap('n', '<C-A-k>', '<C-W>2-')
 u.keymap('n', '<C-A-l>', '<C-W>2>')
 u.keymap('n', '<C-c>', '<C-W>c')
-u.keymap('n', '<C-h>', [[<cmd>lua require('tmux').move_left()<CR>]])
-u.keymap('n', '<C-j>', [[<cmd>lua require('tmux').move_down()<CR>]])
-u.keymap('n', '<C-k>', [[<cmd>lua require('tmux').move_up()<CR>]])
-u.keymap('n', '<C-l>', [[<cmd>lua require('tmux').move_right()<CR>]])
+u.keymap('n', '<C-h>', require('tmux').move_left)
+u.keymap('n', '<C-j>', require('tmux').move_down)
+u.keymap('n', '<C-k>', require('tmux').move_up)
+u.keymap('n', '<C-l>', require('tmux').move_right)
 u.keymap('n', '<C-x>', '<C-W>xzz')
 u.keymap('n', '<Leader>hv', '<C-W>H<C-W>x') -- make horizantal vertical and viceversa
 u.keymap('n', '<Leader>vh', '<C-W>K')
-u.keymap('n', '<Leader>pu', ':wincmd J<bar>15 wincmd _<CR>') -- Resize win as popup
-u.keymap('n', '<Leader>sp', ':split<CR>')
-u.keymap('n', '<Leader>vs', ':vsplit<CR>')
+u.keymap('n', '<Leader>pu', '<Cmd>wincmd J<bar>15 wincmd _<CR>') -- Resize win as popup
+u.keymap('n', '<Leader>sp', '<Cmd>split<CR>')
+u.keymap('n', '<Leader>vs', '<Cmd>vsplit<CR>')
 
 -- Line edit/movement
-u.keymap('n', '<down>', '<nop>')
-u.keymap('n', '<left>', '<nop>')
-u.keymap('n', '<right>', '<nop>')
-u.keymap('n', '<up>', '<nop>')
-u.keymap('n', '+', '<C-a>')
-u.keymap('n', '-', '<C-x>')
+u.keymap({ 'n', 'i', 'v' }, '<down>', '<nop>')
+u.keymap({ 'n', 'i', 'v' }, '<left>', '<nop>')
+u.keymap({ 'n', 'i', 'v' }, '<right>', '<nop>')
+u.keymap({ 'n', 'i', 'v' }, '<up>', '<nop>')
+u.keymap({ 'n', 'v' }, '+', '<C-a>')
+u.keymap({ 'n', 'v' }, '-', '<C-x>')
 u.keymap('n', '<A-0>', 'H')
 u.keymap('n', '<A-b>', 'L')
-u.keymap('n', '<A-j>', ':<C-U>execute "move+" . v:count1<CR>:silent! normal! zO==<CR>')
-u.keymap('n', '<A-k>', ':<C-U>execute "move--" . v:count1<CR>:silent! normal! zO==<CR>')
+u.keymap('n', '<A-j>', '<Cmd>execute "move+" . v:count1<CR><Cmd>silent! normal! zO==<CR>')
+u.keymap(
+    'n',
+    '<A-k>',
+    '<Cmd>execute "move--" . v:count1<CR><Cmd>silent! normal! zO==<CR>'
+)
 u.keymap('n', '<A-m>', 'M')
 u.keymap('n', '<A-s>', 'i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>`w') -- Split line
 u.keymap('n', '<A-u>', 'mzg~iw`z', { noremap = false }) -- Upper case inner word
 u.keymap('n', '<Leader>mr', 'q') -- Macro recording
-u.keymap('n', 'H', '^')
+u.keymap({ 'n', 'v' }, 'H', '^')
 u.keymap('n', 'L', '$')
 u.keymap('n', 'M', [[<cmd>execute 'normal! ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('n', 'j', 'gj')
@@ -66,24 +70,25 @@ u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>')
 -- TODO: add mapping to swap words
 
 -- Yank and paste
-u.keymap('n', '<Leader>P', ':put!<CR>')
-u.keymap('n', '<Leader>p', ':put<CR>', { nowait = false })
+u.keymap('n', '<Leader>P', '<Cmd>put!<CR>')
+u.keymap('n', '<Leader>p', '<Cmd>put<CR>', { nowait = false })
+-- FIXME: not working
 u.keymap('n', 'gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]') -- Visually reselect what was just pasted
 u.keymap('n', 'Y', 'y$', { noremap = false })
 u.keymap('n', 'yy', 'mz0y$`z', { noremap = false })
 
 -- Search, jumps and marks
-u.keymap('n', '/', '/\\v', { silent = false, noremap = false })
-u.keymap('n', '?', '?\\v', { silent = false, noremap = false })
+u.keymap({ 'n', 'v' }, '/', '/\\v', { silent = false, noremap = false })
+u.keymap({ 'n', 'v' }, '?', '?\\v', { silent = false, noremap = false })
 u.keymap('n', '<C-o>', '<C-o>zvzz')
 u.keymap('n', '<C-y>', '<C-i>zvzz') -- Jump to newer entry in jumplist
-u.keymap('n', '<Leader><Space>', ':nohlsearch<CR>:call clearmatches()<CR>')
+u.keymap('n', '<Leader><Space>', '<Cmd>nohlsearch<CR><Cmd>call clearmatches()<CR>')
 u.keymap('n', '<Leader>qr', ':cdo %s/', { silent = false })
 u.keymap('n', '<Leader>sr', ':%s/', { silent = false })
 u.keymap('n', 'n', 'nzzzv') -- keep matches window in the middle (while opening folds)
 u.keymap('n', 'N', 'Nzzzv')
 u.keymap('n', "'", '`', { noremap = false })
-u.keymap('n', '<Leader>dm', ':delmarks!<CR>:delmarks A-Z0-9<CR>')
+u.keymap('n', '<Leader>dm', '<Cmd>delmarks!<CR><Cmd>delmarks A-Z0-9<CR>')
 u.keymap('n', '<tab>', '%', { noremap = false })
 u.keymap(
     'n',
@@ -98,32 +103,38 @@ u.keymap('n', '<Leader>ws', '/<><Left>', { silent = false, noremap = false })
 u.keymap('n', '<Leader>z', 'zMzvzz')
 u.keymap('n', 'zm', 'zM')
 u.keymap('n', 'zr', 'zR')
-u.keymap('n', '<Leader>mf', ':set foldmethod=marker<CR>zv')
+u.keymap('n', '<Leader>mf', '<Cmd>set foldmethod=marker<CR>zv')
 
 -- Diffs
-u.keymap('n', '<Leader>de', ':diffoff!<CR>')
-u.keymap('n', '<Leader>ds', ':call v:lua.udfs.diff_file_split()<CR>')
-u.keymap('n', '<Leader>du', ':diffupdate<CR>')
+u.keymap('n', '<Leader>de', '<Cmd>diffoff!<CR>')
+u.keymap('n', '<Leader>ds', udfs.diff_file_split)
+u.keymap('n', '<Leader>du', '<Cmd>diffupdate<CR>')
 u.keymap('n', '[h', "&diff ? '[c' : '[h'", { expr = true })
 u.keymap('n', ']h', "&diff ? ']c' : ']h'", { expr = true })
 
+-- Misc
+u.keymap('n', '<Leader>ic', '<Cmd>set list!<CR>')
+u.keymap('n', '<Leader>sa', '<Cmd>sort i<CR>')
+u.keymap('n', '<Leader>sc', '<Cmd>set spell!<CR>')
+u.keymap('n', '<Leader>lp', ':lua put(', { silent = false })
+
 -- Bookmarks
-u.keymap('n', '<Leader>ev', ':e $MYVIMRC<CR>')
-u.keymap('n', '<Leader>em', ':e ' .. vim.env.DOTVIM .. '/init_min.lua<CR>')
+u.keymap('n', '<Leader>ev', '<Cmd>e $MYVIMRC<CR>')
+u.keymap('n', '<Leader>em', '<Cmd>e ' .. vim.env.DOTVIM .. '/init_min.lua<CR>')
 u.keymap(
     'n',
     '<Leader>ew',
-    ':e ' .. vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add<CR>'
+    '<Cmd>e ' .. vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add<CR>'
 )
 u.keymap(
     'n',
     '<Leader>etm',
-    ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_mutt.md<CR>'
+    '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/varios/todos_mutt.md<CR>'
 )
 u.keymap(
     'n',
     '<Leader>ets',
-    ':e ' .. vim.env.HOME .. '/OneDrive/varios/todos_coding_setup.md<CR>'
+    '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/varios/todos_coding_setup.md<CR>'
 )
 u.keymap('n', '<Leader>dd', ':e $HOME/Desktop/', { silent = false })
 u.keymap(
@@ -132,30 +143,40 @@ u.keymap(
     ':e  ' .. vim.fn.expand('%:p:h') .. '/scratch/',
     { silent = false }
 )
-u.keymap('n', '<Leader>eb', ':e $HOME/.bashrc<CR>')
+u.keymap('n', '<Leader>eb', '<Cmd>e $HOME/.bashrc<CR>')
 
--- Misc
-u.keymap('n', '<Leader>dt', ':call v:lua.udfs.delete_trailing_whitespace()<CR>')
-u.keymap('n', '<Leader>ol', ':call v:lua.udfs.open_links("n")<CR>')
-u.keymap('v', '<Leader>ol', ':call v:lua.udfs.open_links("v")<CR>')
-u.keymap('n', '<Leader>ic', ':set list!<CR>')
-u.keymap('n', '<Leader>sa', ':sort i<CR>')
-u.keymap('n', '<Leader>sc', ':set spell!<CR>')
-u.keymap('n', '<Leader>fm', ':call v:lua.udfs.tmux_split_cmd("ranger")<CR>')
-u.keymap('n', '<Leader>h1', ':call v:lua.udfs.highlight_word(1)<CR>')
-u.keymap('n', '<Leader>h2', ':call v:lua.udfs.highlight_word(2)<CR>')
-u.keymap('n', '<Leader>h3', ':call v:lua.udfs.highlight_word(3)<CR>')
-u.keymap('n', '<Leader>h4', ':call v:lua.udfs.highlight_word(4)<CR>')
-u.keymap('n', '<Leader>h5', ':call v:lua.udfs.highlight_word(5)<CR>')
-u.keymap('n', '<Leader>h6', ':call v:lua.udfs.highlight_word(6)<CR>')
-u.keymap('n', '<Leader>lp', ':lua put(', { silent = false })
+-- UDFs
+u.keymap('n', '<Leader>dt', udfs.delete_trailing_whitespace)
+u.keymap('n', '<Leader>ol', function()
+    udfs.open_links('n')
+end)
+u.keymap('v', '<Leader>ol', function()
+    udfs.open_links('v')
+end)
+u.keymap('n', '<Leader>fm', function()
+    udfs.tmux_split_cmd('ranger')
+end)
+u.keymap('n', '<Leader>h1', function()
+    udfs.highlight_word(1)
+end)
+u.keymap('n', '<Leader>h2', function()
+    udfs.highlight_word(2)
+end)
+u.keymap('n', '<Leader>h3', function()
+    udfs.highlight_word(3)
+end)
+u.keymap('n', '<Leader>h4', function()
+    udfs.highlight_word(4)
+end)
+u.keymap('n', '<Leader>h5', function()
+    udfs.highlight_word(5)
+end)
+u.keymap('n', '<Leader>h6', function()
+    udfs.highlight_word(6)
+end)
 
--- Insert mode
+-- Insert mode specific
 u.keymap('i', 'jj', '<ESC>')
-u.keymap('i', '<down>', '<nop>')
-u.keymap('i', '<left>', '<nop>')
-u.keymap('i', '<right>', '<nop>')
-u.keymap('i', '<up>', '<nop>')
 u.keymap('i', '<A-b>', '<C-o>b')
 u.keymap('i', '<A-f>', '<C-o>w')
 u.keymap('i', '<A-p>', '<C-R>"')
@@ -165,15 +186,7 @@ u.keymap('i', '<C-e>', 'pumvisible() ? "<C-e>" : "<C-o>$"', { expr = true })
 u.keymap('i', '<C-h>', '<C-o>h')
 u.keymap('i', '<C-l>', '<C-o>l')
 
--- Visual mode
-u.keymap('v', '<down>', '<nop>')
-u.keymap('v', '<left>', '<nop>')
-u.keymap('v', '<right>', '<nop>')
-u.keymap('v', '<up>', '<nop>')
-u.keymap('v', '+', '<C-a>')
-u.keymap('v', '-', '<C-x>')
-u.keymap('v', '/', '/\\v', { silent = false, noremap = false })
-u.keymap('v', '?', '?\\v', { silent = false, noremap = false })
+-- Visual mode specific
 u.keymap('v', '<', '<gv')
 u.keymap('v', '>', '>gv')
 u.keymap('v', '<A-j>', ":m '>+1<CR>gv=gv")
@@ -182,15 +195,14 @@ u.keymap('v', '<ESC>', '"+ygv<C-c>') -- mimicks autoselect
 u.keymap('v', '<Leader>sa', ':sort i<CR>')
 u.keymap('v', '<Leader>sr', ':s/', { silent = false })
 u.keymap('v', 'G', 'G$')
-u.keymap('v', 'H', '^')
 u.keymap('v', 'L', 'g_')
-u.keymap('v', 'M', [[<cmd>execute 'normal! gv ' . (virtcol('$')/2) . '<bar>'<CR>]])
+u.keymap('v', 'M', [[<Cmd>execute 'normal! gv ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('v', 'Q', 'gq')
 u.keymap('v', '.', ':normal .<CR>')
 u.keymap('x', '*', 'mz:<C-U>call v:lua.udfs.visual_search("/")<CR>/<C-R>=@/<CR><CR>`z')
 u.keymap('x', '#', 'mz:<C-U>call v:lua.udfs.visual_search("?")<CR>?<C-R>=@/<CR><CR>`z')
 
--- Command mode
+-- Command mode specific
 u.keymap('n', ';', ':', { silent = false })
 u.keymap('c', '<A-b>', '<S-Left>', { silent = false })
 u.keymap('c', '<A-f>', '<S-Right>', { silent = false })
@@ -208,7 +220,7 @@ u.keymap(
     { silent = false, expr = true }
 )
 
--- Terminal mode
+-- Terminal mode specific
 u.keymap('t', '<C-A-n>', '<C-\\><C-n>:bn<CR>')
 u.keymap('t', '<C-A-p>', '<C-\\><C-n>:bp<CR>')
 u.keymap('t', '<C-h>', '<C-\\><C-n><C-W>h')

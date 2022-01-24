@@ -9,10 +9,5 @@ require('commented').setup({
     },
 })
 
-u.keymap(
-    'n',
-    '<Leader>cu',
-    'v:lua.require("commented").commented_line()',
-    { expr = true }
-)
-u.keymap('v', '<Leader>cu', 'v:lua.require("commented").commented()', { expr = true })
+u.keymap('n', '<Leader>cu', require('commented').commented_line, { expr = true })
+u.keymap('v', '<Leader>cu', require('commented').commented, { expr = true })

@@ -89,4 +89,4 @@ require('nvim-tree').setup({
     },
 })
 
-u.keymap('n', '<Leader>ff', ':lua NvimTreeConfig.find_file()<CR>')
+u.keymap('n', '<Leader>ff', NvimTreeConfig.find_file)

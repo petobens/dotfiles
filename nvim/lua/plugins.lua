@@ -149,8 +149,16 @@ return require('packer').startup(function(use)
             require('plugin-config/gitsigns_config')
         end,
     })
+    use({
+        'tpope/vim-fugitive',
+        config = function()
+            require('plugin-config/fugitive_config')
+        end,
+    })
 
     use('nathom/tmux.nvim')
+    use('jamessan/vim-gnupg')
+    use('tpope/vim-repeat')
 
     if packer_bootstrap then
         require('packer').sync()
