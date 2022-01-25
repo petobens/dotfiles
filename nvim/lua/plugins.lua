@@ -151,6 +151,11 @@ return require('packer').startup(function(use)
     })
     use({
         'tpope/vim-fugitive',
+        requires = {
+            'tpope/vim-rhubarb',
+            'tommcdo/vim-fubitive',
+            'shumphrey/fugitive-gitlab.vim',
+        },
         config = function()
             require('plugin-config/fugitive_config')
         end,

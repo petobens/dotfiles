@@ -177,6 +177,14 @@ onedarkpro.setup({
         DiffNewFile = { fg = p.green, bg = p.visual_grey },
 
         -- Plugins
+        ---- Fugitive
+        diffAdded = { fg = p.green },
+        diffRemoved = { fg = p.red },
+        fugitiveUnstagedHeading = { fg = p.red },
+        fugitiveUnstagedModifier = { fg = p.red },
+        fugitiveStagedHeading = { fg = p.green },
+        fugitiveStagedModifier = { fg = p.green },
+
         ---- IndentBlankline
         IndentLine = { fg = p.comment_grey },
         IndentBlanklineContextChar = { fg = p.white },
