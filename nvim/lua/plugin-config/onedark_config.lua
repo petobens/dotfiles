@@ -155,7 +155,16 @@ onedarkpro.setup({
         LspReferenceWrite = { link = 'LspReferenceText' },
         -- TODO: add other lsp hls (as code lens)
 
-        -- TODO: Treesitter stuff
+        -- Treesitter stuff
+        ---- Markdown
+        TSTitle = { fg = p.dark_red, style = 'bold' },
+        TSLiteral = { fg = p.green }, -- embedded code
+        TSEmphasis = { fg = p.orange, style = 'italic' },
+        TSStrong = { fg = p.orange, style = 'bold' },
+        TSURI = { fg = p.blue, style = 'underline' },
+        TSTextReference = { link = 'TSText' },
+        TSPunctSpecial = { fg = p.dark_red, style = 'bold' },
+        TSStringEscape = { fg = p.fg },
 
         -- Filetypes
         ---- Vim help

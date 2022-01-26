@@ -1,3 +1,5 @@
+local u = require('utils')
+
 require('nvim-treesitter.configs').setup({
     highlight = {
         enable = true,
@@ -6,7 +8,10 @@ require('nvim-treesitter.configs').setup({
         'bash',
         'json',
         'lua',
+        'markdown',
         'python',
         'vim',
     },
 })
+
+u.keymap('n', '<Leader>cg', '<Cmd>TSHighlightCapturesUnderCursor<CR>')

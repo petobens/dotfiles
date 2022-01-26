@@ -101,6 +101,7 @@ return require('packer').startup(function(use)
 
     use({
         'nvim-treesitter/nvim-treesitter',
+        requires = { 'nvim-treesitter/playground' },
         run = ':TSUpdate',
         config = function()
             require('plugin-config/treesitter_config')
