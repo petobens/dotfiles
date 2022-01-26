@@ -22,6 +22,23 @@ local function spell_status()
     return spell_lang
 end
 
+local function branch_with_remote()
+    local branch_name = vim.fn.FugitiveHead()
+    local remote = vim.api.nvim_exec(
+        [[echo fugitive#repo().config('remote.origin.url')]],
+        true
+    )
+    local branch_icon = ''
+    if remote:find('github') then
+        branch_icon = ' '
+    elseif remote:find('gitlab') then
+        branch_icon = ' '
+    elseif remote:find('bitbucket') then
+        branch_icon = ' '
+    end
+    return branch_icon .. ' ' .. branch_name:sub(1, 30)
+end
+
 local conds = {
     hide_winwidth_leq_80 = function()
         return vim.fn.winwidth(0) > 80
@@ -113,7 +130,7 @@ require('lualine').setup({
         },
         lualine_b = {
             {
-                'branch',
+                branch_with_remote,
                 separator = '',
                 cond = conds.hide_winwidth_leq_80,
             },
