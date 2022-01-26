@@ -18,10 +18,9 @@ end
 lsp_installer.on_server_ready(function(server)
     local opts = {}
 
-    -- FIXME: adding the following lines break everything
-    -- if server.name == 'sumneko_lua' then
-    -- opts.settings = require('lua-dev').setup().settings
-    -- end
+    if server.name == 'sumneko_lua' then
+        opts.settings = require('lua-dev').setup().settings
+    end
 
     server:setup(opts)
 end)
