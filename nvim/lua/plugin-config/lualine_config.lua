@@ -36,7 +36,7 @@ local function branch_with_remote()
     elseif remote:find('bitbucket') then
         branch_icon = ' '
     end
-    return branch_icon .. ' ' .. branch_name:sub(1, 30)
+    return branch_icon .. ' ' .. branch_name
 end
 
 local conds = {
@@ -131,6 +131,9 @@ require('lualine').setup({
         lualine_b = {
             {
                 branch_with_remote,
+                fmt = function(str)
+                    return str:sub(1, 30)
+                end,
                 separator = '',
                 cond = conds.hide_winwidth_leq_80,
             },
@@ -145,6 +148,18 @@ require('lualine').setup({
         },
         lualine_x = {
             {
+                'lsp_progress',
+                component_separator = { left = '', right = '' },
+                display_components = {
+                    'spinner',
+                    'lsp_client_name',
+                },
+                separators = {
+                    lsp_client_name = { pre = '', post = '' },
+                },
+                cond = conds.hide_winwidth_leq_40,
+            },
+            {
                 'filetype',
                 colored = false,
                 cond = conds.hide_winwidth_leq_60,
@@ -152,13 +167,13 @@ require('lualine').setup({
         },
         lualine_y = {
             {
-                'encoding',
+                'fileformat',
                 separator = '',
                 cond = conds.hide_winwidth_leq_60,
             },
             {
-                'fileformat',
-                padding = { left = 0, right = 2 },
+                'encoding',
+                padding = { left = 0, right = 1 },
                 cond = conds.hide_winwidth_leq_60,
             },
         },
@@ -190,7 +205,7 @@ require('lualine').setup({
                 sources = { 'nvim_diagnostic' },
                 colored = false,
                 color = { fg = onedark_colors.black, bg = onedark_colors.orange },
-                symbols = { error = ' ', warn = ' ', info = ' ', hint = '' },
+                symbols = { error = ' ', warn = ' ', info = ' ', hint = '' },
                 separator = { left = '', right = '' },
                 cond = conds.hide_winwidth_leq_60,
             },
@@ -207,13 +222,13 @@ require('lualine').setup({
         },
         lualine_y = {
             {
-                'encoding',
+                'fileformat',
                 separator = '',
                 cond = conds.hide_winwidth_leq_60,
             },
             {
-                'fileformat',
-                padding = { left = 0, right = 2 },
+                'encoding',
+                padding = { left = 0, right = 1 },
                 cond = conds.hide_winwidth_leq_60,
             },
         },
