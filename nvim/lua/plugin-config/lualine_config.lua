@@ -146,6 +146,18 @@ require('lualine').setup({
                 cond = conds.hide_winwidth_leq_80,
             },
         },
+        lualine_c = {
+            {
+                'filename',
+                file_status = true,
+                path = 1,
+                symbols = {
+                    modified = '[+]',
+                    readonly = ' ',
+                    unnamed = '[No Name]',
+                },
+            },
+        },
         lualine_x = {
             {
                 'lsp_progress',
@@ -212,7 +224,18 @@ require('lualine').setup({
         },
     },
     inactive_sections = {
-        lualine_c = { 'filename' },
+        lualine_c = {
+            {
+                'filename',
+                file_status = true,
+                path = 1,
+                symbols = {
+                    modified = '[+]',
+                    readonly = ' ',
+                    unnamed = '[No Name]',
+                },
+            },
+        },
         lualine_x = {
             {
                 'filetype',
