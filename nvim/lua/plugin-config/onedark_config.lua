@@ -156,15 +156,18 @@ onedarkpro.setup({
         -- TODO: add other lsp hls (as code lens)
 
         -- Treesitter stuff
-        ---- Markdown
-        TSTitle = { fg = p.dark_red, style = 'bold' },
-        TSLiteral = { fg = p.green }, -- embedded code
+        -- TSField = { fg = p.red }, -- python self and yamls
         TSEmphasis = { fg = p.orange, style = 'italic' },
-        TSStrong = { fg = p.orange, style = 'bold' },
-        TSURI = { fg = p.blue, style = 'underline' },
-        TSTextReference = { link = 'TSText' },
+        TSFunction = { fg = p.light_blue },
+        TSInclude = { fg = p.purple },
+        TSLiteral = { fg = p.green }, -- embedded code
+        TSMethod = { fg = p.light_blue },
         TSPunctSpecial = { fg = p.dark_red, style = 'bold' },
         TSStringEscape = { fg = p.fg },
+        TSStrong = { fg = p.orange, style = 'bold' },
+        TSTextReference = { link = 'TSText' },
+        TSTitle = { fg = p.dark_red, style = 'bold' },
+        TSURI = { fg = p.blue, style = 'underline' },
 
         -- Filetypes
         ---- Vim help
