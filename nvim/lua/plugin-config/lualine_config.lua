@@ -217,7 +217,12 @@ require('lualine').setup({
                 sources = { 'nvim_diagnostic' },
                 colored = false,
                 color = { fg = onedark_colors.black, bg = onedark_colors.orange },
-                symbols = { error = ' ', warn = ' ', info = ' ', hint = '' },
+                symbols = {
+                    error = ' ',
+                    warn = ' ',
+                    info = ' ',
+                    hint = ' ',
+                },
                 separator = { left = '', right = '' },
                 cond = conds.hide_winwidth_leq_60,
             },
