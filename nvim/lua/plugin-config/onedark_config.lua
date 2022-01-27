@@ -177,7 +177,7 @@ onedarkpro.setup({
         helpHeader = { fg = p.white, style = 'bold' },
         helpSectionDelim = { fg = p.comment_grey },
 
-        ---- Diffs and Git
+        ---- Diffs
         DiffAdd = { fg = p.green, bg = p.visual_grey },
         DiffChange = { fg = p.orange, bg = p.visual_grey },
         DiffDelete = { fg = p.red, bg = p.visual_grey },
@@ -188,6 +188,8 @@ onedarkpro.setup({
         DiffLine = { fg = p.light_blue, bg = p.visual_grey },
         DiffFile = { fg = p.red, bg = p.visual_grey },
         DiffNewFile = { fg = p.green, bg = p.visual_grey },
+
+        ---- Git
         gitcommitComment = { fg = p.comment_grey },
         gitcommitUnmerged = { fg = p.green },
         gitcommitOnBranch = { fg = p.fg },
