@@ -162,6 +162,7 @@ onedarkpro.setup({
         TSInclude = { fg = p.purple },
         TSLiteral = { fg = p.green }, -- embedded code
         TSMethod = { fg = p.light_blue },
+        TSParameter = { fg = p.orange },
         TSPunctSpecial = { fg = p.dark_red, style = 'bold' },
         TSStringEscape = { fg = p.fg },
         TSStrong = { fg = p.orange, style = 'bold' },
