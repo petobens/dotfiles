@@ -1,15 +1,9 @@
--- Copyright (c) 2020-2021 shadmansaleh
--- MIT license, see LICENSE for more details.
 local require = require('lualine_require').require
-local Buffer = require('lualine.components.buffers.buffer')
+local Buffer = require('lualine.components.buffertab.buffer')
+
 local M = require('lualine.component'):extend()
-local highlight = require('lualine.highlight')
 
 local default_options = {
-    show_filename_only = true,
-    show_modified_status = true,
-    mode = 0,
-    max_length = 0,
     filetype_names = {
         TelescopePrompt = 'Telescope',
         dashboard = 'Dashboard',
@@ -17,50 +11,11 @@ local default_options = {
         fzf = 'FZF',
         alpha = 'Alpha',
     },
-    buffers_color = {
-        active = nil,
-        inactive = nil,
-    },
 }
-
--- This function is duplicated in tabs
----returns the proper hl for buffer in section. used for setting default highlights
----@param section string name of section buffers component is in
----@param is_active boolean
----@return string hl name
-local function get_hl(section, is_active)
-    local suffix = is_active and '_normal' or '_inactive'
-    local section_redirects = {
-        lualine_x = 'lualine_c',
-        lualine_y = 'lualine_b',
-        lualine_z = 'lualine_a',
-    }
-    if section_redirects[section] then
-        section = highlight.highlight_exists(section .. suffix) and section
-            or section_redirects[section]
-    end
-    return section .. suffix
-end
 
 function M:init(options)
     M.super.init(self, options)
-    default_options.buffers_color = {
-        active = get_hl(options.self.section, true),
-        inactive = get_hl(options.self.section, false),
-    }
     self.options = vim.tbl_deep_extend('keep', self.options or {}, default_options)
-    self.highlights = {
-        active = highlight.create_component_highlight_group(
-            self.options.buffers_color.active,
-            'buffers_active',
-            self.options
-        ),
-        inactive = highlight.create_component_highlight_group(
-            self.options.buffers_color.inactive,
-            'buffers_active',
-            self.options
-        ),
-    }
 end
 
 function M:update_status()
@@ -74,28 +29,38 @@ function M:update_status()
             buffers[#buffers + 1] = Buffer({
                 bufnr = b,
                 options = self.options,
-                highlights = self.highlights,
             })
         end
     end
-    local current_bufnr = vim.fn.bufnr()
+    local current_bufnr = vim.api.nvim_get_current_buf()
     local current = -2
-    -- mark the first, last, current, before current, after current buffers
-    -- for rendering
+    -- Mark the first, last, current, visible, prev_visible and aftercurrent
+    -- buffers for rendering
     if buffers[1] then
         buffers[1].first = true
     end
     if buffers[#buffers] then
         buffers[#buffers].last = true
     end
+    local visible_buffers = vim.fn.tabpagebuflist()
     for i, buffer in ipairs(buffers) do
         if buffer.bufnr == current_bufnr then
             buffer.current = true
             current = i
         end
-    end
-    if buffers[current - 1] then
-        buffers[current - 1].beforecurrent = true
+        if vim.fn.index(visible_buffers, buffer.bufnr) > -1 then
+            buffer.visible = true
+        else
+            buffer.visible = false
+        end
+        if buffer.first ~= true then
+            local prev_buffer = buffers[i - 1]
+            if vim.fn.index(visible_buffers, prev_buffer.bufnr) > -1 then
+                buffer.prev_visible = true
+            else
+                buffer.prev_visible = false
+            end
+        end
     end
     if buffers[current + 1] then
         buffers[current + 1].aftercurrent = true
@@ -119,9 +84,8 @@ function M:update_status()
     -- all buffers are drawn or max_length has been reached.
     if current == -2 then
         local b = Buffer({
-            bufnr = vim.fn.bufnr(),
+            bufnr = vim.api.nvim_get_current_buf(),
             options = self.options,
-            highlights = self.highlights,
         })
         b.current = true
         if self.options.self.section < 'lualine_x' then

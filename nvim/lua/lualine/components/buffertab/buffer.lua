@@ -1,7 +1,6 @@
-local highlight = require('lualine.highlight')
 local Buffer = require('lualine.utils.class'):extend()
 
----intialize a new buffer from opts
+---Intialize a new buffer from opts
 ---@param opts table
 function Buffer:init(opts)
     assert(opts.bufnr, 'Cannot create Buffer without bufnr')
@@ -11,36 +10,29 @@ function Buffer:init(opts)
     self:get_props()
 end
 
----setup icons, modified status for buffer
+---Setup icons modified status and properties for buffer
 function Buffer:get_props()
-    self.file = vim.fn.bufname(self.bufnr)
+    self.file = vim.api.nvim_buf_get_name(self.bufnr)
     self.buftype = vim.api.nvim_buf_get_option(self.bufnr, 'buftype')
     self.filetype = vim.api.nvim_buf_get_option(self.bufnr, 'filetype')
-    local modified = self.options.show_modified_status
-        and vim.api.nvim_buf_get_option(self.bufnr, 'modified')
-    local modified_icon = self.options.icons_enabled and ' ●' or ' +'
-    self.modified_icon = modified and modified_icon or ''
+    self.modified = vim.api.nvim_buf_get_option(self.bufnr, 'modified')
+
     self.icon = ''
     if self.options.icons_enabled then
         local dev
-        local status, _ = pcall(require, 'nvim-web-devicons')
-        if not status then
-            dev, _ = '', ''
-        elseif self.filetype == 'TelescopePrompt' then
-            dev, _ = require('nvim-web-devicons').get_icon('telescope')
+        local get_icon = require('nvim-web-devicons').get_icon
+        if self.filetype == 'TelescopePrompt' then
+            dev, _ = get_icon('telescope')
         elseif self.filetype == 'fugitive' then
-            dev, _ = require('nvim-web-devicons').get_icon('git')
+            dev, _ = get_icon('git')
         elseif self.filetype == 'vimwiki' then
-            dev, _ = require('nvim-web-devicons').get_icon('markdown')
+            dev, _ = get_icon('markdown')
         elseif self.buftype == 'terminal' then
-            dev, _ = require('nvim-web-devicons').get_icon('zsh')
+            dev, _ = get_icon('zsh')
         elseif vim.fn.isdirectory(self.file) == 1 then
             dev, _ = '', nil
         else
-            dev, _ = require('nvim-web-devicons').get_icon(
-                self.file,
-                vim.fn.expand('#' .. self.bufnr .. ':e')
-            )
+            dev, _ = get_icon(self.file, vim.fn.expand('#' .. self.bufnr .. ':e'))
         end
         if dev then
             self.icon = dev .. ' '
@@ -48,7 +40,28 @@ function Buffer:get_props()
     end
 end
 
----returns rendered buffer
+function Buffer:hl_buffer_state()
+    local hl_group = ''
+    if self.current then
+        if self.modified then
+            hl_group = 'tabmod'
+        else
+            hl_group = 'tabsel'
+        end
+    else
+        if self.modified then
+            hl_group = 'tabmod_unsel'
+        elseif self.visible then
+            hl_group = 'tabvis'
+        else
+            hl_group = 'tabhid'
+        end
+    end
+    hl_group = 'lualine_' .. hl_group .. '_tabline'
+    return '%#' .. hl_group .. '#'
+end
+
+---Return rendered buffer
 ---@return string
 function Buffer:render()
     local name = self:name()
@@ -59,64 +72,38 @@ function Buffer:render()
     if self.ellipse then -- show elipsis
         name = '...'
     else
-        if self.options.mode == 0 then
-            name = string.format('%s%s%s', self.icon, name, self.modified_icon)
-        elseif self.options.mode == 1 then
-            name = string.format('%s %s%s', self.bufnr, self.icon, self.modified_icon)
-        else
-            name = string.format(
-                '%s %s%s%s',
-                self.bufnr,
-                self.icon,
-                name,
-                self.modified_icon
-            )
-        end
+        name = string.format('%s %s %s', self.bufnr, name, self.icon)
     end
     name = Buffer.apply_padding(name, self.options.padding)
     self.len = vim.fn.strchars(name)
 
-    -- setup for mouse clicks
+    -- Setup for mouse clicks
     local line = string.format('%%%s@LualineSwitchBuffer@%s%%T', self.bufnr, name)
-    -- apply highlight
-    line = highlight.component_format_highlight(
-        self.highlights[(self.current and 'active' or 'inactive')]
-    ) .. line
 
-    -- apply separators
+    -- Apply highlight
+    local buf_hl_group = self:hl_buffer_state()
+    line = buf_hl_group .. line
+
+    -- Apply separators
     if self.options.self.section < 'lualine_x' and not self.first then
         local sep_before = self:separator_before()
         line = sep_before .. line
         self.len = self.len + vim.fn.strchars(sep_before)
-    elseif self.options.self.section >= 'lualine_x' and not self.last then
-        local sep_after = self:separator_after()
-        line = line .. sep_after
-        self.len = self.len + vim.fn.strchars(sep_after)
     end
     return line
 end
 
----apply separator before current buffer
+---Apply separator before
 ---@return string
 function Buffer:separator_before()
-    if self.current or self.aftercurrent then
+    if self.current or self.aftercurrent or self.visible ~= self.prev_visible then
         return '%S{' .. self.options.section_separators.left .. '}'
     else
         return self.options.component_separators.left
     end
 end
 
----apply separator after current buffer
----@return string
-function Buffer:separator_after()
-    if self.current or self.beforecurrent then
-        return '%s{' .. self.options.section_separators.right .. '}'
-    else
-        return self.options.component_separators.right
-    end
-end
-
----returns name of current buffer after filtering special buffers
+---Returns name of current buffer after filtering special buffers
 ---@return string
 function Buffer:name()
     if self.options.filetype_names[self.filetype] then
@@ -131,11 +118,10 @@ function Buffer:name()
     elseif self.file == '' then
         return '[No Name]'
     end
-    return self.options.show_filename_only and vim.fn.fnamemodify(self.file, ':t')
-        or vim.fn.pathshorten(vim.fn.fnamemodify(self.file, ':p:.'))
+    return vim.fn.fnamemodify(self.file, ':t')
 end
 
----adds spaces to left and right
+---Adds spaces to left and right
 function Buffer.apply_padding(str, padding)
     local l_padding, r_padding = 1, 1
     if type(padding) == 'number' then

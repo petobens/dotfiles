@@ -51,65 +51,6 @@ local conds = {
     end,
 }
 
-local function hl_buffer_state(bufnr)
-    local hl_group = ''
-    local buffers = vim.fn.tabpagebuflist(vim.fn.tabpagenr())
-    local mod_buf = (vim.fn.getbufvar(bufnr, '&modified') ~= 0)
-    local cur_buf = vim.fn.bufnr('%')
-
-    if cur_buf == bufnr then
-        if mod_buf then
-            hl_group = 'tabmod'
-        else
-            hl_group = 'tabsel'
-        end
-    else
-        if mod_buf then
-            hl_group = 'tabmod_unsel'
-        elseif vim.fn.index(buffers, bufnr) > -1 then
-            hl_group = 'tabvis'
-        else
-            hl_group = 'tabhid'
-        end
-    end
-    hl_group = 'lualine_' .. hl_group .. '_tabline'
-    return '%#' .. hl_group .. '#'
-end
-
--- Override tabline function
-require('lualine.components.buffers.buffer').render = function(self)
-    local apply_padding = require('lualine.components.buffers.buffer').apply_padding
-
-    local name = self:name()
-    if self.ellipse then
-        name = '...'
-    else
-        name = string.format('%s %s %s', self.bufnr, name, self.icon)
-    end
-    name = apply_padding(name, self.options.padding)
-    self.len = vim.fn.strchars(name)
-
-    local line = string.format('%%%s@LualineSwitchBuffer@%s%%T', self.bufnr, name)
-    local buf_hl_group = hl_buffer_state(self.bufnr)
-    line = buf_hl_group .. line
-
-    if not self.first then
-        local sep_before = ''
-        -- local sep_before = self.options.section_separators.left
-        -- local sep_before ='%S{' .. self.options.section_separators.left .. '}'
-        -- local sep_before ='%S{' .. self.options.component_separators.left .. '}'
-        if self.current or self.aftercurrent then
-            sep_before = '%S{' .. self.options.section_separators.left .. '}'
-        else
-            sep_before = self.options.component_separators.left
-        end
-        -- local sep_before = self:separator_before()
-        line = sep_before .. line
-        self.len = self.len + vim.fn.strchars(sep_before)
-    end
-    return line
-end
-
 require('lualine').setup({
     options = {
         theme = 'onedarkish',
@@ -137,7 +78,6 @@ require('lualine').setup({
                 separator = '',
                 cond = conds.hide_winwidth_leq_80,
             },
-            -- FIXME: diff numbers different size?
             {
                 'diff',
                 colored = true,
@@ -277,7 +217,6 @@ require('lualine').setup({
         lualine_a = {
             {
                 'buffertab',
-                show_filename_only = true,
                 max_length = vim.o.columns * 0.98 - vim.fn.strlen('buffers'),
             },
         },
