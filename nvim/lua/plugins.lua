@@ -168,8 +168,10 @@ return require('packer').startup(function(use)
         end,
     })
 
-    use('nathom/tmux.nvim')
+    -- Utilities
+    use('gioele/vim-autoswap')
     use('jamessan/vim-gnupg')
+    use('nathom/tmux.nvim')
     use('tpope/vim-repeat')
 
     if packer_bootstrap then
