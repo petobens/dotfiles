@@ -1,6 +1,12 @@
 local u = require('utils')
 local lsp_buf = vim.lsp.buf
 
+-- Diagnostic
+vim.diagnostic.config({
+    signs = false,
+})
+
+-- Mappings
 u.keymap('n', '<Leader>jd', lsp_buf.definition)
 u.keymap('n', '<Leader>ap', lsp_buf.references)
 u.keymap('n', '<Leader>rn', lsp_buf.rename)
