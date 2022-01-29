@@ -173,6 +173,13 @@ return require('packer').startup(function(use)
     use('jamessan/vim-gnupg')
     use('nathom/tmux.nvim')
     use('tpope/vim-repeat')
+    use({
+        'andymass/vim-matchup',
+        event = 'VimEnter',
+        config = function()
+            require('plugin-config/matchup_config')
+        end,
+    })
 
     if packer_bootstrap then
         require('packer').sync()

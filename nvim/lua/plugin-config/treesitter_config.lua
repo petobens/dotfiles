@@ -12,6 +12,7 @@ require('nvim-treesitter.configs').setup({
         'python',
         'vim',
     },
+    matchup = { enable = true },
 })
 
 u.keymap('n', '<Leader>cg', '<Cmd>TSHighlightCapturesUnderCursor<CR>')
