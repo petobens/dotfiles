@@ -99,7 +99,7 @@ function Buffer:separator_before()
     if
         (self.current or self.aftercurrent)
         or self.visible ~= self.prev_visible
-        or (self.visible and (self.prev_visible and self.prev_modified))
+        or (self.visible and (self.prev_modified or self.modified))
     then
         return '%S{' .. self.options.section_separators.left .. '}'
     else
