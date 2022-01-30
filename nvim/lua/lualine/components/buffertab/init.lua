@@ -1,7 +1,20 @@
 local require = require('lualine_require').require
 local Buffer = require('lualine.components.buffertab.buffer')
-
 local M = require('lualine.component'):extend()
+
+_G.LualineBuffertab = {}
+
+local superscript_nrs = {
+    [1] = '¹',
+    [2] = '²',
+    [3] = '³',
+    [4] = '⁴',
+    [5] = '⁵',
+    [6] = '⁶',
+    [7] = '⁷',
+    [8] = '⁸',
+    [9] = '⁹',
+}
 
 local default_options = {
     filetype_names = {
@@ -18,16 +31,13 @@ end
 function M:update_status()
     local data = {}
     local buffers = {}
-    local buf_idx = 0
     for b = 1, vim.fn.bufnr('$') do
         if
             vim.fn.buflisted(b) ~= 0
             and vim.api.nvim_buf_get_option(b, 'buftype') ~= 'quickfix'
         then
-            buf_idx = buf_idx + 1
             buffers[#buffers + 1] = Buffer({
                 bufnr = b,
-                buf_idx = buf_idx,
                 options = self.options,
             })
         end
@@ -123,7 +133,7 @@ function M:update_status()
         -- draw left most undrawn buffer if fits in max_length
         if before then
             rendered_before = before:render()
-            total_length = total_length + before.len
+            total_length = total_length + before.len - 1 -- substract 1 due to KQ placeholder
             if total_length > max_length then
                 break
             end
@@ -132,13 +142,23 @@ function M:update_status()
         -- draw right most undrawn buffer if fits in max_length
         if after then
             rendered_after = after:render()
-            total_length = total_length + after.len
+            total_length = total_length + after.len - 1 -- same as above
             if total_length > max_length then
                 break
             end
             data[#data + 1] = rendered_after
         end
     end
+
+    -- Add superscript positions for easy switching and construct mapping
+    -- matching idx to buffer number
+    _G.LualineBuffertab.idx2bufnr = {}
+    for pos, segment in ipairs(data) do
+        local segment_bufnr = string.match(segment, 'KQ(%d+):')
+        data[pos] = segment:gsub('KQ', superscript_nrs[pos])
+        _G.LualineBuffertab.idx2bufnr[pos] = segment_bufnr
+    end
+
     -- draw elipsis (...) on relevent sides if all buffers don't fit in max_length
     if total_length > max_length then
         if before ~= nil then
@@ -152,9 +172,6 @@ function M:update_status()
             data[#data + 1] = after:render()
         end
     end
-
-    -- TODO: actually record visible ones
-    _G.LUALINE_CURRENT_VISIBLE_BUFFERS = buffers
 
     return table.concat(data)
 end

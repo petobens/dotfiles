@@ -1,23 +1,10 @@
 local Buffer = require('lualine.utils.class'):extend()
 
-local superscript_nrs = {
-    [1] = '¹',
-    [2] = '²',
-    [3] = '³',
-    [4] = '⁴',
-    [5] = '⁵',
-    [6] = '⁶',
-    [7] = '⁷',
-    [8] = '⁸',
-    [9] = '⁹',
-}
-
 ---Intialize a new buffer from opts
 ---@param opts table
 function Buffer:init(opts)
     assert(opts.bufnr, 'Cannot create Buffer without bufnr')
     self.bufnr = opts.bufnr
-    self.buf_idx = opts.buf_idx
     self.options = opts.options
     self:get_props()
 end
@@ -85,13 +72,9 @@ function Buffer:render()
     if self.ellipse then -- show elipsis
         name = '...'
     else
-        name = string.format(
-            '%s%s:%s %s',
-            superscript_nrs[self.buf_idx] or '',
-            self.bufnr,
-            name,
-            self.icon
-        )
+        -- FIXME: find a way of actually adding %s placeholder
+        name = 'KQ' -- arbitrary string to replace by superscript position
+            .. string.format('%s:%s %s', self.bufnr, name, self.icon)
     end
     name = Buffer.apply_padding(name, self.options.padding)
     self.len = vim.fn.strchars(name)
