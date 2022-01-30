@@ -34,6 +34,12 @@ core:
         foreground: yellow
     sticky:
         foreground: green
+    multi_hard_link: {}
+    setuid: {}
+    door: {}
+    reset_to_normal: {}
+    setgid: {}
+    file_with_capability: {}
     sticky_other_writable: {}
     other_writable: {}
     normal_text: {}
