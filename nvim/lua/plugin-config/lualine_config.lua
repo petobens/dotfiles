@@ -1,3 +1,4 @@
+local u = require('utils')
 local onedark_colors = require('onedarkpro').get_colors()
 
 local function gitsigns_diff_source()
@@ -218,6 +219,7 @@ require('lualine').setup({
             {
                 'buffertab',
                 max_length = vim.o.columns - vim.fn.strlen('buffers'),
+                padding = { left = 1, right = 0 },
             },
         },
         lualine_z = {
@@ -230,3 +232,18 @@ require('lualine').setup({
         },
     },
 })
+
+-- Buffertab mappings
+_G.LualineBuffertab = {}
+function LualineBuffertab.select_buf(buf_idx)
+    local bufnr_idx_map = {}
+    for i, buffer in ipairs(_G.LUALINE_CURRENT_VISIBLE_BUFFERS) do
+        bufnr_idx_map[buffer.buf_idx] = buffer.bufnr
+    end
+    vim.cmd('buffer! ' .. bufnr_idx_map[buf_idx])
+end
+for i = 1, 9 do
+    u.keymap('n', '<Leader>' .. i, function()
+        LualineBuffertab.select_buf(i)
+    end)
+end

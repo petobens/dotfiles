@@ -18,13 +18,16 @@ end
 function M:update_status()
     local data = {}
     local buffers = {}
+    local buf_idx = 0
     for b = 1, vim.fn.bufnr('$') do
         if
             vim.fn.buflisted(b) ~= 0
             and vim.api.nvim_buf_get_option(b, 'buftype') ~= 'quickfix'
         then
+            buf_idx = buf_idx + 1
             buffers[#buffers + 1] = Buffer({
                 bufnr = b,
+                buf_idx = buf_idx,
                 options = self.options,
             })
         end
@@ -149,6 +152,9 @@ function M:update_status()
             data[#data + 1] = after:render()
         end
     end
+
+    -- TODO: actually record visible ones
+    _G.LUALINE_CURRENT_VISIBLE_BUFFERS = buffers
 
     return table.concat(data)
 end
