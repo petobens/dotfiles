@@ -5,12 +5,9 @@ local M = require('lualine.component'):extend()
 
 local default_options = {
     filetype_names = {
-        TelescopePrompt = 'Telescope',
-        dashboard = 'Dashboard',
         packer = 'Packer',
-        fzf = 'FZF',
-        alpha = 'Alpha',
     },
+    filetype_ignore = '\\c\\vtelescope|nvimtree',
 }
 
 function M:init(options)
@@ -87,8 +84,12 @@ function M:update_status()
             bufnr = vim.api.nvim_get_current_buf(),
             options = self.options,
         })
-        b.current = true
-        if self.options.self.section < 'lualine_x' then
+        if
+            -- If current buffer was not listed and it's not blacklisted then
+            -- add to the the list
+            vim.fn.match(b.filetype, self.options.filetype_ignore) < 0
+        then
+            b.current = true
             b.last = true
             if #buffers > 0 then
                 buffers[#buffers].last = nil
@@ -96,12 +97,7 @@ function M:update_status()
             buffers[#buffers + 1] = b
             current = #buffers
         else
-            b.first = true
-            if #buffers > 0 then
-                buffers[1].first = nil
-            end
-            table.insert(buffers, 1, b)
-            current = 1
+            current = 1 -- arbitrary existent buffer
         end
     end
     local current_buffer = buffers[current]

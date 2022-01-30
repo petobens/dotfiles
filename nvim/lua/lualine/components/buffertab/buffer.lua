@@ -6,7 +6,6 @@ function Buffer:init(opts)
     assert(opts.bufnr, 'Cannot create Buffer without bufnr')
     self.bufnr = opts.bufnr
     self.options = opts.options
-    self.highlights = opts.highlights
     self:get_props()
 end
 
