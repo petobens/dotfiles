@@ -39,21 +39,22 @@ function Buffer:get_props()
     end
 end
 
+--- Highlight buffer state according to visible/modified status
 function Buffer:hl_buffer_state()
     local hl_group = ''
     if self.current then
         if self.modified then
-            hl_group = 'tabmod'
+            hl_group = 'modified'
         else
-            hl_group = 'tabsel'
+            hl_group = 'selected'
         end
     else
         if self.modified then
-            hl_group = 'tabmod_unsel'
+            hl_group = 'modified_unselected'
         elseif self.visible then
-            hl_group = 'tabvis'
+            hl_group = 'visible'
         else
-            hl_group = 'tabhid'
+            hl_group = 'hidden'
         end
     end
     hl_group = 'lualine_' .. hl_group .. '_tabline'
@@ -95,7 +96,11 @@ end
 ---Apply separator before
 ---@return string
 function Buffer:separator_before()
-    if self.current or self.aftercurrent or self.visible ~= self.prev_visible then
+    if
+        (self.current or self.aftercurrent)
+        or self.visible ~= self.prev_visible
+        or (self.visible and (self.prev_visible and self.prev_modified))
+    then
         return '%S{' .. self.options.section_separators.left .. '}'
     else
         return self.options.component_separators.left

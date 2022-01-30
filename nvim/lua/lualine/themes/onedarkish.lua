@@ -46,11 +46,11 @@ onedarkish.inactive = {
 }
 
 onedarkish.tabline = {
-    tabsel = { fg = c.bg, bg = c.light_blue, gui = 'bold' },
-    tabmod = { fg = c.bg, bg = c.red, gui = 'bold' },
-    tabvis = { fg = c.white, bg = c.special_grey },
-    tabhid = { fg = c.gray, bg = c.cursor_grey },
-    tabmod_unsel = { fg = c.bg, bg = c.orange, gui = 'bold' },
+    hidden = { fg = c.gray, bg = c.cursor_grey },
+    modified = { fg = c.bg, bg = c.red, gui = 'bold' },
+    modified_unselected = { fg = c.bg, bg = c.orange, gui = 'bold' },
+    selected = { fg = c.bg, bg = c.light_blue, gui = 'bold' },
+    visible = { fg = c.white, bg = c.special_grey },
 }
 
 return onedarkish

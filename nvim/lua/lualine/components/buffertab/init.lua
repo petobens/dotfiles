@@ -31,8 +31,8 @@ function M:update_status()
     end
     local current_bufnr = vim.api.nvim_get_current_buf()
     local current = -2
-    -- Mark the first, last, current, visible, prev_visible and aftercurrent
-    -- buffers for rendering
+    -- Mark the first, last, current, visible, prev_visible, prev_modified and
+    -- aftercurrent buffers for rendering
     if buffers[1] then
         buffers[1].first = true
     end
@@ -57,6 +57,10 @@ function M:update_status()
             else
                 buffer.prev_visible = false
             end
+            buffer.prev_modified = vim.api.nvim_buf_get_option(
+                prev_buffer.bufnr,
+                'modified'
+            )
         end
     end
     if buffers[current + 1] then
