@@ -89,6 +89,7 @@ u.keymap('n', 'n', 'nzzzv') -- keep matches window in the middle (while opening 
 u.keymap('n', 'N', 'Nzzzv')
 u.keymap('n', "'", '`', { noremap = false })
 u.keymap('n', '<Leader>dm', '<Cmd>delmarks!<CR><Cmd>delmarks A-Z0-9<CR>')
+u.keymap({ 'n', 'v', 'o' }, '<tab>', '%', { remap = true })
 u.keymap(
     'n',
     '*',
