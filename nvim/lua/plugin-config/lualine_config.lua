@@ -234,12 +234,14 @@ require('lualine').setup({
 })
 
 -- Buffertab mappings
-_G.LualineBuffertabConf = {}
-function LualineBuffertabConf.select_buf(buf_idx)
+local function select_buf(buf_idx)
     vim.cmd('buffer! ' .. _G.LualineBuffertab.idx2bufnr[buf_idx])
 end
-for i = 1, 9 do
+for i = 0, 9 do
     u.keymap('n', '<Leader>' .. i, function()
-        LualineBuffertabConf.select_buf(i)
+        select_buf(i)
     end)
 end
+u.keymap('n', '<Leader>$', function()
+    select_buf(-1)
+end)

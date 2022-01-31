@@ -158,6 +158,8 @@ function M:update_status()
         data[pos] = segment:gsub('KQ', superscript_nrs[pos])
         _G.LualineBuffertab.idx2bufnr[pos] = segment_bufnr
     end
+    _G.LualineBuffertab.idx2bufnr[0] = buffers[1].bufnr -- also tag first buffer
+    _G.LualineBuffertab.idx2bufnr[-1] = buffers[#buffers].bufnr -- last
 
     -- draw elipsis (...) on relevent sides if all buffers don't fit in max_length
     if total_length > max_length then
