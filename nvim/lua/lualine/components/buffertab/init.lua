@@ -42,10 +42,11 @@ function M:update_status()
             })
         end
     end
-    local current_bufnr = vim.api.nvim_get_current_buf()
-    local current = -2
+
     -- Mark the first, last, current, visible, prev_visible, prev_modified and
     -- aftercurrent buffers for rendering
+    local current_bufnr = vim.api.nvim_get_current_buf()
+    local current = -2
     if buffers[1] then
         buffers[1].first = true
     end
@@ -84,17 +85,12 @@ function M:update_status()
     if type(max_length) == 'function' then
         max_length = max_length(self)
     end
-
     if max_length == 0 then
         max_length = math.floor(2 * vim.o.columns / 3)
     end
     local total_length
-    for i, buffer in pairs(buffers) do
-        if buffer.current then
-            current = i
-        end
-    end
-    -- start drawing from current buffer and draw left and right of it until
+
+    -- Start drawing from current buffer and draw left and right of it until
     -- all buffers are drawn or max_length has been reached.
     if current == -2 then
         local b = Buffer({
@@ -103,7 +99,7 @@ function M:update_status()
         })
         if
             -- If current buffer was not listed and it's not blacklisted then
-            -- add to the the list
+            -- add it to the the list
             vim.fn.match(b.filetype, self.options.filetype_ignore) < 0
         then
             b.current = true
@@ -130,7 +126,7 @@ function M:update_status()
         if before == nil and after == nil then
             break
         end
-        -- draw left most undrawn buffer if fits in max_length
+        -- Draw left most undrawn buffer if fits in max_length
         if before then
             rendered_before = before:render()
             total_length = total_length + before.len - 1 -- substract 1 due to KQ placeholder
@@ -139,7 +135,7 @@ function M:update_status()
             end
             table.insert(data, 1, rendered_before)
         end
-        -- draw right most undrawn buffer if fits in max_length
+        -- Draw right most undrawn buffer if fits in max_length
         if after then
             rendered_after = after:render()
             total_length = total_length + after.len - 1 -- same as above
@@ -150,18 +146,18 @@ function M:update_status()
         end
     end
 
-    -- Add superscript positions for easy switching and construct mapping
-    -- matching idx to buffer number
+    -- Construct mapping from idx/position to buffer number for easy navigation
+    -- (and also tag first and last buffers)
     _G.LualineBuffertab.idx2bufnr = {}
     for pos, segment in ipairs(data) do
         local segment_bufnr = string.match(segment, 'KQ(%d+):')
         data[pos] = segment:gsub('KQ', superscript_nrs[pos])
         _G.LualineBuffertab.idx2bufnr[pos] = segment_bufnr
     end
-    _G.LualineBuffertab.idx2bufnr[0] = buffers[1].bufnr -- also tag first buffer
-    _G.LualineBuffertab.idx2bufnr[-1] = buffers[#buffers].bufnr -- last
+    _G.LualineBuffertab.idx2bufnr[0] = buffers[1].bufnr
+    _G.LualineBuffertab.idx2bufnr[-1] = buffers[#buffers].bufnr
 
-    -- draw elipsis (...) on relevent sides if all buffers don't fit in max_length
+    -- Draw elipsis (...) on relevent sides if all buffers don't fit in max_length
     if total_length > max_length then
         if before ~= nil then
             before.ellipse = true

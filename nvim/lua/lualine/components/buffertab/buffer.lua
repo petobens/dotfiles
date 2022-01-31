@@ -72,9 +72,10 @@ function Buffer:render()
     if self.ellipse then -- show elipsis
         name = '...'
     else
+        -- Add arbitrary string to replace by superscript position, we leave a
+        -- space at the beginning and set padding to 0 for tighter fit
         -- FIXME: find a way of actually adding %s placeholder
-        name = 'KQ' -- arbitrary string to replace by superscript position
-            .. string.format('%s:%s %s', self.bufnr, name, self.icon)
+        name = ' KQ' .. string.format('%s:%s %s', self.bufnr, name, self.icon)
     end
     name = Buffer.apply_padding(name, self.options.padding)
     self.len = vim.fn.strchars(name)
