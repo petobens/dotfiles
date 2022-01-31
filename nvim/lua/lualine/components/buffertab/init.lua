@@ -23,6 +23,30 @@ local default_options = {
     filetype_ignore = '\\c\\vtelescope|nvimtree',
 }
 
+local function unique_tail_format(buffers)
+    local seen = {}
+    local duplicated = {}
+    for _, buffer in ipairs(buffers) do
+        if seen[buffer.name] then
+            duplicated[seen[buffer.name]] = true
+            duplicated[buffer.bufnr] = true
+        else
+            seen[buffer.name] = buffer.bufnr
+        end
+    end
+    for _, buffer in ipairs(buffers) do
+        if duplicated[buffer.bufnr] then
+            local new_name = string.format(
+                '…/%s/%s',
+                vim.fn.fnamemodify(buffer.file, ':h:t'),
+                vim.fn.fnamemodify(buffer.file, ':t')
+            )
+            buffer.name = new_name
+        end
+    end
+    return buffers
+end
+
 function M:init(options)
     M.super.init(self, options)
     self.options = vim.tbl_deep_extend('keep', self.options or {}, default_options)
@@ -81,6 +105,7 @@ function M:update_status()
         buffers[current + 1].aftercurrent = true
     end
 
+    -- Compute max tabline length
     local max_length = self.options.max_length
     if type(max_length) == 'function' then
         max_length = max_length(self)
@@ -89,6 +114,9 @@ function M:update_status()
         max_length = math.floor(2 * vim.o.columns / 3)
     end
     local total_length
+
+    -- Filter/format duplicate buffer names
+    buffers = unique_tail_format(buffers)
 
     -- Start drawing from current buffer and draw left and right of it until
     -- all buffers are drawn or max_length has been reached.

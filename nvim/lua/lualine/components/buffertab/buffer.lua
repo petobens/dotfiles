@@ -7,6 +7,7 @@ function Buffer:init(opts)
     self.bufnr = opts.bufnr
     self.options = opts.options
     self:get_props()
+    self:get_name()
 end
 
 ---Setup icons modified status and properties for buffer
@@ -64,7 +65,7 @@ end
 ---Return rendered buffer
 ---@return string
 function Buffer:render()
-    local name = self:name()
+    local name = self.name
     if self.options.fmt then
         name = self.options.fmt(name or '')
     end
@@ -112,20 +113,23 @@ end
 
 ---Returns name of current buffer after filtering special buffers
 ---@return string
-function Buffer:name()
+function Buffer:get_name()
+    local name
     if self.options.filetype_names[self.filetype] then
-        return self.options.filetype_names[self.filetype]
+        name = self.options.filetype_names[self.filetype]
     elseif self.buftype == 'help' then
-        return 'help:' .. vim.fn.fnamemodify(self.file, ':t:r')
+        name = 'help:' .. vim.fn.fnamemodify(self.file, ':t:r')
     elseif self.buftype == 'terminal' then
         local match = string.match(vim.split(self.file, ' ')[1], 'term:.*:(%a+)')
-        return match ~= nil and match or vim.fn.fnamemodify(vim.env.SHELL, ':t')
+        name = match ~= nil and match or vim.fn.fnamemodify(vim.env.SHELL, ':t')
     elseif vim.fn.isdirectory(self.file) == 1 then
-        return vim.fn.fnamemodify(self.file, ':p:.')
+        name = vim.fn.fnamemodify(self.file, ':p:.')
     elseif self.file == '' then
-        return '[No Name]'
+        name = '[No Name]'
+    else
+        name = vim.fn.fnamemodify(self.file, ':t')
     end
-    return vim.fn.fnamemodify(self.file, ':t')
+    self.name = name
 end
 
 ---Adds spaces to left and right
