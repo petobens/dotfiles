@@ -202,10 +202,15 @@ function M:update_status()
     return table.concat(data)
 end
 
+-- (Global) Functions
 vim.cmd([[
   function! LualineSwitchBuffer(bufnr, mouseclicks, mousebutton, modifiers)
     execute ":buffer " . a:bufnr
   endfunction
 ]])
+
+function _G.LualineBuffertab.select_buf(buf_idx)
+    vim.cmd('buffer! ' .. _G.LualineBuffertab.idx2bufnr[buf_idx])
+end
 
 return M
