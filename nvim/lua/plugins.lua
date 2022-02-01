@@ -41,12 +41,9 @@ return require('packer').startup(function(use)
         end,
     })
     use({
-        -- FIXME: doesn't allow for repeat?
         'blackCauldron7/surround.nvim',
         config = function()
-            require('surround').setup({
-                mappings_style = 'surround',
-            })
+            require('plugin-config/surround_config')
         end,
     })
     use({
