@@ -203,10 +203,10 @@ require('lualine').setup({
                 colored = false,
                 color = { fg = onedark_colors.black, bg = onedark_colors.orange },
                 symbols = {
-                    error = ' ',
+                    error = ' ',
                     warn = ' ',
-                    info = ' ',
-                    hint = ' ',
+                    info = ' ',
+                    hint = ' ',
                 },
                 separator = { left = '', right = '' },
                 cond = conds.hide_winwidth_leq_60,
