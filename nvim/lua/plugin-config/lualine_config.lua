@@ -218,7 +218,9 @@ require('lualine').setup({
         lualine_a = {
             {
                 'buffertab',
-                max_length = vim.o.columns - vim.fn.strlen('buffers'),
+                max_length = function()
+                    return vim.o.columns - vim.fn.strlen('buffers')
+                end,
                 padding = { left = 0, right = 0 },
             },
         },
