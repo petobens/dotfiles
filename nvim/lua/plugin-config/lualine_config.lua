@@ -46,6 +46,37 @@ local function trailing_whitespace()
     return space ~= 0 and ' ' .. space or ''
 end
 
+-- Custom extensions
+local nvimtree_ext = {
+    sections = {
+        lualine_a = {
+            function()
+                return 'NvimTree'
+            end,
+        },
+        lualine_b = {
+            function()
+                return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+            end,
+        },
+    },
+    filetypes = { 'NvimTree' },
+}
+
+local fugitive_ext = {
+    sections = {
+        lualine_a = {
+            function()
+                return 'fugitive'
+            end,
+        },
+        lualine_b = {
+            branch_with_remote,
+        },
+    },
+    filetypes = { 'fugitive' },
+}
+
 -- Resize conditions
 local conds = {
     hide_winwidth_leq_80 = function()
@@ -247,6 +278,7 @@ require('lualine').setup({
             },
         },
     },
+    extensions = { 'quickfix', nvimtree_ext, fugitive_ext },
 })
 
 -- Buffertab mappings
