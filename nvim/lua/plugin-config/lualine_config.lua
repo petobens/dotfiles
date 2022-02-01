@@ -1,6 +1,8 @@
 local u = require('utils')
 local onedark_colors = require('onedarkpro').get_colors()
 
+_G.LualineConfig = {}
+
 -- Custom segments/components
 local function gitsigns_diff_source()
     local gitsigns = vim.b.gitsigns_status_dict
@@ -41,9 +43,13 @@ local function branch_with_remote()
     return branch_icon .. ' ' .. branch_name
 end
 
+_G.LualineConfig.trailing_last = ''
 local function trailing_whitespace()
     local space = vim.fn.search([[\s\+$]], 'nwc')
-    return space ~= 0 and ' ' .. space or ''
+    if vim.api.nvim_get_mode().mode:sub(1, 1) == 'n' then
+        _G.LualineConfig.trailing_last = space ~= 0 and ' ' .. space or ''
+    end
+    return _G.LualineConfig.trailing_last
 end
 
 -- Custom extensions
