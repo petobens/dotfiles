@@ -1,6 +1,7 @@
 local u = require('utils')
 local onedark_colors = require('onedarkpro').get_colors()
 
+-- Custom segments/components
 local function gitsigns_diff_source()
     local gitsigns = vim.b.gitsigns_status_dict
     if gitsigns then
@@ -40,6 +41,12 @@ local function branch_with_remote()
     return branch_icon .. ' ' .. branch_name
 end
 
+local function trailing_whitespace()
+    local space = vim.fn.search([[\s\+$]], 'nwc')
+    return space ~= 0 and ' ' .. space or ''
+end
+
+-- Resize conditions
 local conds = {
     hide_winwidth_leq_80 = function()
         return vim.fn.winwidth(0) > 80
@@ -165,6 +172,13 @@ require('lualine').setup({
                     hint = ' ',
                 },
                 separator = { left = '', right = '' },
+                cond = conds.hide_winwidth_leq_60,
+            },
+            {
+                trailing_whitespace,
+                separator = { left = '', right = '' },
+                component_separator = { left = '', right = '' },
+                color = { fg = onedark_colors.black, bg = onedark_colors.orange },
                 cond = conds.hide_winwidth_leq_60,
             },
         },
