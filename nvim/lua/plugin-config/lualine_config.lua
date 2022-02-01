@@ -234,11 +234,9 @@ require('lualine').setup({
 })
 
 -- Buffertab mappings
-for i = 0, 9 do
-    u.keymap('n', '<Leader>' .. i, function()
+for i = -1, 9 do
+    local key = i == -1 and '$' or i
+    u.keymap('n', '<Leader>' .. key, function()
         _G.LualineBuffertab.select_buf(i)
     end)
 end
-u.keymap('n', '<Leader>$', function()
-    _G.LualineBuffertab.select_buf(-1)
-end)
