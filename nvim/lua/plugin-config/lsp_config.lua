@@ -4,6 +4,22 @@ local lsp_buf = vim.lsp.buf
 -- Diagnostic
 vim.diagnostic.config({
     signs = false,
+    virtual_text = {
+        prefix = '',
+        format = function(diagnostic)
+            local icon
+            if diagnostic.severity == vim.diagnostic.severity.ERROR then
+                icon = ' '
+            elseif diagnostic.severity == vim.diagnostic.severity.WARN then
+                icon = ' '
+            elseif diagnostic.severity == vim.diagnostic.severity.INFO then
+                icon = ' '
+            else
+                icon = ' '
+            end
+            return string.format('%s %s', icon, diagnostic.message)
+        end,
+    },
 })
 
 -- Mappings
