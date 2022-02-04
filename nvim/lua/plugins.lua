@@ -114,7 +114,10 @@ return require('packer').startup(function(use)
     -- Telescope and file exploring
     use({
         'nvim-telescope/telescope.nvim',
-        requires = { { 'nvim-lua/plenary.nvim' } },
+        requires = {
+            'nvim-lua/plenary.nvim',
+            { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+        },
         config = function()
             require('plugin-config/telescope_config')
         end,

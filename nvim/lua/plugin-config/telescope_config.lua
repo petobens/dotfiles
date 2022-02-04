@@ -1,8 +1,14 @@
 local u = require('utils')
 local telescope = require('telescope')
+local actions = require('telescope.actions')
 
 telescope.setup({
     defaults = {
+        prompt_prefix = '❯ ',
+        multi_icon = ' ',
+        winblend = 7,
+        color_devicons = true,
+        file_ignore_patterns = { 'doc/', 'venv/' },
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
@@ -11,6 +17,7 @@ telescope.setup({
                 ['<C-k>'] = 'move_selection_previous',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
+                ['<C-]>'] = actions.toggle_selection + actions.move_selection_previous,
             },
         },
         -- layout_strategy = 'bottom_pane',
@@ -18,10 +25,15 @@ telescope.setup({
             preview_width = 0.4,
         },
     },
+    extensions = {
+        fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = 'smart_case',
+        },
+    },
 })
-
--- Extensions
-telescope.load_extension('z')
 
 -- Mappings
 u.keymap('n', '<Leader>ls', '<Cmd>Telescope find_files<CR>')
@@ -39,3 +51,7 @@ u.keymap(
     [[<cmd>lua require('telescope').extensions.z.list({cmd = {'bash', '-c', 'source /usr/share/z/z.sh && _z -l'}})<CR>]],
     { silent = false }
 )
+
+-- Extensions
+telescope.load_extension('fzf')
+telescope.load_extension('z')
