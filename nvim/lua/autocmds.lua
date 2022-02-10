@@ -5,8 +5,8 @@ augroup session
     au VimLeavePre * execute 'mksession! ' . v:lua.udfs.session_name()
     au BufWinLeave {*.*,vimrc,vimrc_min,bashrc,config}
         \ if &previewwindow != 1 | mkview | endif
-    au BufWinEnter {*.*,vimrc,vimrc_min,bashrc,config}
-        \ if &previewwindow != 1 | silent! loadview | endif
+    "au BufWinEnter {*.*,vimrc,vimrc_min,bashrc,config}
+    "    \ if &previewwindow != 1 | silent! loadview | endif
 augroup END
 ]])
 
