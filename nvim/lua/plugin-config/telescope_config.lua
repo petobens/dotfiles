@@ -5,7 +5,7 @@ local actions = require('telescope.actions')
 telescope.setup({
     defaults = {
         prompt_prefix = '❯ ',
-        multi_icon = ' ',
+        multi_icon = '  ',
         winblend = 7,
         color_devicons = true,
         file_ignore_patterns = { 'doc/', 'venv/' },
@@ -17,7 +17,8 @@ telescope.setup({
                 ['<C-k>'] = 'move_selection_previous',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
-                ['<C-]>'] = actions.toggle_selection + actions.move_selection_previous,
+                ['<C-space>'] = actions.toggle_selection
+                    + actions.move_selection_previous,
             },
         },
         -- layout_strategy = 'bottom_pane',
