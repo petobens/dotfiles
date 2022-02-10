@@ -171,7 +171,7 @@ if type "nvim" > /dev/null 2>&1; then
         alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
     fi
     if [ -f "$HOME/git-repos/private/dotfiles/nvim/init_min.lua" ]; then
-        alias mnvi='nvim -u $HOME/git-repos/private/dotfiles/nvim/init_min.lua'
+        alias mnvi='nvim --noplugin -u $HOME/git-repos/private/dotfiles/nvim/init_min.lua'
     fi
 fi
 if type "ranger" > /dev/null 2>&1; then
