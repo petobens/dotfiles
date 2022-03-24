@@ -144,6 +144,7 @@ u.keymap(
     { silent = false }
 )
 u.keymap('n', '<Leader>eb', '<Cmd>e $HOME/.bashrc<CR>')
+u.keymap('n', '<Leader>eh', '<Cmd>e $HOME/.config/i3/config<CR>')
 
 -- UDFs
 u.keymap('n', '<Leader>dt', udfs.delete_trailing_whitespace)
@@ -161,6 +162,26 @@ for i = 1, 6 do
         udfs.highlight_word(i)
     end)
 end
+
+-- Quickfix, Location & Preview windows
+u.keymap('n', '<Leader>qf', '<Cmd>copen<CR>')
+u.keymap('n', '<Leader>ll', '<Cmd>lopen<CR>')
+u.keymap('n', '<Leader>qc', '<Cmd>cclose<CR>')
+u.keymap('n', '<Leader>lc', '<Cmd>lclose<CR>')
+u.keymap('n', '<Leader>lC', function()
+    local win_id = vim.api.nvim_get_current_win()
+    vim.cmd('noautocmd windo if &buftype == "quickfix" | lclose | endif')
+    vim.api.nvim_set_current_win(win_id)
+end)
+u.keymap('n', ']q', '<Cmd>execute v:count1 . "cnext"<CR>')
+u.keymap('n', '[q', '<Cmd>execute v:count1 . "cprevious"<CR>')
+u.keymap('n', ']Q', '<Cmd>clast<CR>')
+u.keymap('n', '[Q', '<Cmd>cfirst<CR>')
+u.keymap('n', ']l', '<Cmd>execute v:count1 . "lnext"<CR>')
+u.keymap('n', '[l', '<Cmd>execute v:count1 . "lprevious"<CR>')
+u.keymap('n', ']L', '<Cmd>llast<CR>')
+u.keymap('n', '[L', '<Cmd>lfirst<CR>')
+u.keymap('n', '<Leader>pc', '<Cmd>pclose<CR>')
 
 -- Insert mode specific
 u.keymap('i', 'jj', '<ESC>')
