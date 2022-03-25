@@ -37,10 +37,15 @@ telescope.setup({
 })
 
 -- Mappings
-u.keymap('n', '<Leader>ls', '<Cmd>Telescope find_files<CR>')
-u.keymap('n', '<Leader>lu', '<Cmd>Telescope find_files cwd=..<CR>')
-u.keymap('n', '<Leader>sd', ':Telescope find_files cwd=', { silent = false })
-u.keymap('n', '<Leader>ig', '<Cmd>Telescope live_grep<CR>')
+u.keymap('n', '<Leader>ls', '<Cmd>lcd %:p:h<CR><Cmd>Telescope find_files<CR>')
+u.keymap('n', '<Leader>lu', '<Cmd>lcd %:p:h<CR><Cmd>Telescope find_files cwd=..<CR>')
+u.keymap(
+    'n',
+    '<Leader>sd',
+    '<Cmd>lcd %:p:h<CR>:Telescope find_files cwd=',
+    { silent = false }
+)
+u.keymap('n', '<Leader>ig', '<Cmd>lcd %:p:h<CR><Cmd>Telescope live_grep<CR>')
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
