@@ -41,7 +41,7 @@ return require('packer').startup(function(use)
         end,
     })
     use({
-        'blackCauldron7/surround.nvim',
+        'ur4ltz/surround.nvim',
         config = function()
             require('plugin-config/surround_config')
         end,
