@@ -48,7 +48,7 @@ onedarkpro.setup({
         Directory = { fg = p.light_blue },
         EndOfBuffer = { link = 'NonText' },
         ErrorMsg = { fg = p.red },
-        FloatBorder = { link = 'VertSplit' },
+        FloatBorder = { link = 'WinSeparator' },
         FoldColumn = { fg = p.comment_grey, bg = p.black },
         Folded = { fg = p.comment_grey, bg = p.black },
         IncSearch = { fg = p.bg, bg = p.orange },
@@ -83,12 +83,12 @@ onedarkpro.setup({
         TermCursor = { bg = p.blue },
         TermCursorNC = { bg = p.gray },
         Title = { fg = p.fg },
-        VertSplit = { fg = p.cursor_grey },
         Visual = { bg = p.visual_grey },
         VisualNOS = { link = 'Visual' },
         WarningMsg = { fg = p.orange },
         Whitespace = { fg = p.special_grey }, -- listchars
         WildMenu = { link = 'PMenuSel' },
+        WinSeparator = { fg = p.cursor_grey },
 
         -- Syntax
         Comment = { fg = p.comment_grey, style = 'italic' },
