@@ -34,6 +34,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 vim.api.nvim_create_autocmd('BufEnter', {
     -- FIXME: not working with nvim-cmp
+    -- See https://github.com/petertriho/cmp-git
     group = fugitive_acg,
     pattern = { '*.git/COMMIT_EDITMSG', '*.gitcommit' },
     callback = function()

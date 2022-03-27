@@ -216,7 +216,10 @@ vim.cmd([[
 ]])
 
 function _G.LualineBuffertab.select_buf(buf_idx)
-    vim.cmd('buffer! ' .. _G.LualineBuffertab.idx2bufnr[buf_idx])
+    local bufnr = _G.LualineBuffertab.idx2bufnr[buf_idx]
+    if bufnr ~= nil then
+        vim.cmd('buffer! ' .. bufnr)
+    end
 end
 
 return M
