@@ -88,6 +88,14 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal iskeyword=@,48-57,_,192-255,: comments+=b:\\item indentkeys=!^F,o,O,0=\\item',
 })
 
+--- Lua
+local lua_acg = vim.api.nvim_create_augroup('ft_lua', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+    group = lua_acg,
+    pattern = { 'lua' },
+    command = 'setlocal formatoptions=jcql',
+})
+
 --- Markdown
 local markdown_acg = vim.api.nvim_create_augroup('ft_markdown', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
