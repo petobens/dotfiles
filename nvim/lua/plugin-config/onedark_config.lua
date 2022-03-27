@@ -242,6 +242,7 @@ onedarkpro.setup({
             markdownTSPunctSpecial = { fg = p.dark_red, style = 'bold' },
         },
         python = {
+            pythonTSConstant = { fg = p.orange },
             pythonTSPunctSpecial = { fg = p.orange },
         },
         sh = {
