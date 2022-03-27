@@ -156,19 +156,22 @@ onedarkpro.setup({
         -- TODO: add other lsp hls (as code lens)
 
         -- Treesitter stuff
-        -- TSField = { fg = p.red }, -- python self and yamls
+        TSBoolean = { fg = p.orange },
+        TSDanger = { fg = p.red, style = 'bold' },
         TSEmphasis = { fg = p.orange, style = 'italic' },
+        TSField = { fg = p.fg },
         TSFunction = { fg = p.light_blue },
         TSInclude = { fg = p.purple },
         TSLiteral = { fg = p.green }, -- embedded code
         TSMethod = { fg = p.light_blue },
         TSParameter = { fg = p.orange },
-        TSPunctSpecial = { fg = p.dark_red, style = 'bold' },
+        TSPunctSpecial = { fg = p.blue },
         TSStringEscape = { fg = p.fg },
         TSStrong = { fg = p.orange, style = 'bold' },
         TSTextReference = { link = 'TSText' },
         TSTitle = { fg = p.dark_red, style = 'bold' },
         TSURI = { fg = p.blue, style = 'underline' },
+        TSWarning = { fg = p.orange },
 
         -- Filetypes
         ---- Vim help
@@ -230,6 +233,24 @@ onedarkpro.setup({
         HlWord4 = { fg = p.black, bg = p.orange },
         HlWord5 = { fg = p.black, bg = p.light_blue },
         HlWord6 = { fg = p.black, bg = p.white },
+    },
+    filetype_hlgroups = {
+        json = {
+            jsonTSLabel = { fg = p.red },
+        },
+        markdown = {
+            markdownTSPunctSpecial = { fg = p.dark_red, style = 'bold' },
+        },
+        python = {
+            pythonTSPunctSpecial = { fg = p.orange },
+        },
+        sh = {
+            bashTSParameter = { fg = p.fg },
+            bashTSPunctSpecial = { fg = p.red, style = 'none' },
+        },
+        yaml = {
+            yamlBool = { fg = p.orange },
+        },
     },
     options = {
         italic = false,
