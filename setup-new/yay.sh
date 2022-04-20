@@ -218,7 +218,7 @@ $yay_cmd socat
 $yay_cmd sshfs
 $yay_cmd sshpass
 $yay_cmd strace
-$yay_cmd stylua-bin
+$yay_cmd stylua
 $yay_cmd tk
 $yay_cmd tldr
 $yay_cmd tokei
