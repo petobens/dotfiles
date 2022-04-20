@@ -95,7 +95,7 @@ return require('packer').startup(function(use)
             'hrsh7th/cmp-cmdline',
             'hrsh7th/cmp-vsnip',
             'andersevenrud/cmp-tmux',
-            'onsails/lspkind-nvim',
+            'onsails/lspkind.nvim',
         },
         config = function()
             require('plugin-config/cmp_config')
