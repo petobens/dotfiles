@@ -76,7 +76,7 @@ require('nvim-tree').setup({
     disable_netrw = false, -- conflicts with Fugitive's Gbrowse
     view = {
         width = 43,
-        numbers = true,
+        number = true,
         relativenumber = true,
         mappings = {
             custom_only = false,
