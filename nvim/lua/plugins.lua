@@ -60,16 +60,11 @@ return require('packer').startup(function(use)
     })
 
     -- LSP and completion
+    use({ 'williamboman/nvim-lsp-installer' })
     use({
         'neovim/nvim-lspconfig',
         config = function()
             require('plugin-config/lsp_config')
-        end,
-    })
-    use({
-        'williamboman/nvim-lsp-installer',
-        config = function()
-            require('plugin-config/lspinstaller_config')
         end,
     })
     use({ 'folke/lua-dev.nvim' })

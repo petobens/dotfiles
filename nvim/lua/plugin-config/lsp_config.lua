@@ -1,5 +1,7 @@
-local lspconfig = require('lspconfig')
-local u = require('utils')
+-- We need this first to ensure lsp-insaller loads before lspconfig
+require('nvim-lsp-installer').setup({
+    ensure_installed = { 'sumneko_lua' },
+})
 
 -- Diagnostics
 vim.diagnostic.config({
@@ -50,12 +52,14 @@ local function on_attach(client, bufnr)
 end
 
 -- Servers setup
+local lspconfig = require('lspconfig')
 lspconfig.sumneko_lua.setup({
     settings = require('lua-dev').setup().settings,
     on_attach = on_attach,
 })
 
 -- Mappings
+local u = require('utils')
 local lsp_buf = vim.lsp.buf
 u.keymap('n', '<Leader>jd', lsp_buf.definition)
 u.keymap('n', '<Leader>ap', lsp_buf.references)
