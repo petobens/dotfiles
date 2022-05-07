@@ -245,6 +245,7 @@ $yay_cmd --mflags --skipinteg freeoffice
 $yay_cmd gcolor3
 $yay_cmd gnome-font-viewer
 $yay_cmd hplip-plugin
+$yay_cmd mailspring
 $yay_cmd obs-studio
 $yay_cmd onedrive-abraunegg
 $yay_cmd pdfpc
@@ -255,7 +256,6 @@ $yay_cmd spotify
 $yay_cmd spotifyd
 $yay_cmd spotify-tui-bin
 $yay_cmd teams
-$yay_cmd thunderbird
 $yay_cmd transmission-gtk
 $yay_cmd visual-studio-code-bin
 $yay_cmd xfce4-power-manager

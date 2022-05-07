@@ -66,6 +66,7 @@ APPS = {
     },
     'Kitty': {'cmd': 'kitty', 'icon': 'kitty', 'desc': 'Terminal Emulator'},
     'Kodi': {'cmd': 'kodi', 'icon': 'kodi', 'desc': 'Media Center'},
+    'Mailspring': {'cmd': 'mailspring', 'icon': 'mailspring', 'desc': 'Mail Client'},
     'Meet': {'cmd': 'meet', 'icon': 'google-meet', 'desc': 'Google Meet'},
     'Microsoft Teams': {'cmd': 'teams', 'icon': 'teams'},
     'OBS Studio': {'cmd': 'obs', 'icon': 'obs', 'desc': 'Streaming/Recording Software'},
@@ -89,7 +90,6 @@ APPS = {
         'icon': 'view-process-all',
         'desc': 'FZF Based Process Killer',
     },
-    'Thunderbird': {'cmd': 'thunderbird', 'icon': 'thunderbird', 'desc': 'Mail Client'},
     'Transmission': {
         'cmd': 'transmission',
         'icon': 'transmission',

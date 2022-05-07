@@ -84,6 +84,13 @@ APPS = {
         },
     },
     'kodi': {'type': 'rol', 'args': {'class_name': 'kodi'}},
+    'mailspring': {
+        'type': 'electron',
+        'args': {
+            'class_name': 'Mailspring',
+            'event_delay': 30
+        }
+    },
     'meet': {
         'type': 'electron',
         'args': {
@@ -198,7 +205,6 @@ APPS = {
         'type': 'rol_custom',
         'args': {'class_name': 'tm', 'cmd': 'freeoffice-textmaker', 'event_delay': 30},
     },
-    'thunderbird': {'type': 'gtk', 'args': {'class_name': 'thunderbird'}},
     'transmission': {'type': 'gtk', 'args': {'class_name': 'Transmission-gtk'}},
     'trash': {
         'type': 'tui',
