@@ -38,6 +38,11 @@ end
 
 local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 local function on_attach(client, bufnr)
+    if client.name == 'sumneko_lua' then
+        -- TODO: Improve after https://github.com/neovim/neovim/issues/18371
+        client.server_capabilities.documentRangeFormattingProvider = false
+    end
+
     if client.supports_method('textDocument/formatting') then
         -- Autoformat on save
         vim.api.nvim_clear_autocmds({ group = format_augroup, buffer = bufnr })
