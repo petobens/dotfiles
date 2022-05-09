@@ -71,7 +71,7 @@ bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down
 # re-focusing it)
 for_window [class="^(Spotify|Slack|pm|tm|pr|Mailspring|Transmission-gtk|mpv|Simple-scan|discord)$" title="^(?!webcam).+"] $nexec $resize Full
 for_window [title="^(Alacritty|kitty|Spotify-TUI)$"] $nexec $resize Full
-for_window [con_mark="^(browser|calendar|hangouts|meet|clickup)$"] $nexec $resize Full
+for_window [con_mark="^(browser|calendar|meet|clickup)$"] $nexec $resize Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] $nexec $resize Center
 for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] $nexec $resize Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] $nexec $resize Rectangle
@@ -184,7 +184,6 @@ bindsym $mod+Control+l $nexec $font_aware_launcher slack -W $ws2
 bindsym $mod+Control+s $nexec $font_aware_launcher teams -W $ws2
 bindsym $mod+Control+z $nexec $font_aware_launcher zoom -W $ws2
 bindsym $mod+Control+t $nexec $font_aware_launcher mailspring -W $ws2
-bindsym $mod+Control+semicolon $nexec $font_aware_launcher hangouts -W $ws2
 bindsym $mod+Control+o $nexec $font_aware_launcher meet -W $ws2
 # WS3: Music and video
 bindsym $mod+Control+m $nexec $font_aware_launcher spotify -W $ws3
