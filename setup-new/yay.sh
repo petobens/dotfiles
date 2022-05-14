@@ -174,7 +174,7 @@ $yay_cmd diff-so-fancy
 $yay_cmd dmidecode
 $yay_cmd docker
 $yay_cmd docker-compose
-$yay_cmd dragon-drag-and-drop-git
+$yay_cmd dragon-drop
 $yay_cmd dust
 $yay_cmd fd
 $yay_cmd forgit-git
