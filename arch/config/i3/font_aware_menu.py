@@ -84,7 +84,6 @@ APPS = {
     },
     'Slack': {'cmd': 'slack', 'icon': 'slack', 'desc': 'Internet Messaging'},
     'Spotify': {'cmd': 'spotify', 'icon': 'spotify', 'desc': 'Music Player'},
-    'Spotify-TUI': {'cmd': 'spotify-tui', 'icon': 'spotify', 'desc': 'Music Player'},
     'Task Manager': {
         'cmd': 'prockiller',
         'icon': 'view-process-all',

@@ -70,7 +70,7 @@ bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
 # re-focusing it)
 for_window [class="^(Spotify|Slack|pm|tm|pr|Mailspring|Transmission-gtk|mpv|Simple-scan|discord)$" title="^(?!webcam).+"] $nexec $resize Full
-for_window [title="^(Alacritty|kitty|Spotify-TUI)$"] $nexec $resize Full
+for_window [title="^(Alacritty|kitty)$"] $nexec $resize Full
 for_window [con_mark="^(browser|calendar|meet|clickup)$"] $nexec $resize Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] $nexec $resize Center
 for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] $nexec $resize Center
@@ -187,7 +187,6 @@ bindsym $mod+Control+t $nexec $font_aware_launcher mailspring -W $ws2
 bindsym $mod+Control+o $nexec $font_aware_launcher meet -W $ws2
 # WS3: Music and video
 bindsym $mod+Control+m $nexec $font_aware_launcher spotify -W $ws3
-# bindsym $mod+Control+m $nexec $font_aware_launcher spotify-tui -W $ws3
 # WS4: Other
 bindsym $mod+Control+u $nexec $font_aware_launcher transmission -W $ws4
 bindsym $mod+Control+x $nexec $font_aware_launcher planmaker -W $ws4
