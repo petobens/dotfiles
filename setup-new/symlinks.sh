@@ -368,6 +368,8 @@ else
         # echo Created /etc/udev/rules.d/99-monitor-hotplug.rules symlink
         # sudo $ln_cmd -fTs "$dotfiles_dir/arch/udev/usb-ethernet.rules" "/etc/udev/rules.d/99-usb-ethernet.rules"
         # echo Created /etc/udev/rules.d/99-usb-ethernet.rules symlink
+        sudo $ln_cmd -fTs "$dotfiles_dir/arch/udev/99-webcam.rules" "/etc/udev/rules.d/99-webcam.rules"
+        echo Created /etc/udev/rules.d/99-webcam.rules symlink
     fi
 fi
 
