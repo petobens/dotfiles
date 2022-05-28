@@ -1,7 +1,5 @@
 local u = require('utils')
 
-vim.g.nvim_tree_root_folder_modifier = ':t'
-
 _G.NvimTreeConfig = {}
 
 function NvimTreeConfig.home()
@@ -82,6 +80,9 @@ require('nvim-tree').setup({
             custom_only = false,
             list = map_list,
         },
+    },
+    renderer = {
+        root_folder_modifier = ':t',
     },
     update_focused_file = {
         enable = true,
