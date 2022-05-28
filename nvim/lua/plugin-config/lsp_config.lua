@@ -24,13 +24,11 @@ vim.diagnostic.config({
     },
 })
 
--- Custom formatting (filtering clients)
+-- Only use null-ls for formatting
 local function custom_lsp_format(bufnr)
     vim.lsp.buf.format({
-        filter = function(clients)
-            return vim.tbl_filter(function(client)
-                return client.name ~= 'sumneko_lua'
-            end, clients)
+        filter = function(client)
+            return client.name == 'null-ls'
         end,
         bufnr = bufnr,
     })
@@ -39,6 +37,7 @@ end
 local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 local function on_attach(client, bufnr)
     if client.name == 'sumneko_lua' then
+        -- For buffer range_formatting
         -- TODO: Improve after https://github.com/neovim/neovim/issues/18371
         client.server_capabilities.documentRangeFormattingProvider = false
     end
