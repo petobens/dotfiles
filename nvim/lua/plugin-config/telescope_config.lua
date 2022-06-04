@@ -49,7 +49,7 @@ u.keymap('n', '<Leader>ig', '<Cmd>lcd %:p:h<CR><Cmd>Telescope live_grep<CR>')
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
-u.keymap('n', '<Leader>gL', '<Cmd>Telescope git_bcommits<CR>')
+u.keymap('n', '<Leader>gL', '<Cmd>lcd %:p:h<CR><Cmd>Telescope git_bcommits<CR>')
 u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap(
