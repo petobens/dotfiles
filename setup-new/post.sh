@@ -96,6 +96,8 @@ else
             mkdir -p "$HOME/$dir"
             xdg-user-dirs-update --set "${dir^^}" "$HOME/$dir"
         done
+        mkdir -p "$HOME/.local/share"
+        xdg-user-dirs-update --set DATA_HOME "$HOME/.local/share"
     fi
 
     # Set some default apps on Linux

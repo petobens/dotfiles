@@ -334,6 +334,8 @@ else
         echo Created .config/rofi folder symlink
     fi
     if type "dunst" > /dev/null 2>&1; then
+        mkdir -p $HOME/.local/share
+        $ln_cmd -fTs "/usr/share/icons" "$HOME/.local/share/icons"
         $ln_cmd -fTs "$dotfiles_dir/arch/config/dunst" "$HOME/.config/dunst"
         echo Created .config/dunst folder symlink
     fi
