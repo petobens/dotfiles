@@ -39,7 +39,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
     pattern = { '*.git/COMMIT_EDITMSG', '*.gitcommit' },
     callback = function()
         local remote = vim.api.nvim_exec(
-            [[echo fugitive#repo().config('remote.origin.url')]],
+            [[echo FugitiveConfigGet('remote.origin.url')]],
             true
         )
         local omnifunc = 'rhubarb#omnifunc'

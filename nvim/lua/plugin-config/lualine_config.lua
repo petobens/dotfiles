@@ -29,7 +29,7 @@ end
 local function branch_with_remote()
     local branch_name = vim.fn.FugitiveHead()
     local remote = vim.api.nvim_exec(
-        [[echo fugitive#repo().config('remote.origin.url')]],
+        [[echo FugitiveConfigGet('remote.origin.url')]],
         true
     )
     local branch_icon = ''
