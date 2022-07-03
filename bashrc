@@ -381,9 +381,11 @@ if [[ "$OSTYPE" != 'darwin'* ]]; then
 fi
 
 # NFS
-alias mnfs='sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
+alias mpnfs='sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
+alias mfnfs='sudo mount synology-flor:/volume1/Shared-DS220 /mnt/nfs'
 alias unfs='sudo umount /mnt/nfs'
-alias nssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology -t "cd /volume1/Shared-DS220; bash --login"'
+alias npssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology -t "cd /volume1/Shared-DS220; bash --login"'
+alias nfssh='sshpass -p "$(pass show synology/synology-flor/flor)" ssh synology-flor -t "cd /volume1/Shared-DS220; bash --login"'
 
 # }}}
 # Work Aliases {{{
