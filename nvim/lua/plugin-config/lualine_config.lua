@@ -28,6 +28,9 @@ end
 
 local function branch_with_remote()
     local branch_name = vim.fn.FugitiveHead()
+    if branch_name == '' then
+        return ''
+    end
     local remote = vim.api.nvim_exec(
         [[echo FugitiveConfigGet('remote.origin.url')]],
         true
