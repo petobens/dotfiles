@@ -7,6 +7,7 @@ telescope.setup({
         prompt_prefix = '❯ ',
         multi_icon = ' ',
         winblend = 7,
+        results_title = false,
         color_devicons = true,
         file_ignore_patterns = { 'doc/', 'venv/' },
         mappings = {
@@ -21,9 +22,11 @@ telescope.setup({
                     + actions.move_selection_previous,
             },
         },
-        -- layout_strategy = 'bottom_pane',
+        layout_strategy = 'bottom_pane',
         layout_config = {
-            preview_width = 0.4,
+            prompt_position = 'bottom',
+            height = 20,
+            preview_width = 0.45,
         },
     },
     extensions = {
