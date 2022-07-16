@@ -17,11 +17,11 @@ monitor = 0
 follow = keyboard
 
 # Geometry
-width = 300
-offset = 0x26 # margin from the top (to allow for Polybar)
+width = (300, 600)
+offset = 0x45 # margin from the top (to allow for Polybar)
 
 # Scale factor. It is auto-detected if value is 0.
-scale = 0
+scale = 1
 
 # Show how many messages are currently hidden (because of geometry).
 indicate_hidden = yes
