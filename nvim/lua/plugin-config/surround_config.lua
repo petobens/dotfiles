@@ -1,4 +1,10 @@
-require('surround').setup({
-    mappings_style = 'surround',
-    prompt = false,
+require('nvim-surround').setup({
+    delimiters = {
+        pairs = {
+            ['('] = { '(', ')' },
+            ['['] = { '[', ']' },
+            ['{'] = { '{', '}' },
+            ['<'] = { '<', '>' },
+        },
+    },
 })

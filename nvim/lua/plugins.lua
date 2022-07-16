@@ -41,7 +41,7 @@ return require('packer').startup(function(use)
         end,
     })
     use({
-        'ur4ltz/surround.nvim',
+        'kylechui/nvim-surround',
         config = function()
             require('plugin-config/surround_config')
         end,
