@@ -233,6 +233,18 @@ onedarkpro.setup({
         HlWord4 = { fg = p.black, bg = p.orange },
         HlWord5 = { fg = p.black, bg = p.light_blue },
         HlWord6 = { fg = p.black, bg = p.white },
+
+        ---- Telescope
+        TelescopeNormal = { fg = p.fg, bg = p.bg },
+        TelescopeSelection = { fg = p.fg, bg = p.cursor_grey, style = 'bold' },
+        TelescopeSelectionCaret = { fg = p.purple, style = 'bold' },
+        TelescopeMultiSelection = { fg = p.orange },
+        TelescopeMultiIcon = { fg = p.orange },
+        TelescopeBorder = { fg = p.cursor_grey },
+        TelescopeTitle = { fg = p.comment_grey, bg = p.bg },
+        TelescopePromptCounter = { fg = p.linenr_grey },
+        TelescopePromptPrefix = { fg = p.purple, style = 'bold' },
+        TelescopeMatching = { fg = p.blue },
     },
     filetype_hlgroups = {
         json = {
@@ -252,6 +264,10 @@ onedarkpro.setup({
         yaml = {
             yamlBool = { fg = p.orange },
         },
+    },
+    plugins = {
+        all = false,
+        treesitter = true,
     },
     options = {
         italic = false,
