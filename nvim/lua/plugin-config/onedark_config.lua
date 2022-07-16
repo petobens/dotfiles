@@ -205,6 +205,7 @@ onedarkpro.setup({
         gitcommitSelectedFile = { fg = p.green },
         gitcommitUnmergedFile = { fg = p.yellow },
         gitcommitFile = { fg = p.fg },
+        gitcommitFirstLine = { fg = p.fg },
         gitcommitNoBranch = { link = 'gitcommitBranch' },
         gitcommitUntracked = { link = 'gitcommitComment' },
         gitcommitDiscarded = { link = 'gitcommitComment' },
