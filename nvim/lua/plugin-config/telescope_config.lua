@@ -5,7 +5,7 @@ local actions = require('telescope.actions')
 telescope.setup({
     defaults = {
         prompt_prefix = '❯ ',
-        multi_icon = '  ',
+        multi_icon = ' ',
         winblend = 7,
         color_devicons = true,
         file_ignore_patterns = { 'doc/', 'venv/' },
@@ -52,6 +52,7 @@ u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
 u.keymap('n', '<Leader>gL', '<Cmd>lcd %:p:h<CR><Cmd>Telescope git_bcommits<CR>')
 u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
+u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
 u.keymap(
     'n',
     '<A-z>',
