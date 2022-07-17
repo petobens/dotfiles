@@ -156,7 +156,7 @@ onedarkpro.setup({
         LspReferenceWrite = { link = 'LspReferenceText' },
         -- TODO: add other lsp hls (as code lens)
 
-        -- Treesitter stuff
+        -- Treesitter
         TSBoolean = { fg = p.orange },
         TSDanger = { fg = p.red, style = 'bold' },
         TSEmphasis = { fg = p.orange, style = 'italic' },
@@ -172,7 +172,7 @@ onedarkpro.setup({
         TSTextReference = { link = 'TSText' },
         TSTitle = { fg = p.dark_red, style = 'bold' },
         TSURI = { fg = p.blue, style = 'underline' },
-        TSWarning = { fg = p.orange },
+        TSWarning = { fg = p.orange, style = 'bold' },
 
         -- Filetypes
         ---- Vim help
@@ -216,6 +216,14 @@ onedarkpro.setup({
         gitcommitUnmergedArrow = { link = 'gitcommitUnmergedFile' },
 
         -- Plugins
+        ---- Cmp
+        CmpItemAbbr = { fg = p.fg },
+        CmpItemAbbrDeprecated = { fg = p.fg },
+        CmpItemAbbrMatch = { fg = p.blue },
+        CmpItemAbbrMatchFuzzy = { fg = p.blue },
+        CmpItemMenu = { fg = p.gray },
+        CmpItemKind = { fg = p.cyan },
+
         ---- Fugitive
         diffAdded = { fg = p.green },
         diffRemoved = { fg = p.red },
