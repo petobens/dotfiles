@@ -4,7 +4,7 @@ local actions = require('telescope.actions')
 
 telescope.setup({
     defaults = {
-        prompt_prefix = '❯ ',
+        prompt_prefix = '   ',
         multi_icon = ' ',
         winblend = 7,
         results_title = false,
