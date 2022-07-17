@@ -224,10 +224,6 @@ onedarkpro.setup({
         fugitiveStagedHeading = { fg = p.green },
         fugitiveStagedModifier = { fg = p.green },
 
-        ---- IndentBlankline
-        IndentLine = { fg = p.comment_grey },
-        IndentBlanklineContextChar = { fg = p.white },
-
         ---- HlWords (in udfs)
         HlWord1 = { fg = p.black, bg = p.yellow },
         HlWord2 = { fg = p.black, bg = p.green },
@@ -235,6 +231,18 @@ onedarkpro.setup({
         HlWord4 = { fg = p.black, bg = p.orange },
         HlWord5 = { fg = p.black, bg = p.light_blue },
         HlWord6 = { fg = p.black, bg = p.white },
+
+        ---- IndentBlankline
+        IndentLine = { fg = p.comment_grey },
+        IndentBlanklineContextChar = { fg = p.white },
+
+        ---- Packer
+        packerFail = { fg = p.red },
+        packerSuccess = { fg = p.green },
+        packerWorking = { fg = p.yellow },
+        packerOutput = { fg = p.blue },
+        packerStatusFail = { fg = p.red },
+        packerStatusSuccess = { fg = p.green },
 
         ---- Telescope
         TelescopeNormal = { fg = p.fg, bg = p.bg },
