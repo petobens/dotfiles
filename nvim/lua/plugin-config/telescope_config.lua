@@ -21,6 +21,7 @@ telescope.setup({
                 ['<C-space>'] = actions.toggle_selection
                     + actions.move_selection_previous,
             },
+            n = { ['q'] = 'close' },
         },
         layout_strategy = 'bottom_pane',
         layout_config = {
