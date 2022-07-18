@@ -40,6 +40,14 @@ telescope.setup({
     },
 })
 
+-- Autocmds
+local prompt_acg = vim.api.nvim_create_augroup('telescope_prompt', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+    group = prompt_acg,
+    pattern = { 'TelescopePrompt' },
+    command = 'setlocal nocursorline',
+})
+
 -- Mappings
 u.keymap('n', '<Leader>ls', '<Cmd>lcd %:p:h<CR><Cmd>Telescope find_files<CR>')
 u.keymap('n', '<Leader>lu', '<Cmd>lcd %:p:h<CR><Cmd>Telescope find_files cwd=..<CR>')
