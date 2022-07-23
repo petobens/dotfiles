@@ -41,4 +41,4 @@ Icon?
 *.vrb
 
 # Nvim
-init_min.lua
+minimal.lua

@@ -167,11 +167,8 @@ if type "lsd" > /dev/null 2>&1; then
 fi
 if type "nvim" > /dev/null 2>&1; then
     alias v='nvim --listen /tmp/nvimsocket'
-    if [ -f "$HOME/git-repos/private/dotfiles/vim/vimrc_min" ]; then
-        alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
-    fi
-    if [ -f "$HOME/git-repos/private/dotfiles/nvim/init_min.lua" ]; then
-        alias mnvi='nvim --noplugin -u $HOME/git-repos/private/dotfiles/nvim/init_min.lua'
+    if [ -f "$HOME/git-repos/private/dotfiles/nvim/minimal.lua" ]; then
+        alias mnvi='nvim --clean -u $HOME/git-repos/private/dotfiles/nvim/minimal.lua'
     fi
 fi
 if type "ranger" > /dev/null 2>&1; then

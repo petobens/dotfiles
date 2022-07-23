@@ -12,7 +12,7 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 return require('packer').startup(function(use)
-    -- TODO: automatically install plugins
+    -- Automanage packer with packer
     use('wbthomason/packer.nvim')
 
     -- Appearance
@@ -177,6 +177,7 @@ return require('packer').startup(function(use)
         end,
     })
 
+    -- Automatically install plugins after cloning packer
     if packer_bootstrap then
         require('packer').sync()
     end
