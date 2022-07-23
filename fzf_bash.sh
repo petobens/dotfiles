@@ -33,7 +33,7 @@ export FZF_DEFAULT_OPTS='
 --height 15
 --inline-info
 --prompt="   "
---marker="> "
+--marker=" "
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
 --bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up
 --bind=alt-d:preview-half-page-down,alt-u:preview-half-page-up
