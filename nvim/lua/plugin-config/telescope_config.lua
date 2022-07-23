@@ -1,7 +1,35 @@
 local u = require('utils')
 local telescope = require('telescope')
 local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
 
+-- Custom actions
+local transform_mod = require('telescope.actions.mt').transform_mod
+local custom_actions = transform_mod({
+    -- Yank
+    yank = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        vim.fn.setreg('+', action_state.get_selected_entry().value)
+    end,
+    -- Open git commit using Fugitive
+    fugitive_open = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local commit_sha = action_state.get_selected_entry().value
+        vim.cmd(string.format([[execute 'e' FugitiveFind("%s")]], commit_sha))
+    end,
+    fugitive_split = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local commit_sha = action_state.get_selected_entry().value
+        vim.cmd(string.format([[execute 'split' FugitiveFind("%s")]], commit_sha))
+    end,
+    fugitive_vsplit = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local commit_sha = action_state.get_selected_entry().value
+        vim.cmd(string.format([[execute 'vsplit' FugitiveFind("%s")]], commit_sha))
+    end,
+})
+
+-- Setup
 telescope.setup({
     defaults = {
         prompt_prefix = '   ',
@@ -10,6 +38,12 @@ telescope.setup({
         results_title = false,
         color_devicons = true,
         file_ignore_patterns = { 'doc/', 'venv/' },
+        layout_strategy = 'bottom_pane',
+        layout_config = {
+            prompt_position = 'bottom',
+            height = 20,
+            preview_width = 0.45,
+        },
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
@@ -20,14 +54,29 @@ telescope.setup({
                 ['<A-k>'] = 'preview_scrolling_up',
                 ['<C-space>'] = actions.toggle_selection
                     + actions.move_selection_previous,
+                ['<C-y>'] = custom_actions.yank,
             },
             n = { ['q'] = 'close' },
         },
-        layout_strategy = 'bottom_pane',
-        layout_config = {
-            prompt_position = 'bottom',
-            height = 20,
-            preview_width = 0.45,
+    },
+    pickers = {
+        git_commits = {
+            mappings = {
+                i = {
+                    ['<CR>'] = custom_actions.fugitive_open,
+                    ['<C-s>'] = custom_actions.fugitive_split,
+                    ['<C-v>'] = custom_actions.fugitive_vsplit,
+                },
+            },
+        },
+        git_bcommits = {
+            mappings = {
+                i = {
+                    ['<CR>'] = custom_actions.fugitive_open,
+                    ['<C-s>'] = custom_actions.fugitive_split,
+                    ['<C-v>'] = custom_actions.fugitive_vsplit,
+                },
+            },
         },
     },
     extensions = {
