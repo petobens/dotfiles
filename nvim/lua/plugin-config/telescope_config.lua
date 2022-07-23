@@ -60,6 +60,9 @@ telescope.setup({
         },
     },
     pickers = {
+        buffers = {
+            sort_mru = true,
+        },
         git_commits = {
             mappings = {
                 i = {
