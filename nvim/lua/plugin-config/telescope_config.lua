@@ -63,6 +63,17 @@ telescope.setup({
         buffers = {
             sort_mru = true,
         },
+        find_files = {
+            find_command = {
+                'fd',
+                '--type',
+                'f',
+                '--follow',
+                '--hidden',
+                '--exclude',
+                '.git',
+            },
+        },
         git_commits = {
             mappings = {
                 i = {
