@@ -45,10 +45,8 @@ vim.api.nvim_create_autocmd(
 )
 
 -- Create non-existing parent directory on save
-local create_dir_before_write_acg = vim.api.nvim_create_augroup(
-    'create_dir_before_write',
-    { clear = true }
-)
+local create_dir_before_write_acg =
+    vim.api.nvim_create_augroup('create_dir_before_write', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePre', {
     group = create_dir_before_write_acg,
     callback = function()
@@ -57,10 +55,8 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 })
 
 -- Delete trailing whitespace
-local delete_trailing_acg = vim.api.nvim_create_augroup(
-    'delete_trailing',
-    { clear = true }
-)
+local delete_trailing_acg =
+    vim.api.nvim_create_augroup('delete_trailing', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePre', {
     group = delete_trailing_acg,
     callback = function()

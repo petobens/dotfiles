@@ -101,6 +101,7 @@ u.keymap('n', '<Leader>ws', '/<><Left>', { silent = false, noremap = false })
 
 -- Folds
 u.keymap('n', '<Leader>z', 'zMzvzz')
+u.keymap('n', 'l', udfs.open_fold_from_start)
 u.keymap('n', 'zm', 'zM')
 u.keymap('n', 'zr', 'zR')
 u.keymap('n', '<Leader>mf', '<Cmd>set foldmethod=marker<CR>zv')
