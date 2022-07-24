@@ -134,15 +134,18 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal nocursorline',
 })
 
+-- Commands
+-- command -nargs=+ -complete=dir Telescopefdcwd Telescope fd cwd=<args>
+vim.api.nvim_create_user_command(
+    'Telescopeff',
+    'Telescope find_files cwd=<args>',
+    { nargs = 1, complete = 'file' }
+)
+
 -- Mappings
 u.keymap('n', '<Leader>ls', '<Cmd>lcd %:p:h<CR><Cmd>Telescope find_files<CR>')
 u.keymap('n', '<Leader>lu', '<Cmd>lcd %:p:h<CR><Cmd>Telescope find_files cwd=..<CR>')
-u.keymap(
-    'n',
-    '<Leader>sd',
-    '<Cmd>lcd %:p:h<CR>:Telescope find_files cwd=',
-    { silent = false }
-)
+u.keymap('n', '<Leader>sd', '<Cmd>lcd %:p:h<CR>:Telescopeff ', { silent = false })
 u.keymap('n', '<Leader>ig', '<Cmd>lcd %:p:h<CR><Cmd>Telescope live_grep<CR>')
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')

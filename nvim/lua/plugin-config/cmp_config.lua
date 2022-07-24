@@ -88,3 +88,18 @@ cmp.setup({
         ghost_text = true,
     },
 })
+
+-- Complete commands and paths in command prompt
+cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline({
+        ['<C-y>'] = {
+            c = cmp.mapping.confirm({ select = false }),
+        },
+    }),
+    sources = cmp.config.sources({
+        { name = 'cmdline' },
+    }, {
+        -- FIXME: https://github.com/hrsh7th/nvim-cmp/issues/1090
+        -- { name = 'path' },
+    }),
+})
