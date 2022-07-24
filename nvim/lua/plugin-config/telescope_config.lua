@@ -27,6 +27,12 @@ local custom_actions = transform_mod({
         local commit_sha = action_state.get_selected_entry().value
         vim.cmd(string.format([[execute 'vsplit' FugitiveFind("%s")]], commit_sha))
     end,
+    -- Search history
+    edit_search_line = function(prompt_bufnr)
+        local selection = action_state.get_selected_entry().value
+        actions.close(prompt_bufnr)
+        vim.api.nvim_feedkeys('/' .. selection, 'n', true)
+    end,
 })
 
 -- Setup
@@ -47,6 +53,7 @@ telescope.setup({
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
+                ['<Tab>'] = 'select_default',
                 ['<C-s>'] = 'file_split',
                 ['<C-j>'] = 'move_selection_next',
                 ['<C-k>'] = 'move_selection_previous',
@@ -62,6 +69,13 @@ telescope.setup({
     pickers = {
         buffers = {
             sort_mru = true,
+        },
+        command_history = {
+            mappings = {
+                i = {
+                    ['<Tab>'] = actions.edit_command_line,
+                },
+            },
         },
         find_files = {
             find_command = {
@@ -91,6 +105,13 @@ telescope.setup({
                     ['<C-s>'] = custom_actions.fugitive_split,
                     ['<C-v>'] = custom_actions.fugitive_vsplit,
                     ['<C-o>'] = actions.git_checkout,
+                },
+            },
+        },
+        search_history = {
+            mappings = {
+                i = {
+                    ['<Tab>'] = custom_actions.edit_search_line,
                 },
             },
         },
@@ -129,6 +150,7 @@ u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
 u.keymap('n', '<Leader>gL', '<Cmd>lcd %:p:h<CR><Cmd>Telescope git_bcommits<CR>')
 u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
+u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
 u.keymap(
     'n',
