@@ -120,7 +120,7 @@ u.keymap('n', '<Leader>lp', ':lua put(', { silent = false })
 
 -- Bookmarks
 u.keymap('n', '<Leader>ev', '<Cmd>e $MYVIMRC<CR>')
-u.keymap('n', '<Leader>em', '<Cmd>e ' .. vim.env.DOTVIM .. '/init_min.lua<CR>')
+u.keymap('n', '<Leader>em', '<Cmd>e ' .. vim.env.DOTVIM .. '/minimal.lua<CR>')
 u.keymap(
     'n',
     '<Leader>ew',
