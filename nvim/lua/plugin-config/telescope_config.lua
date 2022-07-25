@@ -158,7 +158,7 @@ u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
 u.keymap(
     'n',
     '<A-z>',
-    [[<cmd>lua require('telescope').extensions.z.list({cmd = {'bash', '-c', 'source /usr/share/z/z.sh && _z -l'}})<CR>]],
+    [[<cmd>lua require('telescope').extensions.z.list({cmd = {'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1'}})<CR>]],
     { silent = false }
 )
 

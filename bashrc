@@ -562,8 +562,7 @@ PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 # }}}
 # Fzf and cli apps {{{
 
-# Z (load it but unalias it to override it with fzf version). Note: we must load
-# if after the prompt since it modifies the prompt command
+# Z Note: we must load if after the prompt since it modifies the prompt command
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if [ -f "$BASE_PKG_DIR/etc/profile.d/z.sh" ]; then
         . "$BASE_PKG_DIR/etc/profile.d/z.sh"
@@ -573,7 +572,6 @@ else
         source /usr/share/z/z.sh
     fi
 fi
-unalias z 2> /dev/null
 
 # Fzf
 if type "fzf" > /dev/null 2>&1; then

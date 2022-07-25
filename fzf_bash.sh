@@ -310,7 +310,7 @@ export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE
 --tac
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
 "
-z() {
+zfzf() {
     [ $# -gt 0 ] && _z "$*" && return
     cmd="_z -l 2>&1"
     out="$(eval "$cmd" | devicon-lookup |
@@ -320,12 +320,12 @@ z() {
 }
 if [[ -o vi ]]; then
     # shellcheck disable=SC2016
-    bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
+    bind '"\ez": "\C-x\C-addi`zfzf`\C-x\C-e\C-x\C-r\C-m"'
     # shellcheck disable=SC2016
-    bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ez": "ddi`zfzf`\C-x\C-e\C-x\C-r\C-m"'
 else
     # shellcheck disable=SC2016
-    bind '"\ez": " \C-e\C-u`z`\e\C-e\er\C-m"'
+    bind '"\ez": " \C-e\C-u`zfzf`\e\C-e\er\C-m"'
 fi
 
 # }}}
