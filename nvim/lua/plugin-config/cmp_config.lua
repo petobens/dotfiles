@@ -99,7 +99,6 @@ cmp.setup.cmdline(':', {
     sources = cmp.config.sources({
         { name = 'cmdline' },
     }, {
-        -- FIXME: https://github.com/hrsh7th/nvim-cmp/issues/1090
-        -- { name = 'path' },
+        { name = 'path' },
     }),
 })
