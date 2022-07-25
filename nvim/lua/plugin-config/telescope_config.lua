@@ -152,6 +152,7 @@ u.keymap(
     '<Leader>ig',
     '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").live_grep({ prompt_title = string.format("Live Grep (%s)", vim.loop.cwd()) })<CR>'
 )
+u.keymap('n', '<A-c>', '<Cmd>Telescope file_browser<CR>')
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
@@ -170,3 +171,4 @@ u.keymap(
 -- Extensions
 telescope.load_extension('fzf')
 telescope.load_extension('z')
+telescope.load_extension('file_browser')
