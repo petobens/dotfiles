@@ -134,6 +134,27 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal nocursorline',
 })
 
+-- Helper functions
+local function z_with_tree_preview()
+    local previewers = require('telescope.previewers.term_previewer')
+    local from_entry = require('telescope.from_entry')
+    telescope.extensions.z.list({
+        cmd = { 'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1 | tac' },
+        previewer = previewers.new_termopen_previewer({
+            get_command = function(entry)
+                return {
+                    'lsd',
+                    '-F',
+                    '--tree',
+                    '--depth=2',
+                    '--icon=always',
+                    from_entry.path(entry),
+                }
+            end,
+        }),
+    })
+end
+
 -- Mappings
 u.keymap(
     'n',
@@ -161,12 +182,7 @@ u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
-u.keymap(
-    'n',
-    '<A-z>',
-    [[<cmd>lua require('telescope').extensions.z.list({cmd = {'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1'}})<CR>]],
-    { silent = false }
-)
+u.keymap('n', '<A-z>', z_with_tree_preview)
 
 -- Extensions
 telescope.load_extension('fzf')
