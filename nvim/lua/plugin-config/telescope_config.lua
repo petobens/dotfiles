@@ -151,6 +151,18 @@ local function z_with_tree_preview()
                     from_entry.path(entry),
                 }
             end,
+            scroll_fn = function(self, direction)
+                if not self.state then
+                    return
+                end
+                local bufnr = self.state.termopen_bufnr
+                -- 0x05 -> <C-e>; 0x19 -> <C-y>
+                local input = direction > 0 and string.char(0x05) or string.char(0x19)
+                local count = math.abs(direction)
+                vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
+                    vim.cmd([[normal! ]] .. count .. input)
+                end)
+            end,
         }),
     })
 end
