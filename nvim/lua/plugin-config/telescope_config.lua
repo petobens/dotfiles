@@ -159,7 +159,7 @@ end
 u.keymap(
     'n',
     '<Leader>ls',
-    '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").find_files({ prompt_title = string.format("Find Files (%s)", vim.loop.cwd()) })<CR>'
+    '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").find_files({ results_title = vim.loop.cwd() })<CR>'
 )
 u.keymap('n', '<Leader>lu', '<Cmd>lcd %:p:h<CR><Cmd>Telescope find_files cwd=..<CR>')
 u.keymap(
@@ -171,7 +171,7 @@ u.keymap(
 u.keymap(
     'n',
     '<Leader>ig',
-    '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").live_grep({ prompt_title = string.format("Live Grep (%s)", vim.loop.cwd()) })<CR>'
+    '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").live_grep({ results_title = vim.loop.cwd() })<CR>'
 )
 u.keymap('n', '<A-c>', '<Cmd>Telescope file_browser<CR>')
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
