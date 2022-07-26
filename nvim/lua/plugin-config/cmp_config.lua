@@ -31,11 +31,11 @@ cmp.setup({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
         }),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
         ['<C-y>'] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Insert,
             select = true,
         }),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
@@ -92,9 +92,16 @@ cmp.setup({
 -- Complete commands and paths in command prompt
 cmp.setup.cmdline(':', {
     mapping = cmp.mapping.preset.cmdline({
-        ['<C-y>'] = {
-            c = cmp.mapping.confirm({ select = false }),
+        -- Select candidate but don't execute with enter (do that with C-y)
+        ['<CR>'] = {
+            c = cmp.mapping.confirm({
+                select = true,
+            }),
         },
+        ['<C-y>'] = cmp.mapping(function()
+            cmp.confirm({ select = true })
+            feedkey('<CR>', '')
+        end, { 'c' }),
     }),
     sources = cmp.config.sources({
         { name = 'cmdline' },
