@@ -135,6 +135,17 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Helper functions
+local function find_files_upper_cwd()
+    vim.cmd('lcd %:p:h')
+    require('telescope.builtin').find_files({
+        cwd = '..',
+        results_title = string.format(
+            '%s',
+            require('plenary.path'):new(vim.loop.cwd()):parent()
+        ),
+    })
+end
+
 local function z_with_tree_preview()
     local previewers = require('telescope.previewers.term_previewer')
     local from_entry = require('telescope.from_entry')
@@ -173,7 +184,7 @@ u.keymap(
     '<Leader>ls',
     '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").find_files({ results_title = vim.loop.cwd() })<CR>'
 )
-u.keymap('n', '<Leader>lu', '<Cmd>lcd %:p:h<CR><Cmd>Telescope find_files cwd=..<CR>')
+u.keymap('n', '<Leader>lu', find_files_upper_cwd)
 u.keymap(
     'n',
     '<Leader>sd',
