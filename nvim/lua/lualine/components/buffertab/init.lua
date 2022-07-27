@@ -101,10 +101,8 @@ function M:update_status()
             else
                 buffer.prev_visible = false
             end
-            buffer.prev_modified = vim.api.nvim_buf_get_option(
-                prev_buffer.bufnr,
-                'modified'
-            )
+            buffer.prev_modified =
+                vim.api.nvim_buf_get_option(prev_buffer.bufnr, 'modified')
         end
     end
     if buffers[current + 1] then

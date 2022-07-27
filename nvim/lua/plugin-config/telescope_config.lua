@@ -134,6 +134,36 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal nocursorline',
 })
 
+-- Custom previewers
+local previewers = require('telescope.previewers.term_previewer')
+local from_entry = require('telescope.from_entry')
+
+---- Tree Previewer
+local tree_previewer = previewers.new_termopen_previewer({
+    get_command = function(entry)
+        return {
+            'lsd',
+            '-F',
+            '--tree',
+            '--depth=2',
+            '--icon=always',
+            from_entry.path(entry),
+        }
+    end,
+    scroll_fn = function(self, direction)
+        if not self.state then
+            return
+        end
+        local bufnr = self.state.termopen_bufnr
+        -- 0x05 -> <C-e>; 0x19 -> <C-y>
+        local input = direction > 0 and string.char(0x05) or string.char(0x19)
+        local count = math.abs(direction)
+        vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
+            vim.cmd([[normal! ]] .. count .. input)
+        end)
+    end,
+})
+
 -- Helper functions
 local function find_files_upper_cwd()
     vim.cmd('lcd %:p:h')
@@ -146,35 +176,21 @@ local function find_files_upper_cwd()
     })
 end
 
+local function find_directories()
+    vim.cmd('lcd %:p:h')
+    require('telescope').extensions.file_browser.file_browser({
+        files = false,
+        hidden = true,
+        results_title = string.format('%s', vim.loop.cwd()),
+        display_stat = false,
+        previewer = tree_previewer,
+    })
+end
+
 local function z_with_tree_preview()
-    local previewers = require('telescope.previewers.term_previewer')
-    local from_entry = require('telescope.from_entry')
     telescope.extensions.z.list({
         cmd = { 'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1 | tac' },
-        previewer = previewers.new_termopen_previewer({
-            get_command = function(entry)
-                return {
-                    'lsd',
-                    '-F',
-                    '--tree',
-                    '--depth=2',
-                    '--icon=always',
-                    from_entry.path(entry),
-                }
-            end,
-            scroll_fn = function(self, direction)
-                if not self.state then
-                    return
-                end
-                local bufnr = self.state.termopen_bufnr
-                -- 0x05 -> <C-e>; 0x19 -> <C-y>
-                local input = direction > 0 and string.char(0x05) or string.char(0x19)
-                local count = math.abs(direction)
-                vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
-                    vim.cmd([[normal! ]] .. count .. input)
-                end)
-            end,
-        }),
+        previewer = tree_previewer,
     })
 end
 
@@ -196,7 +212,7 @@ u.keymap(
     '<Leader>ig',
     '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").live_grep({ results_title = vim.loop.cwd() })<CR>'
 )
-u.keymap('n', '<A-c>', '<Cmd>Telescope file_browser<CR>')
+u.keymap('n', '<A-c>', find_directories)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
