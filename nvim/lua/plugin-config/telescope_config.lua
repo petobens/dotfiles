@@ -2,6 +2,10 @@ local u = require('utils')
 local telescope = require('telescope')
 local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
+local pickers = require('telescope.pickers')
+local finders = require('telescope.finders')
+local conf = require('telescope.config').values
+local make_entry = require('telescope.make_entry')
 
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
@@ -164,6 +168,42 @@ local tree_previewer = previewers.new_termopen_previewer({
     end,
 })
 
+-- Custom pickers
+local find_dirs = function(opts)
+    vim.cmd('lcd %:p:h')
+    opts = opts or {}
+    -- TODO: change dir icon
+    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+    pickers
+        .new(opts, {
+            prompt_title = 'Find Dirs',
+            finder = finders.new_oneshot_job({
+                'fd',
+                '--type',
+                'd',
+                '--follow',
+                '--hidden',
+                '--exclude',
+                '.git',
+            }, opts),
+            sorter = conf.file_sorter(opts),
+            results_title = string.format('%s', vim.loop.cwd()),
+            previewer = tree_previewer,
+            attach_mappings = function(prompt_bufnr, map)
+                actions.select_default:replace(function()
+                    local entry = action_state.get_selected_entry()
+                    local dir = from_entry.path(entry)
+                    require('telescope.builtin').find_files({
+                        cwd = dir,
+                        results_title = dir,
+                    })
+                end)
+                return true
+            end,
+        })
+        :find()
+end
+
 -- Helper functions
 local function find_files_upper_cwd()
     vim.cmd('lcd %:p:h')
@@ -173,17 +213,6 @@ local function find_files_upper_cwd()
             '%s',
             require('plenary.path'):new(vim.loop.cwd()):parent()
         ),
-    })
-end
-
-local function find_directories()
-    vim.cmd('lcd %:p:h')
-    require('telescope').extensions.file_browser.file_browser({
-        files = false,
-        hidden = true,
-        results_title = string.format('%s', vim.loop.cwd()),
-        display_stat = false,
-        previewer = tree_previewer,
     })
 end
 
@@ -212,7 +241,7 @@ u.keymap(
     '<Leader>ig',
     '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").live_grep({ results_title = vim.loop.cwd() })<CR>'
 )
-u.keymap('n', '<A-c>', find_directories)
+u.keymap('n', '<A-c>', find_dirs)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
@@ -226,4 +255,3 @@ u.keymap('n', '<A-z>', z_with_tree_preview)
 -- Extensions
 telescope.load_extension('fzf')
 telescope.load_extension('z')
-telescope.load_extension('file_browser')
