@@ -14,7 +14,12 @@ end
 
 return require('packer').startup(function(use)
     -- Automanage packer with packer
-    use('wbthomason/packer.nvim')
+    use({
+        'wbthomason/packer.nvim',
+        config = function()
+            require('plugin-config/packer_config')
+        end,
+    })
 
     -- Appearance
     use({

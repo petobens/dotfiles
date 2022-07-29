@@ -1,11 +1,11 @@
-local u = require('utils')
-local telescope = require('telescope')
-local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
-local pickers = require('telescope.pickers')
-local finders = require('telescope.finders')
+local actions = require('telescope.actions')
 local conf = require('telescope.config').values
+local finders = require('telescope.finders')
 local make_entry = require('telescope.make_entry')
+local pickers = require('telescope.pickers')
+local telescope = require('telescope')
+local u = require('utils')
 
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
