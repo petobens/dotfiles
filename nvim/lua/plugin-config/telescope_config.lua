@@ -3,6 +3,7 @@ local actions = require('telescope.actions')
 local conf = require('telescope.config').values
 local finders = require('telescope.finders')
 local make_entry = require('telescope.make_entry')
+local Path = require('plenary.path')
 local pickers = require('telescope.pickers')
 local telescope = require('telescope')
 local u = require('utils')
@@ -204,15 +205,44 @@ local find_dirs = function(opts)
         :find()
 end
 
+local parent_dirs = function(opts)
+    vim.cmd('lcd %:p:h')
+    opts = opts or {}
+    -- TODO: change dir icon
+    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+
+    local cwd = Path:new(vim.loop.cwd())
+    pickers
+        .new(opts, {
+            prompt_title = 'Parents Dirs',
+            finder = finders.new_table({
+                results = cwd:parents(),
+                entry_maker = opts.entry_maker,
+            }),
+            sorter = conf.file_sorter(opts),
+            results_title = string.format('%s', cwd),
+            previewer = tree_previewer,
+            attach_mappings = function(prompt_bufnr, map)
+                actions.select_default:replace(function()
+                    local entry = action_state.get_selected_entry()
+                    local dir = from_entry.path(entry)
+                    require('telescope.builtin').find_files({
+                        cwd = dir,
+                        results_title = dir,
+                    })
+                end)
+                return true
+            end,
+        })
+        :find()
+end
+
 -- Helper functions
 local function find_files_upper_cwd()
     vim.cmd('lcd %:p:h')
     require('telescope.builtin').find_files({
         cwd = '..',
-        results_title = string.format(
-            '%s',
-            require('plenary.path'):new(vim.loop.cwd()):parent()
-        ),
+        results_title = string.format('%s', Path:new(vim.loop.cwd()):parent()),
     })
 end
 
@@ -242,6 +272,7 @@ u.keymap(
     '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").live_grep({ results_title = vim.loop.cwd() })<CR>'
 )
 u.keymap('n', '<A-c>', find_dirs)
+u.keymap('n', '<A-p>', parent_dirs)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
