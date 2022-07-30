@@ -144,6 +144,12 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'TelescopePrompt' },
     command = 'setlocal nocursorline',
 })
+local previewer_acg = vim.api.nvim_create_augroup('telescope_previewer', { clear = true })
+vim.api.nvim_create_autocmd('User', {
+    group = previewer_acg,
+    pattern = { 'TelescopePreviewerLoaded' },
+    command = 'setlocal number',
+})
 
 -- Custom previewers
 ---- Tree Previewer
