@@ -280,6 +280,16 @@ local function tasklist_cwd()
     })
 end
 
+local function tasklist_buffer()
+    local buf_name = vim.api.nvim_buf_get_name(0)
+    require('telescope.builtin').grep_string({
+        results_title = buf_name,
+        use_regex = true,
+        search = 'TODO:\\s|FIXME:\\s',
+        search_dirs = { buf_name },
+    })
+end
+
 local function gitcommits()
     local buffer_dir = telescope_utils.buffer_dir()
     local git_root, _ = telescope_utils.get_os_command_output({
@@ -315,13 +325,14 @@ u.keymap('n', '<A-z>', z_with_tree_preview)
 u.keymap('n', '<Leader>ig', igrep)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
+u.keymap('n', '<Leader>tl', tasklist_buffer)
 u.keymap('n', '<Leader>tL', tasklist_cwd)
 u.keymap('n', '<Leader>gl', gitcommits)
 u.keymap('n', '<Leader>gL', gitcommits_buffer)
 u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
-u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
+u.keymap('n', '<Leader>dh', '<Cmd>Telescope highlights<CR>')
 
 -- Extensions
 telescope.load_extension('fzf')
