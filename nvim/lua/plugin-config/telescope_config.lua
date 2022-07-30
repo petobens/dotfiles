@@ -1,10 +1,13 @@
 local action_state = require('telescope.actions.state')
 local actions = require('telescope.actions')
+local builtin = require('telescope.builtin')
 local conf = require('telescope.config').values
 local finders = require('telescope.finders')
+local from_entry = require('telescope.from_entry')
 local make_entry = require('telescope.make_entry')
 local Path = require('plenary.path')
 local pickers = require('telescope.pickers')
+local previewers = require('telescope.previewers')
 local telescope = require('telescope')
 local telescope_utils = require('telescope.utils')
 local u = require('utils')
@@ -65,6 +68,8 @@ telescope.setup({
                 ['<C-k>'] = 'move_selection_previous',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
+                ['<A-n>'] = actions.cycle_previewers_next,
+                ['<A-p>'] = actions.cycle_previewers_prev,
                 ['<C-space>'] = actions.toggle_selection
                     + actions.move_selection_previous,
                 ['<C-y>'] = custom_actions.yank,
@@ -141,9 +146,6 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Custom previewers
-local previewers = require('telescope.previewers.term_previewer')
-local from_entry = require('telescope.from_entry')
-
 ---- Tree Previewer
 local tree_previewer = previewers.new_termopen_previewer({
     get_command = function(entry)
@@ -195,7 +197,7 @@ local find_dirs = function(opts)
                 actions.select_default:replace(function()
                     local entry = action_state.get_selected_entry()
                     local dir = from_entry.path(entry)
-                    require('telescope.builtin').find_files({
+                    builtin.find_files({
                         cwd = dir,
                         results_title = dir,
                     })
@@ -226,7 +228,7 @@ local parent_dirs = function(opts)
                 actions.select_default:replace(function()
                     local entry = action_state.get_selected_entry()
                     local dir = from_entry.path(entry)
-                    require('telescope.builtin').find_files({
+                    builtin.find_files({
                         cwd = dir,
                         results_title = dir,
                     })
@@ -240,7 +242,7 @@ end
 -- Helper (wrapper) functions
 local function find_files_cwd()
     local buffer_dir = telescope_utils.buffer_dir()
-    require('telescope.builtin').find_files({
+    builtin.find_files({
         cwd = buffer_dir,
         results_title = buffer_dir,
     })
@@ -249,7 +251,7 @@ end
 local function find_files_upper_cwd()
     local buffer_upperdir =
         string.format('%s', Path:new(telescope_utils.buffer_dir()):parent())
-    require('telescope.builtin').find_files({
+    builtin.find_files({
         cwd = buffer_upperdir,
         results_title = buffer_upperdir,
     })
@@ -264,7 +266,7 @@ end
 
 local function igrep()
     local buffer_dir = telescope_utils.buffer_dir()
-    require('telescope.builtin').live_grep({
+    builtin.live_grep({
         cwd = buffer_dir,
         results_title = buffer_dir,
     })
@@ -272,7 +274,7 @@ end
 
 local function tasklist_cwd()
     local buffer_dir = telescope_utils.buffer_dir()
-    require('telescope.builtin').grep_string({
+    builtin.grep_string({
         cwd = buffer_dir,
         results_title = buffer_dir,
         use_regex = true,
@@ -282,7 +284,7 @@ end
 
 local function tasklist_buffer()
     local buf_name = vim.api.nvim_buf_get_name(0)
-    require('telescope.builtin').grep_string({
+    builtin.grep_string({
         results_title = buf_name,
         use_regex = true,
         search = 'TODO:\\s|FIXME:\\s',
@@ -290,23 +292,33 @@ local function tasklist_buffer()
     })
 end
 
-local function gitcommits()
+local function gitcommits(opts)
+    opts = opts or {}
     local buffer_dir = telescope_utils.buffer_dir()
     local git_root, _ = telescope_utils.get_os_command_output({
         'git',
         'rev-parse',
         '--show-toplevel',
     }, buffer_dir)
-    require('telescope.builtin').git_commits({
+    builtin.git_commits({
         cwd = buffer_dir,
         results_title = git_root[1],
+        previewer = {
+            previewers.git_commit_diff_as_was.new(opts),
+            previewers.git_commit_message.new(opts),
+        },
     })
 end
 
-local function gitcommits_buffer()
-    require('telescope.builtin').git_bcommits({
+local function gitcommits_buffer(opts)
+    opts = opts or {}
+    builtin.git_bcommits({
         cwd = telescope_utils.buffer_dir(),
         results_title = vim.api.nvim_buf_get_name(0),
+        previewer = {
+            previewers.git_commit_diff_as_was.new(opts),
+            previewers.git_commit_message.new(opts),
+        },
     })
 end
 
