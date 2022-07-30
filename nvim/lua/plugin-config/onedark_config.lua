@@ -232,6 +232,11 @@ onedarkpro.setup({
         fugitiveStagedHeading = { fg = p.green },
         fugitiveStagedModifier = { fg = p.green },
 
+        ---- Gitsigns
+        GitSignsAdd = { fg = p.green },
+        GitSignsChange = { fg = p.orange },
+        GitSignsDelete = { fg = p.red },
+
         ---- HlWords (in udfs)
         HlWord1 = { fg = p.black, bg = p.yellow },
         HlWord2 = { fg = p.black, bg = p.green },
