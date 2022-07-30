@@ -6,6 +6,7 @@ local make_entry = require('telescope.make_entry')
 local Path = require('plenary.path')
 local pickers = require('telescope.pickers')
 local telescope = require('telescope')
+local telescope_utils = require('telescope.utils')
 local u = require('utils')
 
 -- Custom actions
@@ -171,8 +172,8 @@ local tree_previewer = previewers.new_termopen_previewer({
 
 -- Custom pickers
 local find_dirs = function(opts)
-    vim.cmd('lcd %:p:h')
     opts = opts or {}
+    opts.cwd = telescope_utils.buffer_dir()
     -- TODO: change dir icon
     opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
     pickers
@@ -188,7 +189,7 @@ local find_dirs = function(opts)
                 '.git',
             }, opts),
             sorter = conf.file_sorter(opts),
-            results_title = string.format('%s', vim.loop.cwd()),
+            results_title = opts.cwd,
             previewer = tree_previewer,
             attach_mappings = function(prompt_bufnr, map)
                 actions.select_default:replace(function()
@@ -206,12 +207,11 @@ local find_dirs = function(opts)
 end
 
 local parent_dirs = function(opts)
-    vim.cmd('lcd %:p:h')
     opts = opts or {}
     -- TODO: change dir icon
     opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
 
-    local cwd = Path:new(vim.loop.cwd())
+    local cwd = Path:new(telescope_utils.buffer_dir())
     pickers
         .new(opts, {
             prompt_title = 'Parents Dirs',
@@ -237,12 +237,21 @@ local parent_dirs = function(opts)
         :find()
 end
 
--- Helper functions
-local function find_files_upper_cwd()
-    vim.cmd('lcd %:p:h')
+-- Helper (wrapper) functions
+local function find_files_cwd()
+    local buffer_dir = telescope_utils.buffer_dir()
     require('telescope.builtin').find_files({
-        cwd = '..',
-        results_title = string.format('%s', Path:new(vim.loop.cwd()):parent()),
+        cwd = buffer_dir,
+        results_title = buffer_dir,
+    })
+end
+
+local function find_files_upper_cwd()
+    local buffer_upperdir =
+        string.format('%s', Path:new(telescope_utils.buffer_dir()):parent())
+    require('telescope.builtin').find_files({
+        cwd = buffer_upperdir,
+        results_title = buffer_upperdir,
     })
 end
 
@@ -253,12 +262,46 @@ local function z_with_tree_preview()
     })
 end
 
+local function igrep()
+    local buffer_dir = telescope_utils.buffer_dir()
+    require('telescope.builtin').live_grep({
+        cwd = buffer_dir,
+        results_title = buffer_dir,
+    })
+end
+
+local function tasklist_cwd()
+    local buffer_dir = telescope_utils.buffer_dir()
+    require('telescope.builtin').grep_string({
+        cwd = buffer_dir,
+        results_title = buffer_dir,
+        use_regex = true,
+        search = 'TODO:\\s|FIXME:\\s',
+    })
+end
+
+local function gitcommits()
+    local buffer_dir = telescope_utils.buffer_dir()
+    local git_root, _ = telescope_utils.get_os_command_output({
+        'git',
+        'rev-parse',
+        '--show-toplevel',
+    }, buffer_dir)
+    require('telescope.builtin').git_commits({
+        cwd = buffer_dir,
+        results_title = git_root[1],
+    })
+end
+
+local function gitcommits_buffer()
+    require('telescope.builtin').git_bcommits({
+        cwd = telescope_utils.buffer_dir(),
+        results_title = vim.api.nvim_buf_get_name(0),
+    })
+end
+
 -- Mappings
-u.keymap(
-    'n',
-    '<Leader>ls',
-    '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").find_files({ results_title = vim.loop.cwd() })<CR>'
-)
+u.keymap('n', '<Leader>ls', find_files_cwd)
 u.keymap('n', '<Leader>lu', find_files_upper_cwd)
 u.keymap(
     'n',
@@ -266,22 +309,19 @@ u.keymap(
     '<Cmd>lcd %:p:h<CR>:Telescope find_files cwd=',
     { silent = false }
 )
-u.keymap(
-    'n',
-    '<Leader>ig',
-    '<Cmd>lcd %:p:h<CR><Cmd>lua require("telescope.builtin").live_grep({ results_title = vim.loop.cwd() })<CR>'
-)
 u.keymap('n', '<A-c>', find_dirs)
 u.keymap('n', '<A-p>', parent_dirs)
+u.keymap('n', '<A-z>', z_with_tree_preview)
+u.keymap('n', '<Leader>ig', igrep)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
-u.keymap('n', '<Leader>gl', '<Cmd>Telescope git_commits<CR>')
-u.keymap('n', '<Leader>gL', '<Cmd>lcd %:p:h<CR><Cmd>Telescope git_bcommits<CR>')
+u.keymap('n', '<Leader>tL', tasklist_cwd)
+u.keymap('n', '<Leader>gl', gitcommits)
+u.keymap('n', '<Leader>gL', gitcommits_buffer)
 u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
-u.keymap('n', '<A-z>', z_with_tree_preview)
 
 -- Extensions
 telescope.load_extension('fzf')
