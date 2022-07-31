@@ -339,6 +339,10 @@ local function search_buffer()
     })
 end
 
+local function keymaps()
+    builtin.keymaps({ fuzzy = false })
+end
+
 -- Mappings
 u.keymap('n', '<Leader>ls', find_files_cwd)
 u.keymap('n', '<Leader>lu', find_files_upper_cwd)
@@ -364,6 +368,7 @@ u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
 u.keymap('n', '<Leader>dh', '<Cmd>Telescope help_tags<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
+u.keymap('n', '<Leader>dm', keymaps)
 
 -- Extensions
 telescope.load_extension('fzf')
