@@ -277,6 +277,23 @@ local function igrep()
     })
 end
 
+local function rgrep()
+    vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
+        -- FIXME: no completion: https://github.com/hrsh7th/cmp-cmdline/issues/16
+        -- FIXME: no C-c: https://github.com/neovim/neovim/issues/18144
+        local opts = {
+            cwd = dir,
+            search_dirs = { dir },
+            results_title = dir,
+        }
+        local type_filter = vim.fn.input('Type Filter: ', '')
+        if type_filter ~= '' then
+            opts.type_filter = type_filter
+        end
+        builtin.live_grep(opts)
+    end)
+end
+
 local function tasklist_cwd()
     local buffer_dir = utils.buffer_dir()
     builtin.grep_string({
@@ -356,6 +373,7 @@ u.keymap('n', '<A-c>', find_dirs)
 u.keymap('n', '<A-p>', parent_dirs)
 u.keymap('n', '<A-z>', z_with_tree_preview)
 u.keymap('n', '<Leader>ig', igrep)
+u.keymap('n', '<Leader>rg', rgrep)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>tl', tasklist_buffer)
