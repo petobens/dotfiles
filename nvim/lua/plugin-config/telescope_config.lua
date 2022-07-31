@@ -362,7 +362,8 @@ u.keymap('n', '<Leader>dl', search_buffer)
 u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
-u.keymap('n', '<Leader>dh', '<Cmd>Telescope highlights<CR>')
+u.keymap('n', '<Leader>dh', '<Cmd>Telescope help_tags<CR>')
+u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
 
 -- Extensions
 telescope.load_extension('fzf')
