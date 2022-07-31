@@ -299,14 +299,14 @@ end
 
 local function gitcommits(opts)
     opts = opts or {}
-    local buffer_dir = utils.buffer_dir()
+    opts.cwd = utils.buffer_dir()
     local git_root, _ = utils.get_os_command_output({
         'git',
         'rev-parse',
         '--show-toplevel',
-    }, buffer_dir)
+    }, opts.cwd)
     builtin.git_commits({
-        cwd = buffer_dir,
+        cwd = opts.cwd,
         results_title = git_root[1],
         previewer = {
             previewers.git_commit_diff_as_was.new(opts),
@@ -317,8 +317,9 @@ end
 
 local function gitcommits_buffer(opts)
     opts = opts or {}
+    opts.cwd = utils.buffer_dir()
     builtin.git_bcommits({
-        cwd = utils.buffer_dir(),
+        cwd = opts.cwd,
         results_title = vim.api.nvim_buf_get_name(0),
         previewer = {
             previewers.git_commit_diff_as_was.new(opts),
