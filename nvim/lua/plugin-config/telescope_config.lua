@@ -1,3 +1,4 @@
+local action_set = require('telescope.actions.set')
 local action_state = require('telescope.actions.state')
 local actions = require('telescope.actions')
 local builtin = require('telescope.builtin')
@@ -15,6 +16,14 @@ local u = require('utils')
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
 local custom_actions = transform_mod({
+    -- Context split
+    context_split = function(prompt_bufnr)
+        local split = 'new'
+        if vim.fn.winwidth(vim.fn.winnr('#')) > 2 * (vim.go.textwidth or 80) then
+            split = 'vnew'
+        end
+        return action_set.edit(prompt_bufnr, split)
+    end,
     -- Yank
     yank = function(prompt_bufnr)
         actions.close(prompt_bufnr)
@@ -89,6 +98,11 @@ telescope.setup({
     pickers = {
         buffers = {
             sort_mru = true,
+            mappings = {
+                i = {
+                    ['<C-o>'] = custom_actions.context_split,
+                },
+            },
         },
         command_history = {
             mappings = {
