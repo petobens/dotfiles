@@ -194,6 +194,7 @@ local tree_previewer = previewers.new_termopen_previewer({
             from_entry.path(entry),
         }
     end,
+    title = 'Tree Previewer',
     scroll_fn = function(self, direction)
         if not self.state then
             return
@@ -259,6 +260,37 @@ local parent_dirs = function(opts)
             }),
             sorter = conf.file_sorter(opts),
             results_title = string.format('%s', cwd),
+            previewer = tree_previewer,
+            attach_mappings = function(prompt_bufnr, map)
+                actions.select_default:replace(function()
+                    local entry = action_state.get_selected_entry()
+                    local dir = from_entry.path(entry)
+                    builtin.find_files({
+                        cwd = dir,
+                        results_title = dir,
+                    })
+                end)
+                return true
+            end,
+        })
+        :find()
+end
+
+local bookmark_dirs = function(opts)
+    opts = opts or {}
+    -- TODO: change dir icon
+    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+    pickers
+        .new(opts, {
+            prompt_title = 'Directory Bookmarks',
+            finder = finders.new_table({
+                results = {
+                    '/home/pedro/git-repos/private/dotfiles/',
+                    '/home/pedro/git-repos/work/',
+                },
+                entry_maker = opts.entry_maker,
+            }),
+            sorter = conf.file_sorter(opts),
             previewer = tree_previewer,
             attach_mappings = function(prompt_bufnr, map)
                 actions.select_default:replace(function()
@@ -406,6 +438,7 @@ u.keymap(
 u.keymap('n', '<A-c>', find_dirs)
 u.keymap('n', '<A-p>', parent_dirs)
 u.keymap('n', '<A-z>', z_with_tree_preview)
+u.keymap('n', '<Leader>bm', bookmark_dirs)
 u.keymap('n', '<Leader>ig', igrep)
 u.keymap('n', '<Leader>rg', rgrep)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
