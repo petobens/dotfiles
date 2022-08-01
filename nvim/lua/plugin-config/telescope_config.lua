@@ -38,9 +38,18 @@ local custom_actions = transform_mod({
     end,
     -- Search history
     edit_search_line = function(prompt_bufnr)
-        local selection = action_state.get_selected_entry().value
         actions.close(prompt_bufnr)
+        local selection = action_state.get_selected_entry().value
         vim.api.nvim_feedkeys('/' .. selection, 'n', true)
+    end,
+    spell_fix_all = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        vim.cmd('silent normal! mz')
+        vim.cmd('silent normal! ' .. entry.index .. 'z=')
+        -- Use pcall to gracefully catch E753 when there are no more words to replace
+        pcall(vim.cmd, 'spellrepall')
+        vim.cmd('silent normal! `z')
     end,
 })
 
@@ -123,6 +132,13 @@ telescope.setup({
             mappings = {
                 i = {
                     ['<Tab>'] = custom_actions.edit_search_line,
+                },
+            },
+        },
+        spell_suggest = {
+            mappings = {
+                i = {
+                    ['<C-o>'] = custom_actions.spell_fix_all,
                 },
             },
         },
@@ -360,6 +376,10 @@ local function keymaps()
     builtin.keymaps({ fuzzy = false })
 end
 
+local function spell_suggest()
+    builtin.spell_suggest({ fuzzy = false })
+end
+
 -- Mappings
 u.keymap('n', '<Leader>ls', find_files_cwd)
 u.keymap('n', '<Leader>lu', find_files_upper_cwd)
@@ -387,6 +407,7 @@ u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
 u.keymap('n', '<Leader>dh', '<Cmd>Telescope help_tags<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
 u.keymap('n', '<Leader>dm', keymaps)
+u.keymap('n', '<Leader>sg', spell_suggest)
 
 -- Extensions
 telescope.load_extension('fzf')
