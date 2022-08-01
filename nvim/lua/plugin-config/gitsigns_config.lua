@@ -12,7 +12,7 @@ gitsigns.setup({
 u.keymap('n', '<Leader>gg', '<Cmd>Gitsigns toggle_signs<CR>')
 u.keymap('n', ']h', function()
     if vim.wo.diff then
-        return ']h'
+        return ']c'
     end
     vim.schedule(function()
         gitsigns.next_hunk({ navigation_message = false, foldopen = true })
@@ -22,7 +22,7 @@ end, { expr = true })
 
 u.keymap('n', '[h', function()
     if vim.wo.diff then
-        return '[h'
+        return '[c'
     end
     vim.schedule(function()
         gitsigns.prev_hunk({ navigation_message = false, foldopen = true })
