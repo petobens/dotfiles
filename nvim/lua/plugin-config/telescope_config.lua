@@ -243,6 +243,21 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'TelescopePrompt' },
     command = 'setlocal nocursorline',
 })
+vim.api.nvim_create_autocmd('FileType', {
+    group = prompt_acg,
+    pattern = { 'TelescopePrompt' },
+    command = 'nnoremap <buffer><silent> H ^lll', -- to account for search symbol
+})
+vim.api.nvim_create_autocmd('FileType', {
+    group = prompt_acg,
+    pattern = { 'TelescopePrompt' },
+    command = 'nnoremap <buffer><silent> L $',
+})
+vim.api.nvim_create_autocmd('FileType', {
+    group = prompt_acg,
+    pattern = { 'TelescopePrompt' },
+    command = 'inoremap <buffer><silent> <C-l> <C-o>l',
+})
 local previewer_acg = vim.api.nvim_create_augroup('telescope_previewer', { clear = true })
 vim.api.nvim_create_autocmd('User', {
     group = previewer_acg,
@@ -283,8 +298,27 @@ telescope.setup({
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<C-q>'] = custom_actions.qf_selected,
                 ['<A-q>'] = custom_actions.qf_all,
+                ['<C-x>'] = 'which_key',
             },
-            n = { ['q'] = 'close' },
+            n = {
+                ['q'] = 'close',
+                ['<C-c>'] = 'close',
+                ['<Tab>'] = 'select_default',
+                ['<C-s>'] = 'file_split',
+                ['<A-j>'] = 'preview_scrolling_down',
+                ['<A-k>'] = 'preview_scrolling_up',
+                ['<A-n>'] = actions.cycle_previewers_next,
+                ['<space>'] = actions.toggle_selection + actions.move_selection_previous,
+                ['<C-space>'] = actions.toggle_selection
+                    + actions.move_selection_previous,
+                ['<C-y>'] = custom_actions.yank,
+                ['<C-t>'] = custom_actions.entry_find_files,
+                ['<A-c>'] = custom_actions.entry_find_dir,
+                ['<A-p>'] = custom_actions.entry_parent_dirs,
+                ['<C-q>'] = custom_actions.qf_selected,
+                ['<A-q>'] = custom_actions.qf_all,
+                ['<C-x>'] = 'which_key',
+            },
         },
     },
     pickers = {
