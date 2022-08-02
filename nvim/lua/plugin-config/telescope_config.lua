@@ -13,6 +13,136 @@ local telescope = require('telescope')
 local utils = require('telescope.utils')
 local u = require('utils')
 
+-- Custom previewers
+local tree_previewer = previewers.new_termopen_previewer({
+    get_command = function(entry)
+        return {
+            'lsd',
+            '-F',
+            '--tree',
+            '--depth=2',
+            '--icon=always',
+            from_entry.path(entry),
+        }
+    end,
+    title = 'Tree Previewer',
+    scroll_fn = function(self, direction)
+        if not self.state then
+            return
+        end
+        local bufnr = self.state.termopen_bufnr
+        -- 0x05 -> <C-e>; 0x19 -> <C-y>
+        local input = direction > 0 and string.char(0x05) or string.char(0x19)
+        local count = math.abs(direction)
+        vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
+            vim.cmd([[normal! ]] .. count .. input)
+        end)
+    end,
+})
+
+-- Custom pickers
+local find_dirs = function(opts)
+    opts = opts or {}
+    if opts.cwd == nil then
+        opts.cwd = utils.buffer_dir()
+    end
+    -- TODO: change dir icon
+    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+    pickers
+        .new(opts, {
+            prompt_title = 'Find Dirs',
+            finder = finders.new_oneshot_job({
+                'fd',
+                '--type',
+                'd',
+                '--follow',
+                '--hidden',
+                '--exclude',
+                '.git',
+            }, opts),
+            sorter = conf.file_sorter(opts),
+            results_title = opts.cwd,
+            previewer = tree_previewer,
+            attach_mappings = function(prompt_bufnr, map)
+                actions.select_default:replace(function()
+                    local entry = action_state.get_selected_entry()
+                    local dir = from_entry.path(entry)
+                    builtin.find_files({
+                        cwd = dir,
+                        results_title = dir,
+                    })
+                end)
+                return true
+            end,
+        })
+        :find()
+end
+
+local parent_dirs = function(opts)
+    opts = opts or {}
+    -- TODO: change dir icon
+    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+
+    local cwd = opts.starting_dir
+    if opts.starting_dir == nil then
+        cwd = Path:new(utils.buffer_dir())
+    end
+    pickers
+        .new(opts, {
+            prompt_title = 'Parents Dirs',
+            finder = finders.new_table({
+                results = cwd:parents(),
+                -- entry_maker = opts.entry_maker,
+            }),
+            sorter = conf.file_sorter(opts),
+            results_title = string.format('%s', cwd),
+            previewer = tree_previewer,
+            attach_mappings = function(prompt_bufnr, map)
+                actions.select_default:replace(function()
+                    local entry = action_state.get_selected_entry()
+                    local dir = from_entry.path(entry)
+                    builtin.find_files({
+                        cwd = dir,
+                        results_title = dir,
+                    })
+                end)
+                return true
+            end,
+        })
+        :find()
+end
+
+local bookmark_dirs = function(opts)
+    opts = opts or {}
+    -- TODO: change dir icon
+    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+    pickers
+        .new(opts, {
+            prompt_title = 'Directory Bookmarks',
+            finder = finders.new_table({
+                results = {
+                    '/home/pedro/git-repos/private/dotfiles/',
+                    '/home/pedro/git-repos/work/',
+                },
+                entry_maker = opts.entry_maker,
+            }),
+            sorter = conf.file_sorter(opts),
+            previewer = tree_previewer,
+            attach_mappings = function(prompt_bufnr, map)
+                actions.select_default:replace(function()
+                    local entry = action_state.get_selected_entry()
+                    local dir = from_entry.path(entry)
+                    builtin.find_files({
+                        cwd = dir,
+                        results_title = dir,
+                    })
+                end)
+                return true
+            end,
+        })
+        :find()
+end
+
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
 local custom_actions = transform_mod({
@@ -51,6 +181,7 @@ local custom_actions = transform_mod({
         local selection = action_state.get_selected_entry().value
         vim.api.nvim_feedkeys('/' .. selection, 'n', true)
     end,
+    -- Fix all spell mistakes in buffer
     spell_fix_all = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
@@ -60,6 +191,54 @@ local custom_actions = transform_mod({
         pcall(vim.cmd, 'spellrepall')
         vim.cmd('silent normal! `z')
     end,
+    -- Show containing files of entry dir
+    entry_find_files = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        local p = Path:new(from_entry.path(entry))
+        if p:is_file() then
+            p = p:parent()
+        end
+        local dir = tostring(p)
+        builtin.find_files({
+            cwd = dir,
+            results_title = dir,
+        })
+    end,
+    -- Show containing dir of entry
+    entry_find_dir = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        local p = Path:new(from_entry.path(entry))
+        if p:is_file() then
+            p = p:parent()
+        end
+        find_dirs({ cwd = tostring(p) })
+    end,
+    -- Show parent dirs of entry
+    entry_parent_dirs = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        local p = Path:new(from_entry.path(entry))
+        if p:is_file() then
+            p = p:parent()
+        end
+        parent_dirs({ starting_dir = p })
+    end,
+})
+
+-- Autocmds
+local prompt_acg = vim.api.nvim_create_augroup('telescope_prompt', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+    group = prompt_acg,
+    pattern = { 'TelescopePrompt' },
+    command = 'setlocal nocursorline',
+})
+local previewer_acg = vim.api.nvim_create_augroup('telescope_previewer', { clear = true })
+vim.api.nvim_create_autocmd('User', {
+    group = previewer_acg,
+    pattern = { 'TelescopePreviewerLoaded' },
+    command = 'setlocal number',
 })
 
 -- Setup
@@ -87,10 +266,12 @@ telescope.setup({
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
                 ['<A-n>'] = actions.cycle_previewers_next,
-                ['<A-p>'] = actions.cycle_previewers_prev,
                 ['<C-space>'] = actions.toggle_selection
                     + actions.move_selection_previous,
                 ['<C-y>'] = custom_actions.yank,
+                ['<C-t>'] = custom_actions.entry_find_files,
+                ['<A-c>'] = custom_actions.entry_find_dir,
+                ['<A-p>'] = custom_actions.entry_parent_dirs,
             },
             n = { ['q'] = 'close' },
         },
@@ -166,146 +347,6 @@ telescope.setup({
         },
     },
 })
-
--- Autocmds
-local prompt_acg = vim.api.nvim_create_augroup('telescope_prompt', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-    group = prompt_acg,
-    pattern = { 'TelescopePrompt' },
-    command = 'setlocal nocursorline',
-})
-local previewer_acg = vim.api.nvim_create_augroup('telescope_previewer', { clear = true })
-vim.api.nvim_create_autocmd('User', {
-    group = previewer_acg,
-    pattern = { 'TelescopePreviewerLoaded' },
-    command = 'setlocal number',
-})
-
--- Custom previewers
----- Tree Previewer
-local tree_previewer = previewers.new_termopen_previewer({
-    get_command = function(entry)
-        return {
-            'lsd',
-            '-F',
-            '--tree',
-            '--depth=2',
-            '--icon=always',
-            from_entry.path(entry),
-        }
-    end,
-    title = 'Tree Previewer',
-    scroll_fn = function(self, direction)
-        if not self.state then
-            return
-        end
-        local bufnr = self.state.termopen_bufnr
-        -- 0x05 -> <C-e>; 0x19 -> <C-y>
-        local input = direction > 0 and string.char(0x05) or string.char(0x19)
-        local count = math.abs(direction)
-        vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
-            vim.cmd([[normal! ]] .. count .. input)
-        end)
-    end,
-})
-
--- Custom pickers
-local find_dirs = function(opts)
-    opts = opts or {}
-    opts.cwd = utils.buffer_dir()
-    -- TODO: change dir icon
-    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
-    pickers
-        .new(opts, {
-            prompt_title = 'Find Dirs',
-            finder = finders.new_oneshot_job({
-                'fd',
-                '--type',
-                'd',
-                '--follow',
-                '--hidden',
-                '--exclude',
-                '.git',
-            }, opts),
-            sorter = conf.file_sorter(opts),
-            results_title = opts.cwd,
-            previewer = tree_previewer,
-            attach_mappings = function(prompt_bufnr, map)
-                actions.select_default:replace(function()
-                    local entry = action_state.get_selected_entry()
-                    local dir = from_entry.path(entry)
-                    builtin.find_files({
-                        cwd = dir,
-                        results_title = dir,
-                    })
-                end)
-                return true
-            end,
-        })
-        :find()
-end
-
-local parent_dirs = function(opts)
-    opts = opts or {}
-    -- TODO: change dir icon
-    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
-
-    local cwd = Path:new(utils.buffer_dir())
-    pickers
-        .new(opts, {
-            prompt_title = 'Parents Dirs',
-            finder = finders.new_table({
-                results = cwd:parents(),
-                entry_maker = opts.entry_maker,
-            }),
-            sorter = conf.file_sorter(opts),
-            results_title = string.format('%s', cwd),
-            previewer = tree_previewer,
-            attach_mappings = function(prompt_bufnr, map)
-                actions.select_default:replace(function()
-                    local entry = action_state.get_selected_entry()
-                    local dir = from_entry.path(entry)
-                    builtin.find_files({
-                        cwd = dir,
-                        results_title = dir,
-                    })
-                end)
-                return true
-            end,
-        })
-        :find()
-end
-
-local bookmark_dirs = function(opts)
-    opts = opts or {}
-    -- TODO: change dir icon
-    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
-    pickers
-        .new(opts, {
-            prompt_title = 'Directory Bookmarks',
-            finder = finders.new_table({
-                results = {
-                    '/home/pedro/git-repos/private/dotfiles/',
-                    '/home/pedro/git-repos/work/',
-                },
-                entry_maker = opts.entry_maker,
-            }),
-            sorter = conf.file_sorter(opts),
-            previewer = tree_previewer,
-            attach_mappings = function(prompt_bufnr, map)
-                actions.select_default:replace(function()
-                    local entry = action_state.get_selected_entry()
-                    local dir = from_entry.path(entry)
-                    builtin.find_files({
-                        cwd = dir,
-                        results_title = dir,
-                    })
-                end)
-                return true
-            end,
-        })
-        :find()
-end
 
 -- Helper (wrapper) functions
 local function find_files_cwd()
