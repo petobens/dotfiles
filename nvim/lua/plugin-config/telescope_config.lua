@@ -92,7 +92,7 @@ local parent_dirs = function(opts)
             prompt_title = 'Parents Dirs',
             finder = finders.new_table({
                 results = cwd:parents(),
-                -- entry_maker = opts.entry_maker,
+                entry_maker = opts.entry_maker,
             }),
             sorter = conf.file_sorter(opts),
             results_title = string.format('%s', cwd),
@@ -225,6 +225,15 @@ local custom_actions = transform_mod({
         end
         parent_dirs({ starting_dir = p })
     end,
+    -- Send and open quickfix
+    qf_all = function(prompt_bufnr)
+        actions.send_to_qflist(prompt_bufnr)
+        vim.cmd('copen')
+    end,
+    qf_selected = function(prompt_bufnr)
+        actions.send_selected_to_qflist(prompt_bufnr)
+        vim.cmd('copen')
+    end,
 })
 
 -- Autocmds
@@ -272,6 +281,8 @@ telescope.setup({
                 ['<C-t>'] = custom_actions.entry_find_files,
                 ['<A-c>'] = custom_actions.entry_find_dir,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
+                ['<C-q>'] = custom_actions.qf_selected,
+                ['<A-q>'] = custom_actions.qf_all,
             },
             n = { ['q'] = 'close' },
         },
@@ -301,6 +312,14 @@ telescope.setup({
                 '--hidden',
                 '--exclude',
                 '.git',
+            },
+        },
+        live_grep = {
+            mappings = {
+                i = {
+                    ['<C-space>'] = actions.toggle_selection
+                        + actions.move_selection_previous,
+                },
             },
         },
         git_commits = {
