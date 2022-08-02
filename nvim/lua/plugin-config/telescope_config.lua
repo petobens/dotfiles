@@ -234,6 +234,10 @@ local custom_actions = transform_mod({
         actions.send_selected_to_qflist(prompt_bufnr)
         vim.cmd('copen')
     end,
+    -- Undo (restore) previous picker
+    undo_picker = function(prompt_bufnr)
+        builtin.resume()
+    end,
 })
 
 -- Autocmds
@@ -280,6 +284,7 @@ telescope.setup({
             height = 20,
             preview_width = 0.45,
         },
+        cache_picker = { num_pickers = 3 },
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
@@ -298,6 +303,7 @@ telescope.setup({
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<C-q>'] = custom_actions.qf_selected,
                 ['<A-q>'] = custom_actions.qf_all,
+                ['<A-u>'] = custom_actions.undo_picker,
                 ['<C-x>'] = 'which_key',
             },
             n = {
@@ -317,6 +323,7 @@ telescope.setup({
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<C-q>'] = custom_actions.qf_selected,
                 ['<A-q>'] = custom_actions.qf_all,
+                ['<A-u>'] = custom_actions.undo_picker,
                 ['<C-x>'] = 'which_key',
             },
         },
@@ -549,6 +556,7 @@ u.keymap('n', '<Leader>dh', '<Cmd>Telescope help_tags<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
 u.keymap('n', '<Leader>dm', keymaps)
 u.keymap('n', '<Leader>sg', spell_suggest)
+u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 
 -- Extensions
 telescope.load_extension('fzf')
