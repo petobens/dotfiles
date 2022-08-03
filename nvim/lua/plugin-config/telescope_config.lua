@@ -1,3 +1,4 @@
+local action_layout = require('telescope.actions.layout')
 local action_set = require('telescope.actions.set')
 local action_state = require('telescope.actions.state')
 local actions = require('telescope.actions')
@@ -294,6 +295,7 @@ telescope.setup({
                 ['<C-k>'] = 'move_selection_previous',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
+                ['<A-v>'] = action_layout.toggle_preview,
                 ['<A-n>'] = actions.cycle_previewers_next,
                 ['<C-space>'] = actions.toggle_selection
                     + actions.move_selection_previous,
@@ -313,6 +315,7 @@ telescope.setup({
                 ['<C-s>'] = 'file_split',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
+                ['<A-v>'] = action_layout.toggle_preview,
                 ['<A-n>'] = actions.cycle_previewers_next,
                 ['<space>'] = actions.toggle_selection + actions.move_selection_previous,
                 ['<C-space>'] = actions.toggle_selection
