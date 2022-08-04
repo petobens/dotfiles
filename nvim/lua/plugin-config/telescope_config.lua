@@ -570,7 +570,7 @@ u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
 u.keymap('n', '<Leader>dh', '<Cmd>Telescope help_tags<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
-u.keymap('n', '<Leader>dm', keymaps)
+u.keymap('n', '<Leader>me', keymaps)
 u.keymap('n', '<Leader>sg', spell_suggest)
 u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 
