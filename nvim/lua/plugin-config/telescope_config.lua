@@ -146,6 +146,125 @@ local bookmark_dirs = function(opts)
         :find()
 end
 
+-- Helper (wrapper) functions
+local function find_files_cwd()
+    local buffer_dir = utils.buffer_dir()
+    builtin.find_files({
+        cwd = buffer_dir,
+        results_title = buffer_dir,
+    })
+end
+
+local function find_files_upper_cwd()
+    local buffer_upperdir = string.format('%s', Path:new(utils.buffer_dir()):parent())
+    builtin.find_files({
+        cwd = buffer_upperdir,
+        results_title = buffer_upperdir,
+    })
+end
+
+local function z_with_tree_preview()
+    telescope.extensions.z.list({
+        cmd = { 'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1 | tac' },
+        previewer = tree_previewer,
+    })
+end
+
+local function igrep(dir)
+    local buffer_dir = dir or utils.buffer_dir()
+    builtin.live_grep({
+        cwd = buffer_dir,
+        results_title = buffer_dir,
+    })
+end
+
+local function rgrep()
+    vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
+        -- FIXME: no completion: https://github.com/hrsh7th/cmp-cmdline/issues/16
+        -- FIXME: no C-c: https://github.com/neovim/neovim/issues/18144
+        local opts = {
+            cwd = dir,
+            search_dirs = { dir },
+            results_title = dir,
+        }
+        local type_filter = vim.fn.input('Type Filter: ', '')
+        if type_filter ~= '' then
+            opts.type_filter = type_filter
+        end
+        builtin.live_grep(opts)
+    end)
+end
+
+local function tasklist_cwd()
+    local buffer_dir = utils.buffer_dir()
+    builtin.grep_string({
+        cwd = buffer_dir,
+        results_title = buffer_dir,
+        use_regex = true,
+        search = 'TODO:\\s|FIXME:\\s',
+    })
+end
+
+local function tasklist_buffer()
+    local buf_name = vim.api.nvim_buf_get_name(0)
+    builtin.grep_string({
+        results_title = buf_name,
+        use_regex = true,
+        search = 'TODO:\\s|FIXME:\\s',
+        search_dirs = { buf_name },
+    })
+end
+
+local function gitcommits(opts)
+    opts = opts or {}
+    opts.cwd = utils.buffer_dir()
+    local git_root, _ = utils.get_os_command_output({
+        'git',
+        'rev-parse',
+        '--show-toplevel',
+    }, opts.cwd)
+    builtin.git_commits({
+        cwd = opts.cwd,
+        results_title = git_root[1],
+        previewer = {
+            previewers.git_commit_diff_as_was.new(opts),
+            previewers.git_commit_message.new(opts),
+        },
+    })
+end
+
+local function gitcommits_buffer(opts)
+    opts = opts or {}
+    opts.cwd = utils.buffer_dir()
+    builtin.git_bcommits({
+        cwd = opts.cwd,
+        results_title = vim.api.nvim_buf_get_name(0),
+        previewer = {
+            previewers.git_commit_diff_as_was.new(opts),
+            previewers.git_commit_message.new(opts),
+        },
+    })
+end
+
+local function search_buffer()
+    builtin.current_buffer_fuzzy_find({
+        fuzzy = false, -- exact/regex matching/sorting
+        tiebreak = function() -- sort by line number
+            return false
+        end,
+        results_title = vim.api.nvim_buf_get_name(0),
+        preview_title = 'Buffer Search Preview',
+    })
+end
+
+local function keymaps()
+    builtin.keymaps({ fuzzy = false })
+end
+
+local function spell_suggest()
+    builtin.spell_suggest({ fuzzy = false })
+end
+
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
 local custom_actions = transform_mod({
@@ -228,6 +347,16 @@ local custom_actions = transform_mod({
         end
         parent_dirs({ starting_dir = p })
     end,
+    -- Live (interactive) grep in entry dir
+    entry_igrep = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        local p = Path:new(from_entry.path(entry))
+        if p:is_file() then
+            p = p:parent()
+        end
+        igrep(tostring(p))
+    end,
     -- Send and open quickfix
     qf_all = function(prompt_bufnr)
         actions.send_to_qflist(prompt_bufnr)
@@ -305,6 +434,7 @@ telescope.setup({
                 ['<C-t>'] = custom_actions.entry_find_files,
                 ['<A-c>'] = custom_actions.entry_find_dir,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
+                ['<A-g>'] = custom_actions.entry_igrep,
                 ['<C-q>'] = custom_actions.qf_selected,
                 ['<A-q>'] = custom_actions.qf_all,
                 ['<A-u>'] = custom_actions.undo_picker,
@@ -326,6 +456,7 @@ telescope.setup({
                 ['<C-t>'] = custom_actions.entry_find_files,
                 ['<A-c>'] = custom_actions.entry_find_dir,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
+                ['<A-g>'] = custom_actions.entry_igrep,
                 ['<C-q>'] = custom_actions.qf_selected,
                 ['<A-q>'] = custom_actions.qf_all,
                 ['<A-u>'] = custom_actions.undo_picker,
@@ -423,125 +554,6 @@ telescope.setup({
         },
     },
 })
-
--- Helper (wrapper) functions
-local function find_files_cwd()
-    local buffer_dir = utils.buffer_dir()
-    builtin.find_files({
-        cwd = buffer_dir,
-        results_title = buffer_dir,
-    })
-end
-
-local function find_files_upper_cwd()
-    local buffer_upperdir = string.format('%s', Path:new(utils.buffer_dir()):parent())
-    builtin.find_files({
-        cwd = buffer_upperdir,
-        results_title = buffer_upperdir,
-    })
-end
-
-local function z_with_tree_preview()
-    telescope.extensions.z.list({
-        cmd = { 'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1 | tac' },
-        previewer = tree_previewer,
-    })
-end
-
-local function igrep()
-    local buffer_dir = utils.buffer_dir()
-    builtin.live_grep({
-        cwd = buffer_dir,
-        results_title = buffer_dir,
-    })
-end
-
-local function rgrep()
-    vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
-        -- FIXME: no completion: https://github.com/hrsh7th/cmp-cmdline/issues/16
-        -- FIXME: no C-c: https://github.com/neovim/neovim/issues/18144
-        local opts = {
-            cwd = dir,
-            search_dirs = { dir },
-            results_title = dir,
-        }
-        local type_filter = vim.fn.input('Type Filter: ', '')
-        if type_filter ~= '' then
-            opts.type_filter = type_filter
-        end
-        builtin.live_grep(opts)
-    end)
-end
-
-local function tasklist_cwd()
-    local buffer_dir = utils.buffer_dir()
-    builtin.grep_string({
-        cwd = buffer_dir,
-        results_title = buffer_dir,
-        use_regex = true,
-        search = 'TODO:\\s|FIXME:\\s',
-    })
-end
-
-local function tasklist_buffer()
-    local buf_name = vim.api.nvim_buf_get_name(0)
-    builtin.grep_string({
-        results_title = buf_name,
-        use_regex = true,
-        search = 'TODO:\\s|FIXME:\\s',
-        search_dirs = { buf_name },
-    })
-end
-
-local function gitcommits(opts)
-    opts = opts or {}
-    opts.cwd = utils.buffer_dir()
-    local git_root, _ = utils.get_os_command_output({
-        'git',
-        'rev-parse',
-        '--show-toplevel',
-    }, opts.cwd)
-    builtin.git_commits({
-        cwd = opts.cwd,
-        results_title = git_root[1],
-        previewer = {
-            previewers.git_commit_diff_as_was.new(opts),
-            previewers.git_commit_message.new(opts),
-        },
-    })
-end
-
-local function gitcommits_buffer(opts)
-    opts = opts or {}
-    opts.cwd = utils.buffer_dir()
-    builtin.git_bcommits({
-        cwd = opts.cwd,
-        results_title = vim.api.nvim_buf_get_name(0),
-        previewer = {
-            previewers.git_commit_diff_as_was.new(opts),
-            previewers.git_commit_message.new(opts),
-        },
-    })
-end
-
-local function search_buffer()
-    builtin.current_buffer_fuzzy_find({
-        fuzzy = false, -- exact/regex matching/sorting
-        tiebreak = function() -- sort by line number
-            return false
-        end,
-        results_title = vim.api.nvim_buf_get_name(0),
-        preview_title = 'Buffer Search Preview',
-    })
-end
-
-local function keymaps()
-    builtin.keymaps({ fuzzy = false })
-end
-
-local function spell_suggest()
-    builtin.spell_suggest({ fuzzy = false })
-end
 
 -- Mappings
 u.keymap('n', '<Leader>ls', find_files_cwd)
