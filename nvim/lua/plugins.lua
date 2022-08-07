@@ -41,9 +41,9 @@ return require('packer').startup(function(use)
 
     -- Editing
     use({
-        'winston0410/commented.nvim',
+        'numToStr/Comment.nvim',
         config = function()
-            require('plugin-config/commented_config')
+            require('plugin-config/comment_config')
         end,
     })
     use({
