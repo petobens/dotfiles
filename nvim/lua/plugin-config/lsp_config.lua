@@ -32,6 +32,7 @@ local function custom_lsp_format(bufnr)
     })
 end
 
+-- Autocmds
 local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 local function on_attach(client, bufnr)
     if client.name == 'sumneko_lua' then
@@ -40,23 +41,41 @@ local function on_attach(client, bufnr)
         client.server_capabilities.documentRangeFormattingProvider = false
     end
 
-    if client.supports_method('textDocument/formatting') then
-        -- Autoformat on save
-        vim.api.nvim_clear_autocmds({ group = format_augroup, buffer = bufnr })
-        vim.api.nvim_create_autocmd('BufWritePre', {
-            group = format_augroup,
-            buffer = bufnr,
-            callback = function()
-                custom_lsp_format(bufnr)
-            end,
-        })
-    end
+    vim.api.nvim_clear_autocmds({ group = format_augroup, buffer = bufnr })
+
+    -- Autoformat on save with null-ls
+    vim.api.nvim_create_autocmd('BufWritePre', {
+        group = format_augroup,
+        buffer = bufnr,
+        callback = function()
+            custom_lsp_format(bufnr)
+        end,
+    })
+    -- Open diagnostics on save (if there are diagnostics)
+    vim.api.nvim_create_autocmd('BufWritePost', {
+        group = format_augroup,
+        buffer = bufnr,
+        callback = function()
+            if #vim.diagnostic.get(0) > 0 then
+                vim.diagnostic.setloclist({
+                    title = string.format(
+                        'Diagnostics: %s',
+                        vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
+                    ),
+                })
+            end
+        end,
+    })
 end
 
 -- Servers setup
+-- Server names available in https://github.com/williamboman/nvim-lsp-installer
 local lspconfig = require('lspconfig')
 lspconfig.sumneko_lua.setup({
     settings = require('lua-dev').setup().settings,
+    on_attach = on_attach,
+})
+lspconfig.bashls.setup({
     on_attach = on_attach,
 })
 
@@ -70,3 +89,4 @@ u.keymap('n', 'K', lsp_buf.hover)
 u.keymap('n', '<Leader>st', lsp_buf.signature_help)
 u.keymap('n', '<Leader>fc', custom_lsp_format)
 u.keymap('v', '<Leader>fc', ':<C-u>call v:lua.vim.lsp.buf.range_formatting()<CR>')
+u.keymap('n', '<Leader>df', vim.diagnostic.open_float)
