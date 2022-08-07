@@ -90,3 +90,13 @@ u.keymap('n', '<Leader>st', lsp_buf.signature_help)
 u.keymap('n', '<Leader>fc', custom_lsp_format)
 u.keymap('v', '<Leader>fc', ':<C-u>call v:lua.vim.lsp.buf.range_formatting()<CR>')
 u.keymap('n', '<Leader>df', vim.diagnostic.open_float)
+u.keymap('n', '<Leader>ld', function()
+    local win_id = vim.fn.win_getid()
+    vim.diagnostic.setloclist({
+        title = string.format(
+            'Diagnostics: %s',
+            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
+        ),
+    })
+    vim.fn.win_gotoid(win_id)
+end)
