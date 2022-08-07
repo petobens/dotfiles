@@ -1,7 +1,5 @@
--- We need this first to ensure lsp-insaller loads before lspconfig
-require('nvim-lsp-installer').setup({
-    ensure_installed = { 'sumneko_lua' },
-})
+-- We need this first to ensure mason-lsp loads before lspconfig
+require('mason-lspconfig').setup()
 
 -- Diagnostics
 vim.diagnostic.config({

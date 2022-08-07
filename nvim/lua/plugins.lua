@@ -66,7 +66,14 @@ return require('packer').startup(function(use)
     })
 
     -- LSP and completion
-    use({ 'williamboman/nvim-lsp-installer' })
+    use({
+        'williamboman/mason.nvim',
+        requires = 'WhoIsSethDaniel/mason-tool-installer.nvim',
+        config = function()
+            require('plugin-config/mason_config')
+        end,
+    })
+    use('williamboman/mason-lspconfig.nvim')
     use({
         'neovim/nvim-lspconfig',
         config = function()
