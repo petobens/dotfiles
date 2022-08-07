@@ -6,7 +6,7 @@ function M.keymap(mode, lhs, rhs, opts)
         lhs,
         rhs,
         vim.tbl_extend('keep', opts or {}, {
-            noremap = true,
+            remap = false,
             nowait = true,
             silent = true,
         })

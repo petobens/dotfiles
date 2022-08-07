@@ -54,7 +54,7 @@ u.keymap(
 )
 u.keymap('n', '<A-m>', 'M')
 u.keymap('n', '<A-s>', 'i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>`w') -- Split line
-u.keymap('n', '<A-u>', 'mzg~iw`z', { noremap = false }) -- Upper case inner word
+u.keymap('n', '<A-u>', 'mzg~iw`z', { remap = true }) -- Upper case inner word
 u.keymap('n', '<Leader>mr', 'q') -- Macro recording
 u.keymap({ 'n', 'v' }, 'H', '^')
 u.keymap('n', 'L', '$')
@@ -64,7 +64,7 @@ u.keymap('n', 'k', 'gk')
 u.keymap('n', 'J', 'mzJ`z') -- Keep the cursor in place while joining lines
 u.keymap('n', 'q', '<nop>')
 u.keymap('n', 'Q', 'gwap')
-u.keymap('n', 'vv', '^vg_', { noremap = false }) -- Visual selection excluding indentation
+u.keymap('n', 'vv', '^vg_', { remap = true }) -- Visual selection excluding indentation
 -- FIXME: https://github.com/neovim/neovim/issues/12544 we cannot use vim.go.scrolloff here
 u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>')
 -- TODO: add mapping to swap words
@@ -74,12 +74,12 @@ u.keymap('n', '<Leader>P', '<Cmd>put!<CR>')
 u.keymap('n', '<Leader>p', '<Cmd>put<CR>', { nowait = false })
 -- FIXME: not working
 u.keymap('n', 'gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]') -- Visually reselect what was just pasted
-u.keymap('n', 'Y', 'y$', { noremap = false })
-u.keymap('n', 'yy', 'mz0y$`z', { noremap = false })
+u.keymap('n', 'Y', 'y$', { remap = true })
+u.keymap('n', 'yy', 'mz0y$`z', { remap = true })
 
 -- Search, jumps and marks
-u.keymap({ 'n', 'v' }, '/', '/\\v', { silent = false, noremap = false })
-u.keymap({ 'n', 'v' }, '?', '?\\v', { silent = false, noremap = false })
+u.keymap({ 'n', 'v' }, '/', '/\\v', { silent = false, remap = true })
+u.keymap({ 'n', 'v' }, '?', '?\\v', { silent = false, remap = true })
 u.keymap('n', '<C-o>', '<C-o>zvzz')
 u.keymap('n', '<C-y>', '<C-i>zvzz') -- Jump to newer entry in jumplist
 u.keymap('n', '<Leader><Space>', '<Cmd>nohlsearch<CR><Cmd>call clearmatches()<CR>')
@@ -87,17 +87,17 @@ u.keymap('n', '<Leader>qr', ':cdo %s/', { silent = false })
 u.keymap('n', '<Leader>sr', ':%s/', { silent = false })
 u.keymap('n', 'n', 'nzzzv') -- keep matches window in the middle (while opening folds)
 u.keymap('n', 'N', 'Nzzzv')
-u.keymap('n', "'", '`', { noremap = false })
+u.keymap('n', "'", '`', { remap = true })
 u.keymap('n', '<Leader>dm', '<Cmd>delmarks!<CR><Cmd>delmarks A-Z0-9<CR>')
 u.keymap({ 'n', 'v', 'o' }, '<tab>', '%', { remap = true })
 u.keymap(
     'n',
     '*',
     [[:let @/ = '\v' . expand('<cword>')<bar>set hlsearch<CR>]],
-    { noremap = false }
+    { remap = true }
 ) -- don't jump to first match with * and #
-u.keymap('n', '#', '#``', { noremap = false })
-u.keymap('n', '<Leader>ws', '/<><Left>', { silent = false, noremap = false })
+u.keymap('n', '#', '#``', { remap = true })
+u.keymap('n', '<Leader>ws', '/<><Left>', { silent = false, remap = true })
 
 -- Folds
 u.keymap('n', '<Leader>z', 'zMzvzz')
