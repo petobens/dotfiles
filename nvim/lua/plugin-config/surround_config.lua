@@ -1,10 +1,9 @@
 require('nvim-surround').setup({
-    delimiters = {
-        pairs = {
-            ['('] = { '(', ')' },
-            ['['] = { '[', ']' },
-            ['{'] = { '{', '}' },
-            ['<'] = { '<', '>' },
-        },
+    aliases = {
+        -- Never add leading/trailing whitespace
+        ['('] = ')',
+        ['['] = ']',
+        ['{'] = '}',
+        ['<'] = '>',
     },
 })
