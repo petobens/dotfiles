@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 # Note: this also uses several rust binaries: fd, rg, bat, lsd and devicon-lookup
 
 # Setup {{{
@@ -22,6 +23,7 @@ if [[ $- == *i* ]]; then
     else
         completion_base_dir="$base_pkg_dir/share/fzf"
     fi
+    # shellcheck disable=SC1091
     . "$completion_base_dir/completion.bash" 2> /dev/null
 fi
 
@@ -42,9 +44,9 @@ export FZF_DEFAULT_OPTS='
 --color=marker:#d19a66,spinner:#e06c75,border:#282c34
 '
 
-# Override FZF stock commands (ctrl-t,al-tc) and their options
+# Override FZF stock commands (ctrl-t,alt-c) and their options
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git \
-    --color=always"
+    --color=always --strip-cwd-prefix"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
 --multi
@@ -52,16 +54,16 @@ export FZF_CTRL_T_OPTS="
 --bind 'ctrl-y:execute-silent(echo -n {+2} | $COPY_CMD)+abort'
 --preview 'bat --color always --style numbers --theme TwoDark \
     --line-range :200 {2}'
---expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
+--expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,alt-g
 --header='enter=edit, tab=insert, C-t=fzf-files, C-o=open, A-c=cd-file-dir, \
-A-p=parent-dirs, A-f=ranger, C-y=yank'
+A-p=parent-dirs, A-f=ranger, A-g=grep, C-y=yank'
 "
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --strip-cwd-prefix'
 FZF_ALT_C_OPTS_BASE="
 --no-multi
---expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f
+--expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f,alt-g
 --header='enter=fzf-files, C-o=cd, A-c=fzf-dirs, A-p=parent-dirs, \
-A-f=ranger, C-y=yank'
+A-f=ranger, A-g=grep, C-y=yank'
 "
 export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE
 --bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort'
@@ -104,6 +106,7 @@ FZF_LL_OPTS="
 
 ll() {
     cmd="lsd -F -lah --color=always"
+    # shellcheck disable=SC2294
     out="$(eval "$cmd" "$@" |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_LL_OPTS" fzf)"
     key=$(head -1 <<< "$out")
@@ -140,7 +143,8 @@ __fzf_select_custom__() {
         cmd="$cmd --no-ignore-vcs"
     fi
     if [[ "$2" ]]; then
-        cmd="$cmd . $2" # use narrow dir
+        cmd=${cmd//$"--strip-cwd-prefix"/} # Path doesn't work with strip-cwd-prefix
+        cmd="$cmd . $2"                    # use narrow dir
     fi
     out=$(eval "$cmd" | devicon-lookup --color |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)
@@ -175,6 +179,9 @@ __fzf_select_custom__() {
             ;;
         alt-f)
             printf 'ranger --selectfile %q' "${files[0]}"
+            ;;
+        alt-g)
+            ig "$(dirname "${files[0]}")"
             ;;
         *)
             printf '%s %s' "${EDITOR:-nvim}" "$files_str"
@@ -224,6 +231,9 @@ __fzf_cd_action_key__() {
         alt-p)
             __fzf_cd_parent__ "$dir"
             ;;
+        alt-g)
+            ig "$dir"
+            ;;
         *)
             __fzf_select_custom__ "no-ignore" "$dir"
             ;;
@@ -238,7 +248,8 @@ __fzf_cd_custom__() {
         cmd="$cmd --no-ignore-vcs"
     fi
     if [[ "$2" ]]; then
-        cmd="$cmd . $2" # use narrow dir
+        cmd=${cmd//$"--strip-cwd-prefix"/} # Path doesn't work with strip-cwd-prefix
+        cmd="$cmd . $2"                    # use narrow dir
     fi
     out=$(eval "$cmd" | devicon-lookup |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
@@ -344,7 +355,7 @@ FZF_GREP_OPTS="
 
 ig() {
     # shellcheck disable=SC2124
-    grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@ {q}"
+    grep_cmd="rg --smart-case --vimgrep --no-heading --color=always --trim {q} $@"
     grep_cmd+=" | devicon-lookup --color --prefix :"
     # shellcheck disable=SC2016,SC1004
     preview_cmd='bat --color always --style numbers --theme TwoDark \
@@ -372,8 +383,24 @@ ig() {
         done
     fi
     printf -v files_str "%s " "${files[@]}"
-    eval "$(printf "${EDITOR:-nvim} %s" "$files_str")"
+
+    # When calling this with a subdir arg we seem to need echo instead of eval
+    if [[ -d "$1" ]]; then
+        cmd="echo"
+    else
+        cmd="eval"
+    fi
+    $cmd "$(printf "${EDITOR:-nvim} %s" "$files_str")"
 }
+
+if [[ -o vi ]]; then
+    # shellcheck disable=SC2016
+    bind '"\eg": "\C-x\C-addiig\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\eg": "i\eg"'
+else
+    # shellcheck disable=SC2016
+    bind '"\eg": " \C-e\C-u`ig`\e\C-e\er\C-m"'
+fi
 
 # }}}
 # History {{{
