@@ -265,6 +265,13 @@ local function spell_suggest()
     builtin.spell_suggest({ fuzzy = false })
 end
 
+local function lsp_doc_symbols()
+    builtin.lsp_document_symbols({
+        results_title = vim.api.nvim_buf_get_name(0),
+        preview_title = 'LSP Document Symbols Preview',
+    })
+end
+
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
 local custom_actions = transform_mod({
@@ -357,17 +364,8 @@ local custom_actions = transform_mod({
         end
         igrep(tostring(p))
     end,
-    -- Send and open quickfix
-    qf_all = function(prompt_bufnr)
-        actions.send_to_qflist(prompt_bufnr)
-        vim.cmd('copen')
-    end,
-    qf_selected = function(prompt_bufnr)
-        actions.send_selected_to_qflist(prompt_bufnr)
-        vim.cmd('copen')
-    end,
     -- Undo (restore) previous picker
-    undo_picker = function(prompt_bufnr)
+    undo_picker = function()
         builtin.resume()
     end,
 })
@@ -435,10 +433,10 @@ telescope.setup({
                 ['<A-c>'] = custom_actions.entry_find_dir,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
-                ['<C-q>'] = custom_actions.qf_selected,
-                ['<A-q>'] = custom_actions.qf_all,
+                ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
+                ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
                 ['<A-u>'] = custom_actions.undo_picker,
-                ['<C-x>'] = 'which_key',
+                ['<C-/>'] = 'which_key',
             },
             n = {
                 ['q'] = 'close',
@@ -457,10 +455,10 @@ telescope.setup({
                 ['<A-c>'] = custom_actions.entry_find_dir,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
-                ['<C-q>'] = custom_actions.qf_selected,
-                ['<A-q>'] = custom_actions.qf_all,
+                ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
+                ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
                 ['<A-u>'] = custom_actions.undo_picker,
-                ['<C-x>'] = 'which_key',
+                ['?'] = 'which_key',
             },
         },
         vimgrep_arguments = {
@@ -507,6 +505,13 @@ telescope.setup({
                 i = {
                     ['<C-space>'] = actions.toggle_selection
                         + actions.move_selection_previous,
+                },
+            },
+        },
+        lsp_document_symbols = {
+            mappings = {
+                i = {
+                    ['<C-x>'] = actions.complete_tag,
                 },
             },
         },
@@ -564,11 +569,13 @@ u.keymap(
     '<Cmd>lcd %:p:h<CR>:Telescope find_files cwd=',
     { silent = false }
 )
+u.keymap('n', '<C-t>', find_files_cwd)
 u.keymap('n', '<A-c>', find_dirs)
 u.keymap('n', '<A-p>', parent_dirs)
 u.keymap('n', '<A-z>', z_with_tree_preview)
 u.keymap('n', '<Leader>bm', bookmark_dirs)
 u.keymap('n', '<Leader>ig', igrep)
+u.keymap('n', '<A-g>', igrep)
 u.keymap('n', '<Leader>rg', rgrep)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
@@ -585,6 +592,7 @@ u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
 u.keymap('n', '<Leader>me', keymaps)
 u.keymap('n', '<Leader>sg', spell_suggest)
 u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
+u.keymap('n', '<Leader>te', lsp_doc_symbols)
 
 -- Extensions
 telescope.load_extension('fzf')
