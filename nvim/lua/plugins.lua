@@ -183,6 +183,7 @@ return require('packer').startup(function(use)
             require('plugin-config/matchup_config')
         end,
     })
+    use('lambdalisue/suda.vim')
 
     -- Automatically install plugins after cloning packer
     if packer_bootstrap then
