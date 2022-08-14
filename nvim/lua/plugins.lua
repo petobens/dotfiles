@@ -24,6 +24,7 @@ return require('packer').startup(function(use)
     -- Appearance
     use({
         'olimorris/onedarkpro.nvim',
+        branch = 'develop',
         config = function()
             require('plugin-config/onedark_config')
         end,

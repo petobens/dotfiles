@@ -18,9 +18,8 @@ end
 local function spell_status()
     local spell_lang = ''
     if vim.opt.spell:get() then
-        local languages = vim.fn.toupper(
-            vim.fn.substitute(vim.o.spelllang, ',', '/', 'g')
-        )
+        local languages =
+            vim.fn.toupper(vim.fn.substitute(vim.o.spelllang, ',', '/', 'g'))
         spell_lang = ' [' .. languages .. ']'
     end
     return spell_lang
@@ -31,10 +30,8 @@ local function branch_with_remote()
     if branch_name == '' then
         return ''
     end
-    local remote = vim.api.nvim_exec(
-        [[echo FugitiveConfigGet('remote.origin.url')]],
-        true
-    )
+    local remote =
+        vim.api.nvim_exec([[echo FugitiveConfigGet('remote.origin.url')]], true)
     local branch_icon = ''
     if remote:find('github') then
         branch_icon = ' '

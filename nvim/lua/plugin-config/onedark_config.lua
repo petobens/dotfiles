@@ -59,8 +59,7 @@ onedarkpro.setup({
         MsgArea = { fg = p.fg, bg = p.bg },
         NonText = { fg = p.comment_grey },
         Normal = { fg = p.fg, bg = p.bg },
-        NormalFloat = { fg = p.fg, bg = p.pmenu },
-        -- NormalFloat = { link = 'Pmenu' },
+        NormalFloat = { link = 'Pmenu' },
         NormalNC = { fg = p.fg, bg = p.bg },
         Pmenu = { fg = p.fg, bg = p.pmenu },
         PmenuSbar = { fg = p.fg, bg = p.pmenu }, -- scrolling bar space
@@ -282,7 +281,9 @@ onedarkpro.setup({
         },
         sh = {
             bashTSParameter = { fg = p.fg },
-            bashTSPunctSpecial = { fg = p.red, style = 'none' },
+            -- FIXME: none style not working after refactor
+            bashTSPunctSpecial = { fg = p.red },
+            -- bashTSPunctSpecial = { fg = p.red, style = 'none' },
         },
         yaml = {
             yamlBool = { fg = p.orange },
