@@ -3,6 +3,7 @@ local onedarkpro = require('onedarkpro')
 local palette = {
     bg = '#24272e',
     fg = '#abb2bf',
+    none = 'NONE',
 
     -- Base colors
     black = '#24272e',
@@ -15,7 +16,6 @@ local palette = {
     red = '#e06c75',
     white = '#abb2bf',
     yellow = '#e5c07b',
-    none = 'NONE',
 
     -- Custom Colors
     cursor_grey = '#282c34',
@@ -44,26 +44,26 @@ onedarkpro.setup({
         Cursor = { fg = p.black, bg = p.blue }, -- actually set by terminal
         CursorColumn = { bg = p.gray },
         CursorLine = { bg = p.cursor_grey },
-        CursorLineNr = { fg = p.fg, bg = p.black, style = 'NONE' },
+        CursorLineNr = { fg = p.fg, bg = p.black, style = p.none },
         Directory = { fg = p.light_blue },
         EndOfBuffer = { fg = p.comment_grey },
         ErrorMsg = { fg = p.red },
         FloatBorder = { fg = p.cursor_grey },
         FoldColumn = { fg = p.comment_grey, bg = p.black },
-        Folded = { fg = p.comment_grey, bg = p.black },
+        Folded = { link = 'FoldColumn' },
         IncSearch = { fg = p.bg, bg = p.orange },
         LineNr = { fg = p.linenr_grey },
         MatchParen = { fg = p.cursor_grey, bg = p.light_blue },
-        ModeMsg = { fg = p.fg, bg = p.bg },
+        ModeMsg = { link = 'Normal' },
         MoreMsg = { fg = p.orange },
-        MsgArea = { fg = p.fg, bg = p.bg },
+        MsgArea = { link = 'Normal' },
         NonText = { fg = p.comment_grey },
         Normal = { fg = p.fg, bg = p.bg },
         NormalFloat = { link = 'Pmenu' },
-        NormalNC = { fg = p.fg, bg = p.bg },
+        NormalNC = { link = 'Normal' },
         Pmenu = { fg = p.fg, bg = p.pmenu },
-        PmenuSbar = { fg = p.fg, bg = p.pmenu }, -- scrolling bar space
-        PmenuSel = { fg = p.black, bg = p.light_blue },
+        PmenuSbar = { link = 'Pmenu' }, -- scrolling bar space
+        PmenuSel = { link = 'WildMenu' },
         PmenuThumb = { bg = p.linenr_grey }, -- scrollbar color
         Question = { fg = p.light_blue },
         QuickFixLine = { bg = p.cursor_grey },
@@ -76,19 +76,19 @@ onedarkpro.setup({
         SpellRare = { link = 'SpellCap' },
         StatusLine = { fg = p.fg, bg = p.cursor_grey },
         StatusLineNC = { bg = p.cursor_grey },
-        Substitute = { fg = p.bg, bg = p.orange },
+        Substitute = { link = 'IncSearch' },
         TabLine = { fg = p.white, bg = p.black },
         TabLineFill = { fg = p.comment_grey, bg = p.visual_grey },
-        TabLineSel = { fg = p.black, bg = p.light_blue },
+        TabLineSel = { link = 'WildMenu' },
         TermCursor = { bg = p.blue },
-        TermCursorNC = { bg = p.gray },
+        TermCursorNC = { link = 'CursorColumn' },
         Title = { fg = p.fg },
         Visual = { bg = p.visual_grey },
         VisualNOS = { bg = p.visual_grey },
         WarningMsg = { fg = p.orange },
         Whitespace = { fg = p.special_grey }, -- listchars
         WildMenu = { fg = p.black, bg = p.light_blue },
-        WinSeparator = { fg = p.cursor_grey },
+        WinSeparator = { link = 'FloatBorder' },
 
         -- Syntax
         Comment = { fg = p.comment_grey, style = 'italic' },
@@ -96,9 +96,9 @@ onedarkpro.setup({
         String = { fg = p.green },
         Character = { fg = p.green },
         Number = { fg = p.orange },
-        Boolean = { fg = p.orange },
-        Float = { fg = p.orange },
-        Identifier = { fg = p.red, style = 'NONE' },
+        Boolean = { link = 'Number' },
+        Float = { link = 'Number' },
+        Identifier = { fg = p.red, style = p.none },
         Function = { fg = p.light_blue },
         Statement = { fg = p.purple },
         Conditional = { fg = p.purple },
@@ -186,11 +186,11 @@ onedarkpro.setup({
         DiffDelete = { fg = p.red, bg = p.visual_grey },
         DiffText = { fg = p.light_blue, bg = p.visual_grey },
         DiffAdded = { link = 'DiffAdd' },
-        DiffChanged = { fg = p.orange, bg = p.visual_grey },
-        DiffRemoved = { fg = p.red, bg = p.visual_grey },
-        DiffLine = { fg = p.light_blue, bg = p.visual_grey },
-        DiffFile = { fg = p.red, bg = p.visual_grey },
-        DiffNewFile = { fg = p.green, bg = p.visual_grey },
+        DiffChanged = { link = 'DiffChange' },
+        DiffRemoved = { link = 'DiffDelete' },
+        DiffLine = { link = 'DiffText' },
+        DiffFile = { link = 'DiffDelete' },
+        DiffNewFile = { link = 'DiffAdd' },
 
         ---- Git
         gitcommitComment = { fg = p.comment_grey },
@@ -237,7 +237,7 @@ onedarkpro.setup({
         GitSignsDelete = { fg = p.red },
 
         ---- HlWords (in udfs)
-        HlWord1 = { fg = p.black, bg = p.yellow },
+        HlWord1 = { link = 'Search' },
         HlWord2 = { fg = p.black, bg = p.green },
         HlWord3 = { fg = p.black, bg = p.purple },
         HlWord4 = { fg = p.black, bg = p.orange },
@@ -257,7 +257,7 @@ onedarkpro.setup({
         packerStatusSuccess = { fg = p.green },
 
         ---- Telescope
-        TelescopeNormal = { fg = p.fg, bg = p.bg },
+        TelescopeNormal = { link = 'Normal' },
         TelescopeSelection = { fg = p.fg, bg = p.cursor_grey, style = 'bold' },
         TelescopeSelectionCaret = { fg = p.purple, style = 'bold' },
         TelescopeMultiSelection = { fg = p.orange },
@@ -281,7 +281,7 @@ onedarkpro.setup({
         },
         sh = {
             bashTSParameter = { fg = p.fg },
-            bashTSPunctSpecial = { fg = p.red, style = 'NONE' },
+            bashTSPunctSpecial = { fg = p.red, style = p.none },
         },
         yaml = {
             yamlBool = { fg = p.orange },
