@@ -44,7 +44,7 @@ onedarkpro.setup({
         Cursor = { fg = p.black, bg = p.blue }, -- actually set by terminal
         CursorColumn = { bg = p.gray },
         CursorLine = { bg = p.cursor_grey },
-        CursorLineNr = { fg = p.fg, bg = p.black, style = 'none' },
+        CursorLineNr = { fg = p.fg, bg = p.black, style = 'NONE' },
         Directory = { fg = p.light_blue },
         EndOfBuffer = { fg = p.comment_grey },
         ErrorMsg = { fg = p.red },
@@ -98,7 +98,7 @@ onedarkpro.setup({
         Number = { fg = p.orange },
         Boolean = { fg = p.orange },
         Float = { fg = p.orange },
-        Identifier = { fg = p.red, style = 'none' },
+        Identifier = { fg = p.red, style = 'NONE' },
         Function = { fg = p.light_blue },
         Statement = { fg = p.purple },
         Conditional = { fg = p.purple },
@@ -281,9 +281,7 @@ onedarkpro.setup({
         },
         sh = {
             bashTSParameter = { fg = p.fg },
-            -- FIXME: none style not working after refactor
-            bashTSPunctSpecial = { fg = p.red },
-            -- bashTSPunctSpecial = { fg = p.red, style = 'none' },
+            bashTSPunctSpecial = { fg = p.red, style = 'NONE' },
         },
         yaml = {
             yamlBool = { fg = p.orange },
