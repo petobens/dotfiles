@@ -45,3 +45,9 @@ configuration {
 listview {
     scrollbar: false;
 }
+element {
+    highlight: #528bff;
+}
+element selected {
+    highlight: bold;
+}
