@@ -454,7 +454,7 @@ class RofiApp(ROLApp):
     def __init__(self, **kwargs):
         super().__init__(shell=True, **kwargs)
         self.font_size = 11
-        self.yoffset = -110
+        self.yoffset = -10
         self.icon_size = 1.8
 
     def _build_cmd(self):
