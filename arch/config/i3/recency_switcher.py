@@ -155,7 +155,7 @@ if __name__ == '__main__':
         dmenu_cmd = (
             f"-dmenu -p window -i -selected-row {selected_row} "
             "-kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' "
-            "-kb-row-up 'ISO_Left_Tab,Ctrl-p'"
+            "-kb-row-up 'Ctrl-p,Shift+ISO_Left_Tab'"
         )
         rofi_menu = Menu(i3_conn, args.menu, dmenu_cmd)
         rofi_menu.menu_focus(containers_history)
