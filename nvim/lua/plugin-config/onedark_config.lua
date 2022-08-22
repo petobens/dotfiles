@@ -36,7 +36,7 @@ local p = palette
 onedarkpro.setup({
     theme = 'onedark',
     colors = palette,
-    hlgroups = {
+    highlights = {
         -- See https://github.com/olimorris/onedarkpro.nvim/blob/main/lua/onedarkpro/theme.lua
         -- General UI
         ColorColumn = { bg = p.cursor_grey },
@@ -268,7 +268,7 @@ onedarkpro.setup({
         TelescopePromptPrefix = { fg = p.purple, style = 'bold' },
         TelescopeMatching = { fg = p.blue },
     },
-    filetype_hlgroups = {
+    ft_highlights = {
         json = {
             jsonTSLabel = { fg = p.red },
         },
