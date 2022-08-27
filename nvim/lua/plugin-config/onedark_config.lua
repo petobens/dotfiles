@@ -68,6 +68,7 @@ onedarkpro.setup({
         Question = { fg = p.light_blue },
         QuickFixLine = { bg = p.cursor_grey },
         Search = { fg = p.black, bg = p.yellow },
+        CurSearch = { link = 'IncSearch' },
         SignColumn = { bg = p.bg },
         SpecialKey = { fg = p.special_grey },
         SpellBad = { sp = p.red, style = 'undercurl' },
