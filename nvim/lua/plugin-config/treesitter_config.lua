@@ -19,3 +19,6 @@ require('nvim-treesitter.configs').setup({
 })
 
 u.keymap('n', '<Leader>cg', '<Cmd>TSHighlightCapturesUnderCursor<CR>')
+
+-- Custom queries
+vim.treesitter.set_query('markdown', 'folds', [[[(section)] @fold]])
