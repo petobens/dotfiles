@@ -178,6 +178,19 @@ local function igrep(dir)
     })
 end
 
+local function igrep_git_root()
+    local git_root, _ = utils.get_os_command_output({
+        'git',
+        'rev-parse',
+        '--show-toplevel',
+    }, utils.buffer_dir())
+    igrep(git_root[1])
+end
+
+local function igrep_open_buffers()
+    builtin.live_grep({ grep_open_files = true })
+end
+
 local function rgrep()
     vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
         -- FIXME: no completion: https://github.com/hrsh7th/cmp-cmdline/issues/16
@@ -575,6 +588,8 @@ u.keymap('n', '<A-p>', parent_dirs)
 u.keymap('n', '<A-z>', z_with_tree_preview)
 u.keymap('n', '<Leader>bm', bookmark_dirs)
 u.keymap('n', '<Leader>ig', igrep)
+u.keymap('n', '<Leader>ir', igrep_git_root)
+u.keymap('n', '<Leader>io', igrep_open_buffers)
 u.keymap('n', '<A-g>', igrep)
 u.keymap('n', '<Leader>rg', rgrep)
 u.keymap('n', '<Leader>rd', '<Cmd>Telescope oldfiles<CR>')
@@ -589,6 +604,7 @@ u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
 u.keymap('n', '<Leader>dh', '<Cmd>Telescope help_tags<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
+u.keymap('n', '<Leader>tm', '<Cmd>Telescope marks<CR>')
 u.keymap('n', '<Leader>me', keymaps)
 u.keymap('n', '<Leader>sg', spell_suggest)
 u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
