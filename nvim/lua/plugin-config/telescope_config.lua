@@ -428,6 +428,7 @@ telescope.setup({
             preview_width = 0.45,
         },
         cache_picker = { num_pickers = 3 },
+        path_display = { truncate = 1 },
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
@@ -514,6 +515,7 @@ telescope.setup({
             },
         },
         live_grep = {
+            path_display = { shorten = 3 },
             mappings = {
                 i = {
                     ['<C-space>'] = actions.toggle_selection
