@@ -270,20 +270,6 @@ onedarkpro.setup({
         TelescopeMatching = { fg = p.blue },
     },
     ft_highlights = {
-        json = {
-            jsonTSLabel = { fg = p.red },
-        },
-        markdown = {
-            markdownTSPunctSpecial = { fg = p.dark_red, style = 'bold' },
-        },
-        python = {
-            pythonTSConstant = { fg = p.orange },
-            pythonTSPunctSpecial = { fg = p.orange },
-        },
-        sh = {
-            bashTSParameter = { fg = p.fg },
-            bashTSPunctSpecial = { fg = p.red, style = p.none },
-        },
         yaml = {
             yamlBool = { fg = p.orange },
         },
@@ -300,6 +286,49 @@ onedarkpro.setup({
 })
 
 onedarkpro.load()
+
+-- Filetype (treesitter) highlights
+-- FIXME: Remove once the following issues are fixed
+-- https://github.com/olimorris/onedarkpro.nvim/issues/67
+-- https://github.com/olimorris/onedarkpro.nvim/issues/79
+local hl_json = vim.api.nvim_create_augroup('hl_json', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+    group = hl_json,
+    pattern = { '*.json' },
+    callback = function()
+        vim.api.nvim_set_hl(0, '@label.json', { fg = p.red })
+    end,
+})
+local hl_md = vim.api.nvim_create_augroup('hl_md', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+    group = hl_md,
+    pattern = { '*.md' },
+    callback = function()
+        vim.api.nvim_set_hl(
+            0,
+            '@punctuation.special.markdown',
+            { fg = p.dark_red, bold = true }
+        )
+    end,
+})
+local hl_py = vim.api.nvim_create_augroup('hl_py', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+    group = hl_py,
+    pattern = { '*.py' },
+    callback = function()
+        vim.api.nvim_set_hl(0, '@constant.python', { fg = p.orange })
+        vim.api.nvim_set_hl(0, '@punctuation.special.python', { fg = p.orange })
+    end,
+})
+local hl_sh = vim.api.nvim_create_augroup('hl_sh', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
+    group = hl_sh,
+    pattern = { '*.sh', 'bash_profile', 'bashrc' },
+    callback = function()
+        vim.api.nvim_set_hl(0, '@parameter.bash', { fg = p.fg })
+        vim.api.nvim_set_hl(0, '@punctuation.special.bash', { fg = p.red })
+    end,
+})
 
 -- Embedded Terminal colors (don't really need to define these)
 local set = vim.g
