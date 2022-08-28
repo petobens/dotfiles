@@ -189,6 +189,9 @@ onedarkpro.setup({
         ['@constant.python'] = { fg = p.orange },
         ['@punctuation.special.python'] = { fg = p.orange },
 
+        --- Yaml
+        yamlBool = { fg = p.orange },
+
         ---- Vim help
         helpCommand = { fg = p.yellow },
         helpExample = { fg = p.yellow },
@@ -282,11 +285,6 @@ onedarkpro.setup({
         TelescopePromptCounter = { fg = p.linenr_grey },
         TelescopePromptPrefix = { fg = p.purple, style = 'bold' },
         TelescopeMatching = { fg = p.blue },
-    },
-    ft_highlights = {
-        yaml = {
-            yamlBool = { fg = p.orange },
-        },
     },
     plugins = {
         all = false,
