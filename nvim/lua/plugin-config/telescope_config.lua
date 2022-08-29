@@ -124,6 +124,7 @@ local bookmark_dirs = function(opts)
             finder = finders.new_table({
                 results = {
                     '/home/pedro/git-repos/private/dotfiles/',
+                    '/home/pedro/OneDrive/mutt/ops/',
                     '/home/pedro/git-repos/work/',
                     '/home/pedro/.local/share/nvim/site/pack/packer/start',
                 },
