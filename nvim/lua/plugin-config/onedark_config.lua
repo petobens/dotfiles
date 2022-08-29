@@ -84,6 +84,7 @@ onedarkpro.setup({
         TermCursor = { bg = p.blue },
         TermCursorNC = { link = 'CursorColumn' },
         Title = { fg = p.fg },
+        VertSplit = { link = 'FloatBorder' }, -- for nvim-tree separator
         Visual = { bg = p.visual_grey },
         VisualNOS = { bg = p.visual_grey },
         WarningMsg = { fg = p.orange },
