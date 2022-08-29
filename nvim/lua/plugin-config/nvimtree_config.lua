@@ -83,6 +83,21 @@ require('nvim-tree').setup({
     },
     renderer = {
         root_folder_modifier = ':t',
+        icons = {
+            git_placement = 'after',
+            glyphs = {
+                folder = {
+                    arrow_closed = '',
+                    arrow_open = '',
+                },
+                git = {
+                    unstaged = '✚',
+                    staged = '●',
+                    untracked = '?',
+                    deleted = '✖',
+                },
+            },
+        },
     },
     update_focused_file = {
         enable = true,
