@@ -60,6 +60,7 @@ local map_list = {
     { key = 'F', cb = tree_cb('create') },
     { key = 'D', cb = tree_cb('create') },
     { key = 'd', cb = tree_cb('remove') },
+    { key = '<C-o>', cb = tree_cb('cd') },
     { key = 'r', cb = tree_cb('rename') },
     { key = 'y', cb = tree_cb('copy') },
     { key = 'u', cb = ':lua NvimTreeConfig.up_dir()<CR>' },
