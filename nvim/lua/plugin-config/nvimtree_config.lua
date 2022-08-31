@@ -33,8 +33,9 @@ function NvimTreeConfig.cd_or_open()
     local lib = require('nvim-tree.lib')
     local node = lib.get_node_at_cursor()
     if node then
-        if node.entries then
+        if node.nodes then
             nvim_tree.on_keypress('cd')
+            vim.cmd('normal! gg1j')
         else
             nvim_tree.on_keypress('edit')
         end
