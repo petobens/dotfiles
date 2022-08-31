@@ -281,6 +281,7 @@ onedarkpro.setup({
         NvimTreeGitNew = { fg = p.green },
         NvimTreeGitDeleted = { fg = p.red },
         NvimTreeIndentMarker = { fg = p.light_blue },
+        NvimTreeExecFile = { fg = p.red },
 
         ---- Packer
         packerFail = { fg = p.red },
