@@ -1,56 +1,45 @@
+local node_api = require('nvim-tree.api').node
+local tree_api = require('nvim-tree.api').tree
 local u = require('utils')
 
 _G.NvimTreeConfig = {}
 
 function NvimTreeConfig.home()
-    local lib = require('nvim-tree.lib')
-    lib.change_dir(vim.env.HOME)
+    tree_api.change_root(vim.env.HOME)
 end
 
-function NvimTreeConfig.find_file()
-    local nvim_tree = require('nvim-tree')
-    nvim_tree.find_file(true)
-    local lib = require('nvim-tree.lib')
-    local node = lib.get_node_at_cursor()
-    local curr_file = node.name
-    local parent_dir = vim.fn.fnamemodify(node.absolute_path, ':h:t')
-    nvim_tree.on_keypress('close_node')
-    nvim_tree.on_keypress('cd')
-    if vim.fn.line('.') > 1 then
-        local linenr = vim.fn.searchpos(curr_file)[1]
-        vim.cmd('normal! gg' .. (linenr - 1) .. 'j')
+function NvimTreeConfig.cd_find_file()
+    vim.cmd('NvimTreeFindFile')
+    vim.cmd('sleep 3m') -- we seem to need this to allow focus
+    local node = tree_api.get_node_under_cursor()
+    node_api.navigate.parent()
+    local parent_node = tree_api.get_node_under_cursor()
+    if parent_node.name == '..' then
+        tree_api.collapse_all()
     else
-        local linenr = vim.fn.searchpos(parent_dir)[1]
-        vim.cmd('normal! gg' .. (linenr - 1) .. 'j')
-        nvim_tree.on_keypress('cd')
-        linenr = vim.fn.searchpos(curr_file)[1]
-        vim.cmd('normal! gg' .. (linenr - 1) .. 'j')
+        tree_api.change_root_to_node()
+        node_api.navigate.sibling.first() -- to center
     end
+    tree_api.find_file(node.name)
 end
 
 function NvimTreeConfig.cd_or_open()
-    local nvim_tree = require('nvim-tree')
-    local lib = require('nvim-tree.lib')
-    local node = lib.get_node_at_cursor()
+    local node = tree_api.get_node_under_cursor()
     if node then
         if node.nodes then
-            nvim_tree.on_keypress('cd')
-            vim.cmd('normal! gg1j')
+            tree_api.change_root_to_node()
+            node_api.navigate.sibling.first() -- to center
+            vim.cmd('normal! h') -- to avoid moving cursor
         else
-            nvim_tree.on_keypress('edit')
+            node_api.open.edit()
         end
     end
 end
 
 function NvimTreeConfig.up_dir()
-    local nvim_tree = require('nvim-tree')
-    local lib = require('nvim-tree.lib')
-    local node = lib.get_node_at_cursor()
-    local parent_dir = vim.fn.fnamemodify(node.absolute_path, ':h:t')
-    nvim_tree.on_keypress('close_node')
-    nvim_tree.on_keypress('cd')
-    local linenr = vim.fn.searchpos(parent_dir)[1]
-    vim.cmd('normal! gg' .. (linenr - 1) .. 'j')
+    node_api.navigate.parent()
+    tree_api.change_root_to_node()
+    vim.cmd('normal! j') -- don't start on root
 end
 
 local tree_cb = require('nvim-tree.config').nvim_tree_callback
@@ -115,4 +104,4 @@ require('nvim-tree').setup({
     },
 })
 
-u.keymap('n', '<Leader>ff', NvimTreeConfig.find_file)
+u.keymap('n', '<Leader>ff', NvimTreeConfig.cd_find_file)
