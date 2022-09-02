@@ -37,6 +37,7 @@ return require('packer').startup(function(use)
         config = function()
             require('plugin-config/lualine_config')
         end,
+        after = 'onedarkpro.nvim',
     })
 
     -- Editing
