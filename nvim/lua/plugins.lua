@@ -127,6 +127,8 @@ return require('packer').startup(function(use)
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
             'nvim-telescope/telescope-z.nvim',
+            'nvim-telescope/telescope-frecency.nvim',
+            'tami5/sqlite.lua', -- for telescope-frecency
         },
         config = function()
             require('plugin-config/telescope_config')

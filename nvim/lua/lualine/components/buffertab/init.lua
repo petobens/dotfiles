@@ -26,7 +26,7 @@ local default_options = {
     filetype_names = {
         packer = 'Packer',
     },
-    filetype_ignore = '\\c\\vtelescope|nvimtree',
+    filetype_ignore = '\\c\\vtelescope|nvimtree|frecency',
 }
 
 local function unique_tail_format(buffers)
