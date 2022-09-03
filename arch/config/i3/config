@@ -69,7 +69,7 @@ bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
 # re-focusing it)
-for_window [class="^(Spotify|Slack|pm|tm|pr|Mailspring|Transmission-gtk|mpv|Simple-scan|discord)$" title="^(?!webcam).+"] $nexec $resize Full
+for_window [class="^(Spotify|Slack|pm|tm|pr|Mailspring|Transmission-gtk|mpv|Simple-scan)$" title="^(?!webcam).+"] $nexec $resize Full
 for_window [title="^(Alacritty|kitty)$"] $nexec $resize Full
 for_window [con_mark="^(browser|calendar|meet|clickup)$"] $nexec $resize Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] $nexec $resize Center

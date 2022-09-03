@@ -57,7 +57,7 @@ $yay_cmd noto-fonts
 $yay_cmd noto-fonts-cjk
 $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
-$yay_cmd ttf-nerd-fonts-symbols
+$yay_cmd ttf-nerd-fonts-symbols-2048-em
 $yay_cmd ttf-ms-fonts
 yay -S --mflags --skipinteg --answerclean N --nodiffmenu freetype2-ultimate5 # manually resolve conflicts with freetype2
 
@@ -111,7 +111,6 @@ $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
 $yay_cmd i3-gaps
-$yay_cmd i3ipc-python-git
 $yay_cmd i3lock-color-git
 $yay_cmd intltool
 $yay_cmd lsof
@@ -144,7 +143,7 @@ $yay_cmd xsendkey
 $yay_cmd gnome-themes-extra # includes adwaita-dark theme
 $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
-$yay_cmd adwaita-qt
+$yay_cmd adwaita-qt5
 $yay_cmd qt5ct
 
 # Databases

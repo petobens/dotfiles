@@ -7,7 +7,7 @@ if type "pip3" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing Python3 modules...\\033[0m"
     pip_install_cmd='pip3 install --user '
     if type "i3" > /dev/null 2>&1; then
-        $pip_install_cmd i3ipc
+        $pip_install_cmd git+https://github.com/altdesktop/i3ipc-python
     fi
     $pip_install_cmd matplotlib
     $pip_install_cmd numpy

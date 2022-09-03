@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 read -p $'\033[1mThis script will erase/override many files. Do you want to run it (y/n)? \033[0m' -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
