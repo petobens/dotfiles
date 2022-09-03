@@ -123,7 +123,14 @@ EOF'
     # Enable some services
     echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
     # Start pulseaudio (if daemon is not already running which it should)
-    pulseaudio --start
+    # pulseaudio --start
+    # Start pipewire
+    sudo systemctl enable pipewire.service
+    sudo systemctl start pipewire.service
+    sudo systemctl enable pipewire-pulse.service
+    sudo systemctl start pipewire-pulse.service
+    sudo systemctl enable wireplumber.service
+    sudo systemctl start wireplumber.service
     # Time Sync (ntp)
     sudo systemctl enable systemd-timesyncd.service
     sudo systemctl start systemd-timesyncd.service
