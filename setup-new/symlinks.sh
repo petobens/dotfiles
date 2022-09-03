@@ -133,6 +133,7 @@ if type "nvim" > /dev/null 2>&1; then
     echo Created .config/nvim folder symlink
 fi
 if type "code" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.config/Code/User"
     for f in settings.json keybindings.json extensions.txt; do
         $ln_cmd -fTs "$dotfiles_dir/vscode/$f" "$HOME/.config/Code/User/$f"
         echo "Created .config/Code/User/$f symlink"
@@ -188,8 +189,7 @@ fi
 # Terminal programs
 if type "less" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/lesskey" "$HOME/.lesskey"
-    echo Created .lesskey symlink. Running lesskey executable to generate .less binary file...
-    lesskey
+    echo Created .lesskey symlink
 fi
 if type "ssh" > /dev/null 2>&1; then
     if [ -f "$HOME"/OneDrive/arch/ssh/config ]; then
