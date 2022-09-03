@@ -6,7 +6,7 @@
 # `brew cask reinstall basictex`)
 
 # Define path for initial install (which won't read env variable)
-PATH="$PATH:/usr/local/texlive/2021/bin/x86_64-linux"
+PATH="$PATH:/usr/local/texlive/2022/bin/x86_64-linux"
 
 # Install texlive
 if ! type "tlmgr" > /dev/null 2>&1; then
