@@ -53,6 +53,7 @@ if type "bash" > /dev/null 2>&1; then
         echo Created .fzf_bash.sh symlink
     fi
 fi
+# shellcheck disable=SC1091
 . "$HOME/.bashrc"
 # Readline
 $ln_cmd -fTs "$dotfiles_dir/inputrc" "$HOME/.inputrc"
@@ -128,13 +129,8 @@ if type "tmux" > /dev/null 2>&1; then
     echo Created .tmux folder symlink
 fi
 if type "nvim" > /dev/null 2>&1; then
-    if [ -f "$dotfiles_dir/nvim/init.lua" ]; then
-        $ln_cmd -fTs "$dotfiles_dir/nvim" "$HOME/.config/nvim"
-        echo Created .config/nvim folder symlink
-    else
-        $ln_cmd -fTs "$dotfiles_dir/vim" "$HOME/.config/nvim"
-        echo Created .config/nvim folder symlink from vim folder
-    fi
+    $ln_cmd -fTs "$dotfiles_dir/nvim" "$HOME/.config/nvim"
+    echo Created .config/nvim folder symlink
 fi
 if type "code" > /dev/null 2>&1; then
     for f in settings.json keybindings.json extensions.txt; do
@@ -160,10 +156,6 @@ $ln_cmd -fTs "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 echo Created .surfingkeysrc symlink
 
 # Linters
-if type "vint" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/vintrc.yaml" "$HOME/.vintrc.yaml"
-    echo Created .vintrc.yaml symlink
-fi
 if type "eslint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/eslintrc.yaml" "$HOME/.eslintrc.yaml"
     echo Created .eslintrc.yaml symlink
@@ -220,23 +212,10 @@ if type "ranger" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/config/ranger" "$HOME/.config/ranger"
     echo Created .config/ranger folder symlink
 fi
-if type "sqlplus" > /dev/null 2>&1; then
-    # Note: we actually use sqlcl as cli
-    mkdir -p "$HOME/.config/sqlplus"
-    $ln_cmd -fTs "$dotfiles_dir/dbs/sqlcl_config" "$HOME/.config/sqlplus/login.sql"
-    echo Created ".config/sqlplus/login.sql" symlink
-    $ln_cmd -fTs "$dotfiles_dir/dbs/sqlcl_prompt.js" "$HOME/.config/sqlplus/sqlcl_prompt.js"
-    echo Created ".config/sqlplus/sqlcl_prompt.js" symlink
-fi
 if type "pgcli" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/pgcli"
     sudo $ln_cmd -fTs "$dotfiles_dir/dbs/pgcli_config" "$HOME/.config/pgcli/config"
     echo Created ".config/pgcli/config" symlink
-fi
-if type "mssql-cli" > /dev/null 2>&1; then
-    sudo mkdir -p "$HOME/.config/mssqlcli"
-    sudo $ln_cmd -fTs "$dotfiles_dir/dbs/mssqlcli_config" "$HOME/.config/mssqlcli/config"
-    echo Created ".config/mssqlcli/config" symlink
 fi
 if type "litecli" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/litecli"
@@ -334,7 +313,7 @@ else
         echo Created .config/rofi folder symlink
     fi
     if type "dunst" > /dev/null 2>&1; then
-        mkdir -p $HOME/.local/share
+        mkdir -p "$HOME/.local/share"
         $ln_cmd -fTs "/usr/share/icons" "$HOME/.local/share/icons"
         $ln_cmd -fTs "$dotfiles_dir/arch/config/dunst" "$HOME/.config/dunst"
         echo Created .config/dunst folder symlink

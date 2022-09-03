@@ -1,11 +1,5 @@
 # Dotfiles gitignore
 
-# Vim
-vim/bundle/
-vim/cache/
-vim/vimrc_min
-.tern-port
-
 # Nvim
 nvim/plugin/
 nvim/cache/

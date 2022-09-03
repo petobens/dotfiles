@@ -1,4 +1,4 @@
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2148
 
 # Options {{{
 
@@ -77,7 +77,6 @@ bind '"\C-n": history-search-forward'
 
 # Bash
 alias sh='bash'
-alias sbp='source ~/.bash_profile'
 alias u='cd ..'
 alias 2u='cd ../..'
 alias 3u='cd ../../..'
@@ -106,8 +105,6 @@ ds() {
 }
 alias df='df -h'
 alias diff='diff -u --color'
-alias ur='unrar x'
-alias uz='unzip'
 alias rsync='rsync -auP'
 alias ti='hyperfine'
 alias ping='prettyping --nolegend --last 30'
@@ -153,14 +150,6 @@ fi
 if type "ctop" > /dev/null 2>&1; then
     alias ct='TERM=xterm-256 ctop'
 fi
-if type "progress" > /dev/null 2>&1; then
-    alias pg='progress -w'
-fi
-if type "proxychains" > /dev/null 2>&1; then
-    pc() {
-        proxychains -q "$@"
-    }
-fi
 if type "lsd" > /dev/null 2>&1; then
     alias ls='lsd -F --color=auto'
     cd() { builtin cd "$@" && lsd -F --color=auto; }
@@ -180,9 +169,6 @@ if type "bat" > /dev/null 2>&1; then
 fi
 if type "dust" > /dev/null 2>&1; then
     alias rds='dust -r -b'
-fi
-if type "fusermount3" > /dev/null 2>&1; then
-    alias fu='fusermount3 -zu'
 fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
@@ -286,17 +272,6 @@ if type "python" > /dev/null 2>&1; then
     if type "ipython3" > /dev/null 2>&1; then
         alias ipy='ipython3'
     fi
-    if type "pipenv" > /dev/null 2>&1; then
-        alias pel='pipenv run pip list'
-        alias pei='pipenv install'
-        alias peu='pipenv uninstall'
-        alias peg='pipenv graph'
-        alias pes='pipenv shell'
-        alias pep='pipenv run python'
-        alias ped='pipenv run python -m pdb -cc'
-        alias pet='pipenv run pytest'
-        alias pej='pipenv run jupyter notebook'
-    fi
     if type "poetry" > /dev/null 2>&1; then
         alias pol='poetry run pip list'
         alias poa='poetry add'
@@ -357,11 +332,6 @@ if type "vagrant" > /dev/null 2>&1; then
     alias vgh='vagrant halt'
 fi
 
-# AWS
-if type "aws" > /dev/null 2>&1; then
-    alias as3='aws s3'
-fi
-
 # Update system (and language libraries); see function below
 alias ua=sys_update_all
 
@@ -420,12 +390,6 @@ alias cptdb=' PGPASSWORD="$(pass show claro/postgres/tcalt/pass)" pgcli '\
 '-h "$(pass show claro/postgres/tcalt/host)" -p 5432 -U airflow -d delver'
 alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
 
-# Habitat
-alias hsshp='TERM=xterm-256color; ssh habitat-server-prd'
-alias hsshs='TERM=xterm-256color; ssh habitat-server-stg'
-alias hdb='PGPASSWORD="$(pass show habitat/postgres/pass)" pgcli -h '\
-'"$(pass show habitat/postgres/host)" -U mutt -d habitat'
-
 # Meli
 alias mgpp='echo $(pass show meli/vpn/pin)'\
 '$(oathtool --base32 --totp $(pass show meli/vpn/secret)) | xclip -r -selection clipboard'
@@ -454,15 +418,6 @@ alias mvp='mvssh proxy 12345'
 alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
 alias mvtt='vagrant ssh -- -L 127.0.0.1:1025:$(pass show meli/teradata/host):1025 -v -N'
 alias mvpt='vagrant ssh -- -L 127.0.0.1:8443:$(pass show meli/presto/host):443 -v -N'
-
-# UC
-uvpn() {
-    vpn_cmd="openvpn --daemon --config $(pass show urban/vpn/config-path)"
-    vpn_cmd+=" --auth-user-pass <(echo -e \"$(pass show urban/vpn/user)\n$(pass show urban/vpn/pass)\")"
-    cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
-    eval "$cmd"
-}
-alias ussh='TERM=xterm-256color; sshpass -p "$(pass show urban/server/187/pass)" ssh urban'
 
 # Etermax
 alias emfa='aws-mfa --profile etermax'
@@ -511,10 +466,6 @@ sys_update_all() {
             yay -Syu --nodiffmenu --answerclean N --removemake --devel \
                 --timeupdate --combinedupgrade
             yay -c
-        fi
-        if type "flatpak" > /dev/null 2>&1; then
-            echo -e "\033[1;34m\n-> Updating flatpaks...\033[0m"
-            flatpak update
         fi
     fi
     if type "pipx" > /dev/null 2>&1; then

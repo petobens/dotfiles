@@ -12,15 +12,6 @@ if type "gem" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing sqlint...\\033[0m"
     gem install sqlint
 fi
-if type "mongo" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m--> Installing mongo-hacker...\\033[0m"
-    git clone https://github.com/TylerBrock/mongo-hacker
-    (
-        cd mongo-hacker || exit
-        make install
-    )
-    # rm -rf mongo-hacker # (this erases config file)
-fi
 if type "ranger" > /dev/null 2>&1; then
     # Install ranger plugins and scope.sh executable
     echo -e "\\033[1;34m--> Installing ranger devicons...\\033[0m"
@@ -38,9 +29,6 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 else
     base_pkg_dir='/usr'
-fi
-if type "pipenv" > /dev/null 2>&1; then
-    pipenv --completion | sudo tee "$base_pkg_dir/share/bash-completion/completions/pipenv"
 fi
 if type "poetry" > /dev/null 2>&1; then
     poetry completions bash | sudo tee "$base_pkg_dir/share/bash-completion/completions/poetry"

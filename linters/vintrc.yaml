@@ -1,8 +1,0 @@
----
-# Disable `Make the scope explicit` and 'Missing scriptencoding' warnings
-policies:
-    ProhibitImplicitScopeVariable:
-        enabled: false
-    ProhibitMissingScriptEncoding:
-        enabled: false
-...

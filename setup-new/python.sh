@@ -6,11 +6,9 @@ fi
 if type "pip3" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing Python3 modules...\\033[0m"
     pip_install_cmd='pip3 install --user '
-    $pip_install_cmd cython
     if type "i3" > /dev/null 2>&1; then
         $pip_install_cmd i3ipc
     fi
-    $pip_install_cmd jedi
     $pip_install_cmd matplotlib
     $pip_install_cmd numpy
     $pip_install_cmd pandas
@@ -21,9 +19,6 @@ if type "pip3" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
         $pip_install_cmd -U msgpack
     fi
-    $pip_install_cmd pytest-cov
-    $pip_install_cmd pytest
-    $pip_install_cmd pytest-xdist
     $pip_install_cmd requests
     $pip_install_cmd Send2Trash
     $pip_install_cmd scikit-learn
@@ -51,18 +46,16 @@ fi
 pipx_inject_cmd="$HOME/.local/bin/pipx inject --verbose"
 
 $pipx_install_cmd aws-mfa
-$pipx_install_cmd git+https://github.com/PyCQA/flake8
+$pipx_install_cmd flake8
 $pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
 $pipx_install_cmd black
 $pipx_install_cmd httpie
-# shellcheck disable=SC2102
 $pipx_install_cmd isort
 $pipx_install_cmd jupyter --include-deps
 $pipx_inject_cmd jupyter numpy pandas matplotlib
 $pipx_install_cmd ipython
 $pipx_inject_cmd ipython numpy pandas matplotlib black
 $pipx_install_cmd litecli
-$pipx_install_cmd mssql-cli
 $pipx_install_cmd mycli
 $pipx_install_cmd mypy
 if type "nvim" > /dev/null 2>&1; then
@@ -70,14 +63,13 @@ if type "nvim" > /dev/null 2>&1; then
 fi
 $pipx_install_cmd pre-commit
 $pipx_install_cmd pgcli
-$pipx_install_cmd pipenv
 $pipx_install_cmd poetry
 $pipx_install_cmd pylint
 if type "i3" > /dev/null 2>&1; then
     $pipx_install_cmd raiseorlaunch
 fi
 if type "R" > /dev/null 2>&1; then
-    $pipx_install_cmd git+https://github.com/randy3k/radian
+    $pipx_install_cmd radian
     $pipx_inject_cmd radian jedi
 fi
 $pipx_install_cmd ranger-fm
@@ -85,9 +77,7 @@ $pipx_install_cmd sqlparse
 $pipx_install_cmd trash-cli
 $pipx_install_cmd git+https://github.com/will8211/unimatrix
 $pipx_install_cmd vimiv
-$pipx_install_cmd vim-vint
 $pipx_install_cmd yamllint
-$pipx_install_cmd youtube-dl
 
 pipx_venvs="$PIPX_HOME/venvs"
 
@@ -133,9 +123,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-for cli in litecli mycli pgcli mssql-cli radian; do
+for cli in litecli mycli pgcli radian; do
     if [ -d "$pipx_venvs/$cli" ]; then
-        # FIXME: Get python version automatically
         styles_dir="$pipx_venvs/$cli/lib/python$python_version/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then
             $ln_cmd -fTs "$python_dir/onedarkish.py" "$styles_dir/onedarkish.py"

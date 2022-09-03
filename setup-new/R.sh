@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 parent_dir="$(dirname "$current_dir")"
 
-# Ensure lib dir is defined 
+# Ensure lib dir is defined
 export R_LIBS_USER="$HOME/.local/lib/R/site-library"
 
 # Actually install libraries (to install from source use devtools or something
@@ -19,8 +19,3 @@ if (length(new_packages)) {
     install.packages(new_packages, lib=Sys.getenv("R_LIBS_USER"), repos="http://cran.us.r-project.org")
 }
 EOF
-
-# Install colorout
-git clone https://github.com/jalvesaq/colorout.git
-R CMD INSTALL colorout
-rm -rf colorout

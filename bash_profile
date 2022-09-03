@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 # Path and os dependent settings {{{
 
 # OS dependent settings
@@ -30,10 +31,10 @@ else
 
     # Texlive
     if [ -d "$BASE_PKG_DIR/local/texlive" ]; then
-        PATH="$PATH:/usr/local/texlive/2021/bin/x86_64-linux"
+        PATH="$PATH:/usr/local/texlive/2022/bin/x86_64-linux"
         # FIXME: If we set this then we cannot jump between Man tags with nvim
         # export MANPATH="$MANPATH:/usr/local/texlive/2021/texmf-dist/doc/man"
-        export INFOPATH="$INFOPATH:/usr/local/texlive/2021/texmf-dist/doc/info"
+        export INFOPATH="$INFOPATH:/usr/local/texlive/2022/texmf-dist/doc/info"
     fi
 
     # GTK scaling and themes (we don't do this here because we use the Xft.dpi
@@ -68,16 +69,10 @@ if type "pyenv" > /dev/null 2>&1; then
     PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init --path --no-rehash bash)"
 fi
-# We use sqlcl instead of sqlplus (it must be manually installed to this dir)
-if [ -d "$HOME/.local/sqlcl" ]; then
-    PATH="$PATH:$HOME/.local/sqlcl/bin"
-fi
 # Prepend python virtual env to path if exists (this is useful when spawning a
 # new terminal form within neovim). Note: this must be the very last PATH mod
 if [ -n "$VIRTUAL_ENV" ]; then
     PATH="$VIRTUAL_ENV/bin:$PATH"
-    # Also set airflow home to this dir (pipenv shell reads .env file)
-    export AIRFLOW_HOME="$VIRTUAL_ENV/airflow"
 fi
 
 # Remove duplicate path entries
@@ -104,29 +99,14 @@ else
     # files in red and sticky dirs in green
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:tw=0;32"
 fi
-if type "python" > /dev/null 2>&1; then
-    export AIRFLOW_GPL_UNIDECODE='yes'
-fi
 # R libraries (note: first create this folder if it doesn't exist)
 if type "R" > /dev/null 2>&1; then
     export R_LIBS_USER="$HOME/.local/lib/R/site-library"
-fi
-if type "pipenv" > /dev/null 2>&1; then
-    # Always create a pipenv venv (useful when running from vim)
-    export PIPENV_IGNORE_VIRTUALENVS=1
-    # Don't lock dependencies automatically when install/uninstall commands
-    export PIPENV_SKIP_LOCK=1
 fi
 if type "pipx" > /dev/null 2>&1; then
     eval "$(register-python-argcomplete pipx)"
     export PIPX_HOME=$HOME/.local/pipx
     export PIPX_BIN_DIR=$HOME/.local/bin
-fi
-if type "sqlplus" > /dev/null 2>&1; then
-    export SQLPATH="$HOME/.config/sqlplus"
-fi
-if type "mssql-cli" > /dev/null 2>&1; then
-    export MSSQL_CLI_TELEMETRY_OPTOUT=1
 fi
 if type "gpg" > /dev/null 2>&1; then
     GPG_TTY=$(tty)

@@ -17,12 +17,6 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     install_node=true
 fi
-install_displaylink=false
-read -p $'\033[1mDo you want to install Displaylink (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    install_displaylink=true
-fi
 
 # Use our pacman conf
 if type "pacman" > /dev/null 2>&1; then
@@ -103,10 +97,6 @@ $yay_cmd alsa-tools
 $yay_cmd bluez-utils
 $yay_cmd capnet-assist
 $yay_cmd connman
-$yay_cmd debtap
-if [[ "$install_displaylink" = true ]]; then
-    $yay_cmd displaylink
-fi
 $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
@@ -151,27 +141,22 @@ $yay_cmd adwaita-qt
 $yay_cmd qt5ct
 
 # Databases
-$yay_cmd oracle-instantclient-basic
-$yay_cmd oracle-instantclient-sqlplus
-$yay_cmd python-pymysql # python version of mysql
-$yay_cmd mongodb-bin
-$yay_cmd mongodb-tools-bin
 $yay_cmd postgresql
-$yay_cmd protobuf # Required by python's mysql-connector
 $yay_cmd redis
 $yay_cmd sqlite3
 
-# CLI
-$yay_cmd aws-cli
-$yay_cmd aws-session-manager-plugin
+# VPN
 $yay_cmd --mflags "--skipchecksums" snx-800007075
+$yay_cmd globalprotect-openconnect
+$yay_cmd openvpn
+
+# CLI
 $yay_cmd bat
 $yay_cmd bind-tools
 $yay_cmd cronie
 $yay_cmd ctags
 $yay_cmd ctop
 $yay_cmd diff-so-fancy
-$yay_cmd dmidecode
 $yay_cmd docker
 $yay_cmd docker-compose
 $yay_cmd dragon-drop
@@ -180,7 +165,6 @@ $yay_cmd fd
 $yay_cmd forgit-git
 $yay_cmd fzf
 $yay_cmd github-cli
-$yay_cmd globalprotect-openconnect
 $yay_cmd gnupg
 $yay_cmd gobject-introspection
 $yay_cmd gopass
@@ -198,17 +182,13 @@ $yay_cmd neofetch
 $yay_cmd neomutt
 $yay_cmd oath-toolkit
 $yay_cmd openssh
-$yay_cmd openvpn
 $yay_cmd p7zip
 $yay_cmd pandoc
 $yay_cmd pandoc-crossref
 $yay_cmd prettyping
 $yay_cmd procs
-$yay_cmd progress
-$yay_cmd proxychains-ng
 $yay_cmd qrencode
 $yay_cmd ripgrep
-$yay_cmd rlwrap
 $yay_cmd rsync
 $yay_cmd sd
 $yay_cmd shellcheck
@@ -217,11 +197,8 @@ $yay_cmd slides-bin
 $yay_cmd socat
 $yay_cmd sshfs
 $yay_cmd sshpass
-$yay_cmd strace
 $yay_cmd stylua
 $yay_cmd tk
-$yay_cmd tldr
-$yay_cmd tokei
 $yay_cmd tree
 $yay_cmd unrar
 $yay_cmd unzip
@@ -239,7 +216,6 @@ $yay_cmd brave-bin
 $yay_cmd connman-gtk
 $yay_cmd cups
 $yay_cmd cups-pdf
-$yay_cmd discord
 $yay_cmd firefox
 $yay_cmd --mflags --skipinteg freeoffice
 $yay_cmd gcolor3
