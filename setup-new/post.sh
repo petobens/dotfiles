@@ -125,12 +125,12 @@ EOF'
     # Start pulseaudio (if daemon is not already running which it should)
     # pulseaudio --start
     # Start pipewire
-    sudo systemctl enable pipewire.service
-    sudo systemctl start pipewire.service
-    sudo systemctl enable pipewire-pulse.service
-    sudo systemctl start pipewire-pulse.service
-    sudo systemctl enable wireplumber.service
-    sudo systemctl start wireplumber.service
+    systemctl --user enable pipewire.service
+    systemctl --user start pipewire.service
+    systemctl --user enable pipewire-pulse.service
+    systemctl --user start pipewire-pulse.service
+    systemctl --user enable wireplumber.service
+    systemctl --user start wireplumber.service
     # Time Sync (ntp)
     sudo systemctl enable systemd-timesyncd.service
     sudo systemctl start systemd-timesyncd.service
