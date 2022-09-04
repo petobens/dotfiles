@@ -100,6 +100,7 @@ $yay_cmd pipewire-alsa
 $yay_cmd pipewire-pulse
 $yay_cmd pipewire-jack
 $yay_cmd wireplumber
+$yay_cmd sof-firmware
 
 # Arch specific and window manager
 $yay_cmd acpi_call
