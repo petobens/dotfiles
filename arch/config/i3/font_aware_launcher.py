@@ -52,7 +52,6 @@ APPS = {
     },
     'color-picker': {'type': 'gtk', 'args': {'class_name': 'Gcolor3'}},
     'connman': {'type': 'gtk', 'args': {'class_name': 'Connman-gtk'}},
-    'discord': {'type': 'rol', 'args': {'class_name': 'discord', 'event_delay': 30}},
     'docker': {
         'type': 'tui',
         'args': {
@@ -65,15 +64,6 @@ APPS = {
     'firefox': {'type': 'rol', 'args': {'class_name': 'firefox', 'mark': 'ffox'}},
     'globalprotect-vpn': {'type': 'qt', 'args': {'class_name': 'gpclient'}},
     'gnome-font': {'type': 'gtk', 'args': {'class_name': 'Gnome-font-viewer'}},
-    'hangouts': {
-        'type': 'electron',
-        'args': {
-            'class_name': 'Brave',
-            'mark': 'hangouts',
-            'subcmd': 'hangouts',
-            'post_cmd': True,
-        },
-    },
     'htop': {'type': 'tui', 'args': {'title': 'htop', 'cmd': 'htop'}},
     'kitty': {
         'type': 'rol_custom',
@@ -522,8 +512,6 @@ class ElectronApp(ROLApp):
             cmd += ' --new-window --app=https://{url}'
             if self.subcmd == 'calendar':
                 cmd = cmd.format(url=f'{self.subcmd}.google.com/calendar/b/0/r')
-            elif self.subcmd == 'hangouts':
-                cmd = cmd.format(url=f'{self.subcmd}.google.com/?authuser=1')
             elif self.subcmd == 'meet':
                 cmd = cmd.format(url=f'{self.subcmd}.google.com')
             elif self.subcmd == 'clickup':

@@ -5,7 +5,7 @@ import sys
 import i3ipc
 from i3_helpers import sh
 
-CTRL_Q = ['Slack', 'discord']
+CTRL_Q = ['Slack']
 CUSTOM = ['Chromium', 'Brave-browser']
 
 

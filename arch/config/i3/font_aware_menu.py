@@ -38,7 +38,6 @@ APPS = {
         'icon': 'wifi-radar',
         'desc': 'Network Settings',
     },
-    'Discord': {'cmd': 'discord', 'icon': 'discord', 'desc': 'Internet Messenger'},
     'Document Scanner': {'cmd': 'scanner', 'icon': 'org.gnome.SimpleScan'},
     'Firefox': {'cmd': 'firefox', 'icon': 'firefox', 'desc': 'Web Browser'},
     'Fonts': {'cmd': 'gnome-font', 'icon': 'org.gnome.font-viewer'},
@@ -58,7 +57,6 @@ APPS = {
         'desc': 'Word Processor',
     },
     'GlobalProtect VPN': {'cmd': 'globalprotect-vpn', 'icon': 'network-vpn'},
-    'Hangouts': {'cmd': 'hangouts', 'icon': 'google-chat', 'desc': 'Google Hangouts'},
     'Htop': {
         'cmd': 'htop',
         'icon': 'htop',

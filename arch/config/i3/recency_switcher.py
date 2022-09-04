@@ -96,8 +96,6 @@ class Menu:
                 icon_name = 'google-agenda'
             elif 'Meet' in win_title:
                 icon_name = 'google-meet'
-            elif 'Hangouts' in win_title:
-                icon_name = 'google-meet'
             elif '(Board)' in win_title:
                 # TODO: Find a better way of getting clickup app
                 icon_name = 'tracker'
