@@ -183,7 +183,6 @@ $yay_cmd httping
 $yay_cmd hyperfine
 $yay_cmd inetutils
 $yay_cmd jq
-$yay_cmd libsecret # for mailspring
 $yay_cmd libgit2
 $yay_cmd lsb-release
 $yay_cmd lsd
@@ -200,6 +199,7 @@ $yay_cmd qrencode
 $yay_cmd ripgrep
 $yay_cmd rsync
 $yay_cmd sd
+$yay_cmd seahorse
 $yay_cmd shellcheck
 $yay_cmd shfmt
 $yay_cmd slides-bin
