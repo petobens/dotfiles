@@ -351,6 +351,8 @@ else
         # echo Created /etc/udev/rules.d/99-usb-ethernet.rules symlink
         sudo $ln_cmd -fTs "$dotfiles_dir/arch/udev/99-webcam.rules" "/etc/udev/rules.d/99-webcam.rules"
         echo Created /etc/udev/rules.d/99-webcam.rules symlink
+        sudo $ln_cmd -fTs "$dotfiles_dir/arch/udev/99-backlight.rules" "/etc/udev/rules.d/99-backlight.rules"
+        echo Created /etc/udev/rules.d/99-backlight.rules symlink
     fi
 fi
 

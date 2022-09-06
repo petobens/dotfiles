@@ -104,6 +104,7 @@ $yay_cmd sof-firmware
 
 # Arch specific and window manager
 $yay_cmd acpi_call
+$yay_cmd acpilight
 $yay_cmd alsa-tools
 $yay_cmd bluez
 $yay_cmd bluez-utils

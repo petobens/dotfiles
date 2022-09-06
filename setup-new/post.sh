@@ -71,6 +71,11 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line\'\' %file"
     fi
 else
+    # We need to add our user to the "video" group in order to handle screen brightness
+    if type "xbacklight" > /dev/null 2>&1; then
+        sudo usermod -a -G video "$USER"
+    fi
+
     # Create XDG directories
     if type "xdg-user-dirs-update" > /dev/null 2>&1; then
         echo -e "\\033[1;34m--> Creating missing XDG directories...\\033[0m"
