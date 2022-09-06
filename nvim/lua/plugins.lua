@@ -133,7 +133,7 @@ return require('packer').startup(function(use)
             { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
             'nvim-telescope/telescope-z.nvim',
             'nvim-telescope/telescope-frecency.nvim',
-            'tami5/sqlite.lua', -- for telescope-frecency
+            'kkharji/sqlite.lua',
         },
         config = function()
             require('plugin-config/telescope_config')
