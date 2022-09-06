@@ -137,21 +137,27 @@ bindsym $mod+Shift+Left $nexec $multimon_move -d "left" --move-ws
 bindsym $mod+Shift+Down $nexec $multimon_move -d "down" --move-ws
 bindsym $mod+Shift+Up $nexec $multimon_move -d "up" --move-ws
 
-# Assign workspaces to specific monitors
+# Define Monitors (model dependent)
+# TODO: Make this model agnostic
+# Matebook-X-Pro
 set $primary "eDP1"
 set $secondary "DP1"
-set $secondary_bis "HDMI1"
 set $third "DP2"
-set $third_bis "DVI-I-1-1"
-workspace $ws1 output $third $third_bis $primary
-workspace $ws2 output $primary
-workspace $ws3 output $primary
-workspace $ws4 output $third $third_bis $secondary $secondary_bis
-workspace $ws5 output $secondary $secondary_bis $third $third_bis
-workspace $ws6 output $secondary $secondary_bis $third $third_bis
-workspace $ws7 output $secondary $secondary_bis $third $third_bis
-workspace $ws8 output $primary
-workspace $ws9 output $third $third_bis $secondary $secondary_bis
+# Lenovo X1-Carbon
+set $primary_x1 "eDP-1"
+set $secondary_x1 "DP-1"
+set $third_x1 "DP-3"
+
+# Assign workspaces to specific monitors
+workspace $ws1 output $third $third_x1 $primary $primary_x1
+workspace $ws2 output $primary $primary_x1
+workspace $ws3 output $primary $primary_x1
+workspace $ws4 output $third $third_x1 $secondary $secondary_x1
+workspace $ws5 output $secondary $secondary_x1 $third $third_x1
+workspace $ws6 output $secondary $secondary_x1 $third $third_x1
+workspace $ws7 output $secondary $secondary_x1 $third $third_x1
+workspace $ws8 output $primary $primary_x1
+workspace $ws9 output $third $third_x1 $secondary $secondary_x1
 
 # Focus next monitor (with wrapping): this also switches mouse cursor
 bindsym $alt+grave focus output right
