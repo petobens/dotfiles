@@ -131,10 +131,7 @@ fi
 
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     # Define laptop brightness (will be read by Xresource upon starting X)
-    LAPTOP_XBRIGHTNESS=60
-    if [[ "$HOSTNAME" == 'Matebook-X-Pro' ]]; then
-        LAPTOP_XBRIGHTNESS=30
-    fi
+    LAPTOP_XBRIGHTNESS=30
     export LAPTOP_XBRIGHTNESS
 
     # Override default ethernet interface (for polybar)
