@@ -127,8 +127,6 @@ EOF'
 
     # Enable some services
     echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
-    # Start pulseaudio (if daemon is not already running which it should)
-    # pulseaudio --start
     # Start pipewire
     systemctl --user enable pipewire.service
     systemctl --user start pipewire.service

@@ -92,11 +92,8 @@ $yay_cmd neovim-git
 $yay_cmd tmux
 
 # Audio
-# $yay_cmd pulseaudio
 $yay_cmd pipewire
-# $yay_cmd pulseaudio-alsa
 $yay_cmd pipewire-alsa
-# $yay_cmd pulseaudio-bluetooth
 $yay_cmd pipewire-pulse
 $yay_cmd pipewire-jack
 $yay_cmd wireplumber

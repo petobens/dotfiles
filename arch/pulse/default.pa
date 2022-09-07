@@ -1,5 +1,0 @@
-.include /etc/pulse/default.pa
-load-module module-dbus-protocol
-load-module module-switch-on-connect
-load-module module-bluetooth-policy
-load-module module-bluetooth-discover

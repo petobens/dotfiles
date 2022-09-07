@@ -303,11 +303,6 @@ else
         echo Created fontconfig folder symlink
     fi
     # Applications
-    # if type "pulseaudio" > /dev/null 2>&1; then
-    #     mkdir -p "$HOME/.pulse/"
-    #     $ln_cmd -fTs "$dotfiles_dir/arch/pulse/default.pa" "$HOME/.pulse/default.pa"
-    #     echo Created .pulse/default.pa symlink
-    # fi
     if type "rofi" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/arch/config/rofi" "$HOME/.config/rofi"
         echo Created .config/rofi folder symlink

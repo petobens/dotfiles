@@ -10,22 +10,17 @@ def control_volume(how, level):
     _change_vol(how, level)
     if how == 'mute':
         # Remove existing notification
-        sh('xdotool key Control+space')
+        sh('xdotool key Control+Alt+space')
     else:
         _send_notification()
     return 0
 
 
 def _change_vol(how, level):
-    mute_cmd = 'pactl set-sink-mute @DEFAULT_SINK@ '
     if how == 'mute':
-        mute_cmd += 'toggle'
+        sh('wpctl set-mute @DEFAULT_SINK@ toggle')
     else:
-        mute_cmd += 'false'
-    sh(mute_cmd)
-
-    if how != 'mute':
-        vol_cmd = 'pactl set-sink-volume @DEFAULT_SINK@ {how}{level}%'.format(
+        vol_cmd = 'wpctl set-volume @DEFAULT_AUDIO_SINK@ {level}%{how}'.format(
             how='+' if how == 'up' else '-', level=level
         )
         sh(vol_cmd)
@@ -36,8 +31,7 @@ def _send_notification():
     vol, device = _get_vol_and_output_device()
     vol = max(0, min(vol, 100))
     bar = "─" * int(vol / 5)
-
-    not_icon = 'audio-speakers' if 'speaker' in device else 'audio-headphones'
+    not_icon = 'audio-headphones' if 'bluez' in device else 'audio-speakers'
     not_cmd = [
         'dunstify',
         '-i',
@@ -54,21 +48,14 @@ def _send_notification():
 
 
 def _get_vol_and_output_device():
-    pactl_out = [
-        line.decode('ascii').split() for line in sh('pactl list sinks').splitlines()
+    curr_vol = sh('wpctl get-volume @DEFAULT_AUDIO_SINK@')
+    curr_vol = int(float(curr_vol.decode('ascii').split(':')[-1].strip()) * 100)
+    wpctl_out = [
+        line.decode('ascii').split()
+        for line in sh('wpctl inspect @DEFAULT_AUDIO_SINK@').splitlines()
     ]
-    try:
-        active_index = pactl_out.index([e for e in pactl_out if 'RUNNING' in e][0])
-    except IndexError:
-        active_index = 1
-    pactl_out = pactl_out[active_index:]
-
-    vol_list = [e for e in pactl_out if 'Volume:' in e][0]
-    curr_vol = next(i for i in vol_list if i.endswith('%')).split('%')[0]
-
-    out_list = [e for e in pactl_out if 'Port:' in e][0]
-    device = out_list[-1]
-    return int(curr_vol), device
+    device = [e for e in wpctl_out if 'device.api' in e][0][-1].split('"')[1]
+    return curr_vol, device
 
 
 if __name__ == '__main__':
