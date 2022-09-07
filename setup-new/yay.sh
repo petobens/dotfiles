@@ -101,6 +101,7 @@ $yay_cmd sof-firmware
 
 # Arch specific and window manager
 $yay_cmd acpi_call
+yay -S --mflags --skipinteg --answerclean N --nodiffmenu acpilight # manually resolve conflicts with xorg-xbacklight
 $yay_cmd acpilight
 $yay_cmd alsa-tools
 $yay_cmd bluez
