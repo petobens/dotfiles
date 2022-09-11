@@ -268,11 +268,12 @@ onedarkpro.setup({
         IndentBlanklineContextChar = { fg = p.white },
 
         ---- NvimTree
-        NvimTreeFolderIcon = { fg = p.white },
-        NvimTreeFolderName = { fg = p.yellow },
+        NvimTreeFolderIcon = { fg = p.light_blue },
+        NvimTreeFolderName = { fg = p.light_blue },
         NvimTreeOpenedFolderName = { link = 'NvimTreeFolderName' },
         NvimTreeEmptyFolderName = { link = 'NvimTreeFolderName' },
         NvimTreeRootFolder = { fg = p.purple },
+        NvimTreeIndentMarker = { fg = p.gray, style = 'bold' },
         NvimTreeSymlink = { fg = p.purple },
         NvimTreeGitDirty = { fg = p.red }, -- modified/unstaged
         NvimTreeGitStaged = { fg = p.green },
@@ -280,8 +281,8 @@ onedarkpro.setup({
         NvimTreeGitRenamed = { fg = p.yellow },
         NvimTreeGitNew = { fg = p.green },
         NvimTreeGitDeleted = { fg = p.red },
-        NvimTreeIndentMarker = { fg = p.light_blue },
         NvimTreeExecFile = { fg = p.red },
+        NvimTreeSpecialFile = { fg = p.yellow, style = 'bold' },
 
         ---- Packer
         packerFail = { fg = p.red },

@@ -78,8 +78,8 @@ require('nvim-tree').setup({
             git_placement = 'after',
             glyphs = {
                 folder = {
-                    arrow_closed = '',
-                    arrow_open = '',
+                    arrow_open = '',
+                    arrow_closed = '',
                 },
                 git = {
                     unstaged = '✚',
