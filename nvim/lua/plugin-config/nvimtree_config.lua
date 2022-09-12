@@ -59,6 +59,7 @@ local map_list = {
     { key = 'zo', cb = tree_cb('edit') },
     { key = 'zm', cb = ':lua require("nvim-tree.lib").collapse_all()<CR>' },
     { key = 'o', cb = tree_cb('system_open') },
+    { key = '<Space>', cb = tree_cb('toggle_mark') },
 }
 
 require('nvim-tree').setup({
@@ -81,6 +82,7 @@ require('nvim-tree').setup({
                     arrow_open = '',
                     arrow_closed = '',
                 },
+                bookmark = '',
                 git = {
                     unstaged = '✚',
                     staged = '●',
