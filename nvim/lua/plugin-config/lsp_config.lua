@@ -68,11 +68,13 @@ local function on_attach(client, bufnr)
     })
 end
 
+-- Lua-dev setup (must go before lspconfig)
+require('lua-dev').setup()
+
 -- Servers setup
 -- Server names available in https://github.com/williamboman/nvim-lsp-installer
 local lspconfig = require('lspconfig')
 lspconfig.sumneko_lua.setup({
-    settings = require('lua-dev').setup().settings,
     on_attach = on_attach,
 })
 lspconfig.bashls.setup({
