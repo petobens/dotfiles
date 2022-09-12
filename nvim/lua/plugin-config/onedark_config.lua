@@ -64,7 +64,7 @@ onedarkpro.setup({
         Pmenu = { fg = p.fg, bg = p.pmenu },
         PmenuSbar = { link = 'Pmenu' }, -- scrolling bar space
         PmenuSel = { link = 'WildMenu' },
-        PmenuThumb = { bg = p.linenr_grey }, -- scrollbar color
+        PmenuThumb = { bg = p.pmenu }, -- scrollbar color
         Question = { fg = p.light_blue },
         QuickFixLine = { bg = p.cursor_grey },
         Search = { fg = p.black, bg = p.yellow },
@@ -241,6 +241,9 @@ onedarkpro.setup({
         CmpItemAbbrMatchFuzzy = { fg = p.blue },
         CmpItemMenu = { fg = p.gray },
         CmpItemKind = { fg = p.cyan },
+        -- FIXME: https://github.com/olimorris/onedarkpro.nvim/issues/88
+        -- CmpPmenu = { fg = p.fg, bg = p.bg, blend = 30 },
+        CmpBorder = { fg = p.pmenu },
 
         ---- Fugitive
         diffAdded = { fg = p.green },
@@ -337,3 +340,6 @@ set.terminal_color_14 = p.cyan
 set.terminal_color_15 = p.comment_grey
 set.terminal_color_background = p.black
 set.terminal_color_foreground = p.white
+
+-- Custom highlights
+vim.api.nvim_set_hl(0, 'CmpPmenu', { fg = p.fg, bg = p.bg, blend = 6 })

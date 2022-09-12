@@ -18,9 +18,40 @@ local feedkey = function(key, mode)
     )
 end
 
+local function border(hl_name)
+    return {
+        { '╭', hl_name },
+        { '─', hl_name },
+        { '╮', hl_name },
+        { '│', hl_name },
+        { '╯', hl_name },
+        { '─', hl_name },
+        { '╰', hl_name },
+        { '│', hl_name },
+    }
+end
+
 cmp.setup({
     completion = {
         completeopt = 'menu,menuone,noinsert',
+    },
+    window = {
+        completion = {
+            winhighlight = 'Normal:CmpPmenu,CursorLine:PmenuSel,Search:None',
+            border = border('CmpBorder'),
+        },
+        documentation = {
+            winhighlight = 'Normal:CmpPmenu,Search:None',
+            border = border('CmpBorder'),
+        },
+    },
+    experimental = {
+        ghost_text = true,
+    },
+    formatting = {
+        format = require('lspkind').cmp_format({
+            with_text = true,
+        }),
     },
     mapping = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -78,14 +109,6 @@ cmp.setup({
         expand = function(args)
             vim.fn['vsnip#anonymous'](args.body)
         end,
-    },
-    formatting = {
-        format = require('lspkind').cmp_format({
-            with_text = true,
-        }),
-    },
-    experimental = {
-        ghost_text = true,
     },
 })
 
