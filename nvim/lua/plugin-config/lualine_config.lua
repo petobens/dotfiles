@@ -1,4 +1,5 @@
 local u = require('utils')
+---@diagnostic disable-next-line: missing-parameter
 local onedark_colors = require('onedarkpro').get_colors()
 
 _G.LualineConfig = {}
@@ -153,8 +154,8 @@ require('lualine').setup({
                 'lsp_progress',
                 component_separator = { left = '', right = '' },
                 display_components = {
-                    'spinner',
                     'lsp_client_name',
+                    { 'message' },
                 },
                 separators = {
                     lsp_client_name = { pre = '', post = '' },
