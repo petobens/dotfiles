@@ -27,7 +27,7 @@ set.completeopt = { 'menu', 'menuone', 'noselect' }
 set.cursorline = true
 set.mouse = 'a'
 set.number = true
-set.pumblend = 5
+set.pumblend = 6
 set.pumheight = 15
 set.relativenumber = true
 set.scrolloff = 3
@@ -36,7 +36,7 @@ set.splitbelow = true
 set.splitright = true
 set.startofline = true
 set.virtualedit = { 'block', 'onemore' }
-set.winblend = 5
+set.winblend = 6
 
 -- Backups, sessions, undo and shada
 set.backup = true

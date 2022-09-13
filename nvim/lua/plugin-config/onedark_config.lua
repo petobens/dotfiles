@@ -59,7 +59,7 @@ onedarkpro.setup({
         MsgArea = { link = 'Normal' },
         NonText = { fg = p.comment_grey },
         Normal = { fg = p.fg, bg = p.bg },
-        NormalFloat = { link = 'Pmenu' },
+        NormalFloat = { fg = p.fg, bg = p.bg, blend = 6 },
         NormalNC = { link = 'Normal' },
         Pmenu = { fg = p.fg, bg = p.pmenu },
         PmenuSbar = { link = 'Pmenu' }, -- scrolling bar space
@@ -240,10 +240,7 @@ onedarkpro.setup({
         CmpItemAbbrMatch = { fg = p.blue },
         CmpItemAbbrMatchFuzzy = { fg = p.blue },
         CmpItemMenu = { fg = p.gray },
-        CmpItemKind = { fg = p.cyan },
-        -- FIXME: https://github.com/olimorris/onedarkpro.nvim/issues/88
-        -- CmpPmenu = { fg = p.fg, bg = p.bg, blend = 30 },
-        CmpBorder = { fg = p.pmenu },
+        CmpItemKind = { fg = p.gray },
 
         ---- Fugitive
         diffAdded = { fg = p.green },
@@ -301,7 +298,7 @@ onedarkpro.setup({
         TelescopeSelectionCaret = { fg = p.purple, style = 'bold' },
         TelescopeMultiSelection = { fg = p.orange },
         TelescopeMultiIcon = { fg = p.orange },
-        TelescopeBorder = { fg = p.cursor_grey },
+        TelescopeBorder = { link = 'FloatBorder' },
         TelescopeTitle = { fg = p.comment_grey, bg = p.bg },
         TelescopePromptCounter = { fg = p.linenr_grey },
         TelescopePromptPrefix = { fg = p.purple, style = 'bold' },
@@ -340,6 +337,3 @@ set.terminal_color_14 = p.cyan
 set.terminal_color_15 = p.comment_grey
 set.terminal_color_background = p.black
 set.terminal_color_foreground = p.white
-
--- Custom highlights
-vim.api.nvim_set_hl(0, 'CmpPmenu', { fg = p.fg, bg = p.bg, blend = 6 })

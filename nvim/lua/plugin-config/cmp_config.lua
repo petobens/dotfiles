@@ -37,12 +37,12 @@ cmp.setup({
     },
     window = {
         completion = {
-            winhighlight = 'Normal:CmpPmenu,CursorLine:PmenuSel,Search:None',
-            border = border('CmpBorder'),
+            winhighlight = 'Normal:NormalFloat,CursorLine:PmenuSel,Search:None',
+            border = border('FloatBorder'),
         },
         documentation = {
-            winhighlight = 'Normal:CmpPmenu,Search:None',
-            border = border('CmpBorder'),
+            winhighlight = 'Normal:NormalFloat,Search:None',
+            border = border('FloatBorder'),
         },
     },
     experimental = {
