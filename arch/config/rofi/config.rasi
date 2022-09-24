@@ -10,7 +10,7 @@ configuration {
 	dpi: 0;
 	kb-remove-to-eol: "";
 	kb-accept-entry: "Return";
-	kb-row-up: "Shift_L+Left_Tab,Ctrl-p,Up,Ctrl-k";
+	kb-row-up: "Shift_L+Tab,Ctrl-p,Up,Ctrl-k";
 	kb-row-down: "Ctrl-n,Down,Ctrl-j";
 	kb-cancel: "Ctrl-c,Escape";
 	kb-screenshot: "Ctrl+Alt+r";
