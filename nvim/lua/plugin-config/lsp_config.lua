@@ -37,7 +37,6 @@ local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 local function on_attach(client, bufnr)
     if client.name == 'sumneko_lua' then
         -- For buffer range_formatting
-        -- TODO: Improve after https://github.com/neovim/neovim/issues/18371
         client.server_capabilities.documentRangeFormattingProvider = false
     end
 
@@ -76,6 +75,14 @@ require('lua-dev').setup({})
 local lspconfig = require('lspconfig')
 lspconfig.sumneko_lua.setup({
     on_attach = on_attach,
+    settings = {
+        Lua = {
+            workspace = {
+                ignoreDir = { '.git', 'undo' },
+                preloadFileSize = 750,
+            },
+        },
+    },
 })
 lspconfig.bashls.setup({
     on_attach = on_attach,
