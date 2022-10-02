@@ -35,8 +35,9 @@ end
 -- Autocmds
 local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 local function on_attach(client, bufnr)
+    -- Client-specific
     if client.name == 'sumneko_lua' then
-        -- For buffer range_formatting
+        -- We do this with null-ls
         client.server_capabilities.documentRangeFormattingProvider = false
     end
 
@@ -73,6 +74,11 @@ require('lua-dev').setup({})
 -- Servers setup
 -- Server names available in https://github.com/williamboman/nvim-lsp-installer
 local lspconfig = require('lspconfig')
+---- Bash
+lspconfig.bashls.setup({
+    on_attach = on_attach,
+})
+---- Lua
 lspconfig.sumneko_lua.setup({
     on_attach = on_attach,
     settings = {
@@ -84,8 +90,17 @@ lspconfig.sumneko_lua.setup({
         },
     },
 })
-lspconfig.bashls.setup({
+---- Python
+lspconfig.pyright.setup({
     on_attach = on_attach,
+    handlers = {
+        ['textDocument/publishDiagnostics'] = function() end,
+    },
+    settings = {
+        pyright = {
+            disableOrganizeImports = true,
+        },
+    },
 })
 
 -- Mappings

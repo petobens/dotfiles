@@ -8,5 +8,6 @@ require('mason-tool-installer').setup({
         -- LSP servers
         'bash-language-server',
         'lua-language-server',
+        'pyright',
     },
 })

@@ -1,4 +1,5 @@
 local null_ls = require('null-ls')
+local diagnostics = null_ls.builtins.diagnostics
 local formatting = null_ls.builtins.formatting
 
 -- Sources configuration
@@ -13,6 +14,19 @@ local sources = {
             '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml',
         },
     }),
+    -- Python (note that formatters will run in the defined order)
+    formatting.isort.with({
+        -- FIXME: not reading settings file
+        extra_args = {
+            '--settings-file=' .. vim.env.HOME .. '/.isort.cfg',
+        },
+    }),
+    formatting.black.with({
+        extra_args = {
+            '--config=' .. vim.env.HOME .. '/.config/.black.toml',
+        },
+    }),
+    diagnostics.pylint,
 }
 
 null_ls.setup({
