@@ -185,6 +185,7 @@ onedarkpro.setup({
 
         ---- Markdown
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
+        ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
 
         ---- Python
         ['@constant.python'] = { fg = p.orange },
@@ -303,6 +304,9 @@ onedarkpro.setup({
         TelescopePromptCounter = { fg = p.linenr_grey },
         TelescopePromptPrefix = { fg = p.purple, style = 'bold' },
         TelescopeMatching = { fg = p.blue },
+    },
+    filetypes = {
+        all = false,
     },
     plugins = {
         all = false,
