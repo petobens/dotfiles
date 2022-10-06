@@ -150,10 +150,10 @@ return require('packer').startup(function(use)
 
     -- Snippets
     use({
-        'hrsh7th/vim-vsnip',
-        requires = { 'hrsh7th/vim-vsnip-integ' },
+        'L3MON4D3/LuaSnip',
+        requires = { 'saadparwaiz1/cmp_luasnip' },
         config = function()
-            require('plugin-config/vsnip_config')
+            require('plugin-config/luasnip_config')
         end,
     })
 
