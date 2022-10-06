@@ -43,14 +43,10 @@ end
 -- Autocmds
 local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 local function on_attach(client, bufnr)
-    -- Client-specific
-    if client.name == 'sumneko_lua' then
-        -- We do this with null-ls
-        client.server_capabilities.documentRangeFormattingProvider = false
-    end
+    -- We do range formatting with null-ls
+    client.server_capabilities.documentRangeFormattingProvider = false
 
     vim.api.nvim_clear_autocmds({ group = format_augroup, buffer = bufnr })
-
     -- Autoformat on save with null-ls
     vim.api.nvim_create_autocmd('BufWritePre', {
         group = format_augroup,
