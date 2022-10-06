@@ -22,6 +22,14 @@ vim.diagnostic.config({
     },
 })
 
+-- Use borders for floating hovers
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = opts.border or require('utils').border('FloatBorder')
+    return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
+
 -- Only use null-ls for formatting
 local function custom_lsp_format(bufnr)
     vim.lsp.buf.format({

@@ -1,3 +1,4 @@
+local u = require('utils')
 local cmp = require('cmp')
 
 local has_words_before = function()
@@ -18,19 +19,6 @@ local feedkey = function(key, mode)
     )
 end
 
-local function border(hl_name)
-    return {
-        { '╭', hl_name },
-        { '─', hl_name },
-        { '╮', hl_name },
-        { '│', hl_name },
-        { '╯', hl_name },
-        { '─', hl_name },
-        { '╰', hl_name },
-        { '│', hl_name },
-    }
-end
-
 cmp.setup({
     completion = {
         completeopt = 'menu,menuone,noinsert',
@@ -38,11 +26,11 @@ cmp.setup({
     window = {
         completion = {
             winhighlight = 'Normal:NormalFloat,CursorLine:PmenuSel,Search:None',
-            border = border('FloatBorder'),
+            border = u.border('FloatBorder'),
         },
         documentation = {
             winhighlight = 'Normal:NormalFloat,Search:None',
-            border = border('FloatBorder'),
+            border = u.border('FloatBorder'),
         },
     },
     experimental = {

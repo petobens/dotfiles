@@ -13,6 +13,19 @@ function M.keymap(mode, lhs, rhs, opts)
     )
 end
 
+function M.border(hl_name)
+    return {
+        { '╭', hl_name },
+        { '─', hl_name },
+        { '╮', hl_name },
+        { '│', hl_name },
+        { '╯', hl_name },
+        { '─', hl_name },
+        { '╰', hl_name },
+        { '│', hl_name },
+    }
+end
+
 function _G.put(...)
     local objects = {}
     for i = 1, select('#', ...) do
