@@ -92,6 +92,7 @@ cmp.setup({
                 all_panes = true,
             },
         },
+        { name = 'nvim_lsp_signature_help' },
     },
     snippet = {
         expand = function(args)
