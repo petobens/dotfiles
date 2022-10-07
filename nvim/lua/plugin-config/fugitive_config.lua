@@ -38,10 +38,8 @@ vim.api.nvim_create_autocmd('BufEnter', {
     group = fugitive_acg,
     pattern = { '*.git/COMMIT_EDITMSG', '*.gitcommit' },
     callback = function()
-        local remote = vim.api.nvim_exec(
-            [[echo FugitiveConfigGet('remote.origin.url')]],
-            true
-        )
+        local remote =
+            vim.api.nvim_exec([[echo FugitiveConfigGet('remote.origin.url')]], true)
         local omnifunc = 'rhubarb#omnifunc'
         if remote:find('github') then
             omnifunc = 'gitlab#omnifunc'
@@ -96,3 +94,9 @@ u.keymap('n', '<Leader>gb', '<Cmd>GBrowse<CR>')
 u.keymap('v', '<Leader>gb', ':GBrowse<CR>')
 u.keymap('n', '<Leader>gB', '<Cmd>GBrowse!<CR>')
 u.keymap('v', '<Leader>gB', ':GBrowse!<CR>')
+u.keymap('n', '<Leader>bl', function()
+    vim.cmd('0,3Git blame')
+    vim.cmd('wincmd j')
+    vim.cmd('normal! 5j')
+    vim.cmd('25 wincmd _')
+end)

@@ -64,6 +64,14 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal nobackup nowritebackup',
 })
 
+--- Git
+local git_acg = vim.api.nvim_create_augroup('ft_git', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+    group = git_acg,
+    pattern = { 'git' },
+    command = 'nnoremap <buffer><silent> q <Cmd>bdelete<CR>',
+})
+
 --- HTML & CSS
 local html_acg = vim.api.nvim_create_augroup('ft_html', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {

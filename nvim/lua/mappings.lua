@@ -63,7 +63,12 @@ u.keymap('n', 'M', [[<cmd>execute 'normal! ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('n', 'j', 'gj')
 u.keymap('n', 'k', 'gk')
 u.keymap('n', 'J', 'mzJ`z') -- Keep the cursor in place while joining lines
-u.keymap('n', 'q', '<nop>')
+u.keymap('n', 'q', '<Cmd>close<CR>')
+u.keymap('n', 'q', function()
+    if vim.api.nvim_win_get_config(0).zindex then
+        vim.cmd('close')
+    end
+end)
 u.keymap('n', 'Q', 'gwap')
 u.keymap('n', 'vv', '^vg_', { remap = true }) -- Visual selection excluding indentation
 -- FIXME: https://github.com/neovim/neovim/issues/12544 we cannot use vim.go.scrolloff here

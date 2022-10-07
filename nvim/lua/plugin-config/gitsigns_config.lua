@@ -30,3 +30,6 @@ u.keymap('n', '[h', function()
     return '<Ignore>'
 end, { expr = true })
 u.keymap('n', '<Leader>hp', gitsigns.preview_hunk)
+u.keymap('n', '<Leader>gm', function()
+    gitsigns.blame_line({ full = true })
+end)
