@@ -116,7 +116,6 @@ return require('packer').startup(function(use)
             require('plugin-config/cmp_config')
         end,
     })
-
     use({
         'nvim-treesitter/nvim-treesitter',
         requires = { 'nvim-treesitter/playground' },
@@ -174,6 +173,14 @@ return require('packer').startup(function(use)
         },
         config = function()
             require('plugin-config/fugitive_config')
+        end,
+    })
+
+    -- Runners
+    use({
+        'stevearc/overseer.nvim',
+        config = function()
+            require('plugin-config/overseer_config')
         end,
     })
 
