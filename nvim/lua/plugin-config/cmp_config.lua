@@ -67,7 +67,7 @@ cmp.setup({
                 fallback()
             end
         end, { 'i', 's' }),
-        ['<S-Tab>'] = cmp.mapping(function()
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -78,7 +78,14 @@ cmp.setup({
         end, { 'i', 's' }),
     },
     sources = {
-        { name = 'nvim_lsp' },
+        {
+            name = 'nvim_lsp',
+            ---@diagnostic disable-next-line: unused-local
+            entry_filter = function(entry, ctx)
+                local kind = require('cmp.types').lsp.CompletionItemKind[entry:get_kind()]
+                return ((kind ~= 'Text') and (kind ~= 'Snippet'))
+            end,
+        },
         { name = 'path' },
         {
             name = 'buffer',
