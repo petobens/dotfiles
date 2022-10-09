@@ -1,6 +1,11 @@
 local luasnip = require('luasnip')
 local u = require('utils')
 
+luasnip.setup({
+    enable_autosnippets = true,
+    store_selection_keys = '<C-s>',
+})
+
 require('luasnip.loaders.from_lua').lazy_load({
     paths = { vim.fn.stdpath('config') .. '/snippets/' },
 })

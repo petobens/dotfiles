@@ -7,7 +7,7 @@ local function set_efm(ft)
             .. [[%-C\ \ %.%#,]]
             .. [[%-C\ \ \ \ %.%#,]]
             .. [[%Z%\\@=%m,]]
-            .. [[%-GTraceback%.%#,]]
+            .. [[%+GTraceback%.%#,]]
             .. [[%+GDuring\ handling%.%#,]]
             .. [[%+GThe\ above\ exception%.%#,]]
             .. [[%f:%l:\ %.%#%tarning:%m,]]
@@ -22,9 +22,9 @@ return {
         return {
             cmd = { vim.bo.filetype },
             args = { file },
-            default_component_params = {
-                errorformat = set_efm(vim.bo.filetype),
-            },
+            -- default_component_params = {
+            --     errorformat = set_efm(vim.bo.filetype),
+            -- },
             components = {
                 'default',
                 { 'on_output_quickfix', open = true },
