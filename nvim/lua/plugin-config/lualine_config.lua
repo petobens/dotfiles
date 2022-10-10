@@ -1,6 +1,7 @@
 local u = require('utils')
 ---@diagnostic disable-next-line: missing-parameter
 local onedark_colors = require('onedarkpro').get_colors()
+local overseer = require('overseer')
 
 _G.LualineConfig = {}
 
@@ -222,6 +223,21 @@ require('lualine').setup({
                 separator = { left = '', right = '' },
                 component_separator = { left = '', right = '' },
                 color = { fg = onedark_colors.black, bg = onedark_colors.orange },
+                cond = conds.hide_winwidth_leq_60,
+            },
+            {
+                'overseer',
+                label = '',
+                colored = false,
+                color = {
+                    fg = onedark_colors.black,
+                    bg = onedark_colors.purple,
+                },
+                symbols = {
+                    [overseer.STATUS.RUNNING] = '省',
+                },
+                status = { overseer.STATUS.RUNNING },
+                separator = { left = '', right = '' },
                 cond = conds.hide_winwidth_leq_60,
             },
         },
