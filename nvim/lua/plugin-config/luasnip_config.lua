@@ -3,6 +3,7 @@ local u = require('utils')
 
 luasnip.setup({
     enable_autosnippets = true,
+    update_events = 'TextChanged,TextChangedI',
     store_selection_keys = '<C-s>',
 })
 
@@ -24,6 +25,11 @@ end)
 u.keymap({ 'i', 's' }, '<C-k>', function()
     if luasnip.jumpable(-1) then
         luasnip.jump(-1)
+    end
+end)
+u.keymap({ 'i', 's' }, '<C-x>', function()
+    if luasnip.choice_active() then
+        luasnip.change_choice(1)
     end
 end)
 u.keymap('n', '<Leader>es', function()

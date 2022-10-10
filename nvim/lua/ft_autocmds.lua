@@ -89,6 +89,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 --- Latex
+vim.g.tex_flavor = 'latex' -- treat latex files .tex files rather than plaintex
 local tex_acg = vim.api.nvim_create_augroup('ft_tex', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
     group = tex_acg,
