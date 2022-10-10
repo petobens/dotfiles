@@ -9,7 +9,7 @@ local run_tmux_pane = function()
     end
     local cwd = utils.buffer_dir()
     local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
-    local sh_cmd = '"python ' .. fname .. '; exec bash"'
+    local sh_cmd = '"python ' .. fname .. [[; read -p ''"]]
     vim.cmd('silent! !tmux new-window -c ' .. cwd .. ' -n ' .. fname .. ' ' .. sh_cmd)
 end
 
