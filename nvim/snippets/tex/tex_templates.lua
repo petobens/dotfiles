@@ -9,6 +9,7 @@ return {
         fmta(
             [[
       \documentclass{<>}
+      \begin{document}
           <>
       \end{document}
     ]],
