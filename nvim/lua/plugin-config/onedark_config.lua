@@ -312,11 +312,6 @@ onedarkpro.setup({
         all = false,
         treesitter = true,
     },
-    options = {
-        italic = false,
-        cursorline = true,
-        underline = false,
-    },
 })
 
 onedarkpro.load()
