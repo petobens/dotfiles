@@ -85,7 +85,7 @@ return require('packer').startup(function(use)
             require('plugin-config/lsp_config')
         end,
     })
-    use({ 'folke/lua-dev.nvim' })
+    use({ 'folke/neodev.nvim' })
     use({
         'jose-elias-alvarez/null-ls.nvim',
         config = function()

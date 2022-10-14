@@ -72,8 +72,8 @@ local function on_attach(client, bufnr)
     })
 end
 
--- Lua-dev setup (must go before lspconfig)
-require('lua-dev').setup({})
+-- neodev setup (must go before lspconfig)
+require('neodev').setup({})
 
 -- Servers setup
 -- Server names available in https://github.com/williamboman/nvim-lsp-installer
