@@ -54,7 +54,7 @@ bindsym $mod+Control+4 $nexec $resize 'Bottom Right'
 bindsym $mod+Control+5 $nexec $resize Center
 bindsym $mod+Control+6 $nexec $resize Rectangle
 bindsym $mod+Control+7 $nexec $resize Dialog
-bindsym $mod+Control+8 $nexec $resize'Semi Full'
+bindsym $mod+Control+8 $nexec $resize 'Semi Full'
 
 # Resize (grid-like)
 bindsym $mod+l $nexec $grid_resize -a grow -o right
