@@ -188,7 +188,9 @@ onedarkpro.setup({
         ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
 
         ---- Python
+        ['@include.python'] = { fg = p.purple },
         ['@constant.python'] = { fg = p.orange },
+        ['@function.builtin.python'] = { fg = p.yellow },
         ['@punctuation.special.python'] = { fg = p.orange },
 
         --- Yaml
