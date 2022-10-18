@@ -2,7 +2,7 @@ local overseer = require('overseer')
 local u = require('utils')
 
 overseer.setup({
-    templates = { 'builtin', 'user.run_script' },
+    templates = { 'builtin', 'user.run_script', 'user.run_arara' },
 })
 
 -- Mappings
