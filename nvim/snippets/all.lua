@@ -49,25 +49,33 @@ return {
             t("'"),
             i(0),
         }),
-        s({ trig = '{{', dscr = 'Braces' }, {
+        s({ trig = '{{', wordTrig = false, dscr = 'Braces' }, {
             t('{'),
             f(selected_text, {}),
             i(1),
             t('}'),
             i(0),
         }),
-        s({ trig = '((', dscr = 'Parenthesis' }, {
+        s({ trig = '((', wordTrig = false, dscr = 'Parenthesis' }, {
             t('('),
             f(selected_text, {}),
             i(1),
             t(')'),
             i(0),
         }),
-        s({ trig = '[[', dscr = 'Brackets' }, {
+        s({ trig = '[[', wordTrig = false, dscr = 'Brackets' }, {
             t('['),
             f(selected_text, {}),
             i(1),
             t(']'),
+            i(0),
+        }),
+
+        s({ trig = '<<', wordTrig = false, dscr = '<>' }, {
+            t('<'),
+            f(selected_text, {}),
+            i(1),
+            t('>'),
             i(0),
         }),
     }
