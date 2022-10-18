@@ -158,22 +158,22 @@ onedarkpro.setup({
         -- TODO: add other lsp hls (as code lens)
 
         -- Treesitter
-        TSBoolean = { fg = p.orange },
-        TSDanger = { fg = p.red, style = 'bold' },
-        TSEmphasis = { fg = p.orange, style = 'italic' },
-        TSField = { fg = p.fg },
-        TSFunction = { fg = p.light_blue },
-        TSInclude = { fg = p.purple },
-        TSLiteral = { fg = p.green }, -- embedded code
-        TSMethod = { fg = p.light_blue },
-        TSParameter = { fg = p.orange },
-        TSPunctSpecial = { fg = p.blue },
-        TSStringEscape = { fg = p.fg },
-        TSStrong = { fg = p.orange, style = 'bold' },
-        TSTextReference = { link = 'TSText' },
-        TSTitle = { fg = p.dark_red, style = 'bold' },
-        TSURI = { fg = p.blue, style = 'underline' },
-        TSWarning = { fg = p.orange, style = 'bold' },
+        ['@boolean'] = { fg = p.orange },
+        ['@field'] = { fg = p.fg },
+        ['@function'] = { fg = p.light_blue },
+        ['@include'] = { fg = p.purple },
+        ['@method'] = { fg = p.light_blue },
+        ['@parameter'] = { fg = p.orange },
+        ['@punctuation.special'] = { fg = p.blue },
+        ['@string.escape'] = { fg = p.fg },
+        ['@text.danger'] = { fg = p.red, style = 'bold' },
+        ['@text.emphasis'] = { fg = p.orange, style = 'italic' },
+        ['@text.literal'] = { fg = p.green }, -- embedded code
+        ['@text.reference'] = { link = 'TSText' },
+        ['@text.strong'] = { fg = p.orange, style = 'bold' },
+        ['@text.title'] = { fg = p.dark_red, style = 'bold' },
+        ['@text.uri'] = { fg = p.blue, style = 'underline' },
+        ['@text.warning'] = { fg = p.orange, style = 'bold' },
 
         -- Filetypes
         ---- Bash
@@ -188,7 +188,6 @@ onedarkpro.setup({
         ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
 
         ---- Python
-        ['@include.python'] = { fg = p.purple },
         ['@constant.python'] = { fg = p.orange },
         ['@function.builtin.python'] = { fg = p.yellow },
         ['@punctuation.special.python'] = { fg = p.orange },
