@@ -1,84 +1,82 @@
-local set = vim.opt
-
 -- Syntax
-set.iskeyword = set.iskeyword + { ':' }
-set.termguicolors = true
+vim.opt.iskeyword = vim.opt.iskeyword + { ':' }
+vim.opt.termguicolors = true
 
 -- Vim behaviour
-set.autowrite = true
-set.clipboard = 'unnamedplus'
-set.cmdwinheight = 4
-set.confirm = true
-set.diffopt = { 'internal', 'filler', 'indent-heuristic', 'algorithm:histogram' }
-set.foldlevelstart = 0
-set.foldopen = set.foldopen + { 'insert', 'jump' }
-set.lazyredraw = true
-set.modeline = false
-set.shortmess = 'aoOtTIcF'
-set.signcolumn = 'number'
-set.timeoutlen = 550
-set.title = true
-set.ttimeoutlen = 0
-set.updatetime = 500
-set.visualbell = true
+vim.opt.autowrite = true
+vim.opt.clipboard = 'unnamedplus'
+vim.opt.cmdwinheight = 4
+vim.opt.confirm = true
+vim.opt.diffopt = { 'internal', 'filler', 'indent-heuristic', 'algorithm:histogram' }
+vim.opt.foldlevelstart = 0
+vim.opt.foldopen = vim.opt.foldopen + { 'insert', 'jump' }
+vim.opt.lazyredraw = true
+vim.opt.modeline = false
+vim.opt.shortmess = 'aoOtTIcF'
+vim.opt.signcolumn = 'number'
+vim.opt.timeoutlen = 550
+vim.opt.title = true
+vim.opt.ttimeoutlen = 0
+vim.opt.updatetime = 500
+vim.opt.visualbell = true
 
 -- Appearance
-set.completeopt = { 'menu', 'menuone', 'noselect' }
-set.cursorline = true
-set.mouse = 'a'
-set.number = true
-set.pumblend = 6
-set.pumheight = 15
-set.relativenumber = true
-set.scrolloff = 3
-set.showmode = false
-set.splitbelow = true
-set.splitright = true
-set.startofline = true
-set.virtualedit = { 'block', 'onemore' }
-set.winblend = 6
+vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
+vim.opt.cursorline = true
+vim.opt.mouse = 'a'
+vim.opt.number = true
+vim.opt.pumblend = 6
+vim.opt.pumheight = 15
+vim.opt.relativenumber = true
+vim.opt.scrolloff = 3
+vim.opt.showmode = false
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.startofline = true
+vim.opt.virtualedit = { 'block', 'onemore' }
+vim.opt.winblend = 6
 
 -- Backups, sessions, undo and shada
-set.backup = true
-set.backupdir = vim.env.CACHE .. '/tmp/backup//'
-set.directory = vim.env.CACHE .. '/tmp/swap//'
-set.sessionoptions = set.sessionoptions - { 'tabpages' } + { 'winpos', 'resize' }
-set.shadafile = vim.env.CACHE .. '/tmp/shada/main.shada'
-set.undodir = vim.env.CACHE .. '/tmp/undo//'
-set.undofile = true
-set.viewdir = vim.env.CACHE .. '/tmp/view//'
+vim.opt.backup = true
+vim.opt.backupdir = vim.env.CACHE .. '/tmp/backup//'
+vim.opt.directory = vim.env.CACHE .. '/tmp/swap//'
+vim.opt.sessionoptions = vim.opt.sessionoptions - { 'tabpages' } + { 'winpos', 'resize' }
+vim.opt.shadafile = vim.env.CACHE .. '/tmp/shada/main.shada'
+vim.opt.undodir = vim.env.CACHE .. '/tmp/undo//'
+vim.opt.undofile = true
+vim.opt.viewdir = vim.env.CACHE .. '/tmp/view//'
 
 -- Search, matching and substitution
-set.gdefault = true
-set.hlsearch = true
-set.ignorecase = true
-set.matchtime = 1
-set.showmatch = true
-set.smartcase = true
+vim.opt.gdefault = true
+vim.opt.hlsearch = true
+vim.opt.ignorecase = true
+vim.opt.matchtime = 1
+vim.opt.showmatch = true
+vim.opt.smartcase = true
 if vim.fn.executable('rg') then
-    set.grepprg = 'rg --smart-case --vimgrep --no-heading'
-    set.grepformat = { '%f:%l:%c:%m', '%f:%l:%m' }
+    vim.opt.grepprg = 'rg --smart-case --vimgrep --no-heading'
+    vim.opt.grepformat = { '%f:%l:%c:%m', '%f:%l:%m' }
 end
 
 -- Editing, tab and indent
-set.autoindent = true
-set.breakindent = true
-set.colorcolumn = '+1'
-set.expandtab = true
-set.formatoptions = 'jcql'
-set.linebreak = true
-set.listchars = 'tab:▸\\ ,eol:¬,trail:•,extends:»,precedes:«,nbsp:␣'
-set.shiftround = true
-set.shiftwidth = 4
-set.smartcase = true
-set.softtabstop = 4
-set.tabstop = 4
-set.textwidth = 80
-set.whichwrap = vim.o.whichwrap .. ',<,>,h,l,[,]'
-set.wrap = true
+vim.opt.autoindent = true
+vim.opt.breakindent = true
+vim.opt.colorcolumn = '+1'
+vim.opt.expandtab = true
+vim.opt.formatoptions = 'jcql'
+vim.opt.linebreak = true
+vim.opt.listchars = 'tab:▸\\ ,eol:¬,trail:•,extends:»,precedes:«,nbsp:␣'
+vim.opt.shiftround = true
+vim.opt.shiftwidth = 4
+vim.opt.smartcase = true
+vim.opt.softtabstop = 4
+vim.opt.tabstop = 4
+vim.opt.textwidth = 80
+vim.opt.whichwrap = vim.o.whichwrap .. ',<,>,h,l,[,]'
+vim.opt.wrap = true
 
 -- Wildmenu
-set.wildignore = {
+vim.opt.wildignore = {
     '*~',
     '*.o',
     '*.obj',
@@ -91,9 +89,9 @@ set.wildignore = {
     '*.out',
     '*.toc',
 }
-set.wildignorecase = true
-set.wildmode = { 'longest:full', 'full' }
+vim.opt.wildignorecase = true
+vim.opt.wildmode = { 'longest:full', 'full' }
 
 -- Misc
-set.spellfile = vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add'
-set.spelllang = { 'en', 'es' }
+vim.opt.spellfile = vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add'
+vim.opt.spelllang = { 'en', 'es' }
