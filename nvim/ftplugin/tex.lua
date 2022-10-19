@@ -1,6 +1,12 @@
 local overseer = require('overseer')
 local u = require('utils')
 
+-- Options
+vim.opt_local.shiftwidth = 2
+vim.opt_local.tabstop = 2
+vim.opt_local.softtabstop = 2
+
+-- Compiling
 local LATEX_EFM = [[%-P**%f,]]
     .. [[%-P**\"%f\",]]
     .. [[%E!\ LaTeX\ %trror:\ %m,]]
@@ -47,6 +53,14 @@ local compile_latex = function()
     end)
 end
 
+-- Viewing
+local view_pdf = function()
+    local tex_file = vim.fn.expand('%:p')
+    local pdf_file = vim.fn.fnamemodify(tex_file, ':p:r') .. '.pdf'
+    vim.cmd('silent! !tmux new-window -d zathura --fork ' .. pdf_file)
+end
+
 -- Mappings
 u.keymap('n', '<F7>', compile_latex, { buffer = true })
 u.keymap('i', '<F7>', compile_latex, { buffer = true })
+u.keymap('n', '<Leader>vp', view_pdf, { buffer = true })
