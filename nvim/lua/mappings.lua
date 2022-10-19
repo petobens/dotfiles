@@ -242,3 +242,7 @@ u.keymap('t', '<C-k>', '<C-\\><C-n><C-W>k')
 u.keymap('t', '<C-l>', '<C-\\><C-n><C-W>l')
 u.keymap('t', '<C-[>', '<C-\\><C-n>:normal! 0<CR>:call search(" ", "b")<CR>')
 u.keymap('t', 'kj', '<C-\\><C-n>')
+
+-- Select mode (mostly for snippets)
+u.keymap('s', 'L', 'L')
+u.keymap('s', 'H', 'H')
