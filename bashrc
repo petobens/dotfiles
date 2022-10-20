@@ -477,10 +477,7 @@ sys_update_all() {
         outdated="$(pip list --user --outdated)"
         if [ -n "$outdated" ]; then
             echo "$outdated"
-            u_list=$(pip list --user --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1)
-            for i in $u_list; do
-                pip install --user -U "$i"
-            done
+            pip list --user --outdated | grep -v '^-e' | cut -d ' ' -f 1 | xargs -n 1 pip install --user -U
         fi
     fi
     if type "R" > /dev/null 2>&1; then
