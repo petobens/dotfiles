@@ -37,6 +37,7 @@ local function custom_lsp_format(bufnr)
             return client.name == 'null-ls'
         end,
         bufnr = bufnr,
+        async = true,
     })
 end
 
