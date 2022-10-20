@@ -5,6 +5,8 @@ local u = require('utils')
 vim.opt_local.shiftwidth = 2
 vim.opt_local.tabstop = 2
 vim.opt_local.softtabstop = 2
+vim.opt_local.formatoptions = 'trj'
+vim.opt_local.spell = true
 
 -- Compiling
 local LATEX_EFM = [[%-P**%f,]]
