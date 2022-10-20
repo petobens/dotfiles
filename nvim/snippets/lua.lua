@@ -18,6 +18,15 @@ return {
         t({ '', '\t\t}', '\t)', '),' }),
     }),
     s(
+        { trig = 'wt', dscr = 'Word trigger' },
+        fmta(
+            [[
+                wordTrig = false,
+            ]],
+            {}
+        )
+    ),
+    s(
         { trig = 'vis', dscr = 'Visual snippet' },
         fmta(
             [[
@@ -28,6 +37,15 @@ return {
             {
                 i(1, '1'),
             }
+        )
+    ),
+    s(
+        { trig = 'cs', dscr = 'Choice snippet' },
+        fmta(
+            [[
+                c(<>, { sn(nil, { i(<>, '<>')} ), t('') }),
+            ]],
+            { i(1, '1'), i(2, '1'), i(3, 'default_option') }
         )
     ),
 
