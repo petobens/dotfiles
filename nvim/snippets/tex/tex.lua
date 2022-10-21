@@ -119,6 +119,18 @@ return {
         )
     ),
     s(
+        { trig = 'quo', dscr = 'Quote' },
+        fmta(
+            [[
+        \quote{<><>}
+    ]],
+            {
+                f(selected_text, {}),
+                i(1),
+            }
+        )
+    ),
+    s(
         { trig = 'mcg', dscr = 'Math caligraphic' },
         fmta(
             [[
@@ -228,7 +240,7 @@ return {
         )
     ),
 
-    -- Math Operators
+    -- Math Operators and Delimiters
     s(
         { trig = 'frac', dscr = 'Fraction' },
         fmta(
@@ -279,6 +291,109 @@ return {
             }
         )
     ),
+    s(
+        { trig = 'lr(', wordTrig = false, dscr = 'Left( Right)' },
+        fmta(
+            [[
+        \left(<><>\right)
+    ]],
+            {
+                f(selected_text, {}),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'lr[', wordTrig = false, dscr = 'Left[ Right]' },
+        fmta(
+            [[
+        \left[<><>\right]
+    ]],
+            {
+                f(selected_text, {}),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'lr{', wordTrig = false, dscr = 'Left{ Right}' },
+        fmta(
+            [[
+        \left{<><>\right}
+    ]],
+            {
+                f(selected_text, {}),
+                i(1),
+            }
+        )
+    ),
+
+    -- Floats
+    s(
+        { trig = 'ig', dscr = 'Include graphics' },
+        fmta(
+            [[
+                \includegraphics<>{<>}
+            ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'cg', dscr = 'Centered graph' },
+        fmta(
+            [[
+               \begin{center}
+                 \includegraphics<>{<>}
+               \end{center}
+            ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'fig', dscr = 'Figure with caption' },
+        fmta(
+            [[
+                \begin{figure}<>
+                  <><>
+                  \caption{<>}
+                  \label{fig:<>}
+                \end{figure}
+            ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
+                f(selected_text, {}),
+                i(2),
+                i(3, 'text'),
+                rep(3),
+            }
+        )
+    ),
+    s(
+        { trig = 'tab', dscr = 'Table with caption' },
+        fmta(
+            [[
+                \begin{table}<>
+                  \ttabbox
+                  \caption{<>}
+                  \label{tab:<>}
+                  {\includegraphics<>{<>}}
+                \end{table}
+            ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
+                i(2, 'text'),
+                rep(2),
+                c(3, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
+                i(4),
+            }
+        )
+    ),
 
     -- References
     s(
@@ -309,6 +424,17 @@ return {
         fmta(
             [[
         \cref{eq:<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'crf', dscr = 'Cleveref figure' },
+        fmta(
+            [[
+        \cref{fig:<>}
     ]],
             {
                 i(1),
