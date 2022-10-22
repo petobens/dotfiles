@@ -137,5 +137,32 @@ return {
             }
         )
     ),
+    s(
+        { trig = 'fp', dscr = 'For pair' },
+        fmta(
+            [[
+                for k, v in pairs(<>) do
+                    <>
+                end
+            ]],
+            {
+                i(1),
+                i(2),
+            }
+        )
+    ),
+
+    -- Vim stuff
+    s(
+        { trig = 'dnl', dscr = 'Disable next line diagnostic' },
+        fmta(
+            [[
+               ---@diagnostic disable-next-line: <>
+            ]],
+            {
+                i(1),
+            }
+        )
+    ),
 },
     {}
