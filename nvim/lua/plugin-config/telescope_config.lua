@@ -65,7 +65,7 @@ local find_dirs = function(opts)
             sorter = conf.file_sorter(opts),
             results_title = opts.cwd,
             previewer = tree_previewer,
-            attach_mappings = function(prompt_bufnr, map)
+            attach_mappings = function()
                 actions.select_default:replace(function()
                     local entry = action_state.get_selected_entry()
                     local dir = from_entry.path(entry)
@@ -99,7 +99,7 @@ local parent_dirs = function(opts)
             sorter = conf.file_sorter(opts),
             results_title = string.format('%s', cwd),
             previewer = tree_previewer,
-            attach_mappings = function(prompt_bufnr, map)
+            attach_mappings = function()
                 actions.select_default:replace(function()
                     local entry = action_state.get_selected_entry()
                     local dir = from_entry.path(entry)
@@ -132,7 +132,7 @@ local bookmark_dirs = function(opts)
             }),
             sorter = conf.file_sorter(opts),
             previewer = tree_previewer,
-            attach_mappings = function(prompt_bufnr, map)
+            attach_mappings = function()
                 actions.select_default:replace(function()
                     local entry = action_state.get_selected_entry()
                     local dir = from_entry.path(entry)
