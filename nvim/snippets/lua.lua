@@ -154,7 +154,7 @@ return {
 
     -- Vim stuff
     s(
-        { trig = 'dnl', dscr = 'Disable next line diagnostic' },
+        { trig = 'dd', dscr = 'Disable next line diagnostic' },
         fmta(
             [[
                ---@diagnostic disable-next-line: <>

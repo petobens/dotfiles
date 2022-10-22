@@ -4,6 +4,7 @@ local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 
+-- Functions
 local get_comment_string = function()
     return vim.trim(vim.split(vim.bo.cms, '%%s')[1])
 end
@@ -16,13 +17,13 @@ return {
     s({ trig = 'TD', dscr = 'Todo' }, {
         f(get_comment_string),
         t(' TODO: '),
-        f(selected_text, {}),
+        f(selected_text),
         i(0),
     }),
     s({ trig = 'FM', dscr = 'Fixme' }, {
         f(get_comment_string),
         t(' FIXME: '),
-        f(selected_text, {}),
+        f(selected_text),
         i(0),
     }),
 },
@@ -37,35 +38,35 @@ return {
         ---- Autopairs
         s({ trig = 'dq', dscr = 'Double quotes' }, {
             t('"'),
-            f(selected_text, {}),
+            f(selected_text),
             i(1),
             t('"'),
             i(0),
         }),
         s({ trig = 'sq', dscr = 'Single quotes' }, {
             t("'"),
-            f(selected_text, {}),
+            f(selected_text),
             i(1),
             t("'"),
             i(0),
         }),
         s({ trig = '{{', wordTrig = false, dscr = 'Braces' }, {
             t('{'),
-            f(selected_text, {}),
+            f(selected_text),
             i(1),
             t('}'),
             i(0),
         }),
         s({ trig = '((', wordTrig = false, dscr = 'Parenthesis' }, {
             t('('),
-            f(selected_text, {}),
+            f(selected_text),
             i(1),
             t(')'),
             i(0),
         }),
         s({ trig = '[[', wordTrig = false, dscr = 'Brackets' }, {
             t('['),
-            f(selected_text, {}),
+            f(selected_text),
             i(1),
             t(']'),
             i(0),
@@ -73,7 +74,7 @@ return {
 
         s({ trig = '<<', wordTrig = false, dscr = '<>' }, {
             t('<'),
-            f(selected_text, {}),
+            f(selected_text),
             i(1),
             t('>'),
             i(0),

@@ -81,7 +81,7 @@ return {
     {
         s({ trig = 'tq', dscr = 'Triple quotes' }, {
             t('"""'),
-            f(selected_text, {}),
+            f(selected_text),
             i(1),
             t('"""'),
             i(0),
