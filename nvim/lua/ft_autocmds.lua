@@ -90,20 +90,6 @@ vim.api.nvim_create_autocmd('FileType', {
 
 --- Latex
 vim.g.tex_flavor = 'latex' -- treat latex files .tex files rather than plaintex
-local tex_acg = vim.api.nvim_create_augroup('ft_tex', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-    group = tex_acg,
-    pattern = { 'tex' },
-    command = 'setlocal iskeyword=@,48-57,_,192-255,: comments+=b:\\item indentkeys=!^F,o,O,0=\\item',
-})
-
---- Lua
-local lua_acg = vim.api.nvim_create_augroup('ft_lua', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-    group = lua_acg,
-    pattern = { 'lua' },
-    command = 'setlocal formatoptions=jcql',
-})
 
 --- Markdown
 local markdown_acg = vim.api.nvim_create_augroup('ft_markdown', { clear = true })
@@ -120,11 +106,6 @@ vim.api.nvim_create_autocmd('FileType', {
 
 --- Python
 local python_acg = vim.api.nvim_create_augroup('ft_python', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-    group = python_acg,
-    pattern = { 'python' },
-    command = 'setlocal commentstring=#%s ',
-})
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
     group = python_acg,
     pattern = { 'pdbrc' },

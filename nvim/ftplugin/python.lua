@@ -2,6 +2,9 @@ local u = require('utils')
 local builtin = require('telescope.builtin')
 local utils = require('telescope.utils')
 
+-- Options
+vim.opt_local.commentstring = '#%s'
+
 -- Compiling
 local run_tmux_pane = function()
     if vim.env.TMUX == nil then
