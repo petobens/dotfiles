@@ -10,7 +10,7 @@ local rep = require('luasnip.extras').rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 -- Functions
-local selected_text = function(_, snip)
+local visual_selection = function(_, snip)
     return snip.env.TM_SELECTED_TEXT or {}
 end
 
@@ -131,7 +131,7 @@ return {
         \textit{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -143,7 +143,7 @@ return {
         \textbf{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -155,7 +155,7 @@ return {
         \quote{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -167,7 +167,7 @@ return {
         \mathcal{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -179,7 +179,7 @@ return {
         \mathbb{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -191,7 +191,7 @@ return {
         \mathit{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -203,7 +203,7 @@ return {
         \mathrm{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -251,7 +251,7 @@ return {
       \end{equation}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1, 'label'),
                 i(2),
             }
@@ -267,7 +267,7 @@ return {
       \end{equation*}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         ),
@@ -282,7 +282,7 @@ return {
         \frac{<><>}{<>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1, 'nom'),
                 i(2, 'denom'),
             }
@@ -297,7 +297,7 @@ return {
             {
                 i(1, 't=1'),
                 c(2, { sn(nil, { t('^{'), i(1, '\\infty'), t('}') }), t('') }),
-                f(selected_text),
+                f(visual_selection),
             }
         )
     ),
@@ -308,7 +308,7 @@ return {
         \bar{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -320,7 +320,7 @@ return {
         \hat{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -332,7 +332,7 @@ return {
         \left(<><>\right)
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -344,7 +344,7 @@ return {
         \left[<><>\right]
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -356,7 +356,7 @@ return {
         \left{<><>\right}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -402,7 +402,7 @@ return {
             ]],
             {
                 c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
-                f(selected_text),
+                f(visual_selection),
                 i(2),
                 i(3, 'text'),
                 f(snake_case_labels, { 3 }),
@@ -451,7 +451,7 @@ return {
         \label{<><>}
     ]],
             {
-                f(selected_text),
+                f(visual_selection),
                 i(1),
             }
         )
@@ -506,21 +506,21 @@ return {
     {
         s({ trig = '$$', wordTrig = false, dscr = 'Inline math' }, {
             t('$'),
-            f(selected_text),
+            f(visual_selection),
             i(1),
             t('$'),
             i(0),
         }),
         s({ trig = '__', wordTrig = false, dscr = 'Subindex' }, {
             t('_{'),
-            f(selected_text),
+            f(visual_selection),
             i(1),
             t('}'),
             i(0),
         }),
         s({ trig = '^&', wordTrig = false, dscr = 'Superindex' }, {
             t('^{'),
-            f(selected_text),
+            f(visual_selection),
             i(1),
             t('}'),
             i(0),

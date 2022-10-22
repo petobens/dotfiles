@@ -39,13 +39,9 @@ return {
         { trig = 'vis', dscr = 'Visual snippet' },
         fmta(
             [[
-                f(function(_, snip)
-                    return snip.env.TM_SELECTED_TEXT[<>] or {}
-                end, {}),
+                f(visual_selection),
             ]],
-            {
-                i(1, '1'),
-            }
+            {}
         )
     ),
     s(

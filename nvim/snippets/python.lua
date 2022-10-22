@@ -5,7 +5,7 @@ local i = ls.insert_node
 local f = ls.function_node
 local fmta = require('luasnip.extras.fmt').fmta
 
-local selected_text = function(_, snip)
+local visual_selection = function(_, snip)
     return snip.env.TM_SELECTED_TEXT[1] or {}
 end
 
@@ -81,7 +81,7 @@ return {
     {
         s({ trig = 'tq', dscr = 'Triple quotes' }, {
             t('"""'),
-            f(selected_text),
+            f(visual_selection),
             i(1),
             t('"""'),
             i(0),
