@@ -147,7 +147,10 @@ return require('packer').startup(function(use)
     -- Snippets
     use({
         'L3MON4D3/LuaSnip',
-        requires = { 'saadparwaiz1/cmp_luasnip' },
+        requires = {
+            'saadparwaiz1/cmp_luasnip',
+            'benfowler/telescope-luasnip.nvim',
+        },
         config = function()
             require('plugin-config/luasnip_config')
         end,
