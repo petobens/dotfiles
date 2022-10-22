@@ -2,6 +2,7 @@ local luasnip = require('luasnip')
 local u = require('utils')
 
 luasnip.setup({
+    history = true, -- allow to jump back into exited (last) snippet
     enable_autosnippets = true,
     update_events = 'TextChanged,TextChangedI',
     store_selection_keys = '<C-s>',
