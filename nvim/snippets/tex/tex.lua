@@ -7,9 +7,34 @@ local c = ls.choice_node
 local f = ls.function_node
 local fmta = require('luasnip.extras.fmt').fmta
 local rep = require('luasnip.extras').rep
+local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
+-- Helper functions
 local selected_text = function(_, snip)
     return snip.env.TM_SELECTED_TEXT or {}
+end
+
+local snake_case_labels = function(node_text)
+    local str = node_text[1][1]
+    local unicode_map = {
+        ['á'] = 'a',
+        ['Á'] = 'A',
+        ['é'] = 'e',
+        ['É'] = 'E',
+        ['í'] = 'i',
+        ['Í'] = 'I',
+        ['ó'] = 'o',
+        ['Ó'] = 'O',
+        ['ú'] = 'u',
+        ['Ú'] = 'U',
+        ['ñ'] = 'ni',
+    }
+    for k, v in pairs(unicode_map) do
+        str = str:gsub(k, v)
+    end
+    -- Remove punctuation marks, lowercase and replace spaces with underscores
+    str = str:gsub('[%p]', ''):lower():gsub('%s+', '_')
+    return str:sub(1, 35)
 end
 
 return {
@@ -24,7 +49,8 @@ return {
                 c(1, { sn(nil, { t('['), i(1, 'options'), t(']') }), t('') }),
                 i(2, 'name'),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     -- Environments
     s(
@@ -40,7 +66,8 @@ return {
                 i(2),
                 rep(1),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
 
     -- Sections
@@ -55,10 +82,11 @@ return {
             ]],
             {
                 i(1, 'section name'),
-                rep(1),
+                f(snake_case_labels, { 1 }),
                 i(0),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'ss', dscr = 'Subsection' },
@@ -71,10 +99,11 @@ return {
             ]],
             {
                 i(1, 'subsection name'),
-                rep(1),
+                f(snake_case_labels, { 1 }),
                 i(0),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'sss', dscr = 'Subsection' },
@@ -87,10 +116,11 @@ return {
             ]],
             {
                 i(1, 'subsubsection name'),
-                rep(1),
+                f(snake_case_labels, { 1 }),
                 i(0),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
 
     -- Editing/Fonts
@@ -192,7 +222,8 @@ return {
                 c(1, { sn(nil, { t('['), i(1, '(i)'), t(']') }), t('') }),
                 i(2),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'ite', dscr = 'Itemize' },
@@ -205,7 +236,8 @@ return {
             {
                 i(1),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
 
     -- Math Environments
@@ -223,7 +255,8 @@ return {
                 i(1, 'label'),
                 i(2),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'ueq', dscr = 'Unnumbered equation' },
@@ -237,7 +270,8 @@ return {
                 f(selected_text, {}),
                 i(1),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
 
     -- Math Operators and Delimiters
@@ -353,7 +387,8 @@ return {
                 c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
                 i(2),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'fig', dscr = 'Figure with caption' },
@@ -370,9 +405,10 @@ return {
                 f(selected_text, {}),
                 i(2),
                 i(3, 'text'),
-                rep(3),
+                f(snake_case_labels, { 3 }),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'tab', dscr = 'Table with caption' },
@@ -388,11 +424,12 @@ return {
             {
                 c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
                 i(2, 'text'),
-                rep(2),
+                f(snake_case_labels, { 2 }),
                 c(3, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
                 i(4),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
 
     -- References

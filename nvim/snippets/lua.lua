@@ -27,6 +27,15 @@ return {
         )
     ),
     s(
+        { trig = 'lbc', dscr = 'Line begin condition' },
+        fmta(
+            [[
+               { condition = line_begin }
+            ]],
+            {}
+        )
+    ),
+    s(
         { trig = 'vis', dscr = 'Visual snippet' },
         fmta(
             [[
