@@ -6,7 +6,7 @@ local fmta = require('luasnip.extras.fmt').fmta
 
 return {
     -- Luasnip
-    s({ trig = 'snip', dscr = 'Snippet definition' }, {
+    s({ trig = 'sni', dscr = 'Snippet definition' }, {
         t({ 's(', "\t{ trig = '" }),
         i(1, 'trigger'),
         t("', dscr = '"),
