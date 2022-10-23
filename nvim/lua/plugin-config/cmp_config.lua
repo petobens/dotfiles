@@ -1,6 +1,5 @@
 local cmp = require('cmp')
 local u = require('utils')
-local luasnip = require('luasnip')
 
 local feedkey = function(key, mode)
     vim.api.nvim_feedkeys(
@@ -35,17 +34,7 @@ cmp.setup({
     mapping = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<CR>'] = cmp.mapping(function(fallback)
-            if luasnip.expandable() then
-                luasnip.expand({})
-            elseif cmp.visible() then
-                cmp.confirm({
-                    select = true,
-                })
-            else
-                fallback()
-            end
-        end, { 'i', 's' }),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
         ['<C-y>'] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Insert, --useful for cmdline
             select = true,
