@@ -1,15 +1,16 @@
 local luasnip = require('luasnip')
 local u = require('utils')
 
+local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
+
 luasnip.setup({
     history = true, -- allow to jump back into exited (last) snippet
     enable_autosnippets = true,
     update_events = 'TextChanged,TextChangedI',
     store_selection_keys = '<C-s>',
 })
-
 require('luasnip.loaders.from_lua').lazy_load({
-    paths = { vim.fn.stdpath('config') .. '/snippets/' },
+    paths = { snippets_dir },
 })
 
 -- Mappings
@@ -34,13 +35,13 @@ u.keymap({ 'i', 's' }, '<C-x>', function()
     end
 end)
 u.keymap('n', '<Leader>es', function()
-    require('luasnip.loaders').edit_snippet_files({
-        edit = function(file)
-            local split = 'split '
-            if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
-                split = 'vsplit '
-            end
-            vim.cmd(split .. file)
-        end,
-    })
+    local snippet_file = vim.bo.filetype .. '.lua'
+    if vim.bo.filetype == 'tex' then
+        snippet_file = 'tex/' .. snippet_file
+    end
+    local split = 'split '
+    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+        split = 'vsplit '
+    end
+    vim.cmd(split .. snippets_dir .. snippet_file)
 end)
