@@ -69,6 +69,8 @@ local function on_attach(client, bufnr)
                         vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
                     ),
                 })
+            else
+                vim.cmd('lclose')
             end
         end,
     })
