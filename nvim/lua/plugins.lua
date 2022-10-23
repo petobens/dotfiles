@@ -69,6 +69,15 @@ return require('packer').startup(function(use)
             require('plugin-config/indentlines_config')
         end,
     })
+    use({
+        'ggandor/leap.nvim',
+        requires = {
+            'ggandor/flit.nvim',
+        },
+        config = function()
+            require('plugin-config/leap_config')
+        end,
+    })
 
     -- LSP and completion
     use({

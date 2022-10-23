@@ -269,6 +269,10 @@ onedarkpro.setup({
         IndentLine = { fg = p.comment_grey },
         IndentBlanklineContextChar = { fg = p.white },
 
+        ---- Leap (and flit)
+        LeapMatch = { fg = p.black, bg = p.purple, style = 'bold' },
+        LeapLabelPrimary = { fg = p.black, bg = p.purple, style = 'bold' },
+
         ---- NvimTree
         NvimTreeFolderIcon = { fg = p.light_blue },
         NvimTreeFolderName = { fg = p.light_blue },
