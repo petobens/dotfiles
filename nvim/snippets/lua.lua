@@ -27,6 +27,15 @@ return {
         )
     ),
     s(
+        { trig = 'rt', dscr = 'Regex trigger' },
+        fmta(
+            [[
+                regTrig = true,
+            ]],
+            {}
+        )
+    ),
+    s(
         { trig = 'lbc', dscr = 'Line begin condition' },
         fmta(
             [[
