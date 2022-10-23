@@ -1,5 +1,6 @@
 local cmp = require('cmp')
 local u = require('utils')
+local luasnip = require('luasnip')
 
 local feedkey = function(key, mode)
     vim.api.nvim_feedkeys(
@@ -34,16 +35,24 @@ cmp.setup({
     mapping = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<A-k>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-        ['<A-j>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+        ['<CR>'] = cmp.mapping(function(fallback)
+            if luasnip.expandable() then
+                luasnip.expand({})
+            elseif cmp.visible() then
+                cmp.confirm({
+                    select = true,
+                })
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+        ['<C-y>'] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Insert, --useful for cmdline
+            select = true,
+        }),
         ['<C-e>'] = cmp.mapping({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
-        }),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        ['<C-y>'] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Insert,
-            select = true,
         }),
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
@@ -59,6 +68,8 @@ cmp.setup({
                 fallback()
             end
         end, { 'i', 's' }),
+        ['<A-k>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+        ['<A-j>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
     },
     sources = {
         -- Note: sources are prioritized in the order that they are defined
