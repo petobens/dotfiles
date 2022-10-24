@@ -2,8 +2,8 @@ local leap = require('leap')
 
 leap.setup({
     max_highlighted_traversal_targets = 20,
-    safe_labels = { 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';' },
     special_keys = {
+        repeat_search = '<enter>',
         next_target = { '<A-n>' },
         prev_target = { '<A-p>' },
     },
