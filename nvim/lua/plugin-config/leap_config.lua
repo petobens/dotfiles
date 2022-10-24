@@ -1,7 +1,8 @@
 local leap = require('leap')
 
 leap.setup({
-    max_highlighted_traversal_targets = 20,
+    max_phase_one_targets = 0, -- don't highlight ahead of time
+    max_highlighted_traversal_targets = 20, -- show 20 matches when traversing
     special_keys = {
         repeat_search = '<enter>',
         next_target = { '<A-n>' },
