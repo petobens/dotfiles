@@ -3,11 +3,10 @@ local leap = require('leap')
 leap.setup({
     max_highlighted_traversal_targets = 20,
     safe_labels = { 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';' },
-    -- special_keys = {
-    --     -- FIXME: Using special keys defintion gives errors with flit
-    --     next_target = { '<enter>' },
-    --     prev_target = { '<tab>' },
-    -- },
+    special_keys = {
+        next_target = { '<A-n>' },
+        prev_target = { '<A-p>' },
+    },
 })
 require('flit').setup({}) -- enhanced f,F,t and T motions (as in sneak)
 
