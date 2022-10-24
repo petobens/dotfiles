@@ -1,5 +1,6 @@
-local luasnip = require('luasnip')
 local u = require('utils')
+local luasnip = require('luasnip')
+local types = require('luasnip.util.types')
 
 local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
 
@@ -8,6 +9,12 @@ luasnip.setup({
     enable_autosnippets = true,
     update_events = 'TextChanged,TextChangedI',
     store_selection_keys = '<C-s>',
+    ext_opts = {
+        [types.choiceNode] = {
+            -- Show indication of choice node
+            active = { virt_text = { { ' (Choice-Node)', 'DiagnosticInfo' } } },
+        },
+    },
 })
 require('luasnip.loaders.from_lua').lazy_load({
     paths = { snippets_dir },
