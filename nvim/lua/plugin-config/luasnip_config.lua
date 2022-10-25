@@ -47,6 +47,7 @@ u.keymap('n', '<Leader>es', function()
         snippet_file = vim.bo.filetype .. '/' .. snippet_file
     end
     local split = 'split '
+    ---@diagnostic disable-next-line: undefined-field
     if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
         split = 'vsplit '
     end

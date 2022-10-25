@@ -97,5 +97,22 @@ return {
             }
         )
     ),
+    s(
+        { trig = 'pc', dscr = 'pcall' },
+        fmta(
+            [[
+               local ok, <> = pcall(<>, '<>')
+               if ok then
+                   <>
+                end
+            ]],
+            {
+                i(1),
+                i(2, 'func'),
+                i(3, 'args'),
+                i(4),
+            }
+        )
+    ),
 },
     {}
