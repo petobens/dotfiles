@@ -62,5 +62,19 @@ return {
             { i(1, '1'), i(2, '1'), i(3, 'default_option') }
         )
     ),
+    s(
+        { trig = 'ns', dscr = 'Snippet node' },
+        fmta(
+            [[
+                sn(nil, {
+                    <>
+                }),
+
+            ]],
+            {
+                i(1, 'snippet body'),
+            }
+        )
+    ),
 },
     {}

@@ -4,6 +4,10 @@ local i = ls.insert_node
 local fmta = require('luasnip.extras.fmt').fmta
 local rep = require('luasnip.extras').rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
+local sn = ls.snippet_node
+local c = ls.choice_node
+local t = ls.text_node
+local d = ls.dynamic_node
 
 return {
     s(
@@ -51,21 +55,38 @@ return {
                 compile_path = test_dir .. '/plugin/packer_compiled.lua',
             })
             packer.startup(function(use)
-                use('wbthomason/packer.nvim')
-                use({'<>'})
+                use('wbthomason/packer.nvim')<>
                 if packer_bootstrap then
                     packer.sync()
                 end
-            end)
-
-            -- Plugin setup
-            local ok, <> = pcall(require, '<>')
-            if ok then
-                <>
-            end
-
+            end)<>
         ]],
-            { i(1), i(2), i(3), i(4) }
+            {
+                c(1, {
+                    sn(nil, {
+                        t({ '', "\tuse({'" }),
+                        i(1, 'package'),
+                        t("'})"),
+                    }),
+                    t(''),
+                }),
+                d(2, function(node_idx)
+                    local snip_body = {}
+                    local node_val = node_idx[1][2]
+                    if node_val then
+                        snip_body = {
+                            t({ '', '', '-- Plugin setup', 'local ok, ' }),
+                            i(1),
+                            t({ " = pcall(require, '" }),
+                            i(2),
+                            t({ "')", 'if ok then', '\t' }),
+                            i(3),
+                            t({ '', 'end' }),
+                        }
+                    end
+                    return sn(nil, snip_body)
+                end, { 1 }),
+            }
         )
     ),
     s(

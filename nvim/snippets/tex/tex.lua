@@ -14,8 +14,8 @@ local visual_selection = function(_, snip)
     return snip.env.TM_SELECTED_TEXT or {}
 end
 
-local snake_case_labels = function(node_text)
-    local str = node_text[1][1]
+local snake_case_labels = function(node_idx)
+    local str = node_idx[1][1]
     local unicode_map = {
         ['á'] = 'a',
         ['Á'] = 'A',
