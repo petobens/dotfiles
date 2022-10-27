@@ -65,7 +65,24 @@ local view_pdf = function()
     vim.cmd('silent! !tmux new-window -d zathura --fork ' .. pdf_file)
 end
 
+local forward_search = function()
+    local tex_file = vim.fn.expand('%:p')
+    local pdf_file = vim.fn.fnamemodify(tex_file, ':p:r') .. '.pdf'
+    local forward_args = ' --synctex-forward '
+        .. vim.fn.line('.')
+        .. ':'
+        .. vim.fn.col('.')
+        .. ':'
+        .. tex_file
+        .. ' '
+        .. pdf_file
+    -- FIXME: How can we fork here?
+    local cmd = 'silent! !tmux new-window -d zathura ' .. forward_args
+    vim.cmd(cmd)
+end
+
 -- Mappings
 u.keymap('n', '<F7>', compile_latex, { buffer = true })
 u.keymap('i', '<F7>', compile_latex, { buffer = true })
 u.keymap('n', '<Leader>vp', view_pdf, { buffer = true })
+u.keymap('n', '<Leader>sl', forward_search, { buffer = true })
