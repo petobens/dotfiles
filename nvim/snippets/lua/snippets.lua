@@ -3,19 +3,28 @@ local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
 local fmta = require('luasnip.extras.fmt').fmta
+local sn = ls.snippet_node
+local c = ls.choice_node
 
 return {
     -- Luasnip
     s({ trig = 'sni', dscr = 'Snippet definition' }, {
         t({ 's(', "\t{ trig = '" }),
         i(1, 'trigger'),
-        t("', dscr = '"),
-        i(2, 'description'),
+        t("', "),
+        c(2, { sn(nil, { i(1, 'wordTrig = false, ') }), t('') }),
+        t("dscr = '"),
+        i(3, 'description'),
         t({ "' },", '\tfmta(', '\t\t[[', '\t\t\t' }),
-        i(3),
-        t({ '', '\t\t]],', '\t\t{', '\t\t\t' }),
         i(4),
-        t({ '', '\t\t}', '\t)', '),' }),
+        t({ '', '\t\t]],', '\t\t{', '\t\t\t' }),
+        i(5),
+        t({ '', '\t\t}', '\t)' }),
+        c(
+            6,
+            { sn(nil, { t({ ',', '' }), i(1, '\t{ condition = line_begin }') }), t('') }
+        ),
+        t({ '', '),' }),
     }),
     s(
         { trig = 'wt', dscr = 'Word trigger' },
