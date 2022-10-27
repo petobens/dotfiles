@@ -185,6 +185,14 @@ return require('packer').startup(function(use)
         end,
     })
 
+    -- Latex
+    use({
+        'lervag/vimtex',
+        config = function()
+            require('plugin-config/vimtex_config')
+        end,
+    })
+
     -- Runners
     use({
         'stevearc/overseer.nvim',

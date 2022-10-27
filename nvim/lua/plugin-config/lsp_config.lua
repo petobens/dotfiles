@@ -110,6 +110,8 @@ lspconfig.pyright.setup({
         },
     },
 })
+---- Latex
+require('lspconfig').texlab.setup({})
 
 -- Mappings
 local u = require('utils')
