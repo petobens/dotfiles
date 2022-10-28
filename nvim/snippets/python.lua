@@ -4,6 +4,7 @@ local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 local fmta = require('luasnip.extras.fmt').fmta
+local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 local visual_selection = function(_, snip)
     return snip.env.TM_SELECTED_TEXT[1] or {}
@@ -20,7 +21,8 @@ return {
                     <>
             ]],
             { i(0) }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'bp', dscr = 'Breakpoint' },
@@ -44,7 +46,8 @@ return {
             )
         ]],
             { i(1, 'DEBUG'), i(2, 'logger_name') }
-        )
+        ),
+        { condition = line_begin }
     ),
 
     -- Linting
@@ -66,7 +69,8 @@ return {
             import pandas as pd
         ]],
             {}
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'pdf', dscr = 'Pandas dataframe' },

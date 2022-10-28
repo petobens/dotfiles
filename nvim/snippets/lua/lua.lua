@@ -2,6 +2,7 @@ local ls = require('luasnip')
 local s = ls.snippet
 local i = ls.insert_node
 local fmta = require('luasnip.extras.fmt').fmta
+local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     -- Lua
@@ -14,7 +15,8 @@ return {
             {
                 i(1, 'package'),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'lv', dscr = 'Local variable' },
@@ -26,7 +28,8 @@ return {
                 i(1, 'variable'),
                 i(2, 'value'),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'if', dscr = 'If condition' },
@@ -40,7 +43,8 @@ return {
                 i(1, 'condition'),
                 i(2, 'body'),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'ef', dscr = 'Empty function' },
@@ -67,21 +71,24 @@ return {
                 i(1, 'fun_name'),
                 i(2),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'fun', dscr = 'Function definition' },
         fmta(
             [[
-                function <>()
+                function <>(<>)
                     <>
                 end
             ]],
             {
                 i(1, 'fun_name'),
                 i(2),
+                i(3),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'fp', dscr = 'For pair' },
@@ -95,7 +102,8 @@ return {
                 i(1),
                 i(2),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'pc', dscr = 'pcall' },
@@ -112,7 +120,8 @@ return {
                 i(3, 'args'),
                 i(4),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
 },
     {}

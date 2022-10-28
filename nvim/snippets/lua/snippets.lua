@@ -5,6 +5,7 @@ local i = ls.insert_node
 local fmta = require('luasnip.extras.fmt').fmta
 local sn = ls.snippet_node
 local c = ls.choice_node
+local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     -- Luasnip
@@ -51,7 +52,8 @@ return {
                { condition = line_begin }
             ]],
             {}
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'vis', dscr = 'Visual snippet' },

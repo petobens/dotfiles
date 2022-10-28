@@ -87,7 +87,8 @@ return {
                     return sn(nil, snip_body)
                 end, { 1 }),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
         { trig = 'acg', dscr = 'Autocmd group' },
