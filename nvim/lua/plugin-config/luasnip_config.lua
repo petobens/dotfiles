@@ -8,6 +8,7 @@ luasnip.setup({
     history = true, -- allow to jump back into exited (last) snippet
     enable_autosnippets = true,
     update_events = 'TextChanged,TextChangedI',
+    delete_check_events = 'TextChanged', -- remove snippet when text is deleted
     store_selection_keys = '<C-s>',
     ext_opts = {
         [types.choiceNode] = {
