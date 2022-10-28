@@ -114,6 +114,7 @@ $yay_cmd feh
 $yay_cmd i3-gaps
 $yay_cmd i3lock-color-git
 $yay_cmd intltool
+$yay_cmd libxcrypt-compat # needed for latex biber?
 $yay_cmd lsof
 $yay_cmd maim
 $yay_cmd mesa-demos
