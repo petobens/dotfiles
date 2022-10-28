@@ -416,8 +416,8 @@ return {
             [[
                 \begin{table}<>
                   \ttabbox
-                  \caption{<>}
-                  \label{tab:<>}
+                  {\caption{<>}
+                  \label{tab:<>}}
                   {\includegraphics<>{<>}}
                 \end{table}
             ]],

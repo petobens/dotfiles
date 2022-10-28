@@ -11,7 +11,6 @@ local visual_selection = function(_, snip)
 end
 
 return {
-
     -- Control flow
     s(
         { trig = 'im', dscr = 'If main' },
