@@ -29,6 +29,8 @@ local LATEX_EFM = [[%-P**%f,]]
     .. [[%-Z(babel)%.%#input\ line\ %l.,]]
     .. [[%-C(babel)%m,]]
     .. [[%-C(hyperref)%.%#on\ input\ line\ %l.,]]
+    .. [[%-G%.%#refsection%.%#,]] -- ignore refsection and float warnings
+    .. [[%-G%.%#contains\ only\ floats%.%#,]]
     .. [[%-G%.%#,]]
 
 local parse_logfile = function(filename)
