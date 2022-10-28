@@ -10,7 +10,7 @@ vim.g.vimtex_fold_types = { -- only fold preamble, parts and sections
     sections = { enabled = 1 },
     parts = { enabled = 1 },
     comments = { enabled = 0 },
-    envs = { enabled = 0 },
+    envs = { whitelist = { 'frame' } },
     env_options = { enabled = 0 },
     item = { enabled = 0 },
     markers = { enabled = 0 },
