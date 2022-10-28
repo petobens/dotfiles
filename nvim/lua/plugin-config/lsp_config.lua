@@ -111,7 +111,9 @@ lspconfig.pyright.setup({
     },
 })
 ---- Latex
-require('lspconfig').texlab.setup({})
+require('lspconfig').texlab.setup({
+    handlers = { ['textDocument/publishDiagnostics'] = function() end },
+})
 
 -- Mappings
 local u = require('utils')
