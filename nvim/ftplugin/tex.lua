@@ -11,6 +11,10 @@ vim.opt_local.iskeyword = '@,48-57,_,192-255,:'
 vim.opt_local.indentkeys = '!^F,o,O,0=\\item'
 vim.opt.comments = vim.opt.comments + { 'b:\\item' }
 
+-- Folding
+-- FIXME: not quite working
+-- vim.opt_local.foldtext = foldtext()
+
 -- Compiling
 local LATEX_EFM = [[%-P**%f,]]
     .. [[%-P**\"%f\",]]
@@ -83,8 +87,22 @@ local forward_search = function()
     vim.cmd(cmd)
 end
 
+-- File Editing
+local file_edit = function(extension)
+    local base_file = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':p:r')
+    local split = 'split '
+    ---@diagnostic disable-next-line: undefined-field
+    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+        split = 'vsplit '
+    end
+    vim.cmd(split .. base_file .. '.' .. extension)
+end
+
 -- Mappings
 u.keymap('n', '<F7>', compile_latex, { buffer = true })
 u.keymap('i', '<F7>', compile_latex, { buffer = true })
 u.keymap('n', '<Leader>vp', view_pdf, { buffer = true })
 u.keymap('n', '<Leader>sl', forward_search, { buffer = true })
+u.keymap('n', '<Leader>eb', function()
+    file_edit('bib')
+end, { buffer = true })
