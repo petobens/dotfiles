@@ -152,7 +152,7 @@ return {
         { trig = 'quo', dscr = 'Quote' },
         fmta(
             [[
-        \quote{<><>}
+        \enquote{<><>}
     ]],
             {
                 f(visual_selection),
