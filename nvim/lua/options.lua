@@ -32,6 +32,7 @@ vim.opt.scrolloff = 3
 vim.opt.showmode = false
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+vim.opt.splitkeep = 'screen'
 vim.opt.startofline = true
 vim.opt.virtualedit = { 'block', 'onemore' }
 vim.opt.winblend = 6
