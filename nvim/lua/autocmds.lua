@@ -9,11 +9,11 @@ vim.api.nvim_create_autocmd('BufWinLeave', {
     pattern = { '*.*', 'bashrc', 'config' },
     command = 'if &previewwindow != 1 | mkview | endif',
 })
--- vim.api.nvim_create_autocmd('BufWinEnter', {
---     group = session_acg,
---     pattern = { '*.*', 'bashrc', 'config' },
---     command = 'if &previewwindow != 1 | silent! loadview | endif',
--- })
+vim.api.nvim_create_autocmd('BufWinEnter', {
+    group = session_acg,
+    pattern = { '*.*', 'bashrc', 'config' },
+    command = 'if &previewwindow != 1 | silent! loadview | endif',
+})
 
 -- Save when losing focus
 local focus_acg = vim.api.nvim_create_augroup('focus_lost', { clear = true })

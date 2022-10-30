@@ -3,7 +3,21 @@ local u = require('utils')
 -- Save
 u.keymap('n', '<Leader>kv', '<Cmd>qall<CR>')
 u.keymap('n', '<Leader>nw', '<Cmd>noautocmd w!<CR>')
-u.keymap('n', '<Leader>ps', '<Cmd>silent! source ' .. udfs.session_name() .. '<CR>')
+u.keymap('n', '<Leader>ps', function()
+    vim.cmd('silent! source ' .. udfs.session_name())
+    -- Remove any buffer that exists and is listed but doesn't have a valid filename
+    -- See https://github.com/neovim/neovim/pull/17112#issuecomment-1024923302
+    for b = 1, vim.fn.bufnr('$') do
+        if
+            vim.fn.buflisted(b) ~= 0
+            and vim.api.nvim_buf_get_option(b, 'buftype') ~= 'quickfix'
+        then
+            if vim.fn.filereadable(vim.api.nvim_buf_get_name(b)) == 0 then
+                vim.cmd('bwipeout ' .. b)
+            end
+        end
+    end
+end)
 u.keymap('n', '<Leader>w', '<Cmd>w!<CR>')
 u.keymap('n', '<Leader>wc', '<Cmd>w!<CR><Cmd>silent! close<CR>')
 u.keymap('n', '<Leader>wq', '<Cmd>w!<CR><Cmd>q!<CR>')
