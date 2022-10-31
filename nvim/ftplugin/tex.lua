@@ -11,17 +11,18 @@ vim.opt_local.iskeyword = '@,48-57,_,192-255,:'
 vim.opt_local.indentkeys = '!^F,o,O,0=\\item'
 vim.opt.comments = vim.opt.comments + { 'b:\\item' }
 
--- Folding
--- FIXME: not quite working
--- vim.opt_local.foldtext = foldtext()
-
 -- Compiling
-local LATEX_EFM = [[%-P**%f,]]
+local LATEX_EFM = ''
+    -- Push file to file stack
+    .. [[%-P**%f,]]
     .. [[%-P**\"%f\",]]
+    -- Match errors
     .. [[%E!\ LaTeX\ %trror:\ %m,]]
     .. [[%E%f:%l:\ %m,]]
     .. [[%E!\ %m,]]
+    -- More info for undefined control sequences
     .. [[%Z<argument>\ %m,]]
+    -- Show warnings (some warnings)
     .. [[%+WLaTeX\ %.%#Warning:\ %.%#line\ %l%.%#,]]
     .. [[%+W%.%#\ at\ lines\ %l--%*\\d,]]
     .. [[%+WLaTeX\ %.%#Warning:\ %m,]]
@@ -33,8 +34,10 @@ local LATEX_EFM = [[%-P**%f,]]
     .. [[%-Z(babel)%.%#input\ line\ %l.,]]
     .. [[%-C(babel)%m,]]
     .. [[%-C(hyperref)%.%#on\ input\ line\ %l.,]]
-    .. [[%-G%.%#refsection%.%#,]] -- ignore refsection and float warnings
+    -- Ignore refsection and float warnings
+    .. [[%-G%.%#refsection%.%#,]]
     .. [[%-G%.%#contains\ only\ floats%.%#,]]
+    -- Ignore unmatched lines
     .. [[%-G%.%#,]]
 
 local parse_logfile = function(filename)
