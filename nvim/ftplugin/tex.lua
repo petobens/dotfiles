@@ -40,7 +40,7 @@ local LATEX_EFM = ''
     -- Ignore unmatched lines
     .. [[%-G%.%#,]]
 
-local parse_logfile = function(filename)
+local _parse_logfile = function(filename)
     local content = require('overseer.files').read_file(filename)
     local lines = vim.split(content, '\n')
     local items = vim.fn.getqflist({
@@ -58,11 +58,11 @@ end
 
 local compile_latex = function()
     vim.cmd('silent noautocmd update')
-    overseer.run_template({ name = 'Run Arara' }, function(task)
+    overseer.run_template({ name = 'run_arara' }, function(task)
         vim.cmd('cclose')
         task:subscribe('on_complete', function()
             local log_file = vim.fn.fnamemodify(task.metadata.filename, ':p:r') .. '.log'
-            parse_logfile(log_file)
+            _parse_logfile(log_file)
         end)
     end)
 end

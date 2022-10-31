@@ -1,5 +1,5 @@
 return {
-    name = 'Run Arara',
+    name = 'run_arara',
     builder = function()
         local file = vim.fn.expand('%:p')
         return {
