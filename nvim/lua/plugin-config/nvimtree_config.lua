@@ -2,6 +2,9 @@ local node_api = require('nvim-tree.api').node
 local tree_api = require('nvim-tree.api').tree
 local u = require('utils')
 
+local Path = require('plenary.path')
+local builtin = require('telescope.builtin')
+
 _G.NvimTreeConfig = {}
 
 function NvimTreeConfig.home()
@@ -42,6 +45,21 @@ function NvimTreeConfig.up_dir()
     vim.cmd('normal! j') -- don't start on root
 end
 
+function NvimTreeConfig.telescope_find_files()
+    local node = tree_api.get_node_under_cursor()
+    local p = Path:new(node.absolute_path)
+    if p:is_file() then
+        p = p:parent()
+    end
+    local dir = tostring(p)
+    -- TODO: Change default action to execute nvimtree custom action when
+    -- pressing enter
+    builtin.find_files({
+        cwd = dir,
+        results_title = dir,
+    })
+end
+
 local tree_cb = require('nvim-tree.config').nvim_tree_callback
 local map_list = {
     { key = '<CR>', cb = ':lua NvimTreeConfig.cd_or_open()<CR>' },
@@ -60,6 +78,8 @@ local map_list = {
     { key = 'zm', cb = ':lua require("nvim-tree.lib").collapse_all()<CR>' },
     { key = 'o', cb = tree_cb('system_open') },
     { key = '<Space>', cb = tree_cb('toggle_mark') },
+    -- Telescope integration
+    { key = '<C-t>', cb = ':lua NvimTreeConfig.telescope_find_files()<CR>' },
 }
 
 require('nvim-tree').setup({
