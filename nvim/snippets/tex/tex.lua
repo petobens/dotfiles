@@ -502,6 +502,25 @@ return {
             }
         )
     ),
+
+    -- Beamer
+    s(
+        { trig = 'bf', dscr = 'Beamer frame' },
+        fmta(
+            [[
+                \begin{frame}[fragile=singleslide]
+                    \frametitle{<>}
+                    <><>
+                \end{frame}
+            ]],
+            {
+                i(1, 'title'),
+                f(visual_selection),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
 },
     {
         s({ trig = '$$', wordTrig = false, dscr = 'Inline math' }, {
