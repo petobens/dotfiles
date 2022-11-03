@@ -14,6 +14,9 @@ local telescope = require('telescope')
 local utils = require('telescope.utils')
 local u = require('utils')
 
+local tree_api = require('nvim-tree.api').tree
+local node_api = require('nvim-tree.api').node
+
 -- Custom previewers
 local tree_previewer = previewers.new_termopen_previewer({
     get_command = function(entry)
@@ -200,6 +203,7 @@ local function rgrep()
             search_dirs = { dir },
             results_title = dir,
         }
+        ---@diagnostic disable-next-line: assign-type-mismatch
         local type_filter = vim.fn.input('Type Filter: ', '')
         if type_filter ~= '' then
             opts.type_filter = type_filter
@@ -291,6 +295,7 @@ local custom_actions = transform_mod({
     -- Context split
     context_split = function(prompt_bufnr)
         local split = 'new'
+        ---@diagnostic disable-next-line: undefined-field
         if vim.fn.winwidth(vim.fn.winnr('#')) > 2 * (vim.go.textwidth or 80) then
             split = 'vnew'
         end
@@ -330,6 +335,7 @@ local custom_actions = transform_mod({
         vim.cmd('silent normal! mz')
         vim.cmd('silent normal! ' .. entry.index .. 'z=')
         -- Use pcall to gracefully catch E753 when there are no more words to replace
+        ---@diagnostic disable-next-line: assign-type-mismatch
         pcall(vim.cmd, 'spellrepall')
         vim.cmd('silent normal! `z')
     end,
@@ -380,6 +386,29 @@ local custom_actions = transform_mod({
     -- Undo (restore) previous picker
     undo_picker = function()
         builtin.resume()
+    end,
+    -- Open in nvimtree
+    open_nvimtree = function(prompt_bufnr)
+        local is_dir = true
+        local fname = nil
+
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        local p = Path:new(from_entry.path(entry))
+        if p:is_file() then
+            is_dir = false
+            fname = vim.fn.fnamemodify(tostring(p), ':t')
+            p = p:parent()
+        end
+
+        vim.cmd('NvimTreeOpen')
+        vim.cmd('sleep 3m') -- we seem to need this to allow focus
+        tree_api.change_root(tostring(p))
+        if not is_dir then
+            tree_api.find_file(fname)
+        else
+            node_api.navigate.sibling.first()
+        end
     end,
 })
 
@@ -445,6 +474,7 @@ telescope.setup({
                 ['<C-y>'] = custom_actions.yank,
                 ['<C-t>'] = custom_actions.entry_find_files,
                 ['<A-c>'] = custom_actions.entry_find_dir,
+                ['<A-f>'] = custom_actions.open_nvimtree,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
                 ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
@@ -467,6 +497,7 @@ telescope.setup({
                 ['<C-y>'] = custom_actions.yank,
                 ['<C-t>'] = custom_actions.entry_find_files,
                 ['<A-c>'] = custom_actions.entry_find_dir,
+                ['<A-f>'] = custom_actions.open_nvimtree,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
                 ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
