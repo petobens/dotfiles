@@ -40,7 +40,7 @@ local LATEX_EFM = ''
     -- Ignore unmatched lines
     .. [[%-G%.%#,]]
 
-local _parse_logfile = function(filename)
+local _parse_logfile = function(filename, cwd)
     local content = require('overseer.files').read_file(filename)
     local lines = vim.split(content, '\n')
     local items = vim.fn.getqflist({
@@ -51,18 +51,21 @@ local _parse_logfile = function(filename)
         title = filename,
         items = items,
     })
+    vim.cmd('lcd ' .. cwd)
     if next(items) ~= nil then
         vim.cmd('copen')
     end
 end
 
 local compile_latex = function()
+    local cwd = vim.fn.getcwd()
     vim.cmd('silent noautocmd update')
+    vim.cmd('lcd %:p:h') -- we seem to need this for proper qf parsing
     overseer.run_template({ name = 'run_arara' }, function(task)
         vim.cmd('cclose')
         task:subscribe('on_complete', function()
             local log_file = vim.fn.fnamemodify(task.metadata.filename, ':p:r') .. '.log'
-            _parse_logfile(log_file)
+            _parse_logfile(log_file, cwd)
         end)
     end)
 end
