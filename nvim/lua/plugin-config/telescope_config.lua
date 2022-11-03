@@ -194,7 +194,6 @@ end
 
 local function rgrep()
     vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
-        -- FIXME: no completion: https://github.com/hrsh7th/cmp-cmdline/issues/16
         -- FIXME: no C-c: https://github.com/neovim/neovim/issues/18144
         local opts = {
             cwd = dir,

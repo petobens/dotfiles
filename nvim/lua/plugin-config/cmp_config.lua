@@ -116,3 +116,9 @@ cmp.setup.cmdline(':', {
         { name = 'path' },
     }),
 })
+-- Use cmp-cmdline to complete vim.ui.input paths
+cmp.setup.cmdline('@', {
+    sources = cmp.config.sources({
+        { name = 'path' },
+    }),
+})
