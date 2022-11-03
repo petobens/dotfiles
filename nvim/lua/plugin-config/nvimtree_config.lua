@@ -40,9 +40,14 @@ function NvimTreeConfig.cd_or_open()
 end
 
 function NvimTreeConfig.up_dir()
+    local node = tree_api.get_node_under_cursor()
+    local p = Path:new(node.absolute_path):parent()
+    local dir = vim.fn.fnamemodify(tostring(p), ':t')
+
     node_api.navigate.parent()
     tree_api.change_root_to_node()
-    vim.cmd('normal! j') -- don't start on root
+    vim.cmd('sleep 3m')
+    tree_api.find_file(dir)
 end
 
 function NvimTreeConfig.telescope_find_files()
