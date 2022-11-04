@@ -17,6 +17,8 @@ local u = require('utils')
 local tree_api = require('nvim-tree.api').tree
 local node_api = require('nvim-tree.api').node
 
+_G.TelescopeConfig = {}
+
 -- Custom previewers
 local tree_previewer = previewers.new_termopen_previewer({
     get_command = function(entry)
@@ -411,6 +413,8 @@ local custom_actions = transform_mod({
         end
     end,
 })
+-- Store custom actions to be used elsewhere
+_G.TelescopeConfig.custom_actions = custom_actions
 
 -- Autocmds
 local prompt_acg = vim.api.nvim_create_augroup('telescope_prompt', { clear = true })

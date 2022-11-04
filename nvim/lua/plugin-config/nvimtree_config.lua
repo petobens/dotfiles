@@ -57,11 +57,13 @@ function NvimTreeConfig.telescope_find_files()
         p = p:parent()
     end
     local dir = tostring(p)
-    -- TODO: Change default action to execute nvimtree custom action when
-    -- pressing enter
     builtin.find_files({
         cwd = dir,
         results_title = dir,
+        attach_mappings = function(_, map)
+            map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
+            return true
+        end,
     })
 end
 
