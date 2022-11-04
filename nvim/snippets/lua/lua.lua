@@ -15,8 +15,7 @@ return {
             {
                 i(1, 'package'),
             }
-        ),
-        { condition = line_begin }
+        )
     ),
     s(
         { trig = 'lv', dscr = 'Local variable' },
