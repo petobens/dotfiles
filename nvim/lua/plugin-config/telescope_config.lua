@@ -131,6 +131,7 @@ local bookmark_dirs = function(opts)
                     '/home/pedro/git-repos/private/dotfiles/',
                     '/home/pedro/OneDrive/mutt/ops/',
                     '/home/pedro/git-repos/work/',
+                    '/home/pedro/Desktop/',
                     '/home/pedro/.local/share/nvim/site/pack/packer/start',
                 },
                 entry_maker = opts.entry_maker,
