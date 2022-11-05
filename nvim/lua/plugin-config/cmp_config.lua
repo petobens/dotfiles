@@ -116,8 +116,20 @@ cmp.setup.cmdline(':', {
         { name = 'path' },
     }),
 })
--- Use cmp-cmdline to complete vim.ui.input paths
+-- Also use cmp-cmdline to complete vim.ui.input paths
 cmp.setup.cmdline('@', {
+    mapping = cmp.mapping.preset.cmdline({
+        -- Select candidate but don't execute with enter (do that with C-y)
+        ['<CR>'] = {
+            c = cmp.mapping.confirm({
+                select = true,
+            }),
+        },
+        ['<C-y>'] = cmp.mapping(function()
+            cmp.confirm({ select = true })
+            feedkey('<CR>', '')
+        end, { 'c' }),
+    }),
     sources = cmp.config.sources({
         { name = 'path' },
     }),
