@@ -49,12 +49,13 @@ return {
         { trig = 'ef', dscr = 'Empty function' },
         fmta(
             [[
-                function()
+                function(<>)
                     <>
                 end
             ]],
             {
                 i(1),
+                i(2),
             }
         )
     ),
@@ -62,13 +63,14 @@ return {
         { trig = 'lf', dscr = 'Local function definition' },
         fmta(
             [[
-                local <> = function()
+                local <> = function(<>)
                     <>
                 end
             ]],
             {
                 i(1, 'fun_name'),
                 i(2),
+                i(3),
             }
         ),
         { condition = line_begin }
