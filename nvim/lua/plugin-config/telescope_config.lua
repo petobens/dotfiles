@@ -47,7 +47,7 @@ local tree_previewer = previewers.new_termopen_previewer({
 })
 
 -- Custom pickers
-local find_dirs = function(opts)
+function _G.TelescopeConfig.find_dirs(opts)
     opts = opts or {}
     if opts.cwd == nil then
         opts.cwd = utils.buffer_dir()
@@ -85,7 +85,7 @@ local find_dirs = function(opts)
         :find()
 end
 
-local parent_dirs = function(opts)
+function _G.TelescopeConfig.parent_dirs(opts)
     opts = opts or {}
     -- TODO: change dir icon
     opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
@@ -119,7 +119,7 @@ local parent_dirs = function(opts)
         :find()
 end
 
-local bookmark_dirs = function(opts)
+function _G.TelescopeConfig.bookmark_dirs(opts)
     opts = opts or {}
     -- TODO: change dir icon
     opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
@@ -170,10 +170,11 @@ local function find_files_upper_cwd()
     })
 end
 
-local function z_with_tree_preview()
+function _G.TelescopeConfig.z_with_tree_preview(opts)
     telescope.extensions.z.list({
         cmd = { 'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1 | tac' },
         previewer = tree_previewer,
+        opts = opts,
     })
 end
 
@@ -364,7 +365,7 @@ local custom_actions = transform_mod({
         if p:is_file() then
             p = p:parent()
         end
-        find_dirs({ cwd = tostring(p) })
+        _G.TelescopeConfig.find_dirs({ cwd = tostring(p) })
     end,
     -- Show parent dirs of entry
     entry_parent_dirs = function(prompt_bufnr)
@@ -374,7 +375,7 @@ local custom_actions = transform_mod({
         if p:is_file() then
             p = p:parent()
         end
-        parent_dirs({ starting_dir = p })
+        _G.TelescopeConfig.parent_dirs({ starting_dir = p })
     end,
     -- Live (interactive) grep in entry dir
     entry_igrep = function(prompt_bufnr)
@@ -621,10 +622,10 @@ u.keymap(
     { silent = false }
 )
 u.keymap('n', '<C-t>', find_files_cwd)
-u.keymap('n', '<A-c>', find_dirs)
-u.keymap('n', '<A-p>', parent_dirs)
-u.keymap('n', '<A-z>', z_with_tree_preview)
-u.keymap('n', '<Leader>bm', bookmark_dirs)
+u.keymap('n', '<A-c>', _G.TelescopeConfig.find_dirs)
+u.keymap('n', '<A-p>', _G.TelescopeConfig.parent_dirs)
+u.keymap('n', '<A-z>', _G.TelescopeConfig.z_with_tree_preview)
+u.keymap('n', '<Leader>bm', _G.TelescopeConfig.bookmark_dirs)
 u.keymap('n', '<Leader>ig', igrep)
 u.keymap('n', '<Leader>ir', igrep_git_root)
 u.keymap('n', '<Leader>io', igrep_open_buffers)

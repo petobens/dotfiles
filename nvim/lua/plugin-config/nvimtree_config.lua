@@ -67,6 +67,43 @@ function NvimTreeConfig.telescope_find_files()
     })
 end
 
+function NvimTreeConfig.telescope_find_dirs()
+    _G.TelescopeConfig.find_dirs({
+        attach_mappings = function(_, map)
+            map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
+            return true
+        end,
+    })
+end
+
+function NvimTreeConfig.telescope_parent_dirs()
+    _G.TelescopeConfig.parent_dirs({
+        attach_mappings = function(_, map)
+            map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
+            return true
+        end,
+    })
+end
+
+function NvimTreeConfig.telescope_z()
+    -- FIXME: Not working
+    _G.TelescopeConfig.z_with_tree_preview({
+        attach_mappings = function(_, map)
+            map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
+            return true
+        end,
+    })
+end
+
+function NvimTreeConfig.telescope_bookmarks()
+    _G.TelescopeConfig.bookmark_dirs({
+        attach_mappings = function(_, map)
+            map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
+            return true
+        end,
+    })
+end
+
 local tree_cb = require('nvim-tree.config').nvim_tree_callback
 local map_list = {
     { key = '<CR>', cb = ':lua NvimTreeConfig.cd_or_open()<CR>' },
@@ -87,6 +124,10 @@ local map_list = {
     { key = '<Space>', cb = tree_cb('toggle_mark') },
     -- Telescope integration
     { key = '<C-t>', cb = ':lua NvimTreeConfig.telescope_find_files()<CR>' },
+    { key = '<A-c>', cb = ':lua NvimTreeConfig.telescope_find_dirs()<CR>' },
+    { key = '<A-p>', cb = ':lua NvimTreeConfig.telescope_parent_dirs()<CR>' },
+    { key = '<A-z>', cb = ':lua NvimTreeConfig.telescope_z()<CR>' },
+    { key = 'b', cb = ':lua NvimTreeConfig.telescope_bookmarks()<CR>' },
 }
 
 require('nvim-tree').setup({
