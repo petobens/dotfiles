@@ -154,12 +154,12 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
 end
 
 -- Helper (wrapper) functions
-local function find_files_cwd()
+function _G.TelescopeConfig.find_files_cwd(opts)
     local buffer_dir = utils.buffer_dir()
-    builtin.find_files({
-        cwd = buffer_dir,
-        results_title = buffer_dir,
-    })
+    opts = opts or {}
+    opts.cwd = buffer_dir
+    opts.results_title = buffer_dir
+    builtin.find_files(opts)
 end
 
 local function find_files_upper_cwd()
@@ -612,7 +612,7 @@ telescope.setup({
 })
 
 -- Mappings
-u.keymap('n', '<Leader>ls', find_files_cwd)
+u.keymap('n', '<Leader>ls', _G.TelescopeConfig.find_files_cwd)
 u.keymap('n', '<Leader>lu', find_files_upper_cwd)
 u.keymap(
     'n',
@@ -620,7 +620,7 @@ u.keymap(
     '<Cmd>lcd %:p:h<CR>:Telescope find_files cwd=',
     { silent = false }
 )
-u.keymap('n', '<C-t>', find_files_cwd)
+u.keymap('n', '<C-t>', _G.TelescopeConfig.find_files_cwd)
 u.keymap('n', '<A-c>', _G.TelescopeConfig.find_dirs)
 u.keymap('n', '<A-p>', _G.TelescopeConfig.parent_dirs)
 u.keymap('n', '<A-z>', _G.TelescopeConfig.z_with_tree_preview)
