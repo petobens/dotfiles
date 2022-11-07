@@ -201,7 +201,7 @@ APPS = {
             'title': 'Do you want to empty the trash?',
             'shell': True,
             'cmd': (
-                "trash-empty && pkill -INT -f trash-list && "
+                "trash-empty -f && pkill -INT -f trash-list && "
                 "xdotool key Super_L+Control+b && "
                 "dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
             ),
