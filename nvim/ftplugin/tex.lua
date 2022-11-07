@@ -1,5 +1,6 @@
 local overseer = require('overseer')
 local u = require('utils')
+local scan = require('plenary.scandir')
 
 -- Options
 vim.opt_local.shiftwidth = 2
@@ -106,11 +107,56 @@ local file_edit = function(extension)
     vim.cmd(split .. base_file .. '.' .. extension)
 end
 
+-- Miscellaneous
+local delete_aux_files = function()
+    local aux_extensions = {
+        'aux',
+        'bbl',
+        'bcf',
+        'blg',
+        'idx',
+        'log',
+        'xml',
+        'toc',
+        'nav',
+        'out',
+        'snm',
+        'gz',
+        'ilg',
+        'ind',
+        'vrb',
+        'log',
+    }
+    local files = scan.scan_dir(vim.fn.expand('%:p:h'))
+    local rm_files = {}
+    for _, f in pairs(files) do
+        local ext = vim.fn.fnamemodify(f, ':e')
+        -- FIXME: Remove this double loop (simply get index)
+        for _, aux_ext in pairs(aux_extensions) do
+            if ext == aux_ext then
+                table.insert(rm_files, f)
+            end
+        end
+    end
+    vim.ui.input(
+        { prompt = string.format('Delete %s files? (y/n): ', #rm_files) },
+        function(input)
+            if input == 'y' then
+                for _, f in pairs(rm_files) do
+                    -- TODO: Make this async
+                    vim.fn.execute('!trash-put ' .. f)
+                end
+            end
+        end
+    )
+end
+
 -- Mappings
 u.keymap('n', '<F7>', compile_latex, { buffer = true })
 u.keymap('i', '<F7>', compile_latex, { buffer = true })
 u.keymap('n', '<Leader>vp', view_pdf, { buffer = true })
 u.keymap('n', '<Leader>sl', forward_search, { buffer = true })
+u.keymap('n', '<Leader>da', delete_aux_files, { buffer = true })
 u.keymap('n', '<Leader>eb', function()
     file_edit('bib')
 end, { buffer = true })
