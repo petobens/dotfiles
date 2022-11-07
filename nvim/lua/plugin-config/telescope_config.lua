@@ -171,11 +171,10 @@ local function find_files_upper_cwd()
 end
 
 function _G.TelescopeConfig.z_with_tree_preview(opts)
-    telescope.extensions.z.list({
-        cmd = { 'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1 | tac' },
-        previewer = tree_previewer,
-        opts = opts,
-    })
+    opts = opts or {}
+    opts.cmd = { 'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1 | tac' }
+    opts.previewer = tree_previewer
+    telescope.extensions.z.list(opts)
 end
 
 local function igrep(dir)
