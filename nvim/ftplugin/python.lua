@@ -1,3 +1,4 @@
+local overseer = require('overseer')
 local u = require('utils')
 local builtin = require('telescope.builtin')
 local utils = require('telescope.utils')
@@ -5,7 +6,33 @@ local utils = require('telescope.utils')
 -- Options
 vim.opt_local.commentstring = '#%s'
 
--- Compiling
+-- Running
+local _parse_qf = function(qf_title, active_window_id)
+    local current_qf = vim.fn.getqflist()
+    local new_qf = {}
+    for _, v in pairs(current_qf) do
+        if v.valid > 0 or v.text ~= '' then
+            table.insert(new_qf, v)
+        end
+    end
+    if next(new_qf) ~= nil then
+        vim.fn.setqflist({}, ' ', { items = new_qf, title = qf_title })
+        vim.cmd('copen')
+        vim.fn.win_gotoid(active_window_id)
+    end
+end
+
+local run_python = function()
+    local current_win_id = vim.fn.win_getid()
+    vim.cmd('silent noautocmd update')
+    overseer.run_template({ name = 'run_python' }, function(task)
+        vim.cmd('cclose')
+        task:subscribe('on_complete', function()
+            _parse_qf(task.metadata.run_cmd, current_win_id)
+        end)
+    end)
+end
+
 local run_tmux_pane = function()
     if vim.env.TMUX == nil then
         return
@@ -15,10 +42,6 @@ local run_tmux_pane = function()
     local sh_cmd = '"python ' .. fname .. [[; read -p ''"]]
     vim.cmd('silent! !tmux new-window -c ' .. cwd .. ' -n ' .. fname .. ' ' .. sh_cmd)
 end
-
-u.keymap('n', '<F5>', function()
-    run_tmux_pane()
-end, { buffer = true })
 
 -- Debugging
 local add_breakpoint = function()
@@ -60,6 +83,10 @@ local list_breakpoints = function(local_buffer)
     builtin.grep_string(opts)
 end
 
+-- Running
+u.keymap({ 'n', 'i' }, '<F7>', run_python, { buffer = true })
+u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
+-- Debugging
 u.keymap('n', '<Leader>bp', add_breakpoint, { buffer = true })
 u.keymap('n', '<Leader>rb', remove_breakpoints, { buffer = true })
 u.keymap('n', '<Leader>lb', function()
