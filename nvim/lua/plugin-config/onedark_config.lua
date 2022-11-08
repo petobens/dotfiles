@@ -49,6 +49,7 @@ onedarkpro.setup({
         EndOfBuffer = { fg = p.comment_grey },
         ErrorMsg = { fg = p.red },
         FloatBorder = { fg = p.cursor_grey },
+        FloatTitle = { fg = p.cursor_grey },
         FoldColumn = { fg = p.comment_grey, bg = p.black },
         Folded = { link = 'FoldColumn' },
         IncSearch = { fg = p.bg, bg = p.orange },
