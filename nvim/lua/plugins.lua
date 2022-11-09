@@ -138,8 +138,7 @@ return require('packer').startup(function(use)
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
             'nvim-telescope/telescope-z.nvim',
-            'nvim-telescope/telescope-frecency.nvim',
-            'kkharji/sqlite.lua',
+            'smartpde/telescope-recent-files',
         },
         config = function()
             require('plugin-config/telescope_config')

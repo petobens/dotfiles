@@ -656,7 +656,11 @@ u.keymap('n', '<Leader>ir', igrep_git_root)
 u.keymap('n', '<Leader>io', igrep_open_buffers)
 u.keymap('n', '<A-g>', igrep)
 u.keymap('n', '<Leader>rg', rgrep)
-u.keymap('n', '<Leader>rd', '<Cmd>Telescope frecency<CR>')
+u.keymap(
+    'n',
+    '<Leader>rd',
+    [[<Cmd>lua require('telescope').extensions.recent_files.pick()<CR>]]
+)
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>tl', tasklist_buffer)
 u.keymap('n', '<Leader>tL', tasklist_cwd)
@@ -675,7 +679,7 @@ u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 u.keymap('n', '<Leader>te', lsp_doc_symbols)
 
 -- Extensions
-telescope.load_extension('frecency')
+telescope.load_extension('recent_files')
 telescope.load_extension('fzf')
 telescope.load_extension('luasnip')
 telescope.load_extension('z')
