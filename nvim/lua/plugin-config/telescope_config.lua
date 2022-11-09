@@ -200,7 +200,10 @@ end
 
 local function rgrep()
     vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
-        -- FIXME: no C-c: https://github.com/neovim/neovim/issues/18144
+        -- FIXME: no C-c exit: https://github.com/neovim/neovim/pull/21006
+        if not dir then
+            return
+        end
         local opts = {
             cwd = dir,
             search_dirs = { dir },
