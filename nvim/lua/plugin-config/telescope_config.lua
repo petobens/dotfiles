@@ -10,9 +10,10 @@ local make_entry = require('telescope.make_entry')
 local Path = require('plenary.path')
 local pickers = require('telescope.pickers')
 local previewers = require('telescope.previewers')
+local sorters = require('telescope.sorters')
 local telescope = require('telescope')
-local utils = require('telescope.utils')
 local u = require('utils')
+local utils = require('telescope.utils')
 
 local tree_api = require('nvim-tree.api').tree
 local node_api = require('nvim-tree.api').node
@@ -45,6 +46,26 @@ local tree_previewer = previewers.new_termopen_previewer({
         end)
     end,
 })
+
+-- Custom sorters
+local preserve_order_sorter = function(opts)
+    -- From: https://github.com/antoinemadec/telescope-git-browse.nvim/blob/main/lua/telescope/_extensions/git_browse/sorters.lua
+    opts = opts or {}
+    local fzy = opts.fzy_mod or require('telescope.algos.fzy')
+
+    return sorters.Sorter:new({
+        scoring_function = function(_, prompt, line, _)
+            if not fzy.has_match(prompt, line) then
+                return -1
+            end
+            return 1
+        end,
+
+        highlighter = function(_, prompt, display)
+            return fzy.positions(prompt, display)
+        end,
+    })
+end
 
 -- Custom pickers
 function _G.TelescopeConfig.find_dirs(opts)
@@ -253,6 +274,7 @@ local function gitcommits(opts)
             previewers.git_commit_diff_as_was.new(opts),
             previewers.git_commit_message.new(opts),
         },
+        sorter = preserve_order_sorter(opts),
     })
 end
 
@@ -266,6 +288,7 @@ local function gitcommits_buffer(opts)
             previewers.git_commit_diff_as_was.new(opts),
             previewers.git_commit_message.new(opts),
         },
+        sorter = preserve_order_sorter(opts),
     })
 end
 
@@ -652,7 +675,7 @@ u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 u.keymap('n', '<Leader>te', lsp_doc_symbols)
 
 -- Extensions
-telescope.load_extension('fzf')
-telescope.load_extension('z')
 telescope.load_extension('frecency')
+telescope.load_extension('fzf')
 telescope.load_extension('luasnip')
+telescope.load_extension('z')
