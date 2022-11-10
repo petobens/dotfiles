@@ -86,9 +86,7 @@ end
 
 function NvimTreeConfig.execute(cmd)
     local node = tree_api.get_node_under_cursor()
-    local tmux_cmd =
-        string.format('silent! !tmux new-window -d %s %s', cmd, node.absolute_path)
-    vim.cmd(tmux_cmd)
+    vim.fn.jobstart(cmd .. ' ' .. node.absolute_path)
 end
 
 local tree_cb = require('nvim-tree.config').nvim_tree_callback

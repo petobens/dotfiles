@@ -77,7 +77,7 @@ end
 local view_pdf = function()
     local tex_file = vim.fn.expand('%:p')
     local pdf_file = vim.fn.fnamemodify(tex_file, ':p:r') .. '.pdf'
-    vim.cmd('silent! !tmux new-window -d zathura --fork ' .. pdf_file)
+    vim.fn.jobstart('zathura --fork ' .. pdf_file)
 end
 
 local forward_search = function()
@@ -92,8 +92,7 @@ local forward_search = function()
         .. ' '
         .. pdf_file
     -- FIXME: How can we fork here?
-    local cmd = 'silent! !tmux new-window -d zathura ' .. forward_args
-    vim.cmd(cmd)
+    vim.fn.jobstart('zathura ' .. forward_args)
 end
 
 -- File Editing
