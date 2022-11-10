@@ -56,13 +56,13 @@ function NvimTreeConfig.mark_down()
     vim.cmd('normal! j')
 end
 
-function NvimTreeConfig.telescope(picker)
-    _G.TelescopeConfig[picker]({
-        attach_mappings = function(_, map)
-            map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
-            return true
-        end,
-    })
+function NvimTreeConfig.telescope(picker, opts)
+    opts = opts or {}
+    opts.attach_mappings = function(_, map)
+        map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
+        return true
+    end
+    _G.TelescopeConfig[picker](opts)
 end
 
 function NvimTreeConfig.telescope_preview()
@@ -127,6 +127,10 @@ local map_list = {
     { key = '<Space>', cb = ':lua NvimTreeConfig.mark_down()<CR>' },
     -- Telescope integration
     { key = '<C-t>', cb = ':lua NvimTreeConfig.telescope("find_files_cwd")<CR>' },
+    {
+        key = '<A-t>',
+        cb = ':lua NvimTreeConfig.telescope("find_files_cwd", { no_ignore = true })<CR>',
+    },
     { key = '<A-c>', cb = ':lua NvimTreeConfig.telescope("find_dirs")<CR>' },
     { key = '<A-p>', cb = ':lua NvimTreeConfig.telescope("parent_dirs")<CR>' },
     { key = '<A-z>', cb = ':lua NvimTreeConfig.telescope("z_with_tree_preview")<CR>' },

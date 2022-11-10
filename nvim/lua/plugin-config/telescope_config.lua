@@ -183,12 +183,12 @@ function _G.TelescopeConfig.find_files_cwd(opts)
     builtin.find_files(opts)
 end
 
-local function find_files_upper_cwd()
+local function find_files_upper_cwd(opts)
     local buffer_upperdir = string.format('%s', Path:new(utils.buffer_dir()):parent())
-    builtin.find_files({
-        cwd = buffer_upperdir,
-        results_title = buffer_upperdir,
-    })
+    opts = opts or {}
+    opts.cwd = buffer_upperdir
+    opts.results_title = buffer_upperdir
+    builtin.find_files(opts)
 end
 
 function _G.TelescopeConfig.z_with_tree_preview(opts)
@@ -650,7 +650,13 @@ telescope.setup({
 
 -- Mappings
 u.keymap('n', '<Leader>ls', _G.TelescopeConfig.find_files_cwd)
+u.keymap('n', '<Leader>lS', function()
+    _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
+end)
 u.keymap('n', '<Leader>lu', find_files_upper_cwd)
+u.keymap('n', '<Leader>lU', function()
+    find_files_upper_cwd({ no_ignore = true })
+end)
 u.keymap(
     'n',
     '<Leader>sd',
@@ -658,6 +664,9 @@ u.keymap(
     { silent = false }
 )
 u.keymap('n', '<C-t>', _G.TelescopeConfig.find_files_cwd)
+u.keymap('n', '<A-t>', function()
+    _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
+end)
 u.keymap('n', '<A-c>', _G.TelescopeConfig.find_dirs)
 u.keymap('n', '<A-p>', _G.TelescopeConfig.parent_dirs)
 u.keymap('n', '<A-z>', _G.TelescopeConfig.z_with_tree_preview)
