@@ -198,13 +198,13 @@ function _G.TelescopeConfig.z_with_tree_preview(opts)
     telescope.extensions.z.list(opts)
 end
 
-local function igrep(dir, start_text)
+local function igrep(dir, start_text, extra_args)
     local buffer_dir = dir or utils.buffer_dir()
-    local default_text = start_text or ''
     builtin.live_grep({
         cwd = buffer_dir,
         results_title = buffer_dir,
-        default_text = default_text,
+        default_text = start_text or '',
+        additional_args = extra_args or {},
     })
 end
 
@@ -221,7 +221,7 @@ local function igrep_open_buffers()
     builtin.live_grep({ grep_open_files = true })
 end
 
-local function rgrep()
+local function rgrep(extra_args)
     vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
         -- FIXME: no C-c exit: https://github.com/neovim/neovim/pull/21006
         if not dir then
@@ -231,6 +231,7 @@ local function rgrep()
             cwd = dir,
             search_dirs = { dir },
             results_title = dir,
+            additional_args = extra_args or {},
         }
         ---@diagnostic disable-next-line: assign-type-mismatch
         local type_filter = vim.fn.input('Type Filter: ', '')
@@ -295,7 +296,6 @@ local function gitcommits_buffer(opts)
 end
 
 local function search_buffer(start_text)
-    local default_text = start_text or ''
     builtin.current_buffer_fuzzy_find({
         fuzzy = false, -- exact/regex matching/sorting
         tiebreak = function() -- sort by line number
@@ -303,7 +303,7 @@ local function search_buffer(start_text)
         end,
         results_title = vim.api.nvim_buf_get_name(0),
         preview_title = 'Buffer Search Preview',
-        default_text = default_text,
+        default_text = start_text or '',
     })
 end
 
@@ -484,7 +484,7 @@ telescope.setup({
         winblend = 7,
         results_title = false,
         color_devicons = true,
-        file_ignore_patterns = { 'doc/', 'venv/', './git', '__pycache__/' },
+        file_ignore_patterns = { 'doc/', 'venv/', '__pycache__/' },
         layout_strategy = 'bottom_pane',
         layout_config = {
             prompt_position = 'bottom',
@@ -638,6 +638,13 @@ telescope.setup({
             override_file_sorter = true,
             case_mode = 'smart_case',
         },
+        recent_files = {
+            -- FIXME: Not working
+            path_display = function(_, path)
+                local p = Path:new(path)
+                return p.normalize(p)
+            end,
+        },
     },
 })
 
@@ -656,10 +663,16 @@ u.keymap('n', '<A-p>', _G.TelescopeConfig.parent_dirs)
 u.keymap('n', '<A-z>', _G.TelescopeConfig.z_with_tree_preview)
 u.keymap('n', '<Leader>bm', _G.TelescopeConfig.bookmark_dirs)
 u.keymap('n', '<Leader>ig', igrep)
+u.keymap('n', '<Leader>iG', function()
+    igrep(nil, nil, { '--no-ignore-vcs' })
+end)
 u.keymap('n', '<Leader>ir', igrep_git_root)
 u.keymap('n', '<Leader>io', igrep_open_buffers)
 u.keymap('n', '<A-g>', igrep)
 u.keymap('n', '<Leader>rg', rgrep)
+u.keymap('n', '<Leader>rG', function()
+    rgrep({ '--no-ignore-vcs' })
+end)
 u.keymap({ 'n', 'v' }, '<Leader>dg', function()
     igrep(nil, u.get_selection())
 end)
