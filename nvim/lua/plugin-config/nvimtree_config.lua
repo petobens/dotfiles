@@ -118,6 +118,7 @@ local map_list = {
     },
     { key = '<A-i>', cb = tree_cb('toggle_file_info') },
     { key = ',th', cb = tree_cb('toggle_dotfiles') },
+    { key = ',ti', cb = tree_cb('toggle_git_ignored') },
     -- Folds/marks
     { key = 'zc', cb = tree_cb('close_node') },
     { key = 'zo', cb = tree_cb('edit') },
@@ -164,6 +165,7 @@ require('nvim-tree').setup({
                     staged = '●',
                     untracked = '?',
                     deleted = '✖',
+                    ignored = ' ',
                 },
             },
         },
