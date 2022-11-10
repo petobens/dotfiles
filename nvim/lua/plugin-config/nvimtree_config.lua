@@ -65,6 +65,25 @@ function NvimTreeConfig.telescope(picker)
     })
 end
 
+function NvimTreeConfig.telescope_preview()
+    local node = tree_api.get_node_under_cursor()
+    local picker = 'find_files_cwd'
+    if node.nodes then
+        picker = 'find_dirs'
+    end
+    _G.TelescopeConfig[picker]({
+        layout_strategy = 'cursor',
+        layout_config = {
+            preview_width = 0.75,
+        },
+        attach_mappings = function(_, map)
+            map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
+            return true
+        end,
+        default_text = node.name,
+    })
+end
+
 function NvimTreeConfig.execute(cmd)
     local node = tree_api.get_node_under_cursor()
     local tmux_cmd =
@@ -83,7 +102,6 @@ local map_list = {
     { key = 'v', cb = tree_cb('vsplit') },
     { key = 's', cb = tree_cb('split') },
     { key = 'o', cb = tree_cb('system_open') },
-    { key = '<A-v>', cb = tree_cb('preview') },
     -- Filesystem
     { key = 'F', cb = tree_cb('create') },
     { key = 'D', cb = tree_cb('create') },
@@ -113,6 +131,7 @@ local map_list = {
     { key = '<A-p>', cb = ':lua NvimTreeConfig.telescope("parent_dirs")<CR>' },
     { key = '<A-z>', cb = ':lua NvimTreeConfig.telescope("z_with_tree_preview")<CR>' },
     { key = 'b', cb = ':lua NvimTreeConfig.telescope("bookmark_dirs")<CR>' },
+    { key = '<A-v>', cb = ':lua NvimTreeConfig.telescope_preview()<CR>' },
     -- System
     {
         key = ',od',
