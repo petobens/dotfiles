@@ -33,13 +33,21 @@ local run_python = function()
     end)
 end
 
-local run_tmux_pane = function()
+local run_tmux_pane = function(debug_mode)
+    debug_mode = debug_mode or false
+
     if vim.env.TMUX == nil then
         return
     end
+
+    local python_cmd = 'python'
+    if debug_mode then
+        python_cmd = python_cmd .. ' -m pdb -cc'
+    end
+
     local cwd = utils.buffer_dir()
     local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
-    local sh_cmd = '"python ' .. fname .. [[; read -p ''"]]
+    local sh_cmd = '"' .. python_cmd .. ' ' .. fname .. [[; read -p ''"]]
     vim.cmd('silent! !tmux new-window -c ' .. cwd .. ' -n ' .. fname .. ' ' .. sh_cmd)
 end
 
@@ -86,6 +94,10 @@ end
 -- Running
 u.keymap({ 'n', 'i' }, '<F7>', run_python, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
+u.keymap({ 'n', 'i' }, '<F6>', function()
+    run_tmux_pane(true)
+end, { buffer = true })
+
 -- Debugging
 u.keymap('n', '<Leader>bp', add_breakpoint, { buffer = true })
 u.keymap('n', '<Leader>rb', remove_breakpoints, { buffer = true })
