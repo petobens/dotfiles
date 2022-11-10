@@ -47,6 +47,7 @@ vim.opt.shadafile = vim.env.CACHE .. '/tmp/shada/main.shada'
 vim.opt.undodir = vim.env.CACHE .. '/tmp/undo//'
 vim.opt.undofile = true
 vim.opt.viewdir = vim.env.CACHE .. '/tmp/view//'
+vim.opt.shada = [[!,'150,<50,s10,h]]
 
 -- Search, matching and substitution
 vim.opt.gdefault = true
