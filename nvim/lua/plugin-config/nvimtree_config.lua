@@ -74,7 +74,8 @@ function NvimTreeConfig.telescope_preview()
     _G.TelescopeConfig[picker]({
         layout_strategy = 'cursor',
         layout_config = {
-            preview_width = 0.75,
+            width = 0.5,
+            preview_width = 0.95,
         },
         attach_mappings = function(_, map)
             map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_nvimtree)
