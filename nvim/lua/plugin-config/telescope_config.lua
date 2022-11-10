@@ -484,7 +484,7 @@ telescope.setup({
         winblend = 7,
         results_title = false,
         color_devicons = true,
-        file_ignore_patterns = { 'doc/', 'venv/' },
+        file_ignore_patterns = { 'doc/', 'venv/', './git', '__pycache__/' },
         layout_strategy = 'bottom_pane',
         layout_config = {
             prompt_position = 'bottom',
