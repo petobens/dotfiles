@@ -26,6 +26,19 @@ function M.border(hl_name)
     }
 end
 
+function M.get_selection()
+    local text = ''
+    if vim.fn.mode() == 'v' then
+        vim.cmd('noautocmd normal! "vy"')
+        text = vim.fn.getreg('v')
+        vim.fn.setreg('v', {})
+        text = string.gsub(text, '\n', '')
+    else
+        text = vim.fn.expand('<cWORD>')
+    end
+    return text
+end
+
 function _G.put(...)
     local objects = {}
     for i = 1, select('#', ...) do

@@ -198,11 +198,13 @@ function _G.TelescopeConfig.z_with_tree_preview(opts)
     telescope.extensions.z.list(opts)
 end
 
-local function igrep(dir)
+local function igrep(dir, start_text)
     local buffer_dir = dir or utils.buffer_dir()
+    local default_text = start_text or ''
     builtin.live_grep({
         cwd = buffer_dir,
         results_title = buffer_dir,
+        default_text = default_text,
     })
 end
 
@@ -292,7 +294,8 @@ local function gitcommits_buffer(opts)
     })
 end
 
-local function search_buffer()
+local function search_buffer(start_text)
+    local default_text = start_text or ''
     builtin.current_buffer_fuzzy_find({
         fuzzy = false, -- exact/regex matching/sorting
         tiebreak = function() -- sort by line number
@@ -300,6 +303,7 @@ local function search_buffer()
         end,
         results_title = vim.api.nvim_buf_get_name(0),
         preview_title = 'Buffer Search Preview',
+        default_text = default_text,
     })
 end
 
@@ -656,6 +660,9 @@ u.keymap('n', '<Leader>ir', igrep_git_root)
 u.keymap('n', '<Leader>io', igrep_open_buffers)
 u.keymap('n', '<A-g>', igrep)
 u.keymap('n', '<Leader>rg', rgrep)
+u.keymap({ 'n', 'v' }, '<Leader>dg', function()
+    igrep(nil, u.get_selection())
+end)
 u.keymap(
     'n',
     '<Leader>rd',
@@ -667,6 +674,9 @@ u.keymap('n', '<Leader>tL', tasklist_cwd)
 u.keymap('n', '<Leader>gl', gitcommits)
 u.keymap('n', '<Leader>gL', gitcommits_buffer)
 u.keymap('n', '<Leader>dl', search_buffer)
+u.keymap({ 'n', 'v' }, '<Leader>dw', function()
+    search_buffer(u.get_selection())
+end)
 u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
