@@ -226,6 +226,9 @@ local function rgrep(extra_args)
         -- FIXME: no C-c exit: https://github.com/neovim/neovim/pull/21006
         if not dir then
             return
+        else
+            local p = Path:new(dir)
+            dir = tostring(p.absolute(p))
         end
         local opts = {
             cwd = dir,
