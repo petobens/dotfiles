@@ -390,45 +390,6 @@ alias cptdb=' PGPASSWORD="$(pass show claro/postgres/tcalt/pass)" pgcli '\
 '-h "$(pass show claro/postgres/tcalt/host)" -p 5432 -U airflow -d delver'
 alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
 
-# Meli
-alias mgpp='echo $(pass show meli/vpn/pin)'\
-'$(oathtool --base32 --totp $(pass show meli/vpn/secret)) | xclip -r -selection clipboard'
-mvssh() {
-    (
-        command cd "/home/pedro/OneDrive/mutt/clients/meli/vpn" || exit
-        vg_status=$(vagrant status | grep -P "^default\S*\W" | rev | cut -d ' ' -f 2 | rev)
-        if [[ "$vg_status" != 'running' ]]; then
-            vagrant up
-        fi
-        vg_ssh_cmd="vagrant ssh"
-        if [[ "$1" ]]; then
-            case "$1" in
-                proxy)
-                    vg_ssh_cmd="$vg_ssh_cmd -- -v -N -D $2"
-                    ;;
-                *)
-                    vg_ssh_cmd="$vg_ssh_cmd -t -c '$1'"
-                    ;;
-            esac
-        fi
-        eval "$vg_ssh_cmd"
-    )
-}
-alias mvp='mvssh proxy 12345'
-alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
-alias mvtt='vagrant ssh -- -L 127.0.0.1:1025:$(pass show meli/teradata/host):1025 -v -N'
-alias mvpt='vagrant ssh -- -L 127.0.0.1:8443:$(pass show meli/presto/host):443 -v -N'
-
-# Etermax
-alias emfa='aws-mfa --profile etermax'
-alias eas='oathtool --base32 --totp $(pass show etermax/aws/secret) | xclip -r -selection clipboard'
-alias eap='export AWS_PROFILE=etermax'
-evpn() {
-    vpn_cmd="openvpn --daemon --config $(pass show etermax/vpn/ovpn) --cert $(pass show etermax/vpn/cert) --key $(pass show etermax/vpn/key)"
-    cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
-    eval "$cmd"
-}
-
 # Trafi
 alias tdbp='PGPASSWORD="$(pass show trafilea/redshift/pass)" pgcli -h '\
 '"$(pass show trafilea/redshift/host)" -U "$(pass show trafilea/redshift/user)"'\
