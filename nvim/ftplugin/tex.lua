@@ -138,7 +138,7 @@ local delete_aux_files = function()
         end
     end
     vim.ui.input(
-        { prompt = string.format('Delete %s files? (y/n): ', #rm_files) },
+        { prompt = string.format('Delete %s files? [y/n] ', #rm_files) },
         function(input)
             if input == 'y' then
                 for _, f in pairs(rm_files) do

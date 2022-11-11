@@ -224,7 +224,7 @@ end
 local function rgrep(extra_args)
     vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
         -- FIXME: no C-c exit: https://github.com/neovim/neovim/pull/21006
-        if not dir then
+        if not dir or dir == '' then
             return
         else
             local p = Path:new(dir)
@@ -236,11 +236,11 @@ local function rgrep(extra_args)
             results_title = dir,
             additional_args = extra_args or {},
         }
-        ---@diagnostic disable-next-line: assign-type-mismatch
-        local type_filter = vim.fn.input('Type Filter: ', '')
-        if type_filter ~= '' then
-            opts.type_filter = type_filter
-        end
+        vim.ui.input({ prompt = 'Type Filter: ' }, function(type_filter)
+            if type_filter ~= '' then
+                opts.type_filter = type_filter
+            end
+        end)
         builtin.live_grep(opts)
     end)
 end
