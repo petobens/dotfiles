@@ -223,7 +223,6 @@ end
 
 local function rgrep(extra_args)
     vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
-        -- FIXME: no C-c exit: https://github.com/neovim/neovim/pull/21006
         if not dir or dir == '' then
             return
         else
