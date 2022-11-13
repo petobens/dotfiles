@@ -130,7 +130,6 @@ local delete_aux_files = function()
     local rm_files = {}
     for _, f in pairs(files) do
         local ext = vim.fn.fnamemodify(f, ':e')
-        -- FIXME: Remove this double loop (simply get index)
         for _, aux_ext in pairs(aux_extensions) do
             if ext == aux_ext then
                 table.insert(rm_files, f)
@@ -142,8 +141,7 @@ local delete_aux_files = function()
         function(input)
             if input == 'y' then
                 for _, f in pairs(rm_files) do
-                    -- TODO: Make this async
-                    vim.fn.execute('!trash-put ' .. f)
+                    vim.fn.jobstart('trash-put ' .. f)
                 end
             end
         end
