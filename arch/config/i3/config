@@ -285,9 +285,10 @@ bindsym $mod+Shift+s $nexec i3-msg 'fullscreen disable', $nexec $font_aware_laun
 bindsym $mod+Shift+r $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher reboot-dialog
 bindsym $mod+Shift+l $nexec $HOME/.config/i3/i3lock_fancy.sh
 
-# Screen brightness
+# Screen and keyboard brightness
 bindsym $mod+$alt+Right $nexec $HOME/.config/i3/brightness.py -d inc
 bindsym $mod+$alt+Left $nexec $HOME/.config/i3/brightness.py -d dec
+bindsym $mod+$alt+semicolon $nexec $HOME/.config/i3/klight_toggle.sh
 
 # Eject mounted media (usb drives)
 bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher usb-dialog
