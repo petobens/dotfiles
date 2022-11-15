@@ -76,6 +76,12 @@ else
         sudo usermod -a -G video "$USER"
     fi
 
+    # xfce4-power-manager
+    if type "xfce4-power-manager" > /dev/null 2>&1; then
+        x4fce_cmd="xfconf-query --channel xfce4-power-manager --property /xfce4-power-manager"
+        eval "$x4fce_cmd/general-notification --set false"
+    fi
+
     # Create XDG directories
     if type "xdg-user-dirs-update" > /dev/null 2>&1; then
         echo -e "\\033[1;34m--> Creating missing XDG directories...\\033[0m"
