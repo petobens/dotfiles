@@ -641,6 +641,7 @@ telescope.setup({
             case_mode = 'smart_case',
         },
         recent_files = {
+            show_current_file = true,
             -- FIXME: Not working
             path_display = function(_, path)
                 local p = Path:new(path)
