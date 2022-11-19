@@ -23,5 +23,6 @@ require('nvim-treesitter.configs').setup({
 u.keymap('n', '<Leader>cg', '<Cmd>TSHighlightCapturesUnderCursor<CR>')
 
 -- Custom queries (see for example https://github.com/nvim-treesitter/nvim-treesitter/blob/master/queries/python/folds.scm)
-vim.treesitter.set_query('python', 'folds', [[[(class_definition)] @fold]])
+vim.treesitter.set_query('lua', 'folds', [[[(table_constructor)] @fold]])
 vim.treesitter.set_query('markdown', 'folds', [[[(section)] @fold]])
+vim.treesitter.set_query('python', 'folds', [[[(class_definition)] @fold]])
