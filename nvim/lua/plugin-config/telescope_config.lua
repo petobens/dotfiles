@@ -477,6 +477,18 @@ vim.api.nvim_create_autocmd('User', {
     pattern = { 'TelescopePreviewerLoaded' },
     command = 'setlocal number',
 })
+-- Fix folding when opening files
+-- See: https://github.com/nvim-telescope/telescope.nvim/issues/1277
+local fix_folding = vim.api.nvim_create_augroup('telescope_previewer', { clear = true })
+vim.api.nvim_create_autocmd('BufRead', {
+    group = fix_folding,
+    callback = function()
+        vim.api.nvim_create_autocmd('BufWinEnter', {
+            once = true,
+            command = 'normal! zx',
+        })
+    end,
+})
 
 -- Setup
 telescope.setup({
