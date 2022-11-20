@@ -654,11 +654,6 @@ telescope.setup({
         },
         recent_files = {
             show_current_file = true,
-            -- FIXME: Not working
-            path_display = function(_, path)
-                local p = Path:new(path)
-                return p.normalize(p)
-            end,
         },
     },
 })
@@ -700,11 +695,14 @@ end)
 u.keymap({ 'n', 'v' }, '<Leader>dg', function()
     igrep(nil, u.get_selection())
 end)
-u.keymap(
-    'n',
-    '<Leader>rd',
-    [[<Cmd>lua require('telescope').extensions.recent_files.pick()<CR>]]
-)
+u.keymap('n', '<Leader>rd', function()
+    require('telescope').extensions.recent_files.pick({
+        path_display = function(_, path)
+            local p = Path:new(path)
+            return p.normalize(p)
+        end,
+    })
+end)
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
 u.keymap('n', '<Leader>tl', tasklist_buffer)
 u.keymap('n', '<Leader>tL', tasklist_cwd)
