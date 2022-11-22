@@ -125,8 +125,10 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     $tlmgr_install mathtools
     $tlmgr_install microtype
     $tlmgr_install pdfescape
+    $tlmgr_install pdflscape
     $tlmgr_install pdftexcmds
     $tlmgr_install relsize
+    $tlmgr_install sansmath
     $tlmgr_install setspace
     $tlmgr_install translator
     $tlmgr_install ulem
