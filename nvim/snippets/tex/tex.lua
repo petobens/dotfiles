@@ -431,6 +431,20 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'mur', wordTrig = false, dscr = 'Multirow' },
+        fmta(
+            [[
+                \multirow{<>}{<>}{<><>}
+            ]],
+            {
+                i(1, '2'),
+                i(2, '*'),
+                f(visual_selection),
+                i(3),
+            }
+        )
+    ),
 
     -- References
     s(

@@ -83,4 +83,70 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'saf', dscr = 'Standalone figure' },
+        fmta(
+            [[
+                \documentclass{standalone}
+
+                %-----------------------+
+                % Clean auxiliary files |
+                %-----------------------+
+                % arara: clean: {files: [<>.aux, <>.log, <>.synctex.gz]}
+
+                %----------------------------------------------+
+                % Font, hyphenation, encoding and math symbols |
+                %----------------------------------------------+
+                \usepackage{lmodern}
+                % \renewcommand{\rmdefault}{\sfdefault}   % Use beamer sans-serif font family
+                \usepackage[T1]{fontenc}
+                \usepackage[utf8]{inputenc}
+                \usepackage{amssymb}
+                \usepackage[eulergreek]{sansmath}
+
+                %--------+
+                % Graphs |
+                %--------+
+                \usepackage{pgfplots}
+                \pgfplotsset{compat=newest,
+                standard/.style={
+                    axis lines=middle, axis line style={-,big arrow},
+                    every axis x label/.style={at={(current axis.right of origin)}, anchor=
+                    north east, xshift=1.2mm, yshift=-0.2mm},
+                    every axis y label/.style={at={(current axis.above origin)}, anchor=east,
+                    yshift=-0.7mm},
+                    every tick/.style={color=black, line width=0.35pt}
+                }
+                }
+
+                \usetikzlibrary{arrows,intersections,calc,decorations.pathreplacing,
+                decorations.markings}
+                \tikzset{
+                big arrow/.style={
+                    decoration={markings,mark=at position 1 with {\arrow[scale=2.4]{latex'}}},
+                    postaction={decorate,draw}},
+                bold/.style={line width=1pt},
+                fopaque/.style={fill=gray, fill opacity=0.25},
+                every picture/.style={line width=0.5pt},
+                every node/.style={font=\small},
+                every pin/.style={font=\footnotesize},
+                every pin edge/.style={<<-,>>=stealth'}
+                }
+
+                \begin{document}
+                \begin{tikzpicture}
+                    <>
+                \end{tikzpicture}
+                \end{document}
+
+            ]],
+            {
+                p(vim.fn.expand, '%:t:r'),
+                p(vim.fn.expand, '%:t:r'),
+                p(vim.fn.expand, '%:t:r'),
+                i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
 }, {}
