@@ -19,6 +19,9 @@ vim.diagnostic.config({
             end
             return string.format('%s %s', icon, diagnostic.message)
         end,
+        suffix = function(diagnostic)
+            return diagnostic.code and (' [%s]'):format(diagnostic.code) or ''
+        end,
     },
 })
 
