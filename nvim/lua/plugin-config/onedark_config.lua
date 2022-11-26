@@ -133,18 +133,19 @@ onedarkpro.setup({
         Todo = { fg = p.red, bg = p.black },
 
         -- Diagnostics (and LSP)
+        -- Initial empty hl ({}) to avoid highlighting code with diagnostic colors
         DiagnosticError = {},
         DiagnosticWarn = {},
         DiagnosticInfo = {},
         DiagnosticHint = {},
-        DiagnosticUnderlineError = { link = 'DiagnosticError' },
-        DiagnosticUnderlineWarn = { link = 'DiagnosticWarn' },
-        DiagnosticUnderlineInfo = { link = 'DiagnosticInfo' },
-        DiagnosticUnderlineHint = { link = 'DiagnosticHint' },
         DiagnosticVirtualTextError = { link = 'Error' },
         DiagnosticVirtualTextWarn = { fg = p.orange },
         DiagnosticVirtualTextInfo = { fg = p.light_blue },
         DiagnosticVirtualTextHint = { fg = p.cyan },
+        DiagnosticUnderlineError = { link = 'DiagnosticVirtualTextError' },
+        DiagnosticUnderlineWarn = { link = 'DiagnosticVirtualTextWarn' },
+        DiagnosticUnderlineInfo = { link = 'DiagnosticVirtualTextInfo' },
+        DiagnosticUnderlineHint = { link = 'DiagnosticVirtualTextHint' },
         DiagnosticFloatingError = { link = 'DiagnosticVirtualTextError' },
         DiagnosticFloatingWarn = { link = 'DiagnosticVirtualTextWarn' },
         DiagnosticFloatingInfo = { link = 'DiagnosticVirtualTextInfo' },
@@ -156,7 +157,6 @@ onedarkpro.setup({
         LspReferenceText = { bg = p.visual_grey },
         LspReferenceRead = { link = 'LspReferenceText' },
         LspReferenceWrite = { link = 'LspReferenceText' },
-        -- TODO: add other lsp hls (as code lens)
 
         -- Treesitter
         ['@boolean'] = { fg = p.orange },
