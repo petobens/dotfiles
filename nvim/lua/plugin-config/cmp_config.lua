@@ -27,9 +27,19 @@ cmp.setup({
         ghost_text = true,
     },
     formatting = {
-        format = require('lspkind').cmp_format({
-            with_text = true,
-        }),
+        fields = { 'kind', 'abbr', 'menu' },
+        format = function(entry, vim_item)
+            vim_item.kind = require('lspkind').presets.default[vim_item.kind]
+            vim_item.menu = ({
+                buffer = '[Buffer]',
+                copilot = '[Copilot]',
+                luasnip = '[Snippet]',
+                nvim_lsp = '[LSP]',
+                path = '[Path]',
+                tmux = '[TMUX]',
+            })[entry.source.name]
+            return vim_item
+        end,
     },
     mapping = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -115,6 +125,9 @@ cmp.setup.cmdline(':', {
     }, {
         { name = 'path' },
     }),
+    formatting = {
+        fields = { 'abbr' },
+    },
 })
 -- Also use cmp-cmdline to complete vim.ui.input paths
 cmp.setup.cmdline('@', {
@@ -133,4 +146,7 @@ cmp.setup.cmdline('@', {
     sources = cmp.config.sources({
         { name = 'path' },
     }),
+    formatting = {
+        fields = { 'abbr' },
+    },
 })
