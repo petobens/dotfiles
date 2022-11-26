@@ -155,7 +155,9 @@ require('nvim-tree').setup({
         },
     },
     renderer = {
-        root_folder_modifier = ':t',
+        root_folder_label = function(path)
+            return string.format('%s/', vim.fn.fnamemodify(path, ':t'))
+        end,
         icons = {
             git_placement = 'after',
             glyphs = {
