@@ -3,8 +3,12 @@ require('mason-lspconfig').setup()
 
 -- Diagnostics
 vim.diagnostic.config({
+    underline = false,
     signs = false,
+    float = { source = true },
     virtual_text = {
+        spacing = 0,
+        source = 'if_many',
         prefix = '',
         format = function(diagnostic)
             local icon
