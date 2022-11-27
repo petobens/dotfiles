@@ -101,6 +101,7 @@ lspconfig.sumneko_lua.setup({
             workspace = {
                 ignoreDir = { '.git', 'undo' },
                 preloadFileSize = 750,
+                checkThirdParty = false,
             },
         },
     },
