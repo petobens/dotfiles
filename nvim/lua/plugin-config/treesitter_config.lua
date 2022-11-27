@@ -9,6 +9,7 @@ require('nvim-treesitter.configs').setup({
     ensure_installed = {
         'bash',
         'comment',
+        'help', -- vimdoc help
         'java',
         'json',
         'lua',

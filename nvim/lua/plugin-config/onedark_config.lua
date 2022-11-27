@@ -197,14 +197,16 @@ onedarkpro.setup({
         ['@function.builtin.python'] = { fg = p.yellow },
         ['@punctuation.special.python'] = { fg = p.orange },
 
+        ---- vim-doc (help)
+        ['@conceal.help'] = { fg = p.red },
+        ['@label.help'] = { fg = p.green, style = p.none },
+        ['@parameter.help'] = { fg = p.light_blue },
+        ['@text.literal.help'] = { fg = p.yellow },
+        ['@text.reference.help'] = { fg = p.red },
+        ['@text.title.help'] = { fg = p.purple },
+
         --- Yaml
         yamlBool = { fg = p.orange },
-
-        ---- Vim help
-        helpCommand = { fg = p.yellow },
-        helpExample = { fg = p.yellow },
-        helpHeader = { fg = p.white, style = 'bold' },
-        helpSectionDelim = { fg = p.comment_grey },
 
         ---- Diffs
         DiffAdd = { fg = p.green, bg = p.visual_grey },
