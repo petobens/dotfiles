@@ -370,7 +370,7 @@ local custom_actions = transform_mod({
         vim.cmd('silent normal! mz')
         vim.cmd('silent normal! ' .. entry.index .. 'z=')
         -- Use pcall to gracefully catch E753 when there are no more words to replace
-        ---@diagnostic disable-next-line: assign-type-mismatch
+        ---@diagnostic disable-next-line: param-type-mismatch
         pcall(vim.cmd, 'spellrepall')
         vim.cmd('silent normal! `z')
     end,
@@ -526,6 +526,7 @@ telescope.setup({
                 ['<A-f>'] = custom_actions.open_nvimtree,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
+                ['<A-r>'] = actions.to_fuzzy_refine,
                 ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
                 ['<A-u>'] = custom_actions.undo_picker,
@@ -549,6 +550,7 @@ telescope.setup({
                 ['<A-f>'] = custom_actions.open_nvimtree,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
+                ['<A-r>'] = actions.to_fuzzy_refine,
                 ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
                 ['<A-u>'] = custom_actions.undo_picker,
