@@ -36,6 +36,7 @@ export FZF_DEFAULT_OPTS='
 --inline-info
 --prompt="   "
 --marker=" "
+--separator=""
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
 --bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up
 --bind=alt-d:preview-half-page-down,alt-u:preview-half-page-up
