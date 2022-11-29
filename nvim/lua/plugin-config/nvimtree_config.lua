@@ -198,6 +198,7 @@ require('nvim-tree').setup({
         require_confirm = true,
     },
     git = { ignore = false },
+    diagnostics = { enable = false },
 })
 
 u.keymap('n', '<Leader>ff', NvimTreeConfig.cd_find_file)
