@@ -549,17 +549,12 @@ export FORGIT_LOG_FZF_OPTS='
 --bind="ctrl-o:execute(echo {} | grep -Eo [a-f0-9]+ | head -1 | xargs git show | nvim -)"
 '
 
-alias gl=forgit::log
-alias glg='FORGIT_LOG_GRAPH_ENABLE=false gl -G'
-alias gd=forgit::diff
-alias ga=forgit::add
-alias gu=forgit::restore
-alias gsv=forgit::stash::show
-
-# Load
-if [ -f "/usr/share/zsh/plugins/forgit-git/forgit.plugin.zsh" ]; then
-    . "/usr/share/zsh/plugins/forgit-git/forgit.plugin.zsh"
-fi
+alias gcb='git-forgit checkout_branch'
+alias gl='git-forgit log'
+alias glg='FORGIT_LOG_GRAPH_ENABLE=false git-forgit log'
+alias gd='git-forgit diff'
+alias ga='git-forgit add'
+alias gsv='git-forgit stash_show'
 
 # }}}
 # Docker {{{
