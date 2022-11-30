@@ -210,7 +210,6 @@ if type "git" > /dev/null 2>&1; then
         _git_checkout
     }
     __git_complete gco _comp_gco
-    alias gcb='git checkout $(git branch | fzf | tr -d "*")'
     alias gcp='git cherry-pick'
     alias gb='git branch'
     __git_complete gb _git_branch
@@ -354,49 +353,8 @@ alias unfs='sudo umount /mnt/nfs'
 alias npssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology -t "cd /volume1/Shared-DS220; bash --login"'
 alias nfssh='sshpass -p "$(pass show synology/synology-flor/flor)" ssh synology-flor -t "cd /volume1/Shared-DS220; bash --login"'
 
-# }}}
-# Work Aliases {{{
-
-# Gitlab 2fa
-alias g2f='oathtool --base32 --totp $(pass show git/gitlab/secret) | xclip -r -selection clipboard'
-
-# Mostly vpn and databases; ssh hosts are defined in .ssh/config
+# VPN
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
-
-# Claro
-# Note: this requires a passwordless stoken (use token-mode=rsa if password is
-# enabled)
-alias covpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
-'--background --authgroup=1 --user="$(pass show claro/vpn/user)" '\
-'--passwd-on-stdin "$(pass show claro/vpn/host-old)"'
-alias cvpn='sudo pkill -INT -f snx; stoken | '\
-'snx -s "$(pass show claro/vpn/host)" -u "$(pass show claro/vpn/user)"'
-alias cmssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/pytonp01)" '\
-'ssh mjolnir'
-alias cpssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/python01prd)" '\
-'ssh claro-prd'
-alias cpfssh='sshpass -p "$(pass show arch/localhost)" ssh localhost -N -D 54321'
-alias cmtssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/pytonp01)" '\
-'ssh mjolnir -R 9090:127.0.0.1:54321'
-alias ctssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/tcal)" '\
-'ssh tcal'
-alias cttssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/tcal)" '\
-'ssh tcal -R 9090:127.0.0.1:54321'
-alias coddb='rlwrap -a"$(pass show claro/oracle/delver/pass)" -N '\
-'sql DELVER/"$(pass show claro/oracle/delver/pass)"'\
-'@"$(pass show claro/oracle/delver/host)":1521/RAC8.WORLD'
-alias coldb='rlwrap -a -N sql system/oracle@localhost:49161/xe'
-alias cptdb=' PGPASSWORD="$(pass show claro/postgres/tcalt/pass)" pgcli '\
-'-h "$(pass show claro/postgres/tcalt/host)" -p 5432 -U airflow -d delver'
-alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
-
-# Trafi
-alias tdbp='PGPASSWORD="$(pass show trafilea/redshift/pass)" pgcli -h '\
-'"$(pass show trafilea/redshift/host)" -U "$(pass show trafilea/redshift/user)"'\
-' -d dev -p 5439'
-alias tdbd='PGPASSWORD="$(pass show trafilea/redshift_dev/pass)" pgcli -h '\
-'"$(pass show trafilea/redshift_dev/host)" -U "$(pass show trafilea/redshift_dev/user)"'\
-' -d dev -p 5439'
 
 # }}}
 # Functions {{{
