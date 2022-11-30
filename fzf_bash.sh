@@ -32,6 +32,7 @@ fi
 
 # Change default options and colors
 export FZF_DEFAULT_OPTS='
+--border=bottom
 --height 15
 --inline-info
 --prompt="   "
@@ -42,7 +43,7 @@ export FZF_DEFAULT_OPTS='
 --bind=alt-d:preview-half-page-down,alt-u:preview-half-page-up
 --color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff
 --color=prompt:#c678dd,header:#566370,info:#5c6370,pointer:#c678dd
---color=marker:#d19a66,spinner:#e06c75,border:#282c34
+--color=marker:#d19a66,spinner:#e06c75,border:#282c34,label:#566370
 '
 
 # Override FZF stock commands (ctrl-t,alt-c) and their options
@@ -50,6 +51,7 @@ export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git \
     --color=always --strip-cwd-prefix"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
+--border-label='Find Files'
 --multi
 --ansi
 --bind 'ctrl-y:execute-silent(echo -n {+2} | $COPY_CMD)+abort'
@@ -61,6 +63,7 @@ A-p=parent-dirs, A-f=ranger, A-g=grep, C-y=yank'
 "
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --strip-cwd-prefix'
 FZF_ALT_C_OPTS_BASE="
+--border-label='Find Dirs'
 --no-multi
 --expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f,alt-g
 --header='enter=fzf-files, C-o=cd, A-c=fzf-dirs, A-p=parent-dirs, \
@@ -346,6 +349,7 @@ fi
 # Grep {{{
 
 FZF_GREP_OPTS="
+--border-label='Live Grep'
 --header 'enter=open, alt-r=refine-search'
 --multi
 --ansi
@@ -407,6 +411,7 @@ fi
 # History {{{
 
 export FZF_CTRL_R_OPTS="
+--border-label='Command History'
 --bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort,tab:accept'
 --header 'enter=insert, tab=insert, C-y=yank'
 --nth=2..,..
@@ -438,6 +443,7 @@ bind -m vi-insert -x '"\C-r": __fzf_history__'
 # Tmux {{{
 
 FZF_TMUX_OPTIONS="
+--border-label='Tmux Sessions'
 --multi
 --exit-0
 --expect=alt-k,alt-r,enter
@@ -488,6 +494,7 @@ tms() {
 # Bluetooth {{{
 
 FZF_BT_OPTS="
+--border-label='Bluetooth Control'
 --multi
 --tac
 --bind 'ctrl-y:execute-silent(echo -n {2} | $COPY_CMD)+abort,tab:accept'
@@ -566,6 +573,7 @@ FZF_DOCKER_OPTS_BASE="
 "
 
 FZF_DOCKER_IMAGE_OPTS="$FZF_DOCKER_OPTS_BASE
+--border-label='Docker Images'
 --expect=ctrl-i,alt-d
 --header='enter=run, C-i=interactive, A-d=rm, C-y=yank'
 "
@@ -599,6 +607,7 @@ di() {
 }
 
 FZF_DOCKER_CONTAINER_OPTS="$FZF_DOCKER_OPTS_BASE
+--border-label='Docker Containers'
 --expect=ctrl-a,ctrl-e,ctrl-s,ctrl-r,ctrl-b,alt-k,alt-d
 --header='enter=logs, C-e=exec, C-a=attach, C-b=start, C-s=stop, C-r=restart, \
 A-k=kill, A-d=rm'
@@ -651,6 +660,7 @@ dc() {
 # Man (Search) {{{
 
 FZF_MAN_OPTS='
+--border-label="Man"
 --header "enter=open"
 --preview="man -Pcat {1} 2>/dev/null | bat -l man --color always --style numbers"
 '
