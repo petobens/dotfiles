@@ -30,7 +30,7 @@ function Buffer:get_props()
         elseif self.buftype == 'terminal' then
             dev, _ = get_icon('zsh')
         elseif vim.fn.isdirectory(self.file) == 1 then
-            dev, _ = '', nil
+            dev = ''
         else
             dev, _ = get_icon(self.file, vim.fn.expand('#' .. self.bufnr .. ':e'))
         end
@@ -130,6 +130,7 @@ function Buffer:get_name()
         name = vim.fn.fnamemodify(self.file, ':t')
     end
     self.name = name
+    return name
 end
 
 ---Adds spaces to left and right

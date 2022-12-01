@@ -61,6 +61,7 @@ end
 function M:update_status()
     local data = {}
     local buffers = {}
+    ---@diagnostic disable-next-line: param-type-mismatch
     for b = 1, vim.fn.bufnr('$') do
         if
             vim.fn.buflisted(b) ~= 0
