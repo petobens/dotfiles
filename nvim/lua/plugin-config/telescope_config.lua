@@ -700,8 +700,8 @@ end)
 u.keymap('n', '<Leader>rd', function()
     require('telescope').extensions.recent_files.pick({
         path_display = function(_, path)
-            local p = Path:new(path)
-            return p.normalize(p)
+            local p = Path:new(path):absolute()
+            return string.gsub(p, vim.loop.os_homedir(), '~')
         end,
     })
 end)
