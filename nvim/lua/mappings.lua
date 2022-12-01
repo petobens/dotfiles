@@ -21,8 +21,8 @@ end)
 u.keymap('n', '<Leader>w', '<Cmd>w!<CR>')
 u.keymap('n', '<Leader>wc', '<Cmd>w!<CR><Cmd>silent! close<CR>')
 u.keymap('n', '<Leader>wq', '<Cmd>w!<CR><Cmd>q!<CR>')
-u.keymap('n', '<Leader>sw', '<Cmd>SudaWrite<CR><Cmd>q!<CR>')
-u.keymap('n', '<Leader>se', '<Cmd>SudaRead<CR><Cmd>q!<CR>')
+u.keymap('n', '<Leader>sw', '<Cmd>SudaWrite<CR>')
+u.keymap('n', '<Leader>se', ':SudaRead ', { silent = false })
 
 -- Buffer manipulation
 u.keymap('n', '<C-n>', '<Cmd>bn<CR>')
