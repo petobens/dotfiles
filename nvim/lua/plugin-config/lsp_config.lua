@@ -31,6 +31,7 @@ vim.diagnostic.config({
 
 -- Use borders for floating hovers
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+---@diagnostic disable-next-line: duplicate-set-field
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     opts = opts or {}
     opts.border = opts.border or require('utils').border('FloatBorder')
@@ -52,7 +53,7 @@ end
 -- Autocmds
 local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 local function on_attach(client, bufnr)
-    -- We do range formatting with null-ls
+    -- We do range formatting with null-ls so disable it here
     client.server_capabilities.documentRangeFormattingProvider = false
 
     vim.api.nvim_clear_autocmds({ group = format_augroup, buffer = bufnr })

@@ -31,4 +31,8 @@ local sources = {
 
 null_ls.setup({
     sources = sources,
+    on_attach = function(client)
+        -- Don't use null-ls for (cmp-lsp) compeltion
+        client.server_capabilities.completionProvider = false
+    end,
 })
