@@ -43,6 +43,7 @@ local LATEX_EFM = ''
 
 local _parse_logfile = function(filename, cwd, active_window_id)
     local content = require('overseer.files').read_file(filename)
+    ---@diagnostic disable-next-line: param-type-mismatch
     local lines = vim.split(content, '\n')
     local items = vim.fn.getqflist({
         lines = lines,
@@ -75,13 +76,14 @@ end
 
 -- Viewing
 local view_pdf = function()
-    local tex_file = vim.fn.expand('%:p')
-    local pdf_file = vim.fn.fnamemodify(tex_file, ':p:r') .. '.pdf'
+    ---@diagnostic disable-next-line: undefined-field
+    local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
     vim.fn.jobstart('zathura --fork ' .. pdf_file)
 end
 
 local forward_search = function()
-    local tex_file = vim.fn.expand('%:p')
+    ---@diagnostic disable-next-line: undefined-field
+    local tex_file = vim.b.vimtex.tex
     local pdf_file = vim.fn.fnamemodify(tex_file, ':p:r') .. '.pdf'
     local forward_args = ' --synctex-forward '
         .. vim.fn.line('.')
@@ -97,7 +99,8 @@ end
 
 -- File Editing
 local file_edit = function(extension)
-    local base_file = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':p:r')
+    ---@diagnostic disable-next-line: undefined-field
+    local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r')
     local split = 'split '
     ---@diagnostic disable-next-line: undefined-field
     if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
