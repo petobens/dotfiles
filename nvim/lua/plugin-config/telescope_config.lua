@@ -724,9 +724,11 @@ u.keymap('n', '<Leader>me', keymaps)
 u.keymap('n', '<Leader>sg', spell_suggest)
 u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 u.keymap('n', '<Leader>te', lsp_doc_symbols)
+u.keymap('n', '<Leader>ta', '<Cmd>Telescope aerial<CR>')
 
 -- Extensions
 telescope.load_extension('recent_files')
 telescope.load_extension('fzf')
 telescope.load_extension('luasnip')
 telescope.load_extension('z')
+telescope.load_extension('aerial')

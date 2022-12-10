@@ -171,7 +171,7 @@ onedarkpro.setup({
         ['@text.danger'] = { fg = p.red, style = 'bold' },
         ['@text.emphasis'] = { fg = p.orange, style = 'italic' },
         ['@text.literal'] = { fg = p.green }, -- embedded code
-        ['@text.reference'] = {fg = p.blue},
+        ['@text.reference'] = { fg = p.blue },
         ['@text.strong'] = { fg = p.orange, style = 'bold' },
         ['@text.title'] = { fg = p.dark_red, style = 'bold' },
         ['@text.uri'] = { fg = p.light_blue, sp = p.cyan, style = 'undercurl' },
@@ -248,6 +248,9 @@ onedarkpro.setup({
         gitcommitUnmergedArrow = { link = 'gitcommitUnmergedFile' },
 
         -- Plugins
+        ---- Aerial
+        AerialLine = { bg = p.visual_grey },
+
         ---- Cmp
         CmpItemAbbr = { fg = p.fg },
         CmpItemAbbrDeprecated = { fg = p.fg },

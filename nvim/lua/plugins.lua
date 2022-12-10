@@ -131,7 +131,7 @@ return require('packer').startup(function(use)
         end,
     })
 
-    -- Telescope and file exploring
+    -- Telescope and file/code exploring
     use({
         'nvim-telescope/telescope.nvim',
         requires = {
@@ -149,6 +149,12 @@ return require('packer').startup(function(use)
         requires = { 'nvim-tree/nvim-web-devicons' },
         config = function()
             require('plugin-config.nvimtree_config')
+        end,
+    })
+    use({
+        'stevearc/aerial.nvim',
+        config = function()
+            require('plugin-config.aerial_config')
         end,
     })
 

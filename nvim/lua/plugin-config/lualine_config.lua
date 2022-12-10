@@ -7,6 +7,7 @@ _G.LualineConfig = {}
 
 -- Custom segments/components
 local function gitsigns_diff_source()
+    ---@diagnostic disable-next-line: undefined-field
     local gitsigns = vim.b.gitsigns_status_dict
     if gitsigns then
         return {
@@ -151,6 +152,13 @@ require('lualine').setup({
             },
         },
         lualine_x = {
+            {
+                'aerial',
+                depth = -1,
+                colored = false,
+                component_separator = { left = '', right = '' },
+                cond = conds.hide_winwidth_leq_80,
+            },
             {
                 'lsp_progress',
                 component_separator = { left = '', right = '' },
@@ -306,7 +314,12 @@ require('lualine').setup({
             },
         },
     },
-    extensions = { 'quickfix', nvimtree_ext, fugitive_ext },
+    extensions = {
+        'aerial',
+        'quickfix',
+        fugitive_ext,
+        nvimtree_ext,
+    },
 })
 
 -- Buffertab mappings
