@@ -93,8 +93,7 @@ u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>')
 -- Yank and paste
 u.keymap('n', '<Leader>P', '<Cmd>put!<CR>')
 u.keymap('n', '<Leader>p', '<Cmd>put<CR>', { nowait = false })
--- FIXME: not working
-u.keymap('n', 'gp', '`[' .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. '`]') -- Visually reselect what was just pasted
+u.keymap('n', 'gp', '`[v`]') -- visually reselect what was just pasted
 u.keymap('n', 'Y', 'y$', { remap = true })
 u.keymap('n', 'yy', 'mz0y$`z', { remap = true })
 
