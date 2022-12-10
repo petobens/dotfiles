@@ -171,10 +171,10 @@ onedarkpro.setup({
         ['@text.danger'] = { fg = p.red, style = 'bold' },
         ['@text.emphasis'] = { fg = p.orange, style = 'italic' },
         ['@text.literal'] = { fg = p.green }, -- embedded code
-        ['@text.reference'] = { link = 'TSText' },
+        ['@text.reference'] = {fg = p.blue},
         ['@text.strong'] = { fg = p.orange, style = 'bold' },
         ['@text.title'] = { fg = p.dark_red, style = 'bold' },
-        ['@text.uri'] = { fg = p.light_blue, sp = p.light_blue, style = 'undercurl' },
+        ['@text.uri'] = { fg = p.light_blue, sp = p.cyan, style = 'undercurl' },
         ['@text.warning'] = { fg = p.orange, style = 'bold' },
 
         -- Filetypes
