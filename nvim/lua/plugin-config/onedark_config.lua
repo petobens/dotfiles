@@ -163,6 +163,7 @@ onedarkpro.setup({
         ['@field'] = { fg = p.fg },
         ['@function'] = { fg = p.light_blue },
         ['@include'] = { fg = p.purple },
+        ['@keyword'] = { fg = p.purple },
         ['@method'] = { fg = p.light_blue },
         ['@parameter'] = { fg = p.orange },
         ['@punctuation.special'] = { fg = p.blue },
@@ -195,6 +196,9 @@ onedarkpro.setup({
 
         ---- Python
         ['@constant.python'] = { fg = p.orange },
+        ['@constant.builtin.python'] = { fg = p.orange },
+        ['@attribute.python'] = { fg = p.blue },
+        ['@attribute.builtin.python'] = { fg = p.blue },
         ['@function.builtin.python'] = { fg = p.yellow },
         ['@punctuation.special.python'] = { fg = p.orange },
 
