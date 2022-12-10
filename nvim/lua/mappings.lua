@@ -7,6 +7,7 @@ u.keymap('n', '<Leader>ps', function()
     vim.cmd('silent! source ' .. udfs.session_name())
     -- Remove any buffer that exists and is listed but doesn't have a valid filename
     -- See https://github.com/neovim/neovim/pull/17112#issuecomment-1024923302
+    ---@diagnostic disable-next-line: param-type-mismatch
     for b = 1, vim.fn.bufnr('$') do
         if
             vim.fn.buflisted(b) ~= 0
@@ -155,7 +156,12 @@ u.keymap(
     '<Leader>ets',
     '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/varios/todos_coding_setup.md<CR>'
 )
-u.keymap('n', '<Leader>dd', ':e $HOME/Desktop/', { silent = false })
+u.keymap(
+    'n',
+    '<Leader>dd',
+    ':e ' .. vim.fn.expand('$HOME') .. '/Desktop/',
+    { silent = false }
+)
 u.keymap(
     'n',
     '<Leader>sb',
