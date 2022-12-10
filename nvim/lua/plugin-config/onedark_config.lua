@@ -195,10 +195,10 @@ onedarkpro.setup({
         markdownLinkText = { fg = p.light_blue, sp = p.light_blue, style = 'undercurl' },
 
         ---- Python
-        ['@constant.python'] = { fg = p.orange },
-        ['@constant.builtin.python'] = { fg = p.orange },
-        ['@attribute.python'] = { fg = p.blue },
         ['@attribute.builtin.python'] = { fg = p.blue },
+        ['@attribute.python'] = { fg = p.blue },
+        ['@constant.builtin.python'] = { fg = p.orange },
+        ['@constant.python'] = { fg = p.orange },
         ['@function.builtin.python'] = { fg = p.yellow },
         ['@punctuation.special.python'] = { fg = p.orange },
 
