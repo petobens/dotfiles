@@ -173,7 +173,7 @@ onedarkpro.setup({
         ['@text.reference'] = { link = 'TSText' },
         ['@text.strong'] = { fg = p.orange, style = 'bold' },
         ['@text.title'] = { fg = p.dark_red, style = 'bold' },
-        ['@text.uri'] = { fg = p.blue, style = 'underline' },
+        ['@text.uri'] = { fg = p.light_blue, sp = p.light_blue, style = 'undercurl' },
         ['@text.warning'] = { fg = p.orange, style = 'bold' },
 
         -- Filetypes
@@ -191,6 +191,7 @@ onedarkpro.setup({
         ---- Markdown
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
+        markdownLinkText = { fg = p.light_blue, sp = p.light_blue, style = 'undercurl' },
 
         ---- Python
         ['@constant.python'] = { fg = p.orange },
