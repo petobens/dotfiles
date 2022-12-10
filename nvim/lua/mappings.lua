@@ -86,9 +86,18 @@ u.keymap('n', 'q', function()
 end)
 u.keymap('n', 'Q', 'gwap')
 u.keymap('n', 'vv', '^vg_', { remap = true }) -- Visual selection excluding indentation
--- FIXME: https://github.com/neovim/neovim/issues/12544 we cannot use vim.go.scrolloff here
-u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>')
--- TODO: add mapping to swap words
+u.keymap('n', '<Leader>C', ':let &scrolloff=999-&scrolloff<CR>') -- always center
+-- TODO: Try to write the following mappings to swap words in lua
+vim.cmd([[
+nnoremap <silent> <A-h> :execute "silent normal! ms"<CR>
+            \"_yiw?\k\+\%(\k\@!\_.\)\+\%#<CR>
+            \:s/\(\%#\k\+\)\(\%(\k\@!\_.\)\+\)\(\k\+\)/\3\2\1/<CR><c-l>:noh<CR>
+            \:execute "silent normal! `s"<CR>
+nnoremap <silent> <A-l> :execute "silent normal! ms"<CR>
+            \"_yiw:s/\(\%#\k\+\)\(\%(\k\@!\_.\)\+\)\(\k\+\)/\3\2\1/
+            \<CR>/\k\+\%(\k\@!\_.\)\+<CR><c-l>:noh<CR>
+            \:execute "silent normal! `s"<CR>
+]])
 
 -- Yank and paste
 u.keymap('n', '<Leader>P', '<Cmd>put!<CR>')
