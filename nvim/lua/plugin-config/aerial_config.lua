@@ -9,6 +9,10 @@ require('aerial').setup({
     close_on_select = true,
     highlight_on_hover = true,
     highlight_on_jump = 500,
+    keymaps = {
+        ['v'] = 'actions.jump_vsplit',
+        ['s'] = 'actions.jump_split',
+    },
 })
 
 -- Autocmds
