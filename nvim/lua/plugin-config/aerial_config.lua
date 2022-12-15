@@ -5,6 +5,7 @@ require('aerial').setup({
         width = 43,
         default_direction = 'left',
         placement = 'edge',
+        preserve_equality = true,
     },
     close_on_select = true,
     highlight_on_hover = true,
