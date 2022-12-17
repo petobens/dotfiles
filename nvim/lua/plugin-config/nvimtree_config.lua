@@ -90,6 +90,24 @@ function NvimTreeConfig.execute(cmd)
     vim.fn.jobstart(cmd .. ' ' .. node.absolute_path)
 end
 
+function NvimTreeConfig.trash()
+    local nodes = require('nvim-tree.api').marks.list()
+    if next(nodes) == nil then
+        table.insert(nodes, tree_api.get_node_under_cursor())
+    end
+    vim.ui.input(
+        { prompt = string.format('Trash %s files? [y/n] ', #nodes) },
+        function(input)
+            if input == 'y' then
+                vim.cmd('redraw!')
+                for _, node in ipairs(nodes) do
+                    vim.fn.jobstart('trash-put ' .. node.absolute_path)
+                end
+            end
+        end
+    )
+end
+
 local tree_cb = require('nvim-tree.config').nvim_tree_callback
 local map_list = {
     -- Tree
@@ -105,6 +123,7 @@ local map_list = {
     { key = 'F', cb = tree_cb('create') },
     { key = 'D', cb = tree_cb('create') },
     { key = 'd', cb = tree_cb('trash') },
+    { key = 'x', cb = ':lua NvimTreeConfig.trash()<CR>' },
     { key = 'c', cb = tree_cb('copy') },
     { key = 'p', cb = tree_cb('paste') },
     { key = 'r', cb = tree_cb('rename') },
