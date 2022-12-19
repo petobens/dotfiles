@@ -251,7 +251,9 @@ bindsym $mod+Shift+v $nexec $font_aware_launcher pavucontrol
 font pango:Noto Sans 0
 
 # Set window border width
-for_window [class="^.*"] border pixel 2
+default_border pixel 4
+default_floating_border pixel 4
+for_window [class="^.*"] border pixel 1
 
 # Theme
 set $bg #24272e
