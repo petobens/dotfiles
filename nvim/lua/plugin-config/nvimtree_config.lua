@@ -1,6 +1,7 @@
 local node_api = require('nvim-tree.api').node
 local tree_api = require('nvim-tree.api').tree
 local marks_api = require('nvim-tree.api').marks
+local fs_api = require('nvim-tree.api').fs
 local u = require('utils')
 
 local Path = require('plenary.path')
@@ -101,7 +102,7 @@ function NvimTreeConfig.trash()
             if input == 'y' then
                 vim.cmd('redraw!')
                 for _, node in ipairs(nodes) do
-                    vim.fn.jobstart('trash-put ' .. node.absolute_path)
+                    fs_api.trash(node)
                 end
             end
         end
