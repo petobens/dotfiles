@@ -21,7 +21,7 @@ require('nvim-treesitter.configs').setup({
     matchup = { enable = true },
 })
 
-u.keymap('n', '<Leader>cg', '<Cmd>TSHighlightCapturesUnderCursor<CR>')
+u.keymap('n', '<Leader>cg', '<Cmd>Inspect<CR>')
 
 -- Custom queries (see for example https://github.com/nvim-treesitter/nvim-treesitter/blob/master/queries/python/folds.scm)
 vim.treesitter.set_query('lua', 'folds', [[[(table_constructor)] @fold]])
