@@ -1,115 +1,101 @@
-local ensure_packer = function()
-    local fn = vim.fn
-    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-    if fn.empty(fn.glob(install_path)) > 0 then
-        fn.system({
-            'git',
-            'clone',
-            '--depth',
-            '1',
-            'https://github.com/wbthomason/packer.nvim',
-            install_path,
-        })
-        vim.cmd([[packadd packer.nvim]])
-        return true
-    end
-    return false
-end
-local packer_bootstrap = ensure_packer()
-
-return require('packer').startup(function(use)
-    -- Automanage packer with packer
-    use({
-        'wbthomason/packer.nvim',
-        config = function()
-            require('plugin-config.packer_config')
-        end,
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        'git',
+        'clone',
+        '--filter=blob:none',
+        '--single-branch',
+        'https://github.com/folke/lazy.nvim.git',
+        lazypath,
     })
+end
+vim.opt.runtimepath:prepend(lazypath)
 
+-- Plugin list
+local plugins = {
     -- Appearance
-    use({
+    {
         'olimorris/onedarkpro.nvim',
         config = function()
             require('plugin-config.onedark_config')
         end,
-    })
-    use({
+    },
+    {
         'nvim-lualine/lualine.nvim',
-        requires = {
+        dependencies = {
             'WhoIsSethDaniel/lualine-lsp-progress.nvim',
         },
         config = function()
             require('plugin-config.lualine_config')
         end,
-        after = 'onedarkpro.nvim',
-    })
+    },
 
     -- Editing
-    use({
+    {
         'numToStr/Comment.nvim',
         config = function()
             require('plugin-config.comment_config')
         end,
-    })
-    use({
+    },
+    {
         'kylechui/nvim-surround',
         config = function()
             require('plugin-config.surround_config')
         end,
-    })
-    use({
+    },
+    {
         'NvChad/nvim-colorizer.lua',
         config = function()
             require('plugin-config.colorizer_config')
         end,
-    })
-    use({
+    },
+    {
         'lukas-reineke/indent-blankline.nvim',
         config = function()
             require('plugin-config.indentlines_config')
         end,
-    })
-    use({
+    },
+    {
         'ggandor/leap.nvim',
-        requires = {
+        dependencies = {
             'ggandor/flit.nvim',
         },
         config = function()
             require('plugin-config.leap_config')
         end,
-    })
+    },
 
     -- LSP and completion
-    use({
+    {
         'williamboman/mason.nvim',
-        requires = 'WhoIsSethDaniel/mason-tool-installer.nvim',
+        dependencies = 'WhoIsSethDaniel/mason-tool-installer.nvim',
         config = function()
             require('plugin-config.mason_config')
         end,
-    })
-    use('williamboman/mason-lspconfig.nvim')
-    use({
+    },
+    { 'williamboman/mason-lspconfig.nvim' },
+    {
         'neovim/nvim-lspconfig',
         config = function()
             require('plugin-config.lsp_config')
         end,
-    })
-    use({ 'folke/neodev.nvim' })
-    use({
+    },
+    { 'folke/neodev.nvim' },
+    {
         'jose-elias-alvarez/null-ls.nvim',
         config = function()
             require('plugin-config.null_ls_config')
         end,
-    })
-    use({
+    },
+    {
         'folke/trouble.nvim',
         config = function()
             require('plugin-config.trouble_config')
         end,
-    })
-    use({
+    },
+    {
         'hrsh7th/nvim-cmp',
-        requires = {
+        dependencies = {
             'andersevenrud/cmp-tmux',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-cmdline',
@@ -121,65 +107,65 @@ return require('packer').startup(function(use)
         config = function()
             require('plugin-config.cmp_config')
         end,
-    })
-    use({
+        event = 'InsertEnter',
+    },
+    {
         'nvim-treesitter/nvim-treesitter',
-        requires = { 'nvim-treesitter/playground' },
-        run = ':TSUpdate',
+        build = ':TSUpdate',
         config = function()
             require('plugin-config.treesitter_config')
         end,
-    })
+    },
 
     -- Telescope and file/code exploring
-    use({
+    {
         'nvim-telescope/telescope.nvim',
-        requires = {
+        dependencies = {
             'nvim-lua/plenary.nvim',
-            { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
             'nvim-telescope/telescope-z.nvim',
             'smartpde/telescope-recent-files',
         },
         config = function()
             require('plugin-config.telescope_config')
         end,
-    })
-    use({
+    },
+    {
         'nvim-tree/nvim-tree.lua',
-        requires = { 'nvim-tree/nvim-web-devicons' },
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
         config = function()
             require('plugin-config.nvimtree_config')
         end,
-    })
-    use({
+    },
+    {
         'stevearc/aerial.nvim',
         config = function()
             require('plugin-config.aerial_config')
         end,
-    })
+    },
 
     -- Snippets
-    use({
+    {
         'L3MON4D3/LuaSnip',
-        requires = {
+        dependencies = {
             'saadparwaiz1/cmp_luasnip',
             'benfowler/telescope-luasnip.nvim',
         },
         config = function()
             require('plugin-config.luasnip_config')
         end,
-    })
+    },
 
     -- Git
-    use({
+    {
         'lewis6991/gitsigns.nvim',
         config = function()
             require('plugin-config.gitsigns_config')
         end,
-    })
-    use({
+    },
+    {
         'tpope/vim-fugitive',
-        requires = {
+        dependencies = {
             'aymericbeaumet/vim-symlink',
             'shumphrey/fugitive-gitlab.vim',
             'tommcdo/vim-fubitive',
@@ -188,40 +174,47 @@ return require('packer').startup(function(use)
         config = function()
             require('plugin-config.fugitive_config')
         end,
-    })
+    },
 
     -- Latex
-    use({
+    {
         'lervag/vimtex',
         config = function()
             require('plugin-config.vimtex_config')
         end,
-    })
+    },
 
     -- Runners
-    use({
+    {
         'stevearc/overseer.nvim',
         config = function()
             require('plugin-config.overseer_config')
         end,
-    })
+    },
 
     -- Utilities
-    use('gioele/vim-autoswap')
-    use('jamessan/vim-gnupg')
-    use('nathom/tmux.nvim')
-    use('tpope/vim-repeat')
-    use({
+    { 'gioele/vim-autoswap' },
+    { 'jamessan/vim-gnupg' },
+    { 'nathom/tmux.nvim' },
+    { 'tpope/vim-repeat' },
+    {
         'andymass/vim-matchup',
         event = 'VimEnter',
         config = function()
             require('plugin-config.matchup_config')
         end,
-    })
-    use('lambdalisue/suda.vim')
+    },
+    { 'lambdalisue/suda.vim' },
+}
 
-    -- Automatically install plugins after cloning packer
-    if packer_bootstrap then
-        require('packer').sync()
-    end
-end)
+-- Lazy plugin setup
+require('lazy').setup(plugins, {
+    ui = {
+        size = { width = 1, height = 1 },
+    },
+})
+
+-- Mappings
+local u = require('utils')
+u.keymap('n', 'bu', '<Cmd>Lazy sync<CR>')
+u.keymap('n', 'ul', '<Cmd>Lazy log<CR>')

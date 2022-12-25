@@ -153,7 +153,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
                     '/home/pedro/OneDrive/mutt/ops/',
                     '/home/pedro/git-repos/work/',
                     '/home/pedro/Desktop/',
-                    '/home/pedro/.local/share/nvim/site/pack/packer/start',
+                    '/home/pedro/.local/share/nvim/lazy/',
                 },
                 entry_maker = opts.entry_maker,
             }),

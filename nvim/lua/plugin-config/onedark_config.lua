@@ -280,6 +280,10 @@ onedarkpro.setup({
         HlWord5 = { fg = p.black, bg = p.light_blue },
         HlWord6 = { fg = p.black, bg = p.white },
 
+        ---- Lazy
+        LazyCommit = { fg = p.red },
+        LazyHandlerPlugin = { fg = p.purple },
+
         ---- IndentBlankline
         IndentLine = { fg = p.comment_grey },
         IndentBlanklineContextChar = { fg = p.white },
@@ -304,14 +308,6 @@ onedarkpro.setup({
         NvimTreeGitDeleted = { fg = p.red },
         NvimTreeExecFile = { fg = p.red },
         NvimTreeSpecialFile = { fg = p.yellow, style = 'bold' },
-
-        ---- Packer
-        packerFail = { fg = p.red },
-        packerSuccess = { fg = p.green },
-        packerWorking = { fg = p.yellow },
-        packerOutput = { fg = p.blue },
-        packerStatusFail = { fg = p.red },
-        packerStatusSuccess = { fg = p.green },
 
         ---- Telescope
         TelescopeNormal = { link = 'Normal' },

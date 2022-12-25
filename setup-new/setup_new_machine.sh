@@ -100,7 +100,7 @@ read -p $'\033[1mDo you want to install nvim packages (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo -e "\\033[1;34m-> Installing nvim packages...\\033[0m"
-    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+    nvim --headless "+Lazy! sync" +qa
 fi
 
 read -p $'\033[1mDo you want to run post install script (y/n)? \033[0m' -n 1 -r

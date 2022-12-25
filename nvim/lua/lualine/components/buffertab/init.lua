@@ -24,7 +24,7 @@ local superscript_nrs = {
 
 local default_options = {
     filetype_names = {
-        packer = 'Packer',
+        lazy = 'Lazy',
     },
     filetype_ignore = '\\c\\vtelescope|nvimtree|aerial',
 }
