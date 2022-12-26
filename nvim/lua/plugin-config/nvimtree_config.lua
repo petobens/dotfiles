@@ -91,35 +91,22 @@ function NvimTreeConfig.execute(cmd)
     vim.fn.jobstart(cmd .. ' ' .. node.absolute_path)
 end
 
-function NvimTreeConfig.delete()
-    local node = tree_api.get_node_under_cursor()
-    vim.ui.input(
-        { prompt = string.format('Trash %s? [y/n] ', node.name) },
-        function(input)
-            if input == 'y' then
-                vim.cmd('redraw!')
+function NvimTreeConfig.trash()
+    local nodes = require('nvim-tree.api').marks.list()
+    local conf_msg = string.format('Trash %s files? [y/n] ', #nodes)
+    if next(nodes) == nil then
+        local node = tree_api.get_node_under_cursor()
+        conf_msg = string.format('Trash %s? [y/n] ', node.name)
+        table.insert(nodes, node)
+    end
+    vim.ui.input({ prompt = conf_msg }, function(input)
+        if input == 'y' then
+            vim.cmd('redraw!')
+            for _, node in ipairs(nodes) do
                 fs_api.trash(node)
             end
         end
-    )
-end
-
-function NvimTreeConfig.trash()
-    local nodes = require('nvim-tree.api').marks.list()
-    if next(nodes) == nil then
-        table.insert(nodes, tree_api.get_node_under_cursor())
-    end
-    vim.ui.input(
-        { prompt = string.format('Trash %s files? [y/n] ', #nodes) },
-        function(input)
-            if input == 'y' then
-                vim.cmd('redraw!')
-                for _, node in ipairs(nodes) do
-                    fs_api.trash(node)
-                end
-            end
-        end
-    )
+    end)
 end
 
 local tree_cb = require('nvim-tree.config').nvim_tree_callback
@@ -136,8 +123,7 @@ local map_list = {
     -- Filesystem
     { key = 'F', cb = tree_cb('create') },
     { key = 'D', cb = tree_cb('create') },
-    { key = 'd', cb = ':lua NvimTreeConfig.delete()<CR>' },
-    { key = 'x', cb = ':lua NvimTreeConfig.trash()<CR>' },
+    { key = 'd', cb = ':lua NvimTreeConfig.trash()<CR>' },
     { key = 'c', cb = tree_cb('copy') },
     { key = 'p', cb = tree_cb('paste') },
     { key = 'r', cb = tree_cb('rename') },
