@@ -4,7 +4,6 @@ import os
 from time import sleep
 
 import i3ipc
-
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
@@ -76,10 +75,7 @@ APPS = {
     'kodi': {'type': 'rol', 'args': {'class_name': 'kodi'}},
     'mailspring': {
         'type': 'electron',
-        'args': {
-            'class_name': 'Mailspring',
-            'event_delay': 30
-        }
+        'args': {'class_name': 'Mailspring', 'event_delay': 30},
     },
     'meet': {
         'type': 'electron',
@@ -524,7 +520,19 @@ class ElectronApp(ROLApp):
         if (
             self.class_name == 'Brave' and self.mark not in self.screen.i3.get_marks()
         ):  # run this only on first open
-            sleep(2.5)
+            # Wait for focus
+            sleep(1.5)
+
+            # Hack to ensure calendar and clickup apps open corresponding workspace
+            # FIXME: Find a general way to fix this
+            if (
+                self.subcmd == 'calendar' or self.subcmd == 'clickup'
+            ) and self.screen.nr_monitors > 2:
+                self.screen.i3.command(
+                    f'move container to workspace {self.ws}, workspace {self.ws}'
+                )
+                sh('xdotool key Super+Up')  # maximize
+
             # Ensure we have proper scaling
             sh('xdotool key Super+0')
             # If we have 1 external monitor then all brave windows live on the
