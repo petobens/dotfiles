@@ -216,5 +216,5 @@ require('lazy').setup(plugins, {
 
 -- Mappings
 local u = require('utils')
-u.keymap('n', 'bu', '<Cmd>Lazy sync<CR>')
-u.keymap('n', 'ul', '<Cmd>Lazy log<CR>')
+u.keymap('n', '<Leader>bu', '<Cmd>Lazy sync<CR>')
+u.keymap('n', '<Leader>ul', '<Cmd>Lazy log<CR>')
