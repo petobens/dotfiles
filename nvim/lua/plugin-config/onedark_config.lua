@@ -138,6 +138,7 @@ onedarkpro.setup({
         DiagnosticWarn = {},
         DiagnosticInfo = {},
         DiagnosticHint = {},
+        DiagnosticOk = { fg = p.green },
         DiagnosticVirtualTextError = { link = 'Error' },
         DiagnosticVirtualTextWarn = { fg = p.orange },
         DiagnosticVirtualTextInfo = { fg = p.light_blue },
