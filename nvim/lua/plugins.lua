@@ -211,6 +211,9 @@ require('lazy').setup(plugins, {
     ui = {
         size = { width = 1, height = 1 },
     },
+    git = {
+        log = { '--since=2 days ago' },
+    },
 })
 
 -- Mappings
