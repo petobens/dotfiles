@@ -20,6 +20,7 @@ vim.opt.title = true
 vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 500
 vim.opt.visualbell = true
+vim.g.editorconfig_enable = false
 
 -- Appearance
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }

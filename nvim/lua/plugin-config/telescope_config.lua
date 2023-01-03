@@ -660,7 +660,7 @@ telescope.setup({
         undo = {
             mappings = {
                 i = {
-                    ['<CR>'] = require('telescope-undo.actions').yank_additions,
+                    ['<C-y>'] = require('telescope-undo.actions').yank_additions,
                     ['<C-r>'] = require('telescope-undo.actions').restore,
                 },
             },
