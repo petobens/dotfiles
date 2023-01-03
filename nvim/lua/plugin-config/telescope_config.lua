@@ -657,6 +657,14 @@ telescope.setup({
         recent_files = {
             show_current_file = true,
         },
+        undo = {
+            mappings = {
+                i = {
+                    ['<CR>'] = require('telescope-undo.actions').yank_additions,
+                    ['<C-r>'] = require('telescope-undo.actions').restore,
+                },
+            },
+        },
     },
 })
 
@@ -725,10 +733,12 @@ u.keymap('n', '<Leader>sg', spell_suggest)
 u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 u.keymap('n', '<Leader>te', lsp_doc_symbols)
 u.keymap('n', '<Leader>ta', '<Cmd>Telescope aerial<CR>')
+u.keymap('n', '<Leader>gu', '<Cmd>Telescope undo<CR>')
 
 -- Extensions
-telescope.load_extension('recent_files')
+telescope.load_extension('aerial')
 telescope.load_extension('fzf')
 telescope.load_extension('luasnip')
+telescope.load_extension('recent_files')
+telescope.load_extension('undo')
 telescope.load_extension('z')
-telescope.load_extension('aerial')

@@ -124,6 +124,7 @@ local plugins = {
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
             'nvim-telescope/telescope-z.nvim',
             'smartpde/telescope-recent-files',
+            'debugloop/telescope-undo.nvim',
         },
         config = function()
             require('plugin-config.telescope_config')
