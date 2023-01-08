@@ -26,7 +26,7 @@ local default_options = {
     filetype_names = {
         lazy = 'Lazy',
     },
-    filetype_ignore = '\\c\\vtelescope|nvimtree|aerial',
+    filetype_ignore = '\\c\\vtelescope|nvimtree|aerial|help',
 }
 
 local function unique_tail_format(buffers)
