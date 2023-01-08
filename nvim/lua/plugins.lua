@@ -184,11 +184,17 @@ local plugins = {
         end,
     },
 
-    -- Runners
+    -- Runners and terminal
     {
         'stevearc/overseer.nvim',
         config = function()
             require('plugin-config.overseer_config')
+        end,
+    },
+    {
+        'akinsho/toggleterm.nvim',
+        config = function()
+            require('plugin-config.toggleterm_config')
         end,
     },
 
