@@ -212,9 +212,14 @@ require('nvim-tree').setup({
             },
         },
     },
+    ui = {
+        confirm = {
+            remove = true,
+            trash = false,
+        },
+    },
     trash = {
         cmd = 'trash-put',
-        require_confirm = false,
     },
     git = { ignore = false },
     diagnostics = { enable = false },
