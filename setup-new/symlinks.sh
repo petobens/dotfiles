@@ -101,14 +101,6 @@ if type "ipython" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/python/ipython_startup.py" "$HOME/.ipython/profile_default/startup/ipython_startup.py"
     echo Created .ipython/profile_default/startup/ipython_startup symlink
 fi
-if type "R" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/R/Rprofile" "$HOME/.Rprofile"
-    echo Created .Rprofile symlink
-    if type "radian" > /dev/null 2>&1; then
-        $ln_cmd -fTs "$dotfiles_dir/R/radian_profile" "$HOME/.radian_profile"
-        echo Created .radian_profile symlink
-    fi
-fi
 if type "ruby" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/gemrc" "$HOME/.gemrc"
     echo Created .gemrc symlink

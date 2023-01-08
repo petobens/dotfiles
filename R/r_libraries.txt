@@ -1,5 +1,0 @@
-devtools
-formatR
-lintr
-packrat
-stringi

@@ -68,10 +68,6 @@ $pipx_install_cmd pylint
 if type "i3" > /dev/null 2>&1; then
     $pipx_install_cmd raiseorlaunch
 fi
-if type "R" > /dev/null 2>&1; then
-    $pipx_install_cmd radian
-    $pipx_inject_cmd radian jedi
-fi
 $pipx_install_cmd ranger-fm
 $pipx_install_cmd sqlparse
 $pipx_install_cmd trash-cli

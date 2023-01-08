@@ -99,10 +99,6 @@ else
     # files in red and sticky dirs in green
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:tw=0;32"
 fi
-# R libraries (note: first create this folder if it doesn't exist)
-if type "R" > /dev/null 2>&1; then
-    export R_LIBS_USER="$HOME/.local/lib/R/site-library"
-fi
 if type "pipx" > /dev/null 2>&1; then
     eval "$(register-python-argcomplete pipx)"
     export PIPX_HOME=$HOME/.local/pipx

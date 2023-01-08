@@ -4,13 +4,6 @@ sudo echo -n
 current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 parent_dir="$(dirname "$current_dir")"
 
-# Ask whether to install optional dependencies
-install_r=false
-read -p $'\033[1mDo you want to install R (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    install_r=true
-fi
 install_node=false
 read -p $'\033[1mDo you want to install Node.js (y/n)? \033[0m' -n 1 -r
 echo
@@ -77,9 +70,6 @@ $yay_cmd pyenv-virtualenv
 $yay_cmd ruby
 $yay_cmd rust
 $yay_cmd jdk-openjdk
-if [[ "$install_r" = true ]]; then
-    $yay_cmd r
-fi
 if [[ "$install_node" = true ]]; then
     $yay_cmd nodejs
     $yay_cmd npm

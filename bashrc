@@ -173,13 +173,6 @@ fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
 fi
-if type "R" > /dev/null 2>&1; then
-    alias R='R --no-save --quiet'
-    alias rs='Rscript'
-    if type "radian" > /dev/null 2>&1; then
-        alias r='radian --quiet'
-    fi
-fi
 if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
     if [ "$USER" = 'pedro' ]; then
         tmux_session_name='petobens'
@@ -398,11 +391,6 @@ sys_update_all() {
             echo "$outdated"
             pip list --user --outdated | grep -v '^-e' | cut -d ' ' -f 1 | xargs -n 1 pip install --user -U
         fi
-    fi
-    if type "R" > /dev/null 2>&1; then
-        echo -e "\033[1;34m\n-> Updating R packages...\033[0m"
-        R --slave --no-save --no-restore -e \
-            'update.packages(ask=TRUE, checkBuilt=TRUE, lib.loc=Sys.getenv("R_LIBS_USER"))'
     fi
     if type "tlmgr" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Latex packages...\033[0m"
