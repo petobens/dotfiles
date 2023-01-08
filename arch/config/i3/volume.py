@@ -17,13 +17,12 @@ def control_volume(how, level):
 
 
 def _change_vol(how, level):
-    if how == 'mute':
-        sh('wpctl set-mute @DEFAULT_SINK@ toggle')
-    else:
-        vol_cmd = 'wpctl set-volume @DEFAULT_AUDIO_SINK@ {level}%{how}'.format(
-            how='+' if how == 'up' else '-', level=level
-        )
-        sh(vol_cmd)
+    mute_cmd ='wpctl set-mute @DEFAULT_SINK@ {}'.format('toggle' if how == 'mute' else 0)
+    vol_cmd = 'wpctl set-volume @DEFAULT_AUDIO_SINK@ {level}%{how}'.format(
+        how='+' if how == 'up' else '-', level=level
+    )
+    sh(mute_cmd)
+    sh(vol_cmd)
     return 0
 
 
