@@ -63,7 +63,7 @@ return {
         { trig = 'lf', dscr = 'Local function definition' },
         fmta(
             [[
-                local <> = function(<>)
+                local function <>(<>)
                     <>
                 end
             ]],
