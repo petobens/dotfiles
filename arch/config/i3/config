@@ -150,17 +150,20 @@ set $third_x1 "DP-3"
 # Lenovo Dock
 set $secondary_dock "DP-1-1-6"
 set $third_dock "DP-1-2"
+# Lenovo HDMI (only 1 extra monitor)
+set $secondary_hdmi "HDMI-1"
 
-# Assign workspaces to specific monitors
-workspace $ws1 output $third $third_x1 $third_dock $primary $primary_x1
+# Assign workspaces to specific monitors (note this an ordereded list, it will open the
+# first monitor found)
+workspace $ws1 output $third $third_x1 $third_dock $secondary_hdmi $primary $primary_x1
 workspace $ws2 output $primary $primary_x1
 workspace $ws3 output $primary $primary_x1
-workspace $ws4 output $third $third_x1 $third_dock $secondary $secondary_x1 $secondary_dock
-workspace $ws5 output $secondary $secondary_x1 $secondary_dock third $third_x1 $third_dock
-workspace $ws6 output $secondary $secondary_x1 $secondary_dock third $third_x1 $third_dock
-workspace $ws7 output $secondary $secondary_x1 $secondary_dock third $third_x1 $third_dock
+workspace $ws4 output $third $third_x1 $third_dock $secondary $secondary_x1 $secondary_dock $secondary_hdmi
+workspace $ws5 output $secondary $secondary_x1 $secondary_dock $secondary_hdmi $third $third_x1 $third_dock
+workspace $ws6 output $secondary $secondary_x1 $secondary_dock $secondary_hdmi $third $third_x1 $third_dock
+workspace $ws7 output $secondary $secondary_x1 $secondary_dock $secondary_hdmi $third $third_x1 $third_dock
 workspace $ws8 output $primary $primary_x1
-workspace $ws9 output $third $third_x1 $third_dock $secondary $secondary_x1 $secondary_dock
+workspace $ws9 output $third $third_x1 $third_dock $secondary $secondary_x1 $secondary_dock $secondary_hdmi
 
 # Focus next monitor (with wrapping): this also switches mouse cursor
 bindsym $alt+grave focus output right
