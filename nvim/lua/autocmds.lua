@@ -26,6 +26,13 @@ vim.api.nvim_create_autocmd(
     { group = noro_acg, command = 'set noreadonly' }
 )
 
+-- Send cwd to tmux splits (see https://github.com/neovim/neovim/issues/21771)
+local cwd_acg = vim.api.nvim_create_augroup('cwd_tmux', { clear = true })
+vim.api.nvim_create_autocmd({ 'DirChanged' }, {
+    group = cwd_acg,
+    command = [[call chansend(v:stderr, printf("\033]7;%s\033", v:event.cwd))]],
+})
+
 -- Resize splits when the Vim window is resized
 local vim_resized_acg = vim.api.nvim_create_augroup('vim_resized', { clear = true })
 vim.api.nvim_create_autocmd(
