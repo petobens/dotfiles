@@ -31,7 +31,9 @@ else
 
     # Texlive
     if [ -d "$BASE_PKG_DIR/local/texlive" ]; then
-        PATH="$PATH:/usr/local/texlive/2022/bin/x86_64-linux"
+        # Note: we put this first (even before local so that if there is some
+        # other pdflatex installed tlmgr is found first)
+        PATH="/usr/local/texlive/2022/bin/x86_64-linux:$PATH"
         # FIXME: If we set this then we cannot jump between Man tags with nvim
         # export MANPATH="$MANPATH:/usr/local/texlive/2021/texmf-dist/doc/man"
         export INFOPATH="$INFOPATH:/usr/local/texlive/2022/texmf-dist/doc/info"
@@ -47,7 +49,8 @@ fi
 
 # Path OS agnostic settings
 if [[ -d "$HOME/bin" ]]; then
-    PATH="$HOME/bin:$PATH"
+    # Append this after local paths
+    PATH="$PATH:$HOME/bin"
 fi
 if type "npm" > /dev/null 2>&1; then
     PATH="$HOME/.npm-global/bin:$PATH"
