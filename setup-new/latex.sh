@@ -124,6 +124,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     $tlmgr_install mathabx
     $tlmgr_install mathtools
     $tlmgr_install microtype
+    $tlmgr_install optidef
     $tlmgr_install pdfescape
     $tlmgr_install pdflscape
     $tlmgr_install pdftexcmds
@@ -134,6 +135,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     $tlmgr_install ulem
     $tlmgr_install upquote
     $tlmgr_install xcolor
+    $tlmgr_install xifthen
     $tlmgr_install xkeyval
 fi
 
