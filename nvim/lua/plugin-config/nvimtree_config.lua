@@ -92,7 +92,7 @@ function NvimTreeConfig.execute(cmd)
 end
 
 function NvimTreeConfig.trash()
-    local nodes = require('nvim-tree.api').marks.list()
+    local nodes = marks_api.list()
     local conf_msg = string.format('Trash %s files? [y/n] ', #nodes)
     if next(nodes) == nil then
         local node = tree_api.get_node_under_cursor()
@@ -107,6 +107,28 @@ function NvimTreeConfig.trash()
             end
         end
     end)
+    marks_api.clear()
+end
+
+function NvimTreeConfig.copy_move(action)
+    local fn = fs_api[action]
+    if action == 'copy' then
+        fn = fn.node
+    end
+
+    local nodes = marks_api.list()
+    if next(nodes) == nil then
+        local node = tree_api.get_node_under_cursor()
+        table.insert(nodes, node)
+    end
+    for _, node in ipairs(nodes) do
+        fn(node)
+    end
+end
+
+function NvimTreeConfig.paste()
+    fs_api.paste()
+    marks_api.clear()
 end
 
 local tree_cb = require('nvim-tree.config').nvim_tree_callback
@@ -124,8 +146,9 @@ local map_list = {
     { key = 'F', cb = tree_cb('create') },
     { key = 'D', cb = tree_cb('create') },
     { key = 'd', cb = ':lua NvimTreeConfig.trash()<CR>' },
-    { key = 'c', cb = tree_cb('copy') },
-    { key = 'p', cb = tree_cb('paste') },
+    { key = 'c', cb = ':lua NvimTreeConfig.copy_move("copy")<CR>' },
+    { key = 'm', cb = ':lua NvimTreeConfig.copy_move("cut")<CR>' },
+    { key = 'p', cb = ':lua NvimTreeConfig.paste()<CR>' },
     { key = 'r', cb = tree_cb('rename') },
     { key = 'y', cb = tree_cb('copy_name') },
     { key = 'Y', cb = tree_cb('copy_absolute_path') },
