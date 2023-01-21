@@ -1,11 +1,6 @@
 local u = require('utils')
 
 require('nvim-treesitter.configs').setup({
-    highlight = {
-        enable = true,
-        disable = { 'latex' },
-        additional_vim_regex_highlighting = { 'latex' },
-    },
     ensure_installed = {
         'bash',
         'comment',
@@ -18,7 +13,21 @@ require('nvim-treesitter.configs').setup({
         'python',
         'vim',
     },
+    highlight = {
+        enable = true,
+        disable = { 'latex' },
+        additional_vim_regex_highlighting = { 'latex' },
+    },
     matchup = { enable = true },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = '<CR>',
+            node_incremental = '<CR>',
+            scope_incremental = '<S-CR>',
+            node_decremental = '<BS>',
+        },
+    },
 })
 
 u.keymap('n', '<Leader>cg', '<Cmd>Inspect<CR>')
