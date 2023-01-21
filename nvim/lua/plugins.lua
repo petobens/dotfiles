@@ -209,6 +209,12 @@ local plugins = {
         end,
     },
     { 'lambdalisue/suda.vim' },
+    {
+        'nyngwang/NeoZoom.lua',
+        config = function()
+            require('plugin-config.neozoom_config')
+        end,
+    },
 }
 
 -- Lazy plugin setup
