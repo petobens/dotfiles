@@ -106,7 +106,6 @@ local plugins = {
         config = function()
             require('plugin-config.cmp_config')
         end,
-        event = 'InsertEnter',
     },
     {
         'nvim-treesitter/nvim-treesitter',
@@ -205,7 +204,6 @@ local plugins = {
     { 'tpope/vim-repeat' },
     {
         'andymass/vim-matchup',
-        event = 'VimEnter',
         config = function()
             require('plugin-config.matchup_config')
         end,
