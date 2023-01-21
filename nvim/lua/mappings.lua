@@ -173,11 +173,16 @@ u.keymap(
 u.keymap(
     'n',
     '<Leader>sb',
-    ':e  ' .. vim.fn.expand('%:p:h') .. '/scratch/',
+    ':e ' .. vim.fn.expand('%:p:h') .. '/scratch/',
     { silent = false }
 )
 u.keymap('n', '<Leader>eb', '<Cmd>e $HOME/.bashrc<CR>')
-u.keymap('n', '<Leader>eh', '<Cmd>e $HOME/.config/i3/config<CR>')
+u.keymap(
+    'n',
+    '<Leader>eh',
+    -- FIXME: defining the symlink here doesn't preserve make/load view
+    '<Cmd>e $HOME/git-repos/private/dotfiles/arch/config/i3/config<CR>'
+)
 
 -- UDFs
 u.keymap('n', '<Leader>dt', udfs.delete_trailing_whitespace)
