@@ -178,6 +178,9 @@ onedarkpro.setup({
         ['@text.uri'] = { fg = p.light_blue, sp = p.cyan, style = 'undercurl' },
         ['@text.warning'] = { fg = p.orange, style = 'bold' },
 
+        -- Semantic Tokens
+        ['@defaultLibrary'] = { fg = p.yellow },
+
         -- Filetypes
         ---- Bash
         ['@parameter.bash'] = { fg = p.fg },
