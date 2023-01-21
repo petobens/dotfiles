@@ -27,7 +27,9 @@ layout_strategies.bpane = function(picker, max_columns, max_lines, layout_config
         layout_strategies.bottom_pane(picker, max_columns, max_lines, layout_config)
     layout.prompt.width = layout.results.width
     layout.prompt.col = layout.results.col
-    layout.preview.height = layout.preview.height + 2
+    if layout.preview then
+        layout.preview.height = layout.preview.height + 2
+    end
     return layout
 end
 
@@ -517,6 +519,7 @@ telescope.setup({
             prompt_position = 'bottom',
             height = 20,
             preview_width = 0.45,
+            preview_cutoff = 110,
         },
         cache_picker = { num_pickers = 3 },
         path_display = { truncate = 1 },
