@@ -153,7 +153,7 @@ set $third_dock "DP-1-2"
 # Lenovo HDMI (only 1 extra monitor)
 set $secondary_hdmi "HDMI-1"
 
-# Assign workspaces to specific monitors (note this an ordereded list, it will open the
+# Assign workspaces to specific monitors (note this an ordered list, it will open the
 # first monitor found)
 workspace $ws1 output $third $third_x1 $third_dock $secondary_hdmi $primary $primary_x1
 workspace $ws2 output $primary $primary_x1
