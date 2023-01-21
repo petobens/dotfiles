@@ -6,6 +6,7 @@ local builtin = require('telescope.builtin')
 local conf = require('telescope.config').values
 local finders = require('telescope.finders')
 local from_entry = require('telescope.from_entry')
+local layout_strategies = require('telescope.pickers.layout_strategies')
 local make_entry = require('telescope.make_entry')
 local Path = require('plenary.path')
 local pickers = require('telescope.pickers')
@@ -19,6 +20,16 @@ local tree_api = require('nvim-tree.api').tree
 local node_api = require('nvim-tree.api').node
 
 _G.TelescopeConfig = {}
+
+-- Custom Layout
+layout_strategies.bpane = function(picker, max_columns, max_lines, layout_config)
+    local layout =
+        layout_strategies.bottom_pane(picker, max_columns, max_lines, layout_config)
+    layout.prompt.width = layout.results.width
+    layout.prompt.col = layout.results.col
+    layout.preview.height = layout.preview.height + 2
+    return layout
+end
 
 -- Custom previewers
 local tree_previewer = previewers.new_termopen_previewer({
@@ -499,7 +510,7 @@ telescope.setup({
         results_title = false,
         color_devicons = true,
         file_ignore_patterns = { 'doc/', 'venv/', '__pycache__/' },
-        layout_strategy = 'bottom_pane',
+        layout_strategy = 'bpane',
         layout_config = {
             prompt_position = 'bottom',
             height = 20,
