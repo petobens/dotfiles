@@ -129,7 +129,7 @@ u.keymap('n', '#', '#``', { remap = true })
 u.keymap('n', '<Leader>ws', '/<><Left>', { silent = false, remap = true })
 
 -- Folds
-u.keymap('n', '<Leader>z', 'zMzvzz')
+u.keymap('n', '<Leader>zf', 'zMzvzz') -- zoom/fold focus
 u.keymap('n', 'l', udfs.open_fold_from_start)
 u.keymap('n', 'zm', 'zM')
 u.keymap('n', 'zr', 'zR')
