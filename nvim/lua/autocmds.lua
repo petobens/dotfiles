@@ -6,12 +6,12 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
 })
 vim.api.nvim_create_autocmd('BufWinLeave', {
     group = session_acg,
-    pattern = { '*.*', 'bashrc', 'config' },
+    pattern = { '*.*', 'bashrc', 'bash_profile', 'config' },
     command = 'if &previewwindow != 1 | mkview | endif',
 })
 vim.api.nvim_create_autocmd('BufWinEnter', {
     group = session_acg,
-    pattern = { '*.*', 'bashrc', 'config' },
+    pattern = { '*.*', 'bashrc', 'bash_profile', 'config' },
     command = 'if &previewwindow != 1 | silent! loadview | endif',
 })
 
