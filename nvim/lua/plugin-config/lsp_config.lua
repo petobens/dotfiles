@@ -130,6 +130,7 @@ require('lspconfig').texlab.setup({
 -- Mappings
 local u = require('utils')
 local lsp_buf = vim.lsp.buf
+u.keymap('n', '<Leader>li', '<Cmd>LspInfo<CR>')
 u.keymap('n', '<Leader>jd', lsp_buf.definition)
 u.keymap('n', '<Leader>ap', lsp_buf.references)
 u.keymap('n', '<Leader>rn', lsp_buf.rename)

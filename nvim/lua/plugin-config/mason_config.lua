@@ -1,3 +1,5 @@
+local u = require('utils')
+
 require('mason').setup({
     ui = { border = 'rounded' },
 })
@@ -13,3 +15,5 @@ require('mason-tool-installer').setup({
         'texlab',
     },
 })
+
+u.keymap('n', '<Leader>ms', '<Cmd>Mason<CR>')
