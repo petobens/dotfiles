@@ -188,7 +188,7 @@ local map_list = {
 require('nvim-tree').setup({
     disable_netrw = false, -- conflicts with Fugitive's Gbrowse
     view = {
-        width = { min = 43, max = -1 },
+        width = { min = 43, max = 55 },
         number = true,
         relativenumber = true,
         mappings = {
