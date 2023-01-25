@@ -36,6 +36,7 @@ export FZF_DEFAULT_OPTS='
 --height 15
 --inline-info
 --prompt="   "
+--info="inline:  "
 --marker=" "
 --separator=""
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
