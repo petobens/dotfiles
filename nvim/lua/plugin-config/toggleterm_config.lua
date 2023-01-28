@@ -11,6 +11,7 @@ require('toggleterm').setup({
     shade_terminals = false,
     highlights = {
         Normal = { link = 'Normal' },
+        WinSeparator = { link = 'FloatBorder' },
     },
     winbar = {
         enabled = false,
