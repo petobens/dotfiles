@@ -107,6 +107,7 @@ lspconfig.sumneko_lua.setup({
                 preloadFileSize = 750,
                 checkThirdParty = false,
             },
+            telemetry = { enable = false },
         },
     },
 })
