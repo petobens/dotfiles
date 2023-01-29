@@ -69,7 +69,7 @@ bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
 # re-focusing it)
-for_window [class="^(Spotify|Slack|pm|tm|pr|Mailspring|Transmission-gtk|mpv|Simple-scan)$" title="^(?!webcam).+"] $nexec $resize Full
+for_window [class="^(Spotify|Slack|pm|tm|pr|Mailspring|Transmission-gtk|mpv|Simple-scan|obs)$" title="^(?!webcam).+"] $nexec $resize Full
 for_window [title="^(Alacritty|kitty)$"] $nexec $resize Full
 for_window [con_mark="^(browser|calendar|meet|clickup)$"] $nexec $resize Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] $nexec $resize Center
@@ -171,6 +171,7 @@ bindsym $alt+Escape focus output down
 
 # Assign windows to specific workspaces (for apps opened with ranger or those that
 # don't respect startup workspaces)
+for_window [class="^(obs)$"] $nexec $multimon_move -w "1"
 for_window [class="^(zoom)$"] $nexec $multimon_move -w "2"
 for_window [class="^(mpv|Spotify)$"] $nexec $multimon_move -w "3"
 for_window [class="^(pm|tm|pr|Transmission-gtk)$"] $nexec $multimon_move -w "4"
