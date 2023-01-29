@@ -67,7 +67,12 @@ APPS = {
     'Mailspring': {'cmd': 'mailspring', 'icon': 'mailspring', 'desc': 'Mail Client'},
     'Meet': {'cmd': 'meet', 'icon': 'google-meet', 'desc': 'Google Meet'},
     'Microsoft Teams': {'cmd': 'teams', 'icon': 'teams'},
-    'OBS Studio': {'cmd': 'obs', 'icon': 'obs', 'desc': 'Streaming/Recording Software'},
+    'OBS Studio': {
+        'cmd': 'obs',
+        'icon': 'obs',
+        'desc': 'Streaming/Recording Software',
+        'ws': 4,
+    },
     'Peek': {'cmd': 'peek', 'icon': 'peek', 'desc': 'Animated GIF Recorder'},
     'Power Manager': {'cmd': 'power-manager', 'icon': 'xfce4-power-manager-settings'},
     'PulseAudio Volume Control': {
@@ -122,7 +127,7 @@ def font_aware_menu(cmd_menu):
     selected = check_output(menu_cmd, shell=True).decode().strip()
     selected = selected.split('<')[0].strip()  # Remove the description
     selected = APPS[selected]  # type: ignore
-    run_app(selected.get('cmd'), None)  # type: ignore
+    run_app(selected.get('cmd'), selected.get('ws'))  # type: ignore
 
 
 if __name__ == '__main__':
