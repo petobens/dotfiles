@@ -109,6 +109,9 @@ local plugins = {
     },
     {
         'nvim-treesitter/nvim-treesitter',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects',
+        },
         build = ':TSUpdate',
         config = function()
             require('plugin-config.treesitter_config')
