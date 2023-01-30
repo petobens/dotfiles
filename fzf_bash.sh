@@ -32,13 +32,15 @@ fi
 
 # Change default options and colors
 export FZF_DEFAULT_OPTS='
---border=bottom
+--border="bottom"
+--border-label-pos=50
 --height 15
 --inline-info
 --prompt="   "
 --info="inline:  "
 --marker=" "
---separator=""
+--no-separator
+--preview-window="border-left"
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
 --bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up
 --bind=alt-d:preview-half-page-down,alt-u:preview-half-page-up
@@ -325,6 +327,7 @@ export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE
 --no-sort
 --tac
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
+--border-label='Z Dirs'
 "
 zfzf() {
     [ $# -gt 0 ] && _z "$*" && return
@@ -369,8 +372,7 @@ ig() {
     # shellcheck disable=SC2154
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
         fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd" \
-        --bind "alt-r:unbind(change,alt-r)+change-prompt(fzf> )+enable-search+clear-query" \
-        --prompt 'rg> ' \
+        --bind "alt-r:unbind(change,alt-r)+change-border-label(Find Word)+enable-search+clear-query" \
         --preview-window "+{2}-/2")
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
