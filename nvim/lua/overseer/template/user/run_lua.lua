@@ -1,11 +1,11 @@
 return {
-    name = 'run_script',
+    name = 'run_lua',
     builder = function()
         local file = vim.fn.expand('%:p')
-        local cmd = { vim.bo.filetype }
         return {
-            cmd = cmd,
+            cmd = { 'nvim', '-ll' },
             args = { file },
+            metadata = { run_cmd = string.format('%s', file) },
             components = {
                 'default',
                 { 'on_output_quickfix', open = true },
@@ -13,6 +13,6 @@ return {
         }
     end,
     condition = {
-        filetype = { 'bash' },
+        filetype = { 'lua' },
     },
 }
