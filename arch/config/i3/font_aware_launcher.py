@@ -521,13 +521,15 @@ class ElectronApp(ROLApp):
             self.class_name == 'Brave' and self.mark not in self.screen.i3.get_marks()
         ):  # run this only on first open
             # Wait for focus
-            sleep(1.5)
+            sleep(1)
 
             # Hack to ensure calendar and clickup apps open corresponding workspace
             # FIXME: Find a general way to fix this
             if (
                 self.subcmd == 'calendar' or self.subcmd == 'clickup'
             ) and self.screen.nr_monitors > 2:
+                # We need extra waiting time
+                sleep(1.5)
                 self.screen.i3.command(
                     f'move container to workspace {self.ws}, workspace {self.ws}'
                 )
