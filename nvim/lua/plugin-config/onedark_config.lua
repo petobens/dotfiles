@@ -84,7 +84,7 @@ onedarkpro.setup({
         TabLineSel = { link = 'WildMenu' },
         TermCursor = { bg = p.blue },
         TermCursorNC = { link = 'CursorColumn' },
-        Title = { fg = p.fg },
+        Title = { fg = p.green },
         VertSplit = { link = 'FloatBorder' }, -- for nvim-tree separator
         Visual = { bg = p.visual_grey },
         VisualNOS = { bg = p.visual_grey },
@@ -277,6 +277,9 @@ onedarkpro.setup({
         GitSignsAdd = { fg = p.green },
         GitSignsChange = { fg = p.orange },
         GitSignsDelete = { fg = p.red },
+        GitSignsAddInline = { link = 'DiffAdd' },
+        GitSignsChangeInline = { link = 'DiffChange' },
+        GitSignsDeleteInline = { link = 'DiffDelete' },
 
         ---- HlWords (in udfs)
         HlWord1 = { link = 'Search' },
