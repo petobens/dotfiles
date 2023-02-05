@@ -105,10 +105,12 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     $tlmgr_install algorithm2e
     $tlmgr_install beamer
     $tlmgr_install bitset
+    $tlmgr_install blkarray
     $tlmgr_install booktabs
     $tlmgr_install breqn
     $tlmgr_install caption
     $tlmgr_install catchfile
+    $tlmgr_install changelog
     $tlmgr_install embedfile
     $tlmgr_install fancyvrb
     $tlmgr_install float
@@ -131,6 +133,7 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     $tlmgr_install relsize
     $tlmgr_install sansmath
     $tlmgr_install setspace
+    $tlmgr_install translations
     $tlmgr_install translator
     $tlmgr_install ulem
     $tlmgr_install upquote
