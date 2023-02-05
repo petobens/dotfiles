@@ -4,10 +4,7 @@ local u = require('utils')
 overseer.setup({
     templates = {
         'builtin',
-        'user.run_arara',
-        'user.run_lua',
-        'user.run_python',
-        'user.run_script',
+        'user',
     },
 })
 
