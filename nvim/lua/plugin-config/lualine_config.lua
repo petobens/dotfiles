@@ -161,16 +161,17 @@ require('lualine').setup({
             },
             {
                 'lsp_progress',
-                component_separator = { left = '', right = '' },
+                only_show_attached = true,
+                display_components = {
+                    'lsp_client_name',
+                    { 'message' },
+                },
                 message = {
                     initializing = '襤',
                     commenced = '屢',
                     completed = '',
                 },
-                display_components = {
-                    'lsp_client_name',
-                    { 'message' },
-                },
+                component_separator = { left = '', right = '' },
                 separators = {
                     lsp_client_name = { pre = '', post = '' },
                 },
