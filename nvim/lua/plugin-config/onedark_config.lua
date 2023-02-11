@@ -339,7 +339,7 @@ onedarkpro.setup({
     },
 })
 
-onedarkpro.load()
+vim.cmd('colorscheme onedark')
 
 -- Embedded Terminal colors (don't really need to define these)
 local set = vim.g
