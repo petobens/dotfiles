@@ -749,6 +749,7 @@ u.keymap('n', '<Leader>sg', spell_suggest)
 u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 u.keymap('n', '<Leader>te', lsp_doc_symbols)
 u.keymap('n', '<Leader>ta', '<Cmd>Telescope aerial<CR>')
+u.keymap('n', '<Leader>se', '<Cmd>Telescope luasnip<CR>')
 u.keymap('n', '<Leader>gu', '<Cmd>Telescope undo<CR>')
 
 -- Extensions
