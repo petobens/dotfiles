@@ -28,6 +28,15 @@ local plugins = {
             require('plugin-config.lualine_config')
         end,
     },
+    {
+        'folke/noice.nvim',
+        dependencies = {
+            'MunifTanjim/nui.nvim',
+        },
+        config = function()
+            require('plugin-config.noice_config')
+        end,
+    },
 
     -- Editing
     {
