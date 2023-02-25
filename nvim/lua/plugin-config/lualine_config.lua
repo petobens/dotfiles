@@ -153,13 +153,6 @@ require('lualine').setup({
         },
         lualine_x = {
             {
-                'aerial',
-                depth = -1,
-                colored = false,
-                component_separator = { left = '', right = '' },
-                cond = conds.hide_winwidth_leq_80,
-            },
-            {
                 'lsp_progress',
                 only_show_attached = true,
                 -- pyright doesn't send status messages so hide it
@@ -179,6 +172,13 @@ require('lualine').setup({
                     lsp_client_name = { pre = '', post = '' },
                 },
                 cond = conds.hide_winwidth_leq_40,
+            },
+            {
+                'aerial',
+                depth = -1,
+                colored = false,
+                component_separator = { left = '', right = '' },
+                cond = conds.hide_winwidth_leq_80,
             },
         },
         lualine_y = {
