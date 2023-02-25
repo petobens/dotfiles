@@ -180,21 +180,11 @@ require('lualine').setup({
                 },
                 cond = conds.hide_winwidth_leq_40,
             },
-            {
-                'filetype',
-                colored = false,
-                cond = conds.hide_winwidth_leq_60,
-            },
         },
         lualine_y = {
             {
-                'fileformat',
-                separator = '',
-                cond = conds.hide_winwidth_leq_60,
-            },
-            {
-                'encoding',
-                padding = { left = 0, right = 1 },
+                'filetype',
+                colored = false,
                 cond = conds.hide_winwidth_leq_60,
             },
         },
@@ -272,22 +262,10 @@ require('lualine').setup({
                 },
             },
         },
-        lualine_x = {
+        lualine_y = {
             {
                 'filetype',
                 colored = false,
-                cond = conds.hide_winwidth_leq_60,
-            },
-        },
-        lualine_y = {
-            {
-                'fileformat',
-                separator = '',
-                cond = conds.hide_winwidth_leq_60,
-            },
-            {
-                'encoding',
-                padding = { left = 0, right = 1 },
                 cond = conds.hide_winwidth_leq_60,
             },
         },
