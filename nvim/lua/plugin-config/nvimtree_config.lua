@@ -11,7 +11,7 @@ local function cd_find_file()
     vim.cmd('sleep 3m') -- we seem to need this to allow focus
     local node = tree_api.get_node_under_cursor()
     if not node then
-        -- If there is not file open the cwd and exit
+        -- If there is no open file then cwd and exit
         vim.cmd('NvimTreeOpen')
         return
     end
@@ -116,8 +116,7 @@ local function copy_move(action)
 
     local nodes = marks_api.list()
     if next(nodes) == nil then
-        local node = tree_api.get_node_under_cursor()
-        table.insert(nodes, node)
+        table.insert(nodes, tree_api.get_node_under_cursor())
     end
     for _, node in ipairs(nodes) do
         fn(node)
