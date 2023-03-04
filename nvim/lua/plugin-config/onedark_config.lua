@@ -292,6 +292,7 @@ onedarkpro.setup({
         ---- Lazy
         LazyCommit = { fg = p.red },
         LazyHandlerPlugin = { fg = p.purple },
+        LazyDimmed = { fg = p.comment_grey },
 
         ---- IndentBlankline
         IndentLine = { fg = p.comment_grey },
