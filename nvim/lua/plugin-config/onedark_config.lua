@@ -193,6 +193,9 @@ onedarkpro.setup({
         texTitleArg = { style = 'bold' },
         texMathEnvArgName = { fg = p.yellow },
 
+        -- Lua
+        ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
+
         ---- Markdown
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
