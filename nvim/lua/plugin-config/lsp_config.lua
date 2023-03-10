@@ -56,9 +56,6 @@ local function on_attach(client, bufnr)
     -- We do range formatting with null-ls so disable it here
     client.server_capabilities.documentRangeFormattingProvider = false
 
-    -- Don't use semantic tokens
-    -- client.server_capabilities.semanticTokensProvider = nil
-
     vim.api.nvim_clear_autocmds({ group = format_augroup, buffer = bufnr })
     -- Autoformat on save with null-ls
     vim.api.nvim_create_autocmd('BufWritePre', {
