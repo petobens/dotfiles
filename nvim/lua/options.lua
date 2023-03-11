@@ -1,7 +1,7 @@
 local M = {}
 _G.GlobalOpts = M
 
--- Gitsigns to the left of linumbers in statuscolumn
+-- Gitsigns and diagnostics to the left of line numbers in statuscolumn
 -- From https://www.reddit.com/r/neovim/comments/10fpqbp/comment/j50be6b/?utm_source=share&utm_medium=web2x&context=3
 function M.my_status_column()
     local sign, git_sign
