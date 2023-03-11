@@ -9,7 +9,7 @@ gitsigns.setup({
 })
 
 -- Mappings
-u.keymap('n', '<Leader>gg', '<Cmd>Gitsigns toggle_signs<CR>')
+u.keymap('n', '<Leader>gg', gitsigns.toggle_signs)
 u.keymap('n', ']h', function()
     if vim.wo.diff then
         return ']c'
