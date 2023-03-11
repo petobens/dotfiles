@@ -207,7 +207,6 @@ onedarkpro.setup({
         ['@constant.builtin.python'] = { fg = p.orange },
         ['@constant.python'] = { fg = p.orange },
         ['@function.builtin.python'] = { fg = p.yellow },
-        ['@keyword.python'] = { fg = p.yellow },
         ['@punctuation.special.python'] = { fg = p.orange },
 
         ---- vim-doc (help) and checkhealth
