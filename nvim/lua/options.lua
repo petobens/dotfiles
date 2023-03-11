@@ -1,7 +1,7 @@
 local M = {}
 _G.GlobalOpts = M
 
--- Gitsigns to the right of linumbers in statuscolumn
+-- Gitsigns to the left of linumbers in statuscolumn
 -- From https://www.reddit.com/r/neovim/comments/10fpqbp/comment/j50be6b/?utm_source=share&utm_medium=web2x&context=3
 function M.my_status_column()
     local sign, git_sign
@@ -14,10 +14,9 @@ function M.my_status_column()
     end
     local components = {
         sign and ('%#' .. sign.texthl .. '#' .. sign.text .. '%*') or '',
+        git_sign and ('%#' .. git_sign.texthl .. '#' .. git_sign.text .. '%*') or '',
         [[%=]],
         [[%{&nu?(&rnu&&v:relnum?v:relnum:v:lnum):''} ]],
-        -- FIXME: Don't add extra space if there are no gitsigns?
-        git_sign and ('%#' .. git_sign.texthl .. '#' .. git_sign.text .. '%*') or '  ',
     }
     return table.concat(components, '')
 end
@@ -69,7 +68,7 @@ vim.opt.splitkeep = 'cursor'
 vim.opt.startofline = true
 vim.opt.virtualedit = { 'block', 'onemore' }
 vim.opt.winblend = 6
--- vim.opt.statuscolumn = [[%!v:lua.GlobalOpts.my_status_column()]]
+vim.opt.statuscolumn = [[%!v:lua.GlobalOpts.my_status_column()]]
 
 -- Backups, sessions, undo and shada
 vim.opt.backup = true
