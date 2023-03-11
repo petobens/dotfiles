@@ -41,7 +41,7 @@ vim.opt.diffopt =
     { 'internal', 'filler', 'indent-heuristic', 'algorithm:histogram', 'linematch:60' }
 vim.opt.foldlevelstart = 0
 vim.opt.foldopen = vim.opt.foldopen + { 'insert', 'jump' }
-vim.opt.lazyredraw = true
+vim.opt.lazyredraw = false
 vim.opt.modeline = false
 vim.opt.shortmess = 'aoOtTIcF'
 vim.opt.signcolumn = 'number'
