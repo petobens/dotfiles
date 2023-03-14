@@ -449,7 +449,7 @@ local custom_actions = transform_mod({
             p = p:parent()
         end
 
-        vim.cmd('NvimTreeOpen')
+        tree_api.open()
         vim.cmd('sleep 3m') -- we seem to need this to allow focus
         tree_api.change_root(tostring(p))
         if not is_dir then

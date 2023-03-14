@@ -7,14 +7,21 @@ local u = require('utils')
 local Path = require('plenary.path')
 
 local function cd_find_file()
-    vim.cmd('NvimTreeFindFile')
-    vim.cmd('sleep 3m') -- we seem to need this to allow focus
+    local find_file_opts = {
+        buf = vim.api.nvim_get_current_buf(),
+        open = true,
+        focus = true,
+        update_root = true, -- this ensures lcd changes
+    }
+    tree_api.find_file(find_file_opts)
+    vim.cmd('sleep 3m')
+
     local node = tree_api.get_node_under_cursor()
     if not node then
-        -- If there is no open file then cwd and exit
-        vim.cmd('NvimTreeOpen')
+        tree_api.open()
         return
     end
+
     node_api.navigate.parent()
     local parent_node = tree_api.get_node_under_cursor()
     if parent_node.name == '..' then
@@ -23,7 +30,8 @@ local function cd_find_file()
         tree_api.change_root_to_node()
         node_api.navigate.sibling.first() -- to center
     end
-    tree_api.find_file(node.name)
+    find_file_opts.buf = node.name
+    tree_api.find_file(find_file_opts)
 end
 
 local function cd_or_open()
@@ -47,7 +55,7 @@ local function up_dir()
     node_api.navigate.parent()
     tree_api.change_root_to_node()
     vim.cmd('sleep 3m')
-    tree_api.find_file(dir)
+    tree_api.find_file({ buf = dir })
 end
 
 local function mark_down()
@@ -231,7 +239,6 @@ require('nvim-tree').setup({
     },
     update_focused_file = {
         enable = true,
-        update_cwd = true,
     },
     actions = {
         open_file = {
