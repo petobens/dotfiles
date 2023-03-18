@@ -16,29 +16,28 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
 })
 
 -- Save when losing focus
-local focus_acg = vim.api.nvim_create_augroup('focus_lost', { clear = true })
-vim.api.nvim_create_autocmd('FocusLost', { group = focus_acg, command = 'silent! wall' })
+vim.api.nvim_create_autocmd('FocusLost', {
+    group = vim.api.nvim_create_augroup('focus_lost', { clear = true }),
+    command = 'silent! wall',
+})
 
 -- Disable readonly warning
-local noro_acg = vim.api.nvim_create_augroup('no_ro_warn', { clear = true })
-vim.api.nvim_create_autocmd(
-    'FileChangedRO',
-    { group = noro_acg, command = 'set noreadonly' }
-)
+vim.api.nvim_create_autocmd('FileChangedRO', {
+    group = vim.api.nvim_create_augroup('no_ro_warn', { clear = true }),
+    command = 'set noreadonly',
+})
 
 -- Send cwd to tmux splits (see https://github.com/neovim/neovim/issues/21771)
-local cwd_acg = vim.api.nvim_create_augroup('cwd_tmux', { clear = true })
 vim.api.nvim_create_autocmd({ 'DirChanged' }, {
-    group = cwd_acg,
+    group = vim.api.nvim_create_augroup('cwd_tmux', { clear = true }),
     command = [[call chansend(v:stderr, printf("\033]7;%s\033", v:event.cwd))]],
 })
 
 -- Resize splits when the Vim window is resized
-local vim_resized_acg = vim.api.nvim_create_augroup('vim_resized', { clear = true })
-vim.api.nvim_create_autocmd(
-    'VimResized',
-    { group = vim_resized_acg, command = 'wincmd =' }
-)
+vim.api.nvim_create_autocmd('VimResized', {
+    group = vim.api.nvim_create_augroup('vim_resized', { clear = true }),
+    command = 'wincmd =',
+})
 
 -- Only show cursorline in the current window
 local cline_acg = vim.api.nvim_create_augroup('cline', { clear = true })
@@ -52,29 +51,24 @@ vim.api.nvim_create_autocmd(
 )
 
 -- Create non-existing parent directory on save
-local create_dir_before_write_acg =
-    vim.api.nvim_create_augroup('create_dir_before_write', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePre', {
-    group = create_dir_before_write_acg,
+    group = vim.api.nvim_create_augroup('create_dir_before_write', { clear = true }),
     callback = function()
         udfs.mk_non_dir()
     end,
 })
 
 -- Delete trailing whitespace
-local delete_trailing_acg =
-    vim.api.nvim_create_augroup('delete_trailing', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePre', {
-    group = delete_trailing_acg,
+    group = vim.api.nvim_create_augroup('delete_trailing', { clear = true }),
     callback = function()
         udfs.delete_trailing_whitespace()
     end,
 })
 
 -- Briefly highlight yanked text
-local hl_yank_acg = vim.api.nvim_create_augroup('hl_yank', { clear = true })
 vim.api.nvim_create_autocmd({ 'TextYankPost' }, {
-    group = hl_yank_acg,
+    group = vim.api.nvim_create_augroup('hl_yank', { clear = true }),
     callback = function()
         vim.highlight.on_yank({ higroup = 'Visual', timeout = 300 })
     end,

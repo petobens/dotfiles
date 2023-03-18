@@ -1,23 +1,20 @@
 --- i3
-local i3_acg = vim.api.nvim_create_augroup('ft_i3', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = i3_acg,
+    group = vim.api.nvim_create_augroup('ft_i3', { clear = true }),
     pattern = { '*i3/config' },
     command = 'setlocal ft=i3config foldmethod=marker',
 })
 
 --- Bash
-local bash_acg = vim.api.nvim_create_augroup('ft_bash', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = bash_acg,
+    group = vim.api.nvim_create_augroup('ft_bash', { clear = true }),
     pattern = { 'bash_profile', 'bashrc', 'fzf_bash.sh' },
     command = 'setlocal foldmethod=marker filetype=sh',
 })
 
 --- Bibtex
-local bib_acg = vim.api.nvim_create_augroup('ft_bib', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = bib_acg,
+    group = vim.api.nvim_create_augroup('ft_bib', { clear = true }),
     pattern = { 'bib' },
     command = 'setlocal foldmethod=marker commentstring=%%%%s spell shiftwidth=2 tabstop=2 softtabstop=2',
 })
@@ -57,33 +54,29 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
 })
 
 --- Crontab
-local crontab_acg = vim.api.nvim_create_augroup('ft_crontab', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = crontab_acg,
+    group = vim.api.nvim_create_augroup('ft_crontab', { clear = true }),
     pattern = { 'crontab' },
     command = 'setlocal nobackup nowritebackup',
 })
 
 --- Git
-local git_acg = vim.api.nvim_create_augroup('ft_git', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = git_acg,
+    group = vim.api.nvim_create_augroup('ft_git', { clear = true }),
     pattern = { 'git' },
     command = 'nnoremap <buffer><silent> q <Cmd>bdelete<CR>',
 })
 
 --- HTML & CSS
-local html_acg = vim.api.nvim_create_augroup('ft_html', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = html_acg,
+    group = vim.api.nvim_create_augroup('ft_html', { clear = true }),
     pattern = { 'html' },
     command = 'setlocal shiftwidth=2 tabstop=2 softtabstop=2',
 })
 
 --- JSON
-local json_acg = vim.api.nvim_create_augroup('ft_json', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = json_acg,
+    group = vim.api.nvim_create_augroup('ft_json', { clear = true }),
     pattern = { 'json' },
     command = 'setlocal foldmethod=syntax',
 })
@@ -190,9 +183,8 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 --- TOML
-local toml_acg = vim.api.nvim_create_augroup('ft_toml', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = toml_acg,
+    group = vim.api.nvim_create_augroup('ft_toml', { clear = true }),
     pattern = { 'poetry.lock' },
     command = 'set  filetype=toml',
 })

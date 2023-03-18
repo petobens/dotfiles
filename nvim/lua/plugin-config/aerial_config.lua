@@ -17,9 +17,8 @@ require('aerial').setup({
 })
 
 -- Autocmds
-local aerial_acg = vim.api.nvim_create_augroup('aerial', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = aerial_acg,
+    group = vim.api.nvim_create_augroup('aerial', { clear = true }),
     pattern = { 'aerial' },
     command = 'setlocal number relativenumber',
 })
