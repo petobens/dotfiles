@@ -22,16 +22,16 @@ local function cd_find_file()
         return
     end
 
+    -- Get inside the directory instead of unfolding the tree
     node_api.navigate.parent()
     local parent_node = tree_api.get_node_under_cursor()
     if parent_node.name == '..' then
         tree_api.collapse_all()
     else
         tree_api.change_root_to_node()
-        node_api.navigate.sibling.first() -- to center
+        node_api.navigate.sibling.first()
     end
-    find_file_opts.buf = node.name
-    tree_api.find_file(find_file_opts)
+    tree_api.find_file(node.name)
 end
 
 local function cd_or_open()
