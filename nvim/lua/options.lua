@@ -5,7 +5,7 @@ _G.GlobalOpts = M
 -- From https://www.reddit.com/r/neovim/comments/10fpqbp/comment/j50be6b/?utm_source=share&utm_medium=web2x&context=3
 function M.my_status_column()
     local sign, git_sign
-    for _, s in ipairs(M.get_sc_signs()) do
+    for _, s in ipairs(M.get_status_col_signs()) do
         if s.name:find('GitSign') then
             git_sign = s
         else
@@ -21,7 +21,7 @@ function M.my_status_column()
     return table.concat(components, '')
 end
 
-function M.get_sc_signs()
+function M.get_status_col_signs()
     local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
     return vim.tbl_map(function(sign)
         return vim.fn.sign_getdefined(sign.name)[1]

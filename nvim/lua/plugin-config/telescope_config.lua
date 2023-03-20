@@ -458,6 +458,11 @@ local custom_actions = transform_mod({
             node_api.navigate.sibling.first()
         end
     end,
+    -- Undo (restore) previous picker
+    delete_buffer = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        vim.cmd('bwipeout ' .. action_state.get_selected_entry().value)
+    end,
 })
 -- Store custom actions to be used elsewhere
 _G.TelescopeConfig.custom_actions = custom_actions
@@ -586,6 +591,7 @@ telescope.setup({
             mappings = {
                 i = {
                     ['<C-o>'] = custom_actions.context_split,
+                    ['<A-k>'] = custom_actions.delete_buffer,
                 },
             },
         },
@@ -721,6 +727,7 @@ u.keymap('n', '<Leader>rd', function()
     require('telescope').extensions.recent_files.pick({
         path_display = function(_, path)
             local p = Path:new(path):absolute()
+            ---@diagnostic disable-next-line: param-type-mismatch
             return string.gsub(p, vim.loop.os_homedir(), '~')
         end,
     })
