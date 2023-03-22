@@ -66,6 +66,7 @@ function M:update_status()
         if
             vim.fn.buflisted(b) ~= 0
             and vim.api.nvim_buf_get_option(b, 'buftype') ~= 'quickfix'
+            and vim.api.nvim_buf_get_option(b, 'filetype') ~= 'fugitive'
         then
             buffers[#buffers + 1] = Buffer({
                 bufnr = b,
