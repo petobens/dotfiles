@@ -148,6 +148,7 @@ u.keymap('n', '<Leader>ic', '<Cmd>set list!<CR>')
 u.keymap('n', '<Leader>sa', '<Cmd>sort i<CR>')
 u.keymap('n', '<Leader>sc', '<Cmd>set spell!<CR>')
 u.keymap('n', '<Leader>lp', ':lua vim.print(', { silent = false })
+u.keymap('n', '<Leader>rl', ':=', { silent = false })
 
 -- Bookmarks
 u.keymap('n', '<Leader>ev', '<Cmd>e $MYVIMRC<CR>')
