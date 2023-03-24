@@ -12,7 +12,7 @@ disable =
     import-error,
     no-name-in-module,
     # Warnings:
-    broad-except,
+    broad-exception-caught,
     dangerous-default-value,
     fixme,
     logging-format-interpolation,
