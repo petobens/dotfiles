@@ -152,7 +152,7 @@ APPS = {
         'type': 'tui',
         'args': {
             'title': 'ranger',
-            'cmd': '/usr/bin/bash -c "ranger $(tmux display -p \"#{pane_current_path}\")"',
+            'cmd': '/usr/bin/bash -c "ranger {path}"',
         },
     },
     'reboot-dialog': {
@@ -425,6 +425,17 @@ class TUIApp(ROLApp):
             if self.interactive_bash:
                 cmd += '-i '
             cmd += f'"{self.cmd}"'
+
+        if self.title == 'ranger':
+            # FIXME: https://github.com/open-dynaMIX/raiseorlaunch/issues/66#issuecomment-1399110913
+            ranger_path = (
+                sh('tmux display -p "#{?pane_path,#{pane_path},#{pane_current_path}}"')
+                .decode('ascii')
+                .strip()
+                .split('"')[1]
+            )
+            cmd = cmd.format(path=ranger_path)
+
         return cmd
 
     def _run_post_cmd(self):
