@@ -16,7 +16,7 @@ function M.my_status_column()
         sign and ('%#' .. sign.texthl .. '#' .. sign.text .. '%*') or '',
         git_sign and ('%#' .. git_sign.texthl .. '#' .. git_sign.text .. '%*') or '',
         [[%=]],
-        [[%{&nu?(&rnu&&v:relnum?v:relnum:v:lnum):''} ]],
+        [[%{&nu?(&rnu && v:relnum? v:relnum: (v:virtnum > 0? '' : v:lnum)):''} ]],
     }
     return table.concat(components, '')
 end
