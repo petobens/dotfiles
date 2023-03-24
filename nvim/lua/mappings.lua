@@ -139,7 +139,7 @@ u.keymap('n', 'zr', 'zR')
 u.keymap('n', '<Leader>mf', '<Cmd>set foldmethod=marker<CR>zv')
 
 -- Diffs
-u.keymap('n', '<Leader>de', '<Cmd>diffoff!<CR>')
+u.keymap('n', '<Leader>de', '<Cmd>bd #<CR>')
 u.keymap('n', '<Leader>ds', udfs.diff_file_split)
 u.keymap('n', '<Leader>du', '<Cmd>diffupdate<CR>')
 
