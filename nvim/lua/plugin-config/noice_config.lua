@@ -11,5 +11,11 @@ require('noice').setup({
             ['vim.lsp.util.stylize_markdown'] = true,
             ['cmp.entry.get_documentation'] = true,
         },
+        signature = {
+            enabled = true,
+            auto_open = {
+                enabled = false, -- to avoid conflicts with cmp-lsp-signature
+            },
+        },
     },
 })
