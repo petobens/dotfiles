@@ -35,6 +35,16 @@ local run_python = function()
     end)
 end
 
+local run_toggleterm = function()
+    vim.cmd('silent noautocmd update')
+    vim.cmd(
+        string.format(
+            'TermExec cmd="python %s"',
+            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
+        )
+    )
+end
+
 local run_tmux_pane = function(debug_mode)
     debug_mode = debug_mode or false
 
@@ -95,6 +105,7 @@ end
 
 -- Running
 u.keymap({ 'n', 'i' }, '<F7>', run_python, { buffer = true })
+u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F6>', function()
     run_tmux_pane(true)
