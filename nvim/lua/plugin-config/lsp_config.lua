@@ -127,15 +127,6 @@ require('lspconfig').texlab.setup({
 
 -- Mappings
 local u = require('utils')
-local lsp_buf = vim.lsp.buf
-u.keymap('n', '<Leader>li', '<Cmd>LspInfo<CR>')
-u.keymap('n', '<Leader>jd', lsp_buf.definition)
-u.keymap('n', '<Leader>ap', lsp_buf.references)
-u.keymap('n', '<Leader>rn', lsp_buf.rename)
-u.keymap('n', 'K', lsp_buf.hover)
-u.keymap('n', '<Leader>fs', lsp_buf.signature_help)
-u.keymap('n', '<Leader>fc', custom_lsp_format)
-u.keymap('v', '<Leader>fc', 'gq', { remap = true })
 u.keymap('n', '<Leader>fd', vim.diagnostic.open_float)
 u.keymap('n', '<Leader>ld', function()
     local win_id = vim.fn.win_getid()
@@ -147,3 +138,23 @@ u.keymap('n', '<Leader>ld', function()
     })
     vim.fn.win_gotoid(win_id)
 end)
+u.keymap('n', '<Leader>li', '<Cmd>LspInfo<CR>')
+u.keymap('v', '<Leader>fc', 'gq', { remap = true })
+
+local lsp_buf = vim.lsp.buf
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(ev)
+        -- Enable completion triggered by <c-x><c-o>
+        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+        -- Map only after language server attaches to the current buffer
+        local opts = { buffer = ev.buf }
+        u.keymap('n', '<Leader>jd', lsp_buf.definition, opts)
+        u.keymap('n', '<Leader>ap', lsp_buf.references, opts)
+        u.keymap('n', '<Leader>rn', lsp_buf.rename, opts)
+        u.keymap('n', 'K', lsp_buf.hover, opts)
+        u.keymap('n', '<Leader>fs', lsp_buf.signature_help, opts)
+        u.keymap('n', '<Leader>fc', custom_lsp_format, opts)
+    end,
+})
