@@ -16,7 +16,6 @@ local sources = {
     }),
     -- Python (note that formatters will run in the defined order)
     formatting.isort.with({
-        -- FIXME: not reading settings file
         extra_args = {
             '--settings-file=' .. vim.env.HOME .. '/.isort.cfg',
         },
@@ -31,6 +30,7 @@ local sources = {
 
 null_ls.setup({
     sources = sources,
+    debug = false,
     on_attach = function(client)
         -- Don't use null-ls for (cmp-lsp) compeltion
         client.server_capabilities.completionProvider = false
