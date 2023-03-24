@@ -12,6 +12,7 @@ require('nvim-treesitter.configs').setup({
         'markdown_inline',
         'python',
         'regex',
+        'rst',
         'vim',
     },
     highlight = {
