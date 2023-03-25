@@ -218,6 +218,7 @@ onedarkpro.setup({
         ['@text.title.help'] = { fg = p.purple },
         helpSectionDelim = { fg = p.red },
         healthSuccess = { fg = p.black, bg = p.green },
+        ['@constant.builtin.vim'] = { fg = p.yellow },
 
         --- Yaml
         yamlBool = { fg = p.orange },
