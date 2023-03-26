@@ -4,6 +4,7 @@ local builtin = require('telescope.builtin')
 local utils = require('telescope.utils')
 
 -- Options
+vim.opt_local.textwidth = 88
 vim.opt_local.commentstring = '#%s'
 vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
