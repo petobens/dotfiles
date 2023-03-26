@@ -25,7 +25,7 @@ local _parse_qf = function(qf_title, active_window_id)
     end
 end
 
-local run_python = function()
+local run_overseer = function()
     local current_win_id = vim.fn.win_getid()
     vim.cmd('silent noautocmd update')
     overseer.run_template({ name = 'run_python' }, function(task)
@@ -44,6 +44,34 @@ local run_toggleterm = function()
             vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
         )
     )
+end
+
+local function run_ipython(mode)
+    vim.cmd('silent noautocmd update')
+    local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
+
+    local ttt = require('toggleterm.terminal')
+    local is_open = ttt.get(1) ~= nil and ttt.get(1):is_open() or false
+    if not is_open then
+        local ipython = ttt.Terminal:new({
+            cmd = 'ipython',
+            hidden = false,
+        })
+        ipython:toggle()
+    end
+
+    if mode == 'open' then
+        vim.cmd('wincmd p')
+        vim.cmd('stopinsert')
+    elseif mode == 'module' then
+        vim.cmd(string.format('TermExec cmd="\\%%run %s"', fname))
+    elseif mode == 'line' then
+        vim.cmd('ToggleTermSendCurrentLine')
+    elseif mode == 'selection' then
+        vim.cmd('ToggleTermSendVisualLines')
+    elseif mode == 'reset' then
+        vim.cmd('TermExec cmd="\\%reset -f"')
+    end
 end
 
 local run_tmux_pane = function(debug_mode)
@@ -104,15 +132,31 @@ local list_breakpoints = function(local_buffer)
     builtin.grep_string(opts)
 end
 
--- Running
-u.keymap({ 'n', 'i' }, '<F7>', run_python, { buffer = true })
+-- Mappings
+---- Running
+u.keymap({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
 u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F6>', function()
     run_tmux_pane(true)
 end, { buffer = true })
-
--- Debugging
+---- IPython
+u.keymap('n', '<Leader>oi', function()
+    run_ipython('open')
+end, { buffer = true })
+u.keymap('n', '<Leader>ri', function()
+    run_ipython('module')
+end, { buffer = true })
+u.keymap('n', '<Leader>rl', function()
+    run_ipython('line')
+end, { buffer = true })
+u.keymap('v', '<Leader>rv', function()
+    run_ipython('selection')
+end, { buffer = true })
+u.keymap('n', '<Leader>tr', function()
+    run_ipython('reset')
+end, { buffer = true })
+---- Debugging
 u.keymap('n', '<Leader>bp', add_breakpoint, { buffer = true })
 u.keymap('n', '<Leader>rb', remove_breakpoints, { buffer = true })
 u.keymap('n', '<Leader>lb', function()
