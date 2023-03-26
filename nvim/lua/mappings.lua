@@ -139,7 +139,7 @@ u.keymap('n', 'zr', 'zR')
 u.keymap('n', '<Leader>mf', '<Cmd>set foldmethod=marker<CR>zv')
 
 -- Diffs
-u.keymap('n', '<Leader>de', '<Cmd>bd #<CR>')
+u.keymap('n', '<Leader>de', '<Cmd>bd #<CR>zz')
 u.keymap('n', '<Leader>ds', udfs.diff_file_split)
 u.keymap('n', '<Leader>du', '<Cmd>diffupdate<CR>')
 
@@ -148,7 +148,7 @@ u.keymap('n', '<Leader>ic', '<Cmd>set list!<CR>')
 u.keymap('n', '<Leader>sa', '<Cmd>sort i<CR>')
 u.keymap('n', '<Leader>sc', '<Cmd>set spell!<CR>')
 u.keymap('n', '<Leader>lp', ':lua vim.print(', { silent = false })
-u.keymap('n', '<Leader>rl', ':=', { silent = false })
+u.keymap('n', '<Leader>lr', ':=', { silent = false })
 
 -- Bookmarks
 u.keymap('n', '<Leader>ev', '<Cmd>e $MYVIMRC<CR>')
