@@ -60,7 +60,7 @@ return {
         )
     ),
 
-    -- Pandas
+    -- Libraries
     s(
         { trig = 'ipd', dscr = 'Import pandas' },
         fmta(
@@ -80,13 +80,22 @@ return {
             { i(1), i(2) }
         )
     ),
-},
-    {
-        s({ trig = 'tq', dscr = 'Triple quotes' }, {
-            t('"""'),
-            f(visual_selection),
-            i(1),
-            t('"""'),
-            i(0),
-        }),
-    }
+    s(
+        { trig = 'inp', dscr = 'Import numpy' },
+        fmta(
+            [[
+            import numpy as np
+        ]],
+            {}
+        ),
+        { condition = line_begin }
+    ),
+}, {
+    s({ trig = 'tq', dscr = 'Triple quotes' }, {
+        t('"""'),
+        f(visual_selection),
+        i(1),
+        t('"""'),
+        i(0),
+    }),
+}
