@@ -1,9 +1,11 @@
 local ls = require('luasnip')
+local c = ls.choice_node
 local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
+local sn = ls.snippet_node
+local t = ls.text_node
 local fmta = require('luasnip.extras.fmt').fmta
-local rep = require('luasnip.extras').rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 local visual_selection = function(_, snip)
@@ -67,18 +69,15 @@ return {
         { trig = 'acg', dscr = 'Autocmd group' },
         fmta(
             [[
-                local <> = vim.api.nvim_create_augroup('<>', { clear = true })
                 vim.api.nvim_create_autocmd({'<>'}, {
-                    group = <>,
+                    group = vim.api.nvim_create_augroup('<>', { clear = true }),
                     <>
                 })
             ]],
             {
-                i(1, 'acg_var'),
-                i(2, 'group_name'),
-                i(3, 'event'),
-                rep(1),
-                i(4),
+                i(1, 'Event'),
+                i(2, 'Acg name'),
+                c(3, { sn(nil, { t("pattern = {'"), i(1, '*'), t("'},") }), t('') }),
             }
         ),
         { condition = line_begin }
