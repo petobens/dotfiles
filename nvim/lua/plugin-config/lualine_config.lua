@@ -163,9 +163,9 @@ require('lualine').setup({
                     { 'message' },
                 },
                 message = {
-                    initializing = '襤',
-                    commenced = '屢',
-                    completed = '',
+                    initializing = '⏻',
+                    commenced = ' ',
+                    completed = ' ',
                 },
                 component_separator = { left = '', right = '' },
                 separators = {
