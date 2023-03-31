@@ -254,7 +254,7 @@ require('lualine').setup({
             {
                 'filename',
                 file_status = true,
-                path = 3,
+                path = 4,
                 symbols = {
                     modified = '[+]',
                     readonly = ' ',
