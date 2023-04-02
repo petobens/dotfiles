@@ -4,7 +4,6 @@ require('nvim-treesitter.configs').setup({
     ensure_installed = {
         'bash',
         'comment',
-        'help', -- vimdoc help
         'java',
         'json',
         'lua',
@@ -14,6 +13,7 @@ require('nvim-treesitter.configs').setup({
         'regex',
         'rst',
         'vim',
+        'vimdoc',
     },
     highlight = {
         enable = true,

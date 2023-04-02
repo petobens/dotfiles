@@ -209,13 +209,13 @@ onedarkpro.setup({
         ['@function.builtin.python'] = { fg = p.yellow },
         ['@punctuation.special.python'] = { fg = p.orange },
 
-        ---- vim-doc (help) and checkhealth
-        ['@conceal.help'] = { fg = p.red },
-        ['@label.help'] = { fg = p.green, style = p.none },
-        ['@parameter.help'] = { fg = p.light_blue },
-        ['@text.literal.help'] = { fg = p.yellow },
-        ['@text.reference.help'] = { fg = p.red },
-        ['@text.title.help'] = { fg = p.purple },
+        ---- vim-doc and checkhealth
+        ['@conceal.vimdoc'] = { fg = p.red },
+        ['@label.vimdoc'] = { fg = p.green, style = p.none },
+        ['@parameter.vimdoc'] = { fg = p.light_blue },
+        ['@text.literal.vimdoc'] = { fg = p.yellow },
+        ['@text.reference.vimdoc'] = { fg = p.red },
+        ['@text.title.vimdoc'] = { fg = p.purple },
         helpSectionDelim = { fg = p.red },
         healthSuccess = { fg = p.black, bg = p.green },
         ['@constant.builtin.vim'] = { fg = p.yellow },
