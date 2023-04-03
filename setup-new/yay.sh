@@ -129,6 +129,7 @@ $yay_cmd xdg-user-dirs
 $yay_cmd xdotool
 $yay_cmd xsel
 $yay_cmd xsendkey
+$yay_cmd zip
 
 # Themes
 $yay_cmd gnome-themes-extra # includes adwaita-dark theme
