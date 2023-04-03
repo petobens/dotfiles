@@ -377,7 +377,7 @@ sys_update_all() {
             echo -e "\033[1;34m-> YaY...\033[0m"
             yay -Syu --nodiffmenu --answerclean N --removemake --devel \
                 --timeupdate --combinedupgrade
-            yay -c
+            yay -Yc
         fi
     fi
     if type "pipx" > /dev/null 2>&1; then
