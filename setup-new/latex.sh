@@ -76,6 +76,7 @@ $tlmgr_install fontawesome
 $tlmgr_install footmisc
 $tlmgr_install framed
 $tlmgr_install fvextra
+$tlmgr_install ifmtarg
 $tlmgr_install ifplatform
 $tlmgr_install imakeidx
 $tlmgr_install import
