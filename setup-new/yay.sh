@@ -118,7 +118,6 @@ $yay_cmd picom
 $yay_cmd playerctl
 $yay_cmd polybar
 $yay_cmd rofi
-$yay_cmd rofi-dmenu
 $yay_cmd sane-airscan
 $yay_cmd tlp
 $yay_cmd udiskie
