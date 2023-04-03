@@ -264,6 +264,11 @@ require('nvim-tree').setup({
     },
     git = { ignore = false },
     diagnostics = { enable = false },
+    experimental = {
+        git = {
+            async = true,
+        },
+    },
 })
 
 u.keymap('n', '<Leader>ff', cd_find_file)
