@@ -104,6 +104,7 @@ $tlmgr_install xstring
 # Linux specific (i.e not included in basic texlive installation)
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     $tlmgr_install algorithm2e
+    $tlmgr_install algorithmicx
     $tlmgr_install beamer
     $tlmgr_install bitset
     $tlmgr_install blkarray
