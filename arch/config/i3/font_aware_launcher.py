@@ -534,11 +534,12 @@ class ElectronApp(ROLApp):
             # Wait for focus
             sleep(1)
 
-            # Hack to ensure calendar and clickup apps open corresponding workspace
+            # Hack to ensure calendar and clickup apps open corresponding workspace when
+            # we have multiple monitors
             # FIXME: Find a general way to fix this
             if (
                 self.subcmd == 'calendar' or self.subcmd == 'clickup'
-            ) and self.screen.nr_monitors > 2:
+            ) and self.screen.nr_monitors > 1:
                 # We need extra waiting time
                 sleep(1.5)
                 self.screen.i3.command(
@@ -548,14 +549,13 @@ class ElectronApp(ROLApp):
 
             # Ensure we have proper scaling
             sh('xdotool key Super+0')
-            # If we have 1 external monitor then all brave windows live on the
-            # primary monitory which is hidpi. If we have 2 or more then the main brave
-            # window will live in a (potentially) non hidpi screen and be
+            # If we have multiple monitors (i.e not only the primary laptop screen) the
+            # brave window will live in a (potentially) non hidpi screen and be
             # scaled using the `--force-device..` flag so we need to rescale this window
             # in a hidpi screen using the zoom keybinding
             if (
                 self.screen.is_hidpi
-                and self.screen.nr_monitors > 2  # type: ignore
+                and self.screen.nr_monitors > 1  # type: ignore
                 and not self.screen.other_is_hidpi
             ):
                 sh('xdotool key Super+u')
