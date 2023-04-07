@@ -10,4 +10,3 @@ require('colorizer').setup({
 })
 
 u.keymap('n', '<Leader>cz', '<Cmd>ColorizerToggle<CR>')
-u.keymap('n', '<Leader>cg', '<Cmd>Inspect<CR>')

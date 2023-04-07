@@ -18,6 +18,7 @@ local plugins = {
         config = function()
             require('plugin-config.onedark_config')
         end,
+        priority = 1000, -- load first
     },
     {
         'nvim-lualine/lualine.nvim',
@@ -44,6 +45,10 @@ local plugins = {
         config = function()
             require('plugin-config.comment_config')
         end,
+        keys = {
+            { '<Leader>cc', mode = { 'n', 'x' } },
+            { '<Leader>cu', mode = { 'n', 'x' } },
+        },
     },
     {
         'kylechui/nvim-surround',
@@ -56,6 +61,7 @@ local plugins = {
         config = function()
             require('plugin-config.colorizer_config')
         end,
+        keys = '<Leader>cz',
     },
     {
         'lukas-reineke/indent-blankline.nvim',
@@ -93,12 +99,6 @@ local plugins = {
         'jose-elias-alvarez/null-ls.nvim',
         config = function()
             require('plugin-config.null_ls_config')
-        end,
-    },
-    {
-        'folke/trouble.nvim',
-        config = function()
-            require('plugin-config.trouble_config')
         end,
     },
     {
@@ -193,6 +193,7 @@ local plugins = {
         config = function()
             require('plugin-config.vimtex_config')
         end,
+        ft = { 'tex', 'bib' },
     },
 
     -- Runners and terminal
@@ -219,20 +220,31 @@ local plugins = {
         config = function()
             require('plugin-config.matchup_config')
         end,
+        event = 'BufReadPost',
     },
-    { 'lambdalisue/suda.vim' },
+    {
+        'lambdalisue/suda.vim',
+        cmd = { 'SudaWrite', 'SudaRead' },
+    },
     {
         'nyngwang/NeoZoom.lua',
         config = function()
             require('plugin-config.neozoom_config')
         end,
+        keys = '<Leader>zw',
     },
 }
 
 -- Lazy plugin setup
 require('lazy').setup(plugins, {
+    -- Don't lazy load by default instead load during startup; use
+    -- keys/events/cmds/ft in plugin config when lazy laoding is required
+    defaults = { lazy = false },
     ui = {
-        size = { width = 1, height = 1 },
+        size = {
+            width = 1,
+            height = 1,
+        },
     },
     git = {
         log = { '--since=2 days ago' },
