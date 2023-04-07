@@ -49,20 +49,12 @@ require('nvim-treesitter.configs').setup({
         move = {
             enable = true,
             set_jumps = true, -- set jumps in the jumplist
-            goto_next_start = {
-                [']c'] = '@class.outer',
-                [']f'] = '@function.outer',
-                [']p'] = '@parameter.inner',
-            },
+            goto_next_start = {},
             goto_next_end = {
                 [']C'] = '@class.outer',
                 [']F'] = '@function.outer',
             },
-            goto_previous_start = {
-                ['[c'] = '@class.outer',
-                ['[f'] = '@function.outer',
-                ['[p'] = '@parameter.inner',
-            },
+            goto_previous_start = {},
             goto_previous_end = {
                 ['[C'] = '@class.outer',
                 ['[F'] = '@function.outer',
@@ -71,8 +63,13 @@ require('nvim-treesitter.configs').setup({
     },
     matchup = { enable = true },
 })
-
-u.keymap('n', '<Leader>cg', '<Cmd>Inspect<CR>')
+-- Mappings (basically center when moving)
+u.keymap({ 'n', 'v' }, ']c', '<Cmd>TSTextobjectGotoNextStart @class.outer<CR>zz')
+u.keymap({ 'n', 'v' }, ']f', '<Cmd>TSTextobjectGotoNextStart @function.outer<CR>zz')
+u.keymap({ 'n', 'v' }, ']p', '<Cmd>TSTextobjectGotoNextStart @parameter.inner<CR>zz')
+u.keymap({ 'n', 'v' }, '[c', '<Cmd>TSTextobjectGotoPreviousStart @class.outer<CR>zz')
+u.keymap({ 'n', 'v' }, '[f', '<Cmd>TSTextobjectGotoPreviousStart @function.outer<CR>zz')
+u.keymap({ 'n', 'v' }, '[p', '<Cmd>TSTextobjectGotoPreviousStart @parameter.inner<CR>zz')
 
 -- Custom queries (see for example https://github.com/nvim-treesitter/nvim-treesitter/blob/master/queries/python/folds.scm)
 vim.treesitter.query.set('lua', 'folds', [[[(table_constructor)] @fold]])
