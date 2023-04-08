@@ -195,6 +195,7 @@ onedarkpro.setup({
 
         -- Lua
         ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
+        ['@lsp.type.comment.lua'] = {},
 
         ---- Markdown
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
