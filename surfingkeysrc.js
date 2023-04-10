@@ -140,7 +140,7 @@ const qmarksUrls = {
     f: 'www.facebook.com',
     g: 'www.github.com',
     h: 'www.google.com.ar',
-    i: 'www.infobae.com.ar',
+    i: 'www.infobae.com',
     l: 'www.lanacion.com.ar',
     m: 'https://mercadolibre.com.ar',
     M: 'https://mail.google.com',
