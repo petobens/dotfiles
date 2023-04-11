@@ -45,10 +45,6 @@ local plugins = {
         config = function()
             require('plugin-config.comment_config')
         end,
-        keys = {
-            { '<Leader>cc', mode = { 'n', 'x' } },
-            { '<Leader>cu', mode = { 'n', 'x' } },
-        },
     },
     {
         'kylechui/nvim-surround',
