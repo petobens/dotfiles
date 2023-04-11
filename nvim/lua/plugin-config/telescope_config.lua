@@ -337,6 +337,17 @@ local function lsp_doc_symbols()
     })
 end
 
+-- Fix folding when opening files and avoid starting in insert mode
+-- See: https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
+local function stopinsert(callback)
+    return function(prompt_bufnr)
+        vim.cmd.stopinsert()
+        vim.schedule(function()
+            callback(prompt_bufnr)
+        end)
+    end
+end
+
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
 local custom_actions = transform_mod({
@@ -494,21 +505,6 @@ vim.api.nvim_create_autocmd('User', {
     pattern = { 'TelescopePreviewerLoaded' },
     command = 'setlocal number',
 })
--- Fix folding when opening files and avoid starting in insert mode
--- See: https://github.com/nvim-telescope/telescope.nvim/issues/1277
-vim.api.nvim_create_autocmd('BufRead', {
-    group = vim.api.nvim_create_augroup('telescope_fold_insert', { clear = true }),
-    callback = function()
-        vim.api.nvim_create_autocmd('BufWinEnter', {
-            once = true,
-            command = 'normal! zx',
-        })
-        vim.api.nvim_create_autocmd('BufWinEnter', {
-            once = true,
-            command = 'stopinsert',
-        })
-    end,
-})
 
 -- Setup
 telescope.setup({
@@ -531,8 +527,10 @@ telescope.setup({
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
-                ['<Tab>'] = 'select_default',
-                ['<C-s>'] = 'file_split',
+                ['<CR>'] = stopinsert(actions.select_default),
+                ['<TAB>'] = stopinsert(actions.select_default),
+                ['<C-s>'] = stopinsert(actions.select_horizontal),
+                ['<C-v>'] = stopinsert(actions.select_vertical),
                 ['<C-j>'] = 'move_selection_next',
                 ['<C-k>'] = 'move_selection_previous',
                 ['<A-j>'] = 'preview_scrolling_down',
