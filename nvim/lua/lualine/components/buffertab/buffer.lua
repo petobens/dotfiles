@@ -105,7 +105,7 @@ function Buffer:separator_before()
         or self.visible ~= self.prev_visible
         or (self.visible and (self.prev_modified or self.modified))
     then
-        return '%S{' .. self.options.section_separators.left .. '}'
+        return '%Z{' .. self.options.section_separators.left .. '}'
     else
         return self.options.component_separators.left
     end
