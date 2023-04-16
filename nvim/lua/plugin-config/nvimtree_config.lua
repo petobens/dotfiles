@@ -136,12 +136,34 @@ local function paste()
     marks_api.clear()
 end
 
+-- Cycle sorting
+-- See https://github.com/nvim-tree/nvim-tree.lua/wiki/Recipes#cycle-sort-methods
+local SORT_METHODS = {
+    'name',
+    'modification_time',
+}
+local sort_current = 1
+
+local cycle_sort = function()
+    if sort_current >= #SORT_METHODS then
+        sort_current = 1
+    else
+        sort_current = sort_current + 1
+    end
+    tree_api.reload()
+end
+
+local sort_by = function()
+    return SORT_METHODS[sort_current]
+end
+
 local function on_attach(bufnr)
     local map_opts = { buffer = bufnr }
     -- Tree
     u.keymap('n', 'q', tree_api.close, map_opts)
     u.keymap('n', '<ESC>', tree_api.close, map_opts)
     u.keymap('n', '<C-r>', tree_api.reload, map_opts)
+    u.keymap('n', 'T', cycle_sort, map_opts)
     -- Editing
     u.keymap('n', '<CR>', cd_or_open, map_opts)
     u.keymap('n', 'v', node_api.open.vertical, map_opts)
@@ -204,6 +226,7 @@ end
 require('nvim-tree').setup({
     disable_netrw = false, -- conflicts with Fugitive's Gbrowse
     on_attach = on_attach,
+    sort_by = sort_by,
     view = {
         width = { min = 43, max = 55 },
         number = true,
