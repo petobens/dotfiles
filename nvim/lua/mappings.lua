@@ -129,6 +129,8 @@ u.keymap(
 ) -- don't jump to first match with * and #
 u.keymap('n', '#', '#``', { remap = true })
 u.keymap('n', '<Leader>ws', '/<><Left>', { silent = false, remap = true })
+u.keymap('n', '[m', '[mzz')
+u.keymap('n', ']m', ']mzz')
 
 -- Folds
 u.keymap('n', '<Leader>zf', 'zMzvzz') -- zoom/fold focus
