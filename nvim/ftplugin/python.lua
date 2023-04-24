@@ -38,9 +38,21 @@ end
 
 local run_toggleterm = function()
     vim.cmd('silent noautocmd update')
+
+    -- If we have an ipython terminal open don't run `python` cmd but rather `run`
+    local cmd = 'python'
+    local ttt = require('toggleterm.terminal')
+    local term_info = ttt.get(1)
+    if term_info ~= nil and term_info.cmd ~= nil then
+        if term_info.cmd == 'ipython' then
+            cmd = '\\%run'
+        end
+    end
+
     vim.cmd(
         string.format(
-            'TermExec cmd="python %s"',
+            'TermExec cmd="%s %s"',
+            cmd,
             vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
         )
     )
@@ -51,7 +63,8 @@ local function run_ipython(mode)
     local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
 
     local ttt = require('toggleterm.terminal')
-    local is_open = ttt.get(1) ~= nil and ttt.get(1):is_open() or false
+    local term_info = ttt.get(1)
+    local is_open = term_info ~= nil and term_info:is_open() or false
     if not is_open then
         local ipython = ttt.Terminal:new({
             cmd = 'ipython',
@@ -60,6 +73,12 @@ local function run_ipython(mode)
         ipython:toggle()
         vim.cmd('wincmd p')
         vim.cmd('stopinsert')
+    else
+        if term_info ~= nil and term_info.cmd ~= 'ipython' then
+            -- Switch to an ipython console if we are not already in one
+            vim.cmd('TermExec cmd="ipython"')
+            term_info.cmd = 'ipython'
+        end
     end
 
     if mode == 'open' then
@@ -134,14 +153,14 @@ local list_breakpoints = function(local_buffer)
 end
 
 -- Mappings
----- Running
+---- Background running
 u.keymap({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
-u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F6>', function()
     run_tmux_pane(true)
 end, { buffer = true })
----- IPython
+---- Interactive running
+u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
 u.keymap('n', '<Leader>oi', function()
     run_ipython('open')
 end, { buffer = true })
