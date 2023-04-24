@@ -58,11 +58,12 @@ local function run_ipython(mode)
             hidden = false,
         })
         ipython:toggle()
+        vim.cmd('wincmd p')
+        vim.cmd('stopinsert')
     end
 
     if mode == 'open' then
-        vim.cmd('wincmd p')
-        vim.cmd('stopinsert')
+        return
     elseif mode == 'module' then
         vim.cmd(string.format('TermExec cmd="\\%%run %s"', fname))
     elseif mode == 'line' then
