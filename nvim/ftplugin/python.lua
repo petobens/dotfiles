@@ -88,6 +88,8 @@ local function run_ipython(mode)
     elseif mode == 'line' then
         vim.cmd('ToggleTermSendCurrentLine')
     elseif mode == 'selection' then
+        -- FIXME: Previous line is sent
+        -- See https://github.com/akinsho/toggleterm.nvim/issues/415
         vim.cmd('ToggleTermSendVisualLines')
     elseif mode == 'reset' then
         vim.cmd('TermExec cmd="\\%reset -f"')
@@ -170,9 +172,10 @@ end, { buffer = true })
 u.keymap('n', '<Leader>rl', function()
     run_ipython('line')
 end, { buffer = true })
-u.keymap('v', '<Leader>rv', function()
+u.keymap('v', '<Leader>ri', function()
     run_ipython('selection')
 end, { buffer = true })
+u.keymap('v', '<Leader>rv', ':ToggleTermSendVisualLines<CR>', { buffer = true })
 u.keymap('n', '<Leader>tr', function()
     run_ipython('reset')
 end, { buffer = true })
