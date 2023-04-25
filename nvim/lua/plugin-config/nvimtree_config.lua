@@ -31,7 +31,7 @@ local function cd_find_file()
         tree_api.change_root_to_node()
         node_api.navigate.sibling.first()
     end
-    tree_api.find_file(node.name)
+    tree_api.find_file({ buf = find_file_opts.buf })
 end
 
 local function cd_or_open()
