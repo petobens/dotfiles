@@ -46,6 +46,17 @@ local function branch_with_remote()
     return branch_icon .. ' ' .. branch_name
 end
 
+local function pyvenv()
+    local venv_name = require('venv-selector').get_active_venv()
+    if venv_name ~= nil and vim.bo.filetype == 'python' then
+        venv_name = '  '
+            .. string.gsub(venv_name, '.*/pypoetry/virtualenvs/', ''):sub(1, 25)
+    else
+        venv_name = ''
+    end
+    return venv_name
+end
+
 _G.LualineConfig.trailing_last = ''
 local function trailing_whitespace()
     local space = vim.fn.search([[\s\+$]], 'nwc')
@@ -177,6 +188,11 @@ require('lualine').setup({
                 'aerial',
                 depth = -1,
                 colored = false,
+                component_separator = { left = '', right = '' },
+                cond = conds.hide_winwidth_leq_80,
+            },
+            {
+                pyvenv,
                 component_separator = { left = '', right = '' },
                 cond = conds.hide_winwidth_leq_80,
             },

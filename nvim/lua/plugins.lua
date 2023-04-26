@@ -192,6 +192,14 @@ local plugins = {
         ft = { 'tex', 'bib' },
     },
 
+    -- Python
+    {
+        'linux-cultist/venv-selector.nvim',
+        config = function()
+            require('plugin-config.venv_selector_config')
+        end,
+    },
+
     -- Runners and terminal
     {
         'stevearc/overseer.nvim',
