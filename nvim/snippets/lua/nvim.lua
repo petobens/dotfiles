@@ -96,4 +96,18 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'km', dscr = 'Keymap' },
+        fmta(
+            [[
+                u.keymap('<>', '<>', <>)
+            ]],
+            {
+                i(1, 'n'),
+                i(2),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
 }, {}
