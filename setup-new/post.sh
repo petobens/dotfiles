@@ -32,6 +32,7 @@ else
 fi
 if type "poetry" > /dev/null 2>&1; then
     poetry completions bash | sudo tee "$base_pkg_dir/share/bash-completion/completions/poetry"
+    poetry config virtualenvs.prefer-active-python true
 fi
 
 # Git access tokens and (go)pass settings
