@@ -7,7 +7,6 @@ local conf = require('telescope.config').values
 local finders = require('telescope.finders')
 local from_entry = require('telescope.from_entry')
 local layout_strategies = require('telescope.pickers.layout_strategies')
-local make_entry = require('telescope.make_entry')
 local Path = require('plenary.path')
 local pickers = require('telescope.pickers')
 local previewers = require('telescope.previewers')
@@ -86,8 +85,14 @@ function _G.TelescopeConfig.find_dirs(opts)
     if opts.cwd == nil then
         opts.cwd = utils.buffer_dir()
     end
-    -- TODO: change dir icon
-    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+    opts.entry_maker = function(entry)
+        return {
+            value = entry,
+            display = ' ' .. entry,
+            ordinal = entry,
+            path = opts.cwd .. '/' .. entry,
+        }
+    end
     pickers
         .new(opts, {
             prompt_title = 'Find Dirs',
@@ -121,8 +126,13 @@ end
 
 function _G.TelescopeConfig.parent_dirs(opts)
     opts = opts or {}
-    -- TODO: change dir icon
-    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+    opts.entry_maker = function(entry)
+        return {
+            value = entry,
+            display = ' ' .. entry,
+            ordinal = entry,
+        }
+    end
 
     local cwd = opts.starting_dir
     if opts.starting_dir == nil then
@@ -155,8 +165,13 @@ end
 
 function _G.TelescopeConfig.bookmark_dirs(opts)
     opts = opts or {}
-    -- TODO: change dir icon
-    opts.entry_maker = opts.entry_maker or make_entry.gen_from_file(opts)
+    opts.entry_maker = function(entry)
+        return {
+            value = entry,
+            display = ' ' .. vim.fn.substitute(entry, '/home/pedro', '~', ''),
+            ordinal = entry,
+        }
+    end
     pickers
         .new(opts, {
             prompt_title = 'Directory Bookmarks',
