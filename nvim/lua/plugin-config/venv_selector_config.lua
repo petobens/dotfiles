@@ -9,6 +9,6 @@ vim.api.nvim_create_autocmd({ 'Filetype' }, {
     group = vim.api.nvim_create_augroup('pyvenv', { clear = true }),
     pattern = { 'python' },
     callback = function()
-        u.keymap('n', '<Leader>tv', ':VenvSelect<CR>', { buffer = true })
+        u.keymap('n', '<Leader>tv', _G.TelescopeConfig.poetry_venvs, { buffer = true })
     end,
 })

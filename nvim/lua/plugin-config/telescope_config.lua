@@ -202,6 +202,36 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
         :find()
 end
 
+function _G.TelescopeConfig.poetry_venvs(opts)
+    opts = opts or {}
+    opts.entry_maker = function(entry)
+        return {
+            value = vim.fn.substitute(entry, ' (Activated)$', '', ''),
+            display = ' ' .. entry,
+            ordinal = entry,
+        }
+    end
+    pickers
+        .new(opts, {
+            prompt_title = 'Poetry Virtual Envs',
+            finder = finders.new_oneshot_job(
+                { 'poetry', 'env', 'list', '--full-path' },
+                opts
+            ),
+            sorter = conf.file_sorter(opts),
+            previewer = tree_previewer,
+            attach_mappings = function(bufnr)
+                actions.select_default:replace(function()
+                    local entry = action_state.get_selected_entry()
+                    require('venv-selector.venv').set_venv_and_system_paths(entry)
+                    actions.close(bufnr)
+                end)
+                return true
+            end,
+        })
+        :find()
+end
+
 -- Helper (wrapper) functions
 function _G.TelescopeConfig.find_files_cwd(opts)
     local buffer_dir = utils.buffer_dir()
