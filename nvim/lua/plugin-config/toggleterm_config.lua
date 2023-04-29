@@ -18,15 +18,20 @@ require('toggleterm').setup({
     },
 })
 
--- Get into insert mode whenever we enter a terminal buffer
+-- Get into insert mode whenever we enter a terminal buffer and remove statuscolumn
+local term_acg = vim.api.nvim_create_augroup('TermAcg', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
-    group = vim.api.nvim_create_augroup('TermAcg', { clear = true }),
+    group = term_acg,
     pattern = { '*' },
     callback = function()
         if vim.bo.buftype == 'terminal' then
             vim.cmd('startinsert')
         end
     end,
+})
+vim.api.nvim_create_autocmd('TermOpen', {
+    group = term_acg,
+    command = 'setlocal statuscolumn=',
 })
 
 -- Mappings
