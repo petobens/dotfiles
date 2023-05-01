@@ -378,7 +378,13 @@ class GTKApp(ROLApp):
     def _build_cmd(self):
         if not self.is_dialog:
             cmd = self._raiseorlauch_cmd()
-            cmd += ['-e', f'"{self.screen.gdk_env}{self.cmd}"']
+            # Note: if change sccale for transmission-gtk everything looks huge
+            env_var = (
+                self.screen.gdk_env.replace('_SCALE=2', '_SCALE=1')
+                if self.cmd == 'transmission-gtk'
+                else self.screen.gdk_env
+            )
+            cmd += ['-e', f'"{env_var}{self.cmd}"']
         else:
             gtk_env = dict([i.split('=') for i in self.screen.gdk_env.split()])  # type: ignore
             self.cmd_args = {'env': {**os.environ, **gtk_env}}
