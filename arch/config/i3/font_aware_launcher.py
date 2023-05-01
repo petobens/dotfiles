@@ -60,6 +60,14 @@ APPS = {
             'dimensions': (150, 30),
         },
     },
+    'edge': {
+        'type': 'electron',
+        'args': {
+            'class_name': 'Microsoft-edge-dev',
+            'mark': 'edge-browser',
+            'post_cmd': True,
+        },
+    },
     'firefox': {'type': 'rol', 'args': {'class_name': 'firefox', 'mark': 'ffox'}},
     'globalprotect-vpn': {'type': 'qt', 'args': {'class_name': 'gpclient'}},
     'gnome-font': {'type': 'gtk', 'args': {'class_name': 'Gnome-font-viewer'}},

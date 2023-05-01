@@ -39,6 +39,11 @@ APPS = {
         'desc': 'Network Settings',
     },
     'Document Scanner': {'cmd': 'scanner', 'icon': 'org.gnome.SimpleScan'},
+    'Microsoft Edge': {
+        'cmd': 'edge',
+        'icon': 'microsoft-edge',
+        'desc': 'Microsoft Edge Web Browser',
+    },
     'Firefox': {'cmd': 'firefox', 'icon': 'firefox', 'desc': 'Web Browser'},
     'Fonts': {'cmd': 'gnome-font', 'icon': 'org.gnome.font-viewer'},
     'FreeOffice PlanMaker': {

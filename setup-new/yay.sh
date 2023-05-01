@@ -215,6 +215,7 @@ $yay_cmd brave-bin
 $yay_cmd connman-gtk
 $yay_cmd cups
 $yay_cmd cups-pdf
+$yay_cmd microsoft-edge-dev-bin
 $yay_cmd firefox
 $yay_cmd --mflags --skipinteg freeoffice
 $yay_cmd gcolor3
