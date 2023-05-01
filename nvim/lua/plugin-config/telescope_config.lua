@@ -129,7 +129,7 @@ function _G.TelescopeConfig.parent_dirs(opts)
     opts.entry_maker = function(entry)
         return {
             value = entry,
-            display = ' ' .. entry,
+            display = '󰉙 ' .. entry,
             ordinal = entry,
         }
     end
@@ -168,7 +168,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
     opts.entry_maker = function(entry)
         return {
             value = entry,
-            display = ' ' .. vim.fn.substitute(entry, '/home/pedro', '~', ''),
+            display = '󰚝 ' .. vim.fn.substitute(entry, '/home/pedro', '~', ''),
             ordinal = entry,
         }
     end
@@ -207,7 +207,7 @@ function _G.TelescopeConfig.poetry_venvs(opts)
     opts.entry_maker = function(entry)
         return {
             value = vim.fn.substitute(entry, ' (Activated)$', '', ''),
-            display = ' ' .. entry,
+            display = '󰆍 ' .. entry,
             ordinal = entry,
         }
     end
