@@ -50,7 +50,7 @@ $yay_cmd noto-fonts
 $yay_cmd noto-fonts-cjk
 $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
-$yay_cmd ttf-nerd-fonts-symbols-2048-em
+$yay_cmd ttf-nerd-fonts-symbols
 $yay_cmd ttf-ms-fonts
 yay -S --mflags --skipinteg --answerclean N --nodiffmenu freetype2-ultimate5 # manually resolve conflicts with freetype2
 
