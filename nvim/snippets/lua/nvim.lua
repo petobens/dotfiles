@@ -100,12 +100,13 @@ return {
         { trig = 'km', dscr = 'Keymap' },
         fmta(
             [[
-                u.keymap('<>', '<>', <>)
+                u.keymap('<>', '<>', <><>)
             ]],
             {
                 i(1, 'n'),
                 i(2),
                 i(3),
+                c(4, { sn(nil, { t(', {'), i(1), t('}') }), t('') }),
             }
         ),
         { condition = line_begin }
