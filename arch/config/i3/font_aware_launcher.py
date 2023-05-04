@@ -27,9 +27,9 @@ APPS = {
             'dimensions': (100, 30),
         },
     },
-    'browser': {
+    'brave': {
         'type': 'electron',
-        'args': {'class_name': 'Brave', 'mark': 'browser', 'post_cmd': True},
+        'args': {'class_name': 'Brave', 'mark': 'brave', 'post_cmd': True},
     },
     'calendar': {
         'type': 'electron',
@@ -64,7 +64,7 @@ APPS = {
         'type': 'electron',
         'args': {
             'class_name': 'Microsoft-edge-dev',
-            'mark': 'edge-browser',
+            'mark': 'edge',
             'post_cmd': True,
         },
     },

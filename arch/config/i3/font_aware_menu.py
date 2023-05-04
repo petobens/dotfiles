@@ -13,7 +13,7 @@ APPS = {
         'desc': 'Terminal',
     },
     'Brave': {
-        'cmd': 'browser',
+        'cmd': 'brave',
         'icon': 'brave',
         'desc': 'Web Browser',
     },
