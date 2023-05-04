@@ -213,6 +213,16 @@ local plugins = {
             require('plugin-config.toggleterm_config')
         end,
     },
+    {
+        'nvim-neotest/neotest',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-neotest/neotest-python',
+        },
+        config = function()
+            require('plugin-config.neotest_config')
+        end,
+    },
 
     -- Utilities
     { 'gioele/vim-autoswap' },
