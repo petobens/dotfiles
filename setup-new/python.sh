@@ -24,7 +24,6 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd scikit-learn
     $pip_install_cmd scipy
     if [ "$OSTYPE" == 'linux-gnu' ]; then
-        $pip_install_cmd ueberzug
         $pip_install_cmd Xlib
     fi
 fi
