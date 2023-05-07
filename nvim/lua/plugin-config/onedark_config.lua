@@ -307,6 +307,20 @@ onedarkpro.setup({
         LeapMatch = { fg = p.black, bg = p.purple, style = 'bold' },
         LeapLabelPrimary = { fg = p.black, bg = p.purple, style = 'bold' },
 
+        ---- Neotest
+        NeotestAdapterName = { fg = p.purple },
+        NeotestDir = { fg = p.light_blue },
+        NeotestFile = { fg = p.white },
+        NeotestNamespace = { fg = p.yellow },
+        NeotestExpandMarker = { fg = p.gray },
+        NeotestMarked = { fg = p.fg, bg = p.cursor_grey, style = 'bold' },
+        NeotestFocused = { bg = p.visual_grey },
+        NeotestPassed = { fg = p.green },
+        NeotestFailed = { fg = p.red },
+        NeotestRunning = { fg = p.orange },
+        NeotestSkipped = { fg = p.cyan },
+        NeotestUnknown = { fg = p.cyan },
+
         ---- NvimTree
         NvimTreeFolderIcon = { fg = p.light_blue },
         NvimTreeFolderName = { fg = p.light_blue },
