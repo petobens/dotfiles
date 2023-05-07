@@ -18,6 +18,7 @@ local _parse_qf = function(qf_title, active_window_id)
             table.insert(new_qf, v)
         end
     end
+    table.remove(new_qf) -- remove last element since its the "Process Exited" message
     if next(new_qf) ~= nil then
         vim.fn.setqflist({}, ' ', { items = new_qf, title = qf_title })
         vim.cmd('copen')
