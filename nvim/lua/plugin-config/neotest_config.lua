@@ -9,7 +9,7 @@ neotest.setup({
         overseer = require('neotest.consumers.overseer'),
     },
     discovery = {
-        enabled = false,
+        enabled = true,
     },
     diagnostic = {
         enabled = true,
@@ -35,6 +35,7 @@ neotest.setup({
         follow = true,
         open = 'topleft vsplit | wincmd H | vertical resize 40',
         mappings = {
+            attach = 'a',
             expand = { 'zo', 'zc' }, -- also collapse
             expand_all = 'zr',
             jumpto = { 'CR', '<C-]>' },
@@ -99,6 +100,9 @@ u.keymap('n', '<Leader>ns', function()
 end)
 u.keymap('n', '<Leader>nc', function()
     neotest.run.stop()
+end)
+u.keymap('n', '<Leader>na', function()
+    neotest.run.attach()
 end)
 u.keymap('n', '<Leader>no', function()
     neotest.output.open({ short = true })
