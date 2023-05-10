@@ -37,7 +37,7 @@ neotest.setup({
             attach = 'a',
             expand = { 'zo', 'zc' }, -- also collapse
             expand_all = 'zr',
-            jumpto = { 'CR', '<C-]>' },
+            jumpto = { '<CR>', '<C-]>' },
             short = 'o', -- open with short output
             run = 'r',
             run_marked = 'R',
