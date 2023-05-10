@@ -13,16 +13,12 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd numpy
     $pip_install_cmd pandas
     $pip_install_cmd git+https://github.com/pdbpp/pdbpp
-    $pip_install_cmd pillow
     $pip_install_cmd pipx
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
         $pip_install_cmd -U msgpack
     fi
-    $pip_install_cmd requests
     $pip_install_cmd Send2Trash
-    $pip_install_cmd scikit-learn
-    $pip_install_cmd scipy
     if [ "$OSTYPE" == 'linux-gnu' ]; then
         $pip_install_cmd Xlib
     fi
@@ -48,7 +44,6 @@ $pipx_install_cmd aws-mfa
 $pipx_install_cmd flake8
 $pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
 $pipx_install_cmd black
-$pipx_install_cmd httpie
 $pipx_install_cmd isort
 $pipx_install_cmd jupyter --include-deps
 $pipx_inject_cmd jupyter numpy pandas matplotlib
@@ -60,7 +55,6 @@ $pipx_install_cmd mypy
 if type "nvim" > /dev/null 2>&1; then
     $pipx_install_cmd neovim-remote
 fi
-$pipx_install_cmd pre-commit
 $pipx_install_cmd pgcli
 $pipx_install_cmd poetry
 $pipx_install_cmd pylint
