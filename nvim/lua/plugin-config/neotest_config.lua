@@ -28,7 +28,6 @@ neotest.setup({
         open = function()
             vim.cmd('copen')
             vim.cmd('wincmd p')
-            vim.cmd('stopinsert')
         end,
     },
     summary = {

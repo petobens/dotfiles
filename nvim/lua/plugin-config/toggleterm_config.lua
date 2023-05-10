@@ -24,7 +24,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = term_acg,
     pattern = { '*' },
     callback = function()
-        if vim.bo.buftype == 'terminal' then
+        if vim.startswith(vim.api.nvim_buf_get_name(0), 'term://') then
             vim.cmd('startinsert')
         end
     end,
