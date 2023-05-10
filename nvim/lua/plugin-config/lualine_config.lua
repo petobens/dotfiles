@@ -257,7 +257,7 @@ require('lualine').setup({
                     bg = onedark_colors.purple,
                 },
                 symbols = {
-                    [overseer.STATUS.RUNNING] = '省',
+                    [overseer.STATUS.RUNNING] = '󰜎',
                 },
                 status = { overseer.STATUS.RUNNING },
                 separator = { left = '', right = '' },
