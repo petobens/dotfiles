@@ -15,6 +15,7 @@ __pycache__/
 *.pkl
 .mypy_cache/
 /venv/
+.pytest_cache/
 .coverage
 .ipynb_checkpoints
 pip-wheel-metadata/
