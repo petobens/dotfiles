@@ -42,10 +42,13 @@ u.keymap('n', '<C-A-j>', '<C-W>2+')
 u.keymap('n', '<C-A-k>', '<C-W>2-')
 u.keymap('n', '<C-A-l>', '<C-W>2>')
 u.keymap('n', '<C-c>', '<C-W>c')
-u.keymap('n', '<C-h>', require('tmux').move_left)
-u.keymap('n', '<C-j>', require('tmux').move_down)
-u.keymap('n', '<C-k>', require('tmux').move_up)
-u.keymap('n', '<C-l>', require('tmux').move_right)
+local ok, tmux_plugin = pcall(require, 'tmux')
+if ok then
+    u.keymap('n', '<C-h>', tmux_plugin.move_left)
+    u.keymap('n', '<C-j>', tmux_plugin.move_down)
+    u.keymap('n', '<C-k>', tmux_plugin.move_up)
+    u.keymap('n', '<C-l>', tmux_plugin.move_right)
+end
 u.keymap('n', '<C-x>', '<C-W>xzz')
 u.keymap('n', '<Leader>hv', '<C-W>H<C-W>x') -- make horizantal vertical and viceversa
 u.keymap('n', '<Leader>vh', '<C-W>K')
