@@ -133,7 +133,8 @@ const qmarksMapKey = function (prefix, urls) {
 
 const qmarksUrls = {
     a: 'https://aws.amazon.com/console',
-    b: 'www.bing.com/chat',
+    b: 'https://bard.google.com',
+    B: 'www.bing.com/chat',
     c: 'www.utdt.edu/campusvirtual',
     d: 'https://drive.google.com/drive/u/0/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
     e: 'https://yts.am/browse-movies',
