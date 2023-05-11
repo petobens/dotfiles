@@ -80,7 +80,7 @@ u.keymap('n', 'k', 'gk')
 u.keymap('n', 'J', 'mzJ`z') -- Keep the cursor in place while joining lines
 u.keymap('n', 'q', function()
     if vim.api.nvim_win_get_config(0).zindex then
-        if require('neo-zoom').did_zoom()[1] then
+        if require('neo-zoom').is_neo_zoom_float() then
             vim.cmd('NeoZoomToggle')
         else
             vim.cmd('close')
