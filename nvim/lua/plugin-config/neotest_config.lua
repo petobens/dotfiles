@@ -75,27 +75,27 @@ neotest.setup({
     },
 })
 
+-- Helpers
+local function neotest_run(func, opts)
+    vim.cmd('silent noautocmd update')
+    vim.cmd('cclose')
+    vim.cmd('cd %:p:h')
+    func(opts)
+end
+
 -- Mappings
 local u = require('utils')
 u.keymap('n', '<Leader>nn', function()
-    vim.cmd('silent noautocmd update')
-    vim.cmd('cclose')
-    neotest.run.run() -- nearest to cursor
+    neotest_run(neotest.run.run)
 end)
 u.keymap('n', '<Leader>nl', function()
-    vim.cmd('silent noautocmd update')
-    vim.cmd('cclose')
-    neotest.run.run_last()
+    neotest_run(neotest.run.run_last)
 end)
 u.keymap('n', '<Leader>nf', function()
-    vim.cmd('silent noautocmd update')
-    vim.cmd('cclose')
-    neotest.run.run(vim.fn.expand('%'))
+    neotest_run(neotest.run.run, { vim.fn.expand('%') })
 end)
 u.keymap('n', '<Leader>ns', function()
-    vim.cmd('silent noautocmd update')
-    vim.cmd('cclose')
-    neotest.run.run({ suite = true })
+    neotest_run(neotest.run.run, { suite = true })
 end)
 u.keymap('n', '<Leader>nc', function()
     neotest.run.stop()
@@ -107,14 +107,7 @@ u.keymap('n', '<Leader>no', function()
     neotest.output.open({ short = true })
 end)
 u.keymap('n', '<Leader>nt', function()
-    neotest.summary.toggle()
-    ---@diagnostic disable-next-line: param-type-mismatch
-    -- FIXME: this focuses the neotest window but doesn't focus nearest test
-    -- https://github.com/nvim-neotest/neotest/discussions/197#discussioncomment-5697625
-    -- local win = vim.fn.bufwinid('Neotest Summary')
-    -- if win > -1 then
-    --     vim.api.nvim_set_current_win(win)
-    -- end
+    neotest_run(neotest.summary.toggle)
 end)
 -- Filetype-mappings
 local group = vim.api.nvim_create_augroup('NeotestConfig', {})
