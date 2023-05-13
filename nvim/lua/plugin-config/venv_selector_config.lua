@@ -4,6 +4,7 @@ local venv = require('venv-selector.venv')
 
 venv_selector.setup({
     search = false,
+    notify_user_on_activate = false,
 })
 
 _G.Venv = {}
