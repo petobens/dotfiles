@@ -10,7 +10,7 @@ vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
 -- Running
-local _parse_qf = function(qf_title, active_window_id)
+local function _parse_qf(task_metadata, cwd, active_window_id)
     local current_qf = vim.fn.getqflist()
     local new_qf = {}
     for _, v in pairs(current_qf) do
@@ -18,26 +18,53 @@ local _parse_qf = function(qf_title, active_window_id)
             table.insert(new_qf, v)
         end
     end
-    table.remove(new_qf) -- remove last element since its the "Process Exited" message
+
+    if task_metadata.name == 'run_python' then
+        -- Remove last element since its the "Process Exited" message
+        table.remove(new_qf)
+    end
+
+    if task_metadata.name == 'run_precommit' then
+        -- Fix file paths
+        for _, v in pairs(new_qf) do
+            local fn = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(v.bufnr), ':p:.')
+            for _, i in ipairs(task_metadata.project_files) do
+                if string.match(i, fn) then
+                    vim.cmd('badd ' .. i)
+                    v.bufnr = vim.fn.bufnr(i)
+                    break
+                end
+            end
+        end
+        vim.cmd('lcd ' .. cwd)
+    end
+
     if next(new_qf) ~= nil then
-        vim.fn.setqflist({}, ' ', { items = new_qf, title = qf_title })
+        vim.fn.setqflist({}, ' ', { items = new_qf, title = task_metadata.run_cmd })
         vim.cmd('copen')
         vim.fn.win_gotoid(active_window_id)
     end
 end
 
-local run_overseer = function()
+local function run_overseer(task_name)
+    local cwd = vim.fn.getcwd()
     local current_win_id = vim.fn.win_getid()
     vim.cmd('silent noautocmd update')
-    overseer.run_template({ name = 'run_python' }, function(task)
+
+    if task_name == 'run_precommit' then
+        vim.cmd('lcd %:p:h')
+    end
+
+    overseer.run_template({ name = string.format('%s', task_name) }, function(task)
         vim.cmd('cclose')
         task:subscribe('on_complete', function()
-            _parse_qf(task.metadata.run_cmd, current_win_id)
+            task.metadata.name = task_name
+            _parse_qf(task.metadata, cwd, current_win_id)
         end)
     end)
 end
 
-local run_toggleterm = function()
+local function run_toggleterm()
     vim.cmd('silent noautocmd update')
 
     -- If we have an ipython terminal open don't run `python` cmd but rather `run`
@@ -96,7 +123,7 @@ local function run_ipython(mode)
     end
 end
 
-local run_tmux_pane = function(debug_mode)
+local function run_tmux_pane(debug_mode)
     debug_mode = debug_mode or false
 
     if vim.env.TMUX == nil then
@@ -115,7 +142,7 @@ local run_tmux_pane = function(debug_mode)
 end
 
 -- Debugging
-local add_breakpoint = function()
+local function add_breakpoint()
     local save_cursor = vim.fn.getcurpos()
     local current_line = vim.fn.line('.')
     local breakpoint_line = current_line - 1
@@ -126,14 +153,14 @@ local add_breakpoint = function()
     vim.fn.setpos('.', save_cursor)
 end
 
-local remove_breakpoints = function()
+local function remove_breakpoints()
     local save_cursor = vim.fn.getcurpos()
     vim.cmd('g/breakpoint()/d')
     vim.cmd('silent noautocmd update')
     vim.fn.setpos('.', save_cursor)
 end
 
-local list_breakpoints = function(local_buffer)
+local function list_breakpoints(local_buffer)
     local opts = {
         use_regex = true,
         search = 'breakpoint()',
@@ -156,7 +183,9 @@ end
 
 -- Mappings
 ---- Background running
-u.keymap({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
+u.keymap({ 'n', 'i' }, '<F7>', function()
+    run_overseer('run_python')
+end, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F6>', function()
     run_tmux_pane(true)
@@ -186,4 +215,8 @@ u.keymap('n', '<Leader>lb', function()
 end, { buffer = true })
 u.keymap('n', '<Leader>lB', function()
     list_breakpoints(false)
+end, { buffer = true })
+-- Pre-commit
+u.keymap('n', '<Leader>rh', function()
+    run_overseer('run_precommit')
 end, { buffer = true })
