@@ -133,8 +133,8 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
         callback = function()
             u.keymap('n', 'q', function()
                 pcall(vim.api.nvim_win_close, 0, true)
+                vim.cmd('wincmd p')
             end, { buffer = true })
-            vim.cmd('wincmd p')
         end,
     })
 end
