@@ -81,9 +81,7 @@ vim.api.nvim_create_autocmd('FileType', {
     group = group,
     pattern = 'neotest-output-panel',
     callback = function()
-        vim.cmd('resize 20')
-        vim.cmd('set winfixheight')
-        vim.cmd('normal! G')
+        vim.cmd('resize 15 | set winfixheight | normal! G')
     end,
 })
 
@@ -114,6 +112,7 @@ u.keymap('n', '<Leader>nc', function()
 end)
 u.keymap('n', '<Leader>na', function()
     neotest.run.attach()
+    vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight | startinsert')
 end)
 u.keymap('n', '<Leader>no', function()
     neotest.output.open({ short = true })
