@@ -587,7 +587,7 @@ telescope.setup({
                 ['<C-y>'] = custom_actions.yank,
                 ['<C-t>'] = custom_actions.entry_find_files,
                 ['<A-c>'] = custom_actions.entry_find_dir,
-                ['<A-f>'] = custom_actions.open_nvimtree,
+                ['<A-f>'] = stopinsert(custom_actions.open_nvimtree),
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
                 ['<A-r>'] = actions.to_fuzzy_refine,
