@@ -338,6 +338,12 @@ onedarkpro.setup({
         NvimTreeExecFile = { fg = p.red },
         NvimTreeSpecialFile = { fg = p.yellow, style = 'bold' },
 
+        ---- Overseer
+        OverseerTask = { fg = p.purple },
+        OverseerSUCCESS = { fg = p.green },
+        OverseerFAILURE = { fg = p.red },
+        OverseerCANCELED = { fg = p.orange },
+
         ---- Telescope
         TelescopeNormal = { link = 'Normal' },
         TelescopeSelection = { fg = p.fg, bg = p.cursor_grey, style = 'bold' },
