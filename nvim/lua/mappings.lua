@@ -179,12 +179,9 @@ u.keymap(
     ':e ' .. vim.fn.expand('$HOME') .. '/Desktop/',
     { silent = false }
 )
-u.keymap(
-    'n',
-    '<Leader>sb',
-    ':e ' .. vim.fn.expand('%:p:h') .. '/scratch/',
-    { silent = false }
-)
+u.keymap('n', '<Leader>sb', function()
+    vim.api.nvim_input(':e ' .. vim.fn.expand('%:p:h') .. '/scratch/')
+end, { silent = false })
 u.keymap('n', '<Leader>eb', '<Cmd>e $HOME/.bashrc<CR>')
 u.keymap(
     'n',
