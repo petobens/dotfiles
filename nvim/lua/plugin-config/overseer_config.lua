@@ -18,9 +18,11 @@ overseer.setup({
             ['zc'] = 'DecreaseDetail',
             ['zr'] = 'IncreaseDetail',
             ['zm'] = 'DecreaseDetail',
-            ['<A-v>'] = 'TogglePreview',
             ['[c'] = 'PrevTask',
             [']c'] = 'NextTask',
+            ['<A-v>'] = 'TogglePreview',
+            ['<A-j>'] = 'ScrollOutputDown',
+            ['<A-k>'] = 'ScrollOutputUp',
         },
     },
 })
