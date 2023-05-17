@@ -457,6 +457,21 @@ local custom_actions = transform_mod({
             results_title = dir,
         })
     end,
+    -- Same as above but don't gitignore
+    entry_find_files_no_ignore = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        local p = Path:new(from_entry.path(entry))
+        if p:is_file() then
+            p = p:parent()
+        end
+        local dir = tostring(p)
+        builtin.find_files({
+            cwd = dir,
+            results_title = dir,
+            no_ignore = true,
+        })
+    end,
     -- Show containing dir of entry
     entry_find_dir = function(prompt_bufnr)
         actions.close(prompt_bufnr)
@@ -586,6 +601,7 @@ telescope.setup({
                     + actions.move_selection_previous,
                 ['<C-y>'] = custom_actions.yank,
                 ['<C-t>'] = custom_actions.entry_find_files,
+                ['<A-t>'] = custom_actions.entry_find_files_no_ignore,
                 ['<A-c>'] = custom_actions.entry_find_dir,
                 ['<A-f>'] = stopinsert(custom_actions.open_nvimtree),
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
@@ -610,6 +626,7 @@ telescope.setup({
                     + actions.move_selection_previous,
                 ['<C-y>'] = custom_actions.yank,
                 ['<C-t>'] = custom_actions.entry_find_files,
+                ['<A-t>'] = custom_actions.entry_find_files_no_ignore,
                 ['<A-c>'] = custom_actions.entry_find_dir,
                 ['<A-f>'] = custom_actions.open_nvimtree,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
@@ -760,9 +777,9 @@ u.keymap('n', '<Leader>ig', igrep)
 u.keymap('n', '<Leader>iG', function()
     igrep(nil, nil, { '--no-ignore-vcs' })
 end)
+u.keymap('n', '<A-g>', igrep)
 u.keymap('n', '<Leader>ir', igrep_git_root)
 u.keymap('n', '<Leader>io', igrep_open_buffers)
-u.keymap('n', '<A-g>', igrep)
 u.keymap('n', '<Leader>rg', rgrep)
 u.keymap('n', '<Leader>rG', function()
     rgrep({ '--no-ignore-vcs' })
