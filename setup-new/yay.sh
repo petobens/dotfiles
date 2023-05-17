@@ -78,6 +78,7 @@ fi
 # Alacritty, kitty, neovim and tmux and more bash
 $yay_cmd alacritty
 $yay_cmd kitty
+$yay_cmd lua51-lpeg # neovim dependency
 $yay_cmd neovim-git
 $yay_cmd tmux
 
