@@ -122,6 +122,12 @@ local plugins = {
             require('plugin-config.treesitter_config')
         end,
     },
+    {
+        'm-demare/hlargs.nvim',
+        config = function()
+            require('plugin-config.hlargs_config')
+        end,
+    },
 
     -- Telescope and file/code exploring
     {
