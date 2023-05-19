@@ -5,6 +5,11 @@ local overseer = require('overseer')
 
 _G.LualineConfig = {}
 
+-- Helpers
+local function is_loclist()
+    return vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0
+end
+
 -- Custom segments/components
 local function gitsigns_diff_source()
     ---@diagnostic disable-next-line: undefined-field
@@ -79,7 +84,29 @@ local conds = {
     end,
 }
 
--- Custom extensions
+-- Custom filetype extensions
+local quickfix_ext = {
+    sections = {
+        lualine_a = {
+            {
+                function()
+                    return is_loclist() and 'Location' or 'Quickfix'
+                end,
+            },
+        },
+        lualine_b = {
+            function()
+                if is_loclist() then
+                    return vim.fn.getloclist(0, { title = 0 }).title
+                end
+                return vim.fn.getqflist({ title = 0 }).title
+            end,
+        },
+        lualine_z = { 'location' },
+    },
+    filetypes = { 'qf' },
+}
+
 local nvimtree_ext = {
     sections = {
         lualine_a = {
@@ -340,7 +367,7 @@ require('lualine').setup({
     },
     extensions = {
         'aerial',
-        'quickfix',
+        quickfix_ext,
         fugitive_ext,
         nvimtree_ext,
         overseer_ext,
