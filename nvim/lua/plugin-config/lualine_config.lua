@@ -236,6 +236,9 @@ require('lualine').setup({
                 depth = -1,
                 colored = false,
                 component_separator = { left = '', right = '' },
+                fmt = function(str)
+                    return str:sub(1, 40)
+                end,
                 cond = conds.hide_winwidth_leq_80,
             },
             {
