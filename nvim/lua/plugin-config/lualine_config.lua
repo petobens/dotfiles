@@ -66,6 +66,19 @@ local function trailing_whitespace()
     return _G.LualineConfig.trailing_last
 end
 
+-- Resize conditions
+local conds = {
+    hide_winwidth_leq_80 = function()
+        return vim.fn.winwidth(0) > 80
+    end,
+    hide_winwidth_leq_60 = function()
+        return vim.fn.winwidth(0) > 60
+    end,
+    hide_winwidth_leq_40 = function()
+        return vim.fn.winwidth(0) > 40
+    end,
+}
+
 -- Custom extensions
 local nvimtree_ext = {
     sections = {
@@ -97,19 +110,26 @@ local fugitive_ext = {
     filetypes = { 'fugitive' },
 }
 
--- Resize conditions
-local conds = {
-    hide_winwidth_leq_80 = function()
-        return vim.fn.winwidth(0) > 80
-    end,
-    hide_winwidth_leq_60 = function()
-        return vim.fn.winwidth(0) > 60
-    end,
-    hide_winwidth_leq_40 = function()
-        return vim.fn.winwidth(0) > 40
-    end,
+local overseer_ext = {
+    sections = {
+        lualine_a = {
+            function()
+                return 'Overseer Tasks'
+            end,
+        },
+        lualine_z = {
+            {
+                'overseer',
+                label = '',
+                colored = false,
+                cond = conds.hide_winwidth_leq_60,
+            },
+        },
+    },
+    filetypes = { 'OverseerList' },
 }
 
+-- Setup
 require('lualine').setup({
     options = {
         theme = 'onedarkish',
@@ -323,6 +343,7 @@ require('lualine').setup({
         'quickfix',
         fugitive_ext,
         nvimtree_ext,
+        overseer_ext,
     },
 })
 
