@@ -64,6 +64,7 @@ if type "i3" > /dev/null 2>&1; then
     $pipx_install_cmd raiseorlaunch
 fi
 $pipx_install_cmd ranger-fm
+$pipx_install_cmd ruff
 $pipx_install_cmd sqlparse
 $pipx_install_cmd trash-cli
 $pipx_install_cmd git+https://github.com/will8211/unimatrix

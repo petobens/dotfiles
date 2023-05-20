@@ -93,6 +93,10 @@ if type "python" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/python/black.toml" "$HOME/.config/.black.toml"
         echo Created .black.toml symlink
     fi
+    if type "ruff" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/python/ruff" "$HOME/.config/ruff"
+        echo Created .config/ruff folder symlink
+    fi
 fi
 if type "ipython" > /dev/null 2>&1; then
     mkdir -p "$HOME/.ipython/profile_default/startup"
