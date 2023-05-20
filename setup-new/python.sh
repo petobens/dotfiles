@@ -10,6 +10,7 @@ if type "pip3" > /dev/null 2>&1; then
         $pip_install_cmd git+https://github.com/altdesktop/i3ipc-python
     fi
     $pip_install_cmd matplotlib
+    $pip_install_cmd matplotlib-backend-kitty
     $pip_install_cmd numpy
     $pip_install_cmd pandas
     $pip_install_cmd Pillow # needed for gtk dialogs
@@ -49,7 +50,7 @@ $pipx_install_cmd isort
 $pipx_install_cmd jupyter --include-deps
 $pipx_inject_cmd jupyter numpy pandas matplotlib
 $pipx_install_cmd ipython
-$pipx_inject_cmd ipython numpy pandas matplotlib black
+$pipx_inject_cmd ipython numpy pandas matplotlib matplotlib-backend-kitty black
 $pipx_install_cmd litecli
 $pipx_install_cmd mycli
 $pipx_install_cmd mypy

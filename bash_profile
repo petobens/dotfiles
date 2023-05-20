@@ -124,6 +124,10 @@ if type "upower" > /dev/null 2>&1; then
     UPOWER_ADAPTER="$(upower -e | grep line | cut -d '_' -f3)"
     export UPOWER_ADAPTER
 fi
+if type "kitty" > /dev/null 2>&1; then
+    # Control matplotlib kitty backend figure resize manually
+    export MPLBACKEND_KITTY_SIZING=manual
+fi
 
 # }}}
 # Xorg (and linux specific) {{{
