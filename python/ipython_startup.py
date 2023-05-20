@@ -22,7 +22,7 @@ def vi_movement_mode(event):
     event.cli.key_processor.feed(KeyPress(Keys.Escape))
 
 
-# Insert mode mappings
+# Insert mode mappings (note that we also define some keybinds in startup file)
 insert_mode = vi_insert_mode | emacs_insert_mode
 r.add_binding('j', 'j', filter=vi_insert_mode, eager=True)(
     lambda ev: vi_movement_mode(ev)
