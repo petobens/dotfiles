@@ -25,7 +25,9 @@ local sources = {
             '--config=' .. vim.env.HOME .. '/.config/.black.toml',
         },
     }),
-    diagnostics.pylint, --pylint searches for the correct config file by default
+    --pylint and mypy search for the correct config file by default
+    diagnostics.pylint,
+    diagnostics.mypy,
 }
 
 null_ls.setup({

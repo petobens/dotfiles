@@ -112,6 +112,7 @@ lspconfig.lua_ls.setup({
 lspconfig.pyright.setup({
     on_attach = on_attach,
     handlers = {
+        -- Don't use pyright as a linter (we use pylint and mypy instead)
         ['textDocument/publishDiagnostics'] = function() end,
     },
     settings = {
