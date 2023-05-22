@@ -220,3 +220,15 @@ end, { buffer = true })
 u.keymap('n', '<Leader>rh', function()
     run_overseer('run_precommit')
 end, { buffer = true })
+
+-- Autocommand mappings
+vim.api.nvim_create_autocmd({ 'Filetype' }, {
+    group = vim.api.nvim_create_augroup('qf_bp', { clear = true }),
+    pattern = { 'qf' },
+    callback = function()
+        u.keymap('n', '<Leader>rB', function()
+            vim.cmd([[cdo g/breakpoint()/d|silent noautocmd update]])
+            vim.cmd('cclose')
+        end, { buffer = true })
+    end,
+})
