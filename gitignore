@@ -11,11 +11,12 @@ scratch/
 
 # Python
 __pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
 *.pyc
 *.pkl
-.mypy_cache/
 /venv/
-.pytest_cache/
 .coverage
 .ipynb_checkpoints
 pip-wheel-metadata/
