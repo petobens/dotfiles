@@ -534,6 +534,11 @@ local custom_actions = transform_mod({
         actions.close(prompt_bufnr)
         vim.cmd('bwipeout ' .. action_state.get_selected_entry().value)
     end,
+    -- Send selection to quickfix and open
+    send2qf = function(prompt_bufnr)
+        actions.send_to_qflist(prompt_bufnr)
+        actions.open_qflist(prompt_bufnr)
+    end,
 })
 -- Store custom actions to be used elsewhere
 _G.TelescopeConfig.custom_actions = custom_actions
@@ -607,7 +612,7 @@ telescope.setup({
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
                 ['<A-r>'] = actions.to_fuzzy_refine,
-                ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
+                ['<C-q>'] = stopinsert(custom_actions.send2qf),
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
                 ['<A-u>'] = custom_actions.undo_picker,
                 ['<C-/>'] = 'which_key',
