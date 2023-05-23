@@ -13,9 +13,9 @@ end
 ---Setup icons modified status and properties for buffer
 function Buffer:get_props()
     self.file = vim.api.nvim_buf_get_name(self.bufnr)
-    self.buftype = vim.api.nvim_buf_get_option(self.bufnr, 'buftype')
-    self.filetype = vim.api.nvim_buf_get_option(self.bufnr, 'filetype')
-    self.modified = vim.api.nvim_buf_get_option(self.bufnr, 'modified')
+    self.buftype = vim.bo[self.bufnr].buftype
+    self.filetype = vim.bo[self.bufnr].filetype
+    self.modified = vim.bo[self.bufnr].modified
 
     self.icon = ''
     if self.options.icons_enabled then

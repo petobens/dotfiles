@@ -26,7 +26,7 @@ local default_options = {
     filetype_names = {
         lazy = 'Lazy',
     },
-    filetype_ignore = '\\c\\vtelescope|nvimtree|aerial|help|lazy|neotest|overseerlist',
+    filetype_ignore = '\\c\\vtelescope|nvimtree|aerial|help|lazy|neotest|overseerlist|qf',
 }
 
 local function unique_tail_format(buffers)
@@ -65,8 +65,8 @@ function M:update_status()
     for b = 1, vim.fn.bufnr('$') do
         if
             vim.fn.buflisted(b) ~= 0
-            and vim.api.nvim_buf_get_option(b, 'buftype') ~= 'quickfix'
-            and vim.api.nvim_buf_get_option(b, 'filetype') ~= 'fugitive'
+            and vim.bo[b].buftype ~= 'quickfix'
+            and vim.bo[b].filetype ~= 'fugitive'
         then
             buffers[#buffers + 1] = Buffer({
                 bufnr = b,
@@ -103,8 +103,7 @@ function M:update_status()
             else
                 buffer.prev_visible = false
             end
-            buffer.prev_modified =
-                vim.api.nvim_buf_get_option(prev_buffer.bufnr, 'modified')
+            buffer.prev_modified = vim.bo[prev_buffer.bufnr].modified
         end
     end
     if buffers[current + 1] then
