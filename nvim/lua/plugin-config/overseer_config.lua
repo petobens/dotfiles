@@ -27,12 +27,21 @@ overseer.setup({
     },
 })
 
--- Mappings
-u.keymap('n', '<Leader>os', '<Cmd>OverseerToggle bottom<CR>')
-u.keymap('n', '<Leader>ot', function()
+-- Helpers
+local function overseer_last_task(attach)
     vim.cmd('OverseerQuickAction open hsplit')
     vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
+    if attach then
+        vim.cmd('startinsert')
+    end
     vim.cmd([[nmap <silent> q :close<CR>]])
+end
+
+-- Mappings
+u.keymap('n', '<Leader>os', '<Cmd>OverseerToggle bottom<CR>')
+u.keymap('n', '<Leader>ot', overseer_last_task)
+u.keymap('n', '<Leader>oa', function()
+    overseer_last_task(true)
 end)
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'OverseerList',
