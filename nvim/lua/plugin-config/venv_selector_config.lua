@@ -41,18 +41,23 @@ local function auto_poetry_venv()
         local poetry_path = vim.fn.trim(vim.fn.system('poetry env info --path'))
         if vim.v.shell_error ~= 1 then
             vim.b.poetry_venv = poetry_path
-            -- Also store (cache) all files in the project dir
+            -- Also store (cache) project root and all py files in the project
+            local project_root = vim.fn.fnamemodify(
+                vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
+                ':p:h'
+            )
             local py_files = vim.fs.find(function(name)
                 return name:match('.*%.py$')
             end, {
                 limit = math.huge,
                 type = 'file',
-                path = vim.fn.fnamemodify(
-                    vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
-                    ':p:h'
-                ),
+                path = project_root,
             })
-            _G.Venv.active_venv = { venv_path = poetry_path, project_files = py_files }
+            _G.Venv.active_venv = {
+                project_root = project_root,
+                project_files = py_files,
+                venv_path = poetry_path,
+            }
         else
             vim.b.poetry_venv = 'none'
         end

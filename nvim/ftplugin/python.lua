@@ -173,6 +173,9 @@ local function list_breakpoints(local_buffer)
         })
     else
         local buffer_dir = utils.buffer_dir()
+        if next(_G.Venv.active_venv) ~= nil then
+            buffer_dir = _G.Venv.active_venv.project_root
+        end
         opts = vim.tbl_extend('keep', opts, {
             cwd = buffer_dir,
             results_title = buffer_dir,
