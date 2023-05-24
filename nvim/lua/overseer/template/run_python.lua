@@ -1,13 +1,14 @@
 PYTHON_EFM = ''
+    -- See https://github.com/python-mode/python-mode/blob/149ccf7c5be0753f5e9872c023ab2eeec3442105/autoload/pymode/run.vim#L4
     .. [[%E\ \ File\ \"%f\"\\\,\ line\ %l\\\,%m%\\C,]]
     .. [[%E\ \ File\ \"%f\"\\\,\ line\ %l%\\C,]]
     .. [[%C%p^,]]
     .. [[%-C\ \ %.%#,]]
     .. [[%-C\ \ \ \ %.%#,]]
     .. [[%Z%\\@=%m,]]
-    .. [[%-GTraceback%.%#,]]
-    .. [[%-GDuring\ handling%.%#,]]
-    .. [[%-GThe\ above\ exception%.%#,]]
+    .. [[%+GTraceback%.%#,]]
+    .. [[%+GDuring\ handling%.%#,]]
+    .. [[%+GThe\ above\ exception%.%#,]]
     .. [[%f:%l:\ %.%#%tarning:%m,]]
 
 return {
