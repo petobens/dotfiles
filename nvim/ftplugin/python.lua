@@ -42,6 +42,11 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
     if next(new_qf) ~= nil then
         vim.fn.setqflist({}, ' ', { items = new_qf, title = task_metadata.run_cmd })
         vim.cmd('copen')
+        -- Remove the '||' (pipes from output) -> don't use this since
+        -- highlight is not good and a file is actually saved
+        -- vim.cmd('set modifiable | set hidden | file qf')
+        -- pcall(vim.cmd, [[%s/||\s/]])
+        -- vim.cmd('silent noautocmd update!')
         vim.fn.win_gotoid(active_window_id)
     end
 end
