@@ -19,11 +19,6 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
         end
     end
 
-    if task_metadata.name == 'run_python' then
-        -- Remove last element since its the "Process Exited" message
-        table.remove(new_qf)
-    end
-
     if task_metadata.name == 'run_precommit' then
         -- Fix file paths
         for _, v in pairs(new_qf) do

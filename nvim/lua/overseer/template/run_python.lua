@@ -9,6 +9,7 @@ PYTHON_EFM = ''
     .. [[%+GTraceback%.%#,]]
     .. [[%+GDuring\ handling%.%#,]]
     .. [[%+GThe\ above\ exception%.%#,]]
+    .. [[%-G[Process exited%.%#,]]
     .. [[%f:%l:\ %.%#%tarning:%m,]]
 
 return {
