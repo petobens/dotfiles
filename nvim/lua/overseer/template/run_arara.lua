@@ -10,6 +10,7 @@ return {
             ---@diagnostic disable-next-line: undefined-field
             cwd = vim.b.vimtex.root,
             components = {
+                { 'on_complete_notify', statuses = { 'SUCCESS'} },
                 'default',
             },
         }

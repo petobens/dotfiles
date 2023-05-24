@@ -7,8 +7,9 @@ return {
             cmd = cmd,
             args = { file },
             components = {
-                'default',
+                { 'on_complete_notify', statuses = {} }, -- don't notify on completion
                 { 'on_output_quickfix', open = true },
+                'default',
             },
         }
     end,

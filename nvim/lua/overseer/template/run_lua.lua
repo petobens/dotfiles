@@ -7,8 +7,10 @@ return {
             args = { file },
             metadata = { run_cmd = string.format('%s', file) },
             components = {
-                'default',
+                -- TODO: Better EFM
+                { 'on_complete_notify', statuses = {} }, -- don't notify on completion
                 { 'on_output_quickfix', open = true },
+                'default',
             },
         }
     end,
