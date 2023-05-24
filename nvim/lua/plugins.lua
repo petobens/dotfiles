@@ -229,6 +229,12 @@ local plugins = {
             require('plugin-config.neotest_config')
         end,
     },
+    {
+        'yorickpeterse/nvim-pqf',
+        config = function()
+            require('plugin-config.pqf_config')
+        end,
+    },
 
     -- Utilities
     { 'gioele/vim-autoswap' },

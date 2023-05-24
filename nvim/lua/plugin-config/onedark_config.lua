@@ -344,6 +344,13 @@ onedarkpro.setup({
         OverseerFAILURE = { fg = p.red },
         OverseerCANCELED = { fg = p.orange },
 
+        ---- pqf
+        qfPosition = { fg = p.comment_grey },
+        qfError = { link = 'DiagnosticVirtualTextError' },
+        qfWarning = { link = 'DiagnosticVirtualTextWarn' },
+        qfInfo = { link = 'DiagnosticVirtualTextInfo' },
+        qfHint = { link = 'DiagnosticVirtualTextHint' },
+
         ---- Telescope
         TelescopeNormal = { link = 'Normal' },
         TelescopeSelection = { fg = p.fg, bg = p.cursor_grey, style = 'bold' },
