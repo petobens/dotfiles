@@ -70,7 +70,15 @@ local function on_attach(client, bufnr)
         group = format_augroup,
         buffer = bufnr,
         callback = function()
-            if #vim.diagnostic.get(0) > 0 then
+            local diagnostics = vim.diagnostic.get(0)
+            if #diagnostics > 0 then
+                -- Format location list to include source (but do it only once
+                -- to avoid repetition)
+                for _, v in pairs(diagnostics) do
+                    if not string.match(v.message, v.source) then
+                        v.message = string.format('%s: %s', v.source, v.message)
+                    end
+                end
                 vim.diagnostic.setloclist({
                     title = string.format(
                         'Diagnostics: %s',
@@ -94,7 +102,7 @@ local lspconfig = require('lspconfig')
 lspconfig.bashls.setup({
     on_attach = on_attach,
 })
----- Lua
+-- Lua
 lspconfig.lua_ls.setup({
     on_attach = on_attach,
     settings = {
