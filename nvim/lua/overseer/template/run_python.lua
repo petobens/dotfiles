@@ -5,9 +5,9 @@ PYTHON_EFM = ''
     .. [[%-C\ \ %.%#,]]
     .. [[%-C\ \ \ \ %.%#,]]
     .. [[%Z%\\@=%m,]]
-    .. [[%+GTraceback%.%#,]]
-    .. [[%+GDuring\ handling%.%#,]]
-    .. [[%+GThe\ above\ exception%.%#,]]
+    .. [[%-GTraceback%.%#,]]
+    .. [[%-GDuring\ handling%.%#,]]
+    .. [[%-GThe\ above\ exception%.%#,]]
     .. [[%f:%l:\ %.%#%tarning:%m,]]
 
 return {
