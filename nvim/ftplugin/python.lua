@@ -59,11 +59,17 @@ local function run_overseer(task_name)
     end)
 end
 
-local function run_toggleterm()
+local function run_toggleterm(post_mortem_mode)
+    post_mortem_mode = post_mortem_mode or false
+
     vim.cmd('silent noautocmd update')
 
-    -- If we have an ipython terminal open don't run `python` cmd but rather `run`
     local cmd = 'python'
+    if post_mortem_mode then
+        cmd = cmd .. ' -m pdb -cc'
+    end
+
+    -- If we have an ipython terminal open don't run `python` cmd but rather `run`
     local ttt = require('toggleterm.terminal')
     local term_info = ttt.get(1)
     if term_info ~= nil and term_info.cmd ~= nil then
@@ -190,6 +196,9 @@ u.keymap({ 'n', 'i' }, '<F6>', function()
 end, { buffer = true })
 ---- Interactive running
 u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
+u.keymap('n', '<Leader>rp', function()
+   run_toggleterm(true)
+end, { buffer = true })
 u.keymap('n', '<Leader>oi', function()
     run_ipython('open')
 end, { buffer = true })
