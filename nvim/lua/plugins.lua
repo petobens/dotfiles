@@ -144,6 +144,12 @@ local plugins = {
         end,
     },
     {
+        'AckslD/nvim-neoclip.lua',
+        config = function()
+            require('plugin-config.neoclip_config')
+        end,
+    },
+    {
         'nvim-tree/nvim-tree.lua',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         config = function()

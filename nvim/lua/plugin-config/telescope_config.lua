@@ -382,6 +382,14 @@ local function lsp_doc_symbols()
     })
 end
 
+local function yank_history()
+    telescope.extensions.neoclip.default({
+        prompt_title = 'Neoclip',
+        results_title = 'Register +',
+        preview_title = 'Yank History Preview',
+    })
+end
+
 -- Fix folding when opening files and avoid starting in insert mode
 -- See: https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
 local function stopinsert(callback)
@@ -793,7 +801,7 @@ u.keymap({ 'n', 'v' }, '<Leader>dg', function()
     igrep(nil, u.get_selection())
 end)
 u.keymap('n', '<Leader>rd', function()
-    require('telescope').extensions.recent_files.pick({
+    telescope.extensions.recent_files.pick({
         path_display = function(_, path)
             local p = Path:new(path):absolute()
             ---@diagnostic disable-next-line: param-type-mismatch
@@ -814,6 +822,7 @@ end)
 u.keymap('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 u.keymap('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
 u.keymap('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
+u.keymap('n', '<Leader>yh', yank_history)
 u.keymap('n', '<Leader>he', '<Cmd>Telescope help_tags<CR>')
 u.keymap('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
 u.keymap('n', '<Leader>tm', '<Cmd>Telescope marks<CR>')
@@ -831,6 +840,7 @@ u.keymap('n', '<Leader>gu', '<Cmd>Telescope undo<CR>')
 telescope.load_extension('aerial')
 telescope.load_extension('fzf')
 telescope.load_extension('luasnip')
+telescope.load_extension('neoclip')
 telescope.load_extension('recent_files')
 telescope.load_extension('undo')
 telescope.load_extension('z')
