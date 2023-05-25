@@ -1,7 +1,5 @@
 local u = require('utils')
 
-_G.Fugitive = {}
-
 -- Helpers
 local function buf_enter_commit()
     vim.cmd('normal! gg0')
@@ -10,7 +8,7 @@ local function buf_enter_commit()
     end
 end
 
-function _G.Fugitive.quit_gstatus()
+local function quit_gstatus()
     vim.cmd('wincmd p')
     local win_id = vim.api.nvim_get_current_win()
     vim.cmd('wincmd p')
@@ -66,7 +64,9 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
 vim.api.nvim_create_autocmd('FileType', {
     group = fugitive_acg,
     pattern = { 'fugitive' },
-    command = 'nnoremap <buffer><silent> q :call v:lua.Fugitive.quit_gstatus()<CR>',
+    callback = function()
+        u.keymap('n', 'q', quit_gstatus)
+    end,
 })
 vim.api.nvim_create_autocmd('FileType', {
     group = fugitive_acg,
