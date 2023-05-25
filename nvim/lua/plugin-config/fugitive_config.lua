@@ -78,6 +78,11 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'fugitive' },
     command = 'nmap <buffer><silent> [h [c',
 })
+vim.api.nvim_create_autocmd('FileType', {
+    group = fugitive_acg,
+    pattern = { 'fugitive' },
+    command = 'nnoremap <buffer><silent> ci :<C-U>Git commit -n<CR>',
+})
 
 -- Mappings
 u.keymap('n', '<Leader>gd', '<Cmd>Gdiffsplit<CR><Cmd>wincmd x<CR>')
