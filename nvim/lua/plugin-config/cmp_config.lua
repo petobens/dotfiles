@@ -24,7 +24,8 @@ cmp.setup({
         },
     },
     experimental = {
-        ghost_text = true,
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        ghost_text = true, -- show completion candidate on same line
     },
     formatting = {
         fields = { 'kind', 'abbr', 'menu' },
