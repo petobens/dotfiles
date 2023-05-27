@@ -1,3 +1,5 @@
+local u = require('utils')
+
 -- We need this first to ensure mason-lsp loads before lspconfig
 require('mason-lspconfig').setup()
 
@@ -13,13 +15,13 @@ vim.diagnostic.config({
         format = function(diagnostic)
             local icon
             if diagnostic.severity == vim.diagnostic.severity.ERROR then
-                icon = ' '
+                icon = u.icons.error
             elseif diagnostic.severity == vim.diagnostic.severity.WARN then
-                icon = ' '
+                icon = u.icons.warning
             elseif diagnostic.severity == vim.diagnostic.severity.INFO then
-                icon = ' '
+                icon = u.icons.info
             else
-                icon = ' '
+                icon = u.icons.hint
             end
             return string.format('%s %s', icon, diagnostic.message)
         end,
@@ -34,7 +36,7 @@ local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 ---@diagnostic disable-next-line: duplicate-set-field
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     opts = opts or {}
-    opts.border = opts.border or require('utils').border('FloatBorder')
+    opts.border = opts.border or u.border('FloatBorder')
     return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
@@ -135,7 +137,6 @@ require('lspconfig').texlab.setup({
 })
 
 -- Mappings
-local u = require('utils')
 u.keymap('n', '<Leader>fd', vim.diagnostic.open_float)
 u.keymap('n', '<Leader>ld', function()
     local win_id = vim.fn.win_getid()

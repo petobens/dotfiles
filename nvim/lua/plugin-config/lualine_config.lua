@@ -283,10 +283,11 @@ require('lualine').setup({
                 colored = false,
                 color = { fg = onedark_colors.black, bg = onedark_colors.orange },
                 symbols = {
-                    error = ' ',
-                    warn = ' ',
-                    info = ' ',
-                    hint = ' ',
+                    -- We need to add extra space to icon font size
+                    error = u.icons.error .. ' ',
+                    warn = u.icons.warning .. ' ',
+                    info = u.icons.info .. ' ',
+                    hint = u.icons.hint .. ' ',
                 },
                 separator = { left = '', right = '' },
                 cond = conds.hide_winwidth_leq_60,
@@ -307,7 +308,7 @@ require('lualine').setup({
                     bg = onedark_colors.purple,
                 },
                 symbols = {
-                    [overseer.STATUS.RUNNING] = '󰜎',
+                    [overseer.STATUS.RUNNING] = u.icons.running,
                 },
                 status = { overseer.STATUS.RUNNING },
                 separator = { left = '', right = '' },

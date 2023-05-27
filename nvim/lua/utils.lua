@@ -39,4 +39,12 @@ function M.get_selection()
     return text
 end
 
+M.icons = {
+    error = ' ',
+    warning = ' ',
+    info = '',
+    hint = '',
+    running = '󰜎',
+}
+
 return M

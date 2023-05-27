@@ -1,3 +1,4 @@
+local u = require('utils')
 local neotest = require('neotest')
 
 neotest.setup({
@@ -54,7 +55,7 @@ neotest.setup({
         final_child_prefix = '',
         non_collapsible = '',
         passed = ' ',
-        running = '󰜎',
+        running = u.icons.running,
         failed = ' ',
         unknown = ' ',
         skipped = ' ',
@@ -94,7 +95,6 @@ local function neotest_run(func, opts)
 end
 
 -- Mappings
-local u = require('utils')
 u.keymap('n', '<Leader>nn', function()
     neotest_run(neotest.run.run)
 end)
