@@ -40,11 +40,15 @@ function M.get_selection()
 end
 
 M.icons = {
+    -- Running
     error = ' ',
     warning = ' ',
     info = '',
     hint = '',
     running = '󰜎',
+    -- Folding
+    fold_open = '',
+    fold_close = '',
 }
 
 return M

@@ -246,8 +246,8 @@ require('nvim-tree').setup({
             git_placement = 'after',
             glyphs = {
                 folder = {
-                    arrow_open = '',
-                    arrow_closed = '',
+                    arrow_open = u.icons.fold_open,
+                    arrow_closed = u.icons.fold_close,
                 },
                 bookmark = '',
                 git = {
