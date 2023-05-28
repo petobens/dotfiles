@@ -150,6 +150,8 @@ u.keymap('n', '<Leader>ld', function()
 end)
 u.keymap('n', '<Leader>li', '<Cmd>LspInfo<CR>')
 u.keymap('v', '<Leader>fc', 'gq', { remap = true })
+u.keymap('n', '[d', vim.diagnostic.goto_prev)
+u.keymap('n', ']d', vim.diagnostic.goto_next)
 
 local lsp_buf = vim.lsp.buf
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -161,6 +163,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- Map only after language server attaches to the current buffer
         local opts = { buffer = ev.buf }
         u.keymap('n', '<Leader>jd', lsp_buf.definition, opts)
+        u.keymap('n', '<Leader>jD', lsp_buf.declaration, opts)
         u.keymap('n', '<Leader>ap', lsp_buf.references, opts)
         u.keymap('n', '<Leader>rn', lsp_buf.rename, opts)
         u.keymap('n', 'K', lsp_buf.hover, opts)
