@@ -43,13 +43,13 @@ cmp.setup({
         end,
     },
     mapping = {
-        ['<C-p>'] = cmp.mapping.select_prev_item(),
-        ['<C-n>'] = cmp.mapping.select_next_item(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        ['<C-y>'] = cmp.mapping.confirm({
+        ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item()),
+        ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item()),
+        ['<CR>'] = cmp.mapping(cmp.mapping.confirm({ select = true })),
+        ['<C-y>'] = cmp.mapping(cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Insert, --useful for cmdline
             select = true,
-        }),
+        })),
         ['<C-e>'] = cmp.mapping({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
