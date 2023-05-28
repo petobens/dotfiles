@@ -283,7 +283,7 @@ require('lualine').setup({
                 colored = false,
                 color = { fg = onedark_colors.black, bg = onedark_colors.orange },
                 symbols = {
-                    -- We need to add extra space to icon font size
+                    -- We need to add extra space to get proper icon font size
                     error = u.icons.error .. ' ',
                     warn = u.icons.warning .. ' ',
                     info = u.icons.info .. ' ',

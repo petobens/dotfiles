@@ -41,8 +41,8 @@ end
 
 M.icons = {
     -- Running
-    error = ' ',
-    warning = ' ',
+    error = '',
+    warning = '',
     info = '',
     hint = '',
     running = '󰜎',
