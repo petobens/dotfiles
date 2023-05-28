@@ -132,7 +132,7 @@ onedarkpro.setup({
         Error = { fg = p.red, bg = p.black, style = 'bold' },
         Todo = { fg = p.red, bg = p.black },
 
-        -- Diagnostics (and LSP)
+        -- Diagnostics
         -- Initial empty hl ({}) to avoid highlighting code with diagnostic colors
         DiagnosticError = {},
         DiagnosticWarn = {},
@@ -155,9 +155,12 @@ onedarkpro.setup({
         DiagnosticSignWarn = { link = 'DiagnosticVirtualTextWarn' },
         DiagnosticSignInfo = { link = 'DiagnosticVirtualTextInfo' },
         DiagnosticSignHint = { link = 'DiagnosticVirtualTextHint' },
+
+        -- Lsp
         LspReferenceText = { bg = p.visual_grey },
         LspReferenceRead = { link = 'LspReferenceText' },
         LspReferenceWrite = { link = 'LspReferenceText' },
+        LspSignatureActiveParameter = { fg = p.light_blue, bg = p.visual_grey },
 
         -- Treesitter
         ['@boolean'] = { fg = p.orange },

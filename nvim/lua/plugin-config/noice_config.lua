@@ -1,9 +1,16 @@
+local u = require('utils')
+
 require('noice').setup({
+    presets = {
+        lsp_doc_border = true,
+    },
     cmdline = { enabled = false },
     messages = { enabled = false },
     popupmenu = { enabled = false },
     notify = { enabled = false },
     lsp = {
+        -- Hover, signature and messages are enabled by default (and
+        -- override/replace cmp config)
         progress = { enabled = false },
         override = {
             -- Make cmp and other plugins use treesitter markdown highlighting
@@ -11,11 +18,22 @@ require('noice').setup({
             ['vim.lsp.util.stylize_markdown'] = true,
             ['cmp.entry.get_documentation'] = true,
         },
-        signature = {
-            enabled = true,
-            auto_open = {
-                enabled = false, -- to avoid conflicts with cmp-lsp-signature
-            },
-        },
     },
 })
+
+-- Mappings (mostly for scrolling signatures)
+u.keymap({ 'n', 'i', 's' }, '<A-j>', function()
+    if not require('noice.lsp').scroll(4) then
+        return '<A-j>'
+    else
+        require('noice.lsp').scroll(4)
+    end
+end)
+
+u.keymap({ 'n', 'i', 's' }, '<A-k>', function()
+    if not require('noice.lsp').scroll(-4) then
+        return '<A-k>'
+    else
+        require('noice.lsp').scroll(-4)
+    end
+end)

@@ -18,6 +18,7 @@ cmp.setup({
             winhighlight = 'Normal:NormalFloat,CursorLine:PmenuSel,Search:None',
             border = u.border('FloatBorder'),
         },
+        -- Note: we show/render docs with noice
         documentation = {
             winhighlight = 'Normal:NormalFloat,Search:None',
             border = u.border('FloatBorder'),
@@ -83,7 +84,6 @@ cmp.setup({
                 return ((kind ~= 'Text') and (kind ~= 'Snippet'))
             end,
         },
-        { name = 'nvim_lsp_signature_help' },
         {
             name = 'buffer',
             option = {
