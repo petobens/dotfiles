@@ -807,6 +807,7 @@ u.keymap('n', '<Leader>rd', function()
             ---@diagnostic disable-next-line: param-type-mismatch
             return string.gsub(p, vim.loop.os_homedir(), '~')
         end,
+        ignore_patterns = { '/tmp/', '.log' },
     })
 end)
 u.keymap('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
