@@ -1,35 +1,9 @@
 local u = require('utils')
 
--- We need this first to ensure mason-lsp loads before lspconfig
+-- Mason and neodev must load befor lsp-config (and mason must go first)
 require('mason-lspconfig').setup()
-
--- Diagnostics
-vim.diagnostic.config({
-    underline = false,
-    signs = false,
-    float = { source = true },
-    virtual_text = {
-        spacing = 0,
-        source = 'if_many',
-        prefix = '',
-        format = function(diagnostic)
-            local icon
-            if diagnostic.severity == vim.diagnostic.severity.ERROR then
-                icon = u.icons.error
-            elseif diagnostic.severity == vim.diagnostic.severity.WARN then
-                icon = u.icons.warning
-            elseif diagnostic.severity == vim.diagnostic.severity.INFO then
-                icon = u.icons.info
-            else
-                icon = u.icons.hint
-            end
-            return string.format('%s %s', icon, diagnostic.message)
-        end,
-        suffix = function(diagnostic)
-            return diagnostic.code and (' [%s]'):format(diagnostic.code) or ''
-        end,
-    },
-})
+require('neodev').setup({})
+local lspconfig = require('lspconfig')
 
 -- Use borders for floating hovers
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
@@ -52,13 +26,14 @@ local function custom_lsp_format(bufnr)
     })
 end
 
--- Autocmds
+-- On-Attach
 local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 local function on_attach(client, bufnr)
     -- We do range formatting with null-ls so disable it here
     client.server_capabilities.documentRangeFormattingProvider = false
 
     vim.api.nvim_clear_autocmds({ group = format_augroup, buffer = bufnr })
+
     -- Autoformat on save with null-ls
     vim.api.nvim_create_autocmd('BufWritePre', {
         group = format_augroup,
@@ -67,6 +42,7 @@ local function on_attach(client, bufnr)
             custom_lsp_format(bufnr)
         end,
     })
+
     -- Open diagnostics on save (if there are diagnostics)
     vim.api.nvim_create_autocmd('BufWritePost', {
         group = format_augroup,
@@ -94,12 +70,7 @@ local function on_attach(client, bufnr)
     })
 end
 
--- neodev setup (must go before lspconfig)
-require('neodev').setup({})
-
--- Servers setup
--- Server names available in https://github.com/williamboman/nvim-lsp-installer
-local lspconfig = require('lspconfig')
+-- Servers setup (names available in https://github.com/williamboman/nvim-lsp-installer)
 ---- Bash
 lspconfig.bashls.setup({
     on_attach = on_attach,
@@ -137,23 +108,7 @@ require('lspconfig').texlab.setup({
 })
 
 -- Mappings
-u.keymap('n', '<Leader>fd', vim.diagnostic.open_float)
-u.keymap('n', '<Leader>ld', function()
-    local win_id = vim.fn.win_getid()
-    vim.diagnostic.setloclist({
-        title = string.format(
-            'Diagnostics: %s',
-            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
-        ),
-    })
-    vim.fn.win_gotoid(win_id)
-end)
 u.keymap('n', '<Leader>li', '<Cmd>LspInfo<CR>')
-u.keymap('v', '<Leader>fc', 'gq', { remap = true })
-u.keymap('n', '[d', vim.diagnostic.goto_prev)
-u.keymap('n', ']d', vim.diagnostic.goto_next)
-
-local lsp_buf = vim.lsp.buf
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', {}),
     callback = function(ev)
@@ -162,12 +117,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
         -- Map only after language server attaches to the current buffer
         local opts = { buffer = ev.buf }
-        u.keymap('n', '<Leader>jd', lsp_buf.definition, opts)
-        u.keymap('n', '<Leader>jD', lsp_buf.declaration, opts)
-        u.keymap('n', '<Leader>ap', lsp_buf.references, opts)
-        u.keymap('n', '<Leader>rn', lsp_buf.rename, opts)
-        u.keymap('n', 'K', lsp_buf.hover, opts)
-        u.keymap('n', '<Leader>fs', lsp_buf.signature_help, opts)
+        u.keymap('n', '<Leader>jd', vim.lsp.buf.definition, opts)
+        u.keymap('n', '<Leader>jD', vim.lsp.buf.declaration, opts)
+        u.keymap('n', '<Leader>ap', vim.lsp.buf.references, opts)
+        u.keymap('n', '<Leader>rn', vim.lsp.buf.rename, opts)
+        u.keymap('n', 'K', vim.lsp.buf.hover, opts)
+        u.keymap('n', '<Leader>fs', vim.lsp.buf.signature_help, opts)
         u.keymap('n', '<Leader>fc', custom_lsp_format, opts)
     end,
 })
+u.keymap('v', '<Leader>fc', 'gq', { remap = true })

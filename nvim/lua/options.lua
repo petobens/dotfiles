@@ -1,7 +1,7 @@
 local M = {}
 _G.GlobalOpts = M
 
--- Gitsigns and diagnostics to the left of line numbers in statuscolumn
+-- Diagnostics and gitsigns (in that order) to the left of line numbers in statuscolumn
 -- From https://www.reddit.com/r/neovim/comments/10fpqbp/comment/j50be6b/?utm_source=share&utm_medium=web2x&context=3
 function M.my_status_column()
     local sign, git_sign
@@ -9,7 +9,10 @@ function M.my_status_column()
         if s.name:find('GitSign') then
             git_sign = s
         else
-            sign = s
+            if not sign then
+                -- Only draw the first/most-severe diagnostic sign
+                sign = s
+            end
         end
     end
     local components = {

@@ -87,6 +87,8 @@ local plugins = {
     {
         'neovim/nvim-lspconfig',
         config = function()
+            -- Also load diagnostics here
+            require('plugin-config.diagnostics_config')
             require('plugin-config.lsp_config')
         end,
     },
