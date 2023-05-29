@@ -547,6 +547,13 @@ local custom_actions = transform_mod({
         actions.send_to_qflist(prompt_bufnr)
         actions.open_qflist(prompt_bufnr)
     end,
+    -- Open (filter) aerial buffer
+    open_aerial = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        require('aerial').focus()
+        vim.fn.search(action_state.get_selected_entry().name)
+        vim.cmd('normal! 0')
+    end,
 })
 -- Store custom actions to be used elsewhere
 _G.TelescopeConfig.custom_actions = custom_actions
