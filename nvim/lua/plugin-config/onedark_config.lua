@@ -63,9 +63,9 @@ onedarkpro.setup({
         NormalFloat = { fg = p.fg, bg = p.bg, blend = 6 },
         NormalNC = { link = 'Normal' },
         Pmenu = { fg = p.fg, bg = p.pmenu },
-        PmenuSbar = { link = 'Pmenu' }, -- scrolling bar space
-        PmenuSel = { link = 'WildMenu' },
+        PmenuSbar = { bg = p.bg }, -- scrolling bar space
         PmenuThumb = { bg = p.pmenu }, -- scrollbar color
+        PmenuSel = { link = 'WildMenu' },
         Question = { fg = p.light_blue },
         QuickFixLine = { bg = p.cursor_grey },
         Search = { fg = p.black, bg = p.yellow },
