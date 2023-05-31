@@ -2,6 +2,28 @@ local null_ls = require('null-ls')
 local diagnostics = null_ls.builtins.diagnostics
 local formatting = null_ls.builtins.formatting
 
+-- Ruff settings
+local ruff_severities = {
+    ['E'] = vim.diagnostic.severity.ERROR,
+    ['F8'] = vim.diagnostic.severity.ERROR,
+    ['F'] = vim.diagnostic.severity.WARN,
+    ['W'] = vim.diagnostic.severity.WARN,
+    ['D'] = vim.diagnostic.severity.INFO,
+    ['B'] = vim.diagnostic.severity.INFO,
+}
+local ruff = diagnostics.ruff.with({
+    diagnostics_postprocess = function(diagnostic)
+        local code = string.sub(diagnostic.code, 1, 2)
+        if code ~= 'F8' then
+            code = string.sub(code, 1, 1)
+        end
+        local new_severity = ruff_severities[code]
+        if new_severity then
+            diagnostic.severity = new_severity
+        end
+    end,
+})
+
 -- Sources configuration
 local sources = {
     -- Bash
@@ -28,9 +50,10 @@ local sources = {
     -- pylint,mypy and ruff search for the correct config file by default
     diagnostics.pylint,
     diagnostics.mypy,
-    diagnostics.ruff,
+    ruff,
 }
 
+-- Actual setup
 null_ls.setup({
     sources = sources,
     debug = false,
