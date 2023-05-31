@@ -50,11 +50,14 @@ local function on_attach(client, bufnr)
         callback = function()
             local diagnostics = vim.diagnostic.get(0)
             if #diagnostics > 0 then
-                -- Format location list to include source (but do it only once
-                -- to avoid repetition)
+                -- Format location list to include source and error code (but do
+                -- it only once to avoid repetition when reopening the location list)
                 for _, v in pairs(diagnostics) do
                     if not string.match(v.message, v.source) then
                         v.message = string.format('%s: %s', v.source, v.message)
+                        if v.code ~= '' then
+                            v.message = string.format('%s [%s]', v.message, v.code)
+                        end
                     end
                 end
                 vim.diagnostic.setloclist({

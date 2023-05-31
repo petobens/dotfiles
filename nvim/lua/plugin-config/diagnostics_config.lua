@@ -1,34 +1,52 @@
 local u = require('utils')
 
--- Setup
-vim.diagnostic.config({
-    update_in_insert = false,
-    severity_sort = true,
-    underline = false,
-    signs = true,
-    float = { source = true },
-    virtual_text = {
-        spacing = 0,
-        source = 'if_many',
-        prefix = '',
-        format = function(diagnostic)
-            local icon
-            if diagnostic.severity == vim.diagnostic.severity.ERROR then
-                icon = u.icons.error
-            elseif diagnostic.severity == vim.diagnostic.severity.WARN then
-                icon = u.icons.warning
-            elseif diagnostic.severity == vim.diagnostic.severity.INFO then
-                icon = u.icons.info
-            else
-                icon = u.icons.hint
-            end
-            return string.format('%s %s', icon, diagnostic.message)
-        end,
-        suffix = function(diagnostic)
-            return diagnostic.code and (' [%s]'):format(diagnostic.code) or ''
-        end,
-    },
-})
+-- Diagnostic format
+local function diagnostic_icon(diagnostic)
+    local icon
+    if diagnostic.severity == vim.diagnostic.severity.ERROR then
+        icon = u.icons.error
+    elseif diagnostic.severity == vim.diagnostic.severity.WARN then
+        icon = u.icons.warning
+    elseif diagnostic.severity == vim.diagnostic.severity.INFO then
+        icon = u.icons.info
+    else
+        icon = u.icons.hint
+    end
+    return icon
+end
+
+local function diagnostic_format_virtual(diagnostic)
+    if
+        vim.bo.filetype == 'python'
+        and not string.match(diagnostic.message, diagnostic.source)
+    then
+        return string.format('%s: %s', diagnostic.source, diagnostic.message)
+    else
+        return diagnostic.message
+    end
+end
+
+local function diagnostic_format_float(diagnostic)
+    local icon = diagnostic_icon(diagnostic)
+    if
+        -- TODO: Find a better way to find if there are multiple diagnostic in the line
+        vim.bo.filetype == 'python'
+        and not string.match(diagnostic.message, diagnostic.source)
+    then
+        return string.format('%s %s: %s', icon, diagnostic.source, diagnostic.message)
+    else
+        return string.format('%s %s', icon, diagnostic.message)
+    end
+end
+
+local function diagnostic_suffix(diagnostic)
+    if not diagnostic.code then
+        return ''
+    end
+    if not string.match(diagnostic.message, diagnostic.code) then
+        return (' [%s]'):format(diagnostic.code)
+    end
+end
 
 -- Sign icons
 local signs = {
@@ -52,6 +70,27 @@ local toggle_buffer_diagnostics = function()
         vim.diagnostic.hide(nil, 0)
     end
 end
+
+-- Setup
+vim.diagnostic.config({
+    update_in_insert = false,
+    severity_sort = true,
+    underline = false,
+    signs = true,
+    float = {
+        source = false,
+        format = diagnostic_format_float,
+        -- FIXME: Adds suffix twice when writing a file
+        suffix = diagnostic_suffix,
+    },
+    virtual_text = {
+        spacing = 0,
+        source = false,
+        prefix = '',
+        format = diagnostic_format_virtual,
+        suffix = diagnostic_suffix,
+    },
+})
 
 -- Mappings
 u.keymap('n', '<Leader>fd', vim.diagnostic.open_float)
