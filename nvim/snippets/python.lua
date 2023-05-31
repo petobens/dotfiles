@@ -3,6 +3,7 @@ local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
+local c = ls.choice_node
 local fmta = require('luasnip.extras.fmt').fmta
 local rep = require('luasnip.extras').rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
@@ -24,6 +25,19 @@ return {
                     <>
             ]],
             { i(1, 'Name'), i(2, 'docstring'), i(3, 'arg'), i(4, 'attr') }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'def', dscr = 'Function' },
+        fmta(
+            [[
+            def <>(<>):
+                """<>."""
+
+                <>
+            ]],
+            { i(1, 'func_name'), i(2, 'args'), i(3, 'docstring'), i(4) }
         ),
         { condition = line_begin }
     ),
@@ -73,6 +87,20 @@ return {
             )
         ]],
             { i(1, 'DEBUG'), i(2, 'logger_name') }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'li', dscr = 'Logger info' },
+        fmta(
+            [[
+            logger.<>(<><>)
+        ]],
+            {
+                c(1, { t('info'), t('error'), t('warning') }),
+                f(visual_selection),
+                i(2),
+            }
         ),
         { condition = line_begin }
     ),
@@ -164,6 +192,7 @@ return {
     ),
 
     -- Libraries
+    ---- Pandas
     s(
         { trig = 'ipd', dscr = 'Import pandas' },
         fmta(
@@ -171,6 +200,26 @@ return {
             import pandas as pd
         ]],
             {}
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'pmr', dscr = 'Pandas max rows' },
+        fmta(
+            [[
+            pd.set_option('display.max_rows', <>)
+        ]],
+            { i(1, '500') }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'pmc', dscr = 'Pandas max columns' },
+        fmta(
+            [[
+            pd.set_option('display.width', <>)
+        ]],
+            { i(1, '1000') }
         ),
         { condition = line_begin }
     ),
@@ -184,6 +233,41 @@ return {
         )
     ),
     s(
+        { trig = 'sdf', dscr = 'Scratch dataframe' },
+        fmta(
+            [=[
+            pd.DataFrame(
+                [['a', 1, 'i'], ['b', 2, 'ii'], ['c', 3, 'iii']], columns=['l', 'n', 'r']
+            )
+        ]=],
+            {}
+        )
+    ),
+    s(
+        { trig = 'rdf', dscr = 'Random dataframe' },
+        fmta(
+            [[
+            pd.DataFrame(
+                np.random.randint(0, 100, size=(<>, <>)), columns=[<>]
+            )
+        ]],
+            {
+                i(1, 'nrows'),
+                i(2, 'ncols'),
+                f(function(node_idx)
+                    local nr_cols = tonumber(node_idx[1][1])
+                    if not nr_cols then
+                        nr_cols = 0
+                    end
+                    local col_names =
+                        { "'A'", "'B'", "'C'", "'D'", "'E'", "'F'", "'G'", "'H'" }
+                    return table.concat(col_names, ',', 1, nr_cols)
+                end, { 2 }),
+            }
+        )
+    ),
+    ----- Numpy
+    s(
         { trig = 'inp', dscr = 'Import numpy' },
         fmta(
             [[
@@ -193,6 +277,7 @@ return {
         ),
         { condition = line_begin }
     ),
+    ----- Matplotlib
     s(
         { trig = 'ipp', dscr = 'Import pyplot as plt' },
         fmta(
@@ -215,8 +300,18 @@ return {
         ),
         { condition = line_begin }
     ),
-
-    -- (Py)Tests
+    ---- Datetime
+    s(
+        { trig = 'fdt', dscr = 'From datetime' },
+        fmta(
+            [[
+            from datetime import datetime
+        ]],
+            {}
+        ),
+        { condition = line_begin }
+    ),
+    ---- (Py)Tests
     s(
         { trig = 'ptf', dscr = 'Pytest fixture' },
         fmta(
@@ -239,6 +334,26 @@ return {
         ]],
             { f(visual_selection), i(1) }
         )
+    ),
+    s(
+        { trig = 'fs', dscr = 'f-string' },
+        fmta(
+            [[
+            f'<><>'
+        ]],
+            { f(visual_selection), i(1) }
+        )
+    ),
+    s(
+        { trig = 'wo', dscr = 'With open' },
+        fmta(
+            [[
+            with open(<>, '<>') as <>:
+                <>
+        ]],
+            { i(1, 'filepath'), i(2, 'r'), i(3, 'f'), i(4) }
+        ),
+        { condition = line_begin }
     ),
 }, {
     s({ trig = 'tq', dscr = 'Triple quotes' }, {
