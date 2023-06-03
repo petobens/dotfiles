@@ -64,6 +64,10 @@ local function run_overseer(task_name)
             _parse_qf(task.metadata, cwd, current_win_id)
         end)
     end)
+
+    if vim.api.nvim_get_mode()['mode'] == 'i' then
+        vim.cmd.stopinsert()
+    end
 end
 
 local function run_toggleterm(post_mortem_mode)
@@ -132,13 +136,12 @@ local function run_ipython(mode)
 end
 
 local function run_tmux_pane(debug_mode)
-    debug_mode = debug_mode or false
-
     if vim.env.TMUX == nil then
         return
     end
 
     local python_cmd = 'python'
+    debug_mode = debug_mode or false
     if debug_mode then
         python_cmd = python_cmd .. ' -m pdb -cc'
     end
@@ -147,6 +150,10 @@ local function run_tmux_pane(debug_mode)
     local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
     local sh_cmd = '"' .. python_cmd .. ' ' .. fname .. [[; read -p ''"]]
     vim.cmd('silent! !tmux new-window -c ' .. cwd .. ' -n ' .. fname .. ' ' .. sh_cmd)
+
+    if vim.api.nvim_get_mode()['mode'] == 'i' then
+        vim.cmd.stopinsert()
+    end
 end
 
 -- Debugging
