@@ -34,7 +34,6 @@ return {
             [[
             def <>(<>):
                 """<>."""
-
                 <>
             ]],
             { i(1, 'func_name'), i(2, 'args'), i(3, 'docstring'), i(4) }
