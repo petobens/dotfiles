@@ -11,11 +11,16 @@ vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
 -- Running
 local function _parse_qf(task_metadata, cwd, active_window_id)
+    local pdb = false
+
     local current_qf = vim.fn.getqflist()
     local new_qf = {}
     for _, v in pairs(current_qf) do
         if v.valid > 0 or v.text ~= '' then
             table.insert(new_qf, v)
+            if string.match(v.text, 'bdb.BdbQuit') then
+                pdb = true
+            end
         end
     end
 
@@ -36,7 +41,9 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
 
     if next(new_qf) ~= nil then
         vim.fn.setqflist({}, ' ', { items = new_qf, title = task_metadata.run_cmd })
-        vim.cmd('copen')
+        if not pdb then
+            vim.cmd('copen')
+        end
         vim.fn.win_gotoid(active_window_id)
     end
 end
@@ -197,7 +204,7 @@ end, { buffer = true })
 ---- Interactive running
 u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
 u.keymap('n', '<Leader>rp', function()
-   run_toggleterm(true)
+    run_toggleterm(true)
 end, { buffer = true })
 u.keymap('n', '<Leader>oi', function()
     run_ipython('open')
