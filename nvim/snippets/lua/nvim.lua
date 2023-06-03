@@ -8,9 +8,10 @@ local t = ls.text_node
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
-local visual_selection = function(_, snip)
+local function visual_selection(_, snip)
     return snip.env.TM_SELECTED_TEXT[1] or {}
 end
+
 return {
     s(
         { trig = 'dd', dscr = 'Disable next line diagnostic' },
@@ -51,11 +52,13 @@ return {
 
             -- Install plugins
             local plugins = {
-                '<>'
+                { 'folke/tokyonight.nvim' },
+                {'<>'},
             }
             require('lazy').setup(plugins, {
                 root = root .. '/plugins',
             })
+            vim.cmd.colorscheme('tokyonight')
 
 
         ]],
