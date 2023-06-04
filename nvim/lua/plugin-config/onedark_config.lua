@@ -178,7 +178,12 @@ onedarkpro.setup({
         ['@text.reference'] = { fg = p.blue },
         ['@text.strong'] = { fg = p.orange, style = 'bold' },
         ['@text.title'] = { fg = p.dark_red, style = 'bold' },
-        ['@text.uri'] = { fg = p.light_blue, sp = p.cyan, style = 'undercurl' },
+        ['@text.uri'] = { fg = p.blue, sp = p.blue, style = 'undercurl' },
+        ['@text.uri.comment'] = {
+            fg = p.comment_grey,
+            sp = p.comment_grey,
+            style = 'undercurl',
+        },
         ['@text.warning'] = { fg = p.orange, style = 'bold' },
 
         -- Semantic Tokens
@@ -203,7 +208,7 @@ onedarkpro.setup({
         ---- Markdown
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
-        markdownLinkText = { fg = p.light_blue, sp = p.light_blue, style = 'undercurl' },
+        markdownLinkText = { fg = p.blue, sp = p.blue, style = 'undercurl' },
 
         ---- Python
         ['@attribute.builtin.python'] = { fg = p.blue },

@@ -45,9 +45,9 @@ colors:
         matches:
             foreground: '#3e4452'
             background: '#e5c07b'
-        footer_bar:
-            background: '#282c34'
-            foreground: '#abb2bf'
+    footer_bar:
+        background: '#282c34'
+        foreground: '#abb2bf'
     normal:
         black:   '#24272e'
         red:     '#e06c75'
