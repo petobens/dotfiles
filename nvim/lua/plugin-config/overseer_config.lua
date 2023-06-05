@@ -1,6 +1,8 @@
 local overseer = require('overseer')
 local u = require('utils')
 
+_G.OverseerConfig = {} -- to store error formats
+
 overseer.setup({
     templates = {
         'builtin',

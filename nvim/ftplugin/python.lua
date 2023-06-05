@@ -3,11 +3,24 @@ local u = require('utils')
 local builtin = require('telescope.builtin')
 local utils = require('telescope.utils')
 
--- Options
+-- Options and variable
 vim.opt_local.textwidth = 88
 vim.opt_local.commentstring = '#%s'
 vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+_G.OverseerConfig.python_errorformat = ''
+    -- See https://github.com/python-mode/python-mode/blob/149ccf7c5be0753f5e9872c023ab2eeec3442105/autoload/pymode/run.vim#L4
+    .. [[%E\ \ File\ \"%f\"\\\,\ line\ %l\\\,%m%\\C,]]
+    .. [[%E\ \ File\ \"%f\"\\\,\ line\ %l%\\C,]]
+    .. [[%C%p^,]]
+    .. [[%-C\ \ %.%#,]]
+    .. [[%-C\ \ \ \ %.%#,]]
+    .. [[%Z%\\@=%m,]]
+    .. [[%+GTraceback%.%#,]]
+    .. [[%+GDuring\ handling%.%#,]]
+    .. [[%+GThe\ above\ exception%.%#,]]
+    .. [[%-G[Process exited%.%#,]]
+    .. [[%f:%l:\ %.%#%tarning:%m,]]
 
 -- Running
 local function _parse_qf(task_metadata, cwd, active_window_id)
@@ -24,7 +37,7 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
         end
     end
 
-    if task_metadata.name == 'run_precommit' then
+    if task_metadata and task_metadata.name == 'run_precommit' then
         -- Fix file paths
         for _, v in pairs(new_qf) do
             local fn = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(v.bufnr), ':p:.')
@@ -156,6 +169,21 @@ local function run_tmux_pane(debug_mode)
     end
 end
 
+local function tmux2qf(cmd_opt)
+    local tmux_win_nr = cmd_opt.args
+    local content = vim.fn.system('tmux capture-pane -p -t ' .. tmux_win_nr)
+    vim.fn.setqflist({}, ' ', {
+        lines = vim.split(content, '\n'),
+        efm = _G.OverseerConfig.python_errorformat,
+    })
+    _parse_qf(
+        { run_cmd = 'Tmux Window: ' .. tmux_win_nr },
+        vim.fn.getcwd(),
+        vim.fn.win_getid()
+    )
+end
+vim.api.nvim_create_user_command('Tmux2Qf', tmux2qf, { nargs = 1 })
+
 -- Debugging
 local function add_breakpoint()
     local save_cursor = vim.fn.getcurpos()
@@ -237,6 +265,7 @@ end, { buffer = true })
 u.keymap('n', '<Leader>lB', function()
     list_breakpoints(false)
 end, { buffer = true })
+u.keymap('n', '<Leader>lt', ':Tmux2Qf ', { silent = false })
 -- Pre-commit
 u.keymap('n', '<Leader>rh', function()
     run_overseer('run_precommit')
