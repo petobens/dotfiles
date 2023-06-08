@@ -96,12 +96,20 @@ lspconfig.lua_ls.setup({
 lspconfig.pyright.setup({
     on_attach = on_attach,
     handlers = {
-        -- Don't use pyright as a linter (we use pylint and mypy instead)
+        -- Don't publish pyright diagnostics (we use pylint and mypy instead)
         ['textDocument/publishDiagnostics'] = function() end,
     },
     settings = {
         pyright = {
             disableOrganizeImports = true,
+        },
+        python = {
+            analysis = {
+                autoSearchPaths = true,
+                diagnosticMode = 'openFilesOnly',
+                typeCheckingMode = 'off',
+                useLibraryCodeForTypes = false,
+            },
         },
     },
 })
