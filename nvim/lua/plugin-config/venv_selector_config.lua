@@ -78,7 +78,9 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = vim.api.nvim_create_augroup('poetry_venv_auto', { clear = true }),
     pattern = { '*.py' },
     callback = function()
-        auto_poetry_venv()
+        if not string.match(vim.fn.expand('%:p'), '.git/') then
+            auto_poetry_venv()
+        end
     end,
 })
 
