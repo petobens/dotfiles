@@ -58,6 +58,7 @@ vim.g.editorconfig = false
 -- Appearance
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 vim.opt.cursorline = true
+vim.opt.fillchars = vim.opt.fillchars + { eob = ' ' }
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.pumblend = 6
