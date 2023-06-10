@@ -48,8 +48,8 @@ onedarkpro.setup({
         Directory = { fg = p.light_blue },
         EndOfBuffer = { fg = p.comment_grey },
         ErrorMsg = { fg = p.red },
-        FloatBorder = { fg = p.cursor_grey },
-        FloatTitle = { fg = p.cursor_grey },
+        FloatBorder = { fg = p.cursor_grey, bg = p.none },
+        FloatTitle = { fg = p.cursor_grey, bg = p.none },
         FoldColumn = { fg = p.comment_grey, bg = p.black },
         Folded = { link = 'FoldColumn' },
         IncSearch = { fg = p.bg, bg = p.orange },
@@ -72,8 +72,8 @@ onedarkpro.setup({
         CurSearch = { link = 'IncSearch' },
         SignColumn = { bg = p.bg },
         SpecialKey = { fg = p.special_grey },
-        SpellBad = { sp = p.red, style = 'undercurl' },
-        SpellCap = { sp = p.orange, style = 'undercurl' },
+        SpellBad = { fg = p.none, sp = p.red, style = 'undercurl' },
+        SpellCap = { fg = p.none, sp = p.orange, style = 'undercurl' },
         SpellLocal = { link = 'SpellCap' },
         SpellRare = { link = 'SpellCap' },
         StatusLine = { fg = p.fg, bg = p.cursor_grey },
@@ -94,7 +94,7 @@ onedarkpro.setup({
         WinSeparator = { link = 'FloatBorder' },
 
         -- Syntax
-        Comment = { fg = p.comment_grey, style = 'italic' },
+        Comment = { fg = p.comment_grey, bg = p.none, style = 'italic' },
         Constant = { fg = p.cyan },
         String = { fg = p.green },
         Character = { fg = p.green },
@@ -204,7 +204,7 @@ onedarkpro.setup({
 
         -- Lua
         ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
-        ['@lsp.type.comment.lua'] = {},
+        ['@lsp.type.comment.lua'] = { link = 'Comment' },
 
         ---- Markdown
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
