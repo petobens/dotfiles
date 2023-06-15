@@ -1,7 +1,7 @@
-local u = require('utils')
 ---@diagnostic disable-next-line: missing-parameter
 local onedark_colors = require('onedarkpro.helpers').get_colors()
 local overseer = require('overseer')
+local u = require('utils')
 
 _G.LualineConfig = {}
 

@@ -1,5 +1,5 @@
-local u = require('utils')
 local neotest = require('neotest')
+local u = require('utils')
 
 neotest.setup({
     adapters = {

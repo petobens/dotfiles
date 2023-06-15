@@ -1,6 +1,6 @@
 local u = require('utils')
-local venv_selector = require('venv-selector')
 local venv = require('venv-selector.venv')
+local venv_selector = require('venv-selector')
 
 venv_selector.setup({
     search = false,

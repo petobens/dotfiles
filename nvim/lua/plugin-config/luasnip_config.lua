@@ -1,6 +1,6 @@
-local u = require('utils')
 local luasnip = require('luasnip')
 local types = require('luasnip.util.types')
+local u = require('utils')
 
 local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
 
