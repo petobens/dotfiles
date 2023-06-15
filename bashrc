@@ -389,7 +389,7 @@ sys_update_all() {
         outdated="$(pip list --user --outdated)"
         if [ -n "$outdated" ]; then
             echo "$outdated"
-            pip list --user --outdated | grep -v '^-e' | cut -d ' ' -f 1 | tail -n +3 | xargs -n 1 pip install --user -U
+            pip list --user --outdated | grep -v '^-e' | cut -d ' ' -f 1 | tail -n +3 | xargs -n 1 pip install --user --break-system-packages -U
         fi
     fi
     if type "tlmgr" > /dev/null 2>&1; then
