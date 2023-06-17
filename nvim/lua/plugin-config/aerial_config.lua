@@ -13,6 +13,11 @@ require('aerial').setup({
     icons = {
         Collapsed = u.icons.fold_close,
     },
+    get_highlight = function(_, is_icon, is_collapsed)
+        if is_icon and is_collapsed then
+            return 'Comment'
+        end
+    end,
     keymaps = {
         ['v'] = 'actions.jump_vsplit',
         ['s'] = 'actions.jump_split',
