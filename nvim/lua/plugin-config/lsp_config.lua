@@ -116,7 +116,7 @@ lspconfig.pyright.setup({
                 autoSearchPaths = true,
                 diagnosticMode = 'openFilesOnly',
                 typeCheckingMode = 'off',
-                useLibraryCodeForTypes = false,
+                useLibraryCodeForTypes = true,
             },
         },
     },
