@@ -136,6 +136,9 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
                 pcall(vim.api.nvim_win_close, 0, true)
                 vim.cmd('wincmd p')
             end, { buffer = true })
+            if ft == 'summary' then
+                vim.cmd('setlocal number relativenumber')
+            end
         end,
     })
 end
