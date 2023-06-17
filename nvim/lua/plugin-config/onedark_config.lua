@@ -317,6 +317,7 @@ onedarkpro.setup({
 
         ---- Neotest
         NeotestAdapterName = { fg = p.purple },
+        NeotestTarget = { fg = p.orange },
         NeotestDir = { fg = p.light_blue },
         NeotestFile = { fg = p.white },
         NeotestNamespace = { fg = p.yellow },
@@ -326,8 +327,8 @@ onedarkpro.setup({
         NeotestPassed = { fg = p.green },
         NeotestFailed = { fg = p.red },
         NeotestRunning = { fg = p.orange },
-        NeotestSkipped = { fg = p.cyan },
-        NeotestUnknown = { fg = p.cyan },
+        NeotestSkipped = { fg = p.yellow },
+        NeotestUnknown = { fg = p.gray },
 
         ---- NvimTree
         NvimTreeFolderIcon = { fg = p.light_blue },

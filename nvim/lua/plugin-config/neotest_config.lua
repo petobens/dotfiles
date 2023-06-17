@@ -45,6 +45,8 @@ neotest.setup({
             stop = 's',
             mark = '<Space>',
             clear_marked = '<C-Space>',
+            target = 't',
+            clear_target = 'u',
         },
     },
     icons = {
