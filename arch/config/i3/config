@@ -71,7 +71,7 @@ bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down
 # re-focusing it)
 for_window [class="^(Spotify|Slack|pm|tm|pr|Mailspring|Transmission-gtk|mpv|Simple-scan|obs)$" title="^(?!webcam).+"] $nexec $resize Full
 for_window [title="^(Alacritty|kitty)$"] $nexec $resize Full
-for_window [con_mark="^(brave|calendar|meet|clickup|edge)$"] $nexec $resize Full
+for_window [con_mark="^(brave|calendar|meet|clickup|edge|teams)$"] $nexec $resize Full
 for_window [class="^(Peek|Pavucontrol|Connman-gtk)$"] $nexec $resize Center
 for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] $nexec $resize Center
 for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] $nexec $resize Rectangle

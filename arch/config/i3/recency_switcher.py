@@ -91,7 +91,9 @@ class Menu:
     def _get_window_icon(self, win_class, win_title):
         icon_name = None
         if win_class == 'Brave-browser':
-            if 'Calendar' in win_title:
+            if 'Teams' in win_title:
+                icon_name = 'teams'
+            elif 'Calendar' in win_title:
                 icon_name = 'google-agenda'
             elif 'Meet' in win_title:
                 icon_name = 'google-meet'

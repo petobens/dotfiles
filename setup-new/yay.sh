@@ -230,7 +230,6 @@ $yay_cmd peek-git
 $yay_cmd simple-scan
 $yay_cmd slack-desktop
 $yay_cmd spotify
-$yay_cmd teams
 $yay_cmd transmission-gtk
 $yay_cmd visual-studio-code-bin
 $yay_cmd xfce4-power-manager

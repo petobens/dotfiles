@@ -187,7 +187,15 @@ APPS = {
         'type': 'electron',
         'args': {'class_name': 'Spotify', 'event_delay': 30},
     },
-    'teams': {'type': 'electron', 'args': {'class_name': 'Teams', 'event_delay': 30}},
+    'teams': {
+        'type': 'electron',
+        'args': {
+            'class_name': 'Brave',
+            'mark': 'teams',
+            'subcmd': 'teams',
+            'post_cmd': True,
+        },
+    },
     'textmaker': {
         'type': 'rol_custom',
         'args': {'class_name': 'tm', 'cmd': 'freeoffice-textmaker', 'event_delay': 30},
@@ -537,6 +545,8 @@ class ElectronApp(ROLApp):
                 cmd = cmd.format(url=f'{self.subcmd}.google.com')
             elif self.subcmd == 'clickup':
                 cmd = cmd.format(url=f'app.{self.subcmd}.com')
+            elif self.subcmd == 'teams':
+                cmd = cmd.format(url=f'{self.subcmd}.live.com')
 
         cmd += '"'
         return cmd
