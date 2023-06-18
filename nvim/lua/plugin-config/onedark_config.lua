@@ -204,6 +204,7 @@ onedarkpro.setup({
 
         -- Lua
         ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
+        ['@lsp.type.comment.lua'] = {},
 
         ---- Markdown
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
@@ -403,7 +404,3 @@ set.terminal_color_14 = p.cyan
 set.terminal_color_15 = p.comment_grey
 set.terminal_color_background = p.black
 set.terminal_color_foreground = p.white
-
--- Disable some semantic token highlighting
--- See https://github.com/olimorris/onedarkpro.nvim/issues/190#issuecomment-1595867677
-vim.api.nvim_set_hl(0, '@lsp.type.comment.lua', {})
