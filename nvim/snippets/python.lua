@@ -189,6 +189,15 @@ return {
             {}
         )
     ),
+    s(
+        { trig = 'prd', dscr = 'Pyright disable' },
+        fmta(
+            [[
+            # pyright: ignore
+        ]],
+            {}
+        )
+    ),
 
     -- Libraries
     ---- Pandas
