@@ -57,6 +57,10 @@ local sources = {
 null_ls.setup({
     sources = sources,
     debug = false,
+    should_attach = function(bufnr)
+        -- Don't attach to fugitive git diff buffers
+        return not vim.api.nvim_buf_get_name(bufnr):match('^fugitive://')
+    end,
     on_attach = function(client)
         -- Don't use null-ls for (cmp-lsp) compeltion
         client.server_capabilities.completionProvider = false
