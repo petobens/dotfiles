@@ -1,4 +1,14 @@
+local null_ls = require('null-ls')
 local u = require('utils')
+
+-- Helpers
+local function get_diagnostic_sources_count()
+    local sources = null_ls.get_source({
+        method = null_ls.methods.DIAGNOSTICS,
+        filetype = vim.bo.filetype,
+    })
+    return #sources
+end
 
 -- Diagnostic format
 local function diagnostic_icon(diagnostic)
@@ -17,7 +27,7 @@ end
 
 local function diagnostic_format_virtual(diagnostic)
     if
-        vim.bo.filetype == 'python'
+        get_diagnostic_sources_count() > 1
         and not string.match(diagnostic.message, diagnostic.source)
     then
         return string.format('%s: %s', diagnostic.source, diagnostic.message)
@@ -29,8 +39,7 @@ end
 local function diagnostic_format_float(diagnostic)
     local icon = diagnostic_icon(diagnostic)
     if
-        -- TODO: Find a better way to find if there are multiple diagnostic in the line
-        vim.bo.filetype == 'python'
+        get_diagnostic_sources_count() > 1
         and not string.match(diagnostic.message, diagnostic.source)
     then
         return string.format('%s %s: %s', icon, diagnostic.source, diagnostic.message)
