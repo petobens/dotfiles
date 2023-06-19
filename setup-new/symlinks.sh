@@ -181,6 +181,10 @@ if type "stylua" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/stylua.toml" "$HOME/.config/stylua.toml"
     echo Created .config/stylua.toml symlink
 fi
+if type "luacheck" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/luacheckrc" "$HOME/.config/.luacheckrc"
+    echo Created .config/.luacheckrc symlink
+fi
 
 # Terminal programs
 if type "less" > /dev/null 2>&1; then

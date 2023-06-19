@@ -25,6 +25,7 @@ local ruff = diagnostics.ruff.with({
 })
 
 -- Sources configuration
+-- Note: for each language formatters/linters will run in the declared order
 local sources = {
     -- Bash
     formatting.shfmt.with({
@@ -36,7 +37,12 @@ local sources = {
             '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml',
         },
     }),
-    -- Python (note that formatters will run in the defined order)
+    diagnostics.luacheck.with({
+        extra_args = {
+            '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
+        },
+    }),
+    -- Python
     formatting.isort.with({
         extra_args = {
             '--settings-file=' .. vim.env.HOME .. '/.isort.cfg',

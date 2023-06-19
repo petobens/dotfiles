@@ -91,6 +91,7 @@ lspconfig.lua_ls.setup({
     on_attach = on_attach,
     settings = {
         Lua = {
+            diagnostics = { enable = false }, -- we use luacheck
             workspace = {
                 ignoreDir = { '.git', 'undo' },
                 preloadFileSize = 750,
