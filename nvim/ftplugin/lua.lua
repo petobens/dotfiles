@@ -11,12 +11,12 @@ local _parse_qf = function(qf_title, active_window_id)
     local new_qf = {}
     for _, v in pairs(current_qf) do
         if v.valid > 0 or v.text ~= '' then
+            if v.lnum > 0 then
+                v.type = 'E'
+            end
             table.insert(new_qf, v)
         end
     end
-    -- Remove last element since its the "Process Exited" message
-    -- FIXME: Add proper error format and remove this line
-    table.remove(new_qf)
     if next(new_qf) ~= nil then
         vim.fn.setqflist({}, ' ', { items = new_qf, title = qf_title })
         vim.cmd('copen')

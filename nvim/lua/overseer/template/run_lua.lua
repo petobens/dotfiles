@@ -7,10 +7,12 @@ return {
             args = { file },
             metadata = { run_cmd = string.format('%s', file) },
             components = {
-                -- TODO: Better EFM
                 { 'on_complete_notify', statuses = {} }, -- don't notify on completion
                 { 'on_output_quickfix', open = true },
                 'default',
+            },
+            default_component_params = {
+                errorformat = [[%f:%l:%m,%-G[Process exited%.%#]],
             },
         }
     end,
