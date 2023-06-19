@@ -133,29 +133,28 @@ onedarkpro.setup({
         Todo = { fg = p.red, bg = p.black },
 
         -- Diagnostics
-        -- Initial empty hl ({}) to avoid highlighting code with diagnostic colors
-        DiagnosticError = {},
-        DiagnosticWarn = {},
-        DiagnosticInfo = {},
-        DiagnosticHint = {},
+        DiagnosticError = { link = 'Error' },
+        DiagnosticWarn = { link = 'WarningMsg' },
+        DiagnosticInfo = { fg = p.light_blue },
+        DiagnosticHint = { fg = p.cyan },
         DiagnosticOk = { fg = p.green },
         DiagnosticDeprecated = { fg = p.fg, style = 'strikethrough' },
-        DiagnosticVirtualTextError = { link = 'Error' },
-        DiagnosticVirtualTextWarn = { fg = p.orange },
-        DiagnosticVirtualTextInfo = { fg = p.light_blue },
-        DiagnosticVirtualTextHint = { fg = p.cyan },
-        DiagnosticUnderlineError = { link = 'DiagnosticVirtualTextError' },
-        DiagnosticUnderlineWarn = { link = 'DiagnosticVirtualTextWarn' },
-        DiagnosticUnderlineInfo = { link = 'DiagnosticVirtualTextInfo' },
-        DiagnosticUnderlineHint = { link = 'DiagnosticVirtualTextHint' },
-        DiagnosticFloatingError = { link = 'DiagnosticVirtualTextError' },
-        DiagnosticFloatingWarn = { link = 'DiagnosticVirtualTextWarn' },
-        DiagnosticFloatingInfo = { link = 'DiagnosticVirtualTextInfo' },
-        DiagnosticFloatingHint = { link = 'DiagnosticVirtualTextHint' },
-        DiagnosticSignError = { link = 'DiagnosticVirtualTextError' },
-        DiagnosticSignWarn = { link = 'DiagnosticVirtualTextWarn' },
-        DiagnosticSignInfo = { link = 'DiagnosticVirtualTextInfo' },
-        DiagnosticSignHint = { link = 'DiagnosticVirtualTextHint' },
+        DiagnosticVirtualTextError = { link = 'DiagnosticError' },
+        DiagnosticVirtualTextWarn = { link = 'DiagnosticWarn' },
+        DiagnosticVirtualTextInfo = { link = 'DiagnosticInfo' },
+        DiagnosticVirtualTextHint = { link = 'DiagnosticHint' },
+        DiagnosticUnderlineError = { link = 'DiagnosticError' },
+        DiagnosticUnderlineWarn = { link = 'DiagnosticWarn' },
+        DiagnosticUnderlineInfo = { link = 'DiagnosticInfo' },
+        DiagnosticUnderlineHint = { link = 'DiagnosticHint' },
+        DiagnosticFloatingError = { link = 'DiagnosticError' },
+        DiagnosticFloatingWarn = { link = 'DiagnosticWarn' },
+        DiagnosticFloatingInfo = { link = 'DiagnosticInfo' },
+        DiagnosticFloatingHint = { link = 'DiagnosticHint' },
+        DiagnosticSignError = { link = 'DiagnosticError' },
+        DiagnosticSignWarn = { link = 'DiagnosticWarn' },
+        DiagnosticSignInfo = { link = 'DiagnosticInfo' },
+        DiagnosticSignHint = { link = 'DiagnosticHint' },
 
         -- Lsp
         LspReferenceText = { bg = p.visual_grey },
@@ -187,7 +186,7 @@ onedarkpro.setup({
         },
         ['@text.warning'] = { fg = p.orange, style = 'bold' },
 
-        -- Semantic Tokens
+        -- Generic Semantic Tokens
         ['@defaultLibrary'] = { fg = p.yellow },
 
         -- Filetypes
@@ -203,12 +202,31 @@ onedarkpro.setup({
         texMathEnvArgName = { fg = p.yellow },
 
         -- Lua
-        ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
+        ['@keyword.lua'] = { fg = p.purple },
+        ['@keyword.return.lua'] = { fg = p.purple },
+        ['@lsp.mod.defaultLibrary.lua'] = { fg = p.yellow },
+        ['@lsp.mod.documentation.lua'] = { fg = p.purple },
+        ['@lsp.mod.static.lua'] = { fg = p.yellow },
         ['@lsp.type.comment.lua'] = {},
+        ['@lsp.type.property.lua'] = {},
+        ['@lsp.type.keyword.lua'] = { fg = p.red },
+        ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
 
         ---- Markdown
+        ['@label.markdown'] = { fg = p.green, style = p.none },
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
+        ['@text.reference.markdown_inline'] = { fg = p.purple },
         ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
+        ['@text.title.1.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.2.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.3.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.4.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.5.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.1.marker.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.2.marker.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.3.marker.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.4.marker.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.5.marker.markdown'] = { link = '@text.title.markdown' },
         markdownLinkText = { fg = p.blue, sp = p.blue, style = 'undercurl' },
 
         ---- Python
@@ -217,6 +235,9 @@ onedarkpro.setup({
         ['@constant.builtin.python'] = { fg = p.orange },
         ['@constant.python'] = { fg = p.orange },
         ['@function.builtin.python'] = { fg = p.yellow },
+        ['@include.python'] = { fg = p.purple },
+        ['@keyword.python'] = { fg = p.purple },
+        ['@keyword.return.python'] = { fg = p.purple },
         ['@punctuation.special.python'] = { fg = p.orange },
 
         ---- vim-doc and checkhealth
@@ -224,8 +245,14 @@ onedarkpro.setup({
         ['@label.vimdoc'] = { fg = p.green, style = p.none },
         ['@parameter.vimdoc'] = { fg = p.light_blue },
         ['@text.literal.vimdoc'] = { fg = p.yellow },
+        ['@text.literal.block.vimdoc'] = { link = '@text.literal.vimdoc' },
         ['@text.reference.vimdoc'] = { fg = p.red },
         ['@text.title.vimdoc'] = { fg = p.purple },
+        ['@text.title.1.vimdoc'] = { link = '@text.title.vimdoc' },
+        ['@text.title.2.vimdoc'] = { link = '@text.title.vimdoc' },
+        ['@text.title.3.vimdoc'] = { link = '@text.title.vimdoc' },
+        ['@text.title.4.vimdoc'] = { link = '@text.title.vimdoc' },
+        ['@text.title.5.vimdoc'] = { link = '@text.title.vimdoc' },
         helpSectionDelim = { fg = p.red },
         healthSuccess = { fg = p.black, bg = p.green },
         ['@constant.builtin.vim'] = { fg = p.yellow },
