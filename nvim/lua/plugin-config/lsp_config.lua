@@ -92,12 +92,13 @@ lspconfig.lua_ls.setup({
     settings = {
         Lua = {
             diagnostics = { enable = false }, -- we use luacheck
+            hint = { enable = true },
+            telemetry = { enable = false },
             workspace = {
                 ignoreDir = { '.git', 'undo' },
                 preloadFileSize = 750,
                 checkThirdParty = false,
             },
-            telemetry = { enable = false },
         },
     },
 })
@@ -144,6 +145,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
         u.keymap('n', 'K', vim.lsp.buf.hover, opts)
         u.keymap('n', '<Leader>fs', vim.lsp.buf.signature_help, opts)
         u.keymap('n', '<Leader>fc', custom_lsp_format, opts)
+        u.keymap('n', '<Leader>ih', function()
+            vim.lsp.buf.inlay_hint(0, nil)
+        end, opts)
     end,
 })
 u.keymap('v', '<Leader>fc', 'gq', { remap = true })

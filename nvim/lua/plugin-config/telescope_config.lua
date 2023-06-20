@@ -61,6 +61,7 @@ local tree_previewer = previewers.new_termopen_previewer({
 
 -- Custom sorters
 local preserve_order_sorter = function(opts)
+    -- luacheck:ignore 631
     -- From: https://github.com/antoinemadec/telescope-git-browse.nvim/blob/main/lua/telescope/_extensions/git_browse/sorters.lua
     opts = opts or {}
     local fzy = opts.fzy_mod or require('telescope.algos.fzy')
@@ -391,6 +392,7 @@ local function yank_history()
 end
 
 -- Fix folding when opening files and avoid starting in insert mode
+-- luacheck:ignore 631
 -- See: https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
 local function stopinsert(callback)
     return function(prompt_bufnr)

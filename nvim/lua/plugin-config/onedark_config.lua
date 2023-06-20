@@ -37,6 +37,7 @@ onedarkpro.setup({
     theme = 'onedark',
     colors = palette,
     highlights = {
+        -- luacheck:ignore 631
         -- See https://github.com/olimorris/onedarkpro.nvim/blob/main/lua/onedarkpro/theme.lua
         -- General UI
         ColorColumn = { bg = p.cursor_grey },
@@ -161,6 +162,7 @@ onedarkpro.setup({
         LspReferenceRead = { link = 'LspReferenceText' },
         LspReferenceWrite = { link = 'LspReferenceText' },
         LspSignatureActiveParameter = { fg = p.light_blue, bg = p.visual_grey },
+        LspInlayHint = { fg = p.linenr_grey },
 
         -- Treesitter
         ['@boolean'] = { fg = p.orange },
