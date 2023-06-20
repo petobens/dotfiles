@@ -37,15 +37,20 @@ local function diagnostic_format_virtual(diagnostic)
 end
 
 local function diagnostic_format_float(diagnostic)
+    local msg
     local icon = diagnostic_icon(diagnostic)
     if
         get_diagnostic_sources_count() > 1
         and not string.match(diagnostic.message, diagnostic.source)
     then
-        return string.format('%s %s: %s', icon, diagnostic.source, diagnostic.message)
+        msg = string.format('%s %s: %s', icon, diagnostic.source, diagnostic.message)
     else
-        return string.format('%s %s', icon, diagnostic.message)
+        msg = string.format('%s %s', icon, diagnostic.message)
     end
+    if diagnostic.code and not string.match(msg, diagnostic.code) then
+        msg = string.format(msg .. ' [%s]', diagnostic.code)
+    end
+    return msg
 end
 
 local function diagnostic_suffix(diagnostic)
@@ -89,8 +94,8 @@ vim.diagnostic.config({
     float = {
         source = false,
         format = diagnostic_format_float,
-        -- FIXME: Adds suffix twice when writing a file
-        suffix = diagnostic_suffix,
+        -- FIXME: Sometimes adds suffix twice when writing a file
+        suffix = '',
     },
     virtual_text = {
         spacing = 0,
