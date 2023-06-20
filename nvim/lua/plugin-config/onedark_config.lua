@@ -204,14 +204,15 @@ onedarkpro.setup({
         texMathEnvArgName = { fg = p.yellow },
 
         -- Lua
+        ['@field.lua'] = { fg = p.red },
         ['@keyword.lua'] = { fg = p.purple },
         ['@keyword.return.lua'] = { fg = p.purple },
         ['@lsp.mod.defaultLibrary.lua'] = { fg = p.yellow },
         ['@lsp.mod.documentation.lua'] = { fg = p.purple },
         ['@lsp.mod.static.lua'] = { fg = p.yellow },
         ['@lsp.type.comment.lua'] = {},
-        ['@lsp.type.property.lua'] = {},
         ['@lsp.type.keyword.lua'] = { fg = p.red },
+        ['@lsp.type.property.lua'] = {},
         ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
 
         ---- Markdown
@@ -230,6 +231,9 @@ onedarkpro.setup({
         ['@text.title.4.marker.markdown'] = { link = '@text.title.markdown' },
         ['@text.title.5.marker.markdown'] = { link = '@text.title.markdown' },
         markdownLinkText = { fg = p.blue, sp = p.blue, style = 'undercurl' },
+
+        --- TOML
+        tomlTable = { fg = p.orange },
 
         ---- Python
         ['@attribute.builtin.python'] = { fg = p.blue },
