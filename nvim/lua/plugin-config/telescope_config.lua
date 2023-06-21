@@ -180,6 +180,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
                 results = {
                     '/home/pedro/git-repos/private/dotfiles/',
                     '/home/pedro/OneDrive/mutt/ops/',
+                    '/home/pedro/OneDrive/mutt/',
                     '/home/pedro/git-repos/work/',
                     '/home/pedro/Desktop/',
                     '/home/pedro/.local/share/nvim/lazy/',

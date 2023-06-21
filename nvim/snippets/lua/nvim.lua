@@ -89,7 +89,7 @@ return {
         { trig = 'pp', dscr = 'Pretty print' },
         fmta(
             [[
-                print(vim.inspect(<><>))<>
+                vim.print(<><>)<>
             ]],
             {
                 f(visual_selection),
