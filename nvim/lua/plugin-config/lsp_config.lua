@@ -148,6 +148,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         u.keymap('n', '<Leader>ih', function()
             vim.lsp.buf.inlay_hint(0, nil)
         end, opts)
+        u.keymap('n', '<Leader>ca', vim.lsp.buf.code_action, opts)
     end,
 })
 u.keymap('v', '<Leader>fc', 'gq', { remap = true })
