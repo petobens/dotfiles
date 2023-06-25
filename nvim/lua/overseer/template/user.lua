@@ -3,5 +3,5 @@ return {
     'run_lua',
     'run_precommit',
     'run_python',
-    'run_script',
+    'run_sh',
 }

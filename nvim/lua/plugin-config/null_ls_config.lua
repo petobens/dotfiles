@@ -31,6 +31,7 @@ local sources = {
     formatting.shfmt.with({
         extra_args = { '-i', '4', '-ci', '-sr' },
     }),
+    diagnostics.shellcheck,
     -- Lua
     formatting.stylua.with({
         extra_args = {

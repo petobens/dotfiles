@@ -85,13 +85,19 @@ end
 ---- Bash
 lspconfig.bashls.setup({
     on_attach = on_attach,
+    settings = {
+        bashIde = {
+            shellcheckPath = '', -- We use null-ls shellcheck
+            enableSourceErrorDiagnostics = false,
+        },
+    },
 })
 -- Lua
 lspconfig.lua_ls.setup({
     on_attach = on_attach,
     settings = {
         Lua = {
-            diagnostics = { enable = false }, -- we use luacheck
+            diagnostics = { enable = false }, -- We use null-ls luacheck
             hint = { enable = true },
             telemetry = { enable = false },
             workspace = {
