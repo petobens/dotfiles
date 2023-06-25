@@ -6,6 +6,9 @@ gitsigns.setup({
     watch_gitdir = {
         interval = 600,
     },
+    current_line_blame_opts = {
+        delay = 0,
+    },
 })
 
 -- Mappings
@@ -33,3 +36,4 @@ u.keymap('n', '<Leader>hp', gitsigns.preview_hunk)
 u.keymap('n', '<Leader>gm', function()
     gitsigns.blame_line({ full = true })
 end)
+u.keymap('n', '<Leader>ib', gitsigns.toggle_current_line_blame)
