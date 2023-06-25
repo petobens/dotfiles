@@ -213,9 +213,7 @@ require('lualine').setup({
             {
                 'lsp_progress',
                 only_show_attached = true,
-                -- pyright doesn't send status messages so hide it
-                -- https://github.com/WhoIsSethDaniel/lualine-lsp-progress.nvim/issues/5#issuecomment-1426838592
-                hide = { 'pyright' },
+                hide = {},
                 display_components = {
                     'lsp_client_name',
                     { 'message' },
