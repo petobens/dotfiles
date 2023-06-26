@@ -356,5 +356,6 @@
     "terminal.integrated.commandsToSkipShell": [
         "-workbench.action.quickOpen"
     ],
-    "window.zoomLevel": 1
+    "window.zoomLevel": 1,
+    "git.openRepositoryInParentFolders": "always"
 }
