@@ -38,10 +38,12 @@ end
 
 local run_toggleterm = function()
     vim.cmd('silent noautocmd update')
+    -- FIXME: No newline added with -l (and -ll won't do since it doesn't load vim
+    -- library). See https://github.com/neovim/neovim/issues/24180
     vim.cmd(
         string.format(
             'TermExec cmd="%s %s"',
-            'nvim -ll',
+            'nvim -l',
             vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
         )
     )
@@ -53,7 +55,7 @@ local run_tmux_pane = function()
     end
     local cwd = utils.buffer_dir()
     local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
-    local sh_cmd = '"nvim -ll ' .. fname .. [[; read -p ''"]]
+    local sh_cmd = '"nvim -l ' .. fname .. [[; read -p ''"]]
     vim.cmd('silent! !tmux new-window -c ' .. cwd .. ' -n ' .. fname .. ' ' .. sh_cmd)
 end
 
