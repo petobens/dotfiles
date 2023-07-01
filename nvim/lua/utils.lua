@@ -27,7 +27,7 @@ function M.border(hl_name)
 end
 
 function M.get_selection()
-    local text = ''
+    local text
     if vim.fn.mode() == 'v' then
         vim.cmd('noautocmd normal! "vy"')
         text = vim.fn.getreg('v')

@@ -38,8 +38,6 @@ end
 
 local run_toggleterm = function()
     vim.cmd('silent noautocmd update')
-    -- FIXME: No newline added with -l (and -ll won't do since it doesn't load vim
-    -- library). See https://github.com/neovim/neovim/issues/24180
     vim.cmd(
         string.format(
             'TermExec cmd="%s %s"',
@@ -59,13 +57,21 @@ local run_tmux_pane = function()
     vim.cmd('silent! !tmux new-window -c ' .. cwd .. ' -n ' .. fname .. ' ' .. sh_cmd)
 end
 
+vim.api.nvim_create_user_command('RunVisualLua', function()
+    vim.cmd('normal ') -- leave visual mode to set <,> marks
+    local lines = vim.fn.getline(vim.fn.getpos("'<")[2], vim.fn.getpos("'>")[2])
+    vim.cmd('lua ' .. table.concat(lines, ' '))
+end, { range = true })
+
 -- Mappings
 u.keymap({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
 u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
+u.keymap('n', '<Leader>rl', [[:execute "lua " getline('.')<CR>]], { buffer = true })
 u.keymap(
     'n',
     '<Leader>ri',
     '<Cmd>update<CR>:luafile %<CR>',
     { silent = false, buffer = true }
 )
+u.keymap('v', '<Leader>ri', ':RunVisualLua<CR>', { buffer = true })
