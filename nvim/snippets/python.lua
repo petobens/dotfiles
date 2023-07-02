@@ -9,7 +9,7 @@ local rep = require('luasnip.extras').rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 local visual_selection = function(_, snip)
-    return snip.env.TM_SELECTED_TEXT[1] or {}
+    return snip.env.TM_SELECTED_TEXT or {}
 end
 
 return {
