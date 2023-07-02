@@ -60,3 +60,4 @@ end
 u.keymap({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
 u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
 u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
+u.keymap('n', '<Leader>ri', run_toggleterm, { buffer = true })
