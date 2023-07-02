@@ -82,6 +82,22 @@ return {
         { condition = line_begin }
     ),
     s(
+        { trig = 'cc', dscr = 'Create user command' },
+        fmta(
+            [[
+                vim.api.nvim_create_user_command({'<>'}, function()
+                    <>
+                end, { <> })
+            ]],
+            {
+                i(1, 'CommandName'),
+                i(2),
+                i(3, 'nargs = 1, range = true'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
         { trig = 'pp', dscr = 'Pretty print' },
         fmta(
             [[
