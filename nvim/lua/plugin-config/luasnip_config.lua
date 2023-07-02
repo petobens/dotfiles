@@ -6,7 +6,7 @@ _G.LuaSnipConfig = {}
 
 -- Helpers
 function _G.LuaSnipConfig.visual_selection(_, snip)
-    return snip.env.TM_SELECTED_TEXT or {}
+    return snip.env.LS_SELECT_DEDENT or {}
 end
 
 -- Setup
