@@ -9,6 +9,7 @@ vim.opt_local.commentstring = '#%s'
 vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 _G.OverseerConfig.python_errorformat = ''
+    -- luacheck:ignore 631
     -- See https://github.com/python-mode/python-mode/blob/149ccf7c5be0753f5e9872c023ab2eeec3442105/autoload/pymode/run.vim#L4
     .. [[%E\ \ File\ \"%f\"\\\,\ line\ %l\\\,%m%\\C,]]
     .. [[%E\ \ File\ \"%f\"\\\,\ line\ %l%\\C,]]
@@ -145,6 +146,10 @@ local function run_ipython(mode)
         vim.cmd('ToggleTermSendVisualLines')
     elseif mode == 'reset' then
         vim.cmd('TermExec cmd="\\%reset -f"')
+    elseif mode == 'carriage' then
+        vim.cmd('wincmd j') -- assumes terminal buffer is the one below
+        vim.api.nvim_input('<CR>')
+        -- TODO: Find a way to get back to previous buffer since "wincmd p" doesn't work
     end
 end
 
@@ -255,6 +260,9 @@ u.keymap('v', '<Leader>ri', function()
 end, { buffer = true })
 u.keymap('n', '<Leader>tr', function()
     run_ipython('reset')
+end, { buffer = true })
+u.keymap('n', '<Leader>cr', function()
+    run_ipython('carriage')
 end, { buffer = true })
 ---- Debugging
 u.keymap('n', '<Leader>bp', add_breakpoint, { buffer = true })
