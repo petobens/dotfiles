@@ -5,10 +5,6 @@ local f = ls.function_node
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 local fmta = require('luasnip.extras.fmt').fmta
 
-local visual_selection = function(_, snip)
-    return snip.env.TM_SELECTED_TEXT or {}
-end
-
 return {
     s(
         { trig = 'url', wordTrig = false, dscr = 'Link' },
@@ -19,7 +15,7 @@ return {
             {
                 i(1),
                 i(2),
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
             }
         )
     ),

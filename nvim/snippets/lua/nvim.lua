@@ -8,10 +8,6 @@ local t = ls.text_node
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
-local function visual_selection(_, snip)
-    return snip.env.TM_SELECTED_TEXT or {}
-end
-
 return {
     s(
         { trig = 'dd', dscr = 'Disable next line diagnostic' },
@@ -92,7 +88,7 @@ return {
                 vim.print(<><>)<>
             ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
                 i(0),
             }

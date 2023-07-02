@@ -10,10 +10,6 @@ local rep = require('luasnip.extras').rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 -- Functions
-local visual_selection = function(_, snip)
-    return snip.env.TM_SELECTED_TEXT or {}
-end
-
 local snake_case_labels = function(node_idx)
     local str = node_idx[1][1]
     local unicode_map = {
@@ -131,7 +127,7 @@ return {
         \textit{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -143,7 +139,7 @@ return {
         \textbf{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -155,7 +151,7 @@ return {
         \enquote{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -167,7 +163,7 @@ return {
         \mathcal{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -179,7 +175,7 @@ return {
         \mathbb{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -191,7 +187,7 @@ return {
         \mathit{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -203,7 +199,7 @@ return {
         \mathrm{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -251,7 +247,7 @@ return {
       \end{equation}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1, 'label'),
                 i(2),
             }
@@ -267,7 +263,7 @@ return {
       \end{equation*}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         ),
@@ -282,7 +278,7 @@ return {
         \frac{<><>}{<>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1, 'nom'),
                 i(2, 'denom'),
             }
@@ -297,7 +293,7 @@ return {
             {
                 i(1, 't=1'),
                 c(2, { sn(nil, { t('^{'), i(1, '\\infty'), t('}') }), t('') }),
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
             }
         )
     ),
@@ -308,7 +304,7 @@ return {
         \bar{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -320,7 +316,7 @@ return {
         \hat{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -332,7 +328,7 @@ return {
         \left(<><>\right)
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -344,7 +340,7 @@ return {
         \left[<><>\right]
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -356,7 +352,7 @@ return {
         \left{<><>\right}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -402,7 +398,7 @@ return {
             ]],
             {
                 c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(2),
                 i(3, 'text'),
                 f(snake_case_labels, { 3 }),
@@ -440,7 +436,7 @@ return {
             {
                 i(1, '2'),
                 i(2, '*'),
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(3),
             }
         )
@@ -465,7 +461,7 @@ return {
         \label{<><>}
     ]],
             {
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -529,33 +525,32 @@ return {
             ]],
             {
                 i(1, 'title'),
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(2),
             }
         ),
         { condition = line_begin }
     ),
-},
-    {
-        s({ trig = '$$', wordTrig = false, dscr = 'Inline math' }, {
-            t('$'),
-            f(visual_selection),
-            i(1),
-            t('$'),
-            i(0),
-        }),
-        s({ trig = '__', wordTrig = false, dscr = 'Subindex' }, {
-            t('_{'),
-            f(visual_selection),
-            i(1),
-            t('}'),
-            i(0),
-        }),
-        s({ trig = '^&', wordTrig = false, dscr = 'Superindex' }, {
-            t('^{'),
-            f(visual_selection),
-            i(1),
-            t('}'),
-            i(0),
-        }),
-    }
+}, {
+    s({ trig = '$$', wordTrig = false, dscr = 'Inline math' }, {
+        t('$'),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+        t('$'),
+        i(0),
+    }),
+    s({ trig = '__', wordTrig = false, dscr = 'Subindex' }, {
+        t('_{'),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+        t('}'),
+        i(0),
+    }),
+    s({ trig = '^&', wordTrig = false, dscr = 'Superindex' }, {
+        t('^{'),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+        t('}'),
+        i(0),
+    }),
+}

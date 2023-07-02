@@ -8,10 +8,6 @@ local f = ls.function_node
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
-local visual_selection = function(_, snip)
-    return snip.env.TM_SELECTED_TEXT or {}
-end
-
 return {
     -- Control flow
     s(
@@ -111,7 +107,7 @@ return {
             ]],
             {
                 i(1),
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
             }
         )
     ),

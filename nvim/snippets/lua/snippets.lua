@@ -59,7 +59,7 @@ return {
         { trig = 'vis', dscr = 'Visual snippet' },
         fmta(
             [[
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
             ]],
             {}
         )
@@ -87,5 +87,4 @@ return {
             }
         )
     ),
-},
-    {}
+}, {}

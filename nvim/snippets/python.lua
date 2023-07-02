@@ -8,10 +8,6 @@ local fmta = require('luasnip.extras.fmt').fmta
 local rep = require('luasnip.extras').rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
-local visual_selection = function(_, snip)
-    return snip.env.TM_SELECTED_TEXT or {}
-end
-
 return {
     -- Control flow
     s(
@@ -97,7 +93,7 @@ return {
         ]],
             {
                 c(1, { t('info'), t('error'), t('warning') }),
-                f(visual_selection),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(2),
             }
         ),
@@ -340,7 +336,7 @@ return {
             [[
             print(<><>)
         ]],
-            { f(visual_selection), i(1) }
+            { f(_G.LuaSnipConfig.visual_selection), i(1) }
         )
     ),
     s(
@@ -349,7 +345,7 @@ return {
             [[
             f'<><>'
         ]],
-            { f(visual_selection), i(1) }
+            { f(_G.LuaSnipConfig.visual_selection), i(1) }
         )
     ),
     s(
@@ -366,7 +362,7 @@ return {
 }, {
     s({ trig = 'tq', dscr = 'Triple quotes' }, {
         t('"""'),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t('"""'),
         i(0),

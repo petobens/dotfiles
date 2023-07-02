@@ -2,8 +2,15 @@ local luasnip = require('luasnip')
 local types = require('luasnip.util.types')
 local u = require('utils')
 
-local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
+_G.LuaSnipConfig = {}
 
+-- Helpers
+function _G.LuaSnipConfig.visual_selection(_, snip)
+    return snip.env.TM_SELECTED_TEXT or {}
+end
+
+-- Setup
+local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
 luasnip.setup({
     history = true, -- allow to jump back into exited (last) snippet
     enable_autosnippets = true,
@@ -48,7 +55,6 @@ u.keymap('n', '<Leader>es', function()
         snippet_file = vim.bo.filetype .. '/' .. snippet_file
     end
     local split = 'split '
-    ---@diagnostic disable-next-line: undefined-field
     if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
         split = 'vsplit '
     end

@@ -10,21 +10,17 @@ local function get_comment_string()
     return vim.trim(vim.split(vim.bo.cms, '%%s')[1])
 end
 
-local function visual_selection(_, snip)
-    return snip.env.TM_SELECTED_TEXT or {}
-end
-
 return {
     s({ trig = 'TD', dscr = 'Todo' }, {
         f(get_comment_string),
         t(' TODO: '),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(0),
     }),
     s({ trig = 'FM', dscr = 'Fixme' }, {
         f(get_comment_string),
         t(' FIXME: '),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(0),
     }),
 }, {
@@ -38,35 +34,35 @@ return {
     ---- Autopairs
     s({ trig = 'dq', dscr = 'Double quotes' }, {
         t('"'),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t('"'),
         i(0),
     }),
     s({ trig = 'sq', dscr = 'Single quotes' }, {
         t("'"),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t("'"),
         i(0),
     }),
     s({ trig = '{{', wordTrig = false, dscr = 'Braces' }, {
         t('{'),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t('}'),
         i(0),
     }),
     s({ trig = '((', wordTrig = false, dscr = 'Parenthesis' }, {
         t('('),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t(')'),
         i(0),
     }),
     s({ trig = '[[', wordTrig = false, dscr = 'Brackets' }, {
         t('['),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t(']'),
         i(0),
@@ -74,7 +70,7 @@ return {
 
     s({ trig = '<<', wordTrig = false, dscr = '<>' }, {
         t('<'),
-        f(visual_selection),
+        f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t('>'),
         i(0),
