@@ -147,9 +147,12 @@ local function run_ipython(mode)
     elseif mode == 'reset' then
         vim.cmd('TermExec cmd="\\%reset -f"')
     elseif mode == 'carriage' then
-        vim.cmd('wincmd j') -- assumes terminal buffer is the one below
+        local current_win_id = vim.fn.win_getid()
+        vim.fn.win_gotoid(vim.fn.bufwinid('ipython'))
         vim.api.nvim_input('<CR>')
-        -- TODO: Find a way to get back to previous buffer since "wincmd p" doesn't work
+        vim.defer_fn(function()
+            vim.fn.win_gotoid(current_win_id)
+        end, 100)
     end
 end
 
