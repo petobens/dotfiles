@@ -264,8 +264,8 @@ return {
       \end{equation*}
     ]],
             {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
             }
         ),
         { condition = line_begin }
@@ -526,6 +526,7 @@ return {
             ]],
             {
                 i(1, 'title'),
+                -- FIXME: Indent not respected
                 isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(3),
             }
