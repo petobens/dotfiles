@@ -87,8 +87,6 @@ local plugins = {
     {
         'neovim/nvim-lspconfig',
         config = function()
-            -- Also load diagnostics here
-            require('plugin-config.diagnostics_config')
             require('plugin-config.lsp_config')
         end,
     },
@@ -97,6 +95,7 @@ local plugins = {
         'jose-elias-alvarez/null-ls.nvim',
         config = function()
             require('plugin-config.null_ls_config')
+            require('plugin-config.diagnostics_config') -- Also load diagnostics here
         end,
     },
     {
