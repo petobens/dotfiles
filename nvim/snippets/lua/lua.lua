@@ -2,6 +2,7 @@ local ls = require('luasnip')
 local s = ls.snippet
 local i = ls.insert_node
 local f = ls.function_node
+local isn = ls.indent_snippet_node
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
@@ -49,8 +50,8 @@ return {
             ]],
             {
                 i(1),
-                f(_G.LuaSnipConfig.visual_selection),
-                i(2),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
             }
         )
     ),

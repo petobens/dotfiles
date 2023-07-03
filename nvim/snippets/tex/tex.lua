@@ -3,6 +3,7 @@ local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
 local sn = ls.snippet_node
+local isn = ls.indent_snippet_node
 local c = ls.choice_node
 local f = ls.function_node
 local fmta = require('luasnip.extras.fmt').fmta
@@ -247,9 +248,9 @@ return {
       \end{equation}
     ]],
             {
-                f(_G.LuaSnipConfig.visual_selection),
                 i(1, 'label'),
-                i(2),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
             }
         ),
         { condition = line_begin }
@@ -525,8 +526,8 @@ return {
             ]],
             {
                 i(1, 'title'),
-                f(_G.LuaSnipConfig.visual_selection),
-                i(2),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
             }
         ),
         { condition = line_begin }

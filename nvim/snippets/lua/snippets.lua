@@ -56,12 +56,21 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'vis', dscr = 'Visual snippet' },
+        { trig = 'vs', dscr = 'Visual selection' },
         fmta(
             [[
                 f(_G.LuaSnipConfig.visual_selection),
             ]],
             {}
+        )
+    ),
+    s(
+        { trig = 'vi', dscr = 'Visual indent' },
+        fmta(
+            [[
+                isn(<>, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+            ]],
+            { i(1) }
         )
     ),
     s(

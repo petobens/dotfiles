@@ -5,8 +5,8 @@ local u = require('utils')
 _G.LuaSnipConfig = {}
 
 -- Helpers
-function _G.LuaSnipConfig.visual_selection(_, snip)
-    return snip.env.LS_SELECT_DEDENT or {}
+function _G.LuaSnipConfig.visual_selection(_, parent)
+    return parent.snippet.env.LS_SELECT_DEDENT or {}
 end
 
 -- Setup
