@@ -520,13 +520,12 @@ return {
         fmta(
             [[
                 \begin{frame}[fragile=singleslide]
-                    \frametitle{<>}
-                    <><>
+                \frametitle{<>}
+                  <><>
                 \end{frame}
             ]],
             {
                 i(1, 'title'),
-                -- FIXME: Indent not respected
                 isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(3),
             }
