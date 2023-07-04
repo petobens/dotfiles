@@ -5,7 +5,7 @@ fi
 
 if type "pip3" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing Python3 modules...\\033[0m"
-    pip_install_cmd='pip3 install --user '
+    pip_install_cmd='pip3 install --user --break-system-packages'
     if type "i3" > /dev/null 2>&1; then
         $pip_install_cmd git+https://github.com/altdesktop/i3ipc-python
     fi
@@ -14,7 +14,9 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd numpy
     $pip_install_cmd pandas
     $pip_install_cmd Pillow # needed for gtk dialogs
-    $pip_install_cmd git+https://github.com/pdbpp/pdbpp
+    # Temporary fix for 3.11
+    # See: https://github.com/pdbpp/pdbpp/issues/516#issuecomment-1443920246
+    $pip_install_cmd git+https://github.com/petobens/pdbpp
     $pip_install_cmd pipx
     if type "nvim" > /dev/null 2>&1; then
         $pip_install_cmd pynvim
