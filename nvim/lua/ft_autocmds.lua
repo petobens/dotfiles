@@ -160,18 +160,12 @@ local sql_acg = vim.api.nvim_create_augroup('ft_sql', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
     group = sql_acg,
     pattern = { 'sql' },
-    command = 'setlocal shiftwidth=2 tabstop=2 softtabstop=2',
+    command = 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 textwidth=90',
 })
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
     group = sql_acg,
     pattern = { '*.pgsql', '*.mssql', '*.mysql' },
     command = 'setlocal ft=sql',
-})
--- FIXME: not quite working
-vim.api.nvim_create_autocmd('FileType', {
-    group = sql_acg,
-    pattern = { 'sql' },
-    command = 'syn keyword sqlFunction DATE_PARSE DATE_DIFF DATE_TRUNC',
 })
 
 --- Text

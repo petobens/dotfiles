@@ -67,7 +67,6 @@ $yay_cmd python
 $yay_cmd python-pip
 $yay_cmd pyenv
 $yay_cmd pyenv-virtualenv
-$yay_cmd ruby
 $yay_cmd rust
 $yay_cmd jdk-openjdk
 if [[ "$install_node" = true ]]; then
@@ -203,7 +202,6 @@ $yay_cmd tk
 $yay_cmd tree
 $yay_cmd unrar
 $yay_cmd unzip
-$yay_cmd vagrant
 $yay_cmd virtualbox
 $yay_cmd vivid
 $yay_cmd w3m

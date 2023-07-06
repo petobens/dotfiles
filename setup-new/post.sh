@@ -8,10 +8,6 @@ sudo chsh -s "$(command -v bash)"
 if [ ! -f "$HOME/git-repos/private/trueline/trueline.sh" ]; then
     git clone https://github.com/petobens/trueline ~/git-repos/private/trueline
 fi
-if type "gem" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m--> Installing sqlint...\\033[0m"
-    gem install sqlint
-fi
 if type "ranger" > /dev/null 2>&1; then
     # Install ranger plugins and scope.sh executable
     echo -e "\\033[1;34m--> Installing ranger devicons...\\033[0m"

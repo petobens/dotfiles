@@ -185,6 +185,10 @@ if type "luacheck" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/luacheckrc" "$HOME/.config/.luacheckrc"
     echo Created .config/.luacheckrc symlink
 fi
+if type "sqlfluff" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/sqlfluff" "$HOME/.sqlfluff"
+    echo Created .sqlfluff symlink
+fi
 
 # Terminal programs
 if type "less" > /dev/null 2>&1; then
@@ -252,6 +256,7 @@ else
         fi
     fi
     if type "pacman" > /dev/null 2>&1; then
+        # shellcheck disable=SC2033
         sudo rm /etc/pacman.conf
         sudo $ln_cmd -fTs "$dotfiles_dir/arch/config/pacman.conf" "/etc/pacman.conf"
         echo Created /etc/pacman.conf symlink
@@ -289,6 +294,7 @@ else
     fi
     if type "connmanctl" > /dev/null 2>&1; then
         sudo mkdir -p "/etc/connman"
+        # shellcheck disable=SC2033
         sudo cp "$dotfiles_dir/arch/config/connman.conf" "/etc/connman/main.conf"
         echo Copied connman config to /etc/connman/main.conf
     fi
