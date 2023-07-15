@@ -62,6 +62,8 @@ local sources = {
     -- SQL (dialect is set in sqlfluff config)
     null_ls_formatting.sqlfluff,
     null_ls_diagnostics.sqlfluff,
+    -- YAML
+    null_ls_diagnostics.yamllint,
 }
 
 -- Helpers
