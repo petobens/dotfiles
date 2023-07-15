@@ -226,7 +226,7 @@ end
 require('nvim-tree').setup({
     disable_netrw = false, -- conflicts with Fugitive's Gbrowse
     on_attach = on_attach,
-    sort_by = sort_by,
+    sort = { sorter = sort_by },
     view = {
         width = { min = 43, max = 55 },
         number = true,
