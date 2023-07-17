@@ -198,6 +198,7 @@ $yay_cmd socat
 $yay_cmd sshfs
 $yay_cmd sshpass
 $yay_cmd stylua
+$yay_cmd taplo-cli
 $yay_cmd tk
 $yay_cmd tree
 $yay_cmd unrar

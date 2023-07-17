@@ -189,6 +189,10 @@ if type "sqlfluff" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/sqlfluff" "$HOME/.sqlfluff"
     echo Created .sqlfluff symlink
 fi
+if type "taplo" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/taplo.toml" "$HOME/taplo.toml"
+    echo Created taplo.toml symlink
+fi
 
 # Terminal programs
 if type "less" > /dev/null 2>&1; then

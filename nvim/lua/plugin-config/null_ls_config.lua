@@ -3,7 +3,7 @@ local u = require('utils')
 local null_ls_diagnostics = null_ls.builtins.diagnostics
 local null_ls_formatting = null_ls.builtins.formatting
 
--- Ruff settings
+-- Custom sources
 local ruff_severities = {
     ['E'] = vim.diagnostic.severity.ERROR,
     ['F8'] = vim.diagnostic.severity.ERROR,
@@ -62,6 +62,13 @@ local sources = {
     -- SQL (dialect is set in sqlfluff config)
     null_ls_formatting.sqlfluff,
     null_ls_diagnostics.sqlfluff,
+    -- TOML
+    -- TODO: not diagnostics as per https://github.com/tamasfe/taplo/issues/328
+    null_ls_formatting.taplo.with({
+        extra_args = {
+            '--config=' .. vim.env.HOME .. '/taplo.toml',
+        },
+    }),
     -- YAML
     null_ls_diagnostics.yamllint,
 }
