@@ -33,6 +33,10 @@ local sources = {
         extra_args = { '-i', '4', '-ci', '-sr' },
     }),
     null_ls_diagnostics.shellcheck,
+    -- JSON
+    null_ls_formatting.jq.with({
+        extra_args = { '--indent', '4' },
+    }),
     -- Lua
     null_ls_formatting.stylua.with({
         extra_args = {
