@@ -32,11 +32,15 @@ local sources = {
     null_ls_formatting.shfmt.with({
         extra_args = { '-i', '4', '-ci', '-sr' },
     }),
+
     null_ls_diagnostics.shellcheck,
     -- JSON
     null_ls_formatting.jq.with({
         extra_args = { '--indent', '4' },
     }),
+
+    null_ls_diagnostics.jsonlint,
+
     -- Lua
     null_ls_formatting.stylua.with({
         extra_args = {
@@ -48,6 +52,7 @@ local sources = {
             '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
         },
     }),
+
     -- Python
     null_ls_formatting.isort.with({
         extra_args = {
@@ -59,13 +64,14 @@ local sources = {
             '--config=' .. vim.env.HOME .. '/.config/.black.toml',
         },
     }),
-    -- pylint,mypy and ruff search for the correct config file by default
     null_ls_diagnostics.pylint,
     null_ls_diagnostics.mypy,
     ruff,
+
     -- SQL (dialect is set in sqlfluff config)
     null_ls_formatting.sqlfluff,
     null_ls_diagnostics.sqlfluff,
+
     -- TOML
     -- TODO: not diagnostics as per https://github.com/tamasfe/taplo/issues/328
     null_ls_formatting.taplo.with({
@@ -73,6 +79,7 @@ local sources = {
             '--config=' .. vim.env.HOME .. '/taplo.toml',
         },
     }),
+
     -- YAML
     null_ls_diagnostics.yamllint,
 }
