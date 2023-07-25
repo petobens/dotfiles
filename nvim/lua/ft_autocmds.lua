@@ -225,3 +225,10 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'man' },
     command = 'setlocal iskeyword+=-',
 })
+
+--- YAML
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+    group = vim.api.nvim_create_augroup('ft_yaml', { clear = true }),
+    pattern = { 'yaml' },
+    command = 'setlocal textwidth=90',
+})

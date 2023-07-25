@@ -17,4 +17,3 @@ rules:
     semi: [2, always]
     space-infix-ops: [2]
     spaced-comment: [2]
-...

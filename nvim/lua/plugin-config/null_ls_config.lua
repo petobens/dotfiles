@@ -81,6 +81,9 @@ local sources = {
     }),
 
     -- YAML
+    null_ls_formatting.prettierd.with({
+        filetypes = { 'yaml' },
+    }),
     null_ls_diagnostics.yamllint,
 }
 

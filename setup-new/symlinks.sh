@@ -157,10 +157,6 @@ if type "eslint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/eslintrc.yaml" "$HOME/.eslintrc.yaml"
     echo Created .eslintrc.yaml symlink
 fi
-if type "tern" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/tern-config" "$HOME/.tern-config"
-    echo Created .tern-config symlink
-fi
 if type "htmlhint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/htmlhintrc" "$HOME/.htmlhintrc"
     echo Created .htmlhintrc symlink
@@ -169,7 +165,7 @@ if type "markdownlint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/markdownlint.json" "$HOME/.markdownlint.json"
     echo Created .markdownlint.json symlink
 fi
-if type "prettier" > /dev/null 2>&1; then
+if type "prettierd" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/prettierrc.yaml" "$HOME/.prettierrc.yaml"
     echo Created .prettierrc.yaml symlink
 fi
@@ -192,6 +188,11 @@ fi
 if type "taplo" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/taplo.toml" "$HOME/taplo.toml"
     echo Created taplo.toml symlink
+fi
+if type "yamllint" > /dev/null 2>&1; then
+    sudo mkdir -p "$HOME/.config/yamllint"
+    sudo $ln_cmd -fTs "$dotfiles_dir/linters/yamllint.yaml" "$HOME/.config/yamllint/config"
+    echo Created "$HOME/.config/yamllint/config" symlink
 fi
 
 # Terminal programs

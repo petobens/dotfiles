@@ -33,7 +33,7 @@ colors:
         background: '#24272e'
         foreground: '#abb2bf'
     cursor:
-        text: '#0b0b0b'    # black
+        text: '#0b0b0b' # black
         cursor: '#528bff'
     vi_mode_cursor:
         text: '#abb2bf'
@@ -49,23 +49,23 @@ colors:
         background: '#282c34'
         foreground: '#abb2bf'
     normal:
-        black:   '#24272e'
-        red:     '#e06c75'
-        green:   '#98c379'
-        yellow:  '#e5c07b'
-        blue:    '#61afef'
+        black: '#24272e'
+        red: '#e06c75'
+        green: '#98c379'
+        yellow: '#e5c07b'
+        blue: '#61afef'
         magenta: '#c678dd'
-        cyan:    '#56b6c2'
-        white:   '#abb2bf'
+        cyan: '#56b6c2'
+        white: '#abb2bf'
     bright:
-        black:   '#3e4452'
-        red:     '#be5046'
-        green:   '#98c379'
-        yellow:  '#d19a66'
-        blue:    '#61afef'
+        black: '#3e4452'
+        red: '#be5046'
+        green: '#98c379'
+        yellow: '#d19a66'
+        blue: '#61afef'
         magenta: '#c678dd'
-        cyan:    '#56b6c2'
-        white:   '#5c6370'
+        cyan: '#56b6c2'
+        white: '#5c6370'
 
 mouse:
     hide_when_typing: true
@@ -83,67 +83,66 @@ cursor:
 
 # Default shell
 # For osx uncomment the following
-    # shell:
-        # program: /usr/local/bin/bash  # osx
-    # args:
-    # - --login
+# shell:
+# program: /usr/local/bin/bash  # osx
+# args:
+# - --login
 
 # Key bindings
 key_bindings:
-    - { key: V,        mods: Super, action: Paste                }
-    - { key: C,        mods: Super, action: Copy                 }
-    - { key: Q,        mods: Super, action: Quit                 }
-    - { key: W,        mods: Super, action: Quit                 }
-    - { key: Equals,   mods: Super, action: IncreaseFontSize     }
-    - { key: Minus,    mods: Super, action: DecreaseFontSize     }
-    - { key: Key0,     mods: Super, action: ResetFontSize        }
-    - { key: End,      mods: Shift, action: ScrollToBottom       }
-    - { key: Home,     mods: Shift, action: ScrollToTop          }
+    - { key: V, mods: Super, action: Paste }
+    - { key: C, mods: Super, action: Copy }
+    - { key: Q, mods: Super, action: Quit }
+    - { key: W, mods: Super, action: Quit }
+    - { key: Equals, mods: Super, action: IncreaseFontSize }
+    - { key: Minus, mods: Super, action: DecreaseFontSize }
+    - { key: Key0, mods: Super, action: ResetFontSize }
+    - { key: End, mods: Shift, action: ScrollToBottom }
+    - { key: Home, mods: Shift, action: ScrollToTop }
     # Since we cannot set zoom factor we bind keys multiple times
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: U,        mods: Super, action: IncreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
-    - { key: D,        mods: Super, action: DecreaseFontSize     }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: U, mods: Super, action: IncreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
+    - { key: D, mods: Super, action: DecreaseFontSize }
     # Vi mode
-    - { key: LBracket, mods: Control|Alt,  action: ToggleViMode  }
-    - { key: Q,        mode: Vi,           action: ToggleViMode  }
-    - { key: H,        mods: Shift, mode: Vi,  action: First     }
-    - { key: L,        mods: Shift, mode: Vi,  action: Last      }
+    - { key: LBracket, mods: Control|Alt, action: ToggleViMode }
+    - { key: Q, mode: Vi, action: ToggleViMode }
+    - { key: H, mods: Shift, mode: Vi, action: First }
+    - { key: L, mods: Shift, mode: Vi, action: Last }
     # Tmux-like
-    - { key: P,        mods: Control|Alt,  action: Paste         }
+    - { key: P, mods: Control|Alt, action: Paste }
     # On OSX uncomment the following to enable alt maps
     # - { key: D,        mods: Alt,   chars: "\x1bd"               }
     # - { key: Z,        mods: Alt,   chars: "\x1bz"               }
-...
