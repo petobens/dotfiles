@@ -31,120 +31,100 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'sat', dscr = 'Standalone table' },
+        { trig = 'art', dscr = 'Article template' },
         fmta(
             [[
-\documentclass{standalone}
+\documentclass[a4paper,twoside,10pt,leqno]{article}
 
-%-----------------------+
-% Clean auxiliary files |
-%-----------------------+
-% arara: clean: {files: [<base_fn>.aux, <base_fn>.log, <base_fn>.synctex.gz]}
+%---------------------------------------+
+% Source code, programming and patching |
+%---------------------------------------+
+\usepackage{embedfile}                 % Embed latex source code
+% \embedfile{<embedfile>}
+\usepackage{etoolbox}                  % Toolbox of programming tools
+\usepackage{xpatch}                    % Extension of etoolbox patching commands
 
-%------------------------------------+
-% Language, hyphenation and encoding |
-%------------------------------------+
-\usepackage{lmodern}                      % Use Latin Modern fonts
-<>\renewcommand{\rmdefault}{\sfdefault}   % Use beamer sans-serif font family
-\usepackage[T1]{fontenc}        % Better output when a diacritic/accent is used
-\usepackage[utf8]{inputenc}               % Allows to input accented characters
+%--------------------------------------+
+% Language, hyphenation, encoding, etc |
+%--------------------------------------+
+% Babel package
+\usepackage[<second_lang>,<><babel_opts>]{babel}
 
-%----------------+
-% Table packages |
-%----------------+
-\usepackage{array}          % Flexible column formatting
-% \usepackage{spreadtab}  % Spreadsheet features
-\usepackage{multirow}       % Allows table cells that span more than one row
-\usepackage{booktabs}       % Enhance quality of tables
-\setlength{\heavyrulewidth}{1pt}
+\usepackage{lmodern}             % Use Latin Modern fonts
+\usepackage[T1]{fontenc}         % Better output when a diacritic/accent is used
+\usepackage[utf8]{inputenc}      % Allows to input accented characters
+\usepackage{textcomp}            % Avoid conflicts with siunitx and microtype
+\usepackage{microtype}           % Improves justification and typography
+\usepackage[svgnames]{xcolor}    % Svgnames option loads navy (blue) colour
 
-\usepackage{siunitx}        % Typeset units correctly and define new column (S)
-\sisetup{detect-all,table-auto-round,input-symbols = {()}}
-% \robustify{\bfseries}     % Correct alignment of bold numbers in tables
+%---------------------------------------------+
+% Page style: titles, margins, footnotes, etc |
+%---------------------------------------------+
+% A4 page layout:
+\usepackage[width=14cm,left=3.5cm,marginparwidth=3cm,marginparsep=0.35cm,
+height=21cm,top=3.7cm,headsep=1cm, headheight=1.6cm,footskip=1.2cm]{geometry}
 
-% Table colors
-\usepackage[table,x11names]{xcolor}
+\usepackage[pagestyles,outermarks]{titlesec}  % Customize titles and headers
+\newpagestyle{<pagestyle>}{%
+  \sethead
+  [<head_left>][<head_center>][]
+  {}{\MakeUppercase{<foot_center>}}{<foot_right>}
+  <footer>}
+\pagestyle{<>}
 
-\begin{document}
+\usepackage{emptypage}          % Empty blank pages created by \cleardoublepage
 
-\begin{tabular}{<>}
-    \toprule
-    <>
-    \midrule
-    <>
-    \bottomrule
-\end{tabular}
-\end{document}
-]],
+\usepackage[stable,multiple]{footmisc}  % Customizations of footnotes
+\DefineFNsymbols*{mysymbols}[math]{\dagger\ddagger\S\diamondsuit*}
+\setfnsymbol{mysymbols}  % These are used with the \thanks command
+\renewcommand*{\footnoterule}{\vspace*{0.3cm}\hrule width 2.5cm\vspace*{0.3cm}}
+\makeatletter
+	\renewcommand\@makefntext[1]{
+		\setlength{\parindent}{15pt}\mbox{\@thefnmark.\space}{#1}}
+\makeatother
+
+%-------------------------------+
+% Math symbols and environments |
+%-------------------------------+
+\usepackage{amsmath}               % Load new math environments
+\numberwithin{equation}{section}
+\usepackage{amssymb}               % Defines most math symbols (such as \mathbb)
+\usepackage{mathtools}             % Extension and bug fixes for amsmath package
+\usepackage{mathrsfs}              % Math script like font
+\usepackage{breqn}                 % Automatic line breaking of math expressions
+\renewcommand*{\intlimits}{\displaylimits}  % Fix breqn clash with intlimits
+
+            ]],
             {
-                base_fn = p(vim.fn.expand, '%:t:r'),
-                c(1, { sn(nil, { i(1, '%') }), t('') }),
-                i(2, 'S'),
-                i(3),
-                i(4),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
-        { trig = 'saf', dscr = 'Standalone figure' },
-        fmta(
-            [[
-\documentclass{standalone}
-
-%-----------------------+
-% Clean auxiliary files |
-%-----------------------+
-% arara: clean: {files: [<base_fn>.aux, <base_fn>.log, <base_fn>.synctex.gz]}
-
-%----------------------------------------------+
-% Font, hyphenation, encoding and math symbols |
-%----------------------------------------------+
-\usepackage{lmodern}
-% \renewcommand{\rmdefault}{\sfdefault}   % Use beamer sans-serif font family
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{amssymb}
-\usepackage[eulergreek]{sansmath}
-
-%--------+
-% Graphs |
-%--------+
-\usepackage{pgfplots}
-\pgfplotsset{compat=newest,
-standard/.style={
-    axis lines=middle, axis line style={-,big arrow},
-    every axis x label/.style={at={(current axis.right of origin)}, anchor=
-    north east, xshift=1.2mm, yshift=-0.2mm},
-    every axis y label/.style={at={(current axis.above origin)}, anchor=east,
-    yshift=-0.7mm},
-    every tick/.style={color=black, line width=0.35pt}
-}
-}
-
-\usetikzlibrary{arrows,intersections,calc,decorations.pathreplacing,
-decorations.markings}
-\tikzset{
-big arrow/.style={
-    decoration={markings,mark=at position 1 with {\arrow[scale=2.4]{latex'}}},
-    postaction={decorate,draw}},
-bold/.style={line width=1pt},
-fopaque/.style={fill=gray, fill opacity=0.25},
-every picture/.style={line width=0.5pt},
-every node/.style={font=\small},
-every pin/.style={font=\footnotesize},
-every pin edge/.style={<<-,>>=stealth'}
-}
-
-\begin{document}
-\begin{tikzpicture}
-    <>
-\end{tikzpicture}
-\end{document}
-]],
-            {
-                base_fn = p(vim.fn.expand, '%:t:r'),
-                i(1),
+                embedfile = p(vim.fn.expand, '%:t'),
+                second_lang = m(1, '^spanish$', 'english', 'spanish'),
+                c(1, { t('spanish'), t('english') }),
+                babel_opts = m(
+                    1,
+                    '^spanish$',
+                    [[,es-noindentfirst,es-nosectiondot,es-nolists,
+es-noshorthands,es-lcroman,es-tabla]]
+                ),
+                c(2, { t('mutt'), t('other') }),
+                pagestyle = rep(2),
+                head_left = m(2, '^mutt$', '', '\\thepage'),
+                head_center = m(
+                    2,
+                    '^mutt$',
+                    '\\includegraphics[height=1.45cm]{logo_mutt.png}',
+                    '\\MakeUppercase{}'
+                ),
+                foot_center = i(3, 'Short Article Title'),
+                foot_right = m(2, '^mutt$', '', '\\thepage'),
+                footer = m(
+                    2,
+                    '^mutt$',
+                    [[
+  \setfoot
+  {}{\thepage}{}
+  ]],
+                    ''
+                ),
             }
         ),
         { condition = line_begin }
@@ -584,7 +564,8 @@ es-noshorthands,es-lcroman,es-tabla]]
                 ),
                 c(2, { t('mutt'), t('other') }), -- \definecolor{<>}{RGB}{<>}
                 rgb = m(2, '^mutt$', '0,41,91', '31,117,254'),
-                -- Note: we cannot add a variable for a choice node so we define it here
+                -- Note: choice nodes requiere a jump-index i.e we cannot use a variable
+                -- we define it here instead
                 color = rep(2),
                 rgb_other = m(2, '^mutt$', '29,66,129', '136,151,164'),
                 base_bib = p(vim.fn.expand, '%:t:r'),
@@ -598,6 +579,126 @@ es-noshorthands,es-lcroman,es-tabla]]
                 i(9),
             }
         ),
-        { condition = line_begin, repeat_dupicates = true }
+        { condition = line_begin }
+    ),
+
+    s(
+        { trig = 'sat', dscr = 'Standalone table' },
+        fmta(
+            [[
+\documentclass{standalone}
+
+%-----------------------+
+% Clean auxiliary files |
+%-----------------------+
+% arara: clean: {files: [<base_fn>.aux, <base_fn>.log, <base_fn>.synctex.gz]}
+
+%------------------------------------+
+% Language, hyphenation and encoding |
+%------------------------------------+
+\usepackage{lmodern}                      % Use Latin Modern fonts
+<>\renewcommand{\rmdefault}{\sfdefault}   % Use beamer sans-serif font family
+\usepackage[T1]{fontenc}        % Better output when a diacritic/accent is used
+\usepackage[utf8]{inputenc}               % Allows to input accented characters
+
+%----------------+
+% Table packages |
+%----------------+
+\usepackage{array}          % Flexible column formatting
+% \usepackage{spreadtab}  % Spreadsheet features
+\usepackage{multirow}       % Allows table cells that span more than one row
+\usepackage{booktabs}       % Enhance quality of tables
+\setlength{\heavyrulewidth}{1pt}
+
+\usepackage{siunitx}        % Typeset units correctly and define new column (S)
+\sisetup{detect-all,table-auto-round,input-symbols = {()}}
+% \robustify{\bfseries}     % Correct alignment of bold numbers in tables
+
+% Table colors
+\usepackage[table,x11names]{xcolor}
+
+\begin{document}
+
+\begin{tabular}{<>}
+    \toprule
+    <>
+    \midrule
+    <>
+    \bottomrule
+\end{tabular}
+\end{document}
+]],
+            {
+                base_fn = p(vim.fn.expand, '%:t:r'),
+                c(1, { sn(nil, { i(1, '%') }), t('') }),
+                i(2, 'S'),
+                i(3),
+                i(4),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'saf', dscr = 'Standalone figure' },
+        fmta(
+            [[
+\documentclass{standalone}
+
+%-----------------------+
+% Clean auxiliary files |
+%-----------------------+
+% arara: clean: {files: [<base_fn>.aux, <base_fn>.log, <base_fn>.synctex.gz]}
+
+%----------------------------------------------+
+% Font, hyphenation, encoding and math symbols |
+%----------------------------------------------+
+\usepackage{lmodern}
+% \renewcommand{\rmdefault}{\sfdefault}   % Use beamer sans-serif font family
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage[eulergreek]{sansmath}
+
+%--------+
+% Graphs |
+%--------+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest,
+standard/.style={
+    axis lines=middle, axis line style={-,big arrow},
+    every axis x label/.style={at={(current axis.right of origin)}, anchor=
+    north east, xshift=1.2mm, yshift=-0.2mm},
+    every axis y label/.style={at={(current axis.above origin)}, anchor=east,
+    yshift=-0.7mm},
+    every tick/.style={color=black, line width=0.35pt}
+}
+}
+
+\usetikzlibrary{arrows,intersections,calc,decorations.pathreplacing,
+decorations.markings}
+\tikzset{
+big arrow/.style={
+    decoration={markings,mark=at position 1 with {\arrow[scale=2.4]{latex'}}},
+    postaction={decorate,draw}},
+bold/.style={line width=1pt},
+fopaque/.style={fill=gray, fill opacity=0.25},
+every picture/.style={line width=0.5pt},
+every node/.style={font=\small},
+every pin/.style={font=\footnotesize},
+every pin edge/.style={<<-,>>=stealth'}
+}
+
+\begin{document}
+\begin{tikzpicture}
+    <>
+\end{tikzpicture}
+\end{document}
+]],
+            {
+                base_fn = p(vim.fn.expand, '%:t:r'),
+                i(1),
+            }
+        ),
+        { condition = line_begin }
     ),
 }, {}
