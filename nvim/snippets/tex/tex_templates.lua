@@ -1,3 +1,5 @@
+-- luacheck:ignore 631
+
 local extras = require('luasnip.extras')
 local ls = require('luasnip')
 
@@ -94,6 +96,222 @@ height=21cm,top=3.7cm,headsep=1cm, headheight=1.6cm,footskip=1.2cm]{geometry}
 \usepackage{breqn}                 % Automatic line breaking of math expressions
 \renewcommand*{\intlimits}{\displaylimits}  % Fix breqn clash with intlimits
 
+%---------------------+
+% Floats and captions |
+%---------------------+
+\graphicspath{{/home/pedro/OneDrive/programming/Latex/logos/}{figures/}{tables/}}
+
+\usepackage[font=small,labelfont=bf]{caption}
+\captionsetup*[figure]{format=plain,justification=centerlast,labelsep=quad}
+\captionsetup*[table]{justification=centering,labelsep=newline}
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+
+% Use subcaption for subfigures (to work properly with hyperref)
+\usepackage{subcaption}
+\captionsetup*[subfigure]{subrefformat=simple,labelformat=simple}
+\renewcommand*{\thesubfigure}{(\alph{subfigure})}
+
+% Further modifications of float layout
+\usepackage[captionskip=5pt]{floatrow}  % We set caption skip here
+\floatsetup[table]{style=Plaintop,font=small,footnoterule=none,footskip=2.5pt}
+
+% \usepackage{longtable}        % Allows to break tables through pages
+% \floatsetup[longtable]{margins=centering,LTcapwidth=table}
+
+%---------------------------------------------------------+
+% Miscellaneous packages: lists, setspace, todonotes, etc |
+%---------------------------------------------------------+
+\usepackage[shortlabels,inline]{enumitem}   % Customize lists
+\setlist[itemize,1]{label=$\bullet$}
+\setlist[itemize,2]{label=\footnotesize{$\blacktriangleright$}}
+\setlist[itemize,3]{label=\tiny{$\blacksquare$}}
+\setlist[itemize,4]{label=\bfseries{\large{--}}}
+% \setlist[enumerate,2]{label=\emph{\alph*})}
+\newlist{steps}{enumerate}{1}               % List of steps to be used in proofs
+\setlist[steps,1]{leftmargin=*,label=\textit{<step> \arabic*.},ref=\arabic*}
+
+\usepackage{setspace}  % Commands for double and one and a half spacing
+% \setstretch{1.2}       % 1.2 spacing
+
+% \usepackage{listings}  % Useful for inserting code (no unicode support)
+% \lstset{basicstyle=\small\ttfamily}
+
+% Code insertion (note: requires pygment python library and shell pdflatex flag)
+% \usepackage{minted}
+% \setminted{style=default, autogobble}
+% \SetupFloatingEnvironment{listing}{name=`!p snip.rv= 'Código' if t[1] == 'spanish' else 'Code'`}
+% \numberwithin{listing}{section}
+
+\usepackage[<package_lang>colorinlistoftodos,textsize=small,figheight=5cm,
+figwidth=10cm,color=red!85]{todonotes}
+
+% \usepackage{lipsum}    % Dummy text generator
+
+%-------------------------+
+% References and appendix |
+%-------------------------+
+\usepackage[style=american]{csquotes}  % Language sensitive quotation facilities
+\usepackage[style=authoryear-comp,backref=true,backend=biber]{biblatex}
+\usepackage{mybibformat} % Modifications to authoryear-comp style and hyperlinks
+% \addbibresource{<base_bib>.bib}
+
+% Set appendix heading as unnumbered section (use subsections afterwards)
+\newcommand*{\appheading}[1][<appendix>]{%
+  \setcounter{secnumdepth}{0}\section{#1}\setcounter{secnumdepth}{3}%
+  \renewcommand*{\thesubsection}{\Alph{subsection}}
+  \numberwithin{equation}{subsection}
+  \numberwithin{theorem}{subsection}
+  \numberwithin{figure}{subsection}
+  \numberwithin{table}{subsection}
+}
+
+%------------------------------------------------------+
+% Hyperlinks, bookmarks, theorems and cross-references |
+%------------------------------------------------------+
+\usepackage[hyperfootnotes=false]{hyperref}
+\hypersetup{colorlinks=true, allcolors=Navy, pdfstartview={XYZ null null 1},
+pdfcreator={Vim LaTeX}, pdfsubject={},
+pdftitle={<title>},
+pdfauthor={<author>},
+pdfkeywords={}
+}
+\usepackage[numbered,open,openlevel=2]{bookmark}
+
+\usepackage{amsthm}        % We load theorem environments here to avoid warnings
+
+\usepackage[<package_lang>noabbrev,capitalise]{cleveref}
+
+%------------------------------------+
+% Definition of theorem environments |
+%------------------------------------+
+% Declare theorem styles that remove final dot and use bold font for notes
+\newtheoremstyle{plaindotless}{\topsep}{\topsep}{\itshape}{0pt}{\bfseries}{}%
+{5pt plus 1pt minus 1pt}{\thmname{#1}\thmnumber{ #2}\bfseries{\thmnote{ (#3)}}}
+\newtheoremstyle{definitiondotless}{\topsep}{\topsep}{\normalfont}{0pt}%
+{\bfseries}{}{5pt plus 1pt minus 1pt}%
+{\thmname{#1}\thmnumber{ #2}\bfseries{\thmnote{ (#3)}}}
+\newtheoremstyle{remarkdotless}{0.5\topsep}{0.5\topsep}{\normalfont}{0pt}%
+{\itshape}{}{5pt plus 1pt minus 1pt}%
+{\thmname{#1}\normalfont\thmnumber{ #2}\itshape{\thmnote{ (#3)}}}
+
+% Define style dependent environments and number them consecutively per section
+\theoremstyle{plaindotless}
+\newtheorem{theorem}{<theorem>}[section]
+\newtheorem*{theorem*}{<theorem>.}
+\newtheorem{proposition}[theorem]{<proposition>}
+\newtheorem*{proposition*}{<proposition>.}
+\newtheorem{lemma}[theorem]{<lemma>}
+\newtheorem*{lemma*}{<lemma>.}
+\newtheorem{corollary}[theorem]{<corollary>}
+\newtheorem*{corollary*}{<corollary>.}
+
+\theoremstyle{definitiondotless}
+\newtheorem{definition}[theorem]{<definition>}
+\newtheorem*{definition*}{<definition>.}
+\newtheorem{examplex}[theorem]{<example>}
+\newtheorem*{examplestarred}{<example>.}
+\newtheorem*{continuedex}{<example_cont>.}
+\newtheorem{exercise}[theorem]{<exercise>}
+\newtheorem*{exercise*}{<exercise>.}
+\newtheorem*{solution*}{<solution>.}
+
+\theoremstyle{remarkdotless}
+\newtheorem{remark}[theorem]{<remark>}
+\newtheorem*{remark*}{<remark>.}
+\newtheorem*{notation*}{<notation>.}
+
+% Define numbered, unnumbered and continued examples with triangle end mark
+\newcommand{\myqedsymbol}{\ensuremath{\triangle}}
+
+\newenvironment{example}
+  {\pushQED{\qed} \renewcommand{\qedsymbol}{\myqedsymbol}\examplex}
+  {\popQED\endexamplex}
+
+\newenvironment{example*}
+  {\pushQED{\qed}\renewcommand{\qedsymbol}{\myqedsymbol}\examplestarred}
+  {\popQED\endexamplestarred}
+
+\newenvironment{examcont}[1]
+  {\pushQED{\qed}\renewcommand{\qedsymbol}{\myqedsymbol}%
+    \newcommand{\continuedexref}{\ref*{#1}}\continuedex}
+  {\popQED\endcontinuedex}
+
+%-----------------------------------------------+
+% Cross-references settings (cleveref settings) |
+%-----------------------------------------------+<cref_spanish>
+\crefname{exercise}{<cref_exercise>}
+\crefname{stepsi}{<cref_steps>}
+
+\crefname{equation}{}{}
+\crefformat{equation}{#2(#1)#3}
+\crefrangeformat{equation}{#3(#1)#4 <lang_to> #5(#2)#6}
+\crefmultiformat{equation}{#2(#1)#3}{ <lang_and> #2(#1)#3}{, #2(#1)#3}{ <lang_and> #2(#1)#3}
+\crefrangemultiformat{equation}{#3(#1)#4 <lang_to> #5(#2)#6}{ <lang_and> #3(#1)#4 <lang_to> #5(#2)#6}%
+{, #3(#1)#4 <lang_to> #5(#2)#6}{ <lang_and> #3(#1)#4 <lang_to> #5(#2)#6}
+<>
+%-----------------------------+
+% Title and abstract settings |
+%-----------------------------+
+% Patch maketitle to change font and shape size
+\makeatletter
+\patchcmd{\@maketitle}{\LARGE}{\huge\bfseries}{}{}     % Title
+\patchcmd{\@maketitle}{\vskip1.5em}{\vskip1.65em}{}{}  % Separation
+\patchcmd{\@maketitle}{\large\lineskip}{\Large\scshape\lineskip}{}{}  % Authors
+\makeatother
+
+\title{<title>}
+\author{<author>}
+\date{<date>}
+<abstract_spa>
+% Don't indent abstract first line
+\patchcmd{\abstract}{\quotation}{\quotation\noindent\ignorespaces}{}{}
+
+% Keywords and JEL Classification commands:
+\newcommand*{\keywords}[1]{\par\noindent\textbf{<keywords>}: \textit{#1}}
+\newcommand*{\jel}[1]{\par\noindent\textbf{<jel>}: \textit{#1}}
+
+%-------------------+
+% Table of contents |
+%-------------------+
+%\addto\captionsspanish{\renewcommand*{\contentsname}{}}
+
+% Add bookmark for table of contents and increase spacing of items
+\preto{\tableofcontents}{\pdfbookmark[0]{\contentsname}{toc}%
+  \setstretch{1.1}}
+\appto{\tableofcontents}{\singlespacing}
+% \appto{\tableofcontents}{\setstretch{1.1}}
+
+%---------------------------------------------------+
+% (Re)Definition of new commands and math operators |
+%---------------------------------------------------+
+% Numbers
+\DeclareMathOperator{\N}{\mathbb{N}}
+\DeclareMathOperator{\Z}{\mathbb{Z}}
+\DeclareMathOperator{\Q}{\mathbb{Q}}
+\DeclareMathOperator{\R}{\mathbb{R}}
+% Probability
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\var}{\mathrm{Var}}
+\DeclareMathOperator{\cov}{\mathrm{Cov}}
+% Delimiters
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lvert\lvert}{\rvert\rvert}
+% Miscellaneous
+\renewcommand{\d}{\ensuremath{\operatorname{d}\!}}  % Differential
+\renewcommand{\L}{\ensuremath{\operatorname{\mathcal{L}}}}  % Lagrangian
+
+\begin{document}
+
+\maketitle
+<abstract_trigger>
+\tableofcontents
+
+<>
+
+% \printbibliography[heading=bibarticle]
+
+\end{document}
             ]],
             {
                 embedfile = p(vim.fn.expand, '%:t'),
@@ -125,6 +343,114 @@ es-noshorthands,es-lcroman,es-tabla]]
   ]],
                     ''
                 ),
+                step = m(1, '^spanish$', 'Paso', 'Step'),
+                package_lang = m(1, '^spanish$', 'spanish,', ''),
+                base_bib = p(vim.fn.expand, '%:t:r'),
+                appendix = m(1, '^spanish$', 'Apéndice', 'Appendix'),
+                theorem = m(1, '^spanish$', 'Teorema', 'Theorem'),
+                proposition = m(1, '^spanish$', 'Proposición', 'Proposition'),
+                lemma = m(1, '^spanish$', 'Lema', 'Lemma'),
+                corollary = m(1, '^spanish$', 'Corolario', 'Corollary'),
+                definition = m(1, '^spanish$', 'Definición', 'Definition'),
+                example = m(1, '^spanish$', 'Ejemplo', 'Example'),
+                example_cont = m(
+                    1,
+                    '^spanish$',
+                    'Continuación del Ejemplo \\continuedexref',
+                    'Example \\continuedexref\\space Continued.'
+                ),
+                exercise = m(1, '^spanish$', 'Ejercicio', 'Exercise'),
+                solution = m(1, '^spanish$', 'Solución', 'Solution'),
+                remark = m(1, '^spanish$', 'Observación', 'Remark'),
+                notation = m(1, '^spanish$', 'Notación', 'Notation'),
+                cref_spanish = m(
+                    1,
+                    '^spanish$',
+                    [[
+
+\crefname{section}{Sección}{Secciones}
+\crefname{table}{Tabla}{Tablas}
+\crefname{enumi}{Inciso}{Incisos}]],
+                    ''
+                ),
+                cref_exercise = m(
+                    1,
+                    '^spanish$',
+                    'Ejercicio}{Ejercicios',
+                    'Exercise}{Exercises'
+                ),
+                cref_steps = m(1, '^spanish$', 'Paso}{Pasos', 'Step}{Steps'),
+                lang_to = m(1, '^spanish$', 'a', 'to'),
+                lang_and = m(1, '^spanish$', 'y', 'and'),
+                c(4, {
+                    sn(nil, {
+                        t({
+                            '',
+                            [[%------------------------+]],
+                            [[% Solutions to exercises |]],
+                            [[%------------------------+]],
+                            [[\setlist[enumerate,1]{wide = 0pt}  % Use wild lists]],
+                            [[% \renewcommand*{\labelenumi}{\textbf{]],
+                        }),
+                        rep(1),
+                        t({
+                            [[ \arabic{enumi}.}}]],
+                            '',
+                            [[% Number equations, figures and tables following the first enumerate counter]],
+                            [[% (ensuring that hyperlinks work properly)]],
+                            [[\numberwithin{equation}{enumi}]],
+                            [[\renewcommand{\theHequation}{\arabic{enumi}.\arabic{equation}}]],
+                            [[\numberwithin{figure}{enumi}]],
+                            [[\renewcommand\theHfigure{\arabic{enumi}.\arabic{figure}}]],
+                            [[\numberwithin{table}{enumi}]],
+                            [[\renewcommand\theHtable{\arabic{enumi}.\arabic{table}}]],
+                            '',
+                            [[% Don't number section environments (but create bookmarks for them) and create]],
+                            [[% bookmark for each exercise]],
+                            [[\setcounter{secnumdepth}{0}]],
+                            [[\preto{\labelenumi}{%]],
+                            [[  \pdfbookmark[2]{]],
+                        }),
+                        i(1, 'Ejercicio'),
+                        t({
+                            [[ \arabic{enumi}}{ejer\arabic{enumi}}}]],
+                            [[  \preto{\labelenumii}{%]],
+                            [[  \pdfbookmark[3]{(\theenumii)}{\theenumi\theenumii}}]],
+                            '',
+                            [[% Each item is an exercise (potentially with points)]],
+                            [[\crefname{enumi}{]],
+                        }),
+                        rep(1),
+                        t('}{'),
+                        rep(1),
+                        t('s}'),
+                        t({ '', [[\newcommand*{\points}[1]{[#1 \textsc{]] }),
+                        i(2, 'puntos'),
+                        t({
+                            '}]}',
+                            '',
+                            [[% To avoid printing solutions uncomment the following two lines]],
+                            [[% \usepackage{environ}]],
+                            [[% \RenewEnviron{solution*}{}]],
+                        }),
+                    }),
+                    t(''),
+                }),
+                title = i(5, 'title'),
+                author = i(6, 'author'),
+                date = m(1, '^spanish$', '\\Today', '\\today'),
+                abstract_spa = m(
+                    1,
+                    '^spanish$',
+                    [[
+
+\addto\captionsspanish{\renewcommand*{\abstractname}{Abstract}}]],
+                    ''
+                ),
+                keywords = m(1, '^spanish$', 'Palabras Clave', 'Keywords'),
+                jel = m(1, '^spanish$', 'Clasificación JEL', 'JEL Classification'),
+                abstract_trigger = i(7, 'type abs and press <C-s> for abstract'),
+                i(8),
             }
         ),
         { condition = line_begin }
@@ -697,6 +1023,18 @@ every pin edge/.style={<<-,>>=stealth'}
             {
                 base_fn = p(vim.fn.expand, '%:t:r'),
                 i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'cm', dscr = 'Choice multi' },
+        fmta(
+            [[
+                <>
+            ]],
+            {
+                c(1, { sn(nil, { t('foo\bar'), t('bar') }), t('') }),
             }
         ),
         { condition = line_begin }

@@ -49,6 +49,143 @@ return {
         ),
         { condition = line_begin }
     ),
+
+    -- Article class
+    s(
+        { trig = 'tp', dscr = 'Titlepage' },
+        fmta(
+            [[
+% Custom titlepage
+\newcommand*{\maketitlepg}{%
+  \renewcommand{\thepage}{\roman{page}}
+  \begingroup
+    \begin{center}
+      \includegraphics[scale=0.03]{<logo_fn>}
+    \end{center}
+	\vspace{0.01\textheight}
+	\begin{center}
+	  \bfseries\LARGE{<institution>}\\
+	  \vspace{0.02\textheight}
+	  \textbf{\Large{<department>}}\\
+	  \vspace{0.3\textheight}
+	  \rule{\textwidth}{1.5pt}\par
+	  \vspace{\baselineskip}
+	  \bfseries\Huge{<title>}\par
+	  \bigskip\Large{--- <subtitle> ---}\\
+	  \vspace{\baselineskip}
+	  \rule{\textwidth}{1.5pt}\par
+      \vfill
+      \textsc{\huge{<author>}}
+      \vfill
+	  \textbf{\Large{<date>}}
+	 \end{center}
+	\endgroup
+	\thispagestyle{empty}\cleardoublepage
+	\renewcommand{\thepage}{\arabic{page}}
+	\setcounter{page}{1}
+}
+            ]],
+            {
+                logo_fn = i(1, 'logo_mutt.png'),
+                institution = i(2, 'institution'),
+                department = i(3, 'department'),
+                title = i(4, 'title'),
+                subtitle = i(5, 'subtitle'),
+                author = i(6, 'author'),
+                date = i(7, 'date'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'tha', dscr = 'Thanks' },
+        fmta(
+            [[
+        \thanks{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'abs', dscr = 'Abstract' },
+        fmta(
+            [[
+\begin{abstract}
+    <>
+\medskip
+\keywords{<>}<>
+\end{abstract}
+    ]],
+            {
+                i(1, '\\lipsum[1]'),
+                i(2),
+                c(3, {
+                    sn(nil, { t({ '', [[\jel{]] }), i(1, [[jel_codes]]), t('}') }),
+                    t(''),
+                }),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'aa', dscr = 'Article appendix' },
+        fmta(
+            [[
+                % Appendix
+                \appheading
+                \appendix
+            ]],
+            {}
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'pt', dscr = 'Points (for exercises)' },
+        fmta(
+            [[
+        \points{<>}
+    ]],
+            {
+                i(1, 'number of points'),
+            }
+        )
+    ),
+
+    -- Beamer
+    s(
+        { trig = 'bf', dscr = 'Beamer frame' },
+        fmta(
+            [[
+                \begin{frame}[fragile=singleslide]
+                \frametitle{<>}
+                  <><>
+                \end{frame}
+            ]],
+            {
+                i(1, 'title'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ft', dscr = 'Frametitle' },
+        fmta(
+            [[
+        \frame{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1, 'title'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
     -- Environments
     s(
         { trig = 'beg', dscr = 'Begin environment' },
@@ -212,12 +349,13 @@ return {
         fmta(
             [[
       \begin{enumerate}<>
-        \item <>
+        \item <><>
       \end{enumerate}
     ]],
             {
                 c(1, { sn(nil, { t('['), i(1, '(i)'), t(']') }), t('') }),
-                i(2),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
             }
         ),
         { condition = line_begin }
@@ -227,11 +365,352 @@ return {
         fmta(
             [[
       \begin{itemize}
-        \item <>
+        \item <><>
       \end{itemize}
     ]],
             {
-                i(1),
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ste', dscr = 'Steps' },
+        fmta(
+            [[
+      \begin{steps}
+        \item <><>
+      \end{steps}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
+    -- Math theorems, propositions, etc
+    s(
+        { trig = 'thm', dscr = 'Theorem' },
+        fmta(
+            [[
+      \begin{theorem}[<>]
+      \label{thm:<>}
+        <><>
+      \end{theorem}
+    ]],
+            {
+                i(1, 'name or reference'),
+                i(2, 'label'),
+                isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(4),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'uthm', dscr = 'Unnumbered theorem' },
+        fmta(
+            [[
+      \begin{theorem*}[<>]
+        <><>
+      \end{theorem*}
+    ]],
+            {
+                i(1, 'name or reference'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'pro', dscr = 'Proposition' },
+        fmta(
+            [[
+      \begin{proposition}
+      \label{pro:<>}
+        <><>
+      \end{proposition}
+    ]],
+            {
+                i(1, 'label'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'upro', dscr = 'Unnumbered proposition' },
+        fmta(
+            [[
+      \begin{proposition*}
+        <><>
+      \end{proposition*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'lem', dscr = 'Lemma' },
+        fmta(
+            [[
+      \begin{lemma}[<>]
+      \label{lem:<>}
+        <><>
+      \end{lemma}
+    ]],
+            {
+                i(1, 'name or reference'),
+                i(2, 'label'),
+                isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(4),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ulem', dscr = 'Unnumbered lemma' },
+        fmta(
+            [[
+      \begin{lemma*}[<>]
+        <><>
+      \end{lemma*}
+    ]],
+            {
+                i(1, 'name or reference'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'cor', dscr = 'Corollary' },
+        fmta(
+            [[
+      \begin{corollary}
+      \label{cor:<>}
+        <><>
+      \end{corollary}
+    ]],
+            {
+                i(1, 'label'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ucor', dscr = 'Unnumbered corollary' },
+        fmta(
+            [[
+      \begin{corollary*}
+        <><>
+      \end{corollary*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'def', dscr = 'definition' },
+        fmta(
+            [[
+      \begin{definition}
+      \label{def:<>}
+        <><>
+      \end{definition}
+    ]],
+            {
+                i(1, 'label'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'udef', dscr = 'Unnumbered definition' },
+        fmta(
+            [[
+      \begin{definition*}
+        <><>
+      \end{definition*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'exa', dscr = 'example' },
+        fmta(
+            [[
+      \begin{example}
+      \label{exa:<>}
+        <><>
+      \end{example}
+    ]],
+            {
+                i(1, 'label'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'uexa', dscr = 'Unnumbered example' },
+        fmta(
+            [[
+      \begin{example*}
+        <><>
+      \end{example*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'exac', dscr = 'Example continued' },
+        fmta(
+            [[
+      \begin{examcont}{exa:<>}
+        <><>
+      \end{examcont}
+    ]],
+            {
+                i(1, 'ref'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'exe', dscr = 'Exercise' },
+        fmta(
+            [[
+      \begin{exercise}
+      \label{exe:<>}
+        <><>
+      \end{exercise}
+    ]],
+            {
+                i(1, 'label'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'uexe', dscr = 'Unnumbered exercise' },
+        fmta(
+            [[
+      \begin{exercise*}
+        <><>
+      \end{exercise*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ans', dscr = 'Answer/Solution' },
+        fmta(
+            [[
+      \begin{solution*}
+        <><>
+      \end{solution*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'rem', dscr = 'Remark' },
+        fmta(
+            [[
+      \begin{remark}
+      \label{rem:<>}
+        <><>
+      \end{remark}
+    ]],
+            {
+                i(1, 'label'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'urem', dscr = 'Unnumbered remark' },
+        fmta(
+            [[
+      \begin{remark*}
+        <><>
+      \end{remark*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'not', dscr = 'Notation' },
+        fmta(
+            [[
+      \begin{notation*}
+        <><>
+      \end{notation*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'pru', dscr = 'Proof' },
+        fmta(
+            [[
+      \begin{proof}[<> \cref*{<>}]
+        <><>
+      \end{proof}
+    ]],
+            {
+                i(1, 'Prueba de'),
+                i(2, 'thm:'),
+                isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(4),
             }
         ),
         { condition = line_begin }
@@ -512,25 +991,6 @@ return {
                 i(1),
             }
         )
-    ),
-
-    -- Beamer
-    s(
-        { trig = 'bf', dscr = 'Beamer frame' },
-        fmta(
-            [[
-                \begin{frame}[fragile=singleslide]
-                \frametitle{<>}
-                  <><>
-                \end{frame}
-            ]],
-            {
-                i(1, 'title'),
-                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
-                i(3),
-            }
-        ),
-        { condition = line_begin }
     ),
 }, {
     s({ trig = '$$', wordTrig = false, dscr = 'Inline math' }, {
