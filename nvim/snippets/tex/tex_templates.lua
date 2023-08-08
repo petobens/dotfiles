@@ -883,9 +883,17 @@ es-noshorthands,es-lcroman,es-tabla]]
 % Translator package (loaded by beamer)
 \uselanguage{spanish}
 \languagepath{spanish}
-\deftranslation[to=spanish]{Notation}{Notación}
-\deftranslation[to=spanish]{Remark}{Observación}
+\deftranslation[to=spanish]{Theorem}{Teorema}
+\deftranslation[to=spanish]{Proposition}{Proposición}
+\deftranslation[to=spanish]{Lemma}{Lema}
+\deftranslation[to=spanish]{Corollary}{Corolario}
+\deftranslation[to=spanish]{Definition}{Definición}
+\deftranslation[to=spanish]{Example}{Ejemplo}
+\deftranslation[to=spanish]{Exercise}{Ejercicio}
 \deftranslation[to=spanish]{Problem}{Enunciado}
+\deftranslation[to=spanish]{Solution}{Solución}
+\deftranslation[to=spanish]{Remark}{Observación}
+\deftranslation[to=spanish]{Notation}{Notación}
                 ]]
                 ),
                 c(2, { t('mutt'), t('other') }), -- \definecolor{<>}{RGB}{<>}

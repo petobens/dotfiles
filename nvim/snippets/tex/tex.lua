@@ -396,13 +396,13 @@ return {
         { trig = 'thm', dscr = 'Theorem' },
         fmta(
             [[
-      \begin{theorem}[<>]
+      \begin{theorem}<>
       \label{thm:<>}
         <><>
       \end{theorem}
     ]],
             {
-                i(1, 'name or reference'),
+                c(1, { sn(nil, { t('['), i(1, 'name or reference'), t(']') }), t('') }),
                 i(2, 'label'),
                 isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(4),
@@ -414,12 +414,12 @@ return {
         { trig = 'uthm', dscr = 'Unnumbered theorem' },
         fmta(
             [[
-      \begin{theorem*}[<>]
+      \begin{theorem*}<>
         <><>
       \end{theorem*}
     ]],
             {
-                i(1, 'name or reference'),
+                c(1, { sn(nil, { t('['), i(1, 'name or reference'), t(']') }), t('') }),
                 isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(3),
             }
@@ -462,13 +462,13 @@ return {
         { trig = 'lem', dscr = 'Lemma' },
         fmta(
             [[
-      \begin{lemma}[<>]
+      \begin{lemma}<>
       \label{lem:<>}
         <><>
       \end{lemma}
     ]],
             {
-                i(1, 'name or reference'),
+                c(1, { sn(nil, { t('['), i(1, 'name or reference'), t(']') }), t('') }),
                 i(2, 'label'),
                 isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(4),
@@ -480,12 +480,12 @@ return {
         { trig = 'ulem', dscr = 'Unnumbered lemma' },
         fmta(
             [[
-      \begin{lemma*}[<>]
+      \begin{lemma*}<>
         <><>
       \end{lemma*}
     ]],
             {
-                i(1, 'name or reference'),
+                c(1, { sn(nil, { t('['), i(1, 'name or reference'), t(']') }), t('') }),
                 isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(3),
             }
@@ -702,15 +702,23 @@ return {
         { trig = 'pru', dscr = 'Proof' },
         fmta(
             [[
-      \begin{proof}[<> \cref*{<>}]
+      \begin{proof}<>
         <><>
       \end{proof}
     ]],
             {
-                i(1, 'Prueba de'),
-                i(2, 'thm:'),
-                isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
-                i(4),
+                c(1, {
+                    sn(nil, {
+                        t('['),
+                        i(1, 'Prueba de '),
+                        t([[\cref*{]]),
+                        i(2, 'thm:'),
+                        t('}]'),
+                    }),
+                    t(''),
+                }),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
             }
         ),
         { condition = line_begin }
