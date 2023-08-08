@@ -159,28 +159,42 @@ return {
         { trig = 'bf', dscr = 'Beamer frame' },
         fmta(
             [[
-                \begin{frame}[fragile=singleslide]
+                \begin{frame}[<>]
                 \frametitle{<>}
                   <><>
                 \end{frame}
             ]],
             {
-                i(1, 'title'),
-                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
-                i(3),
+                c(1, { sn(nil, { i(1, 'fragile=singleslide') }), t('allowframebreaks') }),
+                i(2, 'title'),
+                isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(4),
             }
         ),
         { condition = line_begin }
     ),
     s(
-        { trig = 'ft', dscr = 'Frametitle' },
+        { trig = 'ft', dscr = 'Frame title' },
         fmta(
             [[
-        \frame{<><>}
+        \frametitle{<><>}
     ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1, 'title'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'fs', dscr = 'Frame subtitle' },
+        fmta(
+            [[
+        \framesubtitle{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1, 'subtitle'),
             }
         ),
         { condition = line_begin }
@@ -204,7 +218,41 @@ return {
         { condition = line_begin }
     ),
 
-    -- Sections
+    -- Section environments
+    s(
+        { trig = 'part', dscr = 'Part' },
+        fmta(
+            [[
+                \part{<>}
+                \label{part:<>}
+
+                <>
+            ]],
+            {
+                i(1, 'part name'),
+                f(snake_case_labels, { 1 }),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'cha', dscr = 'Chapter' },
+        fmta(
+            [[
+                \chapter{<>}
+                \label{cha:<>}
+
+                <>
+            ]],
+            {
+                i(1, 'chapter name'),
+                f(snake_case_labels, { 1 }),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
     s(
         { trig = 'sec', dscr = 'Section' },
         fmta(
@@ -637,6 +685,21 @@ return {
         { condition = line_begin }
     ),
     s(
+        { trig = 'ps', dscr = 'Problem statement' },
+        fmta(
+            [[
+      \begin{problem*}
+        <><>
+      \end{problem*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
         { trig = 'ans', dscr = 'Answer/Solution' },
         fmta(
             [[
@@ -724,7 +787,7 @@ return {
         { condition = line_begin }
     ),
 
-    -- Math Environments
+    -- Equation Environments
     s(
         { trig = 'equ', dscr = 'Equation' },
         fmta(
@@ -753,6 +816,63 @@ return {
             {
                 isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'be', dscr = 'Breakable equation' },
+        fmta(
+            [[
+      \begin{dmath*}
+        <><>
+      \end{dmath*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ali', dscr = 'Align' },
+        fmta(
+            [[
+      \begin{align}
+        <><first_eq> <>\\
+        <second_eq> <>
+      \end{align}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                first_eq = i(2, 'first eq'),
+                c(3, {
+                    sn(nil, { t([[\label{eq:]]), i(1, 'tag'), t('}') }),
+                    t([[\nonumber]]),
+                }),
+                second_eq = i(4, 'second eq'),
+                c(5, {
+                    sn(nil, { t([[\label{eq:]]), i(1, 'tag'), t('}') }),
+                    t([[\nonumber]]),
+                }),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ua', dscr = 'Align*' },
+        fmta(
+            [[
+      \begin{align*}
+        <><> \\
+        <>
+      \end{align*}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2, 'first eq'),
+                i(3, 'second eq'),
             }
         ),
         { condition = line_begin }
