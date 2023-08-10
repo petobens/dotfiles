@@ -36,6 +36,9 @@ require('aerial').setup({
             ['s'] = 'actions.jump_split',
         },
     },
+    treesitter = {
+        experimental_selection_range = true,
+    },
 })
 
 -- Helpers
