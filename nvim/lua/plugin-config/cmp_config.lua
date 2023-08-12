@@ -71,6 +71,13 @@ cmp.setup({
         end, { 'i', 's' }),
         ['<A-k>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
         ['<A-j>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+        ['<A-v>'] = cmp.mapping(function()
+            if cmp.visible_docs() then
+                cmp.close_docs()
+            else
+                cmp.open_docs()
+            end
+        end, { 'i', 's' }),
     },
     sources = {
         -- Note: sources are prioritized in the order that they are defined
@@ -79,7 +86,7 @@ cmp.setup({
         {
             name = 'nvim_lsp',
             ---@diagnostic disable-next-line: unused-local
-            entry_filter = function(entry, ctx)
+            entry_filter = function(entry, _)
                 local kind = require('cmp.types').lsp.CompletionItemKind[entry:get_kind()]
                 return ((kind ~= 'Text') and (kind ~= 'Snippet'))
             end,
