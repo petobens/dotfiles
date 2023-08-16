@@ -49,6 +49,23 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'env', dscr = 'Generic environment' },
+        fmta(
+            [[
+      \begin{<>}
+        <><>
+      \end{<>}
+    ]],
+            {
+                i(1, 'env_name'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+                rep(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
 
     -- Article class
     s(
@@ -873,6 +890,63 @@ return {
                 isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(2, 'first eq'),
                 i(3, 'second eq'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
+    -- Within Equation Environments
+    s(
+        { trig = 'aed', dscr = 'Aligned' },
+        fmta(
+            [[
+      \begin{aligned}<>
+        <><> \\
+        <>
+      \end{aligned}
+    ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, 'r'), t(']') }), t('') }),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3, 'first eq'),
+                i(4, 'second eq'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'dca', dscr = '(d)Cases' },
+        fmta(
+            [[
+      \begin{dcases*}
+        <> & <> $<>$ \\
+        <> & <> $<>$
+      \end{dcases*}
+    ]],
+            {
+                i(1),
+                c(2, { sn(nil, { i(1, 'if') }), t('si') }),
+                i(3),
+                i(4),
+                rep(2),
+                i(5),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'mat', dscr = 'Matrix' },
+        fmta(
+            [[
+      \begin{<>matrix*}<>
+        <>
+      \end{<>matrix*}
+    ]],
+            {
+                c(1, { sn(nil, { i(1, 'p/b/v/V/B') }), t('') }),
+                c(2, { sn(nil, { t('['), i(1, 'r'), t(']') }), t('') }),
+                i(3),
+                rep(1),
             }
         ),
         { condition = line_begin }
