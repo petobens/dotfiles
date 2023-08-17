@@ -66,6 +66,19 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'cmd', dscr = 'Generic cmd' },
+        fmta(
+            [[
+        \<>{<><>}
+    ]],
+            {
+                i(1),
+                i(2),
+                f(_G.LuaSnipConfig.visual_selection),
+            }
+        )
+    ),
 
     -- Article class
     s(
@@ -217,24 +230,6 @@ return {
         { condition = line_begin }
     ),
 
-    -- Environments
-    s(
-        { trig = 'beg', dscr = 'Begin environment' },
-        fmta(
-            [[
-      \begin{<>}
-        <>
-      \end{<>}
-    ]],
-            {
-                i(1),
-                i(2),
-                rep(1),
-            }
-        ),
-        { condition = line_begin }
-    ),
-
     -- Section environments
     s(
         { trig = 'part', dscr = 'Part' },
@@ -320,92 +315,6 @@ return {
             }
         ),
         { condition = line_begin }
-    ),
-
-    -- Editing/Fonts
-    s(
-        { trig = 'ti', dscr = 'Textit' },
-        fmta(
-            [[
-        \textit{<><>}
-    ]],
-            {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
-            }
-        )
-    ),
-    s(
-        { trig = 'tb', dscr = 'Text bold' },
-        fmta(
-            [[
-        \textbf{<><>}
-    ]],
-            {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
-            }
-        )
-    ),
-    s(
-        { trig = 'quo', dscr = 'Quote' },
-        fmta(
-            [[
-        \enquote{<><>}
-    ]],
-            {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
-            }
-        )
-    ),
-    s(
-        { trig = 'mcg', dscr = 'Math caligraphic' },
-        fmta(
-            [[
-        \mathcal{<><>}
-    ]],
-            {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
-            }
-        )
-    ),
-    s(
-        { trig = 'mbb', dscr = 'Math blackboard' },
-        fmta(
-            [[
-        \mathbb{<><>}
-    ]],
-            {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
-            }
-        )
-    ),
-    s(
-        { trig = 'mi', dscr = 'Math italic' },
-        fmta(
-            [[
-        \mathit{<><>}
-    ]],
-            {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
-            }
-        )
-    ),
-    s(
-        { trig = 'mr', dscr = 'Math roman' },
-        fmta(
-            [[
-        \mathrm{<><>}
-    ]],
-            {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
-            }
-        )
     ),
 
     -- Lists
@@ -967,15 +876,73 @@ return {
         )
     ),
     s(
-        { trig = 'sum', dscr = 'Sum' },
+        { trig = 'sum', dscr = 'Sum or Product' },
         fmta(
             [[
-        \sum_{<>}<> <>
+        \<>_{<>}<> <>
     ]],
             {
-                i(1, 't=1'),
-                c(2, { sn(nil, { t('^{'), i(1, '\\infty'), t('}') }), t('') }),
+                c(1, { sn(nil, { i(1, 'sum') }), t('prod') }),
+                i(2, 't=1'),
+                c(3, { sn(nil, { t('^{'), i(1, '\\infty'), t('}') }), t('') }),
                 f(_G.LuaSnipConfig.visual_selection),
+            }
+        )
+    ),
+    s(
+        { trig = 'lim', dscr = 'Limit' },
+        fmta(
+            [[
+        \lim_{<> \to <>}
+    ]],
+            {
+                i(1),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'pd', dscr = 'Partial derivative' },
+        fmta(
+            [[
+        \frac{\partial <><>}{\partial <>}
+    ]],
+            {
+                i(1),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'int', dscr = 'Integral' },
+        fmta(
+            [[
+        \int<>\!<>\,\d <>
+    ]],
+            {
+                c(1, {
+                    sn(
+                        nil,
+                        { t('_{'), i(1, 'inf'), t('}'), t('^{'), i(2, 'sup'), t('}') }
+                    ),
+                    t(''),
+                }),
+                i(2, 'function'),
+                i(3, 'variable'),
+            }
+        )
+    ),
+    s(
+        { trig = 'sr', dscr = 'Square root' },
+        fmta(
+            [[
+        \sqrt<>{<><>}
+    ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, 'n != 2'), t(']') }), t('') }),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(2),
             }
         )
     ),
@@ -1032,6 +999,92 @@ return {
         fmta(
             [[
         \left{<><>\right}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+
+    -- Editing/Fonts
+    s(
+        { trig = 'ti', dscr = 'Textit' },
+        fmta(
+            [[
+        \textit{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'tb', dscr = 'Text bold' },
+        fmta(
+            [[
+        \textbf{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'quo', dscr = 'Quote' },
+        fmta(
+            [[
+        \enquote{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'mcg', dscr = 'Math caligraphic' },
+        fmta(
+            [[
+        \mathcal{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'mbb', dscr = 'Math blackboard' },
+        fmta(
+            [[
+        \mathbb{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'mi', dscr = 'Math italic' },
+        fmta(
+            [[
+        \mathit{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'mr', dscr = 'Math roman' },
+        fmta(
+            [[
+        \mathrm{<><>}
     ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
