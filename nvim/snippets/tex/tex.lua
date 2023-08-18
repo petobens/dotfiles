@@ -803,6 +803,39 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'max', dscr = 'Max/min' },
+        fmta(
+            [[
+      \begin{alignat}{2}
+        & \<max>_{\{<variable>\}} & \, <func> <func_label>\\
+        & \;\; \text{<sa>} & <constraint_1> <c1_label>\\
+        & & <constraint_2> <c2_label>
+      \end{alignat}
+    ]],
+            {
+                max = c(1, { sn(nil, { i(1, 'max') }), t('min') }),
+                variable = i(2),
+                func = i(3, 'F(x,y) & = xy'),
+                func_label = c(4, {
+                    sn(nil, { t([[\label{eq:]]), i(1, 'tag'), t('}') }),
+                    t([[\nonumber]]),
+                }),
+                sa = c(5, { sn(nil, { i(1, 's.a') }), t('s.t') }),
+                constraint_1 = i(6, 'constraint with &'),
+                c1_label = c(7, {
+                    sn(nil, { t([[\label{eq:]]), i(1, 'tag'), t('}') }),
+                    t([[\nonumber]]),
+                }),
+                constraint_2 = i(8, 'constraint with &'),
+                c2_label = c(9, {
+                    sn(nil, { t([[\label{eq:]]), i(1, 'tag'), t('}') }),
+                    t([[\nonumber]]),
+                }),
+            }
+        ),
+        { condition = line_begin }
+    ),
 
     -- Within Equation Environments
     s(
@@ -947,6 +980,54 @@ return {
         )
     ),
     s(
+        { trig = 'nor', dscr = 'Norm' },
+        fmta(
+            [[
+        \norm{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'abv', dscr = 'Absolute value' },
+        fmta(
+            [[
+        \abs{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'log', dscr = 'Log' },
+        fmta(
+            [[
+        \log{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'ln', dscr = 'Natural log' },
+        fmta(
+            [[
+        \ln{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
         { trig = 'ol', dscr = 'Overline' },
         fmta(
             [[
@@ -1067,6 +1148,68 @@ return {
             {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'cdot', dscr = 'cdot' },
+        fmta(
+            [[
+        \cdot
+    ]],
+            {}
+        )
+    ),
+    s(
+        { trig = 'set', dscr = 'Set' },
+        fmta(
+            [[
+        \{\, <><> \}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'vec', dscr = 'Vector' },
+        fmta(
+            [[
+        (<>_{1}, <>_{2}, \ldots, <>_{<>})
+    ]],
+            {
+                i(1),
+                rep(1),
+                rep(1),
+                i(2, 'N'),
+            }
+        )
+    ),
+    s(
+        { trig = 'seq', dscr = 'Sequence' },
+        fmta(
+            [[
+        <>_{1}, <>_{2}, \ldots, <>_{<>}
+    ]],
+            {
+                i(1),
+                rep(1),
+                rep(1),
+                i(2, 'N'),
+            }
+        )
+    ),
+    s(
+        { trig = 'map', dscr = 'Map' },
+        fmta(
+            [[
+        <>\colon <> \to <>
+    ]],
+            {
+                i(1, 'f'),
+                i(2, 'X'),
+                i(3, 'Y'),
             }
         )
     ),
@@ -1397,6 +1540,15 @@ return {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
+        )
+    ),
+    s(
+        { trig = 'nn', dscr = 'No number' },
+        fmta(
+            [[
+        \nonumber
+    ]],
+            {}
         )
     ),
     s(
