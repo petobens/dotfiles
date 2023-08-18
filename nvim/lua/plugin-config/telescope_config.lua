@@ -286,8 +286,7 @@ local function rgrep(extra_args)
         if not dir or dir == '' then
             return
         else
-            local p = Path:new(dir)
-            dir = tostring(p.absolute(p))
+            dir = vim.fn.trim(vim.fn.fnamemodify(dir, ':ph'))
         end
         local opts = {
             cwd = dir,
@@ -298,6 +297,7 @@ local function rgrep(extra_args)
         vim.ui.input({ prompt = 'Type Filter: ' }, function(type_filter)
             if type_filter ~= '' then
                 opts.type_filter = type_filter
+                opts.results_title = opts.results_title .. ' [' .. type_filter .. ']'
             end
         end)
         builtin.live_grep(opts)
