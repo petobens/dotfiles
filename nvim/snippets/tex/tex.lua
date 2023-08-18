@@ -861,7 +861,7 @@ return {
         { condition = line_begin }
     ),
 
-    -- Math Operators and Delimiters
+    -- Math Operators & Notation
     s(
         { trig = 'frac', dscr = 'Fraction' },
         fmta(
@@ -947,6 +947,82 @@ return {
         )
     ),
     s(
+        { trig = 'ol', dscr = 'Overline' },
+        fmta(
+            [[
+        \overline{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'ul', dscr = 'Underline' },
+        fmta(
+            [[
+        \overline{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'ob', dscr = 'Overbrace' },
+        fmta(
+            [[
+        \overbrace{<><>}^{<>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'ub', dscr = 'Underbrace' },
+        fmta(
+            [[
+        \underbrace{<><>}_{<>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'os', dscr = 'Overset' },
+        fmta(
+            [[
+        \overset{<>}{<><>}
+    ]],
+            {
+                i(1, 'text'),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(2, 'symbol'),
+            }
+        )
+    ),
+    s(
+        { trig = 'us', dscr = 'Underset' },
+        fmta(
+            [[
+        \underset{<>}{<><>}
+    ]],
+            {
+                i(1, 'text'),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(2, 'symbol'),
+            }
+        )
+    ),
+    s(
         { trig = 'bar', dscr = 'Bar' },
         fmta(
             [[
@@ -963,6 +1039,56 @@ return {
         fmta(
             [[
         \hat{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'til', dscr = 'Tilde' },
+        fmta(
+            [[
+        \tilde{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'dot', dscr = 'Dot' },
+        fmta(
+            [[
+        \dot{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+
+    -- Delimiters
+    s(
+        { trig = 'bc', dscr = 'Braces' },
+        fmta(
+            [[
+        \{<><>\}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'quo', dscr = 'Quote' },
+        fmta(
+            [[
+        \enquote{<><>}
     ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
@@ -1009,10 +1135,34 @@ return {
 
     -- Editing/Fonts
     s(
+        { trig = 'tx', dscr = 'Text' },
+        fmta(
+            [[
+        \text{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
         { trig = 'ti', dscr = 'Textit' },
         fmta(
             [[
         \textit{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'emph', dscr = 'Emphasize' },
+        fmta(
+            [[
+        \emph{<><>}
     ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
@@ -1033,10 +1183,34 @@ return {
         )
     ),
     s(
-        { trig = 'quo', dscr = 'Quote' },
+        { trig = 'tss', dscr = 'Text sans-serif' },
         fmta(
             [[
-        \enquote{<><>}
+        \textsf{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'ttt', dscr = 'Text typewriter' },
+        fmta(
+            [[
+        \texttt{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'muc', dscr = 'MakeUppercase' },
+        fmta(
+            [[
+        \MakeUppercase{<><>}
     ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
@@ -1085,6 +1259,30 @@ return {
         fmta(
             [[
         \mathrm{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'mf', dscr = 'Math frak' },
+        fmta(
+            [[
+        \mathfrak{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'msc', dscr = 'Math script' },
+        fmta(
+            [[
+        \mathscr{<><>}
     ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
