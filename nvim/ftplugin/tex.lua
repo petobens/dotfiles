@@ -1,6 +1,6 @@
 local overseer = require('overseer')
-local u = require('utils')
 local scan = require('plenary.scandir')
+local u = require('utils')
 
 -- Options
 vim.opt_local.shiftwidth = 2
@@ -160,3 +160,10 @@ u.keymap('n', '<Leader>da', delete_aux_files, { buffer = true })
 u.keymap('n', '<Leader>eb', function()
     file_edit('bib')
 end, { buffer = true })
+
+-- Vimtex maps (for some reason we need to set them here instead of using an autocmd)
+local vimtex_maps = { buffer = true, remap = true }
+u.keymap('n', '<Leader>to', '<plug>(vimtex-toc-open)', vimtex_maps)
+u.keymap('n', '<Leader>ce', '<plug>(vimtex-env-change)', vimtex_maps)
+u.keymap('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
+u.keymap('n', '<Leader>td', '<plug>(vimtex-delim-toggle-modifier)', vimtex_maps)
