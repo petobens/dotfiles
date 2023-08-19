@@ -787,6 +787,20 @@ return {
         { condition = line_begin }
     ),
     s(
+        { trig = 'sit', dscr = '(Short)intertext' },
+        fmta(
+            [[
+        \<>intertext{<>}
+    ]],
+            {
+                c(1, { sn(nil, { i(1, 'short') }), t('') }),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
+    s(
         { trig = 'ua', dscr = 'Align*' },
         fmta(
             [[
@@ -1212,6 +1226,36 @@ return {
                 i(3, 'Y'),
             }
         )
+    ),
+
+    -- Economics
+    s(
+        { trig = 'fco', dscr = 'First order conditions' },
+        fmta(
+            [[
+      \begin{alignat}{2}
+        (<>) &:\quad & <> & = <> <label1>\\
+        (<>) &:\quad & <> & = <> <label2>
+      \end{alignat}
+    ]],
+            {
+                i(1),
+                i(2),
+                i(3),
+                label1 = c(4, {
+                    sn(nil, { t([[\label{eq:]]), i(1, 'tag'), t('}') }),
+                    t([[\nonumber]]),
+                }),
+                i(5),
+                i(6),
+                i(7),
+                label2 = c(8, {
+                    sn(nil, { t([[\label{eq:]]), i(1, 'tag'), t('}') }),
+                    t([[\nonumber]]),
+                }),
+            }
+        ),
+        { condition = line_begin }
     ),
 
     -- Delimiters
