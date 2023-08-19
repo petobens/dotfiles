@@ -85,7 +85,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
 })
 
 -- Mappings
-vim.api.nvim_create_autocmd({ 'Filetype' }, {
+vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('poetry_venv_maps', { clear = true }),
     pattern = { 'python' },
     callback = function()

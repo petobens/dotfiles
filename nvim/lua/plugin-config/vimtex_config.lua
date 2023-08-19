@@ -37,24 +37,24 @@ vim.g.vimtex_toc_config = {
 }
 
 -- Mappings
-local vimtex_acg = vim.api.nvim_create_augroup('vimtex', { clear = true })
-vim.api.nvim_create_autocmd({ 'Filetype' }, {
+local vimtex_acg = vim.api.nvim_create_augroup('vimtex_plugin', { clear = true })
+vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vimtex_acg,
     pattern = { 'tex' },
-    command = 'nmap <buffer><silent> <Leader>tc <Plug>(vimtex-toc-open)',
+    command = 'nmap <buffer><silent> <Leader>to <Plug>(vimtex-toc-open)',
 })
-vim.api.nvim_create_autocmd({ 'Filetype' }, {
+vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vimtex_acg,
     pattern = { 'tex' },
     command = 'nmap <buffer><silent> <Leader>ce <Plug>(vimtex-env-change)',
 })
-vim.api.nvim_create_autocmd({ 'Filetype' }, {
+vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vimtex_acg,
     pattern = { 'tex' },
     command = 'nmap <buffer><silent> <Leader>ts <Plug>(vimtex-env-toggle-star)',
 })
-vim.api.nvim_create_autocmd({ 'Filetype' }, {
+vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vimtex_acg,
     pattern = { 'tex' },
-    command = 'nmap <buffer><silent> <Leader>lr <Plug>(vimtex-delim-toggle-modifier)',
+    command = 'nmap <buffer><silent> <Leader>td <Plug>(vimtex-delim-toggle-modifier)',
 })

@@ -283,7 +283,7 @@ u.keymap('n', '<Leader>rh', function()
 end, { buffer = true })
 
 -- Autocommand mappings
-vim.api.nvim_create_autocmd({ 'Filetype' }, {
+vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('qf_bp', { clear = true }),
     pattern = { 'qf' },
     callback = function()
