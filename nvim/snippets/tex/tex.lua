@@ -1,4 +1,6 @@
+local extras = require('luasnip.extras')
 local ls = require('luasnip')
+
 local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
@@ -6,8 +8,10 @@ local sn = ls.snippet_node
 local isn = ls.indent_snippet_node
 local c = ls.choice_node
 local f = ls.function_node
+
 local fmta = require('luasnip.extras.fmt').fmta
-local rep = require('luasnip.extras').rep
+local m = extras.match
+local rep = extras.rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 -- Functions
@@ -1480,28 +1484,70 @@ return {
 
     -- Floats
     s(
-        { trig = 'ig', dscr = 'Include graphics' },
+        { trig = 'flo', dscr = 'General float' },
         fmta(
             [[
-                \includegraphics<>{<>}
+                \begin{<>}<><>
+                  <><>
+                \end{<>}
             ]],
             {
-                c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
-                i(2),
+                c(1, { sn(nil, { i(1, 'figure') }), t('table') }),
+                c(2, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
+                c(3, { sn(nil, { i(1, '\\RawFloats') }), t('') }),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(4),
+                rep(1),
             }
-        )
+        ),
+        { condition = line_begin }
     ),
     s(
-        { trig = 'cg', dscr = 'Centered graph' },
+        { trig = 'sflo', dscr = 'Subfloat with caption' },
         fmta(
             [[
-               \begin{center}
-                 \includegraphics<>{<>}
-               \end{center}
+                \begin{sub<>}[t]{<>}
+                  \centering
+                  <><>
+                  \caption{<>}
+                  \label{<>:<>}
+                \end{sub<>}<>
             ]],
             {
-                c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
+                c(1, { sn(nil, { i(1, 'figure') }), t('table') }),
+                i(2, '0.48\\textwidth'),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(3),
+                i(4, 'text'),
+                m(1, '^figure$', 'fig', 'tab'),
+                f(snake_case_labels, { 4 }),
+                rep(1),
+                c(5, { sn(nil, { i(1, '\\hfill') }), t('\\\\[1ex]'), t('') }),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        -- Side-by-side floats: flo (with \RawFloats) + mp snippet sequence
+        { trig = 'mp', dscr = 'Minipage' },
+        fmta(
+            [[
+                \begin{minipage}[t]{<>}
+                  \centering
+                  <><>
+                  \captionof{<>}{<>}
+                  \label{<>:<>}
+                \end{minipage}<>
+            ]],
+            {
+                i(1, '0.48\\textwidth'),
+                f(_G.LuaSnipConfig.visual_selection),
                 i(2),
+                c(3, { sn(nil, { i(1, 'figure') }), t('table') }),
+                i(4, 'text'),
+                m(3, '^figure$', 'fig', 'tab'),
+                f(snake_case_labels, { 4 }),
+                c(5, { sn(nil, { i(1, '\\hfill') }), t('\\\\[1ex]'), t('') }),
             }
         ),
         { condition = line_begin }
@@ -1543,6 +1589,48 @@ return {
                 f(snake_case_labels, { 2 }),
                 c(3, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
                 i(4),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ig', dscr = 'Include graphics' },
+        fmta(
+            [[
+                \includegraphics<>{<>}
+            ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'cg', dscr = 'Centered graph' },
+        fmta(
+            [[
+               \begin{center}
+                 \includegraphics<>{<>}
+               \end{center}
+            ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'cap', dscr = 'Caption' },
+        fmta(
+            [[
+                \caption{<>}
+                \label{<>:<>}
+            ]],
+            {
+                i(1, 'text'),
+                c(2, { sn(nil, { i(1, 'fig') }), t('tab') }),
+                f(snake_case_labels, { 1 }),
             }
         ),
         { condition = line_begin }
