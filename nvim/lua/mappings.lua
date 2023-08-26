@@ -7,7 +7,6 @@ u.keymap('n', '<Leader>ps', function()
     vim.cmd('silent! source ' .. udfs.session_name())
     -- Remove any buffer that exists and is listed but doesn't have a valid filename
     -- See https://github.com/neovim/neovim/pull/17112#issuecomment-1024923302
-    ---@diagnostic disable-next-line: param-type-mismatch
     for b = 1, vim.fn.bufnr('$') do
         if vim.fn.buflisted(b) ~= 0 and vim.bo[b].buftype ~= 'quickfix' then
             if vim.fn.filereadable(vim.api.nvim_buf_get_name(b)) == 0 then

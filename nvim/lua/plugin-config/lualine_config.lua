@@ -1,4 +1,3 @@
----@diagnostic disable-next-line: missing-parameter
 local onedark_colors = require('onedarkpro.helpers').get_colors()
 local overseer = require('overseer')
 local u = require('utils')
@@ -12,7 +11,6 @@ end
 
 -- Custom segments/components
 local function gitsigns_diff_source()
-    ---@diagnostic disable-next-line: undefined-field
     local gitsigns = vim.b.gitsigns_status_dict
     if gitsigns then
         return {

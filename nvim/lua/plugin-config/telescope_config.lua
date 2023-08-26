@@ -410,7 +410,6 @@ local custom_actions = transform_mod({
     -- Context split
     context_split = function(prompt_bufnr)
         local split = 'new'
-        ---@diagnostic disable-next-line: undefined-field
         if vim.fn.winwidth(vim.fn.winnr('#')) > 2 * (vim.go.textwidth or 80) then
             split = 'vnew'
         end
@@ -450,7 +449,6 @@ local custom_actions = transform_mod({
         vim.cmd('silent normal! mz')
         vim.cmd('silent normal! ' .. entry.index .. 'z=')
         -- Use pcall to gracefully catch E753 when there are no more words to replace
-        ---@diagnostic disable-next-line: param-type-mismatch
         pcall(vim.cmd, 'spellrepall')
         vim.cmd('silent normal! `z')
     end,
@@ -814,7 +812,6 @@ u.keymap('n', '<Leader>rd', function()
     telescope.extensions.recent_files.pick({
         path_display = function(_, path)
             local p = Path:new(path):absolute()
-            ---@diagnostic disable-next-line: param-type-mismatch
             return string.gsub(p, vim.loop.os_homedir(), '~')
         end,
         ignore_patterns = { '/tmp/', '.log' },

@@ -6,7 +6,6 @@ neotest.setup({
         require('neotest-python'),
     },
     consumers = {
-        ---@diagnostic disable-next-line: assign-type-mismatch
         overseer = require('neotest.consumers.overseer'),
     },
     discovery = {

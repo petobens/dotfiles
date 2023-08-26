@@ -25,7 +25,6 @@ cmp.setup({
         },
     },
     experimental = {
-        ---@diagnostic disable-next-line: assign-type-mismatch
         ghost_text = true, -- show completion candidate on same line
     },
     formatting = {
@@ -85,7 +84,6 @@ cmp.setup({
         { name = 'luasnip' },
         {
             name = 'nvim_lsp',
-            ---@diagnostic disable-next-line: unused-local
             entry_filter = function(entry, _)
                 local kind = require('cmp.types').lsp.CompletionItemKind[entry:get_kind()]
                 return ((kind ~= 'Text') and (kind ~= 'Snippet'))
