@@ -42,17 +42,22 @@ function udfs.diff_file_split()
     local save_pwd = fn.getcwd()
     cmd('lcd %:p:h')
     local win_id = fn.win_getid()
-    local other_file = fn.input('Input file for diffing: ', '', 'file')
-    if other_file == '' then
-        return
-    end
-    local diffcmd = 'diffsplit '
-    if fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
-        diffcmd = 'vertical ' .. diffcmd
-    end
-    cmd(diffcmd .. other_file)
-    fn.win_gotoid(win_id)
-    cmd('normal gg]c') -- move to first hunk
+    vim.ui.input(
+        { prompt = 'Input file for diffing: ', completion = 'file' },
+        function(other_file)
+            if not other_file or other_file == '' then
+                return
+            else
+                local diffcmd = 'diffsplit '
+                if fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+                    diffcmd = 'vertical ' .. diffcmd
+                end
+                cmd(diffcmd .. other_file)
+            end
+            fn.win_gotoid(win_id)
+            cmd('normal gg]h') -- move to first hunk
+        end
+    )
     cmd('lcd ' .. save_pwd)
 end
 
@@ -87,11 +92,11 @@ function udfs.visual_search(direction)
     fn.setreg('s', tmp_register)
 end
 
-function udfs.tmux_split_cmd(tmux_cmd, cwd)
+function udfs.tmux_split_cmd(tmux_cmd, cwd_arg)
     if vim.env.TMUX == nil then
         return
     end
-    local cwd = cwd or fn.getcwd()
+    local cwd = cwd_arg or fn.getcwd()
     cmd('silent! !tmux split-window -p 30 -c ' .. cwd .. ' ' .. tmux_cmd)
 end
 
