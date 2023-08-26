@@ -1,8 +1,11 @@
 local ls = require('luasnip')
-local s = ls.snippet
-local i = ls.insert_node
+
 local f = ls.function_node
+local i = ls.insert_node
 local isn = ls.indent_snippet_node
+local s = ls.snippet
+local t = ls.text_node
+
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
@@ -148,4 +151,12 @@ return {
             { f(_G.LuaSnipConfig.visual_selection), i(1) }
         )
     ),
-}, {}
+}, {
+    s({ trig = 'db', dscr = 'Double brackets' }, {
+        t('[['),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+        t(']]'),
+        i(0),
+    }),
+}
