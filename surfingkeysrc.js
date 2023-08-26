@@ -143,6 +143,7 @@ const qmarksUrls = {
     h: 'www.google.com.ar',
     i: 'www.infobae.com',
     l: 'www.lanacion.com.ar',
+    L: 'http://neverssl.com/', // to trigger captive (L)ogin wifi page
     m: 'https://mercadolibre.com.ar',
     M: 'https://mail.google.com',
     n: 'www.netflix.com',
