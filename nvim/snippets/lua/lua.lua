@@ -16,13 +16,14 @@ return {
         fmta(
             [[
                 function <>(<>)
-                    <>
+                    <><>
                 end
             ]],
             {
                 i(1, 'fun_name'),
                 i(2),
-                i(3),
+                isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(4),
             }
         ),
         { condition = line_begin }
@@ -32,13 +33,14 @@ return {
         fmta(
             [[
                 local function <>(<>)
-                    <>
+                    <><>
                 end
             ]],
             {
                 i(1, 'fun_name'),
                 i(2),
-                i(3),
+                isn(3, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(4),
             }
         ),
         { condition = line_begin }
@@ -63,12 +65,13 @@ return {
         fmta(
             [[
                 for <> do
-                    <>
+                    <><>
                 end
             ]],
             {
                 i(1, 'i = 1, n'),
-                i(2),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
             }
         ),
         { condition = line_begin }
@@ -78,12 +81,13 @@ return {
         fmta(
             [[
                 for k, v in pairs(<>) do
-                    <>
+                    <><>
                 end
             ]],
             {
                 i(1),
-                i(2),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
             }
         ),
         { condition = line_begin }
@@ -93,12 +97,13 @@ return {
         fmta(
             [[
                 if <> then
-                    <>
+                    <><>
                 end
             ]],
             {
                 i(1, 'condition'),
-                i(2, 'body'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3, 'body'),
             }
         ),
         { condition = line_begin }
@@ -109,14 +114,15 @@ return {
             [[
                local ok, <> = pcall(<>, '<>')
                if ok then
-                   <>
+                   <><>
                 end
             ]],
             {
                 i(1),
                 i(2, 'func'),
                 i(3, 'args'),
-                i(4),
+                isn(4, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(5),
             }
         ),
         { condition = line_begin }
