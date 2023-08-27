@@ -59,6 +59,21 @@ return {
         )
     ),
     s(
+        { trig = 'for', dscr = 'For loop' },
+        fmta(
+            [[
+                for <> do
+                    <>
+                end
+            ]],
+            {
+                i(1, 'i = 1, n'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
         { trig = 'fp', dscr = 'For pair' },
         fmta(
             [[
