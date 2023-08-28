@@ -28,6 +28,54 @@ return {
         t({ '', '),' }),
     }),
     s(
+        { trig = 'cs', dscr = 'Choice snippet' },
+        fmta(
+            [[
+                c(<>, { sn(nil, { i(<>, '<>')} ), t('') }),
+            ]],
+            { i(1, '1'), i(2, '1'), i(3, 'default_option') }
+        )
+    ),
+    s(
+        { trig = 'fs', dscr = 'Function snippet' },
+        fmta(
+            [[
+                f(function(node_idx)
+                    local <> = node_idx[1][1]
+                    <>
+                end, { <> }),
+            ]],
+            { i(1, 'var'), i(2), i(3, '1') }
+        )
+    ),
+    s(
+        { trig = 'ds', dscr = 'Dynamic snippet' },
+        fmta(
+            [[
+                d(<>, function(_, snip)
+                    local nodes = {}
+                    <>
+                    return sn(nil, nodes)
+                end),
+            ]],
+            { i(1, '1'), i(2) }
+        )
+    ),
+    s(
+        { trig = 'ns', dscr = 'Snippet node' },
+        fmta(
+            [[
+                sn(nil, {
+                    <>
+                }),
+
+            ]],
+            {
+                i(1, 'snippet body'),
+            }
+        )
+    ),
+    s(
         { trig = 'wt', dscr = 'Word trigger' },
         fmta(
             [[
@@ -71,29 +119,6 @@ return {
                 isn(<>, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
             ]],
             { i(1) }
-        )
-    ),
-    s(
-        { trig = 'cs', dscr = 'Choice snippet' },
-        fmta(
-            [[
-                c(<>, { sn(nil, { i(<>, '<>')} ), t('') }),
-            ]],
-            { i(1, '1'), i(2, '1'), i(3, 'default_option') }
-        )
-    ),
-    s(
-        { trig = 'ns', dscr = 'Snippet node' },
-        fmta(
-            [[
-                sn(nil, {
-                    <>
-                }),
-
-            ]],
-            {
-                i(1, 'snippet body'),
-            }
         )
     ),
 }, {}
