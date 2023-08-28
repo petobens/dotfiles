@@ -1,13 +1,14 @@
 local extras = require('luasnip.extras')
 local ls = require('luasnip')
 
-local s = ls.snippet
-local t = ls.text_node
-local i = ls.insert_node
-local sn = ls.snippet_node
-local isn = ls.indent_snippet_node
 local c = ls.choice_node
+local d = ls.dynamic_node
 local f = ls.function_node
+local i = ls.insert_node
+local isn = ls.indent_snippet_node
+local s = ls.snippet
+local sn = ls.snippet_node
+local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
 local m = extras.match
@@ -1502,6 +1503,7 @@ return {
         ),
         { condition = line_begin }
     ),
+    -- Subfloats: flo (without \RawFloats) + sflo snippet sequence
     s(
         { trig = 'sflo', dscr = 'Subfloat with caption' },
         fmta(
@@ -1573,27 +1575,6 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'tab', dscr = 'Table with caption' },
-        fmta(
-            [[
-                \begin{table}<>
-                  \ttabbox
-                  {\caption{<>}
-                  \label{tab:<>}}
-                  {\includegraphics<>{<>}}
-                \end{table}
-            ]],
-            {
-                c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
-                i(2, 'text'),
-                f(snake_case_labels, { 2 }),
-                c(3, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
-                i(4),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
         { trig = 'ig', dscr = 'Include graphics' },
         fmta(
             [[
@@ -1636,6 +1617,115 @@ return {
         { condition = line_begin }
     ),
     s(
+        { trig = 'tab', dscr = 'Table with caption' },
+        fmta(
+            [[
+                \begin{table}<>
+                  \ttabbox
+                  {\caption{<>}
+                  \label{tab:<>}}
+                  {\includegraphics<>{<>}}
+                \end{table}
+            ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
+                i(2, 'text'),
+                f(snake_case_labels, { 2 }),
+                c(3, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
+                i(4),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'rt', dscr = 'Raw/Regular tabular' },
+        fmta(
+            [[
+                \begin{tabular}{<>}
+                  \toprule
+                  <>
+                  \midrule
+                  <>
+                  \bottomrule
+                \end{tabular}
+            ]],
+            {
+                i(1, 'S'),
+                i(2),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = '(%d)c', regTrig = true, dscr = 'Columns' },
+        fmta(
+            [[
+               <><> <>
+            ]],
+            {
+                d(1, function(_, snip)
+                    local nodes = {}
+                    local nr_cols = snip.captures[1] - 1
+                    for j = 1, nr_cols do
+                        table.insert(nodes, i(j))
+                        table.insert(nodes, t(' & '))
+                    end
+                    return sn(nil, nodes)
+                end),
+                i(2),
+                c(3, { sn(nil, { i(1, '\\\\') }), t('') }),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns' },
+        fmta(
+            [[
+               <>
+            ]],
+            {
+                d(1, function(_, snip)
+                    local nodes = {}
+                    local nr_rows = snip.captures[1]
+                    local nr_cols = snip.captures[2] - 1
+                    local idx = 0
+                    for r = 1, nr_rows do
+                        for _ = 1, nr_cols do
+                            idx = idx + 1
+                            table.insert(nodes, i(idx))
+                            table.insert(nodes, t(' & '))
+                        end
+                        idx = idx + 1
+                        table.insert(nodes, i(idx))
+                        if r < tonumber(nr_rows) then
+                            table.insert(nodes, t({ ' \\\\', '' }))
+                        else
+                            table.insert(nodes, t(' \\\\'))
+                        end
+                    end
+                    return sn(nil, nodes)
+                end),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'mul', wordTrig = false, dscr = 'Multicolumn' },
+        fmta(
+            [[
+                \multicolumn{<>}{<>}{<><>}
+            ]],
+            {
+                i(1, '1:3'),
+                i(2, 'c'),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(3),
+            }
+        )
+    ),
+    s(
         { trig = 'mur', wordTrig = false, dscr = 'Multirow' },
         fmta(
             [[
@@ -1646,6 +1736,19 @@ return {
                 i(2, '*'),
                 f(_G.LuaSnipConfig.visual_selection),
                 i(3),
+            }
+        )
+    ),
+    s(
+        { trig = 'cmr', wordTrig = false, dscr = 'Column Mid-rule' },
+        fmta(
+            [[
+                \cmidrule<>{<>-<>}
+            ]],
+            {
+                c(1, { sn(nil, { t('('), i(1, 'l'), t(')') }), t('') }),
+                i(2, 'col1'),
+                i(3, 'col2'),
             }
         )
     ),
