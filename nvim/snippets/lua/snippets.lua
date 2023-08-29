@@ -52,7 +52,7 @@ return {
         { trig = 'ds', dscr = 'Dynamic snippet' },
         fmta(
             [[
-                d(<>, function(_, snip)
+                d(<>, function(args, snip)
                     local nodes = {}
                     <>
                     return sn(nil, nodes)
