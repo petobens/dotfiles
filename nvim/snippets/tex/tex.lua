@@ -1638,7 +1638,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'rt', dscr = 'Raw/Regular tabular' },
+        { trig = 'rt', dscr = 'Regular tabular' },
         fmta(
             [[
                 \begin{tabular}{<>}
@@ -1651,8 +1651,21 @@ return {
             ]],
             {
                 i(1, 'S'),
-                i(2),
-                i(3),
+                d(2, function(args)
+                    local nodes = {}
+                    local nr_cols = string.len(args[1][1]) - 1
+                    local idx = 0
+                    for j = 1, nr_cols do
+                        idx = idx + 1
+                        table.insert(nodes, i(j))
+                        table.insert(nodes, t(' & '))
+                    end
+                    idx = idx + 1
+                    table.insert(nodes, i(idx))
+                    table.insert(nodes, t(' \\\\'))
+                    return sn(nil, nodes)
+                end, { 1 }),
+                i(3, 'rxc'),
             }
         ),
         { condition = line_begin }

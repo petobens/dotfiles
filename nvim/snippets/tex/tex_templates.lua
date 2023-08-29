@@ -4,6 +4,7 @@ local extras = require('luasnip.extras')
 local ls = require('luasnip')
 
 local c = ls.choice_node
+local d = ls.dynamic_node
 local i = ls.insert_node
 local s = ls.snippet
 local t = ls.text_node
@@ -952,7 +953,6 @@ es-noshorthands,es-lcroman,es-tabla]]
 \usepackage[table,x11names]{xcolor}
 
 \begin{document}
-
 \begin{tabular}{<>}
     \toprule
     <>
@@ -966,8 +966,21 @@ es-noshorthands,es-lcroman,es-tabla]]
                 base_fn = p(vim.fn.expand, '%:t:r'),
                 c(1, { sn(nil, { i(1, '%') }), t('') }),
                 i(2, 'S'),
-                i(3),
-                i(4),
+                d(3, function(args)
+                    local nodes = {}
+                    local nr_cols = string.len(args[1][1]) - 1
+                    local idx = 0
+                    for j = 1, nr_cols do
+                        idx = idx + 1
+                        table.insert(nodes, i(j))
+                        table.insert(nodes, t(' & '))
+                    end
+                    idx = idx + 1
+                    table.insert(nodes, i(idx))
+                    table.insert(nodes, t(' \\\\'))
+                    return sn(nil, nodes)
+                end, { 2 }),
+                i(4, 'rxc'),
             }
         ),
         { condition = line_begin }
