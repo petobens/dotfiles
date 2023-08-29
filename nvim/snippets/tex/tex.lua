@@ -1509,22 +1509,41 @@ return {
         fmta(
             [[
                 \begin{sub<>}[t]{<>}
-                  \centering
-                  <><>
+                  \centering<>
                   \caption{<>}
-                  \label{<>:<>}
+                  \label{<>:<>}<>
                 \end{sub<>}<>
             ]],
             {
                 c(1, { sn(nil, { i(1, 'figure') }), t('table') }),
                 i(2, '0.48\\textwidth'),
-                f(_G.LuaSnipConfig.visual_selection),
-                i(3),
+                d(3, function(args)
+                    local nodes = {}
+                    if args[1][1] == 'figure' then
+                        nodes = {
+                            t({ '', '  ' }),
+                            f(_G.LuaSnipConfig.visual_selection),
+                            i(1),
+                        }
+                    end
+                    return sn(nil, nodes)
+                end, { 1 }),
                 i(4, 'text'),
                 m(1, '^figure$', 'fig', 'tab'),
                 f(snake_case_labels, { 4 }),
+                d(5, function(args)
+                    local nodes = {}
+                    if args[1][1] == 'table' then
+                        nodes = {
+                            t({ '', '  ' }),
+                            f(_G.LuaSnipConfig.visual_selection),
+                            i(1),
+                        }
+                    end
+                    return sn(nil, nodes)
+                end, { 1 }),
                 rep(1),
-                c(5, { sn(nil, { i(1, '\\hfill') }), t('\\\\[1ex]'), t('') }),
+                c(6, { sn(nil, { i(1, '\\hfill') }), t('\\\\[1ex]'), t('') }),
             }
         ),
         { condition = line_begin }
@@ -1535,21 +1554,40 @@ return {
         fmta(
             [[
                 \begin{minipage}[t]{<>}
-                  \centering
-                  <><>
-                  \captionof{<>}{<>}
-                  \label{<>:<>}
+                  \centering<>
+                  \captionof{<type>}{<>}
+                  \label{<>:<>}<>
                 \end{minipage}<>
             ]],
             {
-                i(1, '0.48\\textwidth'),
-                f(_G.LuaSnipConfig.visual_selection),
-                i(2),
-                c(3, { sn(nil, { i(1, 'figure') }), t('table') }),
+                type = c(1, { sn(nil, { i(1, 'figure') }), t('table') }),
+                i(2, '0.48\\textwidth'),
+                d(3, function(args)
+                    local nodes = {}
+                    if args[1][1] == 'figure' then
+                        nodes = {
+                            t({ '', '  ' }),
+                            f(_G.LuaSnipConfig.visual_selection),
+                            i(1),
+                        }
+                    end
+                    return sn(nil, nodes)
+                end, { 1 }),
                 i(4, 'text'),
-                m(3, '^figure$', 'fig', 'tab'),
+                m(1, '^figure$', 'fig', 'tab'),
                 f(snake_case_labels, { 4 }),
-                c(5, { sn(nil, { i(1, '\\hfill') }), t('\\\\[1ex]'), t('') }),
+                d(5, function(args)
+                    local nodes = {}
+                    if args[1][1] == 'table' then
+                        nodes = {
+                            t({ '', '  ' }),
+                            f(_G.LuaSnipConfig.visual_selection),
+                            i(1),
+                        }
+                    end
+                    return sn(nil, nodes)
+                end, { 1 }),
+                c(6, { sn(nil, { i(1, '\\hfill') }), t('\\\\[1ex]'), t('') }),
             }
         ),
         { condition = line_begin }
