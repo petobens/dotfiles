@@ -1804,14 +1804,80 @@ return {
         )
     ),
 
-    -- References
+    -- Miscellaneous packages
+    s(
+        { trig = 'll', dscr = 'Listings' },
+        fmta(
+            [[
+      \begin{lstlisting}
+        <><>
+      \end{lstlisting}
+    ]],
+            {
+                isn(1, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'mt', dscr = 'Minted' },
+        fmta(
+            [[
+      \begin{minted}{<>}
+        <><>
+      \end{minted}
+    ]],
+            {
+                i(1, 'python'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'mtc', dscr = 'Minted with captions' },
+        fmta(
+            [[
+      \begin{listing}[H]
+        \begin{minted}{<>}
+            <><>
+        \end{minted}
+        \caption{<>}
+      \end{listing}
+    ]],
+            {
+                i(1, 'python'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+                i(4),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'td', wordTrig = false, dscr = 'Todo' },
+        fmta(
+            [[
+        \todo{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+
+    -- References and bookmarks
     s(
         { trig = 'fn', wordTrig = false, dscr = 'Footnote' },
         fmta(
             [[
-        \footnote{<>}
+        \footnote{<><>}
     ]],
             {
+                f(_G.LuaSnipConfig.visual_selection),
                 i(1),
             }
         )
@@ -1835,6 +1901,32 @@ return {
         \nonumber
     ]],
             {}
+        )
+    ),
+    s(
+        { trig = 'url', dscr = 'URL' },
+        fmta(
+            [[
+        \href{<>}{<><>}
+    ]],
+            {
+                i(1, 'link'),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'bm', dscr = 'Bookmark' },
+        fmta(
+            [[
+        \pdfbookmark[<>]{<>}{<>}
+    ]],
+            {
+                i(1, 'level'),
+                i(2, 'text'),
+                i(3, 'label'),
+            }
         )
     ),
     s(

@@ -139,9 +139,9 @@ height=21cm,top=3.7cm,headsep=1cm, headheight=1.6cm,footskip=1.2cm]{geometry}
 % \lstset{basicstyle=\small\ttfamily}
 
 % Code insertion (note: requires pygment python library and shell pdflatex flag)
-% \usepackage{minted}
+% \usepackage[newfloat]{minted}
 % \setminted{style=default, autogobble}
-% \SetupFloatingEnvironment{listing}{name=`!p snip.rv= 'Código' if t[1] == 'spanish' else 'Code'`}
+% \SetupFloatingEnvironment{listing}{name=<code>}
 % \numberwithin{listing}{section}
 
 \usepackage[<package_lang>colorinlistoftodos,textsize=small,figheight=5cm,
@@ -346,6 +346,7 @@ es-noshorthands,es-lcroman,es-tabla]]
                 ),
                 step = m(1, '^spanish$', 'Paso', 'Step'),
                 package_lang = m(1, '^spanish$', 'spanish,', ''),
+                code = m(1, '^spanish$', 'Código', 'Code'),
                 base_bib = p(vim.fn.expand, '%:t:r'),
                 appendix = m(1, '^spanish$', 'Apéndice', 'Appendix'),
                 theorem = m(1, '^spanish$', 'Teorema', 'Theorem'),
