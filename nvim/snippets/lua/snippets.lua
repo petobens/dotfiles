@@ -31,9 +31,9 @@ return {
         { trig = 'cs', dscr = 'Choice snippet' },
         fmta(
             [[
-                c(<>, { sn(nil, { i(<>, '<>')} ), t('') }),
+                c(<>, { sn(nil, { i(<>, '<>') }), t('') }),
             ]],
-            { i(1, '1'), i(2, '1'), i(3, 'default_option') }
+            { i(1, '1'), i(2, '1'), i(3) }
         )
     ),
     s(
