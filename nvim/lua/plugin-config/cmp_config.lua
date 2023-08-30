@@ -12,6 +12,10 @@ end
 cmp.setup({
     completion = {
         completeopt = 'menu,menuone,noinsert',
+        get_trigger_characters = function(trigger_characters)
+            table.insert(trigger_characters, ':') -- for tex
+            return trigger_characters
+        end,
     },
     window = {
         completion = {
