@@ -235,6 +235,20 @@ return {
         { condition = line_begin }
     ),
 
+    -- Book Class
+    s(
+        { trig = 'ind', wordTrig = false, dscr = 'Index' },
+        fmta(
+            [[
+        \index{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
+
     -- Section environments
     s(
         { trig = 'part', dscr = 'Part' },
@@ -2044,7 +2058,7 @@ return {
 
     -- Citations
     s(
-        { trig = 'tc', wordTrig = false, dscr = 'Textcite' },
+        { trig = 'tc', dscr = 'Textcite' },
         fmta(
             [[
         \textcite{<>}
@@ -2053,6 +2067,49 @@ return {
                 i(1),
             }
         )
+    ),
+    s(
+        { trig = 'fc', dscr = 'Fullcite' },
+        fmta(
+            [[
+        \fullcite{<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'ffc', wordTrig = false, dscr = 'Foot fullcite' },
+        fmta(
+            [[
+        \footfullcite{<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'noc', dscr = 'Nocite' },
+        fmta(
+            [[
+        \nocite{<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'pb', dscr = 'Print bibliography' },
+        fmta(
+            [[
+        \printbibliography[heading=<>]
+    ]],
+            { c(1, { t('bibarticle'), t('bibbook') }) }
+        ),
+        { condition = line_begin }
     ),
 }, {
     s({ trig = '$$', wordTrig = false, dscr = 'Inline math' }, {
