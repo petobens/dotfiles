@@ -1930,10 +1930,32 @@ return {
         )
     ),
     s(
-        { trig = 'cre', dscr = 'Cleveref equation' },
+        { trig = 'crg', dscr = 'Cleveref general' },
         fmta(
             [[
-        \cref{eq:<>}
+        \cref{<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'crc', dscr = 'Cleveref chapter' },
+        fmta(
+            [[
+        \cref{cha:<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'crs', dscr = 'Cleveref section' },
+        fmta(
+            [[
+        \cref{sec:<>}
     ]],
             {
                 i(1),
@@ -1952,6 +1974,17 @@ return {
         )
     ),
     s(
+        { trig = 'crsf', dscr = 'Cleveref subfigure' },
+        fmta(
+            [[
+        \cref{sfig:<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
         { trig = 'crt', dscr = 'Cleveref table' },
         fmta(
             [[
@@ -1959,6 +1992,52 @@ return {
     ]],
             {
                 i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'cre', dscr = 'Cleveref equation' },
+        fmta(
+            [[
+        \cref{eq:<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'crm', dscr = 'Cleveref math' },
+        fmta(
+            [[
+        \cref{<>:<>}
+    ]],
+            {
+                c(1, { t('thm'), t('def'), t('pro'), t('lem'), t('cor') }),
+                i(2),
+            }
+        )
+    ),
+    s(
+        { trig = 'cri', dscr = 'Cleveref item' },
+        fmta(
+            [[
+        \cref{item:<>}
+    ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'crr', dscr = 'Cleveref range' },
+        fmta(
+            [[
+        \crefrange{<>}{<>}
+    ]],
+            {
+                i(1),
+                i(2),
             }
         )
     ),
