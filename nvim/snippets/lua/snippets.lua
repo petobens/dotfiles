@@ -1,15 +1,17 @@
 local ls = require('luasnip')
-local s = ls.snippet
-local t = ls.text_node
-local i = ls.insert_node
-local fmta = require('luasnip.extras.fmt').fmta
-local sn = ls.snippet_node
+
 local c = ls.choice_node
+local i = ls.insert_node
+local s = ls.snippet
+local sn = ls.snippet_node
+local t = ls.text_node
+
+local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     -- Luasnip
-    s({ trig = 'sni', dscr = 'Regular snippet' }, {
+    s({ trig = 'sni', dscr = 'Snippet snippet' }, {
         t({ 's(', "\t{ trig = '" }),
         i(1, 'trigger'),
         t("', "),
@@ -28,7 +30,41 @@ return {
         t({ '', '),' }),
     }),
     s(
-        { trig = 'cs', dscr = 'Choice snippet' },
+        { trig = 'in', dscr = 'Insert node' },
+        fmta(
+            [[
+                i(<><>),
+            ]],
+            {
+                i(1, '1'),
+                c(2, { sn(nil, { t(", '"), i(1), t("'") }), t('') }),
+            }
+        )
+    ),
+    s(
+        { trig = 'tn', dscr = 'Text node' },
+        fmta(
+            [[
+                t('<>'),
+            ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'sn', dscr = 'Snippet node' },
+        fmta(
+            [[
+                sn(nil, { <> }),
+            ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
+        { trig = 'cn', dscr = 'Choice node' },
         fmta(
             [[
                 c(<>, { <>, <> }),
@@ -44,7 +80,7 @@ return {
         )
     ),
     s(
-        { trig = 'fs', dscr = 'Function snippet' },
+        { trig = 'fn', dscr = 'Function node' },
         fmta(
             [[
                 f(function(node_idx)
@@ -56,7 +92,7 @@ return {
         )
     ),
     s(
-        { trig = 'ds', dscr = 'Dynamic snippet' },
+        { trig = 'dn', dscr = 'Dynamic node' },
         fmta(
             [[
                 d(<>, function(args, snip)
@@ -69,16 +105,38 @@ return {
         )
     ),
     s(
-        { trig = 'ns', dscr = 'Snippet node' },
+        { trig = 'mn', dscr = 'Match node' },
         fmta(
             [[
-                sn(nil, {
-                    <>
-                }),
-
+                m(1, '^<>$', <>, <>),
             ]],
             {
-                i(1, 'snippet body'),
+                i(1, 'condition'),
+                i(2, 'true'),
+                i(3, 'false'),
+            }
+        )
+    ),
+    s(
+        { trig = 'pn', dscr = 'Partial node' },
+        fmta(
+            [[
+                p(<><>),
+            ]],
+            {
+                i(1, 'func'),
+                c(2, { sn(nil, { t(", '"), i(1, 'args'), t("'") }), t('') }),
+            }
+        )
+    ),
+    s(
+        { trig = 'rn', dscr = 'Rep node' },
+        fmta(
+            [[
+                r(<>)
+            ]],
+            {
+                i(1, '1'),
             }
         )
     ),
