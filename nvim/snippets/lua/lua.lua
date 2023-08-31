@@ -80,14 +80,16 @@ return {
         { trig = 'fp', dscr = 'For pair' },
         fmta(
             [[
-                for k, v in pairs(<>) do
+                for <>, <> in pairs(<>) do
                     <><>
                 end
             ]],
             {
-                i(1),
-                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(1, 'k'),
+                i(2, 'v'),
                 i(3),
+                isn(4, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(5),
             }
         ),
         { condition = line_begin }
