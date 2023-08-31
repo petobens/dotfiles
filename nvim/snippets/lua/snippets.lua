@@ -9,7 +9,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     -- Luasnip
-    s({ trig = 'sni', dscr = 'Snippet definition' }, {
+    s({ trig = 'sni', dscr = 'Regular snippet' }, {
         t({ 's(', "\t{ trig = '" }),
         i(1, 'trigger'),
         t("', "),
@@ -31,9 +31,16 @@ return {
         { trig = 'cs', dscr = 'Choice snippet' },
         fmta(
             [[
-                c(<>, { sn(nil, { i(<>, '<>') }), t('') }),
+                c(<>, { <>, <> }),
             ]],
-            { i(1, '1'), i(2, '1'), i(3) }
+            {
+                i(1, '1'),
+                c(2, {
+                    sn(nil, { i(1) }),
+                    sn(nil, { t('sn(nil, { '), i(1, ''), t(' })') }),
+                }),
+                i(3),
+            }
         )
     ),
     s(
