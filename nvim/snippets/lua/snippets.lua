@@ -118,6 +118,18 @@ return {
         )
     ),
     s(
+        { trig = 'ln', dscr = 'Lambda node' },
+        fmta(
+            [[
+                l(l._1:<>, <>),
+            ]],
+            {
+                i(1, 'func'),
+                i(2, '1'),
+            }
+        )
+    ),
+    s(
         { trig = 'pn', dscr = 'Partial node' },
         fmta(
             [[
