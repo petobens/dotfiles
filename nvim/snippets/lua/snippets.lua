@@ -145,7 +145,7 @@ return {
         { trig = 'rn', dscr = 'Rep node' },
         fmta(
             [[
-                r(<>)
+                rep(<>),
             ]],
             {
                 i(1, '1'),
