@@ -9,6 +9,29 @@ function _G.LuaSnipConfig.visual_selection(_, parent)
     return parent.snippet.env.LS_SELECT_DEDENT or {}
 end
 
+function _G.LuaSnipConfig.snake_case_labels(node_idx)
+    local str = node_idx[1][1]
+    local unicode_map = {
+        ['á'] = 'a',
+        ['Á'] = 'A',
+        ['é'] = 'e',
+        ['É'] = 'E',
+        ['í'] = 'i',
+        ['Í'] = 'I',
+        ['ó'] = 'o',
+        ['Ó'] = 'O',
+        ['ú'] = 'u',
+        ['Ú'] = 'U',
+        ['ñ'] = 'ni',
+    }
+    for k, v in pairs(unicode_map) do
+        str = str:gsub(k, v)
+    end
+    -- Remove punctuation marks, lowercase and replace spaces with underscores
+    str = str:gsub('[%p]', ''):lower():gsub('%s+', '_')
+    return str:sub(1, 35)
+end
+
 -- Setup
 local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
 luasnip.setup({
