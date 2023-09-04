@@ -1818,6 +1818,160 @@ return {
         )
     ),
 
+    -- Tikz
+    s(
+        { trig = 'tikz', dscr = 'Tikz picture' },
+        fmta(
+            [[
+                \begin{tikzpicture}<>
+                  <>
+                \end{tikzpicture}
+            ]],
+            { c(1, { sn(nil, { t('[scale='), i(1, '2'), t(']') }), t('') }), i(2) }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'axis', dscr = 'Axis' },
+        fmta(
+            [[
+                \draw [big arrow] (0,0) -- (<>,0) node[below, xshift=-1mm, yshift=-0.5mm]
+                  {$<>$}
+                  coordinate (xaxis);
+                \draw [big arrow] (0,0) -- (0,<>) node [left,yshift=-1mm, xshift=-0.5mm]
+                  {$<>$}
+                  coordinate (yaxis);
+            ]],
+            {
+                i(1, '5'),
+                i(2, 'x'),
+                rep(1),
+                i(3, 'y'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'draw', dscr = 'Draw command' },
+        fmta(
+            [[
+                \draw<>(<>) -- (<>);
+            ]],
+            {
+                c(1, { sn(nil, { t(' ['), i(1, 'option'), t('] ') }), t(' ') }),
+                i(2, 'cor1'),
+                i(3, 'cor2'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'dsc', dscr = 'Draw smooth coordinates' },
+        fmta(
+            [[
+                \draw<> plot [smooth] coordinates {<>};
+            ]],
+            {
+                c(1, { sn(nil, { t('['), i(1, 'option'), t('] ') }), t('') }),
+                i(2, '(c1) (c2) (cn)'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'node', dscr = 'Node' },
+        fmta(
+            [[
+                \node<>at (<>) {<>};
+            ]],
+            {
+                c(1, { sn(nil, { t(' ['), i(1, 'option'), t('] ') }), t(' ') }),
+                i(2, 'coordinate'),
+                i(3, 'text'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'cd', dscr = 'Coordinate' },
+        fmta(
+            [[
+                \coordinate (<>) at (<>);
+            ]],
+            {
+                i(1, 'name'),
+                i(2, 'coordinate'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'cfd', dscr = 'Circle filldraw' },
+        fmta(
+            [[
+                \filldraw (<>) circle (1.5pt)<>
+            ]],
+            {
+                i(1, 'coordinate'),
+                c(2, {
+                    sn(nil, {
+                        t(' node ['),
+                        i(1, 'position'),
+                        t('] {'),
+                        i(2, 'text'),
+                        t('}'),
+                        t(';'),
+                    }),
+                    t(';'),
+                }),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'pin', dscr = 'Draw pin' },
+        fmta(
+            [[
+                \node[pin={[pin distance=<>]<>:{<>}}] at (<>) {};
+            ]],
+            {
+                i(1, '1cm'),
+                i(2, 'angle'),
+                i(3, 'label'),
+                i(4, 'coordinate'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'is', dscr = 'Intersection' },
+        fmta(
+            [[
+                \path [name intersections={of=<>, by=<>}]
+            ]],
+            {
+                i(1, 'L and K'),
+                i(2, 'name'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'bra', dscr = 'Draw braces' },
+        fmta(
+            [[
+                \draw[thin, decorate,decoration={brace,amplitude=8pt}] (<>) -- (<>)
+                    node [midway] {<>};
+            ]],
+            {
+                i(1, 'c1'),
+                i(2, 'c2'),
+                i(3, 'text'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
     -- Miscellaneous packages
     s(
         { trig = 'll', dscr = 'Listings' },
