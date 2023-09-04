@@ -11,6 +11,31 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     -- Luasnip
+    s(
+        { trig = 'lsi', dscr = 'Luasnip imports' },
+        fmta(
+            [[
+local extras = require('luasnip.extras')
+local ls = require('luasnip')
+
+local c = ls.choice_node
+local d = ls.dynamic_node
+local f = ls.function_node
+local i = ls.insert_node
+local s = ls.snippet
+local t = ls.text_node
+local sn = ls.snippet_node
+
+local m = extras.match
+local p = extras.partial
+local rep = extras.rep
+local fmta = require('luasnip.extras.fmt').fmta
+local line_begin = require('luasnip.extras.expand_conditions').line_begin
+            ]],
+            {}
+        ),
+        { condition = line_begin }
+    ),
     s({ trig = 'sni', dscr = 'Snippet snippet' }, {
         t({ 's(', "\t{ trig = '" }),
         i(1, 'trigger'),
