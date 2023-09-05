@@ -505,6 +505,50 @@ This document is free; you can redistribute it and/or modify it under the
         { condition = line_begin }
     ),
     s(
+        { trig = 'pf', dscr = 'Preface' },
+        fmta(
+            [[
+                \chapter{<>}
+                \label{cha:<>}
+
+                <>
+
+                \begin{flushright}
+                  \bigskip
+                  <>\\
+                  <>
+                \end{flushright}
+            ]],
+            {
+                i(1, 'chapter name'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 1 }),
+                i(2),
+                i(3, 'city'),
+                i(4, 'date'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ba', dscr = 'Book appendix' },
+        fmta(
+            [[
+                \appendix
+                \chapter{<>}
+                \label{cha:<>}
+
+                <><>
+            ]],
+            {
+                i(1, 'chapter name'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 1 }),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
         { trig = 'ind', wordTrig = false, dscr = 'Index' },
         fmta(
             [[
