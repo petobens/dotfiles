@@ -319,18 +319,18 @@ pdfkeywords={}
     \end{center}
 	\vspace{0.01\textheight}
 	\begin{center}
-	  \bfseries\LARGE{<institution>}\\
+	  \bfseries{\LARGE{<institution>}}\\
 	  \vspace{0.02\textheight}
-	  \textbf{\Large{<department>}}\\
-	  \vspace{0.3\textheight}
+	  \bfseries{\Large{<department>}}\\
+	  \vspace{0.2\textheight}
 	  \rule{\textwidth}{1.5pt}\par
 	  \vspace{\baselineskip}
-	  \bfseries\Huge{<title>}\par
-	  \bigskip\Large{--- <subtitle> ---}\\
+	  \bfseries{\Huge{<title>}}\par
+	  \bigskip\Large{--- <subtitle> ---}
 	  \vspace{\baselineskip}
 	  \rule{\textwidth}{1.5pt}\par
       \vfill
-      \textsc{\huge{<author>}}
+      \normalfont{\scshape{\huge{<author>}}}
       \vfill
 	  \textbf{\Large{<date>}}
 	 \end{center}
