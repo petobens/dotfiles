@@ -103,7 +103,7 @@ decorations.markings}
 \addtobeamertemplate{frametitle}{}{%
 \begin{tikzpicture}[remember picture,overlay]
 \node[anchor=north east, yshift=3pt] at (current page.north east)
-{\includegraphics[scale=0.01]{<logo_fn>}};
+{\includegraphics[scale=0.01]{<logo>}};
 %\draw[<color>] ([yshift=-0.65cm, xshift=0.25cm]current page.north west)
 	% -- ([yshift=-0.65cm, xshift=\paperwidth - 0.25cm]current page.north west);
 \end{tikzpicture}}
@@ -274,8 +274,8 @@ backend=biber]{biblatex}
 % Hyperref setup
 \hypersetup{colorlinks=true, allcolors=<color>_light,
 pdfcreator={Vim LaTeX}, pdfsubject={},
-pdftitle={<title>},
-pdfauthor={<author>},
+pdftitle={<pdftitle>},
+pdfauthor={<pdfauthor>},
 pdfkeywords={}
 }
 
@@ -460,18 +460,20 @@ es-noshorthands,es-lcroman,es-tabla]]
                 ),
                 c(2, { t('mutt'), t('other') }), -- \definecolor{<>}{RGB}{<>}
                 rgb = m(2, '^mutt$', '0,41,91', '31,117,254'),
-                -- Note: choice nodes requiere a jump-index i.e we cannot use a variable
-                -- we define it here instead
+                -- Note: choice nodes requiere a jump-index i.e we cannot use a variable:
                 color = rep(2),
                 rgb_other = m(2, '^mutt$', '29,66,129', '136,151,164'),
                 base_bib = p(vim.fn.expand, '%:t:r'),
                 heading = i(3, 'heading'),
                 title = i(4, 'title'),
+                pdftitle = rep(4),
                 subtitle = i(5, 'subtitle'),
                 institute = i(6, 'institution'),
                 author = i(7, 'authors'),
+                pdfauthor = rep(7),
                 date = m(1, '^spanish$', '\\Today', '\\today'),
                 logo_fn = i(8, 'logo_mutt.png'),
+                logo = rep(8),
                 i(9),
             }
         ),

@@ -157,8 +157,8 @@ figwidth=10cm,color=red!85]{todonotes}
 \usepackage[hyperfootnotes=false]{hyperref}
 \hypersetup{colorlinks=true, allcolors=Navy, pdfstartview={XYZ null null 1},
 pdfcreator={Vim LaTeX}, pdfsubject={},
-pdftitle={<title>},
-pdfauthor={<author>},
+pdftitle={<pdftitle>},
+pdfauthor={<pdfauthor>},
 pdfkeywords={}
 }
 \usepackage[numbered,open,openlevel=2]{bookmark}
@@ -424,6 +424,8 @@ es-noshorthands,es-lcroman,es-tabla]]
                 }),
                 title = i(5, 'title'),
                 author = i(6, 'author'),
+                pdftitle = rep(5),
+                pdfauthor = rep(6),
                 date = m(1, '^spanish$', '\\Today', '\\today'),
                 abstract_spa = m(
                     1,

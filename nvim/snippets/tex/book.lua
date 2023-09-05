@@ -344,7 +344,7 @@ pdfkeywords={}
     \parindent 0pt
     \null
     \vfill
-    \textcopyright{} <year> <author2>. <rights>.\par
+    \textcopyright{} <year> <author_license>. <rights>.\par
     \vspace{\baselineskip}
     <license>.\par
     \vspace{\baselineskip}
@@ -434,14 +434,13 @@ es-noshorthands,es-lcroman,es-tabla]]
                 institution = i(4, 'institution'),
                 department = i(5, 'department'),
                 title = i(6, 'title'),
+                pdftitle = rep(6),
                 subtitle = i(7, 'subtitle'),
                 author = i(8, 'author'),
+                author_license = rep(8),
+                pdfauthor = rep(8),
                 date = i(9, 'date'),
                 year = p(vim.fn.strftime, '%Y'),
-                -- FIXME: We shouldn't need to do this
-                author2 = rep(8),
-                pdfauthor = rep(8),
-                pdftitle = rep(6),
                 rights = m(
                     1,
                     '^spanish$',
