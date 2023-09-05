@@ -127,7 +127,7 @@ height=21cm,top=3.7cm,headsep=1cm, headheight=1.6cm,footskip=1.2cm]{geometry}
 % Do the same for unnumbered chapters (TOC, preface, etc)
 \titleformat{name=\chapter,numberless}[display]
 {\bfseries\filcenter}
-{\titlerule[1.5pt]\vspace{4ex}}{0.5cm}{\huge}
+{\titlerule[1.5pt]\vspace{0ex}}{0.5cm}{\huge}
 [\vspace{2ex}{\titlerule[1.5pt]}\vspace{0.3cm}]
 
 \usepackage[stable,multiple]{footmisc}  % Customizations of footnotes
