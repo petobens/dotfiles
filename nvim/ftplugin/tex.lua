@@ -95,13 +95,28 @@ local forward_search = function()
 end
 
 -- File Editing
-local file_edit = function(extension)
-    local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r')
+local file_edit = function(search_file)
+    local base_dir = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:h')
+    local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':t:r')
+
+    if search_file == 'bib' then
+        search_file = string.format('%s.%s', base_file, search_file)
+    elseif search_file == 'float' then
+        search_file = vim.fn.fnamemodify(
+            string.match(vim.fn.expand('<cWORD>'), '{(%S+)}'),
+            ':t:r'
+        ) .. '.tex'
+    end
+    local edit_file = vim.fs.find({ search_file }, {
+        type = 'file',
+        path = base_dir,
+    })
+
     local split = 'split '
     if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
         split = 'vsplit '
     end
-    vim.cmd(split .. base_file .. '.' .. extension)
+    vim.cmd(split .. edit_file[1])
 end
 
 -- Miscellaneous
@@ -124,7 +139,7 @@ local delete_aux_files = function()
         'vrb',
         'log',
     }
-    local files = scan.scan_dir(vim.fn.expand('%:p:h'))
+    local files = scan.scan_dir(vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:h'))
     local rm_files = {}
     for _, f in pairs(files) do
         local ext = vim.fn.fnamemodify(f, ':e')
@@ -147,13 +162,24 @@ local delete_aux_files = function()
 end
 
 -- Mappings
+---- Compilation
 u.keymap('n', '<F7>', compile_latex, { buffer = true })
 u.keymap('i', '<F7>', compile_latex, { buffer = true })
 u.keymap('n', '<Leader>vp', view_pdf, { buffer = true })
 u.keymap('n', '<Leader>sl', forward_search, { buffer = true })
 u.keymap('n', '<Leader>da', delete_aux_files, { buffer = true })
+---- Editing
+u.keymap('n', '<Leader>em', function()
+    file_edit('main.tex')
+end, { buffer = true })
+u.keymap('n', '<Leader>ep', function()
+    file_edit('preamble.tex')
+end, { buffer = true })
 u.keymap('n', '<Leader>eb', function()
     file_edit('bib')
+end, { buffer = true })
+u.keymap('n', '<Leader>ef', function()
+    file_edit('float')
 end, { buffer = true })
 
 -- Vimtex maps (for some reason we need to set them here instead of using an autocmd)
