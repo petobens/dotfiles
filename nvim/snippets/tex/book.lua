@@ -32,7 +32,7 @@ return {
 	\halftitlepg
 	\titlepg
 	\copyrightpg
-	\ifdef{\dedication}{\dedication}{}
+	\dedicationpg
 	\tableofcontents<>
 
 \mainmatter
@@ -353,6 +353,16 @@ pdfkeywords={}
   \thispagestyle{empty}\clearpage
 }
 
+\newcommand*{\dedicationpg}{%
+  \begingroup
+    \vspace*{0.3\textheight}
+    \begin{center}
+      \itshape{\large{<dedication>}}
+    \end{center}
+  \endgroup
+  \thispagestyle{empty}\cleardoublepage
+}
+
 %-------------------+
 % Table of contents |
 %-------------------+<toc_spa_title>
@@ -476,6 +486,7 @@ This document is free; you can redistribute it and/or modify it under the
                 ]],
                     ''
                 ),
+                dedication = i(10, 'For me.'),
             }
         ),
         { condition = line_begin }
