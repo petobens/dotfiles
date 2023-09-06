@@ -83,8 +83,8 @@ local view_pdf = function()
 end
 
 local forward_search = function()
-    local tex_file = vim.b.vimtex.tex
-    local pdf_file = vim.fn.fnamemodify(tex_file, ':p:r') .. '.pdf'
+    local tex_file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
+    local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
     local forward_args = ' --synctex-forward '
         .. vim.fn.line('.')
         .. ':'
@@ -93,7 +93,6 @@ local forward_search = function()
         .. tex_file
         .. ' '
         .. pdf_file
-    -- FIXME: How can we fork here?
     vim.fn.jobstart('zathura ' .. forward_args)
 end
 
