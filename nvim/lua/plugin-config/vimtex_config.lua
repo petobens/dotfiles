@@ -1,3 +1,5 @@
+local u = require('utils')
+
 -- Options (essentially disable most functionality)
 vim.g.vimtex_compiler_enabled = 0
 vim.g.vimtex_compiler_method = 'arara'
@@ -36,3 +38,16 @@ vim.g.vimtex_toc_config = {
     hide_line_numbers = 0,
     tocdepth = 1,
 }
+
+-- Mappings
+vim.api.nvim_create_autocmd({ 'User' }, {
+    group = vim.api.nvim_create_augroup('vimtex_maps', { clear = true }),
+    pattern = { 'VimtexEventInitPost' },
+    callback = function()
+        local vimtex_maps = { buffer = true, remap = true }
+        u.keymap('n', '<Leader>tc', '<plug>(vimtex-toc-open)', vimtex_maps)
+        u.keymap('n', '<Leader>ce', '<plug>(vimtex-env-change)', vimtex_maps)
+        u.keymap('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
+        u.keymap('n', '<Leader>td', '<plug>(vimtex-delim-toggle-modifier)', vimtex_maps)
+    end,
+})

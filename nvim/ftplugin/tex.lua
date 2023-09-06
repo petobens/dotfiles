@@ -184,10 +184,3 @@ end, { buffer = true })
 u.keymap('n', '<Leader>ef', function()
     file_edit('float')
 end, { buffer = true })
-
--- Vimtex maps (for some reason we need to set them here instead of using an autocmd)
-local vimtex_maps = { buffer = true, remap = true }
-u.keymap('n', '<Leader>to', '<plug>(vimtex-toc-open)', vimtex_maps)
-u.keymap('n', '<Leader>ce', '<plug>(vimtex-env-change)', vimtex_maps)
-u.keymap('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
-u.keymap('n', '<Leader>td', '<plug>(vimtex-delim-toggle-modifier)', vimtex_maps)
