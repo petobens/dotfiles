@@ -51,12 +51,20 @@ local _parse_logfile = function(filename, cwd, active_window_id)
         lines = lines,
         efm = LATEX_EFM,
     }).items
+
+    local new_qf = {}
+    for _, v in pairs(items) do
+        -- TODO: Find a better way of ignoring warnings (i.e with efm)
+        if not string.find(v.text, 'lipsum') then
+            table.insert(new_qf, v)
+        end
+    end
     vim.fn.setqflist({}, ' ', {
         title = filename,
-        items = items,
+        items = new_qf,
     })
     vim.cmd('lcd ' .. cwd)
-    if next(items) ~= nil then
+    if next(new_qf) ~= nil then
         vim.cmd('copen')
         vim.fn.win_gotoid(active_window_id)
     end
