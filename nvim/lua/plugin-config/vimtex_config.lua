@@ -1,5 +1,6 @@
 -- Options (essentially disable most functionality)
 vim.g.vimtex_compiler_enabled = 0
+vim.g.vimtex_compiler_method = 'arara'
 vim.g.vimtex_quickfix_enabled = 0
 vim.g.vimtex_view_enabled = 0
 vim.g.vimtex_complete_enabled = 0
