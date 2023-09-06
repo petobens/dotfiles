@@ -15,7 +15,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Math Operators & Notation
     s(
-        { trig = 'frac', dscr = 'Fraction' },
+        { trig = 'frac', wordTrig = false, dscr = 'Fraction' },
         fmta(
             [[
         \frac{<><>}{<>}
@@ -147,7 +147,7 @@ return {
         )
     ),
     s(
-        { trig = 'ol', dscr = 'Overline' },
+        { trig = 'ol', wordTrig = false, dscr = 'Overline' },
         fmta(
             [[
         \overline{<><>}
@@ -159,7 +159,7 @@ return {
         )
     ),
     s(
-        { trig = 'ul', dscr = 'Underline' },
+        { trig = 'ul', wordTrig = false, dscr = 'Underline' },
         fmta(
             [[
         \overline{<><>}
@@ -271,7 +271,7 @@ return {
         )
     ),
     s(
-        { trig = 'cdot', dscr = 'cdot' },
+        { trig = 'cdot', wordTrig = false, dscr = 'cdot' },
         fmta(
             [[
         \cdot
@@ -292,7 +292,7 @@ return {
         )
     ),
     s(
-        { trig = 'vec', dscr = 'Vector' },
+        { trig = 'vec', wordTrig = false, dscr = 'Vector' },
         fmta(
             [[
         (<>_{1}, <>_{2}, \ldots, <>_{<>})
@@ -306,7 +306,7 @@ return {
         )
     ),
     s(
-        { trig = 'seq', dscr = 'Sequence' },
+        { trig = 'seq', wordTrig = false, dscr = 'Sequence' },
         fmta(
             [[
         <>_{1}, <>_{2}, \ldots, <>_{<>}

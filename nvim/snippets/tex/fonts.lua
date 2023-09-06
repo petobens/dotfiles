@@ -167,7 +167,7 @@ return {
 
     -- Delimiters
     s(
-        { trig = 'bc', dscr = 'Braces' },
+        { trig = 'bc', wordTrig = false, dscr = 'Braces' },
         fmta(
             [[
         \{<><>\}

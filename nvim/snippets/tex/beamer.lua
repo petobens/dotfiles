@@ -523,4 +523,20 @@ es-noshorthands,es-lcroman,es-tabla]]
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'blo', dscr = 'Beamer block' },
+        fmta(
+            [[
+                \begin{block}{<>}
+                  <><>
+                \end{block}
+            ]],
+            {
+                i(1, 'title'),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
 }, {}

@@ -5,6 +5,7 @@ local c = ls.choice_node
 local d = ls.dynamic_node
 local f = ls.function_node
 local i = ls.insert_node
+local isn = ls.indent_snippet_node
 local s = ls.snippet
 local t = ls.text_node
 local sn = ls.snippet_node
@@ -282,10 +283,10 @@ every pin edge/.style={<<-,>>=stealth'}
             ]],
             {
                 c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
-                f(_G.LuaSnipConfig.visual_selection),
-                i(2),
-                i(3, 'text'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 3 }),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+                i(4, 'text'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 4 }),
             }
         ),
         { condition = line_begin }
@@ -490,10 +491,14 @@ every pin edge/.style={<<-,>>=stealth'}
         fmta(
             [[
                 \begin{tikzpicture}<>
-                  <>
+                  <><>
                 \end{tikzpicture}
             ]],
-            { c(1, { sn(nil, { t('[scale='), i(1, '2'), t(']') }), t('') }), i(2) }
+            {
+                c(1, { sn(nil, { t('[scale='), i(1, '2'), t(']') }), t('') }),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
         ),
         { condition = line_begin }
     ),

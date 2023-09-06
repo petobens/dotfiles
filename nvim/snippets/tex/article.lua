@@ -490,7 +490,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'tha', dscr = 'Thanks' },
+        { trig = 'tha', wordTrig = false, dscr = 'Thanks' },
         fmta(
             [[
         \thanks{<><>}
@@ -535,7 +535,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'pt', dscr = 'Points (for exercises)' },
+        { trig = 'pt', wordTrig = false, dscr = 'Points (for exercises)' },
         fmta(
             [[
         \points{<>}

@@ -14,19 +14,56 @@ local rep = extras.rep
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
-    -- Preamble
     s(
         { trig = 'mwe', dscr = 'MWE template' },
         fmta(
             [[
 \documentclass{<>}
 \begin{document}
-    <>
+    <><>
 \end{document}
 ]],
             {
                 i(1, 'article'),
-                i(2),
+                isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
+                i(3),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    -- Preamble
+    s(
+        { trig = 'ip', dscr = 'Input' },
+        fmta(
+            [[
+        \input{<>}
+    ]],
+            {
+                i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ic', dscr = 'Include' },
+        fmta(
+            [[
+        \include{<>}
+    ]],
+            {
+                i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'io', dscr = 'Includeonly' },
+        fmta(
+            [[
+        \includeonly{<>}
+    ]],
+            {
+                i(1),
             }
         ),
         { condition = line_begin }
@@ -45,6 +82,52 @@ return {
         { condition = line_begin }
     ),
     s(
+        { trig = 'nc', dscr = 'New command' },
+        fmta(
+            [[
+                \<>newcommand*{\<>}<>{\<>}
+            ]],
+            {
+                c(1, { t(''), t('re') }),
+                i(2, 'new_cmd'),
+                c(3, { sn(nil, { t('['), i(1, 'nr_args>1'), t(']') }), t('') }),
+                i(4, 'real_cmd'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'ne', dscr = 'New environment' },
+        fmta(
+            [[
+                \newenvironment*{<>}<>
+                  {<>}<>
+            ]],
+            {
+                i(1, 'name'),
+                c(2, { sn(nil, { t('['), i(1, 'nr_args>1'), t(']') }), t('') }),
+                i(3, 'before'),
+                c(4, { sn(nil, { t({ '', '  {' }), i(1, 'after'), t('}') }), t('') }),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'dmo', dscr = 'Declare math operator' },
+        fmta(
+            [[
+                \DeclareMathOperator*{\<>}{<>}
+            ]],
+            {
+                i(1, 'new_operator'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
+    -- Environments & Commands
+    s(
         { trig = 'env', dscr = 'Generic environment' },
         fmta(
             [[
@@ -62,15 +145,25 @@ return {
         { condition = line_begin }
     ),
     s(
+        { trig = 'end', dscr = 'End environment' },
+        fmta(
+            [[
+            \end{<>}
+        ]],
+            {
+                i(1),
+            }
+        )
+    ),
+    s(
         { trig = 'cmd', dscr = 'Generic cmd' },
         fmta(
             [[
-        \<>{<><>}
+        \<><>
     ]],
             {
                 i(1),
-                i(2),
-                f(_G.LuaSnipConfig.visual_selection),
+                c(2, { sn(nil, { t('{'), i(1), t('}') }), t('') }),
             }
         )
     ),

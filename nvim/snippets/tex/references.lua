@@ -24,7 +24,7 @@ return {
         )
     ),
     s(
-        { trig = 'lab', dscr = 'Label' },
+        { trig = 'lab', wordTrig = false, dscr = 'Label' },
         fmta(
             [[
         \label{<><>}
@@ -36,7 +36,7 @@ return {
         )
     ),
     s(
-        { trig = 'nn', dscr = 'No number' },
+        { trig = 'nn', wordTrig = false, dscr = 'No number' },
         fmta(
             [[
         \nonumber
@@ -58,7 +58,7 @@ return {
         )
     ),
     s(
-        { trig = 'bm', dscr = 'Bookmark' },
+        { trig = 'bm', wordTrig = false, dscr = 'Bookmark' },
         fmta(
             [[
         \pdfbookmark[<>]{<>}{<>}
@@ -218,7 +218,7 @@ return {
         )
     ),
     s(
-        { trig = 'noc', dscr = 'Nocite' },
+        { trig = 'noc', wordTrig = false, dscr = 'Nocite' },
         fmta(
             [[
         \nocite{<>}

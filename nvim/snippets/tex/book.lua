@@ -492,30 +492,6 @@ This document is free; you can redistribute it and/or modify it under the
         { condition = line_begin }
     ),
     s(
-        { trig = 'ic', dscr = 'Include' },
-        fmta(
-            [[
-        \include{<>}
-    ]],
-            {
-                i(1),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
-        { trig = 'io', dscr = 'Includeonly' },
-        fmta(
-            [[
-        \includeonly{<>}
-    ]],
-            {
-                i(1),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
         { trig = 'pf', dscr = 'Preface' },
         fmta(
             [[
