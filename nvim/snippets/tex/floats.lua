@@ -22,12 +22,12 @@ return {
         { trig = 'sat', dscr = 'Standalone table' },
         fmta(
             [[
-\documentclass{standalone}
-
 %-----------------------+
 % Clean auxiliary files |
 %-----------------------+
 % arara: clean: {files: [<base_fn>.aux, <base_fn>.log, <base_fn>.synctex.gz]}
+
+\documentclass{standalone}
 
 %------------------------------------+
 % Language, hyphenation and encoding |
@@ -90,12 +90,12 @@ return {
         { trig = 'saf', dscr = 'Standalone figure' },
         fmta(
             [[
-\documentclass{standalone}
-
 %-----------------------+
 % Clean auxiliary files |
 %-----------------------+
 % arara: clean: {files: [<base_fn>.aux, <base_fn>.log, <base_fn>.synctex.gz]}
+
+\documentclass[tikz]{standalone}
 
 %----------------------------------------------+
 % Font, hyphenation, encoding and math symbols |
