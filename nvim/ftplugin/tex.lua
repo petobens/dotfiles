@@ -42,6 +42,9 @@ local LATEX_EFM = ''
     .. [[%-G%.%#,]]
 
 local _parse_logfile = function(filename, cwd, active_window_id)
+    if vim.fn.filereadable(filename) == 0 then
+        return
+    end
     local content = require('overseer.files').read_file(filename)
     local lines = vim.split(content, '\n')
     local items = vim.fn.getqflist({
