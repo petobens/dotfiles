@@ -2,6 +2,7 @@ local extras = require('luasnip.extras')
 local ls = require('luasnip')
 
 local c = ls.choice_node
+local d = ls.dynamic_node
 local f = ls.function_node
 local i = ls.insert_node
 local isn = ls.indent_snippet_node
@@ -11,6 +12,7 @@ local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
 local rep = extras.rep
+local postfix = require('luasnip.extras.postfix').postfix
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
@@ -163,10 +165,30 @@ return {
     ]],
             {
                 i(1),
-                c(2, { sn(nil, { t('{'), i(1), t('}') }), t('') }),
+                c(2, {
+                    sn(
+                        nil,
+                        { t('{'), f(_G.LuaSnipConfig.visual_selection), i(1), t('}') }
+                    ),
+                    t(''),
+                }),
             }
         )
     ),
+    postfix({ trig = 'kk', dscr = 'Postfix cmd' }, {
+        d(1, function(_, parent)
+            return sn(nil, {
+                t('\\' .. parent.env.POSTFIX_MATCH),
+                c(1, {
+                    sn(
+                        nil,
+                        { t('{'), f(_G.LuaSnipConfig.visual_selection), i(1), t('}') }
+                    ),
+                    t(''),
+                }),
+            })
+        end),
+    }),
 
     -- Section environments
     s(
