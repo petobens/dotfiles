@@ -18,7 +18,7 @@ end)
 u.keymap('n', '<Leader>w', '<Cmd>w!<CR>')
 u.keymap('n', '<Leader>wc', '<Cmd>w!<CR><Cmd>silent! close<CR>')
 u.keymap('n', '<Leader>wq', '<Cmd>w!<CR><Cmd>q!<CR>')
-u.keymap('n', '<Leader>sw', '<Cmd>SudaWrite<CR>')
+u.keymap('n', '<Leader>ws', '<Cmd>SudaWrite<CR>')
 u.keymap('n', '<Leader>rs', ':SudaRead ', { silent = false })
 
 -- Buffer manipulation
@@ -127,7 +127,7 @@ u.keymap(
     { remap = true }
 ) -- don't jump to first match with * and #
 u.keymap('n', '#', '#``', { remap = true })
-u.keymap('n', '<Leader>ws', '/<><Left>', { silent = false, remap = true })
+u.keymap('n', '<Leader>sw', '/<><Left>', { silent = false, remap = true })
 u.keymap('n', '[m', '[mzz')
 u.keymap('n', ']m', ']mzz')
 
