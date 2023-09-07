@@ -1,3 +1,4 @@
+-- luacheck:ignore 631
 --- i3
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
     group = vim.api.nvim_create_augroup('ft_i3', { clear = true }),
@@ -83,6 +84,13 @@ vim.api.nvim_create_autocmd('FileType', {
 
 --- Latex
 vim.g.tex_flavor = 'latex' -- treat latex files .tex files rather than plaintex
+
+---- Lua
+vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('ft_lua', { clear = true }),
+    pattern = { 'lua' },
+    command = 'setlocal formatoptions-=ro',
+})
 
 --- Markdown
 local markdown_acg = vim.api.nvim_create_augroup('ft_markdown', { clear = true })
@@ -180,7 +188,7 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
     group = vim.api.nvim_create_augroup('ft_toml', { clear = true }),
     pattern = { 'poetry.lock' },
-    command = 'set  filetype=toml',
+    command = 'set filetype=toml',
 })
 
 --- Vim (also help and man)

@@ -3,7 +3,6 @@ local u = require('utils')
 local utils = require('telescope.utils')
 
 -- Options
-vim.opt_local.formatoptions = 'jcql'
 vim.opt_local.textwidth = 90
 
 -- Running
