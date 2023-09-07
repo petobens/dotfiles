@@ -22,7 +22,7 @@ return {
             [[
 \documentclass{<>}
 \begin{document}
-    <><>
+<><>
 \end{document}
 ]],
             {
