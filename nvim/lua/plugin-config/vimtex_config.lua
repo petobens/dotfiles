@@ -1,6 +1,10 @@
 local u = require('utils')
 
--- Options
+-- Vim TeX global options
+vim.g.tex_flavor = 'latex' -- treat latex files .tex files rather than plaintex
+vim.g.tex_conceal = nil
+
+-- Vimtex options
 ---- Compiler & Completion
 vim.g.vimtex_compiler_enabled = 0
 vim.g.vimtex_compiler_method = 'arara'

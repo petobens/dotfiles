@@ -27,3 +27,4 @@ function _G.TexFolding.custom_tex_fold()
 end
 
 vim.opt_local.foldtext = 'v:lua.TexFolding.custom_tex_fold()'
+vim.opt_local.comments:append({ 'b:\\item' })

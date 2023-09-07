@@ -2,15 +2,13 @@ local overseer = require('overseer')
 local scan = require('plenary.scandir')
 local u = require('utils')
 
--- Options
+-- Options (note: some other options are in /after/ftplugin file)
 vim.opt_local.shiftwidth = 2
 vim.opt_local.tabstop = 2
 vim.opt_local.softtabstop = 2
 vim.opt_local.formatoptions = 'trj'
 vim.opt_local.spell = true
 vim.opt_local.iskeyword = '@,48-57,_,192-255,:'
--- FIXME: not working:
-vim.opt_local.indentkeys = '!^F,o,O,0=\\item'
 
 -- Compiling
 local LATEX_EFM = ''
