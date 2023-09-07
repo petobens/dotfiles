@@ -73,10 +73,12 @@ u.keymap({ 'i', 's' }, '<C-x>', function()
     end
 end)
 u.keymap('n', '<Leader>es', function()
-    local snippet_file = vim.bo.filetype .. '.lua'
     if vim.bo.filetype == 'tex' or vim.bo.filetype == 'lua' then
-        snippet_file = vim.bo.filetype .. '/' .. snippet_file
+        vim.cmd(':Telescope find_files cwd=' .. snippets_dir .. '/' .. vim.bo.filetype)
+        return
     end
+
+    local snippet_file = vim.bo.filetype .. '.lua'
     local split = 'split '
     if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
         split = 'vsplit '
