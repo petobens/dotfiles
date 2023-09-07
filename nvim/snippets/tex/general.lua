@@ -72,11 +72,11 @@ return {
         { trig = 'up', dscr = 'Use package' },
         fmta(
             [[
-        \usepackage<>{<>}
+        \usepackage<>{<name>}
       ]],
             {
-                c(1, { sn(nil, { t('['), i(1, 'options'), t(']') }), t('') }),
-                i(2, 'name'),
+                name = i(1),
+                c(2, { sn(nil, { t('['), i(1, 'options'), t(']') }), t('') }),
             }
         ),
         { condition = line_begin }
@@ -136,7 +136,7 @@ return {
       \end{<>}
     ]],
             {
-                i(1, 'env_name'),
+                i(1),
                 isn(2, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),
                 i(3),
                 rep(1),

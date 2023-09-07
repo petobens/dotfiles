@@ -295,11 +295,11 @@ every pin edge/.style={<<-,>>=stealth'}
         { trig = 'ig', dscr = 'Include graphics' },
         fmta(
             [[
-                \includegraphics<>{<>}
+                \includegraphics<>{<path>}
             ]],
             {
-                c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
-                i(2),
+                path = i(1),
+                c(2, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
             }
         )
     ),

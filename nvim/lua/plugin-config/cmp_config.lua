@@ -83,8 +83,7 @@ cmp.setup({
         end, { 'i', 's' }),
     },
     sources = {
-        -- Note: sources are prioritized in the order that they are defined
-        -- here
+        -- Note: sources are prioritized in the order that they are defined here
         { name = 'luasnip' },
         {
             name = 'nvim_lsp',
