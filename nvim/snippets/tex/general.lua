@@ -324,4 +324,10 @@ return {
         ),
         { condition = line_begin }
     ),
-}, {}
+}, {
+    s({ trig = 'itm', wordTrig = false, dscr = '\\item' }, {
+        t('\\item '),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+    }),
+}
