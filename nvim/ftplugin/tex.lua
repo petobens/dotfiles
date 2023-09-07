@@ -14,6 +14,7 @@ vim.opt_local.comments = vim.opt.comments + { 'b:\\item' }
 
 -- Compiling
 local LATEX_EFM = ''
+    -- From https://github.com/lervag/vimtex/blob/master/autoload/vimtex/qf/latexlog.vim
     -- Push file to file stack
     .. [[%-P**%f,]]
     .. [[%-P**\"%f\",]]
@@ -23,6 +24,8 @@ local LATEX_EFM = ''
     .. [[%E!\ %m,]]
     -- More info for undefined control sequences
     .. [[%Z<argument>\ %m,]]
+    -- More info for some errors
+    .. [[%Cl.%l\ %m,]]
     -- Show warnings (some warnings)
     .. [[%+WLaTeX\ %.%#Warning:\ %.%#line\ %l%.%#,]]
     .. [[%+W%.%#\ at\ lines\ %l--%*\\d,]]
