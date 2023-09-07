@@ -175,7 +175,7 @@ return {
             }
         )
     ),
-    postfix({ trig = 'kk', dscr = 'Postfix cmd' }, {
+    postfix({ trig = 'kk', snippetType = 'autosnippet', dscr = 'Postfix cmd' }, {
         d(1, function(_, parent)
             return sn(nil, {
                 t('\\' .. parent.env.POSTFIX_MATCH),
