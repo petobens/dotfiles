@@ -84,6 +84,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 --- Latex
 vim.g.tex_flavor = 'latex' -- treat latex files .tex files rather than plaintex
+vim.g.tex_itemize_env = [[itemize\|enumerate\|steps]]
 
 ---- Lua
 vim.api.nvim_create_autocmd('FileType', {

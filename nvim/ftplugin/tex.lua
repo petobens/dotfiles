@@ -9,8 +9,8 @@ vim.opt_local.softtabstop = 2
 vim.opt_local.formatoptions = 'trj'
 vim.opt_local.spell = true
 vim.opt_local.iskeyword = '@,48-57,_,192-255,:'
+-- FIXME: not working:
 vim.opt_local.indentkeys = '!^F,o,O,0=\\item'
-vim.opt_local.comments = vim.opt.comments + { 'b:\\item' }
 
 -- Compiling
 local LATEX_EFM = ''
