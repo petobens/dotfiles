@@ -1,11 +1,13 @@
 local u = require('utils')
 
--- Options (essentially disable most functionality)
+-- Options
+---- Compiler & Completion
 vim.g.vimtex_compiler_enabled = 0
 vim.g.vimtex_compiler_method = 'arara'
 vim.g.vimtex_quickfix_enabled = 0
 vim.g.vimtex_view_enabled = 0
 vim.g.vimtex_complete_enabled = 0
+---- Folding
 vim.g.vimtex_fold_enabled = 1
 vim.g.vimtex_fold_manual = 1 -- only compute folds on demand
 vim.g.vimtex_fold_types = { -- only fold preamble, parts and sections
@@ -22,9 +24,10 @@ vim.g.vimtex_fold_types = { -- only fold preamble, parts and sections
     cmd_multi = { enabled = 0 },
     cmd_addplot = { enabled = 0 },
 }
+----- Indent & delimiters
 vim.g.vimtex_indent_enabled = 0
-vim.g.vimtex_imaps_enabled = 0
 vim.g.vimtex_matchparen_enabled = 0
+---- TOC
 vim.g.vimtex_toc_config = {
     split_pos = 'vert topleft',
     split_width = 40,
@@ -38,8 +41,11 @@ vim.g.vimtex_toc_config = {
     hide_line_numbers = 0,
     tocdepth = 1,
 }
+-- FIXME: Not working: https://github.com/lervag/vimtex/issues/46#issuecomment-1710113952
+vim.g.vimtex_toc_show_preamble = 0
 
 -- Mappings
+vim.g.vimtex_imaps_enabled = 0
 vim.api.nvim_create_autocmd({ 'User' }, {
     group = vim.api.nvim_create_augroup('vimtex_maps', { clear = true }),
     pattern = { 'VimtexEventInitPost' },
@@ -49,5 +55,6 @@ vim.api.nvim_create_autocmd({ 'User' }, {
         u.keymap('n', '<Leader>ce', '<plug>(vimtex-env-change)', vimtex_maps)
         u.keymap('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
         u.keymap('n', '<Leader>td', '<plug>(vimtex-delim-toggle-modifier)', vimtex_maps)
+        u.keymap('i', '<A-d>', '<plug>(vimtex-delim-close)', vimtex_maps)
     end,
 })

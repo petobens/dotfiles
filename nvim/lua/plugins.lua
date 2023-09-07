@@ -201,7 +201,6 @@ local plugins = {
         config = function()
             require('plugin-config.vimtex_config')
         end,
-        ft = { 'tex', 'bib' },
     },
 
     -- Python
