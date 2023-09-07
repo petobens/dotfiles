@@ -1,3 +1,4 @@
+-- luacheck:ignore 631
 local u = require('utils')
 
 require('nvim-treesitter.configs').setup({

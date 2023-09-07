@@ -134,6 +134,7 @@ local function on_attach(client, bufnr)
                             v.message = string.format('%s [%s]', v.message, v.code)
                         end
                     end
+                    vim.diagnostic.set(v.namespace, v.bufnr, { v })
                 end
                 vim.diagnostic.setloclist({
                     title = string.format(
