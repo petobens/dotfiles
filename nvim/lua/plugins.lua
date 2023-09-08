@@ -254,6 +254,12 @@ local plugins = {
         event = 'BufReadPost',
     },
     {
+        'echasnovski/mini.align',
+        config = function()
+            require('plugin-config.mini_align_config')
+        end,
+    },
+    {
         'lambdalisue/suda.vim',
         cmd = { 'SudaWrite', 'SudaRead' },
     },
