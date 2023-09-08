@@ -17,7 +17,7 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('ft_bib', { clear = true }),
     pattern = { 'bib' },
-    command = 'setlocal foldmethod=marker commentstring=%%%%s spell shiftwidth=2 tabstop=2 softtabstop=2',
+    command = 'setlocal foldmethod=marker commentstring=%%%%s spell shiftwidth=2 tabstop=2 softtabstop=2 indentkeys=',
 })
 
 --- Configs
