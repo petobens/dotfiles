@@ -32,8 +32,8 @@ local sources = {
     null_ls_formatting.shfmt.with({
         extra_args = { '-i', '4', '-ci', '-sr' },
     }),
-
     null_ls_diagnostics.shellcheck,
+
     -- JSON
     null_ls_formatting.jq.with({
         extra_args = { '--indent', '4' },
@@ -43,7 +43,18 @@ local sources = {
 
     -- Latex
     null_ls_diagnostics.chktex.with({
-        extra_args = { '-n1', '-n3', '-n8', '-n24', '-n25', '-n36' },
+        extra_args = {
+            '-n1',
+            '-n2',
+            '-n3',
+            '-n6',
+            '-n7',
+            '-n8',
+            '-n13',
+            '-n24',
+            '-n25',
+            '-n36',
+        },
     }),
 
     -- Lua
