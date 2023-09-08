@@ -192,3 +192,6 @@ end, { buffer = true })
 u.keymap('n', '<Leader>ef', function()
     file_edit('float')
 end, { buffer = true })
+---- Tables
+u.keymap('i', '<A-c>', '<ESC>f&lli', { buffer = true })
+u.keymap('i', '<A-r>', '<ESC>j0f&hi', { buffer = true })
