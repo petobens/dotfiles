@@ -41,6 +41,11 @@ local sources = {
 
     null_ls_diagnostics.jsonlint,
 
+    -- Latex
+    null_ls_diagnostics.chktex.with({
+        extra_args = { '-n1', '-n3', '-n8', '-n24', '-n25', '-n36' },
+    }),
+
     -- Lua
     null_ls_formatting.stylua.with({
         extra_args = {
@@ -125,8 +130,8 @@ local function on_attach(client, bufnr)
         callback = function()
             local diagnostics = vim.diagnostic.get(0)
             if #diagnostics > 0 then
-                -- Format location list to include source and error code (but do
-                -- it only once to avoid repetition when reopening the location list)
+                -- Modify message to add source and error code
+                local new_msg = {}
                 for _, v in pairs(diagnostics) do
                     if not string.match(v.message, v.source) then
                         v.message = string.format('%s: %s', v.source, v.message)
@@ -134,14 +139,26 @@ local function on_attach(client, bufnr)
                             v.message = string.format('%s [%s]', v.message, v.code)
                         end
                     end
-                    vim.diagnostic.set(v.namespace, v.bufnr, { v })
+                    table.insert(new_msg, v.message)
                 end
-                vim.diagnostic.setloclist({
+
+                -- Using set.diagnostics is weird so we first set the location list with
+                -- the original diagnostics and then modify it with the new diagnostic msg
+                vim.diagnostic.setloclist({ open = false })
+                local current_ll = vim.fn.getloclist(0)
+                local new_ll = {}
+                for i, v in pairs(current_ll) do
+                    v.text = new_msg[i]
+                    table.insert(new_ll, v)
+                end
+                vim.fn.setloclist(0, {}, ' ', {
                     title = string.format(
                         'Diagnostics: %s',
                         vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
                     ),
+                    items = new_ll,
                 })
+                vim.cmd('lopen')
             else
                 vim.cmd('lclose')
             end
