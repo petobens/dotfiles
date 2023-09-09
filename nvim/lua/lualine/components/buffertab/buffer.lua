@@ -20,6 +20,7 @@ function Buffer:get_props()
     self.icon = ''
     if self.options.icons_enabled then
         local dev
+        local _
         local get_icon = require('nvim-web-devicons').get_icon
         if self.filetype == 'TelescopePrompt' then
             dev, _ = get_icon('telescope')
@@ -42,7 +43,7 @@ end
 
 --- Highlight buffer state according to visible/modified status
 function Buffer:hl_buffer_state()
-    local hl_group = ''
+    local hl_group
     if self.current then
         if self.modified then
             hl_group = 'modified'
@@ -102,8 +103,9 @@ end
 function Buffer:separator_before()
     if
         (self.current or self.aftercurrent)
-        or self.visible ~= self.prev_visible
+        or (self.visible ~= self.prev_visible)
         or (self.visible and (self.prev_modified or self.modified))
+        or (self.modified and not self.prev_visible)
     then
         return '%Z{' .. self.options.section_separators.left .. '}'
     else

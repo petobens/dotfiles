@@ -161,7 +161,8 @@ function M:update_status()
         -- Draw left most undrawn buffer if fits in max_length
         if before then
             rendered_before = before:render()
-            total_length = total_length + before.len - 1 -- substract 1 due to KQ placeholder
+            -- Substract 1 due to KQ placeholder
+            total_length = total_length + before.len - 1
             if total_length > max_length then
                 break
             end
