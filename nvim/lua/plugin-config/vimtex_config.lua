@@ -47,6 +47,8 @@ vim.g.vimtex_toc_config = {
 }
 -- FIXME: Not working: https://github.com/lervag/vimtex/issues/46#issuecomment-1710113952
 vim.g.vimtex_toc_show_preamble = 0
+-- Docs
+vim.g.vimtex_doc_confirm_single = 0
 
 -- Mappings
 vim.g.vimtex_imaps_enabled = 0
@@ -67,5 +69,6 @@ vim.api.nvim_create_autocmd({ 'User' }, {
                 .. '<Cmd>silent! normal! G<CR>',
             vimtex_maps
         )
+        u.keymap('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', vimtex_maps)
     end,
 })
