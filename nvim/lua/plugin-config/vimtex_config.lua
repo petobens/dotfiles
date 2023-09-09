@@ -62,13 +62,15 @@ vim.api.nvim_create_autocmd({ 'User' }, {
         u.keymap('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
         u.keymap('n', '<Leader>td', '<plug>(vimtex-delim-toggle-modifier)', vimtex_maps)
         u.keymap('i', '<A-d>', '<plug>(vimtex-delim-close)', vimtex_maps)
+        u.keymap('n', 'vim', 'vi$', vimtex_maps)
+        u.keymap('n', 'vam', 'va$', vimtex_maps)
         u.keymap(
             'n',
             '<Leader>cw',
             '<Cmd>VimtexCountWords!<CR><Cmd>wincmd J<bar>12 wincmd _<CR>'
                 .. '<Cmd>silent! normal! G<CR>',
-            vimtex_maps
+            { buffer = true }
         )
-        u.keymap('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', vimtex_maps)
+        u.keymap('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', { buffer = true })
     end,
 })
