@@ -110,7 +110,7 @@ local file_edit = function(search_file)
     local base_dir = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:h')
     local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':t:r')
 
-    if search_file == 'bib' then
+    if search_file == 'bib' or search_file == 'log' then
         search_file = string.format('%s.%s', base_file, search_file)
     elseif search_file == 'float' then
         search_file = vim.fn.fnamemodify(
@@ -188,6 +188,9 @@ u.keymap('n', '<Leader>ep', function()
 end, { buffer = true })
 u.keymap('n', '<Leader>eb', function()
     file_edit('bib')
+end, { buffer = true })
+u.keymap('n', '<Leader>el', function()
+    file_edit('log')
 end, { buffer = true })
 u.keymap('n', '<Leader>ef', function()
     file_edit('float')
