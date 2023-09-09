@@ -149,18 +149,6 @@ every pin edge/.style={<<-,>>=stealth'}
         ),
         { condition = line_begin }
     ),
-    s(
-        { trig = 'cm', dscr = 'Choice multi' },
-        fmta(
-            [[
-                <>
-            ]],
-            {
-                c(1, { sn(nil, { t('foo\bar'), t('bar') }), t('') }),
-            }
-        ),
-        { condition = line_begin }
-    ),
 
     -- Floats
     s(
@@ -308,12 +296,12 @@ every pin edge/.style={<<-,>>=stealth'}
         fmta(
             [[
                \begin{center}
-                 \includegraphics<>{<>}
+                 \includegraphics<>{<path>}
                \end{center}
             ]],
             {
-                c(1, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
-                i(2),
+                path = i(1),
+                c(2, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
             }
         ),
         { condition = line_begin }
@@ -343,15 +331,15 @@ every pin edge/.style={<<-,>>=stealth'}
                   \ttabbox
                   {\caption{<>}
                   \label{tab:<>}}
-                  {\includegraphics<>{<>}}
+                  {\includegraphics<>{<path>}}
                 \end{table}
             ]],
             {
-                c(1, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
-                i(2, 'text'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
-                c(3, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
-                i(4),
+                path = i(1),
+                c(2, { sn(nil, { t('['), i(1, '!htb'), t(']') }), t('') }),
+                i(3, 'text'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 3 }),
+                c(4, { sn(nil, { t('['), i(1, 'scale=1'), t(']') }), t('') }),
             }
         ),
         { condition = line_begin }
