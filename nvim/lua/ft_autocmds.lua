@@ -120,7 +120,7 @@ local qf_acg = vim.api.nvim_create_augroup('ft_qf', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
     group = qf_acg,
     pattern = { 'qf' },
-    command = 'setlocal colorcolumn= textwidth=0 nospell',
+    command = 'setlocal colorcolumn= textwidth=0 nospell nobuflisted',
 })
 vim.api.nvim_create_autocmd('FileType', {
     group = qf_acg,
