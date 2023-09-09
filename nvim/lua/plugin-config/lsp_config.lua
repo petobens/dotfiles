@@ -81,7 +81,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
         -- Map only after language server attaches to the current buffer
         local opts = { buffer = ev.buf }
-        u.keymap('n', '<Leader>jd', vim.lsp.buf.definition, opts)
+        u.keymap('n', '<Leader>jd', function()
+            local split_cmd = 'split'
+            if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+                split_cmd = 'vsplit'
+            end
+            vim.cmd(split_cmd)
+            vim.lsp.buf.definition()
+        end, opts)
         u.keymap('n', '<Leader>jD', vim.lsp.buf.declaration, opts)
         u.keymap('n', '<Leader>ap', vim.lsp.buf.references, opts)
         u.keymap('n', '<Leader>rn', vim.lsp.buf.rename, opts)
