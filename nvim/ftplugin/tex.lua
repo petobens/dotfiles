@@ -42,7 +42,7 @@ local LATEX_EFM = ''
     -- Ignore unmatched lines
     .. [[%-G%.%#,]]
 
-local _parse_logfile = function(filename, cwd, active_window_id)
+local function _parse_logfile(filename, cwd, active_window_id)
     if vim.fn.filereadable(filename) == 0 then
         return
     end
@@ -71,7 +71,7 @@ local _parse_logfile = function(filename, cwd, active_window_id)
     end
 end
 
-local compile_latex = function()
+local function compile_latex()
     local cwd = vim.fn.getcwd()
     local current_win_id = vim.fn.win_getid()
     vim.cmd('silent noautocmd update')
@@ -86,12 +86,12 @@ local compile_latex = function()
 end
 
 -- Viewing
-local view_pdf = function()
+local function view_pdf()
     local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
     vim.fn.jobstart('zathura --fork ' .. pdf_file)
 end
 
-local forward_search = function()
+local function forward_search()
     local tex_file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
     local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
     local forward_args = ' --synctex-forward '
@@ -106,7 +106,7 @@ local forward_search = function()
 end
 
 -- File Editing
-local file_edit = function(search_file)
+local function file_edit(search_file)
     local base_dir = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:h')
     local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':t:r')
 
@@ -131,7 +131,7 @@ local file_edit = function(search_file)
 end
 
 -- Miscellaneous
-local delete_aux_files = function()
+local function delete_aux_files()
     local aux_extensions = {
         'aux',
         'bbl',
@@ -172,6 +172,27 @@ local delete_aux_files = function()
     )
 end
 
+local function convert_pandoc(extension)
+    local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':t:r')
+    local output_file = string.format('%s.%s', base_file, extension)
+    local bib_file = base_file .. '.bib'
+
+    local pandoc_cmd = 'pandoc -s'
+    if extension == 'docx' then
+        pandoc_cmd = pandoc_cmd .. ' --toc --number-sections'
+        if vim.fn.filereadable(bib_file) > 0 then
+            pandoc_cmd = pandoc_cmd .. ' --bibliography=' .. bib_file
+        end
+    end
+
+    pandoc_cmd = string.format('%s %s.tex -o %s', pandoc_cmd, base_file, output_file)
+    print(pandoc_cmd)
+    vim.fn.system(pandoc_cmd)
+    if vim.v.shell_error ~= 1 then
+        vim.cmd.echo(string.format('"Converted .tex file into .%s"', extension))
+    end
+end
+
 -- Mappings
 ---- Compilation
 u.keymap('n', '<F7>', compile_latex, { buffer = true })
@@ -179,6 +200,12 @@ u.keymap('i', '<F7>', compile_latex, { buffer = true })
 u.keymap('n', '<Leader>vp', view_pdf, { buffer = true })
 u.keymap('n', '<Leader>sl', forward_search, { buffer = true })
 u.keymap('n', '<Leader>da', delete_aux_files, { buffer = true })
+u.keymap('n', '<Leader>cm', function()
+    convert_pandoc('md')
+end, { buffer = true })
+u.keymap('n', '<Leader>cx', function()
+    convert_pandoc('docx')
+end, { buffer = true })
 ---- Editing
 u.keymap('n', '<Leader>em', function()
     file_edit('main.tex')
