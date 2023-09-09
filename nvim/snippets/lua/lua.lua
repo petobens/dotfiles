@@ -174,6 +174,15 @@ return {
             { f(_G.LuaSnipConfig.visual_selection), i(1) }
         )
     ),
+    s(
+        { trig = 'sf', dscr = 'String format' },
+        fmta(
+            [[
+            string.format('<><>', <>)
+        ]],
+            { f(_G.LuaSnipConfig.visual_selection), i(1), i(2) }
+        )
+    ),
 }, {
     s({ trig = 'db', dscr = 'Double brackets' }, {
         t('[['),
