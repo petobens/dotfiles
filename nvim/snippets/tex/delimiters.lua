@@ -68,4 +68,16 @@ return {
             }
         )
     ),
+    s(
+        { trig = 'vs', dscr = 'vspace' },
+        fmta(
+            [[
+        \vspace{<><>}
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        )
+    ),
 }, {}
