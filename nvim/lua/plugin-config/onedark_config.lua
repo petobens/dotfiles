@@ -365,12 +365,14 @@ onedarkpro.setup({
         NeotestUnknown = { fg = p.gray },
 
         ---- NvimTree
-        NvimTreeFolderIcon = { fg = p.light_blue },
         NvimTreeFolderName = { fg = p.light_blue },
+        NvimTreeFolderIcon = { link = 'NvimTreeFolderName' },
         NvimTreeOpenedFolderName = { link = 'NvimTreeFolderName' },
         NvimTreeEmptyFolderName = { link = 'NvimTreeFolderName' },
         NvimTreeRootFolder = { fg = p.purple },
         NvimTreeIndentMarker = { fg = p.gray, style = 'bold' },
+        NvimTreeFolderArrowOpen = { link = 'NvimTreeIndentMarker' },
+        NvimTreeFolderArrowClosed = { link = 'NvimTreeIndentMarker' },
         NvimTreeSymlink = { fg = p.purple },
         NvimTreeGitDirty = { fg = p.red }, -- modified/unstaged
         NvimTreeGitStaged = { fg = p.green },
