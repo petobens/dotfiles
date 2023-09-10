@@ -134,6 +134,18 @@ vim.api.nvim_create_autocmd('FileType', {
         u.keymap('n', 'Q', '<Cmd>bdelete<CR>', map_opts)
         u.keymap('n', '<C-s>', '<C-w><Enter>', map_opts)
         u.keymap('n', '<C-v>', '<C-w><Enter><C-w>L', map_opts)
+        u.keymap(
+            'n',
+            '<C-q>',
+            '<Cmd>cclose<bar>wincmd p<bar>Telescope quickfix<CR>',
+            map_opts
+        )
+        u.keymap(
+            'n',
+            '<C-l>',
+            '<Cmd>lclose<bar>wincmd p<bar>Telescope loclist<CR>',
+            map_opts
+        )
     end,
 })
 vim.api.nvim_create_autocmd({ 'QuitPre', 'BufDelete' }, {
