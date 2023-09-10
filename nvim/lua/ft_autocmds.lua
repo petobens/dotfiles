@@ -1,4 +1,3 @@
--- luacheck:ignore 631
 local u = require('utils')
 
 --- i3
@@ -19,7 +18,8 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('ft_bib', { clear = true }),
     pattern = { 'bib' },
-    command = 'setlocal foldmethod=marker commentstring=%%%%s spell shiftwidth=2 tabstop=2 softtabstop=2 indentkeys=',
+    command = 'setlocal foldmethod=marker commentstring=%%%%s spell shiftwidth=2 '
+        .. 'tabstop=2 softtabstop=2 indentkeys=',
 })
 
 --- Configs
@@ -101,7 +101,8 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('FileType', {
     group = markdown_acg,
     pattern = { 'markdown' },
-    command = 'setlocal foldlevel=1 foldmethod=expr foldexpr=v:lua.vim.treesitter.foldexpr()',
+    command = 'setlocal foldlevel=1 foldmethod=expr '
+        .. 'foldexpr=v:lua.vim.treesitter.foldexpr()',
 })
 
 --- Python
