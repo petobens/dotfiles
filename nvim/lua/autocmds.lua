@@ -62,7 +62,12 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 vim.api.nvim_create_autocmd('BufWritePre', {
     group = vim.api.nvim_create_augroup('delete_trailing', { clear = true }),
     callback = function()
-        udfs.delete_trailing_whitespace()
+        local pos = vim.api.nvim_win_get_cursor(0)
+        local trailing = vim.fn.search([[\s$]], 'nw')
+        if trailing ~= 0 then
+            vim.cmd([[keepjumps keeppatterns %s/\s\+$//e]])
+            vim.api.nvim_win_set_cursor(0, pos)
+        end
     end,
 })
 

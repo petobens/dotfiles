@@ -187,7 +187,6 @@ u.keymap(
 )
 
 -- UDFs
-u.keymap('n', '<Leader>dT', udfs.delete_trailing_whitespace)
 u.keymap('n', '<Leader>ol', function()
     udfs.open_links('n')
 end)

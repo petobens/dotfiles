@@ -10,15 +10,6 @@ function udfs.mk_non_dir(directory)
     end
 end
 
-function udfs.delete_trailing_whitespace()
-    local pos = vim.api.nvim_win_get_cursor(0)
-    local trailing = vim.fn.search([[\s$]], 'nw')
-    if trailing ~= 0 then
-        vim.cmd([[keepjumps keeppatterns %s/\s\+$//e]])
-        vim.api.nvim_win_set_cursor(0, pos)
-    end
-end
-
 function udfs.session_name()
     local session_dir = vim.env.CACHE .. '/tmp/session/'
     udfs.mk_non_dir(session_dir)
