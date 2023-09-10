@@ -21,14 +21,6 @@ function udfs.session_name()
     return (session_dir .. session_file .. '.vim')
 end
 
-function udfs.goto_file_insplit()
-    local wincmd = 'wincmd f'
-    if fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
-        wincmd = 'vertical ' .. wincmd
-    end
-    cmd(wincmd)
-end
-
 function udfs.diff_file_split()
     local save_pwd = fn.getcwd()
     cmd('lcd %:p:h')

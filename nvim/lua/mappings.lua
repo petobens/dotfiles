@@ -29,7 +29,13 @@ u.keymap('n', '<Leader>cd', '<Cmd>lcd %:h<CR>')
 u.keymap('n', '<Leader>rr', '<Cmd>checktime<CR>')
 u.keymap('n', '<Leader>so', '<Cmd>update<CR>:luafile %<CR>', { silent = false })
 u.keymap('n', '<Leader>wd', '<Cmd>bd<CR>')
-u.keymap('n', 'gf', udfs.goto_file_insplit)
+u.keymap('n', 'gf', function()
+    local wincmd = 'wincmd f'
+    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+        wincmd = 'vertical ' .. wincmd
+    end
+    vim.cmd(wincmd)
+end)
 
 -- Window manipulation
 u.keymap('n', '<A-o>', '<C-W>ozv')
