@@ -1,4 +1,6 @@
 -- luacheck:ignore 631
+local u = require('utils')
+
 --- i3
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
     group = vim.api.nvim_create_augroup('ft_i3', { clear = true }),
@@ -120,31 +122,24 @@ local qf_acg = vim.api.nvim_create_augroup('ft_qf', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
     group = qf_acg,
     pattern = { 'qf' },
-    command = 'setlocal colorcolumn= textwidth=0 nospell nobuflisted',
-})
-vim.api.nvim_create_autocmd('FileType', {
-    group = qf_acg,
-    pattern = { 'qf' },
-    command = 'nnoremap <buffer><silent> q <Cmd>bdelete<CR>',
-})
-vim.api.nvim_create_autocmd('FileType', {
-    group = qf_acg,
-    pattern = { 'qf' },
-    command = 'nnoremap <buffer><silent> Q <Cmd>bdelete<CR>',
+    callback = function()
+        -- Options, position and dynamic height
+        vim.cmd('setlocal colorcolumn= textwidth=0 nospell nobuflisted')
+        vim.cmd('wincmd J')
+        vim.cmd(math.max(1, math.min(vim.fn.line('$'), 15)) .. 'wincmd _')
+
+        -- Maps
+        local map_opts = { buffer = true }
+        u.keymap('n', 'q', '<Cmd>bdelete<CR>', map_opts)
+        u.keymap('n', 'Q', '<Cmd>bdelete<CR>', map_opts)
+        u.keymap('n', '<C-s>', '<C-w><Enter>', map_opts)
+        u.keymap('n', '<C-v>', '<C-w><Enter><C-w>L', map_opts)
+    end,
 })
 vim.api.nvim_create_autocmd({ 'QuitPre', 'BufDelete' }, {
     group = qf_acg,
     -- Automatically close corresponding loclist when quitting a window
     command = 'if &filetype != "qf" | silent! lclose | endif',
-})
-vim.api.nvim_create_autocmd('FileType', {
-    group = qf_acg,
-    pattern = { 'qf' },
-    callback = function()
-        vim.cmd('wincmd J')
-        local height = math.max(1, math.min(vim.fn.line('$'), 15))
-        vim.cmd(height .. 'wincmd _')
-    end,
 })
 
 --- R
