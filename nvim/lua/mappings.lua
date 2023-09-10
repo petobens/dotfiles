@@ -198,7 +198,14 @@ u.keymap('n', '<Leader>fm', function()
 end)
 for i = 1, 6 do
     u.keymap('n', '<Leader>h' .. i, function()
-        udfs.highlight_word(i)
+        vim.cmd('normal! mz')
+        vim.cmd('normal! "zyiw')
+        local mid = 86750 + i -- arbitrary match id
+        vim.cmd('silent! call matchdelete(' .. mid .. ')')
+        local pat = '\\V\\<' .. vim.fn.escape(vim.fn.getreg('z'), '\\') .. '\\>'
+        vim.fn.matchadd('HlWord' .. i, pat, 1, mid)
+        vim.cmd('normal! `z')
+        -- udfs.highlight_word(i)
     end)
 end
 
