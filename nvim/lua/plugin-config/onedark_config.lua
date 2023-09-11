@@ -328,7 +328,7 @@ onedarkpro.setup({
         GitSignsChangeInline = { link = 'DiffChange' },
         GitSignsDeleteInline = { link = 'DiffDelete' },
 
-        ---- HlWords (in udfs)
+        ---- HlWords
         HlWord1 = { link = 'Search' },
         HlWord2 = { fg = p.black, bg = p.green },
         HlWord3 = { fg = p.black, bg = p.purple },

@@ -222,7 +222,7 @@ u.keymap(
     '<Cmd>e $HOME/git-repos/private/dotfiles/arch/config/i3/config<CR>'
 )
 
--- UDFs
+-- Links & Filemanager
 u.keymap({ 'n', 'v' }, '<Leader>ol', function()
     local url
     local mode = vim.api.nvim_get_mode()['mode']
