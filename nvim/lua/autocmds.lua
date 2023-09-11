@@ -1,3 +1,5 @@
+local u = require('utils')
+
 -- Save and load viewoptions and previous session
 local session_acg = vim.api.nvim_create_augroup('session', { clear = true })
 vim.api.nvim_create_autocmd('VimLeavePre', {
@@ -54,7 +56,7 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd('BufWritePre', {
     group = vim.api.nvim_create_augroup('create_dir_before_write', { clear = true }),
     callback = function()
-        udfs.mk_non_dir()
+        u.mk_non_dir()
     end,
 })
 

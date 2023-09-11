@@ -1,5 +1,12 @@
 local M = {}
 
+function M.mk_non_dir(directory)
+    local dir = directory or vim.fn.expand('%:p:h')
+    if vim.fn.isdirectory(dir) == 0 then
+        vim.fn.mkdir(dir, 'p')
+    end
+end
+
 function M.keymap(mode, lhs, rhs, opts)
     return vim.keymap.set(
         mode,

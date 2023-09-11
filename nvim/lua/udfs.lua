@@ -3,24 +3,6 @@ local cmd = vim.cmd
 
 local udfs = {}
 
-function udfs.mk_non_dir(directory)
-    local dir = directory or fn.expand('%:p:h')
-    if fn.isdirectory(dir) == 0 then
-        fn.mkdir(dir, 'p')
-    end
-end
-
-function udfs.session_name()
-    local session_dir = vim.env.CACHE .. '/tmp/session/'
-    udfs.mk_non_dir(session_dir)
-    local session_file = 'vim_session'
-    if vim.env.TMUX ~= nil then
-        local tmux_session = fn.trim(fn.system("tmux display-message -p '#S'"))
-        session_file = session_file .. '_' .. tmux_session
-    end
-    return (session_dir .. session_file .. '.vim')
-end
-
 function udfs.diff_file_split()
     local save_pwd = fn.getcwd()
     cmd('lcd %:p:h')

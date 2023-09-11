@@ -4,7 +4,15 @@ local u = require('utils')
 u.keymap('n', '<Leader>kv', '<Cmd>qall<CR>')
 u.keymap('n', '<Leader>nw', '<Cmd>noautocmd w!<CR>')
 u.keymap('n', '<Leader>ps', function()
-    vim.cmd('silent! source ' .. udfs.session_name())
+    local session_dir = vim.env.CACHE .. '/tmp/session/'
+    u.mk_non_dir(session_dir)
+    local session_file = 'vim_session'
+    if vim.env.TMUX ~= nil then
+        local tmux_session = vim.fn.trim(vim.fn.system("tmux display-message -p '#S'"))
+        session_file = session_file .. '_' .. tmux_session
+    end
+    vim.cmd('silent! source ' .. (session_dir .. session_file .. '.vim'))
+
     -- Remove any buffer that exists and is listed but doesn't have a valid filename
     -- See https://github.com/neovim/neovim/pull/17112#issuecomment-1024923302
     for b = 1, vim.fn.bufnr('$') do
