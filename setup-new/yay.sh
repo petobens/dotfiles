@@ -135,7 +135,7 @@ $yay_cmd zip
 $yay_cmd gnome-themes-extra # includes adwaita-dark theme
 $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
-$yay_cmd adwaita-qt5
+$yay_cmd adwaita-qt5-git
 $yay_cmd qt5ct
 
 # Databases
