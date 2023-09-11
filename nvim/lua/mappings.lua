@@ -223,11 +223,20 @@ u.keymap(
 )
 
 -- UDFs
-u.keymap('n', '<Leader>ol', function()
-    udfs.open_links('n')
-end)
-u.keymap('v', '<Leader>ol', function()
-    udfs.open_links('v')
+u.keymap({ 'n', 'v' }, '<Leader>ol', function()
+    local url
+    local mode = vim.api.nvim_get_mode()['mode']
+    if mode == 'v' then
+        url = u.get_selection()
+    else
+        url = vim.fn.matchstr(
+            vim.fn.getline('.'),
+            [[\(http\|www\.\)[^ ]:\?[[:alnum:]%\/_#.-]*]]
+        )
+    end
+    url = vim.fn.escape(url, '#!?&;|%')
+    vim.cmd('silent! !xdg-open ' .. url)
+    vim.cmd('redraw!')
 end)
 u.keymap('n', '<Leader>fm', function()
     vim.cmd('silent! !tmux split-window -p 30 -c ' .. vim.fn.getcwd() .. ' ranger')
