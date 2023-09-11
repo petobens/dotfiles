@@ -75,16 +75,6 @@ function udfs.visual_search(direction)
     fn.setreg('s', tmp_register)
 end
 
-function udfs.open_fold_from_start()
-    local foldstart_linenr = fn.foldclosed('.')
-    if foldstart_linenr == -1 then
-        cmd('normal! l')
-        return
-    end
-    cmd('normal! zo')
-    cmd('normal! ' .. foldstart_linenr .. 'G^')
-end
-
 _G.udfs = udfs
 
 return udfs

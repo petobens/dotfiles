@@ -139,7 +139,16 @@ u.keymap('n', ']m', ']mzz')
 
 -- Folds
 u.keymap('n', '<Leader>zf', 'zMzvzz') -- zoom/fold focus
-u.keymap('n', 'l', udfs.open_fold_from_start)
+u.keymap('n', 'l', function()
+    -- Open fold from start
+    local foldstart_linenr = vim.fn.foldclosed('.')
+    if foldstart_linenr == -1 then
+        vim.cmd('normal! l')
+        return
+    end
+    vim.cmd('normal! zo')
+    vim.cmd('normal! ' .. foldstart_linenr .. 'G^')
+end)
 u.keymap('n', 'zm', 'zM')
 u.keymap('n', 'zr', 'zR')
 u.keymap('n', '<Leader>mf', '<Cmd>set foldmethod=marker<CR>zv')
