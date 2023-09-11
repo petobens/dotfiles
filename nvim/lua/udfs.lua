@@ -75,14 +75,6 @@ function udfs.visual_search(direction)
     fn.setreg('s', tmp_register)
 end
 
-function udfs.tmux_split_cmd(tmux_cmd, cwd_arg)
-    if vim.env.TMUX == nil then
-        return
-    end
-    local cwd = cwd_arg or fn.getcwd()
-    cmd('silent! !tmux split-window -p 30 -c ' .. cwd .. ' ' .. tmux_cmd)
-end
-
 function udfs.open_fold_from_start()
     local foldstart_linenr = fn.foldclosed('.')
     if foldstart_linenr == -1 then

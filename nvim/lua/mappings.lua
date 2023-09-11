@@ -200,7 +200,7 @@ u.keymap('v', '<Leader>ol', function()
     udfs.open_links('v')
 end)
 u.keymap('n', '<Leader>fm', function()
-    udfs.tmux_split_cmd('ranger')
+    vim.cmd('silent! !tmux split-window -p 30 -c ' .. vim.fn.getcwd() .. ' ranger')
 end)
 for i = 1, 6 do
     u.keymap('n', '<Leader>h' .. i, function()
@@ -211,7 +211,6 @@ for i = 1, 6 do
         local pat = '\\V\\<' .. vim.fn.escape(vim.fn.getreg('z'), '\\') .. '\\>'
         vim.fn.matchadd('HlWord' .. i, pat, 1, mid)
         vim.cmd('normal! `z')
-        -- udfs.highlight_word(i)
     end)
 end
 
