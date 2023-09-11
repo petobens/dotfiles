@@ -163,7 +163,28 @@ u.keymap('n', '<Leader>mf', '<Cmd>set foldmethod=marker<CR>zv')
 
 -- Diffs
 u.keymap('n', '<Leader>de', '<Cmd>bd #<CR>zz')
-u.keymap('n', '<Leader>ds', udfs.diff_file_split)
+u.keymap('n', '<Leader>ds', function()
+    local save_pwd = vim.fn.getcwd()
+    vim.cmd('lcd %:p:h')
+    local win_id = vim.fn.win_getid()
+    vim.ui.input(
+        { prompt = 'Input file for diffing: ', completion = 'file' },
+        function(other_file)
+            if not other_file or other_file == '' then
+                return
+            else
+                local diff_cmd = 'diffsplit '
+                if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+                    diff_cmd = 'vertical ' .. diff_cmd
+                end
+                vim.cmd(diff_cmd .. other_file)
+            end
+            vim.fn.win_gotoid(win_id)
+            vim.cmd('normal gg]h') -- move to first hunk
+        end
+    )
+    vim.cmd('lcd ' .. save_pwd)
+end)
 u.keymap('n', '<Leader>du', '<Cmd>diffupdate<CR>')
 
 -- Misc

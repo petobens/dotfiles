@@ -3,29 +3,6 @@ local cmd = vim.cmd
 
 local udfs = {}
 
-function udfs.diff_file_split()
-    local save_pwd = fn.getcwd()
-    cmd('lcd %:p:h')
-    local win_id = fn.win_getid()
-    vim.ui.input(
-        { prompt = 'Input file for diffing: ', completion = 'file' },
-        function(other_file)
-            if not other_file or other_file == '' then
-                return
-            else
-                local diffcmd = 'diffsplit '
-                if fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
-                    diffcmd = 'vertical ' .. diffcmd
-                end
-                cmd(diffcmd .. other_file)
-            end
-            fn.win_gotoid(win_id)
-            cmd('normal gg]h') -- move to first hunk
-        end
-    )
-    cmd('lcd ' .. save_pwd)
-end
-
 function udfs.open_links(mode)
     local url
     if mode == 'v' then
