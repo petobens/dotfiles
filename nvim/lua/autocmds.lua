@@ -4,7 +4,9 @@ local u = require('utils')
 local session_acg = vim.api.nvim_create_augroup('session', { clear = true })
 vim.api.nvim_create_autocmd('VimLeavePre', {
     group = session_acg,
-    command = [[execute 'mksession! ' . v:lua.udfs.session_name()]],
+    callback = function()
+        vim.cmd(string.format('execute "mksession! %s"', u.vim_session_file()))
+    end,
 })
 vim.api.nvim_create_autocmd('BufWinLeave', {
     group = session_acg,

@@ -7,6 +7,17 @@ function M.mk_non_dir(directory)
     end
 end
 
+function M.vim_session_file()
+    local session_dir = vim.env.CACHE .. '/tmp/session/'
+    M.mk_non_dir(session_dir)
+    local session_file = 'vim_session'
+    if vim.env.TMUX ~= nil then
+        local tmux_session = vim.fn.trim(vim.fn.system("tmux display-message -p '#S'"))
+        session_file = session_file .. '_' .. tmux_session
+    end
+    return session_dir .. session_file .. '.vim'
+end
+
 function M.keymap(mode, lhs, rhs, opts)
     return vim.keymap.set(
         mode,
