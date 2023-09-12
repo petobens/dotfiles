@@ -1,3 +1,5 @@
+-- luacheck:ignore 631
+
 local M = {}
 _G.GlobalOpts = M
 
