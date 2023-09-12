@@ -297,8 +297,7 @@ u.keymap('v', 'L', 'g_')
 u.keymap('v', 'M', [[<Cmd>execute 'normal! gv ' . (virtcol('$')/2) . '<bar>'<CR>]])
 u.keymap('v', 'Q', 'gq')
 u.keymap('v', '.', ':normal .<CR>')
-u.keymap('x', '*', 'mz:<C-U>call v:lua.udfs.visual_search("/")<CR>/<C-R>=@/<CR><CR>`z')
-u.keymap('x', '#', 'mz:<C-U>call v:lua.udfs.visual_search("?")<CR>?<C-R>=@/<CR><CR>`z')
+u.keymap('v', '*', '*<C-o>')
 
 -- Command mode specific
 u.keymap('n', ';', ':', { silent = false })
