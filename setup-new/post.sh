@@ -41,6 +41,9 @@ if type "gopass" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Generating gitlab access token file...\\033[0m"
     gopass git/gitlab/access_token > "$HOME/.gitlab_access_token"
     echo "Created .gitlab_access_token file"
+    if type "gh" > /dev/null 2>&1; then
+        gh auth login
+    fi
 fi
 
 # Reload GPG agent since we change the gpg config
