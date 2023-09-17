@@ -107,6 +107,7 @@ local plugins = {
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-path',
             'onsails/lspkind.nvim',
+            'petertriho/cmp-git',
         },
         config = function()
             require('plugin-config.cmp_config')

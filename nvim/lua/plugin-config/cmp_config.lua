@@ -107,6 +107,7 @@ cmp.setup({
                 all_panes = true,
             },
         },
+        { name = 'git' },
     },
     snippet = {
         expand = function(args)
@@ -159,3 +160,6 @@ cmp.setup.cmdline('@', {
         fields = { 'abbr' },
     },
 })
+
+-- Setup git source
+require('cmp_git').setup()
