@@ -537,16 +537,19 @@ class ElectronApp(ROLApp):
         ):
             cmd += ' --force-device-scale-factor=2'
 
-        if self.class_name == 'Brave' and self.subcmd is not None:
-            cmd += ' --new-window --app=https://{url}'
-            if self.subcmd == 'calendar':
-                cmd = cmd.format(url=f'{self.subcmd}.google.com/calendar/b/0/r')
-            elif self.subcmd == 'meet':
-                cmd = cmd.format(url=f'{self.subcmd}.google.com')
-            elif self.subcmd == 'clickup':
-                cmd = cmd.format(url=f'app.{self.subcmd}.com')
-            elif self.subcmd == 'teams':
-                cmd = cmd.format(url=f'{self.subcmd}.live.com')
+        if self.class_name == 'Brave':
+            if not self.subcmd:
+                cmd += ' --enable-features=VaapiVideoEncoder,VaapiVideoDecodeLinuxGL'
+            else:
+                cmd += ' --new-window --app=https://{url}'
+                if self.subcmd == 'calendar':
+                    cmd = cmd.format(url=f'{self.subcmd}.google.com/calendar/b/0/r')
+                elif self.subcmd == 'meet':
+                    cmd = cmd.format(url=f'{self.subcmd}.google.com')
+                elif self.subcmd == 'clickup':
+                    cmd = cmd.format(url=f'app.{self.subcmd}.com')
+                elif self.subcmd == 'teams':
+                    cmd = cmd.format(url=f'{self.subcmd}.live.com')
 
         cmd += '"'
         return cmd
