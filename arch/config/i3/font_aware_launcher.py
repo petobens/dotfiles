@@ -539,7 +539,7 @@ class ElectronApp(ROLApp):
 
         if self.class_name == 'Brave':
             if not self.subcmd:
-                cmd += ' --enable-features=VaapiVideoEncoder,VaapiVideoDecodeLinuxGL'
+                cmd += ' --enable-features=VaapiVideoDecodeLinuxGL'
             else:
                 cmd += ' --new-window --app=https://{url}'
                 if self.subcmd == 'calendar':
