@@ -286,7 +286,8 @@ bindsym $mod+Shift+0 $nexec shots active
 
 # Kill focused window
 bindsym $mod+q $nexec $HOME/.config/i3/custom_kill.py
-# Kill all windows on all workspaces (match any class string)
+# Kill (window) and quit all windows on all workspaces (match any class string)
+bindsym $mod+Shift+w kill
 bindsym $mod+Shift+q $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher quit-dialog
 
 # Shutdown, restart and lock
