@@ -342,8 +342,8 @@ onedarkpro.setup({
         LazyDimmed = { fg = p.comment_grey },
 
         ---- IndentBlankline
-        IndentLine = { fg = p.comment_grey },
-        IndentBlanklineContextChar = { fg = p.white },
+        IblIndent = { fg = p.special_grey },
+        IblScope = { fg = p.gray },
 
         ---- Leap (and flit)
         LeapMatch = { fg = p.black, bg = p.purple, style = 'bold' },

@@ -1,10 +1,12 @@
+local hooks = require('ibl.hooks')
+local ibl = require('ibl')
 local u = require('utils')
 
-require('indent_blankline').setup({
+ibl.setup({
     enabled = false,
-    use_treesitter = true,
-    char = '|',
-    show_current_context = true,
+    indent = { char = '|' },
+    scope = { enabled = true, char = '│', show_start = false, show_end = false },
 })
+hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
 
-u.keymap('n', '<Leader>I', '<Cmd>IndentBlanklineToggle<CR>')
+u.keymap('n', '<Leader>I', '<Cmd>IBLToggle<CR>')
