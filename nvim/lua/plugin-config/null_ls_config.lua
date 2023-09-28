@@ -1,7 +1,5 @@
 local null_ls = require('null-ls')
-local u = require('utils')
 local null_ls_diagnostics = null_ls.builtins.diagnostics
-local null_ls_formatting = null_ls.builtins.formatting
 
 -- Custom sources
 local ruff_severities = {
@@ -26,19 +24,12 @@ local ruff = null_ls_diagnostics.ruff.with({
 })
 
 -- Sources configuration
--- Note: for each language formatters/linters will run in the declared order
+-- Note: for each language linters will run in the declared order
 local sources = {
     -- Bash
-    null_ls_formatting.shfmt.with({
-        extra_args = { '-i', '4', '-ci', '-sr' },
-    }),
     null_ls_diagnostics.shellcheck,
 
     -- JSON
-    null_ls_formatting.jq.with({
-        extra_args = { '--indent', '4' },
-    }),
-
     null_ls_diagnostics.jsonlint,
 
     -- Latex
@@ -58,11 +49,6 @@ local sources = {
     }),
 
     -- Lua
-    null_ls_formatting.stylua.with({
-        extra_args = {
-            '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml',
-        },
-    }),
     null_ls_diagnostics.luacheck.with({
         extra_args = {
             '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
@@ -70,73 +56,32 @@ local sources = {
     }),
 
     -- Python
-    null_ls_formatting.isort.with({
-        extra_args = {
-            '--settings-file=' .. vim.env.HOME .. '/.isort.cfg',
-        },
-    }),
-    null_ls_formatting.black.with({
-        extra_args = {
-            '--config=' .. vim.env.HOME .. '/.config/.black.toml',
-        },
-    }),
     null_ls_diagnostics.pylint,
     null_ls_diagnostics.mypy,
     ruff,
 
     -- SQL (dialect is set in sqlfluff config)
-    null_ls_formatting.sqlfluff,
     null_ls_diagnostics.sqlfluff,
 
-    -- TOML
-    -- TODO: not diagnostics as per https://github.com/tamasfe/taplo/issues/328
-    null_ls_formatting.taplo.with({
-        extra_args = {
-            '--config=' .. vim.env.HOME .. '/taplo.toml',
-        },
-    }),
-
     -- YAML
-    null_ls_formatting.prettierd.with({
-        filetypes = { 'yaml' },
-    }),
     null_ls_diagnostics.yamllint,
 }
 
 -- Helpers
-local function custom_lsp_format(bufnr)
-    vim.lsp.buf.format({
-        filter = function(client)
-            return client.name == 'null-ls'
-        end,
-        bufnr = bufnr,
-        -- FIXME: if set to true then diagnostic list autocloses
-        async = false,
-    })
-end
 
 -- On-Attach
-local format_augroup = vim.api.nvim_create_augroup('LspFormatting', {})
+local diagnostic_augroup = vim.api.nvim_create_augroup('NullLsDiagnostics', {})
 local function on_attach(client, bufnr)
     -- Don't use null-ls for (cmp-lsp) completion
     if client.name == 'null-ls' then
         client.server_capabilities.completionProvider = false
     end
 
-    vim.api.nvim_clear_autocmds({ group = format_augroup, buffer = bufnr })
-
-    -- Autoformat on save with null-ls
-    vim.api.nvim_create_autocmd('BufWritePre', {
-        group = format_augroup,
-        buffer = bufnr,
-        callback = function()
-            custom_lsp_format(bufnr)
-        end,
-    })
+    vim.api.nvim_clear_autocmds({ group = diagnostic_augroup, buffer = bufnr })
 
     -- Open diagnostics on save (if there are diagnostics)
     vim.api.nvim_create_autocmd('BufWritePost', {
-        group = format_augroup,
+        group = diagnostic_augroup,
         buffer = bufnr,
         callback = function()
             local diagnostics = vim.diagnostic.get(0)
@@ -187,7 +132,3 @@ null_ls.setup({
     end,
     on_attach = on_attach,
 })
-
--- Mappings
-u.keymap('n', '<Leader>fc', custom_lsp_format)
-u.keymap('v', '<Leader>fc', 'gq', { remap = true })

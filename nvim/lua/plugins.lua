@@ -75,7 +75,7 @@ local plugins = {
         end,
     },
 
-    -- LSP and completion
+    -- LSP, treesitter, completion, linting and formatting
     {
         'williamboman/mason.nvim',
         dependencies = 'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -127,6 +127,12 @@ local plugins = {
         'm-demare/hlargs.nvim',
         config = function()
             require('plugin-config.hlargs_config')
+        end,
+    },
+    {
+        'stevearc/conform.nvim',
+        config = function()
+            require('plugin-config.conform_config')
         end,
     },
 
