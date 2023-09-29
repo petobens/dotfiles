@@ -75,7 +75,22 @@ local plugins = {
         end,
     },
 
-    -- LSP, treesitter, completion, linting and formatting
+    -- Linters & formatting
+    {
+        'mfussenegger/nvim-lint',
+        config = function()
+            require('plugin-config.diagnostics_config') -- Also load diagnostics here
+            require('plugin-config.lint_config')
+        end,
+    },
+    {
+        'stevearc/conform.nvim',
+        config = function()
+            require('plugin-config.conform_config')
+        end,
+    },
+
+    -- LSP, treesitter and completion
     {
         'williamboman/mason.nvim',
         dependencies = 'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -91,13 +106,6 @@ local plugins = {
         end,
     },
     { 'folke/neodev.nvim' },
-    {
-        'jose-elias-alvarez/null-ls.nvim',
-        config = function()
-            require('plugin-config.null_ls_config')
-            require('plugin-config.diagnostics_config') -- Also load diagnostics here
-        end,
-    },
     {
         'hrsh7th/nvim-cmp',
         dependencies = {
@@ -127,12 +135,6 @@ local plugins = {
         'm-demare/hlargs.nvim',
         config = function()
             require('plugin-config.hlargs_config')
-        end,
-    },
-    {
-        'stevearc/conform.nvim',
-        config = function()
-            require('plugin-config.conform_config')
         end,
     },
 

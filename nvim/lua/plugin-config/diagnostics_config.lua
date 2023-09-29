@@ -1,13 +1,13 @@
-local null_ls = require('null-ls')
 local u = require('utils')
 
 -- Helpers
 local function get_diagnostic_sources_count()
-    local sources = null_ls.get_source({
-        method = null_ls.methods.DIAGNOSTICS,
-        filetype = vim.bo.filetype,
-    })
-    return #sources
+    local sources = require('lint').linters_by_ft[vim.bo.filetype]
+    if sources then
+        return #sources
+    else
+        return 1
+    end
 end
 
 -- Diagnostic format
