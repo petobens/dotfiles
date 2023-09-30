@@ -21,7 +21,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
             for _, v in pairs(diagnostics) do
                 if not string.match(v.message, v.source) then
                     v.message = string.format('%s: %s', v.source, v.message)
-                    if v.code ~= '' then
+                    if v.code and v.code ~= '' then
                         v.message = string.format('%s [%s]', v.message, v.code)
                     end
                 end
