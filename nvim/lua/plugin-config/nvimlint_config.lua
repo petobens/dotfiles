@@ -1,59 +1,57 @@
 local lint = require('lint')
 
--- Run linters when changing text or leaving insert mode
-local lint_acg = vim.api.nvim_create_augroup('Lint', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'TextChanged', 'InsertLeave' }, {
-    group = lint_acg,
-    callback = function()
-        lint.try_lint(nil, { ignore_errors = true })
-    end,
-})
+-- Automatically run linters
+vim.api.nvim_create_autocmd(
+    { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
+    {
+        group = vim.api.nvim_create_augroup('nvim_lint', { clear = true }),
+        callback = function(opts)
+            lint.try_lint(nil, { ignore_errors = true })
 
--- Populate qf diagnostics on save
-vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
-    group = lint_acg,
-    callback = function()
-        lint.try_lint(nil, { ignore_errors = true })
-        local diagnostics = vim.diagnostic.get(0)
-        if #diagnostics > 0 then
-            -- Modify message to add source and error code
-            local new_msg = {}
-            for _, v in pairs(diagnostics) do
-                if not string.match(v.message, v.source) then
-                    v.message = string.format('%s: %s', v.source, v.message)
-                    if v.code and v.code ~= '' then
-                        v.message = string.format('%s [%s]', v.message, v.code)
+            if opts.event == 'BufWritePost' then
+                local diagnostics = vim.diagnostic.get(0)
+                if #diagnostics > 0 then
+                    -- Modify message to add source and error code
+                    local new_msg = {}
+                    for _, v in pairs(diagnostics) do
+                        if not string.match(v.message, v.source) then
+                            v.message = string.format('%s: %s', v.source, v.message)
+                            if v.code and v.code ~= '' then
+                                v.message = string.format('%s [%s]', v.message, v.code)
+                            end
+                        end
+                        table.insert(new_msg, v.message)
                     end
-                end
-                table.insert(new_msg, v.message)
-            end
 
-            -- Using set.diagnostics is weird so we first set the location list with
-            -- the original diagnostics and then modify it with the new diagnostic msg
-            vim.diagnostic.setloclist({ open = false })
-            local current_ll = vim.fn.getloclist(0)
-            local new_ll = {}
-            for i, v in pairs(current_ll) do
-                v.text = new_msg[i]
-                table.insert(new_ll, v)
+                    -- Using set.diagnostics is weird so we first set the location list
+                    -- with the original diagnostics and then modify it with the new
+                    -- diagnostic msg
+                    vim.diagnostic.setloclist({ open = false })
+                    local current_ll = vim.fn.getloclist(0)
+                    local new_ll = {}
+                    for i, v in pairs(current_ll) do
+                        v.text = new_msg[i]
+                        table.insert(new_ll, v)
+                    end
+                    vim.fn.setloclist(0, {}, ' ', {
+                        title = string.format(
+                            'Diagnostics: %s',
+                            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
+                        ),
+                        items = new_ll,
+                    })
+                    vim.cmd('lopen')
+                else
+                    vim.cmd('lclose')
+                end
             end
-            vim.fn.setloclist(0, {}, ' ', {
-                title = string.format(
-                    'Diagnostics: %s',
-                    vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
-                ),
-                items = new_ll,
-            })
-            vim.cmd('lopen')
-        else
-            vim.cmd('lclose')
-        end
-    end,
-})
+        end,
+    }
+)
 
 -- Linters by filetype
 lint.linters_by_ft = {
-    -- FIXME: Jsonlint and sqlfluff are slow
+    -- FIXME: Jsonlint and sqlfluff are slow?
     json = { 'jsonlint' },
     lua = { 'luacheck' },
     python = { 'mypy', 'pylint', 'ruff' },
