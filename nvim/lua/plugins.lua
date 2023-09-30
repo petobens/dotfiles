@@ -80,7 +80,7 @@ local plugins = {
         'mfussenegger/nvim-lint',
         config = function()
             require('plugin-config.diagnostics_config') -- Also load diagnostics here
-            require('plugin-config.lint_config')
+            require('plugin-config.nvimlint_config')
         end,
     },
     {
