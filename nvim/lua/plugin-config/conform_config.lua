@@ -8,14 +8,11 @@ local formatters = require('conform.formatters')
 vim.o.formatexpr = [[v:lua.require('conform').formatexpr()]]
 
 -- Formatters args
----- Json
 conform_utils.add_formatter_args(formatters.jq, { '--indent', '4' })
----- Lua
 conform_utils.add_formatter_args(
     formatters.stylua,
     { '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml' }
 )
----- Python
 conform_utils.add_formatter_args(
     formatters.isort,
     { '--settings-file=' .. vim.env.HOME .. '/.isort.cfg' }
@@ -24,9 +21,7 @@ conform_utils.add_formatter_args(
     formatters.black,
     { '--config=' .. vim.env.HOME .. '/.config/.black.toml' }
 )
----- sh
 conform_utils.add_formatter_args(formatters.shfmt, { '-i', '4', '-ci', '-sr' })
----- TOML
 formatters.taplo.args = { 'format', '--config=' .. vim.env.HOME .. '/taplo.toml', '-' }
 
 -- Custom Formatters

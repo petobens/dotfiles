@@ -51,7 +51,6 @@ vim.api.nvim_create_autocmd(
 
 -- Linters by filetype
 lint.linters_by_ft = {
-    -- FIXME: Jsonlint and sqlfluff are slow?
     json = { 'jsonlint' },
     lua = { 'luacheck' },
     python = { 'mypy', 'pylint', 'ruff' },
@@ -63,21 +62,10 @@ lint.linters_by_ft = {
 
 -- Linter config/args
 local linters = require('lint').linters
-linters.luacheck.args = {
-    '--formatter',
-    'plain',
-    '--codes',
-    '--ranges',
+linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
     '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
-    '-',
-}
-linters.chktex.args = {
-    '-v0',
-    '-I0',
-    '-s',
-    ':',
-    '-f',
-    '%l%b%c%b%d%b%k%b%n%b%m%b%b%b',
+})
+linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n1',
     '-n2',
     '-n3',
@@ -88,7 +76,7 @@ linters.chktex.args = {
     '-n24',
     '-n25',
     '-n36',
-}
+})
 
 -- Custom Ruff
 -- TODO: Finish this
