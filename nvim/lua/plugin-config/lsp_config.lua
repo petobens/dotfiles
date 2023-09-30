@@ -31,7 +31,7 @@ lspconfig.bashls.setup({
         },
     },
 })
--- Lua
+---- Lua
 lspconfig.lua_ls.setup({
     settings = {
         Lua = {
@@ -67,7 +67,7 @@ lspconfig.pyright.setup({
     },
 })
 ---- Latex
-require('lspconfig').texlab.setup({
+lspconfig.texlab.setup({
     handlers = { ['textDocument/publishDiagnostics'] = function() end },
 })
 
