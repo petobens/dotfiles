@@ -7,7 +7,7 @@ local utils = require('telescope.utils')
 vim.opt_local.textwidth = 88
 vim.opt_local.commentstring = '#%s'
 vim.opt_local.foldmethod = 'expr'
-vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
 _G.OverseerConfig.python_errorformat = ''
     -- luacheck:ignore 631
     -- See https://github.com/python-mode/python-mode/blob/149ccf7c5be0753f5e9872c023ab2eeec3442105/autoload/pymode/run.vim#L4

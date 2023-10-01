@@ -102,7 +102,7 @@ vim.api.nvim_create_autocmd('FileType', {
     group = markdown_acg,
     pattern = { 'markdown' },
     command = 'setlocal foldlevel=1 foldmethod=expr '
-        .. 'foldexpr=v:lua.vim.treesitter.foldexpr()',
+        .. 'foldexpr=nvim_treesitter#foldexpr()',
 })
 
 --- Python

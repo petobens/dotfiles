@@ -4,6 +4,9 @@ local utils = require('telescope.utils')
 
 -- Options
 vim.opt_local.textwidth = 90
+vim.opt_local.foldlevelstart = 99
+vim.opt_local.foldmethod = 'expr'
+vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
 
 -- Running
 local _parse_qf = function(qf_title, active_window_id)
