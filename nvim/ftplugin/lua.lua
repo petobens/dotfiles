@@ -7,6 +7,7 @@ vim.opt_local.textwidth = 90
 vim.opt_local.foldlevelstart = 99
 vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt_local.foldtext = 'v:lua.vim.treesitter.foldtext()'
 
 -- Running
 local _parse_qf = function(qf_title, active_window_id)
