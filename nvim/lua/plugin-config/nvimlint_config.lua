@@ -6,7 +6,9 @@ vim.api.nvim_create_autocmd(
     {
         group = vim.api.nvim_create_augroup('nvim_lint', { clear = true }),
         callback = function(opts)
-            lint.try_lint(nil, { ignore_errors = true })
+            vim.defer_fn(function()
+                lint.try_lint(nil, { ignore_errors = true })
+            end, 1)
 
             if opts.event == 'BufWritePost' then
                 local diagnostics = vim.diagnostic.get(0)
@@ -62,9 +64,11 @@ lint.linters_by_ft = {
 
 -- Linter config/args
 local linters = require('lint').linters
+---- Lua
 linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
     '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
 })
+---- TeX
 linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n1',
     '-n2',
@@ -77,6 +81,7 @@ linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n25',
     '-n36',
 })
+linters.chktex.ignore_exitcode = true
 
 -- Custom Ruff
 -- TODO: Finish this
