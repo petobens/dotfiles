@@ -84,13 +84,6 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal foldmethod=syntax',
 })
 
----- Lua
-vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('ft_lua', { clear = true }),
-    pattern = { 'lua' },
-    command = 'setlocal formatoptions-=ro',
-})
-
 --- Markdown
 local markdown_acg = vim.api.nvim_create_augroup('ft_markdown', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {

@@ -3,9 +3,9 @@ local u = require('utils')
 local utils = require('telescope.utils')
 
 -- Options
-vim.opt_local.textwidth = 90
 vim.opt_local.foldlevelstart = 99
 vim.opt_local.foldmethod = 'manual'
+vim.opt_local.textwidth = 90
 
 -- Running
 local _parse_qf = function(qf_title, active_window_id)
