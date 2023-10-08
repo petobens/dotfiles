@@ -56,6 +56,7 @@ vim.api.nvim_create_autocmd(
 lint.linters_by_ft = {
     json = { 'jsonlint' },
     lua = { 'luacheck' },
+    markdown = { 'markdownlint' },
     -- FIXME: can't run mypy/pylint without save https://github.com/mfussenegger/nvim-lint/issues/235
     python = { 'mypy', 'pylint', 'ruff' },
     sh = { 'shellcheck' },
@@ -70,6 +71,8 @@ local linters = require('lint').linters
 linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
     '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
 })
+---- Markdown
+linters.markdownlint.args = { '--config=' .. vim.env.HOME .. '/.markdownlint.json' }
 ---- TeX
 linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n1',
