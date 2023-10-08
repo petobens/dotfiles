@@ -186,7 +186,6 @@ local function convert_pandoc(extension)
     end
 
     pandoc_cmd = string.format('%s %s.tex -o %s', pandoc_cmd, base_file, output_file)
-    print(pandoc_cmd)
     vim.fn.system(pandoc_cmd)
     if vim.v.shell_error ~= 1 then
         vim.cmd.echo(string.format('"Converted .tex file into .%s"', extension))

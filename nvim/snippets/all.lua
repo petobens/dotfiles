@@ -89,7 +89,6 @@ return {
         t(']'),
         i(0),
     }),
-
     s({ trig = '<<', wordTrig = false, dscr = '<>' }, {
         t('<'),
         f(_G.LuaSnipConfig.visual_selection),

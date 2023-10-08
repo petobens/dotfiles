@@ -181,7 +181,7 @@ return {
         { trig = 'mld', dscr = 'Markdowlint disable' },
         fmta(
             [[
-                <<!-- markdownlint-disable MD<> -->>
+                <<!-- markdownlint-disable MD0<> -->>
             ]],
             {
                 i(1),
@@ -198,10 +198,48 @@ return {
                 ---
                 fontsize: 12pt
                 geometry: margin=3cm
+
+                title: <>
+                author:
+                    - <>
                 ---
+                <<!-- markdownlint-disable MD025 -->>
             ]],
-            {}
+            {
+                i(1),
+                i(2, 'Pedro Ferrari'),
+            }
         ),
         { condition = line_begin }
     ),
-}, {}
+    s(
+        { trig = 'eq', dscr = 'Equation' },
+        fmta(
+            [[
+        $$
+        <><>
+        $$
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
+}, {
+    s({ trig = '``', wordTrig = false, dscr = '<>' }, {
+        t('`'),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+        t('`'),
+        i(0),
+    }),
+    s({ trig = '$$', wordTrig = false, dscr = '<>' }, {
+        t('$'),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+        t('$'),
+        i(0),
+    }),
+}
