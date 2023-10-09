@@ -73,6 +73,30 @@ linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
 })
 ---- Markdown
 linters.markdownlint.args = { '--config=' .. vim.env.HOME .. '/.markdownlint.json' }
+---- Python
+local ruff_severities = {
+    ['E'] = vim.diagnostic.severity.ERROR,
+    ['F8'] = vim.diagnostic.severity.ERROR,
+    ['F'] = vim.diagnostic.severity.WARN,
+    ['W'] = vim.diagnostic.severity.WARN,
+    ['D'] = vim.diagnostic.severity.INFO,
+    ['B'] = vim.diagnostic.severity.INFO,
+}
+local ruff_parser = linters.ruff.parser
+linters.ruff.parser = function(output, bufnr)
+    local diagnostics = ruff_parser(output, bufnr)
+    for _, v in pairs(diagnostics) do
+        local code = string.sub(v.code, 1, 2)
+        if code ~= 'F8' then
+            code = string.sub(code, 1, 1)
+        end
+        local new_severity = ruff_severities[code]
+        if new_severity then
+            v.severity = new_severity
+        end
+    end
+    return diagnostics
+end
 ---- TeX
 linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n1',
@@ -87,4 +111,3 @@ linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n36',
 })
 linters.chktex.ignore_exitcode = true
--- FIXME: Custom ruff severities: https://github.com/mfussenegger/nvim-lint/issues/392
