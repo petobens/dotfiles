@@ -54,10 +54,10 @@ vim.api.nvim_create_autocmd(
 
 -- Linters by filetype
 lint.linters_by_ft = {
+    -- FIXME: can't run mypy/pylint/sqlfluff without save https://github.com/mfussenegger/nvim-lint/issues/235
     json = { 'jsonlint' },
     lua = { 'luacheck' },
     markdown = { 'markdownlint' },
-    -- FIXME: can't run mypy/pylint without save https://github.com/mfussenegger/nvim-lint/issues/235
     python = { 'mypy', 'pylint', 'ruff' },
     sh = { 'shellcheck' },
     sql = { 'sqlfluff' },
@@ -72,7 +72,9 @@ linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
     '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
 })
 ---- Markdown
-linters.markdownlint.args = { '--config=' .. vim.env.HOME .. '/.markdownlint.json' }
+linters.markdownlint.args =
+    { '--stdin', '--config=' .. vim.env.HOME .. '/.markdownlint.json' }
+linters.markdownlint.stdin = true
 ---- Python
 local ruff_severities = {
     ['E'] = vim.diagnostic.severity.ERROR,
