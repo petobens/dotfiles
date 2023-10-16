@@ -1,27 +1,20 @@
 local u = require('utils')
 
 local conform = require('conform')
-local conform_utils = require('conform.util')
 local formatters = require('conform.formatters')
 
 -- Global options
 vim.o.formatexpr = [[v:lua.require('conform').formatexpr()]]
 
 -- Formatters args
-conform_utils.add_formatter_args(formatters.jq, { '--indent', '4' })
-conform_utils.add_formatter_args(
-    formatters.stylua,
-    { '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml' }
-)
-conform_utils.add_formatter_args(
-    formatters.isort,
-    { '--settings-file=' .. vim.env.HOME .. '/.isort.cfg' }
-)
-conform_utils.add_formatter_args(
-    formatters.black,
-    { '--config=' .. vim.env.HOME .. '/.config/.black.toml' }
-)
-conform_utils.add_formatter_args(formatters.shfmt, { '-i', '4', '-ci', '-sr' })
+formatters.jq.args = { '--indent', '4' }
+require('conform').formatters.stylua =
+    { prepend_args = { '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml' } }
+require('conform').formatters.isort =
+    { prepend_args = { '--settings-file=' .. vim.env.HOME .. '/.isort.cfg' } }
+require('conform').formatters.black =
+    { prepend_args = { '--config=' .. vim.env.HOME .. '/.config/.black.toml' } }
+require('conform').formatters.shfmt = { prepend_args = { '-i', '4', '-ci', '-sr' } }
 formatters.taplo.args = { 'format', '--config=' .. vim.env.HOME .. '/taplo.toml', '-' }
 
 -- Custom Formatters
@@ -52,6 +45,7 @@ conform.setup({
         ['_'] = { 'trim_whitespace' },
         json = { 'jq' },
         lua = { 'stylua' },
+        -- markdown = { 'prettierd' },
         python = { 'isort', 'black' },
         sh = { 'shfmt' },
         sql = { 'sqlfluff' },
