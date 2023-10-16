@@ -151,7 +151,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'url', dscr = 'Link' },
+        { trig = 'il', dscr = 'Inline link' },
         fmta(
             [[
                 [<>](<><>)
@@ -228,18 +228,25 @@ return {
         { condition = line_begin }
     ),
 }, {
-    s({ trig = '``', wordTrig = false, dscr = '<>' }, {
+    s({ trig = '``', wordTrig = false, dscr = 'Inline code' }, {
         t('`'),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t('`'),
         i(0),
     }),
-    s({ trig = '$$', wordTrig = false, dscr = '<>' }, {
+    s({ trig = '$$', wordTrig = false, dscr = 'Inline math' }, {
         t('$'),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t('$'),
+        i(0),
+    }),
+    s({ trig = 'db', wordTrig = false, dscr = 'Wiki Link' }, {
+        t('[['),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+        t(']]'),
         i(0),
     }),
 }
