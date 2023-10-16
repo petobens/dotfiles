@@ -2,7 +2,7 @@
 tabWidth: 4
 singleQuote: true
 overrides:
-    # FIMXE: Not useful for markdown until
+    # FIMXE: Can't run it automatically due to
     # https://github.com/prettier/prettier/issues/5019
     # https://github.com/prettier/prettier/issues/8004
     - files: '*.md'

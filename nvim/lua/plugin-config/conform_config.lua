@@ -33,24 +33,26 @@ local custom_formatters = {
 
 -- Setup
 conform.setup({
-    format_on_save = {
-        timeout_ms = 700,
-        quiet = true,
-        lsp_fallback = false,
-    },
-    notify_on_error = false,
     formatters = custom_formatters,
     formatters_by_ft = {
         ['_'] = { 'trim_whitespace' },
         json = { 'jq' },
         lua = { 'stylua' },
-        -- markdown = { 'prettierd' },
+        markdown = { 'prettierd' },
         python = { 'isort', 'black' },
         sh = { 'shfmt' },
         sql = { 'sqlfluff' },
         toml = { 'taplo' },
         yaml = { 'prettierd' },
     },
+    format_on_save = function(bufnr)
+        local ignore_filetypes = { 'markdown' }
+        if vim.tbl_contains(ignore_filetypes, vim.bo[bufnr].filetype) then
+            return
+        end
+        return { timeout_ms = 700, quiet = true, lsp_fallback = false }
+    end,
+    notify_on_error = false,
 })
 
 -- Mappings

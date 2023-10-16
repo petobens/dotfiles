@@ -84,20 +84,6 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal foldmethod=syntax',
 })
 
---- Markdown
-local markdown_acg = vim.api.nvim_create_augroup('ft_markdown', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-    group = markdown_acg,
-    pattern = { 'markdown' },
-    command = 'setlocal textwidth=90 nolinebreak spell',
-})
-vim.api.nvim_create_autocmd('FileType', {
-    group = markdown_acg,
-    pattern = { 'markdown' },
-    command = 'setlocal foldlevel=1 foldmethod=expr '
-        .. 'foldexpr=nvim_treesitter#foldexpr() foldtext=v:lua.vim.treesitter.foldtext()',
-})
-
 --- Python
 local python_acg = vim.api.nvim_create_augroup('ft_python', { clear = true })
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
