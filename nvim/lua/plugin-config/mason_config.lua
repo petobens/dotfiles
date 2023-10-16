@@ -11,6 +11,7 @@ require('mason-tool-installer').setup({
         -- See names in https://github.com/williamboman/mason-lspconfig.nvim/blob/main/lua/mason-lspconfig/mappings/server.lua
         'bash-language-server',
         'lua-language-server',
+        'marksman',
         'pyright',
         'texlab',
     },

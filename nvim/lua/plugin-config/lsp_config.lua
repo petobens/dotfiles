@@ -26,7 +26,7 @@ end
 lspconfig.bashls.setup({
     settings = {
         bashIde = {
-            shellcheckPath = '', -- We use null-ls shellcheck
+            shellcheckPath = '', -- We use shellcheck
             enableSourceErrorDiagnostics = false,
         },
     },
@@ -35,7 +35,7 @@ lspconfig.bashls.setup({
 lspconfig.lua_ls.setup({
     settings = {
         Lua = {
-            diagnostics = { enable = false }, -- We use null-ls luacheck
+            diagnostics = { enable = false }, -- We use luacheck
             hint = { enable = true },
             telemetry = { enable = false },
             workspace = {
@@ -46,10 +46,12 @@ lspconfig.lua_ls.setup({
         },
     },
 })
+---- Markdown
+lspconfig.marksman.setup({})
 ---- Python
 lspconfig.pyright.setup({
     handlers = {
-        -- Don't publish pyright diagnostics (we use pylint and mypy instead)
+        -- Don't publish pyright diagnostics (we use ruff, pylint and mypy instead)
         ['textDocument/publishDiagnostics'] = function() end,
     },
     settings = {
