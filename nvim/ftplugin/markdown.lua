@@ -4,10 +4,7 @@ local u = require('utils')
 vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt_local.foldtext = 'v:lua.vim.treesitter.foldtext()'
-vim.opt_local.shiftwidth = 2
-vim.opt_local.softtabstop = 2
-vim.opt_local.tabstop = 2
-vim.opt_local.textwidth = 90
+vim.opt_local.textwidth = 80
 vim.opt_local.linebreak = false
 vim.opt_local.spell = true
 
