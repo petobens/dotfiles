@@ -46,11 +46,16 @@ conform.setup({
         yaml = { 'prettierd' },
     },
     format_on_save = function(bufnr)
-        local ignore_filetypes = { 'markdown' }
-        if vim.tbl_contains(ignore_filetypes, vim.bo[bufnr].filetype) then
-            return
+        local format_options = { timeout_ms = 700, quiet = true, lsp_fallback = false }
+        if vim.bo[bufnr].filetype == 'markdown' then
+            -- Don't run prettierd automatically but do trim whitespaces
+            format_options = vim.tbl_extend(
+                'keep',
+                format_options,
+                { formatters = { 'trim_whitespace' } }
+            )
         end
-        return { timeout_ms = 700, quiet = true, lsp_fallback = false }
+        return format_options
     end,
     notify_on_error = false,
 })
