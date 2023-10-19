@@ -8,7 +8,6 @@ vim.opt_local.textwidth = 80
 vim.opt_local.linebreak = false
 vim.opt_local.spell = true
 
--- Pandoc
 local function convert_pandoc(extension)
     local base_file = vim.fn.expand('%:p:r')
     local output_file = string.format('%s.%s', base_file, extension)
@@ -20,8 +19,31 @@ local function convert_pandoc(extension)
     end
 end
 
+local function toggle_checklist()
+    -- https://github.com/opdavies/toggle-checkbox.nvim/blob/main/lua/toggle-checkbox.lua
+    local unchecked = '%[%]'
+    local checked = '%[x%]'
+    local bufnr = vim.api.nvim_buf_get_number(0)
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local start_line = cursor[1] - 1
+    local current_line = vim.api.nvim_buf_get_lines(
+        bufnr,
+        start_line,
+        start_line + 1,
+        false
+    )[1] or ''
+
+    local new_line
+    if string.find(current_line, unchecked) then
+        new_line = current_line:gsub(unchecked, checked)
+    else
+        new_line = current_line:gsub(checked, unchecked)
+    end
+    vim.api.nvim_buf_set_lines(bufnr, start_line, start_line + 1, false, { new_line })
+    vim.api.nvim_win_set_cursor(0, cursor)
+end
+
 -- Mappings
----- Pandoc
 u.keymap('n', '<F7>', function()
     convert_pandoc('pdf')
 end, { buffer = true })
@@ -31,3 +53,4 @@ end, { buffer = true })
 u.keymap('n', '<Leader>vp', function()
     vim.fn.jobstart('zathura --fork ' .. vim.fn.expand('%:p:r') .. '.pdf')
 end, { buffer = true })
+u.keymap('n', '<Leader>ct', toggle_checklist, { buffer = true })
