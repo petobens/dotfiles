@@ -198,7 +198,7 @@ u.keymap(
 u.keymap(
     'n',
     '<Leader>etm',
-    '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/varios/todos_mutt.md<CR>'
+    '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/mutt/todos_mutt.md<CR>'
 )
 u.keymap(
     'n',
