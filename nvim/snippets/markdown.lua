@@ -9,6 +9,7 @@ local s = ls.snippet
 local t = ls.text_node
 local sn = ls.snippet_node
 
+local p = extras.partial
 local rep = extras.rep
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
@@ -291,6 +292,19 @@ return {
             }
         ),
         { condition = line_begin }
+    ),
+
+    -- Note-taking
+    s(
+        { trig = 'cd', dscr = 'Current Date' },
+        fmta(
+            [[
+                <>
+            ]],
+            {
+                p(os.date, '%d/%m/%Y'),
+            }
+        )
     ),
 }, {
     s({ trig = '``', wordTrig = false, dscr = 'Inline code' }, {
