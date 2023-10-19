@@ -2,6 +2,7 @@ local extras = require('luasnip.extras')
 local ls = require('luasnip')
 
 local c = ls.choice_node
+local d = ls.dynamic_node
 local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
@@ -223,6 +224,48 @@ return {
             {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
+    -- Tables
+    s(
+        { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns' },
+        fmta(
+            [[
+               <>
+            ]],
+            {
+                d(1, function(_, snip)
+                    local nodes = {}
+                    local nr_rows = snip.captures[1]
+                    local nr_cols = snip.captures[2]
+                    local idx = 0
+
+                    local hlines = ''
+                    for _ = 1, nr_cols do
+                        idx = idx + 1
+                        table.insert(nodes, t('| '))
+                        table.insert(nodes, i(idx))
+                        table.insert(nodes, t(' '))
+                        hlines = hlines .. '|-----'
+                    end
+                    table.insert(nodes, t({ '|', '' }))
+                    hlines = hlines .. '|'
+                    table.insert(nodes, t({ hlines, '' }))
+
+                    for _ = 1, nr_rows do
+                        for _ = 1, nr_cols do
+                            idx = idx + 1
+                            table.insert(nodes, t('| '))
+                            table.insert(nodes, i(idx))
+                            table.insert(nodes, t(' '))
+                        end
+                        table.insert(nodes, t({ '|', '' }))
+                    end
+                    return sn(nil, nodes)
+                end),
             }
         ),
         { condition = line_begin }
