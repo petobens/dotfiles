@@ -231,6 +231,8 @@ onedarkpro.setup({
         ['@text.title.4.marker.markdown'] = { link = '@text.title.markdown' },
         ['@text.title.5.marker.markdown'] = { link = '@text.title.markdown' },
         markdownLinkText = { fg = p.blue, sp = p.blue, style = 'undercurl' },
+        ['@text.todo.checked.markdown'] = { fg = p.green },
+        ['@lsp.type.class.markdown'] = { fg = p.green },
 
         --- TOML
         tomlTable = { fg = p.orange },
