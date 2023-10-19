@@ -231,6 +231,28 @@ return {
 
     -- Tables
     s(
+        { trig = '(%d)c', regTrig = true, dscr = 'Columns' },
+        fmta(
+            [[
+               <>
+            ]],
+            {
+                d(1, function(_, snip)
+                    local nodes = {}
+                    local nr_cols = snip.captures[1]
+                    for j = 1, nr_cols do
+                        table.insert(nodes, t('| '))
+                        table.insert(nodes, i(j))
+                        table.insert(nodes, t(' '))
+                    end
+                    table.insert(nodes, t({ '|', '' }))
+                    return sn(nil, nodes)
+                end),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
         { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns' },
         fmta(
             [[
