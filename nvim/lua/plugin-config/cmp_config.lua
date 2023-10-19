@@ -1,3 +1,4 @@
+-- luacheck:ignore 631
 local cmp = require('cmp')
 local u = require('utils')
 
@@ -14,6 +15,7 @@ cmp.setup({
         completeopt = 'menu,menuone,noinsert',
         get_trigger_characters = function(trigger_characters)
             table.insert(trigger_characters, ':') -- for tex
+            table.insert(trigger_characters, '[') -- for markdown
             return trigger_characters
         end,
     },
@@ -87,9 +89,15 @@ cmp.setup({
         { name = 'luasnip' },
         {
             name = 'nvim_lsp',
-            entry_filter = function(entry, _)
+            entry_filter = function(entry, ctx)
                 local kind = require('cmp.types').lsp.CompletionItemKind[entry:get_kind()]
-                return ((kind ~= 'Text') and (kind ~= 'Snippet'))
+                if ctx.filetype == 'markdown' then
+                    -- Marksman uses Text kind for completion as per
+                    -- https://github.com/artempyanykh/marksman/issues/204#issuecomment-1751657224
+                    return (kind ~= 'Snippet')
+                else
+                    return ((kind ~= 'Text') and (kind ~= 'Snippet'))
+                end
             end,
         },
         {
