@@ -4,7 +4,8 @@
     },
     "MD012": false,
     "MD013": {
-        "line_length": 80
+        "line_length": 80,
+        "code_block_line_length": 120
     },
     "MD024": false,
     "MD025": false,
