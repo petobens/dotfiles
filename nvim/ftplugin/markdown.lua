@@ -7,6 +7,7 @@ vim.opt_local.foldtext = 'v:lua.vim.treesitter.foldtext()'
 vim.opt_local.textwidth = 80
 vim.opt_local.linebreak = false
 vim.opt_local.spell = true
+vim.opt_local.formatexpr = ''
 
 local function convert_pandoc(extension)
     local base_file = vim.fn.expand('%:p:r')
