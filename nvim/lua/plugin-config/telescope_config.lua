@@ -384,6 +384,12 @@ local function lsp_doc_symbols()
     })
 end
 
+local function lsp_ws_symbols()
+    builtin.lsp_workspace_symbols({
+        preview_title = 'LSP Workspace Symbols Preview',
+    })
+end
+
 local function yank_history()
     telescope.extensions.neoclip.default({
         prompt_title = 'Neoclip',
@@ -840,6 +846,7 @@ u.keymap('n', '<Leader>sg', spell_suggest)
 u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 u.keymap('n', '<Leader>te', lsp_doc_symbols)
 u.keymap('n', '<Leader>la', builtin.lsp_references)
+u.keymap('n', '<Leader>we', lsp_ws_symbols)
 u.keymap('n', '<Leader>tq', '<Cmd>Telescope quickfix<CR>')
 u.keymap('n', '<Leader>ta', '<Cmd>Telescope aerial<CR>')
 u.keymap('n', '<Leader>se', '<Cmd>Telescope luasnip<CR>')
