@@ -30,6 +30,12 @@ local plugins = {
         end,
     },
     {
+        'luukvbaal/statuscol.nvim',
+        config = function()
+            require('plugin-config.statuscol_config')
+        end,
+    },
+    {
         'folke/noice.nvim',
         dependencies = {
             'MunifTanjim/nui.nvim',

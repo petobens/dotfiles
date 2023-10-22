@@ -1,38 +1,5 @@
 -- luacheck:ignore 631
 
-local M = {}
-_G.GlobalOpts = M
-
--- Diagnostics and gitsigns (in that order) to the left of line numbers in statuscolumn
--- From https://www.reddit.com/r/neovim/comments/10fpqbp/comment/j50be6b/?utm_source=share&utm_medium=web2x&context=3
-function M.my_status_column()
-    local sign, git_sign
-    for _, s in ipairs(M.get_status_col_signs()) do
-        if s.name:find('GitSign') then
-            git_sign = s
-        else
-            if not sign then
-                -- Only draw the first/most-severe diagnostic sign
-                sign = s
-            end
-        end
-    end
-    local components = {
-        sign and ('%#' .. sign.texthl .. '#' .. sign.text .. '%*') or '',
-        git_sign and ('%#' .. git_sign.texthl .. '#' .. git_sign.text .. '%*') or '',
-        [[%=]],
-        [[%{&nu?(&rnu && v:relnum? v:relnum: (v:virtnum > 0? '' : v:lnum)):''} ]],
-    }
-    return table.concat(components, '')
-end
-
-function M.get_status_col_signs()
-    local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-    return vim.tbl_map(function(sign)
-        return vim.fn.sign_getdefined(sign.name)[1]
-    end, vim.fn.sign_getplaced(buf, { group = '*', lnum = vim.v.lnum })[1].signs)
-end
-
 -- Syntax
 vim.opt.iskeyword = vim.opt.iskeyword + { ':' }
 vim.opt.termguicolors = true
@@ -44,6 +11,7 @@ vim.opt.cmdwinheight = 4
 vim.opt.confirm = true
 vim.opt.diffopt =
     { 'internal', 'filler', 'indent-heuristic', 'algorithm:histogram', 'linematch:60' }
+vim.opt.foldcolumn = 'auto'
 vim.opt.foldlevelstart = 0
 vim.opt.foldopen = vim.opt.foldopen + { 'insert', 'jump' }
 vim.opt.lazyredraw = false
@@ -60,7 +28,7 @@ vim.g.editorconfig = false
 -- Appearance
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 vim.opt.cursorline = true
-vim.opt.fillchars = vim.opt.fillchars + { eob = ' ' }
+vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.pumblend = 6
@@ -75,7 +43,6 @@ vim.opt.splitright = true
 vim.opt.startofline = true
 vim.opt.virtualedit = { 'block', 'onemore' }
 vim.opt.winblend = 6
-vim.opt.statuscolumn = [[%!v:lua.GlobalOpts.my_status_column()]]
 
 -- Backups, sessions, undo and shada
 vim.opt.backup = true
@@ -137,5 +104,3 @@ vim.opt.wildmode = { 'longest:full', 'full' }
 -- Misc
 vim.opt.spellfile = vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add'
 vim.opt.spelllang = { 'en', 'es' }
-
-return M
