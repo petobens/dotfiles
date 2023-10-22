@@ -46,6 +46,7 @@ onedarkpro.setup({
         CursorColumn = { bg = p.gray },
         CursorLine = { bg = p.cursor_grey },
         CursorLineNr = { fg = p.fg, bg = p.black, style = p.none },
+        CursorLineFold = { link = 'CursorLineNr' },
         Directory = { fg = p.light_blue },
         EndOfBuffer = { fg = p.comment_grey },
         ErrorMsg = { fg = p.red },
