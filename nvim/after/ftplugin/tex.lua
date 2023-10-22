@@ -1,11 +1,6 @@
 _G.TexFolding = {}
 
 function _G.TexFolding.custom_tex_fold()
-    local level = '+-' .. string.rep('-', vim.v.foldlevel - 1) .. ' '
-    local nlines = (vim.v.foldend - vim.v.foldstart) + 1
-    local align =
-        string.rep(' ', 5 - (vim.v.foldlevel - 1) - string.len(tostring(nlines)))
-
     local fold_text = tostring(vim.fn.getline(vim.v.foldstart))
     if vim.startswith(fold_text, '\\documentclass') then
         fold_text = 'Preamble'
@@ -23,7 +18,7 @@ function _G.TexFolding.custom_tex_fold()
             fold_text = 'Frame - ' .. frame_title
         end
     end
-    return string.format('%s%s%s lines: %s', level, align, nlines, fold_text)
+    return fold_text
 end
 
 vim.opt_local.foldtext = 'v:lua.TexFolding.custom_tex_fold()'
