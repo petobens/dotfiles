@@ -27,6 +27,13 @@ require('statuscol').setup({
         },
         {
             text = {
+                function(args)
+                    return (args.relnum == 0) and ' ' or ''
+                end,
+            },
+        },
+        {
+            text = {
                 builtin.lnumfunc,
                 ' ',
             },
