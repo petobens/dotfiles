@@ -314,7 +314,7 @@ es-noshorthands,es-lcroman,es-tabla]]
                 head_center = m(
                     2,
                     '^mutt$',
-                    '\\includegraphics[height=1.45cm]{logo_mutt.png}',
+                    '\\includegraphics[height=1.2cm]{logo_mutt.png}',
                     '\\MakeUppercase{}'
                 ),
                 foot_center = i(3, 'Short Article Title'),
