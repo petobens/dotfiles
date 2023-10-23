@@ -10,7 +10,7 @@ set highlight-transparency 0.35
 
 # Synctex (activates with ctrl+click)
 set synctex true
-set synctex-editor-command "nvr --remote-silent +\%{line}|foldo\! \%{input}"
+set synctex-editor-command "nvr --remote-silent +\%{line} \%{input}"
 
 # Mappings
 map Q quit
