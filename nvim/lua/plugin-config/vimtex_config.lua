@@ -45,7 +45,6 @@ vim.g.vimtex_toc_config = {
     hide_line_numbers = 0,
     tocdepth = 1,
 }
--- FIXME: Not working: https://github.com/lervag/vimtex/issues/46#issuecomment-1710113952
 vim.g.vimtex_toc_show_preamble = 0
 -- Docs
 vim.g.vimtex_doc_confirm_single = 0
@@ -74,3 +73,13 @@ vim.api.nvim_create_autocmd({ 'User' }, {
         u.keymap('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', { buffer = true })
     end,
 })
+vim.api.nvim_create_autocmd(
+    { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
+    {
+        group = vim.api.nvim_create_augroup('vimtex_folds', { clear = true }),
+        pattern = { '*.tex' },
+        callback = function()
+            vim.cmd('VimtexRefreshFolds')
+        end,
+    }
+)

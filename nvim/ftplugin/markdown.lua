@@ -9,6 +9,19 @@ vim.opt_local.linebreak = false
 vim.opt_local.spell = true
 vim.opt_local.formatexpr = ''
 
+-- Autocommand options
+vim.api.nvim_create_autocmd(
+    ---- Refresh folds
+    { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
+    {
+        group = vim.api.nvim_create_augroup('md_folds', { clear = true }),
+        pattern = { '*.md' },
+        callback = function()
+            vim.cmd('normal! zx')
+        end,
+    }
+)
+
 local function convert_pandoc(extension)
     local base_file = vim.fn.expand('%:p:r')
     local output_file = string.format('%s.%s', base_file, extension)
