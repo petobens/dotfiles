@@ -43,7 +43,8 @@ vim.g.vimtex_toc_config = {
     show_numbers = 1,
     layer_status = { label = 0, include = 0, todo = 0, content = 1 },
     hide_line_numbers = 0,
-    tocdepth = 1,
+    tocdepth = 2,
+    indent_levels = 1,
 }
 vim.g.vimtex_toc_show_preamble = 0
 -- Docs
