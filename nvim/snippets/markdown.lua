@@ -321,7 +321,7 @@ return {
         t('$'),
         i(0),
     }),
-    s({ trig = 'db', wordTrig = false, dscr = 'Wiki Link' }, {
+    s({ trig = 'wl', wordTrig = false, dscr = 'Wiki Link' }, {
         t('[['),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
