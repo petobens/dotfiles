@@ -104,3 +104,9 @@ vim.opt.wildmode = { 'longest:full', 'full' }
 -- Misc
 vim.opt.spellfile = vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add'
 vim.opt.spelllang = { 'en', 'es' }
+
+-- Foldtext
+function _G.my_custom_foldtext()
+    return vim.fn.trim(tostring(vim.fn.getline(vim.v.foldstart)), vim.wo.foldmarker)
+end
+vim.opt.foldtext = 'v:lua.my_custom_foldtext()'
