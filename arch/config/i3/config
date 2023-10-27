@@ -81,7 +81,7 @@ for_window [window_type="dialog" class="^(?!gtk_qt_dialog).+" window_role="^(?!G
 for_window [window_role="^(GtkFileChooserDialog)$"] $nexec $resize Rectangle
 
 #  }}}
-#  Multiple monitors and workspaces {{{
+# Multiple monitors and workspaces {{{
 
 # Define names for default workspaces
 set $ws1 "1"
@@ -239,7 +239,7 @@ bindsym $mod+Control+bracketright [con_mark="markedwin3"] focus
 bindsym $mod+Control+period [con_mark="markedwin4"] focus
 
 # }}}
-#  Spotify and volume {{{
+# Spotify and volume {{{
 
 bindsym $mod+Shift+p $nexec "playerctl --player=spotify,spotifyd play-pause"
 bindsym $mod+Shift+j $nexec "playerctl --player=spotify,spotifyd next"
