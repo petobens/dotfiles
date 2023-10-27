@@ -72,6 +72,7 @@ vim.api.nvim_create_autocmd({ 'User' }, {
             { buffer = true }
         )
         u.keymap('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', { buffer = true })
+        u.keymap('n', '<Leader>vm', require('nabla').popup, { buffer = true })
     end,
 })
 vim.api.nvim_create_autocmd(

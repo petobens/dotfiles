@@ -213,6 +213,7 @@ local plugins = {
     -- Latex
     {
         'lervag/vimtex',
+        dependencies = { 'jbyuki/nabla.nvim' },
         config = function()
             require('plugin-config.vimtex_config')
         end,

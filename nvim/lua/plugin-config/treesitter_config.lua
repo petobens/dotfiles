@@ -7,6 +7,7 @@ require('nvim-treesitter.configs').setup({
         'comment',
         'java',
         'json',
+        'latex',
         'lua',
         'markdown',
         'markdown_inline',
@@ -19,7 +20,6 @@ require('nvim-treesitter.configs').setup({
     highlight = {
         enable = true,
         disable = { 'latex' },
-        additional_vim_regex_highlighting = { 'latex' },
     },
     incremental_selection = {
         enable = true,
