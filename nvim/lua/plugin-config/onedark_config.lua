@@ -1,3 +1,5 @@
+-- luacheck:ignore 631
+
 local onedarkpro = require('onedarkpro')
 
 local palette = {
@@ -37,7 +39,6 @@ onedarkpro.setup({
     theme = 'onedark',
     colors = palette,
     highlights = {
-        -- luacheck:ignore 631
         -- See https://github.com/olimorris/onedarkpro.nvim/blob/main/lua/onedarkpro/theme.lua
         -- General UI
         ColorColumn = { bg = p.cursor_grey },
@@ -391,13 +392,6 @@ onedarkpro.setup({
         OverseerSUCCESS = { fg = p.green },
         OverseerFAILURE = { fg = p.red },
         OverseerCANCELED = { fg = p.orange },
-
-        ---- pqf
-        qfPosition = { fg = p.comment_grey },
-        qfError = { link = 'DiagnosticVirtualTextError' },
-        qfWarning = { link = 'DiagnosticVirtualTextWarn' },
-        qfInfo = { link = 'DiagnosticVirtualTextInfo' },
-        qfHint = { link = 'DiagnosticVirtualTextHint' },
 
         ---- Telescope
         TelescopeNormal = { link = 'Normal' },
