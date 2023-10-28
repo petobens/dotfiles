@@ -156,6 +156,19 @@ return {
         { trig = 'il', dscr = 'Inline link' },
         fmta(
             [[
+                [<>](#<><>)
+            ]],
+            {
+                i(1),
+                i(2),
+                f(_G.LuaSnipConfig.visual_selection),
+            }
+        )
+    ),
+    s(
+        { trig = 'url', dscr = 'Url' },
+        fmta(
+            [[
                 [<>](<><>)
             ]],
             {
@@ -172,7 +185,7 @@ return {
                 ![<>](<><>)<>
             ]],
             {
-                i(1, 'caption'),
+                i(1),
                 i(2),
                 f(_G.LuaSnipConfig.visual_selection),
                 i(3),
