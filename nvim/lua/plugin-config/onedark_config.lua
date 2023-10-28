@@ -218,9 +218,6 @@ onedarkpro.setup({
         ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
 
         ---- Markdown
-        ['@label.markdown'] = { fg = p.green, style = p.none },
-        ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
-        ['@text.reference.markdown_inline'] = { fg = p.purple },
         ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@text.title.1.markdown'] = { link = '@text.title.markdown' },
         ['@text.title.2.markdown'] = { link = '@text.title.markdown' },
@@ -232,9 +229,19 @@ onedarkpro.setup({
         ['@text.title.3.marker.markdown'] = { link = '@text.title.markdown' },
         ['@text.title.4.marker.markdown'] = { link = '@text.title.markdown' },
         ['@text.title.5.marker.markdown'] = { link = '@text.title.markdown' },
-        markdownLinkText = { fg = p.blue, sp = p.blue, style = 'undercurl' },
+        ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
+        ['@text.uri.markdown_inline'] = {
+            fg = p.light_blue,
+            sp = p.light_blue,
+            style = 'undercurl',
+        },
+        ['@text.reference.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
+        ['@label.markdown'] = { fg = p.cyan }, -- code blocks
         ['@text.todo.checked.markdown'] = { fg = p.green },
-        ['@lsp.type.class.markdown'] = { fg = p.green },
+        ['@lsp.type.class.markdown'] = { fg = p.green }, -- wiki links/checked
+        ['@lsp.type.enumMember.markdown'] = { fg = p.orange }, -- hashtags
+        ['@text.strong.markdown_inline'] = { style = 'bold' },
+        ['@text.emphasis.markdown_inline'] = { style = 'italic' },
 
         --- TOML
         tomlTable = { fg = p.orange },
