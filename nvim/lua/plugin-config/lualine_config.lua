@@ -350,6 +350,7 @@ require('lualine').setup({
         lualine_a = {
             {
                 'buffertab',
+                component_separators = { left = ' ' },
                 max_length = function()
                     return vim.o.columns - vim.fn.strlen('buffers')
                 end,
