@@ -1,4 +1,4 @@
-# shellcheck disable=SC2148
+# shellcheck disable=SC2148,SC2317
 # Note: this also uses several rust binaries: fd, rg, bat, lsd and devicon-lookup
 
 # Setup {{{
@@ -463,9 +463,9 @@ tms() {
         else
             session_name="$1"
         fi
-        tmux $change -t "$session_name" 2> /dev/null ||
+        tmux "$change" -t "$session_name" 2> /dev/null ||
             (tmux -f "$HOME/.tmux/tmux.conf" new-session -d -s "$session_name" &&
-                tmux $change -t "$session_name")
+                tmux "$change" -t "$session_name")
         return
     fi
 
