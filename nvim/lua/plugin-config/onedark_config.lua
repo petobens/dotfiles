@@ -219,17 +219,31 @@ onedarkpro.setup({
 
         ---- Markdown
         ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
-        ['@text.title.1.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.2.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.3.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.4.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.5.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.1.marker.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.2.marker.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.3.marker.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.4.marker.markdown'] = { link = '@text.title.markdown' },
-        ['@text.title.5.marker.markdown'] = { link = '@text.title.markdown' },
+        ['@text.title.1.markdown'] = { fg = p.dark_red, style = 'bold' },
+        ['@text.title.1.marker.markdown'] = { link = '@text.title.1.markdown' },
+        ['@text.title.1.conceal.markdown'] = { link = '@text.title.1.markdown' },
+        ['@text.title.2.markdown'] = { fg = p.orange, style = 'bold' },
+        ['@text.title.2.marker.markdown'] = { link = '@text.title.2.markdown' },
+        ['@text.title.2.conceal.markdown'] = { link = '@text.title.2.markdown' },
+        ['@text.title.3.markdown'] = { fg = p.yellow, style = 'bold' },
+        ['@text.title.3.marker.markdown'] = { link = '@text.title.3.markdown' },
+        ['@text.title.3.conceal.markdown'] = { link = '@text.title.3.markdown' },
+        ['@text.title.4.markdown'] = { fg = p.blue, style = 'bold' },
+        ['@text.title.4.marker.markdown'] = { link = '@text.title.4.markdown' },
+        ['@text.title.4.conceal.markdown'] = { link = '@text.title.4.markdown' },
+        ['@text.title.5.markdown'] = { fg = p.light_blue, style = 'bold' },
+        ['@text.title.5.marker.markdown'] = { link = '@text.title.5.markdown' },
+        ['@text.title.5.conceal.markdown'] = { link = '@text.title.5.markdown' },
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
+        ['@punctuation.special.list_minus.conceal.markdown'] = {
+            link = '@punctuation.special.markdown',
+        },
+        ['@text.todo.checked.markdown'] = { fg = p.green },
+        ['@text.todo.checked.conceal.markdown'] = { link = '@text.todo.checked.markdown' },
+        ['@text.todo.unchecked.markdown'] = { fg = p.red },
+        ['@text.todo.unchecked.conceal.markdown'] = {
+            link = '@text.todo.unchecked.markdown',
+        },
         ['@text.uri.markdown_inline'] = {
             fg = p.light_blue,
             sp = p.light_blue,
@@ -237,8 +251,7 @@ onedarkpro.setup({
         },
         ['@text.reference.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
         ['@label.markdown'] = { fg = p.cyan }, -- code blocks
-        ['@text.todo.checked.markdown'] = { fg = p.green },
-        ['@lsp.type.class.markdown'] = { fg = p.green }, -- wiki links/checked
+        ['@lsp.type.class.markdown'] = { fg = p.cyan }, -- wiki links
         ['@lsp.type.enumMember.markdown'] = { fg = p.orange }, -- hashtags
         ['@text.strong.markdown_inline'] = { style = 'bold' },
         ['@text.emphasis.markdown_inline'] = { style = 'italic' },

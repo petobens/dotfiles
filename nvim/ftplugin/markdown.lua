@@ -36,7 +36,7 @@ end
 
 local function toggle_checklist()
     -- https://github.com/opdavies/toggle-checkbox.nvim/blob/main/lua/toggle-checkbox.lua
-    local unchecked = '%[%]'
+    local unchecked = '%[ %]'
     local checked = '%[x%]'
     local bufnr = vim.api.nvim_buf_get_number(0)
     local cursor = vim.api.nvim_win_get_cursor(0)
