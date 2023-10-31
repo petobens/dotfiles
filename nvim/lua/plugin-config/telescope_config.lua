@@ -845,7 +845,12 @@ u.keymap('n', '<Leader>me', keymaps)
 u.keymap('n', '<Leader>sg', spell_suggest)
 u.keymap('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 u.keymap('n', '<Leader>te', lsp_doc_symbols)
-u.keymap('n', '<Leader>la', builtin.lsp_references)
+u.keymap('n', '<Leader>la', function()
+    builtin.lsp_references({
+        preview_title = 'LSP References Preview',
+        jump_type = 'split',
+    })
+end)
 u.keymap('n', '<Leader>we', lsp_ws_symbols)
 u.keymap('n', '<Leader>tq', '<Cmd>Telescope quickfix<CR>')
 u.keymap('n', '<Leader>ta', '<Cmd>Telescope aerial<CR>')
