@@ -263,6 +263,12 @@ local plugins = {
     { 'nathom/tmux.nvim' },
     { 'tpope/vim-repeat' },
     {
+        '3rd/image.nvim',
+        config = function()
+            require('plugin-config.image_config')
+        end,
+    },
+    {
         'andymass/vim-matchup',
         config = function()
             require('plugin-config.matchup_config')

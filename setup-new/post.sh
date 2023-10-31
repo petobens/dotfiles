@@ -4,6 +4,12 @@
 sudo bash -c "echo $(command -v bash) >> /etc/shells"
 sudo chsh -s "$(command -v bash)"
 
+# Nvim extras
+if type "luarocks" > /dev/null 2>&1; then
+    echo -e "\\033[1;34m--> Installing luarocks packages...\\033[0m"
+    luarocks --local --lua-version 5.1 install magick
+fi
+
 # Extra packages
 if [ ! -f "$HOME/git-repos/private/trueline/trueline.sh" ]; then
     git clone https://github.com/petobens/trueline ~/git-repos/private/trueline
