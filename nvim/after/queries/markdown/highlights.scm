@@ -8,21 +8,18 @@
 ((atx_h5_marker) @text.title.5.conceal (#set! conceal "○"))
 
 ; Lists
+; FIXME: no space between symbol and text https://github.com/MDeiml/tree-sitter-markdown/issues/41#issuecomment-1788150743
 ((list_marker_minus) @punctuation.special.list_minus.conceal (#set! conceal "•"))
-(list_item [
-  (list_marker_minus)
-  (list_marker_star)
-] @text.todo.checked.conceal [
-    (task_list_marker_checked)
-](#set! conceal ""))
-((task_list_marker_checked) @text.todo.checked.conceal (#set! conceal ""))
 
+; Checkboxes
 (list_item [
   (list_marker_minus)
   (list_marker_star)
-] @text.todo.unchecked.conceal [
+] @punctuation.special [
+    (task_list_marker_checked)
     (task_list_marker_unchecked)
 ](#set! conceal ""))
+((task_list_marker_checked) @text.todo.checked.conceal (#set! conceal ""))
 ((task_list_marker_unchecked) @text.todo.unchecked.conceal (#set! conceal ""))
 
 ; Code
