@@ -1,6 +1,7 @@
-_G.TexFolding = {}
+vim.opt_local.comments:append({ 'b:\\item' })
 
-function _G.TexFolding.custom_tex_fold()
+_G.TexFolding = {}
+function _G.TexFolding.custom_foldtext()
     local fold_text = tostring(vim.fn.getline(vim.v.foldstart))
     if vim.startswith(fold_text, '\\documentclass') then
         fold_text = 'Preamble'
@@ -21,5 +22,4 @@ function _G.TexFolding.custom_tex_fold()
     return fold_text
 end
 
-vim.opt_local.foldtext = 'v:lua.TexFolding.custom_tex_fold()'
-vim.opt_local.comments:append({ 'b:\\item' })
+vim.opt_local.foldtext = 'v:lua.TexFolding.custom_foldtext()'
