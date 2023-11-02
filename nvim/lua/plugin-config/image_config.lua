@@ -10,6 +10,8 @@ package.path = package.path
 
 require('image').setup({
     tmux_show_only_in_active_window = true,
+    max_height_window_percentage = 30,
+    window_overlap_clear_enabled = true,
     integrations = {
         markdown = {
             enabled = true,
