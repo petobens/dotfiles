@@ -264,6 +264,7 @@ local plugins = {
     { 'tpope/vim-repeat' },
     {
         '3rd/image.nvim',
+        ft = 'markdown',
         config = function()
             require('plugin-config.image_config')
         end,
@@ -297,7 +298,7 @@ local plugins = {
 -- Lazy plugin setup
 require('lazy').setup(plugins, {
     -- Don't lazy load by default instead load during startup; use
-    -- keys/events/cmds/ft in plugin config when lazy laoding is required
+    -- keys/events/cmds/ft in plugin config if lazy laoding is required
     defaults = { lazy = false },
     ui = {
         size = {
