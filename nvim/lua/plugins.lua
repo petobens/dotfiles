@@ -185,6 +185,7 @@ local plugins = {
             'saadparwaiz1/cmp_luasnip',
             'benfowler/telescope-luasnip.nvim',
         },
+        event = 'InsertEnter',
         config = function()
             require('plugin-config.luasnip_config')
         end,
