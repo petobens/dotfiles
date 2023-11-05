@@ -17,21 +17,6 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Editing
     s(
-        { trig = '(%d)h', regTrig = true, dscr = 'Header' },
-        fmta(
-            [[
-               <> <>
-            ]],
-            {
-                f(function(_, snip)
-                    return string.rep('#', snip.captures[1])
-                end, {}),
-                i(1),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
         { trig = 'ti', dscr = 'Italics' },
         fmta(
             [[
@@ -320,6 +305,21 @@ return {
         )
     ),
 }, {
+    s(
+        { trig = '(%d)h', regTrig = true, dscr = 'Header' },
+        fmta(
+            [[
+               <> <>
+            ]],
+            {
+                f(function(_, snip)
+                    return string.rep('#', snip.captures[1])
+                end, {}),
+                i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
     s({ trig = '``', wordTrig = false, dscr = 'Inline code' }, {
         t('`'),
         f(_G.LuaSnipConfig.visual_selection),
