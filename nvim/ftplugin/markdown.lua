@@ -24,6 +24,7 @@ vim.api.nvim_create_autocmd(
     }
 )
 
+-- Functions
 local function convert_pandoc(extension)
     local base_file = vim.fn.expand('%:p:r')
     local output_file = string.format('%s.%s', base_file, extension)
@@ -33,6 +34,21 @@ local function convert_pandoc(extension)
     if vim.v.shell_error ~= 1 then
         vim.cmd.echo(string.format('"Converted .md file into .%s"', extension))
     end
+end
+
+local function continue_list()
+    local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
+    local marker = vim.fn.matchstr(line, [[^\([*-]\s\[\s\]\|[*-]\|\d\+\.\)\s]])
+    if not marker or line == '' then
+        return '<CR>'
+    end
+    if line == marker then
+        return '<C-U>'
+    end
+    if marker:match('%d+') then
+        marker = marker + 1 .. '. '
+    end
+    return '<CR>' .. marker
 end
 
 local function toggle_checklist()
@@ -69,4 +85,5 @@ end, { buffer = true })
 u.keymap('n', '<Leader>vp', function()
     vim.fn.jobstart('zathura --fork ' .. vim.fn.expand('%:p:r') .. '.pdf')
 end, { buffer = true })
+u.keymap('i', '<CR>', continue_list, { expr = true, buffer = true })
 u.keymap('n', '<Leader>ct', toggle_checklist, { buffer = true })
