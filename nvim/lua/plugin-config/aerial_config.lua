@@ -1,6 +1,10 @@
 local u = require('utils')
 
 require('aerial').setup({
+    backends = {
+        ['_'] = { 'treesitter', 'lsp', 'markdown', 'man' },
+        tex = { 'lsp' },
+    },
     layout = {
         width = 43,
         default_direction = 'left',
