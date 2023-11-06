@@ -110,20 +110,6 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'cb', dscr = 'Checkbox' },
-        fmta(
-            [[
-        <> [<>] <>
-    ]],
-            {
-                c(1, { t('-'), t('*') }),
-                c(2, { t(' '), t('x') }),
-                i(3),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
         { trig = 'enu', dscr = 'Enumerate' },
         fmta(
             [[
@@ -133,6 +119,20 @@ return {
             {
                 i(1),
                 i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'tl', dscr = 'Todo List' },
+        fmta(
+            [[
+        - [ ] To-Do <>
+          - [ ] <>
+    ]],
+            {
+                p(os.date, '%d/%m/%Y'),
+                i(1),
             }
         ),
         { condition = line_begin }
@@ -315,6 +315,18 @@ return {
                 f(function(_, snip)
                     return string.rep('#', snip.captures[1])
                 end, {}),
+                i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = '--', dscr = 'Checkbox' },
+        fmta(
+            [[
+        - [ ] <>
+    ]],
+            {
                 i(1),
             }
         ),
