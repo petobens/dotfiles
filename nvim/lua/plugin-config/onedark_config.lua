@@ -218,20 +218,20 @@ onedarkpro.setup({
         ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
 
         ---- Markdown
-        ['@text.title.markdown'] = { fg = p.dark_red, style = 'bold' },
-        ['@text.title.1.markdown'] = { fg = p.dark_red, style = 'bold' },
+        ['@text.title.markdown'] = { fg = p.purple, style = 'bold' },
+        ['@text.title.1.markdown'] = { fg = p.purple, style = 'bold' },
         ['@text.title.1.marker.markdown'] = { link = '@text.title.1.markdown' },
         ['@text.title.1.conceal.markdown'] = { link = '@text.title.1.markdown' },
-        ['@text.title.2.markdown'] = { fg = p.orange, style = 'bold' },
+        ['@text.title.2.markdown'] = { fg = p.blue, style = 'bold' },
         ['@text.title.2.marker.markdown'] = { link = '@text.title.2.markdown' },
         ['@text.title.2.conceal.markdown'] = { link = '@text.title.2.markdown' },
-        ['@text.title.3.markdown'] = { fg = p.yellow, style = 'bold' },
+        ['@text.title.3.markdown'] = { fg = p.light_blue, style = 'bold' },
         ['@text.title.3.marker.markdown'] = { link = '@text.title.3.markdown' },
         ['@text.title.3.conceal.markdown'] = { link = '@text.title.3.markdown' },
-        ['@text.title.4.markdown'] = { fg = p.blue, style = 'bold' },
+        ['@text.title.4.markdown'] = { fg = p.cyan, style = 'bold' },
         ['@text.title.4.marker.markdown'] = { link = '@text.title.4.markdown' },
         ['@text.title.4.conceal.markdown'] = { link = '@text.title.4.markdown' },
-        ['@text.title.5.markdown'] = { fg = p.light_blue, style = 'bold' },
+        ['@text.title.5.markdown'] = { fg = p.green, style = 'bold' },
         ['@text.title.5.marker.markdown'] = { link = '@text.title.5.markdown' },
         ['@text.title.5.conceal.markdown'] = { link = '@text.title.5.markdown' },
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
@@ -244,15 +244,15 @@ onedarkpro.setup({
         ['@text.todo.unchecked.conceal.markdown'] = {
             link = '@text.todo.unchecked.markdown',
         },
+        ['@text.reference.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
         ['@text.uri.markdown_inline'] = {
             fg = p.light_blue,
             sp = p.light_blue,
             style = 'undercurl',
         },
-        ['@text.reference.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
-        ['@label.markdown'] = { fg = p.cyan }, -- code blocks
-        ['@lsp.type.class.markdown'] = { fg = p.cyan }, -- wiki links
+        ['@lsp.type.class.markdown'] = { fg = p.orange }, -- wiki links
         ['@lsp.type.enumMember.markdown'] = { fg = p.orange }, -- hashtags
+        ['@label.markdown'] = { fg = p.cyan }, -- code blocks
         ['@text.strong.markdown_inline'] = { style = 'bold' },
         ['@text.emphasis.markdown_inline'] = { style = 'italic' },
 
