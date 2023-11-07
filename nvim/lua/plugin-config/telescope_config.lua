@@ -849,6 +849,7 @@ u.keymap('n', '<Leader>la', function()
     builtin.lsp_references({
         preview_title = 'LSP References Preview',
         jump_type = 'split',
+        fname_width = 50,
     })
 end)
 u.keymap('n', '<Leader>we', lsp_ws_symbols)
