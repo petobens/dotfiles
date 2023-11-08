@@ -413,6 +413,9 @@ onedarkpro.setup({
         OverseerFAILURE = { fg = p.red },
         OverseerCANCELED = { fg = p.orange },
 
+        ---- Sniprun
+        SnipRunVirtualTextOk = { fg = p.black, bg = p.purple, style = 'bold' },
+
         ---- Telescope
         TelescopeNormal = { link = 'Normal' },
         TelescopeSelection = { fg = p.fg, bg = p.cursor_grey, style = 'bold' },

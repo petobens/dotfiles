@@ -257,6 +257,13 @@ local plugins = {
             require('plugin-config.pqf_config')
         end,
     },
+    {
+        'michaelb/sniprun',
+        build = 'sh install.sh',
+        config = function()
+            require('plugin-config.sniprun_config')
+        end,
+    },
 
     -- Utilities
     { 'gioele/vim-autoswap' },
