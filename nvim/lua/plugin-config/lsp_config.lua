@@ -41,7 +41,7 @@ lspconfig.lua_ls.setup({
             workspace = {
                 ignoreDir = { '.git', 'undo' },
                 preloadFileSize = 750,
-                checkThirdParty = false,
+                checkThirdParty = 'Disable',
             },
         },
     },
