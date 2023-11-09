@@ -235,7 +235,7 @@ onedarkpro.setup({
         ['@text.title.5.marker.markdown'] = { link = '@text.title.5.markdown' },
         ['@text.title.5.conceal.markdown'] = { link = '@text.title.5.markdown' },
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
-        ['@punctuation.special.list_minus.conceal.markdown'] = {
+        ['@punctuation.special.bullet.conceal.markdown'] = {
             link = '@punctuation.special.markdown',
         },
         ['@text.todo.checked.markdown'] = { fg = p.green },
