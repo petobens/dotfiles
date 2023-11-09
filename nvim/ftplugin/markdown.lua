@@ -38,7 +38,7 @@ end
 
 local function continue_list()
     local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
-    local marker = vim.fn.matchstr(line, [[^\([*-]\s\[\s\]\|[*-]\|\d\+\.\)\s]])
+    local marker = vim.fn.matchstr(line, [[^\([*-]\s\[\s\]\|[*-]\|>\|\d\+\.\)\s]])
     if not marker or line == '' then
         return '<CR>'
     end

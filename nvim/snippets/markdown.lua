@@ -53,19 +53,6 @@ return {
         )
     ),
     s(
-        { trig = 'bq', dscr = 'Block quotes' },
-        fmta(
-            [[
-        >> <><>
-    ]],
-            {
-                f(_G.LuaSnipConfig.visual_selection),
-                i(1),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
         { trig = 'ic', dscr = 'Inline code' },
         fmta(
             [[
@@ -78,7 +65,7 @@ return {
         )
     ),
     s(
-        { trig = 'bc', dscr = 'Block code' },
+        { trig = 'cb', dscr = 'Code block' },
         fmta(
             [[
         ```<>
@@ -339,6 +326,19 @@ return {
         t('`'),
         i(0),
     }),
+    s(
+        { trig = 'bq', dscr = 'Block quotes' },
+        fmta(
+            [[
+        >> <><>
+    ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1),
+            }
+        ),
+        { condition = line_begin }
+    ),
     s({ trig = '$$', wordTrig = false, dscr = 'Inline math' }, {
         t('$'),
         f(_G.LuaSnipConfig.visual_selection),

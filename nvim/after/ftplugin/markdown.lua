@@ -4,7 +4,7 @@ vim.opt_local.shiftwidth = 2
 vim.opt_local.softtabstop = 2
 vim.opt_local.tabstop = 2
 vim.opt_local.formatoptions = 'trjw'
-vim.opt_local.comments = { 'n:>' }
+vim.opt_local.comments = {}
 
 _G.MarkdownFolding = {}
 function _G.MarkdownFolding.custom_foldtext()

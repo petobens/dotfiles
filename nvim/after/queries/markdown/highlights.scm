@@ -63,6 +63,23 @@
 ; Code
 ((fenced_code_block_delimiter) @conceal (#set! conceal ""))
 
+; Block quotes
+((block_quote_marker) @punctuation.special.block.conceal
+                      (#offset! @punctuation.special.block.conceal 0 0 0 -1)
+                      (#set! conceal "▐"))
+((block_continuation) @punctuation.special.block.conceal
+                      (#eq? @punctuation.special.block.conceal ">")
+                      (#set! conceal "▐"))
+((block_continuation) @punctuation.special.block.conceal
+                      (#eq? @punctuation.special.block.conceal "> ")
+                      (#offset! @punctuation.special.block.conceal 0 0 0 -1)
+                      (#set! conceal "▐"))
+((block_continuation) @punctuation.special.block.conceal
+                      ; for indented code blocks
+                      (#eq? @punctuation.special.block.conceal ">     ")
+                      (#offset! @punctuation.special.block.conceal 0 0 0 -5)
+                      (#set! conceal "▐"))
+
 ; Wiki links
 ([
     "["
