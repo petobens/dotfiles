@@ -91,6 +91,7 @@ $tlmgr_install pdfpages
 $tlmgr_install pgfplots
 $tlmgr_install silence
 $tlmgr_install siunitx
+$tlmgr_install soul
 $tlmgr_install spreadtab
 $tlmgr_install standalone
 $tlmgr_install tcolorbox
