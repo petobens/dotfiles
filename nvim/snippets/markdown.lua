@@ -187,8 +187,7 @@ return {
                 geometry: margin=3cm
 
                 title: <>
-                author:
-                    - <>
+                author: <>
                 ---
                 <<!-- markdownlint-disable MD025 -->>
             ]],
