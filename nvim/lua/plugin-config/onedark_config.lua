@@ -257,6 +257,7 @@ onedarkpro.setup({
         ['@label.markdown'] = { fg = p.cyan }, -- code blocks
         ['@text.strong.markdown_inline'] = { style = 'bold' },
         ['@text.emphasis.markdown_inline'] = { style = 'italic' },
+        ['@text.comment.markdown'] = { link = 'Comment' },
 
         --- TOML
         tomlTable = { fg = p.orange },

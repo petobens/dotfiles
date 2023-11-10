@@ -87,3 +87,6 @@
     "]"
     "]"
  ] @conceal (#set! conceal ""))
+
+; Comments
+((html_block) @text.comment)
