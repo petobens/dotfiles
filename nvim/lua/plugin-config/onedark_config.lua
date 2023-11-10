@@ -290,8 +290,9 @@ onedarkpro.setup({
         healthSuccess = { fg = p.black, bg = p.green },
         ['@constant.builtin.vim'] = { fg = p.yellow },
 
-        --- Yaml
-        yamlBool = { fg = p.orange },
+        --- YAML
+        ['@field.yaml'] = { fg = p.red },
+        ['@punctuation.special.yaml'] = { fg = p.yellow },
 
         ---- Diffs
         DiffAdd = { fg = p.green, bg = p.visual_grey },
