@@ -51,6 +51,20 @@ local function continue_list()
     return '<CR>' .. marker
 end
 
+local function indent_list(dedent)
+    local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
+    local marker = vim.fn.matchstr(line, [[^\([*-]\s\[\s\]\|[*-]\|>\|\d\+\.\)\s]])
+    if line == marker then
+        if dedent then
+            return '<C-d>'
+        else
+            return '<C-t>'
+        end
+    else
+        return '<Tab>'
+    end
+end
+
 local function toggle_checklist()
     -- https://github.com/opdavies/toggle-checkbox.nvim/blob/main/lua/toggle-checkbox.lua
     local unchecked = '%[ %]'
@@ -76,6 +90,7 @@ local function toggle_checklist()
 end
 
 -- Mappings
+---- Compiling
 u.keymap('n', '<F7>', function()
     convert_pandoc('pdf')
 end, { buffer = true })
@@ -85,5 +100,10 @@ end, { buffer = true })
 u.keymap('n', '<Leader>vp', function()
     vim.fn.jobstart('zathura --fork ' .. vim.fn.expand('%:p:r') .. '.pdf')
 end, { buffer = true })
+---- Lists
 u.keymap('i', '<CR>', continue_list, { expr = true, buffer = true })
+u.keymap('i', '<Tab>', indent_list, { expr = true, buffer = true })
+u.keymap('i', '<S-Tab>', function()
+    return indent_list({ dedent = true })
+end, { expr = true, buffer = true })
 u.keymap('n', '<Leader>ct', toggle_checklist, { buffer = true })
