@@ -638,6 +638,7 @@ telescope.setup({
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
                 ['<A-u>'] = custom_actions.undo_picker,
                 ['<C-/>'] = 'which_key',
+                ['<A-l>'] = actions.complete_tag,
             },
             n = {
                 ['q'] = 'close',
@@ -663,6 +664,7 @@ telescope.setup({
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
                 ['<A-u>'] = custom_actions.undo_picker,
                 ['?'] = 'which_key',
+                ['<A-l>'] = actions.complete_tag,
             },
         },
         vimgrep_arguments = {
