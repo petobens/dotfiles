@@ -90,3 +90,6 @@
 
 ; Comments
 ((html_block) @text.comment)
+
+; YAML front matter
+((minus_metadata) @front_matter)
