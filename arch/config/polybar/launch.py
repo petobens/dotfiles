@@ -5,6 +5,17 @@ import subprocess
 import sys
 from time import sleep
 
+HD_WIDTH = 1920
+FONT_MAP = {
+    0: ('Noto Sans:size={};3', ['11'], ['21']),
+    1: ('Noto Sans:size={}:weight=bold;2', ['11'], ['21']),
+    2: ('Noto Sans Mono:size={}:weight=bold;2', ['10'], ['20']),
+    3: ('Symbols Nerd Font:size={};4', ['13'], ['26']),
+    4: ('Symbols Nerd Font:size={};4', ['14'], ['28']),
+    5: ('Symbols Nerd Font:size={};4', ['12'], ['24']),
+    6: ('Noto Sans:size={}:weight=bold;{}', ['7', '-5'], ['14', '-10']),
+}
+
 
 def _sh_no_block(cmd, *args, **kwargs):
     if isinstance(cmd, str):
@@ -77,17 +88,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--monitors', '-m', nargs='?', default='xrandr')
     parse_args = parser.parse_args()
-
-    HD_WIDTH = 1920
-    FONT_MAP = {
-        0: ('Noto Sans:size={};3', ['11'], ['21']),
-        1: ('Noto Sans:size={}:weight=bold;2', ['11'], ['21']),
-        2: ('Noto Sans Mono:size={}:weight=bold;2', ['10'], ['20']),
-        3: ('Symbols Nerd Font:size={};4', ['13'], ['26']),
-        4: ('Symbols Nerd Font:size={};4', ['14'], ['28']),
-        5: ('Symbols Nerd Font:size={};4', ['12'], ['24']),
-        6: ('Noto Sans:size={}:weight=bold;{}', ['7', '-5'], ['14', '-10']),
-    }
 
     launch_polybar(parse_args.monitors)
     sys.exit(0)
