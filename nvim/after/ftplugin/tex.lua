@@ -1,5 +1,3 @@
-vim.opt_local.comments:append({ 'b:\\item' })
-
 _G.TexFolding = {}
 function _G.TexFolding.custom_foldtext()
     local fold_text = tostring(vim.fn.getline(vim.v.foldstart))

@@ -193,6 +193,18 @@ local function convert_pandoc(extension)
     end
 end
 
+local function continue_list()
+    local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
+    local marker = vim.fn.matchstr(line, [[^\\item\s]])
+    if not marker or line == '' then
+        return '<CR>'
+    end
+    if line == marker then
+        return '<C-U>'
+    end
+    return '<CR>' .. marker
+end
+
 -- Mappings
 ---- Compilation
 u.keymap('n', '<F7>', compile_latex, { buffer = true })
@@ -225,3 +237,5 @@ end, { buffer = true })
 ---- Tables
 u.keymap('i', '<A-c>', '<ESC>f&lli', { buffer = true })
 u.keymap('i', '<A-r>', '<ESC>j0f&hi', { buffer = true })
+---- Lists
+u.keymap('i', '<CR>', continue_list, { expr = true, buffer = true })
