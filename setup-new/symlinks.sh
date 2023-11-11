@@ -201,11 +201,11 @@ if type "less" > /dev/null 2>&1; then
     echo Created .lesskey symlink
 fi
 if type "ssh" > /dev/null 2>&1; then
-    if [ -f "$HOME"/OneDrive/arch/ssh/config ]; then
+    if [ -f "$HOME"/OneDrive/programming/arch/ssh/config ]; then
         sudo mkdir -p "$HOME/.ssh"
-        sudo $ln_cmd -fTs "$HOME/OneDrive/arch/ssh/config" "$HOME/.ssh/config"
+        sudo $ln_cmd -fTs "$HOME/OneDrive/programming/arch/ssh/config" "$HOME/.ssh/config"
         echo Created .ssh/config symlink
-        sudo $ln_cmd -fTs "$HOME/OneDrive/arch/ssh/id_rsa.pub" "$HOME/.ssh/id_rsa.pub"
+        sudo $ln_cmd -fTs "$HOME/OneDrive/programming/arch/ssh/id_rsa.pub" "$HOME/.ssh/id_rsa.pub"
         echo Created .ssh/id_rsa.pub symlink
     fi
 fi
@@ -240,8 +240,8 @@ if [ -d "$HOME/.gnupg" ]; then
     echo Created ".gnupg/gpg-agent.conf" symlink
 fi
 
-if [ -f "$HOME/OneDrive/arch/git/.netrc.gpg" ]; then
-    sudo $ln_cmd -fTs "$HOME/OneDrive/arch/git/.netrc.gpg" "$HOME/.netrc.gpg"
+if [ -f "$HOME/OneDrive/programming/arch/git/.netrc.gpg" ]; then
+    sudo $ln_cmd -fTs "$HOME/OneDrive/programming/arch/git/.netrc.gpg" "$HOME/.netrc.gpg"
     echo "Created $HOME/.netrc.gpg symlink"
 fi
 

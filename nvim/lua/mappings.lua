@@ -203,7 +203,7 @@ u.keymap(
 u.keymap(
     'n',
     '<Leader>ets',
-    '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/varios/todos_coding_setup.md<CR>'
+    '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/programming/todos_coding_setup.md<CR>'
 )
 u.keymap(
     'n',
