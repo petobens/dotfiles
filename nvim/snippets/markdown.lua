@@ -179,7 +179,7 @@ return {
 
     -- Pandoc
     s(
-        { trig = 'ph', dscr = 'Pandoc Header' },
+        { trig = 'fm', dscr = 'Front matter' },
         fmta(
             [[
                 ---
@@ -189,7 +189,6 @@ return {
                 title: <>
                 author: <>
                 ---
-                <<!-- markdownlint-disable MD025 -->>
             ]],
             {
                 i(1),
