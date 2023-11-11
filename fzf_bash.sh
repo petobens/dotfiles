@@ -53,13 +53,18 @@ export FZF_DEFAULT_OPTS='
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git \
     --color=always --strip-cwd-prefix"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# FIXME: Image preview not working https://github.com/junegunn/fzf/issues/3228#issuecomment-1806840434
 export FZF_CTRL_T_OPTS="
 --border-label='Find Files'
 --multi
 --ansi
 --bind 'ctrl-y:execute-silent(echo -n {+2} | $COPY_CMD)+abort'
---preview 'bat --color always --style numbers --theme TwoDark \
-    --line-range :200 {2}'
+--preview='
+if file --mime-type {2} | grep -qF image/; then
+    kitty icat --clear --transfer-mode=memory --stdin=no --place=${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0 {2} | sed \$d
+else
+    bat --color always --style numbers --theme TwoDark --line-range :200 {2}
+fi'
 --expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,alt-g
 --header='enter=edit, tab=insert, C-t=fzf-files, C-o=open, A-c=cd-file-dir, \
 A-p=parent-dirs, A-f=ranger, A-g=grep, C-y=yank'
