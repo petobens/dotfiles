@@ -12,9 +12,9 @@ function _G.MarkdownFolding.custom_foldtext()
     local conceal_map = {
         ['#'] = '󰪥',
         ['##'] = '󰺕',
-        ['###'] = '',
-        ['####'] = '',
-        ['#####'] = '○',
+        ['###'] = '',
+        ['####'] = '',
+        ['#####'] = '',
     }
     for _, v in pairs(fold_text) do
         if vim.startswith(v[1], '#') then
