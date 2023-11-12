@@ -81,7 +81,10 @@ vim.api.nvim_create_autocmd(
         group = vim.api.nvim_create_augroup('vimtex_folds', { clear = true }),
         pattern = { '*.tex' },
         callback = function()
-            vim.cmd('VimtexRefreshFolds')
+            -- If a choice node is active then `zx` is inserted
+            if not require('luasnip').choice_active() then
+                vim.cmd('VimtexRefreshFolds')
+            end
         end,
     }
 )

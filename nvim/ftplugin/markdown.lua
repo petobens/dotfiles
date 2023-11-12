@@ -19,7 +19,10 @@ vim.api.nvim_create_autocmd(
         group = vim.api.nvim_create_augroup('md_folds', { clear = true }),
         pattern = { '*.md' },
         callback = function()
-            vim.cmd('normal! zx')
+            -- If a choice node is active then `zx` is inserted
+            if not require('luasnip').choice_active() then
+                vim.cmd('normal! zx')
+            end
         end,
     }
 )
