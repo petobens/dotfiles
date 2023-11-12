@@ -188,11 +188,13 @@ return {
 
                 title: <>
                 author: <>
+                date: <>
                 ---
             ]],
             {
                 i(1),
                 i(2, 'Pedro Ferrari'),
+                p(os.date, '%d/%m/%Y'),
             }
         ),
         { condition = line_begin }
