@@ -97,7 +97,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         u.keymap('n', 'K', vim.lsp.buf.hover, opts)
         u.keymap('n', '<Leader>fs', vim.lsp.buf.signature_help, opts)
         u.keymap('n', '<Leader>ih', function()
-            vim.lsp.inlay_hint(0, nil)
+            vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
         end, opts)
         u.keymap('n', '<Leader>ca', vim.lsp.buf.code_action, opts)
     end,
