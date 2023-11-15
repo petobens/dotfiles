@@ -51,6 +51,9 @@ luasnip.setup({
 require('luasnip.loaders.from_lua').lazy_load({
     paths = { snippets_dir },
 })
+-- Fix for  autosnippets expansion in markdown
+-- https://github.com/L3MON4D3/LuaSnip/issues/823
+luasnip.filetype_extend('markdown_inline', { 'markdown' })
 
 -- Mappings
 u.keymap({ 'i', 's' }, '<C-s>', function()
