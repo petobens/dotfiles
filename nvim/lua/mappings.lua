@@ -67,12 +67,8 @@ u.keymap({ 'n', 'v' }, '+', '<C-a>')
 u.keymap({ 'n', 'v' }, '-', '<C-x>')
 u.keymap('n', '<A-0>', 'H')
 u.keymap('n', '<A-b>', 'L')
-u.keymap('n', '<A-j>', '<Cmd>execute "move+" . v:count1<CR><Cmd>silent! normal! zO==<CR>')
-u.keymap(
-    'n',
-    '<A-k>',
-    '<Cmd>execute "move--" . v:count1<CR><Cmd>silent! normal! zO==<CR>'
-)
+u.keymap('n', '<A-j>', '<Cmd>execute "move+" . v:count1<CR><Cmd>silent! normal! zO<CR>')
+u.keymap('n', '<A-k>', '<Cmd>execute "move--" . v:count1<CR><Cmd>silent! normal! zO<CR>')
 u.keymap('n', '<A-m>', 'M')
 u.keymap('n', '<A-s>', 'i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>`w') -- Split line
 u.keymap('n', '<A-u>', 'mzg~iw`z', { remap = true }) -- Upper case inner word
@@ -287,8 +283,8 @@ u.keymap('i', '<C-l>', '<C-o>l')
 -- Visual mode specific
 u.keymap('v', '<', '<gv')
 u.keymap('v', '>', '>gv')
-u.keymap('v', '<A-j>', ":m '>+1<CR>gv=gv")
-u.keymap('v', '<A-k>', ":m '<-2<CR>gv=gv")
+u.keymap('v', '<A-j>', ":m '>+1<CR>gv")
+u.keymap('v', '<A-k>', ":m '<-2<CR>gv")
 u.keymap('v', '<ESC>', '"+ygv<C-c>') -- mimicks autoselect
 u.keymap('v', '<Leader>sa', ':sort i<CR>')
 u.keymap('v', '<Leader>sr', ':s/', { silent = false })
