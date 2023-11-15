@@ -33,7 +33,6 @@ function _G.LuaSnipConfig.snake_case_labels(node_idx)
 end
 
 -- Setup
-local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
 luasnip.setup({
     ft_func = require('luasnip.extras.filetype_functions').from_pos_or_filetype,
     history = true, -- allow to jump back into exited (last) snippet
@@ -48,7 +47,9 @@ luasnip.setup({
         },
     },
 })
-require('luasnip.loaders.from_lua').lazy_load({
+-- Note: we use load instead of lazy_load to allow loading of injected languages
+local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
+require('luasnip.loaders.from_lua').load({
     paths = { snippets_dir },
 })
 -- Fix for  autosnippets expansion in markdown
