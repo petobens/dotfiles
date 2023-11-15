@@ -35,6 +35,7 @@ end
 -- Setup
 local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
 luasnip.setup({
+    ft_func = require('luasnip.extras.filetype_functions').from_pos_or_filetype,
     history = true, -- allow to jump back into exited (last) snippet
     enable_autosnippets = true,
     update_events = 'TextChanged,TextChangedI',
