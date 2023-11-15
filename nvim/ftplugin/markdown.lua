@@ -71,7 +71,10 @@ end
 local function toggle_checklist()
     -- https://github.com/opdavies/toggle-checkbox.nvim/blob/main/lua/toggle-checkbox.lua
     local unchecked = '%[ %]'
-    local checked = '%[x%]'
+    local doing = '%[_%]'
+    local done = '%[x%]'
+    local wontdo = '%[~%]'
+
     local bufnr = vim.api.nvim_buf_get_number(0)
     local cursor = vim.api.nvim_win_get_cursor(0)
     local start_line = cursor[1] - 1
@@ -84,9 +87,13 @@ local function toggle_checklist()
 
     local new_line
     if string.find(current_line, unchecked) then
-        new_line = current_line:gsub(unchecked, checked)
+        new_line = current_line:gsub(unchecked, doing)
+    elseif string.find(current_line, doing) then
+        new_line = current_line:gsub(doing, done)
+    elseif string.find(current_line, done) then
+        new_line = current_line:gsub(done, wontdo)
     else
-        new_line = current_line:gsub(checked, unchecked)
+        new_line = current_line:gsub(wontdo, unchecked)
     end
     vim.api.nvim_buf_set_lines(bufnr, start_line, start_line + 1, false, { new_line })
     vim.api.nvim_win_set_cursor(0, cursor)

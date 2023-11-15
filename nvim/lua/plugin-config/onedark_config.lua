@@ -244,6 +244,8 @@ onedarkpro.setup({
         ['@text.todo.unchecked.conceal.markdown'] = {
             link = '@text.todo.unchecked.markdown',
         },
+        ['@text.todo.doing.conceal.markdown_inline'] = { fg = p.cyan },
+        ['@text.todo.wontdo.conceal.markdown_inline'] = { fg = p.red },
         ['@punctuation.special.block.conceal.markdown'] = { fg = p.gray },
         ['@text.quote.markdown'] = { fg = p.comment_grey },
         ['@text.reference.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
