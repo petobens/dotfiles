@@ -44,6 +44,7 @@ cmp.setup({
                 nvim_lsp = '[LSP]',
                 path = '[Path]',
                 tmux = '[TMUX]',
+                emoji = '[Emoji]',
             })[entry.source.name]
             return vim_item
         end,
@@ -116,6 +117,7 @@ cmp.setup({
             },
         },
         { name = 'git' },
+        { name = 'emoji' },
     },
     snippet = {
         expand = function(args)
