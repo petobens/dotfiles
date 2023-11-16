@@ -55,6 +55,10 @@ conform.setup({
                 { formatters = { 'injected', 'trim_whitespace' } }
             )
         end
+        if vim.bo[bufnr].filetype == 'sql' then
+            -- Sqlfluff is slow
+            format_options.timeout_ms = 1000
+        end
         return format_options
     end,
     notify_on_error = false,

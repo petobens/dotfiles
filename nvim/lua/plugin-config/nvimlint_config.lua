@@ -100,6 +100,16 @@ linters.ruff.parser = function(output, bufnr)
     end
     return diagnostics
 end
+---- Sqlfluff
+linters.sqlfluff.stdin = true
+local fluff_parser = linters.sqlfluff.parser
+linters.sqlfluff.parser = function(output, bufnr)
+    local diagnostics = fluff_parser(output, bufnr)
+    for _, v in pairs(diagnostics) do
+        v.code = v.user_data.lsp.code
+    end
+    return diagnostics
+end
 ---- TeX
 linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n1',
