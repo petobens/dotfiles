@@ -262,6 +262,9 @@ onedarkpro.setup({
         ['@text.comment.markdown'] = { link = 'Comment' },
         ['@front_matter.markdown'] = { fg = p.yellow },
 
+        --- Sql
+        ['@type.sql'] = { fg = p.light_blue },
+
         --- TOML
         tomlTable = { fg = p.orange },
 
