@@ -17,6 +17,7 @@ require('nvim-treesitter.configs').setup({
         'regex',
         'rst',
         'sql',
+        'toml',
         'vim',
         'vimdoc',
         'yaml',

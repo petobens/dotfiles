@@ -266,7 +266,7 @@ onedarkpro.setup({
         ['@type.sql'] = { fg = p.light_blue },
 
         --- TOML
-        tomlTable = { fg = p.orange },
+        ['@table_brackets.toml'] = { fg = p.yellow },
 
         ---- Python
         ['@attribute.builtin.python'] = { fg = p.blue },
