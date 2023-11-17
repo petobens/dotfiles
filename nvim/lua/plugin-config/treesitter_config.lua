@@ -76,9 +76,10 @@ u.keymap({ 'n', 'v' }, '[c', '<Cmd>TSTextobjectGotoPreviousStart @class.outer<CR
 u.keymap({ 'n', 'v' }, '[f', '<Cmd>TSTextobjectGotoPreviousStart @function.outer<CR>zz')
 u.keymap({ 'n', 'v' }, '[p', '<Cmd>TSTextobjectGotoPreviousStart @parameter.inner<CR>zz')
 u.keymap('n', '<Leader>it', function()
-    return vim.treesitter.inspect_tree({
+    vim.treesitter.inspect_tree({
         command = 'vnew | wincmd H | vertical resize 40',
     })
+    u.keymap('n', 'q', u.quit_return)
 end)
 
 -- Custom fold queries (see for example https://github.com/nvim-treesitter/nvim-treesitter/blob/master/queries/python/folds.scm)

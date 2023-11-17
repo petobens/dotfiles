@@ -57,6 +57,14 @@ function M.get_selection()
     return text
 end
 
+function M.quit_return()
+    vim.cmd('wincmd p')
+    local win_id = vim.api.nvim_get_current_win()
+    vim.cmd('wincmd p')
+    vim.cmd('bdelete')
+    vim.fn.win_gotoid(win_id)
+end
+
 M.icons = {
     -- Running
     error = '',

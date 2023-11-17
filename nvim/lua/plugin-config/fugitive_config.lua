@@ -8,14 +8,6 @@ local function buf_enter_commit()
     end
 end
 
-local function quit_gstatus()
-    vim.cmd('wincmd p')
-    local win_id = vim.api.nvim_get_current_win()
-    vim.cmd('wincmd p')
-    vim.cmd('bdelete')
-    vim.fn.win_gotoid(win_id)
-end
-
 -- Autocmds
 local fugitive_acg = vim.api.nvim_create_augroup('ps_fugitive', { clear = true })
 vim.api.nvim_create_autocmd('BufEnter', {
@@ -65,7 +57,7 @@ vim.api.nvim_create_autocmd('FileType', {
     group = fugitive_acg,
     pattern = { 'fugitive' },
     callback = function()
-        u.keymap('n', 'q', quit_gstatus)
+        u.keymap('n', 'q', u.quit_return)
     end,
 })
 vim.api.nvim_create_autocmd('FileType', {
