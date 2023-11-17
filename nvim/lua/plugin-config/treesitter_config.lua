@@ -79,6 +79,9 @@ u.keymap({ 'n', 'v' }, '[p', '<Cmd>TSTextobjectGotoPreviousStart @parameter.inne
 u.keymap('n', '<Leader>it', function()
     vim.treesitter.inspect_tree({
         command = 'vnew | wincmd H | vertical resize 40',
+        title = function()
+            return 'InspectTree'
+        end,
     })
     u.keymap('n', 'q', u.quit_return)
 end)

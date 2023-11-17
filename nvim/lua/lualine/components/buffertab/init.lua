@@ -133,6 +133,7 @@ function M:update_status()
             -- If current buffer was not listed and it's not blacklisted then
             -- add it to the the list
             vim.fn.match(b.filetype, self.options.filetype_ignore) < 0
+            and b.name ~= 'InspectTree'
         then
             b.current = true
             b.last = true
