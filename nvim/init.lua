@@ -11,6 +11,7 @@ vim.env.CACHE = vim.env.DOTVIM .. '/cache/Arch'
 -- Add some filetypes
 vim.filetype.add({
     filename = {
+        ['poetry.lock'] = 'toml',
         ['sqlfluff'] = 'toml',
     },
     pattern = {

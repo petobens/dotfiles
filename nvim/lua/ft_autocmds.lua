@@ -155,13 +155,6 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell',
 })
 
---- TOML
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = vim.api.nvim_create_augroup('ft_toml', { clear = true }),
-    pattern = { 'poetry.lock' },
-    command = 'set filetype=toml',
-})
-
 --- Vim (also help and man)
 local vim_acg = vim.api.nvim_create_augroup('ft_vim', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
