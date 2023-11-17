@@ -537,6 +537,9 @@ class ElectronApp(ROLApp):
         ):
             cmd += ' --force-device-scale-factor=2'
 
+        if self.class_name == 'Mailspring':
+            cmd += ' --password-store="gnome-libsecret"'
+
         if self.class_name == 'Brave':
             if not self.subcmd:
                 cmd += ' --enable-features=VaapiVideoDecodeLinuxGL'
