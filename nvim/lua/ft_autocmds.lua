@@ -84,19 +84,6 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal foldmethod=syntax',
 })
 
---- Python
-local python_acg = vim.api.nvim_create_augroup('ft_python', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = python_acg,
-    pattern = { 'pdbrc' },
-    command = 'setlocal filetype=python',
-})
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = python_acg,
-    pattern = { '*.ipynb' },
-    command = 'setlocal filetype=json',
-})
-
 --- QuickFix
 local qf_acg = vim.api.nvim_create_augroup('ft_qf', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
