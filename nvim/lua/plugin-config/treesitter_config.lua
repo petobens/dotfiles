@@ -82,8 +82,3 @@ u.keymap('n', '<Leader>it', function()
     })
     u.keymap('n', 'q', u.quit_return)
 end)
-
--- Custom fold queries (see for example https://github.com/nvim-treesitter/nvim-treesitter/blob/master/queries/python/folds.scm)
-vim.treesitter.query.set('lua', 'folds', [[[(table_constructor)] @fold]])
-vim.treesitter.query.set('markdown', 'folds', [[[(section)] @fold]])
-vim.treesitter.query.set('python', 'folds', [[[(class_definition)] @fold]])
