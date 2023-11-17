@@ -13,6 +13,9 @@ vim.filetype.add({
     filename = {
         ['sqlfluff'] = 'toml',
     },
+    pattern = {
+        ['.*sql'] = 'sql',
+    },
 })
 
 -- Source lua modules

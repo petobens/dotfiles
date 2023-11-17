@@ -147,19 +147,6 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal foldmethod=syntax',
 })
 
---- SQL
-local sql_acg = vim.api.nvim_create_augroup('ft_sql', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-    group = sql_acg,
-    pattern = { 'sql' },
-    command = 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 textwidth=90',
-})
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = sql_acg,
-    pattern = { '*.pgsql', '*.mssql', '*.mysql' },
-    command = 'setlocal ft=sql',
-})
-
 --- Text
 local txt_acg = vim.api.nvim_create_augroup('ft_txt', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
