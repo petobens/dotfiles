@@ -40,11 +40,12 @@ cmp.setup({
             vim_item.menu = ({
                 buffer = '[Buffer]',
                 copilot = '[Copilot]',
+                emoji = '[Emoji]',
                 luasnip = '[Snippet]',
                 nvim_lsp = '[LSP]',
                 path = '[Path]',
                 tmux = '[TMUX]',
-                emoji = '[Emoji]',
+                ['vim-dadbod-completion'] = '[Dadbod]',
             })[entry.source.name]
             return vim_item
         end,

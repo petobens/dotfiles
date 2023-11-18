@@ -154,6 +154,17 @@ local overseer_ext = {
     filetypes = { 'OverseerList' },
 }
 
+local dbui_ext = {
+    sections = {
+        lualine_a = {
+            function()
+                return 'Dadbod-UI'
+            end,
+        },
+    },
+    filetypes = { 'dbui' },
+}
+
 -- Setup
 require('lualine').setup({
     options = {
@@ -372,6 +383,7 @@ require('lualine').setup({
         fugitive_ext,
         nvimtree_ext,
         overseer_ext,
+        dbui_ext,
     },
 })
 

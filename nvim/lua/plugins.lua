@@ -229,6 +229,23 @@ local plugins = {
         end,
     },
 
+    -- SQL
+    {
+        'kristijanhusak/vim-dadbod-ui',
+        dependencies = {
+            { 'tpope/vim-dadbod', lazy = true },
+            {
+                'kristijanhusak/vim-dadbod-completion',
+                ft = { 'sql' },
+                lazy = true,
+            },
+        },
+        keys = '<Leader>db',
+        config = function()
+            require('plugin-config.dadbod_config')
+        end,
+    },
+
     -- Runners and terminal
     {
         'stevearc/overseer.nvim',

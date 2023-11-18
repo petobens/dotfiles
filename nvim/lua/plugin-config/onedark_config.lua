@@ -346,6 +346,9 @@ onedarkpro.setup({
         CmpItemMenu = { fg = p.gray },
         CmpItemKind = { fg = p.gray },
 
+        ---- DBUI
+        dbui_new_query = { fg = p.green },
+
         ---- Fugitive
         diffAdded = { fg = p.green },
         diffRemoved = { fg = p.red },
