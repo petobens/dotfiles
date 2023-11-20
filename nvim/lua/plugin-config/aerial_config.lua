@@ -4,6 +4,7 @@ require('aerial').setup({
     backends = {
         ['_'] = { 'treesitter', 'lsp', 'markdown', 'man' },
         tex = { 'lsp' },
+        markdown = { 'markdown' },
     },
     layout = {
         width = 43,
@@ -16,6 +17,7 @@ require('aerial').setup({
     highlight_on_jump = 500,
     icons = {
         Collapsed = u.icons.fold_close,
+        markdown = { Interface = '󰪥' },
     },
     get_highlight = function(_, is_icon, is_collapsed)
         if is_icon and is_collapsed then
