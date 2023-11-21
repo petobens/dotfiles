@@ -44,13 +44,6 @@ u.keymap('n', '<C-A-j>', '<C-W>2+')
 u.keymap('n', '<C-A-k>', '<C-W>2-')
 u.keymap('n', '<C-A-l>', '<C-W>2>')
 u.keymap('n', '<C-c>', '<C-W>c')
-local ok, tmux_plugin = pcall(require, 'tmux')
-if ok then
-    u.keymap('n', '<C-h>', tmux_plugin.move_left)
-    u.keymap('n', '<C-j>', tmux_plugin.move_down)
-    u.keymap('n', '<C-k>', tmux_plugin.move_up)
-    u.keymap('n', '<C-l>', tmux_plugin.move_right)
-end
 u.keymap('n', '<C-x>', '<C-W>xzz')
 u.keymap('n', '<Leader>hv', '<C-W>H<C-W>x') -- make horizantal vertical and viceversa
 u.keymap('n', '<Leader>vh', '<C-W>K')
@@ -81,11 +74,7 @@ u.keymap('n', 'k', 'gk')
 u.keymap('n', 'J', 'mzJ`z') -- Keep the cursor in place while joining lines
 u.keymap('n', 'q', function()
     if vim.api.nvim_win_get_config(0).zindex then
-        if require('neo-zoom').is_neo_zoom_float() then
-            vim.cmd('NeoZoomToggle')
-        else
-            vim.cmd('close')
-        end
+        vim.cmd('close')
     end
 end)
 u.keymap('n', 'Q', 'gwap')

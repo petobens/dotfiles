@@ -1,5 +1,17 @@
 -- luacheck:ignore 631
 
+-- Add some filetypes
+vim.filetype.add({
+    filename = {
+        ['pdbrc'] = 'python',
+        ['poetry.lock'] = 'toml',
+        ['sqlfluff'] = 'toml',
+    },
+    pattern = {
+        ['.*sql'] = 'sql',
+    },
+})
+
 -- Syntax
 vim.opt.iskeyword = vim.opt.iskeyword + { ':' }
 vim.opt.termguicolors = true

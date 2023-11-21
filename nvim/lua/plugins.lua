@@ -286,7 +286,12 @@ local plugins = {
     -- Utilities
     { 'gioele/vim-autoswap' },
     { 'jamessan/vim-gnupg' },
-    { 'nathom/tmux.nvim' },
+    {
+        'nathom/tmux.nvim',
+        config = function()
+            require('plugin-config.tmux_config')
+        end,
+    },
     { 'tpope/vim-repeat' },
     {
         '3rd/image.nvim',

@@ -8,21 +8,9 @@ vim.g.do_filetype_lua = true
 vim.env.DOTVIM = vim.env.HOME .. '/.config/nvim'
 vim.env.CACHE = vim.env.DOTVIM .. '/cache/Arch'
 
--- Add some filetypes
-vim.filetype.add({
-    filename = {
-        ['pdbrc'] = 'python',
-        ['poetry.lock'] = 'toml',
-        ['sqlfluff'] = 'toml',
-    },
-    pattern = {
-        ['.*sql'] = 'sql',
-    },
-})
-
 -- Source lua modules
 require('plugins')
 require('options')
+require('mappings')
 require('autocmds')
 require('ft_autocmds')
-require('mappings')
