@@ -14,13 +14,13 @@ window:
 
 font:
     normal:
-        family: SauceCodePro Nerd Font
+        family: SauceCodePro NF
         style: Regular
     bold:
-        family: SauceCodePro Nerd Font
+        family: SauceCodePro NF
         style: Bold
     italic:
-        family: SauceCodePro Nerd Font
+        family: SauceCodePro NF
         style: Italic
 
     # Point size of the font
