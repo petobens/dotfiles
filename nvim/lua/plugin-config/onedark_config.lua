@@ -195,7 +195,7 @@ onedarkpro.setup({
 
         -- Filetypes
         ---- Bash
-        ['@parameter.bash'] = { fg = p.fg },
+        ['@parameter.bash'] = { fg = p.orange },
         ['@punctuation.special.bash'] = { fg = p.red },
 
         ---- Json
