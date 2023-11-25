@@ -121,8 +121,8 @@ if type "kitty" > /dev/null 2>&1; then
     echo Created .config/kitty/kitty.conf symlink
 fi
 if type "tmux" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/tmux" "$HOME/.tmux"
-    echo Created .tmux folder symlink
+    $ln_cmd -fTs "$dotfiles_dir/config/tmux" "$HOME/.config/tmux"
+    echo Created .config/tmux folder symlink
 fi
 if type "nvim" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/nvim" "$HOME/.config/nvim"

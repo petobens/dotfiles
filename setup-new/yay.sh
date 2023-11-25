@@ -166,6 +166,7 @@ $yay_cmd forgit-git
 $yay_cmd fzf
 $yay_cmd github-cli
 $yay_cmd gnupg
+$yay_cmd go-yq
 $yay_cmd gobject-introspection
 $yay_cmd gopass
 $yay_cmd graphviz

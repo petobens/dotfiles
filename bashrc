@@ -173,14 +173,14 @@ fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
 fi
-if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
+if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.config/tmux/tmux.conf" ]; then
     if [ "$USER" = 'pedro' ]; then
         tmux_session_name='petobens'
     else
         tmux_session_name="$USER"
     fi
     # shellcheck disable=SC2139
-    alias tm="tmux -f $HOME/.tmux/tmux.conf new -A -s $tmux_session_name"
+    alias tm="tmux -f $HOME/.config/tmux/tmux.conf new -A -s $tmux_session_name"
     unset tmux_session_name
 fi
 if type "mpv" > /dev/null 2>&1; then

@@ -5,8 +5,8 @@ nvim/plugin/
 nvim/cache/
 
 # Tmux
-tmux/plugins/
-tmux/resurrect/
+config/tmux/plugins/
+config/tmux/resurrect/
 
 # Arch
 arch/config/onedrive/items*

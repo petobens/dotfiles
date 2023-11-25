@@ -1,0 +1,10 @@
+---
+config:
+    fallback-icon: ''
+    icon-position: 'right'
+    show-name: true
+
+icons:
+    nvim: ''
+    python3: ''
+    python: ''
