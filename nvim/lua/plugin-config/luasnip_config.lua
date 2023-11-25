@@ -52,8 +52,10 @@ local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
 require('luasnip.loaders.from_lua').load({
     paths = { snippets_dir },
 })
--- Fix for  autosnippets expansion in markdown
+-- Fix for autosnippets expansion (map treesitter parser to ft)
 -- https://github.com/L3MON4D3/LuaSnip/issues/823
+luasnip.filetype_extend('bash', { 'sh' })
+luasnip.filetype_extend('latex', { 'tex' })
 luasnip.filetype_extend('markdown_inline', { 'markdown' })
 
 -- Mappings
