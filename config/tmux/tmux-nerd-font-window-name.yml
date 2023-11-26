@@ -5,6 +5,7 @@ config:
     show-name: true
 
 icons:
+    ctop: '󰡨'
     nvim: ''
     python3: ''
     python: ''
