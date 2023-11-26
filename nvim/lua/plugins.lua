@@ -146,6 +146,19 @@ local plugins = {
         end,
     },
 
+    -- Snippets
+    {
+        'L3MON4D3/LuaSnip',
+        dependencies = {
+            'saadparwaiz1/cmp_luasnip',
+            'benfowler/telescope-luasnip.nvim',
+        },
+        event = 'InsertEnter',
+        config = function()
+            require('plugin-config.luasnip_config')
+        end,
+    },
+
     -- Telescope and file/code exploring
     {
         'nvim-telescope/telescope.nvim',
@@ -177,73 +190,6 @@ local plugins = {
         'stevearc/aerial.nvim',
         config = function()
             require('plugin-config.aerial_config')
-        end,
-    },
-
-    -- Snippets
-    {
-        'L3MON4D3/LuaSnip',
-        dependencies = {
-            'saadparwaiz1/cmp_luasnip',
-            'benfowler/telescope-luasnip.nvim',
-        },
-        event = 'InsertEnter',
-        config = function()
-            require('plugin-config.luasnip_config')
-        end,
-    },
-
-    -- Git
-    {
-        'lewis6991/gitsigns.nvim',
-        config = function()
-            require('plugin-config.gitsigns_config')
-        end,
-    },
-    {
-        'tpope/vim-fugitive',
-        dependencies = {
-            'aymericbeaumet/vim-symlink',
-            'shumphrey/fugitive-gitlab.vim',
-            'tommcdo/vim-fubitive',
-            'tpope/vim-rhubarb',
-        },
-        config = function()
-            require('plugin-config.fugitive_config')
-        end,
-    },
-
-    -- Latex
-    {
-        'lervag/vimtex',
-        dependencies = { 'jbyuki/nabla.nvim' },
-        config = function()
-            require('plugin-config.vimtex_config')
-        end,
-    },
-
-    -- Python
-    {
-        'linux-cultist/venv-selector.nvim',
-        config = function()
-            require('plugin-config.venv_selector_config')
-        end,
-    },
-
-    -- SQL
-    {
-        'kristijanhusak/vim-dadbod-ui',
-        dependencies = {
-            { 'tpope/vim-dadbod', lazy = true },
-            {
-                'kristijanhusak/vim-dadbod-completion',
-                ft = { 'sql' },
-                lazy = true,
-            },
-        },
-        keys = '<Leader>db',
-        config = function()
-            require('plugin-config.dadbod_config')
         end,
     },
 
@@ -324,6 +270,58 @@ local plugins = {
             require('plugin-config.neozoom_config')
         end,
         keys = '<Leader>zw',
+    },
+
+    -- Filetype-specific
+    ---- Git
+    {
+        'lewis6991/gitsigns.nvim',
+        config = function()
+            require('plugin-config.gitsigns_config')
+        end,
+    },
+    {
+        'tpope/vim-fugitive',
+        dependencies = {
+            'aymericbeaumet/vim-symlink',
+            'shumphrey/fugitive-gitlab.vim',
+            'tommcdo/vim-fubitive',
+            'tpope/vim-rhubarb',
+        },
+        config = function()
+            require('plugin-config.fugitive_config')
+        end,
+    },
+    ---- Latex
+    {
+        'lervag/vimtex',
+        dependencies = { 'jbyuki/nabla.nvim' },
+        config = function()
+            require('plugin-config.vimtex_config')
+        end,
+    },
+    ---- Python
+    {
+        'linux-cultist/venv-selector.nvim',
+        config = function()
+            require('plugin-config.venv_selector_config')
+        end,
+    },
+    ---- SQL
+    {
+        'kristijanhusak/vim-dadbod-ui',
+        dependencies = {
+            { 'tpope/vim-dadbod', lazy = true },
+            {
+                'kristijanhusak/vim-dadbod-completion',
+                ft = { 'sql' },
+                lazy = true,
+            },
+        },
+        keys = '<Leader>db',
+        config = function()
+            require('plugin-config.dadbod_config')
+        end,
     },
 }
 
