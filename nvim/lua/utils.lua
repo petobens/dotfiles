@@ -1,5 +1,28 @@
 local M = {}
 
+function M.set_ft_option(ft, option, value)
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = ft,
+        group = vim.api.nvim_create_augroup('FtOptions', {}),
+        callback = function()
+            vim.opt_local[option] = value
+        end,
+    })
+end
+
+function M.keymap(mode, lhs, rhs, opts)
+    return vim.keymap.set(
+        mode,
+        lhs,
+        rhs,
+        vim.tbl_extend('keep', opts or {}, {
+            remap = false,
+            nowait = true,
+            silent = true,
+        })
+    )
+end
+
 function M.mk_non_dir(directory)
     local dir = directory or vim.fn.expand('%:p:h')
     if vim.fn.isdirectory(dir) == 0 then
@@ -16,19 +39,6 @@ function M.vim_session_file()
         session_file = session_file .. '_' .. tmux_session
     end
     return session_dir .. session_file .. '.vim'
-end
-
-function M.keymap(mode, lhs, rhs, opts)
-    return vim.keymap.set(
-        mode,
-        lhs,
-        rhs,
-        vim.tbl_extend('keep', opts or {}, {
-            remap = false,
-            nowait = true,
-            silent = true,
-        })
-    )
 end
 
 function M.border(hl_name)

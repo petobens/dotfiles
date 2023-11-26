@@ -1,12 +1,5 @@
 local u = require('utils')
 
---- i3
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = vim.api.nvim_create_augroup('ft_i3', { clear = true }),
-    pattern = { '*i3/config' },
-    command = 'setlocal ft=i3config foldmethod=marker',
-})
-
 --- Bash
 vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
     group = vim.api.nvim_create_augroup('ft_bash', { clear = true }),
