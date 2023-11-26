@@ -109,6 +109,7 @@ alias rsync='rsync -auP'
 alias ti='hyperfine'
 alias ping='prettyping --nolegend --last 30'
 alias wbs='curl v2.wttr.in/Buenos_Aires'
+alias ff='fastfetch'
 
 # Unpack helper
 up() {

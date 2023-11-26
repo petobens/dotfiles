@@ -161,6 +161,7 @@ $yay_cmd docker
 $yay_cmd docker-compose
 $yay_cmd dragon-drop
 $yay_cmd dust
+$yay_cmd fastfetch
 $yay_cmd fd
 $yay_cmd forgit-git
 $yay_cmd fzf
@@ -180,7 +181,6 @@ $yay_cmd libgit2
 $yay_cmd lsb-release
 $yay_cmd lsd
 $yay_cmd luacheck
-$yay_cmd neofetch
 $yay_cmd neomutt
 $yay_cmd oath-toolkit
 $yay_cmd openssh
