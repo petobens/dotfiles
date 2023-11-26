@@ -1,12 +1,5 @@
 local u = require('utils')
 
---- Bash
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = vim.api.nvim_create_augroup('ft_bash', { clear = true }),
-    pattern = { 'bash_profile', 'bashrc', 'fzf_bash.sh' },
-    command = 'setlocal foldmethod=marker filetype=sh',
-})
-
 --- Bibtex
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('ft_bib', { clear = true }),

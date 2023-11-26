@@ -115,6 +115,7 @@ vim.opt.foldtext = 'v:lua.my_custom_foldtext()'
 -- Filetype detection and settings
 vim.filetype.add({
     filename = {
+        ['bash_profile'] = 'sh',
         ['pdbrc'] = 'python',
         ['poetry.lock'] = 'toml',
         ['sqlfluff'] = 'toml',
@@ -123,4 +124,4 @@ vim.filetype.add({
         ['.*sql'] = 'sql',
     },
 })
-u.set_ft_option('i3config', 'foldmethod', 'marker')
+u.set_ft_option({ 'i3config', 'sh' }, 'foldmethod', 'marker')
