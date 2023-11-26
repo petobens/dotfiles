@@ -41,6 +41,7 @@ cmp.setup({
                 buffer = '[Buffer]',
                 copilot = '[Copilot]',
                 emoji = '[Emoji]',
+                git = '[Git]',
                 luasnip = '[Snippet]',
                 nvim_lsp = '[LSP]',
                 path = '[Path]',
