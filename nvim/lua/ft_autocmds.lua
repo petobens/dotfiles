@@ -55,13 +55,6 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal shiftwidth=2 tabstop=2 softtabstop=2',
 })
 
---- JSON
-vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('ft_json', { clear = true }),
-    pattern = { 'json' },
-    command = 'setlocal foldmethod=syntax',
-})
-
 --- QuickFix
 local qf_acg = vim.api.nvim_create_augroup('ft_qf', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
