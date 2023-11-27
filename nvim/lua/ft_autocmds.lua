@@ -1,39 +1,5 @@
 local u = require('utils')
 
---- Configs
-local configs_acg = vim.api.nvim_create_augroup('ft_configs', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = configs_acg,
-    pattern = {
-        'dunstrc',
-        '*.dirs',
-        'zathurarc',
-        '*mpv/*.conf',
-        '*onedrive/config',
-        '*fdignore',
-        '*pylintrc',
-        '*flake8',
-        '*ripgreprc',
-        'matplotlibrc',
-    },
-    command = 'setlocal filetype=config foldmethod=marker',
-})
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = configs_acg,
-    pattern = { 'vimiv.conf' },
-    command = 'setlocal filetype=dosini',
-})
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = configs_acg,
-    pattern = { '*.rasi' },
-    command = 'setlocal filetype=css',
-})
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPost' }, {
-    group = configs_acg,
-    pattern = { '*/.ssh/config', '*/ssh/config' },
-    command = 'setlocal filetype=sshconfig',
-})
-
 --- Crontab
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('ft_crontab', { clear = true }),

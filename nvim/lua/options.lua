@@ -116,12 +116,22 @@ vim.opt.foldtext = 'v:lua.my_custom_foldtext()'
 vim.filetype.add({
     filename = {
         ['bash_profile'] = 'sh',
+        ['config.rasi'] = 'css',
+        ['dunstrc'] = 'cfg',
+        ['flake8'] = 'config',
+        ['matplotlibrc'] = 'confini',
         ['pdbrc'] = 'python',
         ['poetry.lock'] = 'toml',
+        ['pylintrc'] = 'config',
+        ['ripgreprc'] = 'confini',
         ['sqlfluff'] = 'toml',
+        ['vimiv.conf'] = 'dosini',
+        ['zathurarc'] = 'config',
     },
     pattern = {
+        ['.*onedrive/config'] = 'config',
         ['.*sql'] = 'sql',
+        ['.*ssh/config'] = 'sshconfig',
     },
 })
 u.set_ft_option({ 'i3config', 'sh' }, 'foldmethod', 'marker')
