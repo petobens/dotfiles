@@ -16,24 +16,8 @@ conform.formatters.shfmt = { prepend_args = { '-i', '4', '-ci', '-sr' } }
 conform.formatters.taplo =
     { args = { 'format', '--config=' .. vim.env.HOME .. '/taplo.toml', '-' } }
 
--- Custom Formatters
-local custom_formatters = {
-    sqlfluff = {
-        command = 'sqlfluff',
-        args = {
-            'fix',
-            '--disable-progress-bar',
-            '-f',
-            '-n',
-            '-',
-        },
-        stdin = true,
-    },
-}
-
 -- Setup
 conform.setup({
-    formatters = custom_formatters,
     formatters_by_ft = {
         ['_'] = { 'trim_whitespace' },
         json = { 'jq' },
