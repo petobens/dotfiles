@@ -50,7 +50,7 @@ vim.api.nvim_create_autocmd('FileType', {
 u.keymap('n', '<Leader>gd', '<Cmd>Gdiffsplit<CR><Cmd>wincmd x<CR>')
 u.keymap('n', '<Leader>gD', ':Git diff<space>', { silent = false })
 u.keymap('n', '<Leader>gs', '<Cmd>botright Git<CR><Cmd>wincmd J<bar>15 wincmd _<CR>4j')
-u.keymap('n', '<Leader>gc', '<Cmd>w!<CR><Cmd>Git commit<CR>')
+u.keymap('n', '<Leader>gC', '<Cmd>w!<CR><Cmd>Git commit<CR>')
 u.keymap('n', '<Leader>gM', '<Cmd>Git! mergetool<CR>')
 u.keymap('n', '<Leader>gr', ':Git rebase -i<space>', { silent = false })
 u.keymap('n', '<Leader>gR', '<Cmd>GRemove<CR>')
