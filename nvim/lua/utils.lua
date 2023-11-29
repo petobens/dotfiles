@@ -1,12 +1,10 @@
 local M = {}
 
-function M.set_ft_option(ft, option, value)
+function M.set_ft_option(ft, vim_cmd)
     vim.api.nvim_create_autocmd('FileType', {
         pattern = ft,
         group = vim.api.nvim_create_augroup('FtOptions', {}),
-        callback = function()
-            vim.opt_local[option] = value
-        end,
+        command = vim_cmd,
     })
 end
 

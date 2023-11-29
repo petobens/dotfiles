@@ -1,19 +1,5 @@
 local u = require('utils')
 
---- Crontab
-vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('ft_crontab', { clear = true }),
-    pattern = { 'crontab' },
-    command = 'setlocal nobackup nowritebackup',
-})
-
---- HTML & CSS
-vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('ft_html', { clear = true }),
-    pattern = { 'html' },
-    command = 'setlocal shiftwidth=2 tabstop=2 softtabstop=2',
-})
-
 --- QuickFix
 local qf_acg = vim.api.nvim_create_augroup('ft_qf', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
@@ -62,14 +48,6 @@ vim.api.nvim_create_autocmd('FileType', {
     group = r_acg,
     pattern = { 'r' },
     command = 'setlocal foldmethod=syntax',
-})
-
---- Text
-local txt_acg = vim.api.nvim_create_augroup('ft_txt', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-    group = txt_acg,
-    pattern = { 'text' },
-    command = 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell',
 })
 
 --- Vim (also help and man)

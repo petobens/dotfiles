@@ -134,4 +134,7 @@ vim.filetype.add({
         ['.*ssh/config'] = 'sshconfig',
     },
 })
-u.set_ft_option({ 'i3config', 'sh' }, 'foldmethod', 'marker')
+u.set_ft_option({ 'crontab' }, 'setlocal nobackup nowritebackup')
+u.set_ft_option({ 'html' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2')
+u.set_ft_option({ 'i3config', 'sh' }, 'setlocal foldmethod=marker')
+u.set_ft_option({ 'text' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell')
