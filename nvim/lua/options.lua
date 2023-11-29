@@ -1,6 +1,11 @@
 -- luacheck:ignore 631
 local u = require('utils')
 
+-- Helpers
+function _G.my_custom_foldtext()
+    return vim.fn.trim(tostring(vim.fn.getline(vim.v.foldstart)), vim.wo.foldmarker)
+end
+
 -- Syntax
 vim.opt.iskeyword = vim.opt.iskeyword + { ':' }
 vim.opt.termguicolors = true
@@ -15,6 +20,7 @@ vim.opt.diffopt =
 vim.opt.foldcolumn = 'auto'
 vim.opt.foldlevelstart = 0
 vim.opt.foldopen = vim.opt.foldopen + { 'insert', 'jump' }
+vim.opt.foldtext = 'v:lua.my_custom_foldtext()'
 vim.opt.lazyredraw = false
 vim.opt.modeline = false
 vim.opt.shortmess = 'aoOtTIcF'
@@ -105,12 +111,6 @@ vim.opt.wildmode = { 'longest:full', 'full' }
 -- Misc
 vim.opt.spellfile = vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add'
 vim.opt.spelllang = { 'en', 'es' }
-
--- Foldtext
-function _G.my_custom_foldtext()
-    return vim.fn.trim(tostring(vim.fn.getline(vim.v.foldstart)), vim.wo.foldmarker)
-end
-vim.opt.foldtext = 'v:lua.my_custom_foldtext()'
 
 -- Filetype detection and settings
 vim.filetype.add({
