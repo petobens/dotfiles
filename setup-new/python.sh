@@ -115,7 +115,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-for cli in litecli mycli pgcli radian; do
+for cli in litecli mycli pgcli; do
     if [ -d "$pipx_venvs/$cli" ]; then
         styles_dir="$pipx_venvs/$cli/lib/python$python_version/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then
