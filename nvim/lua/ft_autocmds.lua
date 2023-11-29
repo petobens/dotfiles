@@ -2,11 +2,6 @@
 local vim_acg = vim.api.nvim_create_augroup('ft_vim', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
     group = vim_acg,
-    pattern = { 'vim' },
-    command = 'setlocal foldmethod=marker formatoptions-=ro',
-})
-vim.api.nvim_create_autocmd('FileType', {
-    group = vim_acg,
     pattern = { 'help' },
     command = 'setlocal textwidth=78 relativenumber',
 })
