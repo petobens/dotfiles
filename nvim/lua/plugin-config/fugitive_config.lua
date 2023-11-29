@@ -27,6 +27,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = vim.api.nvim_create_augroup('git_commit_insert', { clear = true }),
     pattern = { '*.git/COMMIT_EDITMSG' },
     callback = function()
+        vim.cmd('15 wincmd _')
         vim.cmd('normal! gg0')
         if vim.fn.getline('.') == '' then
             vim.cmd('startinsert')
