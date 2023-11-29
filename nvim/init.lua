@@ -12,4 +12,3 @@ vim.env.CACHE = vim.env.DOTVIM .. '/cache/Arch'
 require('plugins')
 require('options')
 require('mappings')
-require('autocmds')
