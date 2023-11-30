@@ -339,6 +339,20 @@ require('lazy').setup(plugins, {
     git = {
         log = { '--since=2 days ago' },
     },
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                'gzip',
+                'matchit',
+                'matchparen',
+                'netrwPlugin',
+                'tarPlugin',
+                'tohtml',
+                'tutor',
+                'zipPlugin',
+            },
+        },
+    },
 })
 
 -- Mappings
