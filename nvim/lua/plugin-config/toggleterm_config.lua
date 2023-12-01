@@ -29,7 +29,9 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
 })
 vim.api.nvim_create_autocmd('TermOpen', {
     group = term_acg,
-    command = 'setlocal statuscolumn=',
+    callback = function()
+        vim.opt_local.statuscolumn = ''
+    end,
 })
 
 -- Mappings

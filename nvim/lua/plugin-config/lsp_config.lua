@@ -77,12 +77,12 @@ lspconfig.texlab.setup({
 vim.keymap.set('n', '<Leader>li', '<Cmd>LspInfo<CR>')
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-    callback = function(ev)
+    callback = function(e)
         -- Enable completion triggered by <c-x><c-o>
-        vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        vim.bo[e.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
         -- Map only after language server attaches to the current buffer
-        local opts = { buffer = ev.buf }
+        local opts = { buffer = e.buf }
         vim.keymap.set('n', '<Leader>jd', function()
             local split_cmd = 'split'
             if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then

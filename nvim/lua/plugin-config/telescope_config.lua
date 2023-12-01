@@ -566,31 +566,23 @@ local custom_actions = transform_mod({
 _G.TelescopeConfig.custom_actions = custom_actions
 
 -- Autocmds
-local prompt_acg = vim.api.nvim_create_augroup('telescope_prompt', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = prompt_acg,
+    group = vim.api.nvim_create_augroup('telescope_prompt', { clear = true }),
     pattern = { 'TelescopePrompt' },
-    command = 'setlocal nocursorline',
-})
-vim.api.nvim_create_autocmd('FileType', {
-    group = prompt_acg,
-    pattern = { 'TelescopePrompt' },
-    command = 'nnoremap <buffer><silent> H ^lll', -- to account for search symbol
-})
-vim.api.nvim_create_autocmd('FileType', {
-    group = prompt_acg,
-    pattern = { 'TelescopePrompt' },
-    command = 'nnoremap <buffer><silent> L $',
-})
-vim.api.nvim_create_autocmd('FileType', {
-    group = prompt_acg,
-    pattern = { 'TelescopePrompt' },
-    command = 'inoremap <buffer><silent> <C-l> <C-o>l',
+    callback = function(e)
+        vim.opt_local.cursorline = false
+
+        vim.keymap.set('n', 'H', '^lll', { buffer = e.buf })
+        vim.keymap.set('n', 'L', '$', { buffer = e.buf })
+        vim.keymap.set('i', '<C-l>', '<C-o>l', { buffer = e.buf })
+    end,
 })
 vim.api.nvim_create_autocmd('User', {
     group = vim.api.nvim_create_augroup('telescope_preview_ln', { clear = true }),
     pattern = { 'TelescopePreviewerLoaded' },
-    command = 'setlocal number',
+    callback = function()
+        vim.opt_local.number = true
+    end,
 })
 
 -- Setup

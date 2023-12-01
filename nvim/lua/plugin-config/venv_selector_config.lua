@@ -87,22 +87,22 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
 vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('poetry_venv_maps', { clear = true }),
     pattern = { 'python' },
-    callback = function()
+    callback = function(e)
         vim.keymap.set('n', '<Leader>va', function()
             vim.b.poetry_venv = nil
             auto_poetry_venv()
-        end, { buffer = true })
+        end, { buffer = e.buf })
         vim.keymap.set(
             'n',
             '<Leader>vd',
             venv_selector.deactivate_venv,
-            { buffer = true }
+            { buffer = e.buf }
         )
         vim.keymap.set(
             'n',
             '<Leader>tv',
             _G.TelescopeConfig.poetry_venvs,
-            { buffer = true }
+            { buffer = e.buf }
         )
     end,
 })

@@ -63,9 +63,11 @@ end
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('aerial', { clear = true }),
     pattern = { 'aerial' },
-    callback = function()
-        vim.cmd('setlocal number relativenumber')
-        vim.keymap.set('n', '<C-t>', telescope_filter, { buffer = true })
+    callback = function(e)
+        vim.opt_local.number = true
+        vim.opt_local.relativenumber = true
+
+        vim.keymap.set('n', '<C-t>', telescope_filter, { buffer = e.buf })
     end,
 })
 

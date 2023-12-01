@@ -53,8 +53,8 @@ vim.g.vimtex_imaps_enabled = 0
 vim.api.nvim_create_autocmd({ 'User' }, {
     group = vim.api.nvim_create_augroup('vimtex_maps', { clear = true }),
     pattern = { 'VimtexEventInitPost' },
-    callback = function()
-        local vimtex_maps = { buffer = true, remap = true }
+    callback = function(e)
+        local vimtex_maps = { buffer = e.buf, remap = true }
         vim.keymap.set('n', '<Leader>tc', '<plug>(vimtex-toc-open)', vimtex_maps)
         vim.keymap.set('n', '<Leader>ce', '<plug>(vimtex-env-change)', vimtex_maps)
         vim.keymap.set('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
@@ -72,10 +72,10 @@ vim.api.nvim_create_autocmd({ 'User' }, {
             '<Leader>cw',
             '<Cmd>VimtexCountWords!<CR><Cmd>wincmd J<bar>12 wincmd _<CR>'
                 .. '<Cmd>silent! normal! G<CR>',
-            { buffer = true }
+            { buffer = e.buf }
         )
-        vim.keymap.set('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', { buffer = true })
-        vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = true })
+        vim.keymap.set('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', { buffer = e.buf })
+        vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = e.buf })
     end,
 })
 vim.api.nvim_create_autocmd(

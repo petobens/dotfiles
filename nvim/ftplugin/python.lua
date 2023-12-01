@@ -286,10 +286,10 @@ end, { buffer = true })
 vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('qf_bp', { clear = true }),
     pattern = { 'qf' },
-    callback = function()
+    callback = function(e)
         vim.keymap.set('n', '<Leader>rB', function()
             vim.cmd([[cdo g/breakpoint()/d|silent noautocmd update]])
             vim.cmd('cclose')
-        end, { buffer = true })
+        end, { buffer = e.buf })
     end,
 })

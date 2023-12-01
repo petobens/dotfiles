@@ -46,7 +46,9 @@ vim.api.nvim_create_autocmd('FocusLost', {
 ---- Disable readonly warning
 vim.api.nvim_create_autocmd('FileChangedRO', {
     group = vim.api.nvim_create_augroup('no_ro_warn', { clear = true }),
-    command = 'set noreadonly',
+    callback = function()
+        vim.opt_local.readonly = false
+    end,
 })
 ---- Send cwd to tmux splits (see https://github.com/neovim/neovim/issues/21771)
 vim.api.nvim_create_autocmd({ 'DirChanged' }, {
@@ -79,14 +81,18 @@ vim.api.nvim_create_autocmd('VimResized', {
 })
 ---- Only show cursorline in the current window
 local cline_acg = vim.api.nvim_create_augroup('cline', { clear = true })
-vim.api.nvim_create_autocmd(
-    'WinLeave',
-    { group = cline_acg, command = 'setlocal nocursorline' }
-)
-vim.api.nvim_create_autocmd(
-    { 'VimEnter', 'WinEnter', 'BufWinEnter' },
-    { group = cline_acg, command = 'setlocal cursorline' }
-)
+vim.api.nvim_create_autocmd('WinLeave', {
+    group = cline_acg,
+    callback = function()
+        vim.opt_local.cursorline = false
+    end,
+})
+vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
+    group = cline_acg,
+    callback = function()
+        vim.opt_local.cursorline = true
+    end,
+})
 
 -- Backups, sessions, undo and shada
 vim.opt.backup = true

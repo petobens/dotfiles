@@ -130,13 +130,14 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
     vim.api.nvim_create_autocmd('FileType', {
         pattern = 'neotest-' .. ft,
         group = group,
-        callback = function()
+        callback = function(e)
             vim.keymap.set('n', 'q', function()
                 pcall(vim.api.nvim_win_close, 0, true)
                 vim.cmd('wincmd p')
-            end, { buffer = true })
+            end, { buffer = e.buf })
             if ft == 'summary' then
-                vim.cmd('setlocal number relativenumber')
+                vim.opt_local.number = true
+                vim.opt_local.relativenumber = true
             end
         end,
     })

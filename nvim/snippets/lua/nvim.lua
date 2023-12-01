@@ -65,18 +65,24 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'acg', dscr = 'Autocmd group' },
+        { trig = 'auc', dscr = 'Autocmd' },
         fmta(
             [[
                 vim.api.nvim_create_autocmd({'<>'}, {
-                    group = vim.api.nvim_create_augroup('<>', { clear = true }),
-                    <>
+                    group = vim.api.nvim_create_augroup('<>', { clear = true }),<>
+                    callback = function()
+                        <>
+                    end
                 })
             ]],
             {
                 i(1, 'Event'),
                 i(2, 'Acg name'),
-                c(3, { sn(nil, { t("pattern = {'"), i(1, '*'), t("'},") }), t('') }),
+                c(3, {
+                    sn(nil, { t({ '', "    pattern = {'" }), i(1, '*'), t("'},") }),
+                    t(''),
+                }),
+                i(4),
             }
         ),
         { condition = line_begin }

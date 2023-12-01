@@ -75,12 +75,12 @@ vim.keymap.set('n', '<Leader>db', '<Cmd>DBUIToggle<CR>')
 vim.api.nvim_create_autocmd({ 'User' }, {
     group = vim.api.nvim_create_augroup('dbui', { clear = true }),
     pattern = { 'DBUIOpened' },
-    callback = function()
+    callback = function(e)
         vim.opt_local.number = true
         vim.opt_local.relativenumber = true
         vim.opt_local.shiftwidth = 2
 
-        local dbui_maps = { buffer = true, remap = true }
+        local dbui_maps = { buffer = e.buf, remap = true }
         vim.keymap.set('n', '<CR>', '<plug>(DBUI_SelectLine)', dbui_maps)
         vim.keymap.set('n', 'v', '<plug>(DBUI_SelectLineVsplit)', dbui_maps)
         vim.keymap.set('n', 'zo', '<plug>(DBUI_SelectLine)', dbui_maps)
@@ -92,7 +92,7 @@ vim.api.nvim_create_autocmd({ 'User' }, {
 vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('dbui_sql', { clear = true }),
     pattern = { 'sql' },
-    callback = function()
+    callback = function(e)
         require('cmp').setup.buffer({
             sources = {
                 { name = 'vim-dadbod-completion' },
@@ -102,7 +102,7 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
             },
         })
 
-        local dbui_maps = { buffer = true, remap = true }
+        local dbui_maps = { buffer = e.buf, remap = true }
         vim.keymap.set('n', '<Leader>rf', '<plug>(DBUI_ExecuteQuery)', dbui_maps)
         vim.keymap.set('n', '<F7>', '<plug>(DBUI_ExecuteQuery)', dbui_maps)
         vim.keymap.set('n', '<Leader>qs', '<plug>(DBUI_SaveQuery)', dbui_maps)

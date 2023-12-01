@@ -4,10 +4,10 @@ local u = require('utils')
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('git_ft', { clear = true }),
     pattern = { 'git' },
-    callback = function()
+    callback = function(e)
         -- Open git previous commits unfolded since we use Glog for the current file
         vim.opt_local.foldlevel = 1
-        vim.keymap.set('n', 'q', '<Cmd>bdelete<CR>', { buffer = true })
+        vim.keymap.set('n', 'q', '<Cmd>bdelete<CR>', { buffer = e.buf })
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
@@ -18,9 +18,9 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('git_commit_ft', { clear = true }),
     pattern = { 'gitcommit' },
-    callback = function()
+    callback = function(e)
         vim.opt_local.spell = true
-        vim.keymap.set('n', 'Q', 'q', { buffer = true, remap = true })
+        vim.keymap.set('n', 'Q', 'q', { buffer = e.buf, remap = true })
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
@@ -39,11 +39,11 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('ps_fugitive', { clear = true }),
     pattern = { 'fugitive' },
-    callback = function()
-        vim.keymap.set('n', 'q', u.quit_return, { buffer = true })
+    callback = function(e)
+        vim.keymap.set('n', 'q', u.quit_return, { buffer = e.buf })
         vim.keymap.set('n', 'ci', '<Cmd><C-U>Git commit -n<CR>', { buffer = true })
-        vim.keymap.set('n', ']h', ']c', { buffer = true, remap = true })
-        vim.keymap.set('n', '[h', '[c', { buffer = true, remap = true })
+        vim.keymap.set('n', ']h', ']c', { buffer = e.buf, remap = true })
+        vim.keymap.set('n', '[h', '[c', { buffer = e.buf, remap = true })
     end,
 })
 
