@@ -71,7 +71,7 @@ end
 vim.g.dbs = read_dadbod_conns('~/.config/.dadbod_conns.yaml')
 
 -- Mappings and ft settings
-u.keymap('n', '<Leader>db', '<Cmd>DBUIToggle<CR>')
+vim.keymap.set('n', '<Leader>db', '<Cmd>DBUIToggle<CR>')
 vim.api.nvim_create_autocmd({ 'User' }, {
     group = vim.api.nvim_create_augroup('dbui', { clear = true }),
     pattern = { 'DBUIOpened' },
@@ -81,12 +81,12 @@ vim.api.nvim_create_autocmd({ 'User' }, {
         vim.opt_local.shiftwidth = 2
 
         local dbui_maps = { buffer = true, remap = true }
-        u.keymap('n', '<CR>', '<plug>(DBUI_SelectLine)', dbui_maps)
-        u.keymap('n', 'v', '<plug>(DBUI_SelectLineVsplit)', dbui_maps)
-        u.keymap('n', 'zo', '<plug>(DBUI_SelectLine)', dbui_maps)
-        u.keymap('n', 'zc', '<plug>(DBUI_SelectLine)', dbui_maps)
-        u.keymap('n', '<C-r>', '<plug>(DBUI_Redraw)', dbui_maps)
-        u.keymap('n', '<C-j>', '<C-W>j', dbui_maps)
+        vim.keymap.set('n', '<CR>', '<plug>(DBUI_SelectLine)', dbui_maps)
+        vim.keymap.set('n', 'v', '<plug>(DBUI_SelectLineVsplit)', dbui_maps)
+        vim.keymap.set('n', 'zo', '<plug>(DBUI_SelectLine)', dbui_maps)
+        vim.keymap.set('n', 'zc', '<plug>(DBUI_SelectLine)', dbui_maps)
+        vim.keymap.set('n', '<C-r>', '<plug>(DBUI_Redraw)', dbui_maps)
+        vim.keymap.set('n', '<C-j>', '<C-W>j', dbui_maps)
     end,
 })
 vim.api.nvim_create_autocmd({ 'FileType' }, {
@@ -103,12 +103,12 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
         })
 
         local dbui_maps = { buffer = true, remap = true }
-        u.keymap('n', '<Leader>rf', '<plug>(DBUI_ExecuteQuery)', dbui_maps)
-        u.keymap('n', '<F7>', '<plug>(DBUI_ExecuteQuery)', dbui_maps)
-        u.keymap('n', '<Leader>qs', '<plug>(DBUI_SaveQuery)', dbui_maps)
-        u.keymap('n', '<Leader>qr', '<Cmd>DBUIRenameBuffer<CR>', dbui_maps)
-        u.keymap('n', '<Leader>qf', '<Cmd>DBUIFindBuffer<CR>', dbui_maps)
-        u.keymap('n', '<Leader>qc', function()
+        vim.keymap.set('n', '<Leader>rf', '<plug>(DBUI_ExecuteQuery)', dbui_maps)
+        vim.keymap.set('n', '<F7>', '<plug>(DBUI_ExecuteQuery)', dbui_maps)
+        vim.keymap.set('n', '<Leader>qs', '<plug>(DBUI_SaveQuery)', dbui_maps)
+        vim.keymap.set('n', '<Leader>qr', '<Cmd>DBUIRenameBuffer<CR>', dbui_maps)
+        vim.keymap.set('n', '<Leader>qf', '<Cmd>DBUIFindBuffer<CR>', dbui_maps)
+        vim.keymap.set('n', '<Leader>qc', function()
             for _, b in ipairs(vim.api.nvim_list_bufs()) do
                 if vim.fn.fnamemodify(vim.api.nvim_buf_get_name(b), ':e') == 'dbout' then
                     vim.cmd('bwipeout ' .. b)

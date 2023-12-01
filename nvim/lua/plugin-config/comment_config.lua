@@ -1,20 +1,20 @@
-local u = require('utils')
+-- luacheck:ignore 631
 
 require('Comment').setup({
     mappings = false,
 })
 
-u.keymap(
+vim.keymap.set(
     'n',
     '<Leader>cc',
     "v:count == 0 ? '<Plug>(comment_toggle_linewise_current)' : '<Plug>(comment_toggle_linewise_count)'",
     { expr = true, remap = true, replace_keycodes = false }
 )
-u.keymap('x', 'cc', '<Plug>(comment_toggle_linewise_visual)')
-u.keymap(
+vim.keymap.set('x', 'cc', '<Plug>(comment_toggle_linewise_visual)')
+vim.keymap.set(
     'n',
     '<Leader>cu',
     "v:count == 0 ? '<Plug>(comment_toggle_linewise_current)' : '<Plug>(comment_toggle_linewise_count)'",
     { expr = true, remap = true, replace_keycodes = false }
 )
-u.keymap('x', 'cu', '<Plug>(comment_toggle_linewise_visual)')
+vim.keymap.set('x', 'cu', '<Plug>(comment_toggle_linewise_visual)')

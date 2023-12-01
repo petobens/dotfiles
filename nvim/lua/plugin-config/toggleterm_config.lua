@@ -1,5 +1,3 @@
-local u = require('utils')
-
 require('toggleterm').setup({
     size = function(term)
         if term.direction == 'horizontal' then
@@ -35,9 +33,9 @@ vim.api.nvim_create_autocmd('TermOpen', {
 })
 
 -- Mappings
-u.keymap('n', '<Leader>st', ':ToggleTerm direction=horizontal<CR>')
-u.keymap('n', '<Leader>vt', ':ToggleTerm direction=vertical<CR>')
-u.keymap('n', '<Leader>tc', ':TermExec cmd="exit"<CR>')
-u.keymap('n', '<Leader>tw', ':TermExec cmd="clear"<CR>')
-u.keymap('n', '<Leader>rl', ':ToggleTermSendCurrentLine<CR>')
-u.keymap('v', '<Leader>ri', ':ToggleTermSendVisualSelection<CR>')
+vim.keymap.set('n', '<Leader>st', ':ToggleTerm direction=horizontal<CR>')
+vim.keymap.set('n', '<Leader>vt', ':ToggleTerm direction=vertical<CR>')
+vim.keymap.set('n', '<Leader>tc', ':TermExec cmd="exit"<CR>')
+vim.keymap.set('n', '<Leader>tw', ':TermExec cmd="clear"<CR>')
+vim.keymap.set('n', '<Leader>rl', ':ToggleTermSendCurrentLine<CR>')
+vim.keymap.set('v', '<Leader>ri', ':ToggleTermSendVisualSelection<CR>')

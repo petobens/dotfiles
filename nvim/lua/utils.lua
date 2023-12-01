@@ -8,19 +8,6 @@ function M.set_ft_option(ft, vim_cmd)
     })
 end
 
-function M.keymap(mode, lhs, rhs, opts)
-    return vim.keymap.set(
-        mode,
-        lhs,
-        rhs,
-        vim.tbl_extend('keep', opts or {}, {
-            remap = false,
-            nowait = true,
-            silent = true,
-        })
-    )
-end
-
 function M.mk_non_dir(directory)
     local dir = directory or vim.fn.expand('%:p:h')
     if vim.fn.isdirectory(dir) == 0 then

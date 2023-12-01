@@ -65,10 +65,10 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'aerial' },
     callback = function()
         vim.cmd('setlocal number relativenumber')
-        u.keymap('n', '<C-t>', telescope_filter, { buffer = true })
+        vim.keymap.set('n', '<C-t>', telescope_filter, { buffer = true })
     end,
 })
 
 -- Mappings
-u.keymap('n', '<Leader>tb', '<Cmd>AerialToggle<CR>')
-u.keymap('n', '<Leader>an', '<Cmd>AerialNavToggle<CR>')
+vim.keymap.set('n', '<Leader>tb', '<Cmd>AerialToggle<CR>')
+vim.keymap.set('n', '<Leader>an', '<Cmd>AerialNavToggle<CR>')

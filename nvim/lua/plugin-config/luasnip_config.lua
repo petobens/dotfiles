@@ -1,6 +1,5 @@
 local luasnip = require('luasnip')
 local types = require('luasnip.util.types')
-local u = require('utils')
 
 _G.LuaSnipConfig = {}
 
@@ -59,27 +58,27 @@ luasnip.filetype_extend('latex', { 'tex' })
 luasnip.filetype_extend('markdown_inline', { 'markdown' })
 
 -- Mappings
-u.keymap({ 'i', 's' }, '<C-s>', function()
+vim.keymap.set({ 'i', 's' }, '<C-s>', function()
     if luasnip.expandable() then
         luasnip.expand({})
     end
 end)
-u.keymap({ 'i', 's' }, '<C-j>', function()
+vim.keymap.set({ 'i', 's' }, '<C-j>', function()
     if luasnip.jumpable(1) then
         luasnip.jump(1)
     end
 end)
-u.keymap({ 'i', 's' }, '<C-k>', function()
+vim.keymap.set({ 'i', 's' }, '<C-k>', function()
     if luasnip.jumpable(-1) then
         luasnip.jump(-1)
     end
 end)
-u.keymap({ 'i', 's' }, '<C-x>', function()
+vim.keymap.set({ 'i', 's' }, '<C-x>', function()
     if luasnip.choice_active() then
         luasnip.change_choice(1)
     end
 end)
-u.keymap('n', '<Leader>es', function()
+vim.keymap.set('n', '<Leader>es', function()
     if vim.bo.filetype == 'tex' or vim.bo.filetype == 'lua' then
         vim.cmd(':Telescope find_files cwd=' .. snippets_dir .. '/' .. vim.bo.filetype)
         return

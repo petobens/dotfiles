@@ -1,5 +1,4 @@
 local overseer = require('overseer')
-local u = require('utils')
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -40,16 +39,16 @@ local function overseer_last_task(attach)
 end
 
 -- Mappings
-u.keymap('n', '<Leader>os', '<Cmd>OverseerToggle bottom<CR>')
-u.keymap('n', '<Leader>ot', overseer_last_task)
-u.keymap('n', '<Leader>oa', function()
+vim.keymap.set('n', '<Leader>os', '<Cmd>OverseerToggle bottom<CR>')
+vim.keymap.set('n', '<Leader>ot', overseer_last_task)
+vim.keymap.set('n', '<Leader>oa', function()
     overseer_last_task(true)
 end)
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'OverseerList',
     group = vim.api.nvim_create_augroup('OverseerConfig', {}),
     callback = function()
-        u.keymap('n', 'q', function()
+        vim.keymap.set('n', 'q', function()
             pcall(vim.api.nvim_win_close, 0, true)
             vim.cmd('wincmd p')
         end, { buffer = true })

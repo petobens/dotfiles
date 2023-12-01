@@ -1,5 +1,4 @@
 local overseer = require('overseer')
-local u = require('utils')
 local utils = require('telescope.utils')
 
 -- Options
@@ -57,7 +56,7 @@ local run_tmux_pane = function()
 end
 
 -- Mappings
-u.keymap({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
-u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
-u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
-u.keymap('n', '<Leader>ri', run_toggleterm, { buffer = true })
+vim.keymap.set({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
+vim.keymap.set({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
+vim.keymap.set('n', '<Leader>rf', run_toggleterm, { buffer = true })
+vim.keymap.set('n', '<Leader>ri', run_toggleterm, { buffer = true })

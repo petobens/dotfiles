@@ -1,5 +1,3 @@
-local u = require('utils')
-
 require('neo-zoom').setup({
     winopts = {
         offset = {
@@ -10,4 +8,4 @@ require('neo-zoom').setup({
     },
 })
 
-u.keymap('n', '<Leader>zw', ':NeoZoomToggle<CR>')
+vim.keymap.set('n', '<Leader>zw', ':NeoZoomToggle<CR>')

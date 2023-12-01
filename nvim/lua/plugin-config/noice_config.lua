@@ -1,5 +1,3 @@
-local u = require('utils')
-
 require('noice').setup({
     presets = {
         lsp_doc_border = true,
@@ -22,7 +20,7 @@ require('noice').setup({
 })
 
 -- Mappings (mostly for scrolling signatures)
-u.keymap({ 'n', 'i', 's' }, '<A-j>', function()
+vim.keymap.set({ 'n', 'i', 's' }, '<A-j>', function()
     if not require('noice.lsp').scroll(4) then
         return '<A-j>'
     else
@@ -30,7 +28,7 @@ u.keymap({ 'n', 'i', 's' }, '<A-j>', function()
     end
 end)
 
-u.keymap({ 'n', 'i', 's' }, '<A-k>', function()
+vim.keymap.set({ 'n', 'i', 's' }, '<A-k>', function()
     if not require('noice.lsp').scroll(-4) then
         return '<A-k>'
     else

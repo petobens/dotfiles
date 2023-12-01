@@ -1,5 +1,4 @@
 local conform = require('conform')
-local u = require('utils')
 
 -- Global options
 vim.o.formatexpr = [[v:lua.require('conform').formatexpr()]]
@@ -49,6 +48,6 @@ conform.setup({
 })
 
 -- Mappings
-u.keymap({ 'n', 'v' }, '<Leader>fc', function()
+vim.keymap.set({ 'n', 'v' }, '<Leader>fc', function()
     conform.format({ async = true, lsp_fallback = false })
 end)

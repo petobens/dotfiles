@@ -74,7 +74,7 @@ lspconfig.texlab.setup({
 })
 
 -- Mappings
-u.keymap('n', '<Leader>li', '<Cmd>LspInfo<CR>')
+vim.keymap.set('n', '<Leader>li', '<Cmd>LspInfo<CR>')
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', {}),
     callback = function(ev)
@@ -83,7 +83,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
         -- Map only after language server attaches to the current buffer
         local opts = { buffer = ev.buf }
-        u.keymap('n', '<Leader>jd', function()
+        vim.keymap.set('n', '<Leader>jd', function()
             local split_cmd = 'split'
             if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
                 split_cmd = 'vsplit'
@@ -91,14 +91,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
             vim.cmd(split_cmd)
             vim.lsp.buf.definition()
         end, opts)
-        u.keymap('n', '<Leader>jD', vim.lsp.buf.declaration, opts)
-        u.keymap('n', '<Leader>ap', vim.lsp.buf.references, opts)
-        u.keymap('n', '<Leader>rn', vim.lsp.buf.rename, opts)
-        u.keymap('n', 'K', vim.lsp.buf.hover, opts)
-        u.keymap('n', '<Leader>fs', vim.lsp.buf.signature_help, opts)
-        u.keymap('n', '<Leader>ih', function()
+        vim.keymap.set('n', '<Leader>jD', vim.lsp.buf.declaration, opts)
+        vim.keymap.set('n', '<Leader>ap', vim.lsp.buf.references, opts)
+        vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, opts)
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+        vim.keymap.set('n', '<Leader>fs', vim.lsp.buf.signature_help, opts)
+        vim.keymap.set('n', '<Leader>ih', function()
             vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
         end, opts)
-        u.keymap('n', '<Leader>ca', vim.lsp.buf.code_action, opts)
+        vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action, opts)
     end,
 })

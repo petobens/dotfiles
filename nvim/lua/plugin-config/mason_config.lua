@@ -1,5 +1,3 @@
-local u = require('utils')
-
 require('mason').setup({
     ui = { border = 'rounded' },
 })
@@ -17,4 +15,4 @@ require('mason-tool-installer').setup({
     },
 })
 
-u.keymap('n', '<Leader>ms', '<Cmd>Mason<CR>')
+vim.keymap.set('n', '<Leader>ms', '<Cmd>Mason<CR>')

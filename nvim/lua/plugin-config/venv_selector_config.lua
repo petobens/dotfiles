@@ -1,4 +1,3 @@
-local u = require('utils')
 local venv = require('venv-selector.venv')
 local venv_selector = require('venv-selector')
 
@@ -89,11 +88,21 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('poetry_venv_maps', { clear = true }),
     pattern = { 'python' },
     callback = function()
-        u.keymap('n', '<Leader>va', function()
+        vim.keymap.set('n', '<Leader>va', function()
             vim.b.poetry_venv = nil
             auto_poetry_venv()
         end, { buffer = true })
-        u.keymap('n', '<Leader>vd', venv_selector.deactivate_venv, { buffer = true })
-        u.keymap('n', '<Leader>tv', _G.TelescopeConfig.poetry_venvs, { buffer = true })
+        vim.keymap.set(
+            'n',
+            '<Leader>vd',
+            venv_selector.deactivate_venv,
+            { buffer = true }
+        )
+        vim.keymap.set(
+            'n',
+            '<Leader>tv',
+            _G.TelescopeConfig.poetry_venvs,
+            { buffer = true }
+        )
     end,
 })

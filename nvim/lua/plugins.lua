@@ -356,7 +356,6 @@ require('lazy').setup(plugins, {
 })
 
 -- Mappings
-local u = require('utils')
-u.keymap('n', '<Leader>lz', '<Cmd>Lazy<CR>')
-u.keymap('n', '<Leader>bu', '<Cmd>Lazy sync<CR>')
-u.keymap('n', '<Leader>ul', '<Cmd>Lazy log<CR>')
+vim.keymap.set('n', '<Leader>lz', '<Cmd>Lazy<CR>')
+vim.keymap.set('n', '<Leader>bu', '<Cmd>Lazy sync<CR>')
+vim.keymap.set('n', '<Leader>ul', '<Cmd>Lazy log<CR>')

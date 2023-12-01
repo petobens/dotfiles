@@ -1,5 +1,3 @@
-local u = require('utils')
-
 -- Options
 vim.opt_local.relativenumber = true
 
@@ -8,5 +6,5 @@ vim.cmd('wincmd J')
 vim.cmd('20 wincmd _')
 
 -- Mappings
-u.keymap('n', 'q', '<Cmd>bdelete<CR>', { buffer = true })
-u.keymap('n', '<Leader>tc', 'gO', { buffer = true, remap = true })
+vim.keymap.set('n', 'q', '<Cmd>bdelete<CR>', { buffer = true })
+vim.keymap.set('n', '<Leader>tc', 'gO', { buffer = true, remap = true })

@@ -1,5 +1,3 @@
-local u = require('utils')
-
 -- Vim TeX global options
 vim.g.tex_flavor = 'latex' -- treat latex files .tex files rather than plaintex
 vim.g.tex_conceal = nil
@@ -57,22 +55,27 @@ vim.api.nvim_create_autocmd({ 'User' }, {
     pattern = { 'VimtexEventInitPost' },
     callback = function()
         local vimtex_maps = { buffer = true, remap = true }
-        u.keymap('n', '<Leader>tc', '<plug>(vimtex-toc-open)', vimtex_maps)
-        u.keymap('n', '<Leader>ce', '<plug>(vimtex-env-change)', vimtex_maps)
-        u.keymap('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
-        u.keymap('n', '<Leader>td', '<plug>(vimtex-delim-toggle-modifier)', vimtex_maps)
-        u.keymap('i', '<A-d>', '<plug>(vimtex-delim-close)', vimtex_maps)
-        u.keymap('n', 'vim', 'vi$', vimtex_maps)
-        u.keymap('n', 'vam', 'va$', vimtex_maps)
-        u.keymap(
+        vim.keymap.set('n', '<Leader>tc', '<plug>(vimtex-toc-open)', vimtex_maps)
+        vim.keymap.set('n', '<Leader>ce', '<plug>(vimtex-env-change)', vimtex_maps)
+        vim.keymap.set('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
+        vim.keymap.set(
+            'n',
+            '<Leader>td',
+            '<plug>(vimtex-delim-toggle-modifier)',
+            vimtex_maps
+        )
+        vim.keymap.set('i', '<A-d>', '<plug>(vimtex-delim-close)', vimtex_maps)
+        vim.keymap.set('n', 'vim', 'vi$', vimtex_maps)
+        vim.keymap.set('n', 'vam', 'va$', vimtex_maps)
+        vim.keymap.set(
             'n',
             '<Leader>cw',
             '<Cmd>VimtexCountWords!<CR><Cmd>wincmd J<bar>12 wincmd _<CR>'
                 .. '<Cmd>silent! normal! G<CR>',
             { buffer = true }
         )
-        u.keymap('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', { buffer = true })
-        u.keymap('n', '<Leader>vm', require('nabla').popup, { buffer = true })
+        vim.keymap.set('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', { buffer = true })
+        vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = true })
     end,
 })
 vim.api.nvim_create_autocmd(

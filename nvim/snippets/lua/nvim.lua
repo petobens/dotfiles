@@ -115,7 +115,7 @@ return {
         { trig = 'km', dscr = 'Keymap' },
         fmta(
             [[
-                u.keymap('<>', '<>', <><>)
+                vim.keymap.set('<>', '<>', <><>)
             ]],
             {
                 i(1, 'n'),

@@ -1,6 +1,5 @@
 local hooks = require('ibl.hooks')
 local ibl = require('ibl')
-local u = require('utils')
 
 ibl.setup({
     enabled = false,
@@ -9,4 +8,4 @@ ibl.setup({
 })
 hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
 
-u.keymap('n', '<Leader>I', '<Cmd>IBLToggle<CR>')
+vim.keymap.set('n', '<Leader>I', '<Cmd>IBLToggle<CR>')

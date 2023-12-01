@@ -70,18 +70,34 @@ require('nvim-treesitter.configs').setup({
     matchup = { enable = true },
 })
 -- Mappings (basically center when moving)
-u.keymap({ 'n', 'v' }, ']c', '<Cmd>TSTextobjectGotoNextStart @class.outer<CR>zz')
-u.keymap({ 'n', 'v' }, ']f', '<Cmd>TSTextobjectGotoNextStart @function.outer<CR>zz')
-u.keymap({ 'n', 'v' }, ']p', '<Cmd>TSTextobjectGotoNextStart @parameter.inner<CR>zz')
-u.keymap({ 'n', 'v' }, '[c', '<Cmd>TSTextobjectGotoPreviousStart @class.outer<CR>zz')
-u.keymap({ 'n', 'v' }, '[f', '<Cmd>TSTextobjectGotoPreviousStart @function.outer<CR>zz')
-u.keymap({ 'n', 'v' }, '[p', '<Cmd>TSTextobjectGotoPreviousStart @parameter.inner<CR>zz')
-u.keymap('n', '<Leader>it', function()
+vim.keymap.set({ 'n', 'v' }, ']c', '<Cmd>TSTextobjectGotoNextStart @class.outer<CR>zz')
+vim.keymap.set({ 'n', 'v' }, ']f', '<Cmd>TSTextobjectGotoNextStart @function.outer<CR>zz')
+vim.keymap.set(
+    { 'n', 'v' },
+    ']p',
+    '<Cmd>TSTextobjectGotoNextStart @parameter.inner<CR>zz'
+)
+vim.keymap.set(
+    { 'n', 'v' },
+    '[c',
+    '<Cmd>TSTextobjectGotoPreviousStart @class.outer<CR>zz'
+)
+vim.keymap.set(
+    { 'n', 'v' },
+    '[f',
+    '<Cmd>TSTextobjectGotoPreviousStart @function.outer<CR>zz'
+)
+vim.keymap.set(
+    { 'n', 'v' },
+    '[p',
+    '<Cmd>TSTextobjectGotoPreviousStart @parameter.inner<CR>zz'
+)
+vim.keymap.set('n', '<Leader>it', function()
     vim.treesitter.inspect_tree({
         command = 'vnew | wincmd H | vertical resize 40',
         title = function()
             return 'InspectTree'
         end,
     })
-    u.keymap('n', 'q', u.quit_return)
+    vim.keymap.set('n', 'q', u.quit_return)
 end)

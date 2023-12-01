@@ -1,5 +1,3 @@
-local u = require('utils')
-
 -- Options
 vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -101,19 +99,19 @@ end
 
 -- Mappings
 ---- Compiling
-u.keymap('n', '<F7>', function()
+vim.keymap.set('n', '<F7>', function()
     convert_pandoc('pdf')
 end, { buffer = true })
-u.keymap('n', '<F9>', function()
+vim.keymap.set('n', '<F9>', function()
     convert_pandoc('html')
 end, { buffer = true })
-u.keymap('n', '<Leader>vp', function()
+vim.keymap.set('n', '<Leader>vp', function()
     vim.fn.jobstart('zathura --fork ' .. vim.fn.expand('%:p:r') .. '.pdf')
 end, { buffer = true })
 ---- Lists
-u.keymap('i', '<CR>', continue_list, { expr = true, buffer = true })
-u.keymap('i', '<Tab>', indent_list, { expr = true, buffer = true })
-u.keymap('i', '<S-Tab>', function()
+vim.keymap.set('i', '<CR>', continue_list, { expr = true, buffer = true })
+vim.keymap.set('i', '<Tab>', indent_list, { expr = true, buffer = true })
+vim.keymap.set('i', '<S-Tab>', function()
     return indent_list({ dedent = true })
 end, { expr = true, buffer = true })
-u.keymap('n', '<Leader>ct', toggle_checklist, { buffer = true })
+vim.keymap.set('n', '<Leader>ct', toggle_checklist, { buffer = true })

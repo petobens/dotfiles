@@ -1,5 +1,4 @@
 local gitsigns = require('gitsigns')
-local u = require('utils')
 
 gitsigns.setup({
     signcolumn = false, -- disable by default
@@ -12,8 +11,8 @@ gitsigns.setup({
 })
 
 -- Mappings
-u.keymap('n', '<Leader>gg', gitsigns.toggle_signs)
-u.keymap('n', ']h', function()
+vim.keymap.set('n', '<Leader>gg', gitsigns.toggle_signs)
+vim.keymap.set('n', ']h', function()
     if vim.wo.diff then
         return ']c'
     end
@@ -23,7 +22,7 @@ u.keymap('n', ']h', function()
     return '<Ignore>'
 end, { expr = true })
 
-u.keymap('n', '[h', function()
+vim.keymap.set('n', '[h', function()
     if vim.wo.diff then
         return '[c'
     end
@@ -32,8 +31,8 @@ u.keymap('n', '[h', function()
     end)
     return '<Ignore>'
 end, { expr = true })
-u.keymap('n', '<Leader>hp', gitsigns.preview_hunk)
-u.keymap('n', '<Leader>gm', function()
+vim.keymap.set('n', '<Leader>hp', gitsigns.preview_hunk)
+vim.keymap.set('n', '<Leader>gm', function()
     gitsigns.blame_line({ full = true })
 end)
-u.keymap('n', '<Leader>ib', gitsigns.toggle_current_line_blame)
+vim.keymap.set('n', '<Leader>ib', gitsigns.toggle_current_line_blame)

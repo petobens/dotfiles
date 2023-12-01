@@ -1,5 +1,4 @@
 local overseer = require('overseer')
-local u = require('utils')
 local utils = require('telescope.utils')
 
 -- Options
@@ -65,14 +64,14 @@ vim.api.nvim_create_user_command('RunVisualLua', function()
 end, { range = true })
 
 -- Mappings
-u.keymap({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
-u.keymap({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
-u.keymap('n', '<Leader>rf', run_toggleterm, { buffer = true })
-u.keymap('n', '<Leader>rl', [[:execute "lua " getline('.')<CR>]], { buffer = true })
-u.keymap(
+vim.keymap.set({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
+vim.keymap.set({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
+vim.keymap.set('n', '<Leader>rf', run_toggleterm, { buffer = true })
+vim.keymap.set('n', '<Leader>rl', [[:execute "lua " getline('.')<CR>]], { buffer = true })
+vim.keymap.set(
     'n',
     '<Leader>ri',
     '<Cmd>update<CR>:luafile %<CR>',
     { silent = false, buffer = true }
 )
-u.keymap('v', '<Leader>ri', ':RunVisualLua<CR>', { buffer = true })
+vim.keymap.set('v', '<Leader>ri', ':RunVisualLua<CR>', { buffer = true })

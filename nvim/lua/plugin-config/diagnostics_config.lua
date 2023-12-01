@@ -107,8 +107,8 @@ vim.diagnostic.config({
 })
 
 -- Mappings
-u.keymap('n', '<Leader>fd', vim.diagnostic.open_float)
-u.keymap('n', '<Leader>ld', function()
+vim.keymap.set('n', '<Leader>fd', vim.diagnostic.open_float)
+vim.keymap.set('n', '<Leader>ld', function()
     local win_id = vim.fn.win_getid()
     vim.diagnostic.setloclist({
         title = string.format(
@@ -118,10 +118,10 @@ u.keymap('n', '<Leader>ld', function()
     })
     vim.fn.win_gotoid(win_id)
 end)
-u.keymap('n', '<Leader>dt', toggle_buffer_diagnostics)
-u.keymap('n', '[d', function()
+vim.keymap.set('n', '<Leader>dt', toggle_buffer_diagnostics)
+vim.keymap.set('n', '[d', function()
     vim.diagnostic.goto_prev({ float = false })
 end)
-u.keymap('n', ']d', function()
+vim.keymap.set('n', ']d', function()
     vim.diagnostic.goto_next({ float = false })
 end)

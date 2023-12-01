@@ -1,5 +1,3 @@
-local u = require('utils')
-
 require('colorizer').setup({
     filetypes = {}, -- disabled by default (toggle it with mapping to enable it)
     user_default_options = {
@@ -9,4 +7,4 @@ require('colorizer').setup({
     },
 })
 
-u.keymap('n', '<Leader>cz', '<Cmd>ColorizerToggle<CR>')
+vim.keymap.set('n', '<Leader>cz', '<Cmd>ColorizerToggle<CR>')

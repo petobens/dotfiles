@@ -390,7 +390,7 @@ require('lualine').setup({
 -- Buffertab mappings
 for i = -1, 9 do
     local key = i == -1 and '$' or i
-    u.keymap('n', '<Leader>' .. key, function()
+    vim.keymap.set('n', '<Leader>' .. key, function()
         _G.LualineBuffertab.select_buf(i)
     end)
 end

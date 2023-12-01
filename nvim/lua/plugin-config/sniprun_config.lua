@@ -1,7 +1,5 @@
-local u = require('utils')
-
 require('sniprun').setup({})
 
-u.keymap({ 'n', 'v' }, '<Leader>br', '<Plug>SnipRun')
-u.keymap('n', '<Leader>bc', '<Plug>SnipClose')
-u.keymap('n', '<Leader>bw', '<Plug>SnipReset')
+vim.keymap.set({ 'n', 'v' }, '<Leader>br', '<Plug>SnipRun')
+vim.keymap.set('n', '<Leader>bc', '<Plug>SnipClose')
+vim.keymap.set('n', '<Leader>bw', '<Plug>SnipReset')

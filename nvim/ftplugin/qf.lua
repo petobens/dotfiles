@@ -1,5 +1,3 @@
-local u = require('utils')
-
 -- Options
 vim.opt_local.colorcolumn = ''
 vim.opt_local.textwidth = 0
@@ -12,12 +10,22 @@ vim.cmd(math.max(1, math.min(vim.fn.line('$'), 15)) .. 'wincmd _')
 
 -- Mappings
 local map_opts = { buffer = true }
-u.keymap('n', 'q', '<Cmd>bdelete<CR>', map_opts)
-u.keymap('n', 'Q', '<Cmd>bdelete<CR>', map_opts)
-u.keymap('n', '<C-s>', '<C-w><Enter>', map_opts)
-u.keymap('n', '<C-v>', '<C-w><Enter><C-w>L', map_opts)
-u.keymap('n', '<C-q>', '<Cmd>cclose<bar>wincmd p<bar>Telescope quickfix<CR>', map_opts)
-u.keymap('n', '<C-l>', '<Cmd>lclose<bar>wincmd p<bar>Telescope loclist<CR>', map_opts)
+vim.keymap.set('n', 'q', '<Cmd>bdelete<CR>', map_opts)
+vim.keymap.set('n', 'Q', '<Cmd>bdelete<CR>', map_opts)
+vim.keymap.set('n', '<C-s>', '<C-w><Enter>', map_opts)
+vim.keymap.set('n', '<C-v>', '<C-w><Enter><C-w>L', map_opts)
+vim.keymap.set(
+    'n',
+    '<C-q>',
+    '<Cmd>cclose<bar>wincmd p<bar>Telescope quickfix<CR>',
+    map_opts
+)
+vim.keymap.set(
+    'n',
+    '<C-l>',
+    '<Cmd>lclose<bar>wincmd p<bar>Telescope loclist<CR>',
+    map_opts
+)
 
 -- Autocmds
 vim.api.nvim_create_autocmd({ 'QuitPre', 'BufDelete' }, {
