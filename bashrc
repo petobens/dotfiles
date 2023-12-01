@@ -310,8 +310,8 @@ fi
 # Package manager
 if type "yay" > /dev/null 2>&1; then
     # Note yay will prompt twice: https://github.com/Jguer/yay/issues/170
-    alias yay='yay --nodiffmenu --answerclean N --removemake'
-    alias yunv='yay -Syu --mflags --skipinteg --answerclean N --nodiffmenu --combinedupgrade'
+    alias yay='yay --diffmenu=false --answerclean N --removemake'
+    alias yunv='yay -Syu --mflags --skipinteg --answerclean N --diffmenu=false --combinedupgrade'
     # Update pacman mirrorlist
     if type "reflector" > /dev/null 2>&1; then
         alias upm='sudo reflector --verbose --latest 25 -p http -p https --sort rate --save /etc/pacman.d/mirrorlist'
@@ -376,7 +376,7 @@ sys_update_all() {
     else
         if type "yay" > /dev/null 2>&1; then
             echo -e "\033[1;34m-> YaY...\033[0m"
-            yay -Syu --nodiffmenu --answerclean N --removemake --devel \
+            yay -Syu --diffmenu=false --answerclean N --removemake --devel \
                 --timeupdate --combinedupgrade
             yay -Yc
         fi

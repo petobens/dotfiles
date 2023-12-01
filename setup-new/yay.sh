@@ -37,11 +37,11 @@ fi
 
 # Use latest and update any already installed package
 echo "Updating packages..."
-yay -Syu --nodiffmenu --answerclean N --devel --timeupdate --combinedupgrade \
+yay -Syu --diffmenu=false --answerclean N --devel --timeupdate --combinedupgrade \
     --removemake
 yay -c
 
-yay_cmd='yay -S --nodiffmenu --answerclean N --needed --removemake --noconfirm --answerdiff=None'
+yay_cmd='yay -S --diffmenu=false --answerclean N --needed --removemake --noconfirm --answerdiff=None'
 
 # Fonts
 $yay_cmd adobe-source-code-pro-fonts
@@ -52,7 +52,7 @@ $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
 $yay_cmd ttf-nerd-fonts-symbols
 $yay_cmd ttf-ms-fonts
-yay -S --mflags --skipinteg --answerclean N --nodiffmenu freetype2-ultimate5 # manually resolve conflicts with freetype2
+yay -S --mflags --skipinteg --answerclean N --diffmenu=false freetype2-ultimate5 # manually resolve conflicts with freetype2
 
 # Bash related
 $yay_cmd bash-completion
@@ -92,7 +92,7 @@ $yay_cmd sof-firmware
 
 # Arch specific and window manager
 $yay_cmd acpi_call
-yay -S --mflags --skipinteg --answerclean N --nodiffmenu acpilight # manually resolve conflicts with xorg-xbacklight
+yay -S --mflags --skipinteg --answerclean N --diffmenu=false acpilight # manually resolve conflicts with xorg-xbacklight
 $yay_cmd acpilight
 $yay_cmd alsa-tools
 $yay_cmd bluez
