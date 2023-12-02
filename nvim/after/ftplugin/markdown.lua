@@ -1,3 +1,4 @@
+-- Options
 vim.opt_local.foldlevel = 2
 vim.opt_local.foldlevelstart = 1
 vim.opt_local.shiftwidth = 2
