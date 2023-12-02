@@ -2,10 +2,10 @@ local node_api = require('nvim-tree.api').node
 local tree_api = require('nvim-tree.api').tree
 local marks_api = require('nvim-tree.api').marks
 local fs_api = require('nvim-tree.api').fs
+local Path = require('plenary.path')
 local u = require('utils')
 
-local Path = require('plenary.path')
-
+-- Helpers
 local function cd_find_file()
     local find_file_opts = {
         buf = vim.api.nvim_get_current_buf(),
@@ -157,6 +157,7 @@ local sort_by = function()
     return SORT_METHODS[sort_current]
 end
 
+-- Buffer mappings
 local function on_attach(bufnr)
     local map_opts = { buffer = bufnr }
     -- Tree
@@ -294,4 +295,5 @@ require('nvim-tree').setup({
     },
 })
 
+-- Mappings
 vim.keymap.set('n', '<Leader>ff', cd_find_file)
