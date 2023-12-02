@@ -77,10 +77,9 @@ neotest.setup({
     },
 })
 
--- Autocmds
-local group = vim.api.nvim_create_augroup('NeotestConfig', {})
+-- Autocmds options
 vim.api.nvim_create_autocmd('FileType', {
-    group = group,
+    group = vim.api.nvim_create_augroup('NeotestConfig', {}),
     pattern = 'neotest-output-panel',
     callback = function()
         vim.cmd('resize 15 | set winfixheight | normal! G')
@@ -129,7 +128,7 @@ end)
 for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
     vim.api.nvim_create_autocmd('FileType', {
         pattern = 'neotest-' .. ft,
-        group = group,
+        group = vim.api.nvim_create_augroup('NeotestFtAu', {}),
         callback = function(e)
             vim.keymap.set('n', 'q', function()
                 pcall(vim.api.nvim_win_close, 0, true)
