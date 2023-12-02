@@ -4,19 +4,18 @@ local action_state = require('telescope.actions.state')
 local actions = require('telescope.actions')
 local builtin = require('telescope.builtin')
 local conf = require('telescope.config').values
-local Path = require('plenary.path')
 local finders = require('telescope.finders')
 local from_entry = require('telescope.from_entry')
 local layout_strategies = require('telescope.pickers.layout_strategies')
+local node_api = require('nvim-tree.api').node
+local Path = require('plenary.path')
 local pickers = require('telescope.pickers')
 local previewers = require('telescope.previewers')
 local sorters = require('telescope.sorters')
 local telescope = require('telescope')
+local tree_api = require('nvim-tree.api').tree
 local u = require('utils')
 local utils = require('telescope.utils')
-
-local tree_api = require('nvim-tree.api').tree
-local node_api = require('nvim-tree.api').node
 
 _G.TelescopeConfig = {}
 
