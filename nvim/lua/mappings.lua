@@ -229,7 +229,7 @@ vim.keymap.set({ 'n', 'v' }, '<Leader>ol', function()
         )
     end
     url = vim.fn.escape(url, '#!?&;|%')
-    vim.cmd('silent! !xdg-open ' .. url)
+    vim.ui.open(url)
     vim.cmd('redraw!')
 end)
 vim.keymap.set('n', '<Leader>fm', function()
