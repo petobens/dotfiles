@@ -88,21 +88,19 @@ end
 -- Viewing
 local function view_pdf()
     local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
-    vim.fn.jobstart('zathura --fork ' .. pdf_file)
+    vim.system({ 'zathura', '--fork', pdf_file })
 end
 
 local function forward_search()
     local tex_file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
     local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
-    local forward_args = ' --synctex-forward '
-        .. vim.fn.line('.')
-        .. ':'
-        .. vim.fn.col('.')
-        .. ':'
-        .. tex_file
-        .. ' '
-        .. pdf_file
-    vim.fn.jobstart('zathura ' .. forward_args)
+    local synctex_cmd = {
+        'zathura',
+        '--synctex-forward',
+        vim.fn.line('.') .. ':' .. vim.fn.col('.') .. ':' .. tex_file,
+        pdf_file,
+    }
+    vim.system(synctex_cmd)
 end
 
 -- File Editing
@@ -165,7 +163,7 @@ local function delete_aux_files()
         function(input)
             if input == 'y' then
                 for _, f in pairs(rm_files) do
-                    vim.fn.jobstart('trash-put ' .. f)
+                    vim.fn.system({ 'trash-put', f })
                 end
             end
         end

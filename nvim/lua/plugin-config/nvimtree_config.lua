@@ -94,7 +94,8 @@ end
 
 local function execute(cmd)
     local node = tree_api.get_node_under_cursor()
-    vim.fn.jobstart(cmd .. ' ' .. node.absolute_path)
+    table.insert(cmd, node.absolute_path)
+    vim.system(cmd)
 end
 
 local function trash()
@@ -220,7 +221,7 @@ local function on_attach(bufnr)
     vim.keymap.set('n', '<A-v>', telescope_preview, map_opts)
     -- System
     vim.keymap.set('n', ',od', function()
-        execute('dragon-drop -a -x')
+        execute({ 'dragon-drop', '-a', '-x' })
     end, map_opts)
 end
 

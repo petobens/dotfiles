@@ -106,7 +106,7 @@ vim.keymap.set('n', '<F9>', function()
     convert_pandoc('html')
 end, { buffer = true })
 vim.keymap.set('n', '<Leader>vp', function()
-    vim.fn.jobstart('zathura --fork ' .. vim.fn.expand('%:p:r') .. '.pdf')
+    vim.system({ 'zathura', '--fork', vim.fn.expand('%:p:r') .. '.pdf' })
 end, { buffer = true })
 ---- Lists
 vim.keymap.set('i', '<CR>', continue_list, { expr = true, buffer = true })
