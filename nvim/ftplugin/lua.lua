@@ -2,8 +2,6 @@ local overseer = require('overseer')
 local utils = require('telescope.utils')
 
 -- Options
-vim.opt_local.foldlevelstart = 99
-vim.opt_local.foldmethod = 'manual'
 vim.opt_local.textwidth = 90
 
 -- Running
