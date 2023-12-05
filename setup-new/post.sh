@@ -117,6 +117,10 @@ else
         if type "freeoffice-textmaker" > /dev/null 2>&1; then
             xdg-mime default freeoffice-textmaker.desktop application/octet-stream
         fi
+        if type "nvim" > /dev/null 2>&1; then
+            # Note we need something like `Exec=alacritty -e nvim %F` in /usr/share/nvim.desktop
+            xdg-mime default nvim.desktop text/plain
+        fi
     fi
 
     # Manage docker as non-root and change image directory
