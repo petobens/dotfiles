@@ -4,11 +4,11 @@
 ; Don't use `return` statements for function matching in Lua.
 
 (for_statement
-  "do" @open.loop
+  ["for" "do"] @open.loop
   "end" @close.loop) @scope.loop
 
 (while_statement
-  "do" @open.loop
+  ["while" "do"] @open.loop
   "end" @close.loop) @scope.loop
 
 (break_statement) @mid.loop.1
