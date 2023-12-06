@@ -124,3 +124,9 @@ linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n36',
 })
 linters.chktex.ignore_exitcode = true
+
+-- Commands
+vim.api.nvim_create_user_command('LinterInfo', function()
+    local runningLinters = table.concat(lint.get_running(), '\n')
+    vim.notify(runningLinters, vim.log.levels.INFO, { title = 'nvim-lint' })
+end, {})
