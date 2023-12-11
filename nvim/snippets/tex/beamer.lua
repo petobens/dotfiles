@@ -106,7 +106,7 @@ decorations.markings}
 {\includegraphics[scale=0.01]{<logo>}};
 %\draw[<color>] ([yshift=-0.65cm, xshift=0.25cm]current page.north west)
 	% -- ([yshift=-0.65cm, xshift=\paperwidth - 0.25cm]current page.north west);
-\end{tikzpicture}}
+\end{tikzpicture}} % chktex 31
 
 % Comment or uncomment to see notes
 % \setbeameroption{show notes}

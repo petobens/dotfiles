@@ -324,6 +324,16 @@ return {
         ),
         { condition = line_begin }
     ),
+    -- Linting
+    s(
+        { trig = 'ctd', dscr = 'Chktex disable' },
+        fmta(
+            [[
+            % chktex <>
+        ]],
+            { i(1) }
+        )
+    ),
 }, {
     s({ trig = 'itm', wordTrig = false, dscr = '\\item' }, {
         t('\\item '),
