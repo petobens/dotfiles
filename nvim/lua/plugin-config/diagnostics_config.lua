@@ -62,18 +62,6 @@ local function diagnostic_suffix(diagnostic)
     end
 end
 
--- Sign icons
-local signs = {
-    Error = u.icons.error,
-    Warn = u.icons.warning,
-    Info = u.icons.info,
-    Hint = u.icons.hint,
-}
-for type, icon in pairs(signs) do
-    local hl = 'DiagnosticSign' .. type
-    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = nil })
-end
-
 -- Toggle function
 local diagnostics_active = true
 local toggle_buffer_diagnostics = function()
@@ -90,7 +78,14 @@ vim.diagnostic.config({
     update_in_insert = false,
     severity_sort = true,
     underline = false,
-    signs = true,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = u.icons.error,
+            [vim.diagnostic.severity.WARN] = u.icons.warning,
+            [vim.diagnostic.severity.INFO] = u.icons.info,
+            [vim.diagnostic.severity.HINT] = u.icons.hint,
+        },
+    },
     float = {
         source = false,
         format = diagnostic_format_float,
