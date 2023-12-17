@@ -6,7 +6,7 @@ require('statuscol').setup({
     segments = {
         {
             sign = {
-                name = { 'Diagnostic' },
+                namespace = { 'diagnostic' },
                 maxwidth = 1,
                 auto = true,
             },
