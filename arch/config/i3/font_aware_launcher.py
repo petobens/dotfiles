@@ -12,7 +12,7 @@ APPS = {
         'type': 'tui',
         'args': {
             'title': 'About Arch',
-            'cmd': "neofetch; read -p ''",
+            'cmd': "fastfetch; read -p ''",
             'use_rol': False,
             'interactive_bash': True,
         },
