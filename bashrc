@@ -1,4 +1,4 @@
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2148
 
 # Options {{{
 
@@ -77,7 +77,6 @@ bind '"\C-n": history-search-forward'
 
 # Bash
 alias sh='bash'
-alias sbp='source ~/.bash_profile'
 alias u='cd ..'
 alias 2u='cd ../..'
 alias 3u='cd ../../..'
@@ -106,12 +105,11 @@ ds() {
 }
 alias df='df -h'
 alias diff='diff -u --color'
-alias ur='unrar x'
-alias uz='unzip'
 alias rsync='rsync -auP'
 alias ti='hyperfine'
 alias ping='prettyping --nolegend --last 30'
 alias wbs='curl v2.wttr.in/Buenos_Aires'
+alias ff='fastfetch'
 
 # Unpack helper
 up() {
@@ -153,22 +151,14 @@ fi
 if type "ctop" > /dev/null 2>&1; then
     alias ct='TERM=xterm-256 ctop'
 fi
-if type "progress" > /dev/null 2>&1; then
-    alias pg='progress -w'
-fi
-if type "proxychains" > /dev/null 2>&1; then
-    pc() {
-        proxychains -q "$@"
-    }
-fi
 if type "lsd" > /dev/null 2>&1; then
     alias ls='lsd -F --color=auto'
     cd() { builtin cd "$@" && lsd -F --color=auto; }
 fi
 if type "nvim" > /dev/null 2>&1; then
     alias v='nvim --listen /tmp/nvimsocket'
-    if [ -f "$HOME/git-repos/private/dotfiles/vim/vimrc_min" ]; then
-        alias mnvrc='nvim -u $HOME/git-repos/private/dotfiles/vim/vimrc_min'
+    if [ -f "$HOME/git-repos/private/dotfiles/nvim/minimal.lua" ]; then
+        alias mnvi='nvim --clean -u $HOME/git-repos/private/dotfiles/nvim/minimal.lua'
     fi
 fi
 if type "ranger" > /dev/null 2>&1; then
@@ -181,27 +171,17 @@ fi
 if type "dust" > /dev/null 2>&1; then
     alias rds='dust -r -b'
 fi
-if type "fusermount3" > /dev/null 2>&1; then
-    alias fu='fusermount3 -zu'
-fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
 fi
-if type "R" > /dev/null 2>&1; then
-    alias R='R --no-save --quiet'
-    alias rs='Rscript'
-    if type "radian" > /dev/null 2>&1; then
-        alias r='radian --quiet'
-    fi
-fi
-if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.tmux/tmux.conf" ]; then
+if type "tmux" > /dev/null 2>&1 && [ -f "$HOME/.config/tmux/tmux.conf" ]; then
     if [ "$USER" = 'pedro' ]; then
         tmux_session_name='petobens'
     else
         tmux_session_name="$USER"
     fi
     # shellcheck disable=SC2139
-    alias tm="tmux -f $HOME/.tmux/tmux.conf new -A -s $tmux_session_name"
+    alias tm="tmux -f $HOME/.config/tmux/tmux.conf new -A -s $tmux_session_name"
     unset tmux_session_name
 fi
 if type "mpv" > /dev/null 2>&1; then
@@ -224,7 +204,6 @@ if type "git" > /dev/null 2>&1; then
         _git_checkout
     }
     __git_complete gco _comp_gco
-    alias gcb='git checkout $(git branch | fzf | tr -d "*")'
     alias gcp='git cherry-pick'
     alias gb='git branch'
     __git_complete gb _git_branch
@@ -286,27 +265,16 @@ if type "python" > /dev/null 2>&1; then
     if type "ipython3" > /dev/null 2>&1; then
         alias ipy='ipython3'
     fi
-    if type "pipenv" > /dev/null 2>&1; then
-        alias pel='pipenv run pip list'
-        alias pei='pipenv install'
-        alias peu='pipenv uninstall'
-        alias peg='pipenv graph'
-        alias pes='pipenv shell'
-        alias pep='pipenv run python'
-        alias ped='pipenv run python -m pdb -cc'
-        alias pet='pipenv run pytest'
-        alias pej='pipenv run jupyter notebook'
-    fi
     if type "poetry" > /dev/null 2>&1; then
         alias pol='poetry run pip list'
         alias poa='poetry add'
-        alias poad='poetry add --dev'
+        alias poad='poetry add --group=dev'
         alias poao='poetry add --optional'
         alias poi='poetry install'
         alias poie='poetry install --extras'
         alias pou='poetry update'
         alias por='poetry remove'
-        alias pord='poetry remove --dev'
+        alias pord='poetry remove --group=dev'
         alias pog='poetry show --tree'
         alias poe='poetry env'
         alias pop='poetry run python'
@@ -342,8 +310,8 @@ fi
 # Package manager
 if type "yay" > /dev/null 2>&1; then
     # Note yay will prompt twice: https://github.com/Jguer/yay/issues/170
-    alias yay='yay --nodiffmenu --answerclean N --removemake'
-    alias yunv='yay -Syu --mflags --skipinteg --answerclean N --nodiffmenu --combinedupgrade'
+    alias yay='yay --diffmenu=false --answerclean N --removemake'
+    alias yunv='yay -Syu --mflags --skipinteg --answerclean N --diffmenu=false --combinedupgrade'
     # Update pacman mirrorlist
     if type "reflector" > /dev/null 2>&1; then
         alias upm='sudo reflector --verbose --latest 25 -p http -p https --sort rate --save /etc/pacman.d/mirrorlist'
@@ -355,11 +323,6 @@ if type "vagrant" > /dev/null 2>&1; then
     alias vg='vagrant'
     alias vgs='vagrant global-status'
     alias vgh='vagrant halt'
-fi
-
-# AWS
-if type "aws" > /dev/null 2>&1; then
-    alias as3='aws s3'
 fi
 
 # Update system (and language libraries); see function below
@@ -378,107 +341,14 @@ if [[ "$OSTYPE" != 'darwin'* ]]; then
 fi
 
 # NFS
-alias mnfs='sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
+alias mpnfs='sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
+alias mfnfs='sudo mount synology-flor:/volume1/Shared-DS220 /mnt/nfs'
 alias unfs='sudo umount /mnt/nfs'
-alias nssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology -t "cd /volume1/Shared-DS220; bash --login"'
+alias npssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology -t "cd /volume1/Shared-DS220; bash --login"'
+alias nfssh='sshpass -p "$(pass show synology/synology-flor/flor)" ssh synology-flor -t "cd /volume1/Shared-DS220; bash --login"'
 
-# }}}
-# Work Aliases {{{
-
-# Gitlab 2fa
-alias g2f='oathtool --base32 --totp $(pass show git/gitlab/secret) | xclip -r -selection clipboard'
-
-# Mostly vpn and databases; ssh hosts are defined in .ssh/config
+# VPN
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
-
-# Claro
-# Note: this requires a passwordless stoken (use token-mode=rsa if password is
-# enabled)
-alias covpn='sudo pkill -INT -f openconnect; stoken | sudo openconnect '\
-'--background --authgroup=1 --user="$(pass show claro/vpn/user)" '\
-'--passwd-on-stdin "$(pass show claro/vpn/host-old)"'
-alias cvpn='sudo pkill -INT -f snx; stoken | '\
-'snx -s "$(pass show claro/vpn/host)" -u "$(pass show claro/vpn/user)"'
-alias cmssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/pytonp01)" '\
-'ssh mjolnir'
-alias cpssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/python01prd)" '\
-'ssh claro-prd'
-alias cpfssh='sshpass -p "$(pass show arch/localhost)" ssh localhost -N -D 54321'
-alias cmtssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/pytonp01)" '\
-'ssh mjolnir -R 9090:127.0.0.1:54321'
-alias ctssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/tcal)" '\
-'ssh tcal'
-alias cttssh='TERM=xterm-256color; sshpass -p "$(pass show claro/ssh/tcal)" '\
-'ssh tcal -R 9090:127.0.0.1:54321'
-alias coddb='rlwrap -a"$(pass show claro/oracle/delver/pass)" -N '\
-'sql DELVER/"$(pass show claro/oracle/delver/pass)"'\
-'@"$(pass show claro/oracle/delver/host)":1521/RAC8.WORLD'
-alias coldb='rlwrap -a -N sql system/oracle@localhost:49161/xe'
-alias cptdb=' PGPASSWORD="$(pass show claro/postgres/tcalt/pass)" pgcli '\
-'-h "$(pass show claro/postgres/tcalt/host)" -p 5432 -U airflow -d delver'
-alias cpldb='pgcli -h localhost -U pedro -d delver_dev'
-
-# Habitat
-alias hsshp='TERM=xterm-256color; ssh habitat-server-prd'
-alias hsshs='TERM=xterm-256color; ssh habitat-server-stg'
-alias hdb='PGPASSWORD="$(pass show habitat/postgres/pass)" pgcli -h '\
-'"$(pass show habitat/postgres/host)" -U mutt -d habitat'
-
-# Meli
-alias mgpp='echo $(pass show meli/vpn/pin)'\
-'$(oathtool --base32 --totp $(pass show meli/vpn/secret)) | xclip -r -selection clipboard'
-mvssh() {
-    (
-        command cd "/home/pedro/OneDrive/mutt/clients/meli/vpn" || exit
-        vg_status=$(vagrant status | grep -P "^default\S*\W" | rev | cut -d ' ' -f 2 | rev)
-        if [[ "$vg_status" != 'running' ]]; then
-            vagrant up
-        fi
-        vg_ssh_cmd="vagrant ssh"
-        if [[ "$1" ]]; then
-            case "$1" in
-                proxy)
-                    vg_ssh_cmd="$vg_ssh_cmd -- -v -N -D $2"
-                    ;;
-                *)
-                    vg_ssh_cmd="$vg_ssh_cmd -t -c '$1'"
-                    ;;
-            esac
-        fi
-        eval "$vg_ssh_cmd"
-    )
-}
-alias mvp='mvssh proxy 12345'
-alias mvsvpn='mvssh "sudo service gpd start; globalprotect show --status"'
-alias mvtt='vagrant ssh -- -L 127.0.0.1:1025:$(pass show meli/teradata/host):1025 -v -N'
-alias mvpt='vagrant ssh -- -L 127.0.0.1:8443:$(pass show meli/presto/host):443 -v -N'
-
-# UC
-uvpn() {
-    vpn_cmd="openvpn --daemon --config $(pass show urban/vpn/config-path)"
-    vpn_cmd+=" --auth-user-pass <(echo -e \"$(pass show urban/vpn/user)\n$(pass show urban/vpn/pass)\")"
-    cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
-    eval "$cmd"
-}
-alias ussh='TERM=xterm-256color; sshpass -p "$(pass show urban/server/187/pass)" ssh urban'
-
-# Etermax
-alias emfa='aws-mfa --profile etermax'
-alias eas='oathtool --base32 --totp $(pass show etermax/aws/secret) | xclip -r -selection clipboard'
-alias eap='export AWS_PROFILE=etermax'
-evpn() {
-    vpn_cmd="openvpn --daemon --config $(pass show etermax/vpn/ovpn) --cert $(pass show etermax/vpn/cert) --key $(pass show etermax/vpn/key)"
-    cmd="sudo pkill -INT -f openvpn; sudo bash -c '$vpn_cmd'"
-    eval "$cmd"
-}
-
-# Trafi
-alias tdbp='PGPASSWORD="$(pass show trafilea/redshift/pass)" pgcli -h '\
-'"$(pass show trafilea/redshift/host)" -U "$(pass show trafilea/redshift/user)"'\
-' -d dev -p 5439'
-alias tdbd='PGPASSWORD="$(pass show trafilea/redshift_dev/pass)" pgcli -h '\
-'"$(pass show trafilea/redshift_dev/host)" -U "$(pass show trafilea/redshift_dev/user)"'\
-' -d dev -p 5439'
 
 # }}}
 # Functions {{{
@@ -506,13 +376,9 @@ sys_update_all() {
     else
         if type "yay" > /dev/null 2>&1; then
             echo -e "\033[1;34m-> YaY...\033[0m"
-            yay -Syu --nodiffmenu --answerclean N --removemake --devel \
+            yay -Syu --diffmenu=false --answerclean N --removemake --devel \
                 --timeupdate --combinedupgrade
-            yay -c
-        fi
-        if type "flatpak" > /dev/null 2>&1; then
-            echo -e "\033[1;34m\n-> Updating flatpaks...\033[0m"
-            flatpak update
+            yay -Yc
         fi
     fi
     if type "pipx" > /dev/null 2>&1; then
@@ -524,16 +390,8 @@ sys_update_all() {
         outdated="$(pip list --user --outdated)"
         if [ -n "$outdated" ]; then
             echo "$outdated"
-            u_list=$(pip list --user --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1)
-            for i in $u_list; do
-                pip install --user -U "$i"
-            done
+            pip list --user --outdated | grep -v '^-e' | cut -d ' ' -f 1 | tail -n +3 | xargs -n 1 pip install --user --break-system-packages -U
         fi
-    fi
-    if type "R" > /dev/null 2>&1; then
-        echo -e "\033[1;34m\n-> Updating R packages...\033[0m"
-        R --slave --no-save --no-restore -e \
-            'update.packages(ask=TRUE, checkBuilt=TRUE, lib.loc=Sys.getenv("R_LIBS_USER"))'
     fi
     if type "tlmgr" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Latex packages...\033[0m"
@@ -560,8 +418,7 @@ PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 # }}}
 # Fzf and cli apps {{{
 
-# Z (load it but unalias it to override it with fzf version). Note: we must load
-# if after the prompt since it modifies the prompt command
+# Z Note: we must load if after the prompt since it modifies the prompt command
 if [[ "$OSTYPE" == 'darwin'* ]]; then
     if [ -f "$BASE_PKG_DIR/etc/profile.d/z.sh" ]; then
         . "$BASE_PKG_DIR/etc/profile.d/z.sh"
@@ -571,7 +428,6 @@ else
         source /usr/share/z/z.sh
     fi
 fi
-unalias z 2> /dev/null
 
 # Fzf
 if type "fzf" > /dev/null 2>&1; then

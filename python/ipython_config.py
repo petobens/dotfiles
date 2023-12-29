@@ -48,7 +48,7 @@ def set_input_mode(self, mode):
     See: https://github.com/jonathanslenders/python-prompt-toolkit/issues/192
     """
     shape = {InputMode.NAVIGATION: 2, InputMode.REPLACE: 4}.get(mode, 6)
-    raw = u'\x1b[{} q'.format(shape)
+    raw = '\x1b[{} q'.format(shape)
     if hasattr(sys.stdout, '_cli'):
         out = sys.stdout._cli.output.write_raw  # type: ignore # pylint:disable=E1101
     else:
@@ -161,3 +161,10 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
 
 # Always import some modules
 c.InteractiveShellApp.exec_lines = ['import numpy as np']
+
+# Define some shortcuts
+custom_keybinds = [
+    # Note that c-f accepts the (f)ull/(f)orward suggestion
+    {'command': 'IPython:auto_suggest.accept_token', 'new_keys': ['c-t']},
+]
+c.TerminalInteractiveShell.shortcuts = custom_keybinds

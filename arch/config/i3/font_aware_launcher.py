@@ -4,7 +4,6 @@ import os
 from time import sleep
 
 import i3ipc
-
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
@@ -13,7 +12,7 @@ APPS = {
         'type': 'tui',
         'args': {
             'title': 'About Arch',
-            'cmd': "neofetch; read -p ''",
+            'cmd': "fastfetch; read -p ''",
             'use_rol': False,
             'interactive_bash': True,
         },
@@ -28,9 +27,9 @@ APPS = {
             'dimensions': (100, 30),
         },
     },
-    'browser': {
+    'brave': {
         'type': 'electron',
-        'args': {'class_name': 'Brave', 'mark': 'browser', 'post_cmd': True},
+        'args': {'class_name': 'Brave', 'mark': 'brave', 'post_cmd': True},
     },
     'calendar': {
         'type': 'electron',
@@ -52,7 +51,6 @@ APPS = {
     },
     'color-picker': {'type': 'gtk', 'args': {'class_name': 'Gcolor3'}},
     'connman': {'type': 'gtk', 'args': {'class_name': 'Connman-gtk'}},
-    'discord': {'type': 'rol', 'args': {'class_name': 'discord', 'event_delay': 30}},
     'docker': {
         'type': 'tui',
         'args': {
@@ -62,18 +60,17 @@ APPS = {
             'dimensions': (150, 30),
         },
     },
-    'firefox': {'type': 'rol', 'args': {'class_name': 'firefox', 'mark': 'ffox'}},
-    'globalprotect-vpn': {'type': 'qt', 'args': {'class_name': 'gpclient'}},
-    'gnome-font': {'type': 'gtk', 'args': {'class_name': 'Gnome-font-viewer'}},
-    'hangouts': {
+    'edge': {
         'type': 'electron',
         'args': {
-            'class_name': 'Brave',
-            'mark': 'hangouts',
-            'subcmd': 'hangouts',
+            'class_name': 'Microsoft-edge-dev',
+            'mark': 'edge',
             'post_cmd': True,
         },
     },
+    'firefox': {'type': 'rol', 'args': {'class_name': 'firefox', 'mark': 'ffox'}},
+    'globalprotect-vpn': {'type': 'qt', 'args': {'class_name': 'gpclient'}},
+    'gnome-font': {'type': 'gtk', 'args': {'class_name': 'Gnome-font-viewer'}},
     'htop': {'type': 'tui', 'args': {'title': 'htop', 'cmd': 'htop'}},
     'kitty': {
         'type': 'rol_custom',
@@ -84,6 +81,10 @@ APPS = {
         },
     },
     'kodi': {'type': 'rol', 'args': {'class_name': 'kodi'}},
+    'mailspring': {
+        'type': 'electron',
+        'args': {'class_name': 'Mailspring', 'event_delay': 30},
+    },
     'meet': {
         'type': 'electron',
         'args': {
@@ -159,7 +160,7 @@ APPS = {
         'type': 'tui',
         'args': {
             'title': 'ranger',
-            'cmd': '/usr/bin/bash -c "ranger $(tmux display -p \"#{pane_current_path}\")"',
+            'cmd': '/usr/bin/bash -c "ranger {path}"',
         },
     },
     'reboot-dialog': {
@@ -186,19 +187,19 @@ APPS = {
         'type': 'electron',
         'args': {'class_name': 'Spotify', 'event_delay': 30},
     },
-    'spotify-tui': {
-        'type': 'tui',
+    'teams': {
+        'type': 'electron',
         'args': {
-            'title': 'Spotify-TUI',
-            'cmd': 'bash -c "spotifyd && spt && killall spotifyd"',
+            'class_name': 'Brave',
+            'mark': 'teams',
+            'subcmd': 'teams',
+            'post_cmd': True,
         },
     },
-    'teams': {'type': 'electron', 'args': {'class_name': 'Teams', 'event_delay': 30}},
     'textmaker': {
         'type': 'rol_custom',
         'args': {'class_name': 'tm', 'cmd': 'freeoffice-textmaker', 'event_delay': 30},
     },
-    'thunderbird': {'type': 'gtk', 'args': {'class_name': 'thunderbird'}},
     'transmission': {'type': 'gtk', 'args': {'class_name': 'Transmission-gtk'}},
     'trash': {
         'type': 'tui',
@@ -212,7 +213,7 @@ APPS = {
             'title': 'Do you want to empty the trash?',
             'shell': True,
             'cmd': (
-                "trash-empty && pkill -INT -f trash-list && "
+                "trash-empty -f && pkill -INT -f trash-list && "
                 "xdotool key Super_L+Control+b && "
                 "dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
             ),
@@ -385,7 +386,13 @@ class GTKApp(ROLApp):
     def _build_cmd(self):
         if not self.is_dialog:
             cmd = self._raiseorlauch_cmd()
-            cmd += ['-e', f'"{self.screen.gdk_env}{self.cmd}"']
+            # Note: if change sccale for transmission-gtk everything looks huge
+            env_var = (
+                self.screen.gdk_env.replace('_SCALE=2', '_SCALE=1')
+                if self.cmd == 'transmission-gtk'
+                else self.screen.gdk_env
+            )
+            cmd += ['-e', f'"{env_var}{self.cmd}"']
         else:
             gtk_env = dict([i.split('=') for i in self.screen.gdk_env.split()])  # type: ignore
             self.cmd_args = {'env': {**os.environ, **gtk_env}}
@@ -440,6 +447,17 @@ class TUIApp(ROLApp):
             if self.interactive_bash:
                 cmd += '-i '
             cmd += f'"{self.cmd}"'
+
+        if self.title == 'ranger':
+            # FIXME: https://github.com/open-dynaMIX/raiseorlaunch/issues/66#issuecomment-1399110913
+            ranger_path = (
+                sh('tmux display -p "#{?pane_path,#{pane_path},#{pane_current_path}}"')
+                .decode('ascii')
+                .strip()
+                .split('"')[1]
+            )
+            cmd = cmd.format(path=ranger_path)
+
         return cmd
 
     def _run_post_cmd(self):
@@ -455,7 +473,7 @@ class RofiApp(ROLApp):
     def __init__(self, **kwargs):
         super().__init__(shell=True, **kwargs)
         self.font_size = 11
-        self.yoffset = -110
+        self.yoffset = -10
         self.icon_size = 1.8
 
     def _build_cmd(self):
@@ -519,16 +537,22 @@ class ElectronApp(ROLApp):
         ):
             cmd += ' --force-device-scale-factor=2'
 
-        if self.class_name == 'Brave' and self.subcmd is not None:
-            cmd += ' --new-window --app=https://{url}'
-            if self.subcmd == 'calendar':
-                cmd = cmd.format(url=f'{self.subcmd}.google.com/calendar/b/0/r')
-            elif self.subcmd == 'hangouts':
-                cmd = cmd.format(url=f'{self.subcmd}.google.com/?authuser=1')
-            elif self.subcmd == 'meet':
-                cmd = cmd.format(url=f'{self.subcmd}.google.com')
-            elif self.subcmd == 'clickup':
-                cmd = cmd.format(url=f'app.{self.subcmd}.com')
+        if self.class_name == 'Mailspring':
+            cmd += ' --password-store="gnome-libsecret"'
+
+        if self.class_name == 'Brave':
+            if not self.subcmd:
+                cmd += ' --enable-features=VaapiVideoDecodeLinuxGL'
+            else:
+                cmd += ' --new-window --app=https://{url}'
+                if self.subcmd == 'calendar':
+                    cmd = cmd.format(url=f'{self.subcmd}.google.com/calendar/b/0/r')
+                elif self.subcmd == 'meet':
+                    cmd = cmd.format(url=f'{self.subcmd}.google.com')
+                elif self.subcmd == 'clickup':
+                    cmd = cmd.format(url=f'app.{self.subcmd}.com')
+                elif self.subcmd == 'teams':
+                    cmd = cmd.format(url=f'{self.subcmd}.live.com')
 
         cmd += '"'
         return cmd
@@ -537,17 +561,31 @@ class ElectronApp(ROLApp):
         if (
             self.class_name == 'Brave' and self.mark not in self.screen.i3.get_marks()
         ):  # run this only on first open
-            sleep(2.5)
+            # Wait for focus
+            sleep(1)
+
+            # Hack to ensure calendar and clickup apps open corresponding workspace when
+            # we have multiple monitors
+            # FIXME: Find a general way to fix this
+            if (
+                self.subcmd == 'calendar' or self.subcmd == 'clickup'
+            ) and self.screen.nr_monitors > 1:
+                # We need extra waiting time
+                sleep(1.5)
+                self.screen.i3.command(
+                    f'move container to workspace {self.ws}, workspace {self.ws}'
+                )
+                sh('xdotool key Super+Up')  # maximize
+
             # Ensure we have proper scaling
             sh('xdotool key Super+0')
-            # If we have 1 external monitor then all brave windows live on the
-            # primary monitory which is hidpi. If we have 2 or more then the main brave
-            # window will live in a (potentially) non hidpi screen and be
+            # If we have multiple monitors (i.e not only the primary laptop screen) the
+            # brave window will live in a (potentially) non hidpi screen and be
             # scaled using the `--force-device..` flag so we need to rescale this window
             # in a hidpi screen using the zoom keybinding
             if (
                 self.screen.is_hidpi
-                and self.screen.nr_monitors > 2  # type: ignore
+                and self.screen.nr_monitors > 1  # type: ignore
                 and not self.screen.other_is_hidpi
             ):
                 sh('xdotool key Super+u')

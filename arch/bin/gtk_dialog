@@ -6,9 +6,8 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 
-from PIL import ImageFont
 from gi.repository import Gtk, Pango
-
+from PIL import ImageFont
 
 FONT = 'NotoSans-Regular.ttf'
 FONT_SIZE = 11
@@ -18,14 +17,10 @@ def confirmation_dialog(title, msg, action, shell=False):
     """Create confirmation dialog that triggers an action."""
     win = Gtk.Window()
     win.connect('destroy', Gtk.main_quit)
-    dialog = Gtk.Dialog(parent=win)
-
     font = ImageFont.truetype(FONT, FONT_SIZE)
-    w, _ = font.getsize(msg)
-    final_w = w + 80
-    final_h = 110
-    dialog.set_default_size(final_w, final_h)
 
+    dialog = Gtk.Dialog(parent=win)
+    dialog.set_default_size(80 + font.getlength(msg), 110)
     dialog.set_property('title', title)
     dialog.add_buttons(
         Gtk.STOCK_OK, Gtk.ResponseType.OK, Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 read -p $'\033[1mThis script will erase/override many files. Do you want to run it (y/n)? \033[0m' -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -61,15 +62,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     . "$current_dir/latex.sh"
 fi
 
-if type "R" > /dev/null 2>&1; then
-    read -p $'\033[1mDo you want to install R libraries (y/n)? \033[0m' -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "\\033[1;34m-> Installing R libraries...\\033[0m"
-        . "$current_dir/R.sh"
-    fi
-fi
-
 if type "npm" > /dev/null 2>&1; then
     read -p $'\033[1mDo you want to install node libraries and binaries (y/n)? \033[0m' -n 1 -r
     echo
@@ -99,7 +91,7 @@ read -p $'\033[1mDo you want to install nvim packages (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo -e "\\033[1;34m-> Installing nvim packages...\\033[0m"
-    nvim +qall
+    nvim --headless "+Lazy! sync" +qa
 fi
 
 read -p $'\033[1mDo you want to run post install script (y/n)? \033[0m' -n 1 -r

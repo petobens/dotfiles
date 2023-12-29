@@ -4,22 +4,15 @@
 sudo bash -c "echo $(command -v bash) >> /etc/shells"
 sudo chsh -s "$(command -v bash)"
 
+# Nvim extras
+if type "luarocks" > /dev/null 2>&1; then
+    echo -e "\\033[1;34m--> Installing luarocks packages...\\033[0m"
+    luarocks --local --lua-version 5.1 install magick
+fi
+
 # Extra packages
 if [ ! -f "$HOME/git-repos/private/trueline/trueline.sh" ]; then
     git clone https://github.com/petobens/trueline ~/git-repos/private/trueline
-fi
-if type "gem" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m--> Installing sqlint...\\033[0m"
-    gem install sqlint
-fi
-if type "mongo" > /dev/null 2>&1; then
-    echo -e "\\033[1;34m--> Installing mongo-hacker...\\033[0m"
-    git clone https://github.com/TylerBrock/mongo-hacker
-    (
-        cd mongo-hacker || exit
-        make install
-    )
-    # rm -rf mongo-hacker # (this erases config file)
 fi
 if type "ranger" > /dev/null 2>&1; then
     # Install ranger plugins and scope.sh executable
@@ -39,11 +32,9 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 else
     base_pkg_dir='/usr'
 fi
-if type "pipenv" > /dev/null 2>&1; then
-    pipenv --completion | sudo tee "$base_pkg_dir/share/bash-completion/completions/pipenv"
-fi
 if type "poetry" > /dev/null 2>&1; then
     poetry completions bash | sudo tee "$base_pkg_dir/share/bash-completion/completions/poetry"
+    poetry config virtualenvs.prefer-active-python true
 fi
 
 # Git access tokens and (go)pass settings
@@ -56,6 +47,9 @@ if type "gopass" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Generating gitlab access token file...\\033[0m"
     gopass git/gitlab/access_token > "$HOME/.gitlab_access_token"
     echo "Created .gitlab_access_token file"
+    if type "gh" > /dev/null 2>&1; then
+        gh auth login
+    fi
 fi
 
 # Reload GPG agent since we change the gpg config
@@ -83,6 +77,17 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line\'\' %file"
     fi
 else
+    # We need to add our user to the "video" group in order to handle screen brightness
+    if type "xbacklight" > /dev/null 2>&1; then
+        sudo usermod -a -G video "$USER"
+    fi
+
+    # xfce4-power-manager
+    if type "xfce4-power-manager" > /dev/null 2>&1; then
+        x4fce_cmd="xfconf-query --channel xfce4-power-manager --property /xfce4-power-manager"
+        eval "$x4fce_cmd/general-notification --set false"
+    fi
+
     # Create XDG directories
     if type "xdg-user-dirs-update" > /dev/null 2>&1; then
         echo -e "\\033[1;34m--> Creating missing XDG directories...\\033[0m"
@@ -96,6 +101,8 @@ else
             mkdir -p "$HOME/$dir"
             xdg-user-dirs-update --set "${dir^^}" "$HOME/$dir"
         done
+        mkdir -p "$HOME/.local/share"
+        xdg-user-dirs-update --set DATA_HOME "$HOME/.local/share"
     fi
 
     # Set some default apps on Linux
@@ -109,6 +116,10 @@ else
         fi
         if type "freeoffice-textmaker" > /dev/null 2>&1; then
             xdg-mime default freeoffice-textmaker.desktop application/octet-stream
+        fi
+        if type "nvim" > /dev/null 2>&1; then
+            # Note we need something like `Exec=alacritty -e nvim %F` in /usr/share/nvim.desktop
+            xdg-mime default nvim.desktop text/plain
         fi
     fi
 
@@ -132,8 +143,13 @@ EOF'
 
     # Enable some services
     echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
-    # Start pulseaudio (if daemon is not already running which it should)
-    pulseaudio --start
+    # Start pipewire
+    systemctl --user enable pipewire.service
+    systemctl --user start pipewire.service
+    systemctl --user enable pipewire-pulse.service
+    systemctl --user start pipewire-pulse.service
+    systemctl --user enable wireplumber.service
+    systemctl --user start wireplumber.service
     # Time Sync (ntp)
     sudo systemctl enable systemd-timesyncd.service
     sudo systemctl start systemd-timesyncd.service

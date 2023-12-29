@@ -133,15 +133,17 @@ const qmarksMapKey = function (prefix, urls) {
 
 const qmarksUrls = {
     a: 'https://aws.amazon.com/console',
-    b: 'www.bitbucket.com',
+    b: 'https://bard.google.com',
+    B: 'www.bing.com/chat',
     c: 'www.utdt.edu/campusvirtual',
     d: 'https://drive.google.com/drive/u/0/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
     e: 'https://yts.am/browse-movies',
     f: 'www.facebook.com',
     g: 'www.github.com',
     h: 'www.google.com.ar',
-    i: 'www.infobae.com.ar',
+    i: 'www.infobae.com',
     l: 'www.lanacion.com.ar',
+    L: 'http://neverssl.com/', // to trigger captive (L)ogin wifi page
     m: 'https://mercadolibre.com.ar',
     M: 'https://mail.google.com',
     n: 'www.netflix.com',

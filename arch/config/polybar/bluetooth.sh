@@ -2,7 +2,7 @@
 
 has_bluetooth=$(bluetoothctl info | grep '^Device')
 if [[ -n "$has_bluetooth" ]]; then
-    echo -n ' '
+    echo -n '󰂯 '
 else
-    echo -n ' '
+    echo -n '󰂲 '
 fi

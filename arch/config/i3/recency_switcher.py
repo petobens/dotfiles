@@ -7,7 +7,6 @@ from argparse import ArgumentParser
 from subprocess import check_output
 
 import i3ipc
-
 from focus_watcher import SOCKET_FILE
 
 ICON_MAP = {
@@ -92,11 +91,11 @@ class Menu:
     def _get_window_icon(self, win_class, win_title):
         icon_name = None
         if win_class == 'Brave-browser':
-            if 'Calendar' in win_title:
+            if 'Teams' in win_title:
+                icon_name = 'teams'
+            elif 'Calendar' in win_title:
                 icon_name = 'google-agenda'
             elif 'Meet' in win_title:
-                icon_name = 'google-meet'
-            elif 'Hangouts' in win_title:
                 icon_name = 'google-meet'
             elif '(Board)' in win_title:
                 # TODO: Find a better way of getting clickup app
@@ -155,7 +154,7 @@ if __name__ == '__main__':
         dmenu_cmd = (
             f"-dmenu -p window -i -selected-row {selected_row} "
             "-kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' "
-            "-kb-row-up 'ISO_Left_Tab,Ctrl-p'"
+            "-kb-row-up 'Ctrl-p,Shift+ISO_Left_Tab'"
         )
         rofi_menu = Menu(i3_conn, args.menu, dmenu_cmd)
         rofi_menu.menu_focus(containers_history)

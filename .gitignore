@@ -1,14 +1,12 @@
 # Dotfiles gitignore
 
-# Vim
-vim/bundle/
-vim/cache/
-vim/vimrc_min
-.tern-port
+# Nvim
+nvim/plugin/
+nvim/cache/
 
 # Tmux
-tmux/plugins/
-tmux/resurrect/
+config/tmux/plugins/
+config/tmux/resurrect/
 
 # Arch
 arch/config/onedrive/items*

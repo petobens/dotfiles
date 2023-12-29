@@ -6,7 +6,7 @@
 # `brew cask reinstall basictex`)
 
 # Define path for initial install (which won't read env variable)
-PATH="$PATH:/usr/local/texlive/2021/bin/x86_64-linux"
+PATH="$PATH:/usr/local/texlive/2022/bin/x86_64-linux"
 
 # Install texlive
 if ! type "tlmgr" > /dev/null 2>&1; then
@@ -76,6 +76,7 @@ $tlmgr_install fontawesome
 $tlmgr_install footmisc
 $tlmgr_install framed
 $tlmgr_install fvextra
+$tlmgr_install ifmtarg
 $tlmgr_install ifplatform
 $tlmgr_install imakeidx
 $tlmgr_install import
@@ -90,6 +91,7 @@ $tlmgr_install pdfpages
 $tlmgr_install pgfplots
 $tlmgr_install silence
 $tlmgr_install siunitx
+$tlmgr_install soul
 $tlmgr_install spreadtab
 $tlmgr_install standalone
 $tlmgr_install tcolorbox
@@ -103,12 +105,15 @@ $tlmgr_install xstring
 # Linux specific (i.e not included in basic texlive installation)
 if [ "$OSTYPE" == 'linux-gnu' ]; then
     $tlmgr_install algorithm2e
+    $tlmgr_install algorithmicx
     $tlmgr_install beamer
     $tlmgr_install bitset
+    $tlmgr_install blkarray
     $tlmgr_install booktabs
     $tlmgr_install breqn
     $tlmgr_install caption
     $tlmgr_install catchfile
+    $tlmgr_install changelog
     $tlmgr_install embedfile
     $tlmgr_install fancyvrb
     $tlmgr_install float
@@ -124,15 +129,19 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
     $tlmgr_install mathabx
     $tlmgr_install mathtools
     $tlmgr_install microtype
+    $tlmgr_install optidef
     $tlmgr_install pdfescape
+    $tlmgr_install pdflscape
     $tlmgr_install pdftexcmds
     $tlmgr_install relsize
     $tlmgr_install sansmath
     $tlmgr_install setspace
+    $tlmgr_install translations
     $tlmgr_install translator
     $tlmgr_install ulem
     $tlmgr_install upquote
     $tlmgr_install xcolor
+    $tlmgr_install xifthen
     $tlmgr_install xkeyval
 fi
 

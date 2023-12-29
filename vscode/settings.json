@@ -3,7 +3,7 @@
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "workbench.colorTheme": "One Dark Pro",
-    "terminal.integrated.fontFamily": "'SauceCodePro Nerd Font'",
+    "terminal.integrated.fontFamily": "'SauceCodePro NF'",
     "terminal.integrated.showExitAlert": false,
     "editor.cursorBlinking": "solid",
     "editor.lineNumbers": "relative",
@@ -356,5 +356,6 @@
     "terminal.integrated.commandsToSkipShell": [
         "-workbench.action.quickOpen"
     ],
-    "window.zoomLevel": 1
+    "window.zoomLevel": 1,
+    "git.openRepositoryInParentFolders": "always"
 }

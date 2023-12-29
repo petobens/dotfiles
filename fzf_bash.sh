@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148,SC2317
 # Note: this also uses several rust binaries: fd, rg, bat, lsd and devicon-lookup
 
 # Setup {{{
@@ -22,6 +23,7 @@ if [[ $- == *i* ]]; then
     else
         completion_base_dir="$base_pkg_dir/share/fzf"
     fi
+    # shellcheck disable=SC1091
     . "$completion_base_dir/completion.bash" 2> /dev/null
 fi
 
@@ -30,37 +32,50 @@ fi
 
 # Change default options and colors
 export FZF_DEFAULT_OPTS='
+--border="bottom"
+--border-label-pos=50
 --height 15
 --inline-info
---prompt="❯ "
+--prompt="   "
+--info="inline:  "
+--marker=" "
+--no-separator
+--preview-window="border-left"
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
 --bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up
 --bind=alt-d:preview-half-page-down,alt-u:preview-half-page-up
 --color=bg+:#282c34,bg:#24272e,fg:#abb2bf,fg+:#abb2bf,hl:#528bff,hl+:#528bff
---color=prompt:#61afef,header:#566370,info:#5c6370,pointer:#c678dd
---color=marker:#98c379,spinner:#e06c75,border:#282c34
+--color=prompt:#c678dd,header:#566370,info:#5c6370,pointer:#c678dd
+--color=marker:#d19a66,spinner:#e06c75,border:#282c34,label:#566370
 '
 
-# Override FZF stock commands (ctrl-t,al-tc) and their options
+# Override FZF stock commands (ctrl-t,alt-c) and their options
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git \
-    --color=always"
+    --color=always --strip-cwd-prefix"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# FIXME: Image preview not working https://github.com/junegunn/fzf/issues/3228#issuecomment-1806840434
 export FZF_CTRL_T_OPTS="
+--border-label='Find Files'
 --multi
 --ansi
 --bind 'ctrl-y:execute-silent(echo -n {+2} | $COPY_CMD)+abort'
---preview 'bat --color always --style numbers --theme TwoDark \
-    --line-range :200 {2}'
---expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f
+--preview='
+if file --mime-type {2} | grep -qF image/; then
+    kitty icat --clear --transfer-mode=memory --stdin=no --place=${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0 {2} | sed \$d
+else
+    bat --color always --style numbers --theme TwoDark --line-range :200 {2}
+fi'
+--expect=tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,alt-g
 --header='enter=edit, tab=insert, C-t=fzf-files, C-o=open, A-c=cd-file-dir, \
-A-p=parent-dirs, A-f=ranger, C-y=yank'
+A-p=parent-dirs, A-f=ranger, A-g=grep, C-y=yank'
 "
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git --strip-cwd-prefix'
 FZF_ALT_C_OPTS_BASE="
+--border-label='Find Dirs'
 --no-multi
---expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f
+--expect=ctrl-o,ctrl-t,alt-c,alt-p,alt-f,alt-g
 --header='enter=fzf-files, C-o=cd, A-c=fzf-dirs, A-p=parent-dirs, \
-A-f=ranger, C-y=yank'
+A-f=ranger, A-g=grep, C-y=yank'
 "
 export FZF_ALT_C_OPTS="$FZF_ALT_C_OPTS_BASE
 --bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort'
@@ -103,6 +118,7 @@ FZF_LL_OPTS="
 
 ll() {
     cmd="lsd -F -lah --color=always"
+    # shellcheck disable=SC2294
     out="$(eval "$cmd" "$@" |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_LL_OPTS" fzf)"
     key=$(head -1 <<< "$out")
@@ -139,7 +155,8 @@ __fzf_select_custom__() {
         cmd="$cmd --no-ignore-vcs"
     fi
     if [[ "$2" ]]; then
-        cmd="$cmd . $2" # use narrow dir
+        cmd=${cmd//$"--strip-cwd-prefix"/} # Path doesn't work with strip-cwd-prefix
+        cmd="$cmd . $2"                    # use narrow dir
     fi
     out=$(eval "$cmd" | devicon-lookup --color |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS" fzf)
@@ -174,6 +191,9 @@ __fzf_select_custom__() {
             ;;
         alt-f)
             printf 'ranger --selectfile %q' "${files[0]}"
+            ;;
+        alt-g)
+            ig "$(dirname "${files[0]}")"
             ;;
         *)
             printf '%s %s' "${EDITOR:-nvim}" "$files_str"
@@ -223,6 +243,9 @@ __fzf_cd_action_key__() {
         alt-p)
             __fzf_cd_parent__ "$dir"
             ;;
+        alt-g)
+            ig "$dir"
+            ;;
         *)
             __fzf_select_custom__ "no-ignore" "$dir"
             ;;
@@ -237,7 +260,8 @@ __fzf_cd_custom__() {
         cmd="$cmd --no-ignore-vcs"
     fi
     if [[ "$2" ]]; then
-        cmd="$cmd . $2" # use narrow dir
+        cmd=${cmd//$"--strip-cwd-prefix"/} # Path doesn't work with strip-cwd-prefix
+        cmd="$cmd . $2"                    # use narrow dir
     fi
     out=$(eval "$cmd" | devicon-lookup |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_C_OPTS" fzf)
@@ -308,8 +332,9 @@ export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE
 --no-sort
 --tac
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
+--border-label='Z Dirs'
 "
-z() {
+zfzf() {
     [ $# -gt 0 ] && _z "$*" && return
     cmd="_z -l 2>&1"
     out="$(eval "$cmd" | devicon-lookup |
@@ -319,12 +344,12 @@ z() {
 }
 if [[ -o vi ]]; then
     # shellcheck disable=SC2016
-    bind '"\ez": "\C-x\C-addi`z`\C-x\C-e\C-x\C-r\C-m"'
+    bind '"\ez": "\C-x\C-addi`zfzf`\C-x\C-e\C-x\C-r\C-m"'
     # shellcheck disable=SC2016
-    bind -m vi-command '"\ez": "ddi`z`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ez": "ddi`zfzf`\C-x\C-e\C-x\C-r\C-m"'
 else
     # shellcheck disable=SC2016
-    bind '"\ez": " \C-e\C-u`z`\e\C-e\er\C-m"'
+    bind '"\ez": " \C-e\C-u`zfzf`\e\C-e\er\C-m"'
 fi
 
 # }}}
@@ -333,7 +358,8 @@ fi
 # Grep {{{
 
 FZF_GREP_OPTS="
---header 'enter=open, alt-q=quit-search'
+--border-label='Live Grep'
+--header 'enter=open, alt-r=refine-search'
 --multi
 --ansi
 --disabled
@@ -343,7 +369,7 @@ FZF_GREP_OPTS="
 
 ig() {
     # shellcheck disable=SC2124
-    grep_cmd="rg --smart-case --vimgrep --no-heading --color=always $@ {q}"
+    grep_cmd="rg --smart-case --vimgrep --no-heading --color=always --trim {q} $@"
     grep_cmd+=" | devicon-lookup --color --prefix :"
     # shellcheck disable=SC2016,SC1004
     preview_cmd='bat --color always --style numbers --theme TwoDark \
@@ -351,8 +377,7 @@ ig() {
     # shellcheck disable=SC2154
     out=$(eval "true" | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_GREP_OPTS" \
         fzf --bind "change:reload:$grep_cmd || true" --preview "$preview_cmd" \
-        --bind "alt-q:unbind(change,alt-q)+change-prompt(fzf> )+enable-search+clear-query" \
-        --prompt 'rg> ' \
+        --bind "alt-r:unbind(change,alt-r)+change-border-label(Find Word)+enable-search+clear-query" \
         --preview-window "+{2}-/2")
     key=$(head -1 <<< "$out")
     mapfile -t _files <<< "$(head -2 <<< "$out")"
@@ -371,13 +396,30 @@ ig() {
         done
     fi
     printf -v files_str "%s " "${files[@]}"
-    eval "$(printf "${EDITOR:-nvim} %s" "$files_str")"
+
+    # When calling this with a subdir arg we seem to need echo instead of eval
+    if [[ -d "$1" ]]; then
+        cmd="echo"
+    else
+        cmd="eval"
+    fi
+    $cmd "$(printf "${EDITOR:-nvim} %s" "$files_str")"
 }
+
+if [[ -o vi ]]; then
+    # shellcheck disable=SC2016
+    bind '"\eg": "\C-x\C-addiig\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\eg": "i\eg"'
+else
+    # shellcheck disable=SC2016
+    bind '"\eg": " \C-e\C-u`ig`\e\C-e\er\C-m"'
+fi
 
 # }}}
 # History {{{
 
 export FZF_CTRL_R_OPTS="
+--border-label='Command History'
 --bind 'ctrl-y:execute-silent(echo -n {2..} | $COPY_CMD)+abort,tab:accept'
 --header 'enter=insert, tab=insert, C-y=yank'
 --nth=2..,..
@@ -409,6 +451,7 @@ bind -m vi-insert -x '"\C-r": __fzf_history__'
 # Tmux {{{
 
 FZF_TMUX_OPTIONS="
+--border-label='Tmux Sessions'
 --multi
 --exit-0
 --expect=alt-k,alt-r,enter
@@ -425,9 +468,9 @@ tms() {
         else
             session_name="$1"
         fi
-        tmux $change -t "$session_name" 2> /dev/null ||
+        tmux "$change" -t "$session_name" 2> /dev/null ||
             (tmux -f "$HOME/.tmux/tmux.conf" new-session -d -s "$session_name" &&
-                tmux $change -t "$session_name")
+                tmux "$change" -t "$session_name")
         return
     fi
 
@@ -459,6 +502,7 @@ tms() {
 # Bluetooth {{{
 
 FZF_BT_OPTS="
+--border-label='Bluetooth Control'
 --multi
 --tac
 --bind 'ctrl-y:execute-silent(echo -n {2} | $COPY_CMD)+abort,tab:accept'
@@ -520,17 +564,12 @@ export FORGIT_LOG_FZF_OPTS='
 --bind="ctrl-o:execute(echo {} | grep -Eo [a-f0-9]+ | head -1 | xargs git show | nvim -)"
 '
 
-alias gl=forgit::log
-alias glg='FORGIT_LOG_GRAPH_ENABLE=false gl -G'
-alias gd=forgit::diff
-alias ga=forgit::add
-alias gu=forgit::restore
-alias gsv=forgit::stash::show
-
-# Load
-if [ -f "/usr/share/zsh/plugins/forgit-git/forgit.plugin.zsh" ]; then
-    . "/usr/share/zsh/plugins/forgit-git/forgit.plugin.zsh"
-fi
+alias gcb='git-forgit checkout_branch'
+alias gl='git-forgit log'
+alias glg='FORGIT_LOG_GRAPH_ENABLE=false git-forgit log'
+alias gd='git-forgit diff'
+alias ga='git-forgit add'
+alias gsv='git-forgit stash_show'
 
 # }}}
 # Docker {{{
@@ -542,6 +581,7 @@ FZF_DOCKER_OPTS_BASE="
 "
 
 FZF_DOCKER_IMAGE_OPTS="$FZF_DOCKER_OPTS_BASE
+--border-label='Docker Images'
 --expect=ctrl-i,alt-d
 --header='enter=run, C-i=interactive, A-d=rm, C-y=yank'
 "
@@ -575,6 +615,7 @@ di() {
 }
 
 FZF_DOCKER_CONTAINER_OPTS="$FZF_DOCKER_OPTS_BASE
+--border-label='Docker Containers'
 --expect=ctrl-a,ctrl-e,ctrl-s,ctrl-r,ctrl-b,alt-k,alt-d
 --header='enter=logs, C-e=exec, C-a=attach, C-b=start, C-s=stop, C-r=restart, \
 A-k=kill, A-d=rm'
@@ -627,6 +668,7 @@ dc() {
 # Man (Search) {{{
 
 FZF_MAN_OPTS='
+--border-label="Man"
 --header "enter=open"
 --preview="man -Pcat {1} 2>/dev/null | bat -l man --color always --style numbers"
 '

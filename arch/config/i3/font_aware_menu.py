@@ -13,7 +13,7 @@ APPS = {
         'desc': 'Terminal',
     },
     'Brave': {
-        'cmd': 'browser',
+        'cmd': 'brave',
         'icon': 'brave',
         'desc': 'Web Browser',
     },
@@ -38,8 +38,12 @@ APPS = {
         'icon': 'wifi-radar',
         'desc': 'Network Settings',
     },
-    'Discord': {'cmd': 'discord', 'icon': 'discord', 'desc': 'Internet Messenger'},
     'Document Scanner': {'cmd': 'scanner', 'icon': 'org.gnome.SimpleScan'},
+    'Microsoft Edge': {
+        'cmd': 'edge',
+        'icon': 'microsoft-edge',
+        'desc': 'Microsoft Edge Web Browser',
+    },
     'Firefox': {'cmd': 'firefox', 'icon': 'firefox', 'desc': 'Web Browser'},
     'Fonts': {'cmd': 'gnome-font', 'icon': 'org.gnome.font-viewer'},
     'FreeOffice PlanMaker': {
@@ -58,7 +62,6 @@ APPS = {
         'desc': 'Word Processor',
     },
     'GlobalProtect VPN': {'cmd': 'globalprotect-vpn', 'icon': 'network-vpn'},
-    'Hangouts': {'cmd': 'hangouts', 'icon': 'google-chat', 'desc': 'Google Hangouts'},
     'Htop': {
         'cmd': 'htop',
         'icon': 'htop',
@@ -66,9 +69,15 @@ APPS = {
     },
     'Kitty': {'cmd': 'kitty', 'icon': 'kitty', 'desc': 'Terminal Emulator'},
     'Kodi': {'cmd': 'kodi', 'icon': 'kodi', 'desc': 'Media Center'},
+    'Mailspring': {'cmd': 'mailspring', 'icon': 'mailspring', 'desc': 'Mail Client'},
     'Meet': {'cmd': 'meet', 'icon': 'google-meet', 'desc': 'Google Meet'},
     'Microsoft Teams': {'cmd': 'teams', 'icon': 'teams'},
-    'OBS Studio': {'cmd': 'obs', 'icon': 'obs', 'desc': 'Streaming/Recording Software'},
+    'OBS Studio': {
+        'cmd': 'obs',
+        'icon': 'obs',
+        'desc': 'Streaming/Recording Software',
+        'ws': 4,
+    },
     'Peek': {'cmd': 'peek', 'icon': 'peek', 'desc': 'Animated GIF Recorder'},
     'Power Manager': {'cmd': 'power-manager', 'icon': 'xfce4-power-manager-settings'},
     'PulseAudio Volume Control': {
@@ -83,13 +92,11 @@ APPS = {
     },
     'Slack': {'cmd': 'slack', 'icon': 'slack', 'desc': 'Internet Messaging'},
     'Spotify': {'cmd': 'spotify', 'icon': 'spotify', 'desc': 'Music Player'},
-    'Spotify-TUI': {'cmd': 'spotify-tui', 'icon': 'spotify', 'desc': 'Music Player'},
     'Task Manager': {
         'cmd': 'prockiller',
         'icon': 'view-process-all',
         'desc': 'FZF Based Process Killer',
     },
-    'Thunderbird': {'cmd': 'thunderbird', 'icon': 'thunderbird', 'desc': 'Mail Client'},
     'Transmission': {
         'cmd': 'transmission',
         'icon': 'transmission',
@@ -125,7 +132,7 @@ def font_aware_menu(cmd_menu):
     selected = check_output(menu_cmd, shell=True).decode().strip()
     selected = selected.split('<')[0].strip()  # Remove the description
     selected = APPS[selected]  # type: ignore
-    run_app(selected.get('cmd'), None)  # type: ignore
+    run_app(selected.get('cmd'), selected.get('ws'))  # type: ignore
 
 
 if __name__ == '__main__':

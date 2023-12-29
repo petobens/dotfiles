@@ -24,10 +24,10 @@ listview {
     dynamic: true;
 }"
 
-menulist=" About This Arch
- App Launcher  (Super+a)
+menulist=" About This Arch
+ App Launcher  (Super+a)
  Reboot        (Super+Ctrl+r)
-襤 Shut Down     (Super+Ctrl+s)"
+⏻ Shut Down     (Super+Ctrl+s)"
 
 # TODO: Highlight option under mouse
 # See: https://github.com/DaveDavenport/rofi/issues/600

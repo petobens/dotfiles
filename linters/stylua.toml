@@ -1,0 +1,9 @@
+column_width = 90
+line_endings = "Unix"
+indent_type = "Spaces"
+indent_width = 4
+quote_style = "AutoPreferSingle"
+no_call_parentheses = false
+
+[sort_requires]
+enabled = true

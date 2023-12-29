@@ -53,6 +53,7 @@ if type "bash" > /dev/null 2>&1; then
         echo Created .fzf_bash.sh symlink
     fi
 fi
+# shellcheck disable=SC1091
 . "$HOME/.bashrc"
 # Readline
 $ln_cmd -fTs "$dotfiles_dir/inputrc" "$HOME/.inputrc"
@@ -89,8 +90,12 @@ if type "python" > /dev/null 2>&1; then
         echo Created .isort.cfg symlink
     fi
     if type "black" > /dev/null 2>&1; then
-        $ln_cmd -fTs "$dotfiles_dir/python/black.toml" "$HOME/.black.toml"
+        $ln_cmd -fTs "$dotfiles_dir/python/black.toml" "$HOME/.config/.black.toml"
         echo Created .black.toml symlink
+    fi
+    if type "ruff" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/python/ruff" "$HOME/.config/ruff"
+        echo Created .config/ruff folder symlink
     fi
 fi
 if type "ipython" > /dev/null 2>&1; then
@@ -99,14 +104,6 @@ if type "ipython" > /dev/null 2>&1; then
     echo Created .ipython/profile_default/ipython_config symlink
     $ln_cmd -fTs "$dotfiles_dir/python/ipython_startup.py" "$HOME/.ipython/profile_default/startup/ipython_startup.py"
     echo Created .ipython/profile_default/startup/ipython_startup symlink
-fi
-if type "R" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/R/Rprofile" "$HOME/.Rprofile"
-    echo Created .Rprofile symlink
-    if type "radian" > /dev/null 2>&1; then
-        $ln_cmd -fTs "$dotfiles_dir/R/radian_profile" "$HOME/.radian_profile"
-        echo Created .radian_profile symlink
-    fi
 fi
 if type "ruby" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/gemrc" "$HOME/.gemrc"
@@ -124,19 +121,15 @@ if type "kitty" > /dev/null 2>&1; then
     echo Created .config/kitty/kitty.conf symlink
 fi
 if type "tmux" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/tmux" "$HOME/.tmux"
-    echo Created .tmux folder symlink
+    $ln_cmd -fTs "$dotfiles_dir/config/tmux" "$HOME/.config/tmux"
+    echo Created .config/tmux folder symlink
 fi
 if type "nvim" > /dev/null 2>&1; then
-    if [ -f "$dotfiles_dir/nvim/init.lua" ]; then
-        $ln_cmd -fTs "$dotfiles_dir/nvim" "$HOME/.config/nvim"
-        echo Created .config/nvim folder symlink
-    else
-        $ln_cmd -fTs "$dotfiles_dir/vim" "$HOME/.config/nvim"
-        echo Created .config/nvim folder symlink from vim folder
-    fi
+    $ln_cmd -fTs "$dotfiles_dir/nvim" "$HOME/.config/nvim"
+    echo Created .config/nvim folder symlink
 fi
 if type "code" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.config/Code/User"
     for f in settings.json keybindings.json extensions.txt; do
         $ln_cmd -fTs "$dotfiles_dir/vscode/$f" "$HOME/.config/Code/User/$f"
         echo "Created .config/Code/User/$f symlink"
@@ -160,17 +153,9 @@ $ln_cmd -fTs "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 echo Created .surfingkeysrc symlink
 
 # Linters
-if type "vint" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/vintrc.yaml" "$HOME/.vintrc.yaml"
-    echo Created .vintrc.yaml symlink
-fi
 if type "eslint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/eslintrc.yaml" "$HOME/.eslintrc.yaml"
     echo Created .eslintrc.yaml symlink
-fi
-if type "tern" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/tern-config" "$HOME/.tern-config"
-    echo Created .tern-config symlink
 fi
 if type "htmlhint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/htmlhintrc" "$HOME/.htmlhintrc"
@@ -180,7 +165,7 @@ if type "markdownlint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/markdownlint.json" "$HOME/.markdownlint.json"
     echo Created .markdownlint.json symlink
 fi
-if type "prettier" > /dev/null 2>&1; then
+if type "prettierd" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/prettierrc.yaml" "$HOME/.prettierrc.yaml"
     echo Created .prettierrc.yaml symlink
 fi
@@ -188,19 +173,39 @@ if type "hadolint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/hadolint.yaml" "$HOME/.config/hadolint.yaml"
     echo Created .config/hadolint.yaml symlink
 fi
+if type "stylua" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/stylua.toml" "$HOME/.config/stylua.toml"
+    echo Created .config/stylua.toml symlink
+fi
+if type "luacheck" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/luacheckrc" "$HOME/.config/.luacheckrc"
+    echo Created .config/.luacheckrc symlink
+fi
+if type "sqlfluff" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/sqlfluff" "$HOME/.sqlfluff"
+    echo Created .sqlfluff symlink
+fi
+if type "taplo" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/taplo.toml" "$HOME/taplo.toml"
+    echo Created taplo.toml symlink
+fi
+if type "yamllint" > /dev/null 2>&1; then
+    sudo mkdir -p "$HOME/.config/yamllint"
+    sudo $ln_cmd -fTs "$dotfiles_dir/linters/yamllint.yaml" "$HOME/.config/yamllint/config"
+    echo Created "$HOME/.config/yamllint/config" symlink
+fi
 
 # Terminal programs
 if type "less" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/lesskey" "$HOME/.lesskey"
-    echo Created .lesskey symlink. Running lesskey executable to generate .less binary file...
-    lesskey
+    echo Created .lesskey symlink
 fi
 if type "ssh" > /dev/null 2>&1; then
-    if [ -f "$HOME"/OneDrive/arch/ssh/config ]; then
+    if [ -f "$HOME"/OneDrive/programming/arch/ssh/config ]; then
         sudo mkdir -p "$HOME/.ssh"
-        sudo $ln_cmd -fTs "$HOME/OneDrive/arch/ssh/config" "$HOME/.ssh/config"
+        sudo $ln_cmd -fTs "$HOME/OneDrive/programming/arch/ssh/config" "$HOME/.ssh/config"
         echo Created .ssh/config symlink
-        sudo $ln_cmd -fTs "$HOME/OneDrive/arch/ssh/id_rsa.pub" "$HOME/.ssh/id_rsa.pub"
+        sudo $ln_cmd -fTs "$HOME/OneDrive/programming/arch/ssh/id_rsa.pub" "$HOME/.ssh/id_rsa.pub"
         echo Created .ssh/id_rsa.pub symlink
     fi
 fi
@@ -216,23 +221,10 @@ if type "ranger" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/config/ranger" "$HOME/.config/ranger"
     echo Created .config/ranger folder symlink
 fi
-if type "sqlplus" > /dev/null 2>&1; then
-    # Note: we actually use sqlcl as cli
-    mkdir -p "$HOME/.config/sqlplus"
-    $ln_cmd -fTs "$dotfiles_dir/dbs/sqlcl_config" "$HOME/.config/sqlplus/login.sql"
-    echo Created ".config/sqlplus/login.sql" symlink
-    $ln_cmd -fTs "$dotfiles_dir/dbs/sqlcl_prompt.js" "$HOME/.config/sqlplus/sqlcl_prompt.js"
-    echo Created ".config/sqlplus/sqlcl_prompt.js" symlink
-fi
 if type "pgcli" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/pgcli"
     sudo $ln_cmd -fTs "$dotfiles_dir/dbs/pgcli_config" "$HOME/.config/pgcli/config"
     echo Created ".config/pgcli/config" symlink
-fi
-if type "mssql-cli" > /dev/null 2>&1; then
-    sudo mkdir -p "$HOME/.config/mssqlcli"
-    sudo $ln_cmd -fTs "$dotfiles_dir/dbs/mssqlcli_config" "$HOME/.config/mssqlcli/config"
-    echo Created ".config/mssqlcli/config" symlink
 fi
 if type "litecli" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/litecli"
@@ -248,19 +240,9 @@ if [ -d "$HOME/.gnupg" ]; then
     echo Created ".gnupg/gpg-agent.conf" symlink
 fi
 
-if [ -f "$HOME/OneDrive/arch/git/.netrc.gpg" ]; then
-    sudo $ln_cmd -fTs "$HOME/OneDrive/arch/git/.netrc.gpg" "$HOME/.netrc.gpg"
+if [ -f "$HOME/OneDrive/programming/arch/git/.netrc.gpg" ]; then
+    sudo $ln_cmd -fTs "$HOME/OneDrive/programming/arch/git/.netrc.gpg" "$HOME/.netrc.gpg"
     echo "Created $HOME/.netrc.gpg symlink"
-fi
-if type "spotifyd" > /dev/null 2>&1; then
-    sudo mkdir -p "$HOME/.config/spotifyd"
-    sudo $ln_cmd -fTs "$dotfiles_dir/config/spotifyd/spotifyd.conf" "$HOME/.config/spotifyd/spotifyd.conf"
-    echo Created "$HOME/.config/spotifyd/spotifyd.conf"
-fi
-if type "spt" > /dev/null 2>&1; then
-    sudo mkdir -p "$HOME/.config/spotify-tui"
-    sudo $ln_cmd -fTs "$dotfiles_dir/config/spotify-tui/config.yml" "$HOME/.config/spotify-tui/config.yml"
-    echo Created "$HOME/.config/spotify-tui/config.yml"
 fi
 
 # OS dependent
@@ -279,6 +261,7 @@ else
         fi
     fi
     if type "pacman" > /dev/null 2>&1; then
+        # shellcheck disable=SC2033
         sudo rm /etc/pacman.conf
         sudo $ln_cmd -fTs "$dotfiles_dir/arch/config/pacman.conf" "/etc/pacman.conf"
         echo Created /etc/pacman.conf symlink
@@ -316,6 +299,7 @@ else
     fi
     if type "connmanctl" > /dev/null 2>&1; then
         sudo mkdir -p "/etc/connman"
+        # shellcheck disable=SC2033
         sudo cp "$dotfiles_dir/arch/config/connman.conf" "/etc/connman/main.conf"
         echo Copied connman config to /etc/connman/main.conf
     fi
@@ -330,16 +314,13 @@ else
         echo Created fontconfig folder symlink
     fi
     # Applications
-    if type "pulseaudio" > /dev/null 2>&1; then
-        mkdir -p "$HOME/.pulse/"
-        $ln_cmd -fTs "$dotfiles_dir/arch/pulse/default.pa" "$HOME/.pulse/default.pa"
-        echo Created .pulse/default.pa symlink
-    fi
     if type "rofi" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/arch/config/rofi" "$HOME/.config/rofi"
         echo Created .config/rofi folder symlink
     fi
     if type "dunst" > /dev/null 2>&1; then
+        mkdir -p "$HOME/.local/share"
+        $ln_cmd -fTs "/usr/share/icons" "$HOME/.local/share/icons"
         $ln_cmd -fTs "$dotfiles_dir/arch/config/dunst" "$HOME/.config/dunst"
         echo Created .config/dunst folder symlink
     fi
@@ -374,6 +355,10 @@ else
         # echo Created /etc/udev/rules.d/99-monitor-hotplug.rules symlink
         # sudo $ln_cmd -fTs "$dotfiles_dir/arch/udev/usb-ethernet.rules" "/etc/udev/rules.d/99-usb-ethernet.rules"
         # echo Created /etc/udev/rules.d/99-usb-ethernet.rules symlink
+        sudo $ln_cmd -fTs "$dotfiles_dir/arch/udev/99-webcam.rules" "/etc/udev/rules.d/99-webcam.rules"
+        echo Created /etc/udev/rules.d/99-webcam.rules symlink
+        sudo $ln_cmd -fTs "$dotfiles_dir/arch/udev/99-backlight.rules" "/etc/udev/rules.d/99-backlight.rules"
+        echo Created /etc/udev/rules.d/99-backlight.rules symlink
     fi
 fi
 

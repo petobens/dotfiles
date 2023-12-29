@@ -1,0 +1,6 @@
+[sqlfluff]
+dialect = postgres
+exclude_rules = AM04,LT12
+
+[sqlfluff:indentation]
+tab_space_size = 2

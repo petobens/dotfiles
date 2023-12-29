@@ -11,9 +11,11 @@ scratch/
 
 # Python
 __pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
 *.pyc
 *.pkl
-.mypy_cache/
 /venv/
 .coverage
 .ipynb_checkpoints
@@ -39,3 +41,7 @@ Icon?
 *.nav
 *.snm
 *.vrb
+
+# Nvim
+minimal.lua
+lazy-lock.json
