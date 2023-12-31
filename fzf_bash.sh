@@ -325,31 +325,30 @@ else
 fi
 
 # }}}
-# Z {{{
+# Zoxide {{{
 
-export FZF_ALT_Z_OPTS="$FZF_ALT_C_OPTS_BASE
+export FZF_ALT_ZOXIDE_OPTS="$FZF_ALT_C_OPTS_BASE
 --bind 'ctrl-y:execute-silent(echo -n {3..} | $COPY_CMD)+abort'
 --no-sort
---tac
 --preview 'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
---border-label='Z Dirs'
+--border-label='Zoxide Dirs'
 "
-zfzf() {
-    [ $# -gt 0 ] && _z "$*" && return
-    cmd="_z -l 2>&1"
+
+zoi() {
+    cmd="zoxide query --list --score 2>&1"
     out="$(eval "$cmd" | devicon-lookup |
-        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_Z_OPTS" fzf |
+        FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_ZOXIDE_OPTS" fzf |
         sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
 }
 if [[ -o vi ]]; then
     # shellcheck disable=SC2016
-    bind '"\ez": "\C-x\C-addi`zfzf`\C-x\C-e\C-x\C-r\C-m"'
+    bind '"\ez": "\C-x\C-addi`zoi`\C-x\C-e\C-x\C-r\C-m"'
     # shellcheck disable=SC2016
-    bind -m vi-command '"\ez": "ddi`zfzf`\C-x\C-e\C-x\C-r\C-m"'
+    bind -m vi-command '"\ez": "ddi`zoi`\C-x\C-e\C-x\C-r\C-m"'
 else
     # shellcheck disable=SC2016
-    bind '"\ez": " \C-e\C-u`zfzf`\e\C-e\er\C-m"'
+    bind '"\ez": " \C-e\C-u`zoi`\e\C-e\er\C-m"'
 fi
 
 # }}}

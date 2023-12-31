@@ -96,33 +96,24 @@ class fzf_parents(Command):
             self.fm.cd(fzf_dir)
 
 
-class fzf_z(Command):
-    """Find a directory using fzf and z."""
+class fzf_zoxide(Command):
+    """Find a directory using fzf and zoxide."""
 
     def execute(self):
         """Execute the command."""
-        z_sh = None
-        if sys.platform == 'darwin':
-            z_sh = '/usr/local/etc/profile.d/z.sh'
-        else:
-            z_sh = '/usr/share/z/z.sh'
-        if not os.path.isfile(z_sh) or z_sh is None:
-            return
-
-        command = f'. {z_sh} && _z -l 2>&1'
+        command = 'zoxide query --list --score 2>&1'
         preview_cmd = (
             'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
         )
         fzf_cmd = f"FZF_DEFAULT_OPTS='{FZF_DEFAULT_OPTS}' fzf"
-        command += (
-            f" | devicon-lookup | {fzf_cmd} --no-sort --tac --preview='{preview_cmd}'"
-        )
-        command += ' | sed "s/^\\W\\s[0-9,.]* *//"'
+        command += f" | devicon-lookup | {fzf_cmd} --no-sort --preview='{preview_cmd}'"
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
         if fzf.returncode == 0:
-            fzf_dir = os.path.abspath(stdout.decode('utf-8').rstrip('\n'))
+            fzf_dir = os.path.abspath(
+                stdout.decode('utf-8').rstrip('\n').split(' ')[-1]
+            )
             self.fm.cd(fzf_dir)
 
 

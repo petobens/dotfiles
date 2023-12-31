@@ -151,6 +151,9 @@ fi
 if type "ctop" > /dev/null 2>&1; then
     alias ct='TERM=xterm-256 ctop'
 fi
+if type "zoxide" > /dev/null 2>&1; then
+    eval "$(zoxide init bash)"
+fi
 if type "lsd" > /dev/null 2>&1; then
     alias ls='lsd -F --color=auto'
     cd() { builtin cd "$@" && lsd -F --color=auto; }
@@ -417,17 +420,6 @@ PROMPT_COMMAND=$'save_reload_hist\n'"$PROMPT_COMMAND"
 
 # }}}
 # Fzf and cli apps {{{
-
-# Z Note: we must load if after the prompt since it modifies the prompt command
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    if [ -f "$BASE_PKG_DIR/etc/profile.d/z.sh" ]; then
-        . "$BASE_PKG_DIR/etc/profile.d/z.sh"
-    fi
-else
-    if [[ -f "/usr/share/z/z.sh" ]]; then
-        source /usr/share/z/z.sh
-    fi
-fi
 
 # Fzf
 if type "fzf" > /dev/null 2>&1; then

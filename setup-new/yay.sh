@@ -210,9 +210,9 @@ $yay_cmd virtualbox
 $yay_cmd vivid
 $yay_cmd w3m
 $yay_cmd wget
-$yay_cmd z
 $yay_cmd zbar
 $yay_cmd zip
+$yay_cmd zoxide
 
 # Apps
 $yay_cmd brave-bin

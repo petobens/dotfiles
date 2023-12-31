@@ -252,7 +252,9 @@ end
 
 function _G.TelescopeConfig.z_with_tree_preview(opts)
     opts = opts or {}
-    opts.cmd = { 'bash', '-c', 'source /usr/share/z/z.sh && _z -l 2>&1 | tac' }
+    opts.cmd = { 'bash', '-c', 'zoxide query --list --score 2>&1' }
+    opts.prompt_title = 'Zoxide Directories'
+    opts.path_display = { 'absolute' }
     opts.previewer = tree_previewer
     telescope.extensions.z.list(opts)
 end
