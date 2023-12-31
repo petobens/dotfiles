@@ -383,7 +383,7 @@ sys_update_all() {
     fi
     if type "pipx" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Python binaries with pipx...\033[0m"
-        pipx upgrade-all --include-injected
+        pipx upgrade-all --include-injected --quiet
     fi
     if type "python3" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Python user modules...\033[0m"
