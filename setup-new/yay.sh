@@ -156,7 +156,6 @@ $yay_cmd bind-tools
 $yay_cmd cronie
 $yay_cmd ctags
 $yay_cmd ctop
-$yay_cmd diff-so-fancy
 $yay_cmd docker
 $yay_cmd docker-compose
 $yay_cmd dragon-drop
@@ -165,6 +164,7 @@ $yay_cmd fastfetch
 $yay_cmd fd
 $yay_cmd forgit-git
 $yay_cmd fzf
+$yay_cmd git-delta
 $yay_cmd github-cli
 $yay_cmd gnupg
 $yay_cmd go-yq

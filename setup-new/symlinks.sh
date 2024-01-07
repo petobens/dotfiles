@@ -387,6 +387,7 @@ if type "git" > /dev/null 2>&1; then
 [core]
     editor = nvim
     excludesfile = ~/.gitignore
+    pager = delta --width ${FZF_PREVIEW_COLUMNS-$COLUMNS}
 [web]
     browser = start
 [credential]
@@ -395,13 +396,36 @@ if type "git" > /dev/null 2>&1; then
     pushf = push --force-with-lease
 [diff]
 	algorithm = histogram
+[delta]
+    syntax-theme = TwoDark
+    features = colorscheme
+    side-by-side = true
+    line-numbers = true
+[delta "colorscheme"]
+    true-color                    = always
+    file-style                    = "#e5c07b"
+    file-decoration-style         = "#e5c07b" ul
+    hunk-header-decoration-style  = "#4b5263" box
+    minus-style                   = "#e06c75" "#3e4452"
+    minus-non-emph-style          = "#e06c75" "#3e4452"
+    minus-emph-style              = black "#e06c75"
+    minus-empty-line-marker-style = "#e06c75" "#3e4452"
+    zero-style                    = syntax
+    plus-style                    = "#98c379" "#3e4452"
+    plus-non-emph-style           = "#98c379" "#3e4452"
+    plus-emph-style               = black "#98c379"
+    plus-empty-line-marker-style  = "#98c379" "#3e4452"
+    line-numbers-zero-style       = "#4b5263"
+    line-numbers-minus-style      = "#e06c75"
+    line-numbers-plus-style       = "#98c379"
+    line-numbers-left-style       = "#282c34"
+    line-numbers-right-style      = "#282c34"
+    grep-line-number-style        = "#98c379"
+    whitespace-error-style        = "#be5046"
+    grep-file-style               = "#529bff"
+[interactive]
+    diffFilter = delta --color-only features=interactive
 EOF
         echo Created .gitconfig file
-
-        # Make git use diff-so-fancy (i.e do corresponding changes in gitconfig)
-        if type "diff-so-fancy" > /dev/null 2>&1; then
-            echo -e "\\033[1;34m--> Setting diff-so-fancy as default git diff tool...\\033[0m"
-            diff-so-fancy --set-defaults
-        fi
     fi
 fi

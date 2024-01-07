@@ -29,6 +29,9 @@ if [[ -f "$BASE_PKG_DIR/share/bash-completion/bash_completion" ]]; then
     . "$BASE_PKG_DIR/share/bash-completion/bash_completion"
 fi
 
+# Export the columns size envar (to be used for instance by git-delta)
+export COLUMNS
+
 # }}}
 # Bindings {{{
 
