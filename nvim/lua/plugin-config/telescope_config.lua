@@ -762,6 +762,7 @@ telescope.setup({
             show_current_file = true,
         },
         undo = {
+            layout_config = { preview_width = 0.7 },
             mappings = {
                 i = {
                     ['<C-y>'] = require('telescope-undo.actions').yank_additions,
