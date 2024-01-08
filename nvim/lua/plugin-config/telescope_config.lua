@@ -32,6 +32,19 @@ layout_strategies.bpane = function(picker, max_columns, max_lines, layout_config
 end
 
 -- Custom previewers
+local function scroll_less(self, direction)
+    if not self.state then
+        return
+    end
+    local bufnr = self.state.termopen_bufnr
+    -- 0x05 -> <C-e>; 0x19 -> <C-y>
+    local input = direction > 0 and string.char(0x05) or string.char(0x19)
+    local count = math.abs(direction)
+    vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
+        vim.cmd([[normal! ]] .. count .. input)
+    end)
+end
+
 local tree_previewer = previewers.new_termopen_previewer({
     get_command = function(entry)
         return {
@@ -44,22 +57,31 @@ local tree_previewer = previewers.new_termopen_previewer({
         }
     end,
     title = 'Tree Previewer',
-    scroll_fn = function(self, direction)
-        if not self.state then
-            return
-        end
-        local bufnr = self.state.termopen_bufnr
-        -- 0x05 -> <C-e>; 0x19 -> <C-y>
-        local input = direction > 0 and string.char(0x05) or string.char(0x19)
-        local count = math.abs(direction)
-        vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
-            vim.cmd([[normal! ]] .. count .. input)
-        end)
+    scroll_fn = scroll_less,
+})
+
+local delta = previewers.new_termopen_previewer({
+    get_command = function(entry)
+        return {
+            'git',
+            '-c',
+            'core.pager=delta',
+            '-c',
+            'delta.paging=never',
+            '-c',
+            'delta.side-by-side=false',
+            'show',
+            entry.value .. '^!',
+            '--',
+            entry.current_file,
+        }
     end,
+    title = 'Delta Diff',
+    scroll_fn = scroll_less,
 })
 
 -- Custom sorters
-local preserve_order_sorter = function(opts)
+local function preserve_order_sorter(opts)
     -- luacheck:ignore 631
     -- From: https://github.com/antoinemadec/telescope-git-browse.nvim/blob/main/lua/telescope/_extensions/git_browse/sorters.lua
     opts = opts or {}
@@ -337,6 +359,7 @@ local function gitcommits(opts)
         cwd = opts.cwd,
         results_title = git_root[1],
         previewer = {
+            delta,
             previewers.git_commit_diff_as_was.new(opts),
             previewers.git_commit_message.new(opts),
         },
@@ -351,6 +374,7 @@ local function gitcommits_buffer(opts)
         cwd = opts.cwd,
         results_title = vim.api.nvim_buf_get_name(0),
         previewer = {
+            delta,
             previewers.git_commit_diff_as_was.new(opts),
             previewers.git_commit_message.new(opts),
         },
@@ -442,6 +466,16 @@ local custom_actions = transform_mod({
         actions.close(prompt_bufnr)
         local commit_sha = action_state.get_selected_entry().value
         vim.cmd(string.format([[execute 'vsplit' FugitiveFind("%s")]], commit_sha))
+    end,
+    -- Open git commit with delta via toggleterm
+    delta_term = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local commit_sha = action_state.get_selected_entry().value
+        local delta_cmd = 'git -c core.pager=delta -c delta.paging=always -c delta.side-by-side=true diff '
+            .. commit_sha
+            .. '^! --'
+        vim.cmd(string.format('TermExec size=25 cmd="%s"', delta_cmd))
+        vim.cmd('wincmd p')
     end,
     -- Search history
     edit_search_line = function(prompt_bufnr)
@@ -717,21 +751,25 @@ telescope.setup({
             },
         },
         git_commits = {
+            layout_config = { preview_width = 0.55 },
             mappings = {
                 i = {
                     ['<CR>'] = custom_actions.fugitive_open,
                     ['<C-s>'] = custom_actions.fugitive_split,
                     ['<C-v>'] = custom_actions.fugitive_vsplit,
+                    ['<C-d>'] = custom_actions.delta_term,
                     ['<C-o>'] = actions.git_checkout,
                 },
             },
         },
         git_bcommits = {
+            layout_config = { preview_width = 0.55 },
             mappings = {
                 i = {
                     ['<CR>'] = custom_actions.fugitive_open,
                     ['<C-s>'] = custom_actions.fugitive_split,
                     ['<C-v>'] = custom_actions.fugitive_vsplit,
+                    ['<C-d>'] = custom_actions.delta_term,
                     ['<C-o>'] = actions.git_checkout,
                 },
             },
