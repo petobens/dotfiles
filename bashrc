@@ -238,7 +238,8 @@ if type "git" > /dev/null 2>&1; then
     gdcp() {
         git diff --cached > "$1"
     }
-    alias dsf='git diff --no-index'
+    # Diff (with) git-delta
+    alias dgd='git diff --no-index'
 fi
 if type "gh" > /dev/null 2>&1; then
     alias ghi='gh issue'
