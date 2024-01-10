@@ -23,10 +23,6 @@ while [ ! -d "$dotfiles_dir" ]; do
 done
 dotfiles_dir=${dotfiles_dir%/} # Strip last (potential) slash
 
-# Ask if we want to create a new gitconfig file
-read -p "Do you want to create new gitconfig file (y/n)? " -n 1 -r
-echo
-
 # Creating missing dirs
 echo Creating symlinks under "$HOME"/
 
@@ -366,66 +362,6 @@ fi
 if type "git" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/gitignore" "$HOME/.gitignore"
     echo Created .gitignore symlink
-
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        rm -rf "$HOME/.gitconfig"
-        read -r -e -p "Enter git user name: " username
-        read -r -e -p "Enter git mail: " mail
-        if [[ "$OSTYPE" == 'darwin'* ]]; then
-            credential_helper='osxkeychain'
-        else
-            credential_helper='/usr/share/git/credential/netrc/git-credential-netrc.perl -f ~/.netrc.gpg'
-        fi
-        cat > "$HOME/.gitconfig" << EOF
-[user]
-    name = $username
-    email = $mail
-[push]
-    default = simple
-[pull]
-	rebase = false
-[core]
-    editor = nvim
-    excludesfile = ~/.gitignore
-    pager = delta --width ${FZF_PREVIEW_COLUMNS-$COLUMNS}
-[web]
-    browser = start
-[credential]
-    helper = $credential_helper
-[alias]
-    pushf = push --force-with-lease
-[diff]
-	algorithm = histogram
-[delta]
-    syntax-theme = TwoDark
-    features = colorscheme
-    side-by-side = true
-    line-numbers = true
-[delta "colorscheme"]
-    true-color                    = always
-    file-style                    = "#e5c07b"
-    file-decoration-style         = "#e5c07b" ul
-    hunk-header-decoration-style  = "#4b5263" box
-    minus-style                   = "#e06c75" "#3e4452"
-    minus-non-emph-style          = "#e06c75" "#3e4452"
-    minus-emph-style              = black "#e06c75"
-    minus-empty-line-marker-style = "#e06c75" "#3e4452"
-    zero-style                    = syntax
-    plus-style                    = "#98c379" "#3e4452"
-    plus-non-emph-style           = "#98c379" "#3e4452"
-    plus-emph-style               = black "#98c379"
-    plus-empty-line-marker-style  = "#98c379" "#3e4452"
-    line-numbers-zero-style       = "#4b5263"
-    line-numbers-minus-style      = "#e06c75"
-    line-numbers-plus-style       = "#98c379"
-    line-numbers-left-style       = "#282c34"
-    line-numbers-right-style      = "#282c34"
-    grep-line-number-style        = "#98c379"
-    whitespace-error-style        = "#be5046"
-    grep-file-style               = "#529bff"
-[interactive]
-    diffFilter = delta --color-only features=interactive
-EOF
-        echo Created .gitconfig file
-    fi
+    $ln_cmd -fTs "$dotfiles_dir/gitconfig" "$HOME/.gitconfig"
+    echo Created .gitconfig file
 fi

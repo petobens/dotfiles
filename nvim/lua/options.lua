@@ -187,6 +187,7 @@ vim.filetype.add({
         ['config.rasi'] = 'css',
         ['dunstrc'] = 'cfg',
         ['flake8'] = 'config',
+        ['gitconfig'] = 'gitconfig',
         ['matplotlibrc'] = 'confini',
         ['pdbrc'] = 'python',
         ['poetry.lock'] = 'toml',
