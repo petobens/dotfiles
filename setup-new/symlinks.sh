@@ -252,7 +252,7 @@ else
         $ln_cmd -fTs "$dotfiles_dir/arch/bin" "$HOME/bin"
         echo Created bin folder symlink
         if type "tmux" > /dev/null 2>&1; then
-            $ln_cmd -fTs "$dotfiles_dir/tmux/tmux_tree" "$HOME/bin/tmux_tree"
+            $ln_cmd -fTs "$dotfiles_dir/config/tmux/tmux_tree" "$HOME/bin/tmux_tree"
             echo Created bin/tmux_tree symlink
         fi
     fi
