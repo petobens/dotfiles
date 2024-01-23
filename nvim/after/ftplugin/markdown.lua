@@ -22,7 +22,9 @@ function _G.MarkdownFolding.custom_foldtext()
             v[1] = conceal_map[v[1]]
         end
         for i, h in pairs(v[2]) do
-            if vim.startswith(h, '@text.title') then
+            if
+                vim.startswith(h, '@markup.heading') or vim.startswith(h, '@text.title')
+            then
                 v[2][i] = v[2][i] .. '.markdown'
             end
         end

@@ -88,7 +88,7 @@ onedarkpro.setup({
         TermCursor = { bg = p.blue },
         TermCursorNC = { link = 'CursorColumn' },
         Title = { fg = p.green },
-        VertSplit = { link = 'FloatBorder' }, -- for nvim-tree separator
+        VertSplit = { link = 'FloatBorder' },
         Visual = { bg = p.visual_grey },
         VisualNOS = { bg = p.visual_grey },
         WarningMsg = { fg = p.orange },
@@ -204,6 +204,15 @@ onedarkpro.setup({
         -- Latex
         texTitleArg = { style = 'bold' },
         texMathEnvArgName = { fg = p.yellow },
+        ---- treesitter hl for embedded latex in md files:
+        ['@function.latex'] = { fg = p.purple },
+        ['@function.macro.latex'] = { fg = p.purple },
+        ['@punctuation.bracket.latex'] = { fg = p.blue },
+        ['@markup.link.latex'] = {},
+        ['@markup.environment.latex'] = { fg = p.purple },
+        ['@markup.environment.name.latex'] = { fg = p.yellow },
+        ['@md_latex_equation_dollar'] = { fg = p.blue },
+        ['@md_latex_equation_double_dollar'] = { fg = p.blue },
 
         -- Lua
         ['@field.lua'] = { fg = p.red },
@@ -214,29 +223,30 @@ onedarkpro.setup({
         ['@lsp.mod.static.lua'] = { fg = p.yellow },
         ['@lsp.type.comment.lua'] = {},
         ['@lsp.type.keyword.lua'] = { fg = p.red },
+        ['@lsp.type.method.lua'] = { fg = p.light_blue },
         ['@lsp.type.property.lua'] = {},
         ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
+        ['@punctuation.bracket.lua'] = { fg = p.fg },
 
         ---- Markdown
-        ['@text.title.markdown'] = { fg = p.purple, style = 'bold' },
-        ['@text.title.1.markdown'] = { fg = p.purple, style = 'bold' },
-        ['@text.title.1.marker.markdown'] = { link = '@text.title.1.markdown' },
-        ['@text.title.1.conceal.markdown'] = { link = '@text.title.1.markdown' },
-        ['@text.title.2.markdown'] = { fg = p.light_blue, style = 'bold' },
-        ['@text.title.2.marker.markdown'] = { link = '@text.title.2.markdown' },
-        ['@text.title.2.conceal.markdown'] = { link = '@text.title.2.markdown' },
-        ['@text.title.3.markdown'] = { fg = p.cyan, style = 'bold' },
-        ['@text.title.3.marker.markdown'] = { link = '@text.title.3.markdown' },
-        ['@text.title.3.conceal.markdown'] = { link = '@text.title.3.markdown' },
-        ['@text.title.4.markdown'] = { fg = p.blue, style = 'bold' },
-        ['@text.title.4.marker.markdown'] = { link = '@text.title.4.markdown' },
-        ['@text.title.4.conceal.markdown'] = { link = '@text.title.4.markdown' },
-        ['@text.title.5.markdown'] = { fg = p.green, style = 'bold' },
-        ['@text.title.5.marker.markdown'] = { link = '@text.title.5.markdown' },
-        ['@text.title.5.conceal.markdown'] = { link = '@text.title.5.markdown' },
-        ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
+        ['@markup.heading.1.markdown'] = { fg = p.purple, style = 'bold' },
+        ['@markup.heading.1.marker.markdown'] = { link = '@markup.heading.1.markdown' },
+        ['@text.title.1.conceal.markdown'] = { link = '@markup.heading.1.markdown' },
+        ['@markup.heading.2.markdown'] = { fg = p.light_blue, style = 'bold' },
+        ['@markup.heading.2.marker.markdown'] = { link = '@markup.heading.2.markdown' },
+        ['@text.title.2.conceal.markdown'] = { link = '@markup.heading.2.markdown' },
+        ['@markup.heading.3.markdown'] = { fg = p.cyan, style = 'bold' },
+        ['@markup.heading.3.marker.markdown'] = { link = '@markup.heading.3.markdown' },
+        ['@text.title.3.conceal.markdown'] = { link = '@markup.heading.3.markdown' },
+        ['@markup.heading.4.markdown'] = { fg = p.blue, style = 'bold' },
+        ['@markup.heading.4.marker.markdown'] = { link = '@markup.heading.4.markdown' },
+        ['@text.title.4.conceal.markdown'] = { link = '@markup.heading.4.markdown' },
+        ['@markup.heading.5.markdown'] = { fg = p.green, style = 'bold' },
+        ['@markup.heading.5.marker.markdown'] = { link = '@markup.heading.5.markdown' },
+        ['@text.title.5.conceal.markdown'] = { link = '@markup.heading.5.markdown' },
+        ['@markup.list.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@punctuation.special.bullet.conceal.markdown'] = {
-            link = '@punctuation.special.markdown',
+            link = '@markup.list.markdown',
         },
         ['@text.todo.checked.markdown'] = { fg = p.green },
         ['@text.todo.checked.conceal.markdown'] = { link = '@text.todo.checked.markdown' },
@@ -247,9 +257,9 @@ onedarkpro.setup({
         ['@text.todo.doing.conceal.markdown_inline'] = { fg = p.cyan },
         ['@text.todo.wontdo.conceal.markdown_inline'] = { fg = p.red },
         ['@punctuation.special.block.conceal.markdown'] = { fg = p.gray },
-        ['@text.quote.markdown'] = { fg = p.comment_grey },
-        ['@text.reference.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
-        ['@text.uri.markdown_inline'] = {
+        ['@markup.quote.markdown'] = { fg = p.comment_grey },
+        ['@markup.link.label.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
+        ['@markup.link.url.markdown_inline'] = {
             fg = p.light_blue,
             sp = p.light_blue,
             style = 'undercurl',
@@ -257,8 +267,8 @@ onedarkpro.setup({
         ['@lsp.type.class.markdown'] = { fg = p.orange }, -- wiki links
         ['@lsp.type.enumMember.markdown'] = { fg = p.orange }, -- hashtags
         ['@label.markdown'] = { fg = p.cyan }, -- code blocks
-        ['@text.strong.markdown_inline'] = { style = 'bold' },
-        ['@text.emphasis.markdown_inline'] = { style = 'italic' },
+        ['@markup.strong.markdown_inline'] = { style = 'bold' },
+        ['@markup.italic.markdown_inline'] = { style = 'italic' },
         ['@text.comment.markdown'] = { link = 'Comment' },
         ['@front_matter.markdown'] = { fg = p.yellow },
 
@@ -402,6 +412,7 @@ onedarkpro.setup({
         NeotestUnknown = { fg = p.gray },
 
         ---- NvimTree
+        NvimTreeWinSeparator = { link = 'FloatBorder' },
         NvimTreeFolderName = { fg = p.light_blue },
         NvimTreeFolderIcon = { link = 'NvimTreeFolderName' },
         NvimTreeOpenedFolderName = { link = 'NvimTreeFolderName' },
