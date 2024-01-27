@@ -50,11 +50,6 @@ vim.api.nvim_create_autocmd('FileChangedRO', {
         vim.opt_local.readonly = false
     end,
 })
----- Send cwd to tmux splits (see https://github.com/neovim/neovim/issues/21771)
-vim.api.nvim_create_autocmd({ 'DirChanged' }, {
-    group = vim.api.nvim_create_augroup('cwd_tmux', { clear = true }),
-    command = [[call chansend(v:stderr, printf("\033]7;%s\033", v:event.cwd))]],
-})
 
 -- Appearance
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
