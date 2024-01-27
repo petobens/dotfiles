@@ -224,6 +224,7 @@ onedarkpro.setup({
         ['@lsp.type.comment.lua'] = {},
         ['@lsp.type.keyword.lua'] = { fg = p.red },
         ['@lsp.type.method.lua'] = { fg = p.light_blue },
+        ['@lsp.type.parameter.lua'] = {},
         ['@lsp.type.property.lua'] = {},
         ['@lsp.typemod.function.defaultLibrary.lua'] = { fg = p.yellow },
         ['@punctuation.bracket.lua'] = { fg = p.fg },
