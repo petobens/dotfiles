@@ -289,11 +289,14 @@ onedarkpro.setup({
         ['@attribute.python'] = { fg = p.blue },
         ['@constant.builtin.python'] = { fg = p.orange },
         ['@constant.python'] = { fg = p.orange },
+        ['@constructor.python'] = { fg = p.cyan },
         ['@function.builtin.python'] = { fg = p.yellow },
+        ['@function.method'] = { fg = p.light_blue },
         ['@include.python'] = { fg = p.purple },
         ['@keyword.python'] = { fg = p.purple },
         ['@keyword.return.python'] = { fg = p.purple },
-        ['@punctuation.special.python'] = { fg = p.orange },
+        ['@punctuation.bracket.python'] = {},
+        ['@punctuation.special.python'] = { fg = p.orange }, -- f-strings
 
         ---- vim-doc and checkhealth
         ['@conceal.vimdoc'] = { fg = p.red },
