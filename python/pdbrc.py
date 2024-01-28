@@ -1,4 +1,5 @@
 """pdbpp config."""
+
 # pylint:disable=E1101,W0212
 
 import pdb
@@ -53,10 +54,10 @@ class OneDarkish(Style):
         Keyword.Constant: green,
         Keyword.Namespace: purple,
         Name.Namespace: f'{syntax_fg} nobold',
-        Name.Builtin: red,
+        Name.Builtin: yellow,
         Name.Function: light_blue,
-        Name.Class: f'{light_blue} nobold',
-        Name.Decorator: light_blue,
+        Name.Class: f'{yellow} nobold',
+        Name.Decorator: blue,
         Name.Exception: yellow,
         Name.Variable.Magic: red,  # dunder methods
         Number: dark_yellow,
