@@ -413,7 +413,6 @@ onedarkpro.setup({
         NeotestUnknown = { fg = p.gray },
 
         ---- NvimTree
-        NvimTreeWinSeparator = { link = 'FloatBorder' },
         NvimTreeFolderName = { fg = p.light_blue },
         NvimTreeFolderIcon = { link = 'NvimTreeFolderName' },
         NvimTreeOpenedFolderName = { link = 'NvimTreeFolderName' },
