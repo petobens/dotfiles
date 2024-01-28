@@ -191,5 +191,5 @@ timeout = 0
 # Per app rules
 [Spotify]
 appname = Spotify
-new_icon = Spotify
+new_icon = /home/pedro/.local/share/icons/hicolor/64x64/apps/spotify.png
 timeout = 3
