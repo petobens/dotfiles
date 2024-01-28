@@ -226,10 +226,10 @@ onedarkpro.setup({
         ---- Json
         ['@label.json'] = { fg = p.red },
 
-        -- Latex
+        ---- Latex
         texTitleArg = { style = 'bold' },
         texMathEnvArgName = { fg = p.yellow },
-        ---- treesitter hl for embedded latex in md files:
+        ------ treesitter hl for embedded latex in md files:
         ['@function.latex'] = { fg = p.purple },
         ['@function.macro.latex'] = { fg = p.purple },
         ['@punctuation.bracket.latex'] = { fg = p.blue },
@@ -239,7 +239,7 @@ onedarkpro.setup({
         ['@md_latex_equation_dollar'] = { fg = p.blue },
         ['@md_latex_equation_double_dollar'] = { fg = p.blue },
 
-        -- Lua
+        ---- Lua
         ['@field.lua'] = { fg = p.red },
         ['@keyword.lua'] = { fg = p.purple },
         ['@keyword.return.lua'] = { fg = p.purple },
@@ -313,10 +313,13 @@ onedarkpro.setup({
         ['@punctuation.bracket.python'] = {},
         ['@punctuation.special.python'] = { fg = p.orange }, -- f-strings
 
-        --- Sql
+        ---- query (ts)
+        ['@punctuation.bracket.query'] = {},
+
+        ---- Sql
         ['@type.sql'] = { fg = p.light_blue },
 
-        --- TOML
+        ---- TOML
         ['@table_brackets.toml'] = { fg = p.yellow },
 
         ---- vim & vimdoc
@@ -338,11 +341,11 @@ onedarkpro.setup({
             sp = p.blue,
             style = 'undercurl',
         },
-        ---- checkhealth
+        ------ checkhealth
         helpSectionDelim = { fg = p.red },
         healthSuccess = { fg = p.black, bg = p.green },
 
-        --- YAML
+        ---- YAML
         ['@field.yaml'] = { fg = p.red },
         ['@punctuation.special.yaml'] = { fg = p.yellow },
 
