@@ -196,6 +196,7 @@ onedarkpro.setup({
         ---- Bash
         ['@parameter.bash'] = { fg = p.orange },
         ['@punctuation.special.bash'] = { fg = p.red },
+        ['@punctuation.bracket.bash'] = {},
 
         ---- Comments
         ['@comment.todo.comment'] = { fg = p.orange, bg = p.black, style = 'bold' },
