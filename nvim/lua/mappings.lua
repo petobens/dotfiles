@@ -228,7 +228,6 @@ vim.keymap.set({ 'n', 'v' }, '<Leader>ol', function()
             [[\(http\|www\.\)[^ ]:\?[[:alnum:]%\/_#.-]*]]
         )
     end
-    url = vim.fn.escape(url, '#!?&;|%')
     vim.ui.open(url)
     vim.cmd('redraw!')
 end)
