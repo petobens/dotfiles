@@ -170,27 +170,12 @@ onedarkpro.setup({
 
         -- Treesitter
         ['@boolean'] = { fg = p.orange },
-        ['@field'] = { fg = p.fg },
         ['@function'] = { fg = p.light_blue },
-        ['@include'] = { fg = p.purple },
+        ['@function.method'] = { fg = p.light_blue },
         ['@keyword'] = { fg = p.purple },
-        ['@method'] = { fg = p.light_blue },
-        ['@parameter'] = { fg = p.orange },
+        ['@variable.parameter'] = { fg = p.orange },
         ['@punctuation.special'] = { fg = p.blue },
         ['@string.escape'] = { fg = p.fg },
-        ['@text.danger'] = { fg = p.red, style = 'bold' },
-        ['@text.emphasis'] = { fg = p.orange, style = 'italic' },
-        ['@text.literal'] = { fg = p.green }, -- embedded code
-        ['@text.reference'] = { fg = p.blue },
-        ['@text.strong'] = { fg = p.orange, style = 'bold' },
-        ['@text.title'] = { fg = p.dark_red, style = 'bold' },
-        ['@text.uri'] = { fg = p.blue, sp = p.blue, style = 'undercurl' },
-        ['@text.uri.comment'] = {
-            fg = p.comment_grey,
-            sp = p.comment_grey,
-            style = 'undercurl',
-        },
-        ['@text.warning'] = { fg = p.orange, style = 'bold' },
 
         -- Filetypes
         ---- Bash
@@ -272,31 +257,33 @@ onedarkpro.setup({
         ---- Markdown
         ['@markup.heading.1.markdown'] = { fg = p.purple, style = 'bold' },
         ['@markup.heading.1.marker.markdown'] = { link = '@markup.heading.1.markdown' },
-        ['@text.title.1.conceal.markdown'] = { link = '@markup.heading.1.markdown' },
+        ['@markup.title.1.conceal.markdown'] = { link = '@markup.heading.1.markdown' },
         ['@markup.heading.2.markdown'] = { fg = p.light_blue, style = 'bold' },
         ['@markup.heading.2.marker.markdown'] = { link = '@markup.heading.2.markdown' },
-        ['@text.title.2.conceal.markdown'] = { link = '@markup.heading.2.markdown' },
+        ['@markup.title.2.conceal.markdown'] = { link = '@markup.heading.2.markdown' },
         ['@markup.heading.3.markdown'] = { fg = p.cyan, style = 'bold' },
         ['@markup.heading.3.marker.markdown'] = { link = '@markup.heading.3.markdown' },
-        ['@text.title.3.conceal.markdown'] = { link = '@markup.heading.3.markdown' },
+        ['@markup.title.3.conceal.markdown'] = { link = '@markup.heading.3.markdown' },
         ['@markup.heading.4.markdown'] = { fg = p.blue, style = 'bold' },
         ['@markup.heading.4.marker.markdown'] = { link = '@markup.heading.4.markdown' },
-        ['@text.title.4.conceal.markdown'] = { link = '@markup.heading.4.markdown' },
+        ['@markup.title.4.conceal.markdown'] = { link = '@markup.heading.4.markdown' },
         ['@markup.heading.5.markdown'] = { fg = p.green, style = 'bold' },
         ['@markup.heading.5.marker.markdown'] = { link = '@markup.heading.5.markdown' },
-        ['@text.title.5.conceal.markdown'] = { link = '@markup.heading.5.markdown' },
+        ['@markup.title.5.conceal.markdown'] = { link = '@markup.heading.5.markdown' },
         ['@markup.list.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@punctuation.special.bullet.conceal.markdown'] = {
             link = '@markup.list.markdown',
         },
-        ['@text.todo.checked.markdown'] = { fg = p.green },
-        ['@text.todo.checked.conceal.markdown'] = { link = '@text.todo.checked.markdown' },
-        ['@text.todo.unchecked.markdown'] = { fg = p.red },
-        ['@text.todo.unchecked.conceal.markdown'] = {
-            link = '@text.todo.unchecked.markdown',
+        ['@markup.todo.checked.markdown'] = { fg = p.green },
+        ['@markup.todo.checked.conceal.markdown'] = {
+            link = '@markup.todo.checked.markdown',
         },
-        ['@text.todo.doing.conceal.markdown_inline'] = { fg = p.cyan },
-        ['@text.todo.wontdo.conceal.markdown_inline'] = { fg = p.red },
+        ['@markup.todo.unchecked.markdown'] = { fg = p.red },
+        ['@markup.todo.unchecked.conceal.markdown'] = {
+            link = '@markup.todo.unchecked.markdown',
+        },
+        ['@markup.todo.doing.conceal.markdown_inline'] = { fg = p.cyan },
+        ['@markup.todo.wontdo.conceal.markdown_inline'] = { fg = p.red },
         ['@punctuation.special.block.conceal.markdown'] = { fg = p.gray },
         ['@markup.quote.markdown'] = { fg = p.comment_grey },
         ['@markup.link.label.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
@@ -310,7 +297,7 @@ onedarkpro.setup({
         ['@label.markdown'] = { fg = p.cyan }, -- code blocks
         ['@markup.strong.markdown_inline'] = { style = 'bold' },
         ['@markup.italic.markdown_inline'] = { style = 'italic' },
-        ['@text.comment.markdown'] = { link = 'Comment' },
+        ['@markup.comment.markdown'] = { link = 'Comment' },
         ['@front_matter.markdown'] = { fg = p.yellow },
 
         ---- Python
@@ -320,7 +307,6 @@ onedarkpro.setup({
         ['@constant.python'] = { fg = p.orange },
         ['@constructor.python'] = { fg = p.cyan },
         ['@function.builtin.python'] = { fg = p.yellow },
-        ['@function.method'] = { fg = p.light_blue },
         ['@include.python'] = { fg = p.purple },
         ['@keyword.python'] = { fg = p.purple },
         ['@keyword.return.python'] = { fg = p.purple },

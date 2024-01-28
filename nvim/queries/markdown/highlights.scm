@@ -2,11 +2,11 @@
 ; Mostly from: https://github.com/ribru17/nvim/blob/master/queries/markdown/highlights.scm
 
 ; Headings
-((atx_h1_marker) @text.title.1.conceal (#set! conceal "󰪥"))
-((atx_h2_marker) @text.title.2.conceal (#set! conceal "󰺕"))
-((atx_h3_marker) @text.title.3.conceal (#set! conceal ""))
-((atx_h4_marker) @text.title.4.conceal (#set! conceal ""))
-((atx_h5_marker) @text.title.5.conceal (#set! conceal ""))
+((atx_h1_marker) @markup.title.1.conceal (#set! conceal "󰪥"))
+((atx_h2_marker) @markup.title.2.conceal (#set! conceal "󰺕"))
+((atx_h3_marker) @markup.title.3.conceal (#set! conceal ""))
+((atx_h4_marker) @markup.title.4.conceal (#set! conceal ""))
+((atx_h5_marker) @markup.title.5.conceal (#set! conceal ""))
 
 ; Bullets
 ([(list_marker_minus) (list_marker_star)]
@@ -46,12 +46,12 @@
 
 ; Checkboxes
 ((task_list_marker_unchecked)
-    @text.todo.unchecked.conceal
-    (#offset! @text.todo.unchecked.conceal 0 -2 0 0)
+    @markup.todo.unchecked.conceal
+    (#offset! @markup.todo.unchecked.conceal 0 -2 0 0)
     (#set! conceal ""))
 ((task_list_marker_checked)
-    @text.todo.checked.conceal
-    (#offset! @text.todo.checked.conceal 0 -2 0 0)
+    @markup.todo.checked.conceal
+    (#offset! @markup.todo.checked.conceal 0 -2 0 0)
     (#set! conceal ""))
 
 ; Tables
@@ -89,7 +89,7 @@
  ] @conceal (#set! conceal ""))
 
 ; Comments
-((html_block) @text.comment)
+((html_block) @markup.comment)
 
 ; YAML front matter
 ((minus_metadata) @front_matter)
