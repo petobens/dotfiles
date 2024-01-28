@@ -223,6 +223,16 @@ onedarkpro.setup({
         gitcommitSelectedArrow = { link = 'gitcommitSelectedFile' },
         gitcommitUnmergedArrow = { link = 'gitcommitUnmergedFile' },
 
+        ---- i3
+        i3ConfigBind = { fg = p.yellow },
+        i3ConfigBindModKey = { fg = p.orange },
+        i3ConfigExec = { fg = p.light_blue },
+        i3ConfigKeyword = { fg = p.purple },
+        i3ConfigSet = { fg = p.cyan },
+        i3ConfigShDelim = { fg = p.fg },
+        i3ConfigShOper = { fg = p.fg },
+        i3ConfigVariable = { fg = p.red },
+
         ---- Json
         ['@label.json'] = { fg = p.red },
 
