@@ -165,8 +165,7 @@ onedarkpro.setup({
         LspReferenceWrite = { link = 'LspReferenceText' },
         LspSignatureActiveParameter = { fg = p.light_blue, bg = p.visual_grey },
         LspInlayHint = { fg = p.linenr_grey },
-
-        -- Generic Semantic Tokens
+        ---- Generic Semantic Tokens
         ['@defaultLibrary'] = { fg = p.yellow },
 
         -- Treesitter
@@ -202,6 +201,40 @@ onedarkpro.setup({
         ['@comment.todo.comment'] = { fg = p.orange, bg = p.black, style = 'bold' },
         ['@comment.error.comment'] = { fg = p.red, bg = p.black, style = 'bold' },
         ['@string.special.url.comment'] = { fg = p.comment_grey, style = 'undercurl' },
+
+        ---- Diffs
+        DiffAdd = { fg = p.green, bg = p.visual_grey },
+        DiffChange = { fg = p.orange, bg = p.visual_grey },
+        DiffDelete = { fg = p.red, bg = p.visual_grey },
+        DiffText = { fg = p.light_blue, bg = p.visual_grey },
+        DiffAdded = { link = 'DiffAdd' },
+        DiffChanged = { link = 'DiffChange' },
+        DiffRemoved = { link = 'DiffDelete' },
+        DiffLine = { link = 'DiffText' },
+        DiffFile = { link = 'DiffDelete' },
+        DiffNewFile = { link = 'DiffAdd' },
+
+        ---- Git
+        gitcommitComment = { fg = p.comment_grey },
+        gitcommitUnmerged = { fg = p.green },
+        gitcommitOnBranch = { fg = p.fg },
+        gitcommitBranch = { fg = p.purple },
+        gitcommitDiscardedType = { fg = p.red },
+        gitcommitSelectedType = { fg = p.green },
+        gitcommitHeader = { fg = p.fg },
+        gitcommitUntrackedFile = { fg = p.cyan },
+        gitcommitDiscardedFile = { fg = p.red },
+        gitcommitSelectedFile = { fg = p.green },
+        gitcommitUnmergedFile = { fg = p.yellow },
+        gitcommitFile = { fg = p.fg },
+        gitcommitFirstLine = { fg = p.fg },
+        gitcommitNoBranch = { link = 'gitcommitBranch' },
+        gitcommitUntracked = { link = 'gitcommitComment' },
+        gitcommitDiscarded = { link = 'gitcommitComment' },
+        gitcommitSelected = { link = 'gitcommitComment' },
+        gitcommitDiscardedArrow = { link = 'gitcommitDiscardedFile' },
+        gitcommitSelectedArrow = { link = 'gitcommitSelectedFile' },
+        gitcommitUnmergedArrow = { link = 'gitcommitUnmergedFile' },
 
         ---- Json
         ['@label.json'] = { fg = p.red },
@@ -278,12 +311,6 @@ onedarkpro.setup({
         ['@text.comment.markdown'] = { link = 'Comment' },
         ['@front_matter.markdown'] = { fg = p.yellow },
 
-        --- Sql
-        ['@type.sql'] = { fg = p.light_blue },
-
-        --- TOML
-        ['@table_brackets.toml'] = { fg = p.yellow },
-
         ---- Python
         ['@attribute.builtin.python'] = { fg = p.blue },
         ['@attribute.python'] = { fg = p.blue },
@@ -297,6 +324,12 @@ onedarkpro.setup({
         ['@keyword.return.python'] = { fg = p.purple },
         ['@punctuation.bracket.python'] = {},
         ['@punctuation.special.python'] = { fg = p.orange }, -- f-strings
+
+        --- Sql
+        ['@type.sql'] = { fg = p.light_blue },
+
+        --- TOML
+        ['@table_brackets.toml'] = { fg = p.yellow },
 
         ---- vim-doc and checkhealth
         ['@conceal.vimdoc'] = { fg = p.red },
@@ -318,40 +351,6 @@ onedarkpro.setup({
         --- YAML
         ['@field.yaml'] = { fg = p.red },
         ['@punctuation.special.yaml'] = { fg = p.yellow },
-
-        ---- Diffs
-        DiffAdd = { fg = p.green, bg = p.visual_grey },
-        DiffChange = { fg = p.orange, bg = p.visual_grey },
-        DiffDelete = { fg = p.red, bg = p.visual_grey },
-        DiffText = { fg = p.light_blue, bg = p.visual_grey },
-        DiffAdded = { link = 'DiffAdd' },
-        DiffChanged = { link = 'DiffChange' },
-        DiffRemoved = { link = 'DiffDelete' },
-        DiffLine = { link = 'DiffText' },
-        DiffFile = { link = 'DiffDelete' },
-        DiffNewFile = { link = 'DiffAdd' },
-
-        ---- Git
-        gitcommitComment = { fg = p.comment_grey },
-        gitcommitUnmerged = { fg = p.green },
-        gitcommitOnBranch = { fg = p.fg },
-        gitcommitBranch = { fg = p.purple },
-        gitcommitDiscardedType = { fg = p.red },
-        gitcommitSelectedType = { fg = p.green },
-        gitcommitHeader = { fg = p.fg },
-        gitcommitUntrackedFile = { fg = p.cyan },
-        gitcommitDiscardedFile = { fg = p.red },
-        gitcommitSelectedFile = { fg = p.green },
-        gitcommitUnmergedFile = { fg = p.yellow },
-        gitcommitFile = { fg = p.fg },
-        gitcommitFirstLine = { fg = p.fg },
-        gitcommitNoBranch = { link = 'gitcommitBranch' },
-        gitcommitUntracked = { link = 'gitcommitComment' },
-        gitcommitDiscarded = { link = 'gitcommitComment' },
-        gitcommitSelected = { link = 'gitcommitComment' },
-        gitcommitDiscardedArrow = { link = 'gitcommitDiscardedFile' },
-        gitcommitSelectedArrow = { link = 'gitcommitSelectedFile' },
-        gitcommitUnmergedArrow = { link = 'gitcommitUnmergedFile' },
 
         -- Plugins
         ---- Aerial
