@@ -166,6 +166,9 @@ onedarkpro.setup({
         LspSignatureActiveParameter = { fg = p.light_blue, bg = p.visual_grey },
         LspInlayHint = { fg = p.linenr_grey },
 
+        -- Generic Semantic Tokens
+        ['@defaultLibrary'] = { fg = p.yellow },
+
         -- Treesitter
         ['@boolean'] = { fg = p.orange },
         ['@field'] = { fg = p.fg },
@@ -190,13 +193,15 @@ onedarkpro.setup({
         },
         ['@text.warning'] = { fg = p.orange, style = 'bold' },
 
-        -- Generic Semantic Tokens
-        ['@defaultLibrary'] = { fg = p.yellow },
-
         -- Filetypes
         ---- Bash
         ['@parameter.bash'] = { fg = p.orange },
         ['@punctuation.special.bash'] = { fg = p.red },
+
+        ---- Comments
+        ['@comment.todo.comment'] = { fg = p.orange, bg = p.black, style = 'bold' },
+        ['@comment.error.comment'] = { fg = p.red, bg = p.black, style = 'bold' },
+        ['@string.special.url.comment'] = { fg = p.comment_grey, style = 'undercurl' },
 
         ---- Json
         ['@label.json'] = { fg = p.red },
