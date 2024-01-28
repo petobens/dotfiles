@@ -201,6 +201,7 @@ onedarkpro.setup({
         ---- Comments
         ['@comment.todo.comment'] = { fg = p.orange, bg = p.black, style = 'bold' },
         ['@comment.error.comment'] = { fg = p.red, bg = p.black, style = 'bold' },
+        ['@comment.note.comment'] = { fg = p.light_blue, bg = p.black, style = 'bold' },
         ['@string.special.url.comment'] = { fg = p.comment_grey, style = 'undercurl' },
 
         ---- Diffs
@@ -332,22 +333,28 @@ onedarkpro.setup({
         --- TOML
         ['@table_brackets.toml'] = { fg = p.yellow },
 
-        ---- vim-doc and checkhealth
+        ---- vim & vimdoc
+        ['@comment.note.vimdoc'] = { link = '@comment.note.comment' },
         ['@conceal.vimdoc'] = { fg = p.red },
-        ['@label.vimdoc'] = { fg = p.green, style = p.none },
+        ['@constant.builtin.vim'] = { fg = p.yellow },
+        ['@label.vimdoc'] = { fg = p.orange, style = p.none },
+        ['@markup.heading.1.vimdoc'] = { link = '@markup.heading.vimdoc' },
+        ['@markup.heading.2.vimdoc'] = { link = '@markup.heading.vimdoc' },
+        ['@markup.heading.3.vimdoc'] = { link = '@markup.heading.vimdoc' },
+        ['@markup.heading.4.vimdoc'] = { link = '@markup.heading.vimdoc' },
+        ['@markup.heading.5.vimdoc'] = { link = '@markup.heading.vimdoc' },
+        ['@markup.heading.vimdoc'] = { fg = p.purple },
+        ['@markup.link.vimdoc'] = { fg = p.blue },
+        ['@markup.raw.block.vimdoc'] = { fg = p.yellow },
         ['@parameter.vimdoc'] = { fg = p.light_blue },
-        ['@text.literal.vimdoc'] = { fg = p.yellow },
-        ['@text.literal.block.vimdoc'] = { link = '@text.literal.vimdoc' },
-        ['@text.reference.vimdoc'] = { fg = p.red },
-        ['@text.title.vimdoc'] = { fg = p.purple },
-        ['@text.title.1.vimdoc'] = { link = '@text.title.vimdoc' },
-        ['@text.title.2.vimdoc'] = { link = '@text.title.vimdoc' },
-        ['@text.title.3.vimdoc'] = { link = '@text.title.vimdoc' },
-        ['@text.title.4.vimdoc'] = { link = '@text.title.vimdoc' },
-        ['@text.title.5.vimdoc'] = { link = '@text.title.vimdoc' },
+        ['@string.special.url.vimdoc'] = {
+            fg = p.blue,
+            sp = p.blue,
+            style = 'undercurl',
+        },
+        ---- checkhealth
         helpSectionDelim = { fg = p.red },
         healthSuccess = { fg = p.black, bg = p.green },
-        ['@constant.builtin.vim'] = { fg = p.yellow },
 
         --- YAML
         ['@field.yaml'] = { fg = p.red },

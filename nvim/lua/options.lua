@@ -193,6 +193,7 @@ vim.filetype.add({
         ['zathurarc'] = 'config',
     },
     pattern = {
+        ['.*doc/.*'] = 'help',
         ['.*onedrive/config'] = 'config',
         ['.*sql'] = 'sql',
         ['.*ssh/config'] = 'sshconfig',
