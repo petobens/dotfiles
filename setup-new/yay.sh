@@ -63,7 +63,6 @@ $yay_cmd gcc-fortran
 $yay_cmd openblas
 
 # Languages
-$yay_cmd lua51-lpeg # neovim dependency
 $yay_cmd luarocks
 $yay_cmd python
 $yay_cmd python-pip
@@ -79,7 +78,6 @@ fi
 # Alacritty, kitty, neovim and tmux and more bash
 $yay_cmd alacritty
 $yay_cmd kitty
-$yay_cmd tree-sitter-git # nvim dependency
 $yay_cmd neovim-git
 $yay_cmd tmux
 
