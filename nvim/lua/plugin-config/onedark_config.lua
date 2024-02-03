@@ -181,7 +181,7 @@ onedarkpro.setup({
         ---- Bash
         ['@parameter.bash'] = { fg = p.orange },
         ['@punctuation.special.bash'] = { fg = p.red },
-        ['@punctuation.bracket.bash'] = {},
+        ['@punctuation.bracket.bash'] = { fg = p.fg },
 
         ---- Comments
         ['@comment.todo.comment'] = { fg = p.orange, bg = p.black, style = 'bold' },
@@ -320,11 +320,11 @@ onedarkpro.setup({
         ['@include.python'] = { fg = p.purple },
         ['@keyword.python'] = { fg = p.purple },
         ['@keyword.return.python'] = { fg = p.purple },
-        ['@punctuation.bracket.python'] = {},
+        ['@punctuation.bracket.python'] = { fg = p.fg },
         ['@punctuation.special.python'] = { fg = p.orange }, -- f-strings
 
         ---- query (ts)
-        ['@punctuation.bracket.query'] = {},
+        ['@punctuation.bracket.query'] = { fg = p.fg },
 
         ---- Sql
         ['@type.sql'] = { fg = p.light_blue },
