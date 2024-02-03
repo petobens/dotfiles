@@ -284,15 +284,17 @@ onedarkpro.setup({
         ['@punctuation.special.bullet.conceal.markdown'] = {
             link = '@markup.list.markdown',
         },
-        ['@markup.todo.checked.markdown'] = { fg = p.green },
+        ['@markup.list.checked.markdown'] = { fg = p.green },
+        ['@markup.todo.checked.markdown'] = { link = '@markup.list.checked.markdown' },
         ['@markup.todo.checked.conceal.markdown'] = {
-            link = '@markup.todo.checked.markdown',
+            link = '@markup.list.checked.markdown',
         },
-        ['@markup.todo.unchecked.markdown'] = { fg = p.red },
+        ['@markup.list.unchecked.markdown'] = { fg = p.blue },
+        ['@markup.todo.unchecked.markdown'] = { link = '@markup.list.unchecked.markdown' },
         ['@markup.todo.unchecked.conceal.markdown'] = {
-            link = '@markup.todo.unchecked.markdown',
+            link = '@markup.list.unchecked.markdown',
         },
-        ['@markup.todo.doing.conceal.markdown_inline'] = { fg = p.cyan },
+        ['@markup.todo.doing.conceal.markdown_inline'] = { fg = p.blue },
         ['@markup.todo.wontdo.conceal.markdown_inline'] = { fg = p.red },
         ['@punctuation.special.block.conceal.markdown'] = { fg = p.gray },
         ['@markup.quote.markdown'] = { fg = p.comment_grey },
