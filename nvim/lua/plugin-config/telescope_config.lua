@@ -423,6 +423,16 @@ local function yank_history()
     })
 end
 
+local function thesaurus_synonyms()
+    telescope.extensions.thesaurus.lookup({
+        layout_strategy = 'bpane',
+        layout_config = {
+            prompt_position = 'bottom',
+            height = 20,
+        },
+    })
+end
+
 -- Fix folding when opening files and avoid starting in insert mode
 -- luacheck:ignore 631
 -- See: https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
@@ -833,6 +843,9 @@ telescope.setup({
                 return true
             end,
         },
+        thesaurus = {
+            provider = 'datamuse',
+        },
         undo = {
             layout_config = { preview_width = 0.7 },
             mappings = {
@@ -925,6 +938,7 @@ vim.keymap.set('n', '<Leader>tq', '<Cmd>Telescope quickfix<CR>')
 vim.keymap.set('n', '<Leader>ta', '<Cmd>Telescope aerial<CR>')
 vim.keymap.set('n', '<Leader>se', '<Cmd>Telescope luasnip<CR>')
 vim.keymap.set('n', '<Leader>gu', '<Cmd>Telescope undo<CR>')
+vim.keymap.set('n', '<Leader>tt', thesaurus_synonyms)
 
 -- Extensions
 telescope.load_extension('aerial')
@@ -932,5 +946,6 @@ telescope.load_extension('fzf')
 telescope.load_extension('luasnip')
 telescope.load_extension('neoclip')
 telescope.load_extension('recent_files')
+telescope.load_extension('thesaurus')
 telescope.load_extension('undo')
 telescope.load_extension('z')
