@@ -335,7 +335,7 @@ export FZF_ALT_ZOXIDE_OPTS="$FZF_ALT_C_OPTS_BASE
 
 zoi() {
     cmd="zoxide query --list --score 2>&1"
-    out="$(eval "$cmd" | devicon-lookup |
+    out="$(eval "$cmd" | devicon-lookup -r '\d +(.*)$' -s |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_ALT_ZOXIDE_OPTS" fzf |
         sed 's/^\W\s[0-9,.]* *//')"
     __fzf_cd_action_key__ "$out"
