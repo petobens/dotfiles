@@ -1,4 +1,5 @@
 """Ranger custom commands."""
+
 import os
 import re
 import subprocess
@@ -106,7 +107,7 @@ class fzf_zoxide(Command):
             'lsd -F --tree --depth 2 --color=always --icon=always {3} | head -200'
         )
         fzf_cmd = f"FZF_DEFAULT_OPTS='{FZF_DEFAULT_OPTS}' fzf"
-        command += f" | devicon-lookup | {fzf_cmd} --no-sort --preview='{preview_cmd}'"
+        command += f" | devicon-lookup -r '\\d +(.*)$' -s | {fzf_cmd} --no-sort --preview='{preview_cmd}'"
 
         fzf = self.fm.execute_command(command, stdout=subprocess.PIPE)
         stdout, _ = fzf.communicate()
