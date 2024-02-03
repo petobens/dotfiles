@@ -438,6 +438,30 @@ end
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
 local custom_actions = transform_mod({
+    -- Open one or many files at once
+    open_one_or_many = function(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local multi = picker:get_multi_selection()
+        if not vim.tbl_isempty(multi) then
+            actions.close(prompt_bufnr)
+            for _, v in pairs(multi) do
+                if v.path ~= nil then
+                    local edit_cmd = 'edit'
+                    if v.col ~= nil and v.lnum ~= nil then
+                        edit_cmd = string.format(
+                            '%s +call\\ cursor(%s,%s)',
+                            edit_cmd,
+                            v.lnum,
+                            v.col
+                        )
+                    end
+                    vim.cmd(string.format('%s %s', edit_cmd, v.path))
+                end
+            end
+        else
+            actions.select_default(prompt_bufnr)
+        end
+    end,
     -- Context split
     context_split = function(prompt_bufnr)
         local split = 'new'
@@ -733,11 +757,17 @@ telescope.setup({
                 '--exclude',
                 '.git',
             },
+            mappings = {
+                i = {
+                    ['<CR>'] = stopinsert(custom_actions.open_one_or_many),
+                },
+            },
         },
         live_grep = {
             path_display = { shorten = 3 },
             mappings = {
                 i = {
+                    ['<CR>'] = stopinsert(custom_actions.open_one_or_many),
                     ['<C-space>'] = actions.toggle_selection
                         + actions.move_selection_previous,
                 },
@@ -798,6 +828,10 @@ telescope.setup({
         },
         recent_files = {
             show_current_file = true,
+            attach_mappings = function(_, map)
+                map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
+                return true
+            end,
         },
         undo = {
             layout_config = { preview_width = 0.7 },
