@@ -424,12 +424,24 @@ local function yank_history()
 end
 
 local function thesaurus_synonyms()
+    local provider = require('telescope._extensions.thesaurus.config').get().provider
+    if not vim.g.dictionary_api_key and provider == 'dictionaryapi' then
+        vim.g.dictionary_api_key = vim.trim(
+            vim.system(
+                { 'pass', 'show', [[dictionary-api/ferrari_pedro@yahoo.com/api-key]] },
+                { text = true }
+            )
+                :wait().stdout
+        )
+    end
     telescope.extensions.thesaurus.lookup({
         layout_strategy = 'bpane',
         layout_config = {
             prompt_position = 'bottom',
             height = 20,
         },
+        results_title = 'Synonyms',
+        preview_title = 'Cursor Word Definition',
     })
 end
 
@@ -844,7 +856,7 @@ telescope.setup({
             end,
         },
         thesaurus = {
-            provider = 'datamuse',
+            provider = 'dictionaryapi', -- or 'datamuse'
         },
         undo = {
             layout_config = { preview_width = 0.7 },

@@ -31,8 +31,6 @@ fi
 
 # Env variables
 export COLUMNS # used for instance by git-delta
-DICTIONARY_API_KEY="$(pass show dictionary-api/ferrari_pedro@yahoo.com/api-key)"
-export DICTIONARY_API_KEY
 
 # }}}
 # Bindings {{{
