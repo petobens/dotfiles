@@ -180,6 +180,11 @@ vim.keymap.set('n', '<Leader>sc', '<Cmd>set spell!<CR>')
 vim.keymap.set('n', '<Leader>lp', ':lua vim.print(', { silent = false })
 vim.keymap.set('n', '<Leader>lr', ':=', { silent = false })
 vim.keymap.set('n', '<Leader>cg', '<Cmd>Inspect<CR>')
+vim.keymap.set(
+    'n',
+    '<Leader>cw',
+    ':lua vim.print("Words: " .. vim.fn.wordcount().words)<CR>'
+)
 
 -- Bookmarks
 vim.keymap.set('n', '<Leader>ev', '<Cmd>e $MYVIMRC<CR>')
