@@ -1,6 +1,21 @@
 -- luacheck:ignore 631
 local u = require('utils')
 
+-- Custom offset directive for markdown conceals
+local offset_first_n = function(match, _, _, pred, metadata)
+    local capture_id = pred[2]
+    if not metadata[capture_id] then
+        metadata[capture_id] = {}
+    end
+
+    local range = metadata[capture_id].range or { match[capture_id]:range() }
+    local offset = pred[3] or 0
+
+    range[4] = range[2] + offset
+    metadata[capture_id].range = range
+end
+vim.treesitter.query.add_directive('offset-first-n!', offset_first_n, true)
+
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
         'bash',
@@ -69,6 +84,7 @@ require('nvim-treesitter.configs').setup({
     },
     matchup = { enable = true },
 })
+
 -- Mappings (basically center when moving)
 vim.keymap.set({ 'n', 'v' }, ']c', '<Cmd>TSTextobjectGotoNextStart @class.outer<CR>zz')
 vim.keymap.set({ 'n', 'v' }, ']f', '<Cmd>TSTextobjectGotoNextStart @function.outer<CR>zz')

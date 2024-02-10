@@ -265,6 +265,7 @@ onedarkpro.setup({
         ['@punctuation.bracket.lua'] = { fg = p.fg },
 
         ---- Markdown
+        ['@markup.heading.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@markup.heading.1.markdown'] = { fg = p.purple, style = 'bold' },
         ['@markup.heading.1.marker.markdown'] = { link = '@markup.heading.1.markdown' },
         ['@markup.title.1.conceal.markdown'] = { link = '@markup.heading.1.markdown' },
@@ -281,9 +282,6 @@ onedarkpro.setup({
         ['@markup.heading.5.marker.markdown'] = { link = '@markup.heading.5.markdown' },
         ['@markup.title.5.conceal.markdown'] = { link = '@markup.heading.5.markdown' },
         ['@markup.list.markdown'] = { fg = p.dark_red, style = 'bold' },
-        ['@punctuation.special.bullet.conceal.markdown'] = {
-            link = '@markup.list.markdown',
-        },
         ['@markup.list.checked.markdown'] = { fg = p.green },
         ['@markup.todo.checked.markdown'] = { link = '@markup.list.checked.markdown' },
         ['@markup.todo.checked.conceal.markdown'] = {
@@ -296,6 +294,7 @@ onedarkpro.setup({
         },
         ['@markup.todo.doing.conceal.markdown_inline'] = { fg = p.blue },
         ['@markup.todo.wontdo.conceal.markdown_inline'] = { fg = p.red },
+        ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@punctuation.special.block.conceal.markdown'] = { fg = p.gray },
         ['@markup.quote.markdown'] = { fg = p.comment_grey },
         ['@markup.link.label.markdown_inline'] = { fg = p.blue, style = 'undercurl' },

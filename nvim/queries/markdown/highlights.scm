@@ -1,5 +1,5 @@
 ;; extends
-; Mostly from: https://github.com/ribru17/nvim/blob/master/queries/markdown/highlights.scm
+; From: https://github.com/ribru17/.dotfiles/blob/master/.config/nvim/queries/markdown/highlights.scm
 
 ; Headings
 ((atx_h1_marker) @markup.title.1.conceal (#set! conceal "󰪥"))
@@ -8,29 +8,41 @@
 ((atx_h4_marker) @markup.title.4.conceal (#set! conceal ""))
 ((atx_h5_marker) @markup.title.5.conceal (#set! conceal ""))
 
-; Bullets
-([(list_marker_minus) (list_marker_star)]
- @punctuation.special.bullet.conceal
- (#offset! @punctuation.special.bullet.conceal 0 0 0 -1)
- (#set! conceal "○"))
+; Bullets (using custom offset directive)
+([
+  (list_marker_minus)
+  (list_marker_plus)
+  (list_marker_star)
+] @markup.list
+  (#offset-first-n! @markup.list 1)
+  (#set! conceal "○"))
+
 (list
   (list_item
     (list
       (list_item
-        ([(list_marker_minus) (list_marker_star)]
-         @punctuation.special.bullet.conceal
-         (#offset! @punctuation.special.bullet.conceal 0 0 0 -1)
-         (#set! conceal "•"))))))
+        ([
+          (list_marker_minus)
+          (list_marker_plus)
+          (list_marker_star)
+        ] @markup.list
+          (#offset-first-n! @markup.list 1)
+          (#set! conceal "•"))))))
+
 (list
   (list_item
     (list
       (list_item
         (list
           (list_item
-            ([(list_marker_minus) (list_marker_star)]
-             @punctuation.special.bullet.conceal
-             (#offset! @punctuation.special.bullet.conceal 0 0 0 -1)
-             (#set! conceal ""))))))))
+            ([
+              (list_marker_minus)
+              (list_marker_plus)
+              (list_marker_star)
+            ] @markup.list
+              (#offset-first-n! @markup.list 1)
+              (#set! conceal ""))))))))
+
 (list
   (list_item
     (list
@@ -39,10 +51,13 @@
           (list_item
             (list
               (list_item
-                ([(list_marker_minus) (list_marker_star)]
-                 @punctuation.special.bullet.conceal
-                 (#offset! @punctuation.special.bullet.conceal 0 0 0 -1)
-                 (#set! conceal "-"))))))))))
+                ([
+                  (list_marker_minus)
+                  (list_marker_plus)
+                  (list_marker_star)
+                ] @markup.list
+                  (#offset-first-n! @markup.list 1)
+                  (#set! conceal "-"))))))))))
 
 ; Checkboxes
 ((task_list_marker_unchecked)
@@ -65,20 +80,13 @@
 
 ; Block quotes
 ((block_quote_marker) @punctuation.special.block.conceal
-                      (#offset! @punctuation.special.block.conceal 0 0 0 -1)
-                      (#set! conceal "▐"))
+  (#offset! @punctuation.special.block.conceal 0 0 0 -1)
+  (#set! conceal "▐"))
+
 ((block_continuation) @punctuation.special.block.conceal
-                      (#eq? @punctuation.special.block.conceal ">")
-                      (#set! conceal "▐"))
-((block_continuation) @punctuation.special.block.conceal
-                      (#eq? @punctuation.special.block.conceal "> ")
-                      (#offset! @punctuation.special.block.conceal 0 0 0 -1)
-                      (#set! conceal "▐"))
-((block_continuation) @punctuation.special.block.conceal
-                      ; for indented code blocks
-                      (#eq? @punctuation.special.block.conceal ">     ")
-                      (#offset! @punctuation.special.block.conceal 0 0 0 -5)
-                      (#set! conceal "▐"))
+  (#lua-match? @punctuation.special.block.conceal "^>")
+  (#offset-first-n! @punctuation.special.block.conceal 1)
+  (#set! conceal "▐"))
 
 ; Wiki links
 ([
