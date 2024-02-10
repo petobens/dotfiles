@@ -29,9 +29,6 @@ if [[ -f "$BASE_PKG_DIR/share/bash-completion/bash_completion" ]]; then
     . "$BASE_PKG_DIR/share/bash-completion/bash_completion"
 fi
 
-# Env variables
-export COLUMNS # used for instance by git-delta
-
 # }}}
 # Bindings {{{
 

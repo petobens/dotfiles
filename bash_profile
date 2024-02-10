@@ -88,6 +88,8 @@ PATH=$(printf "%s" "$PATH" | awk -v RS=':' '!a[$1]++ { if (NR > 1) printf RS; pr
 export EDITOR='nvim --listen /tmp/nvimsocket'
 export MANPAGER='nvim +Man!'
 
+export COLUMNS # used for instance by git-delta
+
 # Set shell to latest bash (check "$(command -v bash)")
 if [ -f "$BASE_PKG_DIR/bin/bash" ]; then
     export SHELL="$BASE_PKG_DIR/bin/bash"
