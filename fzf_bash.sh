@@ -226,7 +226,7 @@ __fzf_cd_action_key__() {
     if [[ -z "$dir" ]]; then
         return 1
     else
-        dir="${dir#* }"
+        dir="${dir##* }"
     fi
 
     case "$key" in
