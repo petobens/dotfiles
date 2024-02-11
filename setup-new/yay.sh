@@ -161,7 +161,7 @@ $yay_cmd dragon-drop
 $yay_cmd dust
 $yay_cmd fastfetch
 $yay_cmd fd
-$yay_cmd forgit-git
+$yay_cmd forgit
 $yay_cmd fzf
 $yay_cmd git-delta
 $yay_cmd github-cli
