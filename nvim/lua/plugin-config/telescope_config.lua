@@ -190,7 +190,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
     opts.entry_maker = function(entry)
         return {
             value = entry,
-            display = '󰚝 ' .. vim.fn.substitute(entry, '/home/pedro', '~', ''),
+            display = '󰚝 ' .. vim.fn.substitute(entry, vim.env.HOME, '~', ''),
             ordinal = entry,
         }
     end
@@ -199,12 +199,12 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
             prompt_title = 'Directory Bookmarks',
             finder = finders.new_table({
                 results = {
-                    '/home/pedro/git-repos/private/dotfiles/',
-                    '/home/pedro/OneDrive/mutt/ops/',
-                    '/home/pedro/OneDrive/mutt/',
-                    '/home/pedro/git-repos/work/',
-                    '/home/pedro/Desktop/',
-                    '/home/pedro/.local/share/nvim/lazy/',
+                    vim.env.HOME .. '/git-repos/private/dotfiles/',
+                    vim.env.HOME .. '/OneDrive/mutt/ops/',
+                    vim.env.HOME .. '/OneDrive/mutt/',
+                    vim.env.HOME .. '/git-repos/work/',
+                    vim.env.HOME .. '/Desktop/',
+                    vim.env.HOME .. '/.local/share/nvim/lazy/',
                 },
                 entry_maker = opts.entry_maker,
             }),
@@ -276,7 +276,9 @@ function _G.TelescopeConfig.z_with_tree_preview(opts)
     opts = opts or {}
     opts.cmd = { 'bash', '-c', 'zoxide query --list --score 2>&1' }
     opts.prompt_title = 'Zoxide Directories'
-    opts.path_display = { 'absolute' }
+    opts.path_display = function(_, path)
+        return string.format(' %s', vim.fn.substitute(path, vim.env.HOME, '~', ''))
+    end
     opts.previewer = tree_previewer
     telescope.extensions.z.list(opts)
 end
