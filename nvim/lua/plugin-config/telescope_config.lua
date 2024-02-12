@@ -447,6 +447,14 @@ local function thesaurus_synonyms()
     })
 end
 
+local function undo()
+    require('telescope').extensions.undo.undo({
+        prompt_title = '<C-r>:restore, <C-y>:yank',
+        results_title = 'Undo Tree',
+        preview_title = 'Undo Diff',
+    })
+end
+
 -- Fix folding when opening files and avoid starting in insert mode
 -- luacheck:ignore 631
 -- See: https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
@@ -951,7 +959,7 @@ vim.keymap.set('n', '<Leader>we', lsp_ws_symbols)
 vim.keymap.set('n', '<Leader>tq', '<Cmd>Telescope quickfix<CR>')
 vim.keymap.set('n', '<Leader>ta', '<Cmd>Telescope aerial<CR>')
 vim.keymap.set('n', '<Leader>se', '<Cmd>Telescope luasnip<CR>')
-vim.keymap.set('n', '<Leader>gu', '<Cmd>Telescope undo<CR>')
+vim.keymap.set('n', '<Leader>gu', undo)
 vim.keymap.set('n', '<Leader>tt', thesaurus_synonyms)
 
 -- Extensions
