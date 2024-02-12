@@ -600,8 +600,8 @@ local custom_actions = transform_mod({
         end
         igrep(tostring(p))
     end,
-    -- Undo (restore) previous picker
-    undo_picker = function()
+    -- resUme previous picker
+    resume = function()
         builtin.resume()
     end,
     -- Open in nvimtree
@@ -711,7 +711,7 @@ telescope.setup({
                 ['<A-r>'] = actions.to_fuzzy_refine,
                 ['<C-q>'] = stopinsert(custom_actions.send2qf),
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
-                ['<A-u>'] = custom_actions.undo_picker,
+                ['<A-u>'] = custom_actions.resume,
                 ['<C-/>'] = 'which_key',
                 ['<A-l>'] = actions.complete_tag,
             },
@@ -737,7 +737,7 @@ telescope.setup({
                 ['<A-r>'] = actions.to_fuzzy_refine,
                 ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
-                ['<A-u>'] = custom_actions.undo_picker,
+                ['<A-u>'] = custom_actions.resume,
                 ['?'] = 'which_key',
                 ['<A-l>'] = actions.complete_tag,
             },
