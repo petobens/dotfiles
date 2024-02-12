@@ -412,6 +412,7 @@ end
 
 local function lsp_doc_symbols()
     builtin.lsp_document_symbols({
+        prompt_title = '<C-x>:complete-tag',
         results_title = vim.api.nvim_buf_get_name(0),
         preview_title = 'LSP Document Symbols Preview',
     })
@@ -419,6 +420,8 @@ end
 
 local function lsp_ws_symbols()
     builtin.lsp_workspace_symbols({
+        prompt_title = '<C-x>:complete-tag',
+        results_title = 'LSP Workspace Symbols',
         preview_title = 'LSP Workspace Symbols Preview',
     })
 end
