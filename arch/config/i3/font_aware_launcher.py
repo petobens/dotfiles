@@ -469,7 +469,9 @@ class TUIApp(ROLApp):
         if self.title == 'ProcKiller':
             sleep(0.8)
             sh('xdotool type kill')
-            sh('xdotool key space+Tab')
+            sh('xdotool key space')
+            sh('xdotool type jk')
+            sh('xdotool key Tab')
 
 
 class RofiApp(ROLApp):
