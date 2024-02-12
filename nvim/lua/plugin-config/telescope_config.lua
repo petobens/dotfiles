@@ -359,7 +359,8 @@ local function gitcommits(opts)
     }, opts.cwd)
     builtin.git_commits({
         cwd = opts.cwd,
-        results_title = git_root[1],
+        prompt_title = '<C-d>:delta-diff,<C-o>:git-checkout',
+        results_title = 'Git Commits: ' .. git_root[1],
         previewer = {
             delta,
             previewers.git_commit_diff_as_was.new(opts),
@@ -374,7 +375,8 @@ local function gitcommits_buffer(opts)
     opts.cwd = utils.buffer_dir()
     builtin.git_bcommits({
         cwd = opts.cwd,
-        results_title = vim.api.nvim_buf_get_name(0),
+        results_title = 'Git Commits: ' .. vim.api.nvim_buf_get_name(0),
+        prompt_title = '<C-d>:delta-diff,<C-o>:git-checkout',
         previewer = {
             delta,
             previewers.git_commit_diff_as_was.new(opts),
