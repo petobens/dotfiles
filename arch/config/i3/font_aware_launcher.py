@@ -71,7 +71,11 @@ APPS = {
     'firefox': {'type': 'rol', 'args': {'class_name': 'firefox', 'mark': 'ffox'}},
     'globalprotect-vpn': {'type': 'qt', 'args': {'class_name': 'gpclient'}},
     'gnome-font': {'type': 'gtk', 'args': {'class_name': 'Gnome-font-viewer'}},
-    'htop': {'type': 'tui', 'args': {'title': 'htop', 'cmd': 'htop'}},
+    'htop': {
+        'type': 'tui',
+        # Note: we need the sleep cmd for proper reflow
+        'args': {'title': 'htop', 'cmd': '/usr/bin/bash -c "sleep 0.2&&htop"'},
+    },
     'kitty': {
         'type': 'rol_custom',
         'args': {
@@ -160,7 +164,8 @@ APPS = {
         'type': 'tui',
         'args': {
             'title': 'ranger',
-            'cmd': '/usr/bin/bash -c "ranger {path}"',
+            # Note: we need the sleep cmd for proper reflow
+            'cmd': '/usr/bin/bash -c "sleep 0.2&&ranger {path}"',
         },
     },
     'reboot-dialog': {
