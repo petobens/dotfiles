@@ -401,7 +401,11 @@ local function keymaps()
 end
 
 local function spell_suggest()
-    builtin.spell_suggest({ fuzzy = false })
+    builtin.spell_suggest({
+        fuzzy = false,
+        prompt_title = '<CR>:fix-word,<C-o>:fix-all',
+        results_title = 'Spelling Suggestions',
+    })
 end
 
 local function lsp_doc_symbols()
