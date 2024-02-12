@@ -99,10 +99,6 @@ alias md='mkdir -p'
 alias rd='rmdir'
 alias sudo='sudo ' # Expand aliases when using sudo
 alias ssh='TERM=xterm-256color; ssh'
-ds() {
-    # shellcheck disable=SC2086
-    du -shc ${1:-*} | sort -rh | fzf
-}
 alias df='df -h'
 alias diff='diff -u --color'
 alias rsync='rsync -auP'
@@ -172,7 +168,11 @@ if type "bat" > /dev/null 2>&1; then
     alias dog='bat --color always --style numbers --theme TwoDark'
 fi
 if type "dust" > /dev/null 2>&1; then
-    alias rds='dust -r -b'
+    ds() {
+        # shellcheck disable=SC2086
+        du -shc ${1:-*} | sort -rh | fzf
+    }
+    alias rds='dust -r -b' # Rust Disk Space
 fi
 if type "unimatrix" > /dev/null 2>&1; then
     alias iamneo='unimatrix -s 90'
