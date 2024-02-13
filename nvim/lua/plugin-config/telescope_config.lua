@@ -446,10 +446,18 @@ local custom_actions = transform_mod({
             node_api.navigate.sibling.first()
         end
     end,
-    -- Undo (restore) previous picker
+    -- Delete buffers
     delete_buffer = function(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local multi = picker:get_multi_selection()
         actions.close(prompt_bufnr)
-        vim.cmd('bwipeout ' .. action_state.get_selected_entry().value)
+        if not vim.tbl_isempty(multi) then
+            for _, v in pairs(multi) do
+                vim.cmd(string.format('bwipeout %s', v.filename))
+            end
+        else
+            vim.cmd('bwipeout ' .. action_state.get_selected_entry().value)
+        end
     end,
     -- Send selection to quickfix and open
     send2qf = function(prompt_bufnr)
