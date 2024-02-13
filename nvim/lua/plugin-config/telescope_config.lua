@@ -255,32 +255,16 @@ function _G.TelescopeConfig.poetry_venvs(opts)
         :find()
 end
 
--- Helper (wrapper) functions
-function _G.TelescopeConfig.find_files_cwd(opts)
-    local buffer_dir = utils.buffer_dir()
-    opts = opts or {}
-    opts.cwd = buffer_dir
-    opts.results_title = buffer_dir
-    builtin.find_files(opts)
-end
-
-local function find_files_upper_cwd(opts)
-    local buffer_upperdir = string.format('%s', Path:new(utils.buffer_dir()):parent())
-    opts = opts or {}
-    opts.cwd = buffer_upperdir
-    opts.results_title = buffer_upperdir
-    builtin.find_files(opts)
-end
-
-function _G.TelescopeConfig.z_with_tree_preview(opts)
-    opts = opts or {}
-    opts.cmd = { 'bash', '-c', 'zoxide query --list --score 2>&1' }
-    opts.prompt_title = 'Zoxide Directories'
-    opts.path_display = function(_, path)
-        return string.format(' %s', vim.fn.substitute(path, vim.env.HOME, '~', ''))
+-- Wrapper to avoid actions starting in insert mode
+-- luacheck:ignore 631
+-- See: https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
+local function stopinsert(callback)
+    return function(prompt_bufnr)
+        vim.cmd.stopinsert()
+        vim.schedule(function()
+            callback(prompt_bufnr)
+        end)
     end
-    opts.previewer = tree_previewer
-    telescope.extensions.z.list(opts)
 end
 
 local function igrep(dir, start_text, extra_args)
@@ -291,189 +275,6 @@ local function igrep(dir, start_text, extra_args)
         default_text = start_text or '',
         additional_args = extra_args or {},
     })
-end
-
-local function igrep_git_root()
-    local git_root, _ = utils.get_os_command_output({
-        'git',
-        'rev-parse',
-        '--show-toplevel',
-    }, utils.buffer_dir())
-    igrep(git_root[1])
-end
-
-local function igrep_open_buffers()
-    builtin.live_grep({ grep_open_files = true })
-end
-
-local function rgrep(extra_args)
-    vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
-        if not dir or dir == '' then
-            return
-        else
-            dir = vim.fn.trim(vim.fn.fnamemodify(dir, ':ph'))
-        end
-        local opts = {
-            cwd = dir,
-            search_dirs = { dir },
-            results_title = dir,
-            additional_args = extra_args or {},
-        }
-        vim.ui.input({ prompt = 'Type Filter: ' }, function(type_filter)
-            if type_filter ~= '' then
-                opts.type_filter = type_filter
-                opts.results_title = opts.results_title .. ' [' .. type_filter .. ']'
-            end
-        end)
-        builtin.live_grep(opts)
-    end)
-end
-
-local function tasklist_cwd()
-    local buffer_dir = utils.buffer_dir()
-    builtin.grep_string({
-        cwd = buffer_dir,
-        results_title = buffer_dir,
-        use_regex = true,
-        search = 'TODO:\\s|FIXME:\\s',
-    })
-end
-
-local function tasklist_buffer()
-    local buf_name = vim.api.nvim_buf_get_name(0)
-    builtin.grep_string({
-        results_title = buf_name,
-        use_regex = true,
-        search = 'TODO:\\s|FIXME:\\s',
-        search_dirs = { buf_name },
-    })
-end
-
-local function gitcommits(opts)
-    opts = opts or {}
-    opts.cwd = utils.buffer_dir()
-    local git_root, _ = utils.get_os_command_output({
-        'git',
-        'rev-parse',
-        '--show-toplevel',
-    }, opts.cwd)
-    builtin.git_commits({
-        cwd = opts.cwd,
-        prompt_title = '<C-d>:delta-diff,<C-o>:git-checkout',
-        results_title = 'Git Commits: ' .. git_root[1],
-        previewer = {
-            delta,
-            previewers.git_commit_diff_as_was.new(opts),
-            previewers.git_commit_message.new(opts),
-        },
-        sorter = preserve_order_sorter(opts),
-    })
-end
-
-local function gitcommits_buffer(opts)
-    opts = opts or {}
-    opts.cwd = utils.buffer_dir()
-    builtin.git_bcommits({
-        cwd = opts.cwd,
-        results_title = 'Git Commits: ' .. vim.api.nvim_buf_get_name(0),
-        prompt_title = '<C-d>:delta-diff,<C-o>:git-checkout',
-        previewer = {
-            delta,
-            previewers.git_commit_diff_as_was.new(opts),
-            previewers.git_commit_message.new(opts),
-        },
-        sorter = preserve_order_sorter(opts),
-    })
-end
-
-local function search_buffer(start_text)
-    builtin.current_buffer_fuzzy_find({
-        fuzzy = false, -- exact/regex matching/sorting
-        tiebreak = function() -- sort by line number
-            return false
-        end,
-        results_title = vim.api.nvim_buf_get_name(0),
-        preview_title = 'Buffer Search Preview',
-        default_text = start_text or '',
-    })
-end
-
-local function keymaps()
-    builtin.keymaps({ fuzzy = false })
-end
-
-local function spell_suggest()
-    builtin.spell_suggest({
-        fuzzy = false,
-        prompt_title = '<CR>:fix-word,<C-o>:fix-all',
-        results_title = 'Spelling Suggestions',
-    })
-end
-
-local function lsp_doc_symbols()
-    builtin.lsp_document_symbols({
-        prompt_title = '<C-x>:complete-tag',
-        results_title = vim.api.nvim_buf_get_name(0),
-        preview_title = 'LSP Document Symbols Preview',
-    })
-end
-
-local function lsp_ws_symbols()
-    builtin.lsp_workspace_symbols({
-        prompt_title = '<C-x>:complete-tag',
-        results_title = 'LSP Workspace Symbols',
-        preview_title = 'LSP Workspace Symbols Preview',
-    })
-end
-
-local function yank_history()
-    telescope.extensions.neoclip.default({
-        prompt_title = 'Neoclip',
-        results_title = 'Register +',
-        preview_title = 'Yank History Preview',
-    })
-end
-
-local function thesaurus_synonyms()
-    local provider = require('telescope._extensions.thesaurus.config').get().provider
-    if not vim.g.dictionary_api_key and provider == 'dictionaryapi' then
-        vim.g.dictionary_api_key = vim.trim(
-            vim.system(
-                { 'pass', 'show', [[dictionary-api/ferrari_pedro@yahoo.com/api-key]] },
-                { text = true }
-            )
-                :wait().stdout
-        )
-    end
-    telescope.extensions.thesaurus.lookup({
-        layout_strategy = 'bpane',
-        layout_config = {
-            prompt_position = 'bottom',
-            height = 20,
-        },
-        results_title = 'Synonyms',
-        preview_title = 'Cursor Word Definition',
-    })
-end
-
-local function undo()
-    require('telescope').extensions.undo.undo({
-        prompt_title = '<C-r>:restore, <C-y>:yank',
-        results_title = 'Undo Tree',
-        preview_title = 'Undo Diff',
-    })
-end
-
--- Fix folding when opening files and avoid starting in insert mode
--- luacheck:ignore 631
--- See: https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
-local function stopinsert(callback)
-    return function(prompt_bufnr)
-        vim.cmd.stopinsert()
-        vim.schedule(function()
-            callback(prompt_bufnr)
-        end)
-    end
 end
 
 -- Custom actions
@@ -536,7 +337,8 @@ local custom_actions = transform_mod({
     delta_term = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local commit_sha = action_state.get_selected_entry().value
-        local delta_cmd = 'git -c core.pager=delta -c delta.paging=always -c delta.side-by-side=true diff '
+        local delta_cmd = 'git -c core.pager=delta -c delta.paging=always -c '
+            .. 'delta.side-by-side=true diff '
             .. commit_sha
             .. '^! --'
         vim.cmd(string.format('TermExec size=25 cmd="%s"', delta_cmd))
@@ -888,6 +690,205 @@ telescope.setup({
         },
     },
 })
+
+-- Customized picker functions (to be called by mappings)
+function _G.TelescopeConfig.find_files_cwd(opts)
+    local buffer_dir = utils.buffer_dir()
+    opts = opts or {}
+    opts.cwd = buffer_dir
+    opts.results_title = buffer_dir
+    builtin.find_files(opts)
+end
+
+local function find_files_upper_cwd(opts)
+    local buffer_upperdir = string.format('%s', Path:new(utils.buffer_dir()):parent())
+    opts = opts or {}
+    opts.cwd = buffer_upperdir
+    opts.results_title = buffer_upperdir
+    builtin.find_files(opts)
+end
+
+function _G.TelescopeConfig.z_with_tree_preview(opts)
+    opts = opts or {}
+    opts.cmd = { 'bash', '-c', 'zoxide query --list --score 2>&1' }
+    opts.prompt_title = 'Zoxide Directories'
+    opts.path_display = function(_, path)
+        return string.format(' %s', vim.fn.substitute(path, vim.env.HOME, '~', ''))
+    end
+    opts.previewer = tree_previewer
+    telescope.extensions.z.list(opts)
+end
+
+local function igrep_git_root()
+    local git_root, _ = utils.get_os_command_output({
+        'git',
+        'rev-parse',
+        '--show-toplevel',
+    }, utils.buffer_dir())
+    igrep(git_root[1])
+end
+
+local function igrep_open_buffers()
+    builtin.live_grep({ grep_open_files = true })
+end
+
+local function rgrep(extra_args)
+    vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
+        if not dir or dir == '' then
+            return
+        else
+            dir = vim.fn.trim(vim.fn.fnamemodify(dir, ':ph'))
+        end
+        local opts = {
+            cwd = dir,
+            search_dirs = { dir },
+            results_title = dir,
+            additional_args = extra_args or {},
+        }
+        vim.ui.input({ prompt = 'Type Filter: ' }, function(type_filter)
+            if type_filter ~= '' then
+                opts.type_filter = type_filter
+                opts.results_title = opts.results_title .. ' [' .. type_filter .. ']'
+            end
+        end)
+        builtin.live_grep(opts)
+    end)
+end
+
+local function tasklist_cwd()
+    local buffer_dir = utils.buffer_dir()
+    builtin.grep_string({
+        cwd = buffer_dir,
+        results_title = buffer_dir,
+        use_regex = true,
+        search = 'TODO:\\s|FIXME:\\s',
+    })
+end
+
+local function tasklist_buffer()
+    local buf_name = vim.api.nvim_buf_get_name(0)
+    builtin.grep_string({
+        results_title = buf_name,
+        use_regex = true,
+        search = 'TODO:\\s|FIXME:\\s',
+        search_dirs = { buf_name },
+    })
+end
+
+local function gitcommits(opts)
+    opts = opts or {}
+    opts.cwd = utils.buffer_dir()
+    local git_root, _ = utils.get_os_command_output({
+        'git',
+        'rev-parse',
+        '--show-toplevel',
+    }, opts.cwd)
+    builtin.git_commits({
+        cwd = opts.cwd,
+        prompt_title = '<C-d>:delta-diff,<C-o>:git-checkout',
+        results_title = 'Git Commits: ' .. git_root[1],
+        previewer = {
+            delta,
+            previewers.git_commit_diff_as_was.new(opts),
+            previewers.git_commit_message.new(opts),
+        },
+        sorter = preserve_order_sorter(opts),
+    })
+end
+
+local function gitcommits_buffer(opts)
+    opts = opts or {}
+    opts.cwd = utils.buffer_dir()
+    builtin.git_bcommits({
+        cwd = opts.cwd,
+        results_title = 'Git Commits: ' .. vim.api.nvim_buf_get_name(0),
+        prompt_title = '<C-d>:delta-diff,<C-o>:git-checkout',
+        previewer = {
+            delta,
+            previewers.git_commit_diff_as_was.new(opts),
+            previewers.git_commit_message.new(opts),
+        },
+        sorter = preserve_order_sorter(opts),
+    })
+end
+
+local function search_buffer(start_text)
+    builtin.current_buffer_fuzzy_find({
+        fuzzy = false, -- exact/regex matching/sorting
+        tiebreak = function() -- sort by line number
+            return false
+        end,
+        results_title = vim.api.nvim_buf_get_name(0),
+        preview_title = 'Buffer Search Preview',
+        default_text = start_text or '',
+    })
+end
+
+local function keymaps()
+    builtin.keymaps({ fuzzy = false })
+end
+
+local function spell_suggest()
+    builtin.spell_suggest({
+        fuzzy = false,
+        prompt_title = '<CR>:fix-word,<C-o>:fix-all',
+        results_title = 'Spelling Suggestions',
+    })
+end
+
+local function lsp_doc_symbols()
+    builtin.lsp_document_symbols({
+        prompt_title = '<C-x>:complete-tag',
+        results_title = vim.api.nvim_buf_get_name(0),
+        preview_title = 'LSP Document Symbols Preview',
+    })
+end
+
+local function lsp_ws_symbols()
+    builtin.lsp_workspace_symbols({
+        prompt_title = '<C-x>:complete-tag',
+        results_title = 'LSP Workspace Symbols',
+        preview_title = 'LSP Workspace Symbols Preview',
+    })
+end
+
+local function yank_history()
+    telescope.extensions.neoclip.default({
+        prompt_title = 'Neoclip',
+        results_title = 'Register +',
+        preview_title = 'Yank History Preview',
+    })
+end
+
+local function thesaurus_synonyms()
+    local provider = require('telescope._extensions.thesaurus.config').get().provider
+    if not vim.g.dictionary_api_key and provider == 'dictionaryapi' then
+        vim.g.dictionary_api_key = vim.trim(
+            vim.system(
+                { 'pass', 'show', [[dictionary-api/ferrari_pedro@yahoo.com/api-key]] },
+                { text = true }
+            )
+                :wait().stdout
+        )
+    end
+    telescope.extensions.thesaurus.lookup({
+        layout_strategy = 'bpane',
+        layout_config = {
+            prompt_position = 'bottom',
+            height = 20,
+        },
+        results_title = 'Synonyms',
+        preview_title = 'Cursor Word Definition',
+    })
+end
+
+local function undo()
+    require('telescope').extensions.undo.undo({
+        prompt_title = '<C-r>:restore, <C-y>:yank',
+        results_title = 'Undo Tree',
+        preview_title = 'Undo Diff',
+    })
+end
 
 -- Mappings
 vim.keymap.set('n', '<Leader>ls', _G.TelescopeConfig.find_files_cwd)
