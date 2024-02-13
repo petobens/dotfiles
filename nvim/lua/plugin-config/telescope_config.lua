@@ -719,19 +719,6 @@ function _G.TelescopeConfig.z_with_tree_preview(opts)
     telescope.extensions.z.list(opts)
 end
 
-local function igrep_git_root()
-    local git_root, _ = utils.get_os_command_output({
-        'git',
-        'rev-parse',
-        '--show-toplevel',
-    }, utils.buffer_dir())
-    igrep(git_root[1])
-end
-
-local function igrep_open_buffers()
-    builtin.live_grep({ grep_open_files = true })
-end
-
 local function rgrep(extra_args)
     vim.ui.input({ prompt = 'Grep dir: ', completion = 'dir' }, function(dir)
         if not dir or dir == '' then
@@ -755,23 +742,15 @@ local function rgrep(extra_args)
     end)
 end
 
-local function tasklist_cwd()
-    local buffer_dir = utils.buffer_dir()
-    builtin.grep_string({
-        cwd = buffer_dir,
-        results_title = buffer_dir,
-        use_regex = true,
-        search = 'TODO:\\s|FIXME:\\s',
-    })
-end
-
-local function tasklist_buffer()
-    local buf_name = vim.api.nvim_buf_get_name(0)
-    builtin.grep_string({
-        results_title = buf_name,
-        use_regex = true,
-        search = 'TODO:\\s|FIXME:\\s',
-        search_dirs = { buf_name },
+local function search_buffer(start_text)
+    builtin.current_buffer_fuzzy_find({
+        fuzzy = false, -- exact/regex matching/sorting
+        tiebreak = function() -- sort by line number
+            return false
+        end,
+        results_title = vim.api.nvim_buf_get_name(0),
+        preview_title = 'Buffer Search Preview',
+        default_text = start_text or '',
     })
 end
 
@@ -785,8 +764,8 @@ local function gitcommits(opts)
     }, opts.cwd)
     builtin.git_commits({
         cwd = opts.cwd,
-        prompt_title = '<C-d>:delta-diff,<C-o>:git-checkout',
-        results_title = 'Git Commits: ' .. git_root[1],
+        prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout)',
+        results_title = git_root[1],
         previewer = {
             delta,
             previewers.git_commit_diff_as_was.new(opts),
@@ -801,62 +780,14 @@ local function gitcommits_buffer(opts)
     opts.cwd = utils.buffer_dir()
     builtin.git_bcommits({
         cwd = opts.cwd,
-        results_title = 'Git Commits: ' .. vim.api.nvim_buf_get_name(0),
-        prompt_title = '<C-d>:delta-diff,<C-o>:git-checkout',
+        results_title = vim.api.nvim_buf_get_name(0),
+        prompt_title = 'File Commits (<C-d>:delta-diff,<C-o>:git-checkout)',
         previewer = {
             delta,
             previewers.git_commit_diff_as_was.new(opts),
             previewers.git_commit_message.new(opts),
         },
         sorter = preserve_order_sorter(opts),
-    })
-end
-
-local function search_buffer(start_text)
-    builtin.current_buffer_fuzzy_find({
-        fuzzy = false, -- exact/regex matching/sorting
-        tiebreak = function() -- sort by line number
-            return false
-        end,
-        results_title = vim.api.nvim_buf_get_name(0),
-        preview_title = 'Buffer Search Preview',
-        default_text = start_text or '',
-    })
-end
-
-local function keymaps()
-    builtin.keymaps({ fuzzy = false })
-end
-
-local function spell_suggest()
-    builtin.spell_suggest({
-        fuzzy = false,
-        prompt_title = '<CR>:fix-word,<C-o>:fix-all',
-        results_title = 'Spelling Suggestions',
-    })
-end
-
-local function lsp_doc_symbols()
-    builtin.lsp_document_symbols({
-        prompt_title = '<C-x>:complete-tag',
-        results_title = vim.api.nvim_buf_get_name(0),
-        preview_title = 'LSP Document Symbols Preview',
-    })
-end
-
-local function lsp_ws_symbols()
-    builtin.lsp_workspace_symbols({
-        prompt_title = '<C-x>:complete-tag',
-        results_title = 'LSP Workspace Symbols',
-        preview_title = 'LSP Workspace Symbols Preview',
-    })
-end
-
-local function yank_history()
-    telescope.extensions.neoclip.default({
-        prompt_title = 'Neoclip',
-        results_title = 'Register +',
-        preview_title = 'Yank History Preview',
     })
 end
 
@@ -877,20 +808,18 @@ local function thesaurus_synonyms()
             prompt_position = 'bottom',
             height = 20,
         },
-        results_title = 'Synonyms',
+        prompt_title = 'Synonyms',
         preview_title = 'Cursor Word Definition',
     })
 end
 
-local function undo()
-    require('telescope').extensions.undo.undo({
-        prompt_title = '<C-r>:restore, <C-y>:yank',
-        results_title = 'Undo Tree',
-        preview_title = 'Undo Diff',
-    })
-end
-
 -- Mappings
+vim.keymap.set('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
+vim.keymap.set('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
+vim.keymap.set('n', '<Leader>tq', '<Cmd>Telescope quickfix<CR>')
+vim.keymap.set('n', '<Leader>be', function()
+    builtin.buffers({ prompt_title = 'Buffers (<A-k>:delete)' })
+end)
 vim.keymap.set('n', '<Leader>ls', _G.TelescopeConfig.find_files_cwd)
 vim.keymap.set('n', '<Leader>lS', function()
     _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
@@ -909,26 +838,9 @@ vim.keymap.set('n', '<C-t>', _G.TelescopeConfig.find_files_cwd)
 vim.keymap.set('n', '<A-t>', function()
     _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
 end)
-vim.keymap.set('n', '<A-c>', _G.TelescopeConfig.find_dirs)
-vim.keymap.set('n', '<A-p>', _G.TelescopeConfig.parent_dirs)
-vim.keymap.set('n', '<A-z>', _G.TelescopeConfig.z_with_tree_preview)
-vim.keymap.set('n', '<Leader>bm', _G.TelescopeConfig.bookmark_dirs)
-vim.keymap.set('n', '<Leader>ig', igrep)
-vim.keymap.set('n', '<Leader>iG', function()
-    igrep(nil, nil, { '--no-ignore-vcs' })
-end)
-vim.keymap.set('n', '<A-g>', igrep)
-vim.keymap.set('n', '<Leader>ir', igrep_git_root)
-vim.keymap.set('n', '<Leader>io', igrep_open_buffers)
-vim.keymap.set('n', '<Leader>rg', rgrep)
-vim.keymap.set('n', '<Leader>rG', function()
-    rgrep({ '--no-ignore-vcs' })
-end)
-vim.keymap.set({ 'n', 'v' }, '<Leader>dg', function()
-    igrep(nil, u.get_selection())
-end)
 vim.keymap.set('n', '<Leader>rd', function()
     telescope.extensions.recent_files.pick({
+        prompt_title = 'Recent Files',
         path_display = function(_, path)
             local p = Path:new(path):absolute()
             return string.gsub(p, vim.loop.os_homedir(), '~')
@@ -936,28 +848,95 @@ vim.keymap.set('n', '<Leader>rd', function()
         ignore_patterns = { '/tmp/', '.log' },
     })
 end)
-vim.keymap.set('n', '<Leader>be', '<Cmd>Telescope buffers<CR>')
-vim.keymap.set('n', '<Leader>tl', tasklist_buffer)
-vim.keymap.set('n', '<Leader>tL', tasklist_cwd)
-vim.keymap.set('n', '<Leader>gl', gitcommits)
-vim.keymap.set('n', '<Leader>gL', gitcommits_buffer)
-vim.keymap.set('v', '<Leader>gl', builtin.git_bcommits_range)
-vim.keymap.set('n', '<Leader>gc', '<Cmd>Telescope git_branches<CR>')
+vim.keymap.set('n', '<A-c>', _G.TelescopeConfig.find_dirs)
+vim.keymap.set('n', '<A-p>', _G.TelescopeConfig.parent_dirs)
+vim.keymap.set('n', '<Leader>bm', _G.TelescopeConfig.bookmark_dirs)
+vim.keymap.set('n', '<A-z>', _G.TelescopeConfig.z_with_tree_preview)
+vim.keymap.set('n', '<Leader>ig', igrep)
+vim.keymap.set('n', '<Leader>iG', function()
+    igrep(nil, nil, { '--no-ignore-vcs' })
+end)
+vim.keymap.set('n', '<A-g>', igrep)
+vim.keymap.set('n', '<Leader>ir', function()
+    local git_root, _ = utils.get_os_command_output({
+        'git',
+        'rev-parse',
+        '--show-toplevel',
+    }, utils.buffer_dir())
+    igrep(git_root[1])
+end)
+vim.keymap.set('n', '<Leader>io', function()
+    builtin.live_grep({ grep_open_files = true, results_title = 'Open Files' })
+end)
+vim.keymap.set('n', '<Leader>rg', rgrep)
+vim.keymap.set('n', '<Leader>rG', function()
+    rgrep({ '--no-ignore-vcs' })
+end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>dg', function()
+    igrep(nil, u.get_selection())
+end)
 vim.keymap.set('n', '<Leader>dl', search_buffer)
 vim.keymap.set({ 'n', 'v' }, '<Leader>dw', function()
     search_buffer(u.get_selection())
 end)
-vim.keymap.set('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
-vim.keymap.set('n', '<Leader>ch', '<Cmd>Telescope command_history<CR>')
-vim.keymap.set('n', '<Leader>sh', '<Cmd>Telescope search_history<CR>')
-vim.keymap.set('n', '<Leader>yh', yank_history)
-vim.keymap.set('n', '<Leader>he', '<Cmd>Telescope help_tags<CR>')
-vim.keymap.set('n', '<Leader>th', '<Cmd>Telescope highlights<CR>')
-vim.keymap.set('n', '<Leader>tm', '<Cmd>Telescope marks<CR>')
-vim.keymap.set('n', '<Leader>me', keymaps)
-vim.keymap.set('n', '<Leader>sg', spell_suggest)
-vim.keymap.set('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
-vim.keymap.set('n', '<Leader>te', lsp_doc_symbols)
+vim.keymap.set('n', '<Leader>tl', function()
+    local buf_name = vim.api.nvim_buf_get_name(0)
+    builtin.grep_string({
+        results_title = buf_name,
+        use_regex = true,
+        search = 'TODO:\\s|FIXME:\\s',
+        search_dirs = { buf_name },
+    })
+end)
+vim.keymap.set('n', '<Leader>tL', function()
+    local buffer_dir = utils.buffer_dir()
+    builtin.grep_string({
+        cwd = buffer_dir,
+        results_title = buffer_dir,
+        use_regex = true,
+        search = 'TODO:\\s|FIXME:\\s',
+    })
+end)
+vim.keymap.set('n', '<Leader>gl', gitcommits)
+vim.keymap.set('n', '<Leader>gL', gitcommits_buffer)
+vim.keymap.set('v', '<Leader>gl', builtin.git_bcommits_range)
+vim.keymap.set('n', '<Leader>gc', function()
+    builtin.git_branches({ prompt_title = 'Git Branches (<C-d>:delete)' })
+end)
+vim.keymap.set('n', '<Leader>ch', function()
+    builtin.command_history({
+        prompt_title = 'Command History (<Tab>:edit)',
+    })
+end)
+vim.keymap.set('n', '<Leader>sh', function()
+    builtin.search_history({
+        prompt_title = 'Search History (<Tab>:edit)',
+    })
+end)
+vim.keymap.set('n', '<Leader>yh', function()
+    telescope.extensions.neoclip.default({
+        prompt_title = 'Neoclip: Register + (<C-y>:yank, <CR>:paste)',
+        preview_title = 'Yank History Preview',
+    })
+end)
+vim.keymap.set('n', '<Leader>he', function()
+    builtin.help_tags({})
+end)
+vim.keymap.set('n', '<Leader>th', function()
+    builtin.highlights({})
+end)
+vim.keymap.set('n', '<Leader>tm', function()
+    builtin.marks({})
+end)
+vim.keymap.set('n', '<Leader>me', function()
+    builtin.keymaps({})
+end)
+vim.keymap.set('n', '<Leader>sg', function()
+    builtin.spell_suggest({
+        fuzzy = false,
+        prompt_title = 'Spelling Suggestions (<CR>:fix-word,<C-o>:fix-all)',
+    })
+end)
 vim.keymap.set('n', '<Leader>la', function()
     builtin.lsp_references({
         preview_title = 'LSP References Preview',
@@ -965,11 +944,36 @@ vim.keymap.set('n', '<Leader>la', function()
         fname_width = 50,
     })
 end)
-vim.keymap.set('n', '<Leader>we', lsp_ws_symbols)
-vim.keymap.set('n', '<Leader>tq', '<Cmd>Telescope quickfix<CR>')
-vim.keymap.set('n', '<Leader>ta', '<Cmd>Telescope aerial<CR>')
-vim.keymap.set('n', '<Leader>se', '<Cmd>Telescope luasnip<CR>')
-vim.keymap.set('n', '<Leader>gu', undo)
+vim.keymap.set('n', '<Leader>te', function()
+    builtin.lsp_document_symbols({
+        prompt_title = 'LSP Symbols (<C-x>:complete-tag)',
+        results_title = vim.api.nvim_buf_get_name(0),
+        preview_title = 'LSP Document Symbols Preview',
+    })
+end)
+vim.keymap.set('n', '<Leader>we', function()
+    builtin.lsp_workspace_symbols({
+        prompt_title = 'LSP Workspace Symbols (<C-x>:complete-tag)',
+        preview_title = 'LSP Workspace Symbols Preview',
+    })
+end)
+vim.keymap.set('n', '<Leader>ta', function()
+    require('telescope').extensions.aerial.aerial({
+        prompt_title = 'Aerial Document Symbols',
+    })
+end)
+vim.keymap.set('n', '<Leader>se', function()
+    require('telescope').extensions.luasnip.luasnip({
+        prompt_title = 'Snippets',
+        preview_title = 'Snippet Preview',
+    })
+end)
+vim.keymap.set('n', '<Leader>gu', function()
+    require('telescope').extensions.undo.undo({
+        prompt_title = 'Undo Tree (<C-r>:restore, <C-y>:yank)',
+        preview_title = 'Undo Diff',
+    })
+end)
 vim.keymap.set('n', '<Leader>tt', thesaurus_synonyms)
 
 -- Extensions
