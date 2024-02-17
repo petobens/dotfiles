@@ -321,6 +321,7 @@ onedarkpro.setup({
         ['@include.python'] = { fg = p.purple },
         ['@keyword.python'] = { fg = p.purple },
         ['@keyword.return.python'] = { fg = p.purple },
+        ['@keyword.directive.python'] = { fg = p.yellow },
         ['@punctuation.bracket.python'] = { fg = p.fg },
         ['@punctuation.special.python'] = { fg = p.orange }, -- f-strings
 
