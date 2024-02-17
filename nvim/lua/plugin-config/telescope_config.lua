@@ -804,7 +804,7 @@ local function thesaurus_synonyms()
     if not vim.g.dictionary_api_key and provider == 'dictionaryapi' then
         vim.g.dictionary_api_key = vim.trim(
             vim.system(
-                { 'pass', 'show', [[dictionary-api/ferrari_pedro@yahoo.com/api-key]] },
+                { 'pass', 'show', [[dictionary-api/yahoomail/api-key]] },
                 { text = true }
             )
                 :wait().stdout
