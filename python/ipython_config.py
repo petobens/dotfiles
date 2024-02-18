@@ -1,4 +1,5 @@
 """My ipython config."""
+
 # pylint:disable=W0212
 
 import sys
@@ -161,6 +162,8 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
 
 # Always import some modules
 c.InteractiveShellApp.exec_lines = ['import numpy as np']
+# And load extensions
+c.InteractiveShellApp.extensions = ['ipython_ctrlr_fzf']
 
 # Define some shortcuts
 custom_keybinds = [
