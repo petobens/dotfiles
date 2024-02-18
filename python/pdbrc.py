@@ -53,7 +53,7 @@ class OneDarkish(Style):
         Keyword: f'{purple} nobold',
         Keyword.Constant: green,
         Keyword.Namespace: purple,
-        Name.Namespace: f'{syntax_fg} nobold',
+        Name.Namespace: f'{red} nobold',
         Name.Builtin: yellow,
         Name.Function: light_blue,
         Name.Class: f'{yellow} nobold',

@@ -123,7 +123,7 @@ syntax_fg = white
 syntax_fold_bg = comment_grey
 
 # See:
-# https://github.com/prompt-toolkit/python-prompt-toolkit/blob/master/prompt_toolkit/styles/defaults.py # noqa
+# https://github.com/prompt-toolkit/python-prompt-toolkit/blob/master/src/prompt_toolkit/styles/defaults.py # noqa
 c.TerminalInteractiveShell.highlighting_style_overrides = {
     Text: syntax_fg,
     Error: red,
@@ -131,11 +131,11 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Keyword: f'{purple} nobold',
     Keyword.Constant: green,
     Keyword.Namespace: purple,
-    Name.Namespace: f'{syntax_fg} nobold',
-    Name.Builtin: red,
+    Name.Namespace: f'{red} nobold',
+    Name.Builtin: yellow,
     Name.Function: light_blue,
-    Name.Class: f'{light_blue} nobold',
-    Name.Decorator: light_blue,
+    Name.Class: f'{yellow} nobold',
+    Name.Decorator: blue,
     Name.Exception: yellow,
     Name.Variable.Magic: red,  # dunder methods
     Number: dark_yellow,
