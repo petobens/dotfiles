@@ -84,11 +84,13 @@ PATH=$(printf "%s" "$PATH" | awk -v RS=':' '!a[$1]++ { if (NR > 1) printf RS; pr
 # }}}
 # Enviromental variables {{{
 
-# Set editor to nvim and use it as a manpager
-export EDITOR='nvim --listen /tmp/nvimsocket'
-export MANPAGER='nvim +Man!'
-
 export COLUMNS # used for instance by git-delta
+
+# Set editor to nvim and use it as a manpager
+if type "nvim" > /dev/null 2>&1; then
+    export EDITOR='nvim --listen /tmp/nvimsocket'
+    export MANPAGER='nvim +Man!'
+fi
 
 # Set shell to latest bash (check "$(command -v bash)")
 if [ -f "$BASE_PKG_DIR/bin/bash" ]; then
