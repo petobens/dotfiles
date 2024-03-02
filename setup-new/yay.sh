@@ -101,6 +101,7 @@ $yay_cmd connman
 $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
+$yay_cmd fswatch # used by nvim
 $yay_cmd i3-wm
 $yay_cmd i3lock-color-git
 $yay_cmd intltool
