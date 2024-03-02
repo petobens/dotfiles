@@ -246,8 +246,10 @@ function _G.TelescopeConfig.poetry_venvs(opts)
             attach_mappings = function(bufnr)
                 actions.select_default:replace(function()
                     local entry = action_state.get_selected_entry()
-                    require('venv-selector.venv').set_venv_and_system_paths(entry)
                     actions.close(bufnr)
+                    local venv = require('venv-selector.venv')
+                    venv.set_venv_and_system_paths(entry)
+                    venv.cache_venv(entry)
                 end)
                 return true
             end,
