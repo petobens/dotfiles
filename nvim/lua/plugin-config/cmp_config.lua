@@ -2,6 +2,7 @@
 local cmp = require('cmp')
 local u = require('utils')
 
+-- Helpers
 local feedkey = function(key, mode)
     vim.api.nvim_feedkeys(
         vim.api.nvim_replace_termcodes(key, true, true, true),
@@ -10,6 +11,17 @@ local feedkey = function(key, mode)
     )
 end
 
+-- Autocmds
+vim.api.nvim_create_autocmd('ModeChanged', {
+    callback = function()
+        -- Make completion work after select mode
+        if vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'i' then
+            cmp.complete()
+        end
+    end,
+})
+
+-- Setup
 cmp.setup({
     completion = {
         completeopt = 'menu,menuone,noinsert',
