@@ -275,6 +275,7 @@ if type "python" > /dev/null 2>&1; then
         alias poad='poetry add --group=dev'
         alias poao='poetry add --optional'
         alias poi='poetry install'
+        alias poid='poetry install --with=dev'
         alias poie='poetry install --extras'
         alias pou='poetry update'
         alias por='poetry remove'
