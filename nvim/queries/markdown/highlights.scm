@@ -2,11 +2,11 @@
 ; From: https://github.com/ribru17/.dotfiles/blob/master/.config/nvim/queries/markdown/highlights.scm
 
 ; Headings
-((atx_h1_marker) @markup.title.1.conceal (#set! conceal "󰪥"))
-((atx_h2_marker) @markup.title.2.conceal (#set! conceal "󰺕"))
-((atx_h3_marker) @markup.title.3.conceal (#set! conceal ""))
-((atx_h4_marker) @markup.title.4.conceal (#set! conceal ""))
-((atx_h5_marker) @markup.title.5.conceal (#set! conceal ""))
+((atx_h1_marker) @markup.heading.1 (#set! conceal "󰪥"))
+((atx_h2_marker) @markup.heading.2 (#set! conceal "󰺕"))
+((atx_h3_marker) @markup.heading.3 (#set! conceal ""))
+((atx_h4_marker) @markup.heading.4 (#set! conceal ""))
+((atx_h5_marker) @markup.heading.5 (#set! conceal ""))
 
 ; Bullets (using custom offset directive)
 ([
