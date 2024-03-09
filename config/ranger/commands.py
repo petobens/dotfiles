@@ -45,9 +45,8 @@ class fzf_select(Command):
         )
         if no_git_ignore:
             command += '--no-ignore-vcs '
-        preview_cmd = (
-            'bat --color always --style numbers --theme TwoDark --line-range :200 {2}'
-        )
+        preview_cmd = 'bat --line-range :200 {2}'
+
         if self.arg(1) == '-d':
             preview_cmd = (
                 'lsd -F --tree --depth 2 --color=always --icon=always {2} | head -200'

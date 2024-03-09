@@ -165,7 +165,7 @@ if type "ranger" > /dev/null 2>&1; then
 fi
 if type "bat" > /dev/null 2>&1; then
     # Colorized cat
-    alias dog='bat --color always --style numbers --theme TwoDark'
+    alias dog='bat'
 fi
 if type "dust" > /dev/null 2>&1; then
     ds() {
