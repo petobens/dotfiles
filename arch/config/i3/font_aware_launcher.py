@@ -98,7 +98,15 @@ APPS = {
             'post_cmd': True,
         },
     },
-    'numbers': {'type': 'tui', 'args': {'title': 'numbers', 'cmd': 'ipython3'}},
+    'numbers': {
+        'type': 'tui',
+        'args': {
+            'title': 'numbers',
+            'cmd': 'ipython3',
+            'use_rol': False,
+            'interactive_bash': True,
+        },
+    },
     'obs': {'type': 'qt', 'args': {'class_name': 'obs'}},
     'onedrive': {
         'type': 'tui',
