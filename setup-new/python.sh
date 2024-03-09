@@ -16,10 +16,6 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd Pillow # needed for gtk dialogs
     $pip_install_cmd git+https://github.com/bretello/pdbpp@0.11.2
     $pip_install_cmd pipx
-    if type "nvim" > /dev/null 2>&1; then
-        $pip_install_cmd pynvim
-        $pip_install_cmd -U msgpack
-    fi
     $pip_install_cmd Send2Trash
     if [ "$OSTYPE" == 'linux-gnu' ]; then
         $pip_install_cmd Xlib
