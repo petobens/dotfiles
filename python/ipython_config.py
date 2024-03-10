@@ -2,7 +2,9 @@
 
 # pylint:disable=W0212
 
+import subprocess
 import sys
+from pathlib import Path
 
 import IPython
 import IPython.terminal.prompts as prompts
@@ -63,16 +65,65 @@ ViState._input_mode = InputMode.INSERT
 ViState.input_mode = property(get_input_mode, set_input_mode)
 
 
+def _get_branch():
+    try:
+        branch = '  ' + (
+            subprocess.check_output(
+                "git branch --show-current", shell=True, stderr=subprocess.DEVNULL
+            )
+            .decode("utf-8")
+            .replace("\n", "")
+        )
+
+    except BaseException:
+        branch = ''
+    return branch
+
+
 class MyPrompt(prompts.Prompts):
     """Custom prompt with vi mode indicator."""
 
     def in_prompt_tokens(self):
         """Return in prompt."""
         mode = 'I' if get_app().vi_state.input_mode == InputMode.INSERT else 'N'
+        branch = _get_branch()
+
+        inprompt = []
+        inprompt.append(
+            (Token.OutPrompt if mode == 'I' else Token.Generic.Prompt, f' {mode} ')
+        )
+        inprompt.append(
+            (Token.Generic.Emph if mode == 'I' else Token.Generic.Strong, " ")
+        )
+        inprompt.append(
+            (Token.Generic.Deleted, f" [{str(self.shell.execution_count)}] ")
+        )
+        inprompt.append((Token.OutPromptNum if branch else Token.Generic.Inserted, ""))
+        if branch:
+            inprompt.append((Token.Prompt, f"{branch} "))
+            inprompt.append((Token.PromptNum, ""))
+        inprompt.append((Token.Generic.Heading, f'  {Path().absolute().stem} '))
+        inprompt.append(
+            (
+                (
+                    Token.Generic.Subheading
+                    if self.shell.last_execution_succeeded
+                    else Token.Generic.Output
+                ),
+                " ",
+            )
+        )
+        if not self.shell.last_execution_succeeded:
+            inprompt.append((Token.Generic.Error, " "))
+            inprompt.append((Token.Generic.Traceback, " "))
+        return inprompt
+
+    def continuation_prompt_tokens(self, width=None):
+        """Return continuation prompt."""
+        if width is None:
+            width = self._width()
         return [
-            (prompts.Token.Prompt, f'({mode})['),
-            (prompts.Token.PromptNum, str(self.shell.execution_count)),
-            (prompts.Token.Prompt, ']>> '),
+            (Token.Generic.EmphStrong, (' ' * (width - 2)) + '| '),
         ]
 
     def out_prompt_tokens(self):
@@ -121,12 +172,14 @@ visual_grey = '#3e4452'
 pmenu = '#333841'
 syntax_fg = white
 syntax_fold_bg = comment_grey
+count_bg = '#d0d0d0'
+count_fg = '#303030'
 
 # See:
 # https://github.com/prompt-toolkit/python-prompt-toolkit/blob/master/src/prompt_toolkit/styles/defaults.py # noqa
 c.TerminalInteractiveShell.highlighting_style_overrides = {
     Text: syntax_fg,
-    Error: red,
+    Error: f'{red} bold',
     Comment: comment_grey,
     Keyword: f'{purple} nobold',
     Keyword.Constant: green,
@@ -146,11 +199,24 @@ c.TerminalInteractiveShell.highlighting_style_overrides = {
     Literal.String.Interpol: f'{light_blue} nobold',
     Literal.String.Escape: f'{light_blue} nobold',
     String: green,
-    Token.Prompt: green,
-    Token.PromptNum: f'{green} bold',
-    Token.OutPrompt: blue,
-    Token.OutPromptNum: f'{blue} bold',
     Token.MatchingBracket.Other: blue,
+    # Prompt stuff (we abuse the token class for this)
+    Token.OutPrompt: f'bg:{light_blue} {black} bold',  # insert mode
+    Token.Generic.Prompt: f'bg:{green} {black} bold',  # normal mode
+    Token.Generic.Emph: f'bg:{count_bg} {light_blue}',  # insert righ separator
+    Token.Generic.Strong: f'bg:{count_bg} {green}',  # normal right separator
+    Token.Generic.Deleted: f'bg:{count_bg} {count_fg} bold',  # execution count
+    Token.OutPromptNum: f'bg:{special_grey} {count_bg}',  # execution right separator w/branch
+    Token.Generic.Inserted: f'bg:{cursor_grey} {count_bg}',  # execution right separator no branch
+    Token.Prompt: f'bg:{special_grey} {white}',  # branch
+    Token.PromptNum: f'bg:{cursor_grey} {special_grey}',  # branch right separator
+    Token.Generic.Heading: f'bg:{cursor_grey} {mono_2}',  # filepath
+    Token.Generic.Subheading: f'bg:{black} {cursor_grey}',  # file (non-error) separator
+    Token.Generic.Output: f'bg:{red} {cursor_grey}',  # error separator
+    Token.Generic.Error: f'bg:{red} {black}',  # error
+    Token.Generic.Traceback: f'bg:{black} {red}',  # error final
+    Token.Generic.EmphStrong: f'bg:{black} {special_grey}',  # continuation prompt
+    # Completion
     'completion-menu': f'bg:{pmenu} {white}',
     'completion-menu.completion.current': f'bg:{light_blue} {black}',
     'completion-menu.completion': f'bg:{pmenu} {white}',
