@@ -174,6 +174,7 @@ end)
 vim.keymap.set('n', '<Leader>du', '<Cmd>diffupdate<CR>')
 
 -- Misc
+vim.keymap.set('n', '<Leader>mg', '<Cmd>messages<CR>')
 vim.keymap.set('n', '<Leader>ic', '<Cmd>set list!<CR>')
 vim.keymap.set('n', '<Leader>sa', '<Cmd>sort i<CR>')
 vim.keymap.set('n', '<Leader>sc', '<Cmd>set spell!<CR>')
