@@ -289,7 +289,8 @@ local custom_actions = transform_mod({
         if not vim.tbl_isempty(multi) then
             actions.close(prompt_bufnr)
             for _, v in pairs(multi) do
-                if v.path ~= nil then
+                if v.path ~= nil or v.filename ~= nil then
+                    local fname = v.path or v.filename
                     local edit_cmd = 'edit'
                     if v.col ~= nil and v.lnum ~= nil then
                         edit_cmd = string.format(
@@ -299,7 +300,7 @@ local custom_actions = transform_mod({
                             v.col
                         )
                     end
-                    vim.cmd(string.format('%s %s', edit_cmd, v.path))
+                    vim.cmd(string.format('%s %s', edit_cmd, fname))
                 end
             end
         else
@@ -679,13 +680,6 @@ telescope.setup({
             override_file_sorter = true,
             case_mode = 'smart_case',
         },
-        recent_files = {
-            show_current_file = true,
-            attach_mappings = function(_, map)
-                map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
-                return true
-            end,
-        },
         thesaurus = {
             provider = 'dictionaryapi', -- or 'datamuse'
         },
@@ -849,11 +843,15 @@ vim.keymap.set('n', '<A-t>', function()
     _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
 end)
 vim.keymap.set('n', '<Leader>rd', function()
-    telescope.extensions.recent_files.pick({
-        prompt_title = 'Recent Files',
+    telescope.extensions.frecency.frecency({
+        prompt_title = 'Frecent Files',
         path_display = function(_, path)
             local p = Path:new(path):absolute()
             return string.gsub(p, vim.loop.os_homedir(), '~')
+        end,
+        attach_mappings = function(_, map)
+            map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
+            return true
         end,
         ignore_patterns = { '/tmp/', '.log' },
     })
@@ -988,10 +986,10 @@ vim.keymap.set('n', '<Leader>tt', thesaurus_synonyms)
 
 -- Extensions
 telescope.load_extension('aerial')
+telescope.load_extension('frecency')
 telescope.load_extension('fzf')
 telescope.load_extension('luasnip')
 telescope.load_extension('neoclip')
-telescope.load_extension('recent_files')
 telescope.load_extension('thesaurus')
 telescope.load_extension('undo')
 telescope.load_extension('z')

@@ -166,9 +166,9 @@ local plugins = {
             'nvim-lua/plenary.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
             'debugloop/telescope-undo.nvim',
+            'nvim-telescope/telescope-frecency.nvim',
             'nvim-telescope/telescope-z.nvim',
             'rafi/telescope-thesaurus.nvim',
-            'smartpde/telescope-recent-files',
         },
         config = function()
             require('plugin-config.telescope_config')
