@@ -712,6 +712,21 @@ local function find_files_upper_cwd(opts)
     builtin.find_files(opts)
 end
 
+local function frecent_files()
+    telescope.extensions.frecency.frecency({
+        prompt_title = 'Frecent Files',
+        path_display = function(_, path)
+            local p = Path:new(path):absolute()
+            return string.gsub(p, vim.loop.os_homedir(), '~')
+        end,
+        attach_mappings = function(_, map)
+            map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
+            return true
+        end,
+        ignore_patterns = { '/tmp/', '.log' },
+    })
+end
+
 function _G.TelescopeConfig.z_with_tree_preview(opts)
     opts = opts or {}
     opts.cmd = { 'bash', '-c', 'zoxide query --list --score 2>&1' }
@@ -842,20 +857,7 @@ vim.keymap.set('n', '<C-t>', _G.TelescopeConfig.find_files_cwd)
 vim.keymap.set('n', '<A-t>', function()
     _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
 end)
-vim.keymap.set('n', '<Leader>rd', function()
-    telescope.extensions.frecency.frecency({
-        prompt_title = 'Frecent Files',
-        path_display = function(_, path)
-            local p = Path:new(path):absolute()
-            return string.gsub(p, vim.loop.os_homedir(), '~')
-        end,
-        attach_mappings = function(_, map)
-            map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
-            return true
-        end,
-        ignore_patterns = { '/tmp/', '.log' },
-    })
-end)
+vim.keymap.set('n', '<Leader>rd', frecent_files)
 vim.keymap.set('n', '<A-c>', _G.TelescopeConfig.find_dirs)
 vim.keymap.set('n', '<A-p>', _G.TelescopeConfig.parent_dirs)
 vim.keymap.set('n', '<Leader>bm', _G.TelescopeConfig.bookmark_dirs)
