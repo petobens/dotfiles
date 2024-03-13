@@ -130,6 +130,16 @@ local plugins = {
         end,
     },
     {
+        'zbirenbaum/copilot.lua',
+        dependencies = {
+            'zbirenbaum/copilot-cmp',
+        },
+        event = 'InsertEnter',
+        config = function()
+            require('plugin-config.copilot_config')
+        end,
+    },
+    {
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',

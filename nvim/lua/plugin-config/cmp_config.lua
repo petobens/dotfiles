@@ -43,7 +43,7 @@ cmp.setup({
         },
     },
     experimental = {
-        ghost_text = false, -- show completion candidate on same line
+        ghost_text = true, -- show completion candidate on same line
     },
     formatting = {
         fields = { 'kind', 'abbr', 'menu' },
@@ -101,6 +101,7 @@ cmp.setup({
     },
     sources = {
         -- Note: sources are prioritized in the order that they are defined here
+        { name = 'copilot' },
         { name = 'luasnip' },
         {
             name = 'nvim_lsp',
