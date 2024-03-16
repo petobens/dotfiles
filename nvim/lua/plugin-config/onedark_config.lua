@@ -356,6 +356,9 @@ onedarkpro.setup({
         ---- Aerial
         AerialLine = { bg = p.visual_grey },
 
+        ---- ChatGPT
+        ChatGPTQuestion = { fg = p.light_blue },
+
         ---- Cmp
         CmpItemAbbr = { fg = p.fg },
         CmpItemAbbrDeprecated = { fg = p.fg },

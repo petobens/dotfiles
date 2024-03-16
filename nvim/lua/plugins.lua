@@ -130,16 +130,6 @@ local plugins = {
         end,
     },
     {
-        'zbirenbaum/copilot.lua',
-        dependencies = {
-            'zbirenbaum/copilot-cmp',
-        },
-        event = 'InsertEnter',
-        config = function()
-            require('plugin-config.copilot_config')
-        end,
-    },
-    {
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
@@ -153,6 +143,28 @@ local plugins = {
         'm-demare/hlargs.nvim',
         config = function()
             require('plugin-config.hlargs_config')
+        end,
+    },
+    {
+        'zbirenbaum/copilot.lua',
+        dependencies = {
+            'zbirenbaum/copilot-cmp',
+        },
+        event = 'InsertEnter',
+        config = function()
+            require('plugin-config.copilot_config')
+        end,
+    },
+    {
+        'jackMort/ChatGPT.nvim',
+        dependencies = {
+            'MunifTanjim/nui.nvim',
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope.nvim',
+        },
+        keys = '<Leader>cg',
+        config = function()
+            require('plugin-config.chatgpt_config')
         end,
     },
 
