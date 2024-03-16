@@ -634,6 +634,13 @@ telescope.setup({
                 },
             },
         },
+        lsp_workspace_symbols = {
+            mappings = {
+                i = {
+                    ['<C-x>'] = actions.complete_tag,
+                },
+            },
+        },
         git_commits = {
             layout_config = { preview_width = 0.55 },
             mappings = {
