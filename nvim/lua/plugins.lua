@@ -234,6 +234,7 @@ local plugins = {
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-neotest/neotest-python',
+            'nvim-neotest/nvim-nio',
         },
         config = function()
             require('plugin-config.neotest_config')
