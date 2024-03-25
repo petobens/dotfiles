@@ -7,7 +7,7 @@ chatgpt.setup({
     api_key_cmd = 'pass show openai/yahoomail/apikey',
     openai_params = {
         model = 'gpt-4-turbo-preview',
-        max_tokens = 4096,
+        max_tokens = 2048,
         temperature = 0.2,
         top_p = 0.1,
         n = 1,
@@ -26,6 +26,8 @@ chatgpt.setup({
             scroll_down = '<A-j>',
             cycle_windows = { '<C-k>', '<C-j>' },
             cycle_modes = '<Tab>',
+            yank_last_code = '<C-y>',
+            yank_last = '<A-y>',
             toggle_settings = '<A-p>',
             toggle_help = '<A-h>',
             toggle_system_role_open = '<A-r>',
