@@ -128,6 +128,7 @@ chatgpt.setup({
         help_key = '@chatgpt.help_key',
         params_value = '@chatgpt.params_value',
         input_title = 'TelescopeTitle',
+        active_session = '@chatgpt.active_session',
     },
 })
 

@@ -363,6 +363,7 @@ onedarkpro.setup({
         ChatGPTMessageAction = { fg = p.fg, bg = p.visual_grey },
         ['@chatgpt.help_key'] = { fg = p.light_blue },
         ['@chatgpt.params_value'] = { fg = p.green },
+        ['@chatgpt.active_session'] = { fg = p.green },
 
         ---- Cmp
         CmpItemAbbr = { fg = p.fg },
