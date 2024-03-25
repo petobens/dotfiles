@@ -156,7 +156,7 @@ local plugins = {
         end,
     },
     {
-        'jackMort/ChatGPT.nvim',
+        'petobens/ChatGPT.nvim',
         dependencies = {
             'MunifTanjim/nui.nvim',
             'nvim-lua/plenary.nvim',

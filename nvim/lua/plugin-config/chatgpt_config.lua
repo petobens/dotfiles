@@ -1,6 +1,5 @@
 local NuiText = require('nui.text')
 local chatgpt = require('chatgpt')
-local colors = require('onedarkpro.helpers').get_colors()
 
 _G.ChatGPTConfig = {}
 
@@ -127,6 +126,8 @@ chatgpt.setup({
     },
     highlights = {
         help_key = '@chatgpt.help_key',
+        params_value = '@chatgpt.params_value',
+        input_title = 'TelescopeTitle',
     },
 })
 
@@ -171,15 +172,6 @@ vim.api.nvim_create_autocmd({ 'WinClosed' }, {
                 vim.cmd('stopinsert')
             end, 2)
         end
-    end,
-})
----- Settings (params)
-vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('chatgpt-params', { clear = true }),
-    pattern = { 'chatgpt-params' },
-    callback = function()
-        -- FIXME: This changes the global identifier color
-        vim.api.nvim_set_hl(0, 'Identifier', { fg = colors.green })
     end,
 })
 
