@@ -1,3 +1,4 @@
+local NuiText = require('nui.text')
 local chatgpt = require('chatgpt')
 local colors = require('onedarkpro.helpers').get_colors()
 
@@ -22,19 +23,19 @@ chatgpt.setup({
             toggle_settings = '<C-p>',
             toggle_help = '<A-h>',
             toggle_system_role_open = '<nop>',
+            new_session = '<A-n>',
             -- Output
             next_message = '<C-]>',
             prev_message = '<C-[>',
             -- Sessions
             toggle_sessions = '<C-s>',
-            new_session = '<A-n>',
             select_session = '<CR>',
             rename_session = 'r',
             delete_session = 'd',
         },
         sessions_window = {
-            active_sign = '* ',
-            inactive_sign = '- ',
+            active_sign = ' ',
+            inactive_sign = ' ',
             current_line_sign = ' ',
             border = {
                 text = {
@@ -50,7 +51,7 @@ chatgpt.setup({
         },
     },
     popup_input = {
-        prompt = ' ',
+        prompt = NuiText('󰥭 ', 'Statement'),
         submit = '<C-o>',
         border = {
             text = {
@@ -125,7 +126,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
         end
     end,
 })
----- Chat output
+---- Output (chat)
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('chatgpt-ft', { clear = true }),
     pattern = { 'chatgpt' },
@@ -145,11 +146,12 @@ vim.api.nvim_create_autocmd({ 'WinClosed' }, {
         end
     end,
 })
----- Parameters (settings)
+---- Settings (params)
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('chatgpt-params', { clear = true }),
     pattern = { 'chatgpt-params' },
     callback = function()
+        -- FIXME: This changes the global identifier color
         vim.api.nvim_set_hl(0, 'Identifier', { fg = colors.green })
     end,
 })
