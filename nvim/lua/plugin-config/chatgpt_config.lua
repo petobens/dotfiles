@@ -22,7 +22,8 @@ chatgpt.setup({
             cycle_modes = '<Tab>',
             toggle_settings = '<C-p>',
             toggle_help = '<A-h>',
-            toggle_system_role_open = '<nop>',
+            toggle_system_role_open = '<A-s>',
+            toggle_message_role = '<C-m>',
             new_session = '<A-n>',
             -- Output
             next_message = '<C-]>',
@@ -97,9 +98,28 @@ chatgpt.setup({
                 top = { { ' Help ', 'TelescopeTitle' } },
             },
         },
+        buf_options = {
+            filetype = 'chatgpt-help',
+        },
         win_options = {
             winfixbuf = true,
         },
+    },
+    system_window = {
+        border = {
+            text = {
+                top = { { ' System ', 'TelescopeTitle' } },
+            },
+        },
+        buf_options = {
+            filetype = 'chatgpt-system',
+        },
+        win_options = {
+            winfixbuf = true,
+        },
+    },
+    highlights = {
+        help_key = '@chatgpt.help_key',
     },
 })
 

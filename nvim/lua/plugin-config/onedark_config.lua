@@ -361,6 +361,7 @@ onedarkpro.setup({
         ChatGPTTotalTokens = { fg = p.fg, bg = p.special_grey },
         ChatGPTTotalTokensBorder = { fg = p.special_grey },
         ChatGPTMessageAction = { fg = p.fg, bg = p.visual_grey },
+        ['@chatgpt.help_key'] = { fg = p.light_blue },
 
         ---- Cmp
         CmpItemAbbr = { fg = p.fg },
