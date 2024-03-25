@@ -6,6 +6,13 @@ _G.ChatGPTConfig = {}
 
 chatgpt.setup({
     api_key_cmd = 'pass show openai/yahoomail/apikey',
+    openai_params = {
+        model = 'gpt-4-turbo-preview',
+        max_tokens = 4096,
+        temperature = 0.2,
+        top_p = 0.1,
+        n = 1,
+    },
     popup_layout = {
         default = 'right',
         right = { width = '45%' },
