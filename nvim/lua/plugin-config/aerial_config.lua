@@ -66,6 +66,7 @@ vim.api.nvim_create_autocmd('FileType', {
     callback = function(e)
         vim.opt_local.number = true
         vim.opt_local.relativenumber = true
+        vim.opt_local.winfixbuf = true
 
         vim.keymap.set('n', '<C-t>', telescope_filter, { buffer = e.buf })
     end,

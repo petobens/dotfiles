@@ -3,6 +3,7 @@ vim.opt_local.colorcolumn = ''
 vim.opt_local.textwidth = 0
 vim.opt_local.spell = false
 vim.opt_local.buflisted = false
+vim.opt_local.winfixbuf = true
 
 -- Appearance
 vim.cmd('wincmd J')

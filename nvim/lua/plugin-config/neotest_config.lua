@@ -137,6 +137,7 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
             if ft == 'summary' then
                 vim.opt_local.number = true
                 vim.opt_local.relativenumber = true
+                vim.opt_local.winfixbuf = true
             end
         end,
     })

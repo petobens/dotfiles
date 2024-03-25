@@ -79,6 +79,7 @@ vim.api.nvim_create_autocmd({ 'User' }, {
         vim.opt_local.number = true
         vim.opt_local.relativenumber = true
         vim.opt_local.shiftwidth = 2
+        vim.opt_local.winfixbuf = true
 
         local dbui_maps = { buffer = e.buf, remap = true }
         vim.keymap.set('n', '<CR>', '<plug>(DBUI_SelectLine)', dbui_maps)

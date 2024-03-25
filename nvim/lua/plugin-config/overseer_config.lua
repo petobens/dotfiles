@@ -48,6 +48,8 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = 'OverseerList',
     group = vim.api.nvim_create_augroup('OverseerConfig', {}),
     callback = function(e)
+        vim.opt_local.winfixbuf = true
+
         vim.keymap.set('n', 'q', function()
             pcall(vim.api.nvim_win_close, 0, true)
             vim.cmd('wincmd p')
