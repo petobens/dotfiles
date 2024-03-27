@@ -1,4 +1,3 @@
-local NuiText = require('nui.text')
 local chatgpt = require('chatgpt')
 
 _G.ChatGPTConfig = {}
@@ -20,6 +19,7 @@ chatgpt.setup({
         welcome_message = '',
         loading_text = 'Loading...',
         question_sign = ' ',
+        answer_sign = '> ',
         keymaps = {
             -- Input
             scroll_up = '<A-k>',
@@ -60,7 +60,7 @@ chatgpt.setup({
         },
     },
     popup_input = {
-        prompt = NuiText('󰥭 ', 'Statement'),
+        prompt = '󰥭 ',
         submit = '<C-o>',
         border = {
             text = {
@@ -144,6 +144,7 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'chatgpt-input' },
     callback = function(e)
         vim.keymap.set('i', '<C-h>', '<ESC><C-w>h', { buffer = e.buf })
+        vim.keymap.set('i', '<C-a>', '<Cmd>ChatGPTActAs<CR>')
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
