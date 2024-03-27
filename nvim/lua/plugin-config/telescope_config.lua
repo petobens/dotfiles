@@ -681,6 +681,11 @@ telescope.setup({
         },
     },
     extensions = {
+        frecency = {
+            auto_validate = true,
+            db_validate_threshold = 2,
+            db_safe_mode = false,
+        },
         fzf = {
             fuzzy = true,
             override_generic_sorter = true,
