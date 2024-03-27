@@ -162,7 +162,7 @@ local plugins = {
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope.nvim',
         },
-        keys = { '<Leader>cg' },
+        keys = { '<Leader>cg', '<Leader>cp' },
         config = function()
             require('plugin-config.chatgpt_config')
         end,
