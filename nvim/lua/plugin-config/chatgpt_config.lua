@@ -24,7 +24,7 @@ chatgpt.setup({
             -- Input
             scroll_up = '<A-k>',
             scroll_down = '<A-j>',
-            cycle_windows = { '<C-k>', '<C-j>' },
+            cycle_windows = { '<C-j>' },
             cycle_modes = '<Tab>',
             yank_last_code = '<C-y>',
             yank_last = '<A-y>',
@@ -59,6 +59,17 @@ chatgpt.setup({
             },
         },
     },
+    edit_with_instructions = {
+        keymaps = {
+            toggle_diff = '<C-d>',
+            toggle_settings = '<A-p>',
+            toggle_help = '<A-h>',
+            cycle_windows = { '<C-j>' },
+            accept = '<C-r>', -- "replace"
+            yank = '<C-y>',
+            use_output_as_input = '<C-i>',
+        },
+    },
     popup_input = {
         prompt = '󰥭 ',
         submit = '<C-o>',
@@ -82,6 +93,7 @@ chatgpt.setup({
             filetype = 'chatgpt',
         },
         win_options = {
+            foldenable = false,
             conceallevel = 2,
             concealcursor = 'nc',
             winfixbuf = true,
@@ -127,10 +139,11 @@ chatgpt.setup({
         },
     },
     highlights = {
-        help_key = '@chatgpt.help_key',
-        params_value = '@chatgpt.params_value',
-        input_title = 'TelescopeTitle',
         active_session = '@chatgpt.active_session',
+        code_edit_result_title = 'TelescopeTitle',
+        help_key = '@chatgpt.help_key',
+        input_title = 'TelescopeTitle',
+        params_value = '@chatgpt.params_value',
     },
 })
 
@@ -143,6 +156,19 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('chatgpt-in', { clear = true }),
     pattern = { 'chatgpt-input' },
     callback = function(e)
+        vim.keymap.set({ 'n', 'i' }, '<C-k>', function()
+            for w = 1, vim.fn.winnr('$') do
+                local win_id = vim.fn.win_getid(w)
+                local filetype = vim.bo[vim.api.nvim_win_get_buf(win_id)].filetype
+                if filetype == 'chatgpt' then
+                    vim.fn.win_gotoid(win_id)
+                    vim.defer_fn(function()
+                        vim.cmd('stopinsert')
+                    end, 1)
+                    return
+                end
+            end
+        end, { buffer = e.buf, remap = true })
         vim.keymap.set('i', '<C-h>', '<ESC><C-w>h', { buffer = e.buf })
         vim.keymap.set('i', '<C-a>', '<Cmd>ChatGPTActAs<CR>')
     end,
@@ -163,7 +189,16 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('chatgpt-ft', { clear = true }),
     pattern = { 'chatgpt' },
     callback = function(e)
-        vim.keymap.set('n', 'i', '<C-k>', { buffer = e.buf, remap = true })
+        vim.keymap.set('n', 'i', function()
+            for w = 1, vim.fn.winnr('$') do
+                local win_id = vim.fn.win_getid(w)
+                local filetype = vim.bo[vim.api.nvim_win_get_buf(win_id)].filetype
+                if filetype == 'chatgpt-input' then
+                    vim.fn.win_gotoid(win_id)
+                    return
+                end
+            end
+        end, { buffer = e.buf, remap = true })
     end,
 })
 vim.api.nvim_create_autocmd({ 'WinClosed' }, {
@@ -205,3 +240,4 @@ vim.keymap.set('n', '<Leader>cg', function()
     end, 1)
 end)
 vim.keymap.set('n', '<Leader>cp', '<Cmd>ChatGPTCompleteCode<CR>')
+vim.keymap.set({ 'n', 'v' }, '<Leader>ei', ':ChatGPTEditWithInstructions<CR>')

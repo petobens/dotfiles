@@ -157,12 +157,13 @@ local plugins = {
     },
     {
         'petobens/ChatGPT.nvim',
+        branch = 'chatgpt-all-changes',
         dependencies = {
             'MunifTanjim/nui.nvim',
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope.nvim',
         },
-        keys = { '<Leader>cg', '<Leader>cp' },
+        keys = { '<Leader>cg', '<Leader>cp', '<Leader>ei' },
         config = function()
             require('plugin-config.chatgpt_config')
         end,
