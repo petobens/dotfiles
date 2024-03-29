@@ -1,3 +1,4 @@
+-- luacheck:ignore 631
 local chatgpt = require('chatgpt')
 
 _G.ChatGPTConfig = {}
@@ -11,6 +12,7 @@ chatgpt.setup({
         top_p = 0.1,
         n = 1,
     },
+    predefined_chat_gpt_prompts = 'https://raw.githubusercontent.com/petobens/chatgpt-prompts/main/prompts.csv',
     popup_layout = {
         default = 'right',
         right = { width = '45%' },
@@ -214,12 +216,16 @@ vim.api.nvim_create_autocmd({ 'WinClosed' }, {
     end,
 })
 
--- Mappings
-vim.keymap.set('n', '<Leader>cg', function()
-    -- Remove line signs
+-- Helpers
+local function undefine_gpt_signs()
     for _, v in pairs({ 'start', 'middle', 'end' }) do
         pcall(vim.fn.sign_undefine, 'chatgpt_chat_' .. v .. '_block')
     end
+end
+
+-- Mappings
+vim.keymap.set('n', '<Leader>cg', function()
+    undefine_gpt_signs()
 
     -- Save last win_id to jump back
     _G.ChatGPTConfig.last_winid = vim.fn.win_getid()
@@ -239,5 +245,9 @@ vim.keymap.set('n', '<Leader>cg', function()
         vim.cmd('startinsert')
     end, 1)
 end)
-vim.keymap.set('n', '<Leader>cp', '<Cmd>ChatGPTCompleteCode<CR>')
+vim.keymap.set('n', '<Leader>aa', function()
+    undefine_gpt_signs()
+    chatgpt.selectAwesomePrompt()
+end)
 vim.keymap.set({ 'n', 'v' }, '<Leader>ei', ':ChatGPTEditWithInstructions<CR>')
+vim.keymap.set('n', '<Leader>cp', '<Cmd>ChatGPTCompleteCode<CR>')
