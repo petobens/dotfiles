@@ -99,6 +99,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', '<Leader>ih', function()
             vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
         end, opts)
-        vim.keymap.set('n', '<Leader>ca', vim.lsp.buf.code_action, opts)
+        vim.keymap.set('n', '<Leader>cA', vim.lsp.buf.code_action, opts)
     end,
 })

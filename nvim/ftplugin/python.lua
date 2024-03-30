@@ -264,7 +264,7 @@ end, { buffer = true })
 vim.keymap.set('n', '<Leader>tr', function()
     run_ipython('reset')
 end, { buffer = true })
-vim.keymap.set('n', '<Leader>cr', function()
+vim.keymap.set('n', '<Leader>tx', function()
     run_ipython('carriage')
 end, { buffer = true })
 ---- Debugging
