@@ -197,6 +197,18 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
         end
     end,
 })
+vim.api.nvim_create_autocmd({ 'WinLeave' }, {
+    group = vim.api.nvim_create_augroup('chatgpt-winleave', { clear = true }),
+    pattern = { '*' },
+    callback = function()
+        if vim.bo.filetype == 'chatgpt-input' then
+            vim.fn.win_gotoid(_G.ChatGPTConfig.last_winid)
+            vim.defer_fn(function()
+                vim.cmd('stopinsert')
+            end, 2)
+        end
+    end,
+})
 ---- Output (chat)
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('chatgpt-ft', { clear = true }),
@@ -212,18 +224,6 @@ vim.api.nvim_create_autocmd('FileType', {
                 end
             end
         end, { buffer = e.buf, remap = true })
-    end,
-})
-vim.api.nvim_create_autocmd({ 'WinClosed' }, {
-    group = vim.api.nvim_create_augroup('chatgpt-bufleave', { clear = true }),
-    pattern = { '*' },
-    callback = function()
-        if vim.bo.filetype == 'chatgpt' then
-            vim.fn.win_gotoid(_G.ChatGPTConfig.last_winid)
-            vim.defer_fn(function()
-                vim.cmd('stopinsert')
-            end, 2)
-        end
     end,
 })
 
