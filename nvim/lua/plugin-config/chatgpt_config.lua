@@ -26,7 +26,7 @@ chatgpt.setup({
             -- Input
             scroll_up = '<A-k>',
             scroll_down = '<A-j>',
-            cycle_windows = { '<C-j>' },
+            cycle_windows = '<A-l>',
             cycle_modes = '<Tab>',
             yank_last_code = '<C-y>',
             yank_last = '<A-y>',
@@ -66,7 +66,7 @@ chatgpt.setup({
             toggle_diff = '<C-d>',
             toggle_settings = '<A-p>',
             toggle_help = '<A-h>',
-            cycle_windows = { '<C-j>' },
+            cycle_windows = '<A-l>',
             accept = '<C-r>', -- "replace"
             yank = '<C-y>',
             use_output_as_input = '<C-i>',
@@ -81,7 +81,17 @@ chatgpt.setup({
                 top = { { ' Prompt ', 'TelescopeTitle' } },
             },
         },
+        buf_options = {
+            formatoptions = 'trjw',
+            formatexpr = '',
+        },
         win_options = {
+            concealcursor = 'nc',
+            conceallevel = 2,
+            foldenable = false,
+            linebreak = false,
+            number = true,
+            spell = true,
             winfixbuf = true,
         },
     },
@@ -149,7 +159,8 @@ chatgpt.setup({
     },
 })
 
--- Ensure popup_window (out) is treated as markdown despite being a chatgpt file
+-- Ensure popup_window (in/out) is treated as markdown despite being chatgpt filetypes
+vim.treesitter.language.register('markdown', 'chatgpt-input')
 vim.treesitter.language.register('markdown', 'chatgpt')
 
 -- Autocmds
