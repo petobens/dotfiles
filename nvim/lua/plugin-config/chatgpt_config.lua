@@ -183,7 +183,12 @@ vim.api.nvim_create_autocmd('FileType', {
             end
         end, { buffer = e.buf, remap = true })
         vim.keymap.set('i', '<C-h>', '<ESC><C-w>h', { buffer = e.buf })
-        vim.keymap.set('i', '<C-a>', '<Cmd>ChatGPTActAs<CR>')
+        vim.keymap.set('i', '<C-a>', function()
+            vim.cmd('ChatGPTActAs')
+            vim.defer_fn(function()
+                vim.cmd('startinsert')
+            end, 100)
+        end)
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
