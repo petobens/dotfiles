@@ -73,7 +73,7 @@ return {
         ```
     ]],
             {
-                c(1, { sn(nil, { i(1, 'language') }), t('') }),
+                c(1, { sn(nil, { i(1, 'python') }), t('') }),
                 f(_G.LuaSnipConfig.visual_selection),
                 i(2),
             }
