@@ -132,6 +132,9 @@ if type "kitty" > /dev/null 2>&1; then
     # Control matplotlib kitty backend figure resize manually
     export MPLBACKEND_KITTY_SIZING=manual
 fi
+if type "qt5ct" > /dev/null 2>&1; then
+    export QT_QPA_PLATFORMTHEME="qt5ct"
+fi
 
 # }}}
 # Xorg (and linux specific) {{{

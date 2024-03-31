@@ -139,6 +139,8 @@ $yay_cmd capitaine-cursors
 $yay_cmd papirus-icon-theme
 $yay_cmd adwaita-qt5-git
 $yay_cmd qt5ct
+$yay_cmd adwaita-qt6-git
+$yay_cmd qt6ct
 
 # Databases
 $yay_cmd postgresql
