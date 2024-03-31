@@ -65,10 +65,8 @@ vim.keymap.set(
     '<Cmd>lcd %:p:h<CR><Cmd>Git push --force-with-lease<CR>'
 )
 vim.keymap.set('n', '<Leader>gP', '<Cmd>lcd %:p:h<CR><Cmd>Git pull<CR>')
-vim.keymap.set('n', '<Leader>gb', '<Cmd>GBrowse<CR>')
-vim.keymap.set('v', '<Leader>gb', ':GBrowse<CR>')
-vim.keymap.set('n', '<Leader>gB', '<Cmd>GBrowse!<CR>')
-vim.keymap.set('v', '<Leader>gB', ':GBrowse!<CR>')
+vim.keymap.set({ 'n', 'v' }, '<Leader>gb', ':GBrowse<CR>')
+vim.keymap.set({ 'n', 'v' }, '<Leader>gB', ':GBrowse!<CR>')
 vim.keymap.set('n', '<Leader>bl', function()
     vim.cmd('0,3Git blame')
     vim.cmd('wincmd j')
