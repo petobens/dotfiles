@@ -2,7 +2,7 @@
 local u = require('utils')
 
 -- Custom offset directive for markdown conceals
-local offset_first_n = function(match, _, _, pred, metadata)
+local function offset_first_n(match, _, _, pred, metadata)
     local capture_id = pred[2]
     if not metadata[capture_id] then
         metadata[capture_id] = {}
@@ -20,6 +20,7 @@ vim.treesitter.query.add_directive(
     { force = true, all = true }
 )
 
+-- Setup
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
         'bash',
