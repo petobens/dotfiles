@@ -315,6 +315,11 @@ onedarkpro.setup({
         ['@keyword.directive.python'] = { fg = p.yellow },
         ['@punctuation.bracket.python'] = { fg = p.fg },
         ['@punctuation.special.python'] = { fg = p.orange }, -- f-strings
+        ['@lsp.mod.builtin.python'] = { fg = p.yellow },
+        ['@lsp.type.class.python'] = {},
+        ['@lsp.type.decorator.python'] = { fg = p.blue },
+        ['@lsp.type.method.python'] = {},
+        ['@lsp.type.variable.python'] = {},
 
         ---- query (ts)
         ['@punctuation.bracket.query'] = { fg = p.fg },

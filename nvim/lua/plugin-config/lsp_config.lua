@@ -49,16 +49,14 @@ lspconfig.lua_ls.setup({
 ---- Markdown
 lspconfig.marksman.setup({})
 ---- Python
-lspconfig.pyright.setup({
+lspconfig.basedpyright.setup({
     handlers = {
-        -- Don't publish pyright diagnostics (we use ruff, pylint and mypy instead)
+        -- Don't publish basedpyright diagnostics (we use ruff, pylint and mypy instead)
         ['textDocument/publishDiagnostics'] = function() end,
     },
     settings = {
-        pyright = {
+        basedpyright = {
             disableOrganizeImports = true,
-        },
-        python = {
             analysis = {
                 autoSearchPaths = true,
                 diagnosticMode = 'openFilesOnly',
@@ -71,6 +69,23 @@ lspconfig.pyright.setup({
 ---- Latex
 lspconfig.texlab.setup({
     handlers = { ['textDocument/publishDiagnostics'] = function() end },
+})
+
+-- Autocmds
+vim.api.nvim_create_autocmd('LspTokenUpdate', {
+    callback = function(args)
+        local token = args.data.token
+        -- Ensure python decorators have priority over builtin semantic token highlights
+        if vim.bo[args.buf].filetype == 'python' and token.type == 'decorator' then
+            vim.lsp.semantic_tokens.highlight_token(
+                token,
+                args.buf,
+                args.data.client_id,
+                '@lsp.type.decorator.python',
+                { priority = 128 }
+            )
+        end
+    end,
 })
 
 -- Mappings
