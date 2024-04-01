@@ -103,7 +103,6 @@ APPS = {
         'args': {
             'title': 'numbers',
             'cmd': 'ipython3',
-            'use_rol': False,
             'interactive_bash': True,
         },
     },
