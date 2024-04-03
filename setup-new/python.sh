@@ -39,8 +39,6 @@ fi
 pipx_inject_cmd="$HOME/.local/bin/pipx inject --verbose"
 
 $pipx_install_cmd aws-mfa
-$pipx_install_cmd flake8
-$pipx_inject_cmd flake8 flake8-bugbear flake8-docstrings
 $pipx_install_cmd black
 $pipx_install_cmd isort
 $pipx_install_cmd jupyter --include-deps
