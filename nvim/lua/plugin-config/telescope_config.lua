@@ -200,8 +200,9 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
             finder = finders.new_table({
                 results = {
                     vim.env.HOME .. '/git-repos/private/dotfiles/',
-                    vim.env.HOME .. '/OneDrive/mutt/ops/',
-                    vim.env.HOME .. '/OneDrive/mutt/',
+                    vim.env.HOME .. '/git-repos/private/notes/mutt/ops/',
+                    vim.env.HOME .. '/git-repos/private/notes/mutt/people/',
+                    vim.env.HOME .. '/git-repos/private/notes/mutt/',
                     vim.env.HOME .. '/git-repos/work/',
                     vim.env.HOME .. '/Desktop/',
                     vim.env.HOME .. '/.local/share/nvim/lazy/',
