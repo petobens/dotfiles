@@ -43,6 +43,9 @@ yay -c
 
 yay_cmd='yay -S --diffmenu=false --answerclean N --needed --removemake --noconfirm --answerdiff=None'
 
+# For yay
+$yay_cmd debugedit
+
 # Fonts
 $yay_cmd adobe-source-code-pro-fonts
 $yay_cmd nerd-fonts-source-code-pro
@@ -79,6 +82,7 @@ fi
 $yay_cmd alacritty
 $yay_cmd kitty
 $yay_cmd neovim-git
+$yay_cmd tree-sitter-cli
 $yay_cmd tmux
 
 # Audio
