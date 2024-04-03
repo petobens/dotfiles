@@ -198,12 +198,14 @@ vim.keymap.set(
 vim.keymap.set(
     'n',
     '<Leader>etm',
-    '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/mutt/todos_mutt.md<CR>'
+    '<Cmd>e ' .. vim.env.HOME .. '/git-repos/private/notes/mutt/todos_mutt.md<CR>'
 )
 vim.keymap.set(
     'n',
     '<Leader>ets',
-    '<Cmd>e ' .. vim.env.HOME .. '/OneDrive/programming/todos_coding_setup.md<CR>'
+    '<Cmd>e '
+        .. vim.env.HOME
+        .. '/git-repos/private/notes/programming/todos_coding_setup.md<CR>'
 )
 vim.keymap.set(
     'n',
