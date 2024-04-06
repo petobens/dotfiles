@@ -44,7 +44,8 @@ $pipx_install_cmd isort
 $pipx_install_cmd jupyter --include-deps
 $pipx_inject_cmd jupyter numpy pandas matplotlib
 $pipx_install_cmd ipython
-$pipx_inject_cmd ipython numpy pandas matplotlib matplotlib-backend-kitty black ipython-ctrlr-fzf
+$pipx_inject_cmd ipython numpy pandas matplotlib matplotlib-backend-kitty black
+$pipx_inject_cmd ipython git+https://github.com/petobens/ipython-ctrlr-fzf@ui
 $pipx_install_cmd litecli
 $pipx_install_cmd mycli
 $pipx_install_cmd mypy
