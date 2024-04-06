@@ -476,6 +476,19 @@ local custom_actions = transform_mod({
         vim.fn.search(action_state.get_selected_entry().name)
         vim.cmd('normal! 0')
     end,
+    -- Delete frecency entries
+    delete_frecency = function(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local multi = picker:get_multi_selection()
+        actions.close(prompt_bufnr)
+        if not vim.tbl_isempty(multi) then
+            for _, v in pairs(multi) do
+                vim.cmd(string.format('FrecencyDelete %s', v.filename))
+            end
+        else
+            vim.cmd('FrecencyDelete ' .. action_state.get_selected_entry().filename)
+        end
+    end,
 })
 -- Store custom actions to be used elsewhere
 _G.TelescopeConfig.custom_actions = custom_actions
@@ -591,7 +604,7 @@ telescope.setup({
             mappings = {
                 i = {
                     ['<C-o>'] = custom_actions.context_split,
-                    ['<A-k>'] = custom_actions.delete_buffer,
+                    ['<C-d>'] = custom_actions.delete_buffer,
                 },
             },
         },
@@ -728,7 +741,7 @@ end
 
 local function frecent_files()
     telescope.extensions.frecency.frecency({
-        prompt_title = 'Frecent Files',
+        prompt_title = 'Frecent Files (<C-d>:delete)',
         path_display = function(_, path)
             local p = Path:new(path):absolute()
             return string.gsub(p, vim.loop.os_homedir(), '~')
@@ -736,6 +749,7 @@ local function frecent_files()
         attach_mappings = function(_, map)
             map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
             map('i', '<C-y>', custom_actions.yank)
+            map('i', '<C-d>', custom_actions.delete_frecency)
             return true
         end,
         ignore_patterns = { '/tmp/', '.log' },
@@ -852,7 +866,7 @@ vim.keymap.set('n', '<Leader>dr', '<Cmd>Telescope resume<CR>')
 vim.keymap.set('n', '<Leader>tp', '<Cmd>Telescope pickers<CR>')
 vim.keymap.set('n', '<Leader>tq', '<Cmd>Telescope quickfix<CR>')
 vim.keymap.set('n', '<Leader>be', function()
-    builtin.buffers({ prompt_title = 'Buffers (<A-k>:delete)' })
+    builtin.buffers({ prompt_title = 'Buffers (<C-d>:delete)' })
 end)
 vim.keymap.set('n', '<Leader>ls', _G.TelescopeConfig.find_files_cwd)
 vim.keymap.set('n', '<Leader>lS', function()
