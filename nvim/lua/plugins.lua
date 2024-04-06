@@ -48,12 +48,6 @@ local plugins = {
 
     -- Editing
     {
-        'numToStr/Comment.nvim',
-        config = function()
-            require('plugin-config.comment_config')
-        end,
-    },
-    {
         'kylechui/nvim-surround',
         config = function()
             require('plugin-config.surround_config')

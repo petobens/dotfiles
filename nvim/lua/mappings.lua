@@ -187,6 +187,12 @@ vim.keymap.set(
     ':lua vim.print("Words: " .. vim.fn.wordcount().words)<CR>'
 )
 
+-- Commenting
+vim.keymap.set('n', '<Leader>cc', 'gcc', { remap = true })
+vim.keymap.set('n', '<Leader>cu', 'gcc', { remap = true })
+vim.keymap.set('v', '<Leader>cc', 'gc', { remap = true })
+vim.keymap.set('v', '<Leader>cu', 'gc', { remap = true })
+
 -- Bookmarks
 vim.keymap.set('n', '<Leader>ev', '<Cmd>e $MYVIMRC<CR>')
 vim.keymap.set('n', '<Leader>em', '<Cmd>e ' .. vim.env.DOTVIM .. '/minimal.lua<CR>')
