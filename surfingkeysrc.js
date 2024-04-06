@@ -148,6 +148,7 @@ const qmarksUrls = {
     M: 'https://mail.google.com',
     n: 'www.netflix.com',
     N: 'synology-ds:5000',
+    o: 'https://onedrive.live.com',
     p: 'http://pirateproxy.net',
     r: 'www.reddit.com',
     s: 'http://stackoverflow.com',
