@@ -319,7 +319,8 @@ local custom_actions = transform_mod({
     -- Yank
     yank = function(prompt_bufnr)
         actions.close(prompt_bufnr)
-        vim.fn.setreg('+', action_state.get_selected_entry().value)
+        local entry = action_state.get_selected_entry()
+        vim.fn.setreg('+', entry.value or entry.filename)
     end,
     -- Open git commit using Fugitive
     fugitive_open = function(prompt_bufnr)
@@ -734,6 +735,7 @@ local function frecent_files()
         end,
         attach_mappings = function(_, map)
             map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
+            map('i', '<C-y>', custom_actions.yank)
             return true
         end,
         ignore_patterns = { '/tmp/', '.log' },
