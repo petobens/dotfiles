@@ -48,14 +48,14 @@ $yay_cmd debugedit
 
 # Fonts
 $yay_cmd adobe-source-code-pro-fonts
+$yay_cmd freetype2
 $yay_cmd nerd-fonts-source-code-pro
 $yay_cmd noto-fonts
 $yay_cmd noto-fonts-cjk
 $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
-$yay_cmd ttf-nerd-fonts-symbols
 $yay_cmd ttf-ms-fonts
-yay -S --mflags --skipinteg --answerclean N --diffmenu=false freetype2-ultimate5 # manually resolve conflicts with freetype2
+$yay_cmd ttf-nerd-fonts-symbols
 
 # Bash related
 $yay_cmd bash-completion
