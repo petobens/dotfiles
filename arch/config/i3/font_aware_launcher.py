@@ -102,8 +102,7 @@ APPS = {
         'type': 'tui',
         'args': {
             'title': 'numbers',
-            'cmd': 'ipython3',
-            'interactive_bash': True,
+            'cmd': '/usr/bin/bash -i -c "ipython3"',
         },
     },
     'obs': {'type': 'qt', 'args': {'class_name': 'obs'}},
