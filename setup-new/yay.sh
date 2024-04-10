@@ -39,7 +39,7 @@ fi
 echo "Updating packages..."
 yay -Syu --diffmenu=false --answerclean N --devel --timeupdate --combinedupgrade \
     --removemake
-yay -c
+yay -Yc
 
 yay_cmd='yay -S --diffmenu=false --answerclean N --needed --removemake --noconfirm --answerdiff=None'
 
@@ -49,13 +49,13 @@ $yay_cmd debugedit
 # Fonts
 $yay_cmd adobe-source-code-pro-fonts
 $yay_cmd freetype2
-$yay_cmd nerd-fonts-source-code-pro
 $yay_cmd noto-fonts
 $yay_cmd noto-fonts-cjk
 $yay_cmd noto-fonts-emoji
 $yay_cmd ttf-dejavu
 $yay_cmd ttf-ms-fonts
 $yay_cmd ttf-nerd-fonts-symbols
+$yay_cmd ttf-sourcecodepro-nerd
 
 # Bash related
 $yay_cmd bash-completion
@@ -152,7 +152,6 @@ $yay_cmd redis
 $yay_cmd sqlite3
 
 # VPN
-$yay_cmd --mflags "--skipchecksums" snx-800007075
 $yay_cmd globalprotect-openconnect
 $yay_cmd openvpn
 
@@ -191,7 +190,7 @@ $yay_cmd neomutt
 $yay_cmd oath-toolkit
 $yay_cmd openssh
 $yay_cmd p7zip
-$yay_cmd pandoc
+$yay_cmd pandoc-cli
 $yay_cmd pandoc-crossref
 $yay_cmd prettyping
 $yay_cmd procs
@@ -249,4 +248,4 @@ $yay_cmd zathura-pdf-poppler
 $yay_cmd zoom
 
 # Cleanup
-yay -c
+yay -Yc
