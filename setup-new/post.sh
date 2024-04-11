@@ -179,8 +179,3 @@ EOF'
     echo -e "\\033[1;34m--> Removing old pacman cache dir...\\033[0m"
     sudo rm -rf /var/cache/pacman
 fi
-
-# Private repos
-if [ ! -f "$HOME/git-repos/private/notes/README.md" ]; then
-    git clone https://github.com/petobens/notes ~/git-repos/private/notes
-fi
