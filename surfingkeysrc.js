@@ -152,7 +152,7 @@ const qmarksUrls = {
     s: 'http://stackoverflow.com',
     u: 'www.alumnos.econ.uba.ar',
     v: 'http://virtual.econ.uba.ar/',
-    y: 'www.yahoo.com/mail',
+    y: 'www.youtube.com',
     // Printing (arch)
     q: 'http://localhost:631/jobs',
 };
