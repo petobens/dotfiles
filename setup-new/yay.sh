@@ -43,9 +43,6 @@ yay -Yc
 
 yay_cmd='yay -S --diffmenu=false --answerclean N --needed --removemake --noconfirm --answerdiff=None'
 
-# For yay
-$yay_cmd debugedit
-
 # Fonts
 $yay_cmd adobe-source-code-pro-fonts
 $yay_cmd freetype2
