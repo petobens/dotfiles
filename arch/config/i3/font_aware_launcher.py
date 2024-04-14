@@ -74,7 +74,7 @@ APPS = {
     'htop': {
         'type': 'tui',
         # Note: we need the sleep cmd for proper reflow
-        'args': {'title': 'htop', 'cmd': '/usr/bin/bash -c "sleep 0.3&&htop"'},
+        'args': {'title': 'htop', 'cmd': '/usr/bin/bash -c "sleep 0.2&&htop"'},
     },
     'kitty': {
         'type': 'rol_custom',
@@ -171,7 +171,7 @@ APPS = {
         'args': {
             'title': 'ranger',
             # Note: we need the sleep cmd for proper reflow
-            'cmd': '/usr/bin/bash -c "sleep 0.3&&ranger {path}"',
+            'cmd': '/usr/bin/bash -c "sleep 0.2&&ranger {path}"',
         },
     },
     'reboot-dialog': {
