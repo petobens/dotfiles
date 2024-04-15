@@ -263,7 +263,6 @@ local plugins = {
             require('plugin-config.tmux_config')
         end,
     },
-    { 'tpope/vim-repeat' },
     {
         '3rd/image.nvim',
         ft = 'markdown',
