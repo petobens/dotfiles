@@ -256,7 +256,6 @@ local plugins = {
     },
 
     -- Utilities
-    { 'gioele/vim-autoswap' },
     { 'jamessan/vim-gnupg' },
     {
         'nathom/tmux.nvim',
