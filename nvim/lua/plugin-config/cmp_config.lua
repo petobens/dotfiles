@@ -58,7 +58,6 @@ cmp.setup({
                 nvim_lsp = '[LSP]',
                 path = '[Path]',
                 tmux = '[TMUX]',
-                ['vim-dadbod-completion'] = '[Dadbod]',
             })[entry.source.name]
             return vim_item
         end,

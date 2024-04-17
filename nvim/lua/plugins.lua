@@ -332,18 +332,24 @@ local plugins = {
     },
     ---- SQL
     {
-        'kristijanhusak/vim-dadbod-ui',
+        'kndndrj/nvim-dbee',
+        branch = 'spring_cleaning',
         dependencies = {
-            { 'tpope/vim-dadbod', lazy = true },
+            'MunifTanjim/nui.nvim',
+            -- FIXME: Can't lazy load this
+            -- See https://github.com/MattiasMTS/cmp-dbee/issues/18
             {
-                'kristijanhusak/vim-dadbod-completion',
+                'MattiasMTS/cmp-dbee',
                 ft = { 'sql' },
-                lazy = true,
+                lazy = false,
             },
         },
+        build = function()
+            require('dbee').install()
+        end,
         keys = '<Leader>db',
         config = function()
-            require('plugin-config.dadbod_config')
+            require('plugin-config.dbee_config')
         end,
     },
 }

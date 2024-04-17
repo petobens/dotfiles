@@ -378,8 +378,10 @@ onedarkpro.setup({
         CmpItemMenu = { fg = p.gray },
         CmpItemKind = { fg = p.gray },
 
-        ---- DBUI
-        dbui_new_query = { fg = p.green },
+        ---- dbee
+        dbee_source = { fg = p.yellow },
+        dbee_connection = { fg = p.red },
+        dbee_note = { fg = p.orange },
 
         ---- Fugitive
         diffAdded = { fg = p.green },
