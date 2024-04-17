@@ -21,7 +21,6 @@ dbee.setup({
             },
             connection = {
                 icon_highlight = 'dbee_connection',
-                text_highlight = 'dbee_connection',
             },
             note = {
                 icon_highlight = 'dbee_note',
@@ -34,7 +33,24 @@ dbee.setup({
             { key = '<F7>', mode = 'v', action = 'run_selection' },
         },
     },
+    result = {
+        mappings = {
+            { key = '<C-c>', mode = '', action = 'cancel_call' },
+        },
+    },
+    call_log = {
+        mappings = {
+            { key = '<C-c>', mode = '', action = 'cancel_call' },
+        },
+    },
     sources = {
+        -- Json file entries should have the following form:
+        -- "first": {
+        --     "id": "1",
+        --     "name": "docker-postgres",
+        --     "type": "postgres",
+        --     "url": "postgres://postgres:passwd@localhost:5432?sslmode=disable"
+        -- }
         require('dbee.sources').FileSource:new(
             vim.env.HOME .. '/.config/.dbee_connections.json'
         ),
