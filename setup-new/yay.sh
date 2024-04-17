@@ -183,7 +183,6 @@ $yay_cmd libgit2
 $yay_cmd lsb-release
 $yay_cmd lsd
 $yay_cmd luacheck
-$yay_cmd neomutt
 $yay_cmd oath-toolkit
 $yay_cmd openssh
 $yay_cmd p7zip
