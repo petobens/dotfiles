@@ -810,6 +810,7 @@ local function gitcommits(opts)
         'rev-parse',
         '--show-toplevel',
     }, opts.cwd)
+    vim.cmd('lcd %:p:h') -- to fix delta previewing
     builtin.git_commits({
         cwd = opts.cwd,
         prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout)',
@@ -826,6 +827,7 @@ end
 local function gitcommits_buffer(opts)
     opts = opts or {}
     opts.cwd = utils.buffer_dir()
+    vim.cmd('lcd %:p:h') -- to fix delta previewing
     builtin.git_bcommits({
         cwd = opts.cwd,
         results_title = vim.api.nvim_buf_get_name(0),
