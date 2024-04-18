@@ -315,6 +315,19 @@ local plugins = {
             require('plugin-config.fugitive_config')
         end,
     },
+
+    {
+        'NeogitOrg/neogit',
+        branch = 'nightly',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'sindrets/diffview.nvim',
+            'nvim-telescope/telescope.nvim',
+        },
+        config = function()
+            require('plugin-config.neogit_config')
+        end,
+    },
     ---- Latex
     {
         'lervag/vimtex',
