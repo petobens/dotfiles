@@ -1,4 +1,5 @@
 local u = require('utils')
+local methods = vim.lsp.protocol.Methods
 
 -- Mason and neodev must load befor lsp-config (and mason must go first)
 require('mason-lspconfig').setup()
@@ -11,6 +12,85 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     opts = opts or {}
     opts.border = opts.border or u.border('FloatBorder')
     return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
+
+--- Mimic noice treesitter markdown highlights for hover, signatures and docs
+-- https://github.com/MariaSolOs/dotfiles/blob/fedora/.config/nvim/lua/lsp.lua
+local md_namespace = vim.api.nvim_create_namespace('noiceish_highlights')
+local function add_inline_highlights(buf)
+    for l, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+        for pattern, hl_group in pairs({
+            ['─'] = '@markup.heading.vimdoc',
+            --- Lua/vimdoc
+            ['@%S+'] = '@variable.parameter',
+            ['{%S-}'] = '@variable.parameter',
+            ['|%S-|'] = '@markup.link.vimdoc',
+            -- Python
+            ['^%s*(Parameters)$'] = '@markup.heading.vimdoc',
+            ['^%s*(Returns)$'] = '@markup.heading.vimdoc',
+            ['^%s*(Examples)$'] = '@markup.heading.vimdoc',
+            ['^%s*(Notes)$'] = '@markup.heading.vimdoc',
+            ['^%s*(See Also)$'] = '@markup.heading.vimdoc',
+        }) do
+            local from = 1
+            while from do
+                local to
+                from, to = line:find(pattern, from)
+                if from then
+                    vim.api.nvim_buf_set_extmark(buf, md_namespace, l - 1, from - 1, {
+                        end_col = to,
+                        hl_group = hl_group,
+                    })
+                end
+                from = to and to + 1 or nil
+            end
+        end
+    end
+    -- Don't conceal code block quotes and language delimiters
+    -- FIXME: This done globally
+    -- vim.treesitter.query.set(
+    --     'markdown',
+    --     'highlights',
+    --     [[
+    --     ((fenced_code_block_delimiter) @conceal (#set! conceal ""))
+    --     ((language) @conceal (#set! conceal ""))
+    --     ]]
+    -- )
+end
+
+local function enhanced_float_handler(handler, focusable)
+    return function(err, result, ctx, config)
+        local bufnr, winnr = handler(
+            err,
+            result,
+            ctx,
+            vim.tbl_deep_extend('force', config or {}, {
+                border = 'rounded',
+                focusable = focusable,
+            })
+        )
+        if not bufnr or not winnr then
+            return
+        end
+        vim.wo[winnr].concealcursor = 'n'
+        add_inline_highlights(bufnr)
+    end
+end
+vim.lsp.handlers[methods.textDocument_hover] =
+    enhanced_float_handler(vim.lsp.handlers.hover, true)
+vim.lsp.handlers[methods.textDocument_signatureHelp] =
+    enhanced_float_handler(vim.lsp.handlers.signature_help, false)
+
+-- For cmp docs
+vim.lsp.util.stylize_markdown = function(bufnr, contents, opts)
+    contents = vim.lsp.util._normalize_markdown(contents, {
+        width = vim.lsp.util._make_floating_popup_size(contents, opts),
+    })
+    vim.bo[bufnr].filetype = 'markdown'
+    vim.treesitter.start(bufnr)
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
+    add_inline_highlights(bufnr)
+    return contents
 end
 
 -- FIXME: workaround for https://github.com/neovim/neovim/issues/23291

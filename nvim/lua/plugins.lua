@@ -36,15 +36,6 @@ local plugins = {
             require('plugin-config.statuscol_config')
         end,
     },
-    {
-        'folke/noice.nvim',
-        dependencies = {
-            'MunifTanjim/nui.nvim',
-        },
-        config = function()
-            require('plugin-config.noice_config')
-        end,
-    },
 
     -- Editing
     {
@@ -325,6 +316,7 @@ local plugins = {
             'nvim-telescope/telescope.nvim',
         },
         config = function()
+            -- Foo
             require('plugin-config.neogit_config')
         end,
         keys = '<Leader>ng',
