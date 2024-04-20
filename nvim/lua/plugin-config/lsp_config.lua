@@ -93,14 +93,6 @@ vim.lsp.util.stylize_markdown = function(bufnr, contents, opts)
     return contents
 end
 
--- FIXME: workaround for https://github.com/neovim/neovim/issues/23291
-local ok, wf = pcall(require, 'vim.lsp._watchfiles')
-if ok then
-    wf._watchfunc = function()
-        return function() end
-    end
-end
-
 -- Servers setup (names available in https://github.com/williamboman/nvim-lsp-installer)
 ---- Bash
 lspconfig.bashls.setup({
