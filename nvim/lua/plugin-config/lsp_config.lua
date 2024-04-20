@@ -46,16 +46,6 @@ local function add_inline_highlights(buf)
             end
         end
     end
-    -- Don't conceal code block quotes and language delimiters
-    -- FIXME: This done globally
-    -- vim.treesitter.query.set(
-    --     'markdown',
-    --     'highlights',
-    --     [[
-    --     ((fenced_code_block_delimiter) @conceal (#set! conceal ""))
-    --     ((language) @conceal (#set! conceal ""))
-    --     ]]
-    -- )
 end
 
 local function enhanced_float_handler(handler, focusable)
