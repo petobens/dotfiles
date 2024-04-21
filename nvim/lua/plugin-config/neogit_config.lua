@@ -16,8 +16,10 @@ neogit.setup({
         item = { '', '' },
         section = { u.icons.fold_open, u.icons.fold_close },
     },
+    show_head_commit_hash = false,
     status = {
         recent_commit_count = 5,
+        HEAD_padding = 0,
         mode_padding = 1,
         mode_text = {
             M = 'M ',

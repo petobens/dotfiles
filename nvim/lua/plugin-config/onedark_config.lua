@@ -426,8 +426,10 @@ onedarkpro.setup({
         NeogitChangeModified = { fg = p.red },
         NeogitUntrackedfiles = { fg = p.yellow },
         NeogitChangeUntracked = { fg = p.yellow },
-        NeogitBranch = { fg = p.green, style = 'bold' },
-        NeogitRemote = { fg = p.cyan, style = 'bold' },
+        NeogitBranch = { fg = p.light_blue },
+        NeogitRemote = { fg = p.light_blue },
+        NeogitStatusHEAD = { fg = p.purple },
+        NeogitObjectId = { fg = p.red },
 
         ---- Neotest
         NeotestAdapterName = { fg = p.purple },
