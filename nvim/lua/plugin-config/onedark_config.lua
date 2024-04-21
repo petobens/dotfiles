@@ -383,6 +383,13 @@ onedarkpro.setup({
         dbee_connection = { fg = p.red },
         dbee_note = { fg = p.orange },
 
+        ---- Diffview
+        DiffviewFilePanelDeletions = { fg = p.red },
+        DiffviewFilePanelInsertions = { fg = p.green },
+        DiffviewFilePanelRootPath = { fg = p.purple },
+        DiffviewStatusModified = { fg = p.red },
+        DiffviewStatusUntracked = { fg = p.yellow },
+
         ---- Fugitive
         diffAdded = { fg = p.green },
         diffRemoved = { fg = p.red },
