@@ -17,8 +17,14 @@ end
 --- Mimic noice treesitter markdown highlights for hover, signatures and docs
 -- https://github.com/MariaSolOs/dotfiles/blob/fedora/.config/nvim/lua/lsp.lua
 local md_namespace = vim.api.nvim_create_namespace('noiceish_highlights')
-local function add_inline_highlights(buf)
-    for l, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+local function add_inline_highlights(bufnr)
+    for l, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
+        if vim.startswith(line, '``` man') then
+            -- For sh files directly use man filetype since there is no treesitter parser
+            vim.bo[bufnr].filetype = 'man'
+            return
+        end
+
         for pattern, hl_group in pairs({
             ['─'] = '@markup.heading.vimdoc',
             --- Lua/vimdoc
@@ -37,7 +43,7 @@ local function add_inline_highlights(buf)
                 local to
                 from, to = line:find(pattern, from)
                 if from then
-                    vim.api.nvim_buf_set_extmark(buf, md_namespace, l - 1, from - 1, {
+                    vim.api.nvim_buf_set_extmark(bufnr, md_namespace, l - 1, from - 1, {
                         end_col = to,
                         hl_group = hl_group,
                     })
