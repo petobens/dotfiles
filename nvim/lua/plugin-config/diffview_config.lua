@@ -32,7 +32,12 @@ require('diffview').setup({
             { 'n', '[c', '[h', { remap = true } },
         },
         file_panel = {
+            { 'n', 'j', 'j' },
+            { 'n', 'k', 'k' },
+            { 'n', 'l', 'l' },
+            { 'n', 'h', 'h' },
             { 'n', 'q', actions.toggle_files },
+            { 'n', 'Q', '<Cmd>DiffviewClose<CR>' },
         },
     },
 })

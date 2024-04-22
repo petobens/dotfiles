@@ -384,9 +384,13 @@ onedarkpro.setup({
         dbee_note = { fg = p.orange },
 
         ---- Diffview
+        DiffviewFilePanelCounter = { fg = p.orange },
         DiffviewFilePanelDeletions = { fg = p.red },
         DiffviewFilePanelInsertions = { fg = p.green },
-        DiffviewFilePanelRootPath = { fg = p.purple },
+        DiffviewFilePanelRootPath = { fg = p.yellow },
+        DiffviewFilePanelSelected = { fg = p.fg, style = 'bold' },
+        DiffviewFilePanelTitle = { fg = p.red },
+        DiffviewFolderSign = { fg = p.light_blue },
         DiffviewStatusModified = { fg = p.red },
         DiffviewStatusUntracked = { fg = p.yellow },
 
