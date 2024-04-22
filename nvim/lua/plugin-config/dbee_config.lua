@@ -4,6 +4,10 @@ local dbee = require('dbee')
 dbee.setup({
     drawer = {
         disable_help = true,
+        window_options = {
+            number = true,
+            relativenumber = true,
+        },
         mappings = {
             { key = '<C-r>', mode = 'n', action = 'refresh' },
             { key = 'o', mode = 'n', action = 'action_1' }, -- open
