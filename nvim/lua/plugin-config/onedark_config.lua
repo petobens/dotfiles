@@ -434,13 +434,18 @@ onedarkpro.setup({
 
         ---- Neogit
         NeogitBranch = { fg = p.light_blue },
+        NeogitBranchHead = { fg = p.cyan },
+        NeogitChangeD = { fg = p.red },
         NeogitChangeModified = { fg = p.red },
+        NeogitChangeR = { fg = p.green },
         NeogitChangeUntracked = { fg = p.yellow },
         NeogitObjectId = { fg = p.red },
         NeogitRemote = { fg = p.light_blue },
         NeogitSectionHeaderCount = { fg = p.orange },
         NeogitStagedchanges = { fg = p.green },
         NeogitStatusHEAD = { fg = p.purple },
+        NeogitUnmergedchanges = { fg = p.yellow },
+        NeogitUnpulledchanges = { fg = p.yellow },
         NeogitUnstagedchanges = { fg = p.red },
         NeogitUntrackedfiles = { fg = p.yellow },
 

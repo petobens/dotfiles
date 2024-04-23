@@ -135,6 +135,20 @@ local fugitive_ext = {
     filetypes = { 'fugitive' },
 }
 
+local neogit_ext = {
+    sections = {
+        lualine_a = {
+            function()
+                return 'NeogitStatus'
+            end,
+        },
+        lualine_b = {
+            branch_with_remote,
+        },
+    },
+    filetypes = { 'NeogitStatus' },
+}
+
 local overseer_ext = {
     sections = {
         lualine_a = {
@@ -381,6 +395,7 @@ require('lualine').setup({
         'aerial',
         diffview_ext,
         fugitive_ext,
+        neogit_ext,
         nvimtree_ext,
         overseer_ext,
         quickfix_ext,
