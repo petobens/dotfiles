@@ -74,6 +74,7 @@ cmp.setup({
             vim_item.kind = require('lspkind').presets.default[vim_item.kind]
             vim_item.menu = ({
                 buffer = '[Buffer]',
+                ['cmp-dbee'] = '[dbee]',
                 copilot = '[Copilot]',
                 emoji = '[Emoji]',
                 git = '[Git]',
