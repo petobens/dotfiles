@@ -1,20 +1,14 @@
 local neogit = require('neogit')
-local u = require('utils')
 
 neogit.setup({
-    disable_hint = true,
-    disable_signs = false,
-    disable_line_numbers = false,
     kind = 'split',
+    disable_hint = true,
+    disable_signs = true,
+    disable_line_numbers = false,
     sections = {
         recent = {
             hidden = true,
         },
-    },
-    signs = {
-        hunk = { '', '' },
-        item = { '', '' },
-        section = { u.icons.fold_open, u.icons.fold_close },
     },
     status = {
         recent_commit_count = 5,
