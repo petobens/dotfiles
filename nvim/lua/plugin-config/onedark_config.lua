@@ -433,14 +433,16 @@ onedarkpro.setup({
         LeapLabelPrimary = { fg = p.black, bg = p.purple, style = 'bold' },
 
         ---- Neogit
-        NeogitUnstagedchanges = { fg = p.red },
-        NeogitChangeModified = { fg = p.red },
-        NeogitUntrackedfiles = { fg = p.yellow },
-        NeogitChangeUntracked = { fg = p.yellow },
         NeogitBranch = { fg = p.light_blue },
-        NeogitRemote = { fg = p.light_blue },
-        NeogitStatusHEAD = { fg = p.purple },
+        NeogitChangeModified = { fg = p.red },
+        NeogitChangeUntracked = { fg = p.yellow },
         NeogitObjectId = { fg = p.red },
+        NeogitRemote = { fg = p.light_blue },
+        NeogitSectionHeaderCount = { fg = p.orange },
+        NeogitStagedchanges = { fg = p.green },
+        NeogitStatusHEAD = { fg = p.purple },
+        NeogitUnstagedchanges = { fg = p.red },
+        NeogitUntrackedfiles = { fg = p.yellow },
 
         ---- Neotest
         NeotestAdapterName = { fg = p.purple },
