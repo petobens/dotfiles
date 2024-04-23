@@ -450,6 +450,17 @@ mapkey(',sm', 'Search in MercadoLibre in current tab', function () {
 mapkey(',Sm', 'Search in MercadoLibre in new tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'm' });
 });
+addSearchAlias(
+    'd',
+    'Google Drive',
+    'https://drive.google.com/drive/u/0/search?q='
+);
+mapkey(',sd', 'Search in Google Drive in current tab', function () {
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'd', tabbed: false });
+});
+mapkey(',Sd', 'Search in Google Drive in new tab', function () {
+    Front.openOmnibar({ type: 'SearchEngine', extra: 'd' });
+});
 
 // History
 mapkey(',hs', 'Open URL from history', function () {
