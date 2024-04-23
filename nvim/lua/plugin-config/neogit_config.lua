@@ -1,5 +1,7 @@
 local neogit = require('neogit')
 
+_G.dbeeConfig = {}
+
 neogit.setup({
     kind = 'split',
     disable_hint = true,
@@ -36,6 +38,8 @@ neogit.setup({
     mappings = {
         status = {
             ['='] = 'Toggle',
+            ['[h'] = 'GoToPreviousHunkHeader',
+            [']h'] = 'GoToNextHunkHeader',
         },
         popup = {
             ['l'] = false,
@@ -45,8 +49,20 @@ neogit.setup({
     },
 })
 
+-- Autocmds
+vim.api.nvim_create_autocmd({ 'WinLeave' }, {
+    group = vim.api.nvim_create_augroup('neogitstatus-winleave', { clear = true }),
+    pattern = { '*' },
+    callback = function()
+        if vim.bo.filetype == 'NeogitStatus' then
+            vim.fn.win_gotoid(_G.dbeeConfig.last_winid)
+        end
+    end,
+})
+
 -- Mappings
 vim.keymap.set('n', '<Leader>ng', function()
+    _G.dbeeConfig.last_winid = vim.fn.win_getid()
     neogit.open()
     vim.cmd('wincmd J | resize 15 | set winfixheight')
 end)
