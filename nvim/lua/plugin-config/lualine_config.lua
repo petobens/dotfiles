@@ -154,6 +154,17 @@ local overseer_ext = {
     filetypes = { 'OverseerList' },
 }
 
+local diffview_ext = {
+    sections = {
+        lualine_a = {
+            function()
+                return 'DiffviewFiles'
+            end,
+        },
+    },
+    filetypes = { 'DiffviewFiles' },
+}
+
 -- Setup
 require('lualine').setup({
     options = {
@@ -368,10 +379,11 @@ require('lualine').setup({
     },
     extensions = {
         'aerial',
-        quickfix_ext,
+        diffview_ext,
         fugitive_ext,
         nvimtree_ext,
         overseer_ext,
+        quickfix_ext,
     },
 })
 

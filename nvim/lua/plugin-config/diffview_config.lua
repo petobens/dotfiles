@@ -28,8 +28,10 @@ require('diffview').setup({
     keymaps = {
         view = {
             { 'n', '<Leader>fp', actions.toggle_files },
+            { 'n', '<Leader>ff', actions.focus_files },
             { 'n', ']c', ']h', { remap = true } },
             { 'n', '[c', '[h', { remap = true } },
+            { 'n', 'Q', '<Cmd>DiffviewClose<CR>' },
         },
         file_panel = {
             { 'n', 'j', 'j' },
@@ -38,6 +40,9 @@ require('diffview').setup({
             { 'n', 'h', 'h' },
             { 'n', 'q', actions.toggle_files },
             { 'n', 'Q', '<Cmd>DiffviewClose<CR>' },
+            { 'n', 'zm', actions.close_all_folds },
+            { 'n', 'zr', actions.open_all_folds },
+            { 'n', '?', 'g?', { remap = true } },
         },
     },
 })
