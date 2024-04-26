@@ -437,6 +437,8 @@ onedarkpro.setup({
         NeogitBranchHead = { fg = p.cyan },
         NeogitChangeD = { fg = p.red },
         NeogitChangeModified = { fg = p.red },
+        NeogitChangeMstaged = { fg = p.green },
+        NeogitChangeN = { fg = p.green },
         NeogitChangeR = { fg = p.green },
         NeogitChangeUntracked = { fg = p.yellow },
         NeogitObjectId = { fg = p.red },
