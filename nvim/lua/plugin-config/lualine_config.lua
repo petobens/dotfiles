@@ -1,3 +1,4 @@
+local neogit = require('neogit.lib.git')
 local onedark_colors = require('onedarkpro.helpers').get_colors()
 local overseer = require('overseer')
 local u = require('utils')
@@ -32,12 +33,10 @@ local function spell_status()
 end
 
 local function branch_with_remote()
-    local branch_name = vim.fn.FugitiveHead()
-    if branch_name == '' then
+    if neogit.repo.git_root == '' then
         return ''
     end
-    local remote =
-        vim.api.nvim_exec([[echo FugitiveConfigGet('remote.origin.url')]], true)
+    local remote = neogit.config.get('remote.origin.url').value
     local branch_icon = ''
     if remote:find('github') then
         branch_icon = ' '
@@ -46,7 +45,7 @@ local function branch_with_remote()
     elseif remote:find('bitbucket') then
         branch_icon = ' '
     end
-    return branch_icon .. ' ' .. branch_name
+    return branch_icon .. ' ' .. neogit.branch.current()
 end
 
 local function pyvenv()

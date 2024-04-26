@@ -312,7 +312,6 @@ local plugins = {
             require('plugin-config.diffview_config')
         end,
         cmd = { 'DiffviewOpen', 'DiffviewFileHistory' },
-        keys = { '<Leader>vd' },
     },
     {
         'NeogitOrg/neogit',
@@ -325,7 +324,6 @@ local plugins = {
         config = function()
             require('plugin-config.neogit_config')
         end,
-        keys = '<Leader>ng',
     },
     ---- Latex
     {
