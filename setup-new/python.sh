@@ -25,7 +25,7 @@ fi
 # Python binaries (can also be mostly installed with a package manager but we
 # do it with pipx to avoid dependency clash)
 # Note: when upgrading python minor version we might need to remove the
-# ~/.local/pipx folder and reinstall all packages
+# ~/.local/pipx folder and reinstall all packages by running this file
 # See https://github.com/pipxproject/pipx/issues/278#issuecomment-557132753
 echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
 if ! type "pipx" > /dev/null 2>&1; then
@@ -56,7 +56,7 @@ $pipx_install_cmd pgcli
 $pipx_install_cmd poetry
 $pipx_install_cmd pylint
 if type "i3" > /dev/null 2>&1; then
-    $pipx_install_cmd raiseorlaunch
+    $pipx_install_cmd git+https://github.com/open-dynaMIX/raiseorlaunch
 fi
 $pipx_install_cmd ranger-fm
 $pipx_install_cmd ruff
