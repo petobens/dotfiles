@@ -33,10 +33,18 @@ local function spell_status()
 end
 
 local function branch_with_remote()
-    if neogit.repo.git_root == '' then
+    local git_root = neogit.cli.git_root(vim.fn.expand('%:p:h'))
+    if git_root == '' then
         return ''
     end
-    local remote = neogit.config.get('remote.origin.url').value
+
+    local branch = vim.trim(
+        vim.system({ 'git', 'rev-parse', '--abbrev-ref', 'HEAD' }, { cwd = git_root })
+            :wait().stdout
+    )
+    local remote = vim.trim(
+        vim.system({ 'git', 'ls-remote', '--get-url' }, { cwd = git_root }):wait().stdout
+    )
     local branch_icon = ''
     if remote:find('github') then
         branch_icon = ' '
@@ -45,7 +53,7 @@ local function branch_with_remote()
     elseif remote:find('bitbucket') then
         branch_icon = ' '
     end
-    return branch_icon .. ' ' .. neogit.branch.current()
+    return branch_icon .. ' ' .. branch
 end
 
 local function pyvenv()
@@ -140,9 +148,6 @@ local neogit_ext = {
             function()
                 return 'NeogitStatus'
             end,
-        },
-        lualine_b = {
-            branch_with_remote,
         },
     },
     filetypes = { 'NeogitStatus' },
