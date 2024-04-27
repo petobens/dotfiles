@@ -307,18 +307,18 @@ local plugins = {
         end,
     },
     {
-        'sindrets/diffview.nvim',
+        -- 'sindrets/diffview.nvim',
+        'mikesmithgh/diffview.nvim',
+        branch = 'fix-islist',
         config = function()
             require('plugin-config.diffview_config')
         end,
-        cmd = { 'DiffviewOpen', 'DiffviewFileHistory' },
     },
     {
         'NeogitOrg/neogit',
         branch = 'nightly',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'sindrets/diffview.nvim',
             'nvim-telescope/telescope.nvim',
         },
         config = function()
