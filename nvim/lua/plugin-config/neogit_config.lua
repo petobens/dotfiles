@@ -3,7 +3,6 @@ local neogit = require('neogit')
 _G.dbeeConfig = {}
 
 neogit.setup({
-    kind = 'split',
     disable_hint = true,
     disable_signs = true,
     disable_line_numbers = false,
@@ -35,23 +34,40 @@ neogit.setup({
             ['?'] = '?',
         },
     },
+    commit_editor = {
+        kind = 'split',
+        show_staged_diff = false,
+    },
     mappings = {
         status = {
             ['='] = 'Toggle',
             ['[h'] = 'GoToPreviousHunkHeader',
             [']h'] = 'GoToNextHunkHeader',
+            ['zr'] = 'Depth4',
+            ['zm'] = 'Depth2',
         },
         popup = {
             ['l'] = false,
             ['b'] = false,
             ['w'] = false,
+            ['p'] = 'PushPopup',
+            ['P'] = 'PullPopup',
         },
     },
 })
 
 -- Autocmds
+vim.api.nvim_create_autocmd({ 'WinEnter' }, {
+    group = vim.api.nvim_create_augroup('neogitstatus_winenter', { clear = true }),
+    pattern = { '*' },
+    callback = function()
+        if vim.bo.filetype == 'NeogitStatus' then
+            vim.cmd('resize 20')
+        end
+    end,
+})
 vim.api.nvim_create_autocmd({ 'WinLeave' }, {
-    group = vim.api.nvim_create_augroup('neogitstatus-winleave', { clear = true }),
+    group = vim.api.nvim_create_augroup('neogitstatus_winleave', { clear = true }),
     pattern = { '*' },
     callback = function()
         if vim.bo.filetype == 'NeogitStatus' then
@@ -59,10 +75,17 @@ vim.api.nvim_create_autocmd({ 'WinLeave' }, {
         end
     end,
 })
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+    group = vim.api.nvim_create_augroup('neogit_commit_editor', { clear = true }),
+    pattern = { 'NeogitCommitMessage' },
+    callback = function()
+        vim.cmd('wincmd J | resize 15 | set winfixheight')
+    end,
+})
 
 -- Mappings
 vim.keymap.set('n', '<Leader>ng', function()
     _G.dbeeConfig.last_winid = vim.fn.win_getid()
-    neogit.open()
-    vim.cmd('wincmd J | resize 15 | set winfixheight')
+    neogit.open({ kind = 'split' })
+    vim.cmd('wincmd J | resize 20 | set winfixheight')
 end)
