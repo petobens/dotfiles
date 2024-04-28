@@ -433,6 +433,7 @@ onedarkpro.setup({
         LeapLabelPrimary = { fg = p.black, bg = p.purple, style = 'bold' },
 
         ---- Neogit
+        ------ Status
         NeogitBranch = { fg = p.light_blue },
         NeogitBranchHead = { fg = p.cyan },
         NeogitChangeD = { fg = p.red },
