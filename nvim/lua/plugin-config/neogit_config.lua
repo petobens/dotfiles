@@ -40,18 +40,19 @@ neogit.setup({
     },
     mappings = {
         status = {
+            ['X'] = 'Discard',
             ['='] = 'Toggle',
             ['[h'] = 'GoToPreviousHunkHeader',
             [']h'] = 'GoToNextHunkHeader',
-            ['zr'] = 'Depth4',
             ['zm'] = 'Depth2',
+            ['zr'] = 'Depth4',
         },
         popup = {
-            ['l'] = false,
             ['b'] = false,
-            ['w'] = false,
-            ['p'] = 'PushPopup',
+            ['l'] = false,
             ['P'] = 'PullPopup',
+            ['p'] = 'PushPopup',
+            ['w'] = false,
         },
     },
 })
