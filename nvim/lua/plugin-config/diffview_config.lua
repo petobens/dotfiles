@@ -44,9 +44,19 @@ require('diffview').setup({
             { 'n', 'zr', actions.open_all_folds },
             { 'n', '?', 'g?', { remap = true } },
         },
+        file_history_panel = {
+            { 'n', 'j', 'j' },
+            { 'n', 'k', 'k' },
+            { 'n', 'l', 'l' },
+            { 'n', 'h', 'h' },
+            { 'n', 'q', actions.toggle_files },
+            { 'n', 'Q', '<Cmd>DiffviewClose<CR>' },
+            { 'n', '?', 'g?', { remap = true } },
+        },
     },
 })
 
 -- Mappings
 vim.keymap.set('n', '<Leader>vd', '<Cmd>DiffviewOpen<CR>')
 vim.keymap.set('n', '<Leader>ve', '<Cmd>DiffviewClose<CR>')
+vim.keymap.set('n', '<Leader>dh', '<Cmd>DiffviewFileHistory<CR>')
