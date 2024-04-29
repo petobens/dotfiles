@@ -347,11 +347,11 @@ local plugins = {
             'MunifTanjim/nui.nvim',
             -- FIXME: Can't lazy load this with lazy = true
             -- See https://github.com/MattiasMTS/cmp-dbee/issues/18
-            -- {
-            --     'MattiasMTS/cmp-dbee',
-            --     ft = { 'sql' },
-            --     lazy = true,
-            -- },
+            {
+                'MattiasMTS/cmp-dbee',
+                ft = { 'sql' },
+                lazy = true,
+            },
         },
         build = function()
             require('dbee').install()
