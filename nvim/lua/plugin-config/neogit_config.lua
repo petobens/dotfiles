@@ -63,7 +63,7 @@ vim.api.nvim_create_autocmd({ 'WinEnter' }, {
     pattern = { '*' },
     callback = function()
         if vim.bo.filetype == 'NeogitStatus' then
-            vim.cmd('resize 20')
+            vim.cmd('resize 15')
         end
     end,
 })
@@ -88,5 +88,5 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
 vim.keymap.set('n', '<Leader>ng', function()
     _G.dbeeConfig.last_winid = vim.fn.win_getid()
     neogit.open({ kind = 'split' })
-    vim.cmd('wincmd J | resize 20 | set winfixheight')
+    vim.cmd('wincmd J | resize 15 | set winfixheight')
 end)

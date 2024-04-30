@@ -307,9 +307,7 @@ local plugins = {
         end,
     },
     {
-        -- 'sindrets/diffview.nvim',
-        'mikesmithgh/diffview.nvim',
-        branch = 'fix-islist',
+        'sindrets/diffview.nvim',
         config = function()
             require('plugin-config.diffview_config')
         end,
