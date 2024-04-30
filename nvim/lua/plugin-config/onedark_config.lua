@@ -455,6 +455,26 @@ onedarkpro.setup({
         NeogitUnpulledchanges = { fg = p.yellow },
         NeogitUnstagedchanges = { fg = p.red },
         NeogitUntrackedfiles = { fg = p.yellow },
+        ---- Diff View
+        NeogitDiffAddCursor = { link = 'DiffAdd' },
+        NeogitDiffAddHighlight = { link = 'DiffAdd' },
+        NeogitDiffContext = { bg = p.bg },
+        NeogitDiffContextCursor = { bg = p.cursor_grey },
+        NeogitDiffContextHighlight = { bg = p.bg },
+        NeogitDiffDeleteCursor = { link = 'DiffDelete' },
+        NeogitDiffDeleteHighlight = { link = 'DiffDelete' },
+        NeogitDiffHeader = { fg = p.light_blue, bg = p.visual_grey },
+        NeogitHunkHeader = { fg = p.light_blue, bg = p.visual_grey },
+        NeogitHunkHeaderCursor = { fg = p.light_blue, bg = p.visual_grey, style = 'bold' },
+        NeogitHunkHeaderHighlight = {
+            fg = p.light_blue,
+            bg = p.visual_grey,
+            style = 'bold',
+        },
+        ---- Commit View
+        NeogitCommitViewDescription = { fg = p.fg },
+        NeogitCommitViewHeader = { fg = p.red },
+        NeogitFilePath = { fg = p.yellow },
 
         ---- Neotest
         NeotestAdapterName = { fg = p.purple },
