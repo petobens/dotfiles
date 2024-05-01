@@ -63,15 +63,6 @@ neogit.setup({
 })
 
 -- Autocmds
-vim.api.nvim_create_autocmd({ 'WinEnter' }, {
-    group = vim.api.nvim_create_augroup('neogitstatus_winenter', { clear = true }),
-    pattern = { '*' },
-    callback = function()
-        if vim.bo.filetype == 'NeogitStatus' then
-            vim.cmd('resize 15')
-        end
-    end,
-})
 vim.api.nvim_create_autocmd({ 'WinLeave' }, {
     group = vim.api.nvim_create_augroup('neogitstatus_winleave', { clear = true }),
     pattern = { '*' },
