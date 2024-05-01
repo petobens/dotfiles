@@ -59,4 +59,4 @@ require('diffview').setup({
 -- Mappings
 vim.keymap.set('n', '<Leader>vd', '<Cmd>DiffviewOpen<CR>')
 vim.keymap.set('n', '<Leader>ve', '<Cmd>DiffviewClose<CR>')
-vim.keymap.set('n', '<Leader>dh', '<Cmd>DiffviewFileHistory<CR>')
+vim.keymap.set('n', '<Leader>gh', '<Cmd>DiffviewFileHistory<CR>')
