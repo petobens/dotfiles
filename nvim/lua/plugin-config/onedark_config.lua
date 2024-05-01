@@ -418,6 +418,11 @@ onedarkpro.setup({
         HlWord5 = { fg = p.black, bg = p.light_blue },
         HlWord6 = { fg = p.black, bg = p.white },
 
+        ---- Lualine
+        LualineGitAdd = { fg = p.green, bg = p.special_grey },
+        LualineGitChange = { fg = p.orange, bg = p.special_grey },
+        LualineGitDelete = { fg = p.red, bg = p.special_grey },
+
         ---- Lazy
         LazyCommit = { fg = p.red },
         LazyHandlerPlugin = { fg = p.purple },

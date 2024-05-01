@@ -215,9 +215,9 @@ require('lualine').setup({
                 'diff',
                 colored = true,
                 diff_color = {
-                    added = 'DiffAdd',
-                    modified = 'DiffChange',
-                    removed = 'DiffDelete',
+                    added = 'LualineGitAdd',
+                    modified = 'LualineGitChange',
+                    removed = 'LualineGitDelete',
                 },
                 padding = { left = 0, right = 1 },
                 sources = gitsigns_diff_source,
