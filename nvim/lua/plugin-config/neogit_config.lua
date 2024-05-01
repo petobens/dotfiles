@@ -47,6 +47,11 @@ neogit.setup({
             ['zm'] = 'Depth2',
             ['zr'] = 'Depth4',
         },
+        commit_editor = {
+            ['q'] = 'Close',
+            ['<Leader>wq'] = 'Submit',
+            ['<Leader>ac'] = 'Abort',
+        },
         popup = {
             ['b'] = false,
             ['l'] = false,
