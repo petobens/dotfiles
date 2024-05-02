@@ -81,8 +81,15 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>ng', function()
+vim.keymap.set('n', '<Leader>ngs', function()
     _G.dbeeConfig.last_winid = vim.fn.win_getid()
     neogit.open({ kind = 'split' })
     vim.cmd('wincmd J | resize 15 | set winfixheight')
 end)
+vim.keymap.set('n', '<leader>ngp', neogit.action('push', 'to_pushremote'))
+vim.keymap.set(
+    'n',
+    '<leader>ngF',
+    neogit.action('push', 'to_pushremote', { '--force-with-lease' })
+)
+vim.keymap.set('n', '<leader>ngP', neogit.action('pull', 'from_pushremote'))
