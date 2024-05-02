@@ -329,6 +329,7 @@ onedarkpro.setup({
 
         ---- TOML
         ['@table_brackets.toml'] = { fg = p.yellow },
+        ['@punctuation.bracket.toml'] = { fg = p.fg },
 
         ---- vim & vimdoc
         ['@comment.note.vimdoc'] = { link = '@comment.note.comment' },
