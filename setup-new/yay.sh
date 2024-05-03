@@ -153,6 +153,7 @@ $yay_cmd globalprotect-openconnect
 $yay_cmd openvpn
 
 # CLI
+$yay_cmd act
 $yay_cmd bat
 $yay_cmd bind-tools
 $yay_cmd cronie
