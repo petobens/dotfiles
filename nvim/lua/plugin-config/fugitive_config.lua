@@ -20,7 +20,12 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'gitcommit' },
     callback = function(e)
         vim.opt_local.spell = true
-        vim.keymap.set('n', 'Q', 'q', { buffer = e.buf, remap = true })
+        vim.keymap.set('n', '<Leader>ac', function()
+            vim.cmd('normal! gg0')
+            vim.cmd('normal! dd')
+            vim.cmd('silent noautocmd update')
+            vim.cmd('bd')
+        end, { buffer = e.buf })
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
