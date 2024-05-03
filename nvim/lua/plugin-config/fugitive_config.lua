@@ -49,7 +49,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.opt_local.winfixbuf = true
 
         vim.keymap.set('n', 'q', u.quit_return, { buffer = e.buf })
-        vim.keymap.set('n', 'ci', '<Cmd><C-U>Git commit -n<CR>', { buffer = true })
+        vim.keymap.set('n', 'ci', '<Cmd>Git commit -n<CR>', { buffer = true })
         vim.keymap.set('n', ']h', ']c', { buffer = e.buf, remap = true })
         vim.keymap.set('n', '[h', '[c', { buffer = e.buf, remap = true })
     end,
