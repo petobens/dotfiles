@@ -3,6 +3,7 @@
     email = ferrari_pedro@yahoo.com
 [push]
     default = simple
+	autoSetupRemote = true
 [pull]
 	rebase = false
 [core]
