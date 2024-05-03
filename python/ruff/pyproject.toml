@@ -1,11 +1,14 @@
 [tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
 select = [
     "E", # pycodestyle errors
     "W", # pycodestyle warnings
     "F", # pyflakes
     "B", # Bugbear plugin
-    "D"  # pydocstyle plugin
-    ]
+    "D", # pydocstyle plugin
+]
 
 ignore = [
     "E203", # Whitespace before ':'
@@ -15,7 +18,7 @@ ignore = [
     "D107", # Missing docstring in init
     "D203", # Same as D211 about class docstring
     "D213", # Same as D212 about summary docstring
-    ]
+]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = []
@@ -46,8 +49,7 @@ exclude = [
     "venv",
 ]
 
-line-length = 88  # Same as Black.
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # Don't ask for docstring in test files
 "test_*.py" = ["D100", "D101", "D102", "D102", "D103"]
