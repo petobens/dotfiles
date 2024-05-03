@@ -40,6 +40,9 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('ps_fugitive', { clear = true }),
     pattern = { 'fugitive' },
     callback = function(e)
+        vim.opt_local.winfixheight = true
+        vim.opt_local.winfixbuf = true
+
         vim.keymap.set('n', 'q', u.quit_return, { buffer = e.buf })
         vim.keymap.set('n', 'ci', '<Cmd><C-U>Git commit -n<CR>', { buffer = true })
         vim.keymap.set('n', ']h', ']c', { buffer = e.buf, remap = true })
@@ -48,13 +51,13 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>gd', '<Cmd>Gdiffsplit<CR><Cmd>wincmd x<CR>')
-vim.keymap.set('n', '<Leader>gD', ':Git diff<space>', { silent = false })
 vim.keymap.set(
     'n',
     '<Leader>gs',
     '<Cmd>botright Git<CR><Cmd>wincmd J<bar>15 wincmd _<CR>4j'
 )
+vim.keymap.set('n', '<Leader>gd', '<Cmd>Gdiffsplit<CR><Cmd>wincmd x<CR>')
+vim.keymap.set('n', '<Leader>gD', ':Git diff<space>', { silent = false })
 vim.keymap.set('n', '<Leader>gM', '<Cmd>Git! mergetool<CR>')
 vim.keymap.set('n', '<Leader>gr', ':Git rebase -i<space>', { silent = false })
 vim.keymap.set('n', '<Leader>gp', '<Cmd>lcd %:p:h<CR><Cmd>Git push<CR>')
