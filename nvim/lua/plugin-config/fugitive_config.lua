@@ -55,7 +55,6 @@ vim.keymap.set(
     '<Leader>gs',
     '<Cmd>botright Git<CR><Cmd>wincmd J<bar>15 wincmd _<CR>4j'
 )
-vim.keymap.set('n', '<Leader>gC', '<Cmd>w!<CR><Cmd>Git commit<CR>')
 vim.keymap.set('n', '<Leader>gM', '<Cmd>Git! mergetool<CR>')
 vim.keymap.set('n', '<Leader>gr', ':Git rebase -i<space>', { silent = false })
 vim.keymap.set('n', '<Leader>gp', '<Cmd>lcd %:p:h<CR><Cmd>Git push<CR>')
