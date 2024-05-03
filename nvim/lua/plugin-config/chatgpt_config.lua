@@ -75,6 +75,7 @@ chatgpt.setup({
     popup_input = {
         prompt = '󰥭 ',
         submit = '<C-o>',
+        submit_n = '<C-o>',
         border = {
             text = {
                 top_align = 'center',
