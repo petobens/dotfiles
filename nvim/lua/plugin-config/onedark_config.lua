@@ -357,6 +357,7 @@ onedarkpro.setup({
         ---- YAML
         ['@field.yaml'] = { fg = p.red },
         ['@punctuation.special.yaml'] = { fg = p.yellow },
+        ['@punctuation.delimiter.yaml'] = { fg = p.fg },
 
         -- Plugins
         ---- Aerial
