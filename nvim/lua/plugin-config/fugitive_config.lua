@@ -1,19 +1,34 @@
 local u = require('utils')
 
--- Git settings
+_G.fugitiveConfig = {}
+
+-- Autocmds
 vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('git_ft', { clear = true }),
-    pattern = { 'git' },
+    group = vim.api.nvim_create_augroup('ps_fugitive', { clear = true }),
+    pattern = { 'fugitive' }, -- gstatus
     callback = function(e)
-        -- Open git previous commits unfolded since we use Glog for the current file
-        vim.opt_local.foldlevel = 1
-        vim.keymap.set('n', 'q', '<Cmd>bdelete<CR>', { buffer = e.buf })
+        vim.opt_local.winfixheight = true
+        vim.opt_local.winfixbuf = true
+
+        vim.keymap.set('n', 'q', u.quit_return, { buffer = e.buf })
+        vim.keymap.set('n', 'ci', '<Cmd>Git commit -n<CR>', { buffer = true })
+        vim.keymap.set('n', ']h', ']c', { buffer = e.buf, remap = true })
+        vim.keymap.set('n', '[h', '[c', { buffer = e.buf, remap = true })
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
     group = vim.api.nvim_create_augroup('git_window_size', { clear = true }),
     pattern = { '*.git/index' },
     command = '15 wincmd _',
+})
+vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('git_ft', { clear = true }),
+    pattern = { 'git' }, -- basically diffs
+    callback = function(e)
+        -- Open git previous commits unfolded since we use Glog for the current file
+        vim.opt_local.foldlevel = 1
+        vim.keymap.set('n', 'q', '<Cmd>bdelete<CR>', { buffer = e.buf })
+    end,
 })
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('git_commit_ft', { clear = true }),
@@ -39,28 +54,21 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
         end
     end,
 })
-
--- Fugitive settings
-vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('ps_fugitive', { clear = true }),
-    pattern = { 'fugitive' },
-    callback = function(e)
-        vim.opt_local.winfixheight = true
-        vim.opt_local.winfixbuf = true
-
-        vim.keymap.set('n', 'q', u.quit_return, { buffer = e.buf })
-        vim.keymap.set('n', 'ci', '<Cmd>Git commit -n<CR>', { buffer = true })
-        vim.keymap.set('n', ']h', ']c', { buffer = e.buf, remap = true })
-        vim.keymap.set('n', '[h', '[c', { buffer = e.buf, remap = true })
+vim.api.nvim_create_autocmd({ 'BufLeave' }, {
+    group = vim.api.nvim_create_augroup('git_commit_leave', { clear = true }),
+    pattern = { '*.git/COMMIT_EDITMSG' },
+    callback = function()
+        vim.fn.win_gotoid(_G.fugitiveConfig.gstatus_winid)
     end,
 })
 
 -- Mappings
-vim.keymap.set(
-    'n',
-    '<Leader>gs',
-    '<Cmd>botright Git<CR><Cmd>wincmd J<bar>15 wincmd _<CR>4j'
-)
+vim.keymap.set('n', '<Leader>gs', function()
+    vim.cmd('botright Git')
+    vim.cmd('wincmd J | resize 15')
+    vim.cmd('normal! 4j')
+    _G.fugitiveConfig.gstatus_winid = vim.fn.win_getid()
+end)
 vim.keymap.set('n', '<Leader>gd', '<Cmd>Gdiffsplit<CR><Cmd>wincmd x<CR>')
 vim.keymap.set('n', '<Leader>gD', ':Git diff<space>', { silent = false })
 vim.keymap.set('n', '<Leader>gM', '<Cmd>Git! mergetool<CR>')
