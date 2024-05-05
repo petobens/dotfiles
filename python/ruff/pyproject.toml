@@ -1,6 +1,9 @@
 [tool.ruff]
 line-length = 88
 
+[tool.ruff.format]
+quote-style = "preserve"
+
 [tool.ruff.lint]
 select = [
     "E", # pycodestyle errors
@@ -8,6 +11,7 @@ select = [
     "F", # pyflakes
     "B", # Bugbear plugin
     "D", # pydocstyle plugin
+    "I", # isort
 ]
 
 ignore = [
@@ -20,11 +24,10 @@ ignore = [
     "D213", # Same as D212 about summary docstring
 ]
 
-# Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = []
-unfixable = []
+# Rules eligible for autofix
+fixable = ["I"]
 
-# Exclude a variety of commonly ignored directories.
+# Exclude a variety of commonly ignored directories
 exclude = [
     ".bzr",
     ".direnv",

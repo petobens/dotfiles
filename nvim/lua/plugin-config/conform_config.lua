@@ -22,7 +22,7 @@ conform.setup({
         json = { 'jq' },
         lua = { 'stylua' },
         markdown = { 'prettierd', 'injected' },
-        python = { 'isort', 'black' },
+        python = { 'ruff_fix', 'ruff_format' },
         sh = { 'shfmt' },
         sql = { 'sqlfluff' },
         toml = { 'taplo' },
