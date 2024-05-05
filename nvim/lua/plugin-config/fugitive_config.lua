@@ -15,6 +15,13 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '[h', '[c', { buffer = e.buf, remap = true })
         vim.keymap.set('n', 'ci', '<Cmd>Git commit -n<CR>', { buffer = true })
         vim.keymap.set('n', '<Leader>gp', '<Cmd>Git push<CR>', { buffer = true })
+        vim.keymap.set(
+            'n',
+            '<Leader>gF',
+            '<Cmd>Git push --force-with-lease<CR>',
+            { buffer = true }
+        )
+        vim.keymap.set('n', '<Leader>gP', '<Cmd>Git pull<CR>', { buffer = true })
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
