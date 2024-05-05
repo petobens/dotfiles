@@ -6,6 +6,7 @@ neogit.setup({
     disable_hint = true,
     disable_signs = true,
     disable_line_numbers = false,
+    disable_context_highlighting = true,
     sections = {
         recent = {
             hidden = true,
