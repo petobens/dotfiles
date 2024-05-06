@@ -397,8 +397,8 @@ onedarkpro.setup({
         DiffviewStatusUntracked = { fg = p.yellow },
 
         ---- Fugitive
-        diffAdded = { fg = p.green },
-        diffRemoved = { fg = p.red },
+        diffAdded = { link = 'DiffAdd' },
+        diffRemoved = { link = 'DiffDelete' },
         fugitiveUnstagedHeading = { fg = p.red },
         fugitiveUnstagedModifier = { fg = p.red },
         fugitiveStagedHeading = { fg = p.green },
