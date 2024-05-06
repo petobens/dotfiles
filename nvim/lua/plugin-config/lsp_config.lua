@@ -119,7 +119,7 @@ lspconfig.marksman.setup({})
 ---- Python
 lspconfig.basedpyright.setup({
     handlers = {
-        -- Don't publish basedpyright diagnostics (we use ruff, pylint and mypy instead)
+        -- Don't publish basedpyright diagnostics (we use ruff and mypy instead)
         ['textDocument/publishDiagnostics'] = function() end,
     },
     settings = {

@@ -54,14 +54,14 @@ vim.api.nvim_create_autocmd(
 
 -- Linters by filetype
 lint.linters_by_ft = {
-    -- FIXME: can't run mypy/pylint/sqlfluff/markdownlint without save
+    -- FIXME: can't run mypy/sqlfluff/markdownlint without save
     -- https://github.com/mfussenegger/nvim-lint/issues/235
     -- https://github.com/mfussenegger/nvim-lint/issues/469
     dockerfile = { 'hadolint' },
     json = { 'jsonlint' },
     lua = { 'luacheck' },
     markdown = { 'markdownlint' },
-    python = { 'mypy', 'pylint', 'ruff' },
+    python = { 'mypy', 'ruff' },
     sh = { 'shellcheck' },
     sql = { 'sqlfluff' },
     tex = { 'chktex' },
