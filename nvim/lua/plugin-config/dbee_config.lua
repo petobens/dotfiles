@@ -72,9 +72,9 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
     group = vim.api.nvim_create_augroup('dbee_sql', { clear = true }),
     pattern = { 'sql' },
     callback = function()
+        require('cmp-dbee').setup()
         require('cmp').setup.buffer({
             sources = {
-                -- FIXME: Not working
                 { name = 'cmp-dbee' },
                 { name = 'tmux' },
                 { name = 'buffer' },

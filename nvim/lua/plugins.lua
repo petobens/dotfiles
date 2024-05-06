@@ -343,8 +343,6 @@ local plugins = {
         'kndndrj/nvim-dbee',
         dependencies = {
             'MunifTanjim/nui.nvim',
-            -- FIXME: Can't lazy load this with lazy = true
-            -- See https://github.com/MattiasMTS/cmp-dbee/issues/18
             {
                 'MattiasMTS/cmp-dbee',
                 ft = { 'sql' },
