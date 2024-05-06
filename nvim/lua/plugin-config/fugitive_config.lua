@@ -22,6 +22,9 @@ vim.api.nvim_create_autocmd('FileType', {
             { buffer = true }
         )
         vim.keymap.set('n', '<Leader>gP', '<Cmd>Git pull<CR>', { buffer = true })
+        vim.keymap.set('n', '<Leader>gl', function()
+            vim.cmd('Git log --oneline')
+        end, { buffer = true })
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
@@ -31,11 +34,10 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
 })
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('git_ft', { clear = true }),
-    pattern = { 'git' }, -- basically diffs
+    pattern = { 'git' }, -- basically diffs/commit history
     callback = function(e)
-        -- Open git previous commits unfolded since we use Glog for the current file
-        vim.opt_local.foldlevel = 1
-        vim.keymap.set('n', 'q', '<Cmd>bdelete<CR>', { buffer = e.buf })
+        vim.opt_local.foldlevel = 1 -- open commits unfolded
+        vim.keymap.set('n', 'q', u.quit_return, { buffer = e.buf })
     end,
 })
 vim.api.nvim_create_autocmd('FileType', {
