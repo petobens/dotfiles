@@ -27,11 +27,6 @@ vim.api.nvim_create_autocmd('FileType', {
         end, { buffer = true })
     end,
 })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'WinEnter' }, {
-    group = vim.api.nvim_create_augroup('git_window_size', { clear = true }),
-    pattern = { '*.git/index' },
-    command = '15 wincmd _',
-})
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('git_ft', { clear = true }),
     pattern = { 'git' }, -- basically diffs/commit history
