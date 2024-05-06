@@ -1,4 +1,5 @@
 """i3 common helper functions."""
+
 import subprocess
 
 

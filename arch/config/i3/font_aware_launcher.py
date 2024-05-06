@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Launch programs adjusting fonts if necessary."""
+
 import os
 from time import sleep
 
 import i3ipc
+
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
@@ -153,7 +155,7 @@ APPS = {
         'type': 'tui',
         'args': {
             'title': 'QuickTerm',
-            'cmd': '/usr/bin/bash -l -c "cd $(tmux display -p \"#{pane_current_path}\") && exec /usr/bin/bash -i"',  # noqa
+            'cmd': '/usr/bin/bash -l -c "cd $(tmux display -p "#{pane_current_path}") && exec /usr/bin/bash -i"',  # noqa
         },
     },
     'quit-dialog': {

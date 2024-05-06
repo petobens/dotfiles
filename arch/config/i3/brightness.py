@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Control brightness with keyboard."""
+
 import sys
 from pathlib import Path
 

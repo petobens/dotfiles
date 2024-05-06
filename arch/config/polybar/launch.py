@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Launch Polybar in multiple monitors."""
+
 import os
 import subprocess
 import sys

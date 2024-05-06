@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Module to resize i3 windows in a tilingish manner."""
+
 import sys
 from time import sleep
 
 import i3ipc
+
 from multimon_move import _get_resize_map
 from resize import LAYOUT_DICT
 

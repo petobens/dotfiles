@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Custom killing of apps."""
+
 import sys
 
 import i3ipc
+
 from i3_helpers import sh
 
 CTRL_Q = ['Slack']

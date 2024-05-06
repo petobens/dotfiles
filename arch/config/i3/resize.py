@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Resize windows easily."""
+
 import sys
 
 import i3ipc

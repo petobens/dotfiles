@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 """Font Aware Menu with Rofi."""
+
 from subprocess import check_output
 
 from font_aware_launcher import run_app

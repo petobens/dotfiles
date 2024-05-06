@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from subprocess import check_output
 
 import i3ipc
+
 from focus_watcher import SOCKET_FILE
 
 ICON_MAP = {

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Control volume with keyboard."""
+
 import sys
 
 from i3_helpers import sh, sh_no_block
@@ -17,7 +18,9 @@ def control_volume(how, level):
 
 
 def _change_vol(how, level):
-    mute_cmd ='wpctl set-mute @DEFAULT_SINK@ {}'.format('toggle' if how == 'mute' else 0)
+    mute_cmd = 'wpctl set-mute @DEFAULT_SINK@ {}'.format(
+        'toggle' if how == 'mute' else 0
+    )
     vol_cmd = 'wpctl set-volume @DEFAULT_AUDIO_SINK@ {level}%{how}'.format(
         how='+' if how == 'up' else '-', level=level
     )
