@@ -4,6 +4,7 @@
 [push]
     default = simple
 	autoSetupRemote = true
+	followTags = true
 [pull]
 	rebase = false
 [core]
