@@ -537,7 +537,8 @@ onedarkpro.setup({
         TelescopePromptCounter = { fg = p.linenr_grey },
         TelescopePromptPrefix = { fg = p.purple, style = 'bold' },
         TelescopeMatching = { fg = p.blue },
-        TelescopePathSeparator = { fg = p.fg },
+        TelescopeResultsComment = { fg = p.comment_grey },
+        TelescopePathSeparator = { fg = p.comment_grey },
 
         ---- VimTex
         VimtexTocSec0 = { link = 'Normal' },

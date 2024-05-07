@@ -530,7 +530,7 @@ telescope.setup({
             preview_cutoff = 110,
         },
         cache_picker = { num_pickers = 3 },
-        path_display = { truncate = 1 },
+        path_display = { 'filename_first' },
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
@@ -742,10 +742,6 @@ end
 local function frecent_files()
     telescope.extensions.frecency.frecency({
         prompt_title = 'Frecent Files (<C-d>:delete)',
-        path_display = function(_, path)
-            local p = Path:new(path):absolute()
-            return string.gsub(p, vim.loop.os_homedir(), '~')
-        end,
         attach_mappings = function(_, map)
             map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
             map('i', '<C-y>', custom_actions.yank)
