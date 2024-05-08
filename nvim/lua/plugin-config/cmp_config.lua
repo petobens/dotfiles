@@ -154,7 +154,6 @@ cmp.setup({
                 all_panes = true,
             },
         },
-        { name = 'git' },
         { name = 'emoji' },
     },
     snippet = {
@@ -209,5 +208,13 @@ cmp.setup.cmdline('@', {
     },
 })
 
--- Setup git source
+-- Filetype setup
+---- Git
+cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+        { name = 'git' },
+    }, {
+        { name = 'buffer' },
+    }),
+})
 require('cmp_git').setup()
