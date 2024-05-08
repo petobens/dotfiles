@@ -298,6 +298,17 @@ return {
             }
         )
     ),
+    s(
+        { trig = 'cD', dscr = 'Current Date - Format' },
+        fmta(
+            [[
+                <>
+            ]],
+            {
+                p(os.date, '%Y-%m-%d'),
+            }
+        )
+    ),
 }, {
     s(
         { trig = '(%d)h', regTrig = true, dscr = 'Header' },
