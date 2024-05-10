@@ -23,7 +23,7 @@ local plugins = {
     {
         'nvim-lualine/lualine.nvim',
         dependencies = {
-            'WhoIsSethDaniel/lualine-lsp-progress.nvim',
+            'petobens/lualine-lsp-progress.nvim',
         },
         config = function()
             require('plugin-config.lualine_config')
@@ -304,23 +304,6 @@ local plugins = {
         },
         config = function()
             require('plugin-config.fugitive_config')
-        end,
-    },
-    {
-        'sindrets/diffview.nvim',
-        config = function()
-            require('plugin-config.diffview_config')
-        end,
-    },
-    {
-        'NeogitOrg/neogit',
-        branch = 'nightly',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope.nvim',
-        },
-        config = function()
-            require('plugin-config.neogit_config')
         end,
     },
     ---- Latex

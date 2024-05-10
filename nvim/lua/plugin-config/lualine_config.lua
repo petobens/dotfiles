@@ -1,4 +1,3 @@
-local neogit = require('neogit.lib.git')
 local onedark_colors = require('onedarkpro.helpers').get_colors()
 local overseer = require('overseer')
 local u = require('utils')
@@ -33,18 +32,13 @@ local function spell_status()
 end
 
 local function branch_with_remote()
-    local git_root = neogit.cli.git_root(vim.fn.expand('%:p:h'))
-    if git_root == '' then
+    local branch_name = vim.fn.FugitiveHead()
+    if branch_name == '' then
         return ''
     end
 
-    local branch = vim.trim(
-        vim.system({ 'git', 'rev-parse', '--abbrev-ref', 'HEAD' }, { cwd = git_root })
-            :wait().stdout
-    )
-    local remote = vim.trim(
-        vim.system({ 'git', 'ls-remote', '--get-url' }, { cwd = git_root }):wait().stdout
-    )
+    local remote =
+        vim.api.nvim_exec([[echo FugitiveConfigGet('remote.origin.url')]], true)
     local branch_icon = ''
     if remote:find('github') then
         branch_icon = ' '
@@ -53,7 +47,7 @@ local function branch_with_remote()
     elseif remote:find('bitbucket') then
         branch_icon = ' '
     end
-    return branch_icon .. ' ' .. branch
+    return branch_icon .. ' ' .. branch_name
 end
 
 local function pyvenv()
@@ -142,17 +136,6 @@ local fugitive_ext = {
     filetypes = { 'fugitive' },
 }
 
-local neogit_ext = {
-    sections = {
-        lualine_a = {
-            function()
-                return 'NeogitStatus'
-            end,
-        },
-    },
-    filetypes = { 'NeogitStatus' },
-}
-
 local overseer_ext = {
     sections = {
         lualine_a = {
@@ -170,17 +153,6 @@ local overseer_ext = {
         },
     },
     filetypes = { 'OverseerList' },
-}
-
-local diffview_ext = {
-    sections = {
-        lualine_a = {
-            function()
-                return 'DiffviewFiles'
-            end,
-        },
-    },
-    filetypes = { 'DiffviewFiles' },
 }
 
 -- Setup
@@ -397,9 +369,7 @@ require('lualine').setup({
     },
     extensions = {
         'aerial',
-        diffview_ext,
         fugitive_ext,
-        neogit_ext,
         nvimtree_ext,
         overseer_ext,
         quickfix_ext,

@@ -385,17 +385,6 @@ onedarkpro.setup({
         dbee_connection = { fg = p.red },
         dbee_note = { fg = p.orange },
 
-        ---- Diffview
-        DiffviewFilePanelCounter = { fg = p.orange },
-        DiffviewFilePanelDeletions = { fg = p.red },
-        DiffviewFilePanelInsertions = { fg = p.green },
-        DiffviewFilePanelRootPath = { fg = p.yellow },
-        DiffviewFilePanelSelected = { fg = p.fg, style = 'bold' },
-        DiffviewFilePanelTitle = { fg = p.red },
-        DiffviewFolderSign = { fg = p.light_blue },
-        DiffviewStatusModified = { fg = p.red },
-        DiffviewStatusUntracked = { fg = p.yellow },
-
         ---- Fugitive
         diffAdded = { link = 'DiffAdd' },
         diffRemoved = { link = 'DiffDelete' },
@@ -438,50 +427,6 @@ onedarkpro.setup({
         ---- Leap (and flit)
         LeapMatch = { fg = p.black, bg = p.purple, style = 'bold' },
         LeapLabelPrimary = { fg = p.black, bg = p.purple, style = 'bold' },
-
-        ---- Neogit
-        ------ Status
-        NeogitBranch = { fg = p.light_blue },
-        NeogitBranchHead = { fg = p.cyan },
-        NeogitChangeD = { fg = p.red },
-        NeogitChangeDunstaged = { fg = p.red },
-        NeogitChangeModified = { fg = p.red },
-        NeogitChangeMstaged = { fg = p.green },
-        NeogitChangeN = { fg = p.green },
-        NeogitChangeNstaged = { fg = p.green },
-        NeogitChangeR = { fg = p.green },
-        NeogitChangeRstaged = { fg = p.green },
-        NeogitChangeUntracked = { fg = p.yellow },
-        NeogitChangeUntrackeduntracked = { fg = p.yellow },
-        NeogitObjectId = { fg = p.red },
-        NeogitRemote = { fg = p.light_blue },
-        NeogitSectionHeaderCount = { fg = p.orange },
-        NeogitStagedchanges = { fg = p.green },
-        NeogitStatusHEAD = { fg = p.purple },
-        NeogitUnmergedchanges = { fg = p.yellow },
-        NeogitUnpulledchanges = { fg = p.yellow },
-        NeogitUnstagedchanges = { fg = p.red },
-        NeogitUntrackedfiles = { fg = p.yellow },
-        ---- Diff View
-        NeogitDiffAddCursor = { link = 'DiffAdd' },
-        NeogitDiffAddHighlight = { link = 'DiffAdd' },
-        NeogitDiffContext = { bg = p.bg },
-        NeogitDiffContextCursor = { bg = p.cursor_grey },
-        NeogitDiffContextHighlight = { bg = p.bg },
-        NeogitDiffDeleteCursor = { link = 'DiffDelete' },
-        NeogitDiffDeleteHighlight = { link = 'DiffDelete' },
-        NeogitDiffHeader = { fg = p.light_blue, bg = p.visual_grey },
-        NeogitHunkHeader = { fg = p.light_blue, bg = p.visual_grey },
-        NeogitHunkHeaderCursor = { fg = p.light_blue, bg = p.visual_grey, style = 'bold' },
-        NeogitHunkHeaderHighlight = {
-            fg = p.light_blue,
-            bg = p.visual_grey,
-            style = 'bold',
-        },
-        ---- Commit View
-        NeogitCommitViewDescription = { fg = p.fg },
-        NeogitCommitViewHeader = { fg = p.red },
-        NeogitFilePath = { fg = p.yellow },
 
         ---- Neotest
         NeotestAdapterName = { fg = p.purple },
