@@ -116,12 +116,16 @@ APPS = {
             'use_rol': False,
         },
     },
+    'onlyoffice': {
+        'type': 'rol_custom',
+        'args': {
+            'class_name': 'DesktopEditors',
+            'cmd': 'onlyoffice-desktopeditors',
+            'event_delay': 30,
+        },
+    },
     'pavucontrol': {'type': 'gtk', 'args': {'class_name': 'Pavucontrol'}},
     'peek': {'type': 'gtk', 'args': {'class_name': 'Peek'}},
-    'planmaker': {
-        'type': 'rol_custom',
-        'args': {'class_name': 'pm', 'cmd': 'freeoffice-planmaker', 'event_delay': 30},
-    },
     'power-manager': {
         'type': 'gtk',
         'args': {'class_name': 'Xfce4-power-manager-settings'},
@@ -133,14 +137,6 @@ APPS = {
             'class_name': 'Power Management',
             'title': 'Do you want to poweroff?',
             'cmd': 'systemctl poweroff',
-        },
-    },
-    'presentations': {
-        'type': 'rol_custom',
-        'args': {
-            'class_name': 'pr',
-            'cmd': 'freeoffice-presentations',
-            'event_delay': 30,
         },
     },
     'prockiller': {
@@ -208,10 +204,6 @@ APPS = {
             'subcmd': 'teams',
             'post_cmd': True,
         },
-    },
-    'textmaker': {
-        'type': 'rol_custom',
-        'args': {'class_name': 'tm', 'cmd': 'freeoffice-textmaker', 'event_delay': 30},
     },
     'transmission': {'type': 'gtk', 'args': {'class_name': 'Transmission-gtk'}},
     'trash': {

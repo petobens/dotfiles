@@ -47,21 +47,6 @@ APPS = {
     },
     'Firefox': {'cmd': 'firefox', 'icon': 'firefox', 'desc': 'Web Browser'},
     'Fonts': {'cmd': 'gnome-font', 'icon': 'org.gnome.font-viewer'},
-    'FreeOffice PlanMaker': {
-        'cmd': 'planmaker',
-        'icon': 'freeoffice-planmaker',
-        'desc': 'Spreadsheet',
-    },
-    'FreeOffice Presentations': {
-        'cmd': 'presentations',
-        'icon': 'freeoffice-presentations',
-        'desc': 'Presentation',
-    },
-    'FreeOffice TextMaker': {
-        'cmd': 'textmaker',
-        'icon': 'freeoffice-textmaker',
-        'desc': 'Word Processor',
-    },
     'GlobalProtect VPN': {'cmd': 'globalprotect-vpn', 'icon': 'network-vpn'},
     'Htop': {
         'cmd': 'htop',
@@ -78,6 +63,11 @@ APPS = {
         'icon': 'obs',
         'desc': 'Streaming/Recording Software',
         'ws': 4,
+    },
+    'OnlyOffice': {
+        'cmd': 'onlyoffice',
+        'icon': 'onlyoffice-desktopeditors',
+        'desc': 'Office Suite',
     },
     'Peek': {'cmd': 'peek', 'icon': 'peek', 'desc': 'Animated GIF Recorder'},
     'Power Manager': {'cmd': 'power-manager', 'icon': 'xfce4-power-manager-settings'},

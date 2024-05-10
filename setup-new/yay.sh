@@ -224,13 +224,13 @@ $yay_cmd cups
 $yay_cmd cups-pdf
 $yay_cmd microsoft-edge-dev-bin
 $yay_cmd firefox
-$yay_cmd --mflags --skipinteg freeoffice
 $yay_cmd gcolor3
 $yay_cmd gnome-font-viewer
 $yay_cmd hplip-plugin
 $yay_cmd mailspring
 $yay_cmd obs-studio
 $yay_cmd onedrive-abraunegg
+$yay_cmd onlyoffice-bin
 $yay_cmd pdfpc
 $yay_cmd peek-git
 $yay_cmd simple-scan

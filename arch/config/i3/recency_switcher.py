@@ -15,10 +15,8 @@ ICON_MAP = {
     'connman-gtk': 'wifi-radar',
     'gnome-font-viewer': 'org.gnome.font-viewer',
     'kodi': 'kodi',
-    'pm': 'freeoffice-planmaker',
-    'pr': 'freeoffice-presentations',
+    'onlyoffice desktop editors': 'onlyoffice-desktopeditors',
     'simple-scan': 'org.gnome.SimpleScan',
-    'tm': 'freeoffice-textmaker',
     'vimiv': 'image-viewer',
     'zoom': 'Zoom',
 }
