@@ -14,8 +14,14 @@ vim.opt.autowrite = true
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.cmdwinheight = 4
 vim.opt.confirm = true
-vim.opt.diffopt =
-    { 'internal', 'filler', 'indent-heuristic', 'algorithm:histogram', 'linematch:60' }
+vim.opt.diffopt = {
+    'internal',
+    'filler',
+    'closeoff',
+    'indent-heuristic',
+    'algorithm:histogram',
+    'linematch:60',
+}
 vim.opt.foldcolumn = 'auto'
 vim.opt.foldlevelstart = 0
 vim.opt.foldopen = vim.opt.foldopen + { 'insert', 'jump' }
