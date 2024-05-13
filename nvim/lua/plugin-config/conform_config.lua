@@ -15,6 +15,7 @@ conform.formatters.taplo =
 conform.setup({
     formatters_by_ft = {
         ['_'] = { 'trim_whitespace' },
+        ghaction = { 'prettierd' },
         json = { 'jq' },
         lua = { 'stylua' },
         markdown = { 'prettierd', 'injected' },
