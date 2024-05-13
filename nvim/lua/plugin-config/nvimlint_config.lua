@@ -58,6 +58,7 @@ lint.linters_by_ft = {
     -- https://github.com/mfussenegger/nvim-lint/issues/235
     -- https://github.com/mfussenegger/nvim-lint/issues/469
     dockerfile = { 'hadolint' },
+    ghaction = { 'actionlint' },
     json = { 'jsonlint' },
     lua = { 'luacheck' },
     markdown = { 'markdownlint' },

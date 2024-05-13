@@ -90,6 +90,9 @@ require('nvim-treesitter.configs').setup({
     matchup = { enable = true },
 })
 
+-- Ft/Langugage register
+vim.treesitter.language.register('yaml', 'ghaction')
+
 -- Mappings (basically center when moving)
 vim.keymap.set({ 'n', 'v' }, ']c', '<Cmd>TSTextobjectGotoNextStart @class.outer<CR>zz')
 vim.keymap.set({ 'n', 'v' }, ']f', '<Cmd>TSTextobjectGotoNextStart @function.outer<CR>zz')

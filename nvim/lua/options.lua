@@ -199,6 +199,7 @@ vim.filetype.add({
     },
     pattern = {
         ['.*doc/.*'] = 'help',
+        ['.*github/workflows/.*'] = 'ghaction',
         ['.*onedrive/config'] = 'config',
         ['.*sql'] = 'sql',
         ['.*ssh/config'] = 'sshconfig',
