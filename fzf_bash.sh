@@ -561,6 +561,7 @@ export FORGIT_LOG_FZF_OPTS='
 '
 
 alias gcb='git-forgit checkout_branch'
+alias gdb='git-forgit branch_delete'
 alias gl='git-forgit log'
 alias glg='FORGIT_LOG_GRAPH_ENABLE=false git-forgit log'
 alias gd='git-forgit diff'

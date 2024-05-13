@@ -207,15 +207,18 @@ if type "git" > /dev/null 2>&1; then
         _git_checkout
     }
     __git_complete gco _comp_gco
+    alias gcob='git checkout -b'
     alias gcp='git cherry-pick'
     alias gb='git branch'
     __git_complete gb _git_branch
+    alias gbd='git branch -D'
+    __git_complete gbd _git_branch
+    alias gbdr='git push origin --delete'
+    __git_complete gbdr _git_branch
     alias gp='git push'
     __git_complete gp _git_push
     alias gF='git push --force-with-lease'
     __git_complete gF _git_push
-    alias gdr='git push origin --delete'
-    __git_complete gdr _git_push
     alias gP='git pull'
     __git_complete gP _git_pull
     alias gPr='git pull --rebase'
