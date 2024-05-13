@@ -7,10 +7,6 @@ vim.o.formatexpr = [[v:lua.require('conform').formatexpr()]]
 conform.formatters.jq = { args = { '--indent', '4' } }
 conform.formatters.stylua =
     { prepend_args = { '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml' } }
-conform.formatters.isort =
-    { prepend_args = { '--settings-file=' .. vim.env.HOME .. '/.isort.cfg' } }
-conform.formatters.black =
-    { prepend_args = { '--config=' .. vim.env.HOME .. '/.config/.black.toml' } }
 conform.formatters.shfmt = { prepend_args = { '-i', '4', '-ci', '-sr' } }
 conform.formatters.taplo =
     { args = { 'format', '--config=' .. vim.env.HOME .. '/taplo.toml', '-' } }
