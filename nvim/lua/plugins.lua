@@ -314,13 +314,6 @@ local plugins = {
             require('plugin-config.vimtex_config')
         end,
     },
-    ---- Python
-    {
-        'linux-cultist/venv-selector.nvim',
-        config = function()
-            require('plugin-config.venv_selector_config')
-        end,
-    },
     ---- SQL
     {
         'kndndrj/nvim-dbee',

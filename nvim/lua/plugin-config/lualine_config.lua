@@ -51,8 +51,11 @@ local function branch_with_remote()
 end
 
 local function pyvenv()
-    local venv_name = require('venv-selector').get_active_venv()
-    if venv_name ~= nil and vim.bo.filetype == 'python' then
+    if vim.bo.filetype ~= 'python' then
+        return ''
+    end
+    local venv_name = _G.PyVenv.statusline_venv()
+    if venv_name ~= 'none' then
         venv_name = '󰆍 '
             .. string.gsub(venv_name, '.*/pypoetry/virtualenvs/', ''):sub(1, 25)
     else

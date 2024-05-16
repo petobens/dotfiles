@@ -2,6 +2,8 @@ local builtin = require('telescope.builtin')
 local overseer = require('overseer')
 local utils = require('telescope.utils')
 
+_G.PyVenv = { active_venv = {} }
+
 -- Options and variable
 vim.opt_local.textwidth = 88
 vim.opt_local.commentstring = '#%s'
@@ -224,8 +226,8 @@ local function list_breakpoints(local_buffer)
         })
     else
         local buffer_dir = utils.buffer_dir()
-        if next(_G.Venv.active_venv) ~= nil then
-            buffer_dir = _G.Venv.active_venv.project_root
+        if next(_G.PyVenv.active_venv) ~= nil then
+            buffer_dir = _G.PyVenv.active_venv.project_root
         end
         opts = vim.tbl_extend('keep', opts, {
             cwd = buffer_dir,
@@ -233,6 +235,84 @@ local function list_breakpoints(local_buffer)
         })
     end
     builtin.grep_string(opts)
+end
+
+-- Virtual Envs
+function _G.PyVenv.statusline_venv()
+    return vim.b.poetry_venv
+end
+
+function _G.PyVenv.deactivate_venv()
+    if _G.PyVenv.saved_path ~= nil then
+        vim.fn.setenv('PATH', _G.PyVenv.saved_path)
+        _G.PyVenv.saved_path = nil
+    end
+    vim.fn.setenv('VIRTUAL_ENV', nil)
+    vim.b.poetry_venv = nil
+end
+
+function _G.PyVenv.activate_venv(venv)
+    if vim.env.VIRTUAL_ENV then
+        if vim.b.poetry_venv == vim.env.VIRTUAL_ENV then
+            -- Active venv is equal to current so there is nothing to do
+            return
+        elseif
+            vim.b.poetry_venv == nil
+            and next(_G.PyVenv.active_venv) ~= nil
+            and vim.tbl_contains(
+                _G.PyVenv.active_venv.project_files,
+                vim.api.nvim_buf_get_name(0)
+            )
+        then
+            -- Current file belongs to the project of the active env then simply
+            -- set the buffer cache variable since we can reuse the existing venv
+            vim.b.poetry_venv = _G.PyVenv.active_venv.venv_path
+            return
+        else
+            _G.PyVenv.deactivate_venv()
+            _G.PyVenv.active_venv = {}
+        end
+    end
+
+    -- Save working dir and cd to window cwd (lcd) to ensure system call works
+    local lwd = vim.loop.cwd()
+    vim.cmd('lcd %:p:h')
+
+    -- If there is no active venv look for one (but just once)
+    if vim.b.poetry_venv == nil then
+        local poetry_path = venv or vim.fn.trim(vim.fn.system('poetry env info --path'))
+        if venv or vim.v.shell_error ~= 1 then
+            vim.b.poetry_venv = poetry_path
+            -- Also store (cache) project root and all py files in the project
+            local project_root = vim.fn.fnamemodify(
+                vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
+                ':p:h'
+            )
+            local py_files = vim.fs.find(function(name)
+                return name:match('.*%.py$')
+            end, {
+                limit = math.huge,
+                type = 'file',
+                path = project_root,
+            })
+            _G.PyVenv.active_venv = {
+                project_root = project_root,
+                project_files = py_files,
+                venv_path = poetry_path,
+            }
+        else
+            vim.b.poetry_venv = 'none'
+        end
+    end
+
+    -- Actually activate the venv if it exists/was found
+    if vim.b.poetry_venv ~= 'none' then
+        _G.PyVenv.saved_path = vim.env.PATH
+        vim.fn.setenv('PATH', string.format('%s/bin:%s', vim.b.poetry_venv, vim.env.PATH))
+        vim.fn.setenv('VIRTUAL_ENV', vim.b.poetry_venv)
+        -- TODO: Add lsp activation logic
+    end
+    vim.cmd('lcd ' .. lwd)
 end
 
 -- Mappings
@@ -280,6 +360,16 @@ vim.keymap.set('n', '<Leader>lt', ':Tmux2Qf ', { silent = false })
 -- Pre-commit
 vim.keymap.set('n', '<Leader>rh', function()
     run_overseer('run_precommit')
+end, { buffer = true })
+-- Virtual Envs
+vim.keymap.set('n', '<Leader>va', function()
+    _G.PyVenv.activate_venv()
+end, { buffer = true })
+vim.keymap.set('n', '<Leader>vd', function()
+    _G.PyVenv.deactivate_venv()
+end, { buffer = true })
+vim.keymap.set('n', '<Leader>vl', function()
+    _G.TelescopeConfig.poetry_venvs()
 end, { buffer = true })
 
 -- Autocommand mappings

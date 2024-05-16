@@ -210,3 +210,15 @@ u.set_ft_option({ 'html' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2')
 u.set_ft_option({ 'i3config', 'sh' }, 'setlocal foldmethod=marker')
 u.set_ft_option({ 'text' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell')
 u.set_ft_option({ 'vim' }, 'setlocal foldmethod=marker formatoptions-=ro')
+
+-- Python (autoactivate venvs)
+vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+    group = vim.api.nvim_create_augroup('poetry_venv_auto', { clear = true }),
+    pattern = { '*.py' },
+    callback = function()
+        local fname = vim.fn.expand('%:p')
+        if not string.match(fname, '.git/') and not vim.startswith(fname, 'copilot') then
+            _G.PyVenv.activate_venv()
+        end
+    end,
+})

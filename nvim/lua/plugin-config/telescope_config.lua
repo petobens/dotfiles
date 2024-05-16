@@ -227,6 +227,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
 end
 
 function _G.TelescopeConfig.poetry_venvs(opts)
+    vim.cmd('lcd %:p:h')
     opts = opts or {}
     opts.entry_maker = function(entry)
         return {
@@ -246,11 +247,10 @@ function _G.TelescopeConfig.poetry_venvs(opts)
             previewer = tree_previewer,
             attach_mappings = function(bufnr)
                 actions.select_default:replace(function()
-                    local entry = action_state.get_selected_entry()
+                    local venv = action_state.get_selected_entry().value
                     actions.close(bufnr)
-                    local venv = require('venv-selector.venv')
-                    venv.set_venv_and_system_paths(entry)
-                    venv.cache_venv(entry)
+                    _G.PyVenv.deactivate_venv()
+                    _G.PyVenv.activate_venv(venv)
                 end)
                 return true
             end,
