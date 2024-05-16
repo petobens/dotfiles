@@ -73,14 +73,6 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
     pattern = { 'sql' },
     callback = function()
         require('cmp-dbee').setup()
-        require('cmp').setup.buffer({
-            sources = {
-                { name = 'cmp-dbee' },
-                { name = 'tmux' },
-                { name = 'buffer' },
-                { name = 'luasnip' },
-            },
-        })
     end,
 })
 

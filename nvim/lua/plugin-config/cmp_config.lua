@@ -218,3 +218,12 @@ cmp.setup.filetype('gitcommit', {
     }),
 })
 require('cmp_git').setup()
+---- SQL
+cmp.setup.filetype('sql', {
+    sources = cmp.config.sources({
+        { name = 'cmp-dbee' },
+        { name = 'tmux' },
+        { name = 'buffer' },
+        { name = 'luasnip' },
+    }),
+})
