@@ -2,8 +2,6 @@ local builtin = require('telescope.builtin')
 local overseer = require('overseer')
 local utils = require('telescope.utils')
 
-_G.PyVenv = { active_venv = {} }
-
 -- Options and variable
 vim.opt_local.textwidth = 88
 vim.opt_local.commentstring = '#%s'
@@ -238,26 +236,29 @@ local function list_breakpoints(local_buffer)
 end
 
 -- Virtual Envs
-function _G.PyVenv.statusline_venv()
-    return vim.b.poetry_venv
+_G.PyVenv = { active_venv = {} }
+
+function _G.PyVenv.statusline()
+    return vim.b.pyvenv
 end
 
-function _G.PyVenv.deactivate_venv()
+function _G.PyVenv.deactivate()
     if _G.PyVenv.saved_path ~= nil then
         vim.fn.setenv('PATH', _G.PyVenv.saved_path)
         _G.PyVenv.saved_path = nil
     end
     vim.fn.setenv('VIRTUAL_ENV', nil)
-    vim.b.poetry_venv = nil
+    vim.b.pyvenv = nil
+    _G.PyVenv.active_venv = {}
 end
 
-function _G.PyVenv.activate_venv(venv)
+function _G.PyVenv.activate(venv)
     if vim.env.VIRTUAL_ENV then
-        if vim.b.poetry_venv == vim.env.VIRTUAL_ENV then
+        if vim.b.pyvenv == vim.env.VIRTUAL_ENV then
             -- Active venv is equal to current so there is nothing to do
             return
         elseif
-            vim.b.poetry_venv == nil
+            vim.b.pyvenv == nil
             and next(_G.PyVenv.active_venv) ~= nil
             and vim.tbl_contains(
                 _G.PyVenv.active_venv.project_files,
@@ -266,11 +267,10 @@ function _G.PyVenv.activate_venv(venv)
         then
             -- Current file belongs to the project of the active env then simply
             -- set the buffer cache variable since we can reuse the existing venv
-            vim.b.poetry_venv = _G.PyVenv.active_venv.venv_path
+            vim.b.pyvenv = _G.PyVenv.active_venv.venv_path
             return
         else
-            _G.PyVenv.deactivate_venv()
-            _G.PyVenv.active_venv = {}
+            _G.PyVenv.deactivate()
         end
     end
 
@@ -279,10 +279,10 @@ function _G.PyVenv.activate_venv(venv)
     vim.cmd('lcd %:p:h')
 
     -- If there is no active venv look for one (but just once)
-    if vim.b.poetry_venv == nil then
-        local poetry_path = venv or vim.fn.trim(vim.fn.system('poetry env info --path'))
+    if vim.b.pyvenv == nil then
+        local venv_path = venv or vim.fn.trim(vim.fn.system('poetry env info --path'))
         if venv or vim.v.shell_error ~= 1 then
-            vim.b.poetry_venv = poetry_path
+            vim.b.pyvenv = venv_path
             -- Also store (cache) project root and all py files in the project
             local project_root = vim.fn.fnamemodify(
                 vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
@@ -298,18 +298,18 @@ function _G.PyVenv.activate_venv(venv)
             _G.PyVenv.active_venv = {
                 project_root = project_root,
                 project_files = py_files,
-                venv_path = poetry_path,
+                venv_path = venv_path,
             }
         else
-            vim.b.poetry_venv = 'none'
+            vim.b.pyvenv = 'none'
         end
     end
 
     -- Actually activate the venv if it exists/was found
-    if vim.b.poetry_venv ~= 'none' then
+    if vim.b.pyvenv ~= 'none' then
         _G.PyVenv.saved_path = vim.env.PATH
-        vim.fn.setenv('PATH', string.format('%s/bin:%s', vim.b.poetry_venv, vim.env.PATH))
-        vim.fn.setenv('VIRTUAL_ENV', vim.b.poetry_venv)
+        vim.fn.setenv('PATH', string.format('%s/bin:%s', vim.b.pyvenv, vim.env.PATH))
+        vim.fn.setenv('VIRTUAL_ENV', vim.b.pyvenv)
         -- TODO: Add lsp activation logic
     end
     vim.cmd('lcd ' .. lwd)
@@ -363,10 +363,10 @@ vim.keymap.set('n', '<Leader>rh', function()
 end, { buffer = true })
 -- Virtual Envs
 vim.keymap.set('n', '<Leader>va', function()
-    _G.PyVenv.activate_venv()
+    _G.PyVenv.activate()
 end, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', function()
-    _G.PyVenv.deactivate_venv()
+    _G.PyVenv.deactivate()
 end, { buffer = true })
 vim.keymap.set('n', '<Leader>vl', function()
     _G.TelescopeConfig.poetry_venvs()

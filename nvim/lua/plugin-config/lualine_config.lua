@@ -54,7 +54,7 @@ local function pyvenv()
     if vim.bo.filetype ~= 'python' then
         return ''
     end
-    local venv_name = _G.PyVenv.statusline_venv()
+    local venv_name = _G.PyVenv.statusline()
     if venv_name ~= 'none' then
         venv_name = '󰆍 '
             .. string.gsub(venv_name, '.*/pypoetry/virtualenvs/', ''):sub(1, 25)

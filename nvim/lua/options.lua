@@ -180,7 +180,7 @@ vim.opt.wildmode = { 'longest:full', 'full' }
 vim.opt.spellfile = vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add'
 vim.opt.spelllang = { 'en', 'es' }
 
--- Filetype detection and settings
+-- Filetype detection and autocmd settings
 vim.filetype.add({
     filename = {
         ['bash_profile'] = 'sh',
@@ -210,15 +210,14 @@ u.set_ft_option({ 'html' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2')
 u.set_ft_option({ 'i3config', 'sh' }, 'setlocal foldmethod=marker')
 u.set_ft_option({ 'text' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell')
 u.set_ft_option({ 'vim' }, 'setlocal foldmethod=marker formatoptions-=ro')
-
--- Python (autoactivate venvs)
+---- Python
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
-    group = vim.api.nvim_create_augroup('poetry_venv_auto', { clear = true }),
+    group = vim.api.nvim_create_augroup('auto_venv', { clear = true }),
     pattern = { '*.py' },
     callback = function()
         local fname = vim.fn.expand('%:p')
         if not string.match(fname, '.git/') and not vim.startswith(fname, 'copilot') then
-            _G.PyVenv.activate_venv()
+            _G.PyVenv.activate()
         end
     end,
 })

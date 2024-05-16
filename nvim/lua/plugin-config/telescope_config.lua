@@ -249,8 +249,8 @@ function _G.TelescopeConfig.poetry_venvs(opts)
                 actions.select_default:replace(function()
                     local venv = action_state.get_selected_entry().value
                     actions.close(bufnr)
-                    _G.PyVenv.deactivate_venv()
-                    _G.PyVenv.activate_venv(venv)
+                    _G.PyVenv.deactivate()
+                    _G.PyVenv.activate(venv)
                 end)
                 return true
             end,
