@@ -7,9 +7,10 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('ps_fugitive', { clear = true }),
     pattern = { 'fugitive' }, -- gstatus
     callback = function(e)
+        -- Options
         vim.opt_local.winfixheight = true
         vim.opt_local.winfixbuf = true
-
+        -- Mappings
         vim.keymap.set('n', 'q', u.quit_return, { buffer = e.buf })
         vim.keymap.set('n', ']h', ']c', { buffer = e.buf, remap = true })
         vim.keymap.set('n', '[h', '[c', { buffer = e.buf, remap = true })
@@ -39,7 +40,9 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('git_commit_ft', { clear = true }),
     pattern = { 'gitcommit' },
     callback = function(e)
+        -- Options
         vim.opt_local.spell = true
+        -- Mappings
         vim.keymap.set('n', '<Leader>ac', function()
             vim.cmd('normal! gg0')
             vim.cmd('normal! dd')
