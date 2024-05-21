@@ -2,10 +2,10 @@ local u = require('utils')
 
 require('pqf').setup({
     signs = {
-        error = u.icons.error,
-        warning = u.icons.warning,
-        info = u.icons.info,
-        hint = u.icons.hint,
+        error = { text = u.icons.error },
+        warning = { text = u.icons.warning },
+        info = { text = u.icons.info },
+        hint = { text = u.icons.hint },
     },
     show_multiple_lines = true,
 })
