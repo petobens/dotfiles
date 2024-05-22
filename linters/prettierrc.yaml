@@ -8,6 +8,6 @@ overrides:
     - files: '*.md'
       options:
           tabWidth: 2
-    - files: '**/.github/workflows/*.yaml'
+    - files: '**/.github/workflows/*.y*ml'
       options:
           tabWidth: 2
