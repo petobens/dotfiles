@@ -231,20 +231,7 @@ vim.keymap.set(
 )
 
 -- Links & Filemanager
-vim.keymap.set({ 'n', 'v' }, '<Leader>ol', function()
-    local url
-    local mode = vim.api.nvim_get_mode()['mode']
-    if mode == 'v' then
-        url = u.get_selection()
-    else
-        url = vim.fn.matchstr(
-            vim.fn.getline('.'),
-            [[\(http\|www\.\)[^ ]:\?[[:alnum:]%\/_#.-]*]]
-        )
-    end
-    vim.ui.open(url)
-    vim.cmd('redraw!')
-end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>ol', 'gx', { remap = true })
 vim.keymap.set('n', '<Leader>fm', function()
     vim.cmd('silent! !tmux split-window -p 30 -c ' .. vim.fn.getcwd() .. ' ranger')
 end)
