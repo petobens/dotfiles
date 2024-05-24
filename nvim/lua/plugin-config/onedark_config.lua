@@ -472,18 +472,19 @@ onedarkpro.setup({
         SnipRunVirtualTextOk = { fg = p.black, bg = p.purple, style = 'bold' },
 
         ---- Telescope
-        TelescopeNormal = { link = 'Normal' },
-        TelescopeSelection = { fg = p.fg, bg = p.cursor_grey, style = 'bold' },
-        TelescopeSelectionCaret = { fg = p.purple, style = 'bold' },
-        TelescopeMultiSelection = { fg = p.orange },
-        TelescopeMultiIcon = { fg = p.orange },
         TelescopeBorder = { link = 'FloatBorder' },
-        TelescopeTitle = { fg = p.comment_grey, bg = p.bg },
+        TelescopeBufferLoaded = { fg = p.cyan },
+        TelescopeMatching = { fg = p.blue },
+        TelescopeMultiIcon = { fg = p.orange },
+        TelescopeMultiSelection = { fg = p.orange },
+        TelescopeNormal = { link = 'Normal' },
+        TelescopePathSeparator = { fg = p.comment_grey },
         TelescopePromptCounter = { fg = p.linenr_grey },
         TelescopePromptPrefix = { fg = p.purple, style = 'bold' },
-        TelescopeMatching = { fg = p.blue },
         TelescopeResultsComment = { fg = p.comment_grey },
-        TelescopePathSeparator = { fg = p.comment_grey },
+        TelescopeSelection = { fg = p.fg, bg = p.cursor_grey, style = 'bold' },
+        TelescopeSelectionCaret = { fg = p.purple, style = 'bold' },
+        TelescopeTitle = { fg = p.comment_grey, bg = p.bg },
 
         ---- VimTex
         VimtexTocSec0 = { link = 'Normal' },
