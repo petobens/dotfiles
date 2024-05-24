@@ -233,7 +233,7 @@ vim.keymap.set(
 -- Links & Filemanager
 vim.keymap.set({ 'n', 'v' }, '<Leader>ol', 'gx', { remap = true })
 vim.keymap.set('n', '<Leader>fm', function()
-    vim.cmd('silent! !tmux split-window -p 30 -c ' .. vim.fn.getcwd() .. ' ranger')
+    vim.cmd('silent! !tmux split-window -l 20 -c ' .. vim.fn.getcwd() .. ' ranger')
 end)
 for i = 1, 6 do
     vim.keymap.set('n', '<Leader>h' .. i, function()
