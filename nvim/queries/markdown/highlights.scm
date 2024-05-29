@@ -15,7 +15,7 @@
   (list_marker_star)
 ] @markup.list
   (#offset-first-n! @markup.list 1)
-  (#set! conceal "○"))
+  (#set! conceal ""))
 
 (list
   (list_item
