@@ -268,13 +268,11 @@ function _G.PyVenv.deactivate()
 end
 
 function _G.PyVenv.activate(venv)
-    if vim.env.VIRTUAL_ENV then
-        if vim.b.pyvenv == vim.env.VIRTUAL_ENV then
-            -- Active venv is equal to current so there is nothing to do
-            return
-        elseif
-            vim.b.pyvenv == nil
-            and next(_G.PyVenv.active_venv) ~= nil
+    if vim.b.pyvenv and vim.b.pyvenv == _G.PyVenv.active_venv.path then
+        return
+    else
+        if
+            next(_G.PyVenv.active_venv) ~= nil
             and vim.tbl_contains(
                 _G.PyVenv.active_venv.project_files,
                 vim.api.nvim_buf_get_name(0)
@@ -282,7 +280,7 @@ function _G.PyVenv.activate(venv)
         then
             -- Current file belongs to the project of the active env then simply
             -- set the buffer cache variable since we can reuse the existing venv
-            vim.b.pyvenv = _G.PyVenv.active_venv.venv_path
+            vim.b.pyvenv = _G.PyVenv.active_venv.path
             return
         else
             _G.PyVenv.deactivate()
@@ -311,22 +309,23 @@ function _G.PyVenv.activate(venv)
                 path = project_root,
             })
             _G.PyVenv.active_venv = {
-                project_root = project_root,
+                path = venv_path,
                 project_files = py_files,
-                venv_path = venv_path,
+                project_root = project_root,
             }
         else
             vim.b.pyvenv = 'none'
         end
     end
 
-    -- Actually activate the venv if it exists/was found
+    -- Actually activate the venv if it was found
     if vim.b.pyvenv ~= 'none' then
         _G.PyVenv.saved_path = vim.env.PATH
         vim.fn.setenv('PATH', string.format('%s/bin:%s', vim.b.pyvenv, vim.env.PATH))
         vim.fn.setenv('VIRTUAL_ENV', vim.b.pyvenv)
+        local lsp_path = vim.b.pyvenv .. '/bin/python'
         vim.defer_fn(function()
-            set_lsp_path(vim.b.pyvenv .. '/bin/python')
+            set_lsp_path(lsp_path)
         end, 100)
     end
     vim.cmd('lcd ' .. lwd)
