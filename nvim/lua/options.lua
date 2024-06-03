@@ -210,7 +210,9 @@ u.set_ft_option({ 'html' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2')
 u.set_ft_option({ 'i3config', 'sh' }, 'setlocal foldmethod=marker')
 u.set_ft_option({ 'text' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell')
 u.set_ft_option({ 'vim' }, 'setlocal foldmethod=marker formatoptions-=ro')
+
 ---- Python
+_G.PyVenv = { active_venv = {} } -- if set inside ftplugin file it will be reset
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = vim.api.nvim_create_augroup('auto_venv', { clear = true }),
     pattern = { '*.py' },

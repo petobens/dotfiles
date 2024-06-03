@@ -236,8 +236,6 @@ local function list_breakpoints(local_buffer)
 end
 
 -- Virtual Envs
-_G.PyVenv = { active_venv = {} }
-
 local function set_lsp_path(path)
     -- Needed to jump to proper docs/definitions
     -- From https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/basedpyright.lua#L28
@@ -257,9 +255,14 @@ function _G.PyVenv.statusline()
 end
 
 function _G.PyVenv.deactivate()
-    if _G.PyVenv.saved_path ~= nil then
-        vim.fn.setenv('PATH', _G.PyVenv.saved_path)
-        _G.PyVenv.saved_path = nil
+    if
+        _G.PyVenv.active_venv.path
+        and string.find(vim.env.PATH, _G.PyVenv.active_venv.path, 1, true)
+    then
+        local venv_path =
+            string.gsub(_G.PyVenv.active_venv.path .. '/bin:', '([^%w])', '%%%1') -- escaped
+        local path = string.gsub(vim.env.PATH, venv_path, '')
+        vim.fn.setenv('PATH', path)
     end
     vim.fn.setenv('VIRTUAL_ENV', nil)
     vim.b.pyvenv = nil
@@ -320,7 +323,6 @@ function _G.PyVenv.activate(venv)
 
     -- Actually activate the venv if it was found
     if vim.b.pyvenv ~= 'none' then
-        _G.PyVenv.saved_path = vim.env.PATH
         vim.fn.setenv('PATH', string.format('%s/bin:%s', vim.b.pyvenv, vim.env.PATH))
         vim.fn.setenv('VIRTUAL_ENV', vim.b.pyvenv)
         local lsp_path = vim.b.pyvenv .. '/bin/python'
