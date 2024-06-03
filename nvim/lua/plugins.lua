@@ -97,7 +97,7 @@ local plugins = {
             require('plugin-config.lsp_config')
         end,
     },
-    { 'folke/neodev.nvim' },
+    { 'folke/lazydev.nvim' },
     {
         'hrsh7th/nvim-cmp',
         dependencies = {

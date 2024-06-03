@@ -139,6 +139,7 @@ cmp.setup({
                 end
             end,
         },
+        { name = 'lazydev', group_index = 0 },
         {
             name = 'buffer',
             option = {
@@ -218,6 +219,8 @@ cmp.setup.filetype('gitcommit', {
     }),
 })
 require('cmp_git').setup()
+---- Lua
+require('lazydev').setup()
 ---- SQL
 cmp.setup.filetype('sql', {
     sources = cmp.config.sources({

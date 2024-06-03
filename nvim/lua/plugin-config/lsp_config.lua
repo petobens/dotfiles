@@ -1,9 +1,8 @@
 local u = require('utils')
 local methods = vim.lsp.protocol.Methods
 
--- Mason and neodev must load befor lsp-config (and mason must go first)
+-- Mason must load before lsp-config
 require('mason-lspconfig').setup()
-require('neodev').setup({})
 local lspconfig = require('lspconfig')
 
 -- Use borders for floating hovers
