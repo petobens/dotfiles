@@ -1,6 +1,7 @@
-;; extends
+; extends
 
-(table ([
+(table
+  [
     "["
     "]"
- ] @table_brackets))
+  ] @table_brackets)

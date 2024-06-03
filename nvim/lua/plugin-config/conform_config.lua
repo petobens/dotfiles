@@ -20,6 +20,7 @@ conform.setup({
         lua = { 'stylua' },
         markdown = { 'prettierd', 'injected' },
         python = { 'ruff_fix', 'ruff_format' },
+        query = { 'format-queries' },
         sh = { 'shfmt' },
         sql = { 'sqlfluff' },
         toml = { 'taplo' },
