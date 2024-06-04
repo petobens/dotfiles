@@ -15,7 +15,7 @@
   (#set! conceal ""))
 
 ((atx_h5_marker) @markup.heading.5
-  (#set! conceal ""))
+  (#set! conceal ""))
 
 ; Bullets (using custom offset directive)
 ([
