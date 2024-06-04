@@ -287,7 +287,7 @@ if type "python" > /dev/null 2>&1; then
         alias poe='poetry env'
         alias pop='poetry run python'
         alias pod='poetry run python -m pdb -cc'
-        alias pot='poetry run pytest'
+        alias pot='poetry run pytest -n auto'
         alias poj='poetry run jupyter notebook'
         alias poh='poetry run pre-commit run --all-files'
         pos() {
