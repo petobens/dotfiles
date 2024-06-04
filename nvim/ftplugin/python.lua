@@ -333,6 +333,26 @@ function _G.PyVenv.activate(venv)
     vim.cmd('lcd ' .. lwd)
 end
 
+-- Sphinx
+local function build_html_docs()
+    local on_exit = function(obj)
+        if obj.code == 0 then
+            vim.print('HTML docs built successfully')
+        else
+            vim.print(obj.stderr)
+            vim.print('HTML docs build failed!')
+        end
+    end
+
+    local buffer_dir = _G.PyVenv.active_venv.project_root
+    vim.print('Building HTML docs...')
+    vim.system(
+        { 'poetry', 'run', 'make', 'html' },
+        { cwd = buffer_dir .. '/docs', text = true },
+        on_exit
+    )
+end
+
 -- Mappings
 ---- Background running
 vim.keymap.set({ 'n', 'i' }, '<F7>', function()
@@ -389,6 +409,8 @@ end, { buffer = true })
 vim.keymap.set('n', '<Leader>vl', function()
     _G.TelescopeConfig.poetry_venvs()
 end, { buffer = true })
+--- Sphinx
+vim.keymap.set('n', '<Leader>hb', build_html_docs, { buffer = true })
 
 -- Autocommand mappings
 vim.api.nvim_create_autocmd({ 'FileType' }, {
