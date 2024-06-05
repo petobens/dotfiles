@@ -79,12 +79,13 @@ vim.keymap.set({ 'i', 's' }, '<C-x>', function()
     end
 end)
 vim.keymap.set('n', '<Leader>es', function()
-    if vim.bo.filetype == 'tex' or vim.bo.filetype == 'lua' then
-        vim.cmd(':Telescope find_files cwd=' .. snippets_dir .. '/' .. vim.bo.filetype)
+    local ft = vim.bo.filetype
+    if ft == 'tex' or ft == 'lua' or ft == 'markdown' then
+        vim.cmd(':Telescope find_files cwd=' .. snippets_dir .. '/' .. ft)
         return
     end
 
-    local snippet_file = vim.bo.filetype .. '.lua'
+    local snippet_file = ft .. '.lua'
     local split = 'split '
     if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
         split = 'vsplit '
