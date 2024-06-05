@@ -410,7 +410,7 @@ vim.keymap.set('n', '<Leader>vl', function()
     _G.TelescopeConfig.poetry_venvs()
 end, { buffer = true })
 --- Sphinx
-vim.keymap.set('n', '<Leader>hb', build_html_docs, { buffer = true })
+vim.keymap.set('n', '<Leader>bh', build_html_docs, { buffer = true })
 
 -- Autocommand mappings
 vim.api.nvim_create_autocmd({ 'FileType' }, {
