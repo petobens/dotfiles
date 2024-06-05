@@ -141,6 +141,40 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'npp', dscr = 'Numpy parameters' },
+        fmta(
+            [[
+            Parameters
+            ----------
+            <>
+                <>
+
+        ]],
+            {
+                i(1, 'arg'),
+                i(2, 'description'),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'npr', dscr = 'Numpy returns' },
+        fmta(
+            [[
+            Returns
+            -------
+            <>
+                <>
+
+        ]],
+            {
+                i(1, 'arg'),
+                i(2, 'description'),
+            }
+        ),
+        { condition = line_begin }
+    ),
 
     -- Linting
     s(
