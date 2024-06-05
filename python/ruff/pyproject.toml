@@ -22,6 +22,7 @@ ignore = [
     "D107", # Missing docstring in init
     "D203", # Same as D211 about class docstring
     "D213", # Same as D212 about summary docstring
+    "D413", # Missing blank linke after last section
 ]
 
 # Rules eligible for autofix
