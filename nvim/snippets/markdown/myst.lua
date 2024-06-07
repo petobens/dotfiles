@@ -10,15 +10,30 @@ local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
-    -- Docs
+    -- Parser
     s(
-        { trig = 'stc', dscr = 'Sphinx TOC' },
+        { trig = 'mdt', dscr = 'MyST directive' },
         fmta(
             [[
-            ```{toctree}<><>
+            :::{<>}
+            <>
+            :::
+        ]],
+            {
+                i(1, 'directive'),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'mtc', dscr = 'MyST TOC' },
+        fmta(
+            [[
+            :::{toctree}<><>
 
             <>
-            ```
+            :::
         ]],
             {
                 c(1, { sn(nil, { t({ '', '' }), i(1, ':hidden:') }), t('') }),
@@ -28,24 +43,8 @@ return {
         ),
         { condition = line_begin }
     ),
-    s(
-        { trig = 'ser', dscr = 'Sphinx eval-rst' },
-        fmta(
-            [[
-            ```{eval-rst}
-            .. <>:: <>
 
-               <>
-            ```
-        ]],
-            {
-                i(1, 'directive'),
-                i(2, 'value'),
-                i(3),
-            }
-        ),
-        { condition = line_begin }
-    ),
+    -- Sphinx
     s(
         { trig = 'sam', dscr = 'Sphinx automodule' },
         fmta(
@@ -60,12 +59,13 @@ return {
         ),
         { condition = line_begin }
     ),
+
     -- Math
     s(
-        { trig = 'le', dscr = 'Label equation' },
+        { trig = 'lb', dscr = 'Label' },
         fmta(
             [[
-            (eq:<>)
+            (<>)
     ]],
             {
                 i(1),
@@ -73,14 +73,36 @@ return {
         )
     ),
     s(
-        { trig = 'cre', dscr = 'Equation ref' },
+        { trig = 'ref', dscr = 'Ref' },
         fmta(
             [[
-        {eq}`eq:<>`
+        {<>}`<>`
     ]],
             {
                 i(1),
+                i(2),
             }
         )
+    ),
+
+    -- Figures
+    s(
+        { trig = 'mfig', dscr = 'MyST figure' },
+        fmta(
+            [[
+            :::{figure} <>
+            :scale: <>%
+            :align: center
+
+            <>
+            :::
+        ]],
+            {
+                i(1, 'path'),
+                i(2),
+                i(3, 'caption'),
+            }
+        ),
+        { condition = line_begin }
     ),
 }, {}
