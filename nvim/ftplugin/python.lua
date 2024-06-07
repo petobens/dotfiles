@@ -353,6 +353,14 @@ local function build_html_docs()
     )
 end
 
+local function view_sphinx_docs()
+    local docs_dir = vim.fn.fnamemodify(
+        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
+        ':p:h'
+    ) .. '/docs/build/html/'
+    vim.ui.open(docs_dir .. 'index.html')
+end
+
 -- Mappings
 ---- Background running
 vim.keymap.set({ 'n', 'i' }, '<F7>', function()
@@ -411,6 +419,7 @@ vim.keymap.set('n', '<Leader>vl', function()
 end, { buffer = true })
 --- Sphinx
 vim.keymap.set('n', '<Leader>bh', build_html_docs, { buffer = true })
+vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
 
 -- Autocommand mappings
 vim.api.nvim_create_autocmd({ 'FileType' }, {
