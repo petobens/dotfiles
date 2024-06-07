@@ -26,17 +26,7 @@ vim.api.nvim_create_autocmd(
 )
 
 -- Functions
-local function convert_pandoc(extension)
-    local base_file = vim.fn.expand('%:p:r')
-    local output_file = string.format('%s.%s', base_file, extension)
-    local pandoc_cmd = 'pandoc -s --toc --number-sections'
-    pandoc_cmd = string.format('%s %s.md -o %s', pandoc_cmd, base_file, output_file)
-    vim.fn.system(pandoc_cmd)
-    if vim.v.shell_error ~= 1 then
-        vim.cmd.echo(string.format('"Converted .md file into .%s"', extension))
-    end
-end
-
+---- Lists
 local function continue_list()
     local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
     local marker = vim.fn.matchstr(line, [[^\([*-]\s\[\s\]\|[*-]\|>\|\d\+\.\)\s]])
@@ -97,6 +87,19 @@ local function toggle_checklist()
     vim.api.nvim_win_set_cursor(0, cursor)
 end
 
+---- Pandoc
+local function convert_pandoc(extension)
+    local base_file = vim.fn.expand('%:p:r')
+    local output_file = string.format('%s.%s', base_file, extension)
+    local pandoc_cmd = 'pandoc -s --toc --number-sections'
+    pandoc_cmd = string.format('%s %s.md -o %s', pandoc_cmd, base_file, output_file)
+    vim.fn.system(pandoc_cmd)
+    if vim.v.shell_error ~= 1 then
+        vim.cmd.echo(string.format('"Converted .md file into .%s"', extension))
+    end
+end
+
+---- Sphinx
 local function build_sphinx_docs()
     local on_exit = function(obj)
         if obj.code == 0 then
@@ -111,13 +114,22 @@ local function build_sphinx_docs()
         vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
         ':p:h'
     )
-    vim.print(project_root)
     vim.print('Building HTML docs...')
     vim.system(
         { 'poetry', 'run', 'make', 'html' },
         { cwd = project_root .. '/docs', text = true },
         on_exit
     )
+end
+
+local function view_sphinx_docs()
+    local file_dir = vim.fn.expand('%:p:r')
+    local html_file = file_dir:match('docs/source/(.*)') .. '.html'
+    local docs_dir = vim.fn.fnamemodify(
+        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
+        ':p:h'
+    ) .. '/docs/build/html/'
+    vim.ui.open(docs_dir .. html_file)
 end
 
 -- Mappings
@@ -138,5 +150,6 @@ vim.keymap.set('i', '<S-Tab>', function()
     return indent_list({ dedent = true })
 end, { expr = true, buffer = true })
 vim.keymap.set('n', '<Leader>ct', toggle_checklist, { buffer = true })
---- Sphinx
+--- Sphinx (html)
 vim.keymap.set('n', '<Leader>bh', build_sphinx_docs, { buffer = true })
+vim.keymap.set('n', '<Leader>vh', view_sphinx_docs, { buffer = true })
