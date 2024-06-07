@@ -14,7 +14,7 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd numpy
     $pip_install_cmd pandas
     $pip_install_cmd Pillow # needed for gtk dialogs
-    $pip_install_cmd git+https://github.com/bretello/pdbpp@0.11.2
+    $pip_install_cmd git+https://github.com/bretello/pdbpp@0.11.3
     $pip_install_cmd pipx
     $pip_install_cmd Send2Trash
     if [ "$OSTYPE" == 'linux-gnu' ]; then
