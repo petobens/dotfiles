@@ -29,7 +29,8 @@ conform.setup({
     format_on_save = function(bufnr)
         local format_options = { timeout_ms = 700, quiet = true, lsp_fallback = false }
         if vim.bo[bufnr].filetype == 'markdown' then
-            -- Don't run prettierd automatically
+            -- Don't run prettierd automatically until new line bug is fixed
+            -- https://github.com/prettier/prettier/issues/8004
             format_options = vim.tbl_extend(
                 'keep',
                 format_options,
