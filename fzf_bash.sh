@@ -37,6 +37,7 @@ export FZF_DEFAULT_OPTS='
 --height 15
 --inline-info
 --prompt="   "
+--pointer=">"
 --info="inline:  "
 --marker=" "
 --no-separator
