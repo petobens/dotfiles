@@ -1,3 +1,4 @@
+local extras = require('luasnip.extras')
 local ls = require('luasnip')
 
 local c = ls.choice_node
@@ -6,6 +7,7 @@ local s = ls.snippet
 local t = ls.text_node
 local sn = ls.snippet_node
 
+local rep = extras.rep
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
@@ -58,6 +60,23 @@ return {
             }
         ),
         { condition = line_begin }
+    ),
+
+    -- Text
+    s(
+        { trig = 'fn', wordTrig = false, dscr = 'Footnote' },
+        fmta(
+            [[
+        [^<>]
+
+        [^<>]: <>
+    ]],
+            {
+                i(1),
+                rep(1),
+                i(2),
+            }
+        )
     ),
 
     -- Math
