@@ -334,23 +334,11 @@ function _G.PyVenv.activate(venv)
 end
 
 -- Sphinx
-local function build_html_docs()
-    local on_exit = function(obj)
-        if obj.code == 0 then
-            vim.print('HTML docs built successfully')
-        else
-            vim.print(obj.stderr)
-            vim.print('HTML docs build failed!')
-        end
-    end
-
-    local buffer_dir = _G.PyVenv.active_venv.project_root
-    vim.print('Building HTML docs...')
-    vim.system(
-        { 'poetry', 'run', 'make', 'html' },
-        { cwd = buffer_dir .. '/docs', text = true },
-        on_exit
-    )
+local function run_sphinx_build()
+    vim.cmd('silent noautocmd update')
+    overseer.run_template({ name = 'run_sphinx_build' }, function()
+        vim.cmd('cclose')
+    end)
 end
 
 local function view_sphinx_docs()
@@ -418,7 +406,7 @@ vim.keymap.set('n', '<Leader>vl', function()
     _G.TelescopeConfig.poetry_venvs()
 end, { buffer = true })
 --- Sphinx
-vim.keymap.set('n', '<Leader>bh', build_html_docs, { buffer = true })
+vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
 
 -- Autocommand mappings

@@ -1,3 +1,5 @@
+local overseer = require('overseer')
+
 -- Options
 vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -100,26 +102,11 @@ local function convert_pandoc(extension)
 end
 
 ---- Sphinx
-local function build_sphinx_docs()
-    local on_exit = function(obj)
-        if obj.code == 0 then
-            vim.print('HTML docs built successfully')
-        else
-            vim.print(obj.stderr)
-            vim.print('HTML docs build failed!')
-        end
-    end
-
-    local project_root = vim.fn.fnamemodify(
-        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
-        ':p:h'
-    )
-    vim.print('Building HTML docs...')
-    vim.system(
-        { 'poetry', 'run', 'make', 'html' },
-        { cwd = project_root .. '/docs', text = true },
-        on_exit
-    )
+local function run_sphinx_build()
+    vim.cmd('silent noautocmd update')
+    overseer.run_template({ name = 'run_sphinx_build' }, function()
+        vim.cmd('cclose')
+    end)
 end
 
 local function view_sphinx_docs()
@@ -151,5 +138,5 @@ vim.keymap.set('i', '<S-Tab>', function()
 end, { expr = true, buffer = true })
 vim.keymap.set('n', '<Leader>ct', toggle_checklist, { buffer = true })
 --- Sphinx (html)
-vim.keymap.set('n', '<Leader>bh', build_sphinx_docs, { buffer = true })
+vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })

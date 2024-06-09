@@ -4,4 +4,5 @@ return {
     'run_precommit',
     'run_python',
     'run_sh',
+    'run_sphinx_build',
 }
