@@ -341,6 +341,27 @@ local function run_sphinx_build()
     end)
 end
 
+local function clean_sphinx_build()
+    local on_exit = function(obj)
+        if obj.code == 0 then
+            vim.print('Cleaning sphinx html build... done!')
+        else
+            vim.print(obj.stderr)
+        end
+    end
+
+    local project_root = vim.fn.fnamemodify(
+        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
+        ':p:h'
+    )
+    vim.print('Cleaning sphinx html build...')
+    vim.system(
+        { 'poetry', 'run', 'make', 'clean' },
+        { cwd = project_root .. '/docs', text = true },
+        on_exit
+    )
+end
+
 local function view_sphinx_docs()
     local docs_dir = vim.fn.fnamemodify(
         vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
@@ -407,6 +428,7 @@ vim.keymap.set('n', '<Leader>vl', function()
 end, { buffer = true })
 --- Sphinx
 vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true })
+vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
 
 -- Autocommand mappings
