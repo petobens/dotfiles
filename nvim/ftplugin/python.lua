@@ -362,12 +362,25 @@ local function clean_sphinx_build()
     )
 end
 
-local function view_sphinx_docs()
-    local docs_dir = vim.fn.fnamemodify(
+local function view_sphinx_docs(opts)
+    local repo_root = vim.fn.fnamemodify(
         vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
         ':p:h'
-    ) .. '/docs/build/html/'
-    vim.ui.open(docs_dir .. 'index.html')
+    ) .. '/'
+    local html_file
+
+    opts = opts or {}
+    if opts.index then
+        html_file = repo_root .. 'docs/build/html/index.html'
+    else
+        local docs_dir = repo_root .. 'docs/build/html/api-reference/_autosummary/'
+        local root_escaped = string.gsub(repo_root, '([^%w])', '%%%1')
+        local current_file = vim.fn.expand('%:p:r')
+        html_file = docs_dir
+            .. current_file:gsub(root_escaped, '', 1):gsub('/', '.')
+            .. '.html'
+    end
+    vim.ui.open(html_file)
 end
 
 -- Mappings
@@ -430,6 +443,9 @@ end, { buffer = true })
 vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
+vim.keymap.set('n', '<Leader>vi', function()
+    view_sphinx_docs({ index = true })
+end, { buffer = true })
 
 -- Autocommand mappings
 vim.api.nvim_create_autocmd({ 'FileType' }, {
