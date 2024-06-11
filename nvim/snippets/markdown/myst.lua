@@ -46,22 +46,6 @@ return {
         { condition = line_begin }
     ),
 
-    -- Sphinx
-    s(
-        { trig = 'sam', dscr = 'Sphinx automodule' },
-        fmta(
-            [[
-            ```{eval-rst}
-            .. automodule:: <>
-            ```
-        ]],
-            {
-                i(1),
-            }
-        ),
-        { condition = line_begin }
-    ),
-
     -- Text
     s(
         { trig = 'fn', wordTrig = false, dscr = 'Footnote' },
