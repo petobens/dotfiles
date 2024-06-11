@@ -91,14 +91,27 @@ end
 
 ---- Pandoc
 local function convert_pandoc(extension)
+    local on_exit = function(obj)
+        if obj.code == 0 then
+            vim.print('Converting markdown file with pandoc... done!')
+        else
+            vim.print(obj.stderr)
+            vim.print('Converting markdown file with pandoc... failed!')
+        end
+    end
+
     local base_file = vim.fn.expand('%:p:r')
     local output_file = string.format('%s.%s', base_file, extension)
-    local pandoc_cmd = 'pandoc -s --toc --number-sections'
-    pandoc_cmd = string.format('%s %s.md -o %s', pandoc_cmd, base_file, output_file)
-    vim.fn.system(pandoc_cmd)
-    if vim.v.shell_error ~= 1 then
-        vim.cmd.echo(string.format('"Converted .md file into .%s"', extension))
-    end
+    vim.print('Converting markdown file with pandoc...')
+    vim.system({
+        'pandoc',
+        '-s',
+        '--toc',
+        '--number-sections',
+        base_file .. '.md',
+        '-o',
+        output_file,
+    }, { text = true }, on_exit)
 end
 
 ---- Sphinx
