@@ -91,18 +91,19 @@ end
 
 ---- Pandoc
 local function convert_pandoc(extension)
+    local msg = 'Converting markdown file with pandoc...'
     local on_exit = function(obj)
         if obj.code == 0 then
-            vim.print('Converting markdown file with pandoc... done!')
+            vim.print(msg .. 'done!')
         else
             vim.print(obj.stderr)
-            vim.print('Converting markdown file with pandoc... failed!')
+            vim.print(msg .. 'failed!')
         end
     end
 
     local base_file = vim.fn.expand('%:p:r')
     local output_file = string.format('%s.%s', base_file, extension)
-    vim.print('Converting markdown file with pandoc...')
+    vim.print(msg)
     vim.system({
         'pandoc',
         '-s',
