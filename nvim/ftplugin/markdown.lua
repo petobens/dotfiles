@@ -142,7 +142,7 @@ end
 
 -- Mappings
 ---- Compiling
-vim.keymap.set('n', '<F7>', function()
+vim.keymap.set('n', '<F8>', function()
     convert_pandoc('pdf')
 end, { buffer = true })
 vim.keymap.set('n', '<F9>', function()
@@ -159,6 +159,6 @@ vim.keymap.set('i', '<S-Tab>', function()
 end, { expr = true, buffer = true })
 vim.keymap.set('n', '<Leader>ct', toggle_checklist, { buffer = true })
 --- Sphinx (html)
-vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true })
+vim.keymap.set('n', '<F7>', run_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
