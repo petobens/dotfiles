@@ -82,6 +82,7 @@ $tlmgr_install imakeidx
 $tlmgr_install import
 $tlmgr_install lipsum
 $tlmgr_install logreq
+$tlmgr_install mdwtools
 $tlmgr_install minted
 $tlmgr_install moderncv
 $tlmgr_install multirow
