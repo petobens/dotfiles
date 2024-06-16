@@ -296,5 +296,14 @@ require('nvim-tree').setup({
     },
 })
 
+-- Autocmds
+vim.api.nvim_create_autocmd('BufEnter', {
+    callback = function()
+        if vim.list_contains({ 'NvimTree' }, vim.bo.filetype) then
+            vim.wo.winfixbuf = true
+        end
+    end,
+})
+
 -- Mappings
 vim.keymap.set('n', '<Leader>ff', cd_find_file)

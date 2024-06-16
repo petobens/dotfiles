@@ -31,6 +31,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
     group = term_acg,
     callback = function()
         vim.opt_local.statuscolumn = ''
+        vim.opt_local.winfixbuf = true
     end,
 })
 
