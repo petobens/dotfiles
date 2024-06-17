@@ -27,7 +27,7 @@ conform.setup({
         yaml = { 'prettierd' },
     },
     format_on_save = function(bufnr)
-        local format_options = { timeout_ms = 700, quiet = true, lsp_fallback = false }
+        local format_options = { timeout_ms = 700, quiet = true, lsp_format = 'never' }
         if vim.bo[bufnr].filetype == 'markdown' then
             -- Don't run prettierd automatically until new line bug is fixed
             -- https://github.com/prettier/prettier/issues/8004
@@ -48,5 +48,5 @@ conform.setup({
 
 -- Mappings
 vim.keymap.set({ 'n', 'v' }, '<Leader>fc', function()
-    conform.format({ async = true, lsp_fallback = false })
+    conform.format({ async = true, lsp_format = 'never' })
 end)
