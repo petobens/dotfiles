@@ -31,7 +31,6 @@ local plugins = {
     },
     {
         'luukvbaal/statuscol.nvim',
-        branch = '0.10',
         config = function()
             require('plugin-config.statuscol_config')
         end,
