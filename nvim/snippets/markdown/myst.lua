@@ -76,14 +76,13 @@ return {
         )
     ),
     s(
-        { trig = 'ref', dscr = 'Ref' },
+        { trig = 'cre', dscr = 'Equation ref' },
         fmta(
             [[
-        {<>}`<>`
+        {eq}`eq:<>`
     ]],
             {
                 i(1),
-                i(2),
             }
         )
     ),
