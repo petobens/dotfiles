@@ -48,7 +48,7 @@ return {
 
     -- Text
     s(
-        { trig = 'fn', wordTrig = false, dscr = 'Footnote' },
+        { trig = 'mfn', wordTrig = false, dscr = 'Footnote' },
         fmta(
             [[
         [^<>]
@@ -65,7 +65,7 @@ return {
 
     -- Math
     s(
-        { trig = 'lb', dscr = 'Label' },
+        { trig = 'mlb', dscr = 'Label' },
         fmta(
             [[
             (<>)
@@ -76,7 +76,7 @@ return {
         )
     ),
     s(
-        { trig = 'cre', dscr = 'Equation ref' },
+        { trig = 'mer', dscr = 'Equation ref' },
         fmta(
             [[
         {eq}`eq:<>`
