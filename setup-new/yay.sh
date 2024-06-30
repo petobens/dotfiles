@@ -80,6 +80,7 @@ $yay_cmd alacritty
 $yay_cmd kitty
 $yay_cmd neovim-git
 $yay_cmd tree-sitter-cli
+$yay_cmd libutf8proc
 $yay_cmd tmux
 
 # Audio
