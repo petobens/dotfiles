@@ -64,6 +64,7 @@ $yay_cmd openblas
 
 # Languages
 $yay_cmd luarocks
+$yay_cmd lua51
 $yay_cmd python
 $yay_cmd python-pip
 $yay_cmd pyenv
