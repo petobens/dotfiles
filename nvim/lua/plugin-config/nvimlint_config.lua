@@ -19,8 +19,11 @@ vim.api.nvim_create_autocmd(
                     for _, v in pairs(diagnostics) do
                         if not string.match(v.message, v.source) then
                             v.message = string.format('%s: %s', v.source, v.message)
-                            if v.code and v.code ~= '' then
-                                v.message = string.format('%s [%s]', v.message, v.code)
+                            if v.code ~= vim.NIL then
+                                if v.code and v.code ~= '' then
+                                    v.message =
+                                        string.format('%s [%s]', v.message, v.code)
+                                end
                             end
                         end
                         table.insert(new_msg, v.message)
@@ -90,7 +93,12 @@ local ruff_parser = linters.ruff.parser
 linters.ruff.parser = function(output, bufnr)
     local diagnostics = ruff_parser(output, bufnr)
     for _, v in pairs(diagnostics) do
-        local code = string.sub(v.code, 1, 2)
+        local code
+        if v.code == vim.NIL then
+            code = 'E'
+        else
+            code = string.sub(v.code, 1, 2)
+        end
         if code ~= 'F8' then
             code = string.sub(code, 1, 1)
         end

@@ -47,14 +47,16 @@ local function diagnostic_format_float(diagnostic)
     else
         msg = string.format('%s %s', icon, diagnostic.message)
     end
-    if diagnostic.code and not string.match(msg, diagnostic.code) then
-        msg = string.format(msg .. ' [%s]', diagnostic.code)
+    if diagnostic.code ~= vim.NIL then
+        if diagnostic.code and not string.match(msg, diagnostic.code) then
+            msg = string.format(msg .. ' [%s]', diagnostic.code)
+        end
     end
     return msg
 end
 
 local function diagnostic_suffix(diagnostic)
-    if not diagnostic.code then
+    if not diagnostic.code or diagnostic.code == vim.NIL then
         return ''
     end
     if not string.match(diagnostic.message, diagnostic.code) then
