@@ -109,6 +109,8 @@ $yay_cmd i3lock-color-git
 $yay_cmd inotify-tools # used by nvim
 $yay_cmd intltool
 $yay_cmd kwayland5        # neded for pinentry-qt
+$yay_cmd kwindowsystem    # neded for pinentry-qt
+$yay_cmd kguiaddons       # neded for pinentry-qt
 $yay_cmd libxcrypt-compat # needed for latex biber?
 $yay_cmd lsof
 $yay_cmd maim
