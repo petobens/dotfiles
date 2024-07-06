@@ -104,9 +104,9 @@ $yay_cmd connman
 $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
-$yay_cmd fswatch # used by nvim
 $yay_cmd i3-wm
 $yay_cmd i3lock-color-git
+$yay_cmd inotify-tools # used by nvim
 $yay_cmd intltool
 $yay_cmd kwayland5        # neded for pinentry-qt
 $yay_cmd libxcrypt-compat # needed for latex biber?
