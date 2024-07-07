@@ -289,11 +289,6 @@ require('nvim-tree').setup({
     },
     git = { ignore = false },
     diagnostics = { enable = false },
-    experimental = {
-        git = {
-            async = true,
-        },
-    },
 })
 
 -- Autocmds
