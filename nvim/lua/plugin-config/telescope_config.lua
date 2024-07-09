@@ -489,6 +489,25 @@ local custom_actions = transform_mod({
             vim.cmd('FrecencyDelete ' .. action_state.get_selected_entry().filename)
         end
     end,
+    -- Focus preview window
+    focus_preview = function(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local bufnr = picker.previewer.state.bufnr
+        vim.keymap.set('n', '<C-h>', function()
+            vim.cmd(
+                string.format(
+                    'noautocmd lua vim.api.nvim_set_current_win(%s)',
+                    picker.prompt_win
+                )
+            )
+        end, { buffer = bufnr })
+        vim.cmd(
+            string.format(
+                'noautocmd lua vim.api.nvim_set_current_win(%s)',
+                picker.previewer.state.winid
+            )
+        )
+    end,
 })
 -- Store custom actions to be used elsewhere
 _G.TelescopeConfig.custom_actions = custom_actions
@@ -542,6 +561,7 @@ telescope.setup({
                 ['<C-k>'] = 'move_selection_previous',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
+                ['<C-p>'] = custom_actions.focus_preview,
                 ['<A-v>'] = action_layout.toggle_preview,
                 ['<A-n>'] = actions.cycle_previewers_next,
                 ['<C-space>'] = actions.toggle_selection
@@ -567,6 +587,7 @@ telescope.setup({
                 ['<C-s>'] = 'file_split',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
+                ['<C-p>'] = custom_actions.focus_preview,
                 ['<A-v>'] = action_layout.toggle_preview,
                 ['<A-n>'] = actions.cycle_previewers_next,
                 ['<space>'] = actions.toggle_selection + actions.move_selection_previous,
