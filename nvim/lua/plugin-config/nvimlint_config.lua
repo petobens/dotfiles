@@ -17,6 +17,7 @@ vim.api.nvim_create_autocmd(
                     -- Modify message to add source and error code
                     local new_msg = {}
                     for _, v in pairs(diagnostics) do
+                        local old_msg = v.message
                         if not string.match(v.message, v.source) then
                             v.message = string.format('%s: %s', v.source, v.message)
                             if v.code ~= vim.NIL then
@@ -26,7 +27,7 @@ vim.api.nvim_create_autocmd(
                                 end
                             end
                         end
-                        table.insert(new_msg, v.message)
+                        new_msg[old_msg] = v.message
                     end
 
                     -- Using set.diagnostics is weird so we first set the location list
@@ -35,8 +36,8 @@ vim.api.nvim_create_autocmd(
                     vim.diagnostic.setloclist({ open = false })
                     local current_ll = vim.fn.getloclist(0)
                     local new_ll = {}
-                    for i, v in pairs(current_ll) do
-                        v.text = new_msg[i]
+                    for _, v in pairs(current_ll) do
+                        v.text = new_msg[v.text]
                         table.insert(new_ll, v)
                     end
                     vim.fn.setloclist(0, {}, ' ', {
