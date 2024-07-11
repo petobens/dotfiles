@@ -135,6 +135,7 @@ function M:update_status()
             -- add it to the the list
             vim.fn.match(b.filetype, self.options.filetype_ignore) < 0
             and b.name ~= 'InspectTree'
+            and b.name ~= 'TelescopePreview'
         then
             b.current = true
             b.last = true
