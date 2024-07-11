@@ -215,7 +215,7 @@ bindsym $mod+Control+q $nexec $font_aware_launcher quickterm
 bindsym $mod+Control+n $nexec $font_aware_launcher numbers
 bindsym $mod+Control+f $nexec $font_aware_launcher ranger
 bindsym $mod+Control+h $nexec $font_aware_launcher htop
-bindsym $mod+Control+b $nexec $font_aware_launcher trash
+bindsym $mod+Control+b $nexec $font_aware_launcher bluetooth
 bindsym Control+$alt+Delete $nexec $font_aware_launcher prockiller
 
 # Paramount: we want to have the ability to open a terminal without relying on python
@@ -304,6 +304,7 @@ bindsym $mod+Shift+e $nexec i3-msg 'fullscreen disable', $nexec $font_aware_laun
 
 # Empty Trash Can
 bindsym $mod+Shift+b $nexec i3-msg 'fullscreen disable', $nexec $font_aware_launcher trash-dialog
+bindsym $mod+$alt+b $nexec $font_aware_launcher trash
 
 # Dunst Notifications
 bindsym Control+$alt+space $nexec "dunstctl close"
