@@ -521,7 +521,6 @@ vim.api.nvim_create_autocmd('FileType', {
 
         vim.keymap.set('n', 'H', '^lll', { buffer = e.buf })
         vim.keymap.set('n', 'L', '$', { buffer = e.buf })
-        vim.keymap.set('i', '<C-l>', '<C-o>l', { buffer = e.buf })
     end,
 })
 vim.api.nvim_create_autocmd('User', {
@@ -561,7 +560,7 @@ telescope.setup({
                 ['<C-k>'] = 'move_selection_previous',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
-                ['<C-p>'] = custom_actions.focus_preview,
+                ['<C-l>'] = custom_actions.focus_preview,
                 ['<A-v>'] = action_layout.toggle_preview,
                 ['<A-n>'] = actions.cycle_previewers_next,
                 ['<C-space>'] = actions.toggle_selection
@@ -587,7 +586,7 @@ telescope.setup({
                 ['<C-s>'] = 'file_split',
                 ['<A-j>'] = 'preview_scrolling_down',
                 ['<A-k>'] = 'preview_scrolling_up',
-                ['<C-p>'] = custom_actions.focus_preview,
+                ['<C-l>'] = custom_actions.focus_preview,
                 ['<A-v>'] = action_layout.toggle_preview,
                 ['<A-n>'] = actions.cycle_previewers_next,
                 ['<space>'] = actions.toggle_selection + actions.move_selection_previous,
