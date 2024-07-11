@@ -526,8 +526,9 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('User', {
     group = vim.api.nvim_create_augroup('telescope_preview_ln', { clear = true }),
     pattern = { 'TelescopePreviewerLoaded' },
-    callback = function()
+    callback = function(e)
         vim.opt_local.number = true
+        vim.api.nvim_buf_set_name(e.buf, 'TelescopePreview' .. e.buf)
     end,
 })
 
