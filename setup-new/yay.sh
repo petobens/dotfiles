@@ -166,6 +166,7 @@ $yay_cmd cronie
 $yay_cmd ctags
 $yay_cmd ctop
 $yay_cmd docker
+$yay_cmd docker-buildx
 $yay_cmd docker-compose
 $yay_cmd dragon-drop
 $yay_cmd dust
