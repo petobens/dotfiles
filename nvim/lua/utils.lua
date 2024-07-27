@@ -8,6 +8,14 @@ function M.set_ft_option(ft, vim_cmd)
     })
 end
 
+function M.split_open(file)
+    local split = 'split '
+    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+        split = 'vsplit '
+    end
+    vim.cmd(split .. file)
+end
+
 function M.mk_non_dir(directory)
     local dir = directory or vim.fn.expand('%:p:h')
     if vim.fn.isdirectory(dir) == 0 then

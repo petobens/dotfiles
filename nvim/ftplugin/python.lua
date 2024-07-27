@@ -1,5 +1,6 @@
 local builtin = require('telescope.builtin')
 local overseer = require('overseer')
+local u = require('utils')
 local utils = require('telescope.utils')
 
 -- Options and variable
@@ -333,7 +334,7 @@ function _G.PyVenv.activate(venv)
     vim.cmd('lcd ' .. lwd)
 end
 
--- Sphinx
+-- Sphinx(docs)
 local function run_sphinx_build()
     vim.cmd('silent noautocmd update')
     overseer.run_template({ name = 'run_sphinx_build' }, function()
@@ -363,7 +364,7 @@ local function clean_sphinx_build()
 end
 
 local function view_sphinx_docs(opts)
-    local repo_root = vim.fn.fnamemodify(
+    local project_root = vim.fn.fnamemodify(
         vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
         ':p:h'
     ) .. '/'
@@ -371,16 +372,33 @@ local function view_sphinx_docs(opts)
 
     opts = opts or {}
     if opts.index then
-        html_file = repo_root .. 'docs/build/html/index.html'
+        html_file = project_root .. 'docs/build/html/index.html'
     else
-        local docs_dir = repo_root .. 'docs/build/html/api-reference/_autosummary/'
-        local root_escaped = string.gsub(repo_root, '([^%w])', '%%%1')
+        local docs_dir = project_root .. 'docs/build/html/api-reference/_autosummary/'
+        local root_escaped = string.gsub(project_root, '([^%w])', '%%%1')
         local current_file = vim.fn.expand('%:p:r')
         html_file = docs_dir
             .. current_file:gsub(root_escaped, '', 1):gsub('/', '.')
             .. '.html'
     end
     vim.ui.open(html_file)
+end
+
+-- Tests
+local function edit_test_file()
+    local tests_dir = vim.fn.fnamemodify(
+        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
+        ':p:h'
+    ) .. '/tests/'
+    local test_file = vim.fs.find(
+        { 'test_' .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t') },
+        { limit = math.huge, type = 'file', path = tests_dir }
+    )
+    if next(test_file) then
+        u.split_open(test_file[1])
+    else
+        vim.cmd(':Telescope find_files cwd=' .. tests_dir)
+    end
 end
 
 -- Mappings
@@ -439,13 +457,15 @@ end, { buffer = true })
 vim.keymap.set('n', '<Leader>vl', function()
     _G.TelescopeConfig.poetry_venvs()
 end, { buffer = true })
---- Sphinx
+--- Sphinx (docs)
 vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
 vim.keymap.set('n', '<Leader>vi', function()
     view_sphinx_docs({ index = true })
 end, { buffer = true })
+--- Tests
+vim.keymap.set('n', '<Leader>etf', edit_test_file, { buffer = true })
 
 -- Autocommand mappings
 vim.api.nvim_create_autocmd({ 'FileType' }, {

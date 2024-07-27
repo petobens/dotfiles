@@ -1,5 +1,6 @@
 local overseer = require('overseer')
 local scan = require('plenary.scandir')
+local u = require('utils')
 
 -- Options (note: some other options are in /after/ftplugin file)
 vim.opt_local.shiftwidth = 2
@@ -120,12 +121,7 @@ local function file_edit(search_file)
         type = 'file',
         path = base_dir,
     })
-
-    local split = 'split '
-    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
-        split = 'vsplit '
-    end
-    vim.cmd(split .. edit_file[1])
+    u.split_open(edit_file[1])
 end
 
 -- Miscellaneous

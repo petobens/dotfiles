@@ -1,5 +1,6 @@
 local luasnip = require('luasnip')
 local types = require('luasnip.util.types')
+local u = require('utils')
 
 _G.LuaSnipConfig = {}
 
@@ -85,10 +86,6 @@ vim.keymap.set('n', '<Leader>es', function()
         return
     end
 
-    local snippet_file = ft .. '.lua'
-    local split = 'split '
-    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
-        split = 'vsplit '
-    end
-    vim.cmd(split .. snippets_dir .. snippet_file)
+    local snippet_file = snippets_dir .. ft .. '.lua'
+    u.split_open(snippet_file)
 end)
