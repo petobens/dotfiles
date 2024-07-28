@@ -24,6 +24,14 @@ _G.OverseerConfig.python_errorformat = ''
     .. [[%-G[Process exited%.%#,]]
     .. [[%f:%l:\ %.%#%tarning:%m,]]
 
+-- Helpers
+local function _project_root()
+    return vim.fn.fnamemodify(
+        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
+        ':p:h'
+    )
+end
+
 -- Running
 local function _parse_qf(task_metadata, cwd, active_window_id)
     local pdb = false
@@ -301,10 +309,7 @@ function _G.PyVenv.activate(venv)
         if venv or vim.v.shell_error ~= 1 then
             vim.b.pyvenv = venv_path
             -- Also store (cache) project root and all py files in the project
-            local project_root = vim.fn.fnamemodify(
-                vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
-                ':p:h'
-            )
+            local project_root = _project_root()
             local py_files = vim.fs.find(function(name)
                 return name:match('.*%.py$')
             end, {
@@ -351,23 +356,16 @@ local function clean_sphinx_build()
         end
     end
 
-    local project_root = vim.fn.fnamemodify(
-        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
-        ':p:h'
-    )
     vim.print('Cleaning sphinx html build...')
     vim.system(
         { 'poetry', 'run', 'make', 'clean' },
-        { cwd = project_root .. '/docs', text = true },
+        { cwd = _project_root() .. '/docs', text = true },
         on_exit
     )
 end
 
 local function view_sphinx_docs(opts)
-    local project_root = vim.fn.fnamemodify(
-        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
-        ':p:h'
-    ) .. '/'
+    local project_root = _project_root() .. '/'
     local html_file
 
     opts = opts or {}
@@ -386,10 +384,7 @@ end
 
 -- Tests
 local function edit_test_file()
-    local tests_dir = vim.fn.fnamemodify(
-        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
-        ':p:h'
-    ) .. '/tests/'
+    local tests_dir = _project_root() .. '/tests/'
     local test_file = vim.fs.find(
         { 'test_' .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t') },
         { limit = math.huge, type = 'file', path = tests_dir }
@@ -443,11 +438,11 @@ vim.keymap.set('n', '<Leader>lB', function()
     list_breakpoints(false)
 end, { buffer = true })
 vim.keymap.set('n', '<Leader>lt', ':Tmux2Qf ', { silent = false })
--- Pre-commit
+---- Pre-commit
 vim.keymap.set('n', '<Leader>rh', function()
     run_overseer('run_precommit')
 end, { buffer = true })
--- Virtual Envs
+---- Virtual Envs
 vim.keymap.set('n', '<Leader>va', function()
     _G.PyVenv.activate()
 end, { buffer = true })
@@ -457,14 +452,14 @@ end, { buffer = true })
 vim.keymap.set('n', '<Leader>vl', function()
     _G.TelescopeConfig.poetry_venvs()
 end, { buffer = true })
---- Sphinx (docs)
+---- Sphinx (docs)
 vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
 vim.keymap.set('n', '<Leader>vi', function()
     view_sphinx_docs({ index = true })
 end, { buffer = true })
---- Tests
+---- Tests
 vim.keymap.set('n', '<Leader>etf', edit_test_file, { buffer = true })
 
 -- Autocommand mappings
