@@ -382,7 +382,7 @@ local function view_sphinx_docs(opts)
     vim.ui.open(html_file)
 end
 
--- Tests
+-- Fast editing
 local function edit_test_file()
     local tests_dir = _project_root() .. '/tests/'
     local test_file = vim.fs.find(
@@ -393,6 +393,19 @@ local function edit_test_file()
         u.split_open(test_file[1])
     else
         vim.cmd(':Telescope find_files cwd=' .. tests_dir)
+    end
+end
+
+local function edit_project_todo()
+    local notes_dir = '~/git-repos/private/notes/'
+    local todo_file = vim.fs.find(
+        { 'todos_' .. vim.fn.fnamemodify(_project_root(), ':t') .. '.md' },
+        { limit = math.huge, type = 'file', path = notes_dir }
+    )
+    if next(todo_file) then
+        u.split_open(todo_file[1])
+    else
+        vim.cmd(':Telescope find_files cwd=' .. notes_dir)
     end
 end
 
@@ -459,8 +472,9 @@ vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
 vim.keymap.set('n', '<Leader>vi', function()
     view_sphinx_docs({ index = true })
 end, { buffer = true })
----- Tests
+---- Editing
 vim.keymap.set('n', '<Leader>etf', edit_test_file, { buffer = true })
+vim.keymap.set('n', '<Leader>etp', edit_project_todo, { buffer = true })
 
 -- Autocommand mappings
 vim.api.nvim_create_autocmd({ 'FileType' }, {
