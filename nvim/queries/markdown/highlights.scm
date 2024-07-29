@@ -108,15 +108,6 @@
   (#offset-first-n! @punctuation.special.block.conceal 1)
   (#set! conceal "▐"))
 
-; Wiki links
-([
-  "["
-  "["
-  "]"
-  "]"
-] @conceal
-  (#set! conceal ""))
-
 ; Comments
 (html_block) @markup.comment
 
