@@ -1,0 +1,8 @@
+{
+    "formatOnSave": false,
+    "preferences": {
+        "default_formatter": {
+            "python": "ruff"
+        }
+    }
+}

@@ -101,6 +101,13 @@ if type "ipython" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/python/ipython_startup.py" "$HOME/.ipython/profile_default/startup/ipython_startup.py"
     echo Created .ipython/profile_default/startup/ipython_startup symlink
 fi
+if [ -d "$HOME/.jupyter/lab/user-settings" ]; then
+    sudo $ln_cmd -fTs "$dotfiles_dir/python/jupyterlab/overrides.json" "$HOME/.jupyter/lab/user-settings/overrides.json"
+    echo Created .jupyter/lab/user-settings/overrides.json symlink
+    rm -rf "$HOME/.jupyter/lab/user-settings/jupyterlab_code_formatter"
+    $ln_cmd -fTs "$dotfiles_dir/python/jupyterlab/jupyterlab_code_formatter" "$HOME/.jupyter/lab/user-settings/jupyterlab_code_formatter"
+    echo Created .jupyter/lab/user-settings/jupyterlab_code_formatter folder symlink
+fi
 if type "ruby" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/gemrc" "$HOME/.gemrc"
     echo Created .gemrc symlink
