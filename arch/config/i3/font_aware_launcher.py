@@ -5,6 +5,7 @@ import os
 from time import sleep
 
 import i3ipc
+
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
@@ -69,7 +70,10 @@ APPS = {
             'post_cmd': True,
         },
     },
-    'firefox': {'type': 'rol', 'args': {'class_name': 'firefox', 'mark': 'ffox'}},
+    'firefox': {
+        'type': 'rol_custom',
+        'args': {'class_name': 'firefox', 'mark': 'ffox', 'cmd': 'firefox'},
+    },
     'globalprotect-vpn': {'type': 'qt', 'args': {'class_name': 'gpclient'}},
     'gnome-font': {'type': 'gtk', 'args': {'class_name': 'Gnome-font-viewer'}},
     'htop': {
@@ -85,7 +89,7 @@ APPS = {
             'cmd': 'kitty',
         },
     },
-    'kodi': {'type': 'rol', 'args': {'class_name': 'kodi'}},
+    'kodi': {'type': 'rol_custom', 'args': {'class_name': 'kodi', 'cmd': 'kodi'}},
     'mailspring': {
         'type': 'electron',
         'args': {'class_name': 'Mailspring', 'event_delay': 30},
@@ -235,7 +239,10 @@ APPS = {
     'vimiv': {'type': 'qt', 'args': {'class_name': 'vimiv', 'cycle': True}},
     'vscode': {'type': 'electron', 'args': {'class_name': 'Code', 'event_delay': 30}},
     'zathura': {'type': 'gtk', 'args': {'class_name': 'Zathura', 'cycle': True}},
-    'zoom': {'type': 'rol', 'args': {'class_name': 'Zoom', 'event_delay': 30}},
+    'zoom': {
+        'type': 'rol_custom',
+        'args': {'class_name': 'Zoom', 'cmd': 'zoom', 'event_delay': 30},
+    },
 }
 
 
