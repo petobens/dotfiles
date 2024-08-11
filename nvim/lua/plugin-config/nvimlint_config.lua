@@ -65,7 +65,6 @@ lint.linters_by_ft = {
     ghaction = { 'actionlint' },
     json = { 'jsonlint' },
     lua = { 'luacheck' },
-    make = { 'checkmake' },
     markdown = { 'markdownlint' },
     python = { 'mypy', 'ruff' },
     sh = { 'shellcheck' },
