@@ -263,8 +263,8 @@ if type "python" > /dev/null 2>&1; then
     alias py='python'
     alias pyd='python3 -m pdb -cc'
     alias pip='pip3'
-    if type "jupyter-notebook" > /dev/null 2>&1; then
-        alias jn='jupyter-notebook'
+    if type "jupyter-lab" > /dev/null 2>&1; then
+        alias jl='jupyter-lab'
     fi
     if type "pip" > /dev/null 2>&1; then
         alias piu='pip install --user'
