@@ -26,6 +26,7 @@ overseer.setup({
             ['<A-v>'] = 'TogglePreview',
             ['<A-j>'] = 'ScrollOutputDown',
             ['<A-k>'] = 'ScrollOutputUp',
+            ['dd'] = 'Dispose',
         },
     },
 })
