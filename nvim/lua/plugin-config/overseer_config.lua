@@ -52,6 +52,9 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('OverseerConfig', {}),
     callback = function(e)
         vim.opt_local.winfixbuf = true
+        vim.defer_fn(function()
+            vim.cmd('stopinsert')
+        end, 1)
 
         vim.keymap.set('n', 'q', function()
             pcall(vim.api.nvim_win_close, 0, true)
