@@ -27,7 +27,7 @@ _G.OverseerConfig.python_errorformat = ''
 -- Helpers
 local function _project_root()
     return vim.fn.fnamemodify(
-        vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
+        vim.fn.findfile('pyproject.toml', utils.buffer_dir() .. ';'),
         ':p:h'
     )
 end

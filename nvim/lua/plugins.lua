@@ -252,13 +252,13 @@ local plugins = {
             require('plugin-config.tmux_config')
         end,
     },
-    {
-        '3rd/image.nvim',
-        ft = 'markdown',
-        config = function()
-            require('plugin-config.image_config')
-        end,
-    },
+    -- {
+    --     '3rd/image.nvim',
+    --     ft = 'markdown',
+    --     config = function()
+    --         require('plugin-config.image_config')
+    --     end,
+    -- },
     {
         'andymass/vim-matchup',
         config = function()
