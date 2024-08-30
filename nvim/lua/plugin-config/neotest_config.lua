@@ -105,7 +105,11 @@ vim.keymap.set('n', '<Leader>nf', function()
     neotest_run(neotest.run.run, { vim.fn.expand('%') })
 end)
 vim.keymap.set('n', '<Leader>ns', function()
-    neotest_run(neotest.run.run, { suite = true })
+    local extra_args = {}
+    if vim.bo.filetype == 'python' then
+        table.insert(extra_args, '--cov')
+    end
+    neotest_run(neotest.run.run, { suite = true, extra_args = extra_args })
 end)
 vim.keymap.set('n', '<Leader>nc', function()
     neotest.run.stop()
