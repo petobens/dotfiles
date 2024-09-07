@@ -6,7 +6,8 @@
 # `brew cask reinstall basictex`)
 
 # Define path for initial install (which won't read env variable)
-PATH="$PATH:/usr/local/texlive/2024/bin/x86_64-linux"
+TLMGR_PATH="/usr/local/texlive/2024/bin/x86_64-linux"
+PATH="$PATH:$TLMGR_PATH"
 
 # Install texlive
 if ! type "tlmgr" > /dev/null 2>&1; then
@@ -31,27 +32,17 @@ else
     git clone https://github.com/petobens/mybibformat ~/texmf
 fi
 
+# Define tlmgr binary
+tlmgr_bin=$TLMGR_PATH/tlmgr
+
 # Update tlmgr and all packages
-sudo tlmgr update --self
-sudo tlmgr update all
+sudo $tlmgr_bin update --self
+sudo $tlmgr_bin update all
 
 # Install texdoc and enable automatic build of documentation
-tlmgr_install='sudo tlmgr install'
+tlmgr_install="sudo $tlmgr_bin install"
 $tlmgr_install texdoc
-sudo tlmgr option docfiles 1
-
-# Add documentation to already installed packages
-read -p $'\033[1mDo you want to re-install all existing LaTeX packages (y/n)? \033[0m' -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    installed_packages=$(tlmgr list --only-installed | sed -e 's/^i //' -e 's/:.*$//')
-    for i in $installed_packages; do
-        if [[ "$i" =~ "zapfding" ]]; then
-            continue
-        fi
-        $tlmgr_install --reinstall "$i"
-    done
-fi
+sudo $tlmgr_bin option docfiles 1
 
 # Install arara (needs java)
 $tlmgr_install arara
@@ -147,4 +138,4 @@ if [ "$OSTYPE" == 'linux-gnu' ]; then
 fi
 
 # Update all recently installed packages
-sudo tlmgr update all
+sudo $tlmgr_bin update all
