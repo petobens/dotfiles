@@ -5,7 +5,6 @@ import os
 from time import sleep
 
 import i3ipc
-
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
@@ -52,7 +51,7 @@ APPS = {
         },
     },
     'color-picker': {'type': 'gtk', 'args': {'class_name': 'Gcolor3'}},
-    'connman': {'type': 'gtk', 'args': {'class_name': 'Connman-gtk'}},
+    'connman': {'type': 'qt', 'args': {'class_name': 'cmst'}},
     'docker': {
         'type': 'tui',
         'args': {
