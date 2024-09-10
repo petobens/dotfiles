@@ -402,7 +402,7 @@ sys_update_all() {
     fi
     if type "tlmgr" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Latex packages...\033[0m"
-        sudo tlmgr update --all
+        sudo -E env "PATH=$PATH" tlmgr update --all
     fi
     if type "npm" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Node packages...\033[0m"
