@@ -314,6 +314,11 @@ fi
 # FIXME: This seems to be needed by vscode:
 # eval "$(pyenv init -)"
 
+# Latex
+if type "tlmgr" > /dev/null 2>&1; then
+    alias tlgmr='sudo -E env "PATH=$PATH" tlmgr'
+fi
+
 # Package manager
 if type "yay" > /dev/null 2>&1; then
     # Note yay will prompt twice: https://github.com/Jguer/yay/issues/170
