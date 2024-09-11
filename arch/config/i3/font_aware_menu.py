@@ -48,6 +48,7 @@ APPS = {
     'Firefox': {'cmd': 'firefox', 'icon': 'firefox', 'desc': 'Web Browser'},
     'Fonts': {'cmd': 'gnome-font', 'icon': 'org.gnome.font-viewer'},
     'GlobalProtect VPN': {'cmd': 'globalprotect-vpn', 'icon': 'network-vpn'},
+    'Gmail': {'cmd': 'gmail', 'icon': 'gmail', 'desc': 'GMail'},
     'Htop': {
         'cmd': 'htop',
         'icon': 'htop',

@@ -74,6 +74,15 @@ APPS = {
         'args': {'class_name': 'firefox', 'mark': 'ffox', 'cmd': 'firefox'},
     },
     'globalprotect-vpn': {'type': 'qt', 'args': {'class_name': 'gpclient'}},
+    'gmail': {
+        'type': 'electron',
+        'args': {
+            'class_name': 'Brave',
+            'mark': 'gmail',
+            'subcmd': 'gmail',
+            'post_cmd': True,
+        },
+    },
     'gnome-font': {'type': 'gtk', 'args': {'class_name': 'Gnome-font-viewer'}},
     'htop': {
         'type': 'tui',
@@ -561,6 +570,8 @@ class ElectronApp(ROLApp):
                     cmd = cmd.format(url=f'{self.subcmd}.google.com/calendar/b/0/r')
                 elif self.subcmd == 'meet':
                     cmd = cmd.format(url=f'{self.subcmd}.google.com')
+                elif self.subcmd == 'gmail':
+                    cmd = cmd.format(url='mail.google.com')
                 elif self.subcmd == 'clickup':
                     cmd = cmd.format(url=f'app.{self.subcmd}.com')
                 elif self.subcmd == 'teams':
