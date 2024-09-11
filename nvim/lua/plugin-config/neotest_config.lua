@@ -6,7 +6,9 @@ neotest.setup({
         require('neotest-python'),
     },
     consumers = {
-        overseer = require('neotest.consumers.overseer'),
+        overseer = function()
+            return require('neotest.consumers.overseer')
+        end,
     },
     discovery = {
         enabled = true,
