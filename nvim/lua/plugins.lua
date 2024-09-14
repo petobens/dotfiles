@@ -220,7 +220,9 @@ local plugins = {
         end,
     },
     {
-        'nvim-neotest/neotest',
+        -- 'nvim-neotest/neotest',
+        'dpetka2001/neotest',
+        branch = 'fix/treesitter-query',
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-neotest/neotest-python',
