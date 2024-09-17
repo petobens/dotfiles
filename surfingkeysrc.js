@@ -48,10 +48,12 @@ settings.enableAutoFocus = true;
 settings.modeAfterYank = 'Normal';
 settings.hintAlign = 'left';
 settings.editableBodyCare = false;
-Hints.setCharacters('asdfghjkl');
+// FIXME: This should be a function again
+Hints.setCharacters = 'asdfghjkl';
 
 // Disable PDF viewer (note that ;s toggle that does this doesn't seem to work)
-chrome.storage.local.set({ noPdfViewer: 1 });
+// Note: this won't work with Google Manifest V3 (maybe simple remove it)
+// chrome.storage.local.set({ noPdfViewer: 1 });
 
 // Theme (uses Onedark colors)
 settings.theme = `
