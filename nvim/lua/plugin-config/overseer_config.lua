@@ -34,7 +34,7 @@ overseer.setup({
 -- Helpers
 local function overseer_last_task(attach)
     vim.cmd('OverseerQuickAction open hsplit')
-    vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
+    vim.cmd('stopinsert | wincmd J | resize 20 | set winfixheight')
     if attach then
         vim.cmd('startinsert')
     end
