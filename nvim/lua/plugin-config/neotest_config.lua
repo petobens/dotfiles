@@ -26,8 +26,18 @@ neotest.setup({
     quickfix = {
         enabled = true,
         open = function()
-            vim.cmd('copen')
-            vim.cmd('wincmd p')
+            local pdb = false
+            if vim.bo.filetype == 'python' then
+                for _, v in pairs(vim.fn.getqflist()) do
+                    if string.match(v.text, 'bdb.BdbQuit') then
+                        pdb = true
+                    end
+                end
+            end
+            if not pdb then
+                vim.cmd('copen')
+                vim.cmd('wincmd p')
+            end
         end,
     },
     summary = {
