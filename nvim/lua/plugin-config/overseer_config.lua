@@ -43,7 +43,7 @@ end
 
 -- Mappings
 vim.keymap.set('n', '<Leader>os', '<Cmd>OverseerToggle bottom<CR>')
-vim.keymap.set('n', '<Leader>ot', overseer_last_task)
+vim.keymap.set('n', '<Leader>oo', overseer_last_task)
 vim.keymap.set('n', '<Leader>oa', function()
     overseer_last_task(true)
 end)
