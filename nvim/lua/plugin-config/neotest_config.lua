@@ -121,12 +121,13 @@ local function neotest_nearest()
     local extra_args = {}
     if vim.bo.filetype == 'python' then
         table.insert(extra_args, '-rA')
+        table.insert(extra_args, '--no-header')
     end
     neotest_run(neotest.run.run, { extra_args = extra_args })
 end
 local function neotest_attach()
     neotest.run.attach()
-    vim.cmd('stopinsert | wincmd J | resize 20 | set winfixheight | startinsert')
+    vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight | startinsert')
 end
 
 -- Mappings
@@ -147,8 +148,22 @@ end)
 vim.keymap.set('n', '<Leader>nr', function()
     neotest_nearest()
     vim.defer_fn(function()
-        neotest_attach()
-    end, 300)
+        local overseer = require('overseer')
+        local tasks = overseer.list_tasks({ recent_first = true })
+        if tasks[1].status == 'RUNNING' then
+            neotest_attach()
+        else
+            if vim.tbl_isempty(vim.fn.getqflist()) then
+                overseer.run_action(tasks[1], 'open hsplit')
+                vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
+                vim.opt_local.winfixbuf = true
+                vim.opt_local.modifiable = true
+                vim.cmd('normal! jdGggG')
+                vim.opt_local.modifiable = false
+                vim.cmd([[nmap <silent> q :close<CR>]])
+            end
+        end
+    end, 400)
 end)
 vim.keymap.set('n', '<Leader>nc', function()
     neotest.run.stop()
