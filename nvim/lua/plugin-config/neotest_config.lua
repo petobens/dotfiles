@@ -27,9 +27,10 @@ neotest.setup({
         enabled = true,
         open = function()
             local pdb = false
+            local pdb_exit_msg = 'bdb.BdbQuit'
             if vim.bo.filetype == 'python' then
                 for _, v in pairs(vim.fn.getqflist()) do
-                    if string.match(v.text, 'bdb.BdbQuit') then
+                    if string.match(v.text, pdb_exit_msg) then
                         pdb = true
                     end
                 end
@@ -37,6 +38,19 @@ neotest.setup({
             if not pdb then
                 vim.cmd('copen')
                 vim.cmd('wincmd p')
+            else
+                local diagnostics = vim.diagnostic.get(0)
+                if
+                    #diagnostics == 1
+                    and string.match(diagnostics[1].message, pdb_exit_msg)
+                then
+                    vim.defer_fn(function()
+                        vim.diagnostic.reset(
+                            diagnostics[1].namespace,
+                            diagnostics[1].bufnr
+                        )
+                    end, 100)
+                end
             end
         end,
     },
