@@ -35,10 +35,15 @@ overseer.setup({
 local function overseer_last_task(attach)
     vim.cmd('OverseerQuickAction open hsplit')
     vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
+    vim.cmd([[nmap <silent> q :close<CR>]])
     if attach then
         vim.cmd('startinsert')
+        return
     end
-    vim.cmd([[nmap <silent> q :close<CR>]])
+    vim.opt_local.winfixbuf = true
+    vim.opt_local.modifiable = true
+    vim.cmd('silent normal! kdGggG')
+    vim.opt_local.modifiable = false
 end
 
 -- Mappings

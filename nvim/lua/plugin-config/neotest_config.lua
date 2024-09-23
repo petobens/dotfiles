@@ -158,7 +158,7 @@ vim.keymap.set('n', '<Leader>nr', function()
                 vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
                 vim.opt_local.winfixbuf = true
                 vim.opt_local.modifiable = true
-                vim.cmd('normal! jdGggG')
+                vim.cmd('silent normal! kdGggG')
                 vim.opt_local.modifiable = false
                 vim.cmd([[nmap <silent> q :close<CR>]])
             end
