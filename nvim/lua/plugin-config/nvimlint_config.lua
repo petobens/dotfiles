@@ -58,7 +58,7 @@ vim.api.nvim_create_autocmd(
 
 -- Linters by filetype
 lint.linters_by_ft = {
-    -- FIXME: can't run mypy/sqlfluff/markdownlint without save
+    -- FIXME: can't run mypy/sqlfluff without save
     -- https://github.com/mfussenegger/nvim-lint/issues/235
     -- https://github.com/mfussenegger/nvim-lint/issues/469
     dockerfile = { 'hadolint' },
@@ -80,7 +80,8 @@ linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
     '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
 })
 ---- Markdown
-linters.markdownlint.args = { '--config=' .. vim.env.HOME .. '/.markdownlint.json' }
+linters.markdownlint.args =
+    { '--config=' .. vim.env.HOME .. '/.markdownlint.json', '--stdin' }
 ---- Python
 local ruff_severities = {
     ['E'] = vim.diagnostic.severity.ERROR,
