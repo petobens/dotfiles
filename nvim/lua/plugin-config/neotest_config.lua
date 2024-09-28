@@ -3,7 +3,7 @@ local u = require('utils')
 
 neotest.setup({
     adapters = {
-        require('neotest-python'),
+        require('neotest-python')({ args = { '--no-header', '-rA' } }),
     },
     consumers = {
         overseer = require('neotest.consumers.overseer'),
@@ -24,35 +24,7 @@ neotest.setup({
         open_on_run = false,
     },
     quickfix = {
-        enabled = true,
-        open = function()
-            local pdb = false
-            local pdb_exit_msg = 'bdb.BdbQuit'
-            if vim.bo.filetype == 'python' then
-                for _, v in pairs(vim.fn.getqflist()) do
-                    if string.match(v.text, pdb_exit_msg) then
-                        pdb = true
-                    end
-                end
-            end
-            if not pdb then
-                vim.cmd('copen')
-                vim.cmd('wincmd p')
-            else
-                local diagnostics = vim.diagnostic.get(0)
-                if
-                    #diagnostics == 1
-                    and string.match(diagnostics[1].message, pdb_exit_msg)
-                then
-                    vim.defer_fn(function()
-                        vim.diagnostic.reset(
-                            diagnostics[1].namespace,
-                            diagnostics[1].bufnr
-                        )
-                    end, 100)
-                end
-            end
-        end,
+        enabled = false,
     },
     summary = {
         follow = true,
@@ -111,27 +83,93 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Helpers
-local function neotest_run(func, opts)
+local function _parse_neotest_output(task, last_winid)
+    local efm = { python = [[%E%f:%l:\ %m,%-G%.%#,]] }
+    local has_stdout = false
+    local pdb = false
+
+    local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, true)
+    for _, v in ipairs(lines) do
+        if task.ft == 'python' then
+            if string.find(v, 'Captured stdout call') and not has_stdout then
+                has_stdout = true
+            end
+            if string.match(v, 'bdb.BdbQuit') then
+                pdb = true
+            end
+        end
+    end
+
+    vim.fn.setqflist({}, ' ', {
+        title = task.name,
+        lines = lines,
+        efm = efm[task.ft],
+    })
+    if not vim.tbl_isempty(vim.fn.getqflist()) then
+        if not pdb then
+            vim.cmd('copen')
+            vim.fn.win_gotoid(last_winid)
+        else
+            -- Reset qf and diagnostics
+            vim.fn.setqflist({})
+            local diagnostics = vim.diagnostic.get(task.bufnr)
+            if diagnostics then
+                vim.defer_fn(function()
+                    vim.diagnostic.reset(diagnostics[1].namespace, diagnostics[1].bufnr)
+                end, 100)
+            end
+        end
+    else
+        if has_stdout then
+            require('overseer').run_action(task, 'open hsplit')
+            vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
+            vim.opt_local.winfixbuf = true
+            vim.opt_local.modifiable = true
+            vim.cmd('silent normal! kdGggG')
+            vim.opt_local.modifiable = false
+            vim.cmd([[nmap <silent> q :close<CR>]])
+        end
+    end
+end
+
+local function _neotest_overseer_subscribe(ft, bufnr)
+    local overseer = require('overseer')
+    local tasks = {}
+    while vim.tbl_isempty(tasks) do
+        vim.wait(100)
+        tasks = overseer.list_tasks({ recent_first = true })
+    end
+
+    -- We record filetype and buffer number since we might call neotest.run from a
+    -- terminal buffer when attaching to it
+    local neotest_task = tasks[1]
+    neotest_task.ft = ft
+    neotest_task.bufnr = bufnr
+
+    neotest_task:subscribe('on_complete', function()
+        _parse_neotest_output(neotest_task, vim.fn.win_getid())
+    end)
+end
+
+local function neotest_run(func, opts, subscribe)
+    local ft = vim.bo.filetype
+    local bufnr = vim.api.nvim_get_current_buf()
     vim.cmd('silent noautocmd update')
     vim.cmd('cclose')
     vim.cmd('cd %:p:h')
+
     func(opts)
-end
-local function neotest_nearest()
-    local extra_args = {}
-    if vim.bo.filetype == 'python' then
-        table.insert(extra_args, '-rA')
-        table.insert(extra_args, '--no-header')
+
+    local post = (subscribe == nil and true) or subscribe
+    if post then
+        _neotest_overseer_subscribe(ft, bufnr)
     end
-    neotest_run(neotest.run.run, { extra_args = extra_args })
-end
-local function neotest_attach()
-    neotest.run.attach()
-    vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight | startinsert')
 end
 
 -- Mappings
-vim.keymap.set('n', '<Leader>nn', neotest_nearest)
+vim.keymap.set('n', '<Leader>nn', function()
+    neotest_run(neotest.run.run)
+end)
 vim.keymap.set('n', '<Leader>nl', function()
     neotest_run(neotest.run.run_last)
 end)
@@ -145,30 +183,14 @@ vim.keymap.set('n', '<Leader>ns', function()
     end
     neotest_run(neotest.run.run, { suite = true, extra_args = extra_args })
 end)
-vim.keymap.set('n', '<Leader>nr', function()
-    neotest_nearest()
-    vim.defer_fn(function()
-        local overseer = require('overseer')
-        local tasks = overseer.list_tasks({ recent_first = true })
-        if tasks[1].status == 'RUNNING' then
-            neotest_attach()
-        else
-            if vim.tbl_isempty(vim.fn.getqflist()) then
-                overseer.run_action(tasks[1], 'open hsplit')
-                vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
-                vim.opt_local.winfixbuf = true
-                vim.opt_local.modifiable = true
-                vim.cmd('silent normal! kdGggG')
-                vim.opt_local.modifiable = false
-                vim.cmd([[nmap <silent> q :close<CR>]])
-            end
-        end
-    end, 400)
+vim.keymap.set('n', '<Leader>na', function()
+    neotest_run(neotest.run.attach)
+    vim.cmd([[nmap <silent> q :close<CR>]])
+    vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight | startinsert')
 end)
 vim.keymap.set('n', '<Leader>nc', function()
     neotest.run.stop()
 end)
-vim.keymap.set('n', '<Leader>na', neotest_attach)
 vim.keymap.set('n', '<Leader>no', function()
     neotest.output.open({ short = true })
 end)
@@ -176,7 +198,7 @@ vim.keymap.set('n', '<Leader>np', function()
     neotest.output_panel.toggle()
 end)
 vim.keymap.set('n', '<Leader>nt', function()
-    neotest_run(neotest.summary.toggle)
+    neotest_run(neotest.summary.toggle, {}, false)
 end)
 
 -- Filetype-mappings
