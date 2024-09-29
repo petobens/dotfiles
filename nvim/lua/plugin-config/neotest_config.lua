@@ -3,7 +3,7 @@ local u = require('utils')
 
 neotest.setup({
     adapters = {
-        require('neotest-python')({ args = { '--no-header', '-rA' } }),
+        require('neotest-python')({ args = { '--no-header', '-raP', '--tb=line' } }),
     },
     consumers = {
         overseer = require('neotest.consumers.overseer'),
