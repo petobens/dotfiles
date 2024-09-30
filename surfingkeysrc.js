@@ -48,11 +48,11 @@ settings.enableAutoFocus = true;
 settings.modeAfterYank = 'Normal';
 settings.hintAlign = 'left';
 settings.editableBodyCare = false;
+settings.noPdfViewer = true;
+
+// Define hint characters
 Hints.setCharacters('asdfghjkl');
 
-// Disable PDF viewer (note that ;s toggle that does this doesn't seem to work)
-// Note: this won't work with Google Manifest V3 (maybe simple remove it)
-// chrome.storage.local.set({ noPdfViewer: 1 });
 
 // Theme (uses Onedark colors)
 settings.theme = `
