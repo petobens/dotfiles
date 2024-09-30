@@ -48,8 +48,7 @@ settings.enableAutoFocus = true;
 settings.modeAfterYank = 'Normal';
 settings.hintAlign = 'left';
 settings.editableBodyCare = false;
-// FIXME: This should be a function again
-Hints.setCharacters = 'asdfghjkl';
+Hints.setCharacters('asdfghjkl');
 
 // Disable PDF viewer (note that ;s toggle that does this doesn't seem to work)
 // Note: this won't work with Google Manifest V3 (maybe simple remove it)
