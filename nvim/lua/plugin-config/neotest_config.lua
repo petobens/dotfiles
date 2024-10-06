@@ -84,10 +84,21 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- Helpers
 local function _parse_neotest_output(task, last_winid)
+    -- Set the diagnostic qf
+    vim.diagnostic.setqflist()
+    local qf_diagnostic = vim.fn.getqflist()
+    local diagnostic_entries = {}
+    for _, v in pairs(qf_diagnostic) do
+        table.insert(
+            diagnostic_entries,
+            { bufnr = v.bufnr, lnum = v.lnum, text = v.text }
+        )
+    end
+
+    -- Create qf from output that is not a diagnostic
     local efm = { python = [[%E%f:%l:\ %m,%-G%.%#,]] }
     local has_stdout = false
     local pdb = false
-
     local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, true)
     for _, v in ipairs(lines) do
         if task.ft == 'python' then
@@ -99,19 +110,37 @@ local function _parse_neotest_output(task, last_winid)
             end
         end
     end
-
     vim.fn.setqflist({}, ' ', {
-        title = task.name,
         lines = lines,
         efm = efm[task.ft],
     })
-    if not vim.tbl_isempty(vim.fn.getqflist()) then
+    local qf_output = {}
+    for _, v in pairs(vim.fn.getqflist()) do
+        local repeatead = false
+        for _, e in pairs(diagnostic_entries) do
+            if v.bufnr == e.bufnr and v.lnum == e.lnum and v.text == e.text then
+                repeatead = true
+            end
+        end
+        if not repeatead then
+            table.insert(qf_output, v)
+        end
+    end
+
+    -- Combine both qf lists
+    local qf = vim.list_extend(qf_diagnostic, qf_output)
+    if not vim.tbl_isempty(qf) then
+        vim.fn.setqflist({}, ' ', { title = task.name, items = qf })
+    end
+
+    if not vim.tbl_isempty(qf) then
         if not pdb then
             vim.cmd('copen')
             vim.fn.win_gotoid(last_winid)
         else
             -- Reset qf and diagnostics
             vim.fn.setqflist({})
+            vim.cmd('cclose')
             local diagnostics = vim.diagnostic.get(task.bufnr)
             if diagnostics then
                 vim.defer_fn(function()
