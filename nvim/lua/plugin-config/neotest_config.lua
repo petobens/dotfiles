@@ -85,6 +85,7 @@ vim.api.nvim_create_autocmd('FileType', {
 -- Helpers
 local function _parse_neotest_output(task, last_winid)
     -- Set the diagnostic qf
+    local diagnostics = vim.diagnostic.get(task.bufnr)
     vim.diagnostic.setqflist()
     local qf_diagnostic = vim.fn.getqflist()
     local diagnostic_entries = {}
@@ -95,7 +96,7 @@ local function _parse_neotest_output(task, last_winid)
         )
     end
 
-    -- Create qf from output that is not a diagnostic
+    -- Create another qf from output but avoid repeating diagnostics entries
     local efm = { python = [[%E%f:%l:\ %m,%-G%.%#,]] }
     local has_stdout = false
     local pdb = false
@@ -127,13 +128,10 @@ local function _parse_neotest_output(task, last_winid)
         end
     end
 
-    -- Combine both qf lists
+    -- Combine both qf lists and open qf or output buffer accordingly
     local qf = vim.list_extend(qf_diagnostic, qf_output)
     if not vim.tbl_isempty(qf) then
         vim.fn.setqflist({}, ' ', { title = task.name, items = qf })
-    end
-
-    if not vim.tbl_isempty(qf) then
         if not pdb then
             vim.cmd('copen')
             vim.fn.win_gotoid(last_winid)
@@ -141,7 +139,6 @@ local function _parse_neotest_output(task, last_winid)
             -- Reset qf and diagnostics
             vim.fn.setqflist({})
             vim.cmd('cclose')
-            local diagnostics = vim.diagnostic.get(task.bufnr)
             if diagnostics then
                 vim.defer_fn(function()
                     vim.diagnostic.reset(diagnostics[1].namespace, diagnostics[1].bufnr)
