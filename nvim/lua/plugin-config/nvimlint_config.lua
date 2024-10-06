@@ -13,6 +13,7 @@ vim.api.nvim_create_autocmd(
 
             if opts.event == 'BufWritePost' then
                 local diagnostics = vim.diagnostic.get(0)
+                local neotest = false
                 if #diagnostics > 0 then
                     -- Modify message to add source and error code
                     local new_msg = {}
@@ -28,6 +29,9 @@ vim.api.nvim_create_autocmd(
                             end
                         end
                         new_msg[old_msg] = v.message
+                        if v.source == 'neotest' then
+                            neotest = true
+                        end
                     end
 
                     -- Using set.diagnostics is weird so we first set the location list
@@ -47,7 +51,9 @@ vim.api.nvim_create_autocmd(
                         ),
                         items = new_ll,
                     })
-                    vim.cmd('lopen')
+                    if not neotest then
+                        vim.cmd('lopen')
+                    end
                 else
                     vim.cmd('lclose')
                 end
