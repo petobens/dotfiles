@@ -6,58 +6,10 @@ vim.api.nvim_create_autocmd(
     { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
     {
         group = vim.api.nvim_create_augroup('nvim_lint', { clear = true }),
-        callback = function(opts)
+        callback = function()
             vim.defer_fn(function()
                 lint.try_lint(nil, { ignore_errors = true })
             end, 1)
-
-            if opts.event == 'BufWritePost' then
-                local diagnostics = vim.diagnostic.get(0)
-                local neotest = false
-                if #diagnostics > 0 then
-                    -- Modify message to add source and error code
-                    local new_msg = {}
-                    for _, v in pairs(diagnostics) do
-                        local old_msg = v.message
-                        if not string.match(v.message, v.source) then
-                            v.message = string.format('%s: %s', v.source, v.message)
-                            if v.code ~= vim.NIL then
-                                if v.code and v.code ~= '' then
-                                    v.message =
-                                        string.format('%s [%s]', v.message, v.code)
-                                end
-                            end
-                        end
-                        new_msg[old_msg] = v.message
-                        if v.source == 'neotest' then
-                            neotest = true
-                        end
-                    end
-
-                    -- Using set.diagnostics is weird so we first set the location list
-                    -- with the original diagnostics and then modify it with the new
-                    -- diagnostic msg
-                    vim.diagnostic.setloclist({ open = false })
-                    local current_ll = vim.fn.getloclist(0)
-                    local new_ll = {}
-                    for _, v in pairs(current_ll) do
-                        v.text = new_msg[v.text]
-                        table.insert(new_ll, v)
-                    end
-                    vim.fn.setloclist(0, {}, ' ', {
-                        title = string.format(
-                            'Diagnostics: %s',
-                            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
-                        ),
-                        items = new_ll,
-                    })
-                    if not neotest then
-                        vim.cmd('lopen')
-                    end
-                else
-                    vim.cmd('lclose')
-                end
-            end
         end,
     }
 )
