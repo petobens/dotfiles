@@ -16,9 +16,8 @@ vim.api.nvim_create_autocmd(
 
 -- Linters by filetype
 lint.linters_by_ft = {
-    -- FIXME: can't run mypy/sqlfluff without save
+    -- FIXME: can't run mypy without save
     -- https://github.com/mfussenegger/nvim-lint/issues/235
-    -- https://github.com/mfussenegger/nvim-lint/issues/469
     dockerfile = { 'hadolint' },
     ghaction = { 'actionlint' },
     json = { 'jsonlint' },
@@ -70,6 +69,7 @@ linters.ruff.parser = function(output, bufnr)
     return diagnostics
 end
 ---- Sqlfluff
+lint.linters.sqlfluff.args = { 'lint', '--format=json', '-' }
 linters.sqlfluff.stdin = true
 local fluff_parser = linters.sqlfluff.parser
 linters.sqlfluff.parser = function(output, bufnr)
