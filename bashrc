@@ -155,7 +155,7 @@ if type "lsd" > /dev/null 2>&1; then
     cd() { builtin cd "$@" && lsd -F --color=auto; }
 fi
 if type "nvim" > /dev/null 2>&1; then
-    alias v='nvim --listen /tmp/nvimsocket'
+    alias v='nvim'
     if [ -f "$HOME/git-repos/private/dotfiles/nvim/minimal.lua" ]; then
         alias mnvi='nvim --clean -u $HOME/git-repos/private/dotfiles/nvim/minimal.lua'
     fi

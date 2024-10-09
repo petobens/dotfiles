@@ -88,7 +88,7 @@ export COLUMNS # used for instance by git-delta
 
 # Set editor to nvim and use it as a manpager
 if type "nvim" > /dev/null 2>&1; then
-    export EDITOR='nvim --listen /tmp/nvimsocket'
+    export EDITOR='nvim'
     export MANPAGER='nvim +Man!'
 fi
 
