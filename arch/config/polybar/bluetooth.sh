@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
-has_bluetooth=$(bluetoothctl info | grep '^Device')
-if [[ -n "$has_bluetooth" ]]; then
-    echo -n '󰂯 '
+bluetooth_status=$(bluetoothctl show | grep "Powered:" | awk '{print $2}')
+if [ "$bluetooth_status" == "yes" ]; then
+    connected_device=$(bluetoothctl info | grep "Connected:" | awk '{print $2}')
+    if [ "$connected_device" == "yes" ]; then
+        echo -n '󰂯 '
+    else
+        echo -n '󰂲 '
+    fi
 else
-    echo -n '󰂲 '
+    echo -n '  '
 fi
