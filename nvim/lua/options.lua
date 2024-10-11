@@ -79,12 +79,13 @@ vim.api.nvim_create_autocmd('VimResized', {
     group = vim.api.nvim_create_augroup('vim_resized', { clear = true }),
     command = 'wincmd =',
 })
----- Only show cursorline in the current window
+---- Only show cursorline in the current window and save last visited window id
 local cline_acg = vim.api.nvim_create_augroup('cline', { clear = true })
 vim.api.nvim_create_autocmd('WinLeave', {
     group = cline_acg,
     callback = function()
         vim.opt_local.cursorline = false
+        _G.LastWinId = vim.fn.win_getid()
     end,
 })
 vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {

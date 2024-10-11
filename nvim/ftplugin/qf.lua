@@ -11,8 +11,15 @@ vim.cmd(math.max(1, math.min(vim.fn.line('$'), 15)) .. 'wincmd _')
 
 -- Mappings
 local map_opts = { buffer = true }
-vim.keymap.set('n', 'q', '<Cmd>bdelete<CR>', map_opts)
-vim.keymap.set('n', 'Q', '<Cmd>bdelete<CR>', map_opts)
+vim.keymap.set('n', 'q', function()
+    local close_cmd = 'cclose'
+    if vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0 then
+        close_cmd = 'lclose'
+    end
+    vim.fn.win_gotoid(_G.LastWinId)
+    vim.cmd(close_cmd)
+end, map_opts)
+vim.keymap.set('n', 'Q', 'q', { buffer = true, remap = true })
 vim.keymap.set('n', '<C-s>', '<C-w><Enter>', map_opts)
 vim.keymap.set('n', '<C-v>', '<C-w><Enter><C-w>L', map_opts)
 vim.keymap.set(
