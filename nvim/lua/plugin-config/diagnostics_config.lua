@@ -110,6 +110,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
         local diagnostics = vim.diagnostic.get(0)
         if #diagnostics <= 0 then
             vim.cmd('lclose')
+            vim.fn.setloclist(0, {})
             return
         end
 
