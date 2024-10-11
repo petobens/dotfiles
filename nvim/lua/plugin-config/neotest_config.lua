@@ -209,6 +209,14 @@ vim.keymap.set('n', '<Leader>ns', function()
     end
     neotest_run(neotest.run.run, { suite = true, extra_args = extra_args })
 end)
+vim.keymap.set('n', '<Leader>nd', function()
+    local extra_args = {}
+    if vim.bo.filetype == 'python' then
+        table.insert(extra_args, '-x')
+        table.insert(extra_args, '--pdb')
+    end
+    neotest_run(neotest.run.run, { extra_args = extra_args })
+end)
 vim.keymap.set('n', '<Leader>na', function()
     neotest_run(neotest.run.attach)
     vim.cmd([[nmap <silent> q :close<CR>]])
