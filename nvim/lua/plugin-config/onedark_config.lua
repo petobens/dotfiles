@@ -176,6 +176,7 @@ onedarkpro.setup({
         ['@variable.parameter'] = { fg = p.orange },
         ['@punctuation.special'] = { fg = p.blue },
         ['@string.escape'] = { fg = p.fg },
+        ['@string.escape.regex'] = { fg = p.light_blue },
 
         -- Filetypes
         ---- Bash
