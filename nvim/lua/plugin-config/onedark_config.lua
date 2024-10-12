@@ -269,6 +269,7 @@ onedarkpro.setup({
         ['@string.regexp.lua'] = { fg = p.green },
 
         ---- Markdown
+        ['@front_matter.markdown'] = { fg = p.yellow },
         ['@markup.heading.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@markup.heading.1.markdown'] = { fg = p.purple, style = 'bold' },
         ['@markup.heading.2.markdown'] = { fg = p.light_blue, style = 'bold' },
@@ -277,19 +278,9 @@ onedarkpro.setup({
         ['@markup.heading.5.markdown'] = { fg = p.green, style = 'bold' },
         ['@markup.list.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@markup.list.checked.markdown'] = { fg = p.green },
-        ['@markup.todo.checked.markdown'] = { link = '@markup.list.checked.markdown' },
-        ['@markup.todo.checked.conceal.markdown'] = {
-            link = '@markup.list.checked.markdown',
-        },
         ['@markup.list.unchecked.markdown'] = { fg = p.blue },
-        ['@markup.todo.unchecked.markdown'] = { link = '@markup.list.unchecked.markdown' },
-        ['@markup.todo.unchecked.conceal.markdown'] = {
-            link = '@markup.list.unchecked.markdown',
-        },
-        ['@markup.todo.doing.conceal.markdown_inline'] = { fg = p.blue },
-        ['@markup.todo.wontdo.conceal.markdown_inline'] = { fg = p.red },
         ['@punctuation.special.markdown'] = { fg = p.dark_red, style = 'bold' },
-        ['@punctuation.special.block.conceal.markdown'] = { fg = p.gray },
+        ['@label.markdown'] = { fg = p.cyan }, -- code blocks language
         ['@markup.quote.markdown'] = { fg = p.comment_grey },
         ['@markup.link.label.markdown_inline'] = { fg = p.blue, style = 'undercurl' },
         ['@markup.link.url.markdown_inline'] = {
@@ -299,11 +290,9 @@ onedarkpro.setup({
         },
         ['@lsp.type.class.markdown'] = { fg = p.orange }, -- wiki links
         ['@lsp.type.enumMember.markdown'] = { fg = p.orange }, -- hashtags
-        ['@label.markdown'] = { fg = p.cyan }, -- code blocks
         ['@markup.strong.markdown_inline'] = { style = 'bold' },
         ['@markup.italic.markdown_inline'] = { style = 'italic' },
         ['@markup.comment.markdown'] = { link = 'Comment' },
-        ['@front_matter.markdown'] = { fg = p.yellow },
 
         ---- Python
         ['@attribute.builtin.python'] = { fg = p.blue },
@@ -470,6 +459,26 @@ onedarkpro.setup({
         OverseerSUCCESS = { fg = p.green },
         OverseerFAILURE = { fg = p.red },
         OverseerCANCELED = { fg = p.orange },
+
+        ---- Render-Markdown
+        RenderMarkdownDash = { fg = p.yellow },
+        RenderMarkdownH1Bg = { fg = p.purple, style = 'bold' },
+        RenderMarkdownH2Bg = { fg = p.light_blue, style = 'bold' },
+        RenderMarkdownH3Bg = { fg = p.blue, style = 'bold' },
+        RenderMarkdownH4Bg = { fg = p.cyan, style = 'bold' },
+        RenderMarkdownH5Bg = { fg = p.green, style = 'bold' },
+        RenderMarkdownBullet = { fg = p.dark_red, style = 'bold' },
+        RenderMarkdownUnChecked = { fg = p.blue },
+        RenderMarkdownChecked = { fg = p.green },
+        RenderMarkdownDoing = { fg = p.blue },
+        RenderMarkdownWontdo = { fg = p.red },
+        RenderMarkdownCode = { bg = p.cursor_grey },
+        RenderMarkdownQuote = { fg = p.gray },
+        RenderMarkdownTableHead = { fg = p.dark_red, style = 'bold' },
+        RenderMarkdownTableRow = { fg = p.dark_red, style = 'bold' },
+        RenderMarkdownTableFill = { fg = p.dark_red, style = 'bold' },
+        RenderMarkdownLink = { fg = p.blue, style = 'undercurl' },
+        RenderMarkdownWikiLink = { fg = p.orange },
 
         ---- Sniprun
         SnipRunVirtualTextOk = { fg = p.black, bg = p.purple, style = 'bold' },

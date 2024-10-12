@@ -312,6 +312,17 @@ local plugins = {
             require('plugin-config.vimtex_config')
         end,
     },
+    ----- Markdown
+    {
+        'MeanderingProgrammer/render-markdown.nvim',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter',
+            'nvim-tree/nvim-web-devicons',
+        },
+        config = function()
+            require('plugin-config.render_markdown_config')
+        end,
+    },
     ---- SQL
     {
         'kndndrj/nvim-dbee',

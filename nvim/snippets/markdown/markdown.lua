@@ -309,6 +309,22 @@ return {
             }
         )
     ),
+    s(
+        { trig = 'co', dscr = 'Callout' },
+        fmta(
+            [[
+        >> [!<>]
+        >>
+        >> <><>
+    ]],
+            {
+                i(1, 'NOTE'),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(2),
+            }
+        ),
+        { condition = line_begin }
+    ),
 }, {
     s(
         { trig = '(%d)h', regTrig = true, dscr = 'Header' },
