@@ -176,3 +176,5 @@ vim.keymap.set('n', '<Leader>ct', toggle_checklist, { buffer = true })
 vim.keymap.set('n', '<F7>', run_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
+--- Math rendering
+vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = true })

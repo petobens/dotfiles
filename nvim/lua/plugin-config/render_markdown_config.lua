@@ -62,4 +62,5 @@ require('render-markdown').setup({
     link = {
         wiki = { icon = '󱗖 ', highlight = 'RenderMarkdownWikiLink' },
     },
+    latex = { enabled = false },
 })
