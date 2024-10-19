@@ -473,6 +473,7 @@ onedarkpro.setup({
         RenderMarkdownDoing = { fg = p.blue },
         RenderMarkdownWontdo = { fg = p.red },
         RenderMarkdownCode = { bg = p.cursor_grey },
+        RenderMarkdownCodeInLine = { fg = p.green, bg = p.cursor_grey },
         RenderMarkdownQuote = { fg = p.gray },
         RenderMarkdownTableHead = { fg = p.dark_red, style = 'bold' },
         RenderMarkdownTableRow = { fg = p.dark_red, style = 'bold' },
