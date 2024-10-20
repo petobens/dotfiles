@@ -12,9 +12,9 @@ local feedkey = function(key, mode)
 end
 
 -- Override the documentation handler to remove the redundant detail section
--- See https://github.com/MariaSolOs/dotfiles/blob/fedora/.config/nvim/lua/plugins/nvim-cmp.lua
+-- See https://github.com/MariaSolOs/dotfiles/blob/main/.config/nvim/lua/plugins/nvim-cmp.lua
 require('cmp.entry').get_documentation = function(self)
-    local item = self:get_completion_item()
+    local item = self.completion_item
 
     if item.documentation then
         -- Use treesitter for markdown highlights
