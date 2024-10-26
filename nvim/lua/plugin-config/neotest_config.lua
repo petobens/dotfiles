@@ -153,7 +153,11 @@ local function _parse_neotest_output(task, last_winid)
             vim.opt_local.modifiable = true
             vim.cmd('silent normal! kdGggG')
             vim.opt_local.modifiable = false
-            vim.cmd([[nmap <silent> q :close<CR>]])
+            vim.keymap.set('n', 'q', function()
+                local calling_winid = _G.LastWinId
+                vim.cmd('close')
+                vim.fn.win_gotoid(calling_winid)
+            end, { buffer = true })
         end
     end
 end
