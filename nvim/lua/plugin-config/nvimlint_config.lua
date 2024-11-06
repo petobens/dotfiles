@@ -6,7 +6,15 @@ vim.api.nvim_create_autocmd(
     { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
     {
         group = vim.api.nvim_create_augroup('nvim_lint', { clear = true }),
-        callback = function()
+        callback = function(e)
+            if
+                e.buf
+                and vim.bo[e.buf].filetype == 'markdown'
+                and vim.api.nvim_win_get_config(0).zindex
+            then
+                return
+            end
+
             vim.defer_fn(function()
                 lint.try_lint(nil, { ignore_errors = true })
             end, 1)
