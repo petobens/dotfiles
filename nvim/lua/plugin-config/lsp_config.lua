@@ -53,28 +53,21 @@ local function add_inline_highlights(bufnr)
     end
 end
 
-local function enhanced_float_handler(handler, focusable)
-    return function(err, result, ctx, config)
-        local bufnr, winnr = handler(
-            err,
-            result,
-            ctx,
-            vim.tbl_deep_extend('force', config or {}, {
-                border = 'rounded',
-                focusable = focusable,
-            })
-        )
-        if not bufnr or not winnr then
-            return
-        end
-        vim.wo[winnr].concealcursor = 'n'
-        add_inline_highlights(bufnr)
-    end
+local hover = vim.lsp.buf.hover
+vim.lsp.buf.hover = function()
+    return hover({
+        border = 'rounded',
+        focusable = true,
+    })
 end
-vim.lsp.handlers[methods.textDocument_hover] =
-    enhanced_float_handler(vim.lsp.handlers.hover, true)
-vim.lsp.handlers[methods.textDocument_signatureHelp] =
-    enhanced_float_handler(vim.lsp.handlers.signature_help, false)
+
+local signature_help = vim.lsp.buf.signature_help
+vim.lsp.buf.signature_help = function()
+    return signature_help({
+        border = 'rounded',
+        focusable = false,
+    })
+end
 
 -- For cmp docs
 vim.lsp.util.stylize_markdown = function(bufnr, contents, opts)
