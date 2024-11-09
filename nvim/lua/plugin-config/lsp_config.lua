@@ -1,5 +1,4 @@
 local u = require('utils')
-local methods = vim.lsp.protocol.Methods
 
 -- Mason must load before lsp-config
 require('mason-lspconfig').setup()
@@ -14,7 +13,7 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
 end
 
 --- Mimic noice treesitter markdown highlights for hover, signatures and docs
--- https://github.com/MariaSolOs/dotfiles/blob/fedora/.config/nvim/lua/lsp.lua
+-- https://github.com/MariaSolOs/dotfiles/blob/main/.config/nvim/lua/lsp.lua
 local md_namespace = vim.api.nvim_create_namespace('noiceish_highlights')
 local function add_inline_highlights(bufnr)
     for l, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
@@ -53,6 +52,7 @@ local function add_inline_highlights(bufnr)
     end
 end
 
+-- FIXME: We should be able to run add_inline_highlights here too
 local hover = vim.lsp.buf.hover
 vim.lsp.buf.hover = function()
     return hover({
