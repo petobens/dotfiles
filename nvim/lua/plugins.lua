@@ -140,7 +140,9 @@ local plugins = {
         end,
     },
     {
-        'jackMort/ChatGPT.nvim',
+        -- 'jackMort/ChatGPT.nvim',
+        'MeanderingProgrammer/ChatGPT.nvim',
+        branch = 'trigger-text-changed',
         dependencies = {
             'MunifTanjim/nui.nvim',
             'nvim-lua/plenary.nvim',
