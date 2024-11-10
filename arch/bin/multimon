@@ -333,7 +333,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('how')
-    parser.add_argument('direction', nargs='?', default='right')
+    parser.add_argument('direction', nargs='?', default='below')
     parse_args = parser.parse_args()
 
     # Constants

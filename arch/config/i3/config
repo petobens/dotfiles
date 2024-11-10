@@ -124,7 +124,7 @@ bindsym $mod+Shift+9 $nexec $multimon_move -w "9"
 
 # Activate primary or multi monitor
 bindsym $mod+Return $nexec multimon primary
-bindsym $mod+Control+Return $nexec multimon multi right
+bindsym $mod+Control+Return $nexec multimon multi
 
 # Move window (container) in monitor (output) direction and switch focus
 bindsym $mod+Control+Right $nexec $multimon_move -d "right"
