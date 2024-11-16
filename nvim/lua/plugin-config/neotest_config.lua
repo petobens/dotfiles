@@ -128,13 +128,34 @@ local function _parse_neotest_output(task, last_winid)
         end
     end
 
-    -- Combine both qf lists and open qf or output buffer accordingly
+    -- If we have output then open it
+    if has_stdout then
+        require('overseer').run_action(task, 'open hsplit')
+        vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
+        vim.opt_local.winfixbuf = true
+        vim.opt_local.modifiable = true
+        vim.cmd('silent normal! kdGggG')
+        vim.opt_local.modifiable = false
+        vim.keymap.set('n', 'q', function()
+            local calling_winid = _G.LastWinId
+            vim.cmd('close')
+            vim.fn.win_gotoid(calling_winid)
+        end, { buffer = true })
+    end
+
+    -- Combine both qf lists and open qf if needed
     local qf = vim.list_extend(qf_diagnostic, qf_output)
     if not vim.tbl_isempty(qf) then
         vim.fn.setqflist({}, ' ', { title = task.name, items = qf })
         if not pdb then
             vim.cmd('copen')
             vim.fn.win_gotoid(last_winid)
+
+            if has_stdout then
+                -- overseer run_action creates a new empty buffer so we delete it
+                local buffers = vim.api.nvim_list_bufs()
+                vim.api.nvim_buf_delete(buffers[#buffers], {})
+            end
         else
             -- Reset qf and diagnostics
             vim.fn.setqflist({})
@@ -144,20 +165,6 @@ local function _parse_neotest_output(task, last_winid)
                     vim.diagnostic.reset(diagnostics[1].namespace, diagnostics[1].bufnr)
                 end, 100)
             end
-        end
-    else
-        if has_stdout then
-            require('overseer').run_action(task, 'open hsplit')
-            vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
-            vim.opt_local.winfixbuf = true
-            vim.opt_local.modifiable = true
-            vim.cmd('silent normal! kdGggG')
-            vim.opt_local.modifiable = false
-            vim.keymap.set('n', 'q', function()
-                local calling_winid = _G.LastWinId
-                vim.cmd('close')
-                vim.fn.win_gotoid(calling_winid)
-            end, { buffer = true })
         end
     end
 end
