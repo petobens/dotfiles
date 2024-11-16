@@ -195,6 +195,14 @@ local function neotest_run(func, opts, subscribe)
     vim.cmd('cclose')
     vim.cmd('cd %:p:h')
 
+    -- Delete terminal (overseer output) buffers
+    for _, bufnum in ipairs(vim.api.nvim_list_bufs()) do
+        local bufname = vim.api.nvim_buf_get_name(bufnum)
+        if bufname:match('^term://') then
+            vim.api.nvim_buf_delete(bufnum, { force = true })
+        end
+    end
+
     func(opts)
 
     local post = (subscribe == nil and true) or subscribe
