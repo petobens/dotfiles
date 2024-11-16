@@ -131,7 +131,10 @@ local function _parse_neotest_output(task, last_winid)
     -- If we have output then open it
     if has_stdout then
         require('overseer').run_action(task, 'open hsplit')
-        vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
+        vim.defer_fn(function()
+            vim.cmd('stopinsert')
+        end, 5)
+        vim.cmd('wincmd J | resize 15 | set winfixheight')
         vim.opt_local.winfixbuf = true
         vim.opt_local.modifiable = true
         vim.cmd('silent normal! kdGggG')
