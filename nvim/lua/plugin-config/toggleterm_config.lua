@@ -34,10 +34,20 @@ vim.api.nvim_create_autocmd('TermOpen', {
     end,
 })
 
+-- Helpers
+local function close_all_terminals()
+    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        local bufname = vim.api.nvim_buf_get_name(bufnr)
+        if bufname:match('^term://') then
+            vim.api.nvim_buf_delete(bufnr, { force = true })
+        end
+    end
+end
+
 -- Mappings
 vim.keymap.set('n', '<Leader>st', ':ToggleTerm direction=horizontal<CR>')
 vim.keymap.set('n', '<Leader>vt', ':ToggleTerm direction=vertical<CR>')
-vim.keymap.set('n', '<Leader>tc', ':TermExec cmd="exit"<CR>')
+vim.keymap.set('n', '<Leader>tc', close_all_terminals)
 vim.keymap.set('n', '<Leader>tw', ':TermExec cmd="clear"<CR>')
 vim.keymap.set('n', '<Leader>rl', ':ToggleTermSendCurrentLine<CR>')
 vim.keymap.set('v', '<Leader>ri', ':ToggleTermSendVisualSelection<CR>')
