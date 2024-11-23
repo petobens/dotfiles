@@ -27,7 +27,7 @@ require('render-markdown').setup({
     },
     heading = {
         sign = false,
-        icons = { '󰪥', '󰺕', '', '', '', '' },
+        icons = { '󰪥 ', '󰺕 ', ' ', ' ', ' ', '' },
         position = 'inline',
     },
     bullet = {
