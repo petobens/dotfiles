@@ -5,6 +5,7 @@ import os
 from time import sleep
 
 import i3ipc
+
 from i3_helpers import sh, sh_no_block
 from multimon_move import get_output_width
 
@@ -610,7 +611,7 @@ class ElectronApp(ROLApp):
                 self.screen.is_hidpi
                 and self.screen.nr_monitors > 1  # type: ignore
                 and not self.screen.other_is_hidpi
-            ):
+            ) and self.subcmd != 'gmail':
                 sh('xdotool key Super+u')
 
 
