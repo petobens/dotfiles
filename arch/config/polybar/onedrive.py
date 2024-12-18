@@ -20,7 +20,15 @@ if status in ['Downloading']:
     print("󰅢")
 elif status in ['Uploading']:
     print("󰅧")
-elif status in ['Creating', 'Deleting', 'Syncing', 'Moving']:
+elif status in [
+    'Creating',
+    'Deleting',
+    'Fetching',
+    'Moving',
+    'Performing',
+    'Processing',
+    'Syncing',
+]:
     print("󰔪")
 elif status in ['Initializing', 'OneDrive', 'Sync']:
     print("󰅟")
