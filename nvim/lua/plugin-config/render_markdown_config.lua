@@ -61,6 +61,24 @@ require('render-markdown').setup({
     pipe_table = { cell = 'raw' },
     link = {
         wiki = { icon = '󱗖 ', highlight = 'RenderMarkdownWikiLink' },
+        custom = {
+            gdrive = {
+                pattern = 'drive%.google%.com/drive',
+                icon = ' ',
+            },
+            spreadsheets = {
+                pattern = 'docs%.google%.com/spreadsheets',
+                icon = '󰧷 ',
+            },
+            document = {
+                pattern = 'docs%.google%.com/document',
+                icon = '󰈙 ',
+            },
+            presentation = {
+                pattern = 'docs%.google%.com/presentation',
+                icon = '󰈩 ',
+            },
+        },
     },
     latex = { enabled = false },
 })
