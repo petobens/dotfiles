@@ -44,7 +44,7 @@ local plugins = {
         end,
     },
     {
-        'NvChad/nvim-colorizer.lua',
+        'catgoose/nvim-colorizer.lua',
         config = function()
             require('plugin-config.colorizer_config')
         end,
