@@ -198,11 +198,17 @@ local function neotest_run(func, opts, subscribe)
     vim.cmd('cclose')
     vim.cmd('cd %:p:h')
 
-    -- Delete terminal (overseer output) buffers
-    for _, bufnum in ipairs(vim.api.nvim_list_bufs()) do
-        local bufname = vim.api.nvim_buf_get_name(bufnum)
-        if bufname:match('^term://') then
-            vim.api.nvim_buf_delete(bufnum, { force = true })
+    -- Delete terminal (overseer output) buffers unless otherwise specified (i.e. when
+    -- attaching)
+    opts = opts or {}
+    local delete = opts.delete ~= false
+    opts.delete = nil
+    if delete then
+        for _, bufnum in ipairs(vim.api.nvim_list_bufs()) do
+            local bufname = vim.api.nvim_buf_get_name(bufnum)
+            if bufname:match('^term://') then
+                vim.api.nvim_buf_delete(bufnum, { force = true })
+            end
         end
     end
 
@@ -240,7 +246,7 @@ vim.keymap.set('n', '<Leader>nd', function()
     neotest_run(neotest.run.run, { extra_args = extra_args })
 end)
 vim.keymap.set('n', '<Leader>na', function()
-    neotest_run(neotest.run.attach)
+    neotest_run(neotest.run.attach, { delete = false })
     vim.cmd([[nmap <silent> q :close<CR>]])
     vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight | startinsert')
 end)
