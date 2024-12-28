@@ -81,6 +81,8 @@ vim.keymap.set('n', 'M', [[<cmd>execute 'normal! ' . (virtcol('$')/2) . '<bar>'<
 vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'k', 'gk')
 vim.keymap.set('n', 'J', 'mzJ`z') -- Keep the cursor in place while joining lines
+vim.keymap.set('n', '<Leader>oj', ']<Space>j', { remap = true })
+vim.keymap.set('n', '<Leader>ok', '[<Space>k', { remap = true })
 vim.keymap.set('n', 'q', function()
     if vim.api.nvim_win_get_config(0).zindex then
         vim.cmd('close')
