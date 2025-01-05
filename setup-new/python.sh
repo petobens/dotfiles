@@ -54,6 +54,7 @@ if type "nvim" > /dev/null 2>&1; then
 fi
 $pipx_install_cmd pgcli
 $pipx_install_cmd poetry
+$pipx_inject_cmd poetry poetry-plugin-up
 $pipx_install_cmd pylint
 if type "i3" > /dev/null 2>&1; then
     $pipx_install_cmd git+https://github.com/open-dynaMIX/raiseorlaunch
