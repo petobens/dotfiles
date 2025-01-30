@@ -344,7 +344,7 @@ onedarkpro.setup({
             style = 'undercurl',
         },
         ------ checkhealth
-        helpSectionDelim = { fg = p.red },
+        helpSectionDelim = { fg = p.pmenu, bg = p.purple },
         healthSuccess = { fg = p.black, bg = p.green },
 
         ---- YAML
