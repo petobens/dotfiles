@@ -17,7 +17,7 @@ vim.keymap.set('n', ']h', function()
         return ']c'
     end
     vim.schedule(function()
-        gitsigns.next_hunk({ navigation_message = false, foldopen = true })
+        gitsigns.nav_hunk('next', { navigation_message = false, foldopen = true })
     end)
     return '<Ignore>'
 end, { expr = true })
@@ -27,7 +27,7 @@ vim.keymap.set('n', '[h', function()
         return '[c'
     end
     vim.schedule(function()
-        gitsigns.prev_hunk({ navigation_message = false, foldopen = true })
+        gitsigns.nav_hunk('prev', { navigation_message = false, foldopen = true })
     end)
     return '<Ignore>'
 end, { expr = true })
