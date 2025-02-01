@@ -1,6 +1,6 @@
 require('render-markdown').setup({
     enabled = true,
-    file_types = { 'markdown', 'chatgpt', 'chatgpt-input' },
+    file_types = { 'markdown', 'chatgpt', 'chatgpt-input', 'codecompanion' },
     render_modes = true,
     win_options = {
         conceallevel = { rendered = 2 },

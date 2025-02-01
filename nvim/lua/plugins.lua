@@ -159,6 +159,16 @@ local plugins = {
             require('plugin-config.chatgpt_config')
         end,
     },
+    {
+        'olimorris/codecompanion.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-treesitter/nvim-treesitter',
+        },
+        config = function()
+            require('plugin-config.codecompanion_config')
+        end,
+    },
 
     -- Snippets
     {
