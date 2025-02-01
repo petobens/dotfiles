@@ -1,13 +1,13 @@
 local codecompanion = require('codecompanion')
 
--- FIXME: Not saving sessions?
--- See: https://github.com/olimorris/codecompanion.nvim/discussions/139
 -- TODO:
--- Title color: https://github.com/olimorris/codecompanion.nvim/discussions/815
--- Get into insert mode after "sending" a request/question?
--- Custom prompts (a.k.a sessions):
--- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- Some virtual indicator that the chat is "loading" (e.g. spinner) as chatgpt
+-- https://github.com/olimorris/codecompanion.nvim/discussions/640
+-- Get into insert mode after "sending" a request/question?
+-- Custom prompts (a.k.a roles):
+-- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
+-- Not saving sessions?
+-- See: https://github.com/olimorris/codecompanion.nvim/discussions/139
 
 _G.CodeCompanionConfig = {}
 
@@ -35,10 +35,11 @@ codecompanion.setup({
                 layout = 'float',
                 border = 'rounded',
                 title = { { 'CodeCompanion', 'TelescopeTitle' } },
-                height = 0.945,
+                height = vim.o.lines - 5, -- (tabline, statuline and cmdline height + row)
                 width = 0.45,
                 relative = 'editor',
                 col = vim.o.columns, -- right position
+                row = 1,
                 opts = {
                     relativenumber = false,
                     number = false,
