@@ -83,13 +83,17 @@ $yay_cmd neovim-git
 $yay_cmd tree-sitter-cli
 $yay_cmd tmux
 
-# Audio
+# Audio/video
+$yay_cmd gst-plugin-libcamera
+$yay_cmd libcamera
+$yay_cmd libcamera-tools
 $yay_cmd pipewire
 $yay_cmd pipewire-alsa
-$yay_cmd pipewire-pulse
 $yay_cmd pipewire-jack
-$yay_cmd wireplumber
+$yay_cmd pipewire-libcamera
+$yay_cmd pipewire-pulse
 $yay_cmd sof-firmware
+$yay_cmd wireplumber
 
 # Arch specific and window manager
 $yay_cmd acpi_call
