@@ -251,7 +251,7 @@ vim.keymap.set('n', '<Leader>cg', function()
     for w = 1, vim.fn.winnr('$') do
         local win_id = vim.fn.win_getid(w)
         local win_conf = vim.api.nvim_win_get_config(win_id)
-        if win_conf.focusable and win_conf.relative ~= '' then
+        if win_conf.focusable and win_conf.relative ~= '' and win_conf.zindex == 50 then
             vim.api.nvim_set_current_win(win_id)
             return
         end

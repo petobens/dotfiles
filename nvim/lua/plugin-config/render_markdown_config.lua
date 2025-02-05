@@ -81,4 +81,20 @@ require('render-markdown').setup({
         },
     },
     latex = { enabled = false },
+    overrides = {
+        filetype = {
+            codecompanion = {
+                heading = {
+                    icons = { '󰪥 ', '  ', ' ', ' ', ' ', '' },
+                    custom = {
+                        codecompanion_input = {
+                            pattern = '^## Me$',
+                            icon = ' ',
+                            background = 'CodeCompanionInputHeader',
+                        },
+                    },
+                },
+            },
+        },
+    },
 })
