@@ -286,6 +286,12 @@ local custom_actions = transform_mod({
     -- Open one or many files at once
     open_one_or_many = function(prompt_bufnr)
         local picker = action_state.get_current_picker(prompt_bufnr)
+        -- For codecompanion: https://github.com/olimorris/codecompanion.nvim/pull/940
+        if picker.prompt_title == 'Select file(s)' then
+            actions.select_default(prompt_bufnr)
+            return
+        end
+
         local multi = picker:get_multi_selection()
         if not vim.tbl_isempty(multi) then
             actions.close(prompt_bufnr)

@@ -52,7 +52,7 @@ onedarkpro.setup({
         EndOfBuffer = { fg = p.comment_grey },
         ErrorMsg = { fg = p.red },
         FloatBorder = { fg = p.cursor_grey, bg = p.none },
-        FloatTitle = { fg = p.cursor_grey, bg = p.none },
+        FloatTitle = { fg = p.comment_grey, bg = p.bg },
         FoldColumn = { fg = p.comment_grey, bg = p.black },
         Folded = { link = 'FoldColumn' },
         IncSearch = { fg = p.bg, bg = p.orange },
@@ -372,6 +372,9 @@ onedarkpro.setup({
         CmpItemAbbrMatchFuzzy = { fg = p.blue },
         CmpItemMenu = { fg = p.gray },
         CmpItemKind = { fg = p.gray },
+
+        ---- CodeCompanion
+        CodeCompanionInputHeader = { fg = p.red },
 
         ---- dbee
         dbee_source = { fg = p.yellow },
