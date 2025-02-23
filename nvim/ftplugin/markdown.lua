@@ -178,3 +178,5 @@ vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
 --- Math rendering
 vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = true })
+--- TOC
+vim.keymap.set('n', '<Leader>tc', 'gO', { buffer = true, remap = true })
