@@ -3,28 +3,32 @@
 local adapters = require('codecompanion.adapters')
 local codecompanion = require('codecompanion')
 
--- TODO:
--- Fetch enter url has no spaces: https://github.com/olimorris/codecompanion.nvim/pull/953
--- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
--- Render markdown icons for <file>, <buffer> and <url> fetch command: https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/336
--- Possible to share a PDF file?
+-- FIXME:
+-- No cmp signature for slash commands and variables
+-- Add blank lines to system and user roles: https://github.com/olimorris/codecompanion.nvim/issues/959
 
+-- TODO:
 -- Custom prompts (a.k.a roles) and system role
 -- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- https://codecompanion.olimorris.dev/extending/prompts.html
--- Ignoring system prompt not working: https://github.com/olimorris/codecompanion.nvim/issues/959
 -- Show prompt name in system chat header message: https://github.com/olimorris/codecompanion.nvim/discussions/780#discussioncomment-12255241
 -- Use another system prompt by default? https://codecompanion.olimorris.dev/configuration/system-prompt
--- Show a preview of the prompt in telescope
+-- (DOING) Show a preview of the prompt in telescope
+-- Mapping to show open chats in telescope and move between chats
 -- Feature parity con prompts en chatgpt plugin
 -- Agregar prompt que le paso el file de como escribo yo con los memos de Ops
 
 -- Create slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/958
--- Tipo para ver gitfiles o lo que hay en un directorio
+-- For git files, a specific and pyproject.toml root dir
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
+-- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
+-- Possible to share a PDF file?
+
 -- Use/mappings for inline diffs
+
 -- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
--- Check how to use agents/tools (i.e @ commands)
+
+-- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 
@@ -78,6 +82,10 @@ codecompanion.setup({
         action_palette = {
             prompt = '> ',
             provider = 'telescope',
+            opts = {
+                show_default_prompt_library = false,
+                show_default_actions = false,
+            },
         },
     },
     strategies = {
@@ -122,13 +130,12 @@ codecompanion.setup({
         },
     },
     prompt_library = {
-        ['Bash Developer'] = {
+        [' Bash Developer'] = {
             strategy = 'chat',
             opts = {
                 index = 1,
-                is_slash_cmd = true,
-                is_default = true,
                 short_name = 'bash',
+                is_slash_cmd = true,
                 auto_submit = false,
                 ignore_system_prompt = true,
             },
@@ -136,14 +143,12 @@ codecompanion.setup({
                 {
                     role = 'system',
                     content = [[
-I want you to act as an expert Bash developer. When giving code examples show the generated output.
-                    ]],
+I want you to act as an expert Bash developer. When giving code examples show the generated output.]],
                     opts = { visible = true },
                 },
                 {
                     role = 'user',
-                    -- FIXME: Add new line
-                    content = string.format('i\n%s', ''),
+                    content = [[]],
                 },
             },
         },
@@ -221,6 +226,20 @@ vim.api.nvim_create_autocmd('FileType', {
                 string.format('Model Params:\n%s', vim.inspect(chat[1].chat.settings))
             )
         end, { buffer = e.buf })
+        vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
+            local chat = codecompanion.buf_get_chat()
+            local messages = chat[1].chat.messages
+
+            local system_role = nil
+            for _, entry in ipairs(messages) do
+                if entry.role == 'system' then
+                    system_role = entry.content
+                end
+            end
+            if system_role then
+                vim.print(string.format('System Role:\n%s', system_role))
+            end
+        end, { buffer = e.buf })
     end,
 })
 
@@ -241,4 +260,4 @@ vim.keymap.set('n', '<Leader>xx', function()
         vim.cmd('startinsert')
     end, 1)
 end)
-vim.keymap.set('n', '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')
+vim.keymap.set({ 'n', 'v' }, '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')

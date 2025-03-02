@@ -81,8 +81,10 @@ require('render-markdown').setup({
         },
     },
     latex = { enabled = false },
+    html = { comment = { conceal = false } },
     overrides = {
         filetype = {
+            -- CodeCompanion
             codecompanion = {
                 heading = {
                     icons = { '󰪥 ', '  ', ' ', ' ', ' ', '' },
@@ -91,6 +93,22 @@ require('render-markdown').setup({
                             pattern = '^## Me$',
                             icon = ' ',
                             background = 'CodeCompanionInputHeader',
+                        },
+                    },
+                },
+                html = {
+                    tag = {
+                        buf = {
+                            icon = '󰌹 ',
+                            highlight = 'Comment',
+                        },
+                        file = {
+                            icon = '󰨸 ',
+                            highlight = 'Comment',
+                        },
+                        url = {
+                            icon = ' ',
+                            highlight = 'Comment',
                         },
                     },
                 },
