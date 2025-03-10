@@ -148,7 +148,7 @@ const qmarksUrls = {
     n: 'www.netflix.com',
     N: 'synology-ds:5000',
     o: 'https://onedrive.live.com',
-    p: 'http://pirateproxy.net',
+    p: 'app.powerbi.com',
     r: 'www.reddit.com',
     s: 'http://stackoverflow.com',
     u: 'www.alumnos.econ.uba.ar',
@@ -176,6 +176,7 @@ mapkey(',qm', 'Open URL from vim-like marks', function () {
 
 // Page navigation (and opening links)
 mapkey('r', 'Refresh', function () {
+    RUNTIME.repeats = 1;
     RUNTIME('reloadTab', { nocache: false });
 });
 mapkey('H', 'Backward', function () {
@@ -225,21 +226,26 @@ mapkey(',nt', 'Open new tab', function () {
     tabOpenLink('www.google.com.ar');
 });
 mapkey('<Ctrl-c>', 'Close tab', function () {
+    RUNTIME.repeats = 1;
     RUNTIME('closeTab');
 });
 map(',wd', '<Ctrl-c>');
 map(',bd', '<Ctrl-c>');
 // Ctrl-n cannot be mapped on Linux so we use alt-n (and alt-p) instead
 mapkey('<Alt-n>', 'Go one tab right', function () {
+    RUNTIME.repeats = 1;
     RUNTIME('nextTab');
 });
 mapkey('<Alt-p>', 'Go one tab left', function () {
+    RUNTIME.repeats = 1;
     RUNTIME('previousTab');
 });
 mapkey('<Alt-h>', 'Move current tab to left', function () {
+    RUNTIME.repeats = 1;
     RUNTIME('moveTab', { step: -1 });
 });
 mapkey('<Alt-l>', 'Move current tab to right', function () {
+    RUNTIME.repeats = 1;
     RUNTIME('moveTab', { step: 1 });
 });
 mapkey('<Alt-w>', 'New window with current tab', function () {
@@ -275,6 +281,7 @@ mapkey('p', 'Open the clipboard in the current tab', function () {
         } else {
             data = 'https://www.google.com/search?q=' + response.data;
         }
+        RUNTIME.repeats = 1;
         RUNTIME('openLink', {
             tab: { tabbed: false },
             url: data,
@@ -293,6 +300,7 @@ mapkey('P', 'Open the clipboard in a new tab', function () {
         } else {
             data = 'https://www.google.com/search?q=' + response.data;
         }
+        RUNTIME.repeats = 1;
         RUNTIME('openLink', {
             tab: { tabbed: true },
             url: data,
@@ -525,6 +533,7 @@ imapkey(
     '<Alt-p>',
     'Previous Tab',
     function () {
+        RUNTIME.repeats = 1;
         RUNTIME('previousTab');
     },
     {
@@ -535,6 +544,7 @@ imapkey(
     '<Alt-n>',
     'Next Tab',
     function () {
+        RUNTIME.repeats = 1;
         RUNTIME('nextTab');
     },
     {
