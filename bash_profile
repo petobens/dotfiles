@@ -33,10 +33,10 @@ else
     if [ -d "$BASE_PKG_DIR/local/texlive" ]; then
         # Note: we put this first (even before local so that if there is some
         # other pdflatex installed tlmgr is found first)
-        PATH="/usr/local/texlive/2024/bin/x86_64-linux:$PATH"
+        PATH="/usr/local/texlive/2025/bin/x86_64-linux:$PATH"
         # FIXME: If we set this then we cannot jump between Man tags with nvim
         # export MANPATH="$MANPATH:/usr/local/texlive/2021/texmf-dist/doc/man"
-        export INFOPATH="$INFOPATH:/usr/local/texlive/2024/texmf-dist/doc/info"
+        export INFOPATH="$INFOPATH:/usr/local/texlive/2025/texmf-dist/doc/info"
     fi
 
     # GTK scaling and themes (we don't do this here because we use the Xft.dpi

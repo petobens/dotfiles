@@ -6,7 +6,7 @@
 # `brew cask reinstall basictex`)
 
 # Define path for initial install (which won't read env variable)
-TLMGR_PATH="/usr/local/texlive/2024/bin/x86_64-linux"
+TLMGR_PATH="/usr/local/texlive/2025/bin/x86_64-linux"
 PATH="$PATH:$TLMGR_PATH"
 
 # Install texlive
