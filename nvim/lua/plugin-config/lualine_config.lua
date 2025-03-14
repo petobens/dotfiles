@@ -213,22 +213,13 @@ require('lualine').setup({
         },
         lualine_x = {
             {
-                'lsp_progress',
-                only_show_attached = true,
-                hide = {},
-                display_components = {
-                    'lsp_client_name',
-                    { 'message' },
+                'lsp_status',
+                icon = '',
+                symbols = {
+                    done = '',
+                    separator = '- ',
                 },
-                message = {
-                    initializing = '⏻',
-                    commenced = ' ',
-                    completed = ' ',
-                },
-                component_separator = { left = '', right = '' },
-                separators = {
-                    lsp_client_name = { pre = '', post = '' },
-                },
+                ignore_lsp = { 'copilot' },
                 cond = conds.hide_winwidth_leq_40,
             },
             {

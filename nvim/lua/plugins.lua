@@ -22,9 +22,6 @@ local plugins = {
     },
     {
         'nvim-lualine/lualine.nvim',
-        dependencies = {
-            'petobens/lualine-lsp-progress.nvim',
-        },
         config = function()
             require('plugin-config.lualine_config')
         end,
