@@ -355,6 +355,10 @@ else
         $ln_cmd -fTs "$dotfiles_dir/arch/config/onedrive" "$HOME/.config/onedrive"
         echo Created .config/onedrive folder symlink
     fi
+    if type "wireplumber" > /dev/null 2>&1; then
+        $ln_cmd -fTs "$dotfiles_dir/arch/config/wireplumber" "$HOME/.config/wireplumber"
+        echo Created .config/wireplumber folder symlink
+    fi
     if type "udevadm" > /dev/null 2>&1; then
         mkdir -p "/etc/udev/rules.d"
         # FIXME: Uncomment when figuring it how to reload polybar from udev rule

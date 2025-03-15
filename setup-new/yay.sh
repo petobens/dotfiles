@@ -85,6 +85,7 @@ $yay_cmd tmux
 
 # Audio/video
 $yay_cmd gst-plugin-libcamera
+$yay_cmd gst-plugin-pipewire
 $yay_cmd libcamera
 $yay_cmd libcamera-tools
 $yay_cmd pipewire
@@ -94,6 +95,10 @@ $yay_cmd pipewire-libcamera
 $yay_cmd pipewire-pulse
 $yay_cmd sof-firmware
 $yay_cmd wireplumber
+# We need xdg-portal for firefox/brave/obs to request permission for libcamera support
+# https://bbs.archlinux.org/viewtopic.php?pid=2218247#p2218247
+$yay_cmd xdg-desktop-portal
+$yay_cmd xdg-desktop-portal-gtk
 
 # Arch specific and window manager
 $yay_cmd acpi_call
