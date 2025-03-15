@@ -213,16 +213,6 @@ require('lualine').setup({
         },
         lualine_x = {
             {
-                'lsp_status',
-                icon = '',
-                symbols = {
-                    done = '',
-                    separator = '- ',
-                },
-                ignore_lsp = { 'copilot' },
-                cond = conds.hide_winwidth_leq_40,
-            },
-            {
                 'aerial',
                 depth = -1,
                 colored = false,
@@ -231,6 +221,17 @@ require('lualine').setup({
                     return str:sub(1, 40)
                 end,
                 cond = conds.hide_winwidth_leq_80,
+            },
+            {
+                'lsp_status',
+                component_separator = { left = '', right = '' },
+                icon = '󰒋',
+                symbols = {
+                    done = '',
+                    separator = '- ',
+                },
+                ignore_lsp = { 'copilot' },
+                cond = conds.hide_winwidth_leq_60,
             },
             {
                 pyvenv,
