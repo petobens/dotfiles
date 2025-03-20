@@ -317,7 +317,7 @@ fi
 
 # Latex
 if type "tlmgr" > /dev/null 2>&1; then
-    alias tlgmr='sudo -E env "PATH=$PATH" tlmgr'
+    alias tlmgr='sudo -E env "PATH=$PATH" tlmgr'
 fi
 
 # Package manager
