@@ -204,7 +204,7 @@ bindsym $mod+Control+g $nexec $font_aware_launcher gmail -W $ws2
 bindsym $mod+Control+m $nexec $font_aware_launcher spotify -W $ws3
 # WS4: Other
 bindsym $mod+Control+u $nexec $font_aware_launcher transmission -W $ws4
-bindsym $mod+Control+d $nexec $font_aware_launcher onlyoffice  -W $ws4
+bindsym $mod+Control+d $nexec $font_aware_launcher onlyoffice -W $ws4
 # WS5 (terminal)
 bindsym $mod+Control+c $nexec $font_aware_launcher kitty -W $ws5
 
