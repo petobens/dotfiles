@@ -18,6 +18,9 @@ local codecompanion = require('codecompanion')
 -- Feature parity con prompts en chatgpt plugin
 -- Agregar prompt que le paso el file de como escribo yo con los memos de Ops
 
+-- Send to input to different models
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1153#discussioncomment-12560883
+
 -- Create slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/958
 -- For git files, a specific and pyproject.toml root dir
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
@@ -27,6 +30,8 @@ local codecompanion = require('codecompanion')
 -- Use/mappings for inline diffs
 
 -- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1098
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1129
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 
