@@ -11,14 +11,13 @@ local codecompanion = require('codecompanion')
 -- Custom prompts (a.k.a roles) and system role
 -- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- https://codecompanion.olimorris.dev/extending/prompts.html
--- Show prompt name in system chat header message: https://github.com/olimorris/codecompanion.nvim/discussions/780#discussioncomment-12255241
--- Use another system prompt by default? https://codecompanion.olimorris.dev/configuration/system-prompt
--- (DOING) Show a preview of the prompt in telescope
+-- (DOING) Show prompt name in system chat header message: https://github.com/olimorris/codecompanion.nvim/discussions/780#discussioncomment-12255241
 -- Mapping to show open chats in telescope and move between chats
 -- Feature parity con prompts en chatgpt plugin
 -- Agregar prompt que le paso el file de como escribo yo con los memos de Ops
 
 -- Send to input to different models
+-- Also add gemini 2.5 pro model
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1153#discussioncomment-12560883
 
 -- Create slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/958
@@ -133,6 +132,13 @@ codecompanion.setup({
                 ['file'] = { opts = { provider = 'telescope' } },
             },
         },
+    },
+    opts = {
+        system_prompt = function()
+            return [[
+You are a helpful and friendly AI assistant. Answer questions accurately and provide detailed explanations when necessary.
+]]
+        end,
     },
     prompt_library = {
         [' Bash Developer'] = {
