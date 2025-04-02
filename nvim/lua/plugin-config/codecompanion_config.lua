@@ -2,19 +2,18 @@
 
 local adapters = require('codecompanion.adapters')
 local codecompanion = require('codecompanion')
+local config = require('codecompanion.config')
 
 -- FIXME:
--- No cmp signature for slash commands and variables
+-- fix cmp signature saying "```codecompanion```"
 -- Add blank lines to system and user roles: https://github.com/olimorris/codecompanion.nvim/issues/959
 
 -- TODO:
 -- Custom prompts (a.k.a roles) and system role
 -- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- https://codecompanion.olimorris.dev/extending/prompts.html
--- (DOING) Show prompt name in system chat header message: https://github.com/olimorris/codecompanion.nvim/discussions/780#discussioncomment-12255241
--- Mapping to show open chats in telescope and move between chats
 -- Feature parity con prompts en chatgpt plugin
--- Agregar prompt que le paso el file de como escribo yo con los memos de Ops
+-- Agregar "writer prompt" pasando files de como escribo yo con los memos de Ops (references)
 
 -- Send to input to different models
 -- Also add gemini 2.5 pro model
@@ -26,6 +25,9 @@ local codecompanion = require('codecompanion')
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- Possible to share a PDF file?
 
+-- Mapping to show open chats in telescope and move between chats (select which default
+-- actions/prompts when to show rather than having a boolean)
+
 -- Use/mappings for inline diffs
 
 -- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
@@ -35,7 +37,26 @@ local codecompanion = require('codecompanion')
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
+local SYSTEM_ROLE = '󰮥 Helpful Assistant'
+local SYSTEM_ROLE_PROMPT = [[
+You are a helpful and friendly AI assistant.
+Answer questions accurately and provide detailed explanations when necessary.
+]]
 
+-- Helpers
+local function get_current_system_role_prompt()
+    local chat = codecompanion.buf_get_chat()
+    local messages = chat[1].chat.messages
+    local system_role = nil
+    for _, entry in ipairs(messages) do
+        if entry.role == 'system' then
+            system_role = entry.content
+        end
+    end
+    return system_role
+end
+
+-- Setup
 codecompanion.setup({
     adapters = {
         opts = {
@@ -96,14 +117,29 @@ codecompanion.setup({
         chat = {
             adapter = 'openai_gpt_4o', -- default adapter
             roles = {
+                user = 'Me',
                 llm = function(adapter)
+                    local current_system_role_prompt = get_current_system_role_prompt()
+                    local system_role = SYSTEM_ROLE
+
+                    for name, prompt in pairs(config.prompt_library) do
+                        local prompt_content = prompt.prompts[1]
+                            and prompt.prompts[1].content
+                        if
+                            type(prompt_content) == 'string'
+                            and prompt_content == current_system_role_prompt
+                        then
+                            system_role = name
+                            break
+                        end
+                    end
                     return string.format(
-                        '%s (%s)',
+                        '%s (%s) | %s',
                         adapter.formatted_name,
-                        adapter.schema.model.default
+                        adapter.schema.model.default,
+                        system_role
                     )
                 end,
-                user = 'Me',
             },
             keymaps = {
                 send = { modes = { n = '<C-o>', i = '<C-o>' } },
@@ -135,16 +171,35 @@ codecompanion.setup({
     },
     opts = {
         system_prompt = function()
-            return [[
-You are a helpful and friendly AI assistant. Answer questions accurately and provide detailed explanations when necessary.
-]]
+            return SYSTEM_ROLE_PROMPT
         end,
     },
     prompt_library = {
+        [SYSTEM_ROLE] = {
+            strategy = 'chat',
+            description = 'Act as a helpful assistant.',
+            opts = {
+                short_name = 'assistant',
+                is_slash_cmd = true,
+                auto_submit = false,
+                ignore_system_prompt = true,
+            },
+            prompts = {
+                {
+                    role = 'system',
+                    content = SYSTEM_ROLE_PROMPT,
+                    opts = { visible = true },
+                },
+                {
+                    role = 'user',
+                    content = [[]],
+                },
+            },
+        },
         [' Bash Developer'] = {
             strategy = 'chat',
+            description = 'Act as an expert Bash developer.',
             opts = {
-                index = 1,
                 short_name = 'bash',
                 is_slash_cmd = true,
                 auto_submit = false,
@@ -154,7 +209,35 @@ You are a helpful and friendly AI assistant. Answer questions accurately and pro
                 {
                     role = 'system',
                     content = [[
-I want you to act as an expert Bash developer. When giving code examples show the generated output.]],
+You are an expert Bash developer.
+When giving code examples show the generated output.
+]],
+                    opts = { visible = true },
+                },
+                {
+                    role = 'user',
+                    content = [[]],
+                },
+            },
+        },
+        [' Lua Developer'] = {
+            strategy = 'chat',
+            description = 'Act as an expert Lua developer.',
+            opts = {
+                short_name = 'lua',
+                is_slash_cmd = true,
+                auto_submit = false,
+                ignore_system_prompt = true,
+            },
+            prompts = {
+                {
+                    role = 'system',
+                    content = [[
+You are an expert Lua developer.
+Use a lua version that is compatible with the neovim editor (i.e 5.1).
+When giving code examples show the generated output.
+]],
+
                     opts = { visible = true },
                 },
                 {
@@ -238,15 +321,7 @@ vim.api.nvim_create_autocmd('FileType', {
             )
         end, { buffer = e.buf })
         vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
-            local chat = codecompanion.buf_get_chat()
-            local messages = chat[1].chat.messages
-
-            local system_role = nil
-            for _, entry in ipairs(messages) do
-                if entry.role == 'system' then
-                    system_role = entry.content
-                end
-            end
+            local system_role = get_current_system_role_prompt()
             if system_role then
                 vim.print(string.format('System Role:\n%s', system_role))
             end
