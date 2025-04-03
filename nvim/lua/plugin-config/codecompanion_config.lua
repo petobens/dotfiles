@@ -5,13 +5,13 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
 -- FIXME:
--- Add blank lines to system and user roles: https://github.com/olimorris/codecompanion.nvim/issues/959
+-- (DOING) Add blank lines to system and user roles: https://github.com/olimorris/codecompanion.nvim/issues/959
 
 -- TODO:
 -- Custom prompts (a.k.a roles) and system role
 -- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- https://codecompanion.olimorris.dev/extending/prompts.html
--- Feature parity con prompts en chatgpt plugin
+-- Feature parity with prompts in chatgpt plugin (most notably python)
 -- Agregar "writer prompt" pasando files de como escribo yo con los memos de Ops (references)
 
 -- Send to input to different models
@@ -22,18 +22,19 @@ local config = require('codecompanion.config')
 -- For git files, a specific and pyproject.toml root dir
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
--- Possible to share a PDF file?
 
--- Mapping to show open chats in telescope and move between chats (select which default
--- actions/prompts when to show rather than having a boolean)
+-- Mapping to show open chats in telescope and move between chats (do a PR to select which
+-- default actions/prompts when to show rather than having a boolean)
 
--- Use/mappings for inline diffs
+-- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
 -- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1098
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1129
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
+
+-- Possible to share a PDF file?
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
@@ -45,9 +46,8 @@ Answer questions accurately and provide detailed explanations when necessary.
 -- Helpers
 local function get_current_system_role_prompt()
     local chat = codecompanion.buf_get_chat()
-    local messages = chat[1].chat.messages
     local system_role = nil
-    for _, entry in ipairs(messages) do
+    for _, entry in ipairs(chat[1].chat.messages) do
         if entry.role == 'system' then
             system_role = entry.content
         end
@@ -178,7 +178,7 @@ codecompanion.setup({
             strategy = 'chat',
             description = 'Act as a helpful assistant.',
             opts = {
-                short_name = 'assistant',
+                short_name = 'assistant_role',
                 is_slash_cmd = true,
                 auto_submit = false,
                 ignore_system_prompt = true,
@@ -199,7 +199,7 @@ codecompanion.setup({
             strategy = 'chat',
             description = 'Act as an expert Bash developer.',
             opts = {
-                short_name = 'bash',
+                short_name = 'bash_role',
                 is_slash_cmd = true,
                 auto_submit = false,
                 ignore_system_prompt = true,
@@ -223,7 +223,7 @@ When giving code examples show the generated output.
             strategy = 'chat',
             description = 'Act as an expert Lua developer.',
             opts = {
-                short_name = 'lua',
+                short_name = 'lua_role',
                 is_slash_cmd = true,
                 auto_submit = false,
                 ignore_system_prompt = true,
