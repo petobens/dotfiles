@@ -5,7 +5,6 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
 -- FIXME:
--- fix cmp signature saying "```codecompanion```"
 -- Add blank lines to system and user roles: https://github.com/olimorris/codecompanion.nvim/issues/959
 
 -- TODO:
@@ -251,6 +250,13 @@ When giving code examples show the generated output.
 
 -- Ensure buffer is treated as markdown by treesitter despite being codecompanion filetype
 vim.treesitter.language.register('markdown', 'codecompanion')
+
+-- Override the default icon for codecompanion filetype
+local devicons = require('nvim-web-devicons')
+devicons.set_icon({
+    codecompanion = { icon = ' ' },
+})
+devicons.set_icon_by_filetype({ codecompanion = 'codecompanion' })
 
 -- Show a spinner loading indicator when a request is being made
 local spinner_states = { '', '', '' }
