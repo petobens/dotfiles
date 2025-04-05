@@ -12,7 +12,6 @@ local config = require('codecompanion.config')
 -- Custom prompts (a.k.a roles) and system role
 -- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- https://codecompanion.olimorris.dev/extending/prompts.html
--- PR to select which default actions/prompts when to show rather than having a boolean
 -- Simplify custom prompts by removing visible opts and auto_submit?
 -- Agregar "writer prompt" pasando files de como escribo yo con los memos de Ops (references)
 
@@ -108,8 +107,8 @@ codecompanion.setup({
             prompt = '> ',
             provider = 'telescope',
             opts = {
-                show_default_prompt_library = true,
                 show_default_actions = true,
+                show_default_prompt_library = false,
             },
         },
     },
