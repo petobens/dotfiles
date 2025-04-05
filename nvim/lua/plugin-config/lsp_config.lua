@@ -12,47 +12,7 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
---- Mimic noice treesitter markdown highlights for hover, signatures and docs
--- https://github.com/MariaSolOs/dotfiles/blob/main/.config/nvim/lua/lsp.lua
-local md_namespace = vim.api.nvim_create_namespace('noiceish_highlights')
-local function add_inline_highlights(bufnr)
-    for l, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
-        if vim.startswith(line, '``` man') then
-            -- For sh files directly use man filetype since there is no treesitter parser
-            vim.bo[bufnr].filetype = 'man'
-            return
-        end
-
-        for pattern, hl_group in pairs({
-            ['─'] = '@markup.heading.vimdoc',
-            --- Lua/vimdoc
-            ['@%S+'] = '@variable.parameter',
-            ['{%S-}'] = '@variable.parameter',
-            ['|%S-|'] = '@markup.link.vimdoc',
-            -- Python
-            ['^%s*(Parameters)$'] = '@markup.heading.vimdoc',
-            ['^%s*(Returns)$'] = '@markup.heading.vimdoc',
-            ['^%s*(Examples)$'] = '@markup.heading.vimdoc',
-            ['^%s*(Notes)$'] = '@markup.heading.vimdoc',
-            ['^%s*(See Also)$'] = '@markup.heading.vimdoc',
-        }) do
-            local from = 1
-            while from do
-                local to
-                from, to = line:find(pattern, from)
-                if from then
-                    vim.api.nvim_buf_set_extmark(bufnr, md_namespace, l - 1, from - 1, {
-                        end_col = to,
-                        hl_group = hl_group,
-                    })
-                end
-                from = to and to + 1 or nil
-            end
-        end
-    end
-end
-
--- FIXME: We should be able to run add_inline_highlights here too
+-- FIXME: We should be able to add_inline_highlights here
 local hover = vim.lsp.buf.hover
 vim.lsp.buf.hover = function()
     return hover({
@@ -67,18 +27,6 @@ vim.lsp.buf.signature_help = function()
         border = 'rounded',
         focusable = false,
     })
-end
-
--- For cmp docs
-vim.lsp.util.stylize_markdown = function(bufnr, contents, opts)
-    contents = vim.lsp.util._normalize_markdown(contents, {
-        width = vim.lsp.util._make_floating_popup_size(contents, opts),
-    })
-    vim.bo[bufnr].filetype = 'markdown'
-    vim.treesitter.start(bufnr)
-    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
-    add_inline_highlights(bufnr)
-    return contents
 end
 
 -- Servers setup (names available in https://github.com/williamboman/nvim-lsp-installer)
