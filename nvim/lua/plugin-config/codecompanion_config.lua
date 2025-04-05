@@ -5,13 +5,15 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
 -- FIXME:
--- (DOING) Add blank lines to system and user roles: https://github.com/olimorris/codecompanion.nvim/issues/959
+-- Missing PR to add a newline after visible system prompt (add spacer() in line 245)
+-- https://github.com/olimorris/codecompanion.nvim/pull/1204#issuecomment-2781062332
 
 -- TODO:
 -- Custom prompts (a.k.a roles) and system role
 -- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- https://codecompanion.olimorris.dev/extending/prompts.html
--- Feature parity with prompts in chatgpt plugin (most notably python)
+-- PR to select which default actions/prompts when to show rather than having a boolean
+-- Simplify custom prompts by removing visible opts and auto_submit?
 -- Agregar "writer prompt" pasando files de como escribo yo con los memos de Ops (references)
 
 -- Send to input to different models
@@ -23,8 +25,7 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
 
--- Mapping to show open chats in telescope and move between chats (do a PR to select which
--- default actions/prompts when to show rather than having a boolean)
+-- Mapping to show open chats in telescope and move between chats
 
 -- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
@@ -107,8 +108,8 @@ codecompanion.setup({
             prompt = '> ',
             provider = 'telescope',
             opts = {
-                show_default_prompt_library = false,
-                show_default_actions = false,
+                show_default_prompt_library = true,
+                show_default_actions = true,
             },
         },
     },
@@ -219,6 +220,30 @@ When giving code examples show the generated output.
                 },
             },
         },
+        [' LaTeX Developer'] = {
+            strategy = 'chat',
+            description = 'Act as an expert LaTeX developer.',
+            opts = {
+                short_name = 'latex_role',
+                is_slash_cmd = true,
+                auto_submit = false,
+                ignore_system_prompt = true,
+            },
+            prompts = {
+                {
+                    role = 'system',
+                    content = [[
+You are an expert LaTeX developer.
+When giving code examples show the generated output.
+]],
+                    opts = { visible = true },
+                },
+                {
+                    role = 'user',
+                    content = [[]],
+                },
+            },
+        },
         [' Lua Developer'] = {
             strategy = 'chat',
             description = 'Act as an expert Lua developer.',
@@ -235,6 +260,64 @@ When giving code examples show the generated output.
 You are an expert Lua developer.
 Use a lua version that is compatible with the neovim editor (i.e 5.1).
 When giving code examples show the generated output.
+]],
+
+                    opts = { visible = true },
+                },
+                {
+                    role = 'user',
+                    content = [[]],
+                },
+            },
+        },
+        [' Python Developer'] = {
+            strategy = 'chat',
+            description = 'Act as an expert Python developer.',
+            opts = {
+                short_name = 'python_role',
+                is_slash_cmd = true,
+                auto_submit = false,
+                ignore_system_prompt = true,
+            },
+            prompts = {
+                {
+                    role = 'system',
+                    content = [[
+You are an expert Python developer with a machine learning engineer background.
+
+Please ensure that all code examples adhere to the following guidelines:
+1. Python Version: Use Python 3.12 or greater syntax.
+2. Type Hinting: Include type hints whenever possible. Use the built-in `list` type for type hinting instead of importing `List` from the `typing` module and any other modern type hinting tricks and syntax.
+3. Docstrings: Use NumPy-style docstrings. Don't specify the type in the `Parameters` section since it's already present in the type hint (i.e if a function receive an argument `n: int` don't write `n: int` in the `Parameters` section but simply `n:`).
+4. Code Formatting: Format all code using the Black style formatter, double quotes are used for interpolation or natural language messages and single quotes for small symbol-like strings. Format docstrings to avoid D212 and D205 linter warnings.
+5. Testing: Provide pytest test cases for every piece of generated code (but don't specify how to run these tests).
+6. Output: Show the generated output for code examples ideally as markdown comments next to the print statements.
+7. When prompted for Python code changes only show the new or modified lines, rather than repeating the entire code.
+]],
+                    opts = { visible = true },
+                },
+                {
+                    role = 'user',
+                    content = [[]],
+                },
+            },
+        },
+        [' SQL Developer'] = {
+            strategy = 'chat',
+            description = 'Act as an expert SQL developer.',
+            opts = {
+                short_name = 'Sql_role',
+                is_slash_cmd = true,
+                auto_submit = false,
+                ignore_system_prompt = true,
+            },
+            prompts = {
+                {
+                    role = 'system',
+                    content = [[
+You are an expert SQL developer.
+When giving code examples show the generated output.
+Favour PostgreSQL syntax.
 ]],
 
                     opts = { visible = true },
