@@ -5,6 +5,12 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
 -- FIXME:
+-- Don't always get first chat chat[1] but rather current chat for role showing
+-- Mapping to open chats: "CodeCompanion OpenChats" or something like that
+-- Add chat preview in telescope
+-- Make the telescope prompt content preview a md FileType
+-- Don't trim empty lines in telescope preview
+
 -- Missing PR to add a newline after visible system prompt (add spacer() in line 245)
 -- https://github.com/olimorris/codecompanion.nvim/pull/1204#issuecomment-2781062332
 
@@ -14,6 +20,7 @@ local config = require('codecompanion.config')
 -- https://codecompanion.olimorris.dev/extending/prompts.html
 -- Simplify custom prompts by removing visible opts and auto_submit?
 -- Agregar "writer prompt" pasando files de como escribo yo con los memos de Ops (references)
+-- Choose only some defautl prompts/actions
 
 -- Send to input to different models
 -- Also add gemini 2.5 pro model
@@ -23,8 +30,6 @@ local config = require('codecompanion.config')
 -- For git files, a specific and pyproject.toml root dir
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
-
--- Mapping to show open chats in telescope and move between chats
 
 -- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
@@ -154,13 +159,14 @@ codecompanion.setup({
                 stop = { modes = { n = '<C-x>', i = '<C-x>' } },
                 yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
                 options = { modes = { n = '<A-h>', i = '<A-h>' } },
-                previous_header = { modes = { n = '<C-[>' } },
-                next_header = { modes = { n = '<C-]>' } },
+                previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
+                next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
                 change_adapter = { modes = { n = '<Leader>cm' } },
                 debug = { modes = { n = '<Leader>db' } },
                 pin = { modes = { n = '<Leader>rp' } },
                 watch = { modes = { n = '<Leader>rw' } },
                 system_prompt = { modes = { n = '<Leader>ts' } },
+                next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
             },
             slash_commands = {
                 ['buffer'] = { opts = { provider = 'telescope' } },
