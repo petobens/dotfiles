@@ -5,9 +5,9 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
 -- FIXME:
--- Don't always get first chat chat[1] but rather current chat for role showing
 -- Mapping to open chats: "CodeCompanion OpenChats" or something like that
--- Add chat preview in telescope
+-- Add chat name to title
+-- Add chat preview in telescope and rename chat
 -- Make the telescope prompt content preview a md FileType
 -- Don't trim empty lines in telescope preview
 
@@ -50,9 +50,9 @@ Answer questions accurately and provide detailed explanations when necessary.
 
 -- Helpers
 local function get_current_system_role_prompt()
-    local chat = codecompanion.buf_get_chat()
+    local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
     local system_role = nil
-    for _, entry in ipairs(chat[1].chat.messages) do
+    for _, entry in ipairs(chat.messages) do
         if entry.role == 'system' then
             system_role = entry.content
         end
@@ -409,10 +409,8 @@ vim.api.nvim_create_autocmd('FileType', {
         -- Mappings
         vim.keymap.set('i', '<C-h>', '<ESC><C-w>h', { buffer = e.buf })
         vim.keymap.set({ 'i', 'n' }, '<A-p>', function()
-            local chat = codecompanion.buf_get_chat()
-            vim.print(
-                string.format('Model Params:\n%s', vim.inspect(chat[1].chat.settings))
-            )
+            local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+            vim.print(string.format('Model Params:\n%s', vim.inspect(chat.settings)))
         end, { buffer = e.buf })
         vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
             local system_role = get_current_system_role_prompt()
