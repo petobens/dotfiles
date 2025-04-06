@@ -5,20 +5,14 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
 -- FIXME:
--- Mapping to open chats: "CodeCompanion OpenChats" or something like that
--- Add chat name to title
--- Add chat preview in telescope and rename chat
--- Make the telescope prompt content preview a md FileType
--- Don't trim empty lines in telescope preview
-
--- Missing PR to add a newline after visible system prompt (add spacer() in line 245)
--- https://github.com/olimorris/codecompanion.nvim/pull/1204#issuecomment-2781062332
+-- Add a newline after visible system prompt
+-- https://github.com/olimorris/codecompanion.nvim/pull/1225
 
 -- TODO:
+-- Simplify custom prompts by removing visible opts and auto_submit?
 -- Custom prompts (a.k.a roles) and system role
 -- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- https://codecompanion.olimorris.dev/extending/prompts.html
--- Simplify custom prompts by removing visible opts and auto_submit?
 -- Agregar "writer prompt" pasando files de como escribo yo con los memos de Ops (references)
 -- Choose only some defautl prompts/actions
 
@@ -33,6 +27,10 @@ local config = require('codecompanion.config')
 
 -- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
+-- Add chat name to chat buffer title
+-- Add chat preview in telescope and ability to rename chat
+-- Map to easily access open chat without passing through the action palette
+
 -- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1098
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1129
@@ -45,8 +43,7 @@ local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
 local SYSTEM_ROLE_PROMPT = [[
 You are a helpful and friendly AI assistant.
-Answer questions accurately and provide detailed explanations when necessary.
-]]
+Answer questions accurately and provide detailed explanations when necessary.]]
 
 -- Helpers
 local function get_current_system_role_prompt()
@@ -215,8 +212,7 @@ codecompanion.setup({
                     role = 'system',
                     content = [[
 You are an expert Bash developer.
-When giving code examples show the generated output.
-]],
+When giving code examples show the generated output.]],
                     opts = { visible = true },
                 },
                 {
@@ -239,8 +235,7 @@ When giving code examples show the generated output.
                     role = 'system',
                     content = [[
 You are an expert LaTeX developer.
-When giving code examples show the generated output.
-]],
+When giving code examples show the generated output.]],
                     opts = { visible = true },
                 },
                 {
@@ -264,8 +259,7 @@ When giving code examples show the generated output.
                     content = [[
 You are an expert Lua developer.
 Use a lua version that is compatible with the neovim editor (i.e 5.1).
-When giving code examples show the generated output.
-]],
+When giving code examples show the generated output.]],
 
                     opts = { visible = true },
                 },
@@ -297,8 +291,7 @@ Please ensure that all code examples adhere to the following guidelines:
 4. Code Formatting: Format all code using the Black style formatter, double quotes are used for interpolation or natural language messages and single quotes for small symbol-like strings. Format docstrings to avoid D212 and D205 linter warnings.
 5. Testing: Provide pytest test cases for every piece of generated code (but don't specify how to run these tests).
 6. Output: Show the generated output for code examples ideally as markdown comments next to the print statements.
-7. When prompted for Python code changes only show the new or modified lines, rather than repeating the entire code.
-]],
+7. When prompted for Python code changes only show the new or modified lines, rather than repeating the entire code.]],
                     opts = { visible = true },
                 },
                 {
@@ -322,8 +315,7 @@ Please ensure that all code examples adhere to the following guidelines:
                     content = [[
 You are an expert SQL developer.
 When giving code examples show the generated output.
-Favour PostgreSQL syntax.
-]],
+Favour PostgreSQL syntax.]],
 
                     opts = { visible = true },
                 },
