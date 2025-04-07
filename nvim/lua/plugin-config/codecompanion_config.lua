@@ -9,12 +9,15 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/pull/1225
 
 -- TODO:
+-- Add chat name to chat buffer title
+-- Add chat preview in telescope and ability to rename chat
+
 -- Simplify custom prompts by removing visible opts and auto_submit?
 -- Custom prompts (a.k.a roles) and system role
 -- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
 -- https://codecompanion.olimorris.dev/extending/prompts.html
 -- Agregar "writer prompt" pasando files de como escribo yo con los memos de Ops (references)
--- Choose only some defautl prompts/actions
+-- Choose only some default prompts/actions
 
 -- Send to input to different models
 -- Also add gemini 2.5 pro model
@@ -24,11 +27,10 @@ local config = require('codecompanion.config')
 -- For git files, a specific and pyproject.toml root dir
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
+-- https://github.com/olimorris/codecompanion.nvim/discussions/641
 
 -- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
--- Add chat name to chat buffer title
--- Add chat preview in telescope and ability to rename chat
 -- Map to easily access open chat without passing through the action palette
 
 -- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
@@ -38,6 +40,7 @@ local config = require('codecompanion.config')
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 
 -- Possible to share a PDF file?
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1208
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
@@ -118,7 +121,23 @@ codecompanion.setup({
         chat = {
             adapter = 'openai_gpt_4o', -- default adapter
             roles = {
-                user = 'Me',
+                user = function()
+                    local chatmap = {}
+                    local chats = codecompanion.buf_get_chat()
+                    for _, chat in pairs(chats) do
+                        chatmap[chat.chat.ui.winnr] = chat.name
+                    end
+
+                    local chat =
+                        codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+                    vim.api.nvim_win_set_config(chat.ui.winnr, {
+                        title = string.format(
+                            'CodeCompanion - %s',
+                            chatmap[chat.ui.winnr]
+                        ),
+                    })
+                    return 'Me'
+                end,
                 llm = function(adapter)
                     local current_system_role_prompt = get_current_system_role_prompt()
                     local system_role = SYSTEM_ROLE
