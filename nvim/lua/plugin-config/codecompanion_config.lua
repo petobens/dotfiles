@@ -9,7 +9,6 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/pull/1225
 
 -- TODO:
--- Add chat name to chat buffer title
 -- Add chat preview in telescope and ability to rename chat
 
 -- Simplify custom prompts by removing visible opts and auto_submit?
@@ -58,6 +57,19 @@ local function get_current_system_role_prompt()
         end
     end
     return system_role
+end
+
+local function set_chat_win_title()
+    local chatmap = {}
+    local chats = codecompanion.buf_get_chat()
+    for _, chat in pairs(chats) do
+        chatmap[chat.chat.ui.winnr] = chat.name
+    end
+
+    local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+    vim.api.nvim_win_set_config(chat.ui.winnr, {
+        title = string.format('CodeCompanion - %s', chatmap[chat.ui.winnr]),
+    })
 end
 
 -- Setup
@@ -121,23 +133,7 @@ codecompanion.setup({
         chat = {
             adapter = 'openai_gpt_4o', -- default adapter
             roles = {
-                user = function()
-                    local chatmap = {}
-                    local chats = codecompanion.buf_get_chat()
-                    for _, chat in pairs(chats) do
-                        chatmap[chat.chat.ui.winnr] = chat.name
-                    end
-
-                    local chat =
-                        codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
-                    vim.api.nvim_win_set_config(chat.ui.winnr, {
-                        title = string.format(
-                            'CodeCompanion - %s',
-                            chatmap[chat.ui.winnr]
-                        ),
-                    })
-                    return 'Me'
-                end,
+                user = 'Me',
                 llm = function(adapter)
                     local current_system_role_prompt = get_current_system_role_prompt()
                     local system_role = SYSTEM_ROLE
@@ -357,6 +353,16 @@ devicons.set_icon({
 })
 devicons.set_icon_by_filetype({ codecompanion = 'codecompanion' })
 
+-- Set chat window title
+vim.api.nvim_create_autocmd('User', {
+    pattern = { 'CodeCompanionChatCreated', 'CodeCompanionChatOpened' },
+    callback = function()
+        vim.defer_fn(function()
+            set_chat_win_title()
+        end, 1)
+    end,
+})
+
 -- Show a spinner loading indicator when a request is being made
 local spinner_states = { '', '', '' }
 local current_state = 1
@@ -412,7 +418,7 @@ vim.api.nvim_create_autocmd('User', {
     end,
 })
 
--- Autocmds
+-- Autocmd mappings
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true }),
     pattern = { 'codecompanion' },
