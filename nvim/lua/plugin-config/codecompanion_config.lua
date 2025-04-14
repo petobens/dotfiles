@@ -9,6 +9,7 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/pull/1225
 
 -- TODO:
+-- Map to easily access open chat without passing through the action palette
 -- Add chat preview in telescope and ability to rename chat
 
 -- Simplify custom prompts by removing visible opts and auto_submit?
@@ -29,8 +30,6 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
 
 -- Use/mappings for inline diffs (custom prompts can have a mapping argument)
-
--- Map to easily access open chat without passing through the action palette
 
 -- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1098
@@ -456,3 +455,14 @@ vim.keymap.set('n', '<Leader>xx', function()
     end, 1)
 end)
 vim.keymap.set({ 'n', 'v' }, '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')
+vim.keymap.set({ 'n' }, '<Leader>xe', function()
+    codecompanion.actions()
+    vim.defer_fn(function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local action_state = require('telescope.actions.state')
+        local picker = action_state.get_current_picker(bufnr)
+        picker:move_selection(-1)
+        -- local action_set = require('telescope.actions.set')
+        -- action_set.select(bufnr, 'default')
+    end, 150)
+end)
