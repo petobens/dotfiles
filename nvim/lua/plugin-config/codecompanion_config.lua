@@ -7,10 +7,11 @@ local config = require('codecompanion.config')
 -- FIXME:
 -- Add a newline after visible system prompt
 -- https://github.com/olimorris/codecompanion.nvim/pull/1225
+-- Add chat preview in telescope
+-- https://github.com/olimorris/codecompanion.nvim/pull/1269
 
 -- TODO:
--- Map to easily access open chat without passing through the action palette
--- Add chat preview in telescope and ability to rename chat
+-- Add ability to rename chat?
 
 -- Simplify custom prompts by removing visible opts and auto_submit?
 -- Custom prompts (a.k.a roles) and system role
@@ -28,17 +29,22 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
+-- Try VectorCode?
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1252
 
 -- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
 -- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1098
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1129
+-- https://github.com/olimorris/codecompanion.nvim/discussions/652
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 
 -- Possible to share a PDF file?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
+
+-- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
@@ -457,12 +463,11 @@ end)
 vim.keymap.set({ 'n', 'v' }, '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')
 vim.keymap.set({ 'n' }, '<Leader>xe', function()
     codecompanion.actions()
+    local actions = require('telescope.actions')
+    local action_state = require('telescope.actions.state')
     vim.defer_fn(function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        local action_state = require('telescope.actions.state')
-        local picker = action_state.get_current_picker(bufnr)
+        local picker = action_state.get_current_picker(vim.api.nvim_get_current_buf())
         picker:move_selection(-1)
-        -- local action_set = require('telescope.actions.set')
-        -- action_set.select(bufnr, 'default')
+        actions.select_default(picker)
     end, 150)
 end)
