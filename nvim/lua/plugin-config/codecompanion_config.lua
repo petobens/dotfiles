@@ -11,6 +11,7 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/pull/1269
 
 -- TODO:
+-- Snippet for previous prompt
 -- Add ability to rename chat?
 
 -- Simplify custom prompts by removing visible opts and auto_submit?
@@ -83,22 +84,22 @@ codecompanion.setup({
         opts = {
             show_defaults = false,
         },
-        openai_gpt_4o = function()
+        openai_gpt = function()
             return adapters.extend('openai', {
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
-                    model = { default = 'gpt-4o' },
+                    model = { default = 'gpt-4.1' },
                     max_tokens = { default = 2048 },
                     temperature = { default = 0.2 },
                     top_p = { default = 0.1 },
                 },
             })
         end,
-        openai_o3_mini = function()
+        openai_o_mini = function()
             return adapters.extend('openai', {
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
-                    model = { default = 'o3-mini-2025-01-31' },
+                    model = { default = 'o4-mini' },
                 },
             })
         end,
@@ -136,7 +137,7 @@ codecompanion.setup({
     },
     strategies = {
         chat = {
-            adapter = 'openai_gpt_4o', -- default adapter
+            adapter = 'openai_gpt', -- default adapter
             roles = {
                 user = 'Me',
                 llm = function(adapter)
