@@ -7,11 +7,8 @@ local config = require('codecompanion.config')
 -- FIXME:
 -- Add a newline after visible system prompt
 -- https://github.com/olimorris/codecompanion.nvim/pull/1225
--- Add chat preview in telescope
--- https://github.com/olimorris/codecompanion.nvim/pull/1269
 
 -- TODO:
--- Snippet for previous prompt
 -- Add ability to rename chat?
 
 -- Simplify custom prompts by removing visible opts and auto_submit?
@@ -41,6 +38,7 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/discussions/652
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
+-- Add tool to fix quickfix errors
 
 -- Possible to share a PDF file?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
@@ -63,6 +61,18 @@ local function get_current_system_role_prompt()
         end
     end
     return system_role
+end
+
+local function get_last_user_prompt()
+    local chat_msgs = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()).messages
+    local last_user_prompt = nil
+    for i = #chat_msgs, 1, -1 do
+        if chat_msgs[i].role == 'user' then
+            last_user_prompt = chat_msgs[i].content
+            break
+        end
+    end
+    return last_user_prompt
 end
 
 local function set_chat_win_title()
@@ -440,6 +450,12 @@ vim.api.nvim_create_autocmd('FileType', {
             if system_role then
                 vim.print(string.format('System Role:\n%s', system_role))
             end
+        end, { buffer = e.buf })
+        vim.keymap.set({ 'i' }, '<C-p>', function()
+            vim.cmd.stopinsert()
+            local last_prompt = vim.split(get_last_user_prompt(), '\n', { plain = true })
+            vim.api.nvim_put(last_prompt, 'c', true, true)
+            vim.cmd.startinsert()
         end, { buffer = e.buf })
     end,
 })
