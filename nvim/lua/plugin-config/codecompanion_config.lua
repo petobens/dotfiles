@@ -7,32 +7,27 @@ local config = require('codecompanion.config')
 -- FIXME:
 -- Add a newline after visible system prompt
 -- https://github.com/olimorris/codecompanion.nvim/pull/1225
+-- Simplify custom prompts by removing visible opts and auto_submit?
 
 -- TODO:
--- Add ability to rename chat?
-
--- Simplify custom prompts by removing visible opts and auto_submit?
--- Custom prompts (a.k.a roles) and system role
--- https://github.com/olimorris/dotfiles/blob/main/.config/nvim/lua/plugins/coding.lua#L81
--- https://codecompanion.olimorris.dev/extending/prompts.html
--- Agregar "writer prompt" pasando files de como escribo yo con los memos de Ops (references)
--- Choose only some default prompts/actions
-
--- Send to input to different models
--- Also add gemini 2.5 pro model
+-- Send input to different models
+-- Add gemini 2.5 pro model
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1153#discussioncomment-12560883
 
--- Create slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/958
+-- Create slash commands:
+-- https://github.com/olimorris/codecompanion.nvim/discussions/958
 -- For git files, a specific and pyproject.toml root dir
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
+
 -- Try VectorCode?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1252
 
 -- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
--- Not saving sessions: https://github.com/olimorris/codecompanion.nvim/discussions/139
+-- Not saving sessions:
+-- https://github.com/olimorris/codecompanion.nvim/discussions/139
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1098
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1129
 -- https://github.com/olimorris/codecompanion.nvim/discussions/652
@@ -44,6 +39,10 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
 
 -- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
+
+-- Nice to Haves:
+-- Add ability to rename chat?
+-- Choose only some default prompts/actions
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
@@ -291,7 +290,6 @@ When giving code examples show the generated output.]],
 You are an expert Lua developer.
 Use a lua version that is compatible with the neovim editor (i.e 5.1).
 When giving code examples show the generated output.]],
-
                     opts = { visible = true },
                 },
                 {
@@ -347,7 +345,65 @@ Please ensure that all code examples adhere to the following guidelines:
 You are an expert SQL developer.
 When giving code examples show the generated output.
 Favour PostgreSQL syntax.]],
-
+                    opts = { visible = true },
+                },
+                {
+                    role = 'user',
+                    content = [[]],
+                },
+            },
+        },
+        [' Writer'] = {
+            strategy = 'chat',
+            description = 'Write the way I write at work.',
+            opts = {
+                short_name = 'writer',
+                is_slash_cmd = false,
+                auto_submit = false,
+                ignore_system_prompt = true,
+            },
+            references = {
+                {
+                    type = 'file',
+                    path = {
+                        '/home/pedro/git-repos/private/notes/mutt/ops/memos/1_tdms.md',
+                        '/home/pedro/git-repos/private/notes/mutt/ops/memos/2_new_structure.md',
+                    },
+                },
+            },
+            prompts = {
+                {
+                    role = 'system',
+                    content = [[
+I want you to answer questions in the same way I would write.
+My style is exemplified in the shared markdown files.
+When you respond, use similar vocabulary, sentence structure, and tone to closely match my writing style.
+]],
+                    opts = { visible = true },
+                },
+                {
+                    role = 'user',
+                    content = [[]],
+                },
+            },
+        },
+        ['󰗊 Translator'] = {
+            strategy = 'chat',
+            description = 'Act as a translator from Spanish to English.',
+            opts = {
+                short_name = 'translate',
+                is_slash_cmd = true,
+                auto_submit = false,
+                ignore_system_prompt = true,
+            },
+            prompts = {
+                {
+                    role = 'system',
+                    content = [[
+Translate the following Spanish sentence into English.
+For each key word or phrase, provide at least one synonym in English.
+Then, give an example sentence in English using the translation.
+]],
                     opts = { visible = true },
                 },
                 {
