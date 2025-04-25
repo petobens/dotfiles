@@ -10,21 +10,16 @@ local config = require('codecompanion.config')
 -- Simplify custom prompts by removing visible opts and auto_submit?
 
 -- TODO:
--- Send input to different models
--- Add gemini 2.5 pro model
--- https://github.com/olimorris/codecompanion.nvim/discussions/1153#discussioncomment-12560883
+-- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
--- Create slash commands:
+-- Create additional slash commands:
 -- https://github.com/olimorris/codecompanion.nvim/discussions/958
 -- For git files, a specific and pyproject.toml root dir
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
-
 -- Try VectorCode?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1252
-
--- Use/mappings for inline diffs (custom prompts can have a mapping argument)
 
 -- Not saving sessions:
 -- https://github.com/olimorris/codecompanion.nvim/discussions/139
@@ -41,10 +36,12 @@ local config = require('codecompanion.config')
 -- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
 
 -- Nice to Haves:
+-- Add gemini model parameters
 -- Add ability to rename chat?
 -- Choose only some default prompts/actions
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
+local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
 local SYSTEM_ROLE_PROMPT = [[
 You are a helpful and friendly AI assistant.
@@ -112,6 +109,14 @@ codecompanion.setup({
                 },
             })
         end,
+        gemini_flash = function()
+            return adapters.extend('gemini', {
+                env = { api_key = GEMINI_API_KEY },
+                schema = {
+                    model = { default = 'gemini-2.5-flash-preview-04-17' },
+                },
+            })
+        end,
     },
     display = {
         chat = {
@@ -174,6 +179,14 @@ codecompanion.setup({
             },
             keymaps = {
                 send = { modes = { n = '<C-o>', i = '<C-o>' } },
+                send_to_other_model = {
+                    modes = { n = '<C-s>', i = '<C-s>' },
+                    callback = function(chat)
+                        vim.g.codecompanion_adapter = 'gemini_flash'
+                        chat:apply_model('gemini-2.5-flash-preview-04-17')
+                        chat:submit()
+                    end,
+                },
                 close = {
                     modes = { n = '<C-c>', i = '<C-c>' },
                     callback = function()
