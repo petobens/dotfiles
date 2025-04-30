@@ -5,14 +5,10 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
 -- FIXME:
--- Add a newline after visible system prompt
--- https://github.com/olimorris/codecompanion.nvim/pull/1225
--- Simplify custom prompts by removing visible opts and auto_submit?
-
--- Help/options map is broken
+-- Help/options map is broken: https://github.com/olimorris/codecompanion.nvim/issues/1335
+-- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 
 -- TODO:
--- Change `Loading` to `Working`
 -- Inline mode with custom prompts (as in python_role)
 
 -- Create additional slash commands:
@@ -29,7 +25,7 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
 
 -- Plugins/Extensions:
--- Try VectorCode?
+-- Try VectorCode
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1252
 -- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
 
@@ -40,10 +36,9 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/discussions/652
 
 -- Nice to Haves:
--- Add gemini model parameters
 -- Add ability to rename chat?
 -- Choose only some default prompts/actions
--- When using editor enter normal mode after exiting the chat buffer
+-- When using editor tool enter normal mode after exiting the chat buffer and into a diff
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
@@ -119,6 +114,8 @@ codecompanion.setup({
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
                     model = { default = 'gemini-2.5-flash-preview-04-17' },
+                    -- maxOutputTokens = { default = 2048 },
+                    -- thinkingBudget = { default = 0 },
                 },
             })
         end,
@@ -239,19 +236,14 @@ codecompanion.setup({
             opts = {
                 short_name = 'assistant_role',
                 is_slash_cmd = true,
-                auto_submit = false,
                 ignore_system_prompt = true,
             },
             prompts = {
                 {
                     role = 'system',
                     content = SYSTEM_ROLE_PROMPT,
-                    opts = { visible = true },
                 },
-                {
-                    role = 'user',
-                    content = [[]],
-                },
+                { role = 'user', content = '' },
             },
         },
         [' Bash Developer'] = {
@@ -260,7 +252,6 @@ codecompanion.setup({
             opts = {
                 short_name = 'bash_role',
                 is_slash_cmd = true,
-                auto_submit = false,
                 ignore_system_prompt = true,
             },
             prompts = {
@@ -269,12 +260,8 @@ codecompanion.setup({
                     content = [[
 You are an expert Bash developer.
 When giving code examples show the generated output.]],
-                    opts = { visible = true },
                 },
-                {
-                    role = 'user',
-                    content = [[]],
-                },
+                { role = 'user', content = '' },
             },
         },
         [' LaTeX Developer'] = {
@@ -283,7 +270,6 @@ When giving code examples show the generated output.]],
             opts = {
                 short_name = 'latex_role',
                 is_slash_cmd = true,
-                auto_submit = false,
                 ignore_system_prompt = true,
             },
             prompts = {
@@ -292,12 +278,8 @@ When giving code examples show the generated output.]],
                     content = [[
 You are an expert LaTeX developer.
 When giving code examples show the generated output.]],
-                    opts = { visible = true },
                 },
-                {
-                    role = 'user',
-                    content = [[]],
-                },
+                { role = 'user', content = '' },
             },
         },
         [' Lua Developer'] = {
@@ -306,7 +288,6 @@ When giving code examples show the generated output.]],
             opts = {
                 short_name = 'lua_role',
                 is_slash_cmd = true,
-                auto_submit = false,
                 ignore_system_prompt = true,
             },
             prompts = {
@@ -316,12 +297,8 @@ When giving code examples show the generated output.]],
 You are an expert Lua developer.
 Use a lua version that is compatible with the neovim editor (i.e 5.1).
 When giving code examples show the generated output.]],
-                    opts = { visible = true },
                 },
-                {
-                    role = 'user',
-                    content = [[]],
-                },
+                { role = 'user', content = '' },
             },
         },
         [' Python Developer'] = {
@@ -330,7 +307,6 @@ When giving code examples show the generated output.]],
             opts = {
                 short_name = 'python_role',
                 is_slash_cmd = true,
-                auto_submit = false,
                 ignore_system_prompt = true,
             },
             prompts = {
@@ -347,12 +323,8 @@ Please ensure that all code examples adhere to the following guidelines:
 5. Testing: Provide pytest test cases for every piece of generated code (but don't specify how to run these tests).
 6. Output: Show the generated output for code examples ideally as markdown comments next to the print statements.
 7. When prompted for Python code changes only show the new or modified lines, rather than repeating the entire code.]],
-                    opts = { visible = true },
                 },
-                {
-                    role = 'user',
-                    content = [[]],
-                },
+                { role = 'user', content = '' },
             },
         },
         [' SQL Developer'] = {
@@ -361,7 +333,6 @@ Please ensure that all code examples adhere to the following guidelines:
             opts = {
                 short_name = 'Sql_role',
                 is_slash_cmd = true,
-                auto_submit = false,
                 ignore_system_prompt = true,
             },
             prompts = {
@@ -371,12 +342,8 @@ Please ensure that all code examples adhere to the following guidelines:
 You are an expert SQL developer.
 When giving code examples show the generated output.
 Favour PostgreSQL syntax.]],
-                    opts = { visible = true },
                 },
-                {
-                    role = 'user',
-                    content = [[]],
-                },
+                { role = 'user', content = '' },
             },
         },
         [' Writer'] = {
@@ -385,7 +352,6 @@ Favour PostgreSQL syntax.]],
             opts = {
                 short_name = 'writer',
                 is_slash_cmd = false,
-                auto_submit = false,
                 ignore_system_prompt = true,
             },
             references = {
@@ -405,12 +371,8 @@ I want you to answer questions in the same way I would write.
 My style is exemplified in the shared markdown files.
 When you respond, use similar vocabulary, sentence structure, and tone to closely match my writing style.
 ]],
-                    opts = { visible = true },
                 },
-                {
-                    role = 'user',
-                    content = [[]],
-                },
+                { role = 'user', content = '' },
             },
         },
         ['󰗊 Translator'] = {
@@ -419,7 +381,6 @@ When you respond, use similar vocabulary, sentence structure, and tone to closel
             opts = {
                 short_name = 'translate',
                 is_slash_cmd = true,
-                auto_submit = false,
                 ignore_system_prompt = true,
             },
             prompts = {
@@ -430,12 +391,8 @@ Translate the following Spanish sentence into English.
 For each key word or phrase, provide at least one synonym in English.
 Then, give an example sentence in English using the translation.
 ]],
-                    opts = { visible = true },
                 },
-                {
-                    role = 'user',
-                    content = [[]],
-                },
+                { role = 'user', content = '' },
             },
         },
     },
@@ -461,11 +418,11 @@ vim.api.nvim_create_autocmd('User', {
     end,
 })
 
--- Show a spinner loading indicator when a request is being made
+-- Show a spinner working indicator when a request is being made
 local spinner_states = { '', '', '' }
 local current_state = 1
 local timer = vim.loop.new_timer()
-local ns_id = vim.api.nvim_create_namespace('codecompanion_loading_spinner')
+local ns_id = vim.api.nvim_create_namespace('codecompanion_working_spinner')
 local spinner_line = nil
 
 local function update_spinner()
@@ -475,7 +432,7 @@ local function update_spinner()
             0,
             ns_id,
             spinner_line,
-            { { ' Loading ' .. spinner_states[current_state], 'Comment' } },
+            { { ' Working ' .. spinner_states[current_state], 'Comment' } },
             {}
         )
         current_state = current_state % #spinner_states + 1
