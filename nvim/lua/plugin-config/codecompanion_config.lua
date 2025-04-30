@@ -9,8 +9,11 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/pull/1225
 -- Simplify custom prompts by removing visible opts and auto_submit?
 
+-- Help/options map is broken
+
 -- TODO:
--- Use/mappings for inline diffs (custom prompts can have a mapping argument)
+-- Change `Loading` to `Working`
+-- Inline mode with custom prompts (as in python_role)
 
 -- Create additional slash commands:
 -- https://github.com/olimorris/codecompanion.nvim/discussions/958
@@ -18,14 +21,6 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/pull/960/files
 -- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
--- Try VectorCode?
--- https://github.com/olimorris/codecompanion.nvim/discussions/1252
-
--- Not saving sessions:
--- https://github.com/olimorris/codecompanion.nvim/discussions/139
--- https://github.com/olimorris/codecompanion.nvim/discussions/1098
--- https://github.com/olimorris/codecompanion.nvim/discussions/1129
--- https://github.com/olimorris/codecompanion.nvim/discussions/652
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
@@ -33,12 +28,22 @@ local config = require('codecompanion.config')
 -- Possible to share a PDF file?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
 
+-- Plugins/Extensions:
+-- Try VectorCode?
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1252
 -- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
+
+-- Not saving sessions:
+-- https://github.com/olimorris/codecompanion.nvim/discussions/139
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1098
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1129
+-- https://github.com/olimorris/codecompanion.nvim/discussions/652
 
 -- Nice to Haves:
 -- Add gemini model parameters
 -- Add ability to rename chat?
 -- Choose only some default prompts/actions
+-- When using editor enter normal mode after exiting the chat buffer
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
@@ -148,6 +153,7 @@ codecompanion.setup({
                 show_default_prompt_library = false,
             },
         },
+        diff = { layout = 'vertical' },
     },
     strategies = {
         chat = {
@@ -211,6 +217,13 @@ codecompanion.setup({
             slash_commands = {
                 ['buffer'] = { opts = { provider = 'telescope' } },
                 ['file'] = { opts = { provider = 'telescope' } },
+            },
+        },
+        inline = {
+            adapter = 'openai_gpt',
+            keymaps = {
+                accept_change = { modes = { n = 'dp' } },
+                reject_change = { modes = { n = 'de' } },
             },
         },
     },
@@ -503,6 +516,17 @@ vim.api.nvim_create_autocmd('User', {
     end,
 })
 
+-- Ensure diffs start in normal mode and follow correct window order
+vim.api.nvim_create_autocmd('User', {
+    pattern = 'CodeCompanionDiffAttached',
+    callback = function()
+        vim.defer_fn(function()
+            vim.cmd('stopinsert')
+            vim.cmd('wincmd x | wincmd p')
+        end, 1)
+    end,
+})
+
 -- Autocmd mappings
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true }),
@@ -557,3 +581,5 @@ vim.keymap.set({ 'n' }, '<Leader>xe', function()
         actions.select_default(picker)
     end, 150)
 end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>xr', ':CodeCompanion ', { silent = false })
+vim.keymap.set({ 'v' }, '<Leader>xp', codecompanion.add)
