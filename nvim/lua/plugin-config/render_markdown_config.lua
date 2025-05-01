@@ -110,6 +110,10 @@ require('render-markdown').setup({
                             icon = ' ',
                             highlight = 'Comment',
                         },
+                        pyfiles = {
+                            icon = ' ',
+                            highlight = 'Comment',
+                        },
                         url = {
                             icon = ' ',
                             highlight = 'Comment',

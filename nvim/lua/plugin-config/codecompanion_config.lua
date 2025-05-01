@@ -9,7 +9,8 @@ local config = require('codecompanion.config')
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 
 -- TODO:
--- Python files looking for pyproject.toml
+-- Move custom prompts to repo in markdown files
+
 -- Pass a path to file slash commands; also list all files in a directory:
 -- https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
@@ -222,6 +223,17 @@ codecompanion.setup({
                                 '<git>git_files</git>'
                             )
                         end
+                    end,
+                },
+                ['py_files'] = {
+                    callback = function(chat)
+                        chat:add_reference({
+                            role = 'user',
+                            content = table.concat(
+                                _G.PyVenv.active_venv.project_files,
+                                '\n'
+                            ),
+                        }, 'files', '<pyfiles>python_files</pyfiles>')
                     end,
                 },
             },
