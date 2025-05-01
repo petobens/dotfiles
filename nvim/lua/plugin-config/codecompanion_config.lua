@@ -241,27 +241,42 @@ codecompanion.setup({
                 ['file'] = { opts = { provider = 'telescope' } },
                 ['git_files'] = {
                     callback = function(chat)
-                        local handle = io.popen('git ls-files')
+                        local git_root = vim.fn.trim(
+                            vim.fn.system('git rev-parse --show-toplevel 2>/dev/null')
+                        )
+                        local handle = io.popen('git ls-files --full-name ' .. git_root)
                         if handle ~= nil then
                             local result = handle:read('*a')
                             handle:close()
                             chat:add_reference(
                                 { role = 'user', content = result },
                                 'git',
-                                '<git>git_files</git>'
+                                string.format(
+                                    '<git>Git Files (%s)</git>',
+                                    vim.fn.fnamemodify(git_root, ':t')
+                                )
                             )
                         end
                     end,
                 },
                 ['py_files'] = {
                     callback = function(chat)
-                        chat:add_reference({
-                            role = 'user',
-                            content = table.concat(
-                                _G.PyVenv.active_venv.project_files,
-                                '\n'
-                            ),
-                        }, 'files', '<pyfiles>python_files</pyfiles>')
+                        local project_name =
+                            vim.fn.fnamemodify(_G.PyVenv.active_venv.project_root, ':t')
+                        chat:add_reference(
+                            {
+                                role = 'user',
+                                content = table.concat(
+                                    _G.PyVenv.active_venv.project_files,
+                                    '\n'
+                                ),
+                            },
+                            'files',
+                            string.format(
+                                '<pyfiles>Python Files (%s)</pyfiles>',
+                                project_name
+                            )
+                        )
                     end,
                 },
             },
