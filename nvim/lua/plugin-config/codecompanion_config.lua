@@ -9,11 +9,9 @@ local config = require('codecompanion.config')
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 
 -- TODO:
--- Create additional slash commands:
--- https://github.com/olimorris/codecompanion.nvim/discussions/958
--- For git files, a specific and pyproject.toml root dir
--- https://github.com/olimorris/codecompanion.nvim/pull/960/files
--- Feature to pass a path to file slash commands: https://github.com/olimorris/codecompanion.nvim/discussions/947
+-- Python files looking for pyproject.toml
+-- Pass a path to file slash commands; also list all files in a directory:
+-- https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
@@ -212,6 +210,20 @@ codecompanion.setup({
             slash_commands = {
                 ['buffer'] = { opts = { provider = 'telescope' } },
                 ['file'] = { opts = { provider = 'telescope' } },
+                ['git_files'] = {
+                    callback = function(chat)
+                        local handle = io.popen('git ls-files')
+                        if handle ~= nil then
+                            local result = handle:read('*a')
+                            handle:close()
+                            chat:add_reference(
+                                { role = 'user', content = result },
+                                'git',
+                                '<git>git_files</git>'
+                            )
+                        end
+                    end,
+                },
             },
         },
         inline = {

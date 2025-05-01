@@ -106,6 +106,10 @@ require('render-markdown').setup({
                             icon = '󰨸 ',
                             highlight = 'Comment',
                         },
+                        git = {
+                            icon = ' ',
+                            highlight = 'Comment',
+                        },
                         url = {
                             icon = ' ',
                             highlight = 'Comment',
