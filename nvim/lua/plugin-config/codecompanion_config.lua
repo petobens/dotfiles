@@ -9,8 +9,6 @@ local config = require('codecompanion.config')
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 
 -- TODO:
--- Move custom prompts to repo in markdown files
-
 -- Pass a path to file slash commands; also list all files in a directory:
 -- https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
@@ -45,6 +43,35 @@ You are a helpful and friendly AI assistant.
 Answer questions accurately and provide detailed explanations when necessary.]]
 
 -- Helpers
+local function get_my_prompt_library()
+    local prompt_md_files = {
+        'bash_developer',
+        'latex_developer',
+        'lua_developer',
+        'pydocs',
+        'python_developer',
+        'sql_developer',
+        'translator_spa_eng',
+        'writer_at_work',
+    }
+    local base_url =
+        'https://raw.githubusercontent.com/petobens/chatgpt-prompts/main/prompts/%s.md'
+    local prompt_library = {}
+
+    for _, name in ipairs(prompt_md_files) do
+        local lines =
+            vim.fn.systemlist({ 'curl', '-fsSL', string.format(base_url, name) })
+        local filtered = {}
+        for _, line in ipairs(lines) do
+            if not line:lower():find('markdownlint') then
+                table.insert(filtered, line)
+            end
+        end
+        prompt_library[name] = table.concat(filtered, '\n'):gsub('\n$', '')
+    end
+    return prompt_library
+end
+
 local function get_current_system_role_prompt()
     local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
     local system_role = nil
@@ -82,6 +109,7 @@ local function set_chat_win_title()
 end
 
 -- Setup
+local PROMPT_LIBRARY = get_my_prompt_library()
 codecompanion.setup({
     adapters = {
         opts = {
@@ -277,12 +305,7 @@ codecompanion.setup({
                 ignore_system_prompt = true,
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = [[
-You are an expert Bash developer.
-When giving code examples show the generated output.]],
-                },
+                { role = 'system', content = PROMPT_LIBRARY['bash_developer'] },
                 { role = 'user', content = '' },
             },
         },
@@ -295,12 +318,7 @@ When giving code examples show the generated output.]],
                 ignore_system_prompt = true,
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = [[
-You are an expert LaTeX developer.
-When giving code examples show the generated output.]],
-                },
+                { role = 'system', content = PROMPT_LIBRARY['latex_developer'] },
                 { role = 'user', content = '' },
             },
         },
@@ -313,13 +331,7 @@ When giving code examples show the generated output.]],
                 ignore_system_prompt = true,
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = [[
-You are an expert Lua developer.
-Use a lua version that is compatible with the neovim editor (i.e 5.1).
-When giving code examples show the generated output.]],
-                },
+                { role = 'system', content = PROMPT_LIBRARY['lua_developer'] },
                 { role = 'user', content = '' },
             },
         },
@@ -332,21 +344,7 @@ When giving code examples show the generated output.]],
                 ignore_system_prompt = true,
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = [[
-You are an expert Python developer with a machine learning engineer background.
-
-Ensure that all code examples adhere to the following guidelines:
-1. Python Version: Use Python 3.13 or greater syntax.
-2. Type Hinting: Include type hints whenever possible. Use the built-in `list` type for type hinting instead of importing `List` from the `typing` module and any other modern type hinting tricks and syntax.
-3. Docstrings: Use NumPy-style docstrings. Don't specify the type in the `Parameters` section since it's already present in the type hint (i.e if a function receives an argument `n: int` don't write `n: int` in the `Parameters` section but simply `n:`).
-Format docstrings such that the summary line must start on the first line of the docstring (to avoid D212 warnings) and include a blank line after the summary (to avoid D205 warnings).
-4. Code Formatting: Format all code using the Black style formatter, double quotes are used for interpolation or natural language messages and single quotes for small symbol-like strings.
-5. Testing: Provide pytest test cases for every piece of generated code (but don't specify how to run these tests).
-6. Output: Show the generated output for code examples ideally as markdown comments next to the print statements.
-7. When prompted for Python code changes only show the new or modified lines, rather than repeating the entire code.]],
-                },
+                { role = 'system', content = PROMPT_LIBRARY['python_developer'] },
                 { role = 'user', content = '' },
             },
         },
@@ -355,58 +353,10 @@ Format docstrings such that the summary line must start on the first line of the
             description = 'Write inline Python docstrings following NumPy-style.',
             opts = {
                 short_name = 'pydocs',
-                is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = [[
-You are an expert in writing Python docstrings using the NumPy documentation style.
-
-Adhere to the following guidelines when writing docstrings:
-1. Omit types in the Parameters section:
-Do not specify the type in the `Parameters` section, as type hints are already present in the function signature.
-For example, if a function argument is `n: int`, write `n:` in the `Parameters` section, not `n: int`.
-
-2. Docstring formatting and linter compliance:
-   - The summary line must start on the first line of the docstring (to avoid D212 warnings).
-   - Include a blank line after the summary (to avoid D205 warnings).
-   - Ensure proper spacing and formatting throughout the docstring.
-
-3. General NumPy style requirements:
-   - Include a concise summary line.
-   - Optionally, add an extended description after the summary.
-   - List all parameters with a short description for each.
-   - Document the return value(s) in a `Returns` section.
-   - Don't add an `Examples` section unless it absolutely needed.
-
-Example:
-
-```python
-def add(a: int, b: int) -> int:
-    """Add two integers.
-
-    Parameters
-    ----------
-    a:
-        The first integer to add.
-    b:
-        The second integer to add.
-
-    Returns
-    -------
-    result:
-        The sum of `a` and `b`.
-
-    Examples
-    --------
-    >>> add(2, 3)
-    5
-    """
-    return a + b
-```]],
-                },
+                { role = 'system', content = PROMPT_LIBRARY['pydocs'] },
                 { role = 'user', content = '' },
             },
         },
@@ -419,13 +369,7 @@ def add(a: int, b: int) -> int:
                 ignore_system_prompt = true,
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = [[
-You are an expert SQL developer.
-When giving code examples show the generated output.
-Favour PostgreSQL syntax.]],
-                },
+                { role = 'system', content = PROMPT_LIBRARY['sql_developer'] },
                 { role = 'user', content = '' },
             },
         },
@@ -447,14 +391,7 @@ Favour PostgreSQL syntax.]],
                 },
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = [[
-I want you to answer questions in the same way I would write.
-My style is exemplified in the shared markdown files.
-When you respond, use similar vocabulary, sentence structure, and tone to closely match my writing style.
-]],
-                },
+                { role = 'system', content = PROMPT_LIBRARY['writer_at_work'] },
                 { role = 'user', content = '' },
             },
         },
@@ -467,14 +404,7 @@ When you respond, use similar vocabulary, sentence structure, and tone to closel
                 ignore_system_prompt = true,
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = [[
-Translate the following Spanish sentence into English.
-For each key word or phrase, provide at least one synonym in English.
-Then, give an example sentence in English using the translation.
-]],
-                },
+                { role = 'system', content = PROMPT_LIBRARY['translator_spa_eng'] },
                 { role = 'user', content = '' },
             },
         },
@@ -610,6 +540,7 @@ vim.keymap.set('n', '<Leader>xx', function()
         vim.cmd('startinsert')
     end, 1)
 end)
+vim.keymap.set({ 'n', 'v' }, '<Leader>xr', ':CodeCompanion ', { silent = false })
 vim.keymap.set({ 'n', 'v' }, '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')
 vim.keymap.set({ 'n' }, '<Leader>xe', function()
     codecompanion.actions()
@@ -621,5 +552,4 @@ vim.keymap.set({ 'n' }, '<Leader>xe', function()
         actions.select_default(picker)
     end, 150)
 end)
-vim.keymap.set({ 'n', 'v' }, '<Leader>xr', ':CodeCompanion ', { silent = false })
 vim.keymap.set({ 'v' }, '<Leader>xp', codecompanion.add)
