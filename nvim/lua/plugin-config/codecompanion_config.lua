@@ -8,11 +8,15 @@ local config = require('codecompanion.config')
 -- Help/options map is broken: https://github.com/olimorris/codecompanion.nvim/issues/1335
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 
--- TODO:
--- Pass a path to file slash commands; also list all files in a directory:
+-- Search from prompt in local computer before looking in the web
+-- Allow telescope custom_action to add multiple files to chat buffer
+-- Add nvimtree action to add files to chat buffer
+-- Fix git files are not being read
+-- Fix directory slash commands (files are neither shared nor read)
 -- https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
 
+-- TODO:
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
@@ -239,6 +243,26 @@ codecompanion.setup({
             slash_commands = {
                 ['buffer'] = { opts = { provider = 'telescope' } },
                 ['file'] = { opts = { provider = 'telescope' } },
+                ['directory'] = {
+                    callback = function(chat)
+                        vim.ui.input(
+                            { prompt = 'Context dir: ', completion = 'dir' },
+                            function(dir)
+                                dir = vim.fn.trim(vim.fn.fnamemodify(dir, ':ph'))
+                                local handle = io.popen('fd . ' .. dir)
+                                if handle ~= nil then
+                                    local result = handle:read('*a')
+                                    handle:close()
+                                    chat:add_reference(
+                                        { role = 'user', content = result },
+                                        'dir',
+                                        string.format('<dir>Directory (%s)</dir>', dir)
+                                    )
+                                end
+                            end
+                        )
+                    end,
+                },
                 ['git_files'] = {
                     callback = function(chat)
                         local git_root = vim.fn.trim(

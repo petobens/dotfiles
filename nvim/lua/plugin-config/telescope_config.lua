@@ -430,7 +430,7 @@ local custom_actions = transform_mod({
         end
         igrep(tostring(p))
     end,
-    -- resUme previous picker
+    -- resume previous picker
     resume = function()
         builtin.resume()
     end,
@@ -513,6 +513,20 @@ local custom_actions = transform_mod({
                 picker.previewer.state.winid
             )
         )
+    end,
+    -- Add file as a reference/context to codecompanion
+    add_codecompanion_reference = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        local file = string.format('%s/%s', entry.cwd, entry.filename)
+        local content = table.concat(vim.fn.readfile(file), '\n')
+        require('codecompanion').last_chat():add_reference({
+            role = 'user',
+            content = string.format('Here is the content of %s:%s', file, content),
+        }, 'file', string.format(
+            '<file>%s</file>',
+            vim.fn.fnamemodify(file, ':t')
+        ))
     end,
 })
 -- Store custom actions to be used elsewhere
@@ -656,6 +670,13 @@ telescope.setup({
             mappings = {
                 i = {
                     ['<CR>'] = stopinsert(custom_actions.open_one_or_many),
+                    ['<C-s>'] = stopinsert(custom_actions.context_split),
+                    ['<C-f>'] = custom_actions.focus_preview,
+                    ['<A-t>'] = custom_actions.entry_find_files_no_ignore,
+                    ['<A-c>'] = custom_actions.entry_find_dir,
+                    ['<A-p>'] = custom_actions.entry_parent_dirs,
+                    ['<A-g>'] = custom_actions.entry_igrep,
+                    ['<A-a>'] = stopinsert(custom_actions.add_codecompanion_reference),
                 },
             },
         },
