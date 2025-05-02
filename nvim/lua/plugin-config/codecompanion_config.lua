@@ -8,7 +8,6 @@ local config = require('codecompanion.config')
 -- Help/options map is broken: https://github.com/olimorris/codecompanion.nvim/issues/1335
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 
--- Make xp mapping jump to the chat buffer
 -- Allow telescope custom_action to add multiple files to chat buffer
 -- Add nvimtree action to add files to chat buffer
 -- Fix git files are not being read
@@ -115,6 +114,21 @@ local function set_chat_win_title()
     vim.api.nvim_win_set_config(chat.ui.winnr, {
         title = string.format('CodeCompanion - %s', chatmap[chat.ui.winnr]),
     })
+end
+
+local function try_focus_chat_float()
+    local has_chat_win = false
+    -- Focus window if already open (we search for a floating window with specifix zindex)
+    for w = 1, vim.fn.winnr('$') do
+        local win_id = vim.fn.win_getid(w)
+        local win_conf = vim.api.nvim_win_get_config(win_id)
+        if win_conf.focusable and win_conf.relative ~= '' and win_conf.zindex == 45 then
+            vim.api.nvim_set_current_win(win_id)
+            has_chat_win = true
+            break
+        end
+    end
+    return has_chat_win
 end
 
 -- Setup
@@ -443,7 +457,7 @@ codecompanion.setup({
             strategy = 'chat',
             description = 'Act as a translator from Spanish to English.',
             opts = {
-                short_name = 'translate',
+                short_name = 'translator_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -569,16 +583,9 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- Mappings
 vim.keymap.set('n', '<Leader>xx', function()
-    -- Focus window if already open (we simply search for a floating window)
-    for w = 1, vim.fn.winnr('$') do
-        local win_id = vim.fn.win_getid(w)
-        local win_conf = vim.api.nvim_win_get_config(win_id)
-        if win_conf.focusable and win_conf.relative ~= '' and win_conf.zindex == 45 then
-            vim.api.nvim_set_current_win(win_id)
-            return
-        end
+    if try_focus_chat_float() then
+        return
     end
-
     codecompanion.toggle()
     vim.defer_fn(function()
         vim.cmd('startinsert')
@@ -596,4 +603,14 @@ vim.keymap.set({ 'n' }, '<Leader>xe', function()
         actions.select_default(picker)
     end, 150)
 end)
-vim.keymap.set({ 'v' }, '<Leader>xp', codecompanion.add)
+vim.keymap.set({ 'v' }, '<Leader>xp', function()
+    codecompanion.add()
+    if vim.bo.filetype ~= 'codecompanion' then
+        try_focus_chat_float()
+        vim.api.nvim_feedkeys(
+            vim.api.nvim_replace_termcodes('<Esc>', true, false, true),
+            'n',
+            false
+        )
+    end
+end)
