@@ -8,9 +8,9 @@ local config = require('codecompanion.config')
 -- Help/options map is broken: https://github.com/olimorris/codecompanion.nvim/issues/1335
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 
--- Allow telescope custom_action to add multiple files to chat buffer
+-- Open issue about custom prompt (writer) slash cmd not loading references
 -- Add nvimtree action to add files to chat buffer
--- Fix git files are not being read
+-- Fix git and py files are not being read
 -- Fix directory slash commands (files are neither shared nor read)
 -- https://github.com/olimorris/codecompanion.nvim/discussions/947
 -- https://github.com/olimorris/codecompanion.nvim/discussions/641
@@ -25,9 +25,9 @@ local config = require('codecompanion.config')
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1098
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1129
 -- https://github.com/olimorris/codecompanion.nvim/discussions/652
+-- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
 -- Try VectorCode
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1252
--- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
 -- Possible to share a PDF file with this?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
 
@@ -162,6 +162,7 @@ codecompanion.setup({
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
                     model = { default = 'gemini-2.5-flash-preview-04-17' },
+                    -- FIXME: These arguments are not working
                     -- maxOutputTokens = { default = 2048 },
                     -- thinkingBudget = { default = 0 },
                 },

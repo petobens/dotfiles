@@ -514,19 +514,38 @@ local custom_actions = transform_mod({
             )
         )
     end,
-    -- Add file as a reference/context to codecompanion
+    -- Add files as a reference/context to codecompanion
     add_codecompanion_reference = function(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local multi = picker:get_multi_selection()
         actions.close(prompt_bufnr)
-        local entry = action_state.get_selected_entry()
-        local file = string.format('%s/%s', entry.cwd, entry.filename)
-        local content = table.concat(vim.fn.readfile(file), '\n')
-        require('codecompanion').last_chat():add_reference({
-            role = 'user',
-            content = string.format('Here is the content of %s:%s', file, content),
-        }, 'file', string.format(
-            '<file>%s</file>',
-            vim.fn.fnamemodify(file, ':t')
-        ))
+
+        local files = {}
+        if not vim.tbl_isempty(multi) then
+            for _, v in pairs(multi) do
+                table.insert(files, string.format('%s/%s', v.cwd, v.filename))
+            end
+        else
+            local entry = action_state.get_selected_entry()
+            table.insert(files, string.format('%s/%s', entry.cwd, entry.filename))
+        end
+
+        local codecompanion = require('codecompanion')
+        local chat = codecompanion.last_chat()
+        if not chat then
+            chat = codecompanion.chat()
+        end
+
+        for _, file in ipairs(files) do
+            local content = table.concat(vim.fn.readfile(file), '\n')
+            chat:add_reference({
+                role = 'user',
+                content = string.format('Here is the content of %s:%s', file, content),
+            }, 'file', string.format(
+                '<file>%s</file>',
+                vim.fn.fnamemodify(file, ':t')
+            ))
+        end
     end,
 })
 -- Store custom actions to be used elsewhere
