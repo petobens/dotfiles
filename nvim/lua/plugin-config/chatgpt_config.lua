@@ -12,7 +12,7 @@ chatgpt.setup({
         top_p = 0.1,
         n = 1,
     },
-    predefined_chat_gpt_prompts = 'https://raw.githubusercontent.com/petobens/chatgpt-prompts/main/prompts.csv',
+    predefined_chat_gpt_prompts = 'https://raw.githubusercontent.com/petobens/llm-prompts/main/prompts.csv',
     popup_layout = {
         default = 'right',
         right = { width = '45%' },

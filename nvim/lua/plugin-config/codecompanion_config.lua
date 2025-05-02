@@ -8,7 +8,7 @@ local config = require('codecompanion.config')
 -- Help/options map is broken: https://github.com/olimorris/codecompanion.nvim/issues/1335
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 
--- Search from prompt in local computer before looking in the web
+-- Make xp mapping jump to the chat buffer
 -- Allow telescope custom_action to add multiple files to chat buffer
 -- Add nvimtree action to add files to chat buffer
 -- Fix git files are not being read
@@ -20,19 +20,17 @@ local config = require('codecompanion.config')
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
--- Possible to share a PDF file?
--- https://github.com/olimorris/codecompanion.nvim/discussions/1208
-
 -- Plugins/Extensions:
--- Try VectorCode
--- https://github.com/olimorris/codecompanion.nvim/discussions/1252
--- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
-
 -- Not saving sessions:
 -- https://github.com/olimorris/codecompanion.nvim/discussions/139
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1098
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1129
 -- https://github.com/olimorris/codecompanion.nvim/discussions/652
+-- Try VectorCode
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1252
+-- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
+-- Possible to share a PDF file with this?
+-- https://github.com/olimorris/codecompanion.nvim/discussions/1208
 
 -- Nice to Haves:
 -- Add ability to rename chat?
@@ -59,12 +57,19 @@ local function get_my_prompt_library()
         'writer_at_work',
     }
     local base_url =
-        'https://raw.githubusercontent.com/petobens/chatgpt-prompts/main/prompts/%s.md'
+        'https://raw.githubusercontent.com/petobens/llm-prompts/main/md-prompts/%s.md'
+    local prompt_dir = vim.fn.expand('~/git-repos/private/llm-prompts/md-prompts/')
+    local use_url = vim.fn.isdirectory(prompt_dir) ~= 1
     local prompt_library = {}
 
     for _, name in ipairs(prompt_md_files) do
-        local lines =
-            vim.fn.systemlist({ 'curl', '-fsSL', string.format(base_url, name) })
+        local lines
+        if use_url then
+            lines = vim.fn.systemlist({ 'curl', '-fsSL', string.format(base_url, name) })
+        else
+            lines = vim.fn.readfile(prompt_dir .. name .. '.md')
+        end
+
         local filtered = {}
         for _, line in ipairs(lines) do
             if not line:lower():find('markdownlint') then
