@@ -201,6 +201,15 @@ codecompanion.setup({
                 },
             })
         end,
+        ollama_qwen3_2b = function()
+            return adapters.extend('ollama', {
+                schema = {
+                    model = {
+                        default = 'qwen3:1.7b',
+                    },
+                },
+            })
+        end,
     },
     display = {
         chat = {
@@ -260,6 +269,15 @@ codecompanion.setup({
                         adapter.schema.model.default,
                         system_role
                     )
+                end,
+            },
+            opts = {
+                prompt_decorator = function(message, adapter, _)
+                    if adapter.name == 'ollama' then
+                        return string.format([[/no_think %s]], message)
+                    else
+                        return message
+                    end
                 end,
             },
             keymaps = {
