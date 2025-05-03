@@ -171,6 +171,9 @@ EOF'
     # SSH
     sudo systemctl enable sshd.service
     sudo systemctl start sshd.service
+    # Ollama
+    sudo systemctl enable ollama.service
+    sudo systemctl start ollama.service
 
     # Remove previous pacman cache dir (we changed it in pacman.conf)
     echo -e "\\033[1;34m--> Removing old pacman cache dir...\\033[0m"
