@@ -5,7 +5,6 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
 -- FIXME:
--- Help/options map is broken: https://github.com/olimorris/codecompanion.nvim/issues/1335
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 -- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
 
@@ -267,6 +266,7 @@ codecompanion.setup({
                 send = { modes = { n = '<C-o>', i = '<C-o>' } },
                 send_to_other_model = {
                     modes = { n = '<C-s>', i = '<C-s>' },
+                    description = 'Send input alternate model',
                     callback = function(chat)
                         vim.g.codecompanion_adapter = 'gemini_flash'
                         chat:apply_model('gemini-2.5-flash-preview-04-17')
@@ -283,8 +283,18 @@ codecompanion.setup({
                     end,
                 },
                 stop = { modes = { n = '<C-x>', i = '<C-x>' } },
+                clear = { modes = { n = '<A-w>', i = '<A-w>' } },
                 yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
-                options = { modes = { n = '<A-h>', i = '<A-h>' } },
+                options = {
+                    modes = { n = '<A-h>', i = '<A-h>' },
+                    callback = function()
+                        local keymaps = require('codecompanion.strategies.chat.keymaps')
+                        keymaps.options.callback()
+                        vim.defer_fn(function()
+                            vim.cmd('stopinsert')
+                        end, 1)
+                    end,
+                },
                 previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
                 next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
                 change_adapter = { modes = { n = '<Leader>cm' } },
