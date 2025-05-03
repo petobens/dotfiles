@@ -162,11 +162,6 @@ local plugins = {
             'nvim-lua/plenary.nvim',
             'nvim-treesitter/nvim-treesitter',
         },
-        keys = {
-            '<Leader>xx',
-            '<Leader>xa',
-            { '<Leader>xr', mode = { 'n', 'v' } },
-        },
         config = function()
             require('plugin-config.codecompanion_config')
         end,

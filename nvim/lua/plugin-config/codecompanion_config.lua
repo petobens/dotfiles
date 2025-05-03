@@ -7,9 +7,8 @@ local config = require('codecompanion.config')
 -- FIXME:
 -- Help/options map is broken: https://github.com/olimorris/codecompanion.nvim/issues/1335
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
+-- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
 
--- Open issue about custom prompt (writer) slash cmd not loading references
--- Add nvimtree action to add files to chat buffer
 -- Fix git and py files are not being read
 -- Fix directory slash commands (files are neither shared nor read)
 -- https://github.com/olimorris/codecompanion.nvim/discussions/947
@@ -35,6 +34,8 @@ local config = require('codecompanion.config')
 -- Add ability to rename chat?
 -- Choose only some default prompts/actions
 -- When using editor tool enter normal mode after exiting the chat buffer and into a diff
+
+_G.CodeCompanionConfig = {}
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
@@ -117,18 +118,44 @@ local function set_chat_win_title()
 end
 
 local function try_focus_chat_float()
-    local has_chat_win = false
     -- Focus window if already open (we search for a floating window with specifix zindex)
-    for w = 1, vim.fn.winnr('$') do
-        local win_id = vim.fn.win_getid(w)
-        local win_conf = vim.api.nvim_win_get_config(win_id)
-        if win_conf.focusable and win_conf.relative ~= '' and win_conf.zindex == 45 then
+    for _, win_id in ipairs(vim.api.nvim_list_wins()) do
+        local conf = vim.api.nvim_win_get_config(win_id)
+        if conf.focusable and conf.relative ~= '' and conf.zindex == 45 then
             vim.api.nvim_set_current_win(win_id)
-            has_chat_win = true
-            break
+            return true
         end
     end
-    return has_chat_win
+    return false
+end
+
+local function focus_or_toggle_chat()
+    if try_focus_chat_float() then
+        return
+    end
+    codecompanion.toggle()
+    vim.defer_fn(function()
+        vim.cmd('startinsert')
+    end, 1)
+end
+
+-- Globals
+function _G.CodeCompanionConfig.add_references(files)
+    local chat = codecompanion.last_chat()
+    if not chat then
+        chat = codecompanion.chat()
+    end
+    for _, file in ipairs(files) do
+        local content = table.concat(vim.fn.readfile(file), '\n')
+        chat:add_reference({
+            role = 'user',
+            content = string.format('Here is the content of %s:%s', file, content),
+        }, 'file', string.format(
+            '<file>%s</file>',
+            vim.fn.fnamemodify(file, ':t')
+        ))
+    end
+    focus_or_toggle_chat()
 end
 
 -- Setup
@@ -583,15 +610,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>xx', function()
-    if try_focus_chat_float() then
-        return
-    end
-    codecompanion.toggle()
-    vim.defer_fn(function()
-        vim.cmd('startinsert')
-    end, 1)
-end)
+vim.keymap.set('n', '<Leader>xx', focus_or_toggle_chat)
 vim.keymap.set({ 'n', 'v' }, '<Leader>xr', ':CodeCompanion ', { silent = false })
 vim.keymap.set({ 'n', 'v' }, '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')
 vim.keymap.set({ 'n' }, '<Leader>xe', function()

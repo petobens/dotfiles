@@ -515,7 +515,7 @@ local custom_actions = transform_mod({
         )
     end,
     -- Add files as a reference/context to codecompanion
-    add_codecompanion_reference = function(prompt_bufnr)
+    add_codecompanion_references = function(prompt_bufnr)
         local picker = action_state.get_current_picker(prompt_bufnr)
         local multi = picker:get_multi_selection()
         actions.close(prompt_bufnr)
@@ -529,23 +529,7 @@ local custom_actions = transform_mod({
             local entry = action_state.get_selected_entry()
             table.insert(files, string.format('%s/%s', entry.cwd, entry.filename))
         end
-
-        local codecompanion = require('codecompanion')
-        local chat = codecompanion.last_chat()
-        if not chat then
-            chat = codecompanion.chat()
-        end
-
-        for _, file in ipairs(files) do
-            local content = table.concat(vim.fn.readfile(file), '\n')
-            chat:add_reference({
-                role = 'user',
-                content = string.format('Here is the content of %s:%s', file, content),
-            }, 'file', string.format(
-                '<file>%s</file>',
-                vim.fn.fnamemodify(file, ':t')
-            ))
-        end
+        _G.CodeCompanionConfig.add_references(files)
     end,
 })
 -- Store custom actions to be used elsewhere
@@ -695,7 +679,7 @@ telescope.setup({
                     ['<A-c>'] = custom_actions.entry_find_dir,
                     ['<A-p>'] = custom_actions.entry_parent_dirs,
                     ['<A-g>'] = custom_actions.entry_igrep,
-                    ['<A-a>'] = stopinsert(custom_actions.add_codecompanion_reference),
+                    ['<A-a>'] = stopinsert(custom_actions.add_codecompanion_references),
                 },
             },
         },

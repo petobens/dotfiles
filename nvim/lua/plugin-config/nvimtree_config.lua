@@ -137,6 +137,21 @@ local function paste()
     marks_api.clear()
 end
 
+local function add_codecompanion_references()
+    local files = {}
+    local nodes = marks_api.list()
+    if next(nodes) == nil then
+        local node = tree_api.get_node_under_cursor()
+        table.insert(files, node.absolute_path)
+    else
+        for _, node in ipairs(nodes) do
+            table.insert(files, node.absolute_path)
+        end
+    end
+    _G.CodeCompanionConfig.add_references(files)
+    vim.cmd('NvimTreeClose')
+end
+
 -- Cycle sorting
 -- See https://github.com/nvim-tree/nvim-tree.lua/wiki/Recipes#cycle-sort-methods
 local SORT_METHODS = {
@@ -223,6 +238,8 @@ local function on_attach(bufnr)
     vim.keymap.set('n', ',od', function()
         execute({ 'dragon-drop', '-a', '-x' })
     end, map_opts)
+    --- CodeCompanion
+    vim.keymap.set('n', '<A-a>', add_codecompanion_references, map_opts)
 end
 
 require('nvim-tree').setup({
@@ -302,3 +319,4 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 -- Mappings
 vim.keymap.set('n', '<Leader>ff', cd_find_file)
+vim.keymap.set('n', '<Leader>fq', '<Cmd>NvimTreeClose<CR>')
