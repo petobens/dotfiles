@@ -10,6 +10,8 @@ local config = require('codecompanion.config')
 -- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
 
 -- TODO:
+-- Put cwd in chat title
+
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
@@ -132,6 +134,14 @@ local function focus_or_toggle_chat()
     vim.defer_fn(function()
         vim.cmd('startinsert')
     end, 1)
+end
+
+local function send_project_tree(chat, root)
+    local tree = vim.fn.system({ 'tree', '-a', '-L', '2', '--noreport', root })
+    chat:add_message({
+        role = 'user',
+        content = string.format('The project structure is given by:\n%s', tree),
+    })
 end
 
 -- Globals
@@ -286,7 +296,7 @@ codecompanion.setup({
                 ['buffer'] = { opts = { provider = 'telescope' } },
                 ['file'] = { opts = { provider = 'telescope' } },
                 ['directory'] = {
-                    callback = function()
+                    callback = function(chat)
                         vim.ui.input(
                             { prompt = 'Context dir: ', completion = 'dir' },
                             function(dir)
@@ -300,13 +310,14 @@ codecompanion.setup({
                                         table.insert(files, file)
                                     end
                                 end
+                                send_project_tree(chat, dir)
                                 _G.CodeCompanionConfig.add_references(files)
                             end
                         )
                     end,
                 },
                 ['git_files'] = {
-                    callback = function()
+                    callback = function(chat)
                         local git_root = vim.trim(
                             vim.fn.systemlist('git rev-parse --show-toplevel')[1]
                         )
@@ -315,11 +326,13 @@ codecompanion.setup({
                         local files = vim.tbl_map(function(f)
                             return git_root .. '/' .. f
                         end, git_files)
+                        send_project_tree(chat, git_root)
                         _G.CodeCompanionConfig.add_references(files)
                     end,
                 },
                 ['py_files'] = {
-                    callback = function()
+                    callback = function(chat)
+                        send_project_tree(chat, _G.PyVenv.active_venv.project_root)
                         _G.CodeCompanionConfig.add_references(
                             _G.PyVenv.active_venv.project_files
                         )
