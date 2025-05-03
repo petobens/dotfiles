@@ -9,11 +9,6 @@ local config = require('codecompanion.config')
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 -- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
 
--- Fix git and py files are not being read
--- Fix directory slash commands (files are neither shared nor read)
--- https://github.com/olimorris/codecompanion.nvim/discussions/947
--- https://github.com/olimorris/codecompanion.nvim/discussions/641
-
 -- TODO:
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
@@ -291,62 +286,42 @@ codecompanion.setup({
                 ['buffer'] = { opts = { provider = 'telescope' } },
                 ['file'] = { opts = { provider = 'telescope' } },
                 ['directory'] = {
-                    callback = function(chat)
+                    callback = function()
                         vim.ui.input(
                             { prompt = 'Context dir: ', completion = 'dir' },
                             function(dir)
-                                dir = vim.fn.trim(vim.fn.fnamemodify(dir, ':ph'))
-                                local handle = io.popen('fd . ' .. dir)
-                                if handle ~= nil then
-                                    local result = handle:read('*a')
-                                    handle:close()
-                                    chat:add_reference(
-                                        { role = 'user', content = result },
-                                        'dir',
-                                        string.format('<dir>Directory (%s)</dir>', dir)
-                                    )
+                                dir = vim.fn
+                                    .trim(vim.fn.fnamemodify(dir, ':ph'))
+                                    :gsub('/$', '')
+                                local glob_result = vim.fn.glob(dir .. '/*', false, true)
+                                local files = {}
+                                for _, file in ipairs(glob_result) do
+                                    if vim.fn.isdirectory(file) == 0 then
+                                        table.insert(files, file)
+                                    end
                                 end
+                                _G.CodeCompanionConfig.add_references(files)
                             end
                         )
                     end,
                 },
                 ['git_files'] = {
-                    callback = function(chat)
-                        local git_root = vim.fn.trim(
-                            vim.fn.system('git rev-parse --show-toplevel 2>/dev/null')
+                    callback = function()
+                        local git_root = vim.trim(
+                            vim.fn.systemlist('git rev-parse --show-toplevel')[1]
                         )
-                        local handle = io.popen('git ls-files --full-name ' .. git_root)
-                        if handle ~= nil then
-                            local result = handle:read('*a')
-                            handle:close()
-                            chat:add_reference(
-                                { role = 'user', content = result },
-                                'git',
-                                string.format(
-                                    '<git>Git Files (%s)</git>',
-                                    vim.fn.fnamemodify(git_root, ':t')
-                                )
-                            )
-                        end
+                        local git_files =
+                            vim.fn.systemlist('git ls-files --full-name ' .. git_root)
+                        local files = vim.tbl_map(function(f)
+                            return git_root .. '/' .. f
+                        end, git_files)
+                        _G.CodeCompanionConfig.add_references(files)
                     end,
                 },
                 ['py_files'] = {
-                    callback = function(chat)
-                        local project_name =
-                            vim.fn.fnamemodify(_G.PyVenv.active_venv.project_root, ':t')
-                        chat:add_reference(
-                            {
-                                role = 'user',
-                                content = table.concat(
-                                    _G.PyVenv.active_venv.project_files,
-                                    '\n'
-                                ),
-                            },
-                            'files',
-                            string.format(
-                                '<pyfiles>Python Files (%s)</pyfiles>',
-                                project_name
-                            )
+                    callback = function()
+                        _G.CodeCompanionConfig.add_references(
+                            _G.PyVenv.active_venv.project_files
                         )
                     end,
                 },
