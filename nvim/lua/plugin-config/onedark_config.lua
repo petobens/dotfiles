@@ -326,6 +326,7 @@ onedarkpro.setup({
 
         ---- vim & vimdoc
         ['@comment.note.vimdoc'] = { link = '@comment.note.comment' },
+        ['@comment.warning.vimdoc'] = { link = 'WarningMsg' },
         ['@conceal.vimdoc'] = { fg = p.red },
         ['@constant.builtin.vim'] = { fg = p.yellow },
         ['@label.vimdoc'] = { fg = p.orange, style = p.none },
