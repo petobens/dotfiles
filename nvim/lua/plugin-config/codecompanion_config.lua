@@ -10,8 +10,6 @@ local config = require('codecompanion.config')
 -- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
 
 -- TODO:
--- Put cwd in chat title
-
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
@@ -110,7 +108,11 @@ local function set_chat_win_title()
 
     local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
     vim.api.nvim_win_set_config(chat.ui.winnr, {
-        title = string.format('CodeCompanion - %s', chatmap[chat.ui.winnr]),
+        title = string.format(
+            'CodeCompanion - %s (%s)',
+            chatmap[chat.ui.winnr],
+            vim.uv.cwd():match('([^/]+/[^/]+)$')
+        ),
     })
 end
 
