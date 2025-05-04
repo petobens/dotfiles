@@ -9,11 +9,11 @@ local config = require('codecompanion.config')
 -- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
 
 -- TODO:
--- Retrieve model name in pre-process
+-- Retrieve model name in pre-process: https://github.com/olimorris/codecompanion.nvim/pull/1331#issuecomment-2849238617
 -- Add postprocess (to remove think or --- yaml)
--- Show only default model when selecting an adapter
--- Add bottom title to codecompanion chat window
+-- Add bottom title to codecompanion chat window: https://github.com/neovim/neovim/pull/24739
 -- Add filetype to debug window
+-- Show only default model when selecting an adapter
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
