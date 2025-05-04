@@ -3,15 +3,16 @@
 local adapters = require('codecompanion.adapters')
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
+local keymaps = require('codecompanion.strategies.chat.keymaps')
 
 -- FIXME:
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 -- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
 -- Retrieve model name in pre-process: https://github.com/olimorris/codecompanion.nvim/pull/1331#issuecomment-2849238617
--- and aldo add postprocess (to remove think or --- yaml)
+-- and also add postprocess (to remove think or --- yaml)
 
 -- TODO:
--- Add filetype to debug window
+-- Disable diagnostics in debug window
 -- Show only default model when selecting an adapter
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
@@ -304,7 +305,6 @@ codecompanion.setup({
                 options = {
                     modes = { n = '<A-h>', i = '<A-h>' },
                     callback = function()
-                        local keymaps = require('codecompanion.strategies.chat.keymaps')
                         keymaps.options.callback()
                         vim.defer_fn(function()
                             vim.cmd('stopinsert')
@@ -314,7 +314,15 @@ codecompanion.setup({
                 previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
                 next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
                 change_adapter = { modes = { n = '<Leader>cm', i = '<A-m>' } },
-                debug = { modes = { n = '<Leader>db', i = '<A-d>' } },
+                debug = {
+                    modes = { n = '<Leader>db', i = '<A-d>' },
+                    callback = function(chat)
+                        keymaps.debug.callback(chat)
+                        vim.defer_fn(function()
+                            vim.cmd('stopinsert')
+                        end, 1)
+                    end,
+                },
                 pin = { modes = { n = '<Leader>rp' } },
                 watch = { modes = { n = '<Leader>rw' } },
                 system_prompt = { modes = { n = '<Leader>ts' } },
