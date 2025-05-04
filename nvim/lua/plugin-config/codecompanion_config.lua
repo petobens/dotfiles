@@ -169,8 +169,9 @@ codecompanion.setup({
         opts = {
             show_defaults = false,
         },
-        openai_gpt = function()
+        openai_gpt_41 = function()
             return adapters.extend('openai', {
+                name = 'openai_gpt_41',
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
                     model = { default = 'gpt-4.1' },
@@ -180,16 +181,18 @@ codecompanion.setup({
                 },
             })
         end,
-        openai_o_mini = function()
+        openai_o4_mini = function()
             return adapters.extend('openai', {
+                name = 'openai_o4_mini',
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
                     model = { default = 'o4-mini' },
                 },
             })
         end,
-        gemini_flash = function()
+        gemini_flash_25 = function()
             return adapters.extend('gemini', {
+                name = 'gemini_flash_25',
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
                     model = { default = 'gemini-2.5-flash-preview-04-17' },
@@ -201,6 +204,7 @@ codecompanion.setup({
         end,
         ollama_qwen3_2b = function()
             return adapters.extend('ollama', {
+                name = 'ollama_qwen3_2b',
                 schema = {
                     model = {
                         default = 'qwen3:1.7b',
@@ -243,7 +247,7 @@ codecompanion.setup({
     },
     strategies = {
         chat = {
-            adapter = 'openai_gpt', -- default adapter
+            adapter = 'openai_gpt_41',
             roles = {
                 user = 'Me',
                 llm = function(adapter)
@@ -271,7 +275,7 @@ codecompanion.setup({
             },
             opts = {
                 prompt_decorator = function(message, adapter, _)
-                    if adapter.name == 'ollama' then
+                    if adapter.name == 'ollama_qwen3_2b' then
                         return string.format([[/no_think %s]], message)
                     else
                         return message
@@ -284,7 +288,7 @@ codecompanion.setup({
                     modes = { n = '<C-s>', i = '<C-s>' },
                     description = 'Send input alternate model',
                     callback = function(chat)
-                        vim.g.codecompanion_adapter = 'gemini_flash'
+                        vim.g.codecompanion_adapter = 'gemini_flash_25'
                         chat:apply_model('gemini-2.5-flash-preview-04-17')
                         chat:submit()
                     end,
@@ -376,7 +380,7 @@ codecompanion.setup({
             },
         },
         inline = {
-            adapter = 'openai_gpt',
+            adapter = 'openai_gpt_41',
             keymaps = {
                 accept_change = { modes = { n = 'dp' } },
                 reject_change = { modes = { n = 'de' } },
