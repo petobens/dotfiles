@@ -190,6 +190,7 @@ local plugins = {
             'nvim-telescope/telescope-frecency.nvim',
             'nvim-telescope/telescope-z.nvim',
             'rafi/telescope-thesaurus.nvim',
+            'nvim-telescope/telescope-ui-select.nvim',
         },
         config = function()
             require('plugin-config.telescope_config')
