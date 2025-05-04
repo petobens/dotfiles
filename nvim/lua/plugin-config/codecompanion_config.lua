@@ -9,6 +9,12 @@ local config = require('codecompanion.config')
 -- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
 
 -- TODO:
+-- Retrieve model name in pre-process
+-- Add postprocess (to remove think or --- yaml)
+-- Show only default model when selecting an adapter
+-- Add bottom title to codecompanion chat window
+-- Add filetype to debug window
+
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
@@ -310,8 +316,8 @@ codecompanion.setup({
                 },
                 previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
                 next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
-                change_adapter = { modes = { n = '<Leader>cm' } },
-                debug = { modes = { n = '<Leader>db' } },
+                change_adapter = { modes = { n = '<Leader>cm', i = '<A-m>' } },
+                debug = { modes = { n = '<Leader>db', i = '<A-d>' } },
                 pin = { modes = { n = '<Leader>rp' } },
                 watch = { modes = { n = '<Leader>rw' } },
                 system_prompt = { modes = { n = '<Leader>ts' } },
