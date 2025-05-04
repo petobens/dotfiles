@@ -12,7 +12,6 @@ local keymaps = require('codecompanion.strategies.chat.keymaps')
 -- and also add postprocess (to remove think or --- yaml)
 
 -- TODO:
--- Disable diagnostics in debug window
 -- Show only default model when selecting an adapter
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)

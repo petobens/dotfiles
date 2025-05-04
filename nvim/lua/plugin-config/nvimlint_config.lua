@@ -7,10 +7,20 @@ vim.api.nvim_create_autocmd(
     {
         group = vim.api.nvim_create_augroup('nvim_lint', { clear = true }),
         callback = function(e)
+            local win_config = vim.api.nvim_win_get_config(0)
+            local zindex = win_config.zindex
+            local title = win_config.title
+
+            -- Don't lint markdown floating windows
+            if e.buf and vim.bo[e.buf].filetype == 'markdown' and zindex then
+                return
+            end
+            -- Don't lint codecompanion debug window
             if
-                e.buf
-                and vim.bo[e.buf].filetype == 'markdown'
-                and vim.api.nvim_win_get_config(0).zindex
+                zindex
+                and type(title) == 'table'
+                and type(title[1]) == 'table'
+                and title[1][1] == 'Debug Chat'
             then
                 return
             end
