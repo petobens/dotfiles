@@ -7,11 +7,10 @@ local config = require('codecompanion.config')
 -- FIXME:
 -- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 -- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
+-- Retrieve model name in pre-process: https://github.com/olimorris/codecompanion.nvim/pull/1331#issuecomment-2849238617
+-- and aldo add postprocess (to remove think or --- yaml)
 
 -- TODO:
--- Retrieve model name in pre-process: https://github.com/olimorris/codecompanion.nvim/pull/1331#issuecomment-2849238617
--- Add postprocess (to remove think or --- yaml)
--- Add bottom title to codecompanion chat window: https://github.com/neovim/neovim/pull/24739
 -- Add filetype to debug window
 -- Show only default model when selecting an adapter
 
@@ -108,11 +107,9 @@ local function set_chat_win_title()
 
     local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
     vim.api.nvim_win_set_config(chat.ui.winnr, {
-        title = string.format(
-            'CodeCompanion - %s (%s)',
-            chatmap[chat.ui.winnr],
-            vim.uv.cwd():match('([^/]+/[^/]+)$')
-        ),
+        title = string.format('CodeCompanion - %s', chatmap[chat.ui.winnr]),
+        footer = vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$'),
+        footer_pos = 'center',
     })
 end
 
