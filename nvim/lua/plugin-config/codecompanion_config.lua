@@ -12,6 +12,8 @@ local keymaps = require('codecompanion.strategies.chat.keymaps')
 -- and also add postprocess (to remove think or --- yaml)
 
 -- TODO:
+-- Give whole nvim docs to lua role (it didn't know about footer when setting title)
+
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
@@ -341,6 +343,14 @@ codecompanion.setup({
                                 dir = vim.fn
                                     .trim(vim.fn.fnamemodify(dir, ':ph'))
                                     :gsub('/$', '')
+                                vim.cmd('redraw!')
+                                if vim.fn.isdirectory(dir) == 0 then
+                                    vim.notify(
+                                        'Directory not found: ' .. dir,
+                                        vim.log.levels.ERROR
+                                    )
+                                    return
+                                end
                                 local glob_result = vim.fn.glob(dir .. '/*', false, true)
                                 local files = {}
                                 for _, file in ipairs(glob_result) do
@@ -359,6 +369,14 @@ codecompanion.setup({
                         local git_root = vim.trim(
                             vim.fn.systemlist('git rev-parse --show-toplevel')[1]
                         )
+                        if vim.v.shell_error ~= 0 then
+                            vim.notify(
+                                'Not inside a Git repository. Could not determine the project root.',
+                                vim.log.levels.ERROR
+                            )
+                            return
+                        end
+
                         local git_files =
                             vim.fn.systemlist('git ls-files --full-name ' .. git_root)
                         local files = vim.tbl_map(function(f)
@@ -370,6 +388,13 @@ codecompanion.setup({
                 },
                 ['py_files'] = {
                     callback = function(chat)
+                        if vim.tbl_isempty(_G.PyVenv.active_venv) then
+                            vim.notify(
+                                'No active Python virtual environment found.',
+                                vim.log.levels.ERROR
+                            )
+                            return
+                        end
                         send_project_tree(chat, _G.PyVenv.active_venv.project_root)
                         _G.CodeCompanionConfig.add_references(
                             _G.PyVenv.active_venv.project_files
