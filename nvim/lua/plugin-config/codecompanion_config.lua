@@ -12,8 +12,6 @@ local keymaps = require('codecompanion.strategies.chat.keymaps')
 -- and also add postprocess (to remove think or --- yaml)
 
 -- TODO:
--- Show only default model when selecting an adapter
-
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
@@ -168,6 +166,7 @@ codecompanion.setup({
     adapters = {
         opts = {
             show_defaults = false,
+            show_model_choices = false,
         },
         openai_gpt_41 = function()
             return adapters.extend('openai', {
