@@ -13,16 +13,11 @@ local config = require('codecompanion.config')
 -- Add tool to fix quickfix errors
 
 -- Plugins/Extensions:
--- Not saving sessions:
--- https://github.com/olimorris/codecompanion.nvim/discussions/139
--- https://github.com/olimorris/codecompanion.nvim/discussions/1098
--- https://github.com/olimorris/codecompanion.nvim/discussions/1129
--- https://github.com/olimorris/codecompanion.nvim/discussions/652
--- Try MCP Hub plugin integration https://github.com/ravitemer/mcphub.nvim
--- Try VectorCode
--- https://github.com/olimorris/codecompanion.nvim/discussions/1252
+-- Not saving sessions: https://github.com/ravitemer/codecompanion-history.nvim
+-- MCP Hub https://github.com/ravitemer/mcphub.nvim
 -- Possible to share a PDF file with this?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
+-- VectorCode https://github.com/olimorris/codecompanion.nvim/discussions/1252
 
 -- Nice to Haves:
 -- Add ability to rename chat?
@@ -477,7 +472,7 @@ codecompanion.setup({
                 { role = 'user', content = '' },
             },
         },
-        [' Writer'] = {
+        [' Writer at Work'] = {
             strategy = 'chat',
             description = 'Write the way I write at work.',
             opts = {
