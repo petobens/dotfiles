@@ -12,8 +12,6 @@ local keymaps = require('codecompanion.strategies.chat.keymaps')
 -- and also add postprocess (to remove think or --- yaml)
 
 -- TODO:
--- Give whole nvim docs to lua role (it didn't know about footer when setting title)
-
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
@@ -466,6 +464,15 @@ codecompanion.setup({
                 short_name = 'lua_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
+            },
+            references = {
+                {
+                    type = 'file',
+                    path = {
+                        '/usr/share/nvim/runtime/doc/api.txt',
+                        '/usr/share/nvim/runtime/doc/lua.txt',
+                    },
+                },
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['lua_developer'] },
