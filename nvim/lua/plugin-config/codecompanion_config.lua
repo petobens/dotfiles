@@ -6,17 +6,17 @@ local config = require('codecompanion.config')
 local keymaps = require('codecompanion.strategies.chat.keymaps')
 
 -- FIXME:
--- Add gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
--- Custom prompt (writer) slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/issues/1355
--- Retrieve model name in pre-process: https://github.com/olimorris/codecompanion.nvim/pull/1331#issuecomment-2849238617
--- and also add postprocess (to remove think or --- yaml)
+-- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
+-- Do PR with gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
+-- Improve send to alternate model logic
+-- History/Session Extension: https://github.com/ravitemer/codecompanion-history.nvim
+
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
 -- Plugins/Extensions:
--- Not saving sessions: https://github.com/ravitemer/codecompanion-history.nvim
 -- MCP Hub https://github.com/ravitemer/mcphub.nvim
 -- Possible to share a PDF file with this?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
@@ -40,6 +40,7 @@ Answer questions accurately and provide detailed explanations when necessary.]]
 local function get_my_prompt_library()
     local prompt_md_files = {
         'bash_developer',
+        'gsheets_expert',
         'latex_developer',
         'lua_developer',
         'pydocs',
@@ -195,9 +196,8 @@ codecompanion.setup({
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
                     model = { default = 'gemini-2.5-flash-preview-04-17' },
-                    -- FIXME: These arguments are not working
-                    -- maxOutputTokens = { default = 2048 },
-                    -- thinkingBudget = { default = 0 },
+                    max_tokens = { default = 2048 },
+                    reasoning_effort = { default = 'none' },
                 },
             })
         end,
@@ -522,7 +522,7 @@ codecompanion.setup({
             description = 'Write the way I write at work.',
             opts = {
                 short_name = 'writer',
-                is_slash_cmd = false,
+                is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
             references = {
@@ -549,6 +549,19 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['translator_spa_eng'] },
+                { role = 'user', content = '' },
+            },
+        },
+        ['󰧷 GSheets Expert'] = {
+            strategy = 'chat',
+            description = 'Act as a Google Sheets expert.',
+            opts = {
+                short_name = 'gsheets_role',
+                is_slash_cmd = true,
+                ignore_system_prompt = true,
+            },
+            prompts = {
+                { role = 'system', content = PROMPT_LIBRARY['gsheets_expert'] },
                 { role = 'user', content = '' },
             },
         },
