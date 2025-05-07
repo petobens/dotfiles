@@ -80,13 +80,12 @@ local plugins = {
 
     -- LSP, treesitter and completion
     {
-        'williamboman/mason.nvim',
+        'mason-org/mason.nvim',
         dependencies = 'WhoIsSethDaniel/mason-tool-installer.nvim',
         config = function()
             require('plugin-config.mason_config')
         end,
     },
-    { 'williamboman/mason-lspconfig.nvim' },
     {
         'neovim/nvim-lspconfig',
         config = function()
@@ -157,6 +156,7 @@ local plugins = {
         end,
     },
     {
+        -- 'petobens/codecompanion.nvim',
         'olimorris/codecompanion.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim',

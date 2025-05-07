@@ -1,9 +1,5 @@
 local u = require('utils')
 
--- Mason must load before lsp-config
-require('mason-lspconfig').setup()
-local lspconfig = require('lspconfig')
-
 -- Use borders for floating hovers
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
@@ -29,9 +25,9 @@ vim.lsp.buf.signature_help = function()
     })
 end
 
--- Servers setup (names available in https://github.com/williamboman/nvim-lsp-installer)
+-- Servers setup
 ---- Bash
-lspconfig.bashls.setup({
+vim.lsp.config('bashls', {
     settings = {
         bashIde = {
             shellcheckPath = '', -- We use shellcheck
@@ -39,8 +35,8 @@ lspconfig.bashls.setup({
         },
     },
 })
----- Lua
-lspconfig.lua_ls.setup({
+----- Lua
+vim.lsp.config('lua_ls', {
     settings = {
         Lua = {
             diagnostics = { enable = false }, -- We use luacheck
@@ -55,9 +51,9 @@ lspconfig.lua_ls.setup({
     },
 })
 ---- Markdown
-lspconfig.marksman.setup({})
+vim.lsp.config('marksman', {})
 ---- Python
-lspconfig.basedpyright.setup({
+vim.lsp.config('basedpyright', {
     handlers = {
         -- Don't publish basedpyright diagnostics (we use ruff and mypy instead)
         ['textDocument/publishDiagnostics'] = function() end,
@@ -75,8 +71,17 @@ lspconfig.basedpyright.setup({
     },
 })
 ---- Latex
-lspconfig.texlab.setup({
+vim.lsp.config('texlab', {
     handlers = { ['textDocument/publishDiagnostics'] = function() end },
+})
+
+-- Enable of the above servers
+vim.lsp.enable({
+    'bashls',
+    'lua_ls',
+    'marksman',
+    'basedpyright',
+    'texlab',
 })
 
 -- Autocmds
