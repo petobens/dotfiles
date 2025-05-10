@@ -161,6 +161,7 @@ local plugins = {
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-treesitter/nvim-treesitter',
+            { 'ravitemer/codecompanion-history.nvim' },
         },
         config = function()
             require('plugin-config.codecompanion_config')

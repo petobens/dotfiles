@@ -286,7 +286,6 @@ local custom_actions = transform_mod({
     -- Open one or many files at once
     open_one_or_many = function(prompt_bufnr)
         local picker = action_state.get_current_picker(prompt_bufnr)
-        -- For codecompanion: https://github.com/olimorris/codecompanion.nvim/pull/940
         if picker.prompt_title == 'Select file(s)' then
             actions.select_default(prompt_bufnr)
             return
@@ -596,7 +595,7 @@ telescope.setup({
                 ['<A-f>'] = stopinsert(custom_actions.open_nvimtree),
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
-                ['<A-r>'] = actions.to_fuzzy_refine,
+                ['<A-z>'] = actions.to_fuzzy_refine,
                 ['<C-q>'] = stopinsert(custom_actions.send2qf),
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
                 ['<A-u>'] = custom_actions.resume,

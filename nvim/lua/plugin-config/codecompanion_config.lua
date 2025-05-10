@@ -4,13 +4,20 @@ local adapters = require('codecompanion.adapters')
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local keymaps = require('codecompanion.strategies.chat.keymaps')
+local telescope_action_state = require('telescope.actions.state')
+local telescope_actions = require('telescope.actions')
 
 -- FIXME:
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 -- Allow to override gemini model parameters: https://github.com/olimorris/codecompanion.nvim/pull/1409
+-- Finish History/Session Extension: https://github.com/ravitemer/codecompanion-history.nvim/issues/6
 
 -- TODO:
--- History/Session Extension: https://github.com/ravitemer/codecompanion-history.nvim
+-- Add mapping to create new chat from within the chat buffer (A-n) and delete one
+-- Add mapping to call custom actions from the  chat buffer (A-a)?
+-- Add adapter name to change adapter/model picker
+-- Add a custom markdown prompt file to the library that specifies how I like markdown
+-- output and prepend (or postpend) to each custom user prompt
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
@@ -25,6 +32,9 @@ local keymaps = require('codecompanion.strategies.chat.keymaps')
 -- Add ability to rename chat?
 -- Choose only some default prompts/actions
 -- When using editor tool enter normal mode after exiting the chat buffer and into a diff
+-- Some more custom prompts?
+---- Code reviews: https://github.com/olimorris/codecompanion.nvim/discussions/389
+---- Or generate commit message
 
 _G.CodeCompanionConfig = {}
 
@@ -96,16 +106,46 @@ local function get_last_user_prompt()
     return last_user_prompt
 end
 
-local function set_chat_win_title()
+local function set_chat_win_title(e)
     local chatmap = {}
     local chats = codecompanion.buf_get_chat()
     for _, chat in pairs(chats) do
         chatmap[chat.chat.ui.winnr] = chat.name
     end
 
-    local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+    local ok, chat = pcall(function()
+        return codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+    end)
+
+    if not ok then
+        -- When renaming a chat session directly update the chat window title
+        vim.defer_fn(function()
+            local picker =
+                telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
+            if picker then
+                vim.api.nvim_win_close(picker.prompt_win, true)
+            end
+        end, 50)
+        vim.wait(100)
+        if vim.bo.filetype == 'codecompanion' then
+            local win_id = vim.api.nvim_get_current_win()
+            vim.api.nvim_win_set_config(win_id, {
+                title = vim.api
+                    .nvim_win_get_config(win_id).title[1][1]
+                    :gsub('%b()', '(' .. e.data.title .. ')'),
+            })
+        end
+        return
+    end
+
     vim.api.nvim_win_set_config(chat.ui.winnr, {
-        title = string.format('CodeCompanion - %s', chatmap[chat.ui.winnr]),
+        title = string.format(
+            'CodeCompanion - %s%s',
+            chatmap[chat.ui.winnr],
+            (chat.opts.title and chat.opts.title ~= '')
+                    and string.format(' (%s)', chat.opts.title)
+                or ''
+        ),
         footer = vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or '',
         footer_pos = 'center',
     })
@@ -565,6 +605,22 @@ codecompanion.setup({
             },
         },
     },
+    extensions = {
+        history = {
+            enabled = true,
+            opts = {
+                auto_generate_title = true,
+                auto_save = true,
+                expiration_days = 100,
+                keymap = { n = '<A-s>', i = '<A-s>' },
+                picker_keymaps = {
+                    rename = { n = 'r', i = '<A-r>' },
+                    delete = { n = 'd', i = '<A-d>' },
+                },
+                save_chat_keymap = { n = '<nop>', i = '<nop>' },
+            },
+        },
+    },
 })
 
 -- Ensure buffer is treated as markdown by treesitter despite being codecompanion filetype
@@ -579,10 +635,14 @@ devicons.set_icon_by_filetype({ codecompanion = 'codecompanion' })
 
 -- Set chat window title
 vim.api.nvim_create_autocmd('User', {
-    pattern = { 'CodeCompanionChatCreated', 'CodeCompanionChatOpened' },
-    callback = function()
+    pattern = {
+        'CodeCompanionChatCreated',
+        'CodeCompanionChatOpened',
+        'CodeCompanionHistoryTitleSet',
+    },
+    callback = function(e)
         vim.defer_fn(function()
-            set_chat_win_title()
+            set_chat_win_title(e)
         end, 1)
     end,
 })
@@ -685,14 +745,14 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.keymap.set('n', '<Leader>xx', focus_or_toggle_chat)
 vim.keymap.set({ 'n', 'v' }, '<Leader>xr', ':CodeCompanion ', { silent = false })
 vim.keymap.set({ 'n', 'v' }, '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')
+vim.keymap.set('n', '<Leader>xh', '<Cmd>CodeCompanionHistory<CR>')
 vim.keymap.set({ 'n' }, '<Leader>xe', function()
     codecompanion.actions()
-    local actions = require('telescope.actions')
-    local action_state = require('telescope.actions.state')
     vim.defer_fn(function()
-        local picker = action_state.get_current_picker(vim.api.nvim_get_current_buf())
+        local picker =
+            telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
         picker:move_selection(-1)
-        actions.select_default(picker)
+        telescope_actions.select_default(picker)
     end, 150)
 end)
 vim.keymap.set({ 'v' }, '<Leader>xp', function()
