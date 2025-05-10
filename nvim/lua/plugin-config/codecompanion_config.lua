@@ -10,7 +10,6 @@ local keymaps = require('codecompanion.strategies.chat.keymaps')
 -- Allow to override gemini model parameters: https://github.com/olimorris/codecompanion.nvim/pull/1409
 
 -- TODO:
--- Improve send to alternate model logic
 -- History/Session Extension: https://github.com/ravitemer/codecompanion-history.nvim
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
@@ -107,7 +106,7 @@ local function set_chat_win_title()
     local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
     vim.api.nvim_win_set_config(chat.ui.winnr, {
         title = string.format('CodeCompanion - %s', chatmap[chat.ui.winnr]),
-        footer = vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$'),
+        footer = vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or '',
         footer_pos = 'center',
     })
 end
@@ -292,15 +291,6 @@ codecompanion.setup({
             },
             keymaps = {
                 send = { modes = { n = '<C-o>', i = '<C-o>' } },
-                send_to_other_model = {
-                    modes = { n = '<C-s>', i = '<C-s>' },
-                    description = 'Send input alternate model',
-                    callback = function(chat)
-                        vim.g.codecompanion_adapter = 'gemini_flash_25'
-                        chat:apply_model('gemini-2.5-flash-preview-04-17')
-                        chat:submit()
-                    end,
-                },
                 close = {
                     modes = { n = '<C-c>', i = '<C-c>' },
                     callback = function()
@@ -673,11 +663,13 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set({ 'i', 'n' }, '<A-p>', function()
             local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
             vim.print(string.format('Model Params:\n%s', vim.inspect(chat.settings)))
+            vim.cmd('normal! g<')
         end, { buffer = e.buf })
         vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
             local system_role = get_current_system_role_prompt()
             if system_role then
                 vim.print(string.format('System Role:\n%s', system_role))
+                vim.cmd('normal! g<')
             end
         end, { buffer = e.buf })
         vim.keymap.set({ 'i' }, '<C-p>', function()
