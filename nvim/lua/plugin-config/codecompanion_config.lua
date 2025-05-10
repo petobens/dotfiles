@@ -7,9 +7,9 @@ local keymaps = require('codecompanion.strategies.chat.keymaps')
 
 -- FIXME:
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
+-- Allow to override gemini model parameters: https://github.com/olimorris/codecompanion.nvim/pull/1409
 
 -- TODO:
--- Do PR with gemini model parameters: https://github.com/olimorris/codecompanion.nvim/discussions/1337
 -- Improve send to alternate model logic
 -- History/Session Extension: https://github.com/ravitemer/codecompanion-history.nvim
 
@@ -198,6 +198,15 @@ codecompanion.setup({
                     model = { default = 'gemini-2.5-flash-preview-04-17' },
                     max_tokens = { default = 2048 },
                     reasoning_effort = { default = 'none' },
+                },
+            })
+        end,
+        gemini_pro_25 = function()
+            return adapters.extend('gemini', {
+                name = 'gemini_pro_25',
+                env = { api_key = GEMINI_API_KEY },
+                schema = {
+                    model = { default = 'gemini-2.5-pro-exp-03-25' },
                 },
             })
         end,
