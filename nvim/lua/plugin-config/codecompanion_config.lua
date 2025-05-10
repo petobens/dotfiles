@@ -8,10 +8,9 @@ local keymaps = require('codecompanion.strategies.chat.keymaps')
 -- FIXME:
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 -- Allow to override gemini model parameters: https://github.com/olimorris/codecompanion.nvim/pull/1409
+-- History/Session Extension: https://github.com/ravitemer/codecompanion-history.nvim/issues/6
 
 -- TODO:
--- History/Session Extension: https://github.com/ravitemer/codecompanion-history.nvim
-
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
 
@@ -565,6 +564,17 @@ codecompanion.setup({
             },
         },
     },
+    extensions = {
+        history = {
+            enabled = true,
+            opts = {
+                auto_generate_title = true,
+                auto_save = true,
+                keymap = '<A-s>',
+                save_chat_keymap = '<Leader>sc',
+            },
+        },
+    },
 })
 
 -- Ensure buffer is treated as markdown by treesitter despite being codecompanion filetype
@@ -685,6 +695,7 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.keymap.set('n', '<Leader>xx', focus_or_toggle_chat)
 vim.keymap.set({ 'n', 'v' }, '<Leader>xr', ':CodeCompanion ', { silent = false })
 vim.keymap.set({ 'n', 'v' }, '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')
+vim.keymap.set('n', '<Leader>xh', '<Cmd>CodeCompanionHistory<CR>')
 vim.keymap.set({ 'n' }, '<Leader>xe', function()
     codecompanion.actions()
     local actions = require('telescope.actions')
