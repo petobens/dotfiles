@@ -136,26 +136,6 @@ local plugins = {
         end,
     },
     {
-        -- 'jackMort/ChatGPT.nvim',
-        'MeanderingProgrammer/ChatGPT.nvim',
-        branch = 'trigger-text-changed',
-        dependencies = {
-            'MunifTanjim/nui.nvim',
-            'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope.nvim',
-        },
-        keys = {
-            '<Leader>cg',
-            '<Leader>ca',
-            '<Leader>cp',
-            { '<Leader>ce', mode = { 'n', 'v' } },
-            { '<Leader>cr', mode = { 'n', 'v' } },
-        },
-        config = function()
-            require('plugin-config.chatgpt_config')
-        end,
-    },
-    {
         -- 'petobens/codecompanion.nvim',
         'olimorris/codecompanion.nvim',
         dependencies = {

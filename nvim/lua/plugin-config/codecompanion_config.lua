@@ -9,12 +9,11 @@ local telescope_actions = require('telescope.actions')
 
 -- FIXME:
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
--- Allow to override gemini model parameters: https://github.com/olimorris/codecompanion.nvim/pull/1409
 
 -- TODO:
--- Add adapter name to change adapter/model picker
 -- Add a custom markdown prompt file to the library that specifies how I like markdown
 -- output and prepend (or postpend) to each custom user prompt
+-- Add adapter name to change adapter/model picker
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix errors
@@ -754,11 +753,11 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>xx', focus_or_toggle_chat)
-vim.keymap.set({ 'n', 'v' }, '<Leader>xr', ':CodeCompanion ', { silent = false })
-vim.keymap.set({ 'n', 'v' }, '<Leader>xa', '<Cmd>CodeCompanionActions<CR>')
-vim.keymap.set('n', '<Leader>xh', '<Cmd>CodeCompanionHistory<CR>')
-vim.keymap.set({ 'n' }, '<Leader>xe', function()
+vim.keymap.set('n', '<Leader>cg', focus_or_toggle_chat)
+vim.keymap.set({ 'n', 'v' }, '<Leader>cr', ':CodeCompanion ', { silent = false })
+vim.keymap.set({ 'n', 'v' }, '<Leader>ca', '<Cmd>CodeCompanionActions<CR>')
+vim.keymap.set('n', '<Leader>cb', '<Cmd>CodeCompanionHistory<CR>')
+vim.keymap.set({ 'n' }, '<Leader>ce', function()
     codecompanion.actions()
     vim.defer_fn(function()
         local picker =
@@ -767,7 +766,7 @@ vim.keymap.set({ 'n' }, '<Leader>xe', function()
         telescope_actions.select_default(picker)
     end, 150)
 end)
-vim.keymap.set({ 'v' }, '<Leader>xp', function()
+vim.keymap.set({ 'v' }, '<Leader>cp', function()
     codecompanion.add()
     if vim.bo.filetype ~= 'codecompanion' then
         try_focus_chat_float()
