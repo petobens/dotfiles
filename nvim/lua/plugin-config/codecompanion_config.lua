@@ -10,7 +10,6 @@ local telescope_actions = require('telescope.actions')
 -- FIXME:
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 -- Allow to override gemini model parameters: https://github.com/olimorris/codecompanion.nvim/pull/1409
--- Add mapping to delete chat from within the chat buffer: https://github.com/olimorris/codecompanion.nvim/discussions/1439
 
 -- TODO:
 -- Add adapter name to change adapter/model picker
@@ -27,7 +26,6 @@ local telescope_actions = require('telescope.actions')
 -- VectorCode https://github.com/olimorris/codecompanion.nvim/discussions/1252
 
 -- Nice to Haves:
--- Add ability to rename chat?
 -- Choose only some default prompts/actions
 -- When using editor tool enter normal mode after exiting the chat buffer and into a diff
 -- Some more custom prompts?
@@ -328,15 +326,17 @@ codecompanion.setup({
                 end,
             },
             keymaps = {
-                create_new_chat = {
+                create_chat = {
                     modes = { n = '<A-c>', i = '<A-c>' },
                     description = 'Create new chat',
                     callback = function()
                         vim.cmd('CodeCompanionChat')
                     end,
                 },
-                close = {
+                close = { modes = { n = '<A-x>', i = '<A-x>' } }, -- delete chat
+                hide_chats = {
                     modes = { n = '<C-c>', i = '<C-c>' },
+                    description = 'Hide chats',
                     callback = function()
                         codecompanion.toggle()
                         vim.defer_fn(function()
