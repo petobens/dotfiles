@@ -10,11 +10,9 @@ local telescope_actions = require('telescope.actions')
 -- FIXME:
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 -- Allow to override gemini model parameters: https://github.com/olimorris/codecompanion.nvim/pull/1409
--- Finish History/Session Extension: https://github.com/ravitemer/codecompanion-history.nvim/issues/6
+-- Add mapping to delete chat from within the chat buffer: https://github.com/olimorris/codecompanion.nvim/discussions/1439
 
 -- TODO:
--- Add mapping to create new chat from within the chat buffer (A-n) and delete one
--- Add mapping to call custom actions from the  chat buffer (A-a)?
 -- Add adapter name to change adapter/model picker
 -- Add a custom markdown prompt file to the library that specifies how I like markdown
 -- output and prepend (or postpend) to each custom user prompt
@@ -330,7 +328,13 @@ codecompanion.setup({
                 end,
             },
             keymaps = {
-                send = { modes = { n = '<C-o>', i = '<C-o>' } },
+                create_new_chat = {
+                    modes = { n = '<A-c>', i = '<A-c>' },
+                    description = 'Create new chat',
+                    callback = function()
+                        vim.cmd('CodeCompanionChat')
+                    end,
+                },
                 close = {
                     modes = { n = '<C-c>', i = '<C-c>' },
                     callback = function()
@@ -340,6 +344,10 @@ codecompanion.setup({
                         end, 1)
                     end,
                 },
+                next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
+                previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
+                next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
+                send = { modes = { n = '<C-o>', i = '<C-o>' } },
                 stop = { modes = { n = '<C-x>', i = '<C-x>' } },
                 clear = { modes = { n = '<A-w>', i = '<A-w>' } },
                 yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
@@ -352,11 +360,9 @@ codecompanion.setup({
                         end, 1)
                     end,
                 },
-                previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
-                next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
-                change_adapter = { modes = { n = '<Leader>cm', i = '<A-m>' } },
+                change_adapter = { modes = { n = '<A-m>', i = '<A-m>' } },
                 debug = {
-                    modes = { n = '<Leader>db', i = '<A-d>' },
+                    modes = { n = '<A-d>', i = '<A-d>' },
                     callback = function(chat)
                         keymaps.debug.callback(chat)
                         vim.defer_fn(function()
@@ -367,7 +373,13 @@ codecompanion.setup({
                 pin = { modes = { n = '<Leader>rp' } },
                 watch = { modes = { n = '<Leader>rw' } },
                 system_prompt = { modes = { n = '<Leader>ts' } },
-                next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
+                action_palette = {
+                    modes = { n = '<A-a>', i = '<A-a>' },
+                    description = 'Action palette',
+                    callback = function()
+                        vim.cmd('CodeCompanionActions')
+                    end,
+                },
             },
             slash_commands = {
                 ['buffer'] = { opts = { provider = 'telescope' } },
