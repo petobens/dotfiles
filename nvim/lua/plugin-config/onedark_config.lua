@@ -270,7 +270,6 @@ onedarkpro.setup({
         ['@module.builtin.lua'] = { fg = p.yellow },
 
         ---- Markdown
-        ['@front_matter.markdown'] = { fg = p.yellow },
         ['@markup.heading.markdown'] = { fg = p.dark_red, style = 'bold' },
         ['@markup.heading.1.markdown'] = { fg = p.purple, style = 'bold' },
         ['@markup.heading.2.markdown'] = { fg = p.light_blue, style = 'bold' },
@@ -466,7 +465,7 @@ onedarkpro.setup({
         OverseerCANCELED = { fg = p.orange },
 
         ---- Render-Markdown
-        RenderMarkdownDash = { fg = p.yellow },
+        RenderMarkdownDash = { fg = p.linenr_grey },
         RenderMarkdownH1Bg = { fg = p.purple, style = 'bold' },
         RenderMarkdownH2Bg = { fg = p.light_blue, style = 'bold' },
         RenderMarkdownH3Bg = { fg = p.blue, style = 'bold' },
