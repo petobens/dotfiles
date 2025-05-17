@@ -356,14 +356,12 @@ onedarkpro.setup({
         ---- Aerial
         AerialLine = { bg = p.visual_grey },
 
-        ---- ChatGPT
-        ChatGPTQuestion = { fg = p.light_blue },
-        ChatGPTTotalTokens = { fg = p.fg, bg = p.special_grey },
-        ChatGPTTotalTokensBorder = { fg = p.special_grey },
-        ChatGPTMessageAction = { fg = p.fg, bg = p.visual_grey },
-        ['@chatgpt.help_key'] = { fg = p.light_blue },
-        ['@chatgpt.params_value'] = { fg = p.green },
-        ['@chatgpt.active_session'] = { fg = p.green },
+        ----  BlinkCmp
+        BlinkCmpKind = { fg = p.gray },
+        BlinkCmpLabelDeprecated = { fg = p.comment_grey, style = 'strikethrough' },
+        BlinkCmpLabelDescription = { fg = p.gray, italic = true },
+        BlinkCmpLabelMatch = { fg = p.blue },
+        BlinkCmpSource = { fg = p.gray },
 
         ---- Cmp
         CmpItemAbbr = { fg = p.fg },

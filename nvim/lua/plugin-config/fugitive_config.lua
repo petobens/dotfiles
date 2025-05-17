@@ -72,6 +72,7 @@ vim.api.nvim_create_autocmd({ 'BufLeave' }, {
 
 -- Mappings
 vim.keymap.set('n', '<Leader>gs', function()
+    vim.cmd('lcd %:p:h')
     vim.cmd('botright Git')
     vim.cmd('wincmd J | resize 15')
     vim.cmd('normal! 4j')

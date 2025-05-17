@@ -88,25 +88,42 @@ local plugins = {
     },
     {
         'neovim/nvim-lspconfig',
+        dependencies = { { 'folke/lazydev.nvim', ft = 'lua' } },
         config = function()
             require('plugin-config.lsp_config')
         end,
     },
-    { 'folke/lazydev.nvim' },
+    -- {
+    --     'hrsh7th/nvim-cmp',
+    --     dependencies = {
+    --         'andersevenrud/cmp-tmux',
+    --         'hrsh7th/cmp-buffer',
+    --         'hrsh7th/cmp-cmdline',
+    --         'hrsh7th/cmp-nvim-lsp',
+    --         'hrsh7th/cmp-path',
+    --         'hrsh7th/cmp-emoji',
+    --         'onsails/lspkind.nvim',
+    --         'petertriho/cmp-git',
+    --     },
+    --     config = function()
+    --         require('plugin-config.cmp_config')
+    --     end,
+    -- },
     {
-        'hrsh7th/nvim-cmp',
+        'Saghen/blink.cmp',
+        build = 'cargo build --release',
+        event = 'InsertEnter',
         dependencies = {
-            'andersevenrud/cmp-tmux',
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-cmdline',
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-path',
-            'hrsh7th/cmp-emoji',
+            'saghen/blink.compat',
+            'fang2hou/blink-copilot',
+            'mgalliou/blink-cmp-tmux',
+            'Kaiser-Yang/blink-cmp-git',
+            'moyiz/blink-emoji.nvim',
             'onsails/lspkind.nvim',
-            'petertriho/cmp-git',
+            { 'MattiasMTS/cmp-dbee', branch = 'ms/v2' },
         },
         config = function()
-            require('plugin-config.cmp_config')
+            require('plugin-config.blink_cmp_config')
         end,
     },
     {
@@ -319,11 +336,6 @@ local plugins = {
         'kndndrj/nvim-dbee',
         dependencies = {
             'MunifTanjim/nui.nvim',
-            {
-                'MattiasMTS/cmp-dbee',
-                ft = { 'sql' },
-                lazy = true,
-            },
         },
         build = function()
             require('dbee').install()

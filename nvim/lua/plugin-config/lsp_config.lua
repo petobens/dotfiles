@@ -36,6 +36,7 @@ vim.lsp.config('bashls', {
     },
 })
 ----- Lua
+require('lazydev').setup()
 vim.lsp.config('lua_ls', {
     settings = {
         Lua = {
