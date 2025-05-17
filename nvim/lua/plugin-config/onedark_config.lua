@@ -356,6 +356,16 @@ onedarkpro.setup({
         ---- Aerial
         AerialLine = { bg = p.visual_grey },
 
+        ----  BlinkCmp
+        -- BlinkCmpKindVariable = { link = '@variable' },
+        -- BlinkCmpLabelDeprecated = { link = 'DiagnosticDeprecated' },
+        -- BlinkCmpLabelDescription = { fg = colors.grey, italic = true },
+        -- BlinkCmpLabelDetail = { fg = colors.grey, bg = colors.bg },
+        BlinkCmpMenu = { fg = p.gray },
+        BlinkCmpKind = { fg = p.gray },
+        BlinkCmpLabelMatch = { fg = p.blue },
+        -- BlinkCmpMenuBorder = { bg = colors.bg },
+
         ---- ChatGPT
         ChatGPTQuestion = { fg = p.light_blue },
         ChatGPTTotalTokens = { fg = p.fg, bg = p.special_grey },

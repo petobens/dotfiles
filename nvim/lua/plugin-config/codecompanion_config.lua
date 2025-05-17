@@ -11,12 +11,8 @@ local telescope_actions = require('telescope.actions')
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Add a custom markdown prompt file to the library that specifies how I like markdown
--- output and prepend (or postpend) to each custom user prompt
--- Add adapter name to change adapter/model picker
-
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
--- Add tool to fix quickfix errors
+-- Add tool to fix quickfix/diagnostic errors
 
 -- Plugins/Extensions:
 -- MCP Hub https://github.com/ravitemer/mcphub.nvim
