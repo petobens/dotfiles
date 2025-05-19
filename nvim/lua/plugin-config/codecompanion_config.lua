@@ -379,7 +379,27 @@ codecompanion.setup({
             slash_commands = {
                 ['buffer'] = { opts = { provider = 'telescope' } },
                 ['file'] = { opts = { provider = 'telescope' } },
+                ['file_path'] = {
+                    description = 'Insert a filepath',
+                    callback = function()
+                        vim.ui.input(
+                            { prompt = 'File path: ', completion = 'file' },
+                            function(file)
+                                if not file or vim.fn.filereadable(file) == 0 then
+                                    vim.notify(
+                                        'File not found: ' .. tostring(file),
+                                        vim.log.levels.ERROR
+                                    )
+                                    return
+                                else
+                                    _G.CodeCompanionConfig.add_references({ file })
+                                end
+                            end
+                        )
+                    end,
+                },
                 ['directory'] = {
+                    description = 'Insert all files in a directory',
                     callback = function(chat)
                         vim.ui.input(
                             { prompt = 'Context dir: ', completion = 'dir' },
@@ -409,6 +429,7 @@ codecompanion.setup({
                     end,
                 },
                 ['git_files'] = {
+                    description = 'Insert all files in git repo',
                     callback = function(chat)
                         local git_root = vim.trim(
                             vim.fn.systemlist('git rev-parse --show-toplevel')[1]
@@ -431,6 +452,7 @@ codecompanion.setup({
                     end,
                 },
                 ['py_files'] = {
+                    description = 'Insert all project python files',
                     callback = function(chat)
                         if vim.tbl_isempty(_G.PyVenv.active_venv) then
                             vim.notify(
