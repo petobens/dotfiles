@@ -109,6 +109,18 @@ vim.keymap.set('n', '<Leader>p', '<Cmd>put<CR>', { nowait = false })
 vim.keymap.set('n', 'gp', '`[v`]') -- visually reselect what was just pasted
 vim.keymap.set('n', 'Y', 'y$', { remap = true })
 vim.keymap.set('n', 'yy', 'mz0y$`z', { remap = true })
+vim.keymap.set('n', '<Leader>yd', function()
+    local dir = vim.fn.expand('%:p:h')
+    vim.fn.setreg('+', dir)
+    vim.fn.setreg('*', dir)
+    vim.notify('Yanked directory: ' .. dir)
+end)
+vim.keymap.set('n', '<Leader>yf', function()
+    local path = vim.fn.expand('%:p')
+    vim.fn.setreg('+', path)
+    vim.fn.setreg('*', path)
+    vim.notify('Yanked file: ' .. path)
+end)
 
 -- Search, jumps and marks
 vim.keymap.set({ 'n', 'v' }, '/', '/\\v', { silent = false, remap = true })
