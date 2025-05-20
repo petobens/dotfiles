@@ -639,6 +639,9 @@ codecompanion.setup({
             enabled = true,
             opts = {
                 auto_generate_title = true,
+                title_generation_opts = {
+                    adapter = 'openai_gpt_41',
+                },
                 auto_save = true,
                 expiration_days = 100,
                 keymap = { n = '<A-s>', i = '<A-s>' },
