@@ -104,6 +104,8 @@ local plugins = {
     --         'hrsh7th/cmp-emoji',
     --         'onsails/lspkind.nvim',
     --         'petertriho/cmp-git',
+    --         'saadparwaiz1/cmp_luasnip',
+    --         'zbirenbaum/copilot-cmp',
     --     },
     --     config = function()
     --         require('plugin-config.cmp_config')
@@ -111,7 +113,7 @@ local plugins = {
     -- },
     {
         'Saghen/blink.cmp',
-        build = 'cargo build --release',
+        -- build = 'cargo build --release',
         event = 'InsertEnter',
         dependencies = {
             'saghen/blink.compat',
@@ -144,9 +146,6 @@ local plugins = {
     },
     {
         'zbirenbaum/copilot.lua',
-        dependencies = {
-            'zbirenbaum/copilot-cmp',
-        },
         event = 'InsertEnter',
         config = function()
             require('plugin-config.copilot_config')
@@ -169,7 +168,6 @@ local plugins = {
     {
         'L3MON4D3/LuaSnip',
         dependencies = {
-            'saadparwaiz1/cmp_luasnip',
             'benfowler/telescope-luasnip.nvim',
         },
         event = 'InsertEnter',

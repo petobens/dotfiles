@@ -10,5 +10,3 @@ require('copilot').setup({
         sh = true,
     },
 })
-
-require('copilot_cmp').setup()

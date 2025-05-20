@@ -5,6 +5,7 @@
 --  stderr: gh: Not Found (HTTP 404)
 
 -- TODO:
+-- Try to get the cargo thingy to work
 -- Try search feature
 -- Better markdown doc highlights (try with vim.api.nvim_set_keymap)
 -- Position menu to show copilot suggestions
@@ -14,6 +15,7 @@ local blink_cmp = require('blink.cmp')
 local u = require('utils')
 
 blink_cmp.setup({
+    fuzzy = { implementation = 'lua' },
     appearance = {
         kind_icons = require('lspkind').presets.default,
         nerd_font_variant = 'mono',

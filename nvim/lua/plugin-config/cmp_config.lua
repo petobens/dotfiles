@@ -210,6 +210,8 @@ cmp.setup.cmdline('@', {
 })
 
 -- Filetype setup
+---- Copilot
+require('copilot_cmp').setup()
 ---- Git
 cmp.setup.filetype('gitcommit', {
     sources = cmp.config.sources({
