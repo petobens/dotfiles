@@ -1,7 +1,7 @@
 -- TODO:
--- Better markdown doc highlights (try with vim.api.nvim_set_keymap)
+-- Further improve documentation highliting
 -- Position menu to show copilot suggestions
--- Remove cmp highlights
+-- Remove cmp highlights and cmp all together
 
 local blink_cmp = require('blink.cmp')
 local u = require('utils')
@@ -60,6 +60,10 @@ blink_cmp.setup({
                 border = u.border('FloatBorder'),
                 winhighlight = 'Normal:NormalFloat,Search:None',
             },
+            draw = function(opts)
+                opts.default_implementation()
+                _G.LspConfig.highlight_doc_patterns(opts.window.buf)
+            end,
             auto_show = true,
         },
         ghost_text = { enabled = true },

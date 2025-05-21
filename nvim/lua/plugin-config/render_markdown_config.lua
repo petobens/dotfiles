@@ -1,6 +1,7 @@
+-- Setup
 require('render-markdown').setup({
     enabled = true,
-    file_types = { 'markdown', 'chatgpt', 'chatgpt-input', 'codecompanion' },
+    file_types = { 'markdown', 'codecompanion' },
     render_modes = true,
     win_options = {
         conceallevel = { rendered = 2 },
@@ -82,6 +83,15 @@ require('render-markdown').setup({
     },
     latex = { enabled = false },
     html = { comment = { conceal = false } },
+    on = {
+        render = function(ctx)
+            local is_lsp_float =
+                pcall(vim.api.nvim_win_get_var, ctx.win, 'lsp_floating_bufnr')
+            if is_lsp_float then
+                _G.LspConfig.highlight_doc_patterns(ctx.buf)
+            end
+        end,
+    },
     overrides = {
         filetype = {
             -- CodeCompanion
