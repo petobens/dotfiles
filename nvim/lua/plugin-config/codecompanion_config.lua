@@ -225,7 +225,7 @@ codecompanion.setup({
                 name = 'gemini_flash_25',
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
-                    model = { default = 'gemini-2.5-flash-preview-04-17' },
+                    model = { default = 'gemini-2.5-flash-preview-05-20' },
                     max_tokens = { default = 2048 },
                     reasoning_effort = { default = 'none' },
                 },
@@ -236,7 +236,7 @@ codecompanion.setup({
                 name = 'gemini_pro_25',
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
-                    model = { default = 'gemini-2.5-pro-exp-03-25' },
+                    model = { default = 'gemini-2.5-pro-preview-05-06' },
                 },
             })
         end,
