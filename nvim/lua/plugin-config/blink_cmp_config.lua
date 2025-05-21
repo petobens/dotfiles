@@ -2,7 +2,6 @@
 -- Dynamic menu position: https://github.com/Saghen/blink.cmp/issues/1801
 
 -- TODO:
--- Add codecompanion filetype sources (avoid snippets)
 -- Further improve documentation highlighting
 -- Render-markdown in blink documentation (i.e show code block icons)
 -- Remove cmp (and onedark highlights)
@@ -60,6 +59,7 @@ blink_cmp.setup({
             max_items = 50,
         },
         documentation = {
+            auto_show = true,
             window = {
                 border = u.border('FloatBorder'),
                 winhighlight = 'Normal:NormalFloat,Search:None',
@@ -68,7 +68,6 @@ blink_cmp.setup({
                 opts.default_implementation()
                 _G.LspConfig.highlight_doc_patterns(opts.window.buf)
             end,
-            auto_show = true,
         },
         ghost_text = { enabled = true },
     },
@@ -103,6 +102,7 @@ blink_cmp.setup({
             'tmux',
         },
         per_filetype = {
+            codecompanion = { 'codecompanion', 'buffer' },
             gitcommit = { 'git', 'buffer' },
             lua = { inherit_defaults = true, 'lazydev' },
             sql = { 'dbee', 'buffer' },
