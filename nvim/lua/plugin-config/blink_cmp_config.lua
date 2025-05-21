@@ -1,9 +1,10 @@
+-- luacheck:ignore 631
 -- FIXME:
 -- Dynamic menu position: https://github.com/Saghen/blink.cmp/issues/1801
+-- Render-markdown in blink documentation: https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/402#issuecomment-2899590397
 
 -- TODO:
 -- Further improve documentation highlighting
--- Render-markdown in blink documentation (i.e show code block icons)
 -- Remove cmp (and onedark highlights)
 
 local blink_cmp = require('blink.cmp')
@@ -124,6 +125,12 @@ blink_cmp.setup({
             emoji = {
                 name = 'emoji',
                 module = 'blink-emoji',
+                score_offset = function()
+                    if vim.bo.filetype == 'tex' then
+                        return -1
+                    end
+                    return 0
+                end,
             },
             git = {
                 name = 'git',
@@ -139,16 +146,6 @@ blink_cmp.setup({
             lsp = {
                 name = 'lsp',
                 module = 'blink.cmp.sources.lsp',
-                override = {
-                    get_trigger_characters = function(self)
-                        local chars = self:get_trigger_characters()
-                        local ft = vim.bo.filetype
-                        if ft == 'tex' then
-                            table.insert(chars, ':')
-                        end
-                        return chars
-                    end,
-                },
                 transform_items = function(_, items)
                     local cmp_kind = require('blink.cmp.types').CompletionItemKind
                     return vim.tbl_filter(function(item)
@@ -194,3 +191,13 @@ vim.lsp.config(
     '*',
     { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) }
 )
+
+-- Autocmd settings
+vim.api.nvim_create_autocmd('User', {
+    pattern = 'LuasnipInsertNodeEnter',
+    callback = function()
+        vim.schedule(function()
+            blink_cmp.show()
+        end)
+    end,
+})
