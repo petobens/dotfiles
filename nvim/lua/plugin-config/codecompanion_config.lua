@@ -11,8 +11,6 @@ local telescope_actions = require('telescope.actions')
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Remove adapter name?
-
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix/diagnostic errors
 
@@ -203,7 +201,6 @@ codecompanion.setup({
         },
         openai_gpt_41 = function()
             return adapters.extend('openai', {
-                name = 'openai_gpt_41',
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
                     model = { default = 'gpt-4.1' },
@@ -215,7 +212,6 @@ codecompanion.setup({
         end,
         openai_o4_mini = function()
             return adapters.extend('openai', {
-                name = 'openai_o4_mini',
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
                     model = { default = 'o4-mini' },
@@ -224,7 +220,6 @@ codecompanion.setup({
         end,
         gemini_flash_25 = function()
             return adapters.extend('gemini', {
-                name = 'gemini_flash_25',
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
                     model = { default = 'gemini-2.5-flash-preview-05-20' },
@@ -235,7 +230,6 @@ codecompanion.setup({
         end,
         gemini_pro_25 = function()
             return adapters.extend('gemini', {
-                name = 'gemini_pro_25',
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
                     model = { default = 'gemini-2.5-pro-preview-05-06' },
@@ -244,7 +238,6 @@ codecompanion.setup({
         end,
         ollama_qwen3_2b = function()
             return adapters.extend('ollama', {
-                name = 'ollama_qwen3_2b',
                 schema = {
                     model = {
                         default = 'qwen3:1.7b',
@@ -315,7 +308,7 @@ codecompanion.setup({
             },
             opts = {
                 prompt_decorator = function(message, adapter, _)
-                    if adapter.name == 'ollama_qwen3_2b' then
+                    if adapter.model.name == 'qwen3:1.7b' then
                         return string.format([[/no_think %s]], message)
                     else
                         return message
