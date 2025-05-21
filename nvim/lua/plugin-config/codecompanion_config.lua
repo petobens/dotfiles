@@ -641,6 +641,7 @@ codecompanion.setup({
                 auto_generate_title = true,
                 title_generation_opts = {
                     adapter = 'openai_gpt_41',
+                    model = 'gpt-4.1',
                 },
                 auto_save = true,
                 expiration_days = 100,
