@@ -113,7 +113,7 @@ local plugins = {
     -- },
     {
         'Saghen/blink.cmp',
-        -- build = 'cargo build --release',
+        build = 'cargo +nightly build --release',
         event = 'InsertEnter',
         dependencies = {
             'saghen/blink.compat',

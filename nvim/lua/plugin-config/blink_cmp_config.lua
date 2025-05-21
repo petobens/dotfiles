@@ -1,12 +1,4 @@
--- FIXME:
--- We still get error in markdown files due to git gh?
--- get_completions failed
---  with error code: 1
---  stderr: gh: Not Found (HTTP 404)
-
 -- TODO:
--- Try to get the cargo thingy to work
--- Try search feature
 -- Better markdown doc highlights (try with vim.api.nvim_set_keymap)
 -- Position menu to show copilot suggestions
 -- Remove cmp highlights
@@ -15,7 +7,7 @@ local blink_cmp = require('blink.cmp')
 local u = require('utils')
 
 blink_cmp.setup({
-    fuzzy = { implementation = 'lua' },
+    fuzzy = { implementation = 'rust' },
     appearance = {
         kind_icons = require('lspkind').presets.default,
         nerd_font_variant = 'mono',
