@@ -1,12 +1,4 @@
 -- luacheck:ignore 631
-
-local adapters = require('codecompanion.adapters')
-local codecompanion = require('codecompanion')
-local config = require('codecompanion.config')
-local keymaps = require('codecompanion.strategies.chat.keymaps')
-local telescope_action_state = require('telescope.actions.state')
-local telescope_actions = require('telescope.actions')
-
 -- FIXME:
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
@@ -26,6 +18,13 @@ local telescope_actions = require('telescope.actions')
 -- Some more custom prompts?
 ---- Code reviews: https://github.com/olimorris/codecompanion.nvim/discussions/389
 ---- Or generate commit message
+
+local adapters = require('codecompanion.adapters')
+local codecompanion = require('codecompanion')
+local config = require('codecompanion.config')
+local keymaps = require('codecompanion.strategies.chat.keymaps')
+local telescope_action_state = require('telescope.actions.state')
+local telescope_actions = require('telescope.actions')
 
 _G.CodeCompanionConfig = {}
 

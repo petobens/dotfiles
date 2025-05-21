@@ -1,7 +1,11 @@
+-- FIXME:
+-- Dynamic menu position: https://github.com/Saghen/blink.cmp/issues/1801
+
 -- TODO:
--- Further improve documentation highliting
--- Position menu to show copilot suggestions
--- Remove cmp highlights and cmp all together
+-- Add codecompanion filetype sources (avoid snippets)
+-- Further improve documentation highlighting
+-- Render-markdown in blink documentation (i.e show code block icons)
+-- Remove cmp (and onedark highlights)
 
 local blink_cmp = require('blink.cmp')
 local u = require('utils')
@@ -101,7 +105,7 @@ blink_cmp.setup({
         per_filetype = {
             gitcommit = { 'git', 'buffer' },
             lua = { inherit_defaults = true, 'lazydev' },
-            sql = { 'dbee', 'buffer', 'luasnip', 'tmux' },
+            sql = { 'dbee', 'buffer' },
         },
         providers = {
             buffer = {
@@ -122,7 +126,6 @@ blink_cmp.setup({
                 module = 'blink-emoji',
             },
             git = {
-                -- FIXME: Not working
                 name = 'git',
                 module = 'blink-cmp-git',
                 enabled = function()
