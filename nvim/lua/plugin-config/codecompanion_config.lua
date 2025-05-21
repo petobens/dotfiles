@@ -11,6 +11,8 @@ local telescope_actions = require('telescope.actions')
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
+-- Remove adapter name?
+
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix/diagnostic errors
 
@@ -769,7 +771,9 @@ vim.api.nvim_create_autocmd('FileType', {
             vim.cmd.stopinsert()
             local last_prompt = vim.split(get_last_user_prompt(), '\n', { plain = true })
             vim.api.nvim_put(last_prompt, 'c', true, true)
-            vim.cmd.startinsert()
+            vim.defer_fn(function()
+                vim.cmd('startinsert!')
+            end, 1)
         end, { buffer = e.buf })
     end,
 })
