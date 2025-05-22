@@ -530,6 +530,25 @@ local custom_actions = transform_mod({
         end
         _G.CodeCompanionConfig.add_references(files)
     end,
+    -- Paste images with img-clip plugin
+    paste_img_clip = function(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local multi = picker:get_multi_selection()
+        actions.close(prompt_bufnr)
+
+        local entries = not vim.tbl_isempty(multi) and multi
+            or { action_state.get_selected_entry() }
+        local files = vim.iter(entries)
+            :map(function(entry)
+                return string.format('%s/%s', entry.cwd, entry.filename)
+            end)
+            :totable()
+
+        local img_clip = require('img-clip')
+        for _, filepath in ipairs(files) do
+            img_clip.paste_image(nil, filepath)
+        end
+    end,
 })
 -- Store custom actions to be used elsewhere
 _G.TelescopeConfig.custom_actions = custom_actions
@@ -679,6 +698,7 @@ telescope.setup({
                     ['<A-p>'] = custom_actions.entry_parent_dirs,
                     ['<A-g>'] = custom_actions.entry_igrep,
                     ['<A-a>'] = stopinsert(custom_actions.add_codecompanion_references),
+                    ['<A-i>'] = custom_actions.paste_img_clip,
                 },
             },
         },

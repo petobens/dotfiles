@@ -4,8 +4,6 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Try vision support: https://github.com/olimorris/codecompanion.nvim/discussions/1475
----- Also add telescope image preview
 -- Add base custom prompt that tells how to render markdown (avoid h2 headings, reduce
 -- number of ---, etc)
 

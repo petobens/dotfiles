@@ -17,6 +17,7 @@ require('image').setup({
             enabled = true,
             clear_in_insert_mode = true,
             only_render_image_at_cursor = true,
+            only_render_image_at_cursor_mode = 'inline',
         },
     },
 })

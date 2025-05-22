@@ -248,6 +248,12 @@ local plugins = {
         end,
     },
     {
+        'HakonHarnes/img-clip.nvim',
+        config = function()
+            require('plugin-config.img_clip_config')
+        end,
+    },
+    {
         'andymass/vim-matchup',
         config = function()
             require('plugin-config.matchup_config')
