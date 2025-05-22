@@ -1,10 +1,11 @@
 -- luacheck:ignore 631
+
 -- FIXME:
 -- Dynamic menu position: https://github.com/Saghen/blink.cmp/issues/1801
 -- Render-markdown in blink documentation: https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/402#issuecomment-2899590397
 
 -- TODO:
--- Further improve documentation highlighting
+-- Snippet expasion only if blink menu not empty; also autoexpand markown wikilinks
 -- Remove cmp (and onedark highlights)
 
 local blink_cmp = require('blink.cmp')

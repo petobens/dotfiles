@@ -31,13 +31,10 @@ end
 local md_docs_ns = vim.api.nvim_create_namespace('markdown_docs_highlights')
 function _G.LspConfig.highlight_doc_patterns(bufnr)
     vim.api.nvim_buf_clear_namespace(bufnr, md_docs_ns, 0, -1)
-
     local patterns = {
+        ['─'] = 'RenderMarkdownDash',
         -- Lua/vimdoc
-        ['─'] = '@markup.heading.vimdoc',
         ['@%S+'] = '@variable.parameter',
-        ['{%S-}'] = '@variable.parameter',
-        ['|%S-|'] = '@markup.link.vimdoc',
         -- Python
         ['^%s*(Parameters)$'] = '@markup.heading.vimdoc',
         ['^%s*(Returns)$'] = '@markup.heading.vimdoc',
