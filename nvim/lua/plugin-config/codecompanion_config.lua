@@ -379,8 +379,10 @@ codecompanion.setup({
             slash_commands = {
                 ['buffer'] = { opts = { provider = 'telescope' } },
                 ['file'] = { opts = { provider = 'telescope' } },
+                ['help'] = { opts = { max_lines = 10000 } },
                 ['file_path'] = {
                     description = 'Insert a filepath',
+                    keymaps = { modes = { n = '<C-f>', i = '<C-f>' } },
                     callback = function()
                         vim.ui.input(
                             { prompt = 'File path: ', completion = 'file' },
