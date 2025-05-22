@@ -4,10 +4,10 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Add base custom prompt that tells how to render markdown (avoid h2 headings, reduce
--- number of ---, etc)
 -- Try vision support: https://github.com/olimorris/codecompanion.nvim/discussions/1475
 ---- Also add telescope image preview
+-- Add base custom prompt that tells how to render markdown (avoid h2 headings, reduce
+-- number of ---, etc)
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix/diagnostic errors
@@ -206,6 +206,7 @@ codecompanion.setup({
         },
         openai_gpt_41 = function()
             return adapters.extend('openai', {
+                name = 'openai_gpt_41',
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
                     model = { default = 'gpt-4.1' },
@@ -217,6 +218,7 @@ codecompanion.setup({
         end,
         openai_o4_mini = function()
             return adapters.extend('openai', {
+                name = 'openai_o4_mini',
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
                     model = { default = 'o4-mini' },
@@ -226,6 +228,7 @@ codecompanion.setup({
         gemini_flash_25 = function()
             return adapters.extend('gemini', {
                 env = { api_key = GEMINI_API_KEY },
+                name = 'gemini_flash_25',
                 schema = {
                     model = { default = 'gemini-2.5-flash-preview-05-20' },
                     max_tokens = { default = 2048 },
@@ -235,6 +238,7 @@ codecompanion.setup({
         end,
         gemini_pro_25 = function()
             return adapters.extend('gemini', {
+                name = 'gemini_pro_25',
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
                     model = { default = 'gemini-2.5-pro-preview-05-06' },
@@ -243,6 +247,7 @@ codecompanion.setup({
         end,
         ollama_qwen3_2b = function()
             return adapters.extend('ollama', {
+                name = 'ollama_qwen3_2b',
                 schema = {
                     model = {
                         default = 'qwen3:1.7b',
