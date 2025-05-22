@@ -5,7 +5,6 @@
 -- Render-markdown in blink documentation: https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/402#issuecomment-2899590397
 
 -- TODO:
--- Snippet expasion only if blink menu not empty; also autoexpand markown wikilinks
 -- Remove cmp (and onedark highlights)
 
 local blink_cmp = require('blink.cmp')
@@ -32,6 +31,7 @@ blink_cmp.setup({
                         text = function(ctx)
                             local map = {
                                 buffer = '[Buffer]',
+                                codecompanion = '[CodeCompanion]',
                                 copilot = '[Copilot]',
                                 dbee = '[dbee]',
                                 emoji = '[Emoji]',
@@ -113,6 +113,16 @@ blink_cmp.setup({
             buffer = {
                 min_keyword_length = 3,
                 max_items = 10,
+            },
+            codecompanion = {
+                name = 'codecompanion',
+                module = 'codecompanion.providers.completion.blink',
+                transform_items = function(_, items)
+                    for _, item in ipairs(items) do
+                        item.kind_icon = ' '
+                    end
+                    return items
+                end,
             },
             copilot = {
                 name = 'copilot',
