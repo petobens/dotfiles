@@ -93,24 +93,6 @@ local plugins = {
             require('plugin-config.lsp_config')
         end,
     },
-    -- {
-    --     'hrsh7th/nvim-cmp',
-    --     dependencies = {
-    --         'andersevenrud/cmp-tmux',
-    --         'hrsh7th/cmp-buffer',
-    --         'hrsh7th/cmp-cmdline',
-    --         'hrsh7th/cmp-nvim-lsp',
-    --         'hrsh7th/cmp-path',
-    --         'hrsh7th/cmp-emoji',
-    --         'onsails/lspkind.nvim',
-    --         'petertriho/cmp-git',
-    --         'saadparwaiz1/cmp_luasnip',
-    --         'zbirenbaum/copilot-cmp',
-    --     },
-    --     config = function()
-    --         require('plugin-config.cmp_config')
-    --     end,
-    -- },
     {
         'Saghen/blink.cmp',
         build = 'cargo +nightly build --release',

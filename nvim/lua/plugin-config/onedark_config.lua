@@ -363,14 +363,6 @@ onedarkpro.setup({
         BlinkCmpLabelMatch = { fg = p.blue },
         BlinkCmpSource = { fg = p.gray },
 
-        ---- Cmp
-        CmpItemAbbr = { fg = p.fg },
-        CmpItemAbbrDeprecated = { fg = p.fg },
-        CmpItemAbbrMatch = { fg = p.blue },
-        CmpItemAbbrMatchFuzzy = { fg = p.blue },
-        CmpItemMenu = { fg = p.gray },
-        CmpItemKind = { fg = p.gray },
-
         ---- CodeCompanion
         CodeCompanionInputHeader = { fg = p.red },
 

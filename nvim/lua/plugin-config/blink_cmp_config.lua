@@ -4,9 +4,6 @@
 -- Dynamic menu position: https://github.com/Saghen/blink.cmp/issues/1801
 -- Render-markdown in blink documentation: https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/402#issuecomment-2899590397
 
--- TODO:
--- Remove cmp (and onedark highlights)
-
 local blink_cmp = require('blink.cmp')
 local u = require('utils')
 
