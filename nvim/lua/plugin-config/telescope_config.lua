@@ -931,7 +931,7 @@ vim.keymap.set(
     '<Cmd>lcd %:p:h<CR>:Telescope find_files cwd=',
     { silent = false }
 )
-vim.keymap.set('n', '<C-t>', _G.TelescopeConfig.find_files_cwd)
+vim.keymap.set({ 'n', 'i' }, '<C-t>', _G.TelescopeConfig.find_files_cwd)
 vim.keymap.set('n', '<A-t>', function()
     _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
 end)
