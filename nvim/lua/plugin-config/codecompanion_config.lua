@@ -4,8 +4,8 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Add base custom prompt that tells how to render markdown (avoid h2 headings, reduce
--- number of ---, etc)
+-- Pass format options to lua (stlua) and python (ruff/black) prompts
+-- Custom prompt to generate commit message
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Add tool to fix quickfix/diagnostic errors
@@ -21,7 +21,6 @@
 -- When using editor tool enter normal mode after exiting the chat buffer and into a diff
 -- Some more custom prompts?
 ---- Code reviews: https://github.com/olimorris/codecompanion.nvim/discussions/389
----- Or generate commit message
 
 local adapters = require('codecompanion.adapters')
 local codecompanion = require('codecompanion')
@@ -35,15 +34,14 @@ _G.CodeCompanionConfig = {}
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
-local SYSTEM_ROLE_PROMPT = [[
-You are a helpful and friendly AI assistant.
-Answer questions accurately and provide detailed explanations when necessary.]]
 
 -- Helpers
 local function get_my_prompt_library()
+    local formatting_file = 'response_formatting_instructions'
     local prompt_md_files = {
         'bash_developer',
         'gsheets_expert',
+        'helpful_assistant',
         'latex_developer',
         'lua_developer',
         'pydocs',
@@ -58,12 +56,12 @@ local function get_my_prompt_library()
     local use_url = vim.fn.isdirectory(prompt_dir) ~= 1
     local prompt_library = {}
 
-    for _, name in ipairs(prompt_md_files) do
+    local function read_and_filter(fname)
         local lines
         if use_url then
-            lines = vim.fn.systemlist({ 'curl', '-fsSL', string.format(base_url, name) })
+            lines = vim.fn.systemlist({ 'curl', '-fsSL', string.format(base_url, fname) })
         else
-            lines = vim.fn.readfile(prompt_dir .. name .. '.md')
+            lines = vim.fn.readfile(prompt_dir .. fname .. '.md')
         end
 
         local filtered = {}
@@ -72,7 +70,13 @@ local function get_my_prompt_library()
                 table.insert(filtered, line)
             end
         end
-        prompt_library[name] = table.concat(filtered, '\n'):gsub('\n$', '')
+        return table.concat(filtered, '\n'):gsub('\n$', '')
+    end
+
+    local formatting_content = read_and_filter(formatting_file)
+    for _, fname in ipairs(prompt_md_files) do
+        local content = read_and_filter(fname)
+        prompt_library[fname] = formatting_content .. '\n\n' .. content
     end
     return prompt_library
 end
@@ -484,7 +488,7 @@ codecompanion.setup({
     },
     opts = {
         system_prompt = function()
-            return SYSTEM_ROLE_PROMPT
+            return PROMPT_LIBRARY['helpful_assistant']
         end,
     },
     prompt_library = {
@@ -497,10 +501,7 @@ codecompanion.setup({
                 ignore_system_prompt = true,
             },
             prompts = {
-                {
-                    role = 'system',
-                    content = SYSTEM_ROLE_PROMPT,
-                },
+                { role = 'system', content = PROMPT_LIBRARY['helpful_assistant'] },
                 { role = 'user', content = '' },
             },
         },
@@ -766,7 +767,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
             local system_role = get_current_system_role_prompt()
             if system_role then
-                vim.print(string.format('System Role:\n%s', system_role))
+                vim.print(system_role)
                 vim.cmd('normal! g<')
             end
         end, { buffer = e.buf })
