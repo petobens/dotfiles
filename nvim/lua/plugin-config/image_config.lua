@@ -8,7 +8,10 @@ package.path = package.path
     .. vim.fn.expand('$HOME')
     .. '/.luarocks/share/lua/5.1/?.lua;'
 
-require('image').setup({
+local image = require('image')
+
+-- Setup
+image.setup({
     tmux_show_only_in_active_window = true,
     max_height_window_percentage = 30,
     window_overlap_clear_enabled = true,
@@ -21,3 +24,21 @@ require('image').setup({
         },
     },
 })
+
+-- Mappings
+local function preview_image()
+    local line = vim.api.nvim_get_current_line()
+    local img_path = line:match('!%[.*%]%((.+)%)') -- md image ![](path)
+    if not img_path then
+        img_path = line:match('%[.*%]%((.+)%)') -- md-like without !: [](path)
+    end
+    if not img_path then
+        img_path = line:match('<image>(.-)</image>') -- html-like: <image>path</image>
+    end
+
+    if img_path then
+        image.from_file(img_path, {}):render()
+    end
+end
+vim.keymap.set('n', '<Leader>ii', preview_image)
+vim.keymap.set('n', '<Leader>iw', image.clear)
