@@ -80,6 +80,50 @@ local delta = previewers.new_termopen_previewer({
     scroll_fn = scroll_less,
 })
 
+-- Image previewer
+-- From https://github.com/3rd/image.nvim/issues/183#issuecomment-2284979815
+local image = require('image')
+local state = { image = nil, last_path = nil, is_image = false }
+local supported = { gif = true, jpeg = true, jpg = true, png = true, svg = true }
+
+local function clear_buffer_preview_image()
+    if state.image then
+        state.image:clear()
+        state.image = nil
+        state.is_image = false
+    end
+end
+
+local function buffer_image_previewer_maker(filepath, bufnr, opts)
+    if state.is_image and state.last_path ~= filepath then
+        clear_buffer_preview_image()
+    end
+    state.last_path = filepath
+
+    local ext = filepath:lower():match('%.([a-z0-9]+)$')
+    if ext and supported[ext] then
+        local path = filepath:gsub(' ', '%%20'):gsub('\\', '')
+        state.image = image.from_file(path, {
+            x = vim.o.columns - math.floor(vim.o.columns * 0.45) + 1,
+            width = math.floor(vim.o.columns * 0.45),
+            y = vim.o.lines - 21,
+            height = 20,
+        })
+        if state.image then
+            vim.schedule(function()
+                state.image:render()
+                state.is_image = true
+            end)
+        end
+    else
+        previewers.buffer_previewer_maker(filepath, bufnr, opts)
+    end
+end
+
+vim.api.nvim_create_autocmd('WinClosed', {
+    callback = clear_buffer_preview_image,
+})
+
 -- Custom sorters
 local function preserve_order_sorter(opts)
     -- luacheck:ignore 631
@@ -591,6 +635,7 @@ telescope.setup({
         },
         cache_picker = { num_pickers = 3 },
         path_display = { 'filename_first' },
+        buffer_previewer_maker = buffer_image_previewer_maker,
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
@@ -959,7 +1004,7 @@ vim.keymap.set('n', '<Leader>rd', frecent_files)
 vim.keymap.set('n', '<A-c>', _G.TelescopeConfig.find_dirs)
 vim.keymap.set('n', '<A-p>', _G.TelescopeConfig.parent_dirs)
 vim.keymap.set('n', '<Leader>bm', _G.TelescopeConfig.bookmark_dirs)
-vim.keymap.set('n', '<A-z>', _G.TelescopeConfig.z_with_tree_preview)
+vim.keymap.set({ 'n', 'i' }, '<A-z>', _G.TelescopeConfig.z_with_tree_preview)
 vim.keymap.set('n', '<Leader>ig', igrep)
 vim.keymap.set('n', '<Leader>iG', function()
     igrep(nil, nil, { '--no-ignore-vcs' })
