@@ -2,7 +2,6 @@
 
 -- FIXME:
 -- Dynamic menu position: https://github.com/Saghen/blink.cmp/issues/1801
--- Render-markdown in blink documentation: https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/402#issuecomment-2899590397
 
 local blink_cmp = require('blink.cmp')
 local u = require('utils')
@@ -66,6 +65,15 @@ blink_cmp.setup({
             draw = function(opts)
                 opts.default_implementation()
                 _G.LspConfig.highlight_doc_patterns(opts.window.buf)
+                local win_id = opts.window:get_win()
+                if win_id then
+                    require('render-markdown.core.ui').update(
+                        opts.window.buf,
+                        win_id,
+                        'BlinkDraw',
+                        true
+                    )
+                end
             end,
         },
         ghost_text = { enabled = true },
@@ -206,6 +214,9 @@ vim.lsp.config(
     '*',
     { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) }
 )
+
+-- Ensure doc window is treated as markdown by treesitter
+vim.treesitter.language.register('markdown', 'blink-cmp-documentation')
 
 -- Autocmd settings
 vim.api.nvim_create_autocmd('User', {
