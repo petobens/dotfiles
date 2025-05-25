@@ -357,6 +357,7 @@ onedarkpro.setup({
         AerialLine = { bg = p.visual_grey },
 
         ----  BlinkCmp
+        BlinkCmpDocSeparator = { fg = p.linenr_grey },
         BlinkCmpKind = { fg = p.gray },
         BlinkCmpLabelDeprecated = { fg = p.comment_grey, style = 'strikethrough' },
         BlinkCmpLabelDescription = { fg = p.gray, italic = true },
