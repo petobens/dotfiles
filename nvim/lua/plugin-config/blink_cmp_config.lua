@@ -118,13 +118,6 @@ blink_cmp.setup({
             buffer = {
                 min_keyword_length = 3,
                 max_items = 10,
-                opts = {
-                    get_bufnrs = function()
-                        return vim.tbl_filter(function(bufnr)
-                            return vim.bo[bufnr].buftype == ''
-                        end, vim.api.nvim_list_bufs())
-                    end,
-                },
             },
             codecompanion = {
                 name = 'codecompanion',
