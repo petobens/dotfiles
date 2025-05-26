@@ -4,11 +4,13 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Pass format options to lua (stlua) and python (ruff/black) prompts
+-- Pass format options to lua (stylua) and python (ruff/black) prompts
 -- Custom prompt to generate commit message
+-- Custom prompt to suggest fixes quickfix/diagnostic errors
+-- Add telescope support to image slash cmd
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
--- Add tool to fix quickfix/diagnostic errors
+-- Try tavily web_search tool
 
 -- Plugins/Extensions:
 -- MCP Hub https://github.com/ravitemer/mcphub.nvim
@@ -21,6 +23,7 @@
 -- When using editor tool enter normal mode after exiting the chat buffer and into a diff
 -- Some more custom prompts?
 ---- Code reviews: https://github.com/olimorris/codecompanion.nvim/discussions/389
+--- And try https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review
 
 local adapters = require('codecompanion.adapters')
 local codecompanion = require('codecompanion')
