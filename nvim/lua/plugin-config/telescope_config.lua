@@ -80,13 +80,13 @@ local delta = previewers.new_termopen_previewer({
     scroll_fn = scroll_less,
 })
 
--- Image previewer
+-- Custom previewer (with image and pdf support)
 -- From https://github.com/3rd/image.nvim/issues/183#issuecomment-2284979815
 local image = require('image')
 local state = { image = nil, last_path = nil, is_image = false }
-local supported = { gif = true, jpeg = true, jpg = true, png = true, svg = true }
+local supported_images = { gif = true, jpeg = true, jpg = true, png = true, svg = true }
 
-local function clear_buffer_preview_image()
+local function clear_preview_image()
     if state.image then
         state.image:clear()
         state.image = nil
@@ -94,35 +94,52 @@ local function clear_buffer_preview_image()
     end
 end
 
-local function buffer_image_previewer_maker(filepath, bufnr, opts)
+vim.api.nvim_create_autocmd('WinClosed', {
+    callback = clear_preview_image,
+})
+
+local function show_preview_image(path)
+    state.image = image.from_file(path, {
+        x = vim.o.columns - math.floor(vim.o.columns * 0.45) + 1,
+        width = math.floor(vim.o.columns * 0.45),
+        y = vim.o.lines - 21,
+        height = 20,
+    })
+    if state.image then
+        vim.schedule(function()
+            state.image:render()
+            state.is_image = true
+        end)
+    end
+end
+
+local function custom_buffer_previewer_maker(filepath, bufnr, opts)
     if state.is_image and state.last_path ~= filepath then
-        clear_buffer_preview_image()
+        clear_preview_image()
     end
     state.last_path = filepath
 
     local ext = filepath:lower():match('%.([a-z0-9]+)$')
-    if ext and supported[ext] then
+    if ext and supported_images[ext] then
         local path = filepath:gsub(' ', '%%20'):gsub('\\', '')
-        state.image = image.from_file(path, {
-            x = vim.o.columns - math.floor(vim.o.columns * 0.45) + 1,
-            width = math.floor(vim.o.columns * 0.45),
-            y = vim.o.lines - 21,
-            height = 20,
-        })
-        if state.image then
-            vim.schedule(function()
-                state.image:render()
-                state.is_image = true
-            end)
-        end
+        show_preview_image(path)
+    elseif ext == 'pdf' then
+        vim.system(
+            { 'pdftotext', '-layout', filepath, '-' },
+            { text = true },
+            function(obj)
+                if obj.code == 0 and obj.stdout then
+                    vim.schedule(function()
+                        local lines = vim.split(obj.stdout, '\n', { plain = true })
+                        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+                    end)
+                end
+            end
+        )
     else
         previewers.buffer_previewer_maker(filepath, bufnr, opts)
     end
 end
-
-vim.api.nvim_create_autocmd('WinClosed', {
-    callback = clear_buffer_preview_image,
-})
 
 -- Custom sorters
 local function preserve_order_sorter(opts)
@@ -635,7 +652,7 @@ telescope.setup({
         },
         cache_picker = { num_pickers = 3 },
         path_display = { 'filename_first' },
-        buffer_previewer_maker = buffer_image_previewer_maker,
+        buffer_previewer_maker = custom_buffer_previewer_maker,
         mappings = {
             i = {
                 ['<ESC>'] = 'close',
