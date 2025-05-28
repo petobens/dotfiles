@@ -4,9 +4,8 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Pass format options to lua (stylua) and python (ruff/black) prompts
--- Custom prompt to generate commit message
 -- Custom prompt to suggest fixes quickfix/diagnostic errors
+-- Code reviews: https://github.com/olimorris/codecompanion.nvim/discussions/389
 -- Add telescope support to image slash cmd
 
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
@@ -21,9 +20,6 @@
 -- Nice to Haves:
 -- Choose only some default prompts/actions
 -- When using editor tool enter normal mode after exiting the chat buffer and into a diff
--- Some more custom prompts?
----- Code reviews: https://github.com/olimorris/codecompanion.nvim/discussions/389
---- And try https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review
 
 local adapters = require('codecompanion.adapters')
 local codecompanion = require('codecompanion')
@@ -43,6 +39,7 @@ local function get_my_prompt_library()
     local formatting_file = 'response_formatting_instructions'
     local prompt_md_files = {
         'bash_developer',
+        'conventional_commits',
         'gsheets_expert',
         'helpful_assistant',
         'latex_developer',
@@ -477,6 +474,19 @@ codecompanion.setup({
                         _G.CodeCompanionConfig.add_references(
                             _G.PyVenv.active_venv.project_files
                         )
+                    end,
+                },
+                ['ccommits'] = {
+                    description = 'Generate a conventional git commit message.',
+                    callback = function(chat)
+                        chat:add_buf_message({
+                            role = 'user',
+                            content = string.format(
+                                PROMPT_LIBRARY['conventional_commits'],
+                                vim.fn.system('git diff --no-ext-diff --staged')
+                            ),
+                        })
+                        chat:submit()
                     end,
                 },
             },
