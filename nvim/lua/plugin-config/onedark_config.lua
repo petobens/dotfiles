@@ -202,6 +202,11 @@ onedarkpro.setup({
         DiffLine = { link = 'DiffText' },
         DiffFile = { link = 'DiffDelete' },
         DiffNewFile = { link = 'DiffAdd' },
+        ['@attribute.diff'] = { link = 'DiffLine' },
+        ['@diff.minus.diff'] = { link = 'DiffDelete' },
+        ['@diff.plus.diff'] = { link = 'DiffAdd' },
+        ['@function.diff'] = { fg = p.red },
+        ['@string.special.path.diff'] = { fg = p.yellow },
 
         ---- Git
         gitcommitComment = { fg = p.comment_grey },
