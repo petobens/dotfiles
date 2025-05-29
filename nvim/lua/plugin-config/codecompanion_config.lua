@@ -5,11 +5,10 @@
 
 -- TODO:
 -- Custom prompt to suggest fixes quickfix/diagnostic errors
--- Code reviews: https://github.com/olimorris/codecompanion.nvim/discussions/389
 -- Add telescope support to image slash cmd
 
--- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- Try tavily web_search tool
+-- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 
 -- Plugins/Extensions:
 -- MCP Hub https://github.com/ravitemer/mcphub.nvim
@@ -39,6 +38,7 @@ local function get_my_prompt_library()
     local formatting_file = 'response_formatting_instructions'
     local prompt_md_files = {
         'bash_developer',
+        'code_reviewer',
         'conventional_commits',
         'gsheets_expert',
         'helpful_assistant',
@@ -476,13 +476,26 @@ codecompanion.setup({
                         )
                     end,
                 },
-                ['ccommits'] = {
+                ['conventional_commit'] = {
                     description = 'Generate a conventional git commit message.',
                     callback = function(chat)
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['conventional_commits'],
+                                vim.fn.system('git diff --no-ext-diff --staged')
+                            ),
+                        })
+                        chat:submit()
+                    end,
+                },
+                ['code_review'] = {
+                    description = 'Perform a code review.',
+                    callback = function(chat)
+                        chat:add_buf_message({
+                            role = 'user',
+                            content = string.format(
+                                PROMPT_LIBRARY['code_reviewer'],
                                 vim.fn.system('git diff --no-ext-diff --staged')
                             ),
                         })
@@ -663,7 +676,7 @@ codecompanion.setup({
                     model = 'gpt-4.1',
                 },
                 auto_save = true,
-                expiration_days = 100,
+                expiration_days = 30,
                 keymap = { n = '<A-s>', i = '<A-s>' },
                 picker_keymaps = {
                     rename = { n = 'r', i = '<A-r>' },
