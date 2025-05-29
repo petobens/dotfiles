@@ -4,9 +4,11 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
+-- Add mappings to call git and qfix slash commands from fugitive window and loclist
+-- Fix spinner with urls
 -- Add telescope support to image slash cmd
 
--- Try tavily web_search tool
+-- Try tavily web_search tool (and use it to crawl?)
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 
 -- Plugins/Extensions:
@@ -510,8 +512,13 @@ codecompanion.setup({
                     end,
                 },
                 ['conventional_commit'] = {
-                    description = 'Generate a conventional git commit message.',
+                    description = 'Generate a conventional git commit message',
                     callback = function(chat)
+                        local staged = vim.fn.systemlist('git diff --cached --name-only')
+                        if #staged == 0 or (#staged == 1 and staged[1] == '') then
+                            vim.notify('No staged changes found', vim.log.levels.WARN)
+                            return
+                        end
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
@@ -523,8 +530,13 @@ codecompanion.setup({
                     end,
                 },
                 ['code_review'] = {
-                    description = 'Perform a code review.',
+                    description = 'Perform a code review',
                     callback = function(chat)
+                        local staged = vim.fn.systemlist('git diff --cached --name-only')
+                        if #staged == 0 or (#staged == 1 and staged[1] == '') then
+                            vim.notify('No staged changes found', vim.log.levels.WARN)
+                            return
+                        end
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
