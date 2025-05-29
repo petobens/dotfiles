@@ -128,6 +128,9 @@ blink_cmp.setup({
                     end
                     return items
                 end,
+                score_offset = function()
+                    return 100
+                end,
             },
             copilot = {
                 name = 'copilot',
