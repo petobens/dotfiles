@@ -386,7 +386,7 @@ local custom_actions = transform_mod({
     yank = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        vim.fn.setreg('+', entry.value or entry.filename)
+        vim.fn.setreg('+', entry.path or entry.value or entry.filename)
     end,
     -- Open git commit using Fugitive
     fugitive_open = function(prompt_bufnr)
