@@ -4,7 +4,8 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Add mappings to call git and qfix slash commands from fugitive window and loclist
+-- Add mappings to call git commands from fugitive window
+-- Review custom prompts
 -- Fix spinner with urls
 -- Add telescope support to image slash cmd
 
@@ -82,6 +83,7 @@ local function get_my_prompt_library()
     end
     return prompt_library
 end
+local PROMPT_LIBRARY = get_my_prompt_library()
 
 local function get_current_system_role_prompt()
     local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
@@ -173,6 +175,7 @@ local function focus_or_toggle_chat()
     end, 1)
 end
 
+-- Slash command helpers
 local function send_project_tree(chat, root)
     local tree = vim.fn.system({ 'tree', '-a', '-L', '2', '--noreport', root })
     chat:add_message({
@@ -214,6 +217,23 @@ local function get_loclists_or_qf_entries()
     return table.concat(entries, '\n'), references
 end
 
+local function qfix_callback(chat)
+    local entries, references = get_loclists_or_qf_entries()
+    if entries == '' then
+        vim.notify(
+            'No diagnostics found in quickfix or location lists.',
+            vim.log.levels.ERROR
+        )
+        return
+    end
+    _G.CodeCompanionConfig.add_references(references)
+    chat:add_buf_message({
+        role = 'user',
+        content = string.format(PROMPT_LIBRARY['quickfix'], entries),
+    })
+    chat:submit()
+end
+
 -- Globals
 function _G.CodeCompanionConfig.add_references(files)
     local chat = codecompanion.last_chat()
@@ -234,7 +254,6 @@ function _G.CodeCompanionConfig.add_references(files)
 end
 
 -- Setup
-local PROMPT_LIBRARY = get_my_prompt_library()
 codecompanion.setup({
     adapters = {
         opts = {
@@ -549,22 +568,7 @@ codecompanion.setup({
                 },
                 ['qfix'] = {
                     description = 'Explain quickfix/loclist code diagnostics',
-                    callback = function(chat)
-                        local entries, references = get_loclists_or_qf_entries()
-                        if entries == '' then
-                            vim.notify(
-                                'No diagnostics found in quickfix or location lists.',
-                                vim.log.levels.ERROR
-                            )
-                            return
-                        end
-                        _G.CodeCompanionConfig.add_references(references)
-                        chat:add_buf_message({
-                            role = 'user',
-                            content = string.format(PROMPT_LIBRARY['quickfix'], entries),
-                        })
-                        chat:submit()
-                    end,
+                    callback = qfix_callback,
                 },
             },
         },
@@ -842,7 +846,7 @@ vim.api.nvim_create_autocmd('User', {
     end,
 })
 
--- Autocmd mappings
+-- Chat mappings
 vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true }),
     pattern = { 'codecompanion' },
@@ -869,6 +873,17 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.cmd('startinsert!')
             end, 1)
         end, { buffer = e.buf })
+    end,
+})
+
+-- Filetype mappings
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'qf' },
+    callback = function(args)
+        vim.keymap.set('n', '<leader>qf', function()
+            local chat = codecompanion.last_chat() or codecompanion.chat()
+            qfix_callback(chat)
+        end, { buffer = args.buf })
     end,
 })
 
