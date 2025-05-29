@@ -4,7 +4,6 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
--- Custom prompt to suggest fixes quickfix/diagnostic errors
 -- Add telescope support to image slash cmd
 
 -- Try tavily web_search tool
@@ -46,6 +45,7 @@ local function get_my_prompt_library()
         'lua_developer',
         'pydocs',
         'python_developer',
+        'quickfix',
         'sql_developer',
         'translator_spa_eng',
         'writer_at_work',
@@ -177,6 +177,39 @@ local function send_project_tree(chat, root)
         role = 'user',
         content = string.format('The project structure is given by:\n%s', tree),
     })
+end
+
+local function get_loclists_or_qf_entries()
+    local diagnostics = {}
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+        local loclist = vim.fn.getloclist(winid)
+        if #loclist > 0 then
+            vim.list_extend(diagnostics, loclist)
+        end
+    end
+    if #diagnostics == 0 then
+        diagnostics = vim.fn.getqflist()
+    end
+
+    local seen, entries, references = {}, {}, {}
+    for _, item in ipairs(diagnostics) do
+        local filename = vim.fn.fnamemodify(vim.fn.bufname(item.bufnr), ':p')
+        local lnum = item.lnum or 0
+        local col = item.col or 0
+        local text = item.text or ''
+        local key = table.concat({ filename, lnum, col, text }, '\0')
+        if not seen[key] then
+            seen[key] = true
+            table.insert(
+                entries,
+                string.format('%s:%d:%d: %s', filename, lnum, col, text)
+            )
+            if filename ~= '' and not vim.tbl_contains(references, filename) then
+                table.insert(references, filename)
+            end
+        end
+    end
+    return table.concat(entries, '\n'), references
 end
 
 -- Globals
@@ -498,6 +531,25 @@ codecompanion.setup({
                                 PROMPT_LIBRARY['code_reviewer'],
                                 vim.fn.system('git diff --no-ext-diff --staged')
                             ),
+                        })
+                        chat:submit()
+                    end,
+                },
+                ['qfix'] = {
+                    description = 'Explain quickfix/loclist code diagnostics',
+                    callback = function(chat)
+                        local entries, references = get_loclists_or_qf_entries()
+                        if entries == '' then
+                            vim.notify(
+                                'No diagnostics found in quickfix or location lists.',
+                                vim.log.levels.ERROR
+                            )
+                            return
+                        end
+                        _G.CodeCompanionConfig.add_references(references)
+                        chat:add_buf_message({
+                            role = 'user',
+                            content = string.format(PROMPT_LIBRARY['quickfix'], entries),
                         })
                         chat:submit()
                     end,
