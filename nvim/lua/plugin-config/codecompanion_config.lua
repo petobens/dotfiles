@@ -4,12 +4,14 @@
 -- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
 
 -- TODO:
+-- Change fold mapping and add go to file mapping
 -- Add telescope support to image slash cmd
 -- PR to disable url caching (thus fixing spinner) or sending a event
 
 -- Try tavily web_search tool (and use it to crawl?)
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
 -- And integrate with inline code running
+-- Check terminal interaction
 
 -- Plugins/Extensions:
 -- MCP Hub https://github.com/ravitemer/mcphub.nvim
@@ -179,6 +181,17 @@ local function get_or_create_chat()
         chat = codecompanion.chat()
     end
     return chat
+end
+
+local function run_slash_command(name)
+    local chat = get_or_create_chat()
+    local cmd = config.strategies.chat.slash_commands[name]
+    if cmd and type(cmd.callback) == 'function' then
+        cmd.callback(chat)
+        focus_or_toggle_chat()
+    else
+        vim.notify('Slash command not found: ' .. tostring(name), vim.log.levels.ERROR)
+    end
 end
 
 -- Slash command helpers
@@ -883,9 +896,7 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'qf' },
     callback = function(args)
         vim.keymap.set('n', '<leader>qf', function()
-            local chat = get_or_create_chat()
-            config.strategies.chat.slash_commands['qfix'].callback(chat)
-            focus_or_toggle_chat()
+            run_slash_command('qfix')
         end, { buffer = args.buf })
     end,
 })
@@ -893,14 +904,10 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'fugitive' },
     callback = function(args)
         vim.keymap.set('n', '<Leader>cc', function()
-            local chat = get_or_create_chat()
-            config.strategies.chat.slash_commands['conventional_commit'].callback(chat)
-            focus_or_toggle_chat()
+            run_slash_command('conventional_commit')
         end, { buffer = args.buf })
         vim.keymap.set('n', '<Leader>cr', function()
-            local chat = get_or_create_chat()
-            config.strategies.chat.slash_commands['code_review'].callback(chat)
-            focus_or_toggle_chat()
+            run_slash_command('code_review')
         end, { buffer = args.buf })
     end,
 })
