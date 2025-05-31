@@ -1,7 +1,7 @@
 -- luacheck:ignore 631
 
 -- TODO:
--- Add telescope support to image slash cmd
+-- Default buffer watching? https://github.com/olimorris/codecompanion.nvim/commit/c0549d54203160020b4214d3e8827b2103a95b97
 -- PR to disable url caching (thus fixing spinner) or sending a event
 
 -- Try tavily web_search tool (and use it to crawl?)
@@ -442,9 +442,17 @@ codecompanion.setup({
                 },
             },
             slash_commands = {
+                -- Default
                 ['buffer'] = { opts = { provider = 'telescope' } },
                 ['file'] = { opts = { provider = 'telescope' } },
                 ['help'] = { opts = { provider = 'telescope', max_lines = 10000 } },
+                ['image'] = {
+                    opts = {
+                        provider = 'telescope',
+                        dirs = { '~/Pictures/Screenshots/' },
+                    },
+                },
+                -- Custom
                 ['file_path'] = {
                     description = 'Insert a filepath',
                     keymaps = { modes = { n = '<C-f>', i = '<C-f>' } },
