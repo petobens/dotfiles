@@ -1,7 +1,6 @@
 -- luacheck:ignore 631
 
 -- TODO:
--- Show current buffer along cwd in footer
 -- Add telescope support to image slash cmd
 -- PR to disable url caching (thus fixing spinner) or sending a event
 
@@ -145,7 +144,13 @@ local function set_chat_win_title(e)
                     and string.format(' (%s)', chat.opts.title)
                 or ''
         ),
-        footer = vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or '',
+        footer = string.format(
+            '%s %s',
+            vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or '',
+            (chat.context.filename and chat.context.filename ~= '')
+                    and ('(' .. vim.fs.basename(chat.context.filename) .. ')')
+                or ''
+        ),
         footer_pos = 'center',
     })
 end
