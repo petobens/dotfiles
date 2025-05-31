@@ -930,3 +930,6 @@ vim.keymap.set({ 'v' }, '<Leader>cp', function()
         )
     end
 end)
+vim.keymap.set('v', '<Leader>ec', function()
+    codecompanion.prompt('explain')
+end, { noremap = true, silent = true })
