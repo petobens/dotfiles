@@ -1,10 +1,7 @@
 -- luacheck:ignore 631
 
--- FIXME:
--- Custom prompt slash cmd not loading references: https://github.com/olimorris/codecompanion.nvim/pull/1384
-
 -- TODO:
--- Change fold mapping and add go to file mapping
+-- Show current buffer along cwd in footer
 -- Add telescope support to image slash cmd
 -- PR to disable url caching (thus fixing spinner) or sending a event
 
@@ -407,6 +404,8 @@ codecompanion.setup({
                 stop = { modes = { n = '<C-x>', i = '<C-x>' } },
                 clear = { modes = { n = '<A-w>', i = '<A-w>' } },
                 yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
+                fold_code = { modes = { n = 'zc' } },
+                goto_file_under_cursor = { modes = { n = 'gf', x = 'gf' } },
                 options = {
                     modes = { n = '<A-h>', i = '<A-h>' },
                     callback = function()
@@ -598,6 +597,10 @@ codecompanion.setup({
     opts = {
         system_prompt = function()
             return PROMPT_LIBRARY['helpful_assistant']
+        end,
+        goto_file_action = function(fname)
+            vim.cmd('wincmd h')
+            vim.cmd('e ' .. fname)
         end,
     },
     prompt_library = {
