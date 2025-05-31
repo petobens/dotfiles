@@ -35,6 +35,14 @@ local function preview_image()
     if not img_path then
         img_path = line:match('<image>(.-)</image>') -- html-like: <image>path</image>
     end
+    if not img_path then
+        -- Match the first filename-like word ending with an image extension
+        img_path = line:match('([%w%._%-:]+%.png)')
+            or line:match('([%w%._%-:]+%.jpg)')
+            or line:match('([%w%._%-:]+%.jpeg)')
+            or line:match('([%w%._%-:]+%.svg)')
+            or line:match('([%w%._%-:]+%.bmp)')
+    end
 
     if img_path then
         image.from_file(img_path, {}):render()

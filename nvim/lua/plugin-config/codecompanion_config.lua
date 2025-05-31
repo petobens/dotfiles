@@ -1,6 +1,7 @@
 -- luacheck:ignore 631
 
 -- TODO:
+-- Remove telescope mentions (since picker is chosen by default?)
 -- Default buffer watching? https://github.com/olimorris/codecompanion.nvim/commit/c0549d54203160020b4214d3e8827b2103a95b97
 -- PR to disable url caching (thus fixing spinner) or sending a event
 
