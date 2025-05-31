@@ -1,8 +1,8 @@
 -- luacheck:ignore 631
 
 -- TODO:
--- Remove telescope mentions (since picker is chosen by default?)
 -- Default buffer watching? https://github.com/olimorris/codecompanion.nvim/commit/c0549d54203160020b4214d3e8827b2103a95b97
+-- https://codecompanion.olimorris.dev/usage/chat-buffer/variables#buffer
 -- PR to disable url caching (thus fixing spinner) or sending a event
 
 -- Try tavily web_search tool (and use it to crawl?)
@@ -11,10 +11,11 @@
 -- Check terminal interaction
 
 -- Plugins/Extensions:
+-- VectorCode https://github.com/olimorris/codecompanion.nvim/discussions/1252
+-- Try indexing the whole codecompanion repo
 -- MCP Hub https://github.com/ravitemer/mcphub.nvim
 -- Possible to share a PDF file with this?
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
--- VectorCode https://github.com/olimorris/codecompanion.nvim/discussions/1252
 
 -- Nice to Haves:
 -- Choose only some default prompts/actions
@@ -339,7 +340,6 @@ codecompanion.setup({
         },
         action_palette = {
             prompt = '> ',
-            provider = 'telescope',
             opts = {
                 show_default_actions = true,
                 show_default_prompt_library = false,
@@ -444,12 +444,9 @@ codecompanion.setup({
             },
             slash_commands = {
                 -- Default
-                ['buffer'] = { opts = { provider = 'telescope' } },
-                ['file'] = { opts = { provider = 'telescope' } },
-                ['help'] = { opts = { provider = 'telescope', max_lines = 10000 } },
+                ['help'] = { opts = { max_lines = 10000 } },
                 ['image'] = {
                     opts = {
-                        provider = 'telescope',
                         dirs = { '~/Pictures/Screenshots/' },
                     },
                 },
