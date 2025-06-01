@@ -1,9 +1,8 @@
 -- luacheck:ignore 631
 
 -- TODO:
--- Default buffer watching? https://github.com/olimorris/codecompanion.nvim/commit/c0549d54203160020b4214d3e8827b2103a95b97
--- https://codecompanion.olimorris.dev/usage/chat-buffer/variables#buffer
 -- PR to disable url caching (thus fixing spinner) or sending a event
+-- Prompt (explain) should reuse last chat
 
 -- Try tavily web_search tool (and use it to crawl?)
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
@@ -594,6 +593,13 @@ codecompanion.setup({
                         })
                         chat:submit()
                     end,
+                },
+            },
+            variables = {
+                ['buffer'] = {
+                    opts = {
+                        default_params = 'watch',
+                    },
                 },
             },
         },
