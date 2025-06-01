@@ -2,7 +2,8 @@
 
 -- TODO:
 -- PR to disable url caching (thus fixing spinner) or sending a event
--- Prompt (explain) should reuse last chat
+-- Prompt mapping (explain) should reuse last chat
+-- Add prompt header count?
 
 -- Try tavily web_search tool (and use it to crawl?)
 -- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
@@ -777,6 +778,8 @@ codecompanion.setup({
                 title_generation_opts = {
                     adapter = 'openai_gpt_41',
                     model = 'gpt-4.1',
+                    refresh_every_n_prompts = 3,
+                    max_refreshes = 10,
                 },
                 auto_save = true,
                 expiration_days = 30,
