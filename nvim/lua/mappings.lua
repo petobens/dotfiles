@@ -3,6 +3,7 @@ local u = require('utils')
 
 -- Save
 vim.keymap.set('n', '<Leader>kv', '<Cmd>qall<CR>')
+vim.keymap.set('n', '<Leader>rv', '<Cmd>restart<CR>')
 vim.keymap.set('n', '<Leader>nw', '<Cmd>noautocmd w!<CR>')
 vim.keymap.set('n', '<Leader>ps', function()
     vim.cmd('silent! source ' .. u.vim_session_file())
