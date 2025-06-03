@@ -233,7 +233,10 @@ return {
             {
                 d(1, function(_, snip)
                     local nodes = {}
-                    local nr_cols = snip.captures[1]
+                    local nr_cols = tonumber(snip.captures[1])
+                    if not nr_cols then
+                        return
+                    end
                     for j = 1, nr_cols do
                         table.insert(nodes, t('| '))
                         table.insert(nodes, i(j))
