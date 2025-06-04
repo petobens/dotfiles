@@ -5,17 +5,18 @@
 -- Prompt mapping (explain) should reuse last chat
 -- Add prompt header count?
 
--- Try tavily web_search tool (and use it to crawl?)
--- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
--- And integrate with inline code running
--- Check terminal interaction
-
 -- Plugins/Extensions:
+-- Try tavily web_search tool (and use it to crawl?)
 -- VectorCode https://github.com/olimorris/codecompanion.nvim/discussions/1252
 -- Try indexing the whole codecompanion repo
 -- MCP Hub https://github.com/ravitemer/mcphub.nvim
 -- Possible to share a PDF file with this?
+-- Sign-in/read  google doc/slides
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
+
+-- Check how to use agents/tools (i.e @ commands, tipo @editor para que hagan acciones)
+-- And integrate with inline code running
+-- Check terminal interaction
 
 -- Nice to Haves:
 -- Choose only some default prompts/actions

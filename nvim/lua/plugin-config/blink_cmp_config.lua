@@ -1,6 +1,7 @@
 -- luacheck:ignore 631
 
 -- FIXME:
+-- Winresize error: https://github.com/Saghen/blink.cmp/issues/1851
 -- Dynamic menu position: https://github.com/Saghen/blink.cmp/issues/1801
 
 local blink_cmp = require('blink.cmp')
