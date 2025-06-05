@@ -2,8 +2,6 @@
 
 -- TODO:
 -- PR to disable url caching (thus fixing spinner) or sending request finished
--- Prompt mapping (explain) should reuse last chat
--- Add prompt header count?
 
 -- Plugins/Extensions:
 -- Try tavily web_search tool (and use it to crawl?)
@@ -105,6 +103,17 @@ local function get_last_user_prompt()
         end
     end
     return last_user_prompt
+end
+
+local function count_exchanges()
+    local chat_msgs = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()).messages
+    local count = 0
+    for i = 1, #chat_msgs do
+        if chat_msgs[i].role == 'user' then
+            count = count + 1
+        end
+    end
+    return count
 end
 
 local function set_chat_win_title(e)
@@ -369,10 +378,11 @@ codecompanion.setup({
                         end
                     end
                     return string.format(
-                        '%s (%s) | %s',
+                        '%s (%s) | %s | %d Exchanges',
                         adapter.formatted_name,
                         adapter.schema.model.default,
-                        system_role
+                        system_role,
+                        count_exchanges()
                     )
                 end,
             },
