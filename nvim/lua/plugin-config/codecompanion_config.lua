@@ -1,7 +1,7 @@
 -- luacheck:ignore 631
 
 -- TODO:
--- PR to disable url caching (thus fixing spinner) or sending a event
+-- PR to disable url caching (thus fixing spinner) or sending request finished
 -- Prompt mapping (explain) should reuse last chat
 -- Add prompt header count?
 
@@ -384,6 +384,10 @@ codecompanion.setup({
                         return message
                     end
                 end,
+                goto_file_action = function(fname)
+                    vim.cmd('wincmd h')
+                    vim.cmd('e ' .. fname)
+                end,
             },
             keymaps = {
                 create_chat = {
@@ -616,10 +620,6 @@ codecompanion.setup({
     opts = {
         system_prompt = function()
             return PROMPT_LIBRARY['helpful_assistant']
-        end,
-        goto_file_action = function(fname)
-            vim.cmd('wincmd h')
-            vim.cmd('e ' .. fname)
         end,
     },
     prompt_library = {
