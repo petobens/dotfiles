@@ -311,7 +311,7 @@ codecompanion.setup({
                 name = 'gemini_pro_25',
                 env = { api_key = GEMINI_API_KEY },
                 schema = {
-                    model = { default = 'gemini-2.5-pro-preview-05-06' },
+                    model = { default = 'gemini-2.5-pro-preview-06-05' },
                 },
             })
         end,
