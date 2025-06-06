@@ -1,8 +1,6 @@
 -- luacheck:ignore 631
 
 -- TODO:
--- PR to disable url caching (thus fixing spinner) or sending request finished
-
 -- Plugins/Extensions:
 -- Try tavily web_search tool (and use it to crawl?)
 -- VectorCode https://github.com/olimorris/codecompanion.nvim/discussions/1252
@@ -830,57 +828,71 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 -- Show a spinner working indicator when a request is being made
+local ns_id = vim.api.nvim_create_namespace('codecompanion_spinner')
 local spinner_states = { '', '', '' }
-local current_state = 1
-local timer = vim.loop.new_timer()
-local ns_id = vim.api.nvim_create_namespace('codecompanion_working_spinner')
-local spinner_line = nil
+local spinner_bufnr, spinner_line, spinner_timer, spinner_index = nil, nil, nil, 1
+
+local function clear_spinner()
+    if spinner_bufnr and vim.api.nvim_buf_is_valid(spinner_bufnr) then
+        vim.api.nvim_buf_clear_namespace(spinner_bufnr, ns_id, 0, -1)
+    end
+    spinner_bufnr, spinner_line, spinner_index = nil, nil, 1
+    if spinner_timer then
+        spinner_timer:stop()
+        spinner_timer:close()
+        spinner_timer = nil
+    end
+end
 
 local function update_spinner()
-    if spinner_line then
-        vim.api.nvim_buf_clear_namespace(0, ns_id, spinner_line, spinner_line + 1)
-        vim.api.nvim_buf_set_virtual_text(
-            0,
+    if spinner_bufnr and spinner_line and vim.api.nvim_buf_is_valid(spinner_bufnr) then
+        vim.api.nvim_buf_clear_namespace(
+            spinner_bufnr,
             ns_id,
             spinner_line,
-            { { ' Working ' .. spinner_states[current_state], 'Comment' } },
+            spinner_line + 1
+        )
+        vim.api.nvim_buf_set_virtual_text(
+            spinner_bufnr,
+            ns_id,
+            spinner_line,
+            { { ' Working ' .. spinner_states[spinner_index], 'Comment' } },
             {}
         )
-        current_state = current_state % #spinner_states + 1
+        spinner_index = spinner_index % #spinner_states + 1
     end
 end
 
 vim.api.nvim_create_autocmd('User', {
     pattern = 'CodeCompanionRequestStarted',
     callback = function()
-        vim.defer_fn(function()
+        if vim.bo.filetype == 'codecompanion' then
             vim.cmd('stopinsert')
-        end, 1)
+        end
+        clear_spinner()
+        spinner_bufnr = vim.api.nvim_get_current_buf()
         spinner_line = vim.api.nvim_win_get_cursor(0)[1] - 1
-        timer:start(0, 250, vim.schedule_wrap(update_spinner))
+        spinner_timer = vim.loop.new_timer()
+        spinner_timer:start(0, 250, vim.schedule_wrap(update_spinner))
     end,
 })
+
 vim.api.nvim_create_autocmd('User', {
     pattern = 'CodeCompanionRequestStreaming',
     callback = function()
-        timer:stop()
-        if spinner_line then
-            vim.api.nvim_buf_clear_namespace(0, ns_id, spinner_line, spinner_line + 1)
-            spinner_line = nil
-        end
+        vim.defer_fn(clear_spinner, 50)
     end,
 })
+
 vim.api.nvim_create_autocmd('User', {
     pattern = 'CodeCompanionRequestFinished',
     callback = function()
-        if spinner_line then
-            -- /fetch doesn't trigger RequestStreaming event so we also clear spinner here
-            vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
-            spinner_line = nil
-        end
         vim.defer_fn(function()
-            vim.cmd('startinsert')
-        end, 1)
+            clear_spinner()
+            if vim.bo.filetype == 'codecompanion' then
+                vim.cmd('startinsert')
+            end
+        end, 50)
     end,
 })
 
