@@ -59,34 +59,40 @@ local function indent_list(dedent)
 end
 
 local function toggle_checklist()
-    -- https://github.com/opdavies/toggle-checkbox.nvim/blob/main/lua/toggle-checkbox.lua
-    local unchecked = '%[ %]'
-    local doing = '%[_%]'
-    local done = '%[x%]'
-    local wontdo = '%[~%]'
-
-    local bufnr = vim.api.nvim_buf_get_number(0)
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    local start_line = cursor[1] - 1
-    local current_line = vim.api.nvim_buf_get_lines(
-        bufnr,
-        start_line,
-        start_line + 1,
-        false
-    )[1] or ''
-
-    local new_line
-    if string.find(current_line, unchecked) then
-        new_line = current_line:gsub(unchecked, doing)
-    elseif string.find(current_line, doing) then
-        new_line = current_line:gsub(doing, done)
-    elseif string.find(current_line, done) then
-        new_line = current_line:gsub(done, wontdo)
+    local bufnr = vim.api.nvim_get_current_buf()
+    local mode = vim.fn.mode()
+    local start_line, end_line
+    if mode:match('^v') or mode:match('^V') then
+        start_line = vim.fn.line('v')
+        end_line = vim.fn.line('.')
+        if start_line > end_line then
+            start_line, end_line = end_line, start_line
+        end
     else
-        new_line = current_line:gsub(wontdo, unchecked)
+        start_line = vim.fn.line('.')
+        end_line = start_line
     end
-    vim.api.nvim_buf_set_lines(bufnr, start_line, start_line + 1, false, { new_line })
-    vim.api.nvim_win_set_cursor(0, cursor)
+
+    local next_state = {
+        [' '] = '_',
+        ['_'] = 'x',
+        ['x'] = '~',
+        ['~'] = ' ',
+    }
+    local checkbox_pat = '(%[([ %_x~])%])'
+
+    local lines = vim.api.nvim_buf_get_lines(bufnr, start_line - 1, end_line, false)
+    for i, line in ipairs(lines) do
+        lines[i] = line:gsub(checkbox_pat, function(box, state)
+            local new_state = next_state[state]
+            if new_state then
+                return '[' .. new_state .. ']'
+            else
+                return box
+            end
+        end, 1)
+    end
+    vim.api.nvim_buf_set_lines(bufnr, start_line - 1, end_line, false, lines)
 end
 
 ---- Pandoc
@@ -171,7 +177,7 @@ vim.keymap.set('i', '<Tab>', indent_list, { expr = true, buffer = true })
 vim.keymap.set('i', '<S-Tab>', function()
     return indent_list({ dedent = true })
 end, { expr = true, buffer = true })
-vim.keymap.set('n', '<Leader>ct', toggle_checklist, { buffer = true })
+vim.keymap.set({ 'n', 'v' }, '<Leader>ct', toggle_checklist, { buffer = true })
 --- Sphinx (html)
 vim.keymap.set('n', '<F7>', run_sphinx_build, { buffer = true })
 vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
