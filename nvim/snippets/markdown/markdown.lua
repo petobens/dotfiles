@@ -260,6 +260,9 @@ return {
                     local nodes = {}
                     local nr_rows = snip.captures[1]
                     local nr_cols = snip.captures[2]
+                    if not nr_cols then
+                        return
+                    end
                     local idx = 0
 
                     local hlines = ''
@@ -338,7 +341,11 @@ return {
             ]],
             {
                 f(function(_, snip)
-                    return string.rep('#', snip.captures[1])
+                    local count = tonumber(snip.captures[1])
+                    if not count then
+                        return
+                    end
+                    return string.rep('#', count)
                 end, {}),
                 i(1),
             }
