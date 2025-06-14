@@ -27,7 +27,7 @@ local default_options = {
         lazy = 'Lazy',
     },
     filetype_ignore = '\\c\\vtelescope|nvimtree|aerial|help|lazy|neotest|'
-        .. 'overseerlist|qf|dbui|codecompanion|msgmore',
+        .. 'overseerlist|qf|dbui|codecompanion|pager',
 }
 
 local function unique_tail_format(buffers)
