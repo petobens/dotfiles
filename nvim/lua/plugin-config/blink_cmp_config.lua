@@ -1,12 +1,22 @@
 -- luacheck:ignore 631
 
--- FIXME:
--- Winresize error: https://github.com/Saghen/blink.cmp/issues/1851
--- Dynamic menu position: https://github.com/Saghen/blink.cmp/issues/1801
-
 local blink_cmp = require('blink.cmp')
 local u = require('utils')
 
+-- Helpers
+local copilot_multiline_menu_direction = nil
+local function is_multiline_copilot_selected()
+    local item = blink_cmp.get_selected_item()
+    if item and (item.source_id == 'copilot' or item.source_name == 'copilot') then
+        local text = item.insertText or item.label or item.display
+        if text and text:find('\n') then
+            return true
+        end
+    end
+    return false
+end
+
+-- Setup
 blink_cmp.setup({
     fuzzy = { implementation = 'rust' },
     appearance = {
@@ -49,6 +59,9 @@ blink_cmp.setup({
                     },
                 },
             },
+            direction_priority = function()
+                return copilot_multiline_menu_direction or { 's', 'n' }
+            end,
         },
         list = {
             selection = {
@@ -223,5 +236,36 @@ vim.api.nvim_create_autocmd('User', {
         vim.schedule(function()
             blink_cmp.show()
         end)
+    end,
+})
+vim.api.nvim_create_autocmd('User', {
+    pattern = 'BlinkCmpMenuOpen',
+    callback = function()
+        copilot_multiline_menu_direction = nil
+        local timer = vim.uv.new_timer()
+        timer:start(
+            0,
+            80,
+            vim.schedule_wrap(function()
+                if
+                    not copilot_multiline_menu_direction
+                    and is_multiline_copilot_selected()
+                then
+                    copilot_multiline_menu_direction = { 'n', 's' }
+                    require('blink.cmp.completion.windows.menu').update_position()
+                    require('blink.cmp.completion.windows.documentation').update_position()
+                end
+            end)
+        )
+
+        vim.api.nvim_create_autocmd('User', {
+            pattern = 'BlinkCmpMenuClose',
+            once = true,
+            callback = function()
+                timer:stop()
+                timer:close()
+                copilot_multiline_menu_direction = nil
+            end,
+        })
     end,
 })
