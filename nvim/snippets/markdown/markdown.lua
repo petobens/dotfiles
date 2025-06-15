@@ -258,8 +258,8 @@ return {
             {
                 d(1, function(_, snip)
                     local nodes = {}
-                    local nr_rows = snip.captures[1]
-                    local nr_cols = snip.captures[2]
+                    local nr_rows = tonumber(snip.captures[1])
+                    local nr_cols = tonumber(snip.captures[2])
                     if not nr_cols then
                         return
                     end
