@@ -300,7 +300,7 @@ function _G.PyVenv.activate(venv)
     end
 
     -- Save working dir and cd to window cwd (lcd) to ensure system call works
-    local lwd = vim.loop.cwd()
+    local lwd = vim.uv.cwd()
     vim.cmd('lcd %:p:h')
 
     -- If there is no active venv look for one (but just once)

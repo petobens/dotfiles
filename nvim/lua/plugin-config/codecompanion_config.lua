@@ -872,7 +872,7 @@ vim.api.nvim_create_autocmd('User', {
         clear_spinner()
         spinner_bufnr = vim.api.nvim_get_current_buf()
         spinner_line = vim.api.nvim_win_get_cursor(0)[1] - 1
-        spinner_timer = vim.loop.new_timer()
+        spinner_timer = vim.uv.new_timer()
         spinner_timer:start(0, 250, vim.schedule_wrap(update_spinner))
     end,
 })
