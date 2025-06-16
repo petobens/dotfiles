@@ -378,7 +378,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = '(%d)c', regTrig = true, dscr = 'Columns' },
+        { trig = '(%d)c', regTrig = true, dscr = 'Columns', docTrig = '3c' },
         fmta(
             [[
                <><> <>
@@ -400,7 +400,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns' },
+        { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns', docTrig = '2x3' },
         fmta(
             [[
                <>

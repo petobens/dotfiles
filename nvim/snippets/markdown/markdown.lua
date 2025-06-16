@@ -225,7 +225,7 @@ return {
 
     -- Tables
     s(
-        { trig = '(%d)c', regTrig = true, dscr = 'Columns' },
+        { trig = '(%d)c', regTrig = true, dscr = 'Columns', docTrig = '3c' },
         fmta(
             [[
                <>
@@ -250,7 +250,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns' },
+        { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns', docTrig = '2x3' },
         fmta(
             [[
                <>
@@ -334,7 +334,7 @@ return {
     ),
 }, {
     s(
-        { trig = '(%d)h', regTrig = true, dscr = 'Header' },
+        { trig = '(%d)h', regTrig = true, dscr = 'Header', docTrig = '2h' },
         fmta(
             [[
                <> <>
