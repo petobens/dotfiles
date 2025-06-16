@@ -33,6 +33,7 @@ function _G.LspConfig.highlight_doc_patterns(bufnr)
     vim.api.nvim_buf_clear_namespace(bufnr, md_docs_ns, 0, -1)
     local patterns = {
         ['─'] = 'RenderMarkdownDash',
+        ['---'] = 'RenderMarkdownDash',
         -- Lua/vimdoc
         ['@%S+'] = '@variable.parameter',
         -- Python

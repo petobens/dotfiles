@@ -334,7 +334,7 @@ onedarkpro.setup({
         ['@conceal.vimdoc'] = { fg = p.red },
         ['@constant.builtin.vim'] = { fg = p.yellow },
         ['@label.vimdoc'] = { fg = p.orange, style = p.none },
-        ['@markup.heading.vimdoc'] = { fg = p.purple },
+        ['@markup.heading.vimdoc'] = { fg = p.purple, style = p.none },
         ['@markup.heading.1.vimdoc'] = { link = '@markup.heading.vimdoc' },
         ['@markup.heading.2.vimdoc'] = { link = '@markup.heading.vimdoc' },
         ['@markup.heading.3.vimdoc'] = { link = '@markup.heading.vimdoc' },
