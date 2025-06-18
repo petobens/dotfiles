@@ -112,12 +112,20 @@ require('render-markdown').setup({
                             icon = '󰌹 ',
                             highlight = 'Comment',
                         },
+                        file = {
+                            icon = '󰨸 ',
+                            highlight = 'Comment',
+                        },
+                        help = {
+                            icon = ' ',
+                            highlight = 'Comment',
+                        },
                         image = {
                             icon = '󰥶 ',
                             highlight = 'Comment',
                         },
-                        file = {
-                            icon = '󰨸 ',
+                        tool = {
+                            icon = ' ',
                             highlight = 'Comment',
                         },
                         url = {
