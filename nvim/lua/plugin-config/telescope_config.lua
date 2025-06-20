@@ -713,6 +713,7 @@ telescope.setup({
         },
         vimgrep_arguments = {
             'rg',
+            '--hidden',
             '--color=never',
             '--no-heading',
             '--with-filename',
