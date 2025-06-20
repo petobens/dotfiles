@@ -37,55 +37,53 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     pipx_install_cmd="sudo $pipx_install_cmd"
 fi
 pipx_inject_cmd="$HOME/.local/bin/pipx inject --verbose"
+uv_install_cmd='uv tool install --force'
 
-$pipx_install_cmd aws-mfa
-$pipx_install_cmd black
-$pipx_install_cmd isort
+$uv_install_cmd aws-mfa
+$uv_install_cmd black
+$uv_install_cmd isort
 $pipx_install_cmd jupyter --include-deps
 $pipx_inject_cmd jupyter numpy pandas matplotlib
-$pipx_install_cmd ipython
-$pipx_inject_cmd ipython numpy pandas matplotlib matplotlib-backend-kitty black
-$pipx_inject_cmd ipython git+https://github.com/petobens/ipython-ctrlr-fzf@ui
-$pipx_install_cmd litecli
-$pipx_install_cmd mycli
-$pipx_install_cmd mypy
+$uv_install_cmd --with numpy --with pandas --with matplotlib --with matplotlib-backend-kitty --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
+$uv_install_cmd litecli
+$uv_install_cmd mycli
+$uv_install_cmd mypy
 if type "nvim" > /dev/null 2>&1; then
-    $pipx_install_cmd neovim-remote
+    $uv_install_cmd neovim-remote
 fi
-$pipx_install_cmd pgcli
-$pipx_install_cmd poetry
-$pipx_inject_cmd poetry poetry-plugin-up
-$pipx_install_cmd pylint
+$uv_install_cmd pgcli
+$uv_install_cmd --with poetry-plugin-up poetry
+$uv_install_cmd pylint
 if type "i3" > /dev/null 2>&1; then
-    $pipx_install_cmd git+https://github.com/open-dynaMIX/raiseorlaunch
+    $uv_install_cmd git+https://github.com/open-dynaMIX/raiseorlaunch
 fi
-$pipx_install_cmd ranger-fm
-$pipx_install_cmd ruff
-$pipx_install_cmd sqlfluff
-$pipx_install_cmd trash-cli
-$pipx_install_cmd git+https://github.com/will8211/unimatrix
-$pipx_install_cmd vimiv
-$pipx_install_cmd yamllint
+$uv_install_cmd ranger-fm
+$uv_install_cmd ruff
+$uv_install_cmd sqlfluff
+$uv_install_cmd trash-cli
+$uv_install_cmd git+https://github.com/will8211/unimatrix
+$uv_install_cmd vimiv
+$uv_install_cmd yamllint
 
-pipx_venvs="$PIPX_HOME/venvs"
+uv_venvs=$(uv tool dir)
 
 # Set some mime defaults
-if [ -d "$pipx_venvs/ranger-fm" ]; then
+if [ -d "$uv_venvs/ranger-fm" ]; then
     echo "Adding desktop entry for ranger-fm..."
-    xdg-desktop-menu install --novendor "$pipx_venvs/ranger-fm/share/applications/ranger.desktop"
+    xdg-desktop-menu install --novendor "$uv_venvs/ranger-fm/share/applications/ranger.desktop"
     echo "xdg-mime query default inode/directory is: $(xdg-mime query default inode/directory)"
     echo "Adding man pages ranger-fm..."
     local_man_path="$HOME/.local/share/man/man1"
     mkdir -p "$local_man_path"
-    cp -a "$pipx_venvs/ranger-fm/share/man/man1/." "$local_man_path"
+    cp -a "$uv_venvs/ranger-fm/share/man/man1/." "$local_man_path"
     echo "Updating man's internal db..."
     sudo mandb
 fi
-if [ -d "$pipx_venvs/vimiv" ]; then
+if [ -d "$uv_venvs/vimiv" ]; then
     echo "Adding desktop entry for vimiv..."
-    mkdir -p "$pipx_venvs/vimiv/share"
-    wget -P "$pipx_venvs/vimiv/share" "https://raw.githubusercontent.com/karlch/vimiv-qt/master/misc/vimiv.desktop"
-    xdg-desktop-menu install --novendor "$pipx_venvs/vimiv/share/vimiv.desktop"
+    mkdir -p "$uv_venvs/vimiv/share"
+    wget -P "$uv_venvs/vimiv/share" "https://raw.githubusercontent.com/karlch/vimiv-qt/master/misc/vimiv.desktop"
+    xdg-desktop-menu install --novendor "$uv_venvs/vimiv/share/vimiv.desktop"
     echo "xdg-mime query default image/png is: $(xdg-mime query default image/png)"
 fi
 
@@ -112,8 +110,8 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
 fi
 
 for cli in litecli mycli pgcli; do
-    if [ -d "$pipx_venvs/$cli" ]; then
-        styles_dir="$pipx_venvs/$cli/lib/python$python_version/site-packages/pygments/styles"
+    if [ -d "$uv_venvs/$cli" ]; then
+        styles_dir="$uv_venvs/$cli/lib/python$python_version/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then
             $ln_cmd -fTs "$python_dir/onedarkish.py" "$styles_dir/onedarkish.py"
             echo Created symlink in "$styles_dir/onedarkish.py"

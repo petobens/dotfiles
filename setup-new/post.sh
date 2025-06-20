@@ -105,11 +105,18 @@ else
     # Set some default apps on Linux
     if type "xdg-mime" > /dev/null 2>&1; then
         echo -e "\\033[1;34m--> Setting default apps for specific filetypes...\\033[0m"
+        if type "ranger" > /dev/null 2>&1; then
+            xdg-mime default ranger.desktop inode/directory
+        fi
         if type "zathura" > /dev/null 2>&1; then
             xdg-mime default org.pwmt.zathura-pdf-poppler.desktop application/pdf
         fi
         if type "vimiv" > /dev/null 2>&1; then
             xdg-mime default vimiv.desktop image/gif
+            xdg-mime default vimiv.desktop image/jpeg
+            xdg-mime default vimiv.desktop image/jpg
+            xdg-mime default vimiv.desktop image/png
+            xdg-mime default vimiv.desktop image/svg
         fi
         if type "nvim" > /dev/null 2>&1; then
             # Note we need something like `Exec=alacritty -e nvim %F` in /usr/share/nvim.desktop

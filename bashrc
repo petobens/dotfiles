@@ -398,6 +398,10 @@ sys_update_all() {
         echo -e "\033[1;34m\n-> Updating Python binaries with pipx...\033[0m"
         pipx upgrade-all --include-injected
     fi
+    if type "uv" > /dev/null 2>&1; then
+        echo -e "\033[1;34m\n-> Updating Python binaries with uv...\033[0m"
+        uv tool upgrade --all
+    fi
     if type "python3" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Python user modules...\033[0m"
         outdated="$(pip list --user --outdated)"

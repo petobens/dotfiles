@@ -1,3 +1,5 @@
+"""Onedarkish Pygments style."""
+
 from pygments.style import Style
 from pygments.token import (
     Comment,
@@ -33,10 +35,14 @@ pmenu = '#333841'
 syntax_fg = white
 syntax_fold_bg = comment_grey
 
+__all__ = ['OneDarkishStyle']
 
-class OnedarkishStyle(Style):
-    default_style = ''
 
+class OneDarkishStyle(Style):
+    """Theme inspired by One Dark Pro for Atom."""
+
+    name = 'onedarkish'
+    background_color = cursor_grey
     styles = {
         Text: syntax_fg,
         Error: red,
