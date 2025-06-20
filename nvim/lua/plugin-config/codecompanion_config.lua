@@ -528,12 +528,23 @@ codecompanion.setup({
                             )
                             return
                         end
-
                         local git_files =
                             vim.fn.systemlist('git ls-files --full-name ' .. git_root)
-                        local files = vim.tbl_map(function(f)
-                            return git_root .. '/' .. f
-                        end, git_files)
+
+                        local ignore_exts = { ['.png'] = true }
+                        local function has_ignored_ext(filename)
+                            local ext = filename:match('(%.[^%.]+)$') or ''
+                            return ignore_exts[ext] or false
+                        end
+                        local files = vim.tbl_map(
+                            function(f)
+                                return git_root .. '/' .. f
+                            end,
+                            vim.tbl_filter(function(f)
+                                return not has_ignored_ext(f)
+                            end, git_files)
+                        )
+
                         send_project_tree(chat, git_root)
                         _G.CodeCompanionConfig.add_references(files)
                     end,
