@@ -311,9 +311,49 @@ if type "python" > /dev/null 2>&1; then
             poetry shell -q
         }
     fi
+    if type "uv" > /dev/null 2>&1; then
+        alias uva='uv add'
+        alias uvad='uv add --dev'
+        alias uvrm='uv remove'
+        alias uvs='uv sync'
+        alias uvi='uv sync --locked' # install
+        alias uvl='uv pip list'
+        alias uvr='uv run'
+        alias uvp='uv run python'
+        alias uvd='uv run python -m pdb -cc'
+        alias uvt='uv run pytest -n auto --cov'
+        alias uvh='uv run pre-commit run --all-files' # hooks
+        alias uvj='uv run jupyter lab'
+        uvsh() {
+            local venv_name=".venv"
+
+            local dir="$PWD"
+            local pyproject_dir=""
+            while [[ "$dir" != "/" ]]; do
+                if [[ -f "$dir/pyproject.toml" ]]; then
+                    pyproject_dir="$dir"
+                    break
+                fi
+                dir="$(dirname "$dir")"
+            done
+            if [[ -z "$pyproject_dir" ]]; then
+                echo "[ERROR] pyproject.toml not found in any parent directory." >&2
+                return 1
+            fi
+
+            local venv_path="${pyproject_dir}/${venv_name}"
+            local activator="${venv_path}/bin/activate"
+            if [[ ! -f "${activator}" ]]; then
+                echo "[ERROR] Python venv not found: ${venv_path}" >&2
+                return 1
+            else
+                echo "[INFO] Activating Python venv: ${venv_path}"
+            fi
+
+            . "${activator}"
+        }
+    fi
 fi
-# FIXME: This seems to be needed by vscode:
-# eval "$(pyenv init -)"
 
 # Latex
 if type "tlmgr" > /dev/null 2>&1; then
