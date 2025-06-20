@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-if type "pyenv" > /dev/null 2>&1; then
-    pyenv rehash
-fi
 
 if type "pip3" > /dev/null 2>&1; then
     echo -e "\\033[1;34m--> Installing Python3 modules...\\033[0m"

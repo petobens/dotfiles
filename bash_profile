@@ -67,11 +67,6 @@ if type "ruby" > /dev/null 2>&1; then
     export GEM_HOME=$HOME/.gem
     PATH="$PATH:$GEM_HOME/bin"
 fi
-if type "pyenv" > /dev/null 2>&1; then
-    export PYENV_ROOT="$HOME/.pyenv"
-    PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init --path --no-rehash bash)"
-fi
 # Prepend python virtual env to path if exists (this is useful when spawning a
 # new terminal form within neovim). Note: this must be the very last PATH mod
 if [ -n "$VIRTUAL_ENV" ]; then

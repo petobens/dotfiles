@@ -67,8 +67,6 @@ $yay_cmd luarocks
 $yay_cmd lua51
 $yay_cmd python
 $yay_cmd python-pip
-$yay_cmd pyenv
-$yay_cmd pyenv-virtualenv
 $yay_cmd uv
 $yay_cmd rustup
 $yay_cmd jdk-openjdk
