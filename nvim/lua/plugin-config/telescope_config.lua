@@ -610,6 +610,17 @@ local custom_actions = transform_mod({
             img_clip.paste_image(nil, filepath)
         end
     end,
+    -- Run codecompanion code review
+    codecompanion_code_review = function(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        if entry and entry.value then
+            _G.CodeCompanionConfig.run_slash_command(
+                'code_review',
+                { commit_sha = entry.value }
+            )
+        end
+    end,
 })
 -- Store custom actions to be used elsewhere
 _G.TelescopeConfig.custom_actions = custom_actions
@@ -798,6 +809,7 @@ telescope.setup({
                     ['<C-v>'] = custom_actions.fugitive_vsplit,
                     ['<C-d>'] = custom_actions.delta_term,
                     ['<C-o>'] = actions.git_checkout,
+                    ['<A-r>'] = custom_actions.codecompanion_code_review,
                 },
             },
         },
@@ -810,6 +822,7 @@ telescope.setup({
                     ['<C-v>'] = custom_actions.fugitive_vsplit,
                     ['<C-d>'] = custom_actions.delta_term,
                     ['<C-o>'] = actions.git_checkout,
+                    ['<A-r>'] = custom_actions.codecompanion_code_review,
                 },
             },
         },
@@ -943,7 +956,7 @@ local function gitcommits(opts)
     vim.cmd('lcd %:p:h') -- to fix delta previewing
     builtin.git_commits({
         cwd = opts.cwd,
-        prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout)',
+        prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout,<A-r>:review)',
         results_title = git_root[1],
         previewer = {
             delta,
@@ -961,7 +974,7 @@ local function gitcommits_buffer(opts)
     builtin.git_bcommits({
         cwd = opts.cwd,
         results_title = vim.api.nvim_buf_get_name(0),
-        prompt_title = 'File Commits (<C-d>:delta-diff,<C-o>:git-checkout)',
+        prompt_title = 'File Commits (<C-d>:delta-diff,<C-o>:git-checkout,<A-r>:review)',
         previewer = {
             delta,
             previewers.git_commit_diff_as_was.new(opts),

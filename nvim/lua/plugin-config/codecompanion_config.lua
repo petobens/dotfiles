@@ -196,17 +196,6 @@ local function get_or_create_chat()
     return chat
 end
 
-local function run_slash_command(name)
-    local chat = get_or_create_chat()
-    local cmd = config.strategies.chat.slash_commands[name]
-    if cmd and type(cmd.callback) == 'function' then
-        cmd.callback(chat)
-        focus_or_toggle_chat()
-    else
-        vim.notify('Slash command not found: ' .. tostring(name), vim.log.levels.ERROR)
-    end
-end
-
 -- Slash command helpers
 local function send_project_tree(chat, root)
     local tree = vim.fn.system({ 'tree', '-a', '-L', '2', '--noreport', root })
@@ -263,6 +252,18 @@ function _G.CodeCompanionConfig.add_references(files)
         ))
     end
     focus_or_toggle_chat()
+end
+
+function _G.CodeCompanionConfig.run_slash_command(name, opts)
+    opts = opts or {}
+    local chat = get_or_create_chat()
+    local cmd = config.strategies.chat.slash_commands[name]
+    if cmd and type(cmd.callback) == 'function' then
+        cmd.callback(chat, opts)
+        focus_or_toggle_chat()
+    else
+        vim.notify('Slash command not found: ' .. tostring(name), vim.log.levels.ERROR)
+    end
 end
 
 -- Setup
@@ -585,17 +586,30 @@ codecompanion.setup({
                 },
                 ['code_review'] = {
                     description = 'Perform a code review',
-                    callback = function(chat)
-                        local staged = vim.fn.systemlist('git diff --cached --name-only')
-                        if #staged == 0 or (#staged == 1 and staged[1] == '') then
-                            vim.notify('No staged changes found', vim.log.levels.WARN)
+                    callback = function(chat, opts)
+                        local diff_cmd = 'git diff --no-ext-diff'
+                        if opts and opts.commit_sha then
+                            diff_cmd = diff_cmd .. ' ' .. opts.commit_sha .. '^!'
+                        else
+                            local staged =
+                                vim.fn.systemlist('git diff --cached --name-only')
+                            if #staged == 0 or (#staged == 1 and staged[1] == '') then
+                                vim.notify('No staged changes found', vim.log.levels.WARN)
+                                return
+                            end
+                            diff_cmd = diff_cmd .. ' --staged'
+                        end
+
+                        local diff = vim.fn.system(diff_cmd)
+                        if vim.v.shell_error ~= 0 or not diff or vim.trim(diff) == '' then
+                            vim.notify('Failed to get diff output', vim.log.levels.ERROR)
                             return
                         end
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['code_reviewer'],
-                                vim.fn.system('git diff --no-ext-diff --staged')
+                                diff
                             ),
                         })
                         chat:submit()
@@ -954,7 +968,7 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'qf' },
     callback = function(args)
         vim.keymap.set('n', '<leader>qf', function()
-            run_slash_command('qfix')
+            _G.CodeCompanionConfig.run_slash_command('qfix')
         end, { buffer = args.buf })
     end,
 })
@@ -962,10 +976,10 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'fugitive' },
     callback = function(args)
         vim.keymap.set('n', '<Leader>cc', function()
-            run_slash_command('conventional_commit')
+            _G.CodeCompanionConfig.run_slash_command('conventional_commit')
         end, { buffer = args.buf })
         vim.keymap.set('n', '<Leader>cr', function()
-            run_slash_command('code_review')
+            _G.CodeCompanionConfig.run_slash_command('code_review')
         end, { buffer = args.buf })
     end,
 })
