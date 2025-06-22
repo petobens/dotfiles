@@ -21,12 +21,14 @@ if status in ['Downloading']:
 elif status in ['Uploading']:
     print("󰅧")
 elif status in [
+    'Attempting',
     'Creating',
     'Deleting',
     'Fetching',
     'Moving',
     'Performing',
     'Processing',
+    'Succesfully',
     'Syncing',
 ]:
     print("󰔪")

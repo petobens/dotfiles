@@ -1,3 +1,2 @@
-monitor_interval = "180"
-skip_file = "~*|.~*|*.tmp|*.swp|4913|*.w18|*.aex|*.pyg|*.synctex(busy)|*.crdownload"
+skip_file = "~*|.~*|*.tmp|*.swp|4913|*.w18|*.aex|*.pyg|*.synctex(busy)|*.crdownload|*.partial"
 skip_dir = "/.mypy_cache|/.pytest_cache|/.git"
