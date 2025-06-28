@@ -418,7 +418,7 @@ onedarkpro.setup({
 
         ---- Leap (and flit)
         LeapMatch = { fg = p.black, bg = p.purple, style = 'bold' },
-        LeapLabelPrimary = { fg = p.black, bg = p.purple, style = 'bold' },
+        LeapLabel = { fg = p.black, bg = p.purple, style = 'bold' },
 
         ---- Neotest
         NeotestAdapterName = { fg = p.purple },
