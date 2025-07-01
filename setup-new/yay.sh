@@ -106,7 +106,7 @@ $yay_cmd alsa-tools
 $yay_cmd bluez
 $yay_cmd bluez-utils
 $yay_cmd capnet-assist
-$yay_cmd cmst-git
+$yay_cmd cmst
 $yay_cmd downgrade
 $yay_cmd dunst
 $yay_cmd feh
