@@ -456,7 +456,7 @@ sys_update_all() {
     fi
     if type "npm" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Node packages...\033[0m"
-        npm update -g
+        npm_config_loglevel=error npm update --no-fund -g
     fi
     if type "cargo-install-update" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating rust binaries...\033[0m"
