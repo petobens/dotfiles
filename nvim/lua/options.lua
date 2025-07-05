@@ -112,7 +112,11 @@ local session_acg = vim.api.nvim_create_augroup('session', { clear = true })
 vim.api.nvim_create_autocmd('VimLeavePre', {
     group = session_acg,
     callback = function()
-        vim.cmd(string.format('execute "mksession! %s"', u.vim_session_file()))
+        -- Only save session if there is an attached UI (i.e., not in headless mode such
+        -- as a neotest worker)
+        if #vim.api.nvim_list_uis() > 0 then
+            vim.cmd(string.format('execute "mksession! %s"', u.vim_session_file()))
+        end
     end,
 })
 vim.api.nvim_create_autocmd('BufWinLeave', {
