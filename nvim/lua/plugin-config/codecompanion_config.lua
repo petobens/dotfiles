@@ -2,16 +2,18 @@
 
 -- TODO:
 -- Plugins/Extensions:
--- VectorCode https://github.com/olimorris/codecompanion.nvim/discussions/1252
+-- VectorCode: https://github.com/Davidyz/VectorCode
 -- And do something like https://github.com/olimorris/codecompanion.nvim/pull/1659
 -- Try indexing the whole codecompanion repo
--- MCP Hub https://github.com/ravitemer/mcphub.nvim
+-- MCP Hub: https://github.com/ravitemer/mcphub.nvim
 -- Possible to share a PDF file with this?
 -- Sign-in/read  google doc/slides
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
 
 -- Check how to use agents/tools (i.e @ commands, such @editor)
 -- Try tavily web_search tool (and use it to crawl?)
+-- Crawl with site specific search https://github.com/olimorris/codecompanion.nvim/pull/1741
+
 -- And integrate with inline code running
 -- Check terminal interaction
 
@@ -25,6 +27,7 @@ local config = require('codecompanion.config')
 local keymaps = require('codecompanion.strategies.chat.keymaps')
 local telescope_action_state = require('telescope.actions.state')
 local telescope_actions = require('telescope.actions')
+local u = require('utils')
 
 _G.CodeCompanionConfig = {}
 
@@ -809,7 +812,7 @@ codecompanion.setup({
         history = {
             enabled = true,
             opts = {
-                auto_generate_title = true,
+                auto_generate_title = u.is_online(),
                 title_generation_opts = {
                     adapter = 'openai_gpt_41',
                     model = 'gpt-4.1',
