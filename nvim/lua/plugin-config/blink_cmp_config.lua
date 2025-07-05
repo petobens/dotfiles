@@ -169,7 +169,7 @@ blink_cmp.setup({
                 name = 'git',
                 module = 'blink-cmp-git',
                 enabled = function()
-                    return vim.bo.filetype == 'gitcommit'
+                    return vim.bo.filetype == 'gitcommit' and u.is_online()
                 end,
             },
             lazydev = {

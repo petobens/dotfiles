@@ -80,4 +80,17 @@ M.icons = {
     fold_close = '',
 }
 
+local last_online_check, online_status
+local online_cache_timeout = 30
+function M.is_online()
+    local now = os.time()
+    if last_online_check and (now - last_online_check < online_cache_timeout) then
+        return online_status
+    end
+    online_status = vim.system({ 'ping', '-c', '1', '8.8.8.8' }, { timeout = 1000 })
+        :wait().code == 0
+    last_online_check = now
+    return online_status
+end
+
 return M
