@@ -287,7 +287,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
         :find()
 end
 
-function _G.TelescopeConfig.poetry_venvs(opts)
+function _G.TelescopeConfig.py_venvs(opts)
     vim.cmd('lcd %:p:h')
     opts = opts or {}
     opts.entry_maker = function(entry)
@@ -297,13 +297,31 @@ function _G.TelescopeConfig.poetry_venvs(opts)
             ordinal = entry,
         }
     end
+
+    local venvs, manager
+    local uv_venv = opts.project_root .. '/.venv'
+    if vim.fn.isdirectory(uv_venv) == 1 then
+        manager = 'uv'
+        venvs = { uv_venv }
+    else
+        local poetry_venv = vim.fn.trim(vim.fn.system('poetry env info --path'))
+        if poetry_venv ~= '' and vim.v.shell_error == 0 then
+            manager = 'poetry'
+            venvs = { poetry_venv }
+        end
+    end
+    if not venvs then
+        vim.notify('No venvs found!', vim.log.levels.WARN)
+        return
+    end
+
     pickers
         .new(opts, {
-            prompt_title = 'Poetry Virtual Envs',
-            finder = finders.new_oneshot_job(
-                { 'poetry', 'env', 'list', '--full-path' },
-                opts
-            ),
+            prompt_title = manager .. ' venvs',
+            finder = finders.new_table({
+                results = venvs,
+                entry_maker = opts.entry_maker,
+            }),
             sorter = conf.file_sorter(opts),
             previewer = tree_previewer,
             attach_mappings = function(bufnr)

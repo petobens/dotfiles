@@ -245,6 +245,22 @@ local function list_breakpoints(local_buffer)
 end
 
 -- Virtual Envs
+local function get_venv_info(venv, project_root)
+    if venv and venv ~= '' then
+        return { path = venv, manager = nil }
+    end
+    -- Prefer uv over poetry
+    local uv_venv = project_root .. '/.venv'
+    if vim.fn.isdirectory(uv_venv) == 1 then
+        return { path = uv_venv, manager = 'uv' }
+    end
+    local poetry_venv = vim.fn.trim(vim.fn.system('poetry env info --path'))
+    if poetry_venv ~= '' and vim.v.shell_error == 0 then
+        return { path = poetry_venv, manager = 'poetry' }
+    end
+    return nil
+end
+
 local function set_lsp_path(path)
     -- Needed to jump to proper docs/definitions
     -- From https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/basedpyright.lua#L28
@@ -257,26 +273,6 @@ local function set_lsp_path(path)
         )
         client.notify('workspace/didChangeConfiguration', { settings = nil })
     end
-end
-
-function _G.PyVenv.statusline()
-    return vim.b.pyvenv
-end
-
-function _G.PyVenv.deactivate()
-    if
-        _G.PyVenv.active_venv.path
-        and string.find(vim.env.PATH, _G.PyVenv.active_venv.path, 1, true)
-    then
-        local venv_path =
-            string.gsub(_G.PyVenv.active_venv.path .. '/bin:', '([^%w])', '%%%1') -- escaped
-        local path = string.gsub(vim.env.PATH, venv_path, '')
-        vim.fn.setenv('PATH', path)
-    end
-    vim.fn.setenv('VIRTUAL_ENV', nil)
-    vim.b.pyvenv = nil
-    _G.PyVenv.active_venv = {}
-    set_lsp_path(vim.g.python3_host_prog)
 end
 
 function _G.PyVenv.activate(venv)
@@ -305,22 +301,27 @@ function _G.PyVenv.activate(venv)
 
     -- If there is no active venv look for one (but just once)
     if vim.b.pyvenv == nil then
-        local venv_path = venv or vim.fn.trim(vim.fn.system('poetry env info --path'))
-        if venv or vim.v.shell_error ~= 1 then
-            vim.b.pyvenv = venv_path
-            -- Also store (cache) project root and all py files in the project
-            local project_root = _project_root()
-            local py_files = vim.fs.find(function(name)
+        local project_root = _project_root()
+        local venv_info = get_venv_info(venv, project_root)
+        if venv_info then
+            vim.b.pyvenv = venv_info.path
+            local py_files = vim.fs.find(function(name, path)
                 return name:match('.*%.py$')
+                    and not vim.startswith(path, project_root .. '/.venv/')
             end, {
                 limit = math.huge,
                 type = 'file',
                 path = project_root,
             })
+            local py_version = vim.fn
+                .trim(vim.fn.system(venv_info.manager .. ' run python --version'))
+                :match('%d+.%d+.%d+')
             _G.PyVenv.active_venv = {
-                path = venv_path,
+                package_manager = venv_info.manager,
+                path = venv_info.path,
                 project_files = py_files,
                 project_root = project_root,
+                python_version = py_version,
             }
         else
             vim.b.pyvenv = 'none'
@@ -337,6 +338,22 @@ function _G.PyVenv.activate(venv)
         end, 100)
     end
     vim.cmd('lcd ' .. lwd)
+end
+
+function _G.PyVenv.deactivate()
+    if
+        _G.PyVenv.active_venv.path
+        and string.find(vim.env.PATH, _G.PyVenv.active_venv.path, 1, true)
+    then
+        local venv_path =
+            string.gsub(_G.PyVenv.active_venv.path .. '/bin:', '([^%w])', '%%%1') -- escaped
+        local path = string.gsub(vim.env.PATH, venv_path, '')
+        vim.fn.setenv('PATH', path)
+    end
+    vim.fn.setenv('VIRTUAL_ENV', nil)
+    vim.b.pyvenv = nil
+    _G.PyVenv.active_venv = {}
+    set_lsp_path(vim.g.python3_host_prog)
 end
 
 -- Sphinx(docs)
@@ -358,7 +375,7 @@ local function clean_sphinx_build()
 
     vim.print('Cleaning sphinx html build...')
     vim.system(
-        { 'poetry', 'run', 'make', 'clean' },
+        { _G.PyVenv.active_venv.package_manager, 'run', 'make', 'clean' },
         { cwd = _project_root() .. '/docs', text = true },
         on_exit
     )
@@ -463,12 +480,15 @@ vim.keymap.set('n', '<Leader>vd', function()
     _G.PyVenv.deactivate()
 end, { buffer = true })
 vim.keymap.set('n', '<Leader>vl', function()
-    _G.TelescopeConfig.poetry_venvs()
+    _G.TelescopeConfig.py_venvs({ project_root = _project_root() })
+end, { buffer = true })
+vim.keymap.set('n', '<Leader>ve', function()
+    vim.print(_G.PyVenv.active_venv)
 end, { buffer = true })
 ---- Sphinx (docs)
-vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true })
-vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
-vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
+vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true }) -- build html
+vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true }) -- delete aux
+vim.keymap.set('n', '<Leader>od', view_sphinx_docs, { buffer = true }) -- open docs
 vim.keymap.set('n', '<Leader>vi', function()
     view_sphinx_docs({ index = true })
 end, { buffer = true })

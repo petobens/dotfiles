@@ -54,14 +54,13 @@ local function pyvenv()
     if vim.bo.filetype ~= 'python' then
         return ''
     end
-    local venv_name = _G.PyVenv.statusline()
-    if venv_name ~= 'none' then
-        venv_name = '󰆍 '
-            .. string.gsub(venv_name, '.*/pypoetry/virtualenvs/', ''):sub(1, 25)
-    else
-        venv_name = ''
+    local venv_name = vim.b.pyvenv
+    if not venv_name or venv_name == 'none' or venv_name == '' then
+        return ''
     end
-    return venv_name
+
+    local venv = _G.PyVenv.active_venv
+    return string.format('󰆍 %s-%s', venv.package_manager, venv.python_version)
 end
 
 _G.LualineConfig.trailing_last = ''

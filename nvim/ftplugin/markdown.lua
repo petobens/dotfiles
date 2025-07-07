@@ -143,8 +143,11 @@ local function clean_sphinx_build()
         ':p:h'
     )
     vim.print('Cleaning sphinx html build...')
+    local package_manager = (
+        next(_G.PyVenv.active_venv) and _G.PyVenv.active_venv.package_manager
+    ) or 'uv'
     vim.system(
-        { 'poetry', 'run', 'make', 'clean' },
+        { package_manager, 'run', 'make', 'clean' },
         { cwd = project_root .. '/docs', text = true },
         on_exit
     )
