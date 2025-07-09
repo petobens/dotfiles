@@ -53,6 +53,10 @@ local function get_my_prompt_library()
         'translator_spa_eng',
         'writer_at_work',
     }
+    local user_prompts = {
+        conventional_commits = true,
+        code_reviewer = true,
+    }
     local base_url =
         'https://raw.githubusercontent.com/petobens/llm-prompts/main/md-prompts/%s.md'
     local prompt_dir = vim.fn.expand('~/git-repos/private/llm-prompts/md-prompts/')
@@ -79,7 +83,11 @@ local function get_my_prompt_library()
     local formatting_content = read_and_filter(formatting_file)
     for _, fname in ipairs(prompt_md_files) do
         local content = read_and_filter(fname)
-        prompt_library[fname] = formatting_content .. '\n\n' .. content
+        if user_prompts[fname] then
+            prompt_library[fname] = content
+        else
+            prompt_library[fname] = formatting_content .. '\n\n' .. content
+        end
     end
     return prompt_library
 end
