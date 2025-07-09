@@ -590,24 +590,53 @@ codecompanion.setup({
                 ['code_review'] = {
                     description = 'Perform a code review',
                     callback = function(chat, opts)
+                        local git_root = vim.trim(
+                            vim.fn.systemlist('git rev-parse --show-toplevel')[1]
+                        )
+                        if vim.v.shell_error ~= 0 then
+                            vim.notify(
+                                'Not inside a Git repository. Could not determine the project root.',
+                                vim.log.levels.ERROR
+                            )
+                            return
+                        end
+
                         local diff_cmd = 'git diff --no-ext-diff'
+                        local file_list_cmd = 'git diff --name-only'
                         if opts and opts.commit_sha then
                             diff_cmd = diff_cmd .. ' ' .. opts.commit_sha .. '^!'
+                            file_list_cmd = file_list_cmd
+                                .. ' '
+                                .. opts.commit_sha
+                                .. '^!'
                         else
-                            local staged =
-                                vim.fn.systemlist('git diff --cached --name-only')
-                            if #staged == 0 or (#staged == 1 and staged[1] == '') then
-                                vim.notify('No staged changes found', vim.log.levels.WARN)
-                                return
-                            end
                             diff_cmd = diff_cmd .. ' --staged'
+                            file_list_cmd = file_list_cmd .. ' --cached'
                         end
+
+                        local file_list = vim.fn.systemlist(file_list_cmd)
+                        if
+                            #file_list == 0 or (#file_list == 1 and file_list[1] == '')
+                        then
+                            vim.notify('No relevant files found', vim.log.levels.WARN)
+                            return
+                        end
+                        local abs_files = vim.iter(file_list)
+                            :filter(function(f)
+                                return f ~= ''
+                            end)
+                            :map(function(f)
+                                return vim.fs.normalize(vim.fs.joinpath(git_root, f))
+                            end)
+                            :totable()
+                        _G.CodeCompanionConfig.add_references(abs_files)
 
                         local diff = vim.fn.system(diff_cmd)
                         if vim.v.shell_error ~= 0 or not diff or vim.trim(diff) == '' then
                             vim.notify('Failed to get diff output', vim.log.levels.ERROR)
                             return
                         end
+
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
