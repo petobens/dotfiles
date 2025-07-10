@@ -216,6 +216,17 @@ local function get_git_root()
     return vim.trim(output[1])
 end
 
+local function to_absolute_paths(files, root)
+    return vim.iter(files)
+        :filter(function(f)
+            return f ~= ''
+        end)
+        :map(function(f)
+            return vim.fs.normalize(vim.fs.joinpath(root, f))
+        end)
+        :totable()
+end
+
 local function send_project_tree(chat, root)
     local tree = vim.fn.system({ 'tree', '-a', '-L', '2', '--noreport', root })
     chat:add_message({
@@ -583,11 +594,20 @@ codecompanion.setup({
                 ['conventional_commit'] = {
                     description = 'Generate a conventional git commit message',
                     callback = function(chat)
+                        local git_root, err = get_git_root()
+                        if not git_root then
+                            vim.notify(err, vim.log.levels.ERROR)
+                            return
+                        end
+
                         local staged = vim.fn.systemlist('git diff --cached --name-only')
                         if #staged == 0 or (#staged == 1 and staged[1] == '') then
                             vim.notify('No staged changes found', vim.log.levels.WARN)
                             return
                         end
+                        local abs_files = to_absolute_paths(staged, git_root)
+                        _G.CodeCompanionConfig.add_references(abs_files)
+
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
@@ -627,27 +647,14 @@ codecompanion.setup({
                             vim.notify('No relevant files found', vim.log.levels.WARN)
                             return
                         end
-                        local abs_files = vim.iter(file_list)
-                            :filter(function(f)
-                                return f ~= ''
-                            end)
-                            :map(function(f)
-                                return vim.fs.normalize(vim.fs.joinpath(git_root, f))
-                            end)
-                            :totable()
+                        local abs_files = to_absolute_paths(file_list, git_root)
                         _G.CodeCompanionConfig.add_references(abs_files)
-
-                        local diff = vim.fn.system(diff_cmd)
-                        if vim.v.shell_error ~= 0 or not diff or vim.trim(diff) == '' then
-                            vim.notify('Failed to get diff output', vim.log.levels.ERROR)
-                            return
-                        end
 
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['code_reviewer'],
-                                diff
+                                vim.fn.system(diff_cmd)
                             ),
                         })
                         chat:submit()
