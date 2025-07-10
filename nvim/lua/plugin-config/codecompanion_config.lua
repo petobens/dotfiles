@@ -208,6 +208,14 @@ local function get_or_create_chat()
 end
 
 -- Slash command helpers
+local function get_git_root()
+    local output = vim.fn.systemlist('git rev-parse --show-toplevel')
+    if vim.v.shell_error ~= 0 or not output[1] or output[1] == '' then
+        return nil, 'Not inside a Git repository. Could not determine the project root.'
+    end
+    return vim.trim(output[1])
+end
+
 local function send_project_tree(chat, root)
     local tree = vim.fn.system({ 'tree', '-a', '-L', '2', '--noreport', root })
     chat:add_message({
@@ -530,14 +538,9 @@ codecompanion.setup({
                 ['git_files'] = {
                     description = 'Insert all files in git repo',
                     callback = function(chat)
-                        local git_root = vim.trim(
-                            vim.fn.systemlist('git rev-parse --show-toplevel')[1]
-                        )
-                        if vim.v.shell_error ~= 0 then
-                            vim.notify(
-                                'Not inside a Git repository. Could not determine the project root.',
-                                vim.log.levels.ERROR
-                            )
+                        local git_root, err = get_git_root()
+                        if not git_root then
+                            vim.notify(err, vim.log.levels.ERROR)
                             return
                         end
                         local git_files =
@@ -598,14 +601,9 @@ codecompanion.setup({
                 ['code_review'] = {
                     description = 'Perform a code review',
                     callback = function(chat, opts)
-                        local git_root = vim.trim(
-                            vim.fn.systemlist('git rev-parse --show-toplevel')[1]
-                        )
-                        if vim.v.shell_error ~= 0 then
-                            vim.notify(
-                                'Not inside a Git repository. Could not determine the project root.',
-                                vim.log.levels.ERROR
-                            )
+                        local git_root, err = get_git_root()
+                        if not git_root then
+                            vim.notify(err, vim.log.levels.ERROR)
                             return
                         end
 
