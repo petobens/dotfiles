@@ -113,18 +113,25 @@ blink_cmp.setup({
         ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
     },
     sources = {
-        default = {
-            'buffer',
-            'copilot',
-            'emoji',
-            'lsp',
-            'path',
-            'snippets',
-            'tmux',
-        },
+        default = function()
+            local sources = {
+                'buffer',
+                'copilot',
+                'emoji',
+                'lsp',
+                'path',
+                'snippets',
+                'tmux',
+            }
+            -- Workaround for git source not supporting per_filetype configuration
+            -- https://github.com/Kaiser-Yang/blink-cmp-git/issues/62#issuecomment-3062425218
+            if vim.bo.filetype == 'gitcommit' then
+                sources = u.is_online() and { 'buffer', 'git' } or { 'buffer' }
+            end
+            return sources
+        end,
         per_filetype = {
             codecompanion = { 'codecompanion', 'buffer' },
-            gitcommit = { 'git', 'buffer' },
             lua = { inherit_defaults = true, 'lazydev' },
             sql = { 'dbee', 'buffer' },
         },
@@ -168,9 +175,6 @@ blink_cmp.setup({
             git = {
                 name = 'git',
                 module = 'blink-cmp-git',
-                enabled = function()
-                    return vim.bo.filetype == 'gitcommit' and u.is_online()
-                end,
             },
             lazydev = {
                 name = 'lazydev',
