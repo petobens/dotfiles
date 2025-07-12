@@ -367,13 +367,13 @@ end
 local function clean_sphinx_build()
     local on_exit = function(obj)
         if obj.code == 0 then
-            vim.print('Cleaning sphinx html build... done!')
+            vim.notify('Cleaning sphinx html build... done!')
         else
-            vim.print(obj.stderr)
+            vim.notify(obj.stderr, vim.log.levels.ERROR)
         end
     end
 
-    vim.print('Cleaning sphinx html build...')
+    vim.notify('Cleaning sphinx html build...')
     vim.system(
         { _G.PyVenv.active_venv.package_manager, 'run', 'make', 'clean' },
         { cwd = _project_root() .. '/docs', text = true },

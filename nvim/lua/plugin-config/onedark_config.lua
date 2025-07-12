@@ -61,6 +61,7 @@ onedarkpro.setup({
         ModeMsg = { link = 'Normal' },
         MoreMsg = { fg = p.orange },
         MsgArea = { link = 'Normal' },
+        MsgSeparator = { link = 'FloatBorder' },
         NonText = { fg = p.comment_grey },
         Normal = { fg = p.fg, bg = p.bg },
         NormalFloat = { fg = p.fg, bg = p.bg, blend = 6 },

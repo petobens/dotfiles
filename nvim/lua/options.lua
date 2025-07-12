@@ -10,7 +10,7 @@ vim.opt.iskeyword = vim.opt.iskeyword + { ':' }
 vim.opt.termguicolors = true
 
 -- Vim behaviour
--- require('vim._extui').enable({}) -- experimental new TUI message grid
+require('vim._extui').enable({}) -- experimental new TUI message grid
 vim.opt.autowrite = true
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.cmdwinheight = 4
