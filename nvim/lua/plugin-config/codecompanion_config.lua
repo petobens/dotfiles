@@ -988,13 +988,11 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set({ 'i', 'n' }, '<A-p>', function()
             local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
             vim.print(string.format('Model Params:\n%s', vim.inspect(chat.settings)))
-            vim.cmd('normal! g<')
         end, { buffer = e.buf })
         vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
             local system_role = get_current_system_role_prompt()
             if system_role then
                 vim.print(system_role)
-                vim.cmd('normal! g<')
             end
         end, { buffer = e.buf })
         vim.keymap.set({ 'i' }, '<C-p>', function()
