@@ -218,11 +218,18 @@ end
 
 local function to_absolute_paths(files, root)
     return vim.iter(files)
-        :filter(function(f)
-            return f ~= ''
-        end)
         :map(function(f)
-            return vim.fs.normalize(vim.fs.joinpath(root, f))
+            if f == '' then
+                return nil
+            end
+            local abs_path = vim.fs.normalize(vim.fs.joinpath(root, f))
+            if vim.fn.filereadable(abs_path) == 1 then
+                return abs_path
+            end
+            return nil
+        end)
+        :filter(function(f)
+            return f ~= nil
         end)
         :totable()
 end
@@ -627,17 +634,27 @@ codecompanion.setup({
                             return
                         end
 
-                        local diff_cmd = 'git diff --no-ext-diff'
-                        local file_list_cmd = 'git diff --name-only'
-                        if opts and opts.commit_sha then
-                            diff_cmd = diff_cmd .. ' ' .. opts.commit_sha .. '^!'
-                            file_list_cmd = file_list_cmd
-                                .. ' '
-                                .. opts.commit_sha
-                                .. '^!'
+                        local diff_cmd = 'git diff --no-ext-diff '
+                        local file_list_cmd = 'git diff --name-only '
+                        if opts and opts.base_branch then
+                            local base = opts.base_branch
+                            vim.fn.systemlist('git rev-parse --verify ' .. base)
+                            if vim.v.shell_error ~= 0 then
+                                vim.notify(
+                                    'Base branch not found: ' .. base,
+                                    vim.log.levels.ERROR
+                                )
+                                return
+                            end
+                            diff_cmd = diff_cmd .. base .. '...HEAD'
+                            file_list_cmd = file_list_cmd .. base .. '...HEAD'
+                        elseif opts and opts.commit_sha then
+                            local sha = opts.commit_sha
+                            diff_cmd = diff_cmd .. sha .. '^!'
+                            file_list_cmd = file_list_cmd .. sha .. '^!'
                         else
-                            diff_cmd = diff_cmd .. ' --staged'
-                            file_list_cmd = file_list_cmd .. ' --cached'
+                            diff_cmd = diff_cmd .. '--staged'
+                            file_list_cmd = file_list_cmd .. '--cached'
                         end
 
                         local file_list = vim.fn.systemlist(file_list_cmd)
@@ -1023,6 +1040,19 @@ vim.api.nvim_create_autocmd('FileType', {
         end, { buffer = args.buf })
         vim.keymap.set('n', '<Leader>cr', function()
             _G.CodeCompanionConfig.run_slash_command('code_review')
+        end, { buffer = args.buf })
+        vim.keymap.set('n', '<Leader>pr', function()
+            vim.ui.input(
+                { prompt = 'Base branch for diff: ', default = 'main' },
+                function(branch)
+                    if branch and branch ~= '' then
+                        _G.CodeCompanionConfig.run_slash_command(
+                            'code_review',
+                            { base_branch = vim.trim(branch) }
+                        )
+                    end
+                end
+            )
         end, { buffer = args.buf })
     end,
 })
