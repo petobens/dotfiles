@@ -20,13 +20,15 @@ end
 
 local orig_print = vim.print
 vim.print = function(...)
-    -- Always open msg area after print
+    -- Open the message area aftger print only if the printed output spans multiple lines
     local ret = { orig_print(...) }
-    vim.schedule(function()
-        -- FIXME: Only run this if spill
-        vim.cmd('normal! g<')
-        vim.cmd('stopinsert')
-    end)
+    local msg = table.concat(vim.tbl_map(tostring, { ... }), '\t')
+    if msg:find('\n') then
+        vim.schedule(function()
+            vim.cmd('normal! g<')
+            vim.cmd('stopinsert')
+        end)
+    end
     return unpack(ret)
 end
 
