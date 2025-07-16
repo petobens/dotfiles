@@ -273,6 +273,7 @@ onedarkpro.setup({
         ['@lsp.typemod.variable.global.lua'] = { fg = p.yellow },
         ['@punctuation.bracket.lua'] = { fg = p.fg },
         ['@string.regexp.lua'] = { fg = p.green },
+        ['@string.escape.lua'] = { fg = p.light_blue },
         ['@module.builtin.lua'] = { fg = p.yellow },
 
         ---- Markdown

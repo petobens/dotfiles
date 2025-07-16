@@ -18,10 +18,10 @@ vim.keymap.set = function(mode, lhs, rhs, opts)
     return keymap_set(mode, lhs, rhs, opts)
 end
 
-local orig_print = vim.print
+local vim_print = vim.print
 vim.print = function(...)
-    -- Open the message area aftger print only if the printed output spans multiple lines
-    local ret = { orig_print(...) }
+    -- Open the message area after print only if the printed output spans multiple lines
+    local ret = { vim_print(...) }
     local msg = table.concat(vim.tbl_map(tostring, { ... }), '\t')
     if msg:find('\n') then
         vim.schedule(function()
