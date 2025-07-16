@@ -20,10 +20,16 @@ end
 
 local vim_print = vim.print
 vim.print = function(...)
-    -- Open the message area after print only if the printed output spans multiple lines
+    -- Open msg area/pager for long outputs or containing newlines
     local ret = { vim_print(...) }
-    local msg = table.concat(vim.tbl_map(tostring, { ... }), '\t')
-    if msg:find('\n') then
+    local args = { ... }
+    local msg = table.concat(
+        vim.tbl_map(function(v)
+            return type(v) == 'table' and vim.inspect(v) or tostring(v)
+        end, args),
+        '\t'
+    )
+    if #msg > 200 or msg:find('\n') then
         vim.schedule(function()
             vim.cmd('normal! g<')
             vim.cmd('stopinsert')
