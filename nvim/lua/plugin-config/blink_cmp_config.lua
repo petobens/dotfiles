@@ -256,8 +256,6 @@ vim.api.nvim_create_autocmd('User', {
                     and is_multiline_copilot_selected()
                 then
                     copilot_multiline_menu_direction = { 'n', 's' }
-                    require('blink.cmp.completion.windows.menu').update_position()
-                    require('blink.cmp.completion.windows.documentation').update_position()
                 end
             end)
         )
