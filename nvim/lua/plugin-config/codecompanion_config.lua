@@ -463,7 +463,7 @@ codecompanion.setup({
                 clear = { modes = { n = '<A-w>', i = '<A-w>' } },
                 yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
                 fold_code = { modes = { n = 'zc' } },
-                goto_file_under_cursor = { modes = { n = 'gf', x = 'gf' } },
+                goto_file_under_cursor = { modes = { n = 'gf' } },
                 options = {
                     modes = { n = '<A-h>', i = '<A-h>' },
                     callback = function()
@@ -1047,7 +1047,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '<Leader>cr', function()
             _G.CodeCompanionConfig.run_slash_command('code_review')
         end, { buffer = args.buf })
-        vim.keymap.set('n', '<Leader>pr', function()
+        vim.keymap.set('n', '<Leader>br', function()
             vim.ui.input(
                 { prompt = 'Base branch for diff: ', default = 'main' },
                 function(branch)
