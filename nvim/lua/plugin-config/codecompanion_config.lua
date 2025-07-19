@@ -615,10 +615,16 @@ codecompanion.setup({
                         local abs_files = to_absolute_paths(staged, git_root)
                         _G.CodeCompanionConfig.add_references(abs_files)
 
+                        local commit_history = table.concat(
+                            vim.fn.systemlist('git log -n 50 --pretty=format:%s'),
+                            '\n'
+                        )
+
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['conventional_commits'],
+                                commit_history,
                                 vim.fn.system('git diff --no-ext-diff --staged')
                             ),
                         })
