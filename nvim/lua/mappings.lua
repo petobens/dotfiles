@@ -196,10 +196,7 @@ vim.keymap.set('n', '<Leader>sa', '<Cmd>sort i<CR>')
 vim.keymap.set('n', '<Leader>sc', '<Cmd>set spell!<CR>')
 vim.keymap.set('n', '<Leader>lp', ':lua vim.print(', { silent = false })
 vim.keymap.set('n', '<Leader>lr', ':=', { silent = false })
-vim.keymap.set('n', '<Leader>ci', function()
-    vim.cmd('Inspect')
-    vim.cmd('normal! g<')
-end)
+vim.keymap.set('n', '<Leader>ci', '<Cmd>Inspect<CR>')
 vim.keymap.set(
     'n',
     '<Leader>cw',
