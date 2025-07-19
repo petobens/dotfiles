@@ -11,17 +11,14 @@ vim.env.CACHE = vim.env.DOTVIM .. '/cache/Arch'
 -- Override some functions
 local keymap_set = vim.keymap.set
 vim.keymap.set = function(mode, lhs, rhs, opts)
-    -- Use silent and nowait by default in mappings
     opts = opts or {}
+    -- Use silent and nowait by default in mappings
     opts.silent = opts.silent ~= false
     opts.nowait = opts.nowait ~= false
     return keymap_set(mode, lhs, rhs, opts)
 end
 
-local vim_print = vim.print
 vim.print = function(...)
-    -- Open msg area/pager for long outputs or containing newlines
-    local ret = { vim_print(...) }
     local args = { ... }
     local msg = table.concat(
         vim.tbl_map(function(v)
@@ -29,13 +26,11 @@ vim.print = function(...)
         end, args),
         '\t'
     )
-    if #msg > 200 or msg:find('\n') then
-        vim.schedule(function()
-            vim.cmd('normal! g<')
-            vim.cmd('stopinsert')
-        end)
-    end
-    return unpack(ret)
+    -- Always show printed output in the pager
+    vim.schedule(function()
+        vim.api.nvim_echo({ { msg } }, false, { kind = 'list_cmd' })
+    end)
+    return ...
 end
 
 -- Source lua modules
