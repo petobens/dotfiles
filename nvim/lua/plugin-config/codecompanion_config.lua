@@ -470,6 +470,8 @@ codecompanion.setup({
                         keymaps.options.callback()
                         vim.defer_fn(function()
                             vim.cmd('stopinsert')
+                            -- Ensure options window is wide enough for content
+                            vim.api.nvim_win_set_width(0, math.min(160, vim.o.columns))
                         end, 1)
                     end,
                 },
