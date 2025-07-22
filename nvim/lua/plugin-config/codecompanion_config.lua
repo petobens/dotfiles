@@ -34,8 +34,16 @@ _G.CodeCompanionConfig = {}
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
+local DEFAULT_PROMPT = 'helpful_assistant'
 
 -- Helpers
+local ft_prompt_map = {
+    lua = 'lua_role',
+    python = 'python_role',
+    sh = 'bash_role',
+    sql = 'Sql_role',
+    tex = 'latex_role',
+}
 local function get_my_prompt_library()
     local formatting_file = 'response_formatting_instructions'
     local prompt_md_files = {
@@ -43,7 +51,6 @@ local function get_my_prompt_library()
         'code_reviewer',
         'conventional_commits',
         'gsheets_expert',
-        'helpful_assistant',
         'latex_developer',
         'lua_developer',
         'pydocs',
@@ -52,6 +59,7 @@ local function get_my_prompt_library()
         'sql_developer',
         'translator_spa_eng',
         'writer_at_work',
+        DEFAULT_PROMPT,
     }
     local user_prompts = {
         conventional_commits = true,
@@ -232,6 +240,26 @@ local function to_absolute_paths(files, root)
             return f ~= nil
         end)
         :totable()
+end
+
+local function get_majority_filetype(files)
+    local counts = {}
+    local max_ft, max_count = nil, 0
+    for _, file in ipairs(files) do
+        local ft = vim.filetype.match({ filename = file })
+        if ft and ft ~= '' then
+            counts[ft] = (counts[ft] or 0) + 1
+            if counts[ft] > max_count then
+                max_count = counts[ft]
+                max_ft = ft
+            end
+        end
+    end
+    -- Only return a filetype if it appears in more than half of the files
+    if max_count > (#files / 2) then
+        return max_ft
+    end
+    return nil
 end
 
 local function send_project_tree(chat, root)
@@ -670,7 +698,7 @@ codecompanion.setup({
                 },
                 ['code_review'] = {
                     description = 'Perform a code review',
-                    callback = function(chat, opts)
+                    callback = function(_, opts)
                         local git_root, err = get_git_root()
                         if not git_root then
                             vim.notify(err, vim.log.levels.ERROR)
@@ -708,6 +736,15 @@ codecompanion.setup({
                             return
                         end
                         local abs_files = to_absolute_paths(file_list, git_root)
+
+                        -- Determine majority filetype and call the prompt for that filetype
+                        local ft = get_majority_filetype(abs_files)
+                        local prompt_short_name = ft_prompt_map[ft] or DEFAULT_PROMPT
+                        codecompanion.prompt(prompt_short_name)
+                        -- Since prompt generates a new chat we need to get the new handle
+                        -- and ignore the one passed as argument
+                        local chat = get_or_create_chat()
+
                         -- Use watched references for staged/commit reviews and plain
                         -- references for branch diffs
                         if opts and opts.base_branch then
