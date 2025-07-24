@@ -1106,6 +1106,7 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.cmd('startinsert!')
             end, 1)
         end, { buffer = e.buf })
+        vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = e.buf })
     end,
 })
 
