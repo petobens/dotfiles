@@ -247,6 +247,9 @@ if type "gh" > /dev/null 2>&1; then
     alias ghr='gh repo'
     alias ghcp='gh pr checkout'
 fi
+if type "nbdiff" > /dev/null 2>&1; then
+    alias nbd='nbdiff-web HEAD'
+fi
 
 # Docker
 if type "docker" > /dev/null 2>&1; then
