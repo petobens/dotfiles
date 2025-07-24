@@ -60,6 +60,10 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
         if vim.fn.getline('.') == '' then
             vim.cmd('startinsert')
         end
+        vim.cmd(
+            -- Extend gitcommitSummary highlight to 72 columns
+            [[syntax region gitcommitSummary start='\%^\%1l' end='.\{72}\|$' keepend]]
+        )
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufLeave' }, {
