@@ -26,6 +26,21 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '<Leader>gl', function()
             vim.cmd('Git log --oneline')
         end, { buffer = true })
+        vim.keymap.set('n', '<Leader>nd', function()
+            local file = vim.fn.FugitiveFind(vim.fn.expand('<cfile>'))
+            if not file or file == '' or not vim.uv.fs_stat(file) then
+                vim.notify(
+                    'File does not exist: ' .. tostring(file),
+                    vim.log.levels.ERROR
+                )
+                return
+            end
+            vim.notify(
+                'Opening browser with nbdiff-web HEAD for: ' .. file,
+                vim.log.levels.INFO
+            )
+            vim.fn.jobstart({ 'nbdiff-web', 'HEAD', file }, { detach = true })
+        end, { buffer = true })
     end,
 })
 vim.api.nvim_create_autocmd('FileType', {
