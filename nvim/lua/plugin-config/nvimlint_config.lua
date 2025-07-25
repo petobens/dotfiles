@@ -52,11 +52,13 @@ lint.linters_by_ft = {
 local linters = require('lint').linters
 ---- Lua
 linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
-    '--config=' .. vim.env.HOME .. '/.config/.luacheckrc',
+    '--config=' .. vim.fs.joinpath(vim.env.HOME, '.config', '.luacheckrc'),
 })
 ---- Markdown
-linters.markdownlint.args =
-    { '--config=' .. vim.env.HOME .. '/.markdownlint.json', '--stdin' }
+linters.markdownlint.args = {
+    '--config=' .. vim.fs.joinpath(vim.env.HOME, '.markdownlint.json'),
+    '--stdin',
+}
 ---- Python
 local ruff_severities = {
     ['E'] = vim.diagnostic.severity.ERROR,
@@ -114,6 +116,6 @@ linters.chktex.ignore_exitcode = true
 
 -- Commands
 vim.api.nvim_create_user_command('LinterInfo', function()
-    local runningLinters = table.concat(lint.get_running(), '\n')
-    vim.notify(runningLinters, vim.log.levels.INFO, { title = 'nvim-lint' })
+    local running_linters = table.concat(lint.get_running(), '\n')
+    vim.notify(running_linters, vim.log.levels.INFO, { title = 'nvim-lint' })
 end, {})

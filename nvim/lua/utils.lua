@@ -1,9 +1,10 @@
 local M = {}
 
+local ftoptions_group = vim.api.nvim_create_augroup('FtOptions', {})
 function M.set_ft_option(ft, vim_cmd)
     vim.api.nvim_create_autocmd('FileType', {
         pattern = ft,
-        group = vim.api.nvim_create_augroup('FtOptions', {}),
+        group = ftoptions_group,
         command = vim_cmd,
     })
 end
@@ -28,7 +29,12 @@ function M.vim_session_file()
     M.mk_non_dir(session_dir)
     local session_file = 'vim_session'
     if vim.env.TMUX ~= nil then
-        local tmux_session = vim.fn.trim(vim.fn.system("tmux display-message -p '#S'"))
+        local result = vim.system(
+            { 'tmux', 'display-message', '-p', '#S' },
+            { text = true }
+        )
+            :wait()
+        local tmux_session = vim.trim(result.stdout or '')
         session_file = session_file .. '_' .. tmux_session
     end
     return session_dir .. session_file .. '.vim'

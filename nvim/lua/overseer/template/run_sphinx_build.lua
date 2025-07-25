@@ -1,14 +1,12 @@
 return {
     name = 'run_sphinx_build',
     builder = function()
-        local package_manager = (
-            next(_G.PyVenv.active_venv) and _G.PyVenv.active_venv.package_manager
-        ) or 'uv'
+        local pyvenv = (_G.PyVenv and _G.PyVenv.active_venv) or {}
+        local package_manager = pyvenv.package_manager or 'uv'
+        local project_root = vim.fs.root(0, 'pyproject.toml')
+        local docs_dir = vim.fs.joinpath(project_root, 'docs')
         return {
-            cwd = vim.fn.fnamemodify(
-                vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';'),
-                ':p:h'
-            ) .. '/docs',
+            cwd = docs_dir,
             cmd = { package_manager, 'run', 'make', 'html' },
             components = {
                 { 'on_complete_notify', statuses = { 'SUCCESS' } },

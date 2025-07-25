@@ -14,18 +14,18 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', 'q', u.quit_return, { buffer = e.buf })
         vim.keymap.set('n', ']h', ']c', { buffer = e.buf, remap = true })
         vim.keymap.set('n', '[h', '[c', { buffer = e.buf, remap = true })
-        vim.keymap.set('n', 'ci', '<Cmd>Git commit -n<CR>', { buffer = true })
-        vim.keymap.set('n', '<Leader>gp', '<Cmd>Git push<CR>', { buffer = true })
+        vim.keymap.set('n', 'ci', '<Cmd>Git commit -n<CR>', { buffer = e.buf })
+        vim.keymap.set('n', '<Leader>gp', '<Cmd>Git push<CR>', { buffer = e.buf })
         vim.keymap.set(
             'n',
             '<Leader>gF',
             '<Cmd>Git push --force-with-lease<CR>',
-            { buffer = true }
+            { buffer = e.buf }
         )
-        vim.keymap.set('n', '<Leader>gP', '<Cmd>Git pull<CR>', { buffer = true })
+        vim.keymap.set('n', '<Leader>gP', '<Cmd>Git pull<CR>', { buffer = e.buf })
         vim.keymap.set('n', '<Leader>gl', function()
             vim.cmd('Git log --oneline')
-        end, { buffer = true })
+        end, { buffer = e.buf })
         vim.keymap.set('n', '<Leader>nd', function()
             local file = vim.fn.FugitiveFind(vim.fn.expand('<cfile>'))
             if not file or file == '' or not vim.uv.fs_stat(file) then
@@ -40,7 +40,7 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.log.levels.INFO
             )
             vim.fn.jobstart({ 'nbdiff-web', 'HEAD', file }, { detach = true })
-        end, { buffer = true })
+        end, { buffer = e.buf })
     end,
 })
 vim.api.nvim_create_autocmd('FileType', {

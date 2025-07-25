@@ -117,7 +117,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
         -- Modify message to add source and error code
         local neotest = false
         local new_msg = {}
-        for _, v in pairs(diagnostics) do
+        for _, v in vim.iter(diagnostics) do
             local old_msg = v.message
             if not string.match(v.message, v.source) then
                 v.message = string.format('%s: %s', v.source, v.message)
@@ -140,7 +140,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
         vim.diagnostic.setloclist({ open = false })
         local current_ll = vim.fn.getloclist(0)
         local new_ll = {}
-        for _, v in pairs(current_ll) do
+        for _, v in vim.iter(current_ll) do
             v.text = new_msg[v.text]
             table.insert(new_ll, v)
         end

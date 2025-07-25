@@ -220,7 +220,7 @@ vim.cmd([[
 function _G.LualineBuffertab.select_buf(buf_idx)
     local bufnr = _G.LualineBuffertab.idx2bufnr[buf_idx]
     if bufnr ~= nil then
-        vim.cmd('buffer! ' .. bufnr)
+        vim.api.nvim_set_current_buf(tonumber(bufnr))
     end
 end
 

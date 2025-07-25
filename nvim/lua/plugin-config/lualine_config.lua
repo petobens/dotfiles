@@ -117,7 +117,7 @@ local nvimtree_ext = {
         },
         lualine_b = {
             function()
-                return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+                return vim.fs.basename(vim.fn.getcwd())
             end,
         },
     },

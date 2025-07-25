@@ -264,10 +264,11 @@ vim.keymap.set('n', '<Leader>nt', function()
 end)
 
 -- Filetype-mappings
+local neotest_ft_augroup = vim.api.nvim_create_augroup('NeotestFtAu', {})
 for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
     vim.api.nvim_create_autocmd('FileType', {
         pattern = 'neotest-' .. ft,
-        group = vim.api.nvim_create_augroup('NeotestFtAu', {}),
+        group = neotest_ft_augroup,
         callback = function(e)
             vim.keymap.set('n', 'q', function()
                 pcall(vim.api.nvim_win_close, 0, true)

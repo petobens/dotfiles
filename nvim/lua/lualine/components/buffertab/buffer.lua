@@ -30,7 +30,10 @@ function Buffer:get_props()
             dev, _ = get_icon('markdown')
         elseif self.buftype == 'terminal' then
             dev, _ = get_icon('zsh')
-        elseif vim.fn.isdirectory(self.file) == 1 then
+        elseif
+            vim.uv.fs_stat(self.file)
+            and vim.uv.fs_stat(self.file).type == 'directory'
+        then
             dev = ''
         else
             dev, _ = get_icon(self.file, vim.fn.expand('#' .. self.bufnr .. ':e'))
@@ -80,7 +83,7 @@ function Buffer:render()
         name = ' KQ' .. string.format('%s:%s %s', self.bufnr, name, self.icon)
     end
     name = Buffer.apply_padding(name, self.options.padding)
-    self.len = vim.fn.strchars(name)
+    self.len = vim.str_utfindex(name)
 
     -- Setup for mouse clicks
     local line = string.format('%%%s@LualineSwitchBuffer@%s%%T', self.bufnr, name)

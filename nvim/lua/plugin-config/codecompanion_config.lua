@@ -73,7 +73,11 @@ local function get_my_prompt_library()
     local function read_and_filter(fname)
         local lines
         if use_url then
-            lines = vim.fn.systemlist({ 'curl', '-fsSL', string.format(base_url, fname) })
+            local result = vim.system(
+                { 'curl', '-fsSL', string.format(base_url, fname) },
+                { text = true }
+            ):wait()
+            lines = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
         else
             lines = vim.fn.readfile(prompt_dir .. fname .. '.md')
         end
@@ -216,11 +220,13 @@ end
 
 -- Slash command helpers
 local function get_git_root()
-    local output = vim.fn.systemlist('git rev-parse --show-toplevel')
-    if vim.v.shell_error ~= 0 or not output[1] or output[1] == '' then
+    local result = vim.system({ 'git', 'rev-parse', '--show-toplevel' }, { text = true })
+        :wait()
+    local output = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
+    if result.code ~= 0 or not output[1] or output[1] == '' then
         return nil, 'Not inside a Git repository. Could not determine the project root.'
     end
-    return vim.trim(output[1])
+    return output[1]
 end
 
 local function to_absolute_paths(files, root)
@@ -262,7 +268,12 @@ local function get_majority_filetype(files)
 end
 
 local function send_project_tree(chat, root)
-    local tree = vim.fn.system({ 'tree', '-a', '-L', '2', '--noreport', root })
+    local result = vim.system(
+        { 'tree', '-a', '-L', '2', '--noreport', root },
+        { text = true }
+    )
+        :wait()
+    local tree = result.stdout or ''
     chat:add_message({
         role = 'user',
         content = string.format('The project structure is given by:\n%s', tree),
@@ -625,8 +636,15 @@ codecompanion.setup({
                             vim.notify(err, vim.log.levels.ERROR)
                             return
                         end
-                        local git_files =
-                            vim.fn.systemlist('git ls-files --full-name ' .. git_root)
+                        local result = vim.system(
+                            { 'git', 'ls-files', '--full-name', git_root },
+                            { text = true }
+                        ):wait()
+                        local git_files = vim.split(
+                            vim.trim(result.stdout or ''),
+                            '\n',
+                            { plain = true }
+                        )
 
                         local ignore_exts = { ['.png'] = true }
                         local function has_ignored_ext(filename)
@@ -671,7 +689,15 @@ codecompanion.setup({
                             return
                         end
 
-                        local staged = vim.fn.systemlist('git diff --cached --name-only')
+                        local result = vim.system(
+                            { 'git', 'diff', '--cached', '--name-only' },
+                            { text = true }
+                        ):wait()
+                        local staged = vim.split(
+                            vim.trim(result.stdout or ''),
+                            '\n',
+                            { plain = true }
+                        )
                         if #staged == 0 or (#staged == 1 and staged[1] == '') then
                             vim.notify('No staged changes found', vim.log.levels.WARN)
                             return
@@ -679,17 +705,22 @@ codecompanion.setup({
                         local abs_files = to_absolute_paths(staged, git_root)
                         _G.CodeCompanionConfig.add_references(abs_files)
 
-                        local commit_history = table.concat(
-                            vim.fn.systemlist('git log -n 50 --pretty=format:%s'),
-                            '\n'
-                        )
+                        result = vim.system(
+                            { 'git', 'log', '-n', '50', '--pretty=format:%s' },
+                            { text = true }
+                        ):wait()
+                        local commit_history = vim.trim(result.stdout or '')
 
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['conventional_commits'],
                                 commit_history,
-                                vim.fn.system('git diff --no-ext-diff --staged')
+                                vim.system(
+                                    { 'git', 'diff', '--no-ext-diff', '--staged' },
+                                    { text = true }
+                                )
+                                    :wait().stdout
                             ),
                         })
                         chat:submit()
@@ -708,8 +739,11 @@ codecompanion.setup({
                         local file_list_cmd = 'git diff --name-only '
                         if opts and opts.base_branch then
                             local base = opts.base_branch
-                            vim.fn.systemlist('git rev-parse --verify ' .. base)
-                            if vim.v.shell_error ~= 0 then
+                            local result = vim.system(
+                                { 'git', 'rev-parse', '--verify', base },
+                                { text = true }
+                            ):wait()
+                            if result.code ~= 0 then
                                 vim.notify(
                                     'Base branch not found: ' .. base,
                                     vim.log.levels.ERROR
@@ -727,7 +761,15 @@ codecompanion.setup({
                             file_list_cmd = file_list_cmd .. '--cached'
                         end
 
-                        local file_list = vim.fn.systemlist(file_list_cmd)
+                        local file_list_args =
+                            vim.split(file_list_cmd, ' ', { trimempty = true })
+                        local file_list_result =
+                            vim.system(file_list_args, { text = true }):wait()
+                        local file_list = vim.split(
+                            vim.trim(file_list_result.stdout or ''),
+                            '\n',
+                            { plain = true }
+                        )
                         if
                             #file_list == 0 or (#file_list == 1 and file_list[1] == '')
                         then
@@ -752,11 +794,13 @@ codecompanion.setup({
                             _G.CodeCompanionConfig.add_watched_references(abs_files)
                         end
 
+                        local diff_args = vim.split(diff_cmd, ' ', { trimempty = true })
+                        local diff_result = vim.system(diff_args, { text = true }):wait()
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['code_reviewer'],
-                                vim.fn.system(diff_cmd)
+                                diff_result.stdout
                             ),
                         })
                         chat:submit()

@@ -53,9 +53,10 @@ vim.keymap.set('n', '<Leader>oo', overseer_last_task)
 vim.keymap.set('n', '<Leader>oa', function()
     overseer_last_task(true)
 end)
+local overseer_augroup = vim.api.nvim_create_augroup('OverseerConfig', {})
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'OverseerList',
-    group = vim.api.nvim_create_augroup('OverseerConfig', {}),
+    group = overseer_augroup,
     callback = function(e)
         vim.opt_local.winfixbuf = true
         vim.defer_fn(function()

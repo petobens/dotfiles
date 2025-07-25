@@ -304,8 +304,10 @@ function _G.TelescopeConfig.py_venvs(opts)
         manager = 'uv'
         venvs = { uv_venv }
     else
-        local poetry_venv = vim.fn.trim(vim.fn.system('poetry env info --path'))
-        if poetry_venv ~= '' and vim.v.shell_error == 0 then
+        local result = vim.system({ 'poetry', 'env', 'info', '--path' }, { text = true })
+            :wait()
+        local poetry_venv = vim.trim(result.stdout or '')
+        if poetry_venv ~= '' and result.code == 0 then
             manager = 'poetry'
             venvs = { poetry_venv }
         end

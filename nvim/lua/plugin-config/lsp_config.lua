@@ -146,8 +146,9 @@ vim.api.nvim_create_autocmd('LspTokenUpdate', {
 
 -- Mappings
 vim.keymap.set('n', '<Leader>li', '<Cmd>LspInfo<CR>')
+local aug_user_lsp = vim.api.nvim_create_augroup('UserLspConfig', {})
 vim.api.nvim_create_autocmd('LspAttach', {
-    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    group = aug_user_lsp,
     callback = function(e)
         -- Enable completion triggered by <c-x><c-o>
         vim.bo[e.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
