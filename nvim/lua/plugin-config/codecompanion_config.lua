@@ -34,7 +34,6 @@ _G.CodeCompanionConfig = {}
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
-local DEFAULT_PROMPT = 'helpful_assistant'
 
 -- Helpers
 local ft_prompt_map = {
@@ -51,6 +50,7 @@ local function get_my_prompt_library()
         'code_reviewer',
         'conventional_commits',
         'gsheets_expert',
+        'helpful_assistant',
         'latex_developer',
         'lua_developer',
         'pydocs',
@@ -59,7 +59,6 @@ local function get_my_prompt_library()
         'sql_developer',
         'translator_spa_eng',
         'writer_at_work',
-        DEFAULT_PROMPT,
     }
     local user_prompts = {
         conventional_commits = true,
@@ -739,7 +738,7 @@ codecompanion.setup({
 
                         -- Determine majority filetype and call the prompt for that filetype
                         local ft = get_majority_filetype(abs_files)
-                        local prompt_short_name = ft_prompt_map[ft] or DEFAULT_PROMPT
+                        local prompt_short_name = ft_prompt_map[ft] or 'assistant_role'
                         codecompanion.prompt(prompt_short_name)
                         -- Since prompt generates a new chat we need to get the new handle
                         -- and ignore the one passed as argument
