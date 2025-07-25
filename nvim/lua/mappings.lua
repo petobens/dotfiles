@@ -232,7 +232,7 @@ vim.keymap.set(
 vim.keymap.set(
     'n',
     '<Leader>dd',
-    ':e ' .. vim.fn.expand('$HOME') .. '/Desktop/',
+    ':e ' .. vim.env.HOME .. '/Desktop/',
     { silent = false }
 )
 vim.keymap.set('n', '<Leader>sb', function()
@@ -249,7 +249,7 @@ vim.keymap.set(
 -- Links & Filemanager
 vim.keymap.set({ 'n', 'v' }, '<Leader>ol', 'gx', { remap = true })
 vim.keymap.set('n', '<Leader>fm', function()
-    vim.cmd('silent! !tmux split-window -l 20 -c ' .. vim.fn.getcwd() .. ' ranger')
+    vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.fs.getcwd(), 'ranger' })
 end)
 for i = 1, 6 do
     vim.keymap.set('n', '<Leader>h' .. i, function()

@@ -1,12 +1,8 @@
 --- Ensure magick luarock is loaded
-package.path = package.path
-    .. ';'
-    .. vim.fn.expand('$HOME')
-    .. '/.luarocks/share/lua/5.1/?/init.lua;'
-package.path = package.path
-    .. ';'
-    .. vim.fn.expand('$HOME')
-    .. '/.luarocks/share/lua/5.1/?.lua;'
+local luarocks =
+    vim.fs.joinpath(vim.fn.expand('$HOME'), '.luarocks', 'share', 'lua', '5.1')
+package.path = package.path .. ';' .. vim.fs.joinpath(luarocks, '?', 'init.lua') .. ';'
+package.path = package.path .. ';' .. vim.fs.joinpath(luarocks, '?.lua') .. ';'
 
 local image = require('image')
 

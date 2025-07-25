@@ -1,7 +1,7 @@
 return {
     name = 'run_lua',
     builder = function()
-        local file = vim.fn.expand('%:p')
+        local file = vim.api.nvim_buf_get_name(0)
         local cmd = { 'nvim', '-l' }
         return {
             cmd = cmd,

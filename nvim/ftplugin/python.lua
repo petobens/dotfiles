@@ -26,10 +26,7 @@ _G.OverseerConfig.python_errorformat = ''
 
 -- Helpers
 local function _project_root()
-    return vim.fn.fnamemodify(
-        vim.fn.findfile('pyproject.toml', utils.buffer_dir() .. ';'),
-        ':p:h'
-    )
+    return vim.fs.root(0, 'pyproject.toml')
 end
 
 -- Running
@@ -188,9 +185,13 @@ end
 
 local function tmux2qf(cmd_opt)
     local tmux_win_nr = cmd_opt.args
-    local content = vim.fn.system('tmux capture-pane -p -t ' .. tmux_win_nr)
+    local result = vim.system(
+        { 'tmux', 'capture-pane', '-p', '-t', tmux_win_nr },
+        { text = true }
+    )
+        :wait()
     vim.fn.setqflist({}, ' ', {
-        lines = vim.split(content, '\n'),
+        lines = vim.split(result.stdout or '', '\n', { plain = true }),
         efm = _G.OverseerConfig.python_errorformat,
     })
     _parse_qf(
@@ -250,12 +251,14 @@ local function get_venv_info(venv, project_root)
         return { path = venv, manager = nil }
     end
     -- Prefer uv over poetry
-    local uv_venv = project_root .. '/.venv'
+    local uv_venv = vim.fs.joinpath(project_root, '.venv')
     if vim.fn.isdirectory(uv_venv) == 1 then
         return { path = uv_venv, manager = 'uv' }
     end
-    local poetry_venv = vim.fn.trim(vim.fn.system('poetry env info --path'))
-    if poetry_venv ~= '' and vim.v.shell_error == 0 then
+    local result = vim.system({ 'poetry', 'env', 'info', '--path' }, { text = true })
+        :wait()
+    local poetry_venv = vim.trim(result.stdout or '')
+    if poetry_venv ~= '' and result.code == 0 then
         return { path = poetry_venv, manager = 'poetry' }
     end
     return nil
@@ -313,9 +316,11 @@ function _G.PyVenv.activate(venv)
                 type = 'file',
                 path = project_root,
             })
-            local py_version = vim.fn
-                .trim(vim.fn.system(venv_info.manager .. ' run python --version'))
-                :match('%d+.%d+.%d+')
+            local result = vim.system(
+                { venv_info.manager, 'run', 'python', '--version' },
+                { text = true }
+            ):wait()
+            local py_version = vim.trim(result.stdout or ''):match('%d+.%d+.%d+')
             _G.PyVenv.active_venv = {
                 package_manager = venv_info.manager,
                 path = venv_info.path,
@@ -376,7 +381,7 @@ local function clean_sphinx_build()
     vim.notify('Cleaning sphinx html build...')
     vim.system(
         { _G.PyVenv.active_venv.package_manager, 'run', 'make', 'clean' },
-        { cwd = _project_root() .. '/docs', text = true },
+        { cwd = vim.fs.joinpath(_project_root(), 'docs'), text = true },
         on_exit
     )
 end
@@ -401,7 +406,7 @@ end
 
 -- Fast editing
 local function edit_test_file()
-    local tests_dir = _project_root() .. '/tests/'
+    local tests_dir = vim.fs.joinpath(_project_root(), 'tests')
     local test_file = vim.fs.find(
         { 'test_' .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t') },
         { limit = math.huge, type = 'file', path = tests_dir }
@@ -414,7 +419,7 @@ local function edit_test_file()
 end
 
 local function edit_project_todo()
-    local notes_dir = '~/git-repos/private/notes/'
+    local notes_dir = vim.fs.joinpath(vim.fn.expand('~'), 'git-repos', 'private', 'notes')
     local todo_file = vim.fs.find(
         { 'todos_' .. vim.fn.fnamemodify(_project_root(), ':t') .. '.md' },
         { limit = math.huge, type = 'file', path = notes_dir }

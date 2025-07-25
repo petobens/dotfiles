@@ -159,7 +159,7 @@ local function delete_aux_files()
         function(input)
             if input == 'y' then
                 for _, f in pairs(rm_files) do
-                    vim.fn.system({ 'trash-put', f })
+                    vim.system({ 'trash-put', f }):wait()
                 end
             end
         end
@@ -180,8 +180,9 @@ local function convert_pandoc(extension)
     end
 
     pandoc_cmd = string.format('%s %s.tex -o %s', pandoc_cmd, base_file, output_file)
-    vim.fn.system(pandoc_cmd)
-    if vim.v.shell_error ~= 1 then
+    local args = vim.split(pandoc_cmd, ' ', { trimempty = true })
+    local result = vim.system(args, { text = true }):wait()
+    if result.code ~= 0 then
         vim.cmd.echo(string.format('"Converted .tex file into .%s"', extension))
     end
 end

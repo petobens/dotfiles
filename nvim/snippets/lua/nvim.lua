@@ -33,16 +33,22 @@ return {
             end
 
             -- Bootstrap lazy
-            local lazypath = root .. '/plugins/lazy.nvim'
+            local lazypath = vim.fs.joinpath(root, 'plugins', 'lazy.nvim')
             if not vim.uv.fs_stat(lazypath) then
-                vim.fn.system({
+                local result = vim.system({
                     'git',
                     'clone',
                     '--filter=blob:none',
                     '--single-branch',
                     'https://github.com/folke/lazy.nvim.git',
                     lazypath,
-                })
+                }, { text = true }):wait()
+                if result.code ~= 0 then
+                    vim.notify(
+                        'Failed to clone lazy.nvim: ' .. (result.stderr or ''),
+                        vim.log.levels.ERROR
+                    )
+                end
             end
             vim.opt.runtimepath:prepend(lazypath)
 
@@ -52,7 +58,7 @@ return {
                 {'<>'},
             }
             require('lazy').setup(plugins, {
-                root = root .. '/plugins',
+                root = vim.fs.joinpath(root, 'plugins'),
             })
             vim.cmd.colorscheme('tokyonight')
 

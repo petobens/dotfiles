@@ -1,7 +1,7 @@
 return {
     name = 'run_sh',
     builder = function()
-        local file = vim.fn.expand('%:p')
+        local file = vim.api.nvim_buf_get_name(0)
         local cmd = { 'bash' }
         return {
             cmd = cmd,

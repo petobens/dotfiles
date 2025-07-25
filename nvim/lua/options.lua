@@ -99,13 +99,13 @@ vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
 
 -- Backups, sessions, undo and shada
 vim.opt.backup = true
-vim.opt.backupdir = vim.env.CACHE .. '/tmp/backup//'
-vim.opt.directory = vim.env.CACHE .. '/tmp/swap//'
+vim.opt.backupdir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'backup') .. '//'
+vim.opt.directory = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'swap') .. '//'
 vim.opt.sessionoptions = vim.opt.sessionoptions - { 'tabpages' } + { 'winpos', 'resize' }
-vim.opt.shadafile = vim.env.CACHE .. '/tmp/shada/main.shada'
-vim.opt.undodir = vim.env.CACHE .. '/tmp/undo//'
+vim.opt.shadafile = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'shada', 'main.shada')
+vim.opt.undodir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'undo') .. '//'
 vim.opt.undofile = true
-vim.opt.viewdir = vim.env.CACHE .. '/tmp/view//'
+vim.opt.viewdir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'view') .. '//'
 vim.opt.shada = [[!,'150,<50,s10,h]]
 ---- Save and load viewoptions and previous session
 local session_acg = vim.api.nvim_create_augroup('session', { clear = true })
@@ -184,7 +184,8 @@ vim.opt.wildignorecase = true
 vim.opt.wildmode = { 'longest:full', 'full' }
 
 -- Misc
-vim.opt.spellfile = vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add'
+vim.opt.spellfile =
+    vim.fs.joinpath(vim.env.DOTVIM, 'spell', 'custom-dictionary.utf-8.add')
 vim.opt.spelllang = { 'en', 'es' }
 
 -- Filetype detection and autocmd settings

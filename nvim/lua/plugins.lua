@@ -1,12 +1,18 @@
-local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+local lazypath = vim.fs.joinpath(vim.fn.stdpath('data'), 'lazy', 'lazy.nvim')
 if not vim.uv.fs_stat(lazypath) then
-    vim.fn.system({
+    local result = vim.system({
         'git',
         'clone',
         '--filter=blob:none',
         'https://github.com/folke/lazy.nvim.git',
         lazypath,
-    })
+    }, { text = true }):wait()
+    if result.code ~= 0 then
+        vim.notify(
+            'Failed to clone lazy.nvim: ' .. (result.stderr or ''),
+            vim.log.levels.ERROR
+        )
+    end
 end
 vim.opt.runtimepath:prepend(lazypath)
 
@@ -208,7 +214,8 @@ local plugins = {
         end,
     },
     {
-        'nvim-neotest/neotest',
+        -- 'nvim-neotest/neotest',
+        'petobens/neotest',
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-neotest/neotest-python',

@@ -5,11 +5,19 @@ vim.o.formatexpr = [[v:lua.require('conform').formatexpr()]]
 
 -- Formatters args
 conform.formatters.jq = { args = { '--indent', '4' } }
-conform.formatters.stylua =
-    { prepend_args = { '--config-path=' .. vim.env.HOME .. '/.config/stylua.toml' } }
+conform.formatters.stylua = {
+    prepend_args = {
+        '--config-path=' .. vim.fs.joinpath(vim.env.HOME, '.config', 'stylua.toml'),
+    },
+}
 conform.formatters.shfmt = { prepend_args = { '-i', '4', '-ci', '-sr' } }
-conform.formatters.taplo =
-    { args = { 'format', '--config=' .. vim.env.HOME .. '/taplo.toml', '-' } }
+conform.formatters.taplo = {
+    args = {
+        'format',
+        '--config=' .. vim.fs.joinpath(vim.env.HOME, 'taplo.toml'),
+        '-',
+    },
+}
 
 -- Setup
 conform.setup({

@@ -1,12 +1,12 @@
 -- Enable experimental lua module loader
 vim.loader.enable()
 
--- Global and enviromental variables
+-- Global and environmental variables
 vim.g.mapleader = ','
 vim.g.python3_host_prog = '/usr/bin/python'
 vim.g.do_filetype_lua = true
-vim.env.DOTVIM = vim.env.HOME .. '/.config/nvim'
-vim.env.CACHE = vim.env.DOTVIM .. '/cache/Arch'
+vim.env.DOTVIM = vim.fs.joinpath(vim.env.HOME, '.config', 'nvim')
+vim.env.CACHE = vim.fs.joinpath(vim.env.DOTVIM, 'cache', 'Arch')
 
 -- Use silent and nowait by default in mappings
 local keymap_set = vim.keymap.set

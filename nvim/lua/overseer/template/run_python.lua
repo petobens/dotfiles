@@ -1,7 +1,7 @@
 return {
     name = 'run_python',
     builder = function()
-        local file = vim.fn.expand('%:p')
+        local file = vim.api.nvim_buf_get_name(0)
         local cmd = { 'python' }
         return {
             cmd = cmd,
