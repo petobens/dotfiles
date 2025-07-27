@@ -140,8 +140,8 @@ local plugins = {
         end,
     },
     {
-        -- 'petobens/codecompanion.nvim',
-        'olimorris/codecompanion.nvim',
+        'petobens/codecompanion.nvim',
+        -- 'olimorris/codecompanion.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-treesitter/nvim-treesitter',

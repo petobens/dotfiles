@@ -609,7 +609,7 @@ local custom_actions = transform_mod({
             local entry = action_state.get_selected_entry()
             table.insert(files, string.format('%s/%s', entry.cwd, entry.filename))
         end
-        _G.CodeCompanionConfig.add_references(files)
+        _G.CodeCompanionConfig.add_context(files)
     end,
     -- Paste images with img-clip plugin
     paste_img_clip = function(prompt_bufnr)

@@ -148,7 +148,7 @@ local function add_codecompanion_references()
             table.insert(files, node.absolute_path)
         end
     end
-    _G.CodeCompanionConfig.add_references(files)
+    _G.CodeCompanionConfig.add_context(files)
     vim.cmd('NvimTreeClose')
 end
 

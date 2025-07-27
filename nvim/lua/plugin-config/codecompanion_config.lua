@@ -292,7 +292,7 @@ local function get_loclists_or_qf_entries()
         diagnostics = vim.fn.getqflist()
     end
 
-    local seen, entries, references = {}, {}, {}
+    local seen, entries, context = {}, {}, {}
     for _, item in ipairs(diagnostics) do
         local filename = vim.fn.fnamemodify(vim.fn.bufname(item.bufnr), ':p')
         local lnum = item.lnum or 0
@@ -305,20 +305,20 @@ local function get_loclists_or_qf_entries()
                 entries,
                 string.format('%s:%d:%d: %s', filename, lnum, col, text)
             )
-            if filename ~= '' and not vim.tbl_contains(references, filename) then
-                table.insert(references, filename)
+            if filename ~= '' and not vim.tbl_contains(context, filename) then
+                table.insert(context, filename)
             end
         end
     end
-    return table.concat(entries, '\n'), references
+    return table.concat(entries, '\n'), context
 end
 
 -- Globals
-function _G.CodeCompanionConfig.add_references(files)
+function _G.CodeCompanionConfig.add_context(files)
     local chat = get_or_create_chat()
     for _, file in ipairs(files) do
         local content = table.concat(vim.fn.readfile(file), '\n')
-        chat:add_reference({
+        chat:add_context({
             role = 'user',
             content = string.format('Here is the content of %s:%s', file, content),
         }, 'file', string.format(
@@ -329,7 +329,7 @@ function _G.CodeCompanionConfig.add_references(files)
     focus_or_toggle_chat()
 end
 
-function _G.CodeCompanionConfig.add_watched_references(files)
+function _G.CodeCompanionConfig.add_watched_context(files)
     local chat = get_or_create_chat()
     for _, file in ipairs(files) do
         local expanded = vim.fn.expand(file)
@@ -340,7 +340,7 @@ function _G.CodeCompanionConfig.add_watched_references(files)
         if vim.api.nvim_buf_is_loaded(bufnr) then
             local content =
                 table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), '\n')
-            chat:add_reference(
+            chat:add_context(
                 {
                     role = 'user',
                     content = string.format(
@@ -592,7 +592,7 @@ codecompanion.setup({
                                     )
                                     return
                                 else
-                                    _G.CodeCompanionConfig.add_references({ file })
+                                    _G.CodeCompanionConfig.add_context({ file })
                                 end
                             end
                         )
@@ -623,7 +623,7 @@ codecompanion.setup({
                                     end
                                 end
                                 send_project_tree(chat, dir)
-                                _G.CodeCompanionConfig.add_references(files)
+                                _G.CodeCompanionConfig.add_context(files)
                             end
                         )
                     end,
@@ -661,7 +661,7 @@ codecompanion.setup({
                         )
 
                         send_project_tree(chat, git_root)
-                        _G.CodeCompanionConfig.add_references(files)
+                        _G.CodeCompanionConfig.add_context(files)
                     end,
                 },
                 ['py_files'] = {
@@ -675,7 +675,7 @@ codecompanion.setup({
                             return
                         end
                         send_project_tree(chat, _G.PyVenv.active_venv.project_root)
-                        _G.CodeCompanionConfig.add_references(
+                        _G.CodeCompanionConfig.add_context(
                             _G.PyVenv.active_venv.project_files
                         )
                     end,
@@ -703,7 +703,7 @@ codecompanion.setup({
                             return
                         end
                         local abs_files = to_absolute_paths(staged, git_root)
-                        _G.CodeCompanionConfig.add_references(abs_files)
+                        _G.CodeCompanionConfig.add_context(abs_files)
 
                         result = vim.system(
                             { 'git', 'log', '-n', '50', '--pretty=format:%s' },
@@ -786,12 +786,12 @@ codecompanion.setup({
                         -- and ignore the one passed as argument
                         local chat = get_or_create_chat()
 
-                        -- Use watched references for staged/commit reviews and plain
-                        -- references for branch diffs
+                        -- Use watched context for staged/commit reviews and plain context
+                        -- for branch diffs
                         if opts and opts.base_branch then
-                            _G.CodeCompanionConfig.add_references(abs_files)
+                            _G.CodeCompanionConfig.add_context(abs_files)
                         else
-                            _G.CodeCompanionConfig.add_watched_references(abs_files)
+                            _G.CodeCompanionConfig.add_watched_context(abs_files)
                         end
 
                         local diff_args = vim.split(diff_cmd, ' ', { trimempty = true })
@@ -809,7 +809,7 @@ codecompanion.setup({
                 ['qfix'] = {
                     description = 'Explain quickfix/loclist code diagnostics',
                     callback = function(chat)
-                        local entries, references = get_loclists_or_qf_entries()
+                        local entries, context = get_loclists_or_qf_entries()
                         if entries == '' then
                             vim.notify(
                                 'No diagnostics found in quickfix or location lists.',
@@ -817,7 +817,7 @@ codecompanion.setup({
                             )
                             return
                         end
-                        _G.CodeCompanionConfig.add_references(references)
+                        _G.CodeCompanionConfig.add_context(context)
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(PROMPT_LIBRARY['quickfix'], entries),
@@ -895,7 +895,7 @@ codecompanion.setup({
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
-            references = {
+            context = {
                 {
                     type = 'file',
                     path = {
@@ -955,7 +955,7 @@ codecompanion.setup({
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
-            references = {
+            context = {
                 {
                     type = 'file',
                     path = {
