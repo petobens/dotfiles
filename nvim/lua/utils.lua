@@ -40,19 +40,6 @@ function M.vim_session_file()
     return session_dir .. session_file .. '.vim'
 end
 
-function M.border(hl_name)
-    return {
-        { '╭', hl_name },
-        { '─', hl_name },
-        { '╮', hl_name },
-        { '│', hl_name },
-        { '╯', hl_name },
-        { '─', hl_name },
-        { '╰', hl_name },
-        { '│', hl_name },
-    }
-end
-
 function M.get_selection()
     local text
     if vim.fn.mode() == 'v' then

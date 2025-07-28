@@ -25,7 +25,6 @@ blink_cmp.setup({
     },
     completion = {
         menu = {
-            border = u.border('FloatBorder'),
             winhighlight = 'Normal:NormalFloat,CursorLine:PmenuSel,Search:None',
             draw = {
                 columns = {
@@ -73,7 +72,6 @@ blink_cmp.setup({
         documentation = {
             auto_show = true,
             window = {
-                border = u.border('FloatBorder'),
                 winhighlight = 'Normal:NormalFloat,Search:None',
             },
             draw = function(opts)
@@ -95,7 +93,6 @@ blink_cmp.setup({
     signature = {
         enabled = true,
         window = {
-            border = u.border('FloatBorder'),
             winhighlight = 'Normal:NormalFloat,Search:None',
         },
     },

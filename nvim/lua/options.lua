@@ -75,7 +75,7 @@ vim.opt.splitright = true
 vim.opt.startofline = true
 vim.opt.virtualedit = { 'block', 'onemore' }
 vim.opt.winblend = 6
-vim.opt.winborder = 'none' -- FIXME: setting this to 'rounded' breaks telescope
+vim.opt.winborder = 'rounded'
 ---- Resize splits when the Vim window is resized
 vim.api.nvim_create_autocmd('VimResized', {
     group = vim.api.nvim_create_augroup('vim_resized', { clear = true }),

@@ -1,31 +1,4 @@
-local u = require('utils')
-
 _G.LspConfig = {}
-
--- Use borders for floating hovers
--- FIXME: These helpers are no longer needed if we set global winborder
-local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-    opts = opts or {}
-    opts.border = opts.border or u.border('FloatBorder')
-    return orig_util_open_floating_preview(contents, syntax, opts, ...)
-end
-
-local hover = vim.lsp.buf.hover
-vim.lsp.buf.hover = function()
-    return hover({
-        border = 'rounded',
-        focusable = true,
-    })
-end
-
-local signature_help = vim.lsp.buf.signature_help
-vim.lsp.buf.signature_help = function()
-    return signature_help({
-        border = 'rounded',
-        focusable = false,
-    })
-end
 
 -- Define higlights for markdown hover documentation
 local md_docs_ns = vim.api.nvim_create_namespace('markdown_docs_highlights')

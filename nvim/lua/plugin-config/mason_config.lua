@@ -1,6 +1,4 @@
-require('mason').setup({
-    ui = { border = 'rounded' },
-})
+require('mason').setup({})
 
 require('mason-tool-installer').setup({
     auto_update = true,
