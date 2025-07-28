@@ -26,7 +26,11 @@ _G.OverseerConfig.python_errorformat = ''
 
 -- Helpers
 local function _project_root()
-    return vim.fs.root(0, 'pyproject.toml')
+    local root = vim.fs.root(0, 'pyproject.toml')
+    if not root or root == '' then
+        return vim.uv.cwd()
+    end
+    return root
 end
 
 -- Running
