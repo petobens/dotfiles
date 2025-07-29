@@ -69,6 +69,15 @@ require('nvim-treesitter.configs').setup({
                 ['[F'] = '@function.outer',
             },
         },
+        swap = {
+            enable = true,
+            swap_next = {
+                ['<A-l>'] = '@parameter.inner',
+            },
+            swap_previous = {
+                ['<A-h>'] = '@parameter.inner',
+            },
+        },
     },
     matchup = { enable = true },
 })
