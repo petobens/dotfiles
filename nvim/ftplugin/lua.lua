@@ -1,5 +1,4 @@
 local overseer = require('overseer')
-local utils = require('telescope.utils')
 
 -- Options
 vim.opt_local.textwidth = 90
@@ -18,14 +17,14 @@ local _parse_qf = function(qf_title, active_window_id)
     end
     if next(new_qf) ~= nil then
         vim.fn.setqflist({}, ' ', { items = new_qf, title = qf_title })
-        vim.cmd('copen')
-        vim.fn.win_gotoid(active_window_id)
+        vim.cmd.copen()
+        vim.api.nvim_set_current_win(active_window_id)
     end
 end
 
 local function run_overseer()
-    local current_win_id = vim.fn.win_getid()
-    vim.cmd('silent noautocmd update')
+    local current_win_id = vim.api.nvim_get_current_win()
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     overseer.run_template({ name = 'run_lua' }, function(task)
         vim.cmd('cclose')
         task:subscribe('on_complete', function()
@@ -35,13 +34,9 @@ local function run_overseer()
 end
 
 local run_toggleterm = function()
-    vim.cmd('silent noautocmd update')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     vim.cmd(
-        string.format(
-            'TermExec cmd="%s %s"',
-            'nvim -l',
-            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
-        )
+        string.format('TermExec cmd="%s %s"', 'nvim -l', vim.api.nvim_buf_get_name(0))
     )
 end
 
@@ -49,10 +44,14 @@ local run_tmux_pane = function()
     if vim.env.TMUX == nil then
         return
     end
-    local cwd = utils.buffer_dir()
+    local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
     local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
     local sh_cmd = '"nvim -l ' .. fname .. [[; read -p ''"]]
-    vim.cmd('silent! !tmux new-window -c ' .. cwd .. ' -n ' .. fname .. ' ' .. sh_cmd)
+    vim.cmd({
+        cmd = '!',
+        args = { 'tmux', 'new-window', '-c', cwd, '-n', fname, sh_cmd },
+        mods = { silent = true },
+    })
 end
 
 vim.api.nvim_create_user_command('RunVisualLua', function()
