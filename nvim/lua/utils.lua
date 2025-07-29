@@ -60,7 +60,9 @@ function M.quit_return()
     local win_id = vim.api.nvim_get_current_win()
     vim.cmd('wincmd p')
     vim.cmd('bdelete')
-    vim.api.nvim_set_current_win(win_id)
+    if vim.api.nvim_win_is_valid(win_id) then
+        vim.api.nvim_set_current_win(win_id)
+    end
 end
 
 M.icons = {
