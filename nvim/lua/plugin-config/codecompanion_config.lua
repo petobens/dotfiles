@@ -451,7 +451,7 @@ codecompanion.setup({
                 relative = 'editor',
                 col = vim.o.columns, -- right position
                 row = 1,
-                opts = { winblend = 0 }, -- See https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/481
+                opts = {},
             },
             debug_window = {
                 width = math.floor(vim.o.columns * 0.535),

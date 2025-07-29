@@ -57,6 +57,7 @@ require('render-markdown').setup({
         min_width = 80,
         highlight_language = 'LineNr',
         language_name = false,
+        language_border = '',
     },
     quote = { icon = '▐' },
     pipe_table = { cell = 'raw' },
