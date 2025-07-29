@@ -7,8 +7,7 @@ vim.opt_local.winfixbuf = true
 
 -- Appearance
 vim.cmd.wincmd('J')
-local last_line = vim.api.nvim_buf_line_count(0)
-vim.cmd.wincmd('_', { count = math.max(1, math.min(last_line, 15)) })
+vim.cmd(math.max(1, math.min(vim.fn.line('$'), 15)) .. 'wincmd _')
 
 -- Mappings
 local map_opts = { buffer = true }
