@@ -160,7 +160,7 @@ vim.keymap.set('n', '<Leader>mf', '<Cmd>set foldmethod=marker<CR>zv')
 vim.keymap.set('n', '<Leader>de', '<Cmd>bd #<CR>zz')
 vim.keymap.set('n', '<Leader>ds', function()
     local save_pwd = vim.uv.cwd()
-    vim.api.nvim_set_current_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+    vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
     local win_id = vim.api.nvim_get_current_win()
     vim.ui.input(
         { prompt = 'Input file for diffing: ', completion = 'file' },

@@ -44,7 +44,8 @@ local LATEX_EFM = ''
     .. [[%-G%.%#,]]
 
 local function _parse_logfile(filename, cwd, active_window_id)
-    if vim.fn.filereadable(filename) == 0 then
+    local stat = vim.uv.fs_stat(filename)
+    if not (stat and stat.type == 'file') then
         return
     end
     local content = require('overseer.files').read_file(filename)
@@ -65,18 +66,19 @@ local function _parse_logfile(filename, cwd, active_window_id)
         title = filename,
         items = new_qf,
     })
-    vim.cmd('lcd ' .. cwd)
+    vim.cmd.lcd({ args = { cwd } })
     if next(new_qf) ~= nil then
-        vim.cmd('copen')
-        vim.fn.win_gotoid(active_window_id)
+        vim.cmd.copen()
+        vim.api.nvim_set_current_win(active_window_id)
     end
 end
 
 local function compile_latex()
-    local cwd = vim.fn.getcwd()
-    local current_win_id = vim.fn.win_getid()
-    vim.cmd('silent noautocmd update')
-    vim.cmd('lcd %:p:h') -- we seem to need this for proper qf parsing
+    local cwd = vim.uv.cwd()
+    local current_win_id = vim.api.nvim_get_current_win()
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
+    -- We seem to need the following for proper qf parsing
+    vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
     overseer.run_template({ name = 'run_arara' }, function(task)
         vim.cmd('cclose')
         task:subscribe('on_complete', function()
@@ -93,7 +95,7 @@ local function view_pdf()
 end
 
 local function forward_search()
-    local tex_file = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
+    local tex_file = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
     local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
     local synctex_cmd = {
         'zathura',
@@ -106,7 +108,7 @@ end
 
 -- File Editing
 local function file_edit(search_file)
-    local base_dir = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:h')
+    local base_dir = vim.fs.dirname(vim.b.vimtex.tex)
     local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':t:r')
 
     if search_file == 'bib' or search_file == 'log' then
@@ -144,7 +146,7 @@ local function delete_aux_files()
         'vrb',
         'log',
     }
-    local files = scan.scan_dir(vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:h'))
+    local files = scan.scan_dir(vim.fs.dirname(vim.b.vimtex.tex))
     local rm_files = {}
     for _, f in pairs(files) do
         local ext = vim.fn.fnamemodify(f, ':e')
