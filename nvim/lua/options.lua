@@ -2,7 +2,7 @@ local u = require('utils')
 
 -- Helpers
 function _G.my_custom_foldtext()
-    return vim.fn.trim(tostring(vim.fn.getline(vim.v.foldstart)), vim.wo.foldmarker)
+    return vim.trim(tostring(vim.fn.getline(vim.v.foldstart)), vim.wo.foldmarker)
 end
 
 -- Syntax
@@ -87,7 +87,7 @@ vim.api.nvim_create_autocmd('WinLeave', {
     group = cline_acg,
     callback = function()
         vim.opt_local.cursorline = false
-        _G.LastWinId = vim.fn.win_getid()
+        _G.LastWinId = vim.api.nvim_get_current_win()
     end,
 })
 vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
@@ -115,7 +115,7 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
         -- Only save session if there is an attached UI (i.e., not in headless mode such
         -- as a neotest worker)
         if #vim.api.nvim_list_uis() > 0 then
-            vim.cmd(string.format('execute "mksession! %s"', u.vim_session_file()))
+            vim.cmd.mksession({ args = { u.vim_session_file() }, bang = true })
         end
     end,
 })
@@ -225,7 +225,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = vim.api.nvim_create_augroup('auto_venv', { clear = true }),
     pattern = { '*.py' },
     callback = function()
-        local fname = vim.fn.expand('%:p')
+        local fname = vim.api.nvim_buf_get_name(0)
         if not string.match(fname, '.git/') and not vim.startswith(fname, 'copilot') then
             _G.PyVenv.activate()
         end
