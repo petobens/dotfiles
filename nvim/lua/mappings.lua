@@ -9,9 +9,12 @@ vim.keymap.set('n', '<Leader>ps', function()
     vim.cmd('silent! source ' .. u.vim_session_file())
     -- Remove any buffer that exists and is listed but doesn't have a valid filename
     -- See https://github.com/neovim/neovim/pull/17112#issuecomment-1024923302
-    for b = 1, vim.fn.bufnr('$') do
-        if vim.fn.buflisted(b) ~= 0 and vim.bo[b].buftype ~= 'quickfix' then
-            if vim.fn.filereadable(vim.api.nvim_buf_get_name(b)) == 0 then
+    for _, b in ipairs(vim.api.nvim_list_bufs()) do
+        if
+            vim.api.nvim_buf_get_option(b, 'buflisted')
+            and vim.bo[b].buftype ~= 'quickfix'
+        then
+            if vim.uv.fs_stat(vim.api.nvim_buf_get_name(b)) == nil then
                 vim.cmd('bwipeout ' .. b)
             end
         end
@@ -27,7 +30,9 @@ vim.keymap.set('n', '<Leader>rs', ':SudaRead ', { silent = false })
 vim.keymap.set('n', '<C-n>', '<Cmd>bn<CR>')
 vim.keymap.set('n', '<C-p>', '<Cmd>bp<CR>')
 vim.keymap.set('n', '<Leader>bd', '<Cmd>bp|bd #<CR>')
-vim.keymap.set('n', '<Leader>cd', '<Cmd>lcd %:h<CR>')
+vim.keymap.set('n', '<Leader>cd', function()
+    vim.api.nvim_set_current_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+end)
 vim.keymap.set('n', '<Leader>rr', '<Cmd>checktime<CR>')
 vim.keymap.set('n', '<Leader>so', '<Cmd>update<CR>:luafile %<CR>', { silent = false })
 vim.keymap.set('n', '<Leader>wd', '<Cmd>bd<CR>')
@@ -154,9 +159,9 @@ vim.keymap.set('n', '<Leader>mf', '<Cmd>set foldmethod=marker<CR>zv')
 -- Diffs
 vim.keymap.set('n', '<Leader>de', '<Cmd>bd #<CR>zz')
 vim.keymap.set('n', '<Leader>ds', function()
-    local save_pwd = vim.fn.getcwd()
-    vim.cmd('lcd %:p:h')
-    local win_id = vim.fn.win_getid()
+    local save_pwd = vim.uv.cwd()
+    vim.api.nvim_set_current_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+    local win_id = vim.api.nvim_get_current_win()
     vim.ui.input(
         { prompt = 'Input file for diffing: ', completion = 'file' },
         function(other_file)
@@ -164,16 +169,16 @@ vim.keymap.set('n', '<Leader>ds', function()
                 return
             else
                 local diff_cmd = 'diffsplit '
-                if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+                if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
                     diff_cmd = 'vertical ' .. diff_cmd
                 end
                 vim.cmd(diff_cmd .. other_file)
             end
-            vim.fn.win_gotoid(win_id)
+            vim.api.nvim_set_current_win(win_id)
             vim.cmd('normal gg]h') -- move to first hunk
         end
     )
-    vim.cmd('lcd ' .. save_pwd)
+    vim.api.nvim_set_current_dir(save_pwd)
 end)
 vim.keymap.set('n', '<Leader>du', '<Cmd>diffupdate<CR>')
 
