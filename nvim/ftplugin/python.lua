@@ -74,7 +74,7 @@ end
 
 local function run_overseer(task_name)
     local cwd = vim.uv.cwd()
-    local current_win_id = vim.fn.win_getid()
+    local current_win_id = vim.api.nvim_get_current_win()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
 
     if task_name == 'run_precommit' then
@@ -427,7 +427,7 @@ local function edit_test_file()
 end
 
 local function edit_project_todo()
-    local notes_dir = vim.fs.joinpath(vim.fn.expand('~'), 'git-repos', 'private', 'notes')
+    local notes_dir = vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'notes')
     local todo_file = vim.fs.find(
         { 'todos_' .. vim.fs.basename(_project_root()) .. '.md' },
         { limit = math.huge, type = 'file', path = notes_dir }
