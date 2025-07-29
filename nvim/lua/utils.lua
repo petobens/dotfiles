@@ -11,15 +11,16 @@ end
 
 function M.split_open(file)
     local split = 'split '
-    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+    if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
         split = 'vsplit '
     end
     vim.cmd(split .. file)
 end
 
 function M.mk_non_dir(directory)
-    local dir = directory or vim.fn.expand('%:p:h')
-    if vim.fn.isdirectory(dir) == 0 then
+    local dir = directory or vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+    local stat = vim.uv.fs_stat(dir)
+    if stat == nil or stat.type ~= 'directory' then
         vim.fn.mkdir(dir, 'p')
     end
 end
@@ -42,7 +43,8 @@ end
 
 function M.get_selection()
     local text
-    if vim.fn.mode() == 'v' then
+    local mode = vim.api.nvim_get_mode().mode
+    if mode:match('^v') then
         vim.cmd('noautocmd normal! "vy"')
         text = vim.fn.getreg('v')
         vim.fn.setreg('v', {})
@@ -58,7 +60,7 @@ function M.quit_return()
     local win_id = vim.api.nvim_get_current_win()
     vim.cmd('wincmd p')
     vim.cmd('bdelete')
-    vim.fn.win_gotoid(win_id)
+    vim.api.nvim_set_current_win(win_id)
 end
 
 M.icons = {
