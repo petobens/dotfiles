@@ -100,16 +100,16 @@ vim.keymap.set('n', 'gp', '`[v`]') -- visually reselect what was just pasted
 vim.keymap.set('n', 'Y', 'y$', { remap = true })
 vim.keymap.set('n', 'yy', 'mz0y$`z', { remap = true })
 vim.keymap.set('n', '<Leader>yd', function()
-    local dir = vim.fn.expand('%:p:h')
+    local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
     vim.fn.setreg('+', dir)
     vim.fn.setreg('*', dir)
-    vim.notify('Yanked directory: ' .. dir)
+    vim.notify(('Yanked directory: %s'):format(dir), vim.log.levels.INFO)
 end)
 vim.keymap.set('n', '<Leader>yf', function()
-    local path = vim.fn.expand('%:p')
+    local path = vim.api.nvim_buf_get_name(0)
     vim.fn.setreg('+', path)
     vim.fn.setreg('*', path)
-    vim.notify('Yanked file: ' .. path)
+    vim.notify(('Yanked file: %s'):format(path), vim.log.levels.INFO)
 end)
 
 -- Search, jumps and marks
@@ -200,45 +200,52 @@ vim.keymap.set('v', '<Leader>cu', 'gc', { remap = true })
 
 -- Bookmarks
 vim.keymap.set('n', '<Leader>ev', '<Cmd>e $MYVIMRC<CR>')
-vim.keymap.set('n', '<Leader>em', '<Cmd>e ' .. vim.env.DOTVIM .. '/minimal.lua<CR>')
+vim.keymap.set(
+    'n',
+    '<Leader>em',
+    ('<Cmd>e %s<CR>'):format(vim.fs.joinpath(vim.env.DOTVIM, 'minimal.lua'))
+)
 vim.keymap.set(
     'n',
     '<Leader>ew',
-    '<Cmd>e ' .. vim.env.DOTVIM .. '/spell/custom-dictionary.utf-8.add<CR>'
+    ('<Cmd>e %s/spell/custom-dictionary.utf-8.add<CR>'):format(vim.env.DOTVIM)
 )
 vim.keymap.set(
     'n',
     '<Leader>etm',
-    '<Cmd>e ' .. vim.env.HOME .. '/git-repos/private/notes/mutt/todos_mutt.md<CR>'
+    ('<Cmd>e %s/git-repos/private/notes/mutt/todos_mutt.md<CR>'):format(vim.env.HOME)
 )
 vim.keymap.set(
     'n',
     '<Leader>ets',
-    '<Cmd>e '
-        .. vim.env.HOME
-        .. '/git-repos/private/notes/programming/todos_coding_setup.md<CR>'
+    ('<Cmd>e %s/git-repos/private/notes/programming/todos_coding_setup.md<CR>'):format(
+        vim.env.HOME
+    )
 )
 vim.keymap.set(
     'n',
     '<Leader>dd',
-    ':e ' .. vim.env.HOME .. '/Desktop/',
+    (':e %s'):format(vim.fs.joinpath(vim.env.HOME, 'Desktop/')),
     { silent = false }
 )
 vim.keymap.set('n', '<Leader>sb', function()
-    vim.api.nvim_input(':e ' .. vim.fn.expand('%:p:h') .. '/scratch/')
+    local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+    vim.api.nvim_input((':e %s/scratch/'):format(dir))
 end, { silent = false })
-vim.keymap.set('n', '<Leader>eb', '<Cmd>e $HOME/.bashrc<CR>')
+vim.keymap.set('n', '<Leader>eb', ('<Cmd>e %s/.bashrc<CR>'):format(vim.env.HOME))
 vim.keymap.set(
     'n',
     '<Leader>eh',
-    -- FIXME: defining the symlink here doesn't preserve make/load view
-    '<Cmd>e $HOME/git-repos/private/dotfiles/arch/config/i3/config<CR>'
+    -- Note: using a symlink here doesn't preserve make/load view
+    ('<Cmd>e %s/git-repos/private/dotfiles/arch/config/i3/config<CR>'):format(
+        vim.env.HOME
+    )
 )
 
 -- Links & Filemanager
 vim.keymap.set({ 'n', 'v' }, '<Leader>ol', 'gx', { remap = true })
 vim.keymap.set('n', '<Leader>fm', function()
-    vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.fs.getcwd(), 'ranger' })
+    vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.uv.cwd(), 'ranger' })
 end)
 for i = 1, 6 do
     vim.keymap.set('n', '<Leader>h' .. i, function()
