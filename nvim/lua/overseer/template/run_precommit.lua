@@ -3,8 +3,7 @@ return {
     builder = function()
         local cmd = { 'pre-commit', 'run' }
         -- TODO: We probably want this for other filetypes too
-        local precommit_root = vim.fs.root(0, '.pre-commit-config.yaml')
-            or vim.fn.getcwd()
+        local precommit_root = vim.fs.root(0, '.pre-commit-config.yaml') or vim.uv.cwd()
         local py_files = vim.fs.find(function(name)
             return name:match('.*%.py$')
         end, {
