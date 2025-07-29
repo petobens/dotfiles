@@ -60,25 +60,25 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
                 end
             end
         end
-        vim.cmd('lcd ' .. cwd)
+        vim.cmd.lcd({ args = { cwd } })
     end
 
     if next(new_qf) ~= nil then
         vim.fn.setqflist({}, ' ', { items = new_qf, title = task_metadata.run_cmd })
         if not pdb then
-            vim.cmd('copen')
+            vim.cmd.copen()
         end
-        vim.fn.win_gotoid(active_window_id)
+        vim.api.nvim_set_current_win(active_window_id)
     end
 end
 
 local function run_overseer(task_name)
-    local cwd = vim.fn.getcwd()
+    local cwd = vim.uv.cwd()
     local current_win_id = vim.fn.win_getid()
-    vim.cmd('silent noautocmd update')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
 
     if task_name == 'run_precommit' then
-        vim.cmd('lcd %:p:h')
+        vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
     end
 
     overseer.run_template({ name = string.format('%s', task_name) }, function(task)
@@ -97,7 +97,7 @@ end
 local function run_toggleterm(post_mortem_mode)
     post_mortem_mode = post_mortem_mode or false
 
-    vim.cmd('silent noautocmd update')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
 
     local cmd = 'python'
     if post_mortem_mode then
@@ -113,18 +113,12 @@ local function run_toggleterm(post_mortem_mode)
         end
     end
 
-    vim.cmd(
-        string.format(
-            'TermExec cmd="%s %s"',
-            cmd,
-            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
-        )
-    )
+    vim.cmd(string.format('TermExec cmd="%s %s"', cmd, vim.api.nvim_buf_get_name(0)))
 end
 
 local function run_ipython(mode)
-    vim.cmd('silent noautocmd update')
-    local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
+    local fname = vim.api.nvim_buf_get_name(0)
 
     local ttt = require('toggleterm.terminal')
     local term_info = ttt.get(1)
@@ -157,11 +151,11 @@ local function run_ipython(mode)
     elseif mode == 'reset' then
         vim.cmd('TermExec cmd="\\%reset -f"')
     elseif mode == 'carriage' then
-        local current_win_id = vim.fn.win_getid()
+        local current_win_id = vim.api.nvim_get_current_win()
         vim.fn.win_gotoid(vim.fn.bufwinid('ipython'))
         vim.api.nvim_input('<CR>')
         vim.defer_fn(function()
-            vim.fn.win_gotoid(current_win_id)
+            vim.api.nvim_set_current_win(current_win_id)
         end, 100)
     end
 end
@@ -177,10 +171,14 @@ local function run_tmux_pane(debug_mode)
         python_cmd = python_cmd .. ' -m pdb -cc'
     end
 
-    local cwd = utils.buffer_dir()
-    local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
+    local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+    local fname = vim.fs.basename(vim.api.nvim_buf_get_name(0))
     local sh_cmd = '"' .. python_cmd .. ' ' .. fname .. [[; read -p ''"]]
-    vim.cmd('silent! !tmux new-window -c ' .. cwd .. ' -n ' .. fname .. ' ' .. sh_cmd)
+    vim.cmd({
+        cmd = '!',
+        args = { 'tmux', 'new-window', '-c', cwd, '-n', fname, sh_cmd },
+        mods = { silent = true },
+    })
 
     if vim.api.nvim_get_mode()['mode'] == 'i' then
         vim.cmd.stopinsert()
@@ -200,29 +198,35 @@ local function tmux2qf(cmd_opt)
     })
     _parse_qf(
         { run_cmd = 'Tmux Window: ' .. tmux_win_nr },
-        vim.fn.getcwd(),
-        vim.fn.win_getid()
+        vim.uv.cwd(),
+        vim.api.nvim_get_current_win()
     )
 end
 vim.api.nvim_create_user_command('Tmux2Qf', tmux2qf, { nargs = 1 })
 
 -- Debugging
 local function add_breakpoint()
-    local save_cursor = vim.fn.getcurpos()
-    local current_line = vim.fn.line('.')
+    local save_cursor = vim.api.nvim_win_get_cursor(0)
+    local current_line = save_cursor[1]
     local breakpoint_line = current_line - 1
     local indent_length = vim.fn.match(vim.fn.getline(current_line), '\\w')
     local bp_statement = string.rep(' ', indent_length) .. 'breakpoint()'
-    vim.fn.append(breakpoint_line, bp_statement)
-    vim.cmd('silent noautocmd update')
-    vim.fn.setpos('.', save_cursor)
+    vim.api.nvim_buf_set_lines(
+        0,
+        breakpoint_line,
+        breakpoint_line,
+        false,
+        { bp_statement }
+    )
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
+    vim.api.nvim_win_set_cursor(0, save_cursor)
 end
 
 local function remove_breakpoints()
-    local save_cursor = vim.fn.getcurpos()
+    local save_cursor = vim.api.nvim_win_get_cursor(0)
     vim.cmd('g/breakpoint()/d')
-    vim.cmd('silent noautocmd update')
-    vim.fn.setpos('.', save_cursor)
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
+    vim.api.nvim_win_set_cursor(0, save_cursor)
 end
 
 local function list_breakpoints(local_buffer)
@@ -256,7 +260,7 @@ local function get_venv_info(venv, project_root)
     end
     -- Prefer uv over poetry
     local uv_venv = vim.fs.joinpath(project_root, '.venv')
-    if vim.fn.isdirectory(uv_venv) == 1 then
+    if vim.uv.fs_stat(uv_venv) and vim.uv.fs_stat(uv_venv).type == 'directory' then
         return { path = uv_venv, manager = 'uv' }
     end
     local result = vim.system({ 'poetry', 'env', 'info', '--path' }, { text = true })
@@ -304,7 +308,7 @@ function _G.PyVenv.activate(venv)
 
     -- Save working dir and cd to window cwd (lcd) to ensure system call works
     local lwd = vim.uv.cwd()
-    vim.cmd('lcd %:p:h')
+    vim.cmd.lcd({ args = { lwd } })
 
     -- If there is no active venv look for one (but just once)
     if vim.b.pyvenv == nil then
@@ -339,14 +343,14 @@ function _G.PyVenv.activate(venv)
 
     -- Actually activate the venv if it was found
     if vim.b.pyvenv ~= 'none' then
-        vim.fn.setenv('PATH', string.format('%s/bin:%s', vim.b.pyvenv, vim.env.PATH))
-        vim.fn.setenv('VIRTUAL_ENV', vim.b.pyvenv)
+        vim.env.PATH = string.format('%s/bin:%s', vim.b.pyvenv, vim.env.PATH)
+        vim.env.VIRTUAL_ENV = vim.b.pyvenv
         local lsp_path = vim.b.pyvenv .. '/bin/python'
         vim.defer_fn(function()
             set_lsp_path(lsp_path)
         end, 100)
     end
-    vim.cmd('lcd ' .. lwd)
+    vim.cmd.lcd({ args = { lwd } })
 end
 
 function _G.PyVenv.deactivate()
@@ -357,9 +361,9 @@ function _G.PyVenv.deactivate()
         local venv_path =
             string.gsub(_G.PyVenv.active_venv.path .. '/bin:', '([^%w])', '%%%1') -- escaped
         local path = string.gsub(vim.env.PATH, venv_path, '')
-        vim.fn.setenv('PATH', path)
+        vim.env.PATH = path
     end
-    vim.fn.setenv('VIRTUAL_ENV', nil)
+    vim.env.VIRTUAL_ENV = nil
     vim.b.pyvenv = nil
     _G.PyVenv.active_venv = {}
     set_lsp_path(vim.g.python3_host_prog)
@@ -367,7 +371,7 @@ end
 
 -- Sphinx(docs)
 local function run_sphinx_build()
-    vim.cmd('silent noautocmd update')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     overseer.run_template({ name = 'run_sphinx_build' }, function()
         vim.cmd('cclose')
     end)
@@ -412,7 +416,7 @@ end
 local function edit_test_file()
     local tests_dir = vim.fs.joinpath(_project_root(), 'tests')
     local test_file = vim.fs.find(
-        { 'test_' .. vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t') },
+        { 'test_' .. vim.fs.basename(vim.api.nvim_buf_get_name(0)) },
         { limit = math.huge, type = 'file', path = tests_dir }
     )
     if next(test_file) then
@@ -425,7 +429,7 @@ end
 local function edit_project_todo()
     local notes_dir = vim.fs.joinpath(vim.fn.expand('~'), 'git-repos', 'private', 'notes')
     local todo_file = vim.fs.find(
-        { 'todos_' .. vim.fn.fnamemodify(_project_root(), ':t') .. '.md' },
+        { 'todos_' .. vim.fs.basename(_project_root()) .. '.md' },
         { limit = math.huge, type = 'file', path = notes_dir }
     )
     if next(todo_file) then
