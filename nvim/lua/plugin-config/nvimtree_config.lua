@@ -50,7 +50,7 @@ end
 local function up_dir()
     local node = tree_api.get_node_under_cursor()
     local p = Path:new(node.absolute_path):parent()
-    local dir = vim.fn.fnamemodify(tostring(p), ':t')
+    local dir = vim.fs.basename(tostring(p))
 
     node_api.navigate.parent()
     tree_api.change_root_to_node()
@@ -256,8 +256,8 @@ require('nvim-tree').setup({
             return (
                 string.format(
                     ' %s/%s',
-                    vim.fn.fnamemodify(path, ':h:t'),
-                    vim.fn.fnamemodify(path, ':t')
+                    vim.fs.basename(vim.fs.dirname(path)),
+                    vim.fs.basename(path)
                 )
             )
         end,
