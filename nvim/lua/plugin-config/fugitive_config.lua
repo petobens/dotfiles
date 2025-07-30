@@ -61,7 +61,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '<Leader>ac', function()
             vim.cmd('normal! gg0')
             vim.cmd('normal! dd')
-            vim.cmd('silent noautocmd update')
+            vim.cmd.update({ mods = { silent = true, noautocmd = true } })
             vim.cmd('bd')
         end, { buffer = e.buf })
     end,

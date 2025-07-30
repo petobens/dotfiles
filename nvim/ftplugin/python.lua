@@ -1,7 +1,6 @@
 local builtin = require('telescope.builtin')
 local overseer = require('overseer')
 local u = require('utils')
-local utils = require('telescope.utils')
 
 -- Options and variable
 vim.opt_local.textwidth = 88
@@ -241,7 +240,7 @@ local function list_breakpoints(local_buffer)
             search_dirs = { buf_name },
         })
     else
-        local buffer_dir = utils.buffer_dir()
+        local buffer_dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
         if next(_G.PyVenv.active_venv) ~= nil then
             buffer_dir = _G.PyVenv.active_venv.project_root
         end

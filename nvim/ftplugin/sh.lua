@@ -34,7 +34,7 @@ local function run_overseer()
 end
 
 local run_toggleterm = function()
-    vim.cmd('silent noautocmd update')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     vim.cmd(string.format('TermExec cmd="%s %s"', 'bash', vim.api.nvim_buf_get_name(0)))
 end
 

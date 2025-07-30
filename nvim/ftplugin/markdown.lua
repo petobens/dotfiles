@@ -123,7 +123,7 @@ end
 
 ---- Sphinx
 local function run_sphinx_build()
-    vim.cmd('silent noautocmd update')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     overseer.run_template({ name = 'run_sphinx_build' }, function()
         vim.cmd('cclose')
     end)

@@ -130,7 +130,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local opts = { buffer = e.buf }
         vim.keymap.set('n', '<Leader>jd', function()
             local split_cmd = 'split'
-            if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+            if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
                 split_cmd = 'vsplit'
             end
             vim.cmd(split_cmd)

@@ -38,7 +38,7 @@ vim.keymap.set('n', '<Leader>so', '<Cmd>update<CR>:luafile %<CR>', { silent = fa
 vim.keymap.set('n', '<Leader>wd', '<Cmd>bd<CR>')
 vim.keymap.set('n', 'gf', function()
     local wincmd = 'wincmd f'
-    if vim.fn.winwidth(0) > 2 * (vim.go.textwidth or 80) then
+    if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
         wincmd = 'vertical ' .. wincmd
     end
     vim.cmd(wincmd)

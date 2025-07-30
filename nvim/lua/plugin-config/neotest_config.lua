@@ -151,7 +151,7 @@ local function _parse_neotest_output(task, last_winid)
     if not vim.tbl_isempty(qf) then
         vim.fn.setqflist({}, ' ', { title = task.name, items = qf })
         if not pdb then
-            vim.cmd('copen')
+            vim.cmd.copen()
             vim.api.nvim_set_current_win(last_winid)
 
             if has_stdout then
@@ -194,7 +194,7 @@ end
 local function neotest_run(func, opts, subscribe)
     local ft = vim.bo.filetype
     local bufnr = vim.api.nvim_get_current_buf()
-    vim.cmd('silent noautocmd update')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     vim.cmd('cclose')
     vim.cmd('cd %:p:h')
 
