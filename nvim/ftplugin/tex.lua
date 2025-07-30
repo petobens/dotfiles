@@ -176,7 +176,7 @@ local function convert_pandoc(extension)
     local pandoc_cmd = 'pandoc -s'
     if extension == 'docx' then
         pandoc_cmd = pandoc_cmd .. ' --toc --number-sections'
-        if vim.fn.filereadable(bib_file) > 0 then
+        if vim.uv.fs_stat(bib_file) then
             pandoc_cmd = pandoc_cmd .. ' --bibliography=' .. bib_file
         end
     end
@@ -191,7 +191,7 @@ end
 
 local function continue_list()
     local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
-    local marker = vim.fn.matchstr(line, [[^\\item\s]])
+    local marker = line:match('^(\\item%s*)')
     if not marker or line == '' then
         return '<CR>'
     end
