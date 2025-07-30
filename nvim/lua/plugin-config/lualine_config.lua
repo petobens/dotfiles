@@ -75,13 +75,13 @@ end
 -- Resize conditions
 local conds = {
     hide_winwidth_leq_80 = function()
-        return vim.fn.winwidth(0) > 80
+        return vim.api.nvim_win_get_width(0) > 80
     end,
     hide_winwidth_leq_60 = function()
-        return vim.fn.winwidth(0) > 60
+        return vim.api.nvim_win_get_width(0) > 60
     end,
     hide_winwidth_leq_40 = function()
-        return vim.fn.winwidth(0) > 40
+        return vim.api.nvim_win_get_width(0) > 40
     end,
 }
 
@@ -117,7 +117,7 @@ local nvimtree_ext = {
         },
         lualine_b = {
             function()
-                return vim.fs.basename(vim.fn.getcwd())
+                return vim.fs.basename(vim.uv.cwd())
             end,
         },
     },
@@ -347,7 +347,7 @@ require('lualine').setup({
                 'buffertab',
                 component_separators = { left = ' ' },
                 max_length = function()
-                    return vim.o.columns - vim.fn.strlen('buffers')
+                    return vim.o.columns - vim.api.nvim_strwidth('buffers')
                 end,
                 padding = { left = 0, right = 0 },
             },
