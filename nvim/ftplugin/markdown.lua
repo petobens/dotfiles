@@ -60,7 +60,7 @@ end
 
 local function toggle_checklist()
     local bufnr = vim.api.nvim_get_current_buf()
-    local mode = vim.fn.mode()
+    local mode = vim.api.nvim_get_mode().mode
     local start_line, end_line
     if mode:match('^v') or mode:match('^V') then
         start_line = vim.fn.line('v')
@@ -151,7 +151,7 @@ local function clean_sphinx_build()
 end
 
 local function view_sphinx_docs()
-    local project_root = vim.fs.root(0, 'pyproject.toml') or vim.fn.getcwd()
+    local project_root = vim.fs.root(0, 'pyproject.toml') or vim.uv.cwd()
     local docs_dir = vim.fs.joinpath(project_root, 'docs', 'build', 'html')
     local html_file = vim.fs.joinpath(docs_dir, 'index.html')
     vim.ui.open(html_file)
