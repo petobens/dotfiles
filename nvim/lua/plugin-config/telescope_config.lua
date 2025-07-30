@@ -41,7 +41,7 @@ local function scroll_less(self, direction)
     local input = direction > 0 and string.char(0x05) or string.char(0x19)
     local count = math.abs(direction)
     vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
-        vim.cmd([[normal! ]] .. count .. input)
+        vim.cmd.normal({ count .. input, bang = true })
     end)
 end
 
@@ -251,7 +251,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
     opts.entry_maker = function(entry)
         return {
             value = entry,
-            display = '󰚝 ' .. vim.fn.substitute(entry, vim.env.HOME, '~', ''),
+            display = '󰚝 ' .. entry:gsub(vim.env.HOME, '~'),
             ordinal = entry,
         }
     end
@@ -288,11 +288,11 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
 end
 
 function _G.TelescopeConfig.py_venvs(opts)
-    vim.cmd('lcd %:p:h')
+    vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
     opts = opts or {}
     opts.entry_maker = function(entry)
         return {
-            value = vim.fn.substitute(entry, ' (Activated)$', '', ''),
+            value = entry:gsub(' %(Activated%)$', ''),
             display = '󰆍 ' .. entry,
             ordinal = entry,
         }
@@ -300,7 +300,7 @@ function _G.TelescopeConfig.py_venvs(opts)
 
     local venvs, manager
     local uv_venv = opts.project_root .. '/.venv'
-    if vim.fn.isdirectory(uv_venv) == 1 then
+    if vim.uv.fs_stat(uv_venv) and vim.uv.fs_stat(uv_venv).type == 'directory' then
         manager = 'uv'
         venvs = { uv_venv }
     else
@@ -412,17 +412,17 @@ local custom_actions = transform_mod({
     fugitive_open = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local commit_sha = action_state.get_selected_entry().value
-        vim.cmd(string.format([[execute 'e' FugitiveFind("%s")]], commit_sha))
+        vim.cmd.e(string.format('FugitiveFind("%s")', commit_sha))
     end,
     fugitive_split = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local commit_sha = action_state.get_selected_entry().value
-        vim.cmd(string.format([[execute 'split' FugitiveFind("%s")]], commit_sha))
+        vim.cmd.split(string.format('FugitiveFind("%s")', commit_sha))
     end,
     fugitive_vsplit = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local commit_sha = action_state.get_selected_entry().value
-        vim.cmd(string.format([[execute 'vsplit' FugitiveFind("%s")]], commit_sha))
+        vim.cmd.vsplit(string.format('FugitiveFind("%s")', commit_sha))
     end,
     -- Open git commit with delta via toggleterm
     delta_term = function(prompt_bufnr)
@@ -433,7 +433,7 @@ local custom_actions = transform_mod({
             .. commit_sha
             .. '^! --'
         vim.cmd(string.format('TermExec size=25 cmd="%s"', delta_cmd))
-        vim.cmd('wincmd p')
+        vim.cmd.wincmd('p')
     end,
     -- Search history
     edit_search_line = function(prompt_bufnr)
@@ -445,11 +445,11 @@ local custom_actions = transform_mod({
     spell_fix_all = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        vim.cmd('silent normal! mz')
-        vim.cmd('silent normal! ' .. entry.index .. 'z=')
+        vim.cmd.normal({ 'mz', bang = true, mods = { silent = true } })
+        vim.cmd.normal({ entry.index .. 'z=', bang = true, mods = { silent = true } })
         -- Use pcall to gracefully catch E753 when there are no more words to replace
-        pcall(vim.cmd, 'spellrepall')
-        vim.cmd('silent normal! `z')
+        pcall(vim.cmd.spellrepall)
+        vim.cmd.normal({ '`z', bang = true, mods = { silent = true } })
     end,
     -- Show containing files of entry dir
     entry_find_files = function(prompt_bufnr)
@@ -529,7 +529,7 @@ local custom_actions = transform_mod({
         end
 
         tree_api.open()
-        vim.cmd('sleep 3m') -- we seem to need this to allow focus
+        vim.cmd.sleep('3m') -- we seem to need this to allow focus
         tree_api.change_root(tostring(p))
         if not is_dir then
             tree_api.find_file(fname)
@@ -544,10 +544,10 @@ local custom_actions = transform_mod({
         actions.close(prompt_bufnr)
         if not vim.tbl_isempty(multi) then
             for _, v in pairs(multi) do
-                vim.cmd(string.format('bwipeout %s', v.filename))
+                vim.cmd.bwipeout(v.filename)
             end
         else
-            vim.cmd('bwipeout ' .. action_state.get_selected_entry().value)
+            vim.cmd.bwipeout(action_state.get_selected_entry().value)
         end
     end,
     -- Send selection to quickfix and open
@@ -560,7 +560,7 @@ local custom_actions = transform_mod({
         actions.close(prompt_bufnr)
         require('aerial').focus()
         vim.fn.search(action_state.get_selected_entry().name)
-        vim.cmd('normal! 0')
+        vim.cmd.normal({ '0', bang = true })
     end,
     -- Delete frecency entries
     delete_frecency = function(prompt_bufnr)
@@ -580,19 +580,9 @@ local custom_actions = transform_mod({
         local picker = action_state.get_current_picker(prompt_bufnr)
         local bufnr = picker.previewer.state.bufnr
         vim.keymap.set('n', '<C-h>', function()
-            vim.cmd(
-                string.format(
-                    'noautocmd lua vim.api.nvim_set_current_win(%s)',
-                    picker.prompt_win
-                )
-            )
+            vim.api.nvim_set_current_win(picker.prompt_win)
         end, { buffer = bufnr })
-        vim.cmd(
-            string.format(
-                'noautocmd lua vim.api.nvim_set_current_win(%s)',
-                picker.previewer.state.winid
-            )
-        )
+        vim.api.nvim_set_current_win(picker.previewer.state.winid)
     end,
     -- Add files as a reference/context to codecompanion
     add_codecompanion_references = function(prompt_bufnr)
@@ -924,7 +914,7 @@ function _G.TelescopeConfig.z_with_tree_preview(opts)
     opts.cmd = { 'bash', '-c', 'zoxide query --list --score 2>&1' }
     opts.prompt_title = 'Zoxide Directories'
     opts.path_display = function(_, path)
-        return string.format(' %s', vim.fn.substitute(path, vim.env.HOME, '~', ''))
+        return string.format(' %s', path:gsub(vim.env.HOME, '~'))
     end
     opts.previewer = tree_previewer
     telescope.extensions.z.list(opts)
@@ -935,7 +925,7 @@ local function rgrep(extra_args)
         if not dir or dir == '' then
             return
         else
-            dir = vim.fn.trim(vim.fs.normalize(dir))
+            dir = vim.trim(vim.fs.normalize(dir))
         end
         local opts = {
             cwd = dir,
@@ -973,7 +963,7 @@ local function gitcommits(opts)
         'rev-parse',
         '--show-toplevel',
     }, opts.cwd)
-    vim.cmd('lcd %:p:h') -- to fix delta previewing
+    vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } }) -- to fix delta previewing
     builtin.git_commits({
         cwd = opts.cwd,
         prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout,<A-r>:review)',
@@ -990,7 +980,7 @@ end
 local function gitcommits_buffer(opts)
     opts = opts or {}
     opts.cwd = utils.buffer_dir()
-    vim.cmd('lcd %:p:h') -- to fix delta previewing
+    vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } }) -- to fix delta previewing
     builtin.git_bcommits({
         cwd = opts.cwd,
         results_title = vim.api.nvim_buf_get_name(0),
