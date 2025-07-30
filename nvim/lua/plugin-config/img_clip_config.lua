@@ -1,5 +1,5 @@
 -- Ensure image dir exists
-local img_dir = vim.fs.joinpath(vim.fn.expand('~'), 'Pictures', 'nvim-images')
+local img_dir = vim.fs.joinpath(vim.env.HOME, 'Pictures', 'nvim-images')
 if not vim.uv.fs_stat(img_dir) then
     vim.fn.mkdir(img_dir, 'p')
 end
