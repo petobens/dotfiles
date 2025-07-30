@@ -162,14 +162,14 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
 -- Mappings
 vim.keymap.set('n', '<Leader>fd', vim.diagnostic.open_float)
 vim.keymap.set('n', '<Leader>ld', function()
-    local win_id = vim.fn.win_getid()
+    local win_id = vim.api.nvim_get_current_win()
     vim.diagnostic.setloclist({
         title = string.format(
             'Diagnostics: %s',
             vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
         ),
     })
-    vim.fn.win_gotoid(win_id)
+    vim.api.nvim_set_current_win(win_id)
 end)
 vim.keymap.set('n', '<Leader>dt', toggle_buffer_diagnostics)
 vim.keymap.set('n', '[d', function()
