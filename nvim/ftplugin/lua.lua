@@ -45,7 +45,7 @@ local run_tmux_pane = function()
         return
     end
     local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-    local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
+    local fname = vim.fs.basename(vim.api.nvim_buf_get_name(0))
     local sh_cmd = '"nvim -l ' .. fname .. [[; read -p ''"]]
     vim.cmd({
         cmd = '!',
@@ -64,7 +64,9 @@ end, { range = true })
 vim.keymap.set({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
 vim.keymap.set({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
 vim.keymap.set('n', '<Leader>rf', run_toggleterm, { buffer = true })
-vim.keymap.set('n', '<Leader>rl', [[:execute "lua " getline('.')<CR>]], { buffer = true })
+vim.keymap.set('n', '<Leader>rl', function()
+    vim.cmd('lua ' .. vim.api.nvim_get_current_line())
+end, { buffer = true })
 vim.keymap.set(
     'n',
     '<Leader>ri',
