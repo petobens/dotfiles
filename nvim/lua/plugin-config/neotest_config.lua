@@ -142,7 +142,7 @@ local function _parse_neotest_output(task, last_winid)
         vim.keymap.set('n', 'q', function()
             local calling_winid = _G.LastWinId
             vim.cmd('close')
-            vim.fn.win_gotoid(calling_winid)
+            vim.api.nvim_set_current_win(calling_winid)
         end, { buffer = true })
     end
 
@@ -152,7 +152,7 @@ local function _parse_neotest_output(task, last_winid)
         vim.fn.setqflist({}, ' ', { title = task.name, items = qf })
         if not pdb then
             vim.cmd('copen')
-            vim.fn.win_gotoid(last_winid)
+            vim.api.nvim_set_current_win(last_winid)
 
             if has_stdout then
                 -- overseer run_action creates a new empty buffer so we delete it
@@ -187,7 +187,7 @@ local function _neotest_overseer_subscribe(ft, bufnr)
     neotest_task.bufnr = bufnr
 
     neotest_task:subscribe('on_complete', function()
-        _parse_neotest_output(neotest_task, vim.fn.win_getid())
+        _parse_neotest_output(neotest_task, vim.api.nvim_get_current_win())
     end)
 end
 
@@ -228,7 +228,7 @@ vim.keymap.set('n', '<Leader>nl', function()
     neotest_run(neotest.run.run_last)
 end)
 vim.keymap.set('n', '<Leader>nf', function()
-    neotest_run(neotest.run.run, { vim.fn.expand('%') })
+    neotest_run(neotest.run.run, { vim.api.nvim_buf_get_name(0) })
 end)
 vim.keymap.set('n', '<Leader>ns', function()
     local extra_args = {}
