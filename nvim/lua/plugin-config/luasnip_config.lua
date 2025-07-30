@@ -48,7 +48,7 @@ luasnip.setup({
     },
 })
 -- Note: we use load instead of lazy_load to allow loading of injected languages
-local snippets_dir = vim.fn.stdpath('config') .. '/snippets/'
+local snippets_dir = vim.fs.joinpath(vim.fn.stdpath('config'), 'snippets')
 require('luasnip.loaders.from_lua').load({
     paths = { snippets_dir },
 })
@@ -86,6 +86,6 @@ vim.keymap.set('n', '<Leader>es', function()
         return
     end
 
-    local snippet_file = snippets_dir .. ft .. '.lua'
+    local snippet_file = vim.fs.joinpath(snippets_dir, ft .. '.lua')
     u.split_open(snippet_file)
 end)
