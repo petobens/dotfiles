@@ -72,7 +72,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     callback = function()
         vim.cmd('15 wincmd _')
         vim.cmd('normal! gg0')
-        if vim.fn.getline('.') == '' then
+        if vim.api.nvim_get_current_line() == '' then
             vim.cmd('startinsert')
         end
         vim.cmd(
@@ -85,17 +85,17 @@ vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     group = vim.api.nvim_create_augroup('git_commit_leave', { clear = true }),
     pattern = { '*.git/COMMIT_EDITMSG' },
     callback = function()
-        vim.fn.win_gotoid(_G.fugitiveConfig.gstatus_winid)
+        vim.api.nvim_set_current_win(_G.fugitiveConfig.gstatus_winid)
     end,
 })
 
 -- Mappings
 vim.keymap.set('n', '<Leader>gs', function()
-    vim.cmd('lcd %:p:h')
+    vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
     vim.cmd('botright Git')
     vim.cmd('wincmd J | resize 15')
     vim.cmd('normal! 4j')
-    _G.fugitiveConfig.gstatus_winid = vim.fn.win_getid()
+    _G.fugitiveConfig.gstatus_winid = vim.api.nvim_get_current_win()
 end)
 vim.keymap.set('n', '<Leader>gd', '<Cmd>Gdiffsplit!<CR>')
 vim.keymap.set('n', '<Leader>gD', ':Git diff<space>', { silent = false })

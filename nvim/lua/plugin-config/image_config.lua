@@ -1,6 +1,5 @@
 --- Ensure magick luarock is loaded
-local luarocks =
-    vim.fs.joinpath(vim.fn.expand('$HOME'), '.luarocks', 'share', 'lua', '5.1')
+local luarocks = vim.fs.joinpath(vim.env.HOME, '.luarocks', 'share', 'lua', '5.1')
 package.path = package.path .. ';' .. vim.fs.joinpath(luarocks, '?', 'init.lua') .. ';'
 package.path = package.path .. ';' .. vim.fs.joinpath(luarocks, '?.lua') .. ';'
 
