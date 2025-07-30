@@ -82,7 +82,9 @@ local function compile_latex()
     overseer.run_template({ name = 'run_arara' }, function(task)
         vim.cmd('cclose')
         task:subscribe('on_complete', function()
-            local log_file = vim.fn.fnamemodify(task.metadata.filename, ':p:r') .. '.log'
+            local log_file = (vim.fs.normalize(task.metadata.filename)):match(
+                '(.+)%.[^/]+$'
+            ) .. '.log'
             _parse_logfile(log_file, cwd, current_win_id)
         end)
     end)
@@ -90,13 +92,13 @@ end
 
 -- Viewing
 local function view_pdf()
-    local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
+    local pdf_file = (vim.fs.normalize(vim.b.vimtex.text)):match('(.+)%.[^/]+$') .. '.pdf'
     vim.system({ 'zathura', '--fork', pdf_file })
 end
 
 local function forward_search()
     local tex_file = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
-    local pdf_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':p:r') .. '.pdf'
+    local pdf_file = (vim.fs.normalize(vim.b.vimtex.text)):match('(.+)%.[^/]+$') .. '.pdf'
     local synctex_cmd = {
         'zathura',
         '--synctex-forward',
@@ -109,15 +111,13 @@ end
 -- File Editing
 local function file_edit(search_file)
     local base_dir = vim.fs.dirname(vim.b.vimtex.tex)
-    local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':t:r')
+    local base_file = (vim.fs.basename(vim.b.vimtex.tex)):match('(.+)%.[^/]+$')
 
     if search_file == 'bib' or search_file == 'log' then
         search_file = string.format('%s.%s', base_file, search_file)
     elseif search_file == 'float' then
-        search_file = vim.fn.fnamemodify(
-            string.match(vim.fn.expand('<cWORD>'), '{(%S+)}'),
-            ':t:r'
-        ) .. '.tex'
+        local match = string.match(vim.fn.expand('<cWORD>'), '{(%S+)}')
+        search_file = vim.fs.basename(match or ''):gsub('%.%w+$', '') .. '.tex'
     end
     local edit_file = vim.fs.find({ search_file }, {
         type = 'file',
@@ -149,7 +149,7 @@ local function delete_aux_files()
     local files = scan.scan_dir(vim.fs.dirname(vim.b.vimtex.tex))
     local rm_files = {}
     for _, f in pairs(files) do
-        local ext = vim.fn.fnamemodify(f, ':e')
+        local ext = f:match('%.([^/%.]+)$')
         for _, aux_ext in pairs(aux_extensions) do
             if ext == aux_ext then
                 table.insert(rm_files, f)
@@ -169,7 +169,7 @@ local function delete_aux_files()
 end
 
 local function convert_pandoc(extension)
-    local base_file = vim.fn.fnamemodify(vim.b.vimtex.tex, ':t:r')
+    local base_file = vim.fs.basename(vim.b.vimtex.tex):match('(.+)%.[^/]+$')
     local output_file = string.format('%s.%s', base_file, extension)
     local bib_file = base_file .. '.bib'
 

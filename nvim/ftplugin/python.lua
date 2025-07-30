@@ -50,7 +50,7 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
     if task_metadata and task_metadata.name == 'run_precommit' then
         -- Fix file paths
         for _, v in pairs(new_qf) do
-            local fn = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(v.bufnr), ':p:.')
+            local fn = vim.fs.normalize(vim.api.nvim_buf_get_name(v.bufnr))
             for _, i in ipairs(task_metadata.project_files) do
                 if string.match(i, fn) then
                     vim.cmd('badd ' .. i)

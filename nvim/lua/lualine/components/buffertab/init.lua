@@ -45,8 +45,8 @@ local function unique_tail_format(buffers)
         if duplicated[buffer.bufnr] then
             local new_name = string.format(
                 '…/%s/%s',
-                vim.fn.fnamemodify(buffer.file, ':h:t'),
-                vim.fn.fnamemodify(buffer.file, ':t')
+                vim.fs.basename(vim.fs.dirname(buffer.file)),
+                vim.fs.basename(buffer.file)
             )
             buffer.name = new_name
         end

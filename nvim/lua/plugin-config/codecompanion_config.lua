@@ -294,7 +294,7 @@ local function get_loclists_or_qf_entries()
 
     local seen, entries, context = {}, {}, {}
     for _, item in ipairs(diagnostics) do
-        local filename = vim.fn.fnamemodify(vim.fn.bufname(item.bufnr), ':p')
+        local filename = vim.fs.normalize(vim.fn.bufname(item.bufnr))
         local lnum = item.lnum or 0
         local col = item.col or 0
         local text = item.text or ''
@@ -321,10 +321,7 @@ function _G.CodeCompanionConfig.add_context(files)
         chat:add_context({
             role = 'user',
             content = string.format('Here is the content of %s:%s', file, content),
-        }, 'file', string.format(
-            '<file>%s</file>',
-            vim.fn.fnamemodify(file, ':t')
-        ))
+        }, 'file', string.format('<file>%s</file>', vim.fs.basename(file)))
     end
     focus_or_toggle_chat()
 end
@@ -350,7 +347,7 @@ function _G.CodeCompanionConfig.add_watched_context(files)
                     ),
                 },
                 'buffer',
-                string.format('<buf>%s</buf>', vim.fn.fnamemodify(expanded, ':t')),
+                string.format('<buf>%s</buf>', vim.fs.basename(expanded)),
                 {},
                 { bufnr = bufnr, opts = { watched = true } }
             )
@@ -604,11 +601,10 @@ codecompanion.setup({
                         vim.ui.input(
                             { prompt = 'Context dir: ', completion = 'dir' },
                             function(dir)
-                                dir = vim.fn
-                                    .trim(vim.fn.fnamemodify(dir, ':ph'))
-                                    :gsub('/$', '')
+                                dir = vim.fs.normalize(vim.trim(dir)):gsub('/$', '')
                                 vim.cmd('redraw!')
-                                if vim.fn.isdirectory(dir) == 0 then
+                                local stat = vim.uv.fs_stat(dir)
+                                if not (stat and stat.type == 'directory') then
                                     vim.notify(
                                         'Directory not found: ' .. dir,
                                         vim.log.levels.ERROR

@@ -524,7 +524,7 @@ local custom_actions = transform_mod({
         local p = Path:new(from_entry.path(entry))
         if p:is_file() then
             is_dir = false
-            fname = vim.fn.fnamemodify(tostring(p), ':t')
+            fname = vim.fs.basename(tostring(p))
             p = p:parent()
         end
 
@@ -935,7 +935,7 @@ local function rgrep(extra_args)
         if not dir or dir == '' then
             return
         else
-            dir = vim.fn.trim(vim.fn.fnamemodify(dir, ':ph'))
+            dir = vim.fn.trim(vim.fs.normalize(dir))
         end
         local opts = {
             cwd = dir,
