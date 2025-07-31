@@ -2,7 +2,12 @@ local u = require('utils')
 
 -- Helpers
 function _G.my_custom_foldtext()
-    return vim.trim(tostring(vim.fn.getline(vim.v.foldstart)), vim.wo.foldmarker)
+    local bufnr = vim.api.nvim_get_current_buf()
+    local foldstart = vim.v.foldstart
+    local line = vim.api.nvim_buf_get_lines(bufnr, foldstart - 1, foldstart, false)[1]
+        or ''
+    local marker = vim.wo.foldmarker or ''
+    return vim.trim(line, marker)
 end
 
 -- Syntax
@@ -47,7 +52,9 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 ---- Save when losing focus
 vim.api.nvim_create_autocmd('FocusLost', {
     group = vim.api.nvim_create_augroup('focus_lost', { clear = true }),
-    command = 'silent! wall',
+    callback = function()
+        vim.cmd.wall({ mods = { silent = true } })
+    end,
 })
 ---- Disable readonly warning
 vim.api.nvim_create_autocmd('FileChangedRO', {
@@ -60,7 +67,13 @@ vim.api.nvim_create_autocmd('FileChangedRO', {
 -- Appearance
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 vim.opt.cursorline = true
-vim.opt.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+vim.opt.fillchars = {
+    eob = ' ',
+    fold = ' ',
+    foldopen = '',
+    foldsep = ' ',
+    foldclose = '',
+}
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.pumblend = 6
@@ -79,7 +92,9 @@ vim.opt.winborder = 'rounded'
 ---- Resize splits when the Vim window is resized
 vim.api.nvim_create_autocmd('VimResized', {
     group = vim.api.nvim_create_augroup('vim_resized', { clear = true }),
-    command = 'wincmd =',
+    callback = function()
+        vim.cmd.wincmd('=')
+    end,
 })
 ---- Only show cursorline in the current window and save last visited window id
 local cline_acg = vim.api.nvim_create_augroup('cline', { clear = true })
@@ -119,15 +134,29 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
         end
     end,
 })
+local session_patterns = { '*.*', 'bashrc', 'bash_profile', 'config' }
 vim.api.nvim_create_autocmd('BufWinLeave', {
     group = session_acg,
-    pattern = { '*.*', 'bashrc', 'bash_profile', 'config' },
-    command = 'if &previewwindow != 1 | mkview | endif',
+    pattern = session_patterns,
+    callback = function(args)
+        if not vim.wo.previewwindow then
+            vim.api.nvim_buf_call(args.buf, function()
+                vim.cmd.mkview()
+            end)
+        end
+    end,
 })
+
 vim.api.nvim_create_autocmd('BufWinEnter', {
     group = session_acg,
-    pattern = { '*.*', 'bashrc', 'bash_profile', 'config' },
-    command = 'if &previewwindow != 1 | silent! loadview | endif',
+    pattern = session_patterns,
+    callback = function(args)
+        if not vim.wo.previewwindow then
+            vim.api.nvim_buf_call(args.buf, function()
+                vim.cmd.loadview()
+            end)
+        end
+    end,
 })
 
 -- Search, matching, substitution and yanking
@@ -152,11 +181,18 @@ vim.api.nvim_create_autocmd({ 'TextYankPost' }, {
 -- Editing, tab and indent
 vim.opt.autoindent = true
 vim.opt.breakindent = true
-vim.opt.colorcolumn = '+1'
+vim.opt.colorcolumn = { '+1' }
 vim.opt.expandtab = true
 vim.opt.formatoptions = 'jcql'
 vim.opt.linebreak = true
-vim.opt.listchars = 'tab:▸\\ ,eol:¬,trail:•,extends:»,precedes:«,nbsp:␣'
+vim.opt.listchars = {
+    tab = '▸\\ ',
+    eol = '¬',
+    trail = '•',
+    extends = '»',
+    precedes = '«',
+    nbsp = '␣',
+}
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 4
 vim.opt.smartcase = true
