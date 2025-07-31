@@ -66,8 +66,11 @@ local function get_my_prompt_library()
     }
     local base_url =
         'https://raw.githubusercontent.com/petobens/llm-prompts/main/md-prompts/%s.md'
-    local prompt_dir = vim.fn.expand('~/git-repos/private/llm-prompts/md-prompts/')
-    local use_url = vim.fn.isdirectory(prompt_dir) ~= 1
+    local prompt_dir = vim.fs.normalize(
+        vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'llm-prompts', 'md-prompts')
+    )
+    local stat = vim.uv.fs_stat(prompt_dir)
+    local use_url = not (stat and stat.type == 'directory')
     local prompt_library = {}
 
     local function read_and_filter(fname)
@@ -79,7 +82,7 @@ local function get_my_prompt_library()
             ):wait()
             lines = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
         else
-            lines = vim.fn.readfile(prompt_dir .. fname .. '.md')
+            lines = vim.fn.readfile(vim.fs.joinpath(prompt_dir, fname .. '.md'))
         end
 
         local filtered = {}
@@ -206,7 +209,7 @@ local function focus_or_toggle_chat()
     end
     codecompanion.toggle()
     vim.defer_fn(function()
-        vim.cmd('startinsert')
+        vim.cmd.startinsert()
     end, 1)
 end
 
@@ -236,7 +239,8 @@ local function to_absolute_paths(files, root)
                 return nil
             end
             local abs_path = vim.fs.normalize(vim.fs.joinpath(root, f))
-            if vim.fn.filereadable(abs_path) == 1 then
+            local stat = vim.uv.fs_stat(abs_path)
+            if stat and stat.type == 'file' then
                 return abs_path
             end
             return nil
@@ -294,7 +298,7 @@ local function get_loclists_or_qf_entries()
 
     local seen, entries, context = {}, {}, {}
     for _, item in ipairs(diagnostics) do
-        local filename = vim.fs.normalize(vim.fn.bufname(item.bufnr))
+        local filename = vim.fs.basename(vim.api.nvim_buf_get_name(item.bufnr))
         local lnum = item.lnum or 0
         local col = item.col or 0
         local text = item.text or ''
@@ -329,7 +333,7 @@ end
 function _G.CodeCompanionConfig.add_watched_context(files)
     local chat = get_or_create_chat()
     for _, file in ipairs(files) do
-        local expanded = vim.fn.expand(file)
+        local expanded = vim.fs.normalize(file)
         local bufnr = vim.fn.bufnr(expanded, true)
         if not vim.api.nvim_buf_is_loaded(bufnr) then
             vim.fn.bufload(bufnr)
@@ -502,8 +506,8 @@ codecompanion.setup({
                     end
                 end,
                 goto_file_action = function(fname)
-                    vim.cmd('wincmd h')
-                    vim.cmd('e ' .. fname)
+                    vim.cmd.wincmd('h')
+                    vim.cmd.e(fname)
                 end,
             },
             keymaps = {
@@ -521,7 +525,7 @@ codecompanion.setup({
                     callback = function()
                         codecompanion.toggle()
                         vim.defer_fn(function()
-                            vim.cmd('stopinsert')
+                            vim.cmd.stopinsert()
                         end, 1)
                     end,
                 },
@@ -539,7 +543,7 @@ codecompanion.setup({
                     callback = function()
                         keymaps.options.callback()
                         vim.defer_fn(function()
-                            vim.cmd('stopinsert')
+                            vim.cmd.stopinsert()
                             -- Ensure options window is wide enough for content
                             vim.api.nvim_win_set_width(0, math.min(160, vim.o.columns))
                         end, 1)
@@ -551,7 +555,7 @@ codecompanion.setup({
                     callback = function(chat)
                         keymaps.debug.callback(chat)
                         vim.defer_fn(function()
-                            vim.cmd('stopinsert')
+                            vim.cmd.stopinsert()
                         end, 1)
                     end,
                 },
@@ -584,7 +588,7 @@ codecompanion.setup({
                             function(file)
                                 if not file or vim.fn.filereadable(file) == 0 then
                                     vim.notify(
-                                        'File not found: ' .. tostring(file),
+                                        string.format('File not found: %s', file),
                                         vim.log.levels.ERROR
                                     )
                                     return
@@ -602,7 +606,7 @@ codecompanion.setup({
                             { prompt = 'Context dir: ', completion = 'dir' },
                             function(dir)
                                 dir = vim.fs.normalize(vim.trim(dir)):gsub('/$', '')
-                                vim.cmd('redraw!')
+                                vim.cmd.redraw({ bang = true })
                                 local stat = vim.uv.fs_stat(dir)
                                 if not (stat and stat.type == 'directory') then
                                     vim.notify(
@@ -611,10 +615,12 @@ codecompanion.setup({
                                     )
                                     return
                                 end
-                                local glob_result = vim.fn.glob(dir .. '/*', false, true)
+                                local glob_result =
+                                    vim.fn.glob(vim.fs.joinpath(dir, '*'), false, true)
                                 local files = {}
                                 for _, file in ipairs(glob_result) do
-                                    if vim.fn.isdirectory(file) == 0 then
+                                    stat = vim.uv.fs_stat(file)
+                                    if stat and stat.type == 'file' then
                                         table.insert(files, file)
                                     end
                                 end
@@ -647,14 +653,14 @@ codecompanion.setup({
                             local ext = filename:match('(%.[^%.]+)$') or ''
                             return ignore_exts[ext] or false
                         end
-                        local files = vim.tbl_map(
-                            function(f)
-                                return git_root .. '/' .. f
-                            end,
-                            vim.tbl_filter(function(f)
+                        local files = vim.iter(git_files)
+                            :filter(function(f)
                                 return not has_ignored_ext(f)
-                            end, git_files)
-                        )
+                            end)
+                            :map(function(f)
+                                return vim.fs.joinpath(git_root, f)
+                            end)
+                            :totable()
 
                         send_project_tree(chat, git_root)
                         _G.CodeCompanionConfig.add_context(files)
@@ -1080,7 +1086,7 @@ vim.api.nvim_create_autocmd('User', {
     pattern = 'CodeCompanionRequestStarted',
     callback = function()
         if vim.bo.filetype == 'codecompanion' then
-            vim.cmd('stopinsert')
+            vim.cmd.stopinsert()
         end
         clear_spinner()
         spinner_bufnr = vim.api.nvim_get_current_buf()
@@ -1103,7 +1109,7 @@ vim.api.nvim_create_autocmd('User', {
         vim.defer_fn(function()
             clear_spinner()
             if vim.bo.filetype == 'codecompanion' then
-                vim.cmd('startinsert')
+                vim.cmd.startinsert()
             end
         end, 50)
     end,
@@ -1114,7 +1120,7 @@ vim.api.nvim_create_autocmd('User', {
     pattern = 'CodeCompanionDiffAttached',
     callback = function()
         vim.defer_fn(function()
-            vim.cmd('stopinsert')
+            vim.cmd.stopinsert()
             vim.cmd('wincmd x | wincmd p')
         end, 1)
     end,
@@ -1142,7 +1148,7 @@ vim.api.nvim_create_autocmd('FileType', {
             local last_prompt = vim.split(get_last_user_prompt(), '\n', { plain = true })
             vim.api.nvim_put(last_prompt, 'c', true, true)
             vim.defer_fn(function()
-                vim.cmd('startinsert!')
+                vim.cmd.startinsert()
             end, 1)
         end, { buffer = e.buf })
         vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = e.buf })
