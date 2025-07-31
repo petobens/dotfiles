@@ -21,7 +21,7 @@ vim.api.nvim_create_autocmd(
         callback = function()
             -- If a choice node is active then `zx` is inserted
             if not require('luasnip').choice_active() then
-                vim.cmd('normal! zx')
+                vim.cmd.normal({ args = { 'zx' }, bang = true })
             end
         end,
     }
@@ -39,7 +39,8 @@ local function continue_list()
         return '<C-U>'
     end
     if marker:match('%d+') then
-        marker = marker + 1 .. '. '
+        local num = tonumber(marker:match('%d+'))
+        marker = (num + 1) .. '. '
     end
     return '<CR>' .. marker
 end
@@ -107,7 +108,7 @@ local function convert_pandoc(extension)
         end
     end
 
-    local base_file = vim.fn.expand('%:p:r')
+    local base_file = vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$')
     local output_file = string.format('%s.%s', base_file, extension)
     vim.print(msg)
     vim.system({
@@ -125,7 +126,7 @@ end
 local function run_sphinx_build()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     overseer.run_template({ name = 'run_sphinx_build' }, function()
-        vim.cmd('cclose')
+        vim.cmd.cclose()
     end)
 end
 
@@ -166,7 +167,11 @@ vim.keymap.set('n', '<F9>', function()
     convert_pandoc('html')
 end, { buffer = true })
 vim.keymap.set('n', '<Leader>vp', function()
-    vim.system({ 'zathura', '--fork', vim.fn.expand('%:p:r') .. '.pdf' })
+    vim.system({
+        'zathura',
+        '--fork',
+        vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$') .. '.pdf',
+    })
 end, { buffer = true })
 ---- Lists
 vim.keymap.set('i', '<CR>', continue_list, { expr = true, buffer = true })

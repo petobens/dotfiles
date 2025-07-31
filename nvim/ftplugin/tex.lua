@@ -56,7 +56,7 @@ local function _parse_logfile(filename, cwd, active_window_id)
     }).items
 
     local new_qf = {}
-    for _, v in pairs(items) do
+    for _, v in ipairs(items) do
         -- TODO: Find a better way of ignoring warnings (i.e with efm)
         if not string.find(v.text, 'lipsum') then
             table.insert(new_qf, v)
@@ -67,7 +67,7 @@ local function _parse_logfile(filename, cwd, active_window_id)
         items = new_qf,
     })
     vim.cmd.lcd({ args = { cwd } })
-    if next(new_qf) ~= nil then
+    if #new_qf > 0 then
         vim.cmd.copen()
         vim.api.nvim_set_current_win(active_window_id)
     end
@@ -80,7 +80,7 @@ local function compile_latex()
     -- We seem to need the following for proper qf parsing
     vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
     overseer.run_template({ name = 'run_arara' }, function(task)
-        vim.cmd('cclose')
+        vim.cmd.cclose()
         task:subscribe('on_complete', function()
             local log_file = (vim.fs.normalize(task.metadata.filename)):match(
                 '(.+)%.[^/]+$'
@@ -148,9 +148,9 @@ local function delete_aux_files()
     }
     local files = scan.scan_dir(vim.fs.dirname(vim.b.vimtex.tex))
     local rm_files = {}
-    for _, f in pairs(files) do
+    for _, f in ipairs(files) do
         local ext = f:match('%.([^/%.]+)$')
-        for _, aux_ext in pairs(aux_extensions) do
+        for _, aux_ext in ipairs(aux_extensions) do
             if ext == aux_ext then
                 table.insert(rm_files, f)
             end
@@ -160,7 +160,7 @@ local function delete_aux_files()
         { prompt = string.format('Delete %s files? [y/n] ', #rm_files) },
         function(input)
             if input == 'y' then
-                for _, f in pairs(rm_files) do
+                for _, f in ipairs(rm_files) do
                     vim.system({ 'trash-put', f }):wait()
                 end
             end
@@ -185,7 +185,7 @@ local function convert_pandoc(extension)
     local args = vim.split(pandoc_cmd, ' ', { trimempty = true })
     local result = vim.system(args, { text = true }):wait()
     if result.code ~= 0 then
-        vim.cmd.echo(string.format('"Converted .tex file into .%s"', extension))
+        vim.notify(string.format('Converted .tex file into .%s', extension))
     end
 end
 

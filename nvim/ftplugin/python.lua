@@ -38,7 +38,7 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
 
     local current_qf = vim.fn.getqflist()
     local new_qf = {}
-    for _, v in pairs(current_qf) do
+    for _, v in ipairs(current_qf) do
         if v.valid > 0 or v.text ~= '' then
             table.insert(new_qf, v)
             if string.match(v.text, 'bdb.BdbQuit') then
@@ -49,11 +49,11 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
 
     if task_metadata and task_metadata.name == 'run_precommit' then
         -- Fix file paths
-        for _, v in pairs(new_qf) do
+        for _, v in ipairs(new_qf) do
             local fn = vim.fs.normalize(vim.api.nvim_buf_get_name(v.bufnr))
             for _, i in ipairs(task_metadata.project_files) do
                 if string.match(i, fn) then
-                    vim.cmd('badd ' .. i)
+                    vim.cmd.badd(i)
                     v.bufnr = vim.fn.bufnr(i)
                     break
                 end
@@ -81,7 +81,7 @@ local function run_overseer(task_name)
     end
 
     overseer.run_template({ name = string.format('%s', task_name) }, function(task)
-        vim.cmd('cclose')
+        vim.cmd.cclose()
         task:subscribe('on_complete', function()
             task.metadata.name = task_name
             _parse_qf(task.metadata, cwd, current_win_id)
@@ -128,8 +128,8 @@ local function run_ipython(mode)
             hidden = false,
         })
         ipython:toggle()
-        vim.cmd('wincmd p')
-        vim.cmd('stopinsert')
+        vim.cmd.wincmd({ args = { 'p' } })
+        vim.cmd.stopinsert()
     else
         if term_info ~= nil and term_info.cmd ~= 'ipython' then
             -- Switch to an ipython console if we are not already in one
@@ -143,10 +143,10 @@ local function run_ipython(mode)
     elseif mode == 'module' then
         vim.cmd(string.format('TermExec cmd="\\%%run %s"', fname))
     elseif mode == 'line' then
-        vim.cmd('ToggleTermSendCurrentLine')
+        vim.cmd.ToggleTermSendCurrentLine()
     elseif mode == 'selection' then
         vim.cmd('normal ') -- leave visual mode to set <,> marks
-        vim.cmd('ToggleTermSendVisualLines')
+        vim.cmd.ToggleTermSendVisualLines()
     elseif mode == 'reset' then
         vim.cmd('TermExec cmd="\\%reset -f"')
     elseif mode == 'carriage' then
@@ -160,7 +160,7 @@ local function run_ipython(mode)
 end
 
 local function run_tmux_pane(debug_mode)
-    if vim.env.TMUX == nil then
+    if not vim.env.TMUX then
         return
     end
 
@@ -172,7 +172,7 @@ local function run_tmux_pane(debug_mode)
 
     local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
     local fname = vim.fs.basename(vim.api.nvim_buf_get_name(0))
-    local sh_cmd = '"' .. python_cmd .. ' ' .. fname .. [[; read -p ''"]]
+    local sh_cmd = string.format('"%s %s; read -p \'\'"', python_cmd, fname)
     vim.cmd({
         cmd = '!',
         args = { 'tmux', 'new-window', '-c', cwd, '-n', fname, sh_cmd },
@@ -372,7 +372,7 @@ end
 local function run_sphinx_build()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     overseer.run_template({ name = 'run_sphinx_build' }, function()
-        vim.cmd('cclose')
+        vim.cmd.cclose()
     end)
 end
 
@@ -394,19 +394,28 @@ local function clean_sphinx_build()
 end
 
 local function view_sphinx_docs(opts)
-    local project_root = _project_root() .. '/'
+    local project_root = _project_root()
     local html_file
 
     opts = opts or {}
     if opts.index then
-        html_file = project_root .. 'docs/build/html/index.html'
+        html_file = vim.fs.joinpath(project_root, 'docs', 'build', 'html', 'index.html')
     else
-        local docs_dir = project_root .. 'docs/build/html/api-reference/_autosummary/'
+        local docs_dir = vim.fs.joinpath(
+            project_root,
+            'docs',
+            'build',
+            'html',
+            'api-reference',
+            '_autosummary'
+        )
         local root_escaped = string.gsub(project_root, '([^%w])', '%%%1')
-        local current_file = vim.fn.expand('%:p:r')
-        html_file = docs_dir
-            .. current_file:gsub(root_escaped, '', 1):gsub('/', '.')
-            .. '.html'
+        local current_file =
+            vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$')
+        html_file = vim.fs.joinpath(
+            docs_dir,
+            current_file:gsub(root_escaped, '', 1):gsub('/', '.') .. '.html'
+        )
     end
     vim.ui.open(html_file)
 end
@@ -515,7 +524,7 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
     callback = function(e)
         vim.keymap.set('n', '<Leader>rB', function()
             vim.cmd([[cdo g/breakpoint()/d|silent noautocmd update]])
-            vim.cmd('cclose')
+            vim.cmd.cclose()
         end, { buffer = e.buf })
     end,
 })
