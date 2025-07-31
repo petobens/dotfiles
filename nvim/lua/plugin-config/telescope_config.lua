@@ -95,7 +95,9 @@ local function clear_preview_image()
 end
 
 vim.api.nvim_create_autocmd('WinClosed', {
-    callback = clear_preview_image,
+    callback = function()
+        vim.schedule(clear_preview_image)
+    end,
 })
 
 local function show_preview_image(path)
