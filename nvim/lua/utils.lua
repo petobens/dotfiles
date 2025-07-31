@@ -14,7 +14,7 @@ function M.split_open(file)
     if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
         split = 'vsplit '
     end
-    vim.cmd(split .. file)
+    vim.cmd({ cmd = split, args = { file } })
 end
 
 function M.mk_non_dir(directory)
@@ -56,10 +56,10 @@ function M.get_selection()
 end
 
 function M.quit_return()
-    vim.cmd('wincmd p')
+    vim.cmd.wincmd({ args = { 'p' } })
     local win_id = vim.api.nvim_get_current_win()
-    vim.cmd('wincmd p')
-    vim.cmd('bdelete')
+    vim.cmd.wincmd({ args = { 'p' } })
+    vim.cmd.bdelete()
     if vim.api.nvim_win_is_valid(win_id) then
         vim.api.nvim_set_current_win(win_id)
     end
