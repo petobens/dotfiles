@@ -26,33 +26,44 @@ function M.mk_non_dir(directory)
 end
 
 function M.vim_session_file()
-    local session_dir = vim.env.CACHE .. '/tmp/session/'
+    local session_dir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'session')
     M.mk_non_dir(session_dir)
     local session_file = 'vim_session'
-    if vim.env.TMUX ~= nil then
+
+    if vim.env.TMUX and vim.env.TMUX ~= '' then
         local result = vim.system(
             { 'tmux', 'display-message', '-p', '#S' },
             { text = true }
         )
             :wait()
-        local tmux_session = vim.trim(result.stdout or '')
-        session_file = session_file .. '_' .. tmux_session
+        if result.code == 0 then
+            local tmux_session = vim.trim(result.stdout or '')
+            if tmux_session ~= '' then
+                session_file = session_file .. '_' .. tmux_session
+            end
+        end
     end
-    return session_dir .. session_file .. '.vim'
+    return vim.fs.joinpath(session_dir, session_file .. '.vim')
 end
 
 function M.get_selection()
-    local text
     local mode = vim.api.nvim_get_mode().mode
     if mode:match('^v') then
-        vim.cmd('noautocmd normal! "vy"')
-        text = vim.fn.getreg('v')
-        vim.fn.setreg('v', {})
-        text = string.gsub(text, '\n', '')
+        local bufnr = 0
+        local start_pos = vim.api.nvim_buf_get_mark(bufnr, '<')
+        local end_pos = vim.api.nvim_buf_get_mark(bufnr, '>')
+        local lines = vim.api.nvim_buf_get_text(
+            bufnr,
+            start_pos[1] - 1,
+            start_pos[2],
+            end_pos[1] - 1,
+            end_pos[2] + 1,
+            {}
+        )
+        return table.concat(lines, '\n')
     else
-        text = vim.fn.expand('<cWORD>')
+        return vim.fn.expand('<cWORD>')
     end
-    return text
 end
 
 function M.quit_return()
