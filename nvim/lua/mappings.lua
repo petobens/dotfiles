@@ -202,6 +202,8 @@ vim.keymap.set('v', '<Leader>cc', 'gc', { remap = true })
 vim.keymap.set('v', '<Leader>cu', 'gc', { remap = true })
 
 -- Bookmarks
+local git_repos = vim.fs.joinpath(vim.env.HOME, 'git-repos')
+local private_notes = vim.fs.joinpath(git_repos, 'private', 'notes')
 vim.keymap.set('n', '<Leader>ev', function()
     vim.cmd.edit(vim.env.MYVIMRC)
 end)
@@ -211,41 +213,19 @@ end)
 vim.keymap.set('n', '<Leader>ew', function()
     vim.cmd.edit(vim.fs.joinpath(vim.env.DOTVIM, 'spell', 'custom-dictionary.utf-8.add'))
 end)
-
 vim.keymap.set('n', '<Leader>etm', function()
-    vim.cmd.edit(
-        vim.fs.joinpath(
-            vim.env.HOME,
-            'git-repos',
-            'private',
-            'notes',
-            'mutt',
-            'todos_mutt.md'
-        )
-    )
+    vim.cmd.edit(vim.fs.joinpath(private_notes, 'mutt', 'todos_mutt.md'))
 end)
-
 vim.keymap.set('n', '<Leader>ets', function()
-    vim.cmd.edit(
-        vim.fs.joinpath(
-            vim.env.HOME,
-            'git-repos',
-            'private',
-            'notes',
-            'programming',
-            'todos_coding_setup.md'
-        )
-    )
+    vim.cmd.edit(vim.fs.joinpath(private_notes, 'programming', 'todos_coding_setup.md'))
 end)
 vim.keymap.set('n', '<Leader>eb', function()
     vim.cmd.edit(vim.fs.joinpath(vim.env.HOME, '.bashrc'))
 end)
-
 vim.keymap.set('n', '<Leader>eh', function()
     vim.cmd.edit(
         vim.fs.joinpath(
-            vim.env.HOME,
-            'git-repos',
+            git_repos,
             'private',
             'dotfiles',
             'arch',
@@ -255,6 +235,8 @@ vim.keymap.set('n', '<Leader>eh', function()
         )
     )
 end)
+
+-- Quick edit
 vim.keymap.set('n', '<Leader>dd', function()
     local dir = vim.fs.joinpath(vim.env.HOME, 'Desktop')
     vim.api.nvim_input((':e %s/'):format(dir))
@@ -287,12 +269,16 @@ vim.keymap.set('n', '<Leader>ll', '<Cmd>lopen<CR>')
 vim.keymap.set('n', '<Leader>qc', '<Cmd>cclose<CR>')
 vim.keymap.set('n', '<Leader>lc', '<Cmd>lclose<CR>')
 vim.keymap.set('n', '<Leader>lC', function()
-    local win_id = vim.api.nvim_get_current_win()
-    vim.cmd.windo({
-        args = { 'if &buftype == "quickfix" | lclose | endif' },
-        mods = { noautocmd = true },
-    })
-    vim.api.nvim_set_current_win(win_id)
+    local current_win = vim.api.nvim_get_current_win()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buftype = vim.api.nvim_get_option_value('buftype', { win = win })
+        if buftype == 'quickfix' then
+            vim.api.nvim_win_call(win, function()
+                vim.cmd.lclose({ mods = { noautocmd = true } })
+            end)
+        end
+    end
+    vim.api.nvim_set_current_win(current_win)
 end)
 vim.keymap.set('n', ']q', '<Cmd>execute v:count1 . "cnext"<CR>')
 vim.keymap.set('n', '[q', '<Cmd>execute v:count1 . "cprevious"<CR>')
