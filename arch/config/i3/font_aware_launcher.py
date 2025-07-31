@@ -231,7 +231,7 @@ APPS = {
             'shell': True,
             'cmd': (
                 "trash-empty -f && pkill -INT -f trash-list && "
-                "xdotool key Super_L+Control+b && "
+                "xdotool key Super_L+Alt+b && "
                 "dunstify -t 2500 -i trashindicator 'Trash Can emptied!'"
             ),
         },
