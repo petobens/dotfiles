@@ -34,16 +34,16 @@ overseer.setup({
 
 -- Helpers
 local function overseer_last_task(attach)
-    vim.cmd('OverseerQuickAction open hsplit')
+    vim.cmd.OverseerQuickAction({ args = { 'open', 'hsplit' } })
     vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight')
     vim.cmd([[nmap <silent> q :close<CR>]])
     if attach then
-        vim.cmd('startinsert')
+        vim.cmd.startinsert()
         return
     end
     vim.opt_local.winfixbuf = true
     vim.opt_local.modifiable = true
-    vim.cmd('silent normal! kdGggG')
+    vim.cmd.normal({ args = { 'kdGggG' }, bang = true, mods = { silent = true } })
     vim.opt_local.modifiable = false
 end
 
@@ -60,12 +60,12 @@ vim.api.nvim_create_autocmd('FileType', {
     callback = function(e)
         vim.opt_local.winfixbuf = true
         vim.defer_fn(function()
-            vim.cmd('stopinsert')
+            vim.cmd.stopinsert()
         end, 1)
 
         vim.keymap.set('n', 'q', function()
             pcall(vim.api.nvim_win_close, 0, true)
-            vim.cmd('wincmd p')
+            vim.cmd.wincmd({ args = { 'p' } })
         end, { buffer = e.buf })
     end,
 })

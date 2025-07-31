@@ -78,11 +78,19 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('NeotestConfig', {}),
     pattern = 'neotest-output-panel',
     callback = function()
-        vim.cmd('resize 15 | set winfixheight | normal! G')
+        vim.cmd.resize({ args = { '15' } })
+        vim.cmd.set({ args = { 'winfixheight' } })
+        vim.cmd.normal({ args = { 'G' }, bang = true })
     end,
 })
 
 -- Helpers
+local function neotest_set_output_window_layout(height)
+    vim.cmd.wincmd({ args = { 'J' } })
+    vim.cmd.resize({ args = { tostring(height or 15) } })
+    vim.cmd.set({ args = { 'winfixheight' } })
+end
+
 local function _parse_neotest_output(task, last_winid)
     -- Set the diagnostic qf
     local diagnostics = vim.diagnostic.get(task.bufnr)
@@ -132,16 +140,16 @@ local function _parse_neotest_output(task, last_winid)
     if has_stdout then
         require('overseer').run_action(task, 'open hsplit')
         vim.defer_fn(function()
-            vim.cmd('stopinsert')
+            vim.cmd.stopinsert()
         end, 5)
-        vim.cmd('wincmd J | resize 15 | set winfixheight')
+        neotest_set_output_window_layout()
         vim.opt_local.winfixbuf = true
         vim.opt_local.modifiable = true
-        vim.cmd('silent normal! kdGggG')
+        vim.cmd.normal({ args = { 'kdGggG' }, bang = true, mods = { silent = true } })
         vim.opt_local.modifiable = false
         vim.keymap.set('n', 'q', function()
             local calling_winid = _G.LastWinId
-            vim.cmd('close')
+            vim.cmd.cclose()
             vim.api.nvim_set_current_win(calling_winid)
         end, { buffer = true })
     end
@@ -162,7 +170,7 @@ local function _parse_neotest_output(task, last_winid)
         else
             -- Reset qf and diagnostics
             vim.fn.setqflist({})
-            vim.cmd('cclose')
+            vim.cmd.cclose()
             if diagnostics then
                 vim.defer_fn(function()
                     vim.diagnostic.reset(diagnostics[1].namespace, diagnostics[1].bufnr)
@@ -195,8 +203,8 @@ local function neotest_run(func, opts, subscribe)
     local ft = vim.bo.filetype
     local bufnr = vim.api.nvim_get_current_buf()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    vim.cmd('cclose')
-    vim.cmd('cd %:p:h')
+    vim.cmd.cclose()
+    vim.api.nvim_set_current_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
 
     -- Delete terminal (overseer output) buffers unless otherwise specified (i.e. when
     -- attaching)
@@ -248,7 +256,9 @@ end)
 vim.keymap.set('n', '<Leader>na', function()
     neotest_run(neotest.run.attach, { delete = false })
     vim.cmd([[nmap <silent> q :close<CR>]])
-    vim.cmd('stopinsert | wincmd J | resize 15 | set winfixheight | startinsert')
+    vim.cmd.stopinsert()
+    neotest_set_output_window_layout()
+    vim.cmd.startinsert()
 end)
 vim.keymap.set('n', '<Leader>nc', function()
     neotest.run.stop()
@@ -272,7 +282,7 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
         callback = function(e)
             vim.keymap.set('n', 'q', function()
                 pcall(vim.api.nvim_win_close, 0, true)
-                vim.cmd('wincmd p')
+                vim.cmd.wincmd({ args = { 'p' } })
             end, { buffer = e.buf })
             if ft == 'summary' then
                 vim.opt_local.number = true

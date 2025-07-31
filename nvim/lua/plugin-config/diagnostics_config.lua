@@ -109,7 +109,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
     callback = function()
         local diagnostics = vim.diagnostic.get(0)
         if #diagnostics <= 0 then
-            vim.cmd('lclose')
+            vim.cmd.lclose()
             vim.fn.setloclist(0, {})
             return
         end
@@ -154,7 +154,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
 
         if not neotest then
             -- We use the qf for neotest so only open if neotest is not the source
-            vim.cmd('lopen')
+            vim.cmd.lopen()
         end
     end,
 })

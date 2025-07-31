@@ -55,7 +55,7 @@ local function telescope_filter(opts)
         return true
     end
     -- Switch to previous buffer since aerial telescope acts upon current buffer
-    vim.cmd('wincmd p')
+    vim.cmd.wincmd({ args = { 'p' } })
     require('telescope').extensions.aerial.aerial(opts)
 end
 

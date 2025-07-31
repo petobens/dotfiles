@@ -24,7 +24,7 @@ vim.api.nvim_create_autocmd('FileType', {
         )
         vim.keymap.set('n', '<Leader>gP', '<Cmd>Git pull<CR>', { buffer = e.buf })
         vim.keymap.set('n', '<Leader>gl', function()
-            vim.cmd('Git log --oneline')
+            vim.cmd.Git({ args = { 'log', '--oneline' } })
         end, { buffer = e.buf })
         vim.keymap.set('n', '<Leader>nd', function()
             local file = vim.fn.FugitiveFind(vim.fn.expand('<cfile>'))
@@ -39,7 +39,7 @@ vim.api.nvim_create_autocmd('FileType', {
                 'Opening browser with nbdiff-web HEAD for: ' .. file,
                 vim.log.levels.INFO
             )
-            vim.fn.jobstart({ 'nbdiff-web', 'HEAD', file }, { detach = true })
+            vim.system({ 'nbdiff-web', 'HEAD', file }, { detach = true })
         end, { buffer = e.buf })
     end,
 })
@@ -59,10 +59,10 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.opt_local.spell = true
         -- Mappings
         vim.keymap.set('n', '<Leader>ac', function()
-            vim.cmd('normal! gg0')
-            vim.cmd('normal! dd')
+            vim.cmd.normal({ args = { 'gg0' }, bang = true })
+            vim.cmd.normal({ args = { 'dd' }, bang = true })
             vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-            vim.cmd('bd')
+            vim.cmd.bd()
         end, { buffer = e.buf })
     end,
 })
@@ -70,10 +70,10 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     group = vim.api.nvim_create_augroup('git_commit_insert', { clear = true }),
     pattern = { '*.git/COMMIT_EDITMSG' },
     callback = function()
-        vim.cmd('15 wincmd _')
-        vim.cmd('normal! gg0')
+        vim.cmd.wincmd({ args = { '15_' } })
+        vim.cmd.normal({ args = { 'gg0' }, bang = true })
         if vim.api.nvim_get_current_line() == '' then
-            vim.cmd('startinsert')
+            vim.cmd.startinsert()
         end
         vim.cmd(
             -- Extend gitcommitSummary highlight to 72 columns
@@ -93,8 +93,9 @@ vim.api.nvim_create_autocmd({ 'BufLeave' }, {
 vim.keymap.set('n', '<Leader>gs', function()
     vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
     vim.cmd('botright Git')
-    vim.cmd('wincmd J | resize 15')
-    vim.cmd('normal! 4j')
+    vim.cmd.wincmd({ args = { 'J' } })
+    vim.cmd.resize({ args = { '15' } })
+    vim.cmd.normal({ args = { '4j' }, bang = true })
     _G.fugitiveConfig.gstatus_winid = vim.api.nvim_get_current_win()
 end)
 vim.keymap.set('n', '<Leader>gd', '<Cmd>Gdiffsplit!<CR>')
@@ -111,8 +112,8 @@ vim.keymap.set('n', '<Leader>gP', '<Cmd>lcd %:p:h<CR><Cmd>Git pull<CR>')
 vim.keymap.set({ 'n', 'v' }, '<Leader>gb', ':GBrowse<CR>')
 vim.keymap.set({ 'n', 'v' }, '<Leader>gB', ':GBrowse!<CR>')
 vim.keymap.set('n', '<Leader>bl', function()
-    vim.cmd('0,3Git blame')
-    vim.cmd('wincmd j')
-    vim.cmd('normal! 5j')
-    vim.cmd('25 wincmd _')
+    vim.cmd.Git({ args = { 'blame' }, range = { 0, 3 } })
+    vim.cmd.wincmd({ args = { 'j' } })
+    vim.cmd.normal({ args = { '5j' }, bang = true })
+    vim.cmd.wincmd({ args = { '25_' } })
 end)

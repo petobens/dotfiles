@@ -260,13 +260,33 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
             prompt_title = 'Directory Bookmarks',
             finder = finders.new_table({
                 results = {
-                    vim.env.HOME .. '/git-repos/private/dotfiles/',
-                    vim.env.HOME .. '/git-repos/private/notes/mutt/ops/',
-                    vim.env.HOME .. '/git-repos/private/notes/mutt/people/',
-                    vim.env.HOME .. '/git-repos/private/notes/mutt/',
-                    vim.env.HOME .. '/git-repos/work/',
-                    vim.env.HOME .. '/Desktop/',
-                    vim.env.HOME .. '/.local/share/nvim/lazy/',
+                    vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'dotfiles'),
+                    vim.fs.joinpath(
+                        vim.env.HOME,
+                        'git-repos',
+                        'private',
+                        'notes',
+                        'mutt',
+                        'ops'
+                    ),
+                    vim.fs.joinpath(
+                        vim.env.HOME,
+                        'git-repos',
+                        'private',
+                        'notes',
+                        'mutt',
+                        'people'
+                    ),
+                    vim.fs.joinpath(
+                        vim.env.HOME,
+                        'git-repos',
+                        'private',
+                        'notes',
+                        'mutt'
+                    ),
+                    vim.fs.joinpath(vim.env.HOME, 'git-repos', 'work'),
+                    vim.fs.joinpath(vim.env.HOME, 'Desktop'),
+                    vim.fs.joinpath(vim.env.HOME, '.local', 'share', 'nvim', 'lazy'),
                 },
                 entry_maker = opts.entry_maker,
             }),

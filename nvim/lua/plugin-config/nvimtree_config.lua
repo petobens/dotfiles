@@ -14,7 +14,7 @@ local function cd_find_file()
         update_root = true, -- this ensures lcd changes
     }
     tree_api.find_file(find_file_opts)
-    vim.cmd('sleep 3m')
+    vim.cmd.sleep({ args = { '3m' } })
 
     local node = tree_api.get_node_under_cursor()
     if not node then
@@ -40,7 +40,7 @@ local function cd_or_open()
         if node.nodes then
             tree_api.change_root_to_node()
             node_api.navigate.sibling.first() -- to center
-            vim.cmd('normal! h') -- to avoid moving cursor
+            vim.cmd.normal({ args = { 'h' }, bang = true }) -- to avoid moving cursor
         else
             node_api.open.edit()
         end
@@ -54,13 +54,13 @@ local function up_dir()
 
     node_api.navigate.parent()
     tree_api.change_root_to_node()
-    vim.cmd('sleep 3m')
+    vim.cmd.sleep({ args = { '3m' } })
     tree_api.find_file({ buf = dir })
 end
 
 local function mark_down()
     marks_api.toggle()
-    vim.cmd('normal! j')
+    vim.cmd.normal({ args = { 'j' }, bang = true })
 end
 
 local function telescope(picker, opts)
@@ -108,7 +108,7 @@ local function trash()
     end
     vim.ui.input({ prompt = conf_msg }, function(input)
         if input == 'y' then
-            vim.cmd('redraw!')
+            vim.cmd.redraw()
             for _, node in ipairs(nodes) do
                 fs_api.trash(node)
             end
@@ -149,7 +149,7 @@ local function add_codecompanion_references()
         end
     end
     _G.CodeCompanionConfig.add_context(files)
-    vim.cmd('NvimTreeClose')
+    vim.cmd.NvimTreeClose()
 end
 
 -- Cycle sorting

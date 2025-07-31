@@ -24,7 +24,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     callback = function()
         if vim.startswith(vim.api.nvim_buf_get_name(0), 'term://') then
             vim.defer_fn(function()
-                vim.cmd('startinsert')
+                vim.cmd.startinsert()
             end, 1)
         end
     end,
