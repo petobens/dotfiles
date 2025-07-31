@@ -6,7 +6,7 @@ vim.keymap.set('n', '<Leader>kv', '<Cmd>qall<CR>')
 vim.keymap.set('n', '<Leader>rv', '<Cmd>restart<CR>')
 vim.keymap.set('n', '<Leader>nw', '<Cmd>noautocmd w!<CR>')
 vim.keymap.set('n', '<Leader>ps', function()
-    vim.cmd('silent! source ' .. u.vim_session_file())
+    vim.cmd.source({ args = { u.vim_session_file() }, mods = { silent = true } })
     -- Remove any buffer that exists and is listed but doesn't have a valid filename
     -- See https://github.com/neovim/neovim/pull/17112#issuecomment-1024923302
     for _, b in ipairs(vim.api.nvim_list_bufs()) do
@@ -15,7 +15,7 @@ vim.keymap.set('n', '<Leader>ps', function()
             and vim.bo[b].buftype ~= 'quickfix'
         then
             if vim.uv.fs_stat(vim.api.nvim_buf_get_name(b)) == nil then
-                vim.cmd('bwipeout ' .. b)
+                vim.cmd.bwipeout({ args = { tostring(b) } })
             end
         end
     end
@@ -175,7 +175,7 @@ vim.keymap.set('n', '<Leader>ds', function()
                 vim.cmd(diff_cmd .. other_file)
             end
             vim.api.nvim_set_current_win(win_id)
-            vim.cmd('normal gg]h') -- move to first hunk
+            vim.cmd.normal({ args = { 'gg]h' } }) -- move to first hunk
         end
     )
     vim.api.nvim_set_current_dir(save_pwd)
@@ -191,11 +191,9 @@ vim.keymap.set('n', '<Leader>sc', '<Cmd>set spell!<CR>')
 vim.keymap.set('n', '<Leader>lp', ':lua vim.print(', { silent = false })
 vim.keymap.set('n', '<Leader>lr', ':=', { silent = false })
 vim.keymap.set('n', '<Leader>ci', '<Cmd>Inspect<CR>')
-vim.keymap.set(
-    'n',
-    '<Leader>cw',
-    ':lua vim.print("Words: " .. vim.fn.wordcount().words)<CR>'
-)
+vim.keymap.set('n', '<Leader>cw', function()
+    vim.print(('Words: %d'):format(vim.fn.wordcount().words))
+end)
 
 -- Commenting
 vim.keymap.set('n', '<Leader>cc', 'gcc', { remap = true })
@@ -254,13 +252,13 @@ vim.keymap.set('n', '<Leader>fm', function()
 end)
 for i = 1, 6 do
     vim.keymap.set('n', '<Leader>h' .. i, function()
-        vim.cmd('normal! mz')
-        vim.cmd('normal! "zyiw')
+        vim.cmd.normal({ args = { 'mz' }, bang = true })
+        vim.cmd.normal({ args = { '"zyiw' }, bang = true })
         local mid = 86750 + i -- arbitrary match id
-        vim.cmd('silent! call matchdelete(' .. mid .. ')')
+        vim.cmd.matchdelete({ args = { tostring(mid) }, mods = { silent = true } })
         local pat = '\\V\\<' .. vim.fn.escape(vim.fn.getreg('z'), '\\') .. '\\>'
         vim.fn.matchadd('HlWord' .. i, pat, 1, mid)
-        vim.cmd('normal! `z')
+        vim.cmd.normal({ args = { '`z' }, bang = true })
     end)
 end
 
@@ -271,7 +269,10 @@ vim.keymap.set('n', '<Leader>qc', '<Cmd>cclose<CR>')
 vim.keymap.set('n', '<Leader>lc', '<Cmd>lclose<CR>')
 vim.keymap.set('n', '<Leader>lC', function()
     local win_id = vim.api.nvim_get_current_win()
-    vim.cmd('noautocmd windo if &buftype == "quickfix" | lclose | endif')
+    vim.cmd.windo({
+        args = { 'if &buftype == "quickfix" | lclose | endif' },
+        mods = { noautocmd = true },
+    })
     vim.api.nvim_set_current_win(win_id)
 end)
 vim.keymap.set('n', ']q', '<Cmd>execute v:count1 . "cnext"<CR>')
@@ -321,12 +322,13 @@ vim.keymap.set('c', '<C-e>', '<end>', { silent = false })
 vim.keymap.set('c', '<C-h>', '<left>', { silent = false })
 vim.keymap.set('c', '<C-l>', '<right>', { silent = false })
 vim.keymap.set('c', '<C-x>', '<C-U>', { silent = false })
-vim.keymap.set(
-    'c',
-    '%%',
-    "getcmdtype() == ':' ? expand('%:p:h') . '/' : '%%'",
-    { silent = false, expr = true }
-)
+vim.keymap.set('c', '%%', function()
+    if vim.fn.getcmdtype() == ':' then
+        return vim.fs.dirname(vim.api.nvim_buf_get_name(0)) .. '/'
+    else
+        return '%%'
+    end
+end, { expr = true, silent = false })
 
 -- Terminal mode specific
 vim.keymap.set('t', '<C-A-n>', '<C-\\><C-n>:bn<CR>')
@@ -335,7 +337,10 @@ vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-W>h')
 vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-W>j')
 vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-W>k')
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-W>l')
-vim.keymap.set('t', '<C-[>', '<C-\\><C-n>:normal! 0<CR>:call search(" ", "b")<CR>')
+vim.keymap.set('t', '<C-[>', function()
+    vim.cmd.normal({ args = { '0' }, bang = true })
+    vim.fn.search(' ', 'b')
+end)
 vim.keymap.set('t', 'kj', '<C-\\><C-n>')
 
 -- Select mode (mostly for snippets)
