@@ -452,7 +452,7 @@ codecompanion.setup({
                 relative = 'editor',
                 col = vim.o.columns, -- right position
                 row = 1,
-                opts = {},
+                opts = { winfixbuf = true },
             },
             debug_window = {
                 width = math.floor(vim.o.columns * 0.535),
