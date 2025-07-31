@@ -1,3 +1,4 @@
+-- luacheck:ignore 631
 local ls = require('luasnip')
 local c = ls.choice_node
 local f = ls.function_node
@@ -25,11 +26,11 @@ return {
         fmta(
             [[
 
-            local root = '/tmp/nvim-minimal'
+            local root = vim.fs.joinpath(vim.env.TMPDIR or '/tmp', 'nvim-minimal')
 
             -- Set stdpaths to use root dir
             for _, name in ipairs({ 'config', 'data', 'state', 'cache' }) do
-                vim.env[('XDG_%s_HOME'):format(name:upper())] = root .. '/' .. name
+                vim.env[('XDG_%s_HOME'):format(name:upper())] = vim.fs.joinpath(root, name)
             end
 
             -- Bootstrap lazy
@@ -61,7 +62,6 @@ return {
                 root = vim.fs.joinpath(root, 'plugins'),
             })
             vim.cmd.colorscheme('tokyonight')
-
 
         ]],
             {
