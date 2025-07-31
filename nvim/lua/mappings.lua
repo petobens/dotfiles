@@ -146,11 +146,11 @@ vim.keymap.set('n', 'l', function()
     -- Open fold from start
     local foldstart_linenr = vim.fn.foldclosed('.')
     if foldstart_linenr == -1 then
-        vim.cmd('normal! l')
+        vim.cmd.normal({ args = { 'l' }, bang = true })
         return
     end
-    vim.cmd('normal! zo')
-    vim.cmd('normal! ' .. foldstart_linenr .. 'G^')
+    vim.cmd.normal({ args = { 'zo' }, bang = true })
+    vim.api.nvim_win_set_cursor(0, { foldstart_linenr, 0 })
 end)
 vim.keymap.set('n', 'zm', 'zM')
 vim.keymap.set('n', 'zr', 'zR')
@@ -202,48 +202,67 @@ vim.keymap.set('v', '<Leader>cc', 'gc', { remap = true })
 vim.keymap.set('v', '<Leader>cu', 'gc', { remap = true })
 
 -- Bookmarks
-vim.keymap.set('n', '<Leader>ev', '<Cmd>e $MYVIMRC<CR>')
-vim.keymap.set(
-    'n',
-    '<Leader>em',
-    ('<Cmd>e %s<CR>'):format(vim.fs.joinpath(vim.env.DOTVIM, 'minimal.lua'))
-)
-vim.keymap.set(
-    'n',
-    '<Leader>ew',
-    ('<Cmd>e %s/spell/custom-dictionary.utf-8.add<CR>'):format(vim.env.DOTVIM)
-)
-vim.keymap.set(
-    'n',
-    '<Leader>etm',
-    ('<Cmd>e %s/git-repos/private/notes/mutt/todos_mutt.md<CR>'):format(vim.env.HOME)
-)
-vim.keymap.set(
-    'n',
-    '<Leader>ets',
-    ('<Cmd>e %s/git-repos/private/notes/programming/todos_coding_setup.md<CR>'):format(
-        vim.env.HOME
+vim.keymap.set('n', '<Leader>ev', function()
+    vim.cmd.edit(vim.env.MYVIMRC)
+end)
+vim.keymap.set('n', '<Leader>em', function()
+    vim.cmd.edit(vim.fs.joinpath(vim.env.DOTVIM, 'minimal.lua'))
+end)
+vim.keymap.set('n', '<Leader>ew', function()
+    vim.cmd.edit(vim.fs.joinpath(vim.env.DOTVIM, 'spell', 'custom-dictionary.utf-8.add'))
+end)
+
+vim.keymap.set('n', '<Leader>etm', function()
+    vim.cmd.edit(
+        vim.fs.joinpath(
+            vim.env.HOME,
+            'git-repos',
+            'private',
+            'notes',
+            'mutt',
+            'todos_mutt.md'
+        )
     )
-)
-vim.keymap.set(
-    'n',
-    '<Leader>dd',
-    (':e %s'):format(vim.fs.joinpath(vim.env.HOME, 'Desktop/')),
-    { silent = false }
-)
+end)
+
+vim.keymap.set('n', '<Leader>ets', function()
+    vim.cmd.edit(
+        vim.fs.joinpath(
+            vim.env.HOME,
+            'git-repos',
+            'private',
+            'notes',
+            'programming',
+            'todos_coding_setup.md'
+        )
+    )
+end)
+vim.keymap.set('n', '<Leader>eb', function()
+    vim.cmd.edit(vim.fs.joinpath(vim.env.HOME, '.bashrc'))
+end)
+
+vim.keymap.set('n', '<Leader>eh', function()
+    vim.cmd.edit(
+        vim.fs.joinpath(
+            vim.env.HOME,
+            'git-repos',
+            'private',
+            'dotfiles',
+            'arch',
+            'config',
+            'i3',
+            'config'
+        )
+    )
+end)
+vim.keymap.set('n', '<Leader>dd', function()
+    local dir = vim.fs.joinpath(vim.env.HOME, 'Desktop')
+    vim.api.nvim_input((':e %s/'):format(dir))
+end, { silent = false })
 vim.keymap.set('n', '<Leader>sb', function()
     local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
     vim.api.nvim_input((':e %s/scratch/'):format(dir))
 end, { silent = false })
-vim.keymap.set('n', '<Leader>eb', ('<Cmd>e %s/.bashrc<CR>'):format(vim.env.HOME))
-vim.keymap.set(
-    'n',
-    '<Leader>eh',
-    -- Note: using a symlink here doesn't preserve make/load view
-    ('<Cmd>e %s/git-repos/private/dotfiles/arch/config/i3/config<CR>'):format(
-        vim.env.HOME
-    )
-)
 
 -- Links & Filemanager
 vim.keymap.set({ 'n', 'v' }, '<Leader>ol', 'gx', { remap = true })
