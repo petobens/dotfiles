@@ -4,6 +4,27 @@ local M = require('lualine.component'):extend()
 
 _G.LualineBuffertab = {}
 
+local default_options = {
+    filetype_names = {
+        lazy = 'Lazy',
+    },
+    filetype_ignore = {
+        aerial = true,
+        codecompanion = true,
+        dbui = true,
+        help = true,
+        lazy = true,
+        neotest = true,
+        NvimTree = true,
+        OverseerList = true,
+        pager = true,
+        qf = true,
+        query = true,
+        TelescopePrompt = true,
+    },
+}
+
+-- Helpers
 local superscript_nrs = {
     [1] = '¹',
     [2] = '²',
@@ -20,14 +41,6 @@ local superscript_nrs = {
     [13] = '¹³',
     [14] = '¹⁴',
     [15] = '¹⁵',
-}
-
-local default_options = {
-    filetype_names = {
-        lazy = 'Lazy',
-    },
-    filetype_ignore = '\\c\\vtelescope|nvimtree|aerial|help|lazy|neotest|'
-        .. 'overseerlist|qf|dbui|codecompanion|pager',
 }
 
 local function unique_tail_format(buffers)
@@ -62,14 +75,14 @@ end
 function M:update_status()
     local data = {}
     local buffers = {}
-    for b = 1, vim.fn.bufnr('$') do
+    for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
         if
-            vim.fn.buflisted(b) ~= 0
-            and vim.bo[b].buftype ~= 'quickfix'
-            and vim.bo[b].filetype ~= 'fugitive'
+            vim.api.nvim_buf_get_option(bufnr, 'buflisted')
+            and vim.bo[bufnr].buftype ~= 'quickfix'
+            and vim.bo[bufnr].filetype ~= 'fugitive'
         then
             buffers[#buffers + 1] = Buffer({
-                bufnr = b,
+                bufnr = bufnr,
                 options = self.options,
             })
         end
@@ -133,8 +146,7 @@ function M:update_status()
         if
             -- If current buffer was not listed and it's not blacklisted then
             -- add it to the the list
-            vim.fn.match(b.filetype, self.options.filetype_ignore) < 0
-            and b.name ~= 'InspectTree'
+            not self.options.filetype_ignore[b.filetype]
             and (b.name and not vim.startswith(b.name, 'TelescopePreview'))
         then
             b.current = true

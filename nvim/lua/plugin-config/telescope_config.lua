@@ -604,7 +604,12 @@ local custom_actions = transform_mod({
         vim.keymap.set('n', '<C-h>', function()
             vim.api.nvim_set_current_win(picker.prompt_win)
         end, { buffer = bufnr })
-        vim.api.nvim_set_current_win(picker.previewer.state.winid)
+        vim.cmd(
+            string.format(
+                'noautocmd lua vim.api.nvim_set_current_win(%s)',
+                picker.previewer.state.winid
+            )
+        )
     end,
     -- Add files as a reference/context to codecompanion
     add_codecompanion_references = function(prompt_bufnr)
