@@ -125,6 +125,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(e)
         -- Enable completion triggered by <c-x><c-o>
         vim.bo[e.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        -- Disable lsp based color highlighting since we use colorizer plugin
+        vim.lsp.document_color.enable(false, e.buf)
 
         -- Map only after language server attaches to the current buffer
         local opts = { buffer = e.buf }
@@ -145,5 +147,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
         end, opts)
         vim.keymap.set('n', '<Leader>cA', vim.lsp.buf.code_action, opts)
+        vim.keymap.set('n', '<Leader>dc', function()
+            vim.lsp.document_color.enable(not vim.lsp.document_color.is_enabled())
+        end, opts)
     end,
 })
