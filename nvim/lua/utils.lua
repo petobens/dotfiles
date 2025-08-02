@@ -1,13 +1,16 @@
 local M = {}
 
-local ftoptions_group = vim.api.nvim_create_augroup('FtOptions', {})
-function M.set_ft_option(ft, vim_cmd)
-    vim.api.nvim_create_autocmd('FileType', {
-        pattern = ft,
-        group = ftoptions_group,
-        command = vim_cmd,
-    })
-end
+M.icons = {
+    -- Running
+    error = '',
+    warning = '',
+    info = '',
+    hint = '',
+    running = '󰜎',
+    -- Folding
+    fold_open = '',
+    fold_close = '',
+}
 
 function M.split_open(file)
     local split = 'split '
@@ -75,18 +78,6 @@ function M.quit_return()
         vim.api.nvim_set_current_win(win_id)
     end
 end
-
-M.icons = {
-    -- Running
-    error = '',
-    warning = '',
-    info = '',
-    hint = '',
-    running = '󰜎',
-    -- Folding
-    fold_open = '',
-    fold_close = '',
-}
 
 local last_online_check, online_status
 local online_cache_timeout = 30

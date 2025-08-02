@@ -127,7 +127,7 @@ local session_acg = vim.api.nvim_create_augroup('session', { clear = true })
 vim.api.nvim_create_autocmd('VimLeavePre', {
     group = session_acg,
     callback = function()
-        -- Only save session if there is an attached UI (i.e., not in headless mode such
+        -- Only save session if there is an attached UI (i.e. not in headless mode such
         -- as a neotest worker)
         if #vim.api.nvim_list_uis() > 0 then
             vim.cmd.mksession({ args = { u.vim_session_file() }, bang = true })
@@ -146,7 +146,6 @@ vim.api.nvim_create_autocmd('BufWinLeave', {
         end
     end,
 })
-
 vim.api.nvim_create_autocmd('BufWinEnter', {
     group = session_acg,
     pattern = session_patterns,
@@ -224,7 +223,7 @@ vim.opt.spellfile =
     vim.fs.joinpath(vim.env.DOTVIM, 'spell', 'custom-dictionary.utf-8.add')
 vim.opt.spelllang = { 'en', 'es' }
 
--- Filetype detection and autocmd settings
+-- Filetype detection
 vim.filetype.add({
     filename = {
         ['bash_profile'] = 'sh',
@@ -249,12 +248,21 @@ vim.filetype.add({
         ['.*ssh/config'] = 'sshconfig',
     },
 })
-u.set_ft_option({ 'crontab' }, 'setlocal nobackup nowritebackup')
-u.set_ft_option({ 'html' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2')
-u.set_ft_option({ 'i3config', 'sh' }, 'setlocal foldmethod=marker')
-u.set_ft_option({ 'text' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell')
-u.set_ft_option({ 'vim' }, 'setlocal foldmethod=marker formatoptions-=ro')
 
+-- Filetype options
+local ftoptions_group = vim.api.nvim_create_augroup('FtOptions', {})
+local function set_ft_option(ft, vim_cmd)
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = ft,
+        group = ftoptions_group,
+        command = vim_cmd,
+    })
+end
+set_ft_option({ 'crontab' }, 'setlocal nobackup nowritebackup')
+set_ft_option({ 'html' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2')
+set_ft_option({ 'i3config', 'sh' }, 'setlocal foldmethod=marker')
+set_ft_option({ 'text' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell')
+set_ft_option({ 'vim' }, 'setlocal foldmethod=marker formatoptions-=ro')
 ---- Python
 _G.PyVenv = { active_venv = {} } -- if set inside ftplugin file it will be reset
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
