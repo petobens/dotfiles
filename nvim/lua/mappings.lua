@@ -1,9 +1,7 @@
 -- luacheck:ignore 631
 local u = require('utils')
 
--- Save
-vim.keymap.set('n', '<Leader>kv', vim.cmd.qall)
-vim.keymap.set('n', '<Leader>rv', vim.cmd.restart)
+-- Save and quit
 vim.keymap.set('n', '<Leader>w', function()
     vim.cmd.write({ bang = true })
 end)
@@ -20,10 +18,11 @@ vim.keymap.set('n', '<Leader>wq', function()
 end)
 vim.keymap.set('n', '<Leader>ws', vim.cmd.SudaWrite)
 vim.keymap.set('n', '<Leader>rs', ':SudaRead ', { silent = false })
-vim.keymap.set('n', '<Leader>ps', function()
+vim.keymap.set('n', '<Leader>kv', vim.cmd.qall)
+
+-- Sessions
+vim.api.nvim_create_user_command('RestoreSession', function()
     vim.cmd.source({ args = { u.vim_session_file() }, mods = { silent = true } })
-    -- Remove any buffer that exists and is listed but doesn't have a valid filename
-    -- See https://github.com/neovim/neovim/pull/17112#issuecomment-1024923302
     for _, b in ipairs(vim.api.nvim_list_bufs()) do
         if
             vim.api.nvim_buf_get_option(b, 'buflisted')
@@ -34,6 +33,10 @@ vim.keymap.set('n', '<Leader>ps', function()
             end
         end
     end
+end, {})
+vim.keymap.set('n', '<Leader>ps', vim.cmd.RestoreSession)
+vim.keymap.set('n', '<Leader>rv', function()
+    vim.cmd.restart({ args = { '+qall!', 'RestoreSession' } })
 end)
 
 -- Buffer manipulation
@@ -432,6 +435,7 @@ vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-W>j')
 vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-W>k')
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-W>l')
 vim.keymap.set('t', '<C-[>', function()
+    -- FIXME: Not working
     vim.cmd.normal({ args = { '0' }, bang = true })
     vim.fn.search(' ', 'b')
 end)
