@@ -330,41 +330,6 @@ function _G.CodeCompanionConfig.add_context(files)
     focus_or_toggle_chat()
 end
 
-function _G.CodeCompanionConfig.add_watched_context(files)
-    local chat = get_or_create_chat()
-    for _, file in ipairs(files) do
-        local expanded = vim.fs.normalize(file)
-        local bufnr = vim.fn.bufnr(expanded, true)
-        if not vim.api.nvim_buf_is_loaded(bufnr) then
-            vim.fn.bufload(bufnr)
-        end
-        if vim.api.nvim_buf_is_loaded(bufnr) then
-            local content =
-                table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), '\n')
-            chat:add_context(
-                {
-                    role = 'user',
-                    content = string.format(
-                        'Here is the content of %s:%s',
-                        expanded,
-                        content
-                    ),
-                },
-                'buffer',
-                string.format('<buf>%s</buf>', vim.fs.basename(expanded)),
-                {},
-                { bufnr = bufnr, opts = { watched = true } }
-            )
-        else
-            vim.notify(
-                'Could not load buffer for file: ' .. expanded,
-                vim.log.levels.WARN
-            )
-        end
-    end
-    focus_or_toggle_chat()
-end
-
 function _G.CodeCompanionConfig.run_slash_command(name, opts)
     opts = opts or {}
     local chat = get_or_create_chat()
@@ -788,13 +753,7 @@ codecompanion.setup({
                         -- and ignore the one passed as argument
                         local chat = get_or_create_chat()
 
-                        -- Use watched context for staged/commit reviews and plain context
-                        -- for branch diffs
-                        if opts and opts.base_branch then
-                            _G.CodeCompanionConfig.add_context(abs_files)
-                        else
-                            _G.CodeCompanionConfig.add_watched_context(abs_files)
-                        end
+                        _G.CodeCompanionConfig.add_context(abs_files)
 
                         local diff_args = vim.split(diff_cmd, ' ', { trimempty = true })
                         local diff_result = vim.system(diff_args, { text = true }):wait()
