@@ -819,7 +819,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['helpful_assistant'] },
-                { role = 'user', content = '' },
             },
         },
         [' Bash Developer'] = {
@@ -832,7 +831,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['bash_developer'] },
-                { role = 'user', content = '' },
             },
         },
         [' LaTeX Developer'] = {
@@ -845,7 +843,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['latex_developer'] },
-                { role = 'user', content = '' },
             },
         },
         [' Lua Developer'] = {
@@ -867,7 +864,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['lua_developer'] },
-                { role = 'user', content = '' },
             },
         },
         [' Python Developer'] = {
@@ -880,7 +876,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['python_developer'] },
-                { role = 'user', content = '' },
             },
         },
         [' PyDocs'] = {
@@ -892,7 +887,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['pydocs'] },
-                { role = 'user', content = '' },
             },
         },
         [' SQL Developer'] = {
@@ -905,7 +899,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['sql_developer'] },
-                { role = 'user', content = '' },
             },
         },
         [' Writer at Work'] = {
@@ -927,7 +920,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['writer_at_work'] },
-                { role = 'user', content = '' },
             },
         },
         ['󰗊 Translator'] = {
@@ -940,7 +932,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['translator_spa_eng'] },
-                { role = 'user', content = '' },
             },
         },
         ['󰧷 GSheets Expert'] = {
@@ -953,7 +944,6 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['gsheets_expert'] },
-                { role = 'user', content = '' },
             },
         },
     },
