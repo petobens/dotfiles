@@ -16,11 +16,16 @@ vim.keymap.set('n', '<Leader>wq', function()
     vim.cmd.write({ bang = true })
     vim.cmd.quit({ bang = true })
 end)
+vim.keymap.set('n', '<Leader>rr', vim.cmd.checktime)
+vim.keymap.set('n', '<Leader>so', function()
+    vim.cmd.update()
+    vim.cmd.luafile('%')
+end, { silent = false })
 vim.keymap.set('n', '<Leader>ws', vim.cmd.SudaWrite)
 vim.keymap.set('n', '<Leader>rs', ':SudaRead ', { silent = false })
-vim.keymap.set('n', '<Leader>kv', vim.cmd.qall)
 
 -- Sessions
+vim.keymap.set('n', '<Leader>kv', vim.cmd.qall)
 vim.api.nvim_create_user_command('RestoreSession', function()
     vim.cmd.source({ args = { u.vim_session_file() }, mods = { silent = true } })
     for _, b in ipairs(vim.api.nvim_list_bufs()) do
@@ -50,11 +55,6 @@ vim.keymap.set('n', '<Leader>wd', vim.cmd.bdelete)
 vim.keymap.set('n', '<Leader>cd', function()
     vim.api.nvim_set_current_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
 end)
-vim.keymap.set('n', '<Leader>rr', vim.cmd.checktime)
-vim.keymap.set('n', '<Leader>so', function()
-    vim.cmd.update()
-    vim.cmd.luafile('%')
-end, { silent = false })
 vim.keymap.set('n', 'gf', function()
     local mods
     if vim.api.nvim_win_get_width(0) > 160 then
@@ -64,6 +64,7 @@ vim.keymap.set('n', 'gf', function()
 end)
 
 -- Window manipulation
+-- TODO: Resize to center
 vim.keymap.set('n', '<C-A-h>', function()
     vim.cmd.wincmd('2<')
 end)
@@ -76,8 +77,12 @@ end)
 vim.keymap.set('n', '<C-A-k>', function()
     vim.cmd.wincmd('2-')
 end)
--- TODO: Resize to center
 vim.keymap.set('n', '<C-c>', vim.cmd.close)
+vim.keymap.set('n', 'q', function()
+    if vim.api.nvim_win_get_config(0).zindex then
+        vim.cmd.close()
+    end
+end)
 vim.keymap.set('n', '<A-o>', function()
     vim.cmd.only()
     vim.cmd.normal('zv')
@@ -132,17 +137,8 @@ vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'k', 'gk')
 vim.keymap.set('n', '<Leader>oj', ']<Space>j', { remap = true })
 vim.keymap.set('n', '<Leader>ok', '[<Space>k', { remap = true })
-vim.keymap.set('n', 'q', function()
-    if vim.api.nvim_win_get_config(0).zindex then
-        vim.cmd.close()
-    end
-end)
 vim.keymap.set('n', 'Q', 'gwap')
 vim.keymap.set('n', '<A-u>', 'mzg~iw`z', { remap = true }) -- Upper case inner word
-vim.keymap.set('n', '<Leader>C', function()
-    vim.o.scrolloff = 999 - vim.o.scrolloff
-end)
-vim.keymap.set('n', '<Leader>mr', 'q') -- Macro recording
 vim.keymap.set({ 'n', 'v' }, '+', '<C-a>')
 vim.keymap.set({ 'n', 'v' }, '-', '<C-x>')
 
@@ -178,7 +174,7 @@ end)
 vim.keymap.set('n', 'n', 'nzzzv') -- keep matches window in the middle (while opening folds)
 vim.keymap.set('n', 'N', 'Nzzzv')
 vim.keymap.set('n', '*', function()
-    -- Don't jump to first match with * and #
+    -- Don't jump to first match with *
     local word = vim.fn.expand('<cword>')
     vim.fn.setreg('/', '\\v' .. word)
     vim.o.hlsearch = true
@@ -250,6 +246,10 @@ end)
 vim.keymap.set('n', '<Leader>du', vim.cmd.diffupdate)
 
 -- Misc
+vim.keymap.set('n', '<Leader>C', function()
+    vim.o.scrolloff = 999 - vim.o.scrolloff
+end)
+vim.keymap.set('n', '<Leader>mr', 'q') -- Macro recording
 vim.keymap.set('n', '<Leader>mg', vim.cmd.messages)
 vim.keymap.set('n', '<Leader>mm', 'g<', { remap = true })
 vim.keymap.set('n', '<Leader>ic', function()
