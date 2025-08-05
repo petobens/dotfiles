@@ -191,6 +191,7 @@ for i = 1, 6 do
         vim.cmd.normal({ args = { 'mz' }, bang = true })
         vim.cmd.normal({ args = { '"zyiw' }, bang = true })
         local mid = 86750 + i -- arbitrary match id
+        -- FIXME: Not working
         vim.cmd.matchdelete({ args = { tostring(mid) }, mods = { silent = true } })
         local pat = '\\V\\<' .. vim.fn.escape(vim.fn.getreg('z'), '\\') .. '\\>'
         vim.fn.matchadd('HlWord' .. i, pat, 1, mid)
@@ -381,7 +382,7 @@ end)
 vim.keymap.set('n', ']L', vim.cmd.llast)
 vim.keymap.set('n', '[L', vim.cmd.lfirst)
 
--- Insert mode specific
+-- Insert mode
 vim.keymap.set('i', 'jj', '<ESC>')
 vim.keymap.set('i', '<A-b>', '<C-o>b')
 vim.keymap.set('i', '<A-f>', '<C-o>w')
@@ -408,7 +409,7 @@ vim.keymap.set('v', 'Q', 'gq')
 vim.keymap.set('v', '.', ':normal .<CR>')
 vim.keymap.set('v', '*', '*<C-o>')
 
--- Command mode specific
+-- Command mode
 vim.keymap.set('n', ';', ':', { silent = false })
 vim.keymap.set('c', '<A-b>', '<S-Left>', { silent = false })
 vim.keymap.set('c', '<A-f>', '<S-Right>', { silent = false })
@@ -427,20 +428,20 @@ vim.keymap.set('c', '%%', function()
     end
 end, { expr = true, silent = false })
 
--- Terminal mode specific
-vim.keymap.set('t', '<C-A-n>', '<C-\\><C-n>:bn<CR>')
-vim.keymap.set('t', '<C-A-p>', '<C-\\><C-n>:bp<CR>')
-vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-W>h')
-vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-W>j')
-vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-W>k')
-vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-W>l')
-vim.keymap.set('t', '<C-[>', function()
-    -- FIXME: Not working
-    vim.cmd.normal({ args = { '0' }, bang = true })
-    vim.fn.search(' ', 'b')
-end)
-vim.keymap.set('t', 'kj', '<C-\\><C-n>')
-
+-- Terminal mode
+local terminal_escape = '<C-\\><C-n>' -- enter normal mode from terminal
+vim.keymap.set('t', 'kj', terminal_escape)
+vim.keymap.set('t', '<C-A-n>', string.format('%s:bn<CR>', terminal_escape))
+vim.keymap.set('t', '<C-A-p>', string.format('%s:bp<CR>', terminal_escape))
+vim.keymap.set('t', '<C-h>', string.format('%s<C-W>h', terminal_escape))
+vim.keymap.set('t', '<C-j>', string.format('%s<C-W>j', terminal_escape))
+vim.keymap.set('t', '<C-k>', string.format('%s<C-W>k', terminal_escape))
+vim.keymap.set('t', '<C-l>', string.format('%s<C-W>l', terminal_escape))
+vim.keymap.set(
+    't',
+    '<C-[>',
+    string.format('%s:normal! 0<CR>:call search(" ", "b")<CR>', terminal_escape)
+)
 -- Select mode (mostly for snippets)
 vim.keymap.set('s', 'L', 'L')
 vim.keymap.set('s', 'H', 'H')
