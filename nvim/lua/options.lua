@@ -152,7 +152,7 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
     callback = function(args)
         if not vim.wo.previewwindow then
             vim.api.nvim_buf_call(args.buf, function()
-                vim.cmd.loadview()
+                pcall(vim.cmd.loadview)
             end)
         end
     end,
