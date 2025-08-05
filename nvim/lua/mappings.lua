@@ -395,7 +395,8 @@ end, { expr = true })
 vim.keymap.set('i', '<C-h>', '<C-o>h')
 vim.keymap.set('i', '<C-l>', '<C-o>l')
 
--- Visual mode specific
+-- Visual mode
+-- Note: lua function mappings in visual mode lose the selection
 vim.keymap.set('v', '<', '<gv')
 vim.keymap.set('v', '>', '>gv')
 vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv")
@@ -411,15 +412,15 @@ vim.keymap.set('v', '*', '*<C-o>')
 
 -- Command mode
 vim.keymap.set('n', ';', ':', { silent = false })
-vim.keymap.set('c', '<A-b>', '<S-Left>', { silent = false })
-vim.keymap.set('c', '<A-f>', '<S-Right>', { silent = false })
-vim.keymap.set('c', '<A-p>', '<C-R>"', { silent = false })
-vim.keymap.set('c', '<A-x>', '<C-W>', { silent = false })
-vim.keymap.set('c', '<C-a>', '<home>', { silent = false })
-vim.keymap.set('c', '<C-e>', '<end>', { silent = false })
-vim.keymap.set('c', '<C-h>', '<left>', { silent = false })
-vim.keymap.set('c', '<C-l>', '<right>', { silent = false })
+vim.keymap.set('c', '<A-b>', '<S-Left>')
+vim.keymap.set('c', '<A-f>', '<S-Right>')
+vim.keymap.set('c', '<C-a>', '<home>')
+vim.keymap.set('c', '<C-e>', '<end>', { remap = true })
+vim.keymap.set('c', '<C-h>', '<left>')
+vim.keymap.set('c', '<C-l>', '<right>')
 vim.keymap.set('c', '<C-x>', '<C-U>', { silent = false })
+vim.keymap.set('c', '<A-x>', '<C-W>', { silent = false })
+vim.keymap.set('c', '<A-p>', '<C-R>"', { silent = false })
 vim.keymap.set('c', '%%', function()
     if vim.fn.getcmdtype() == ':' then
         return vim.fs.dirname(vim.api.nvim_buf_get_name(0)) .. '/'
