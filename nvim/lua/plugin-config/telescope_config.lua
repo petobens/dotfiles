@@ -434,17 +434,17 @@ local custom_actions = transform_mod({
     fugitive_open = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local commit_sha = action_state.get_selected_entry().value
-        vim.cmd.e(string.format('FugitiveFind("%s")', commit_sha))
+        vim.cmd.e(vim.fn.FugitiveFind(commit_sha))
     end,
     fugitive_split = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local commit_sha = action_state.get_selected_entry().value
-        vim.cmd.split(string.format('FugitiveFind("%s")', commit_sha))
+        vim.cmd.split(vim.fn.FugitiveFind(commit_sha))
     end,
     fugitive_vsplit = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local commit_sha = action_state.get_selected_entry().value
-        vim.cmd.vsplit(string.format('FugitiveFind("%s")', commit_sha))
+        vim.cmd.vsplit(vim.fn.FugitiveFind(commit_sha))
     end,
     -- Open git commit with delta via toggleterm
     delta_term = function(prompt_bufnr)
