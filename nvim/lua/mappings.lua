@@ -437,11 +437,14 @@ vim.keymap.set('t', '<C-h>', string.format('%s<C-W>h', terminal_escape))
 vim.keymap.set('t', '<C-j>', string.format('%s<C-W>j', terminal_escape))
 vim.keymap.set('t', '<C-k>', string.format('%s<C-W>k', terminal_escape))
 vim.keymap.set('t', '<C-l>', string.format('%s<C-W>l', terminal_escape))
-vim.keymap.set(
-    't',
-    '<C-[>',
-    string.format('%s:normal! 0<CR>:call search(" ", "b")<CR>', terminal_escape)
-)
+vim.keymap.set('t', '<C-[>', function()
+    vim.api.nvim_feedkeys(vim.keycode(terminal_escape), 'n', false)
+    vim.schedule(function()
+        vim.cmd.normal({ args = { '0' }, bang = true })
+        vim.fn.search(' ', 'b')
+    end)
+end)
+
 -- Select mode (mostly for snippets)
 vim.keymap.set('s', 'L', 'L')
 vim.keymap.set('s', 'H', 'H')
