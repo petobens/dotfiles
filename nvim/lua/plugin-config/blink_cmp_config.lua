@@ -107,7 +107,8 @@ blink_cmp.setup({
         ['<A-k>'] = { 'scroll_documentation_up', 'fallback' },
         ['<A-j>'] = { 'scroll_documentation_down', 'fallback' },
         ['<A-v>'] = { 'show', 'show_documentation', 'hide_documentation' },
-        ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+        ['<A-s>'] = { 'show_signature', 'hide_signature', 'fallback' },
+        ['<C-k>'] = { 'fallback' },
     },
     sources = {
         default = function()
@@ -235,7 +236,10 @@ vim.api.nvim_create_autocmd('User', {
     pattern = 'LuasnipInsertNodeEnter',
     callback = function()
         vim.schedule(function()
-            blink_cmp.show()
+            local mode = vim.api.nvim_get_mode().mode
+            if not mode:match('^[sS]$') then
+                blink_cmp.show()
+            end
         end)
     end,
 })
