@@ -107,7 +107,7 @@ blink_cmp.setup({
         ['<A-k>'] = { 'scroll_documentation_up', 'fallback' },
         ['<A-j>'] = { 'scroll_documentation_down', 'fallback' },
         ['<A-v>'] = { 'show', 'show_documentation', 'hide_documentation' },
-        ['<A-s>'] = { 'show_signature', 'hide_signature', 'fallback' },
+        ['<A-x>'] = { 'show_signature', 'hide_signature', 'fallback' },
         ['<C-k>'] = { 'fallback' },
     },
     sources = {
