@@ -55,13 +55,6 @@ vim.keymap.set('n', '<Leader>wd', vim.cmd.bdelete)
 vim.keymap.set('n', '<Leader>cd', function()
     vim.api.nvim_set_current_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
 end)
-vim.keymap.set('n', 'gf', function()
-    local mods
-    if vim.api.nvim_win_get_width(0) > 160 then
-        mods = { vertical = true }
-    end
-    vim.cmd.wincmd({ args = { 'f' }, mods = mods })
-end)
 
 -- Window manipulation
 -- TODO: Resize to center
@@ -110,6 +103,13 @@ vim.keymap.set({ 'n', 'i', 'v' }, '<up>', '<nop>')
 vim.keymap.set('n', '<A-0>', 'H')
 vim.keymap.set('n', '<A-b>', 'L')
 vim.keymap.set('n', '<A-m>', 'M')
+vim.keymap.set({ 'n', 'v' }, 'H', '^')
+vim.keymap.set('n', 'L', '$')
+vim.keymap.set('n', 'M', function()
+    local row = vim.api.nvim_win_get_cursor(0)[1]
+    local middle = math.floor(vim.fn.virtcol('$') / 2)
+    vim.api.nvim_win_set_cursor(0, { row, middle - 1 })
+end)
 vim.keymap.set('n', '<A-j>', function()
     local line = vim.api.nvim_win_get_cursor(0)[1]
     vim.cmd.move(tostring(line + vim.v.count1))
@@ -124,19 +124,12 @@ vim.keymap.set('n', '<A-k>', function()
         vim.cmd.normal({ args = { 'zO' }, bang = true, mods = { silent = true } })
     end)
 end)
-vim.keymap.set('n', '<A-s>', 'i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>`w') -- Split line
-vim.keymap.set('n', 'J', 'mzJ`z') -- Keep the cursor in place while joining lines
-vim.keymap.set({ 'n', 'v' }, 'H', '^')
-vim.keymap.set('n', 'L', '$')
-vim.keymap.set('n', 'M', function()
-    local row = vim.api.nvim_win_get_cursor(0)[1]
-    local middle = math.floor(vim.fn.virtcol('$') / 2)
-    vim.api.nvim_win_set_cursor(0, { row, middle - 1 })
-end)
 vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'k', 'gk')
 vim.keymap.set('n', '<Leader>oj', ']<Space>j', { remap = true })
 vim.keymap.set('n', '<Leader>ok', '[<Space>k', { remap = true })
+vim.keymap.set('n', '<A-s>', 'i<CR><ESC>^mwgk:silent! s/\v +$//<CR>:noh<CR>`w') -- Split line
+vim.keymap.set('n', 'J', 'mzJ`z') -- Keep the cursor in place while joining lines
 vim.keymap.set('n', 'Q', 'gwap')
 vim.keymap.set('n', '<A-u>', 'mzg~iw`z', { remap = true }) -- Upper case inner word
 vim.keymap.set({ 'n', 'v' }, '+', '<C-a>')
@@ -147,9 +140,9 @@ vim.keymap.set('n', '<Leader>pp', vim.cmd.put)
 vim.keymap.set('n', '<Leader>P', function()
     vim.cmd.put({ bang = true })
 end)
+vim.keymap.set('n', 'gp', '`[v`]') -- visually reselect what was just pasted
 vim.keymap.set('n', 'Y', 'y$', { remap = true })
 vim.keymap.set('n', 'yy', 'mz0y$`z', { remap = true })
-vim.keymap.set('n', 'gp', '`[v`]') -- visually reselect what was just pasted
 vim.keymap.set('n', 'vv', '^vg_', { remap = true }) -- visually select excluding indentation
 vim.keymap.set('n', '<Leader>yf', function()
     local path = vim.api.nvim_buf_get_name(0)
@@ -181,14 +174,11 @@ vim.keymap.set('n', '*', function()
 end, { remap = true })
 vim.keymap.set('n', '#', '#``', { remap = true })
 vim.keymap.set('n', '<Leader>sw', '/<><Left>', { silent = false, remap = true })
-vim.keymap.set('n', '<C-o>', '<C-o>zvzz')
-vim.keymap.set('n', '<C-y>', '<C-i>zvzz') -- jump to newer entry in jumplist
-vim.keymap.set('n', '<Leader>qr', function()
-    vim.api.nvim_input(':cdo %s/')
-end)
 vim.keymap.set('n', '<Leader>sr', function()
     vim.api.nvim_input(':%s/')
 end)
+vim.keymap.set('n', '<C-o>', '<C-o>zvzz')
+vim.keymap.set('n', '<C-y>', '<C-i>zvzz') -- jump to newer entry in jumplist
 vim.keymap.set('n', "'", '`', { remap = true })
 vim.keymap.set('n', '<Leader>dm', function()
     vim.cmd.delmarks({ bang = true })
@@ -196,6 +186,17 @@ vim.keymap.set('n', '<Leader>dm', function()
 end)
 vim.keymap.set('n', '[m', '[mzz')
 vim.keymap.set('n', ']m', ']mzz')
+for i = 1, 6 do
+    vim.keymap.set('n', '<Leader>h' .. i, function()
+        vim.cmd.normal({ args = { 'mz' }, bang = true })
+        vim.cmd.normal({ args = { '"zyiw' }, bang = true })
+        local mid = 86750 + i -- arbitrary match id
+        vim.cmd.matchdelete({ args = { tostring(mid) }, mods = { silent = true } })
+        local pat = '\\V\\<' .. vim.fn.escape(vim.fn.getreg('z'), '\\') .. '\\>'
+        vim.fn.matchadd('HlWord' .. i, pat, 1, mid)
+        vim.cmd.normal({ args = { '`z' }, bang = true })
+    end)
+end
 
 -- Folds
 vim.keymap.set('n', 'zm', 'zM')
@@ -321,24 +322,20 @@ vim.keymap.set('n', '<Leader>sb', function()
     vim.api.nvim_input((':e %s/scratch/'):format(dir))
 end)
 
--- Links & Filemanager
+-- Links & files
 vim.keymap.set({ 'n', 'v' }, '<Leader>ol', 'gx', { remap = true })
+vim.keymap.set('n', 'gf', function()
+    local mods
+    if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
+        mods = { vertical = true }
+    end
+    vim.cmd.wincmd({ args = { 'f' }, mods = mods })
+end)
 vim.keymap.set('n', '<Leader>fm', function()
     vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.uv.cwd(), 'ranger' })
 end)
-for i = 1, 6 do
-    vim.keymap.set('n', '<Leader>h' .. i, function()
-        vim.cmd.normal({ args = { 'mz' }, bang = true })
-        vim.cmd.normal({ args = { '"zyiw' }, bang = true })
-        local mid = 86750 + i -- arbitrary match id
-        vim.cmd.matchdelete({ args = { tostring(mid) }, mods = { silent = true } })
-        local pat = '\\V\\<' .. vim.fn.escape(vim.fn.getreg('z'), '\\') .. '\\>'
-        vim.fn.matchadd('HlWord' .. i, pat, 1, mid)
-        vim.cmd.normal({ args = { '`z' }, bang = true })
-    end)
-end
 
--- Quickfix, Location & Preview windows
+-- Quickfix and Location
 vim.keymap.set('n', '<Leader>qf', vim.cmd.copen)
 vim.keymap.set('n', '<Leader>qc', vim.cmd.cclose)
 vim.keymap.set('n', ']q', function()
@@ -353,6 +350,9 @@ vim.keymap.set('n', '[q', function()
 end)
 vim.keymap.set('n', ']Q', vim.cmd.clast)
 vim.keymap.set('n', '[Q', vim.cmd.cfirst)
+vim.keymap.set('n', '<Leader>qr', function()
+    vim.api.nvim_input(':cdo %s/')
+end)
 vim.keymap.set('n', '<Leader>ll', vim.cmd.lopen)
 vim.keymap.set('n', '<Leader>lc', vim.cmd.lclose)
 vim.keymap.set('n', '<Leader>lC', function()
