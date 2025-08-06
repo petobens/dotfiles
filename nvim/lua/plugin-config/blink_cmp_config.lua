@@ -218,7 +218,6 @@ blink_cmp.setup({
         keymap = {
             ['<CR>'] = { 'select_and_accept', 'fallback' },
             ['<C-y>'] = { 'select_accept_and_enter' },
-            ['<C-e>'] = false, -- since we map it to <End>
         },
     },
 })
