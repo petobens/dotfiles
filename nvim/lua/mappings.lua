@@ -57,7 +57,6 @@ vim.keymap.set('n', '<Leader>cd', function()
 end)
 
 -- Window manipulation
--- TODO: Resize to center
 vim.keymap.set('n', '<C-A-h>', function()
     vim.cmd.wincmd('2<')
 end)
@@ -178,7 +177,7 @@ vim.keymap.set('n', '<Leader>sr', function()
     vim.api.nvim_input(':%s/')
 end)
 vim.keymap.set('n', '<C-o>', '<C-o>zvzz')
-vim.keymap.set('n', '<C-y>', '<C-i>zvzz') -- jump to newer entry in jumplist
+vim.keymap.set('n', '<C-y>', '<C-i>zvzz')
 vim.keymap.set('n', "'", '`', { remap = true })
 vim.keymap.set('n', '<Leader>dm', function()
     vim.cmd.delmarks({ bang = true })
@@ -188,17 +187,15 @@ vim.keymap.set('n', '[m', '[mzz')
 vim.keymap.set('n', ']m', ']mzz')
 for i = 1, 6 do
     vim.keymap.set('n', '<Leader>h' .. i, function()
-        vim.cmd.normal({ args = { 'mz' }, bang = true })
-        vim.cmd.normal({ args = { '"zyiw' }, bang = true })
-        local mid = 86750 + i -- arbitrary match id
-        -- FIXME: Not working
-        vim.cmd.matchdelete({ args = { tostring(mid) }, mods = { silent = true } })
-        local pat = '\\V\\<' .. vim.fn.escape(vim.fn.getreg('z'), '\\') .. '\\>'
-        vim.fn.matchadd('HlWord' .. i, pat, 1, mid)
+        vim.cmd.normal({ args = { 'mz"zyiw' }, bang = true })
+        local mid = 86750 + i
+        pcall(vim.fn.matchdelete, mid)
+        local word = vim.fn.getreg('z')
+        local pat = ([[\V\<%s\>]]):format(vim.fn.escape(word, '\\'))
+        pcall(vim.fn.matchadd, 'HlWord' .. i, pat, 1, mid)
         vim.cmd.normal({ args = { '`z' }, bang = true })
     end)
 end
-
 -- Folds
 vim.keymap.set('n', 'zm', 'zM')
 vim.keymap.set('n', 'zr', 'zR')
