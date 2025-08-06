@@ -229,6 +229,16 @@ vim.keymap.set('n', '<Leader>ds', function()
             if not other_file or other_file == '' then
                 return
             else
+                other_file = vim.fs.abspath(other_file)
+                local stat = vim.uv.fs_stat(other_file)
+                if not stat or stat.type ~= 'file' then
+                    vim.notify(
+                        ('File not found: %s'):format(other_file),
+                        vim.log.levels.ERROR
+                    )
+                    return
+                end
+
                 local mods
                 if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
                     mods = { vertical = true }
