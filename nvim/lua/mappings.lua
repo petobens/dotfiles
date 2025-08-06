@@ -383,17 +383,16 @@ vim.keymap.set('n', ']L', vim.cmd.llast)
 vim.keymap.set('n', '[L', vim.cmd.lfirst)
 
 -- Insert mode
-vim.keymap.set('i', 'jj', '<ESC>')
+vim.keymap.set('i', 'jj', '<Esc>')
 vim.keymap.set('i', '<A-b>', '<C-o>b')
 vim.keymap.set('i', '<A-f>', '<C-o>w')
-vim.keymap.set('i', '<A-p>', '<C-R>"')
-vim.keymap.set('i', '<A-x>', '<C-W>')
 vim.keymap.set('i', '<C-a>', '<C-o>^')
 vim.keymap.set('i', '<C-e>', function()
     return vim.fn.pumvisible() == 1 and '<C-e>' or '<C-o>$'
 end, { expr = true })
 vim.keymap.set('i', '<C-h>', '<C-o>h')
 vim.keymap.set('i', '<C-l>', '<C-o>l')
+vim.keymap.set('i', '<A-p>', '<C-R>"')
 
 -- Visual mode
 -- Note: lua function mappings in visual mode lose the selection
