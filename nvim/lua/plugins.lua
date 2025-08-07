@@ -1,3 +1,4 @@
+-- Install lazy.nvim if missing
 local lazypath = vim.fs.joinpath(vim.fn.stdpath('data'), 'lazy', 'lazy.nvim')
 if not vim.uv.fs_stat(lazypath) then
     local result = vim.system({
@@ -16,93 +17,96 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
+-- Helpers
+local function load_plugin_config(...)
+    local modules = { ... }
+    return function()
+        for _, m in ipairs(modules) do
+            require('plugin-config.' .. m)
+        end
+    end
+end
+
 -- Plugin list
 local plugins = {
-    -- Appearance
+    -- UI
     {
         'olimorris/onedarkpro.nvim',
-        config = function()
-            require('plugin-config.onedark_config')
-        end,
         priority = 1000, -- load first
+        config = load_plugin_config('onedark_config'),
     },
     {
         'nvim-lualine/lualine.nvim',
-        config = function()
-            require('plugin-config.lualine_config')
-        end,
+        config = load_plugin_config('lualine_config'),
     },
     {
         'luukvbaal/statuscol.nvim',
-        config = function()
-            require('plugin-config.statuscol_config')
-        end,
+        config = load_plugin_config('statuscol_config'),
     },
 
     -- Editing
     {
         'kylechui/nvim-surround',
-        config = function()
-            require('plugin-config.surround_config')
-        end,
-    },
-    {
-        'catgoose/nvim-colorizer.lua',
-        config = function()
-            require('plugin-config.colorizer_config')
-        end,
-        keys = '<Leader>cz',
+        config = load_plugin_config('surround_config'),
     },
     {
         'lukas-reineke/indent-blankline.nvim',
-        config = function()
-            require('plugin-config.indentlines_config')
-        end,
+        config = load_plugin_config('indentlines_config'),
     },
     {
         'ggandor/leap.nvim',
         dependencies = {
             'ggandor/flit.nvim',
         },
-        config = function()
-            require('plugin-config.leap_config')
-        end,
+        config = load_plugin_config('leap_config'),
+    },
+    {
+        'andymass/vim-matchup',
+        event = 'BufReadPost',
+        config = load_plugin_config('matchup_config'),
+    },
+    {
+        'echasnovski/mini.align',
+        config = load_plugin_config('mini_align_config'),
     },
 
-    -- Linters & formatting
+    -- Linting & Formatting
     {
         'mfussenegger/nvim-lint',
-        config = function()
-            require('plugin-config.diagnostics_config') -- Also load diagnostics here
-            require('plugin-config.nvimlint_config')
-        end,
+        config = load_plugin_config('diagnostics_config', 'nvimlint_config'),
     },
     {
         'stevearc/conform.nvim',
-        config = function()
-            require('plugin-config.conform_config')
-        end,
+        config = load_plugin_config('conform_config'),
     },
 
-    -- LSP, treesitter and completion
+    -- LSP & Treesitter
     {
         'mason-org/mason.nvim',
         dependencies = 'WhoIsSethDaniel/mason-tool-installer.nvim',
-        config = function()
-            require('plugin-config.mason_config')
-        end,
+        config = load_plugin_config('mason_config'),
     },
     {
         'neovim/nvim-lspconfig',
         dependencies = { { 'folke/lazydev.nvim', ft = 'lua' } },
-        config = function()
-            require('plugin-config.lsp_config')
-        end,
+        config = load_plugin_config('lsp_config'),
     },
     {
+        'nvim-treesitter/nvim-treesitter',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects',
+        },
+        build = ':TSUpdate',
+        config = load_plugin_config('treesitter_config'),
+    },
+    {
+        'm-demare/hlargs.nvim',
+        config = load_plugin_config('hlargs_config'),
+    },
+
+    -- Completion & Snippets
+    {
         'Saghen/blink.cmp',
-        build = 'cargo +nightly build --release',
-        event = 'InsertEnter',
         dependencies = {
             'saghen/blink.compat',
             'fang2hou/blink-copilot',
@@ -112,32 +116,24 @@ local plugins = {
             'onsails/lspkind.nvim',
             { 'MattiasMTS/cmp-dbee', branch = 'ms/v2' },
         },
-        config = function()
-            require('plugin-config.blink_cmp_config')
-        end,
+        build = 'cargo +nightly build --release',
+        event = 'InsertEnter',
+        config = load_plugin_config('blink_cmp_config'),
     },
     {
-        'nvim-treesitter/nvim-treesitter',
+        'L3MON4D3/LuaSnip',
         dependencies = {
-            'nvim-treesitter/nvim-treesitter-textobjects',
+            'benfowler/telescope-luasnip.nvim',
         },
-        build = ':TSUpdate',
-        config = function()
-            require('plugin-config.treesitter_config')
-        end,
+        event = 'InsertEnter',
+        config = load_plugin_config('luasnip_config'),
     },
-    {
-        'm-demare/hlargs.nvim',
-        config = function()
-            require('plugin-config.hlargs_config')
-        end,
-    },
+
+    -- AI
     {
         'zbirenbaum/copilot.lua',
         event = 'InsertEnter',
-        config = function()
-            require('plugin-config.copilot_config')
-        end,
+        config = load_plugin_config('copilot_config'),
     },
     {
         -- 'petobens/codecompanion.nvim',
@@ -147,24 +143,10 @@ local plugins = {
             'nvim-treesitter/nvim-treesitter',
             { 'ravitemer/codecompanion-history.nvim' },
         },
-        config = function()
-            require('plugin-config.codecompanion_config')
-        end,
+        config = load_plugin_config('codecompanion_config'),
     },
 
-    -- Snippets
-    {
-        'L3MON4D3/LuaSnip',
-        dependencies = {
-            'benfowler/telescope-luasnip.nvim',
-        },
-        event = 'InsertEnter',
-        config = function()
-            require('plugin-config.luasnip_config')
-        end,
-    },
-
-    -- Telescope and file/code exploring
+    -- Fuzzy Finding & File Explorer
     {
         'nvim-telescope/telescope.nvim',
         dependencies = {
@@ -176,42 +158,34 @@ local plugins = {
             'rafi/telescope-thesaurus.nvim',
             'nvim-telescope/telescope-ui-select.nvim',
         },
-        config = function()
-            require('plugin-config.telescope_config')
-        end,
+        config = load_plugin_config('telescope_config'),
     },
     {
         'AckslD/nvim-neoclip.lua',
-        config = function()
-            require('plugin-config.neoclip_config')
-        end,
+        config = load_plugin_config('neoclip_config'),
     },
     {
         'nvim-tree/nvim-tree.lua',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
-        config = function()
-            require('plugin-config.nvimtree_config')
-        end,
+        config = load_plugin_config('nvimtree_config'),
     },
     {
         'stevearc/aerial.nvim',
-        config = function()
-            require('plugin-config.aerial_config')
-        end,
+        config = load_plugin_config('aerial_config'),
     },
 
-    -- Runners and terminal
-    {
-        'stevearc/overseer.nvim',
-        config = function()
-            require('plugin-config.overseer_config')
-        end,
-    },
+    -- Runners & Terminal
     {
         'akinsho/toggleterm.nvim',
-        config = function()
-            require('plugin-config.toggleterm_config')
-        end,
+        config = load_plugin_config('toggleterm_config'),
+    },
+    {
+        'nathom/tmux.nvim',
+        config = load_plugin_config('tmux_config'),
+    },
+    {
+        'stevearc/overseer.nvim',
+        config = load_plugin_config('overseer_config'),
     },
     {
         -- 'nvim-neotest/neotest',
@@ -221,57 +195,33 @@ local plugins = {
             'nvim-neotest/neotest-python',
             'nvim-neotest/nvim-nio',
         },
-        config = function()
-            require('plugin-config.neotest_config')
-        end,
-    },
-    {
-        'yorickpeterse/nvim-pqf',
-        config = function()
-            require('plugin-config.pqf_config')
-        end,
+        config = load_plugin_config('neotest_config'),
     },
     {
         'michaelb/sniprun',
         build = 'sh install.sh',
-        config = function()
-            require('plugin-config.sniprun_config')
-        end,
+        config = load_plugin_config('sniprun_config'),
+    },
+    {
+        'yorickpeterse/nvim-pqf',
+        config = load_plugin_config('pqf_config'),
     },
 
     -- Utilities
     { 'jamessan/vim-gnupg' },
     {
-        'nathom/tmux.nvim',
-        config = function()
-            require('plugin-config.tmux_config')
-        end,
-    },
-    {
         '3rd/image.nvim',
         ft = 'markdown',
-        config = function()
-            require('plugin-config.image_config')
-        end,
+        config = load_plugin_config('image_config'),
     },
     {
         'HakonHarnes/img-clip.nvim',
-        config = function()
-            require('plugin-config.img_clip_config')
-        end,
+        config = load_plugin_config('img_clip_config'),
     },
     {
-        'andymass/vim-matchup',
-        config = function()
-            require('plugin-config.matchup_config')
-        end,
-        event = 'BufReadPost',
-    },
-    {
-        'echasnovski/mini.align',
-        config = function()
-            require('plugin-config.mini_align_config')
-        end,
+        'catgoose/nvim-colorizer.lua',
+        keys = '<Leader>cz',
+        config = load_plugin_config('colorizer_config'),
     },
     {
         'lambdalisue/suda.vim',
@@ -279,20 +229,12 @@ local plugins = {
     },
     {
         'nyngwang/NeoZoom.lua',
-        config = function()
-            require('plugin-config.neozoom_config')
-        end,
         keys = '<Leader>zw',
+        config = load_plugin_config('neozoom_config'),
     },
 
     -- Filetype-specific
     ---- Git
-    {
-        'lewis6991/gitsigns.nvim',
-        config = function()
-            require('plugin-config.gitsigns_config')
-        end,
-    },
     {
         'tpope/vim-fugitive',
         dependencies = {
@@ -301,17 +243,18 @@ local plugins = {
             'tommcdo/vim-fubitive',
             'tpope/vim-rhubarb',
         },
-        config = function()
-            require('plugin-config.fugitive_config')
-        end,
+        config = load_plugin_config('fugitive_config'),
     },
+    {
+        'lewis6991/gitsigns.nvim',
+        config = load_plugin_config('gitsigns_config'),
+    },
+
     ---- Latex
     {
         'lervag/vimtex',
         dependencies = { 'jbyuki/nabla.nvim' },
-        config = function()
-            require('plugin-config.vimtex_config')
-        end,
+        config = load_plugin_config('vimtex_config'),
     },
     ----- Markdown
     {
@@ -320,9 +263,7 @@ local plugins = {
             'nvim-treesitter/nvim-treesitter',
             'nvim-tree/nvim-web-devicons',
         },
-        config = function()
-            require('plugin-config.render_markdown_config')
-        end,
+        config = load_plugin_config('render_markdown_config'),
     },
     ---- SQL
     {
@@ -334,16 +275,14 @@ local plugins = {
             require('dbee').install()
         end,
         keys = '<Leader>db',
-        config = function()
-            require('plugin-config.dbee_config')
-        end,
+        config = load_plugin_config('dbee_config'),
     },
 }
 
 -- Lazy plugin setup
 require('lazy').setup(plugins, {
-    -- Don't lazy load by default instead load during startup; use
-    -- keys/events/cmds/ft in plugin config if lazy laoding is required
+    -- Load all plugins at startup by default
+    -- To enable lazy loading, specify keys/events/cmds/ft in the plugin config
     defaults = { lazy = false },
     ui = {
         size = {
