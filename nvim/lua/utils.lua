@@ -13,11 +13,11 @@ M.icons = {
 }
 
 function M.split_open(file)
-    local split = 'split '
+    local split = 'split'
     if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
-        split = 'vsplit '
+        split = 'vsplit'
     end
-    vim.cmd({ cmd = split, args = { file } })
+    vim.cmd[split](file)
 end
 
 function M.mk_non_dir(directory)
@@ -42,11 +42,11 @@ function M.vim_session_file()
         if result.code == 0 then
             local tmux_session = vim.trim(result.stdout or '')
             if tmux_session ~= '' then
-                session_file = session_file .. '_' .. tmux_session
+                session_file = string.format('%s_%s', session_file, tmux_session)
             end
         end
     end
-    return vim.fs.joinpath(session_dir, session_file .. '.vim')
+    return vim.fs.joinpath(session_dir, string.format('%s.vim', session_file))
 end
 
 function M.get_selection()
@@ -70,9 +70,9 @@ function M.get_selection()
 end
 
 function M.quit_return()
-    vim.cmd.wincmd({ args = { 'p' } })
+    vim.cmd.wincmd('p')
     local win_id = vim.api.nvim_get_current_win()
-    vim.cmd.wincmd({ args = { 'p' } })
+    vim.cmd.wincmd('p')
     vim.cmd.bdelete()
     if vim.api.nvim_win_is_valid(win_id) then
         vim.api.nvim_set_current_win(win_id)
