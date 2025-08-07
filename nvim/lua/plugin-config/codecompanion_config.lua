@@ -371,6 +371,17 @@ codecompanion.setup({
                 },
             })
         end,
+        openai_gpt_5 = function()
+            return adapters.extend('openai', {
+                name = 'openai_gpt_5',
+                env = { api_key = OPENAI_API_KEY },
+                schema = {
+                    model = { default = 'gpt-5' },
+                    max_completion_tokens = { default = 2048 },
+                    reasoning_effort = { default = 'minimal' },
+                },
+            })
+        end,
         gemini_flash_25 = function()
             return adapters.extend('gemini', {
                 env = { api_key = GEMINI_API_KEY },
