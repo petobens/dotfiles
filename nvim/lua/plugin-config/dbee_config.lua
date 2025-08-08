@@ -56,7 +56,7 @@ dbee.setup({
         --     "url": "postgres://postgres:passwd@localhost:5432?sslmode=disable"
         -- }
         require('dbee.sources').FileSource:new(
-            vim.env.HOME .. '/.config/.dbee_connections.json'
+            vim.fs.joinpath(vim.env.HOME, '.config', '.dbee_connections.json')
         ),
     },
     extra_helpers = {
@@ -68,13 +68,15 @@ dbee.setup({
 })
 
 -- Autocmds
+local dbee_sql_augroup = vim.api.nvim_create_augroup('dbee_sql', { clear = true })
 vim.api.nvim_create_autocmd({ 'FileType' }, {
-    group = vim.api.nvim_create_augroup('dbee_sql', { clear = true }),
+    group = dbee_sql_augroup,
     pattern = { 'sql' },
+    desc = 'Enable cmp-dbee completion for SQL files',
     callback = function()
         require('cmp-dbee').setup()
     end,
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>db', dbee.toggle)
+vim.keymap.set('n', '<Leader>db', dbee.toggle, { desc = 'Toggle dbee drawer' })
