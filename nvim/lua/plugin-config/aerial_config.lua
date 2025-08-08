@@ -55,23 +55,40 @@ local function telescope_filter(opts)
         return true
     end
     -- Switch to previous buffer since aerial telescope acts upon current buffer
-    vim.cmd.wincmd({ args = { 'p' } })
+    vim.cmd.wincmd('p')
     require('telescope').extensions.aerial.aerial(opts)
 end
 
 -- Autocmds
+local aerial_augroup = vim.api.nvim_create_augroup('aerial', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup('aerial', { clear = true }),
+    group = aerial_augroup,
     pattern = { 'aerial' },
+    desc = 'Aerial: set local options and mappings',
     callback = function(e)
         vim.opt_local.number = true
         vim.opt_local.relativenumber = true
         vim.opt_local.winfixbuf = true
 
-        vim.keymap.set('n', '<C-t>', telescope_filter, { buffer = e.buf })
+        vim.keymap.set(
+            'n',
+            '<C-t>',
+            telescope_filter,
+            { buffer = e.buf, desc = 'Aerial: Telescope symbols' }
+        )
     end,
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>tb', '<Cmd>AerialToggle<CR>')
-vim.keymap.set('n', '<Leader>an', '<Cmd>AerialNavToggle<CR>')
+vim.keymap.set(
+    'n',
+    '<Leader>tb',
+    vim.cmd.AerialToggle,
+    { desc = 'Aerial: Toggle symbols outline' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>an',
+    vim.cmd.AerialNavToggle,
+    { desc = 'Aerial: Toggle navigation window' }
+)
