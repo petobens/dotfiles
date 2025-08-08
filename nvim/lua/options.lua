@@ -43,22 +43,22 @@ vim.opt.visualbell = true
 require('vim._extui').enable({}) -- experimental new TUI message grid
 
 vim.api.nvim_create_autocmd('BufWritePre', {
-    group = vim.api.nvim_create_augroup('create_dir_before_write', { clear = true }),
     desc = 'Create parent directory before writing file',
+    group = vim.api.nvim_create_augroup('create_dir_before_write', { clear = true }),
     callback = function()
         u.mk_non_dir()
     end,
 })
 vim.api.nvim_create_autocmd('FocusLost', {
-    group = vim.api.nvim_create_augroup('focus_lost', { clear = true }),
     desc = 'Save all files when Neovim loses focus',
+    group = vim.api.nvim_create_augroup('focus_lost', { clear = true }),
     callback = function()
         vim.cmd.wall({ mods = { silent = true } })
     end,
 })
 vim.api.nvim_create_autocmd('FileChangedRO', {
-    group = vim.api.nvim_create_augroup('no_ro_warn', { clear = true }),
     desc = 'Disable readonly warning after file changed outside of Neovim',
+    group = vim.api.nvim_create_augroup('no_ro_warn', { clear = true }),
     callback = function()
         vim.opt_local.readonly = false
     end,
@@ -91,24 +91,24 @@ vim.opt.winblend = 6
 vim.opt.winborder = 'rounded'
 
 vim.api.nvim_create_autocmd('VimResized', {
-    group = vim.api.nvim_create_augroup('vim_resized', { clear = true }),
     desc = 'Equalize all window splits when the Neovim window is resized',
+    group = vim.api.nvim_create_augroup('vim_resized', { clear = true }),
     callback = function()
         vim.cmd.wincmd('=')
     end,
 })
 local cline_acg = vim.api.nvim_create_augroup('cline', { clear = true })
 vim.api.nvim_create_autocmd('WinLeave', {
-    group = cline_acg,
     desc = 'Hide cursorline and save last window id on leaving window',
+    group = cline_acg,
     callback = function()
         vim.opt_local.cursorline = false
         _G.LastWinId = vim.api.nvim_get_current_win()
     end,
 })
 vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
-    group = cline_acg,
     desc = 'Show cursorline in the active window',
+    group = cline_acg,
     callback = function()
         vim.opt_local.cursorline = true
     end,
@@ -127,8 +127,8 @@ vim.opt.viewdir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'view') .. '//'
 
 local session_acg = vim.api.nvim_create_augroup('session', { clear = true })
 vim.api.nvim_create_autocmd('VimLeavePre', {
-    group = session_acg,
     desc = 'Save session on exit if UI is attached',
+    group = session_acg,
     callback = function()
         if #vim.api.nvim_list_uis() > 0 then
             vim.cmd.mksession({ args = { u.vim_session_file() }, bang = true })
@@ -137,9 +137,9 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
 })
 local session_patterns = { '*.*', 'bashrc', 'bash_profile', 'config' }
 vim.api.nvim_create_autocmd('BufWinLeave', {
+    desc = 'Save view when leaving buffer window',
     group = session_acg,
     pattern = session_patterns,
-    desc = 'Save view when leaving buffer window',
     callback = function(args)
         if not vim.wo.previewwindow then
             vim.api.nvim_buf_call(args.buf, function()
@@ -149,9 +149,9 @@ vim.api.nvim_create_autocmd('BufWinLeave', {
     end,
 })
 vim.api.nvim_create_autocmd('BufWinEnter', {
+    desc = 'Restore view when entering buffer window',
     group = session_acg,
     pattern = session_patterns,
-    desc = 'Restore view when entering buffer window',
     callback = function(args)
         if not vim.wo.previewwindow then
             vim.api.nvim_buf_call(args.buf, function()
@@ -173,8 +173,8 @@ if vim.fn.executable('rg') == 1 then
     vim.opt.grepformat = { '%f:%l:%c:%m', '%f:%l:%m' }
 end
 vim.api.nvim_create_autocmd('TextYankPost', {
-    group = vim.api.nvim_create_augroup('hl_yank', { clear = true }),
     desc = 'Briefly highlight yanked text',
+    group = vim.api.nvim_create_augroup('hl_yank', { clear = true }),
     callback = function()
         vim.hl.on_yank({ higroup = 'Visual', timeout = 300 })
     end,
@@ -255,9 +255,9 @@ vim.filetype.add({
 -- Filetype-specific options
 local function set_ft_option(ft, vim_cmd)
     vim.api.nvim_create_autocmd('FileType', {
+        desc = ('Set filetype-specific options: %s'):format(vim.inspect(ft)),
         pattern = ft,
         group = vim.api.nvim_create_augroup('FtOptions', {}),
-        desc = ('Set filetype-specific options: %s'):format(vim.inspect(ft)),
         command = vim_cmd,
     })
 end
@@ -266,13 +266,12 @@ set_ft_option({ 'html' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2')
 set_ft_option({ 'i3config', 'sh' }, 'setlocal foldmethod=marker')
 set_ft_option({ 'text' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell')
 set_ft_option({ 'vim' }, 'setlocal foldmethod=marker formatoptions-=ro')
-
--- Python: auto-activate virtualenvs
+---- Python
 _G.PyVenv = { active_venv = {} } -- if set inside ftplugin file it will be reset
 vim.api.nvim_create_autocmd('BufEnter', {
+    desc = 'Auto-activate Python virtualenv on entering Python buffer',
     group = vim.api.nvim_create_augroup('auto_venv', { clear = true }),
     pattern = { '*.py' },
-    desc = 'Auto-activate Python virtualenv on entering Python buffer',
     callback = function()
         local fname = vim.api.nvim_buf_get_name(0)
         if not string.match(fname, '.git/') and not vim.startswith(fname, 'copilot') then

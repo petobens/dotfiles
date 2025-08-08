@@ -234,6 +234,7 @@ vim.treesitter.language.register('markdown', 'blink-cmp-documentation')
 -- Autocmd settings
 local blink_cmp_augroup = vim.api.nvim_create_augroup('blink_cmp', { clear = true })
 vim.api.nvim_create_autocmd('User', {
+    desc = 'Show Blink completion menu on Luasnip insert node enter',
     group = blink_cmp_augroup,
     pattern = 'LuasnipInsertNodeEnter',
     callback = function()
@@ -246,6 +247,7 @@ vim.api.nvim_create_autocmd('User', {
     end,
 })
 vim.api.nvim_create_autocmd('User', {
+    desc = 'Handle Copilot multiline direction on Blink menu open',
     group = blink_cmp_augroup,
     pattern = 'BlinkCmpMenuOpen',
     callback = function()
@@ -265,6 +267,7 @@ vim.api.nvim_create_autocmd('User', {
         )
 
         vim.api.nvim_create_autocmd('User', {
+            desc = 'Stop Copilot multiline direction timer on Blink menu close',
             group = blink_cmp_augroup,
             pattern = 'BlinkCmpMenuClose',
             once = true,

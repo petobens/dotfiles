@@ -61,9 +61,9 @@ end
 
 -- Autocmds
 vim.api.nvim_create_autocmd('FileType', {
+    desc = 'Aerial: set local options and mappings',
     group = vim.api.nvim_create_augroup('aerial', { clear = true }),
     pattern = { 'aerial' },
-    desc = 'Aerial: set local options and mappings',
     callback = function(e)
         vim.opt_local.number = true
         vim.opt_local.relativenumber = true

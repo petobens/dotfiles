@@ -69,9 +69,9 @@ dbee.setup({
 
 -- Autocmds
 vim.api.nvim_create_autocmd({ 'FileType' }, {
+    desc = 'Enable cmp-dbee completion for SQL files',
     group = vim.api.nvim_create_augroup('dbee_sql', { clear = true }),
     pattern = { 'sql' },
-    desc = 'Enable cmp-dbee completion for SQL files',
     callback = function()
         require('cmp-dbee').setup()
     end,
