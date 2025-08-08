@@ -7,4 +7,9 @@ require('colorizer').setup({
     },
 })
 
-vim.keymap.set('n', '<Leader>cz', '<Cmd>ColorizerToggle<CR>')
+vim.keymap.set(
+    'n',
+    '<Leader>cz',
+    vim.cmd.ColorizerToggle,
+    { desc = 'Toggle colorizer for current buffer' }
+)
