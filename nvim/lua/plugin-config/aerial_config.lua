@@ -60,9 +60,8 @@ local function telescope_filter(opts)
 end
 
 -- Autocmds
-local aerial_augroup = vim.api.nvim_create_augroup('aerial', { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    group = aerial_augroup,
+    group = vim.api.nvim_create_augroup('aerial', { clear = true }),
     pattern = { 'aerial' },
     desc = 'Aerial: set local options and mappings',
     callback = function(e)
