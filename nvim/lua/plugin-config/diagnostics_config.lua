@@ -1,78 +1,77 @@
 local u = require('utils')
 
 -- Helpers
-local function get_diagnostic_sources_count()
-    local sources = require('lint').linters_by_ft[vim.bo.filetype]
-    if sources then
-        return #sources
-    else
-        return 1
-    end
+local function not_in(str, substr)
+    return substr and not string.find(str, substr, 1, true)
 end
 
--- Diagnostic format
-local function diagnostic_icon(diagnostic)
-    local icon
-    if diagnostic.severity == vim.diagnostic.severity.ERROR then
-        icon = u.icons.error
-    elseif diagnostic.severity == vim.diagnostic.severity.WARN then
-        icon = u.icons.warning
-    elseif diagnostic.severity == vim.diagnostic.severity.INFO then
-        icon = u.icons.info
-    else
-        icon = u.icons.hint
+local function count_diagnostic_sources()
+    local sources = require('lint').linters_by_ft[vim.bo.filetype]
+    if type(sources) == 'table' then
+        return math.max(1, vim.tbl_count(sources))
     end
-    return icon
+    return 1
+end
+
+local severity_icons = {
+    [vim.diagnostic.severity.ERROR] = u.icons.error,
+    [vim.diagnostic.severity.WARN] = u.icons.warning,
+    [vim.diagnostic.severity.INFO] = u.icons.info,
+    [vim.diagnostic.severity.HINT] = u.icons.hint,
+}
+local function diagnostic_icon(diagnostic)
+    return severity_icons[diagnostic.severity] or u.icons.hint
 end
 
 local function diagnostic_format_virtual(diagnostic)
-    if
-        get_diagnostic_sources_count() > 1
-        and not string.match(diagnostic.message, diagnostic.source)
-    then
-        return string.format('%s: %s', diagnostic.source, diagnostic.message)
-    else
-        return diagnostic.message
+    local source = diagnostic.source
+    local message = diagnostic.message
+    if count_diagnostic_sources() > 1 and not_in(message, source) then
+        return string.format('%s: %s', source, message)
     end
+    return message
 end
 
 local function diagnostic_format_float(diagnostic)
-    local msg
     local icon = diagnostic_icon(diagnostic)
-    if
-        get_diagnostic_sources_count() > 1
-        and not string.match(diagnostic.message, diagnostic.source)
-    then
-        msg = string.format('%s %s: %s', icon, diagnostic.source, diagnostic.message)
+    local source = diagnostic.source
+    local message = diagnostic.message
+    local code = diagnostic.code
+    local msg
+    if count_diagnostic_sources() > 1 and not_in(message, source) then
+        msg = string.format('%s %s: %s', icon, source, message)
     else
-        msg = string.format('%s %s', icon, diagnostic.message)
+        msg = string.format('%s %s', icon, message)
     end
-    if diagnostic.code ~= vim.NIL then
-        if diagnostic.code and not string.match(msg, diagnostic.code) then
-            msg = string.format(msg .. ' [%s]', diagnostic.code)
-        end
+    if code and code ~= vim.NIL and not_in(msg, code) then
+        msg = string.format('%s [%s]', msg, code)
     end
     return msg
 end
 
 local function diagnostic_suffix(diagnostic)
-    if not diagnostic.code or diagnostic.code == vim.NIL then
+    local code = diagnostic.code
+    local message = diagnostic.message
+    if not code or code == vim.NIL then
         return ''
     end
-    if not string.match(diagnostic.message, diagnostic.code) then
-        return (' [%s]'):format(diagnostic.code)
+    if not_in(message, code) then
+        return string.format(' [%s]', code)
     end
+    return ''
 end
 
 -- Toggle function
 local diagnostics_active = true
-local toggle_buffer_diagnostics = function()
+local function toggle_buffer_diagnostics()
     diagnostics_active = not diagnostics_active
+    local bufnr = 0
     if diagnostics_active then
-        vim.diagnostic.show(nil, 0)
+        vim.diagnostic.show(nil, bufnr)
     else
-        vim.diagnostic.hide(nil, 0)
+        vim.diagnostic.hide(nil, bufnr)
     end
+    return diagnostics_active
 end
 
 -- Setup
@@ -80,14 +79,7 @@ vim.diagnostic.config({
     update_in_insert = false,
     severity_sort = true,
     underline = false,
-    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = u.icons.error,
-            [vim.diagnostic.severity.WARN] = u.icons.warning,
-            [vim.diagnostic.severity.INFO] = u.icons.info,
-            [vim.diagnostic.severity.HINT] = u.icons.hint,
-        },
-    },
+    signs = { text = severity_icons },
     float = {
         source = false,
         format = diagnostic_format_float,
@@ -105,62 +97,67 @@ vim.diagnostic.config({
 
 -- Autocmd options
 vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+    desc = 'Update location list with formatted diagnostics on save',
     group = vim.api.nvim_create_augroup('diagnostics_format', { clear = true }),
     callback = function()
-        local diagnostics = vim.diagnostic.get(0)
-        if #diagnostics <= 0 then
+        local bufnr = 0
+        local diagnostics = vim.diagnostic.get(bufnr)
+        if #diagnostics == 0 then
             vim.cmd.lclose()
-            vim.fn.setloclist(0, {})
+            vim.fn.setloclist(bufnr, {})
             return
         end
 
-        -- Modify message to add source and error code
+        -- Reformat diagnostic messages to include source and code if not present
         local neotest = false
         local new_msg = {}
         for _, v in vim.iter(pairs(diagnostics)) do
             local old_msg = v.message
-            if not string.match(v.message, v.source) then
-                v.message = string.format('%s: %s', v.source, v.message)
-                if v.code ~= vim.NIL then
-                    if v.code and v.code ~= '' then
-                        v.message = string.format('%s [%s]', v.message, v.code)
-                    end
+            local source = v.source and tostring(v.source) or ''
+            local code = v.code and v.code ~= vim.NIL and tostring(v.code) or nil
+
+            if source ~= '' and not string.find(old_msg, source, 1, true) then
+                v.message = string.format('%s: %s', source, old_msg)
+                if code and not string.find(v.message, code, 1, true) then
+                    v.message = string.format('%s [%s]', v.message, code)
                 end
             end
             new_msg[old_msg] = v.message
 
-            if v.source == 'neotest' then
+            if source == 'neotest' then
                 neotest = true
             end
         end
 
-        -- Using set.diagnostics is weird so we first set the location list
-        -- with the original diagnostics and then modify it with the new
-        -- diagnostic msg
+        -- Update the location list with the new messages
         vim.diagnostic.setloclist({ open = false })
-        local current_ll = vim.fn.getloclist(0)
+        local current_ll = vim.fn.getloclist(bufnr)
         local new_ll = {}
         for _, v in vim.iter(pairs(current_ll)) do
-            v.text = new_msg[v.text]
+            v.text = new_msg[v.text] or v.text
             table.insert(new_ll, v)
         end
-        vim.fn.setloclist(0, {}, ' ', {
+        vim.fn.setloclist(bufnr, {}, ' ', {
             title = string.format(
                 'Diagnostics: %s',
-                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
+                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':p:.')
             ),
             items = new_ll,
         })
 
         if not neotest then
-            -- We use the qf for neotest so only open if neotest is not the source
             vim.cmd.lopen()
         end
     end,
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>fd', vim.diagnostic.open_float)
+vim.keymap.set(
+    'n',
+    '<Leader>fd',
+    vim.diagnostic.open_float,
+    { desc = 'Show diagnostics in floating window' }
+)
 vim.keymap.set('n', '<Leader>ld', function()
     local win_id = vim.api.nvim_get_current_win()
     vim.diagnostic.setloclist({
@@ -170,11 +167,16 @@ vim.keymap.set('n', '<Leader>ld', function()
         ),
     })
     vim.api.nvim_set_current_win(win_id)
-end)
-vim.keymap.set('n', '<Leader>dt', toggle_buffer_diagnostics)
+end, { desc = 'Show diagnostics in location list' })
+vim.keymap.set(
+    'n',
+    '<Leader>dt',
+    toggle_buffer_diagnostics,
+    { desc = 'Toggle diagnostics for current buffer' }
+)
 vim.keymap.set('n', '[d', function()
     vim.diagnostic.jump({ count = -1 })
-end)
+end, { desc = 'Go to previous diagnostic' })
 vim.keymap.set('n', ']d', function()
     vim.diagnostic.jump({ count = 1 })
-end)
+end, { desc = 'Go to next diagnostic' })
