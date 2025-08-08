@@ -72,14 +72,17 @@ local ruff_parser = linters.ruff.parser
 linters.ruff.parser = function(output, bufnr)
     local diagnostics = ruff_parser(output, bufnr)
     for _, v in pairs(diagnostics) do
-        local code
-        if v.code == vim.NIL then
+        local code = v.code
+        if code == nil or code == vim.NIL or type(code) ~= 'string' then
+            code = 'E'
+        elseif vim.startswith(code, 'invalid-syntax') then
             code = 'E'
         else
-            code = string.sub(v.code, 1, 2)
-        end
-        if code ~= 'F8' then
-            code = string.sub(code, 1, 1)
+            code = string.sub(code, 1, 2)
+            -- 'F8' is a special case; all other codes use the first char for severity mapping
+            if code ~= 'F8' then
+                code = string.sub(code, 1, 1)
+            end
         end
         local new_severity = ruff_severities[code]
         if new_severity then
