@@ -232,7 +232,9 @@ vim.lsp.config(
 vim.treesitter.language.register('markdown', 'blink-cmp-documentation')
 
 -- Autocmd settings
+local blink_cmp_augroup = vim.api.nvim_create_augroup('blink_cmp', { clear = true })
 vim.api.nvim_create_autocmd('User', {
+    group = blink_cmp_augroup,
     pattern = 'LuasnipInsertNodeEnter',
     callback = function()
         vim.schedule(function()
@@ -244,6 +246,7 @@ vim.api.nvim_create_autocmd('User', {
     end,
 })
 vim.api.nvim_create_autocmd('User', {
+    group = blink_cmp_augroup,
     pattern = 'BlinkCmpMenuOpen',
     callback = function()
         copilot_multiline_menu_direction = nil
@@ -262,6 +265,7 @@ vim.api.nvim_create_autocmd('User', {
         )
 
         vim.api.nvim_create_autocmd('User', {
+            group = blink_cmp_augroup,
             pattern = 'BlinkCmpMenuClose',
             once = true,
             callback = function()
