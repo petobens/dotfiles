@@ -1,3 +1,4 @@
+local ts_select = require('nvim-treesitter.textobjects.select')
 local u = require('utils')
 
 -- Setup
@@ -86,37 +87,47 @@ require('nvim-treesitter.configs').setup({
 vim.treesitter.language.register('yaml', 'ghaction')
 
 -- Mappings
-vim.keymap.set({ 'n', 'v' }, ']c', '<Cmd>TSTextobjectGotoNextStart @class.outer<CR>zz')
-vim.keymap.set({ 'n', 'v' }, ']f', '<Cmd>TSTextobjectGotoNextStart @function.outer<CR>zz')
-vim.keymap.set(
-    { 'n', 'v' },
-    ']p',
-    '<Cmd>TSTextobjectGotoNextStart @parameter.inner<CR>zz'
-)
-vim.keymap.set(
-    { 'n', 'v' },
-    '[c',
-    '<Cmd>TSTextobjectGotoPreviousStart @class.outer<CR>zz'
-)
-vim.keymap.set(
-    { 'n', 'v' },
-    '[f',
-    '<Cmd>TSTextobjectGotoPreviousStart @function.outer<CR>zz'
-)
-vim.keymap.set(
-    { 'n', 'v' },
-    '[p',
-    '<Cmd>TSTextobjectGotoPreviousStart @parameter.inner<CR>zz'
-)
+vim.keymap.set({ 'n', 'v' }, ']c', function()
+    vim.cmd.TSTextobjectGotoNextStart('@class.outer')
+    vim.cmd.normal({ args = { 'zz' }, bang = true })
+end, { desc = 'Next class' })
+
+vim.keymap.set({ 'n', 'v' }, '[c', function()
+    vim.cmd.TSTextobjectGotoPreviousStart('@class.outer')
+    vim.cmd.normal({ args = { 'zz' }, bang = true })
+end, { desc = 'Prev class' })
+
+vim.keymap.set({ 'n', 'v' }, ']f', function()
+    vim.cmd.TSTextobjectGotoNextStart('@function.outer')
+    vim.cmd.normal({ args = { 'zz' }, bang = true })
+end, { desc = 'Next function' })
+
+vim.keymap.set({ 'n', 'v' }, '[f', function()
+    vim.cmd.TSTextobjectGotoPreviousStart('@function.outer')
+    vim.cmd.normal({ args = { 'zz' }, bang = true })
+end, { desc = 'Prev function' })
+
+vim.keymap.set({ 'n', 'v' }, ']p', function()
+    vim.cmd.TSTextobjectGotoNextStart('@parameter.inner')
+    vim.cmd.normal({ args = { 'zz' }, bang = true })
+end, { desc = 'Next parameter' })
+
+vim.keymap.set({ 'n', 'v' }, '[p', function()
+    vim.cmd.TSTextobjectGotoPreviousStart('@parameter.inner')
+    vim.cmd.normal({ args = { 'zz' }, bang = true })
+end, { desc = 'Prev parameter' })
+
 vim.keymap.set({ 'o', 'x', 'n' }, '<leader>if', function()
-    require('nvim-treesitter.textobjects.select').select_textobject('@function.inner')
+    ts_select.select_textobject('@function.inner')
 end, { desc = 'Select inner function (works in injections)' })
+
 vim.keymap.set({ 'o', 'x', 'n' }, '<leader>af', function()
-    require('nvim-treesitter.textobjects.select').select_textobject('@function.outer')
+    ts_select.select_textobject('@function.outer')
 end, { desc = 'Select outer function (works in injections)' })
+
 vim.keymap.set('n', '<Leader>it', function()
     vim.treesitter.inspect_tree({
-        command = 'vnew | wincmd H | vertical resize 40',
+        command = 'vnew | wincmd H | vertical resize 60',
         title = function()
             return 'InspectTree'
         end,
