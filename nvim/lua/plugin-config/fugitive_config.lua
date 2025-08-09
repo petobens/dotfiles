@@ -2,6 +2,22 @@ local u = require('utils')
 
 _G.fugitiveConfig = {}
 
+-- Helpers
+local function open_file_at_commit_split()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local commit = bufname:match('//([0-9a-f]+)$')
+    local line = vim.api.nvim_get_current_line()
+    local file = line:match('^diff %-%-git a/.- b/(.+)$')
+    if commit and file then
+        u.split_open(vim.fn.FugitiveFind(commit .. ':' .. file))
+    else
+        vim.notify(
+            'Not on a diff --git line or not in a commit buffer',
+            vim.log.levels.WARN
+        )
+    end
+end
+
 -- Autocmds
 vim.api.nvim_create_autocmd('FileType', {
     desc = 'Set up Fugitive git status options and mappings',
@@ -70,12 +86,20 @@ vim.api.nvim_create_autocmd('FileType', {
     group = vim.api.nvim_create_augroup('git_ft', { clear = true }),
     pattern = { 'git' },
     callback = function(e)
+        -- Options
         vim.opt_local.foldlevel = 1 -- open commits unfolded
+        -- Mappings
         vim.keymap.set(
             'n',
             'q',
             u.quit_return,
             { buffer = e.buf, desc = 'Quit and return' }
+        )
+        vim.keymap.set(
+            'n',
+            '<Leader>gh',
+            open_file_at_commit_split,
+            { buffer = e.buf, desc = 'Open file at commit in split (diff --git line)' }
         )
     end,
 })
