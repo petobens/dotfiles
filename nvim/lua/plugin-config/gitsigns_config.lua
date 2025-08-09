@@ -13,6 +13,7 @@ gitsigns.setup({
 
 -- Mappings
 vim.keymap.set('n', '<Leader>gg', gitsigns.toggle_signs, { desc = 'Toggle gitsigns' })
+
 vim.keymap.set('n', ']h', function()
     if vim.wo.diff then
         return ']c'
@@ -22,6 +23,7 @@ vim.keymap.set('n', ']h', function()
     end)
     return '<Ignore>'
 end, { expr = true, desc = 'Next git hunk' })
+
 vim.keymap.set('n', '[h', function()
     if vim.wo.diff then
         return '[c'
@@ -31,10 +33,13 @@ vim.keymap.set('n', '[h', function()
     end)
     return '<Ignore>'
 end, { expr = true, desc = 'Previous git hunk' })
+
 vim.keymap.set('n', '<Leader>hp', gitsigns.preview_hunk, { desc = 'Preview git hunk' })
+
 vim.keymap.set('n', '<Leader>gm', function()
     gitsigns.blame_line({ full = true })
 end, { desc = 'Show git blame for current line' })
+
 vim.keymap.set(
     'n',
     '<Leader>ib',

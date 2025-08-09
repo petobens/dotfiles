@@ -311,9 +311,11 @@ require('lazy').setup(plugins, {
 
 -- Mappings
 vim.keymap.set('n', '<Leader>lz', vim.cmd.Lazy, { desc = 'Open Lazy plugin manager' })
+
 vim.keymap.set('n', '<Leader>bu', function()
     vim.cmd.Lazy('sync')
 end, { desc = 'Sync Lazy plugins' })
+
 vim.keymap.set('n', '<Leader>ul', function()
     vim.cmd.Lazy('log')
 end, { desc = 'Show Lazy log' })

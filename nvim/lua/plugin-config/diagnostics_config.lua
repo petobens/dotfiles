@@ -158,6 +158,7 @@ vim.keymap.set(
     vim.diagnostic.open_float,
     { desc = 'Show diagnostics in floating window' }
 )
+
 vim.keymap.set('n', '<Leader>ld', function()
     local win_id = vim.api.nvim_get_current_win()
     vim.diagnostic.setloclist({
@@ -168,15 +169,18 @@ vim.keymap.set('n', '<Leader>ld', function()
     })
     vim.api.nvim_set_current_win(win_id)
 end, { desc = 'Show diagnostics in location list' })
+
 vim.keymap.set(
     'n',
     '<Leader>dt',
     toggle_buffer_diagnostics,
     { desc = 'Toggle diagnostics for current buffer' }
 )
+
 vim.keymap.set('n', '[d', function()
     vim.diagnostic.jump({ count = -1 })
 end, { desc = 'Go to previous diagnostic' })
+
 vim.keymap.set('n', ']d', function()
     vim.diagnostic.jump({ count = 1 })
 end, { desc = 'Go to next diagnostic' })

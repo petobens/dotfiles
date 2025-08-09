@@ -34,15 +34,19 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '<Leader>gp', function()
             vim.cmd.Git('push')
         end, { buffer = e.buf, desc = 'Push' })
+
         vim.keymap.set('n', '<Leader>gF', function()
             vim.cmd.Git('push --force-with-lease')
         end, { buffer = e.buf, desc = 'Force push with lease' })
+
         vim.keymap.set('n', '<Leader>gP', function()
             vim.cmd.Git('pull')
         end, { buffer = e.buf, desc = 'Pull' })
+
         vim.keymap.set('n', 'ci', function()
             vim.cmd.Git('commit -n')
         end, { buffer = e.buf, desc = 'Commit ignore check (no verify)' })
+
         vim.keymap.set('n', '<Leader>nd', function()
             local file = vim.fn.FugitiveFind(vim.fn.expand('<cfile>'))
             if not file or file == '' or not vim.uv.fs_stat(file) then
@@ -129,39 +133,49 @@ vim.keymap.set('n', '<Leader>gs', function()
     vim.cmd.normal({ args = { '4j' }, bang = true })
     _G.fugitiveConfig.gstatus_winid = vim.api.nvim_get_current_win()
 end, { desc = 'Open Fugitive status window' })
+
 vim.keymap.set('n', '<Leader>gd', function()
     vim.cmd.Gdiffsplit({ bang = true })
 end, { desc = 'Run Gdiffsplit' })
+
 vim.keymap.set('n', '<Leader>gD', function()
     vim.cmd.Git('diff')
 end, { desc = 'Git diff prompt' })
+
 vim.keymap.set('n', '<Leader>gM', function()
     vim.cmd.Git('mergetool')
 end, { desc = 'Git mergetool' })
+
 vim.keymap.set('n', '<Leader>gr', function()
     vim.cmd.Git('rebase -i')
 end, { desc = 'Git interactive rebase' })
+
 vim.keymap.set('n', '<Leader>gp', function()
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     vim.cmd.Git('push')
 end, { desc = 'Push' })
+
 vim.keymap.set('n', '<Leader>gF', function()
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     vim.cmd.Git('push --force-with-lease')
 end, { desc = 'Force push with lease' })
+
 vim.keymap.set('n', '<Leader>gP', function()
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     vim.cmd.Git('pull')
 end, { desc = 'Pull' })
+
 vim.keymap.set(
     { 'n', 'v' },
     '<Leader>gb',
     vim.cmd.GBrowse,
     { desc = 'Browse git object' }
 )
+
 vim.keymap.set({ 'n', 'v' }, '<Leader>gB', function()
     vim.cmd.GBrowse({ bang = true })
 end, { desc = 'Copy browser permalink' })
+
 vim.keymap.set('n', '<Leader>bl', function()
     vim.cmd.Git({ args = { 'blame' }, range = { 0, 3 } })
     vim.cmd.wincmd('j')

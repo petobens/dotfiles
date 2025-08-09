@@ -63,21 +63,25 @@ vim.keymap.set({ 'i', 's' }, '<C-s>', function()
         luasnip.expand({})
     end
 end, { desc = 'Expand snippet' })
+
 vim.keymap.set({ 'i', 's' }, '<C-j>', function()
     if luasnip.jumpable(1) then
         luasnip.jump(1)
     end
 end, { desc = 'Jump to next snippet field' })
+
 vim.keymap.set({ 'i', 's' }, '<C-k>', function()
     if luasnip.jumpable(-1) then
         luasnip.jump(-1)
     end
 end, { desc = 'Jump to previous snippet field' })
+
 vim.keymap.set({ 'i', 's' }, '<C-x>', function()
     if luasnip.choice_active() then
         luasnip.change_choice(1)
     end
 end, { desc = 'Cycle through snippet choices' })
+
 vim.keymap.set('n', '<Leader>es', function()
     local ft = vim.bo.filetype
     local special_fts = { tex = true, lua = true, markdown = true }
