@@ -1,8 +1,6 @@
 -- Ensure image dir exists
 local img_dir = vim.fs.joinpath(vim.env.HOME, 'Pictures', 'nvim-images')
-if not vim.uv.fs_stat(img_dir) then
-    vim.fn.mkdir(img_dir, 'p')
-end
+require('utils').mk_non_dir(img_dir)
 
 -- Setup
 require('img-clip').setup({
@@ -22,4 +20,4 @@ require('img-clip').setup({
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>pi', '<Cmd>PasteImage<CR>')
+vim.keymap.set('n', '<Leader>pi', vim.cmd.PasteImage, { desc = 'Paste clipboard image' })
