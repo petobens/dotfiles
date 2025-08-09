@@ -91,7 +91,7 @@ vim.lsp.config('texlab', {
     handlers = { ['textDocument/publishDiagnostics'] = function() end },
 })
 
--- Enable of the above servers
+-- Enable all of the above servers
 vim.lsp.enable({
     'bashls',
     'lua_ls',
@@ -102,9 +102,9 @@ vim.lsp.enable({
 
 -- Autocmds
 vim.api.nvim_create_autocmd('LspTokenUpdate', {
+    desc = 'Highlight Python decorators with semantic token priority',
     callback = function(args)
         local token = args.data.token
-        -- Ensure python decorators have priority over builtin semantic token highlights
         if vim.bo[args.buf].filetype == 'python' and token.type == 'decorator' then
             vim.lsp.semantic_tokens.highlight_token(
                 token,
@@ -118,37 +118,66 @@ vim.api.nvim_create_autocmd('LspTokenUpdate', {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>li', '<Cmd>LspInfo<CR>')
-local aug_user_lsp = vim.api.nvim_create_augroup('UserLspConfig', {})
+vim.keymap.set('n', '<Leader>li', vim.cmd.LspInfo, { desc = 'Show LSP info' })
 vim.api.nvim_create_autocmd('LspAttach', {
-    group = aug_user_lsp,
+    desc = 'Set up buffer-local keymaps and options after attaching LSP server',
+    group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
     callback = function(e)
         -- Enable completion triggered by <c-x><c-o>
         vim.bo[e.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
         -- Disable lsp based color highlighting since we use colorizer plugin
         vim.lsp.document_color.enable(false, e.buf)
 
-        -- Map only after language server attaches to the current buffer
-        local opts = { buffer = e.buf }
+        -- Mappings
         vim.keymap.set('n', '<Leader>jd', function()
-            local split_cmd = 'split'
             if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
-                split_cmd = 'vsplit'
+                vim.cmd.vsplit()
+            else
+                vim.cmd.split()
             end
-            vim.cmd(split_cmd)
             vim.lsp.buf.definition()
-        end, opts)
-        vim.keymap.set('n', '<Leader>jD', vim.lsp.buf.declaration, opts)
-        vim.keymap.set('n', '<Leader>ap', vim.lsp.buf.references, opts)
-        vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, opts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-        vim.keymap.set('n', '<Leader>fs', vim.lsp.buf.signature_help, opts)
+        end, { buffer = e.buf, desc = 'Jump to definition (split/vsplit)' })
+        vim.keymap.set(
+            'n',
+            '<Leader>jD',
+            vim.lsp.buf.declaration,
+            { buffer = e.buf, desc = 'Jump to declaration' }
+        )
+        vim.keymap.set(
+            'n',
+            '<Leader>ap',
+            vim.lsp.buf.references,
+            { buffer = e.buf, desc = 'List references/appearances' }
+        )
+        vim.keymap.set(
+            'n',
+            '<Leader>rn',
+            vim.lsp.buf.rename,
+            { buffer = e.buf, desc = 'Rename symbol' }
+        )
+        vim.keymap.set(
+            'n',
+            'K',
+            vim.lsp.buf.hover,
+            { buffer = e.buf, desc = 'Show hover documentation' }
+        )
+        vim.keymap.set(
+            'n',
+            '<Leader>fs',
+            vim.lsp.buf.signature_help,
+            { buffer = e.buf, desc = 'Show signature help' }
+        )
         vim.keymap.set('n', '<Leader>ih', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-        end, opts)
-        vim.keymap.set('n', '<Leader>cA', vim.lsp.buf.code_action, opts)
+        end, { buffer = e.buf, desc = 'Toggle inlay hints' })
+        vim.keymap.set(
+            'n',
+            '<Leader>cA',
+            vim.lsp.buf.code_action,
+            { buffer = e.buf, desc = 'Code action' }
+        )
         vim.keymap.set('n', '<Leader>dc', function()
             vim.lsp.document_color.enable(not vim.lsp.document_color.is_enabled())
-        end, opts)
+        end, { buffer = e.buf, desc = 'Toggle LSP color highlighting' })
     end,
 })
