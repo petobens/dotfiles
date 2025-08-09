@@ -995,8 +995,9 @@ devicons.set_icon({
 })
 devicons.set_icon_by_filetype({ codecompanion = 'codecompanion' })
 
--- Set chat window title
+-- Chat title
 vim.api.nvim_create_autocmd('User', {
+    desc = 'Set CodeCompanion chat window title after chat events',
     pattern = {
         'CodeCompanionChatCreated',
         'CodeCompanionChatOpened',
@@ -1009,7 +1010,7 @@ vim.api.nvim_create_autocmd('User', {
     end,
 })
 
--- Show a spinner working indicator when a request is being made
+-- Spinner
 local ns_id = vim.api.nvim_create_namespace('codecompanion_spinner')
 local spinner_states = { '', '', '' }
 local spinner_bufnr, spinner_line, spinner_timer, spinner_index = nil, nil, nil, 1
@@ -1046,6 +1047,7 @@ local function update_spinner()
 end
 
 vim.api.nvim_create_autocmd('User', {
+    desc = 'Start CodeCompanion spinner on request start',
     pattern = 'CodeCompanionRequestStarted',
     callback = function()
         if vim.bo.filetype == 'codecompanion' then
@@ -1060,6 +1062,7 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 vim.api.nvim_create_autocmd('User', {
+    desc = 'Clear CodeCompanion spinner on streaming',
     pattern = 'CodeCompanionRequestStreaming',
     callback = function()
         vim.defer_fn(clear_spinner, 50)
@@ -1067,6 +1070,7 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 vim.api.nvim_create_autocmd('User', {
+    desc = 'Clear spinner and start insert on request finish',
     pattern = 'CodeCompanionRequestFinished',
     callback = function()
         vim.defer_fn(function()
@@ -1078,8 +1082,9 @@ vim.api.nvim_create_autocmd('User', {
     end,
 })
 
--- Ensure diffs start in normal mode and follow correct window order
+-- Diffs
 vim.api.nvim_create_autocmd('User', {
+    desc = 'Ensure diffs start in normal mode and follow correct window order',
     pattern = 'CodeCompanionDiffAttached',
     callback = function()
         vim.defer_fn(function()
@@ -1091,51 +1096,68 @@ vim.api.nvim_create_autocmd('User', {
 
 -- Chat mappings
 vim.api.nvim_create_autocmd('FileType', {
+    desc = 'CodeCompanion buffer mappings',
     group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true }),
     pattern = { 'codecompanion' },
     callback = function(e)
-        -- Mappings
-        vim.keymap.set('i', '<C-h>', '<ESC><C-w>h', { buffer = e.buf })
+        local bufnr = e.buf
+        vim.keymap.set(
+            'i',
+            '<C-h>',
+            '<ESC><C-w>h',
+            { buffer = bufnr, desc = 'Move left window' }
+        )
+
         vim.keymap.set({ 'i', 'n' }, '<A-p>', function()
-            local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+            local chat = codecompanion.buf_get_chat(bufnr)
             vim.print(string.format('Model Params:\n%s', vim.inspect(chat.settings)))
-        end, { buffer = e.buf })
+        end, { buffer = bufnr, desc = 'Show model params' })
+
         vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
             local system_role = get_current_system_role_prompt()
             if system_role then
                 vim.print(system_role)
             end
-        end, { buffer = e.buf })
-        vim.keymap.set({ 'i' }, '<C-p>', function()
+        end, { buffer = bufnr, desc = 'Show system role prompt' })
+
+        vim.keymap.set('i', '<C-p>', function()
             vim.cmd.stopinsert()
             local last_prompt = vim.split(get_last_user_prompt(), '\n', { plain = true })
             vim.api.nvim_put(last_prompt, 'c', true, true)
             vim.defer_fn(function()
                 vim.cmd.startinsert()
             end, 1)
-        end, { buffer = e.buf })
-        vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = e.buf })
+        end, { buffer = bufnr, desc = 'Insert last user prompt' })
+
+        vim.keymap.set(
+            'n',
+            '<Leader>vm',
+            require('nabla').popup,
+            { buffer = bufnr, desc = 'Show Nabla math preview' }
+        )
     end,
 })
 
 -- Filetype mappings
 vim.api.nvim_create_autocmd('FileType', {
+    desc = 'CodeCompanion quickfix buffer mapping',
     pattern = { 'qf' },
     callback = function(args)
         vim.keymap.set('n', '<leader>qf', function()
             _G.CodeCompanionConfig.run_slash_command('qfix')
-        end, { buffer = args.buf })
+        end, { buffer = args.buf, desc = 'Explain quickfix/loclist diagnostics' })
     end,
 })
 vim.api.nvim_create_autocmd('FileType', {
+    desc = 'CodeCompanion fugitive buffer mappings',
     pattern = { 'fugitive' },
     callback = function(args)
         vim.keymap.set('n', '<Leader>cc', function()
             _G.CodeCompanionConfig.run_slash_command('conventional_commit')
-        end, { buffer = args.buf })
+        end, { buffer = args.buf, desc = 'Generate conventional commit message' })
         vim.keymap.set('n', '<Leader>cr', function()
             _G.CodeCompanionConfig.run_slash_command('code_review')
-        end, { buffer = args.buf })
+        end, { buffer = args.buf, desc = 'Perform code review' })
         vim.keymap.set('n', '<Leader>br', function()
             vim.ui.input(
                 { prompt = 'Base branch for diff: ', default = 'main' },
@@ -1148,25 +1170,47 @@ vim.api.nvim_create_autocmd('FileType', {
                     end
                 end
             )
-        end, { buffer = args.buf })
+        end, { buffer = args.buf, desc = 'Code review with base branch' })
     end,
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>cg', focus_or_toggle_chat)
-vim.keymap.set({ 'n', 'v' }, '<Leader>cr', ':CodeCompanion ', { silent = false })
-vim.keymap.set({ 'n', 'v' }, '<Leader>ca', '<Cmd>CodeCompanionActions<CR>')
-vim.keymap.set('n', '<Leader>cb', '<Cmd>CodeCompanionHistory<CR>')
-vim.keymap.set({ 'n' }, '<Leader>ce', function()
+vim.keymap.set(
+    'n',
+    '<Leader>cg',
+    focus_or_toggle_chat,
+    { desc = 'Toggle CodeCompanion chat' }
+)
+
+vim.keymap.set({ 'n', 'v' }, '<Leader>cr', function()
+    vim.api.nvim_input(':CodeCompanion ')
+end, { desc = 'Open CodeCompanion command-line' })
+
+vim.keymap.set(
+    { 'n', 'v' },
+    '<Leader>ca',
+    vim.cmd.CodeCompanionActions,
+    { desc = 'Open CodeCompanion actions' }
+)
+
+vim.keymap.set(
+    'n',
+    '<Leader>cb',
+    vim.cmd.CodeCompanionHistory,
+    { desc = 'Open CodeCompanion history' }
+)
+
+vim.keymap.set('n', '<Leader>ce', function()
     codecompanion.actions()
     vim.defer_fn(function()
         local picker =
             telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
         picker:move_selection(-1)
         telescope_actions.select_default(picker)
-    end, 150)
-end)
-vim.keymap.set({ 'v' }, '<Leader>cp', function()
+    end, 250)
+end, { desc = 'Run CodeCompanion actions and select default' })
+
+vim.keymap.set('v', '<Leader>cp', function()
     codecompanion.add()
     if vim.bo.filetype ~= 'codecompanion' then
         try_focus_chat_float()
@@ -1176,7 +1220,8 @@ vim.keymap.set({ 'v' }, '<Leader>cp', function()
             false
         )
     end
-end)
+end, { desc = 'Add selection to CodeCompanion chat' })
+
 vim.keymap.set('v', '<Leader>ec', function()
     codecompanion.prompt('explain')
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = 'Explain selection with CodeCompanion' })
