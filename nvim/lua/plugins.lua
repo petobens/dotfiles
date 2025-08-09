@@ -126,6 +126,7 @@ local plugins = {
             'benfowler/telescope-luasnip.nvim',
         },
         event = 'InsertEnter',
+        keys = '<Leader>es',
         config = load_plugin_config('luasnip_config'),
     },
 

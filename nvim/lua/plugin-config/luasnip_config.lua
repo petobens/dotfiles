@@ -1,6 +1,5 @@
 local luasnip = require('luasnip')
 local types = require('luasnip.util.types')
-local u = require('utils')
 
 _G.LuaSnipConfig = {}
 
@@ -63,29 +62,35 @@ vim.keymap.set({ 'i', 's' }, '<C-s>', function()
     if luasnip.expandable() then
         luasnip.expand({})
     end
-end)
+end, { desc = 'Expand snippet' })
+
 vim.keymap.set({ 'i', 's' }, '<C-j>', function()
     if luasnip.jumpable(1) then
         luasnip.jump(1)
     end
-end)
+end, { desc = 'Jump to next snippet field' })
+
 vim.keymap.set({ 'i', 's' }, '<C-k>', function()
     if luasnip.jumpable(-1) then
         luasnip.jump(-1)
     end
-end)
+end, { desc = 'Jump to previous snippet field' })
+
 vim.keymap.set({ 'i', 's' }, '<C-x>', function()
     if luasnip.choice_active() then
         luasnip.change_choice(1)
     end
-end)
+end, { desc = 'Cycle through snippet choices' })
 vim.keymap.set('n', '<Leader>es', function()
     local ft = vim.bo.filetype
-    if ft == 'tex' or ft == 'lua' or ft == 'markdown' then
-        vim.cmd(':Telescope find_files cwd=' .. snippets_dir .. '/' .. ft)
+    local special_fts = { tex = true, lua = true, markdown = true }
+    if special_fts[ft] then
+        require('telescope.builtin').find_files({
+            cwd = vim.fs.joinpath(snippets_dir, ft),
+        })
         return
     end
 
     local snippet_file = vim.fs.joinpath(snippets_dir, ft .. '.lua')
-    u.split_open(snippet_file)
-end)
+    require('utils').split_open(snippet_file)
+end, { desc = 'Edit snippet file for current filetype' })
