@@ -85,7 +85,7 @@ require('nvim-treesitter.configs').setup({
 -- Ft/Langugage register
 vim.treesitter.language.register('yaml', 'ghaction')
 
--- Mappings (basically center when moving)
+-- Mappings
 vim.keymap.set({ 'n', 'v' }, ']c', '<Cmd>TSTextobjectGotoNextStart @class.outer<CR>zz')
 vim.keymap.set({ 'n', 'v' }, ']f', '<Cmd>TSTextobjectGotoNextStart @function.outer<CR>zz')
 vim.keymap.set(
@@ -108,6 +108,12 @@ vim.keymap.set(
     '[p',
     '<Cmd>TSTextobjectGotoPreviousStart @parameter.inner<CR>zz'
 )
+vim.keymap.set({ 'o', 'x', 'n' }, '<leader>if', function()
+    require('nvim-treesitter.textobjects.select').select_textobject('@function.inner')
+end, { desc = 'Select inner function (works in injections)' })
+vim.keymap.set({ 'o', 'x', 'n' }, '<leader>af', function()
+    require('nvim-treesitter.textobjects.select').select_textobject('@function.outer')
+end, { desc = 'Select outer function (works in injections)' })
 vim.keymap.set('n', '<Leader>it', function()
     vim.treesitter.inspect_tree({
         command = 'vnew | wincmd H | vertical resize 40',
