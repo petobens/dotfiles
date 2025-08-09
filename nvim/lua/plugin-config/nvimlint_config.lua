@@ -5,19 +5,20 @@ local lint = require('lint')
 vim.api.nvim_create_autocmd(
     { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
     {
+        desc = 'Run nvim-lint on buffer events',
         group = vim.api.nvim_create_augroup('nvim_lint', { clear = true }),
         callback = function(e)
             local win_config = vim.api.nvim_win_get_config(0)
-            local zindex = win_config.zindex
+            local is_float = win_config.relative ~= ''
             local title = win_config.title
 
             -- Don't lint markdown floating windows
-            if e.buf and vim.bo[e.buf].filetype == 'markdown' and zindex then
+            if is_float and e.buf and vim.bo[e.buf].filetype == 'markdown' then
                 return
             end
             -- Don't lint codecompanion debug window
             if
-                zindex
+                is_float
                 and type(title) == 'table'
                 and type(title[1]) == 'table'
                 and title[1][1] == 'Debug Chat'
@@ -25,6 +26,7 @@ vim.api.nvim_create_autocmd(
                 return
             end
 
+            -- Defer linting to avoid blocking UI
             vim.defer_fn(function()
                 lint.try_lint(nil, { ignore_errors = true })
             end, 1)
@@ -49,7 +51,7 @@ lint.linters_by_ft = {
 }
 
 -- Linter config/args
-local linters = require('lint').linters
+local linters = lint.linters
 ---- Lua
 linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
     '--config=' .. vim.fs.joinpath(vim.env.HOME, '.config', '.luacheckrc'),
@@ -60,13 +62,14 @@ linters.markdownlint.args = {
     '--stdin',
 }
 ---- Python
+local severity = vim.diagnostic.severity
 local ruff_severities = {
-    ['E'] = vim.diagnostic.severity.ERROR,
-    ['F8'] = vim.diagnostic.severity.ERROR,
-    ['F'] = vim.diagnostic.severity.WARN,
-    ['W'] = vim.diagnostic.severity.WARN,
-    ['D'] = vim.diagnostic.severity.INFO,
-    ['B'] = vim.diagnostic.severity.INFO,
+    ['E'] = severity.ERROR,
+    ['F8'] = severity.ERROR,
+    ['F'] = severity.WARN,
+    ['W'] = severity.WARN,
+    ['D'] = severity.INFO,
+    ['B'] = severity.INFO,
 }
 local ruff_parser = linters.ruff.parser
 linters.ruff.parser = function(output, bufnr)
@@ -78,8 +81,8 @@ linters.ruff.parser = function(output, bufnr)
         elseif vim.startswith(code, 'invalid-syntax') then
             code = 'E'
         else
+            -- 'F8' is a special case; all other codes use first char for severity mapping
             code = string.sub(code, 1, 2)
-            -- 'F8' is a special case; all other codes use the first char for severity mapping
             if code ~= 'F8' then
                 code = string.sub(code, 1, 1)
             end
@@ -119,6 +122,21 @@ linters.chktex.ignore_exitcode = true
 
 -- Commands
 vim.api.nvim_create_user_command('LinterInfo', function()
-    local running_linters = table.concat(lint.get_running(), '\n')
-    vim.notify(running_linters, vim.log.levels.INFO, { title = 'nvim-lint' })
-end, {})
+    local ft = vim.bo.filetype
+    local configured = require('lint').linters_by_ft[ft]
+    if configured and #configured > 0 then
+        vim.notify(
+            string.format(
+                'Configured linters for `%s` filetype:\n%s',
+                ft,
+                table.concat(configured, '\n')
+            ),
+            vim.log.levels.INFO
+        )
+    else
+        vim.notify(
+            string.format('No linters configured for filetype "%s"', ft),
+            vim.log.levels.WARN
+        )
+    end
+end, { desc = 'Show configured linters for current filetype' })
