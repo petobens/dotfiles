@@ -514,4 +514,4 @@ onedarkpro.setup({
     },
 })
 
-vim.cmd.colorscheme({ args = { 'onedark' } })
+vim.cmd.colorscheme('onedark')
