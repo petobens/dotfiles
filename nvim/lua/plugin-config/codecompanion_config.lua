@@ -356,7 +356,6 @@ codecompanion.setup({
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
                     model = { default = 'gpt-4.1' },
-                    max_tokens = { default = 2048 },
                     temperature = { default = 0.2 },
                     top_p = { default = 0.1 },
                 },
@@ -377,7 +376,6 @@ codecompanion.setup({
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
                     model = { default = 'gpt-5' },
-                    max_completion_tokens = { default = 2048 },
                     reasoning_effort = { default = 'minimal' },
                 },
             })
@@ -388,7 +386,6 @@ codecompanion.setup({
                 name = 'gemini_flash_25',
                 schema = {
                     model = { default = 'gemini-2.5-flash' },
-                    max_tokens = { default = 2048 },
                     reasoning_effort = { default = 'none' },
                 },
             })
