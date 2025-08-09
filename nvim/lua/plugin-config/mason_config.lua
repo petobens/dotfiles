@@ -11,4 +11,4 @@ require('mason-tool-installer').setup({
     },
 })
 
-vim.keymap.set('n', '<Leader>ms', '<Cmd>Mason<CR>')
+vim.keymap.set('n', '<Leader>ms', vim.cmd.Mason, { desc = 'Open Mason UI' })
