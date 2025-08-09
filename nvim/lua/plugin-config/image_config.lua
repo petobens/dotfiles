@@ -43,5 +43,10 @@ local function preview_image()
         image.from_file(img_path, {}):render()
     end
 end
-vim.keymap.set('n', '<Leader>ii', preview_image)
-vim.keymap.set('n', '<Leader>iw', image.clear)
+vim.keymap.set(
+    'n',
+    '<Leader>ii',
+    preview_image,
+    { desc = 'Preview inline image under cursor' }
+)
+vim.keymap.set('n', '<Leader>iw', image.clear, { desc = 'Clear (wipe) all images' })
