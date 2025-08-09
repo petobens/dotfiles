@@ -1,7 +1,8 @@
-local node_api = require('nvim-tree.api').node
-local tree_api = require('nvim-tree.api').tree
-local marks_api = require('nvim-tree.api').marks
-local fs_api = require('nvim-tree.api').fs
+local nvimtree_api = require('nvim-tree.api')
+local node_api = nvimtree_api.node
+local tree_api = nvimtree_api.tree
+local marks_api = nvimtree_api.marks
+local fs_api = nvimtree_api.fs
 local Path = require('plenary.path')
 local u = require('utils')
 
@@ -14,7 +15,7 @@ local function cd_find_file()
         update_root = true, -- this ensures lcd changes
     }
     tree_api.find_file(find_file_opts)
-    vim.cmd.sleep({ args = { '3m' } })
+    vim.cmd.sleep('3m')
 
     local node = tree_api.get_node_under_cursor()
     if not node then
@@ -54,7 +55,7 @@ local function up_dir()
 
     node_api.navigate.parent()
     tree_api.change_root_to_node()
-    vim.cmd.sleep({ args = { '3m' } })
+    vim.cmd.sleep('3m')
     tree_api.find_file({ buf = dir })
 end
 
@@ -137,7 +138,7 @@ local function paste()
     marks_api.clear()
 end
 
-local function add_codecompanion_references()
+local function add_codecompanion_context()
     local files = {}
     local nodes = marks_api.list()
     if next(nodes) == nil then
@@ -175,71 +176,171 @@ end
 
 -- Buffer mappings
 local function on_attach(bufnr)
-    local map_opts = { buffer = bufnr }
     -- Tree
-    vim.keymap.set('n', 'q', tree_api.close, map_opts)
-    vim.keymap.set('n', '<ESC>', tree_api.close, map_opts)
-    vim.keymap.set('n', '<C-r>', tree_api.reload, map_opts)
-    vim.keymap.set('n', 'T', cycle_sort, map_opts)
+    vim.keymap.set('n', 'q', tree_api.close, { buffer = bufnr, desc = 'Close NvimTree' })
+    vim.keymap.set(
+        'n',
+        '<ESC>',
+        tree_api.close,
+        { buffer = bufnr, desc = 'Close NvimTree' }
+    )
+    vim.keymap.set(
+        'n',
+        '<C-r>',
+        tree_api.reload,
+        { buffer = bufnr, desc = 'Reload tree' }
+    )
+    vim.keymap.set('n', 'T', cycle_sort, { buffer = bufnr, desc = 'Cycle sort method' })
+
     -- Editing
-    vim.keymap.set('n', '<CR>', cd_or_open, map_opts)
-    vim.keymap.set('n', 'v', node_api.open.vertical, map_opts)
-    vim.keymap.set('n', 's', node_api.open.horizontal, map_opts)
-    vim.keymap.set('n', 'o', node_api.run.system, map_opts)
+    vim.keymap.set(
+        'n',
+        '<CR>',
+        cd_or_open,
+        { buffer = bufnr, desc = 'Open or cd into node' }
+    )
+    vim.keymap.set(
+        'n',
+        'v',
+        node_api.open.vertical,
+        { buffer = bufnr, desc = 'Open in vertical split' }
+    )
+    vim.keymap.set(
+        'n',
+        's',
+        node_api.open.horizontal,
+        { buffer = bufnr, desc = 'Open in horizontal split' }
+    )
+    vim.keymap.set(
+        'n',
+        'o',
+        node_api.run.system,
+        { buffer = bufnr, desc = 'Open with system handler' }
+    )
+
     -- Filesystem
-    vim.keymap.set('n', 'F', fs_api.create, map_opts)
-    vim.keymap.set('n', 'D', fs_api.create, map_opts)
-    vim.keymap.set('n', 'd', trash, map_opts)
+    vim.keymap.set('n', 'F', fs_api.create, { buffer = bufnr, desc = 'Create file' })
+    vim.keymap.set('n', 'D', fs_api.create, { buffer = bufnr, desc = 'Create directory' })
+    vim.keymap.set('n', 'd', trash, { buffer = bufnr, desc = 'Trash/delete node(s)' })
     vim.keymap.set('n', 'c', function()
         copy_move('copy')
-    end, map_opts)
+    end, { buffer = bufnr, desc = 'Copy node(s)' })
     vim.keymap.set('n', 'm', function()
         copy_move('cut')
-    end, map_opts)
-    vim.keymap.set('n', 'p', paste, map_opts)
-    vim.keymap.set('n', 'r', fs_api.rename, map_opts)
-    vim.keymap.set('n', 'y', fs_api.copy.filename, map_opts)
-    vim.keymap.set('n', 'Y', fs_api.copy.absolute_path, map_opts)
-    vim.keymap.set('n', '<C-o>', tree_api.change_root_to_node, map_opts)
-    vim.keymap.set('n', 'u', up_dir, map_opts)
+    end, { buffer = bufnr, desc = 'Move (cut) node(s)' })
+    vim.keymap.set('n', 'p', paste, { buffer = bufnr, desc = 'Paste node(s)' })
+    vim.keymap.set('n', 'r', fs_api.rename, { buffer = bufnr, desc = 'Rename node' })
+    vim.keymap.set(
+        'n',
+        'y',
+        fs_api.copy.filename,
+        { buffer = bufnr, desc = 'Copy filename' }
+    )
+    vim.keymap.set(
+        'n',
+        'Y',
+        fs_api.copy.absolute_path,
+        { buffer = bufnr, desc = 'Copy absolute path' }
+    )
+    vim.keymap.set(
+        'n',
+        '<C-o>',
+        tree_api.change_root_to_node,
+        { buffer = bufnr, desc = 'Change root to node' }
+    )
+    vim.keymap.set('n', 'u', up_dir, { buffer = bufnr, desc = 'Go up one directory' })
     vim.keymap.set('n', 'h', function()
         tree_api.change_root(vim.env.HOME)
-    end, map_opts)
-    vim.keymap.set('n', '<A-i>', node_api.show_info_popup, map_opts)
-    vim.keymap.set('n', ',th', tree_api.toggle_hidden_filter, map_opts)
-    vim.keymap.set('n', ',ti', tree_api.toggle_gitignore_filter, map_opts)
+    end, { buffer = bufnr, desc = 'Change root to $HOME' })
+    vim.keymap.set(
+        'n',
+        '<A-i>',
+        node_api.show_info_popup,
+        { buffer = bufnr, desc = 'Show info popup' }
+    )
+    vim.keymap.set(
+        'n',
+        ',th',
+        tree_api.toggle_hidden_filter,
+        { buffer = bufnr, desc = 'Toggle hidden files' }
+    )
+    vim.keymap.set(
+        'n',
+        ',ti',
+        tree_api.toggle_gitignore_filter,
+        { buffer = bufnr, desc = 'Toggle gitignore filter' }
+    )
+
     -- Folds/marks
-    vim.keymap.set('n', 'zc', node_api.navigate.parent_close, map_opts)
-    vim.keymap.set('n', 'zo', node_api.open.edit, map_opts)
-    vim.keymap.set('n', 'zm', tree_api.collapse_all, map_opts)
-    vim.keymap.set('n', 'zr', tree_api.expand_all, map_opts)
-    vim.keymap.set('n', '<Space>', mark_down, map_opts)
+    vim.keymap.set(
+        'n',
+        'zc',
+        node_api.navigate.parent_close,
+        { buffer = bufnr, desc = 'Close parent fold' }
+    )
+    vim.keymap.set(
+        'n',
+        'zo',
+        node_api.open.edit,
+        { buffer = bufnr, desc = 'Open node (edit)' }
+    )
+    vim.keymap.set(
+        'n',
+        'zm',
+        tree_api.collapse_all,
+        { buffer = bufnr, desc = 'Collapse all' }
+    )
+    vim.keymap.set(
+        'n',
+        'zr',
+        tree_api.expand_all,
+        { buffer = bufnr, desc = 'Expand all' }
+    )
+    vim.keymap.set(
+        'n',
+        '<Space>',
+        mark_down,
+        { buffer = bufnr, desc = 'Mark/unmark node' }
+    )
+
     -- Telescope integration
     vim.keymap.set('n', '<C-t>', function()
         telescope('find_files_cwd')
-    end, map_opts)
+    end, { buffer = bufnr, desc = 'Telescope: find files in cwd' })
     vim.keymap.set('n', '<A-t>', function()
         telescope('find_files_cwd', { no_ignore = true })
-    end, map_opts)
+    end, { buffer = bufnr, desc = 'Telescope: find all files in cwd' })
     vim.keymap.set('n', '<A-c>', function()
         telescope('find_dirs')
-    end, map_opts)
+    end, { buffer = bufnr, desc = 'Telescope: find directories' })
     vim.keymap.set('n', '<A-p>', function()
         telescope('parent_dirs')
-    end, map_opts)
+    end, { buffer = bufnr, desc = 'Telescope: find parent directories' })
     vim.keymap.set('n', '<A-z>', function()
         telescope('z_with_tree_preview')
-    end, map_opts)
+    end, { buffer = bufnr, desc = 'Telescope: zoxide with tree preview' })
     vim.keymap.set('n', 'b', function()
         telescope('bookmark_dirs')
-    end, map_opts)
-    vim.keymap.set('n', '<A-v>', telescope_preview, map_opts)
+    end, { buffer = bufnr, desc = 'Telescope: bookmark directories' })
+    vim.keymap.set(
+        'n',
+        '<A-v>',
+        telescope_preview,
+        { buffer = bufnr, desc = 'Telescope: preview node' }
+    )
+
     -- System
     vim.keymap.set('n', ',od', function()
         execute({ 'dragon-drop', '-a', '-x' })
-    end, map_opts)
+    end, { buffer = bufnr, desc = 'Drag and drop node(s) externally' })
+
     --- CodeCompanion
-    vim.keymap.set('n', '<A-a>', add_codecompanion_references, map_opts)
+    vim.keymap.set(
+        'n',
+        '<A-a>',
+        add_codecompanion_context,
+        { buffer = bufnr, desc = 'Add marked files as CodeCompanion context' }
+    )
 end
 
 require('nvim-tree').setup({
@@ -253,13 +354,11 @@ require('nvim-tree').setup({
     },
     renderer = {
         root_folder_label = function(path)
-            return (
-                string.format(
-                    ' %s/%s',
+            return ' '
+                .. vim.fs.joinpath(
                     vim.fs.basename(vim.fs.dirname(path)),
                     vim.fs.basename(path)
                 )
-            )
         end,
         icons = {
             git_placement = 'after',
@@ -310,6 +409,7 @@ require('nvim-tree').setup({
 
 -- Autocmds
 vim.api.nvim_create_autocmd('BufEnter', {
+    desc = 'Winfix NvimTree buffer window',
     callback = function()
         if vim.list_contains({ 'NvimTree' }, vim.bo.filetype) then
             vim.wo.winfixbuf = true
@@ -318,5 +418,5 @@ vim.api.nvim_create_autocmd('BufEnter', {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>ff', cd_find_file)
-vim.keymap.set('n', '<Leader>fq', '<Cmd>NvimTreeClose<CR>')
+vim.keymap.set('n', '<Leader>ff', cd_find_file, { desc = 'Find file in NvimTree' })
+vim.keymap.set('n', '<Leader>fq', vim.cmd.NvimTreeClose, { desc = 'Close/quit NvimTree' })
