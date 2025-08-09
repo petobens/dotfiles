@@ -26,6 +26,21 @@ vim.g.vimtex_fold_types = { -- only fold preamble, parts and sections
     cmd_multi = { enabled = 0 },
     cmd_addplot = { enabled = 0 },
 }
+vim.api.nvim_create_autocmd(
+    { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
+    {
+        desc = 'Refresh VimTeX folds unless a snippet is active',
+        group = vim.api.nvim_create_augroup('vimtex_folds', { clear = true }),
+        pattern = { '*.tex' },
+        callback = function()
+            if not require('luasnip').get_active_snip() then
+                vim.defer_fn(function()
+                    pcall(vim.cmd.VimtexRefreshFolds)
+                end, 1)
+            end
+        end,
+    }
+)
 ----- Indent & delimiters
 vim.g.vimtex_indent_enabled = 0
 vim.g.vimtex_matchparen_enabled = 0
@@ -54,42 +69,65 @@ vim.api.nvim_create_autocmd({ 'User' }, {
     group = vim.api.nvim_create_augroup('vimtex_maps', { clear = true }),
     pattern = { 'VimtexEventInitPost' },
     callback = function(e)
-        -- Remaps
-        local vimtex_maps = { buffer = e.buf, remap = true }
-        vim.keymap.set('n', '<Leader>tc', '<plug>(vimtex-toc-open)', vimtex_maps)
-        vim.keymap.set('n', '<Leader>ce', '<plug>(vimtex-env-change)', vimtex_maps)
-        vim.keymap.set('n', '<Leader>ts', '<plug>(vimtex-env-toggle-star)', vimtex_maps)
+        vim.keymap.set(
+            'n',
+            '<Leader>tc',
+            '<plug>(vimtex-toc-open)',
+            { buffer = e.buf, remap = true, desc = 'Open TOC' }
+        )
+        vim.keymap.set(
+            'n',
+            '<Leader>ce',
+            '<plug>(vimtex-env-change)',
+            { buffer = e.buf, remap = true, desc = 'Change environment' }
+        )
+        vim.keymap.set(
+            'n',
+            '<Leader>ts',
+            '<plug>(vimtex-env-toggle-star)',
+            { buffer = e.buf, remap = true, desc = 'Toggle starred environment' }
+        )
         vim.keymap.set(
             'n',
             '<Leader>td',
             '<plug>(vimtex-delim-toggle-modifier)',
-            vimtex_maps
+            { buffer = e.buf, remap = true, desc = 'Toggle delimiter modifier' }
         )
-        vim.keymap.set('i', '<A-d>', '<plug>(vimtex-delim-close)', vimtex_maps)
-        vim.keymap.set('n', 'vim', 'vi$', vimtex_maps)
-        vim.keymap.set('n', 'vam', 'va$', vimtex_maps)
-        -- Maps
+        vim.keymap.set(
+            'i',
+            '<A-d>',
+            '<plug>(vimtex-delim-close)',
+            { buffer = e.buf, remap = true, desc = 'Close delimiter' }
+        )
+        vim.keymap.set(
+            'n',
+            'vim',
+            'vi$',
+            { buffer = e.buf, remap = true, desc = 'Select inside $...$' }
+        )
+        vim.keymap.set(
+            'n',
+            'vam',
+            'va$',
+            { buffer = e.buf, remap = true, desc = 'Select around $...$' }
+        )
         vim.keymap.set('n', '<Leader>cw', function()
             vim.cmd.VimtexCountWords({ bang = true })
-            vim.cmd.wincmd({ args = { 'J' } })
-            vim.cmd.wincmd({ args = { '12_' } })
+            vim.cmd.wincmd('J')
+            vim.cmd.wincmd('12_')
             vim.cmd.normal({ args = { 'G' }, bang = true, mods = { silent = true } })
-        end, { buffer = e.buf })
-        vim.keymap.set('n', '<Leader>vd', '<Cmd>VimtexDocPackage<CR>', { buffer = e.buf })
-        vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = e.buf })
+        end, { buffer = e.buf, desc = 'Count words and show output' })
+        vim.keymap.set(
+            'n',
+            '<Leader>vd',
+            vim.cmd.VimtexDocPackage,
+            { buffer = e.buf, desc = 'Show VimTeX doc for package' }
+        )
+        vim.keymap.set(
+            'n',
+            '<Leader>vm',
+            require('nabla').popup,
+            { buffer = e.buf, desc = 'Show Nabla math preview' }
+        )
     end,
 })
-vim.api.nvim_create_autocmd(
-    { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
-    {
-        group = vim.api.nvim_create_augroup('vimtex_folds', { clear = true }),
-        pattern = { '*.tex' },
-        callback = function()
-            if not require('luasnip').get_active_snip() then
-                vim.defer_fn(function()
-                    pcall(vim.cmd.VimtexRefreshFolds)
-                end, 1)
-            end
-        end,
-    }
-)
