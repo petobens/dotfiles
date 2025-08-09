@@ -22,13 +22,13 @@ local function gitsigns_diff_source()
 end
 
 local function spell_status()
-    local spell_lang = ''
-    if vim.opt.spell:get() then
-        local languages =
-            vim.fn.toupper(vim.fn.substitute(vim.o.spelllang, ',', '/', 'g'))
-        spell_lang = ' [' .. languages .. ']'
+    if not vim.opt.spell:get() then
+        return ''
     end
-    return spell_lang
+    -- Get spelllang as a table, join with '/', and uppercase
+    local langs = vim.opt.spelllang:get()
+    local languages = string.upper(table.concat(langs, '/'))
+    return ' [' .. languages .. ']'
 end
 
 local function branch_with_remote()
@@ -37,14 +37,13 @@ local function branch_with_remote()
         return ''
     end
 
-    local remote =
-        vim.api.nvim_exec([[echo FugitiveConfigGet('remote.origin.url')]], true)
+    local remote = vim.fn.FugitiveConfigGet('remote.origin.url')
     local branch_icon = ''
-    if remote:find('github') then
+    if remote and remote:find('github', 1, true) then
         branch_icon = ' '
-    elseif remote:find('gitlab') then
+    elseif remote and remote:find('gitlab', 1, true) then
         branch_icon = ' '
-    elseif remote:find('bitbucket') then
+    elseif remote and remote:find('bitbucket', 1, true) then
         branch_icon = ' '
     end
     return branch_icon .. ' ' .. branch_name
@@ -66,7 +65,7 @@ end
 _G.LualineConfig.trailing_last = ''
 local function trailing_whitespace()
     local space = vim.fn.search([[\s\+$]], 'nwc')
-    if vim.api.nvim_get_mode().mode:sub(1, 1) == 'n' then
+    if vim.api.nvim_get_mode().mode:find('^n') then
         _G.LualineConfig.trailing_last = space ~= 0 and ' ' .. space or ''
     end
     return _G.LualineConfig.trailing_last
@@ -375,5 +374,5 @@ for i = -1, 9 do
     local key = i == -1 and '$' or i
     vim.keymap.set('n', '<Leader>' .. key, function()
         _G.LualineBuffertab.select_buf(i)
-    end)
+    end, { desc = 'Go to buffer tab ' .. (i == -1 and '$' or i) })
 end
