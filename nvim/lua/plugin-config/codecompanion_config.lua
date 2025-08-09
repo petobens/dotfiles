@@ -529,6 +529,12 @@ codecompanion.setup({
                         keymaps.debug.callback(chat)
                         vim.defer_fn(function()
                             vim.cmd.stopinsert()
+                            local win = vim.api.nvim_get_current_win()
+                            local win_config = vim.api.nvim_win_get_config(win)
+                            if win_config.relative == 'editor' then
+                                win_config.col = 1
+                                vim.api.nvim_win_set_config(win, win_config)
+                            end
                         end, 1)
                     end,
                 },
