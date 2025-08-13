@@ -1,4 +1,5 @@
 _G.TexFolding = {}
+
 function _G.TexFolding.custom_foldtext()
     local fold_text = tostring(vim.fn.getline(vim.v.foldstart))
     if vim.startswith(fold_text, '\\documentclass') then
