@@ -35,16 +35,19 @@ end
 
 local function run_toggleterm()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    vim.cmd(string.format('TermExec cmd="%s %s"', 'bash', vim.api.nvim_buf_get_name(0)))
+    vim.cmd.TermExec({
+        args = { string.format('cmd="bash %s"', vim.api.nvim_buf_get_name(0)) },
+    })
 end
 
 local function run_tmux_pane()
     if not vim.env.TMUX then
         return
     end
-    local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-    local fname = vim.fs.basename(vim.api.nvim_buf_get_name(0))
-    local sh_cmd = string.format('"bash %s; read -p \'\'"', fname)
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local cwd = vim.fs.dirname(bufname)
+    local fname = vim.fs.basename(bufname)
+    local sh_cmd = string.format('sh -c "bash %s; read -n 1 -s"', fname)
     vim.cmd({
         cmd = '!',
         args = { 'tmux', 'new-window', '-c', cwd, '-n', fname, sh_cmd },
@@ -53,7 +56,30 @@ local function run_tmux_pane()
 end
 
 -- Mappings
-vim.keymap.set({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
-vim.keymap.set({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
-vim.keymap.set('n', '<Leader>rf', run_toggleterm, { buffer = true })
-vim.keymap.set('n', '<Leader>ri', run_toggleterm, { buffer = true })
+vim.keymap.set(
+    { 'n', 'i' },
+    '<F7>',
+    run_overseer,
+    { buffer = true, desc = 'Run shell script with Overseer' }
+)
+
+vim.keymap.set(
+    { 'n', 'i' },
+    '<F5>',
+    run_tmux_pane,
+    { buffer = true, desc = 'Run shell script in new tmux pane' }
+)
+
+vim.keymap.set(
+    'n',
+    '<Leader>rf',
+    run_toggleterm,
+    { buffer = true, desc = 'Run shell script in ToggleTerm' }
+)
+
+vim.keymap.set(
+    'n',
+    '<Leader>ri',
+    run_toggleterm,
+    { buffer = true, desc = 'Run shell script in ToggleTerm (alias)' }
+)
