@@ -114,8 +114,6 @@ function Buffer:get_name()
     local name
     if self.options.filetype_names[self.filetype] then
         name = self.options.filetype_names[self.filetype]
-    elseif self.buftype == 'help' then
-        name = 'help:' .. (vim.fs.basename(self.file)):match('(.+)%.[^/]+$')
     elseif self.buftype == 'terminal' then
         local match = string.match(vim.split(self.file, ' ')[1], 'term:.*:(%a+)')
         name = match ~= nil and match or vim.fs.basename(vim.env.SHELL)

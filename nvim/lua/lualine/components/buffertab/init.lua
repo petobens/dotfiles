@@ -67,6 +67,7 @@ local function unique_tail_format(buffers)
     return buffers
 end
 
+-- Buffertab update
 function M:init(options)
     M.super.init(self, options)
     self.options = vim.tbl_deep_extend('keep', self.options or {}, default_options)
