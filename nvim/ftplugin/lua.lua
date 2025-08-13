@@ -35,9 +35,7 @@ end
 
 local function run_toggleterm()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    vim.cmd(
-        string.format('TermExec cmd="%s %s"', 'nvim -l', vim.api.nvim_buf_get_name(0))
-    )
+    vim.cmd.TermExec(string.format('cmd="nvim -l %s"', vim.api.nvim_buf_get_name(0)))
 end
 
 local function run_tmux_pane()
@@ -46,7 +44,7 @@ local function run_tmux_pane()
     end
     local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
     local fname = vim.fs.basename(vim.api.nvim_buf_get_name(0))
-    local sh_cmd = string.format('nvim -l %s; read -p ""', fname)
+    local sh_cmd = string.format('sh -c "nvim -l %s; read -n 1 -s"', fname)
     vim.cmd({
         cmd = '!',
         args = { 'tmux', 'new-window', '-c', cwd, '-n', fname, sh_cmd },
@@ -61,14 +59,39 @@ vim.api.nvim_create_user_command('RunVisualLua', function()
 end, { range = true })
 
 -- Mappings
-vim.keymap.set({ 'n', 'i' }, '<F7>', run_overseer, { buffer = true })
-vim.keymap.set({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
-vim.keymap.set('n', '<Leader>rf', run_toggleterm, { buffer = true })
+vim.keymap.set(
+    { 'n', 'i' },
+    '<F7>',
+    run_overseer,
+    { buffer = true, desc = 'Run Overseer task' }
+)
+
+vim.keymap.set(
+    { 'n', 'i' },
+    '<F5>',
+    run_tmux_pane,
+    { buffer = true, desc = 'Run in tmux pane' }
+)
+
+vim.keymap.set(
+    'n',
+    '<Leader>rf',
+    run_toggleterm,
+    { buffer = true, desc = 'Run in ToggleTerm' }
+)
+
 vim.keymap.set('n', '<Leader>rl', function()
     vim.cmd.lua(vim.api.nvim_get_current_line())
-end, { buffer = true })
+end, { buffer = true, desc = 'Run current line as Lua' })
+
 vim.keymap.set('n', '<Leader>ri', function()
     vim.cmd.update()
     vim.cmd.luafile('%')
-end, { silent = false, buffer = true })
-vim.keymap.set('v', '<Leader>ri', ':RunVisualLua<CR>', { buffer = true })
+end, { buffer = true, desc = 'Save and source current Lua file' })
+
+vim.keymap.set(
+    'v',
+    '<Leader>ri',
+    vim.cmd.RunVisualLua,
+    { buffer = true, desc = 'Run visual selection as Lua' }
+)

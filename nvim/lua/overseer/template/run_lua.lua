@@ -14,6 +14,7 @@ return {
             },
             default_component_params = {
                 errorformat = ''
+                    .. [[%*[^:]:\ Lua\ chunk:\ %f:%l:%m,]]
                     .. [[%t%n:\ Error\ while\ creating\ lua\ chunk:\ %f:%l:\ %m,]]
                     .. [[%t%n:\ Error\ while\ calling\ lua\ chunk:\ %f:%l:\ %m,]]
                     .. [[%f:%l:%m,]]
