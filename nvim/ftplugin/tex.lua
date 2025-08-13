@@ -92,17 +92,31 @@ end
 
 -- Viewing
 local function view_pdf()
-    local pdf_file = (vim.fs.normalize(vim.b.vimtex.text)):match('(.+)%.[^/]+$') .. '.pdf'
+    local base = vim.fs.normalize(vim.b.vimtex.tex):match('(.+)%.[^/]+$')
+    local pdf_file = base and (base .. '.pdf') or nil
+    if not pdf_file or not vim.uv.fs_stat(pdf_file) then
+        vim.notify('PDF file not found: ' .. tostring(pdf_file), vim.log.levels.ERROR)
+        return
+    end
     vim.system({ 'zathura', '--fork', pdf_file })
 end
 
 local function forward_search()
     local tex_file = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
-    local pdf_file = (vim.fs.normalize(vim.b.vimtex.text)):match('(.+)%.[^/]+$') .. '.pdf'
+    local base = vim.fs.normalize(vim.b.vimtex.tex):match('(.+)%.[^/]+$')
+    local pdf_file = base and (base .. '.pdf') or nil
+    if not pdf_file or not vim.uv.fs_stat(pdf_file) then
+        vim.notify('PDF file not found: ' .. tostring(pdf_file), vim.log.levels.ERROR)
+        return
+    end
+
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local line = cursor[1]
+    local col = cursor[2] + 1 -- col is 0-based in API, but synctex expects 1-based
     local synctex_cmd = {
         'zathura',
         '--synctex-forward',
-        vim.fn.line('.') .. ':' .. vim.fn.col('.') .. ':' .. tex_file,
+        string.format('%d:%d:%s', line, col, tex_file),
         pdf_file,
     }
     vim.system(synctex_cmd)
@@ -123,55 +137,71 @@ local function file_edit(search_file)
         type = 'file',
         path = base_dir,
     })
+    if not edit_file[1] then
+        vim.notify('File not found: ' .. search_file, vim.log.levels.ERROR)
+        return
+    end
     u.split_open(edit_file[1])
 end
 
 -- Miscellaneous
 local function delete_aux_files()
     local aux_extensions = {
-        'aux',
-        'bbl',
-        'bcf',
-        'blg',
-        'idx',
-        'log',
-        'xml',
-        'toc',
-        'nav',
-        'out',
-        'snm',
-        'gz',
-        'ilg',
-        'ind',
-        'vrb',
-        'log',
+        aux = true,
+        bbl = true,
+        bcf = true,
+        blg = true,
+        idx = true,
+        log = true,
+        xml = true,
+        toc = true,
+        nav = true,
+        out = true,
+        snm = true,
+        gz = true,
+        ilg = true,
+        ind = true,
+        vrb = true,
     }
     local files = scan.scan_dir(vim.fs.dirname(vim.b.vimtex.tex))
     local rm_files = {}
     for _, f in ipairs(files) do
         local ext = f:match('%.([^/%.]+)$')
-        for _, aux_ext in ipairs(aux_extensions) do
-            if ext == aux_ext then
-                table.insert(rm_files, f)
-            end
+        if ext and aux_extensions[ext] then
+            table.insert(rm_files, f)
         end
     end
+    if #rm_files == 0 then
+        vim.notify('No auxiliary files found to delete', vim.log.levels.INFO)
+        return
+    end
+
     vim.ui.input(
-        { prompt = string.format('Delete %s files? [y/n] ', #rm_files) },
+        { prompt = string.format('Delete %d auxiliary files? [y/n] ', #rm_files) },
         function(input)
             if input == 'y' then
                 for _, f in ipairs(rm_files) do
                     vim.system({ 'trash-put', f }):wait()
                 end
+                vim.notify(
+                    string.format('Deleted %d auxiliary files', #rm_files),
+                    vim.log.levels.INFO
+                )
             end
         end
     )
 end
 
 local function convert_pandoc(extension)
-    local base_file = vim.fs.basename(vim.b.vimtex.tex):match('(.+)%.[^/]+$')
+    local tex_path = vim.fs.normalize(vim.b.vimtex.tex)
+    local base_file = tex_path:match('(.+)%.[^/]+$')
+    local tex_file = base_file .. '.tex'
     local output_file = string.format('%s.%s', base_file, extension)
     local bib_file = base_file .. '.bib'
+    if not vim.uv.fs_stat(tex_file) then
+        vim.notify('TeX file not found: ' .. tex_file, vim.log.levels.ERROR)
+        return
+    end
 
     local pandoc_cmd = 'pandoc -s'
     if extension == 'docx' then
@@ -180,17 +210,32 @@ local function convert_pandoc(extension)
             pandoc_cmd = pandoc_cmd .. ' --bibliography=' .. bib_file
         end
     end
+    pandoc_cmd = string.format('%s %s -o %s', pandoc_cmd, tex_file, output_file)
 
-    pandoc_cmd = string.format('%s %s.tex -o %s', pandoc_cmd, base_file, output_file)
+    local cwd = vim.fs.dirname(tex_file)
     local args = vim.split(pandoc_cmd, ' ', { trimempty = true })
-    local result = vim.system(args, { text = true }):wait()
-    if result.code ~= 0 then
-        vim.notify(string.format('Converted .tex file into .%s', extension))
+    local result = vim.system(args, { text = true, cwd = cwd }):wait()
+    if result.code == 0 then
+        vim.notify(
+            string.format('Converted .tex file into .%s', extension),
+            vim.log.levels.INFO
+        )
+    else
+        vim.notify(
+            string.format(
+                'Pandoc failed (exit code %d): %s',
+                result.code,
+                result.stderr or ''
+            ),
+            vim.log.levels.ERROR
+        )
     end
 end
 
 local function continue_list()
-    local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
+    local row = vim.api.nvim_win_get_cursor(0)[1]
+    local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ''
+    line = line:match('^%s*(.*)$') or ''
     local marker = line:match('^(\\item%s*)')
     if not marker or line == '' then
         return '<CR>'
@@ -203,35 +248,62 @@ end
 
 -- Mappings
 ---- Compilation
-vim.keymap.set('n', '<F7>', compile_latex, { buffer = true })
-vim.keymap.set('i', '<F7>', compile_latex, { buffer = true })
-vim.keymap.set('n', '<Leader>vp', view_pdf, { buffer = true })
-vim.keymap.set('n', '<Leader>sl', forward_search, { buffer = true })
-vim.keymap.set('n', '<Leader>da', delete_aux_files, { buffer = true })
+vim.keymap.set(
+    { 'n', 'i' },
+    '<F7>',
+    compile_latex,
+    { buffer = true, desc = 'Compile LaTeX (arara)' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>vp',
+    view_pdf,
+    { buffer = true, desc = 'View PDF in Zathura' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>sl',
+    forward_search,
+    { buffer = true, desc = 'Forward search (synctex)' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>da',
+    delete_aux_files,
+    { buffer = true, desc = 'Delete auxiliary files' }
+)
 vim.keymap.set('n', '<Leader>cm', function()
     convert_pandoc('md')
-end, { buffer = true })
+end, { buffer = true, desc = 'Convert to Markdown (pandoc)' })
 vim.keymap.set('n', '<Leader>cx', function()
     convert_pandoc('docx')
-end, { buffer = true })
+end, { buffer = true, desc = 'Convert to DOCX (pandoc)' })
+
 ---- Editing
 vim.keymap.set('n', '<Leader>em', function()
     file_edit('main.tex')
-end, { buffer = true })
+end, { buffer = true, desc = 'Edit main.tex' })
 vim.keymap.set('n', '<Leader>ep', function()
     file_edit('preamble.tex')
-end, { buffer = true })
+end, { buffer = true, desc = 'Edit preamble.tex' })
 vim.keymap.set('n', '<Leader>eb', function()
     file_edit('bib')
-end, { buffer = true })
+end, { buffer = true, desc = 'Edit bibliography' })
 vim.keymap.set('n', '<Leader>el', function()
     file_edit('log')
-end, { buffer = true })
+end, { buffer = true, desc = 'Edit log file' })
 vim.keymap.set('n', '<Leader>ef', function()
     file_edit('float')
-end, { buffer = true })
+end, { buffer = true, desc = 'Edit float file' })
+
 ---- Tables
-vim.keymap.set('i', '<A-c>', '<ESC>f&lli', { buffer = true })
-vim.keymap.set('i', '<A-r>', '<ESC>j0f&hi', { buffer = true })
+vim.keymap.set('i', '<A-c>', '<ESC>f&lli', { buffer = true, desc = 'Table: next column' })
+vim.keymap.set('i', '<A-r>', '<ESC>j0f&hi', { buffer = true, desc = 'Table: next row' })
+
 ---- Lists
-vim.keymap.set('i', '<CR>', continue_list, { expr = true, buffer = true })
+vim.keymap.set(
+    'i',
+    '<CR>',
+    continue_list,
+    { expr = true, buffer = true, desc = 'Continue LaTeX list' }
+)
