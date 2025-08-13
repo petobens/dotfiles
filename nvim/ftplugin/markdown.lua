@@ -13,13 +13,13 @@ vim.opt_local.concealcursor = 'nc'
 
 -- Autocommand options
 vim.api.nvim_create_autocmd(
-    ---- Refresh folds
     { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
     {
+        desc = 'Refresh markdown folds',
         group = vim.api.nvim_create_augroup('md_folds', { clear = true }),
         pattern = { '*.md' },
         callback = function()
-            -- If a choice node is active then `zx` is inserted
+            -- If a choice node is active then `zx` is inserted so avoid that case
             if not require('luasnip').choice_active() then
                 vim.cmd.normal({ args = { 'zx' }, bang = true })
             end
@@ -30,67 +30,59 @@ vim.api.nvim_create_autocmd(
 -- Functions
 ---- Lists
 local function continue_list()
-    local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
-    local marker = vim.fn.matchstr(line, [[^\([*-]\s\[\s\]\|[*-]\|>\|\d\+\.\)\s]])
+    local row = vim.api.nvim_win_get_cursor(0)[1]
+    local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ''
+    line = line:match('^%s*(.*)$') or ''
+
+    local unordered = line:match('^([*-]%s)')
+    local task = line:match('^([*-]%s%[%s?%]%s)')
+    local blockquote = line:match('^(>%s)')
+    local ordered = line:match('^(%d+)%.%s')
+
+    local marker
+    if task then
+        marker = task
+    elseif unordered then
+        marker = unordered
+    elseif blockquote then
+        marker = blockquote
+    elseif ordered then
+        marker = tostring(tonumber(ordered) + 1) .. '. '
+    end
+
     if not marker or line == '' then
         return '<CR>'
     end
     if line == marker then
         return '<C-U>'
     end
-    if marker:match('%d+') then
-        local num = tonumber(marker:match('%d+'))
-        marker = (num + 1) .. '. '
-    end
     return '<CR>' .. marker
-end
-
-local function indent_list(dedent)
-    local line = vim.fn.substitute(vim.fn.getline(vim.fn.line('.')), '^\\s*', '', '')
-    local marker = vim.fn.matchstr(line, [[^\([*-]\s\[\s\]\|[*-]\|>\|\d\+\.\)\s]])
-    if line == marker then
-        if dedent then
-            return '<C-d>'
-        else
-            return '<C-t>'
-        end
-    else
-        return '<Tab>'
-    end
 end
 
 local function toggle_checklist()
     local bufnr = vim.api.nvim_get_current_buf()
     local mode = vim.api.nvim_get_mode().mode
     local start_line, end_line
-    if mode:match('^v') or mode:match('^V') then
-        start_line = vim.fn.line('v')
-        end_line = vim.fn.line('.')
+
+    if mode:sub(1, 1) == 'v' or mode:sub(1, 1) == 'V' then
+        start_line = vim.api.nvim_buf_get_mark(bufnr, '<')[1]
+        end_line = vim.api.nvim_buf_get_mark(bufnr, '>')[1]
         if start_line > end_line then
             start_line, end_line = end_line, start_line
         end
     else
-        start_line = vim.fn.line('.')
+        start_line = vim.api.nvim_win_get_cursor(0)[1]
         end_line = start_line
     end
 
-    local next_state = {
-        [' '] = '_',
-        ['_'] = 'x',
-        ['x'] = '~',
-        ['~'] = ' ',
-    }
-    local checkbox_pat = '(%[([ %_x~])%])'
+    local next_state = { [' '] = '_', ['_'] = 'x', ['x'] = '~', ['~'] = ' ' }
+    local checkbox_pat = '(%[([ %_x~])%])' -- Lua pattern for [ ] [x] [_] [~]
 
     local lines = vim.api.nvim_buf_get_lines(bufnr, start_line - 1, end_line, false)
     for i, line in ipairs(lines) do
         lines[i] = line:gsub(checkbox_pat, function(box, state)
             local new_state = next_state[state]
-            if new_state then
-                return '[' .. new_state .. ']'
-            else
-                return box
-            end
+            return new_state and ('[' .. new_state .. ']') or box
         end, 1)
     end
     vim.api.nvim_buf_set_lines(bufnr, start_line - 1, end_line, false, lines)
@@ -98,28 +90,27 @@ end
 
 ---- Pandoc
 local function convert_pandoc(extension)
-    local msg = 'Converting markdown file with pandoc...'
-    local on_exit = function(obj)
-        if obj.code == 0 then
-            vim.print(msg .. 'done!')
-        else
-            vim.print(obj.stderr)
-            vim.print(msg .. 'failed!')
-        end
-    end
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local dir = vim.fs.dirname(bufname)
+    local base = vim.fs.basename(bufname):gsub('%.md$', '')
+    local output_file = vim.fs.joinpath(dir, base .. '.' .. extension)
 
-    local base_file = vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$')
-    local output_file = string.format('%s.%s', base_file, extension)
-    vim.print(msg)
+    vim.notify('Converting markdown file with pandoc...', vim.log.levels.INFO)
     vim.system({
         'pandoc',
         '-s',
         '--toc',
         '--number-sections',
-        base_file .. '.md',
+        bufname,
         '-o',
         output_file,
-    }, { text = true }, on_exit)
+    }, { text = true }, function(obj)
+        if obj.code == 0 then
+            vim.print('Converting markdown file with pandoc... done!')
+        else
+            vim.print(obj.stderr or 'Pandoc failed!')
+        end
+    end)
 end
 
 ---- Sphinx
@@ -131,23 +122,24 @@ local function run_sphinx_build()
 end
 
 local function clean_sphinx_build()
-    local on_exit = function(obj)
-        if obj.code == 0 then
-            vim.print('Cleaning sphinx html build... done!')
-        else
-            vim.print(obj.stderr)
-        end
+    local project_root = vim.fs.root(0, 'pyproject.toml')
+    local docs_dir = vim.fs.joinpath(project_root, 'docs')
+    local package_manager = 'uv'
+    if _G.PyVenv and _G.PyVenv.active_venv and _G.PyVenv.active_venv.package_manager then
+        package_manager = _G.PyVenv.active_venv.package_manager
     end
 
-    local project_root = vim.fs.root(0, 'pyproject.toml')
-    vim.print('Cleaning sphinx html build...')
-    local package_manager = (
-        next(_G.PyVenv.active_venv) and _G.PyVenv.active_venv.package_manager
-    ) or 'uv'
+    vim.notify('Cleaning sphinx html build...', vim.log.levels.INFO)
     vim.system(
         { package_manager, 'run', 'make', 'clean' },
-        { cwd = vim.fs.joinpath(project_root, 'docs'), text = true },
-        on_exit
+        { cwd = docs_dir, text = true },
+        function(obj)
+            if obj.code == 0 then
+                vim.print('Cleaning sphinx html build... done!')
+            else
+                vim.print(obj.stderr or 'Sphinx clean failed!')
+            end
+        end
     )
 end
 
@@ -162,29 +154,68 @@ end
 ---- Compiling
 vim.keymap.set('n', '<F8>', function()
     convert_pandoc('pdf')
-end, { buffer = true })
+end, { buffer = true, desc = 'Convert markdown to PDF (pandoc)' })
+
 vim.keymap.set('n', '<F9>', function()
     convert_pandoc('html')
-end, { buffer = true })
+end, { buffer = true, desc = 'Convert markdown to HTML (pandoc)' })
+
 vim.keymap.set('n', '<Leader>vp', function()
     vim.system({
         'zathura',
         '--fork',
         vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$') .. '.pdf',
     })
-end, { buffer = true })
+end, { buffer = true, desc = 'View PDF in Zathura' })
+
 ---- Lists
-vim.keymap.set('i', '<CR>', continue_list, { expr = true, buffer = true })
-vim.keymap.set('i', '<Tab>', indent_list, { expr = true, buffer = true })
-vim.keymap.set('i', '<S-Tab>', function()
-    return indent_list({ dedent = true })
-end, { expr = true, buffer = true })
-vim.keymap.set({ 'n', 'v' }, '<Leader>ct', toggle_checklist, { buffer = true })
+vim.keymap.set(
+    'i',
+    '<CR>',
+    continue_list,
+    { expr = true, buffer = true, desc = 'Continue markdown list' }
+)
+
+vim.keymap.set(
+    { 'n', 'v' },
+    '<Leader>ct',
+    toggle_checklist,
+    { buffer = true, desc = 'Toggle checklist state' }
+)
+
 --- Sphinx (html)
-vim.keymap.set('n', '<F7>', run_sphinx_build, { buffer = true })
-vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true })
-vim.keymap.set('n', '<Leader>vd', view_sphinx_docs, { buffer = true })
---- Math rendering
-vim.keymap.set('n', '<Leader>vm', require('nabla').popup, { buffer = true })
---- TOC
-vim.keymap.set('n', '<Leader>tc', 'gO', { buffer = true, remap = true })
+vim.keymap.set(
+    'n',
+    '<F7>',
+    run_sphinx_build,
+    { buffer = true, desc = 'Build Sphinx docs' }
+)
+
+vim.keymap.set(
+    'n',
+    '<Leader>da',
+    clean_sphinx_build,
+    { buffer = true, desc = 'Clean Sphinx build' }
+)
+
+vim.keymap.set(
+    'n',
+    '<Leader>vd',
+    view_sphinx_docs,
+    { buffer = true, desc = 'View Sphinx HTML docs' }
+)
+
+--- Misc
+vim.keymap.set(
+    'n',
+    '<Leader>vm',
+    require('nabla').popup,
+    { buffer = true, desc = 'Render math with Nabla' }
+)
+
+vim.keymap.set(
+    'n',
+    '<Leader>tc',
+    'gO',
+    { buffer = true, remap = true, desc = 'Insert TOC' }
+)
