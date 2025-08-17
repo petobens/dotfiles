@@ -59,7 +59,7 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
                 end
             end
         end
-        vim.cmd.lcd({ args = { cwd } })
+        vim.cmd.lcd(cwd)
     end
 
     if next(new_qf) ~= nil then
@@ -77,7 +77,7 @@ local function run_overseer(task_name)
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
 
     if task_name == 'run_precommit' then
-        vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
+        vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     end
 
     overseer.run_template({ name = string.format('%s', task_name) }, function(task)
@@ -88,22 +88,20 @@ local function run_overseer(task_name)
         end)
     end)
 
-    if vim.api.nvim_get_mode()['mode'] == 'i' then
+    if vim.api.nvim_get_mode().mode == 'i' then
         vim.cmd.stopinsert()
     end
 end
 
 local function run_toggleterm(post_mortem_mode)
     post_mortem_mode = post_mortem_mode or false
-
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
 
     local cmd = 'python'
     if post_mortem_mode then
         cmd = cmd .. ' -m pdb -cc'
     end
-
-    -- If we have an ipython terminal open don't run `python` cmd but rather `run`
+    -- If we have an ipython terminal open, use %run instead
     local ttt = require('toggleterm.terminal')
     local term_info = ttt.get(1)
     if term_info ~= nil and term_info.cmd ~= nil then
@@ -112,43 +110,40 @@ local function run_toggleterm(post_mortem_mode)
         end
     end
 
-    vim.cmd(string.format('TermExec cmd="%s %s"', cmd, vim.api.nvim_buf_get_name(0)))
+    vim.cmd.TermExec(string.format('cmd="%s %s"', cmd, vim.api.nvim_buf_get_name(0)))
 end
 
 local function run_ipython(mode)
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     local fname = vim.api.nvim_buf_get_name(0)
-
     local ttt = require('toggleterm.terminal')
     local term_info = ttt.get(1)
     local is_open = term_info ~= nil and term_info:is_open() or false
+
     if not is_open then
         local ipython = ttt.Terminal:new({
             cmd = 'ipython',
             hidden = false,
         })
         ipython:toggle()
-        vim.cmd.wincmd({ args = { 'p' } })
+        vim.cmd.wincmd('p')
         vim.cmd.stopinsert()
-    else
-        if term_info ~= nil and term_info.cmd ~= 'ipython' then
-            -- Switch to an ipython console if we are not already in one
-            vim.cmd('TermExec cmd="ipython"')
-            term_info.cmd = 'ipython'
-        end
+    elseif term_info and term_info.cmd ~= 'ipython' then
+        vim.cmd.TermExec('cmd="ipython"')
+        term_info.cmd = 'ipython'
     end
 
     if mode == 'open' then
         return
     elseif mode == 'module' then
-        vim.cmd(string.format('TermExec cmd="\\%%run %s"', fname))
+        vim.cmd.TermExec(string.format('cmd="\\%%run %s"', fname))
     elseif mode == 'line' then
         vim.cmd.ToggleTermSendCurrentLine()
     elseif mode == 'selection' then
         vim.cmd('normal ') -- leave visual mode to set <,> marks
         vim.cmd.ToggleTermSendVisualLines()
     elseif mode == 'reset' then
-        vim.cmd('TermExec cmd="\\%reset -f"')
+        vim.cmd.TermExec('cmd="\\%reset -f"')
     elseif mode == 'carriage' then
         local current_win_id = vim.api.nvim_get_current_win()
         vim.fn.win_gotoid(vim.fn.bufwinid('ipython'))
@@ -170,8 +165,9 @@ local function run_tmux_pane(debug_mode)
         python_cmd = python_cmd .. ' -m pdb -cc'
     end
 
-    local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-    local fname = vim.fs.basename(vim.api.nvim_buf_get_name(0))
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local cwd = vim.fs.dirname(bufname)
+    local fname = vim.fs.basename(bufname)
     local sh_cmd = string.format('"%s %s; read -p \'\'"', python_cmd, fname)
     vim.cmd({
         cmd = '!',
@@ -179,7 +175,7 @@ local function run_tmux_pane(debug_mode)
         mods = { silent = true },
     })
 
-    if vim.api.nvim_get_mode()['mode'] == 'i' then
+    if vim.api.nvim_get_mode().mode == 'i' then
         vim.cmd.stopinsert()
     end
 end
@@ -208,7 +204,10 @@ local function add_breakpoint()
     local save_cursor = vim.api.nvim_win_get_cursor(0)
     local current_line = save_cursor[1]
     local breakpoint_line = current_line - 1
-    local indent_length = vim.fn.match(vim.fn.getline(current_line), '\\w')
+    local line = vim.api.nvim_buf_get_lines(0, breakpoint_line, current_line, false)[1]
+        or ''
+    local indent_start = string.find(line, '%w') or 1
+    local indent_length = indent_start - 1
     local bp_statement = string.rep(' ', indent_length) .. 'breakpoint()'
     vim.api.nvim_buf_set_lines(
         0,
@@ -241,7 +240,7 @@ local function list_breakpoints(local_buffer)
         })
     else
         local buffer_dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-        if next(_G.PyVenv.active_venv) ~= nil then
+        if _G.PyVenv.active_venv and _G.PyVenv.active_venv.project_root then
             buffer_dir = _G.PyVenv.active_venv.project_root
         end
         opts = vim.tbl_extend('keep', opts, {
@@ -272,7 +271,6 @@ local function get_venv_info(venv, project_root)
 end
 
 local function set_lsp_path(path)
-    -- Needed to jump to proper docs/definitions
     -- From https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/basedpyright.lua#L28
     local client = vim.lsp.get_clients({ name = 'basedpyright' })[1]
     if client then
@@ -307,7 +305,7 @@ function _G.PyVenv.activate(venv)
 
     -- Save working dir and cd to window cwd (lcd) to ensure system call works
     local lwd = vim.uv.cwd()
-    vim.cmd.lcd({ args = { lwd } })
+    vim.cmd.lcd(lwd)
 
     -- If there is no active venv look for one (but just once)
     if vim.b.pyvenv == nil then
@@ -349,7 +347,7 @@ function _G.PyVenv.activate(venv)
             set_lsp_path(lsp_path)
         end, 100)
     end
-    vim.cmd.lcd({ args = { lwd } })
+    vim.cmd.lcd(lwd)
 end
 
 function _G.PyVenv.deactivate()
@@ -412,11 +410,14 @@ local function view_sphinx_docs(opts)
         local root_escaped = string.gsub(project_root, '([^%w])', '%%%1')
         local current_file =
             vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$')
-        html_file = vim.fs.joinpath(
-            docs_dir,
-            current_file:gsub(root_escaped, '', 1):gsub('/', '.') .. '.html'
-        )
+        local rel_path = current_file
+            :gsub(root_escaped, '', 1)
+            :gsub('^/', '')
+            :gsub('^src/', '') -- remove leading src/
+            :gsub('/', '.')
+        html_file = vim.fs.joinpath(docs_dir, rel_path .. '.html')
     end
+    vim.notify('Opening Sphinx docs: ' .. html_file, vim.log.levels.INFO)
     vim.ui.open(html_file)
 end
 
@@ -451,80 +452,151 @@ end
 ---- Background running
 vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     run_overseer('run_python')
-end, { buffer = true })
-vim.keymap.set({ 'n', 'i' }, '<F5>', run_tmux_pane, { buffer = true })
+end, { buffer = true, desc = 'Run Python with Overseer' })
+
+vim.keymap.set(
+    { 'n', 'i' },
+    '<F5>',
+    run_tmux_pane,
+    { buffer = true, desc = 'Run Python in tmux pane' }
+)
+
 vim.keymap.set({ 'n', 'i' }, '<F6>', function()
     run_tmux_pane(true)
-end, { buffer = true })
+end, { buffer = true, desc = 'Run Python in tmux pane (debug)' })
+
 ---- Interactive running
-vim.keymap.set('n', '<Leader>rf', run_toggleterm, { buffer = true })
+vim.keymap.set(
+    'n',
+    '<Leader>rf',
+    run_toggleterm,
+    { buffer = true, desc = 'Run file in ToggleTerm' }
+)
+
 vim.keymap.set('n', '<Leader>rp', function()
     run_toggleterm(true)
-end, { buffer = true })
+end, { buffer = true, desc = 'Run in ToggleTerm (post-mortem)' })
+
 vim.keymap.set('n', '<Leader>oi', function()
     run_ipython('open')
-end, { buffer = true })
+end, { buffer = true, desc = 'Open terminal interpreter' })
+
 vim.keymap.set('n', '<Leader>ri', function()
     run_ipython('module')
-end, { buffer = true })
+end, { buffer = true, desc = 'Run current file in IPython' })
+
 vim.keymap.set('n', '<Leader>rl', function()
     run_ipython('line')
-end, { buffer = true })
+end, { buffer = true, desc = 'Send current line to IPython' })
+
 vim.keymap.set('v', '<Leader>ri', function()
     run_ipython('selection')
-end, { buffer = true })
+end, { buffer = true, desc = 'Send selection to IPython' })
+
 vim.keymap.set('n', '<Leader>tr', function()
     run_ipython('reset')
-end, { buffer = true })
+end, { buffer = true, desc = 'Reset IPython terminal' })
+
 vim.keymap.set('n', '<Leader>tx', function()
     run_ipython('carriage')
-end, { buffer = true })
+end, { buffer = true, desc = 'Send carriage return to IPython terminal' })
+
 ---- Debugging
-vim.keymap.set('n', '<Leader>bp', add_breakpoint, { buffer = true })
-vim.keymap.set('n', '<Leader>rb', remove_breakpoints, { buffer = true })
+vim.keymap.set(
+    'n',
+    '<Leader>bp',
+    add_breakpoint,
+    { buffer = true, desc = 'Add breakpoint()' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>rb',
+    remove_breakpoints,
+    { buffer = true, desc = 'Remove all breakpoints()' }
+)
 vim.keymap.set('n', '<Leader>lb', function()
     list_breakpoints(true)
-end, { buffer = true })
+end, { buffer = true, desc = 'List breakpoints in buffer' })
+
 vim.keymap.set('n', '<Leader>lB', function()
     list_breakpoints(false)
-end, { buffer = true })
-vim.keymap.set('n', '<Leader>lt', ':Tmux2Qf ', { silent = false })
+end, { buffer = true, desc = 'List breakpoints in project' })
+
+vim.keymap.set(
+    'n',
+    '<Leader>lt',
+    ':Tmux2Qf ',
+    { silent = false, desc = 'Load Tmux output to quickfix' }
+)
+
 ---- Pre-commit
 vim.keymap.set('n', '<Leader>rh', function()
     run_overseer('run_precommit')
-end, { buffer = true })
+end, { buffer = true, desc = 'Run pre-commit hooks with Overseer' })
+
 ---- Virtual Envs
 vim.keymap.set('n', '<Leader>va', function()
     _G.PyVenv.activate()
-end, { buffer = true })
+end, { buffer = true, desc = 'Activate Python venv' })
+
 vim.keymap.set('n', '<Leader>vd', function()
     _G.PyVenv.deactivate()
-end, { buffer = true })
+end, { buffer = true, desc = 'Deactivate Python venv' })
+
 vim.keymap.set('n', '<Leader>vl', function()
     _G.TelescopeConfig.py_venvs({ project_root = _project_root() })
-end, { buffer = true })
+end, { buffer = true, desc = 'List Python venvs' })
+
 vim.keymap.set('n', '<Leader>ve', function()
     vim.print(_G.PyVenv.active_venv)
-end, { buffer = true })
+end, { buffer = true, desc = 'Echo active venv info' })
+
 ---- Sphinx (docs)
-vim.keymap.set('n', '<Leader>bh', run_sphinx_build, { buffer = true }) -- build html
-vim.keymap.set('n', '<Leader>da', clean_sphinx_build, { buffer = true }) -- delete aux
-vim.keymap.set('n', '<Leader>od', view_sphinx_docs, { buffer = true }) -- open docs
+vim.keymap.set(
+    'n',
+    '<Leader>bh',
+    run_sphinx_build,
+    { buffer = true, desc = 'Build Sphinx HTML docs' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>da',
+    clean_sphinx_build,
+    { buffer = true, desc = 'Clean Sphinx build' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>od',
+    view_sphinx_docs,
+    { buffer = true, desc = 'Open Sphinx docs' }
+)
 vim.keymap.set('n', '<Leader>vi', function()
     view_sphinx_docs({ index = true })
-end, { buffer = true })
+end, { buffer = true, desc = 'Open Sphinx index.html' })
+
 ---- Editing
-vim.keymap.set('n', '<Leader>etf', edit_test_file, { buffer = true })
-vim.keymap.set('n', '<Leader>etp', edit_project_todo, { buffer = true })
+vim.keymap.set(
+    'n',
+    '<Leader>etf',
+    edit_test_file,
+    { buffer = true, desc = 'Edit test file' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>etp',
+    edit_project_todo,
+    { buffer = true, desc = 'Edit project TODO' }
+)
 
 -- Autocommand mappings
 vim.api.nvim_create_autocmd({ 'FileType' }, {
+    desc = 'Mapping to remove all breakpoints from quickfix',
     group = vim.api.nvim_create_augroup('qf_bp', { clear = true }),
     pattern = { 'qf' },
     callback = function(e)
         vim.keymap.set('n', '<Leader>rB', function()
             vim.cmd([[cdo g/breakpoint()/d|silent noautocmd update]])
             vim.cmd.cclose()
-        end, { buffer = e.buf })
+        end, { buffer = e.buf, desc = 'Remove all breakpoints from qf' })
     end,
 })
