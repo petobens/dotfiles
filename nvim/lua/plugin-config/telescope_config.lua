@@ -36,11 +36,20 @@ local function scroll_less(self, direction)
     if not self.state then
         return
     end
-    local bufnr = self.state.termopen_bufnr
+    local winid = nil
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_buf(win) == self.state.termopen_bufnr then
+            winid = win
+            break
+        end
+    end
+    if not winid then
+        return
+    end
     -- 0x05 -> <C-e>; 0x19 -> <C-y>
     local input = direction > 0 and string.char(0x05) or string.char(0x19)
     local count = math.abs(direction)
-    vim.api.nvim_win_call(vim.fn.bufwinid(bufnr), function()
+    vim.api.nvim_win_call(winid, function()
         vim.cmd.normal({ count .. input, bang = true })
     end)
 end

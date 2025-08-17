@@ -137,11 +137,11 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
             v.text = new_msg[v.text] or v.text
             table.insert(new_ll, v)
         end
+
+        local bufname = vim.api.nvim_buf_get_name(bufnr)
+        local rel = bufname and vim.fs.relpath(vim.uv.cwd(), bufname)
         vim.fn.setloclist(bufnr, {}, ' ', {
-            title = string.format(
-                'Diagnostics: %s',
-                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':p:.')
-            ),
+            title = 'Diagnostics: ' .. (rel or bufname or '[No Name]'),
             items = new_ll,
         })
 
@@ -161,11 +161,10 @@ vim.keymap.set(
 
 vim.keymap.set('n', '<Leader>ld', function()
     local win_id = vim.api.nvim_get_current_win()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local rel = bufname and vim.fs.relpath(vim.uv.cwd(), bufname)
     vim.diagnostic.setloclist({
-        title = string.format(
-            'Diagnostics: %s',
-            vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':p:.')
-        ),
+        title = 'Diagnostics: ' .. (rel or bufname or '[No Name]'),
     })
     vim.api.nvim_set_current_win(win_id)
 end, { desc = 'Show diagnostics in location list' })

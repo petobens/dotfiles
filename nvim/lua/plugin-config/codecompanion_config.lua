@@ -82,7 +82,15 @@ local function get_my_prompt_library()
             ):wait()
             lines = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
         else
-            lines = vim.fn.readfile(vim.fs.joinpath(prompt_dir, fname .. '.md'))
+            local path = vim.fs.joinpath(prompt_dir, fname .. '.md')
+            local f = io.open(path, 'r')
+            if f then
+                local content = f:read('*a')
+                f:close()
+                lines = vim.split(vim.trim(content or ''), '\n', { plain = true })
+            else
+                lines = {}
+            end
         end
 
         local filtered = {}
@@ -321,11 +329,20 @@ end
 function _G.CodeCompanionConfig.add_context(files)
     local chat = get_or_create_chat()
     for _, file in ipairs(files) do
-        local content = table.concat(vim.fn.readfile(file), '\n')
-        chat:add_context({
-            role = 'user',
-            content = string.format('Here is the content of %s:%s', file, content),
-        }, 'file', string.format('<file>%s</file>', vim.fs.basename(file)))
+        local f = io.open(file, 'r')
+        local content
+        if f then
+            content = f:read('*a')
+            f:close()
+        end
+        if not content then
+            vim.notify('Could not read file: ' .. file, vim.log.levels.ERROR)
+        else
+            chat:add_context({
+                role = 'user',
+                content = string.format('Here is the content of %s:%s', file, content),
+            }, 'file', string.format('<file>%s</file>', vim.fs.basename(file)))
+        end
     end
     focus_or_toggle_chat()
 end
@@ -565,15 +582,15 @@ codecompanion.setup({
                         vim.ui.input(
                             { prompt = 'File path: ', completion = 'file' },
                             function(file)
-                                if not file or vim.fn.filereadable(file) == 0 then
+                                local stat = file and vim.uv.fs_stat(file)
+                                if not (stat and stat.type == 'file') then
                                     vim.notify(
                                         string.format('File not found: %s', file),
                                         vim.log.levels.ERROR
                                     )
                                     return
-                                else
-                                    _G.CodeCompanionConfig.add_context({ file })
                                 end
+                                _G.CodeCompanionConfig.add_context({ file })
                             end
                         )
                     end,
@@ -594,15 +611,14 @@ codecompanion.setup({
                                     )
                                     return
                                 end
-                                local glob_result =
-                                    vim.fn.glob(vim.fs.joinpath(dir, '*'), false, true)
+
                                 local files = {}
-                                for _, file in ipairs(glob_result) do
-                                    stat = vim.uv.fs_stat(file)
-                                    if stat and stat.type == 'file' then
-                                        table.insert(files, file)
+                                for name, type in vim.fs.dir(dir) do
+                                    if type == 'file' then
+                                        table.insert(files, vim.fs.joinpath(dir, name))
                                     end
                                 end
+
                                 send_project_tree(chat, dir)
                                 _G.CodeCompanionConfig.add_context(files)
                             end

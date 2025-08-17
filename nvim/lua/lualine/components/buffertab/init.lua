@@ -105,18 +105,10 @@ function M:update_status()
             buffer.current = true
             current = i
         end
-        if vim.fn.index(visible_buffers, buffer.bufnr) > -1 then
-            buffer.visible = true
-        else
-            buffer.visible = false
-        end
+        buffer.visible = vim.list_contains(visible_buffers, buffer.bufnr)
         if buffer.first ~= true then
             local prev_buffer = buffers[i - 1]
-            if vim.fn.index(visible_buffers, prev_buffer.bufnr) > -1 then
-                buffer.prev_visible = true
-            else
-                buffer.prev_visible = false
-            end
+            buffer.prev_visible = vim.list_contains(visible_buffers, prev_buffer.bufnr)
             buffer.prev_modified = vim.bo[prev_buffer.bufnr].modified
         end
     end

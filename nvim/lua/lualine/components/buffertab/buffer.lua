@@ -120,7 +120,7 @@ function Buffer:get_name()
     elseif
         vim.uv.fs_stat(self.file) and vim.uv.fs_stat(self.file).type == 'directory'
     then
-        name = vim.fn.fnamemodify(self.file, ':p:.')
+        name = vim.fs.relpath(vim.uv.cwd(), self.file) or self.file
     elseif self.file == '' then
         name = '[No Name]'
     else

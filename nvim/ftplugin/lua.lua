@@ -53,8 +53,10 @@ local function run_tmux_pane()
 end
 
 vim.api.nvim_create_user_command('RunVisualLua', function()
-    vim.cmd('normal ') -- leave visual mode to set <,> marks
-    local lines = vim.fn.getline(vim.fn.getpos("'<")[2], vim.fn.getpos("'>")[2])
+    vim.cmd.normal({ '', bang = true }) -- leave visual mode to set <,> marks
+    local start_line = vim.api.nvim_buf_get_mark(0, '<')[1]
+    local end_line = vim.api.nvim_buf_get_mark(0, '>')[1]
+    local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
     vim.cmd.lua(table.concat(lines, ' '))
 end, { range = true })
 
