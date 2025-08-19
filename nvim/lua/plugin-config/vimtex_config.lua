@@ -123,11 +123,5 @@ vim.api.nvim_create_autocmd({ 'User' }, {
             vim.cmd.VimtexDocPackage,
             { buffer = e.buf, desc = 'Show VimTeX doc for package' }
         )
-        vim.keymap.set(
-            'n',
-            '<Leader>vm',
-            require('nabla').popup,
-            { buffer = e.buf, desc = 'Show Nabla math preview' }
-        )
     end,
 })

@@ -1144,13 +1144,6 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.cmd.startinsert()
             end, 1)
         end, { buffer = bufnr, desc = 'Insert last user prompt' })
-
-        vim.keymap.set(
-            'n',
-            '<Leader>vm',
-            require('nabla').popup,
-            { buffer = bufnr, desc = 'Show Nabla math preview' }
-        )
     end,
 })
 

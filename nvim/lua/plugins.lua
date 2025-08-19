@@ -253,8 +253,11 @@ local plugins = {
     ---- Latex
     {
         'lervag/vimtex',
-        dependencies = { 'jbyuki/nabla.nvim' },
         config = load_plugin_config('vimtex_config'),
+    },
+    {
+        'Thiago4532/mdmath.nvim',
+        config = load_plugin_config('mdmath_config'),
     },
     ----- Markdown
     {

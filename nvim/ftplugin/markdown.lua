@@ -208,13 +208,6 @@ vim.keymap.set(
 --- Misc
 vim.keymap.set(
     'n',
-    '<Leader>vm',
-    require('nabla').popup,
-    { buffer = true, desc = 'Render math with Nabla' }
-)
-
-vim.keymap.set(
-    'n',
     '<Leader>tc',
     'gO',
     { buffer = true, remap = true, desc = 'Insert TOC' }
