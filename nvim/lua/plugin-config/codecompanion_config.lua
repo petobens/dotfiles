@@ -392,7 +392,18 @@ codecompanion.setup({
                 name = 'openai_gpt_5',
                 env = { api_key = OPENAI_API_KEY },
                 schema = {
-                    model = { default = 'gpt-5' },
+                    model = {
+                        default = 'gpt-5',
+                        choices = {
+                            ['gpt-5'] = {
+                                opts = {
+                                    has_vision = true,
+                                    can_reason = true,
+                                    stream = true,
+                                },
+                            },
+                        },
+                    },
                     reasoning_effort = { default = 'minimal' },
                 },
             })
