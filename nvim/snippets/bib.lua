@@ -13,22 +13,22 @@ local l = extras.lambda
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
-local function bibkey(node_idx)
-    local authors = node_idx[1][1]
+local function bibkey(args)
+    local authors = args[1][1]
     if not authors or authors == '' then
         return ''
     end
 
-    local first_author = vim.fn.split(authors:lower(), 'and')[1]
-    local first_author_surname
-    if string.find(first_author, ',') then
-        first_author_surname = vim.fn.split(first_author, ',')[1]
+    local first_author = authors:match('^(.-)%s+[aA][nN][dD]%s+') or authors
+    first_author = first_author:lower()
+    local surname
+    if first_author:find(',') then
+        surname = first_author:match('^%s*([^,]+)')
     else
-        first_author_surname = vim.fn.split(first_author, ' ')
-        first_author_surname = first_author_surname[#first_author_surname]
+        surname = first_author:match('(%S+)$')
     end
-    first_author_surname = first_author_surname:gsub('%s+', '')
-    return first_author_surname
+    surname = surname and surname:gsub('%s+', '') or ''
+    return surname
 end
 
 return {

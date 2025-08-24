@@ -64,7 +64,7 @@ return {
 \end{document}
 ]],
             {
-                base_fn = p(vim.fn.expand, '%:t:r'),
+                base_fn = p(_G.LuaSnipConfig.filepart, 'basename_no_ext'),
                 c(1, { sn(nil, { i(1, '%') }), t('') }),
                 i(2, 'S'),
                 d(3, function(args)
@@ -143,7 +143,7 @@ every pin edge/.style={<<-,>>=stealth'}
 \end{document}
 ]],
             {
-                base_fn = p(vim.fn.expand, '%:t:r'),
+                base_fn = p(_G.LuaSnipConfig.filepart, 'basename_no_ext'),
                 i(1),
             }
         ),

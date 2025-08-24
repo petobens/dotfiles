@@ -428,7 +428,7 @@ toc}{\circled{\small{\inserttocsectionnumber}}~%
 \end{document}
 ]],
             {
-                embedfile = p(vim.fn.expand, '%:t'),
+                embedfile = p(_G.LuaSnipConfig.filepart, 'basename'),
                 second_lang = m(1, '^spanish$', 'english', 'spanish'),
                 c(1, { t('spanish'), t('english') }),
                 babel_opts = m(
@@ -463,7 +463,7 @@ es-noshorthands,es-lcroman,es-tabla]]
                 -- Note: choice nodes requiere a jump-index i.e we cannot use a variable:
                 color = rep(2),
                 rgb_other = m(2, '^mutt$', '29,66,129', '136,151,164'),
-                base_bib = p(vim.fn.expand, '%:t:r'),
+                base_bib = p(_G.LuaSnipConfig.filepart, 'basename_no_ext'),
                 heading = i(3, 'heading'),
                 title = i(4, 'title'),
                 pdftitle = rep(4),

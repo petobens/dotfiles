@@ -299,7 +299,7 @@ pdfkeywords={}
 \end{document}
             ]],
             {
-                embedfile = p(vim.fn.expand, '%:t'),
+                embedfile = p(_G.LuaSnipConfig.filepart, 'basename'),
                 second_lang = m(1, '^spanish$', 'english', 'spanish'),
                 c(1, { t('spanish'), t('english') }),
                 babel_opts = m(
@@ -331,7 +331,7 @@ es-noshorthands,es-lcroman,es-tabla]]
                 step = m(1, '^spanish$', 'Paso', 'Step'),
                 package_lang = m(1, '^spanish$', 'spanish,', ''),
                 code = m(1, '^spanish$', 'Código', 'Code'),
-                base_bib = p(vim.fn.expand, '%:t:r'),
+                base_bib = p(_G.LuaSnipConfig.filepart, 'basename_no_ext'),
                 appendix = m(1, '^spanish$', 'Apéndice', 'Appendix'),
                 theorem = m(1, '^spanish$', 'Teorema', 'Theorem'),
                 proposition = m(1, '^spanish$', 'Proposición', 'Proposition'),

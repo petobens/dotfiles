@@ -402,7 +402,7 @@ es-noshorthands,es-lcroman,es-tabla]]
                 step = m(1, '^spanish$', 'Paso', 'Step'),
                 package_lang = m(1, '^spanish$', 'spanish,', ''),
                 code = m(1, '^spanish$', 'Código', 'Code'),
-                base_bib = p(vim.fn.expand, '%:t:r'),
+                base_bib = p(_G.LuaSnipConfig.filepart, 'basename_no_ext'),
                 index = m(1, '^spanish$', 'Índice Alfabético', 'Alphabetical Index'),
                 theorem = m(1, '^spanish$', 'Teorema', 'Theorem'),
                 proposition = m(1, '^spanish$', 'Proposición', 'Proposition'),
@@ -450,7 +450,7 @@ es-noshorthands,es-lcroman,es-tabla]]
                 author_license = rep(8),
                 pdfauthor = rep(8),
                 date = i(9, 'date'),
-                year = p(vim.fn.strftime, '%Y'),
+                year = p(os.date, '%Y'),
                 rights = m(
                     1,
                     '^spanish$',

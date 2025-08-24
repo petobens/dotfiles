@@ -31,6 +31,18 @@ function _G.LuaSnipConfig.snake_case_labels(node_idx)
     return str:sub(1, 35)
 end
 
+function _G.LuaSnipConfig.filepart(part)
+    local path = vim.api.nvim_buf_get_name(0)
+    local filename = vim.fs.basename(path)
+    if part == 'basename' then
+        return filename
+    elseif part == 'basename_no_ext' then
+        return filename:match('^(.*)%.%w+$') or filename
+    else
+        return path
+    end
+end
+
 -- Setup
 luasnip.setup({
     ft_func = require('luasnip.extras.filetype_functions').from_pos_or_filetype,
