@@ -363,80 +363,82 @@ end
 local PROMPT_LIBRARY = get_my_prompt_library()
 codecompanion.setup({
     adapters = {
-        opts = {
-            show_defaults = false,
-            show_model_choices = false,
-        },
-        openai_gpt_41 = function()
-            return adapters.extend('openai', {
-                name = 'openai_gpt_41',
-                env = { api_key = OPENAI_API_KEY },
-                schema = {
-                    model = { default = 'gpt-4.1' },
-                    temperature = { default = 0.2 },
-                    top_p = { default = 0.1 },
-                },
-            })
-        end,
-        openai_o4_mini = function()
-            return adapters.extend('openai', {
-                name = 'openai_o4_mini',
-                env = { api_key = OPENAI_API_KEY },
-                schema = {
-                    model = { default = 'o4-mini' },
-                },
-            })
-        end,
-        openai_gpt_5 = function()
-            return adapters.extend('openai', {
-                name = 'openai_gpt_5',
-                env = { api_key = OPENAI_API_KEY },
-                schema = {
-                    model = {
-                        default = 'gpt-5',
-                        choices = {
-                            ['gpt-5'] = {
-                                opts = {
-                                    has_vision = true,
-                                    can_reason = true,
-                                    stream = true,
+        http = {
+            opts = {
+                show_defaults = false,
+                show_model_choices = false,
+            },
+            openai_gpt_41 = function()
+                return adapters.extend('openai', {
+                    name = 'openai_gpt_41',
+                    env = { api_key = OPENAI_API_KEY },
+                    schema = {
+                        model = { default = 'gpt-4.1' },
+                        temperature = { default = 0.2 },
+                        top_p = { default = 0.1 },
+                    },
+                })
+            end,
+            openai_o4_mini = function()
+                return adapters.extend('openai', {
+                    name = 'openai_o4_mini',
+                    env = { api_key = OPENAI_API_KEY },
+                    schema = {
+                        model = { default = 'o4-mini' },
+                    },
+                })
+            end,
+            openai_gpt_5 = function()
+                return adapters.extend('openai', {
+                    name = 'openai_gpt_5',
+                    env = { api_key = OPENAI_API_KEY },
+                    schema = {
+                        model = {
+                            default = 'gpt-5',
+                            choices = {
+                                ['gpt-5'] = {
+                                    opts = {
+                                        has_vision = true,
+                                        can_reason = true,
+                                        stream = true,
+                                    },
                                 },
                             },
                         },
+                        reasoning_effort = { default = 'minimal' },
                     },
-                    reasoning_effort = { default = 'minimal' },
-                },
-            })
-        end,
-        gemini_flash_25 = function()
-            return adapters.extend('gemini', {
-                env = { api_key = GEMINI_API_KEY },
-                name = 'gemini_flash_25',
-                schema = {
-                    model = { default = 'gemini-2.5-flash' },
-                    reasoning_effort = { default = 'none' },
-                },
-            })
-        end,
-        gemini_pro_25 = function()
-            return adapters.extend('gemini', {
-                name = 'gemini_pro_25',
-                env = { api_key = GEMINI_API_KEY },
-                schema = {
-                    model = { default = 'gemini-2.5-pro' },
-                },
-            })
-        end,
-        ollama_qwen3_2b = function()
-            return adapters.extend('ollama', {
-                name = 'ollama_qwen3_2b',
-                schema = {
-                    model = {
-                        default = 'qwen3:1.7b',
+                })
+            end,
+            gemini_flash_25 = function()
+                return adapters.extend('gemini', {
+                    env = { api_key = GEMINI_API_KEY },
+                    name = 'gemini_flash_25',
+                    schema = {
+                        model = { default = 'gemini-2.5-flash' },
+                        reasoning_effort = { default = 'none' },
                     },
-                },
-            })
-        end,
+                })
+            end,
+            gemini_pro_25 = function()
+                return adapters.extend('gemini', {
+                    name = 'gemini_pro_25',
+                    env = { api_key = GEMINI_API_KEY },
+                    schema = {
+                        model = { default = 'gemini-2.5-pro' },
+                    },
+                })
+            end,
+            ollama_qwen3_2b = function()
+                return adapters.extend('ollama', {
+                    name = 'ollama_qwen3_2b',
+                    schema = {
+                        model = {
+                            default = 'qwen3:1.7b',
+                        },
+                    },
+                })
+            end,
+        },
     },
     display = {
         chat = {
