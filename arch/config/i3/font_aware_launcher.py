@@ -45,7 +45,7 @@ APPS = {
     'clickup': {
         'type': 'electron',
         'args': {
-            'class_name': 'Brave',
+            'class_name': 'Microsoft-edge-dev',
             'mark': 'clickup',
             'subcmd': 'clickup',
             'post_cmd': True,
@@ -562,7 +562,7 @@ class ElectronApp(ROLApp):
         if self.class_name == 'Mailspring':
             cmd += ' --password-store="gnome-libsecret"'
 
-        if self.class_name == 'Brave':
+        if self.class_name in {'Brave', 'Microsoft-edge-dev'}:
             if not self.subcmd:
                 cmd += ' --enable-features=VaapiVideoDecodeLinuxGL'
             else:
@@ -583,8 +583,10 @@ class ElectronApp(ROLApp):
 
     def _run_post_cmd(self):
         if (
-            self.class_name == 'Brave' and self.mark not in self.screen.i3.get_marks()
-        ):  # run this only on first open
+            self.class_name in {'Brave', 'Microsoft-edge-dev'}
+            and self.mark
+            not in self.screen.i3.get_marks()  # run this only on first open
+        ):
             # Wait for focus
             sleep(1)
 
