@@ -87,8 +87,9 @@ local plugins = {
     },
     {
         'nvim-treesitter/nvim-treesitter',
+        branch = 'main',
         dependencies = {
-            'nvim-treesitter/nvim-treesitter-textobjects',
+            { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'main' },
         },
         build = ':TSUpdate',
         config = load_plugin_config('treesitter_config'),
@@ -135,7 +136,6 @@ local plugins = {
         'olimorris/codecompanion.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'nvim-treesitter/nvim-treesitter',
             { 'ravitemer/codecompanion-history.nvim' },
         },
         config = load_plugin_config('codecompanion_config'),
@@ -257,7 +257,6 @@ local plugins = {
     {
         'MeanderingProgrammer/render-markdown.nvim',
         dependencies = {
-            'nvim-treesitter/nvim-treesitter',
             'nvim-tree/nvim-web-devicons',
         },
         config = load_plugin_config('render_markdown_config'),

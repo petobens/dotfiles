@@ -1014,9 +1014,6 @@ codecompanion.setup({
     },
 })
 
--- Ensure buffer is treated as markdown by treesitter despite being codecompanion filetype
-vim.treesitter.language.register('markdown', 'codecompanion')
-
 -- Override the default icon for codecompanion filetype
 local devicons = require('nvim-web-devicons')
 devicons.set_icon({

@@ -228,9 +228,6 @@ vim.lsp.config(
     { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) }
 )
 
--- Ensure doc window is treated as markdown by treesitter
-vim.treesitter.language.register('markdown', 'blink-cmp-documentation')
-
 -- Autocmd settings
 local blink_cmp_augroup = vim.api.nvim_create_augroup('blink_cmp', { clear = true })
 vim.api.nvim_create_autocmd('User', {
