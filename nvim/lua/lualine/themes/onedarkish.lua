@@ -1,5 +1,4 @@
--- For this to work we need to ensure that lualine loads after onedarkpro
-local c = require('onedarkpro.helpers').get_colors()
+local c = _G.OneDarkishPalette
 
 local onedarkish = {}
 

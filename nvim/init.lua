@@ -17,6 +17,9 @@ vim.keymap.set = function(mode, lhs, rhs, opts)
     return keymap_set(mode, lhs, rhs, opts)
 end
 
+-- Set my colorscheme
+vim.cmd.colorscheme('onedarkish')
+
 -- Source lua modules
 require('plugins')
 require('options')

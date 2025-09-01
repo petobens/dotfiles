@@ -29,12 +29,6 @@ end
 
 -- Plugin list
 local plugins = {
-    -- UI
-    {
-        'olimorris/onedarkpro.nvim',
-        priority = 1000, -- load first
-        config = load_plugin_config('onedark_config'),
-    },
     {
         'nvim-lualine/lualine.nvim',
         config = load_plugin_config('lualine_config'),

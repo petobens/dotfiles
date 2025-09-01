@@ -1,4 +1,4 @@
-local onedark_colors = require('onedarkpro.helpers').get_colors()
+local onedark_colors = _G.OneDarkishPalette
 local overseer = require('overseer')
 local u = require('utils')
 
