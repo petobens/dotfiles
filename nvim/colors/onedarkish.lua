@@ -179,6 +179,7 @@ local groups = {
     ['@function.builtin'] = { fg = p.yellow },
     ['@keyword'] = { fg = p.purple },
     ['@label'] = { link = 'Label' },
+    ['@markup.raw.block'] = { fg = p.fg },
     ['@module'] = { fg = p.yellow },
     ['@number.float'] = { link = 'Float' },
     ['@operator'] = { fg = p.cyan },
