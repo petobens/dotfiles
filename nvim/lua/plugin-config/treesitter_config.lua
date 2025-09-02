@@ -1,5 +1,5 @@
 -- TODO:
--- Add incremntal selection
+-- Add incremental selection?
 
 -- Setup
 require('nvim-treesitter').install({
@@ -32,7 +32,7 @@ vim.treesitter.language.register('markdown', 'codecompanion')
 vim.treesitter.language.register('yaml', 'ghaction')
 
 vim.api.nvim_create_autocmd('FileType', {
-    desc = 'Start Tree-sitter except for LaTeX files',
+    desc = 'Start treesitter highlighting',
     callback = function(args)
         local filetype = args.match
         if filetype == 'tex' then
@@ -44,6 +44,22 @@ vim.api.nvim_create_autocmd('FileType', {
         end
     end,
 })
+
+vim.api.nvim_create_autocmd(
+    { 'BufWinEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
+    {
+        desc = 'Refresh folds for filetypes where we use treesitter foldexpr',
+        group = vim.api.nvim_create_augroup('treesitter_folds', { clear = true }),
+        pattern = { '*.md', '*.py' },
+        callback = function()
+            vim.schedule(function()
+                if not require('luasnip').choice_active() then
+                    vim.cmd.normal({ args = { 'zx' }, bang = true })
+                end
+            end)
+        end,
+    }
+)
 
 -- Mappings
 vim.keymap.set('n', '<Leader>it', function()

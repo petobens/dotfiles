@@ -11,22 +11,6 @@ vim.opt_local.formatexpr = ''
 vim.opt_local.conceallevel = 2
 vim.opt_local.concealcursor = 'nc'
 
--- Autocommand options
-vim.api.nvim_create_autocmd(
-    { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
-    {
-        desc = 'Refresh markdown folds',
-        group = vim.api.nvim_create_augroup('md_folds', { clear = true }),
-        pattern = { '*.md' },
-        callback = function()
-            -- If a choice node is active then `zx` is inserted so avoid that case
-            if not require('luasnip').choice_active() then
-                vim.cmd.normal({ args = { 'zx' }, bang = true })
-            end
-        end,
-    }
-)
-
 -- Functions
 ---- Lists
 local function continue_list()
