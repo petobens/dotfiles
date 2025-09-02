@@ -6,7 +6,7 @@ local u = require('utils')
 vim.opt_local.textwidth = 88
 vim.opt_local.commentstring = '#%s'
 vim.opt_local.foldmethod = 'expr'
-vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.opt_local.foldtext = ''
 _G.OverseerConfig.python_errorformat = ''
     -- luacheck:ignore 631
