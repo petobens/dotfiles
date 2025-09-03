@@ -51,7 +51,7 @@ fi
 read -p $'\033[1mDo you want to install python modules and binaries (y/n)? \033[0m' -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "\\033[1;34m-> Installing python modules and binaries (with pipx)...\\033[0m"
+    echo -e "\\033[1;34m-> Installing python modules and binaries (with uv)...\\033[0m"
     . "$current_dir/python.sh"
 fi
 

@@ -12,36 +12,21 @@ if type "pip3" > /dev/null 2>&1; then
     $pip_install_cmd pandas
     $pip_install_cmd Pillow # needed for gtk dialogs
     $pip_install_cmd pdbpp
-    $pip_install_cmd pipx
     $pip_install_cmd Send2Trash
     if [ "$OSTYPE" == 'linux-gnu' ]; then
         $pip_install_cmd Xlib
     fi
 fi
 
-# Python binaries (can also be mostly installed with a package manager but we
-# do it with pipx to avoid dependency clash)
-# Note: when upgrading python minor version we might need to remove the
-# ~/.local/pipx folder and reinstall all packages by running this file
-# See https://github.com/pipxproject/pipx/issues/278#issuecomment-557132753
-echo -e "\\033[1;34m--> Installing python binaries (with pipx)...\\033[0m"
-if ! type "pipx" > /dev/null 2>&1; then
-    python3 -m pipx ensurepath
-fi
-pipx_install_cmd="$HOME/.local/bin/pipx install --force --verbose"
-if [[ "$OSTYPE" == 'darwin'* ]]; then
-    # We seem to need sudo on osx
-    pipx_install_cmd="sudo $pipx_install_cmd"
-fi
-pipx_inject_cmd="$HOME/.local/bin/pipx inject --verbose"
+# Python binaries
+echo -e "\\033[1;34m--> Installing python binaries (with uv)...\\033[0m"
 uv_install_cmd='uv tool install --force'
 
 $uv_install_cmd aws-mfa
 $uv_install_cmd black
 $uv_install_cmd isort
-$pipx_install_cmd jupyter --include-deps
-$pipx_inject_cmd jupyter numpy pandas matplotlib
-$uv_install_cmd --with numpy --with pandas --with matplotlib --with matplotlib-backend-kitty --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
+$uv_install_cmd --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib jupyterlab
+$uv_install_cmd --with numpy,pandas,matplotlib,matplotlib-backend-kitty --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
 $uv_install_cmd litecli
 $uv_install_cmd mycli
 $uv_install_cmd mypy

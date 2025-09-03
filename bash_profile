@@ -101,11 +101,6 @@ else
     # files in red and sticky dirs in green
     export LS_COLORS="di=0;34:ln=0;35:ex=0;31:tw=0;32"
 fi
-if type "pipx" > /dev/null 2>&1; then
-    eval "$(register-python-argcomplete pipx)"
-    export PIPX_HOME=$HOME/.local/pipx
-    export PIPX_BIN_DIR=$HOME/.local/bin
-fi
 if type "gpg" > /dev/null 2>&1; then
     GPG_TTY=$(tty)
     export GPG_TTY
