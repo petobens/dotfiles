@@ -189,16 +189,14 @@ vim.keymap.set('n', '<Leader>gP', function()
     vim.cmd.Git('pull')
 end, { desc = 'Pull' })
 
+vim.keymap.set({ 'n', 'v' }, '<Leader>gb', ':GBrowse<CR>', { desc = 'Browse git object' })
+
 vim.keymap.set(
     { 'n', 'v' },
-    '<Leader>gb',
-    vim.cmd.GBrowse,
-    { desc = 'Browse git object' }
+    '<Leader>gB',
+    ':GBrowse!<CR>',
+    { desc = 'Copy browser permalink' }
 )
-
-vim.keymap.set({ 'n', 'v' }, '<Leader>gB', function()
-    vim.cmd.GBrowse({ bang = true })
-end, { desc = 'Copy browser permalink' })
 
 vim.keymap.set('n', '<Leader>bl', function()
     vim.cmd.Git({ args = { 'blame' }, range = { 0, 3 } })
