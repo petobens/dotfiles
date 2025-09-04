@@ -20,8 +20,7 @@ end
 local function _parse_neotest_output(task, last_winid)
     -- Set the diagnostic qf
     local diagnostics = vim.diagnostic.get(task.bufnr)
-    vim.diagnostic.setqflist()
-    local qf_diagnostic = vim.fn.getqflist()
+    local qf_diagnostic = vim.diagnostic.toqflist(diagnostics)
     local diagnostic_entries = {}
     for _, v in pairs(qf_diagnostic) do
         table.insert(
