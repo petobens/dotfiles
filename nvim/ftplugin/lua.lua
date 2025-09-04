@@ -2,6 +2,8 @@ local overseer = require('overseer')
 
 -- Options
 vim.opt_local.textwidth = 90
+vim.opt_local.foldmethod = 'manual'
+vim.opt_local.foldexpr = ''
 
 -- Running
 local function _parse_qf(qf_title, active_window_id)
