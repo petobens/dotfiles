@@ -259,6 +259,44 @@ local function to_absolute_paths(files, root)
         :totable()
 end
 
+local function resolve_git_diff_and_filelist_cmds(opts)
+    local diff_cmd = { 'git', 'diff', '--no-ext-diff' }
+    local file_list_cmd = { 'git', 'diff', '--name-only' }
+
+    if opts and opts.base_branch then
+        local base = opts.base_branch
+        local result = vim.system(
+            { 'git', 'rev-parse', '--verify', base },
+            { text = true }
+        )
+            :wait()
+        if result.code ~= 0 then
+            return nil, nil, 'Base branch not found: ' .. base
+        end
+        table.insert(diff_cmd, base .. '...HEAD')
+        table.insert(file_list_cmd, base .. '...HEAD')
+    elseif opts and opts.commit_sha then
+        local sha = opts.commit_sha
+        table.insert(diff_cmd, sha .. '^!')
+        table.insert(file_list_cmd, sha .. '^!')
+    else
+        table.insert(diff_cmd, '--staged')
+        table.insert(file_list_cmd, '--cached')
+    end
+
+    return diff_cmd, file_list_cmd
+end
+
+local function get_git_files(git_root, file_list_cmd)
+    local file_list_result = vim.system(file_list_cmd, { text = true }):wait()
+    local files =
+        vim.split(vim.trim(file_list_result.stdout or ''), '\n', { plain = true })
+    if #files == 0 or (#files == 1 and files[1] == '') then
+        return {}, 'No relevant files found'
+    end
+    return to_absolute_paths(files, git_root)
+end
+
 local function get_majority_filetype(files)
     local counts = {}
     local max_ft, max_count = nil, 0
@@ -692,45 +730,43 @@ codecompanion.setup({
                 },
                 ['conventional_commit'] = {
                     description = 'Generate a conventional git commit message',
-                    callback = function(chat)
+                    callback = function(chat, opts)
                         local git_root, err = get_git_root()
                         if not git_root then
                             vim.notify(err, vim.log.levels.ERROR)
                             return
                         end
 
-                        local result = vim.system(
-                            { 'git', 'diff', '--cached', '--name-only' },
-                            { text = true }
-                        ):wait()
-                        local staged = vim.split(
-                            vim.trim(result.stdout or ''),
-                            '\n',
-                            { plain = true }
-                        )
-                        if #staged == 0 or (#staged == 1 and staged[1] == '') then
-                            vim.notify('No staged changes found', vim.log.levels.WARN)
+                        local diff_cmd, file_list_cmd, error =
+                            resolve_git_diff_and_filelist_cmds(opts)
+                        if not diff_cmd then
+                            vim.notify(error, vim.log.levels.ERROR)
                             return
                         end
-                        local abs_files = to_absolute_paths(staged, git_root)
+
+                        local abs_files, file_err = get_git_files(git_root, file_list_cmd)
+                        if file_err then
+                            vim.notify(file_err, vim.log.levels.WARN)
+                            return
+                        end
                         _G.CodeCompanionConfig.add_context(abs_files)
 
-                        result = vim.system(
+                        local commit_history_result = vim.system(
                             { 'git', 'log', '-n', '50', '--pretty=format:%s' },
                             { text = true }
                         ):wait()
-                        local commit_history = vim.trim(result.stdout or '')
+                        local commit_history =
+                            vim.trim(commit_history_result.stdout or '')
+
+                        local diff_result = vim.system(diff_cmd, { text = true }):wait()
+                        local diff_output = diff_result.stdout or ''
 
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['conventional_commits'],
                                 commit_history,
-                                vim.system(
-                                    { 'git', 'diff', '--no-ext-diff', '--staged' },
-                                    { text = true }
-                                )
-                                    :wait().stdout
+                                diff_output
                             ),
                         })
                         chat:submit()
@@ -745,66 +781,35 @@ codecompanion.setup({
                             return
                         end
 
-                        local diff_cmd = 'git diff --no-ext-diff '
-                        local file_list_cmd = 'git diff --name-only '
-                        if opts and opts.base_branch then
-                            local base = opts.base_branch
-                            local result = vim.system(
-                                { 'git', 'rev-parse', '--verify', base },
-                                { text = true }
-                            ):wait()
-                            if result.code ~= 0 then
-                                vim.notify(
-                                    'Base branch not found: ' .. base,
-                                    vim.log.levels.ERROR
-                                )
-                                return
-                            end
-                            diff_cmd = diff_cmd .. base .. '...HEAD'
-                            file_list_cmd = file_list_cmd .. base .. '...HEAD'
-                        elseif opts and opts.commit_sha then
-                            local sha = opts.commit_sha
-                            diff_cmd = diff_cmd .. sha .. '^!'
-                            file_list_cmd = file_list_cmd .. sha .. '^!'
-                        else
-                            diff_cmd = diff_cmd .. '--staged'
-                            file_list_cmd = file_list_cmd .. '--cached'
-                        end
-
-                        local file_list_args =
-                            vim.split(file_list_cmd, ' ', { trimempty = true })
-                        local file_list_result =
-                            vim.system(file_list_args, { text = true }):wait()
-                        local file_list = vim.split(
-                            vim.trim(file_list_result.stdout or ''),
-                            '\n',
-                            { plain = true }
-                        )
-                        if
-                            #file_list == 0 or (#file_list == 1 and file_list[1] == '')
-                        then
-                            vim.notify('No relevant files found', vim.log.levels.WARN)
+                        local diff_cmd, file_list_cmd, error =
+                            resolve_git_diff_and_filelist_cmds(opts)
+                        if not diff_cmd then
+                            vim.notify(error, vim.log.levels.ERROR)
                             return
                         end
-                        local abs_files = to_absolute_paths(file_list, git_root)
+
+                        local abs_files, file_err = get_git_files(git_root, file_list_cmd)
+                        if file_err then
+                            vim.notify(file_err, vim.log.levels.WARN)
+                            return
+                        end
 
                         -- Determine majority filetype and call the prompt for that filetype
                         local ft = get_majority_filetype(abs_files)
                         local prompt_short_name = ft_prompt_map[ft] or 'assistant_role'
                         codecompanion.prompt(prompt_short_name)
-                        -- Since prompt generates a new chat we need to get the new handle
-                        -- and ignore the one passed as argument
                         local chat = get_or_create_chat()
 
                         _G.CodeCompanionConfig.add_context(abs_files)
 
-                        local diff_args = vim.split(diff_cmd, ' ', { trimempty = true })
-                        local diff_result = vim.system(diff_args, { text = true }):wait()
+                        local diff_result = vim.system(diff_cmd, { text = true }):wait()
+                        local diff_output = diff_result.stdout or ''
+
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['code_reviewer'],
-                                diff_result.stdout
+                                diff_output
                             ),
                         })
                         chat:submit()
@@ -1174,6 +1179,19 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '<Leader>cc', function()
             _G.CodeCompanionConfig.run_slash_command('conventional_commit')
         end, { buffer = args.buf, desc = 'Generate conventional commit message' })
+        vim.keymap.set('n', '<Leader>bc', function()
+            vim.ui.input(
+                { prompt = 'Base branch for commit diff: ', default = 'main' },
+                function(branch)
+                    if branch and branch ~= '' then
+                        _G.CodeCompanionConfig.run_slash_command(
+                            'conventional_commit',
+                            { base_branch = vim.trim(branch) }
+                        )
+                    end
+                end
+            )
+        end, { buffer = args.buf, desc = 'Conventional commit with base branch' })
         vim.keymap.set('n', '<Leader>cr', function()
             _G.CodeCompanionConfig.run_slash_command('code_review')
         end, { buffer = args.buf, desc = 'Perform code review' })
