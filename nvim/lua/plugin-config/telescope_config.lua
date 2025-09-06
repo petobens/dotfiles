@@ -680,6 +680,28 @@ local custom_actions = transform_mod({
             )
         end
     end,
+    -- Run codecompanion changelog
+    codecompanion_changelog = function(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local multi = picker:get_multi_selection()
+        actions.close(prompt_bufnr)
+
+        local commit_shas = {}
+        if not vim.tbl_isempty(multi) then
+            for _, entry in ipairs(multi) do
+                table.insert(commit_shas, entry.value)
+            end
+        else
+            local entry = action_state.get_selected_entry()
+            if entry then
+                table.insert(commit_shas, entry.value)
+            end
+        end
+        _G.CodeCompanionConfig.run_slash_command(
+            'changelog',
+            { commit_shas = commit_shas }
+        )
+    end,
 })
 -- Store custom actions to be used elsewhere
 _G.TelescopeConfig.custom_actions = custom_actions
@@ -871,6 +893,7 @@ telescope.setup({
                     ['<C-d>'] = custom_actions.delta_term,
                     ['<C-o>'] = actions.git_checkout,
                     ['<A-r>'] = custom_actions.codecompanion_code_review,
+                    ['<A-c>'] = custom_actions.codecompanion_changelog,
                 },
             },
         },
@@ -884,6 +907,7 @@ telescope.setup({
                     ['<C-d>'] = custom_actions.delta_term,
                     ['<C-o>'] = actions.git_checkout,
                     ['<A-r>'] = custom_actions.codecompanion_code_review,
+                    ['<A-c>'] = custom_actions.codecompanion_changelog,
                 },
             },
         },
@@ -1017,7 +1041,7 @@ local function gitcommits(opts)
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0))) -- to fix delta previewing
     builtin.git_commits({
         cwd = opts.cwd,
-        prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout,<A-r>:review)',
+        prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout,<A-r>:review,<A-c>:changelog)',
         results_title = git_root[1],
         previewer = {
             delta,

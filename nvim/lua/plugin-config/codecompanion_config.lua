@@ -47,6 +47,7 @@ local function get_my_prompt_library()
     local formatting_file = 'response_formatting_instructions'
     local prompt_md_files = {
         'bash_developer',
+        'changelog_writer',
         'code_reviewer',
         'conventional_commits',
         'gsheets_expert',
@@ -810,6 +811,46 @@ codecompanion.setup({
                             content = string.format(
                                 PROMPT_LIBRARY['code_reviewer'],
                                 diff_output
+                            ),
+                        })
+                        chat:submit()
+                    end,
+                },
+                ['changelog'] = {
+                    description = 'Generate a changelog entry from selected commits',
+                    callback = function(chat, opts)
+                        local shas = opts and opts.commit_shas
+                        if not shas or vim.tbl_isempty(shas) then
+                            vim.notify('No commits selected.', vim.log.levels.WARN)
+                            return
+                        end
+
+                        local git_root, err = get_git_root()
+                        if not git_root then
+                            vim.notify(err, vim.log.levels.ERROR)
+                            return
+                        end
+
+                        local commit_msgs = {}
+                        for _, sha in ipairs(shas) do
+                            local msg = vim.trim(
+                                vim.system(
+                                    { 'git', 'show', '--no-patch', '--format=%B', sha },
+                                    { text = true, cwd = git_root }
+                                )
+                                    :wait().stdout
+                                    or ''
+                            )
+                            msg = msg:gsub('\n\n+', '\n\n') -- collapse multiple blank lines:
+                            table.insert(commit_msgs, msg)
+                        end
+
+                        local joined = table.concat(commit_msgs, '\n---\n')
+                        chat:add_buf_message({
+                            role = 'user',
+                            content = string.format(
+                                PROMPT_LIBRARY['changelog_writer'],
+                                joined
                             ),
                         })
                         chat:submit()
