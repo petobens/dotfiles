@@ -1,5 +1,4 @@
 local overseer = require('overseer')
-local scan = require('plenary.scandir')
 local u = require('utils')
 
 -- Options (note: some other options are in /after/ftplugin file)
@@ -163,12 +162,15 @@ local function delete_aux_files()
         ind = true,
         vrb = true,
     }
-    local files = scan.scan_dir(vim.fs.dirname(vim.b.vimtex.tex))
+    local dir = vim.fs.dirname(vim.b.vimtex.tex)
     local rm_files = {}
-    for _, f in ipairs(files) do
-        local ext = f:match('%.([^/%.]+)$')
-        if ext and aux_extensions[ext] then
-            table.insert(rm_files, f)
+    for name, type in vim.fs.dir(dir) do
+        if type == 'file' then
+            local f = vim.fs.joinpath(dir, name)
+            local ext = f:match('%.([^/%.]+)$')
+            if ext and aux_extensions[ext] then
+                table.insert(rm_files, f)
+            end
         end
     end
     if #rm_files == 0 then

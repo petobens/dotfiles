@@ -8,7 +8,6 @@ local finders = require('telescope.finders')
 local from_entry = require('telescope.from_entry')
 local layout_strategies = require('telescope.pickers.layout_strategies')
 local node_api = require('nvim-tree.api').node
-local Path = require('plenary.path')
 local pickers = require('telescope.pickers')
 local previewers = require('telescope.previewers')
 local sorters = require('telescope.sorters')
@@ -231,13 +230,18 @@ function _G.TelescopeConfig.parent_dirs(opts)
 
     local cwd = opts.starting_dir
     if opts.starting_dir == nil then
-        cwd = Path:new(utils.buffer_dir())
+        cwd = utils.buffer_dir()
     end
+    local parent_dirs = {}
+    for dir in vim.fs.parents(cwd) do
+        table.insert(parent_dirs, dir)
+    end
+
     pickers
         .new(opts, {
             prompt_title = 'Parents Dirs',
             finder = finders.new_table({
-                results = cwd:parents(),
+                results = parent_dirs,
                 entry_maker = opts.entry_maker,
             }),
             sorter = conf.file_sorter(opts),
@@ -332,7 +336,8 @@ function _G.TelescopeConfig.py_venvs(opts)
 
     local venvs, manager
     local uv_venv = opts.project_root .. '/.venv'
-    if vim.uv.fs_stat(uv_venv) and vim.uv.fs_stat(uv_venv).type == 'directory' then
+    local stat = vim.uv.fs_stat(uv_venv)
+    if stat and stat.type == 'directory' then
         manager = 'uv'
         venvs = { uv_venv }
     else
@@ -487,11 +492,12 @@ local custom_actions = transform_mod({
     entry_find_files = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        local p = Path:new(from_entry.path(entry))
-        if p:is_file() then
-            p = p:parent()
+        local path = from_entry.path(entry)
+        local stat = vim.uv.fs_stat(path)
+        if stat and stat.type == 'file' then
+            path = vim.fs.dirname(path)
         end
-        local dir = tostring(p)
+        local dir = path
         builtin.find_files({
             cwd = dir,
             results_title = dir,
@@ -501,11 +507,12 @@ local custom_actions = transform_mod({
     entry_find_files_no_ignore = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        local p = Path:new(from_entry.path(entry))
-        if p:is_file() then
-            p = p:parent()
+        local path = from_entry.path(entry)
+        local stat = vim.uv.fs_stat(path)
+        if stat and stat.type == 'file' then
+            path = vim.fs.dirname(path)
         end
-        local dir = tostring(p)
+        local dir = path
         builtin.find_files({
             cwd = dir,
             results_title = dir,
@@ -516,31 +523,34 @@ local custom_actions = transform_mod({
     entry_find_dir = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        local p = Path:new(from_entry.path(entry))
-        if p:is_file() then
-            p = p:parent()
+        local path = from_entry.path(entry)
+        local stat = vim.uv.fs_stat(path)
+        if stat and stat.type == 'file' then
+            path = vim.fs.dirname(path)
         end
-        _G.TelescopeConfig.find_dirs({ cwd = tostring(p) })
+        _G.TelescopeConfig.find_dirs({ cwd = path })
     end,
     -- Show parent dirs of entry
     entry_parent_dirs = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        local p = Path:new(from_entry.path(entry))
-        if p:is_file() then
-            p = p:parent()
+        local path = from_entry.path(entry)
+        local stat = vim.uv.fs_stat(path)
+        if stat and stat.type == 'file' then
+            path = vim.fs.dirname(path)
         end
-        _G.TelescopeConfig.parent_dirs({ starting_dir = p })
+        _G.TelescopeConfig.parent_dirs({ starting_dir = path })
     end,
     -- Live (interactive) grep in entry dir
     entry_igrep = function(prompt_bufnr)
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        local p = Path:new(from_entry.path(entry))
-        if p:is_file() then
-            p = p:parent()
+        local path = from_entry.path(entry)
+        local stat = vim.uv.fs_stat(path)
+        if stat and stat.type == 'file' then
+            path = vim.fs.dirname(path)
         end
-        igrep(tostring(p))
+        igrep(path)
     end,
     -- resume previous picker
     resume = function()
@@ -553,16 +563,18 @@ local custom_actions = transform_mod({
 
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
-        local p = Path:new(from_entry.path(entry))
-        if p:is_file() then
+
+        local path = from_entry.path(entry)
+        local stat = vim.uv.fs_stat(path)
+        if stat and stat.type == 'file' then
             is_dir = false
-            fname = vim.fs.basename(tostring(p))
-            p = p:parent()
+            fname = vim.fs.basename(path)
+            path = vim.fs.dirname(path)
         end
 
         tree_api.open()
         vim.cmd.sleep('3m') -- we seem to need this to allow focus
-        tree_api.change_root(tostring(p))
+        tree_api.change_root(path)
         if not is_dir then
             tree_api.find_file(fname)
         else
@@ -928,7 +940,7 @@ function _G.TelescopeConfig.find_files_cwd(opts)
 end
 
 local function find_files_upper_cwd(opts)
-    local buffer_upperdir = string.format('%s', Path:new(utils.buffer_dir()):parent())
+    local buffer_upperdir = vim.fs.dirname(utils.buffer_dir())
     opts = opts or {}
     opts.cwd = buffer_upperdir
     opts.results_title = buffer_upperdir

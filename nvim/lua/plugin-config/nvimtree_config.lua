@@ -3,7 +3,6 @@ local node_api = nvimtree_api.node
 local tree_api = nvimtree_api.tree
 local marks_api = nvimtree_api.marks
 local fs_api = nvimtree_api.fs
-local Path = require('plenary.path')
 local u = require('utils')
 
 -- Helpers
@@ -50,8 +49,8 @@ end
 
 local function up_dir()
     local node = tree_api.get_node_under_cursor()
-    local p = Path:new(node.absolute_path):parent()
-    local dir = vim.fs.basename(tostring(p))
+    local parent_dir = vim.fs.dirname(node.absolute_path)
+    local dir = vim.fs.basename(parent_dir)
 
     node_api.navigate.parent()
     tree_api.change_root_to_node()
