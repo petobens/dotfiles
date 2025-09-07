@@ -819,16 +819,50 @@ codecompanion.setup({
                 ['changelog'] = {
                     description = 'Generate a changelog entry from selected commits',
                     callback = function(chat, opts)
-                        local shas = opts and opts.commit_shas
-                        if not shas or vim.tbl_isempty(shas) then
-                            vim.notify('No commits selected.', vim.log.levels.WARN)
-                            return
-                        end
-
                         local git_root, err = get_git_root()
                         if not git_root then
                             vim.notify(err, vim.log.levels.ERROR)
                             return
+                        end
+
+                        local shas = opts and opts.commit_shas
+                        if not shas or vim.tbl_isempty(shas) then
+                            local tag = vim.trim(
+                                vim.system(
+                                    { 'git', 'describe', '--tags', '--abbrev=0' },
+                                    { text = true, cwd = git_root }
+                                )
+                                    :wait().stdout
+                                    or ''
+                            )
+                            if tag == '' then
+                                vim.notify('No release tag found!', vim.log.levels.WARN)
+                                return
+                            end
+
+                            shas = vim.split(
+                                vim.trim(
+                                    -- Get all commit SHAs after the tag
+                                    vim.system(
+                                        { 'git', 'log', '--format=%H', tag .. '..HEAD' },
+                                        { text = true, cwd = git_root }
+                                    )
+                                        :wait().stdout
+                                        or ''
+                                ),
+                                '\n',
+                                { plain = true }
+                            )
+                            if
+                                vim.tbl_isempty(shas)
+                                or (vim.tbl_count(shas) == 1 and shas[1] == '')
+                            then
+                                vim.notify(
+                                    'No commits found after latest release!',
+                                    vim.log.levels.WARN
+                                )
+                                return
+                            end
                         end
 
                         local commit_msgs = {}
@@ -841,8 +875,8 @@ codecompanion.setup({
                                     :wait().stdout
                                     or ''
                             )
-                            msg = msg:gsub('\n\n+', '\n\n') -- collapse multiple blank lines:
-                            table.insert(commit_msgs, msg)
+                            local cleaned_msg = (msg:gsub('\n\n+', '\n\n'))
+                            table.insert(commit_msgs, cleaned_msg)
                         end
 
                         local joined = table.concat(commit_msgs, '\n---\n')
@@ -1220,6 +1254,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '<Leader>cc', function()
             _G.CodeCompanionConfig.run_slash_command('conventional_commit')
         end, { buffer = args.buf, desc = 'Generate conventional commit message' })
+
         vim.keymap.set('n', '<Leader>bc', function()
             vim.ui.input(
                 { prompt = 'Base branch for commit diff: ', default = 'main' },
@@ -1233,9 +1268,11 @@ vim.api.nvim_create_autocmd('FileType', {
                 end
             )
         end, { buffer = args.buf, desc = 'Conventional commit with base branch' })
+
         vim.keymap.set('n', '<Leader>cr', function()
             _G.CodeCompanionConfig.run_slash_command('code_review')
         end, { buffer = args.buf, desc = 'Perform code review' })
+
         vim.keymap.set('n', '<Leader>br', function()
             vim.ui.input(
                 { prompt = 'Base branch for diff: ', default = 'main' },
@@ -1249,6 +1286,10 @@ vim.api.nvim_create_autocmd('FileType', {
                 end
             )
         end, { buffer = args.buf, desc = 'Code review with base branch' })
+
+        vim.keymap.set('n', '<Leader>cl', function()
+            _G.CodeCompanionConfig.run_slash_command('changelog')
+        end, { buffer = args.buf, desc = 'Generate changelog since last release' })
     end,
 })
 
