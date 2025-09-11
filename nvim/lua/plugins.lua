@@ -183,8 +183,7 @@ local plugins = {
         config = load_plugin_config('overseer_config'),
     },
     {
-        'petobens/neotest',
-        -- 'nvim-neotest/neotest',
+        'nvim-neotest/neotest',
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-neotest/neotest-python',
