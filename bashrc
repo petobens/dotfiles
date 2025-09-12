@@ -318,6 +318,7 @@ if type "python" > /dev/null 2>&1; then
         alias uva='uv add'
         alias uvad='uv add --dev'
         alias uvrm='uv remove'
+        alias uvrmd='uv remove --dev'
         alias uvs='uv sync'
         alias uvi='uv sync --locked' # install
         alias uvl='uv pip list'
