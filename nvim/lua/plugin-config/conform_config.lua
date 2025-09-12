@@ -36,15 +36,14 @@ conform.setup({
     },
     format_on_save = function(bufnr)
         local format_options = { timeout_ms = 700, quiet = true, lsp_format = 'never' }
-        if vim.bo[bufnr].filetype == 'markdown' then
-            -- Don't run prettierd automatically until new line bug is fixed
-            -- https://github.com/prettier/prettier/issues/8004
-            format_options = vim.tbl_extend(
-                'keep',
-                format_options,
-                { formatters = { 'injected', 'trim_whitespace' } }
-            )
-        end
+        -- if vim.bo[bufnr].filetype == 'markdown' then
+        --     -- Prettierd adds blank line before lists so we don't run it automatically
+        --     format_options = vim.tbl_extend(
+        --         'keep',
+        --         format_options,
+        --         { formatters = { 'injected', 'trim_whitespace' } }
+        --     )
+        -- end
         if vim.bo[bufnr].filetype == 'sql' then
             -- Sqlfluff is slow
             format_options.timeout_ms = 1000
