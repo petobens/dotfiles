@@ -25,7 +25,7 @@ uv_install_cmd='uv tool install --force'
 $uv_install_cmd aws-mfa
 $uv_install_cmd black
 $uv_install_cmd isort
-$uv_install_cmd --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib jupyterlab
+$uv_install_cmd --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib,jupyter-ruff jupyterlab
 $uv_install_cmd --with numpy,pandas,matplotlib,matplotlib-backend-kitty --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
 $uv_install_cmd litecli
 $uv_install_cmd mycli
