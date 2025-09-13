@@ -34,22 +34,6 @@ vim.api.nvim_create_autocmd(
     }
 )
 
--- Linters by filetype
-lint.linters_by_ft = {
-    -- FIXME: can't run mypy without save
-    -- https://github.com/mfussenegger/nvim-lint/issues/235
-    dockerfile = { 'hadolint' },
-    ghaction = { 'actionlint' },
-    json = { 'jsonlint' },
-    lua = { 'luacheck' },
-    markdown = { 'markdownlint' },
-    python = { 'mypy', 'ruff' },
-    sh = { 'shellcheck' },
-    sql = { 'sqlfluff' },
-    tex = { 'chktex' },
-    yaml = { 'yamllint' },
-}
-
 -- Linter config/args
 local linters = lint.linters
 ---- Lua
@@ -62,6 +46,7 @@ linters.markdownlint.args = {
     '--stdin',
 }
 ---- Python
+-- Ruff:
 local severity = vim.diagnostic.severity
 local ruff_severities = {
     ['E'] = severity.ERROR,
@@ -94,6 +79,27 @@ linters.ruff.parser = function(output, bufnr)
     end
     return diagnostics
 end
+-- Zuban
+linters.zmypy = {
+    cmd = 'zmypy',
+    stdin = false,
+    stream = 'both',
+    ignore_exitcode = true,
+    args = {
+        '--no-pretty',
+        '--show-error-end',
+    },
+    parser = require('lint.parser').from_pattern(
+        '([^:]+):(%d+):(%d+): (%a+): (.*) %[(%a[%a-]+)%]',
+        { 'file', 'lnum', 'col', 'severity', 'message', 'code' },
+        {
+            error = vim.diagnostic.severity.ERROR,
+            warning = vim.diagnostic.severity.WARN,
+            note = vim.diagnostic.severity.HINT,
+        },
+        { source = 'zmypy' }
+    ),
+}
 ---- Sqlfluff
 lint.linters.sqlfluff.args = { 'lint', '--format=json', '-' }
 linters.sqlfluff.stdin = true
@@ -119,6 +125,22 @@ linters.chktex.args = vim.list_extend(vim.deepcopy(linters.chktex.args), {
     '-n36',
 })
 linters.chktex.ignore_exitcode = true
+
+-- Linters by filetype
+lint.linters_by_ft = {
+    -- FIXME: can't run mypy without save
+    -- https://github.com/mfussenegger/nvim-lint/issues/235
+    dockerfile = { 'hadolint' },
+    ghaction = { 'actionlint' },
+    json = { 'jsonlint' },
+    lua = { 'luacheck' },
+    markdown = { 'markdownlint' },
+    python = { 'zmypy', 'ruff' },
+    sh = { 'shellcheck' },
+    sql = { 'sqlfluff' },
+    tex = { 'chktex' },
+    yaml = { 'yamllint' },
+}
 
 -- Commands
 vim.api.nvim_create_user_command('LinterInfo', function()
