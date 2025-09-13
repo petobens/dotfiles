@@ -47,6 +47,7 @@ $uv_install_cmd trash-cli
 $uv_install_cmd git+https://github.com/will8211/unimatrix
 $uv_install_cmd vimiv
 $uv_install_cmd yamllint
+$uv_install_cmd zuban
 
 uv_venvs=$(uv tool dir)
 
