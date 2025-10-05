@@ -380,3 +380,9 @@ if type "git" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/gitconfig" "$HOME/.gitconfig"
     echo Created .gitconfig file
 fi
+
+# AI
+if type "mcp-hub" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/config/mcphub" "$HOME/.config/mcphub"
+    echo Created .config/mcphub folder symlink
+fi

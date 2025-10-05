@@ -117,6 +117,10 @@ require('render-markdown').setup({
                             icon = '󰨸 ',
                             highlight = 'Comment',
                         },
+                        group = {
+                            icon = ' ',
+                            highlight = 'Comment',
+                        },
                         help = {
                             icon = ' ',
                             highlight = 'Comment',

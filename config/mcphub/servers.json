@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "github": {
+            "disabled": false,
+            "headers": {
+                "Authorization": "Bearer ${cmd: pass show git/github/petobens/api-key}"
+            },
+            "url": "https://api.githubcopilot.com/mcp/"
+        }
+    }
+}

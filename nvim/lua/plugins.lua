@@ -132,7 +132,14 @@ local plugins = {
         config = load_plugin_config('copilot_config'),
     },
     {
-        -- 'petobens/codecompanion.nvim',
+        'ravitemer/mcphub.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+        },
+        build = 'npm install -g mcp-hub@latest',
+        config = load_plugin_config('mcphub_config'),
+    },
+    {
         'olimorris/codecompanion.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim',
