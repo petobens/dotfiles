@@ -4,10 +4,9 @@
 -- Plugins/Extensions:
 -- MCP
 -- Possible to share a PDF file with this?
+-- https://github.com/olimorris/codecompanion.nvim/discussions/2216
 -- Sign-in/read  google doc/slides
 -- https://github.com/olimorris/codecompanion.nvim/discussions/1208
--- Try tavily web_search tool (and use it to crawl?)
--- Crawl with site specific search https://github.com/olimorris/codecompanion.nvim/pull/1741
 
 -- VectorCode: https://github.com/Davidyz/VectorCode
 -- And do something like https://github.com/olimorris/codecompanion.nvim/pull/1659
@@ -34,6 +33,7 @@ _G.CodeCompanionConfig = {}
 
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
+local TAVILY_API_KEY = 'cmd:pass show tavily/yahoomail/api-key'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
 
 -- Helpers
@@ -476,6 +476,11 @@ codecompanion.setup({
                             default = 'qwen3:1.7b',
                         },
                     },
+                })
+            end,
+            tavily = function()
+                return adapters.extend('tavily', {
+                    env = { api_key = TAVILY_API_KEY },
                 })
             end,
         },
