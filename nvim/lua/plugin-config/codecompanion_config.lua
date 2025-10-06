@@ -518,7 +518,7 @@ codecompanion.setup({
     },
     strategies = {
         chat = {
-            adapter = 'openai_gpt_41',
+            adapter = 'openai_gpt_5',
             roles = {
                 user = 'Me',
                 llm = function(adapter)
