@@ -2,10 +2,29 @@
     "mcpServers": {
         "github": {
             "disabled": false,
+            "url": "https://api.githubcopilot.com/mcp/",
             "headers": {
                 "Authorization": "Bearer ${cmd: pass show git/github/petobens/api-key}"
             },
-            "url": "https://api.githubcopilot.com/mcp/"
+            "autoApprove": [
+                "get_file_contents",
+                "get_me",
+                "list_branches",
+                "list_commits",
+                "list_pull_requests",
+                "search_code",
+                "search_issues",
+                "search_pull_requests",
+                "search_repositories"
+            ]
+        }
+    },
+    "nativeMCPServers": {
+        "mcphub": {
+            "disabled": true
+        },
+        "neovim": {
+            "disabled": true
         }
     }
 }
