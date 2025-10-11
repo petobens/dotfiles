@@ -429,7 +429,7 @@ codecompanion.setup({
                 })
             end,
             openai_gpt_5 = function()
-                return adapters.extend('openai', {
+                return adapters.extend('openai_responses', {
                     name = 'openai_gpt_5',
                     env = { api_key = OPENAI_API_KEY },
                     schema = {
@@ -445,7 +445,7 @@ codecompanion.setup({
                                 },
                             },
                         },
-                        reasoning_effort = { default = 'minimal' },
+                        ['reasoning.effort'] = { default = 'minimal' },
                     },
                 })
             end,
