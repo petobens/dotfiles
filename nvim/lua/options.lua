@@ -77,6 +77,7 @@ vim.opt.fillchars = {
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.pumblend = 6
+vim.opt.pumborder = 'rounded'
 vim.opt.pumheight = 15
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 3
