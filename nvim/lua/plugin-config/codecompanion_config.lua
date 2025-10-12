@@ -446,6 +446,7 @@ codecompanion.setup({
                             },
                         },
                         ['reasoning.effort'] = { default = 'minimal' },
+                        verbosity = { default = 'low' },
                     },
                 })
             end,
