@@ -1,13 +1,9 @@
 local leap = require('leap')
 
-leap.setup({
-    max_highlighted_traversal_targets = 20, -- show 20 matches when traversing
-})
 require('flit').setup({}) -- enhanced f,F,t and T motions (as in sneak)
 
--- Mappings (use default but don't map x)
-leap.add_default_mappings()
-leap.opts.special_keys.next_target = { '<A-n>' }
-leap.opts.special_keys.prev_target = { '<A-p>' }
-vim.keymap.del({ 'x', 'o' }, 'x')
-vim.keymap.del({ 'x', 'o' }, 'X')
+-- Mappings
+vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap-forward)')
+vim.keymap.set({ 'n', 'x', 'o' }, 'S', '<Plug>(leap-backward)')
+leap.opts.keys.next_target = { '<A-n>' }
+leap.opts.keys.prev_target = { '<A-p>' }
