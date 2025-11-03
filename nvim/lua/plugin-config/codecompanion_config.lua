@@ -448,6 +448,13 @@ codecompanion.setup({
                         ['reasoning.effort'] = { default = 'minimal' },
                         verbosity = { default = 'low' },
                     },
+                    available_tools = {
+                        ['web_search'] = {
+                            enabled = function(_)
+                                return false
+                            end,
+                        },
+                    },
                 })
             end,
             gemini_flash_25 = function()
