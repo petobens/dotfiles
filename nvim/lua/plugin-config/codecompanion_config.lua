@@ -428,15 +428,15 @@ codecompanion.setup({
                     },
                 })
             end,
-            openai_gpt_5 = function()
+            openai_gpt_51 = function()
                 return adapters.extend('openai_responses', {
-                    name = 'openai_gpt_5',
+                    name = 'openai_gpt_51',
                     env = { api_key = OPENAI_API_KEY },
                     schema = {
                         model = {
-                            default = 'gpt-5',
+                            default = 'gpt-5.1',
                             choices = {
-                                ['gpt-5'] = {
+                                ['gpt-5.1'] = {
                                     opts = {
                                         has_vision = true,
                                         can_reason = true,
@@ -445,7 +445,7 @@ codecompanion.setup({
                                 },
                             },
                         },
-                        ['reasoning.effort'] = { default = 'minimal' },
+                        ['reasoning.effort'] = { default = 'low' },
                         verbosity = { default = 'low' },
                     },
                     available_tools = {
@@ -526,7 +526,7 @@ codecompanion.setup({
     },
     strategies = {
         chat = {
-            adapter = 'openai_gpt_5',
+            adapter = 'openai_gpt_51',
             roles = {
                 user = 'Me',
                 llm = function(adapter)
