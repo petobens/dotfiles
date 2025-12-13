@@ -1366,3 +1366,7 @@ end, { desc = 'Add selection to CodeCompanion chat' })
 vim.keymap.set('v', '<Leader>ec', function()
     codecompanion.prompt('explain')
 end, { noremap = true, silent = true, desc = 'Explain selection with CodeCompanion' })
+
+vim.keymap.set('n', '<Leader>ac', function()
+    _G.CodeCompanionConfig.add_context({ vim.api.nvim_buf_get_name(0) })
+end, { desc = 'Add current file to CodeCompanion' })
