@@ -24,7 +24,7 @@
 local adapters = require('codecompanion.adapters')
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
-local keymaps = require('codecompanion.strategies.chat.keymaps')
+local keymaps = require('codecompanion.interactions.chat.keymaps')
 local telescope_action_state = require('telescope.actions.state')
 local telescope_actions = require('telescope.actions')
 local u = require('utils')
@@ -390,7 +390,7 @@ end
 function _G.CodeCompanionConfig.run_slash_command(name, opts)
     opts = opts or {}
     local chat = get_or_create_chat()
-    local cmd = config.strategies.chat.slash_commands[name]
+    local cmd = config.interactions.chat.slash_commands[name]
     if cmd and type(cmd.callback) == 'function' then
         cmd.callback(chat, opts)
         focus_or_toggle_chat()
@@ -402,10 +402,11 @@ end
 -- Setup
 local PROMPT_LIBRARY = get_my_prompt_library()
 codecompanion.setup({
+    -- Adapters
     adapters = {
         http = {
             opts = {
-                show_defaults = false,
+                show_presets = false,
                 show_model_choices = false,
             },
             openai_gpt_41 = function()
@@ -493,12 +494,13 @@ codecompanion.setup({
             end,
         },
     },
+    -- Display
     display = {
         chat = {
             intro_message = '',
             icons = {
-                buffer_pin = ' ',
-                buffer_watch = ' ',
+                buffer_sync_all = ' ',
+                buffer_sync_diff = ' ',
             },
             window = {
                 layout = 'float',
@@ -518,13 +520,14 @@ codecompanion.setup({
         action_palette = {
             prompt = '> ',
             opts = {
-                show_default_actions = true,
-                show_default_prompt_library = false,
+                show_preset_actions = true,
+                show_preset_prompts = false,
             },
         },
         diff = { layout = 'vertical' },
     },
-    strategies = {
+    -- Interactions
+    interactions = {
         chat = {
             adapter = 'openai_gpt_51',
             roles = {
@@ -533,15 +536,17 @@ codecompanion.setup({
                     local current_system_role_prompt = get_current_system_role_prompt()
                     local system_role = SYSTEM_ROLE
 
-                    for name, prompt in pairs(config.prompt_library) do
-                        local prompt_content = prompt.prompts[1]
-                            and prompt.prompts[1].content
-                        if
-                            type(prompt_content) == 'string'
-                            and prompt_content == current_system_role_prompt
-                        then
-                            system_role = name
-                            break
+                    for name, prompt in pairs(config.prompt_library or {}) do
+                        local prompts = prompt and prompt.prompts
+                        if type(prompts) == 'table' then
+                            local first = prompts[1]
+                            if first and type(first.content) == 'string' then
+                                local prompt_content = first.content
+                                if prompt_content == current_system_role_prompt then
+                                    system_role = name
+                                    break
+                                end
+                            end
                         end
                     end
                     return string.format(
@@ -554,6 +559,9 @@ codecompanion.setup({
                 end,
             },
             opts = {
+                system_prompt = function()
+                    return PROMPT_LIBRARY['helpful_assistant']
+                end,
                 prompt_decorator = function(message, adapter, _)
                     if adapter.model.name == 'qwen3:1.7b' then
                         return string.format([[/no_think %s]], message)
@@ -621,8 +629,8 @@ codecompanion.setup({
                         end, 1)
                     end,
                 },
-                pin = { modes = { n = '<Leader>rp' } },
-                watch = { modes = { n = '<Leader>rw' } },
+                buffer_sync_all = { modes = { n = '<Leader>rp' } },
+                buffer_sync_diff = { modes = { n = '<Leader>rw' } },
                 system_prompt = { modes = { n = '<Leader>ts' } },
                 action_palette = {
                     modes = { n = '<A-a>', i = '<A-a>' },
@@ -632,6 +640,7 @@ codecompanion.setup({
                     end,
                 },
             },
+            ---- Slash Commands
             slash_commands = {
                 -- Default
                 ['help'] = { opts = { max_lines = 10000 } },
@@ -811,8 +820,8 @@ codecompanion.setup({
 
                         -- Determine majority filetype and call the prompt for that filetype
                         local ft = get_majority_filetype(abs_files)
-                        local prompt_short_name = ft_prompt_map[ft] or 'assistant_role'
-                        codecompanion.prompt(prompt_short_name)
+                        local prompt_alias = ft_prompt_map[ft] or 'assistant_role'
+                        codecompanion.prompt(prompt_alias)
                         local chat = get_or_create_chat()
 
                         _G.CodeCompanionConfig.add_context(abs_files)
@@ -932,6 +941,7 @@ codecompanion.setup({
                 },
             },
         },
+        -- Inline
         inline = {
             adapter = 'openai_gpt_41',
             keymaps = {
@@ -940,17 +950,13 @@ codecompanion.setup({
             },
         },
     },
-    opts = {
-        system_prompt = function()
-            return PROMPT_LIBRARY['helpful_assistant']
-        end,
-    },
+    -- Prompt Library
     prompt_library = {
         [SYSTEM_ROLE] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Act as a helpful assistant.',
             opts = {
-                short_name = 'assistant_role',
+                alias = 'assistant_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -959,10 +965,10 @@ codecompanion.setup({
             },
         },
         [' Bash Developer'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Act as an expert Bash developer.',
             opts = {
-                short_name = 'bash_role',
+                alias = 'bash_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -971,10 +977,10 @@ codecompanion.setup({
             },
         },
         [' LaTeX Developer'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Act as an expert LaTeX developer.',
             opts = {
-                short_name = 'latex_role',
+                alias = 'latex_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -983,10 +989,10 @@ codecompanion.setup({
             },
         },
         [' Lua Developer'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Act as an expert Lua developer.',
             opts = {
-                short_name = 'lua_role',
+                alias = 'lua_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -1004,10 +1010,10 @@ codecompanion.setup({
             },
         },
         [' Python Developer'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Act as an expert Python developer.',
             opts = {
-                short_name = 'python_role',
+                alias = 'python_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -1016,10 +1022,10 @@ codecompanion.setup({
             },
         },
         [' PyDocs'] = {
-            strategy = 'inline',
+            interaction = 'inline',
             description = 'Write inline Python docstrings following NumPy-style.',
             opts = {
-                short_name = 'pydocs',
+                alias = 'pydocs',
                 ignore_system_prompt = true,
             },
             prompts = {
@@ -1027,10 +1033,10 @@ codecompanion.setup({
             },
         },
         [' SQL Developer'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Act as an expert SQL developer.',
             opts = {
-                short_name = 'Sql_role',
+                alias = 'Sql_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -1039,10 +1045,10 @@ codecompanion.setup({
             },
         },
         [' Writer at Work'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Write the way I write at work.',
             opts = {
-                short_name = 'writer',
+                alias = 'writer',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -1060,10 +1066,10 @@ codecompanion.setup({
             },
         },
         ['󰗊 Translator'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Act as a translator from Spanish to English.',
             opts = {
-                short_name = 'translator_role',
+                alias = 'translator_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
@@ -1072,10 +1078,10 @@ codecompanion.setup({
             },
         },
         ['󰧷 GSheets Expert'] = {
-            strategy = 'chat',
+            interaction = 'chat',
             description = 'Act as a Google Sheets expert.',
             opts = {
-                short_name = 'gsheets_role',
+                alias = 'gsheets_role',
                 is_slash_cmd = true,
                 ignore_system_prompt = true,
             },
