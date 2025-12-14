@@ -1196,14 +1196,6 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 vim.api.nvim_create_autocmd('User', {
-    desc = 'Clear CodeCompanion spinner on streaming',
-    pattern = 'CodeCompanionRequestStreaming',
-    callback = function()
-        vim.defer_fn(clear_spinner, 50)
-    end,
-})
-
-vim.api.nvim_create_autocmd('User', {
     desc = 'Clear spinner and start insert on request finish',
     pattern = 'CodeCompanionRequestFinished',
     callback = function()
