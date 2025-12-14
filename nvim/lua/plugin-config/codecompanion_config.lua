@@ -404,31 +404,13 @@ local PROMPT_LIBRARY = get_my_prompt_library()
 codecompanion.setup({
     -- Adapters
     adapters = {
+        ---- HTTP
         http = {
             opts = {
                 show_presets = false,
                 show_model_choices = false,
             },
-            openai_gpt_41 = function()
-                return adapters.extend('openai', {
-                    name = 'openai_gpt_41',
-                    env = { api_key = OPENAI_API_KEY },
-                    schema = {
-                        model = { default = 'gpt-4.1' },
-                        temperature = { default = 0.2 },
-                        top_p = { default = 0.1 },
-                    },
-                })
-            end,
-            openai_o4_mini = function()
-                return adapters.extend('openai', {
-                    name = 'openai_o4_mini',
-                    env = { api_key = OPENAI_API_KEY },
-                    schema = {
-                        model = { default = 'o4-mini' },
-                    },
-                })
-            end,
+            ---- OpenAI
             openai_gpt_51 = function()
                 return adapters.extend('openai_responses', {
                     name = 'openai_gpt_51',
@@ -458,6 +440,26 @@ codecompanion.setup({
                     },
                 })
             end,
+            openai_gpt_5_nano = function()
+                return adapters.extend('openai', {
+                    name = 'openai_gpt_5_nano',
+                    env = { api_key = OPENAI_API_KEY },
+                    schema = {
+                        model = { default = 'gpt-5-nano' },
+                        reasoning_effort = { 'minimal' },
+                    },
+                })
+            end,
+            ---- Google
+            gemini_pro_3 = function()
+                return adapters.extend('gemini', {
+                    name = 'gemini_pro_3',
+                    env = { api_key = GEMINI_API_KEY },
+                    schema = {
+                        model = { default = 'gemini-3-pro-preview' },
+                    },
+                })
+            end,
             gemini_flash_25 = function()
                 return adapters.extend('gemini', {
                     env = { api_key = GEMINI_API_KEY },
@@ -468,15 +470,7 @@ codecompanion.setup({
                     },
                 })
             end,
-            gemini_pro_25 = function()
-                return adapters.extend('gemini', {
-                    name = 'gemini_pro_25',
-                    env = { api_key = GEMINI_API_KEY },
-                    schema = {
-                        model = { default = 'gemini-2.5-pro' },
-                    },
-                })
-            end,
+            ---- Ollama
             ollama_qwen3_2b = function()
                 return adapters.extend('ollama', {
                     name = 'ollama_qwen3_2b',
@@ -487,11 +481,19 @@ codecompanion.setup({
                     },
                 })
             end,
+            ---- Tools
             tavily = function()
                 return adapters.extend('tavily', {
                     env = { api_key = TAVILY_API_KEY },
                 })
             end,
+        },
+        ---- ACP
+        acp = {
+            opts = {
+                show_presets = false,
+                show_model_choices = false,
+            },
         },
     },
     -- Display
@@ -943,7 +945,7 @@ codecompanion.setup({
         },
         -- Inline
         inline = {
-            adapter = 'openai_gpt_41',
+            adapter = 'openai_gpt_5_nano',
             keymaps = {
                 accept_change = { modes = { n = 'dp' } },
                 reject_change = { modes = { n = 'de' } },
@@ -1096,8 +1098,7 @@ codecompanion.setup({
             opts = {
                 auto_generate_title = u.is_online(),
                 title_generation_opts = {
-                    adapter = 'openai_gpt_41',
-                    model = 'gpt-4.1',
+                    adapter = 'openai_gpt_5_nano',
                     refresh_every_n_prompts = 3,
                     max_refreshes = 10,
                 },
