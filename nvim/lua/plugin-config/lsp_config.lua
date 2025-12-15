@@ -179,5 +179,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', '<Leader>dc', function()
             vim.lsp.document_color.enable(not vim.lsp.document_color.is_enabled())
         end, { buffer = e.buf, desc = 'Toggle LSP color highlighting' })
+        vim.keymap.set('n', '<CR>', function()
+            vim.lsp.buf.selection_range(vim.v.count1)
+        end, { buffer = e.buf, desc = 'LSP incremental selection (grow)' })
     end,
 })
