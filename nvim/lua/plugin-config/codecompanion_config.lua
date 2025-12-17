@@ -1099,6 +1099,7 @@ codecompanion.setup({
                 auto_generate_title = u.is_online(),
                 title_generation_opts = {
                     adapter = 'openai_gpt_5_nano',
+                    model = 'gpt-5-nano',
                     refresh_every_n_prompts = 3,
                     max_refreshes = 10,
                 },
