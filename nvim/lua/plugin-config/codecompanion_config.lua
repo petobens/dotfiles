@@ -460,12 +460,12 @@ codecompanion.setup({
                     },
                 })
             end,
-            gemini_flash_25 = function()
+            gemini_flash_3 = function()
                 return adapters.extend('gemini', {
                     env = { api_key = GEMINI_API_KEY },
-                    name = 'gemini_flash_25',
+                    name = 'gemini_flash_3',
                     schema = {
-                        model = { default = 'gemini-2.5-flash' },
+                        model = { default = 'gemini-3-flash-preview' },
                         reasoning_effort = { default = 'none' },
                     },
                 })
