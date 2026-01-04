@@ -411,15 +411,15 @@ codecompanion.setup({
                 show_model_choices = false,
             },
             ---- OpenAI
-            openai_gpt_51 = function()
+            openai_gpt_52 = function()
                 return adapters.extend('openai_responses', {
-                    name = 'openai_gpt_51',
+                    name = 'openai_gpt_52',
                     env = { api_key = OPENAI_API_KEY },
                     schema = {
                         model = {
-                            default = 'gpt-5.1',
+                            default = 'gpt-5.2',
                             choices = {
-                                ['gpt-5.1'] = {
+                                ['gpt-5.2'] = {
                                     opts = {
                                         has_vision = true,
                                         can_reason = true,
@@ -427,6 +427,11 @@ codecompanion.setup({
                                     },
                                 },
                             },
+                        },
+                        top_p = {
+                            enabled = function()
+                                return false
+                            end,
                         },
                         ['reasoning.effort'] = { default = 'low' },
                         verbosity = { default = 'low' },
@@ -531,7 +536,7 @@ codecompanion.setup({
     -- Interactions
     interactions = {
         chat = {
-            adapter = 'openai_gpt_51',
+            adapter = 'openai_gpt_52',
             roles = {
                 user = 'Me',
                 llm = function(adapter)
