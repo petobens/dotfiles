@@ -45,6 +45,7 @@ $uv_install_cmd ruff
 $uv_install_cmd sqlfluff
 $uv_install_cmd trash-cli
 $uv_install_cmd git+https://github.com/will8211/unimatrix
+$uv_install_cmd uv-upx
 $uv_install_cmd vimiv
 $uv_install_cmd yamllint
 $uv_install_cmd zuban
