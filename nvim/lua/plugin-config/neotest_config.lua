@@ -101,15 +101,25 @@ end
 
 local function _neotest_overseer_subscribe(ft, bufnr)
     local overseer = require('overseer')
-    local tasks = {}
-    while vim.tbl_isempty(tasks) do
-        vim.wait(100)
-        tasks = overseer.list_tasks({ recent_first = true })
+    local neotest_task
+    local ok = vim.wait(math.huge, function()
+        local tasks = overseer.list_tasks({
+            include_ephemeral = true,
+            status = { 'PENDING', 'RUNNING' },
+            sort = function(a, b)
+                return (a.time_start or 0) > (b.time_start or 0)
+            end,
+        }) or {}
+        neotest_task = tasks[1]
+        return neotest_task ~= nil
+    end, 50)
+    if not ok then
+        vim.notify('Timed out waiting for overseer task', vim.log.levels.WARN)
+        return
     end
 
     -- We record filetype and buffer number since we might call neotest.run from a
     -- terminal buffer when attaching to it
-    local neotest_task = tasks[1]
     neotest_task.ft = ft
     neotest_task.bufnr = bufnr
 

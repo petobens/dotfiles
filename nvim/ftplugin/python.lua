@@ -80,7 +80,7 @@ local function run_overseer(task_name)
         vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     end
 
-    overseer.run_template({ name = string.format('%s', task_name) }, function(task)
+    overseer.run_task({ name = string.format('%s', task_name) }, function(task)
         vim.cmd.cclose()
         task:subscribe('on_complete', function()
             task.metadata.name = task_name
@@ -369,7 +369,7 @@ end
 -- Sphinx(docs)
 local function run_sphinx_build()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    overseer.run_template({ name = 'run_sphinx_build' }, function()
+    overseer.run_task({ name = 'run_sphinx_build' }, function()
         vim.cmd.cclose()
     end)
 end

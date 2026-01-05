@@ -4,38 +4,42 @@ _G.OverseerConfig = {} -- to store error formats
 
 -- Setup
 overseer.setup({
-    templates = {
-        'builtin',
-        'user',
-    },
     task_list = {
-        default_detail = 2,
         min_height = 15,
         max_height = 15,
         min_width = 0.5,
         max_width = 0.5,
         separator = '',
-        bindings = {
-            ['zo'] = 'IncreaseDetail',
-            ['zc'] = 'DecreaseDetail',
-            ['zr'] = 'IncreaseDetail',
-            ['zm'] = 'DecreaseDetail',
-            [']'] = false,
-            ['['] = false,
-            ['[t'] = 'PrevTask',
-            [']t'] = 'NextTask',
-            ['<A-v>'] = 'TogglePreview',
-            ['<A-j>'] = 'ScrollOutputDown',
-            ['<A-k>'] = 'ScrollOutputUp',
-            ['dd'] = 'Dispose',
-            ['ss'] = 'Stop',
+        keymaps = {
+            ['<C-k>'] = false,
+            ['<C-j>'] = false,
+            ['p'] = false,
+            ['[t'] = 'keymap.prev_task',
+            [']t'] = 'keymap.next_task',
+            ['<A-v>'] = 'keymap.toggle_preview',
+            ['<A-k>'] = 'keymap.scroll_output_up',
+            ['<A-j>'] = 'keymap.scroll_output_down',
+            ['dd'] = { 'keymap.run_action', opts = { action = 'dispose' } },
+            ['ss'] = { 'keymap.run_action', opts = { action = 'stop' } },
         },
     },
 })
 
 -- Helpers
 local function overseer_last_task(attach)
-    vim.cmd.OverseerQuickAction('open hsplit')
+    local tasks = overseer.list_tasks({
+        include_ephemeral = true,
+        sort = function(a, b)
+            return (a.time_start or 0) > (b.time_start or 0)
+        end,
+    })
+    local task = tasks[1]
+    if not task then
+        vim.notify('No Overseer tasks found', vim.log.levels.WARN)
+        return
+    end
+    overseer.run_action(task, 'open hsplit')
+
     vim.cmd.stopinsert()
     vim.cmd.wincmd('J')
     vim.cmd.resize('15')

@@ -25,7 +25,7 @@ end
 local function run_overseer()
     local current_win_id = vim.api.nvim_get_current_win()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    overseer.run_template({ name = 'run_sh' }, function(task)
+    overseer.run_task({ name = 'run_sh' }, function(task)
         vim.cmd.cclose()
         task:subscribe('on_complete', function()
             _parse_qf(task.metadata.run_cmd, current_win_id)

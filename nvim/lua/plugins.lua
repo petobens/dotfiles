@@ -179,7 +179,6 @@ local plugins = {
     },
     {
         'stevearc/overseer.nvim',
-        version = '1.6.0',
         config = load_plugin_config('overseer_config'),
     },
     {

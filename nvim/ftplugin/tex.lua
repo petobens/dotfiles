@@ -78,7 +78,7 @@ local function compile_latex()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     -- We seem to need the following for proper qf parsing
     vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
-    overseer.run_template({ name = 'run_arara' }, function(task)
+    overseer.run_task({ name = 'run_arara' }, function(task)
         vim.cmd.cclose()
         task:subscribe('on_complete', function()
             local log_file = (vim.fs.normalize(task.metadata.filename)):match(
