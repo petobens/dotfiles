@@ -86,8 +86,15 @@ function M.is_online()
     if last_online_check and (now - last_online_check < online_cache_timeout) then
         return online_status
     end
-    online_status = vim.system({ 'ping', '-c', '1', '8.8.8.8' }, { timeout = 1000 })
-        :wait().code == 0
+
+    local res = vim.system({
+        'curl',
+        '-fsS',
+        '--max-time',
+        '1',
+        'https://clients3.google.com/generate_204',
+    }, { text = true, timeout = 1000 }):wait()
+    online_status = (res.code == 0)
     last_online_check = now
     return online_status
 end
