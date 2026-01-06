@@ -51,6 +51,7 @@ local function get_my_prompt_library()
         'changelog_writer',
         'code_reviewer',
         'conventional_commits',
+        'explain_code',
         'gsheets_expert',
         'helpful_assistant',
         'latex_developer',
@@ -62,9 +63,10 @@ local function get_my_prompt_library()
         'translator_spa_eng',
         'writer_at_work',
     }
-    local user_prompts = {
-        conventional_commits = true,
+    local user_prompts = { -- don't prepend formatting instructions
         code_reviewer = true,
+        conventional_commits = true,
+        explain_code = true,
     }
     local base_url =
         'https://raw.githubusercontent.com/petobens/llm-prompts/main/md-prompts/%s.md'
@@ -939,6 +941,26 @@ codecompanion.setup({
                         chat:submit()
                     end,
                 },
+                ['explain_code'] = {
+                    description = 'Explain selected code',
+                    callback = function(chat, opts)
+                        local bufnr = opts and opts.bufnr
+                        local code = opts and opts.code
+                        local file = vim.api.nvim_buf_get_name(bufnr)
+                        local ft = (vim.bo[bufnr] and vim.bo[bufnr].filetype) or 'text'
+
+                        _G.CodeCompanionConfig.add_context({ file })
+                        chat:add_buf_message({
+                            role = 'user',
+                            content = string.format(
+                                PROMPT_LIBRARY['explain_code'],
+                                ft,
+                                code
+                            ),
+                        })
+                        chat:submit()
+                    end,
+                },
             },
             variables = {
                 ['buffer'] = {
@@ -1361,7 +1383,14 @@ vim.keymap.set('v', '<Leader>cp', function()
 end, { desc = 'Add selection to CodeCompanion chat' })
 
 vim.keymap.set('v', '<Leader>ec', function()
-    codecompanion.prompt('explain')
+    local bufnr = vim.api.nvim_get_current_buf()
+    local code = u.get_selection()
+    -- Leave visual mode to avoid pasting into the chat buffer
+    vim.cmd.normal({ '', bang = true })
+    _G.CodeCompanionConfig.run_slash_command(
+        'explain_code',
+        { bufnr = bufnr, code = code }
+    )
 end, { noremap = true, silent = true, desc = 'Explain selection with CodeCompanion' })
 
 vim.keymap.set('n', '<Leader>ac', function()

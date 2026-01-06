@@ -50,23 +50,16 @@ function M.vim_session_file()
 end
 
 function M.get_selection()
-    local mode = vim.api.nvim_get_mode().mode
-    if mode:match('^v') then
-        local bufnr = 0
-        local start_pos = vim.api.nvim_buf_get_mark(bufnr, '<')
-        local end_pos = vim.api.nvim_buf_get_mark(bufnr, '>')
-        local lines = vim.api.nvim_buf_get_text(
-            bufnr,
-            start_pos[1] - 1,
-            start_pos[2],
-            end_pos[1] - 1,
-            end_pos[2] + 1,
-            {}
-        )
-        return table.concat(lines, '\n')
-    else
-        return vim.fn.expand('<cWORD>')
+    local mode = vim.fn.mode()
+    if mode:match('^[vV\22]') then
+        local type_map = { v = 'v', V = 'V', ['\22'] = 'b' }
+        local vtype = type_map[mode] or 'v'
+        local start_pos = vim.fn.getpos('v')
+        local end_pos = vim.fn.getpos('.')
+        local region = vim.fn.getregion(start_pos, end_pos, { type = vtype })
+        return table.concat(region, '\n')
     end
+    return vim.fn.expand('<cWORD>')
 end
 
 function M.quit_return()
