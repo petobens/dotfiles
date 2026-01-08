@@ -279,7 +279,7 @@ local function set_lsp_path(path)
             client.settings.python or {},
             { pythonPath = path }
         )
-        client.notify('workspace/didChangeConfiguration', { settings = nil })
+        client:notify('workspace/didChangeConfiguration', { settings = nil })
     end
 end
 
