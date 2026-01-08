@@ -323,7 +323,7 @@ function _G.PyVenv.activate(venv)
             })
             local result = vim.system(
                 { venv_info.manager, 'run', 'python', '--version' },
-                { text = true }
+                { text = true, cwd = project_root }
             ):wait()
             local py_version = vim.trim(result.stdout or ''):match('%d+.%d+.%d+')
             _G.PyVenv.active_venv = {
