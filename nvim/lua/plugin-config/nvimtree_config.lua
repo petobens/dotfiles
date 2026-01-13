@@ -331,7 +331,7 @@ local function on_attach(bufnr)
     -- System
     vim.keymap.set('n', ',od', function()
         execute({ 'dragon-drop', '-a', '-x' })
-    end, { buffer = bufnr, desc = 'Drag and drop node(s) externally' })
+    end, { buffer = bufnr, desc = 'Open drag and drop' })
 
     --- CodeCompanion
     vim.keymap.set(
@@ -418,4 +418,9 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 -- Mappings
 vim.keymap.set('n', '<Leader>ff', cd_find_file, { desc = 'Find file in NvimTree' })
-vim.keymap.set('n', '<Leader>fq', vim.cmd.NvimTreeClose, { desc = 'Close/quit NvimTree' })
+vim.keymap.set(
+    'n',
+    '<Leader>fq',
+    vim.cmd.NvimTreeClose,
+    { desc = 'Close/quit NvimTree finder' }
+)

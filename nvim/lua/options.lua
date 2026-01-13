@@ -70,9 +70,9 @@ vim.opt.cursorline = true
 vim.opt.fillchars = {
     eob = ' ',
     fold = ' ',
+    foldclose = '',
     foldopen = '',
     foldsep = ' ',
-    foldclose = '',
 }
 vim.opt.mouse = 'a'
 vim.opt.number = true
@@ -189,12 +189,12 @@ vim.opt.expandtab = true
 vim.opt.formatoptions = 'jcql'
 vim.opt.linebreak = true
 vim.opt.listchars = {
-    tab = '▸\\ ',
     eol = '¬',
-    trail = '•',
     extends = '»',
-    precedes = '«',
     nbsp = '␣',
+    precedes = '«',
+    tab = '▸\\ ',
+    trail = '•',
 }
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 4
@@ -207,17 +207,17 @@ vim.opt.wrap = true
 
 -- Wildmenu
 vim.opt.wildignore = {
-    '*~',
+    '*.dat',
+    '*.dll',
+    '*.DS_Store',
+    '*.exe',
     '*.o',
     '*.obj',
-    '*.dll',
-    '*.dat',
-    '*.swp',
-    '*.zip',
-    '*.exe',
-    '*.DS_Store',
     '*.out',
+    '*.swp',
     '*.toc',
+    '*.zip',
+    '*~',
 }
 vim.opt.wildignorecase = true
 vim.opt.wildmode = { 'longest:full', 'full' }

@@ -71,7 +71,10 @@ local function _parse_neotest_output(task, last_winid)
             local calling_winid = _G.LastWinId
             vim.cmd.close()
             pcall(vim.api.nvim_set_current_win, calling_winid)
-        end, { buffer = true, desc = 'Close neotest output window and return' })
+        end, {
+            buffer = true,
+            desc = 'Close neotest output window and return to previous window',
+        })
     end
 
     -- Combine both qf lists and open qf if needed
@@ -188,31 +191,31 @@ neotest.setup({
         open = 'topleft vsplit | wincmd H | vertical resize 40',
         mappings = {
             attach = 'a',
+            clear_marked = '<C-Space>',
+            clear_target = 'u',
             expand = { 'zo', 'zc' }, -- also collapse
             expand_all = 'zr',
             jumpto = { '<CR>', '<C-]>' },
-            short = 'o', -- open with short output
+            mark = '<Space>',
             run = 'r',
             run_marked = 'R',
+            short = 'o', -- open with short output
             stop = 's',
-            mark = '<Space>',
-            clear_marked = '<C-Space>',
             target = 't',
-            clear_target = 'u',
         },
     },
     icons = {
-        expanded = '',
-        collapsed = '',
-        child_prefix = '',
         child_indent = '  ',
+        child_prefix = '',
+        collapsed = '',
+        expanded = '',
+        failed = ' ',
         final_child_prefix = '',
         non_collapsible = '',
         passed = ' ',
         running = u.icons.running,
-        failed = ' ',
-        unknown = ' ',
         skipped = ' ',
+        unknown = ' ',
         running_animated = vim.tbl_map(function(s)
             return s .. ' '
         end, {
@@ -288,7 +291,7 @@ vim.keymap.set(
     'n',
     '<Leader>np',
     neotest.output_panel.toggle,
-    { desc = 'Toggle output panel' }
+    { desc = 'Toggle test output panel' }
 )
 
 vim.keymap.set('n', '<Leader>nt', function()
@@ -309,7 +312,7 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
                 vim.cmd.wincmd('p')
             end, {
                 buffer = e.buf,
-                desc = 'Close neotest window and return to previous',
+                desc = 'Close neotest window and return to previous window',
             })
             -- Options
             if ft == 'summary' then

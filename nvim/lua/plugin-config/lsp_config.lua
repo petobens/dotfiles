@@ -71,7 +71,7 @@ vim.lsp.config('marksman', {})
 ---- Python
 vim.lsp.config('basedpyright', {
     handlers = {
-        -- Don't publish basedpyright diagnostics (we use ruff and mypy instead)
+        -- Don't publish basedpyright diagnostics (we use ruff and mypy/zuban instead)
         ['textDocument/publishDiagnostics'] = function() end,
     },
     settings = {
@@ -165,7 +165,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
             'n',
             '<Leader>fs',
             vim.lsp.buf.signature_help,
-            { buffer = e.buf, desc = 'Show signature help' }
+            { buffer = e.buf, desc = 'Show (function) signature help' }
         )
         vim.keymap.set('n', '<Leader>ih', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
@@ -174,11 +174,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
             'n',
             '<Leader>cA',
             vim.lsp.buf.code_action,
-            { buffer = e.buf, desc = 'Code action' }
+            { buffer = e.buf, desc = 'Code actions' }
         )
         vim.keymap.set('n', '<Leader>dc', function()
             vim.lsp.document_color.enable(not vim.lsp.document_color.is_enabled())
-        end, { buffer = e.buf, desc = 'Toggle LSP color highlighting' })
+        end, { buffer = e.buf, desc = 'Toggle LSP document color highlighting' })
         vim.keymap.set('n', '<CR>', function()
             vim.lsp.buf.selection_range(vim.v.count1)
         end, { buffer = e.buf, desc = 'LSP incremental selection (grow)' })

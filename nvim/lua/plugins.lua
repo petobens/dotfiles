@@ -49,9 +49,7 @@ local plugins = {
     },
     {
         'ggandor/leap.nvim',
-        dependencies = {
-            'ggandor/flit.nvim',
-        },
+        dependencies = { 'ggandor/flit.nvim' },
         config = load_plugin_config('leap_config'),
     },
     {
@@ -77,7 +75,7 @@ local plugins = {
     -- LSP & Treesitter
     {
         'mason-org/mason.nvim',
-        dependencies = 'WhoIsSethDaniel/mason-tool-installer.nvim',
+        dependencies = { 'WhoIsSethDaniel/mason-tool-installer.nvim' },
         config = load_plugin_config('mason_config'),
     },
     {
@@ -117,9 +115,7 @@ local plugins = {
     },
     {
         'L3MON4D3/LuaSnip',
-        dependencies = {
-            'benfowler/telescope-luasnip.nvim',
-        },
+        dependencies = { 'benfowler/telescope-luasnip.nvim' },
         event = 'InsertEnter',
         keys = '<Leader>es',
         config = load_plugin_config('luasnip_config'),
@@ -255,17 +251,13 @@ local plugins = {
     ----- Markdown
     {
         'MeanderingProgrammer/render-markdown.nvim',
-        dependencies = {
-            'nvim-tree/nvim-web-devicons',
-        },
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
         config = load_plugin_config('render_markdown_config'),
     },
     ---- SQL
     {
         'kndndrj/nvim-dbee',
-        dependencies = {
-            'MunifTanjim/nui.nvim',
-        },
+        dependencies = { 'MunifTanjim/nui.nvim' },
         build = function()
             require('dbee').install()
         end,
@@ -309,8 +301,8 @@ vim.keymap.set('n', '<Leader>lz', vim.cmd.Lazy, { desc = 'Open Lazy plugin manag
 
 vim.keymap.set('n', '<Leader>bu', function()
     vim.cmd.Lazy('sync')
-end, { desc = 'Sync Lazy plugins' })
+end, { desc = 'Sync Lazy plugins (bundle update)' })
 
 vim.keymap.set('n', '<Leader>ul', function()
     vim.cmd.Lazy('log')
-end, { desc = 'Show Lazy log' })
+end, { desc = 'Show Lazy log (update list)' })

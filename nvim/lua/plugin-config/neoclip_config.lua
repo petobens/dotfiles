@@ -3,20 +3,20 @@ require('neoclip').setup({
     keys = {
         telescope = {
             i = {
-                select = '<C-y>',
+                delete = '<C-d>',
+                edit = '<C-e>',
                 paste = '<CR>',
                 paste_behind = '<nop>',
-                replay = '<c-q>',
-                delete = '<c-d>',
-                edit = '<c-e>',
+                replay = '<C-q>',
+                select = '<C-y>',
             },
             n = {
-                select = '<C-y>',
+                delete = 'd',
+                edit = 'e',
                 paste = '<CR>',
                 paste_behind = 'P',
                 replay = 'q',
-                delete = 'd',
-                edit = 'e',
+                select = '<C-y>',
             },
         },
     },

@@ -38,7 +38,7 @@ vim.keymap.set('n', '<Leader>hp', gitsigns.preview_hunk, { desc = 'Preview git h
 
 vim.keymap.set('n', '<Leader>gm', function()
     gitsigns.blame_line({ full = true })
-end, { desc = 'Show git blame for current line' })
+end, { desc = 'Show git blame message for current line' })
 
 vim.keymap.set(
     'n',

@@ -3,13 +3,13 @@ local M = {}
 M.icons = {
     -- Running
     error = '',
-    warning = '',
-    info = '',
     hint = '',
+    info = '',
     running = '󰜎',
+    warning = '',
     -- Folding
-    fold_open = '',
     fold_close = '',
+    fold_open = '',
 }
 
 function M.split_open(file)

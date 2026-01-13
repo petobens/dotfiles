@@ -128,7 +128,7 @@ linters.chktex.ignore_exitcode = true
 
 -- Linters by filetype
 lint.linters_by_ft = {
-    -- FIXME: can't run mypy without save
+    -- FIXME: can't run mypy/zmpy without save
     -- https://github.com/mfussenegger/nvim-lint/issues/235
     dockerfile = { 'hadolint' },
     ghaction = { 'actionlint' },

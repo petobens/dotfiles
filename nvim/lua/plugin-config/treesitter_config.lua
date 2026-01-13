@@ -108,7 +108,7 @@ end, { desc = 'Select inside class (inner)' })
 
 vim.keymap.set({ 'x', 'o' }, 'ai', function()
     ts_select.select_textobject('@conditional.outer', 'textobjects')
-end, { desc = 'Select around conditional (outer)' })
+end, { desc = 'Select around if conditional (outer)' })
 
 vim.keymap.set({ 'x', 'o' }, 'as', function()
     ts_select.select_textobject('@local.scope', 'locals')

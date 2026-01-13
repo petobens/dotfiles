@@ -8,4 +8,9 @@ require('neo-zoom').setup({
     },
 })
 
-vim.keymap.set('n', '<Leader>zw', vim.cmd.NeoZoomToggle, { desc = 'Toggle NeoZoom' })
+vim.keymap.set(
+    'n',
+    '<Leader>zw',
+    vim.cmd.NeoZoomToggle,
+    { desc = 'Toggle NeoZoom (zoom window)' }
+)

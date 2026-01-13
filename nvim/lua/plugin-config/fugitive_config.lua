@@ -33,7 +33,7 @@ vim.api.nvim_create_autocmd('FileType', {
             'n',
             'q',
             u.quit_return,
-            { buffer = e.buf, desc = 'Quit Fugitive and return' }
+            { buffer = e.buf, desc = 'Quit Fugitive and return to previous window' }
         )
         vim.keymap.set(
             'n',
@@ -88,12 +88,13 @@ vim.api.nvim_create_autocmd('FileType', {
     callback = function(e)
         -- Options
         vim.opt_local.foldlevel = 1 -- open commits unfolded
+
         -- Mappings
         vim.keymap.set(
             'n',
             'q',
             u.quit_return,
-            { buffer = e.buf, desc = 'Quit and return' }
+            { buffer = e.buf, desc = 'Quit and return to previous window' }
         )
         vim.keymap.set(
             'n',
@@ -195,7 +196,7 @@ vim.keymap.set(
     { 'n', 'v' },
     '<Leader>gB',
     ':GBrowse!<CR>',
-    { desc = 'Copy browser permalink' }
+    { desc = 'Copy browser git permalink' }
 )
 
 vim.keymap.set('n', '<Leader>bl', function()
@@ -203,4 +204,4 @@ vim.keymap.set('n', '<Leader>bl', function()
     vim.cmd.wincmd('j')
     vim.cmd.normal({ args = { '5j' }, bang = true })
     vim.cmd.wincmd('25_')
-end, { desc = 'Open git blame and adjust window layout' })
+end, { desc = 'Open git blame' })

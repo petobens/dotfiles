@@ -1,5 +1,4 @@
 -- luacheck:ignore 631
-
 local blink_cmp = require('blink.cmp')
 local u = require('utils')
 

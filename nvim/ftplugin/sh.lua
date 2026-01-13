@@ -81,5 +81,5 @@ vim.keymap.set(
     'n',
     '<Leader>ri',
     run_toggleterm,
-    { buffer = true, desc = 'Run shell script in ToggleTerm (alias)' }
+    { buffer = true, desc = 'Run shell script in ToggleTerm (run interpreter)' }
 )

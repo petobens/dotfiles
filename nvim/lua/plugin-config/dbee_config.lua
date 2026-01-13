@@ -12,7 +12,7 @@ dbee.setup({
             { key = '<C-r>', mode = 'n', action = 'refresh' },
             { key = 'o', mode = 'n', action = 'action_1' }, -- open
             { key = 'r', mode = 'n', action = 'action_2' }, -- rename
-            { key = 'd', mode = 'n', action = 'action_3' }, --delete/remove
+            { key = 'd', mode = 'n', action = 'action_3' }, -- delete/remove
             { key = 'zc', mode = 'n', action = 'collapse' },
             { key = 'zo', mode = 'n', action = 'expand' },
             { key = '<CR>', mode = 'n', action = 'menu_confirm' },

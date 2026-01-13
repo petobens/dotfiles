@@ -164,7 +164,7 @@ vim.keymap.set(
     { 'n', 'v' },
     '<Leader>ct',
     toggle_checklist,
-    { buffer = true, desc = 'Toggle checklist state' }
+    { buffer = true, desc = 'Toggle checklist state (checklist toggle)' }
 )
 
 --- Sphinx (html)
@@ -179,7 +179,7 @@ vim.keymap.set(
     'n',
     '<Leader>da',
     clean_sphinx_build,
-    { buffer = true, desc = 'Clean Sphinx build' }
+    { buffer = true, desc = 'Delete Sphinx build auxiliary files' }
 )
 
 vim.keymap.set(
@@ -194,5 +194,5 @@ vim.keymap.set(
     'n',
     '<Leader>tc',
     'gO',
-    { buffer = true, remap = true, desc = 'Insert TOC' }
+    { buffer = true, remap = true, desc = 'Show TOC' }
 )

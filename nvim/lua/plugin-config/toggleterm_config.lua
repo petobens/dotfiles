@@ -68,12 +68,12 @@ vim.keymap.set(
     'n',
     '<Leader>rl',
     vim.cmd.ToggleTermSendCurrentLine,
-    { desc = 'Send current line to terminal' }
+    { desc = 'Run current line in terminal' }
 )
 
 vim.keymap.set(
     'v',
     '<Leader>ri',
     vim.cmd.ToggleTermSendVisualSelection,
-    { desc = 'Send visual selection to terminal' }
+    { desc = 'Run visual selection in terminal interpreter' }
 )

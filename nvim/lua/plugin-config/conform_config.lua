@@ -36,17 +36,8 @@ conform.setup({
     },
     format_on_save = function(bufnr)
         local format_options = { timeout_ms = 700, quiet = true, lsp_format = 'never' }
-        -- if vim.bo[bufnr].filetype == 'markdown' then
-        --     -- Prettierd adds blank line before lists so we don't run it automatically
-        --     format_options = vim.tbl_extend(
-        --         'keep',
-        --         format_options,
-        --         { formatters = { 'injected', 'trim_whitespace' } }
-        --     )
-        -- end
         if vim.bo[bufnr].filetype == 'sql' then
-            -- Sqlfluff is slow
-            format_options.timeout_ms = 1000
+            format_options.timeout_ms = 1000 -- Sqlfluff is slow
         end
         return format_options
     end,
@@ -56,4 +47,4 @@ conform.setup({
 -- Mappings
 vim.keymap.set({ 'n', 'v' }, '<Leader>fc', function()
     conform.format({ async = true, lsp_format = 'never' })
-end, { desc = 'Format buffer with conform' })
+end, { desc = 'Format buffer code with conform' })

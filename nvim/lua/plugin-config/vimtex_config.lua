@@ -103,25 +103,25 @@ vim.api.nvim_create_autocmd({ 'User' }, {
             'n',
             'vim',
             'vi$',
-            { buffer = e.buf, remap = true, desc = 'Select inside $...$' }
+            { buffer = e.buf, remap = true, desc = 'Select inside $...$ (inner math)' }
         )
         vim.keymap.set(
             'n',
             'vam',
             'va$',
-            { buffer = e.buf, remap = true, desc = 'Select around $...$' }
+            { buffer = e.buf, remap = true, desc = 'Select around $...$ (around math)' }
         )
         vim.keymap.set('n', '<Leader>cw', function()
             vim.cmd.VimtexCountWords({ bang = true })
             vim.cmd.wincmd('J')
             vim.cmd.wincmd('12_')
             vim.cmd.normal({ args = { 'G' }, bang = true, mods = { silent = true } })
-        end, { buffer = e.buf, desc = 'Count words and show output' })
+        end, { buffer = e.buf, desc = 'Count words' })
         vim.keymap.set(
             'n',
             '<Leader>vd',
             vim.cmd.VimtexDocPackage,
-            { buffer = e.buf, desc = 'Show VimTeX doc for package' }
+            { buffer = e.buf, desc = 'View VimTeX doc for package' }
         )
     end,
 })

@@ -470,7 +470,7 @@ vim.keymap.set(
     'n',
     '<Leader>rf',
     run_toggleterm,
-    { buffer = true, desc = 'Run file in ToggleTerm' }
+    { buffer = true, desc = 'Run Python file in ToggleTerm' }
 )
 
 vim.keymap.set('n', '<Leader>rp', function()
@@ -479,7 +479,7 @@ end, { buffer = true, desc = 'Run in ToggleTerm (post-mortem)' })
 
 vim.keymap.set('n', '<Leader>oi', function()
     run_ipython('open')
-end, { buffer = true, desc = 'Open terminal interpreter' })
+end, { buffer = true, desc = 'Open terminal interpreter (IPython)' })
 
 vim.keymap.set('n', '<Leader>ri', function()
     run_ipython('module')
@@ -487,11 +487,11 @@ end, { buffer = true, desc = 'Run current file in IPython' })
 
 vim.keymap.set('n', '<Leader>rl', function()
     run_ipython('line')
-end, { buffer = true, desc = 'Send current line to IPython' })
+end, { buffer = true, desc = 'Run current line in IPython' })
 
 vim.keymap.set('v', '<Leader>ri', function()
     run_ipython('selection')
-end, { buffer = true, desc = 'Send selection to IPython' })
+end, { buffer = true, desc = 'Run selection in IPython' })
 
 vim.keymap.set('n', '<Leader>tr', function()
     run_ipython('reset')
@@ -562,7 +562,7 @@ vim.keymap.set(
     'n',
     '<Leader>da',
     clean_sphinx_build,
-    { buffer = true, desc = 'Clean Sphinx build' }
+    { buffer = true, desc = 'Delete Sphinx build auxiliary files' }
 )
 vim.keymap.set(
     'n',
@@ -572,7 +572,7 @@ vim.keymap.set(
 )
 vim.keymap.set('n', '<Leader>vi', function()
     view_sphinx_docs({ index = true })
-end, { buffer = true, desc = 'Open Sphinx index.html' })
+end, { buffer = true, desc = 'View Sphinx index.html' })
 
 ---- Editing
 vim.keymap.set(
@@ -585,7 +585,7 @@ vim.keymap.set(
     'n',
     '<Leader>etp',
     edit_project_todo,
-    { buffer = true, desc = 'Edit project TODO' }
+    { buffer = true, desc = 'Edit todos project' }
 )
 
 -- Autocommand mappings

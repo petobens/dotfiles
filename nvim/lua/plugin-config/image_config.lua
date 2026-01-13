@@ -49,4 +49,4 @@ vim.keymap.set(
     preview_image,
     { desc = 'Preview inline image under cursor' }
 )
-vim.keymap.set('n', '<Leader>iw', image.clear, { desc = 'Clear (wipe) all images' })
+vim.keymap.set('n', '<Leader>iw', image.clear, { desc = 'Wipe all inline images' })

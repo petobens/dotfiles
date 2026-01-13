@@ -83,7 +83,7 @@ vim.keymap.set(
     'n',
     '<Leader>tb',
     vim.cmd.AerialToggle,
-    { desc = 'Aerial: Toggle symbols outline' }
+    { desc = 'Aerial: Toggle symbols outline (tagbar)' }
 )
 vim.keymap.set(
     'n',

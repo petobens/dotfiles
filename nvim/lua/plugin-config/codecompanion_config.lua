@@ -1344,7 +1344,7 @@ vim.keymap.set(
 
 vim.keymap.set({ 'n', 'v' }, '<Leader>cr', function()
     vim.api.nvim_input(':CodeCompanion ')
-end, { desc = 'Open CodeCompanion command-line' })
+end, { desc = 'Run CodeCompanion command-line' })
 
 vim.keymap.set(
     { 'n', 'v' },
@@ -1357,7 +1357,7 @@ vim.keymap.set(
     'n',
     '<Leader>cb',
     vim.cmd.CodeCompanionHistory,
-    { desc = 'Open CodeCompanion history' }
+    { desc = 'Browse CodeCompanion history' }
 )
 
 vim.keymap.set('n', '<Leader>ce', function()
@@ -1368,7 +1368,7 @@ vim.keymap.set('n', '<Leader>ce', function()
         picker:move_selection(-1)
         telescope_actions.select_default(picker)
     end, 250)
-end, { desc = 'Run CodeCompanion actions and select default' })
+end, { desc = 'Explore CodeCompanion open chats' })
 
 vim.keymap.set('v', '<Leader>cp', function()
     codecompanion.add()
@@ -1380,18 +1380,23 @@ vim.keymap.set('v', '<Leader>cp', function()
             false
         )
     end
-end, { desc = 'Add selection to CodeCompanion chat' })
+end, { desc = 'Paste selection to CodeCompanion chat' })
 
-vim.keymap.set('v', '<Leader>ec', function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local code = u.get_selection()
-    -- Leave visual mode to avoid pasting into the chat buffer
-    vim.cmd.normal({ '', bang = true })
-    _G.CodeCompanionConfig.run_slash_command(
-        'explain_code',
-        { bufnr = bufnr, code = code }
-    )
-end, { noremap = true, silent = true, desc = 'Explain selection with CodeCompanion' })
+vim.keymap.set(
+    'v',
+    '<Leader>ec',
+    function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local code = u.get_selection()
+        -- Leave visual mode to avoid pasting into the chat buffer
+        vim.cmd.normal({ '', bang = true })
+        _G.CodeCompanionConfig.run_slash_command(
+            'explain_code',
+            { bufnr = bufnr, code = code }
+        )
+    end,
+    { noremap = true, silent = true, desc = 'Explain code selection with CodeCompanion' }
+)
 
 vim.keymap.set('n', '<Leader>ac', function()
     _G.CodeCompanionConfig.add_context({ vim.api.nvim_buf_get_name(0) })

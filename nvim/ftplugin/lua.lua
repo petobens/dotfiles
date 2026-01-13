@@ -44,8 +44,9 @@ local function run_tmux_pane()
     if not vim.env.TMUX then
         return
     end
-    local cwd = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
-    local fname = vim.fs.basename(vim.api.nvim_buf_get_name(0))
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local cwd = vim.fs.dirname(bufname)
+    local fname = vim.fs.basename(bufname)
     local sh_cmd = string.format('sh -c "nvim -l %s; read -n 1 -s"', fname)
     vim.cmd({
         cmd = '!',
@@ -67,21 +68,21 @@ vim.keymap.set(
     { 'n', 'i' },
     '<F7>',
     run_overseer,
-    { buffer = true, desc = 'Run Overseer task' }
+    { buffer = true, desc = 'Run lua with Overseer' }
 )
 
 vim.keymap.set(
     { 'n', 'i' },
     '<F5>',
     run_tmux_pane,
-    { buffer = true, desc = 'Run in tmux pane' }
+    { buffer = true, desc = 'Run lua in tmux pane' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>rf',
     run_toggleterm,
-    { buffer = true, desc = 'Run in ToggleTerm' }
+    { buffer = true, desc = 'Run lua file in ToggleTerm' }
 )
 
 vim.keymap.set('n', '<Leader>rl', function()
@@ -91,11 +92,11 @@ end, { buffer = true, desc = 'Run current line as Lua' })
 vim.keymap.set('n', '<Leader>ri', function()
     vim.cmd.update()
     vim.cmd.luafile('%')
-end, { buffer = true, desc = 'Save and source current Lua file' })
+end, { buffer = true, desc = 'Save and source current Lua file (run interpreter)' })
 
 vim.keymap.set(
     'v',
     '<Leader>ri',
     vim.cmd.RunVisualLua,
-    { buffer = true, desc = 'Run visual selection as Lua' }
+    { buffer = true, desc = 'Run visual selection (run interpreter)' }
 )

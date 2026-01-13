@@ -75,14 +75,17 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', 'q', function()
             pcall(vim.api.nvim_win_close, 0, true)
             vim.cmd.wincmd('p')
-        end, { buffer = e.buf, desc = 'Close OverseerList window and return' })
+        end, {
+            buffer = e.buf,
+            desc = 'Close OverseerList window and return to previous window',
+        })
     end,
 })
 
 -- Mappings
 vim.keymap.set('n', '<Leader>os', function()
     vim.cmd.OverseerToggle('bottom')
-end, { desc = 'Toggle Overseer task list (bottom)' })
+end, { desc = 'Toggle Overseer task list' })
 
 vim.keymap.set(
     'n',
