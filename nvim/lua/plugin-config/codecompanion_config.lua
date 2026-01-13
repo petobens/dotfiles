@@ -965,7 +965,7 @@ codecompanion.setup({
             variables = {
                 ['buffer'] = {
                     opts = {
-                        default_params = 'watch',
+                        default_params = 'diff',
                     },
                 },
             },
