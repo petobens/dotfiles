@@ -118,7 +118,25 @@ vim.api.nvim_create_autocmd('LspTokenUpdate', {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>li', vim.cmd.LspInfo, { desc = 'Show LSP info' })
+vim.keymap.set('n', '<Leader>li', function()
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
+    if #clients == 0 then
+        vim.notify('No LSP clients attached to current buffer', vim.log.levels.INFO)
+        return
+    end
+    vim.notify(
+        vim.inspect(vim.tbl_map(function(c)
+            return {
+                id = c.id,
+                name = c.name,
+                cmd = c.config and c.config.cmd,
+                root_dir = c.root_dir,
+            }
+        end, clients)),
+        vim.log.levels.INFO,
+        { title = 'LSP clients (current buffer)' }
+    )
+end, { desc = 'Show active LSP clients' })
 vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'Set up buffer-local keymaps and options after attaching LSP server',
     group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
