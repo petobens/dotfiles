@@ -910,13 +910,19 @@ codecompanion.setup({
                             local cleaned_msg = (msg:gsub('\n\n+', '\n\n'))
                             table.insert(commit_msgs, cleaned_msg)
                         end
+                        local joined_commits = table.concat(commit_msgs, '\n---\n')
 
-                        local joined = table.concat(commit_msgs, '\n---\n')
+                        local changelog_file = vim.fs.joinpath(git_root, 'CHANGELOG.md')
+                        local stat = vim.uv.fs_stat(changelog_file)
+                        if stat and stat.type == 'file' then
+                            _G.CodeCompanionConfig.add_context({ changelog_file })
+                        end
+
                         chat:add_buf_message({
                             role = 'user',
                             content = string.format(
                                 PROMPT_LIBRARY['changelog_writer'],
-                                joined
+                                joined_commits
                             ),
                         })
                         chat:submit()
