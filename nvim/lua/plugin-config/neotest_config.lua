@@ -22,42 +22,52 @@ local function _parse_neotest_output(task, last_winid)
     local diagnostics = vim.diagnostic.get(task.bufnr)
     local qf_diagnostic = vim.diagnostic.toqflist(diagnostics)
     local diagnostic_entries = {}
-    for _, v in pairs(qf_diagnostic) do
+    for _, v in ipairs(qf_diagnostic) do
         table.insert(
             diagnostic_entries,
             { bufnr = v.bufnr, lnum = v.lnum, text = v.text }
         )
     end
 
-    -- Create another qf from output but avoid repeating diagnostics entries
-    local efm = { python = [[%E%f:%l:\ %m,%-G%.%#,]] }
-    local has_stdout, pdb = false, false
+    -- Open output when pytest shows captured stdout or the coverage header
+    local has_output, pdb = false, false
     local lines = vim.api.nvim_buf_get_lines(task:get_bufnr(), 0, -1, true)
-    for _, v in ipairs(lines) do
+    for _, line in ipairs(lines) do
         if task.ft == 'python' then
-            if not has_stdout and v:find('Captured stdout call', 1, true) then
-                has_stdout = true
+            if
+                not has_output
+                and (
+                    line:find('Captured stdout call', 1, true)
+                    or line:find('tests coverage', 1, true)
+                )
+            then
+                has_output = true
             end
-            if v:find('bdb.BdbQuit', 1, true) then
+            -- Detect PDB quit to avoid opening quickfix and to clear diagnostics instead
+            if not pdb and line:find('bdb.BdbQuit', 1, true) then
                 pdb = true
+            end
+            if has_output and pdb then
+                break
             end
         end
     end
 
+    -- Parse output into quickfix items, then merge with diagnostics avoiding repeats
+    local efm = { python = [[%E%f:%l:\ %m,%-G%.%#,]] }
     vim.fn.setqflist({}, ' ', {
         lines = lines,
         efm = efm[task.ft],
     })
-
     local qf_output = {}
-    for _, v in pairs(vim.fn.getqflist()) do
+    for _, v in ipairs(vim.fn.getqflist()) do
         if not is_qf_duplicate(v, diagnostic_entries) then
             table.insert(qf_output, v)
         end
     end
 
     -- If we have output then open it
-    if has_stdout then
+    if has_output then
         require('overseer').run_action(task, 'open hsplit')
         vim.defer_fn(function()
             vim.cmd.stopinsert()
@@ -84,7 +94,7 @@ local function _parse_neotest_output(task, last_winid)
         if not pdb then
             vim.cmd.copen()
             vim.api.nvim_set_current_win(last_winid)
-            if has_stdout then
+            if has_output then
                 -- overseer run_action creates a new empty buffer so we delete it
                 local buffers = vim.api.nvim_list_bufs()
                 vim.api.nvim_buf_delete(buffers[#buffers], {})
