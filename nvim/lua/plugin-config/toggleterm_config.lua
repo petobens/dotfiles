@@ -32,10 +32,17 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     end,
 })
 vim.api.nvim_create_autocmd('TermOpen', {
-    desc = 'Remove statuscolumn in terminal buffer',
+    desc = 'Remove statuscolumn in terminal buffer and add hide mapping',
     group = term_acg,
-    callback = function()
+    callback = function(e)
         vim.opt_local.statuscolumn = ''
+
+        vim.keymap.set('t', '<C-A-h>', function()
+            vim.api.nvim_feedkeys(vim.keycode('<C-\\><C-n>'), 'n', false)
+            vim.schedule(function()
+                vim.cmd.close({ mods = { silent = true } })
+            end)
+        end, { buffer = e.buf, desc = 'Hide toggleterm window' })
     end,
 })
 
