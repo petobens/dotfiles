@@ -384,7 +384,7 @@ local function add_tmux_pane_context_incremental(chat, target)
         'capture-pane',
         '-p',
         '-S',
-        '-1000', -- last 1k lines from the bottom
+        '-3000', -- last 3k lines from the bottom
         '-E',
         '-',
         '-t',
@@ -1021,7 +1021,7 @@ codecompanion.setup({
                     description = 'Add tmux pane output (window.pane) as context',
                     callback = function(chat)
                         vim.ui.input(
-                            { prompt = 'tmux target (window.pane, e.g. 2.1): ' },
+                            { prompt = 'tmux window.pane (default 1.2): ' },
                             function(target)
                                 target = vim.trim(target or '')
                                 if target == '' then
