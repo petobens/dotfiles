@@ -48,8 +48,7 @@ local plugins = {
         config = load_plugin_config('indentlines_config'),
     },
     {
-        'ggandor/leap.nvim',
-        dependencies = { 'ggandor/flit.nvim' },
+        url = 'https://codeberg.org/andyg/leap.nvim',
         config = load_plugin_config('leap_config'),
     },
     {
