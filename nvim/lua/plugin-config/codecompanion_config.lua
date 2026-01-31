@@ -498,12 +498,23 @@ codecompanion.setup({
                 })
             end,
             openai_gpt_5_nano = function()
-                return adapters.extend('openai', {
+                return adapters.extend('openai_responses', {
                     name = 'openai_gpt_5_nano',
                     env = { api_key = OPENAI_API_KEY },
                     schema = {
-                        model = { default = 'gpt-5-nano' },
-                        reasoning_effort = { 'minimal' },
+                        model = {
+                            default = 'gpt-5-nano',
+                            choices = {
+                                ['gpt-5-nano'] = {
+                                    opts = {
+                                        has_vision = true,
+                                        can_reason = true,
+                                        stream = false,
+                                    },
+                                },
+                            },
+                        },
+                        ['reasoning.effort'] = { default = 'minimal' },
                     },
                 })
             end,
@@ -1196,8 +1207,8 @@ codecompanion.setup({
             opts = {
                 auto_generate_title = u.is_online(),
                 title_generation_opts = {
-                    adapter = 'openai_gpt_5_nano',
-                    model = 'gpt-5-nano',
+                    adapter = 'gemini_flash_3',
+                    model = 'gemini-3-flash-preview',
                     refresh_every_n_prompts = 3,
                     max_refreshes = 10,
                 },
