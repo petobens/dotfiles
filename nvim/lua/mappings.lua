@@ -485,7 +485,7 @@ vim.keymap.set('i', '<C-e>', function()
 end, { expr = true, desc = 'Move to end of line (or close popup)' })
 vim.keymap.set('i', '<C-h>', '<C-o>h', { desc = 'Move left' })
 vim.keymap.set('i', '<C-l>', '<C-o>l', { desc = 'Move right' })
-vim.keymap.set('i', '<A-p>', '<C-R>"', { desc = 'Paste from unnamed register' })
+vim.keymap.set('i', '<A-p>', '<C-R>+', { desc = 'Paste from system clipboard (+)' })
 
 -- Visual mode
 -- Note: we avoid lua function mappings in visual mode since they lose the selection
@@ -537,8 +537,8 @@ vim.keymap.set('c', '<A-x>', '<C-W>', { silent = false, desc = 'Delete previous 
 vim.keymap.set(
     'c',
     '<A-p>',
-    '<C-R>"',
-    { silent = false, desc = 'Paste from unnamed register' }
+    '<C-R>+',
+    { silent = false, desc = 'Paste from system clipboard (+)' }
 )
 vim.keymap.set('c', '%%', function()
     if vim.fn.getcmdtype() == ':' then
