@@ -204,6 +204,7 @@ local plugins = {
     },
     {
         'HakonHarnes/img-clip.nvim',
+        keys = '<Leader>pi',
         config = load_plugin_config('img_clip_config'),
     },
     {
