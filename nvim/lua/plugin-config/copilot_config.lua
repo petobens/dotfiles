@@ -1,5 +1,5 @@
 require('copilot').setup({
-    copilot_model = 'gpt-4o-copilot',
+    copilot_model = 'gpt-41-copilot',
     suggestion = { enabled = false },
     panel = { enabled = false },
     filetypes = {
