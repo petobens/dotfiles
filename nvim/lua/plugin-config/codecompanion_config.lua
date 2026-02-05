@@ -56,6 +56,7 @@ local function get_my_prompt_library()
         'helpful_assistant',
         'latex_developer',
         'lua_developer',
+        'meeting_copilot',
         'pydocs',
         'python_developer',
         'quickfix',
@@ -1198,6 +1199,18 @@ codecompanion.setup({
             },
             prompts = {
                 { role = 'system', content = PROMPT_LIBRARY['gsheets_expert'] },
+            },
+        },
+        ['󰦑 Meeting Copilot'] = {
+            interaction = 'chat',
+            description = 'Act as a real-time stakeholder meeting copilot.',
+            opts = {
+                alias = 'meeting_role',
+                is_slash_cmd = true,
+                ignore_system_prompt = true,
+            },
+            prompts = {
+                { role = 'system', content = PROMPT_LIBRARY['meeting_copilot'] },
             },
         },
     },
