@@ -277,14 +277,14 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 -- Autocmd hacks
-vim.api.nvim_create_autocmd('InsertLeave', {
+vim.api.nvim_create_autocmd('BufWritePre', {
+    desc = 'Force-close Blink UI before saving (Markdown)',
     group = vim.api.nvim_create_augroup('blink_cmp_force_cleanup', { clear = true }),
-    desc = 'Force-close UI on InsertLeave to avoid stale menu artifacts',
-    callback = function()
-        -- Workaround for stale menu artifacts, remove when fixed upstream:
-        -- https://github.com/saghen/blink.cmp/issues/1932
-        vim.schedule(function()
-            pcall(blink_cmp.hide)
-        end)
+    callback = function(ev)
+        if vim.bo[ev.buf].filetype ~= 'markdown' then
+            return
+        end
+        pcall(blink_cmp.cancel)
+        pcall(blink_cmp.hide)
     end,
 })
