@@ -519,6 +519,17 @@ codecompanion.setup({
                     },
                 })
             end,
+            -- Legacy OpenAI adapter (non-responses) for title generation
+            openai_gpt_5_nano_legacy = function()
+                return adapters.extend('openai', {
+                    name = 'openai_gpt_5_nano_legacy',
+                    env = { api_key = OPENAI_API_KEY },
+                    schema = {
+                        model = { default = 'gpt-5-nano' },
+                        reasoning_effort = { default = 'minimal' },
+                    },
+                })
+            end,
             ---- Google
             gemini_pro_3 = function()
                 return adapters.extend('gemini', {
@@ -1220,8 +1231,8 @@ codecompanion.setup({
             opts = {
                 auto_generate_title = u.is_online(),
                 title_generation_opts = {
-                    adapter = 'gemini_flash_3',
-                    model = 'gemini-3-flash-preview',
+                    adapter = 'openai_gpt_5_nano_legacy',
+                    model = 'gpt-5-nano',
                     refresh_every_n_prompts = 3,
                     max_refreshes = 10,
                 },
