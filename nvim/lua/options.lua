@@ -40,7 +40,7 @@ vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 500
 vim.opt.visualbell = true
 
-require('vim._extui').enable({}) -- experimental new TUI message grid
+require('vim._core.ui2').enable({}) -- experimental new TUI message grid
 
 vim.api.nvim_create_autocmd('BufWritePre', {
     desc = 'Create parent directory before writing file',
