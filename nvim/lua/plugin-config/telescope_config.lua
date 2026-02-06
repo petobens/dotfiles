@@ -708,14 +708,27 @@ _G.TelescopeConfig.custom_actions = custom_actions
 
 -- Autocmds
 vim.api.nvim_create_autocmd('FileType', {
-    desc = 'Telescope prompt window customizations',
+    desc = 'Telescope prompt customizations',
     group = vim.api.nvim_create_augroup('telescope_prompt', { clear = true }),
     pattern = { 'TelescopePrompt' },
     callback = function(e)
-        vim.opt_local.cursorline = false
+        local prompt_bufnr = e.buf
 
-        vim.keymap.set('n', 'H', '^lll', { buffer = e.buf })
-        vim.keymap.set('n', 'L', '$', { buffer = e.buf })
+        vim.opt_local.cursorline = false
+        vim.keymap.set('n', 'H', '^lll', { buffer = prompt_bufnr })
+        vim.keymap.set('n', 'L', '$', { buffer = prompt_bufnr })
+
+        vim.schedule(function()
+            local picker = action_state.get_current_picker(prompt_bufnr)
+            if not picker then
+                return
+            end
+            if picker.prompt_title == 'Images' then
+                vim.keymap.set('i', '<CR>', function()
+                    actions.select_default(prompt_bufnr)
+                end, { buffer = prompt_bufnr })
+            end
+        end)
     end,
 })
 vim.api.nvim_create_autocmd('User', {
