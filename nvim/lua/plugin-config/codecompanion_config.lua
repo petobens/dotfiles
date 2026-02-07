@@ -234,6 +234,23 @@ local function get_or_create_chat()
     return chat
 end
 
+local request_counts = {}
+local tools_running = {}
+local function maybe_enter_insert(bufnr)
+    if vim.bo[bufnr].filetype ~= 'codecompanion' then
+        return
+    end
+    if (request_counts[bufnr] or 0) > 0 then
+        return
+    end
+    if tools_running[bufnr] then
+        return
+    end
+    vim.api.nvim_buf_call(bufnr, function()
+        vim.cmd.startinsert()
+    end)
+end
+
 -- Slash command helpers
 local function get_git_root()
     local result = vim.system({ 'git', 'rev-parse', '--show-toplevel' }, { text = true })
@@ -1310,12 +1327,16 @@ end
 vim.api.nvim_create_autocmd('User', {
     desc = 'Start CodeCompanion spinner on request start',
     pattern = 'CodeCompanionRequestStarted',
-    callback = function()
-        if vim.bo.filetype == 'codecompanion' then
+    callback = function(e)
+        local bufnr = e.buf
+        request_counts[bufnr] = (request_counts[bufnr] or 0) + 1
+
+        if vim.bo[bufnr].filetype == 'codecompanion' then
             vim.cmd.stopinsert()
         end
+
         clear_spinner()
-        spinner_bufnr = vim.api.nvim_get_current_buf()
+        spinner_bufnr = bufnr
         spinner_line = vim.api.nvim_win_get_cursor(0)[1] - 1
         spinner_timer = vim.uv.new_timer()
         spinner_timer:start(0, 250, vim.schedule_wrap(update_spinner))
@@ -1325,13 +1346,39 @@ vim.api.nvim_create_autocmd('User', {
 vim.api.nvim_create_autocmd('User', {
     desc = 'Clear spinner and start insert on request finish',
     pattern = 'CodeCompanionRequestFinished',
-    callback = function()
+    callback = function(e)
+        local bufnr = e.buf
+        local prev = request_counts[bufnr] or 0
+        request_counts[bufnr] = math.max(0, prev - 1)
+
         vim.defer_fn(function()
-            clear_spinner()
-            if vim.bo.filetype == 'codecompanion' then
-                vim.cmd.startinsert()
+            if (request_counts[bufnr] or 0) == 0 then
+                clear_spinner()
             end
+            maybe_enter_insert(bufnr)
         end, 50)
+    end,
+})
+
+-- Tools
+vim.api.nvim_create_autocmd('User', {
+    desc = 'Track CodeCompanion tools running state',
+    pattern = 'CodeCompanionToolsStarted',
+    callback = function(e)
+        tools_running[e.buf] = true
+        if vim.bo[e.buf].filetype == 'codecompanion' then
+            vim.cmd.stopinsert()
+        end
+    end,
+})
+vim.api.nvim_create_autocmd('User', {
+    desc = 'Clear tools running state, enter insert if fully idle',
+    pattern = 'CodeCompanionToolsFinished',
+    callback = function(e)
+        tools_running[e.buf] = false
+        vim.defer_fn(function()
+            maybe_enter_insert(e.buf)
+        end, 10)
     end,
 })
 
