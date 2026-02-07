@@ -678,7 +678,14 @@ codecompanion.setup({
                 next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
                 previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
                 next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
-                send = { modes = { n = '<C-o>', i = '<C-o>' } },
+                send = {
+                    modes = { n = '<C-o>', i = '<C-o>' },
+                    description = 'Send message',
+                    callback = function(chat)
+                        vim.cmd.stopinsert()
+                        keymaps.send.callback(chat)
+                    end,
+                },
                 stop = { modes = { n = '<C-x>', i = '<C-x>' } },
                 clear = { modes = { n = '<A-w>', i = '<A-w>' } },
                 yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
@@ -1311,9 +1318,6 @@ vim.api.nvim_create_autocmd('User', {
     desc = 'Start CodeCompanion spinner on request start',
     pattern = 'CodeCompanionRequestStarted',
     callback = function()
-        if vim.bo.filetype == 'codecompanion' then
-            vim.cmd.stopinsert()
-        end
         clear_spinner()
         spinner_bufnr = vim.api.nvim_get_current_buf()
         spinner_line = vim.api.nvim_win_get_cursor(0)[1] - 1
@@ -1328,9 +1332,6 @@ vim.api.nvim_create_autocmd('User', {
     callback = function()
         vim.defer_fn(function()
             clear_spinner()
-            if vim.bo.filetype == 'codecompanion' then
-                vim.cmd.startinsert()
-            end
         end, 50)
     end,
 })
