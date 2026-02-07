@@ -20,8 +20,8 @@ image.setup({
     },
 })
 
--- Mappings
-local function preview_image()
+-- Helpers
+local function get_image_path()
     local line = vim.api.nvim_get_current_line()
     local img_path = line:match('!%[.*%]%((.+)%)') -- md image ![](path)
     if not img_path then
@@ -38,15 +38,41 @@ local function preview_image()
             or line:match('([%w%._%-:]+%.svg)')
             or line:match('([%w%._%-:]+%.bmp)')
     end
+    return img_path
+end
 
-    if img_path then
-        image.from_file(img_path, {}):render()
+local function open_image_inline()
+    local path = get_image_path()
+    if not path or path == '' then
+        vim.notify('No image path found on current line', vim.log.levels.WARN)
+        return
+    end
+    image.from_file(path, {}):render()
+end
+
+local function open_image_system()
+    local path = get_image_path()
+    if not path or path == '' then
+        vim.notify('No image path found on current line', vim.log.levels.WARN)
+        return
+    end
+    local _, err = vim.ui.open(path)
+    if err then
+        vim.notify(err, vim.log.levels.ERROR)
     end
 end
+
+-- Mappings
 vim.keymap.set(
     'n',
     '<Leader>ii',
-    preview_image,
-    { desc = 'Preview inline image under cursor' }
+    open_image_inline,
+    { desc = 'Open image under cursor inline' }
 )
 vim.keymap.set('n', '<Leader>iw', image.clear, { desc = 'Wipe all inline images' })
+vim.keymap.set(
+    'n',
+    '<Leader>is',
+    open_image_system,
+    { desc = 'Open image under cursor with system handler' }
+)
