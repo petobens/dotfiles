@@ -216,14 +216,20 @@ local function try_focus_chat_float()
     return false
 end
 
-local function focus_or_toggle_chat()
+local function focus_or_toggle_chat(opts)
+    opts = opts or {}
+    local startinsert = opts.startinsert ~= false
+
     if try_focus_chat_float() then
         return
     end
     codecompanion.toggle()
-    vim.defer_fn(function()
-        vim.cmd.startinsert()
-    end, 1)
+
+    if startinsert then
+        vim.defer_fn(function()
+            vim.cmd.startinsert()
+        end, 10)
+    end
 end
 
 local function get_or_create_chat()
@@ -437,7 +443,7 @@ function _G.CodeCompanionConfig.add_context(files)
             }, 'file', string.format('<file>%s</file>', vim.fs.basename(file)))
         end
     end
-    focus_or_toggle_chat()
+    focus_or_toggle_chat({ startinsert = false })
 end
 
 function _G.CodeCompanionConfig.run_slash_command(name, opts)
@@ -446,7 +452,7 @@ function _G.CodeCompanionConfig.run_slash_command(name, opts)
     local cmd = config.interactions.chat.slash_commands[name]
     if cmd and type(cmd.callback) == 'function' then
         cmd.callback(chat, opts)
-        focus_or_toggle_chat()
+        focus_or_toggle_chat({ startinsert = false })
     else
         vim.notify('Slash command not found: ' .. tostring(name), vim.log.levels.ERROR)
     end
