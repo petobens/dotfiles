@@ -119,8 +119,20 @@ local function get_my_prompt_library()
     return prompt_library
 end
 
+local function safe_last_chat()
+    local ok, chat = pcall(codecompanion.last_chat)
+    if ok and chat then
+        return chat
+    end
+    return nil
+end
+
 local function get_current_system_role_prompt()
-    local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+    local chat = safe_last_chat()
+    if not chat or type(chat.messages) ~= 'table' then
+        return nil
+    end
+
     local system_role = nil
     for _, entry in ipairs(chat.messages) do
         if entry.role == 'system' then
@@ -131,22 +143,28 @@ local function get_current_system_role_prompt()
 end
 
 local function get_last_user_prompt()
-    local chat_msgs = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()).messages
-    local last_user_prompt = nil
-    for i = #chat_msgs, 1, -1 do
-        if chat_msgs[i].role == 'user' then
-            last_user_prompt = chat_msgs[i].content
-            break
+    local chat = safe_last_chat()
+    if not chat or type(chat.messages) ~= 'table' then
+        return nil
+    end
+    for i = #chat.messages, 1, -1 do
+        local msg = chat.messages[i]
+        if msg.role == 'user' then
+            return msg.content
         end
     end
-    return last_user_prompt
+    return nil
 end
 
 local function count_exchanges()
-    local chat_msgs = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()).messages
+    local chat = safe_last_chat()
+    if not chat or type(chat.messages) ~= 'table' then
+        return 0
+    end
+
     local count = 0
-    for i = 1, #chat_msgs do
-        if chat_msgs[i].role == 'user' then
+    for _, msg in ipairs(chat.messages) do
+        if msg.role == 'user' then
             count = count + 1
         end
     end
@@ -1400,12 +1418,15 @@ vim.api.nvim_create_autocmd('FileType', {
             end
         end, { buffer = bufnr, desc = 'Show system role prompt' })
 
-        vim.keymap.set('i', '<C-p>', function()
+        vim.keymap.set({ 'i', 'n' }, '<C-p>', function()
             vim.cmd.stopinsert()
-            local last_prompt = vim.split(get_last_user_prompt(), '\n', { plain = true })
-            vim.api.nvim_put(last_prompt, 'c', true, true)
+            local last = get_last_user_prompt()
+            if not last or last == '' then
+                return
+            end
+            vim.api.nvim_put(vim.split(last, '\n', { plain = true }), 'c', true, true)
             vim.defer_fn(function()
-                vim.cmd.startinsert()
+                vim.cmd.startinsert({ bang = true })
             end, 1)
         end, { buffer = bufnr, desc = 'Insert last user prompt' })
 
