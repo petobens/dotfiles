@@ -240,6 +240,26 @@ local function get_or_create_chat()
     return chat
 end
 
+local function toggle_cc_zoom()
+    local win = vim.api.nvim_get_current_win()
+    local win_config = vim.api.nvim_win_get_config(win)
+    local saved = vim.w.cc_default_float_conf
+    if saved then
+        vim.api.nvim_win_set_config(win, saved)
+        vim.w.cc_default_float_conf = nil
+        return
+    end
+
+    vim.w.cc_default_float_conf = win_config
+    vim.api.nvim_win_set_config(win, {
+        relative = 'editor',
+        row = 1,
+        col = math.floor(vim.o.columns * 0.10),
+        width = math.floor(vim.o.columns * 0.80),
+        height = vim.o.lines - 4,
+    })
+end
+
 -- Slash command helpers
 local function get_git_root()
     local result = vim.system({ 'git', 'rev-parse', '--show-toplevel' }, { text = true })
@@ -1388,6 +1408,11 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.cmd.startinsert()
             end, 1)
         end, { buffer = bufnr, desc = 'Insert last user prompt' })
+
+        vim.keymap.set({ 'n', 'i' }, '<A-t>', function()
+            vim.cmd.stopinsert()
+            toggle_cc_zoom()
+        end, { buffer = bufnr, desc = 'Toggle window zoom' })
     end,
 })
 
