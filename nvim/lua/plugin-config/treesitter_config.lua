@@ -181,3 +181,20 @@ end, { desc = 'Swap with next parameter' })
 vim.keymap.set('n', '<A-h>', function()
     ts_swap.swap_previous('@parameter.inner')
 end, { desc = 'Swap with previous parameter' })
+
+-- FileType specific
+---- Markdown
+vim.api.nvim_create_autocmd('FileType', {
+    desc = 'Tree-sitter fenced-code-block textobjects for markdown-like filetypes',
+    group = vim.api.nvim_create_augroup('ts_markdown_textobjects', { clear = true }),
+    pattern = { 'markdown', 'codecompanion' },
+    callback = function(e)
+        vim.keymap.set({ 'x', 'o' }, 'aq', function()
+            ts_select.select_textobject('@fence.outer', 'textobjects')
+        end, { buffer = e.buf, desc = 'Select around fenced code block' })
+
+        vim.keymap.set({ 'x', 'o' }, 'iq', function()
+            ts_select.select_textobject('@fence.inner', 'textobjects')
+        end, { buffer = e.buf, desc = 'Select inside fenced code block' })
+    end,
+})
