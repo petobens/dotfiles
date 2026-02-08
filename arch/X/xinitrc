@@ -21,4 +21,5 @@ udiskie &
 picom &
 xfce4-power-manager &
 multimon init
+nohup soupawhisper > /tmp/soupawhisper.log 2>&1 < /dev/null &
 exec i3

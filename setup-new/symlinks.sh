@@ -251,6 +251,10 @@ if [ -f "$HOME/OneDrive/programming/arch/git/.netrc.gpg" ]; then
     sudo $ln_cmd -fTs "$HOME/OneDrive/programming/arch/git/.netrc.gpg" "$HOME/.netrc.gpg"
     echo "Created $HOME/.netrc.gpg symlink"
 fi
+if command -v soupawhisper > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/arch/config/soupawhisper" "$HOME/.config/soupawhisper"
+    echo Created .config/soupawhisper folder symlink
+fi
 
 # OS dependent
 if [[ "$OSTYPE" == 'darwin'* ]]; then

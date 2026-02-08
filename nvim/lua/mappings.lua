@@ -599,3 +599,9 @@ end, { desc = 'Move to previous terminal prompt' })
 vim.keymap.set('s', 'L', 'L', { desc = 'Move to last character in selection' })
 vim.keymap.set('s', 'H', 'H', { desc = 'Move to first character in selection' })
 vim.keymap.set('s', 'M', 'M', { desc = 'Move to middle character in selection' })
+
+-- Key disabling
+-- We use f10 for recording dictation with voice control software, so we disable it in
+-- insert mode to avoid inserting `<F10>` and make it switch to insert mode in normal mode
+vim.keymap.set('i', '<F10>', '<nop>', { desc = 'Disable F10 in insert mode' })
+vim.keymap.set('n', '<F10>', 'i', { desc = 'Enter insert mode (F10)' })
