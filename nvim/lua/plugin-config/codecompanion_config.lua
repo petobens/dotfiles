@@ -1324,7 +1324,8 @@ vim.api.nvim_create_autocmd('User', {
 
 -- Spinner
 local ns_id = vim.api.nvim_create_namespace('codecompanion_spinner')
-local spinner_states = { '', '', '' }
+local spinner_states =
+    { '⢎ ', '⠎⠁', '⠊⠑', '⠈⠱', ' ⡱', '⢀⡰', '⢄⡠', '⢆⡀' }
 local spinner_bufnr, spinner_line, spinner_timer, spinner_index = nil, nil, nil, 1
 
 local function clear_spinner()
@@ -1366,7 +1367,7 @@ vim.api.nvim_create_autocmd('User', {
         spinner_bufnr = vim.api.nvim_get_current_buf()
         spinner_line = vim.api.nvim_win_get_cursor(0)[1] - 1
         spinner_timer = vim.uv.new_timer()
-        spinner_timer:start(0, 250, vim.schedule_wrap(update_spinner))
+        spinner_timer:start(0, 120, vim.schedule_wrap(update_spinner))
     end,
 })
 
