@@ -42,7 +42,7 @@ if type "i3" > /dev/null 2>&1; then
 fi
 $uv_install_cmd ranger-fm
 $uv_install_cmd ruff
-$uv_install_cmd --python 3.13 git+https://github.com/petobens/soupawhisper-streaming@entry-point
+$uv_install_cmd --python 3.13 git+https://github.com/petobens/soupawhisper-streaming@multi-lang
 $uv_install_cmd sqlfluff
 $uv_install_cmd trash-cli
 $uv_install_cmd git+https://github.com/will8211/unimatrix
