@@ -193,7 +193,7 @@ blink_cmp.setup({
             tmux = {
                 name = 'tmux',
                 module = 'blink-cmp-tmux',
-                opts = { all_panes = true },
+                opts = { panes = 'all' },
             },
         },
     },
