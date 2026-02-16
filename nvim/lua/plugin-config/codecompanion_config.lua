@@ -1388,7 +1388,11 @@ vim.api.nvim_create_autocmd('User', {
     callback = function()
         vim.defer_fn(function()
             vim.cmd.stopinsert()
-            vim.cmd('wincmd x | wincmd p')
+            if vim.api.nvim_win_get_config(0).relative ~= '' then
+                return
+            end
+            vim.cmd.wincmd('x')
+            vim.cmd.wincmd('p')
         end, 1)
     end,
 })
