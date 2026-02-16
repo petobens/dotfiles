@@ -295,6 +295,7 @@ fi
 # Alt-p mapping to cd to selected parent directory (sister to Alt-c)
 __fzf_cd_parent__() {
     local dirs=()
+    # shellcheck disable=SC2329
     get_parent_dirs() {
         if [[ -d "${1}" ]]; then
             dirs+=("$1")
@@ -499,6 +500,11 @@ tms() {
 # }}}
 # Bluetooth {{{
 
+_btctl() {
+    bluetoothctl 2> /dev/null <<< "$*"
+}
+export -f _btctl
+
 FZF_BT_OPTS="
 --border-label='Bluetooth Control'
 --multi
@@ -508,11 +514,11 @@ FZF_BT_OPTS="
 --header='enter=connect, A-t=trust, A-u=untrust, A-p=pair,
 A-d=disconnect, A-r=remove/unpair, C-y=yank'
 --with-nth=3..
---preview 'bluetoothctl info {2} | bat --style plain -H 6 -H 7 -H 9'
+--preview '_btctl info {2} | bat --style plain -H 6 -H 7 -H 9'
 "
 
 bt() {
-    cmd="bluetoothctl devices"
+    cmd="_btctl devices"
     out=$(eval "$cmd" |
         FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_BT_OPTS" fzf |
         cut -d ' ' -f 2)
@@ -543,7 +549,7 @@ bt() {
             ;;
     esac
     for d in "${devices[@]}"; do
-        bluetoothctl "$sub_cmd" "$d"
+        _btctl "$sub_cmd" "$d"
     done
 }
 

@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
+_btctl() {
+    bluetoothctl 2> /dev/null <<< "$*"
+}
+
 bluetooth_status="$(
-    bluetoothctl show 2> /dev/null | awk '/Powered:/ {print $2; exit}'
+    _btctl show | awk '/Powered:/ {print $2; exit}'
 )"
 
 BLACKLIST_NAMES=(
@@ -31,7 +35,7 @@ while IFS= read -r line; do
     is_blacklisted "$name" && continue
     connected_device="yes"
     break
-done < <(bluetoothctl devices Connected 2> /dev/null)
+done < <(_btctl devices Connected)
 
 if [[ $connected_device == "yes" ]]; then
     echo -n '󰂯 '
