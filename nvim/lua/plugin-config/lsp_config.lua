@@ -70,8 +70,9 @@ vim.lsp.config('lua_ls', {
 vim.lsp.config('marksman', {})
 ---- Python
 vim.lsp.config('basedpyright', {
+    -- Don't publish basedpyright diagnostics (we use ruff and mypy/zuban instead)
     handlers = {
-        -- Don't publish basedpyright diagnostics (we use ruff and mypy/zuban instead)
+        ['textDocument/diagnostic'] = function() end,
         ['textDocument/publishDiagnostics'] = function() end,
     },
     settings = {
