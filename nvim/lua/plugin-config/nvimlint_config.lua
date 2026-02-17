@@ -89,16 +89,33 @@ linters.zmypy = {
         '--no-pretty',
         '--show-error-end',
     },
-    parser = require('lint.parser').from_pattern(
-        '([^:]+):(%d+):(%d+): (%a+): (.*) %[(%a[%a-]+)%]',
-        { 'file', 'lnum', 'col', 'severity', 'message', 'code' },
-        {
-            error = vim.diagnostic.severity.ERROR,
-            warning = vim.diagnostic.severity.WARN,
-            note = vim.diagnostic.severity.HINT,
-        },
-        { source = 'zmypy' }
-    ),
+    parser = function(output, bufnr)
+        local text = type(output) == 'table' and table.concat(output, '\n')
+            or (output or '')
+        text = text:gsub('\r\n', '\n')
+        local sev = vim.diagnostic.severity
+        local map = { error = sev.ERROR, warning = sev.WARN, note = sev.HINT }
+        local diags = {}
+        for line in vim.gsplit(text, '\n', { trimempty = true }) do
+            local file, l1, c1, l2, c2, s, msg, code = line:match(
+                '^(.+):(%d+):(%d+):(%d+):(%d+):%s*(%a+):%s*(.-)%s*%[([^%]]+)%]%s*$'
+            )
+            if file then
+                diags[#diags + 1] = {
+                    bufnr = bufnr,
+                    lnum = tonumber(l1) - 1,
+                    col = math.max(tonumber(c1) - 1, 0),
+                    end_lnum = tonumber(l2) - 1,
+                    end_col = math.max(tonumber(c2) - 1, 0),
+                    severity = map[s] or sev.ERROR,
+                    message = msg,
+                    code = code,
+                    source = 'zmypy',
+                }
+            end
+        end
+        return diags
+    end,
 }
 ---- Sqlfluff
 lint.linters.sqlfluff.args = { 'lint', '--format=json', '-' }
