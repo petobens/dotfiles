@@ -17,6 +17,9 @@ end
 
 -- Setup
 blink_cmp.setup({
+    enabled = function()
+        return vim.bo.filetype ~= 'markdown'
+    end,
     fuzzy = { implementation = 'rust' },
     appearance = {
         kind_icons = require('lspkind').presets.default,
