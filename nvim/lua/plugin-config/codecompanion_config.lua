@@ -1232,6 +1232,8 @@ codecompanion.setup({
                     path = {
                         '/home/pedro/git-repos/private/notes/mutt/ops/memos/1_tdms.md',
                         '/home/pedro/git-repos/private/notes/mutt/ops/memos/2_new_structure.md',
+                        '/home/pedro/git-repos/private/notes/mutt/ops/memos/3_portfolios_practices.md',
+                        '/home/pedro/git-repos/private/notes/mutt/ops/memos/4_incentives.md',
                     },
                 },
             },
