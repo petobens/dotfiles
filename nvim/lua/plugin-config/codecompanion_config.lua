@@ -1107,7 +1107,7 @@ codecompanion.setup({
                     end,
                 },
             },
-            variables = {
+            editor_context = {
                 ['buffer'] = {
                     opts = {
                         default_params = 'diff',
@@ -1118,6 +1118,9 @@ codecompanion.setup({
         -- Inline
         inline = {
             adapter = 'openai_gpt_5_nano',
+        },
+        -- Shared
+        shared = {
             keymaps = {
                 accept_change = { modes = { n = 'dp' } },
                 reject_change = { modes = { n = 'de' } },
