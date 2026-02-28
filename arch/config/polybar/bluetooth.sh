@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _btctl() {
-    bluetoothctl 2> /dev/null <<< "$*"
+    bluetoothctl "$@" 2> /dev/null
 }
 
 bluetooth_status="$(

@@ -501,7 +501,7 @@ tms() {
 # Bluetooth {{{
 
 _btctl() {
-    bluetoothctl 2> /dev/null <<< "$*"
+    bluetoothctl "$@" 2> /dev/null
 }
 export -f _btctl
 
