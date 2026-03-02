@@ -1277,7 +1277,14 @@ codecompanion.setup({
                 ignore_system_prompt = true,
             },
             prompts = {
-                { role = 'system', content = PROMPT_LIBRARY['meeting_copilot'] },
+                {
+                    role = 'system',
+                    content = string.format(
+                        '%s\n\nToday is: %s',
+                        PROMPT_LIBRARY['meeting_copilot'],
+                        os.date('%d/%m/%Y')
+                    ),
+                },
             },
         },
     },
