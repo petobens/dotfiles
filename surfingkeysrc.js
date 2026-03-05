@@ -351,10 +351,10 @@ cmap('<Ctrl-j>', '<Shift-Tab>');
 
 // URLs
 mapkey('o', 'Open a URL in current tab', function () {
-    Front.openOmnibar({ type: 'URLs', extra: 'getAllSites', tabbed: false });
+    Front.openOmnibar({ type: 'URLs', tabbed: false });
 });
 mapkey('t', 'Open a URL in a new tab', function () {
-    Front.openOmnibar({ type: 'URLs', extra: 'getAllSites' });
+    Front.openOmnibar({ type: 'URLs'});
 });
 mapkey('u', 'Open recently closed URL', function () {
     Front.openOmnibar({ type: 'URLs', extra: 'getRecentlyClosed' });
