@@ -595,12 +595,15 @@ codecompanion.setup({
                 })
             end,
             ---- Ollama
-            ollama_qwen3_2b = function()
+            ollama_qwen35_08b = function()
                 return adapters.extend('ollama', {
-                    name = 'ollama_qwen3_2b',
+                    name = 'ollama_qwen35_08b',
                     schema = {
                         model = {
-                            default = 'qwen3:1.7b',
+                            default = 'qwen3.5:0.8b',
+                        },
+                        think = {
+                            default = false,
                         },
                     },
                 })
@@ -688,12 +691,8 @@ codecompanion.setup({
                 system_prompt = function()
                     return PROMPT_LIBRARY['helpful_assistant']
                 end,
-                prompt_decorator = function(message, adapter, _)
-                    if adapter.model.name == 'qwen3:1.7b' then
-                        return string.format([[/no_think %s]], message)
-                    else
-                        return message
-                    end
+                prompt_decorator = function(message, _, _)
+                    return message
                 end,
                 goto_file_action = function(fname)
                     vim.cmd.wincmd('h')
