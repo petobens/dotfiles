@@ -31,10 +31,18 @@ local u = require('utils')
 
 _G.CodeCompanionConfig = {}
 
+-- Constants
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
 local TAVILY_API_KEY = 'cmd:pass show tavily/yahoomail/api-key'
 local SYSTEM_ROLE = '󰮥 Helpful Assistant'
+local MODEL_CONTEXT_WINDOWS = {
+    ['gpt-5.4'] = 400000,
+    ['gpt-5-nano'] = 400000,
+    ['gemini-3-pro-preview'] = 1048576,
+    ['gemini-3-flash-preview'] = 1048576,
+    ['qwen3.5:0.8b'] = 32768,
+}
 
 -- Helpers
 local ft_prompt_map = {
@@ -169,6 +177,17 @@ local function count_exchanges()
         end
     end
     return count
+end
+
+local function get_context_usage_label(adapter)
+    local bufnr = vim.api.nvim_get_current_buf()
+    local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
+    local tokens = metadata.tokens or 0
+    local max_ctx = MODEL_CONTEXT_WINDOWS[adapter.schema.model.default]
+    if not max_ctx then
+        return string.format('unknown ctx (%d)', tokens)
+    end
+    return string.format('%.1f%% (%d)', (tokens / max_ctx) * 100, tokens)
 end
 
 local function set_chat_win_title(e)
@@ -679,11 +698,12 @@ codecompanion.setup({
                         end
                     end
                     return string.format(
-                        '%s (%s) | %s | %d Exchanges',
+                        '%s (%s) | %s |  %d |  %s',
                         adapter.formatted_name,
                         adapter.schema.model.default,
                         system_role,
-                        count_exchanges()
+                        count_exchanges(),
+                        get_context_usage_label(adapter)
                     )
                 end,
             },
