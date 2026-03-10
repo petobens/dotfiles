@@ -61,6 +61,21 @@ vim.api.nvim_create_autocmd(
     }
 )
 
+-- Helpers
+local function incremental_select(direction)
+    local buf = vim.api.nvim_get_current_buf()
+    if vim.treesitter.get_parser(buf, nil, { error = false }) then
+        local ts_select = require('vim.treesitter._select')
+        if direction > 0 then
+            ts_select.select_parent(vim.v.count1)
+        else
+            ts_select.select_child(vim.v.count1)
+        end
+    else
+        vim.lsp.buf.selection_range(direction * vim.v.count1)
+    end
+end
+
 -- Mappings
 vim.keymap.set('n', '<Leader>it', function()
     vim.treesitter.inspect_tree({
@@ -76,6 +91,14 @@ vim.keymap.set('n', '<Leader>it', function()
         { desc = 'Quit InspectTree window' }
     )
 end, { desc = 'Open Tree-sitter InspectTree in vertical split' })
+
+vim.keymap.set({ 'n', 'x' }, '<CR>', function()
+    incremental_select(1)
+end, { desc = 'Grow incremental selection' })
+
+vim.keymap.set({ 'n', 'x' }, '<BS>', function()
+    incremental_select(-1)
+end, { desc = 'Shrink incremental selection' })
 
 -- Text Objects
 require('nvim-treesitter-textobjects').setup({
