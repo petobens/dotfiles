@@ -1126,6 +1126,15 @@ codecompanion.setup({
                     end,
                 },
             },
+            ---- Tools
+            tools = {
+                read_file = {
+                    opts = {
+                        require_approval_before = false,
+                    },
+                },
+            },
+            ---- Editor Context (variables)
             editor_context = {
                 ['buffer'] = {
                     opts = {
