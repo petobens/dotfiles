@@ -170,7 +170,7 @@ local function get_chat_cycles()
     return metadata.cycles or 0
 end
 
-local function get_context_usage_label(adapter)
+local function get_context_usage(adapter)
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
     local tokens = metadata.tokens or 0
@@ -694,7 +694,7 @@ codecompanion.setup({
                         adapter.schema.model.default,
                         system_role,
                         get_chat_cycles(),
-                        get_context_usage_label(adapter)
+                        get_context_usage(adapter)
                     )
                 end,
             },
