@@ -17,9 +17,6 @@ end
 
 -- Setup
 blink_cmp.setup({
-    enabled = function()
-        return vim.bo.filetype ~= 'markdown'
-    end,
     fuzzy = { implementation = 'rust' },
     appearance = {
         kind_icons = require('lspkind').presets.default,
@@ -276,18 +273,5 @@ vim.api.nvim_create_autocmd('User', {
                 copilot_multiline_menu_direction = nil
             end,
         })
-    end,
-})
-
--- Autocmd hacks
-vim.api.nvim_create_autocmd('BufWritePre', {
-    desc = 'Force-close Blink UI before saving (Markdown)',
-    group = vim.api.nvim_create_augroup('blink_cmp_force_cleanup', { clear = true }),
-    callback = function(ev)
-        if vim.bo[ev.buf].filetype ~= 'markdown' then
-            return
-        end
-        pcall(blink_cmp.cancel)
-        pcall(blink_cmp.hide)
     end,
 })
