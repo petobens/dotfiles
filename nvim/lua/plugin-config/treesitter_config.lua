@@ -1,6 +1,3 @@
--- TODO:
--- Add incremental selection?
-
 -- Setup
 require('nvim-treesitter').install({
     'bash',
@@ -76,7 +73,36 @@ local function incremental_select(direction)
     end
 end
 
--- Mappings
+-- Autocmd mappings
+local allowed_incremental_filetypes = {
+    codecompanion = true,
+    help = true,
+}
+vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('ts_incremental_select', { clear = true }),
+    desc = 'Set incremental selection keymaps for supported buffers',
+    callback = function(args)
+        local bufnr = args.buf
+        local bo = vim.bo[bufnr]
+        if bo.buftype ~= '' and not allowed_incremental_filetypes[bo.filetype] then
+            return
+        end
+        vim.keymap.set({ 'n', 'x' }, '<CR>', function()
+            incremental_select(1)
+        end, {
+            buffer = bufnr,
+            desc = 'Grow incremental selection',
+        })
+        vim.keymap.set({ 'n', 'x' }, '<BS>', function()
+            incremental_select(-1)
+        end, {
+            buffer = bufnr,
+            desc = 'Shrink incremental selection',
+        })
+    end,
+})
+
+-- Global Mappings
 vim.keymap.set('n', '<Leader>it', function()
     vim.treesitter.inspect_tree({
         command = 'vnew | wincmd H | vertical resize 60',
@@ -91,14 +117,6 @@ vim.keymap.set('n', '<Leader>it', function()
         { desc = 'Quit InspectTree window' }
     )
 end, { desc = 'Open Tree-sitter InspectTree in vertical split' })
-
-vim.keymap.set({ 'n', 'x' }, '<CR>', function()
-    incremental_select(1)
-end, { desc = 'Grow incremental selection' })
-
-vim.keymap.set({ 'n', 'x' }, '<BS>', function()
-    incremental_select(-1)
-end, { desc = 'Shrink incremental selection' })
 
 -- Text Objects
 require('nvim-treesitter-textobjects').setup({
