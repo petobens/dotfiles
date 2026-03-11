@@ -25,6 +25,14 @@ vim.api.nvim_create_autocmd(
             then
                 return
             end
+            -- Don't lint temporary scratch/diff buffers (as codecompanion diff window)
+            if
+                e.buf
+                and vim.bo[e.buf].buftype == 'nofile'
+                and not vim.bo[e.buf].buflisted
+            then
+                return
+            end
 
             -- Defer linting to avoid blocking UI
             vim.defer_fn(function()
