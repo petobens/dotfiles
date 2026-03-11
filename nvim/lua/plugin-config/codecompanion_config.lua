@@ -127,7 +127,7 @@ local function get_my_prompt_library()
     return prompt_library
 end
 
-local function safe_last_chat()
+local function get_last_chat()
     local ok, chat = pcall(codecompanion.last_chat)
     if ok and chat then
         return chat
@@ -135,8 +135,12 @@ local function safe_last_chat()
     return nil
 end
 
+local function get_or_create_chat()
+    return get_last_chat() or codecompanion.chat()
+end
+
 local function get_current_system_role_prompt()
-    local chat = safe_last_chat()
+    local chat = get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then
         return nil
     end
@@ -151,7 +155,7 @@ local function get_current_system_role_prompt()
 end
 
 local function get_last_user_prompt()
-    local chat = safe_last_chat()
+    local chat = get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then
         return nil
     end
@@ -258,14 +262,6 @@ local function focus_or_toggle_chat(opts)
             vim.cmd.startinsert()
         end, 10)
     end
-end
-
-local function get_or_create_chat()
-    local chat = codecompanion.last_chat()
-    if not chat then
-        chat = codecompanion.chat()
-    end
-    return chat
 end
 
 local function toggle_cc_zoom()
