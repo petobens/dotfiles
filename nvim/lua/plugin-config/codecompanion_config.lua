@@ -164,19 +164,10 @@ local function get_last_user_prompt()
     return nil
 end
 
-local function count_exchanges()
-    local chat = safe_last_chat()
-    if not chat or type(chat.messages) ~= 'table' then
-        return 0
-    end
-
-    local count = 0
-    for _, msg in ipairs(chat.messages) do
-        if msg.role == 'user' then
-            count = count + 1
-        end
-    end
-    return count
+local function get_chat_cycles()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
+    return metadata.cycles or 0
 end
 
 local function get_context_usage_label(adapter)
@@ -702,7 +693,7 @@ codecompanion.setup({
                         adapter.formatted_name,
                         adapter.schema.model.default,
                         system_role,
-                        count_exchanges(),
+                        get_chat_cycles(),
                         get_context_usage_label(adapter)
                     )
                 end,
