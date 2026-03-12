@@ -22,74 +22,6 @@ local function prompt_for_path(prompt, completion, on_confirm)
     vim.ui.input({ prompt = prompt, completion = completion }, on_confirm)
 end
 
-local function get_git_root_or_notify()
-    local git_root, err = git_helpers.git_root()
-    if not git_root then
-        vim.notify(err, vim.log.levels.ERROR)
-        return nil
-    end
-    return git_root
-end
-
-local function get_git_diff_context(opts)
-    local git_root = get_git_root_or_notify()
-    if not git_root then
-        return nil
-    end
-
-    local diff_cmd, file_list_cmd, cmd_err =
-        git_helpers.resolve_git_diff_and_filelist_cmds(opts)
-    if not diff_cmd then
-        vim.notify(cmd_err, vim.log.levels.ERROR)
-        return nil
-    end
-
-    local abs_files, file_err = git_helpers.get_git_files(git_root, file_list_cmd)
-    if file_err then
-        vim.notify(file_err, vim.log.levels.WARN)
-        return nil
-    end
-
-    return {
-        git_root = git_root,
-        diff_cmd = diff_cmd,
-        abs_files = abs_files,
-    }
-end
-
-local function get_release_commit_shas(git_root)
-    local tag = vim.trim(
-        vim.system(
-            { 'git', 'describe', '--tags', '--abbrev=0' },
-            { text = true, cwd = git_root }
-        )
-            :wait().stdout or ''
-    )
-    if tag == '' then
-        vim.notify('No release tag found!', vim.log.levels.WARN)
-        return nil
-    end
-
-    local shas = vim.split(
-        vim.trim(
-            vim.system(
-                { 'git', 'log', '--format=%H', tag .. '..HEAD' },
-                { text = true, cwd = git_root }
-            )
-                :wait().stdout or ''
-        ),
-        '\n',
-        { plain = true }
-    )
-
-    if vim.tbl_isempty(shas) or (#shas == 1 and shas[1] == '') then
-        vim.notify('No commits found after latest release!', vim.log.levels.WARN)
-        return nil
-    end
-
-    return shas
-end
-
 -- Filesystem callbacks
 local function file_path_callback()
     prompt_for_path('File path: ', 'file', function(file)
@@ -127,7 +59,7 @@ local function directory_callback(chat)
 end
 
 local function git_files_callback(chat)
-    local git_root = get_git_root_or_notify()
+    local git_root = git_helpers.find_root_or_notify()
     if not git_root then
         return
     end
@@ -162,7 +94,7 @@ end
 
 -- Git callbacks
 local function conventional_commit_callback(chat, opts)
-    local ctx = get_git_diff_context(opts)
+    local ctx = git_helpers.build_diff_context(opts)
     if not ctx then
         return
     end
@@ -192,12 +124,12 @@ local function conventional_commit_callback(chat, opts)
 end
 
 local function code_review_callback(_, opts)
-    local ctx = get_git_diff_context(opts)
+    local ctx = git_helpers.build_diff_context(opts)
     if not ctx then
         return
     end
 
-    local ft = file_helpers.get_majority_filetype(ctx.abs_files)
+    local ft = file_helpers.detect_majority_filetype(ctx.abs_files)
     local prompt_alias = ft_prompt_map[ft] or 'assistant_role'
     codecompanion.prompt(prompt_alias)
 
@@ -214,14 +146,14 @@ local function code_review_callback(_, opts)
 end
 
 local function changelog_callback(chat, opts)
-    local git_root = get_git_root_or_notify()
+    local git_root = git_helpers.find_root_or_notify()
     if not git_root then
         return
     end
 
     local shas = opts and opts.commit_shas
     if not shas or vim.tbl_isempty(shas) then
-        shas = get_release_commit_shas(git_root)
+        shas = git_helpers.find_release_commit_shas(git_root)
         if not shas then
             return
         end
@@ -257,7 +189,7 @@ end
 
 -- Coding callbacks
 local function qfix_callback(chat)
-    local entries, context = diagnostics_helpers.get_loclists_or_qf_entries()
+    local entries, context = diagnostics_helpers.collect_entries_and_context()
     if entries == '' then
         vim.notify(
             'No diagnostics found in quickfix or location lists.',

@@ -59,13 +59,13 @@ function M.state.get_last_user_prompt()
     return nil
 end
 
-function M.state.get_chat_cycles()
+function M.state.get_cycle_count()
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
     return metadata.cycles or 0
 end
 
-function M.state.get_context_usage(adapter)
+function M.state.format_context_usage(adapter)
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
     local tokens = metadata.tokens or 0
@@ -222,7 +222,7 @@ function M.ui.set_chat_win_title(e)
 end
 
 -- Filesystem
-function M.files.to_absolute_paths(files, root)
+function M.files.resolve_absolute_paths(files, root)
     return vim.iter(files)
         :map(function(f)
             if f == '' then
@@ -242,7 +242,7 @@ function M.files.to_absolute_paths(files, root)
         :totable()
 end
 
-function M.files.get_majority_filetype(files)
+function M.files.detect_majority_filetype(files)
     local counts = {}
     local max_ft, max_count = nil, 0
 
@@ -280,7 +280,7 @@ function M.files.send_project_tree(chat, root)
 end
 
 -- Git
-function M.git.git_root()
+function M.git.find_root()
     local result = vim.system({ 'git', 'rev-parse', '--show-toplevel' }, { text = true })
         :wait()
     local output = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
@@ -292,7 +292,17 @@ function M.git.git_root()
     return output[1]
 end
 
-function M.git.resolve_git_diff_and_filelist_cmds(opts)
+function M.git.find_root_or_notify()
+    local git_root, err = M.git.find_root()
+    if not git_root then
+        vim.notify(err, vim.log.levels.ERROR)
+        return nil
+    end
+
+    return git_root
+end
+
+function M.git.resolve_diff_and_filelist_cmds(opts)
     local diff_cmd = { 'git', 'diff', '--no-ext-diff' }
     local file_list_cmd = { 'git', 'diff', '--name-only' }
 
@@ -320,7 +330,7 @@ function M.git.resolve_git_diff_and_filelist_cmds(opts)
     return diff_cmd, file_list_cmd
 end
 
-function M.git.get_git_files(git_root, file_list_cmd)
+function M.git.collect_changed_files(git_root, file_list_cmd)
     local result = vim.system(file_list_cmd, { text = true, cwd = git_root }):wait()
     local files = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
 
@@ -328,11 +338,69 @@ function M.git.get_git_files(git_root, file_list_cmd)
         return {}, 'No relevant files found'
     end
 
-    return M.files.to_absolute_paths(files, git_root)
+    return M.files.resolve_absolute_paths(files, git_root)
+end
+
+function M.git.build_diff_context(opts)
+    local git_root = M.git.find_root_or_notify()
+    if not git_root then
+        return nil
+    end
+
+    local diff_cmd, file_list_cmd, cmd_err = M.git.resolve_diff_and_filelist_cmds(opts)
+    if not diff_cmd then
+        vim.notify(cmd_err, vim.log.levels.ERROR)
+        return nil
+    end
+
+    local abs_files, file_err = M.git.collect_changed_files(git_root, file_list_cmd)
+    if file_err then
+        vim.notify(file_err, vim.log.levels.WARN)
+        return nil
+    end
+
+    return {
+        git_root = git_root,
+        diff_cmd = diff_cmd,
+        abs_files = abs_files,
+    }
+end
+
+function M.git.find_release_commit_shas(git_root)
+    local tag = vim.trim(
+        vim.system(
+            { 'git', 'describe', '--tags', '--abbrev=0' },
+            { text = true, cwd = git_root }
+        )
+            :wait().stdout or ''
+    )
+    if tag == '' then
+        vim.notify('No release tag found!', vim.log.levels.WARN)
+        return nil
+    end
+
+    local shas = vim.split(
+        vim.trim(
+            vim.system(
+                { 'git', 'log', '--format=%H', tag .. '..HEAD' },
+                { text = true, cwd = git_root }
+            )
+                :wait().stdout or ''
+        ),
+        '\n',
+        { plain = true }
+    )
+
+    if vim.tbl_isempty(shas) or (#shas == 1 and shas[1] == '') then
+        vim.notify('No commits found after latest release!', vim.log.levels.WARN)
+        return nil
+    end
+
+    return shas
 end
 
 -- Diagnostics
-function M.diagnostics.get_loclists_or_qf_entries()
+function M.diagnostics.collect_entries_and_context()
     local diagnostics = {}
 
     for _, winid in ipairs(vim.api.nvim_list_wins()) do

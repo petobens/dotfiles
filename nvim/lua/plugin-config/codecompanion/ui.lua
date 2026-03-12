@@ -31,8 +31,8 @@ function M.llm_role(adapter)
         adapter.formatted_name,
         adapter.schema.model.default,
         system_role,
-        state_helpers.get_chat_cycles(),
-        state_helpers.get_context_usage(adapter)
+        state_helpers.get_cycle_count(),
+        state_helpers.format_context_usage(adapter)
     )
 end
 
