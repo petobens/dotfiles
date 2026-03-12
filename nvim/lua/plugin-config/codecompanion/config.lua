@@ -1,6 +1,6 @@
 local adapter_config = require('plugin-config.codecompanion.adapters')
 local codecompanion = require('codecompanion')
-local keymaps = require('codecompanion.interactions.chat.keymaps')
+local mappings = require('plugin-config.codecompanion.mappings')
 local u = require('utils')
 
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
@@ -9,41 +9,7 @@ local ui = require('plugin-config.codecompanion.ui')
 
 local M = {}
 
--- Chat window keymap callbacks
-local function hide_chats()
-    codecompanion.toggle()
-    vim.defer_fn(function()
-        vim.cmd.stopinsert()
-    end, 1)
-end
-
-local function send_message(chat)
-    vim.cmd.stopinsert()
-    keymaps.send.callback(chat)
-end
-
-local function open_options()
-    keymaps.options.callback()
-    vim.defer_fn(function()
-        vim.cmd.stopinsert()
-        vim.api.nvim_win_set_width(0, math.min(160, vim.o.columns))
-    end, 1)
-end
-
-local function open_debug(chat)
-    keymaps.debug.callback(chat)
-    vim.defer_fn(function()
-        vim.cmd.stopinsert()
-        local win = vim.api.nvim_get_current_win()
-        local win_config = vim.api.nvim_win_get_config(win)
-        if win_config.relative == 'editor' then
-            win_config.col = 1
-            vim.api.nvim_win_set_config(win, win_config)
-        end
-    end, 1)
-end
-
--- Main setup
+-- Main CodeCompanion setup
 function M.setup()
     codecompanion.setup({
         -- Adapters
@@ -131,7 +97,7 @@ function M.setup()
                     hide_chats = {
                         modes = { n = '<C-c>', i = '<C-c>' },
                         description = 'Hide chats',
-                        callback = hide_chats,
+                        callback = mappings.chat_window.hide_chats,
                     },
                     next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
                     previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
@@ -139,7 +105,7 @@ function M.setup()
                     send = {
                         modes = { n = '<C-o>', i = '<C-o>' },
                         description = 'Send message',
-                        callback = send_message,
+                        callback = mappings.chat_window.send_message,
                     },
                     stop = { modes = { n = '<C-x>', i = '<C-x>' } },
                     clear = { modes = { n = '<A-w>', i = '<A-w>' } },
@@ -148,12 +114,12 @@ function M.setup()
                     goto_file_under_cursor = { modes = { n = 'gf' } },
                     options = {
                         modes = { n = '<A-h>', i = '<A-h>' },
-                        callback = open_options,
+                        callback = mappings.chat_window.open_options,
                     },
                     change_adapter = { modes = { n = '<A-m>', i = '<A-m>' } },
                     debug = {
                         modes = { n = '<A-d>', i = '<A-d>' },
-                        callback = open_debug,
+                        callback = mappings.chat_window.open_debug,
                     },
                     buffer_sync_all = { modes = { n = '<Leader>rp' } },
                     buffer_sync_diff = { modes = { n = '<Leader>rw' } },

@@ -4,10 +4,47 @@ local telescope_actions = require('telescope.actions')
 local u = require('utils')
 
 local helpers = require('plugin-config.codecompanion.helpers')
+local keymaps = require('codecompanion.interactions.chat.keymaps')
 
 local M = {}
 
--- Callback helpers for CodeCompanion-related mappings
+-- Chat window callbacks referenced by CodeCompanion setup
+M.chat_window = {}
+
+function M.chat_window.hide_chats()
+    codecompanion.toggle()
+    vim.defer_fn(function()
+        vim.cmd.stopinsert()
+    end, 1)
+end
+
+function M.chat_window.send_message(chat)
+    vim.cmd.stopinsert()
+    keymaps.send.callback(chat)
+end
+
+function M.chat_window.open_options()
+    keymaps.options.callback()
+    vim.defer_fn(function()
+        vim.cmd.stopinsert()
+        vim.api.nvim_win_set_width(0, math.min(160, vim.o.columns))
+    end, 1)
+end
+
+function M.chat_window.open_debug(chat)
+    keymaps.debug.callback(chat)
+    vim.defer_fn(function()
+        vim.cmd.stopinsert()
+        local win = vim.api.nvim_get_current_win()
+        local win_config = vim.api.nvim_win_get_config(win)
+        if win_config.relative == 'editor' then
+            win_config.col = 1
+            vim.api.nvim_win_set_config(win, win_config)
+        end
+    end, 1)
+end
+
+-- Codecompanion filetype mapping callbacks
 local function show_model_params(bufnr)
     local chat = codecompanion.buf_get_chat(bufnr)
     vim.print(string.format('Model Params:\n%s', vim.inspect(chat.settings)))
@@ -74,7 +111,7 @@ local function add_current_buffer_context()
     helpers.add_context({ vim.api.nvim_buf_get_name(0) })
 end
 
--- Set mappings for the codecompanion chat filetype
+-- CodeCompanion chat filetype mappings
 local function setup_codecompanion_filetype_mappings(e)
     local bufnr = e.buf
 
@@ -103,7 +140,7 @@ local function setup_codecompanion_filetype_mappings(e)
     })
 end
 
--- Filetype mappings
+-- Quickfix filetype mappings
 local function setup_qf_filetype_mappings(args)
     vim.keymap.set('n', '<Leader>qf', explain_qfix, {
         buffer = args.buf,
@@ -111,6 +148,7 @@ local function setup_qf_filetype_mappings(args)
     })
 end
 
+-- Fugitive filetype mappings
 local function setup_fugitive_filetype_mappings(args)
     vim.keymap.set('n', '<Leader>cc', function()
         helpers.run_slash_command('conventional_commit')
@@ -166,7 +204,7 @@ local function setup_fugitive_filetype_mappings(args)
     })
 end
 
--- Register filetype mappings
+-- Filetype mapping registration
 local function setup_filetype_mappings()
     local group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true })
 
