@@ -1,10 +1,9 @@
 local codecompanion = require('codecompanion')
+local helpers = require('plugin-config.codecompanion.helpers')
+local keymaps = require('codecompanion.interactions.chat.keymaps')
 local telescope_action_state = require('telescope.actions.state')
 local telescope_actions = require('telescope.actions')
 local u = require('utils')
-
-local helpers = require('plugin-config.codecompanion.helpers')
-local keymaps = require('codecompanion.interactions.chat.keymaps')
 
 local M = {}
 

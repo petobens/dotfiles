@@ -1,5 +1,4 @@
 local codecompanion = require('codecompanion')
-
 local helpers = require('plugin-config.codecompanion.helpers')
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
