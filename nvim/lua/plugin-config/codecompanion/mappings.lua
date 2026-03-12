@@ -10,7 +10,7 @@ local window_helpers = require('plugin-config.codecompanion.helpers').window
 
 local M = {}
 
--- Chat window callbacks referenced by CodeCompanion setup
+-- Chat window callbacks
 M.chat_window = {}
 
 function M.chat_window.hide_chats()
@@ -46,40 +46,11 @@ function M.chat_window.open_debug(chat_obj)
     end, 1)
 end
 
--- Codecompanion filetype mapping callbacks
-local function show_model_params(bufnr)
-    local chat_obj = codecompanion.buf_get_chat(bufnr)
-    vim.print(string.format('Model Params:\n%s', vim.inspect(chat_obj.settings)))
-end
-
-local function show_system_role_prompt()
-    local system_role = state_helpers.get_current_system_role_prompt()
-    if system_role then
-        vim.print(system_role)
-    end
-end
-
-local function insert_last_user_prompt()
-    vim.cmd.stopinsert()
-    local last = state_helpers.get_last_user_prompt()
-    if not last or last == '' then
-        return
-    end
-    vim.api.nvim_put(vim.split(last, '\n', { plain = true }), 'c', true, true)
-    vim.defer_fn(function()
-        vim.cmd.startinsert({ bang = true })
-    end, 1)
-end
-
-local function toggle_chat_zoom()
-    vim.cmd.stopinsert()
-    window_helpers.toggle_cc_zoom()
-end
-
 local function explain_qfix()
     chat_helpers.run_slash_command('qfix')
 end
 
+-- CodeCompanion global mapping callbacks
 local function run_command_line()
     vim.api.nvim_input(':CodeCompanion ')
 end
@@ -113,7 +84,37 @@ local function add_current_buffer_context()
     chat_helpers.add_context({ vim.api.nvim_buf_get_name(0) })
 end
 
--- CodeCompanion chat filetype mappings
+-- CodeCompanion filetype-local mapping callbacks
+local function show_model_params(bufnr)
+    local chat_obj = codecompanion.buf_get_chat(bufnr)
+    vim.print(string.format('Model Params:\n%s', vim.inspect(chat_obj.settings)))
+end
+
+local function show_system_role_prompt()
+    local system_role = state_helpers.get_current_system_role_prompt()
+    if system_role then
+        vim.print(system_role)
+    end
+end
+
+local function insert_last_user_prompt()
+    vim.cmd.stopinsert()
+    local last = state_helpers.get_last_user_prompt()
+    if not last or last == '' then
+        return
+    end
+    vim.api.nvim_put(vim.split(last, '\n', { plain = true }), 'c', true, true)
+    vim.defer_fn(function()
+        vim.cmd.startinsert({ bang = true })
+    end, 1)
+end
+
+local function toggle_chat_zoom()
+    vim.cmd.stopinsert()
+    window_helpers.toggle_cc_zoom()
+end
+
+-- CodeCompanion chat filetype-local mappings
 local function setup_codecompanion_filetype_mappings(e)
     local bufnr = e.buf
 
@@ -206,7 +207,7 @@ local function setup_fugitive_filetype_mappings(args)
     })
 end
 
--- Filetype mapping registration
+-- Filetype mappings registration
 local function setup_filetype_mappings()
     local group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true })
 
@@ -232,7 +233,7 @@ local function setup_filetype_mappings()
     })
 end
 
--- Global mappings
+-- Global mappings registration
 local function setup_global_mappings()
     vim.keymap.set('n', '<Leader>cg', window_helpers.focus_or_toggle_chat, {
         desc = 'Toggle CodeCompanion chat',
