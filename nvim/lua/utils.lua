@@ -59,7 +59,7 @@ function M.get_selection()
         local region = vim.fn.getregion(start_pos, end_pos, { type = vtype })
         return table.concat(region, '\n')
     end
-    return vim.fn.expand('<cWORD>')
+    return vim.fn.expand('<cword>')
 end
 
 function M.quit_return()
