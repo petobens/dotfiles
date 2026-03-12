@@ -1,5 +1,9 @@
 local codecompanion = require('codecompanion')
-local helpers = require('plugin-config.codecompanion.helpers')
+
+local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local diagnostics_helpers = require('plugin-config.codecompanion.helpers').diagnostics
+local file_helpers = require('plugin-config.codecompanion.helpers').files
+local git_helpers = require('plugin-config.codecompanion.helpers').git
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
 local M = {}
@@ -19,7 +23,7 @@ local function prompt_for_path(prompt, completion, on_confirm)
 end
 
 local function get_git_root_or_notify()
-    local git_root, err = helpers.git_root()
+    local git_root, err = git_helpers.git_root()
     if not git_root then
         vim.notify(err, vim.log.levels.ERROR)
         return nil
@@ -34,13 +38,13 @@ local function get_git_diff_context(opts)
     end
 
     local diff_cmd, file_list_cmd, cmd_err =
-        helpers.resolve_git_diff_and_filelist_cmds(opts)
+        git_helpers.resolve_git_diff_and_filelist_cmds(opts)
     if not diff_cmd then
         vim.notify(cmd_err, vim.log.levels.ERROR)
         return nil
     end
 
-    local abs_files, file_err = helpers.get_git_files(git_root, file_list_cmd)
+    local abs_files, file_err = git_helpers.get_git_files(git_root, file_list_cmd)
     if file_err then
         vim.notify(file_err, vim.log.levels.WARN)
         return nil
@@ -95,7 +99,7 @@ local function file_path_callback()
             return
         end
 
-        helpers.add_context({ file })
+        chat_helpers.add_context({ file })
     end)
 end
 
@@ -117,8 +121,8 @@ local function directory_callback(chat)
             end
         end
 
-        helpers.send_project_tree(chat, dir)
-        helpers.add_context(files)
+        file_helpers.send_project_tree(chat, dir)
+        chat_helpers.add_context(files)
     end)
 end
 
@@ -142,8 +146,8 @@ local function git_files_callback(chat)
         end)
         :totable()
 
-    helpers.send_project_tree(chat, git_root)
-    helpers.add_context(files)
+    file_helpers.send_project_tree(chat, git_root)
+    chat_helpers.add_context(files)
 end
 
 local function py_files_callback(chat)
@@ -152,8 +156,8 @@ local function py_files_callback(chat)
         return
     end
 
-    helpers.send_project_tree(chat, _G.PyVenv.active_venv.project_root)
-    helpers.add_context(_G.PyVenv.active_venv.project_files)
+    file_helpers.send_project_tree(chat, _G.PyVenv.active_venv.project_root)
+    chat_helpers.add_context(_G.PyVenv.active_venv.project_files)
 end
 
 -- Git callbacks
@@ -163,7 +167,7 @@ local function conventional_commit_callback(chat, opts)
         return
     end
 
-    helpers.add_context(ctx.abs_files)
+    chat_helpers.add_context(ctx.abs_files)
 
     local commit_history = vim.trim(
         vim.system(
@@ -193,12 +197,12 @@ local function code_review_callback(_, opts)
         return
     end
 
-    local ft = helpers.get_majority_filetype(ctx.abs_files)
+    local ft = file_helpers.get_majority_filetype(ctx.abs_files)
     local prompt_alias = ft_prompt_map[ft] or 'assistant_role'
     codecompanion.prompt(prompt_alias)
 
-    local chat = helpers.get_or_create_chat()
-    helpers.add_context(ctx.abs_files)
+    local chat = chat_helpers.get_or_create_chat()
+    chat_helpers.add_context(ctx.abs_files)
 
     local diff_output = vim.system(ctx.diff_cmd, { text = true, cwd = ctx.git_root })
         :wait().stdout or ''
@@ -238,7 +242,7 @@ local function changelog_callback(chat, opts)
     local changelog_file = vim.fs.joinpath(git_root, 'CHANGELOG.md')
     local stat = vim.uv.fs_stat(changelog_file)
     if stat and stat.type == 'file' then
-        helpers.add_context({ changelog_file })
+        chat_helpers.add_context({ changelog_file })
     end
 
     chat:add_buf_message({
@@ -253,7 +257,7 @@ end
 
 -- Coding callbacks
 local function qfix_callback(chat)
-    local entries, context = helpers.get_loclists_or_qf_entries()
+    local entries, context = diagnostics_helpers.get_loclists_or_qf_entries()
     if entries == '' then
         vim.notify(
             'No diagnostics found in quickfix or location lists.',
@@ -262,7 +266,7 @@ local function qfix_callback(chat)
         return
     end
 
-    helpers.add_context(context)
+    chat_helpers.add_context(context)
     chat:add_buf_message({
         role = 'user',
         content = string.format(prompt_library.prompt('quickfix'), entries),
@@ -276,7 +280,7 @@ local function explain_code_callback(chat, opts)
     local file = vim.api.nvim_buf_get_name(bufnr)
     local ft = vim.bo[bufnr].filetype ~= '' and vim.bo[bufnr].filetype or 'text'
 
-    helpers.add_context({ file })
+    chat_helpers.add_context({ file })
     chat:add_buf_message({
         role = 'user',
         content = string.format(prompt_library.prompt('explain_code'), ft, code),

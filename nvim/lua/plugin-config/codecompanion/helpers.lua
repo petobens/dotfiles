@@ -4,10 +4,17 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local telescope_action_state = require('telescope.actions.state')
 
-local M = {}
+local M = {
+    chat = {},
+    window = {},
+    ui = {},
+    files = {},
+    git = {},
+    diagnostics = {},
+}
 
 -- Chat state
-function M.get_last_chat()
+function M.chat.get_last_chat()
     local ok, chat = pcall(codecompanion.last_chat)
     if ok and chat then
         return chat
@@ -15,12 +22,12 @@ function M.get_last_chat()
     return nil
 end
 
-function M.get_or_create_chat()
-    return M.get_last_chat() or codecompanion.chat()
+function M.chat.get_or_create_chat()
+    return M.chat.get_last_chat() or codecompanion.chat()
 end
 
-function M.get_current_system_role_prompt()
-    local chat = M.get_last_chat()
+function M.chat.get_current_system_role_prompt()
+    local chat = M.chat.get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then
         return nil
     end
@@ -35,8 +42,8 @@ function M.get_current_system_role_prompt()
     return system_role
 end
 
-function M.get_last_user_prompt()
-    local chat = M.get_last_chat()
+function M.chat.get_last_user_prompt()
+    local chat = M.chat.get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then
         return nil
     end
@@ -51,13 +58,13 @@ function M.get_last_user_prompt()
     return nil
 end
 
-function M.get_chat_cycles()
+function M.chat.get_chat_cycles()
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
     return metadata.cycles or 0
 end
 
-function M.get_context_usage(adapter)
+function M.chat.get_context_usage(adapter)
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
     local tokens = metadata.tokens or 0
@@ -70,8 +77,46 @@ function M.get_context_usage(adapter)
     return string.format('%.1f%% (%d)', (tokens / max_ctx) * 100, tokens)
 end
 
+function M.chat.add_context(files)
+    local chat = M.chat.get_or_create_chat()
+
+    for _, file in ipairs(files) do
+        local fd = io.open(file, 'r')
+        local content
+        if fd then
+            content = fd:read('*a')
+            fd:close()
+        end
+
+        if not content then
+            vim.notify('Could not read file: ' .. file, vim.log.levels.ERROR)
+        else
+            chat:add_context({
+                role = 'user',
+                content = string.format('Here is the content of %s:%s', file, content),
+            }, 'file', string.format('<file>%s</file>', vim.fs.basename(file)))
+        end
+    end
+
+    M.window.focus_or_toggle_chat({ startinsert = false })
+end
+
+function M.chat.run_slash_command(name, opts)
+    opts = opts or {}
+
+    local chat = M.chat.get_or_create_chat()
+    local cmd = config.interactions.chat.slash_commands[name]
+
+    if cmd and type(cmd.callback) == 'function' then
+        cmd.callback(chat, opts)
+        M.window.focus_or_toggle_chat({ startinsert = false })
+    else
+        vim.notify('Slash command not found: ' .. tostring(name), vim.log.levels.ERROR)
+    end
+end
+
 -- Chat windows
-function M.try_focus_chat_float()
+function M.window.try_focus_chat_float()
     for _, win_id in ipairs(vim.api.nvim_list_wins()) do
         local conf = vim.api.nvim_win_get_config(win_id)
         if conf.focusable and conf.relative ~= '' and conf.zindex == 45 then
@@ -83,11 +128,11 @@ function M.try_focus_chat_float()
     return false
 end
 
-function M.focus_or_toggle_chat(opts)
+function M.window.focus_or_toggle_chat(opts)
     opts = opts or {}
     local startinsert = opts.startinsert ~= false
 
-    if M.try_focus_chat_float() then
+    if M.window.try_focus_chat_float() then
         return
     end
 
@@ -100,7 +145,7 @@ function M.focus_or_toggle_chat(opts)
     end
 end
 
-function M.toggle_cc_zoom()
+function M.window.toggle_cc_zoom()
     local win = vim.api.nvim_get_current_win()
     local win_config = vim.api.nvim_win_get_config(win)
     local saved = vim.w.cc_default_float_conf
@@ -122,7 +167,7 @@ function M.toggle_cc_zoom()
 end
 
 -- Chat UI
-function M.set_chat_win_title(e)
+function M.ui.set_chat_win_title(e)
     local chatmap = {}
     local chats = codecompanion.buf_get_chat()
 
@@ -174,47 +219,8 @@ function M.set_chat_win_title(e)
     })
 end
 
--- Chat helpers
-function M.add_context(files)
-    local chat = M.get_or_create_chat()
-
-    for _, file in ipairs(files) do
-        local fd = io.open(file, 'r')
-        local content
-        if fd then
-            content = fd:read('*a')
-            fd:close()
-        end
-
-        if not content then
-            vim.notify('Could not read file: ' .. file, vim.log.levels.ERROR)
-        else
-            chat:add_context({
-                role = 'user',
-                content = string.format('Here is the content of %s:%s', file, content),
-            }, 'file', string.format('<file>%s</file>', vim.fs.basename(file)))
-        end
-    end
-
-    M.focus_or_toggle_chat({ startinsert = false })
-end
-
-function M.run_slash_command(name, opts)
-    opts = opts or {}
-
-    local chat = M.get_or_create_chat()
-    local cmd = config.interactions.chat.slash_commands[name]
-
-    if cmd and type(cmd.callback) == 'function' then
-        cmd.callback(chat, opts)
-        M.focus_or_toggle_chat({ startinsert = false })
-    else
-        vim.notify('Slash command not found: ' .. tostring(name), vim.log.levels.ERROR)
-    end
-end
-
 -- Filesystem
-function M.to_absolute_paths(files, root)
+function M.files.to_absolute_paths(files, root)
     return vim.iter(files)
         :map(function(f)
             if f == '' then
@@ -234,7 +240,7 @@ function M.to_absolute_paths(files, root)
         :totable()
 end
 
-function M.get_majority_filetype(files)
+function M.files.get_majority_filetype(files)
     local counts = {}
     local max_ft, max_count = nil, 0
 
@@ -256,7 +262,7 @@ function M.get_majority_filetype(files)
     return nil
 end
 
-function M.send_project_tree(chat, root)
+function M.files.send_project_tree(chat, root)
     local result = vim.system(
         { 'tree', '-a', '-L', '2', '--noreport', root },
         { text = true }
@@ -272,7 +278,7 @@ function M.send_project_tree(chat, root)
 end
 
 -- Git
-function M.git_root()
+function M.git.git_root()
     local result = vim.system({ 'git', 'rev-parse', '--show-toplevel' }, { text = true })
         :wait()
     local output = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
@@ -284,7 +290,7 @@ function M.git_root()
     return output[1]
 end
 
-function M.resolve_git_diff_and_filelist_cmds(opts)
+function M.git.resolve_git_diff_and_filelist_cmds(opts)
     local diff_cmd = { 'git', 'diff', '--no-ext-diff' }
     local file_list_cmd = { 'git', 'diff', '--name-only' }
 
@@ -312,7 +318,7 @@ function M.resolve_git_diff_and_filelist_cmds(opts)
     return diff_cmd, file_list_cmd
 end
 
-function M.get_git_files(git_root, file_list_cmd)
+function M.git.get_git_files(git_root, file_list_cmd)
     local result = vim.system(file_list_cmd, { text = true, cwd = git_root }):wait()
     local files = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
 
@@ -320,11 +326,11 @@ function M.get_git_files(git_root, file_list_cmd)
         return {}, 'No relevant files found'
     end
 
-    return M.to_absolute_paths(files, git_root)
+    return M.files.to_absolute_paths(files, git_root)
 end
 
 -- Diagnostics
-function M.get_loclists_or_qf_entries()
+function M.diagnostics.get_loclists_or_qf_entries()
     local diagnostics = {}
 
     for _, winid in ipairs(vim.api.nvim_list_wins()) do

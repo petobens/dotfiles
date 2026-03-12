@@ -1,14 +1,16 @@
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local devicons = require('nvim-web-devicons')
-local helpers = require('plugin-config.codecompanion.helpers')
+
+local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local ui_helpers = require('plugin-config.codecompanion.helpers').ui
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
 local M = {}
 
 -- Chat role label formatter for the chat UI
 function M.llm_role(adapter)
-    local current_system_role_prompt = helpers.get_current_system_role_prompt()
+    local current_system_role_prompt = chat_helpers.get_current_system_role_prompt()
     local system_role = prompt_library.SYSTEM_ROLE
 
     for name, prompt in pairs(config.prompt_library or {}) do
@@ -29,8 +31,8 @@ function M.llm_role(adapter)
         adapter.formatted_name,
         adapter.schema.model.default,
         system_role,
-        helpers.get_chat_cycles(),
-        helpers.get_context_usage(adapter)
+        chat_helpers.get_chat_cycles(),
+        chat_helpers.get_context_usage(adapter)
     )
 end
 
@@ -104,7 +106,7 @@ function M.setup()
         desc = 'Set CodeCompanion chat window title after chat events',
         callback = function(e)
             vim.defer_fn(function()
-                helpers.set_chat_win_title(e)
+                ui_helpers.set_chat_win_title(e)
             end, 1)
         end,
     })

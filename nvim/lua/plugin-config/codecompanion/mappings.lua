@@ -1,9 +1,11 @@
 local codecompanion = require('codecompanion')
-local helpers = require('plugin-config.codecompanion.helpers')
-local keymaps = require('codecompanion.interactions.chat.keymaps')
 local telescope_action_state = require('telescope.actions.state')
 local telescope_actions = require('telescope.actions')
 local u = require('utils')
+
+local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local window_helpers = require('plugin-config.codecompanion.helpers').window
+local keymaps = require('codecompanion.interactions.chat.keymaps')
 
 local M = {}
 
@@ -17,9 +19,9 @@ function M.chat_window.hide_chats()
     end, 1)
 end
 
-function M.chat_window.send_message(chat)
+function M.chat_window.send_message(chat_obj)
     vim.cmd.stopinsert()
-    keymaps.send.callback(chat)
+    keymaps.send.callback(chat_obj)
 end
 
 function M.chat_window.open_options()
@@ -30,27 +32,27 @@ function M.chat_window.open_options()
     end, 1)
 end
 
-function M.chat_window.open_debug(chat)
-    keymaps.debug.callback(chat)
+function M.chat_window.open_debug(chat_obj)
+    keymaps.debug.callback(chat_obj)
     vim.defer_fn(function()
         vim.cmd.stopinsert()
-        local win = vim.api.nvim_get_current_win()
-        local win_config = vim.api.nvim_win_get_config(win)
+        local win_id = vim.api.nvim_get_current_win()
+        local win_config = vim.api.nvim_win_get_config(win_id)
         if win_config.relative == 'editor' then
             win_config.col = 1
-            vim.api.nvim_win_set_config(win, win_config)
+            vim.api.nvim_win_set_config(win_id, win_config)
         end
     end, 1)
 end
 
 -- Codecompanion filetype mapping callbacks
 local function show_model_params(bufnr)
-    local chat = codecompanion.buf_get_chat(bufnr)
-    vim.print(string.format('Model Params:\n%s', vim.inspect(chat.settings)))
+    local chat_obj = codecompanion.buf_get_chat(bufnr)
+    vim.print(string.format('Model Params:\n%s', vim.inspect(chat_obj.settings)))
 end
 
 local function show_system_role_prompt()
-    local system_role = helpers.get_current_system_role_prompt()
+    local system_role = chat_helpers.get_current_system_role_prompt()
     if system_role then
         vim.print(system_role)
     end
@@ -58,7 +60,7 @@ end
 
 local function insert_last_user_prompt()
     vim.cmd.stopinsert()
-    local last = helpers.get_last_user_prompt()
+    local last = chat_helpers.get_last_user_prompt()
     if not last or last == '' then
         return
     end
@@ -70,11 +72,11 @@ end
 
 local function toggle_chat_zoom()
     vim.cmd.stopinsert()
-    helpers.toggle_cc_zoom()
+    window_helpers.toggle_cc_zoom()
 end
 
 local function explain_qfix()
-    helpers.run_slash_command('qfix')
+    chat_helpers.run_slash_command('qfix')
 end
 
 local function run_command_line()
@@ -94,7 +96,7 @@ end
 local function paste_selection_to_chat()
     codecompanion.add()
     if vim.bo.filetype ~= 'codecompanion' then
-        helpers.try_focus_chat_float()
+        window_helpers.try_focus_chat_float()
         vim.api.nvim_feedkeys(vim.keycode('<Esc>'), 'n', false)
     end
 end
@@ -103,11 +105,11 @@ local function explain_selection()
     local bufnr = vim.api.nvim_get_current_buf()
     local code = u.get_selection()
     vim.cmd.normal({ vim.keycode('<Esc>'), bang = true })
-    helpers.run_slash_command('explain_code', { bufnr = bufnr, code = code })
+    chat_helpers.run_slash_command('explain_code', { bufnr = bufnr, code = code })
 end
 
 local function add_current_buffer_context()
-    helpers.add_context({ vim.api.nvim_buf_get_name(0) })
+    chat_helpers.add_context({ vim.api.nvim_buf_get_name(0) })
 end
 
 -- CodeCompanion chat filetype mappings
@@ -150,7 +152,7 @@ end
 -- Fugitive filetype mappings
 local function setup_fugitive_filetype_mappings(args)
     vim.keymap.set('n', '<Leader>cc', function()
-        helpers.run_slash_command('conventional_commit')
+        chat_helpers.run_slash_command('conventional_commit')
     end, {
         buffer = args.buf,
         desc = 'Generate conventional commit message',
@@ -161,7 +163,7 @@ local function setup_fugitive_filetype_mappings(args)
             { prompt = 'Base branch for commit diff: ', default = 'main' },
             function(branch)
                 if branch and branch ~= '' then
-                    helpers.run_slash_command('conventional_commit', {
+                    chat_helpers.run_slash_command('conventional_commit', {
                         base_branch = vim.trim(branch),
                     })
                 end
@@ -173,7 +175,7 @@ local function setup_fugitive_filetype_mappings(args)
     })
 
     vim.keymap.set('n', '<Leader>cr', function()
-        helpers.run_slash_command('code_review')
+        chat_helpers.run_slash_command('code_review')
     end, {
         buffer = args.buf,
         desc = 'Perform code review',
@@ -184,7 +186,7 @@ local function setup_fugitive_filetype_mappings(args)
             { prompt = 'Base branch for diff: ', default = 'main' },
             function(branch)
                 if branch and branch ~= '' then
-                    helpers.run_slash_command('code_review', {
+                    chat_helpers.run_slash_command('code_review', {
                         base_branch = vim.trim(branch),
                     })
                 end
@@ -196,7 +198,7 @@ local function setup_fugitive_filetype_mappings(args)
     })
 
     vim.keymap.set('n', '<Leader>cl', function()
-        helpers.run_slash_command('changelog')
+        chat_helpers.run_slash_command('changelog')
     end, {
         buffer = args.buf,
         desc = 'Generate changelog since last release',
@@ -231,7 +233,7 @@ end
 
 -- Global mappings
 local function setup_global_mappings()
-    vim.keymap.set('n', '<Leader>cg', helpers.focus_or_toggle_chat, {
+    vim.keymap.set('n', '<Leader>cg', window_helpers.focus_or_toggle_chat, {
         desc = 'Toggle CodeCompanion chat',
     })
 
