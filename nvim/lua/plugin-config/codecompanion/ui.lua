@@ -1,8 +1,38 @@
 local codecompanion = require('codecompanion')
+local config = require('codecompanion.config')
 local devicons = require('nvim-web-devicons')
 local helpers = require('plugin-config.codecompanion.helpers')
+local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
 local M = {}
+
+-- Chat role label formatter for the chat UI
+function M.llm_role(adapter)
+    local current_system_role_prompt = helpers.get_current_system_role_prompt()
+    local system_role = prompt_library.SYSTEM_ROLE
+
+    for name, prompt in pairs(config.prompt_library or {}) do
+        local prompts = prompt and prompt.prompts
+        if type(prompts) == 'table' then
+            local first = prompts[1]
+            if first and type(first.content) == 'string' then
+                if first.content == current_system_role_prompt then
+                    system_role = name
+                    break
+                end
+            end
+        end
+    end
+
+    return string.format(
+        '%s (%s) | %s |  %d |  %s',
+        adapter.formatted_name,
+        adapter.schema.model.default,
+        system_role,
+        helpers.get_chat_cycles(),
+        helpers.get_context_usage(adapter)
+    )
+end
 
 -- Spinner helpers
 local spinner = {
