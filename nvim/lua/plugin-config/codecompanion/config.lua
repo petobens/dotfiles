@@ -1,9 +1,10 @@
-local adapter_config = require('plugin-config.codecompanion.adapters')
 local codecompanion = require('codecompanion')
+local u = require('utils')
+
+local adapter_config = require('plugin-config.codecompanion.adapters')
 local mappings = require('plugin-config.codecompanion.mappings')
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 local slash_commands = require('plugin-config.codecompanion.slash_commands')
-local u = require('utils')
 local ui = require('plugin-config.codecompanion.ui')
 
 local M = {}

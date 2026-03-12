@@ -36,6 +36,26 @@ function M.llm_role(adapter)
     )
 end
 
+-- Restore history metadata to be used by label above
+local function restore_chat_history_metadata(bufnr)
+    local history = codecompanion.extensions.history
+    local chat = codecompanion.buf_get_chat(bufnr)
+    local save_id = chat and chat.opts and chat.opts.save_id
+    local saved_chat = save_id and history.load_chat(save_id)
+    if not saved_chat then
+        return
+    end
+
+    _G.codecompanion_chat_metadata = _G.codecompanion_chat_metadata or {}
+    _G.codecompanion_chat_metadata[chat.bufnr] =
+        vim.tbl_deep_extend('force', _G.codecompanion_chat_metadata[chat.bufnr] or {}, {
+            cycles = saved_chat.cycle,
+            tokens = history.get_chats()[save_id].token_estimate,
+        })
+
+    vim.cmd.redrawstatus()
+end
+
 -- Spinner helpers
 local spinner = {
     ns_id = vim.api.nvim_create_namespace('codecompanion_spinner'),
@@ -155,25 +175,7 @@ function M.setup()
         desc = 'Restore CodeCompanion history metadata',
         callback = function(args)
             vim.schedule(function()
-                local history = codecompanion.extensions.history
-                local chat = codecompanion.buf_get_chat(args.data.bufnr)
-                local save_id = chat.opts.save_id
-                local saved_chat = save_id and history.load_chat(save_id)
-                if not saved_chat then
-                    return
-                end
-
-                _G.codecompanion_chat_metadata = _G.codecompanion_chat_metadata or {}
-                _G.codecompanion_chat_metadata[chat.bufnr] = vim.tbl_deep_extend(
-                    'force',
-                    _G.codecompanion_chat_metadata[chat.bufnr] or {},
-                    {
-                        cycles = saved_chat.cycle,
-                        tokens = history.get_chats()[save_id].token_estimate,
-                    }
-                )
-
-                vim.cmd.redrawstatus()
+                restore_chat_history_metadata(args.data.bufnr)
             end)
         end,
     })
