@@ -1,10 +1,11 @@
--- luacheck:ignore 631
-local adapter_config = require('plugin-config.codecompanion.adapters')
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local telescope_action_state = require('telescope.actions.state')
 
+local adapter_config = require('plugin-config.codecompanion.adapters')
+
 local M = {
+    state = {},
     chat = {},
     window = {},
     ui = {},
@@ -13,8 +14,8 @@ local M = {
     diagnostics = {},
 }
 
--- Chat state
-function M.chat.get_last_chat()
+-- State
+function M.state.get_last_chat()
     local ok, chat = pcall(codecompanion.last_chat)
     if ok and chat then
         return chat
@@ -23,11 +24,11 @@ function M.chat.get_last_chat()
 end
 
 function M.chat.get_or_create_chat()
-    return M.chat.get_last_chat() or codecompanion.chat()
+    return M.state.get_last_chat() or codecompanion.chat()
 end
 
-function M.chat.get_current_system_role_prompt()
-    local chat = M.chat.get_last_chat()
+function M.state.get_current_system_role_prompt()
+    local chat = M.state.get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then
         return nil
     end
@@ -42,8 +43,8 @@ function M.chat.get_current_system_role_prompt()
     return system_role
 end
 
-function M.chat.get_last_user_prompt()
-    local chat = M.chat.get_last_chat()
+function M.state.get_last_user_prompt()
+    local chat = M.state.get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then
         return nil
     end
@@ -58,13 +59,13 @@ function M.chat.get_last_user_prompt()
     return nil
 end
 
-function M.chat.get_chat_cycles()
+function M.state.get_chat_cycles()
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
     return metadata.cycles or 0
 end
 
-function M.chat.get_context_usage(adapter)
+function M.state.get_context_usage(adapter)
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
     local tokens = metadata.tokens or 0
@@ -77,6 +78,7 @@ function M.chat.get_context_usage(adapter)
     return string.format('%.1f%% (%d)', (tokens / max_ctx) * 100, tokens)
 end
 
+-- Chat
 function M.chat.add_context(files)
     local chat = M.chat.get_or_create_chat()
 

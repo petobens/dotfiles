@@ -2,7 +2,7 @@ local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local devicons = require('nvim-web-devicons')
 
-local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local state_helpers = require('plugin-config.codecompanion.helpers').state
 local ui_helpers = require('plugin-config.codecompanion.helpers').ui
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
@@ -10,7 +10,7 @@ local M = {}
 
 -- Chat role label formatter for the chat UI
 function M.llm_role(adapter)
-    local current_system_role_prompt = chat_helpers.get_current_system_role_prompt()
+    local current_system_role_prompt = state_helpers.get_current_system_role_prompt()
     local system_role = prompt_library.SYSTEM_ROLE
 
     for name, prompt in pairs(config.prompt_library or {}) do
@@ -31,8 +31,8 @@ function M.llm_role(adapter)
         adapter.formatted_name,
         adapter.schema.model.default,
         system_role,
-        chat_helpers.get_chat_cycles(),
-        chat_helpers.get_context_usage(adapter)
+        state_helpers.get_chat_cycles(),
+        state_helpers.get_context_usage(adapter)
     )
 end
 

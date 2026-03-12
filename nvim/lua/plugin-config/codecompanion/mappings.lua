@@ -1,11 +1,12 @@
 local codecompanion = require('codecompanion')
+local keymaps = require('codecompanion.interactions.chat.keymaps')
 local telescope_action_state = require('telescope.actions.state')
 local telescope_actions = require('telescope.actions')
 local u = require('utils')
 
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local state_helpers = require('plugin-config.codecompanion.helpers').state
 local window_helpers = require('plugin-config.codecompanion.helpers').window
-local keymaps = require('codecompanion.interactions.chat.keymaps')
 
 local M = {}
 
@@ -52,7 +53,7 @@ local function show_model_params(bufnr)
 end
 
 local function show_system_role_prompt()
-    local system_role = chat_helpers.get_current_system_role_prompt()
+    local system_role = state_helpers.get_current_system_role_prompt()
     if system_role then
         vim.print(system_role)
     end
@@ -60,7 +61,7 @@ end
 
 local function insert_last_user_prompt()
     vim.cmd.stopinsert()
-    local last = chat_helpers.get_last_user_prompt()
+    local last = state_helpers.get_last_user_prompt()
     if not last or last == '' then
         return
     end
