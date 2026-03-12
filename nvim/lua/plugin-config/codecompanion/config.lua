@@ -91,7 +91,9 @@ function M.setup()
                     create_chat = {
                         modes = { n = '<A-c>', i = '<A-c>' },
                         description = 'Create new chat',
-                        callback = vim.cmd.CodeCompanionChat,
+                        callback = function()
+                            vim.cmd.CodeCompanionChat()
+                        end,
                     },
                     close = { modes = { n = '<A-x>', i = '<A-x>' } },
                     hide_chats = {
@@ -127,7 +129,9 @@ function M.setup()
                     action_palette = {
                         modes = { n = '<A-a>', i = '<A-a>' },
                         description = 'Action palette',
-                        callback = vim.cmd.CodeCompanionActions,
+                        callback = function()
+                            vim.cmd.CodeCompanionActions()
+                        end,
                     },
                 },
                 -- Slash commands
