@@ -1,7 +1,6 @@
 local codecompanion = require('codecompanion')
 
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
-local diagnostics_helpers = require('plugin-config.codecompanion.helpers').diagnostics
 local file_helpers = require('plugin-config.codecompanion.helpers').files
 local git_helpers = require('plugin-config.codecompanion.helpers').git
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
@@ -16,6 +15,99 @@ local ft_prompt_map = {
     tex = 'latex_role',
 }
 local tmux_data = {}
+
+-- Local helpers
+local function collect_diagnostics_entries_and_context()
+    local diagnostics = {}
+
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+        local loclist = vim.fn.getloclist(winid)
+        if #loclist > 0 then
+            vim.list_extend(diagnostics, loclist)
+        end
+    end
+
+    if #diagnostics == 0 then
+        diagnostics = vim.fn.getqflist()
+    end
+
+    local seen, entries, context = {}, {}, {}
+
+    for _, item in ipairs(diagnostics) do
+        local filename = vim.fs.basename(vim.api.nvim_buf_get_name(item.bufnr))
+        local lnum = item.lnum or 0
+        local col = item.col or 0
+        local text = item.text or ''
+        local key = table.concat({ filename, lnum, col, text }, '\0')
+
+        if not seen[key] then
+            seen[key] = true
+            table.insert(
+                entries,
+                string.format('%s:%d:%d: %s', filename, lnum, col, text)
+            )
+            if filename ~= '' and not vim.tbl_contains(context, filename) then
+                table.insert(context, filename)
+            end
+        end
+    end
+
+    return table.concat(entries, '\n'), context
+end
+
+local function add_tmux_pane_context_incremental(chat, target)
+    if not vim.env.TMUX then
+        vim.notify('Not in a tmux session', vim.log.levels.ERROR)
+        return
+    end
+
+    target = vim.trim(target or '')
+    if target == '' or not target:match('^%d+%.%d+$') then
+        vim.notify('Invalid target, use window.pane (e.g. 2.1)', vim.log.levels.ERROR)
+        return
+    end
+
+    local result = vim.system({
+        'tmux',
+        'capture-pane',
+        '-p',
+        '-S',
+        '-3000',
+        '-E',
+        '-',
+        '-t',
+        target,
+    }, { text = true }):wait()
+
+    local out = vim.trim(result.stdout or '')
+    if result.code ~= 0 or out == '' then
+        vim.notify('No tmux output captured for target: ' .. target, vim.log.levels.WARN)
+        return
+    end
+
+    local lines = vim.split(out, '\n', { plain = true })
+    local start_line = 1
+    local prev = tmux_data[target]
+
+    if prev and prev.lines then
+        start_line = math.max(1, prev.lines - 3)
+    end
+
+    local new_lines = {}
+    for i = start_line, #lines do
+        table.insert(new_lines, lines[i])
+    end
+
+    tmux_data[target] = { lines = #lines }
+
+    chat:add_context({
+        role = 'user',
+        content = ('Latest tmux output (%s):\n\n%s'):format(
+            target,
+            table.concat(new_lines, '\n')
+        ),
+    }, 'terminal', ('<tmux>%s</tmux>'):format(target))
+end
 
 -- Filesystem callbacks
 local function file_path_callback()
@@ -184,7 +276,7 @@ end
 
 -- Coding callbacks
 local function qfix_callback(chat)
-    local entries, context = diagnostics_helpers.collect_entries_and_context()
+    local entries, context = collect_diagnostics_entries_and_context()
     if entries == '' then
         vim.notify(
             'No diagnostics found in quickfix or location lists.',
@@ -216,60 +308,6 @@ local function explain_code_callback(chat, opts)
 end
 
 -- Terminal callbacks
-local function add_tmux_pane_context_incremental(chat, target)
-    if not vim.env.TMUX then
-        vim.notify('Not in a tmux session', vim.log.levels.ERROR)
-        return
-    end
-
-    target = vim.trim(target or '')
-    if target == '' or not target:match('^%d+%.%d+$') then
-        vim.notify('Invalid target, use window.pane (e.g. 2.1)', vim.log.levels.ERROR)
-        return
-    end
-
-    local result = vim.system({
-        'tmux',
-        'capture-pane',
-        '-p',
-        '-S',
-        '-3000',
-        '-E',
-        '-',
-        '-t',
-        target,
-    }, { text = true }):wait()
-
-    local out = vim.trim(result.stdout or '')
-    if result.code ~= 0 or out == '' then
-        vim.notify('No tmux output captured for target: ' .. target, vim.log.levels.WARN)
-        return
-    end
-
-    local lines = vim.split(out, '\n', { plain = true })
-    local start_line = 1
-    local prev = tmux_data[target]
-
-    if prev and prev.lines then
-        start_line = math.max(1, prev.lines - 3)
-    end
-
-    local new_lines = {}
-    for i = start_line, #lines do
-        table.insert(new_lines, lines[i])
-    end
-
-    tmux_data[target] = { lines = #lines }
-
-    chat:add_context({
-        role = 'user',
-        content = ('Latest tmux output (%s):\n\n%s'):format(
-            target,
-            table.concat(new_lines, '\n')
-        ),
-    }, 'terminal', ('<tmux>%s</tmux>'):format(target))
-end
-
 local function tmux_callback(chat)
     vim.ui.input({ prompt = 'tmux window.pane (default 1.2): ' }, function(target)
         target = vim.trim(target or '')

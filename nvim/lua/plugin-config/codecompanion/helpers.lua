@@ -1,6 +1,5 @@
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
-local telescope_action_state = require('telescope.actions.state')
 
 local adapter_config = require('plugin-config.codecompanion.adapters')
 
@@ -8,10 +7,8 @@ local M = {
     state = {},
     chat = {},
     window = {},
-    ui = {},
     files = {},
     git = {},
-    diagnostics = {},
 }
 
 -- State
@@ -165,59 +162,6 @@ function M.window.toggle_cc_zoom()
         col = math.floor(vim.o.columns * 0.10),
         width = math.floor(vim.o.columns * 0.80),
         height = vim.o.lines - 4,
-    })
-end
-
--- Chat UI
-function M.ui.set_chat_win_title(e)
-    local chatmap = {}
-    local chats = codecompanion.buf_get_chat()
-
-    for _, chat in pairs(chats) do
-        chatmap[chat.chat.ui.winnr] = chat.name
-    end
-
-    local ok, chat = pcall(function()
-        return codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
-    end)
-
-    if not ok then
-        vim.defer_fn(function()
-            local picker =
-                telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
-            if picker then
-                vim.api.nvim_win_close(picker.prompt_win, true)
-            end
-        end, 50)
-
-        vim.wait(100)
-
-        if vim.bo.filetype == 'codecompanion' then
-            local win_id = vim.api.nvim_get_current_win()
-            local current = vim.api.nvim_win_get_config(win_id)
-            vim.api.nvim_win_set_config(win_id, {
-                title = current.title[1][1]:gsub('%b()', '(' .. e.data.title .. ')'),
-            })
-        end
-        return
-    end
-
-    vim.api.nvim_win_set_config(chat.ui.winnr, {
-        title = string.format(
-            'CodeCompanion - %s%s',
-            chatmap[chat.ui.winnr],
-            (chat.opts.title and chat.opts.title ~= '')
-                    and string.format(' (%s)', chat.opts.title)
-                or ''
-        ),
-        footer = string.format(
-            '%s %s',
-            vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or '',
-            (chat.context.filename and chat.context.filename ~= '')
-                    and ('(' .. vim.fs.basename(chat.context.filename) .. ')')
-                or ''
-        ),
-        footer_pos = 'center',
     })
 end
 
@@ -397,45 +341,6 @@ function M.git.find_release_commit_shas(git_root)
     end
 
     return shas
-end
-
--- Diagnostics
-function M.diagnostics.collect_entries_and_context()
-    local diagnostics = {}
-
-    for _, winid in ipairs(vim.api.nvim_list_wins()) do
-        local loclist = vim.fn.getloclist(winid)
-        if #loclist > 0 then
-            vim.list_extend(diagnostics, loclist)
-        end
-    end
-
-    if #diagnostics == 0 then
-        diagnostics = vim.fn.getqflist()
-    end
-
-    local seen, entries, context = {}, {}, {}
-
-    for _, item in ipairs(diagnostics) do
-        local filename = vim.fs.basename(vim.api.nvim_buf_get_name(item.bufnr))
-        local lnum = item.lnum or 0
-        local col = item.col or 0
-        local text = item.text or ''
-        local key = table.concat({ filename, lnum, col, text }, '\0')
-
-        if not seen[key] then
-            seen[key] = true
-            table.insert(
-                entries,
-                string.format('%s:%d:%d: %s', filename, lnum, col, text)
-            )
-            if filename ~= '' and not vim.tbl_contains(context, filename) then
-                table.insert(context, filename)
-            end
-        end
-    end
-
-    return table.concat(entries, '\n'), context
 end
 
 return M

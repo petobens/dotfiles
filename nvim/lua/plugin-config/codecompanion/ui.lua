@@ -1,14 +1,87 @@
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local devicons = require('nvim-web-devicons')
+local telescope_action_state = require('telescope.actions.state')
 
 local state_helpers = require('plugin-config.codecompanion.helpers').state
-local ui_helpers = require('plugin-config.codecompanion.helpers').ui
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
 local M = {}
 
--- Chat role label formatter for the chat UI
+-- Local helpers
+local function set_chat_win_title(e)
+    local chatmap = {}
+    local chats = codecompanion.buf_get_chat()
+
+    for _, chat in pairs(chats) do
+        chatmap[chat.chat.ui.winnr] = chat.name
+    end
+
+    local ok, chat = pcall(function()
+        return codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+    end)
+
+    if not ok then
+        vim.defer_fn(function()
+            local picker =
+                telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
+            if picker then
+                vim.api.nvim_win_close(picker.prompt_win, true)
+            end
+        end, 50)
+
+        vim.wait(100)
+
+        if vim.bo.filetype == 'codecompanion' then
+            local win_id = vim.api.nvim_get_current_win()
+            local current = vim.api.nvim_win_get_config(win_id)
+            vim.api.nvim_win_set_config(win_id, {
+                title = current.title[1][1]:gsub('%b()', '(' .. e.data.title .. ')'),
+            })
+        end
+        return
+    end
+
+    vim.api.nvim_win_set_config(chat.ui.winnr, {
+        title = string.format(
+            'CodeCompanion - %s%s',
+            chatmap[chat.ui.winnr],
+            (chat.opts.title and chat.opts.title ~= '')
+                    and string.format(' (%s)', chat.opts.title)
+                or ''
+        ),
+        footer = string.format(
+            '%s %s',
+            vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or '',
+            (chat.context.filename and chat.context.filename ~= '')
+                    and ('(' .. vim.fs.basename(chat.context.filename) .. ')')
+                or ''
+        ),
+        footer_pos = 'center',
+    })
+end
+
+-- Restore history metadata to be used by label below
+local function restore_chat_history_metadata(bufnr)
+    local history = codecompanion.extensions.history
+    local chat = codecompanion.buf_get_chat(bufnr)
+    local save_id = chat and chat.opts and chat.opts.save_id
+    local saved_chat = save_id and history.load_chat(save_id)
+    if not saved_chat then
+        return
+    end
+
+    _G.codecompanion_chat_metadata = _G.codecompanion_chat_metadata or {}
+    _G.codecompanion_chat_metadata[chat.bufnr] =
+        vim.tbl_deep_extend('force', _G.codecompanion_chat_metadata[chat.bufnr] or {}, {
+            cycles = saved_chat.cycle,
+            tokens = history.get_chats()[save_id].token_estimate,
+        })
+
+    vim.cmd.redrawstatus()
+end
+
+-- Role label formatter for the chat UI
 function M.llm_role(adapter)
     local current_system_role_prompt = state_helpers.get_current_system_role_prompt()
     local system_role = prompt_library.SYSTEM_ROLE
@@ -36,27 +109,7 @@ function M.llm_role(adapter)
     )
 end
 
--- Restore history metadata to be used by label above
-local function restore_chat_history_metadata(bufnr)
-    local history = codecompanion.extensions.history
-    local chat = codecompanion.buf_get_chat(bufnr)
-    local save_id = chat and chat.opts and chat.opts.save_id
-    local saved_chat = save_id and history.load_chat(save_id)
-    if not saved_chat then
-        return
-    end
-
-    _G.codecompanion_chat_metadata = _G.codecompanion_chat_metadata or {}
-    _G.codecompanion_chat_metadata[chat.bufnr] =
-        vim.tbl_deep_extend('force', _G.codecompanion_chat_metadata[chat.bufnr] or {}, {
-            cycles = saved_chat.cycle,
-            tokens = history.get_chats()[save_id].token_estimate,
-        })
-
-    vim.cmd.redrawstatus()
-end
-
--- Spinner helpers
+-- Spinner internals
 local spinner = {
     ns_id = vim.api.nvim_create_namespace('codecompanion_spinner'),
     states = {
@@ -126,7 +179,7 @@ function M.setup()
         desc = 'Set CodeCompanion chat window title after chat events',
         callback = function(e)
             vim.defer_fn(function()
-                ui_helpers.set_chat_win_title(e)
+                set_chat_win_title(e)
             end, 1)
         end,
     })

@@ -89,9 +89,8 @@ local function load_prompt_library()
     return prompt_library
 end
 
-local PROMPT_LIBRARY = load_prompt_library()
-
 -- Public accessor for loaded prompt text
+local PROMPT_LIBRARY = load_prompt_library()
 function M.prompt(name)
     return PROMPT_LIBRARY[name]
 end
