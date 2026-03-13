@@ -46,15 +46,7 @@ function M.chat_window.open_debug(chat_obj)
     end, 1)
 end
 
-local function explain_qfix()
-    chat_helpers.run_slash_command('qfix')
-end
-
 -- CodeCompanion global mapping callbacks
-local function run_command_line()
-    vim.api.nvim_input(':CodeCompanion ')
-end
-
 local function explore_open_chats()
     codecompanion.actions()
     vim.defer_fn(function()
@@ -80,23 +72,7 @@ local function explain_selection()
     chat_helpers.run_slash_command('explain_code', { bufnr = bufnr, code = code })
 end
 
-local function add_current_buffer_context()
-    chat_helpers.add_context({ vim.api.nvim_buf_get_name(0) })
-end
-
 -- CodeCompanion filetype-local mapping callbacks
-local function show_model_params(bufnr)
-    local chat_obj = codecompanion.buf_get_chat(bufnr)
-    vim.print(string.format('Model Params:\n%s', vim.inspect(chat_obj.settings)))
-end
-
-local function show_system_role_prompt()
-    local system_role = state_helpers.get_current_system_role_prompt()
-    if system_role then
-        vim.print(system_role)
-    end
-end
-
 local function insert_last_user_prompt()
     vim.cmd.stopinsert()
     local last = state_helpers.get_last_user_prompt()
@@ -124,10 +100,16 @@ local function setup_codecompanion_filetype_mappings(e)
     })
 
     vim.keymap.set({ 'i', 'n' }, '<A-p>', function()
-        show_model_params(bufnr)
+        local chat_obj = codecompanion.buf_get_chat(bufnr)
+        vim.print(string.format('Model Params:\n%s', vim.inspect(chat_obj.settings)))
     end, { buffer = bufnr, desc = 'Show model params' })
 
-    vim.keymap.set({ 'i', 'n' }, '<A-r>', show_system_role_prompt, {
+    vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
+        local system_role = state_helpers.get_current_system_role_prompt()
+        if system_role then
+            vim.print(system_role)
+        end
+    end, {
         buffer = bufnr,
         desc = 'Show system role prompt',
     })
@@ -145,7 +127,9 @@ end
 
 -- Quickfix filetype mappings
 local function setup_qf_filetype_mappings(args)
-    vim.keymap.set('n', '<Leader>qf', explain_qfix, {
+    vim.keymap.set('n', '<Leader>qf', function()
+        chat_helpers.run_slash_command('qfix')
+    end, {
         buffer = args.buf,
         desc = 'Explain quickfix diagnostics',
     })
@@ -239,7 +223,9 @@ local function setup_global_mappings()
         desc = 'Toggle CodeCompanion chat',
     })
 
-    vim.keymap.set({ 'n', 'v' }, '<Leader>cr', run_command_line, {
+    vim.keymap.set({ 'n', 'v' }, '<Leader>cr', function()
+        vim.api.nvim_input(':CodeCompanion ')
+    end, {
         desc = 'Run CodeCompanion command-line',
     })
 
@@ -263,7 +249,9 @@ local function setup_global_mappings()
         desc = 'Explain selected code with CodeCompanion',
     })
 
-    vim.keymap.set('n', '<Leader>ac', add_current_buffer_context, {
+    vim.keymap.set('n', '<Leader>ac', function()
+        chat_helpers.add_context({ vim.api.nvim_buf_get_name(0) })
+    end, {
         desc = 'Add current file to CodeCompanion',
     })
 end

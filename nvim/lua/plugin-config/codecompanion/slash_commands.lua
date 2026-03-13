@@ -17,14 +17,9 @@ local ft_prompt_map = {
 }
 local tmux_data = {}
 
--- Shared helpers
-local function prompt_for_path(prompt, completion, on_confirm)
-    vim.ui.input({ prompt = prompt, completion = completion }, on_confirm)
-end
-
 -- Filesystem callbacks
 local function file_path_callback()
-    prompt_for_path('File path: ', 'file', function(file)
+    vim.ui.input({ prompt = 'File path: ', completion = 'file' }, function(file)
         local stat = file and vim.uv.fs_stat(file)
         if not (stat and stat.type == 'file') then
             vim.notify(string.format('File not found: %s', file), vim.log.levels.ERROR)
@@ -36,7 +31,7 @@ local function file_path_callback()
 end
 
 local function directory_callback(chat)
-    prompt_for_path('Context dir: ', 'dir', function(dir)
+    vim.ui.input({ prompt = 'Context dir: ', completion = 'dir' }, function(dir)
         dir = vim.fs.normalize(vim.trim(dir)):gsub('/$', '')
         vim.cmd.redraw({ bang = true })
 
@@ -276,7 +271,7 @@ local function add_tmux_pane_context_incremental(chat, target)
 end
 
 local function tmux_callback(chat)
-    prompt_for_path('tmux window.pane (default 1.2): ', nil, function(target)
+    vim.ui.input({ prompt = 'tmux window.pane (default 1.2): ' }, function(target)
         target = vim.trim(target or '')
         if target == '' then
             target = '1.2'
