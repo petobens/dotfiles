@@ -22,7 +22,6 @@ function M.setup()
                 openai_gpt_54 = adapter_config.openai_gpt_54,
                 openai_gpt_5_nano = adapter_config.openai_gpt_5_nano,
                 openai_gpt_5_nano_legacy = adapter_config.openai_gpt_5_nano_legacy,
-                gemini_pro_3 = adapter_config.gemini_pro_3,
                 gemini_flash_3 = adapter_config.gemini_flash_3,
                 ollama_qwen35_08b = adapter_config.ollama_qwen35_08b,
                 tavily = adapter_config.tavily,
