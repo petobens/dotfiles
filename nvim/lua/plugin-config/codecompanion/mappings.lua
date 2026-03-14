@@ -46,33 +46,7 @@ function M.chat_window.open_debug(chat_obj)
     end, 1)
 end
 
--- CodeCompanion global mapping callbacks
-local function explore_open_chats()
-    codecompanion.actions()
-    vim.defer_fn(function()
-        local picker =
-            telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
-        picker:move_selection(-1)
-        telescope_actions.select_default(picker)
-    end, 250)
-end
-
-local function paste_selection_to_chat()
-    codecompanion.add()
-    if vim.bo.filetype ~= 'codecompanion' then
-        window_helpers.try_focus_chat_float()
-        vim.api.nvim_feedkeys(vim.keycode('<Esc>'), 'n', false)
-    end
-end
-
-local function explain_selection()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local code = u.get_selection()
-    vim.cmd.normal({ vim.keycode('<Esc>'), bang = true })
-    chat_helpers.run_slash_command('explain_code', { bufnr = bufnr, code = code })
-end
-
--- CodeCompanion filetype-local mapping callbacks
+-- CodeCompanion chat filetype-local mapping callbacks
 local function insert_last_user_prompt()
     vim.cmd.stopinsert()
     local last = state_helpers.get_last_user_prompt()
@@ -217,7 +191,33 @@ local function setup_filetype_mappings()
     })
 end
 
--- Global mappings registration
+-- CodeCompanion global mapping callbacks
+local function explore_open_chats()
+    codecompanion.actions()
+    vim.defer_fn(function()
+        local picker =
+            telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
+        picker:move_selection(-1)
+        telescope_actions.select_default(picker)
+    end, 250)
+end
+
+local function paste_selection_to_chat()
+    codecompanion.add()
+    if vim.bo.filetype ~= 'codecompanion' then
+        window_helpers.try_focus_chat_float()
+        vim.api.nvim_feedkeys(vim.keycode('<Esc>'), 'n', false)
+    end
+end
+
+local function explain_selection()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local code = u.get_selection()
+    vim.cmd.normal({ vim.keycode('<Esc>'), bang = true })
+    chat_helpers.run_slash_command('explain_code', { bufnr = bufnr, code = code })
+end
+
+-- CodeCompanion global mappings
 local function setup_global_mappings()
     vim.keymap.set('n', '<Leader>cg', window_helpers.focus_or_toggle_chat, {
         desc = 'Toggle CodeCompanion chat',
