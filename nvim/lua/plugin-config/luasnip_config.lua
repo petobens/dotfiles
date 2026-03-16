@@ -1,3 +1,5 @@
+local ftf = require('luasnip.extras.filetype_functions')
+local ls_util = require('luasnip.util.util')
 local luasnip = require('luasnip')
 local types = require('luasnip.util.types')
 
@@ -43,9 +45,28 @@ function _G.LuaSnipConfig.filepart(part)
     end
 end
 
+local function safe_from_pos_or_filetype()
+    local ok, parser = pcall(vim.treesitter.get_parser, 0)
+    if ok and parser then
+        local cursor = ls_util.get_cursor_0ind()
+        local ok_langtree, langtree = pcall(parser.language_for_range, parser, {
+            cursor[1],
+            cursor[2],
+            cursor[1],
+            cursor[2],
+        })
+        if ok_langtree and langtree then
+            local fts = vim.treesitter.language.get_filetypes(langtree:lang())
+            vim.list_extend(fts, ftf.from_filetype())
+            return fts
+        end
+    end
+    return ftf.from_filetype()
+end
+
 -- Setup
 luasnip.setup({
-    ft_func = require('luasnip.extras.filetype_functions').from_pos_or_filetype,
+    ft_func = safe_from_pos_or_filetype,
     history = true, -- allow to jump back into exited (last) snippet
     enable_autosnippets = true,
     update_events = 'TextChanged,TextChangedI',
