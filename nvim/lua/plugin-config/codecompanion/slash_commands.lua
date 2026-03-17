@@ -267,7 +267,7 @@ local function changelog_callback(chat, opts)
     chat:add_buf_message({
         role = 'user',
         content = string.format(
-            prompt_library.prompt('changelog_writer'),
+            prompt_library.prompt('changelog_generator'),
             table.concat(commit_msgs, '\n---\n')
         ),
     })

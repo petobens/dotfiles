@@ -5,10 +5,10 @@ M.SYSTEM_ROLE = '󰮥 Helpful Assistant'
 
 -- Prompt library config
 local PROMPT_LIBRARY_CONFIG = {
-    formatting_file = 'response_formatting_instructions',
+    formatting_file = 'response_formatting',
     prompt_md_files = {
         'bash_developer',
-        'changelog_writer',
+        'changelog_generator',
         'code_reviewer',
         'conventional_commits',
         'explain_code',
