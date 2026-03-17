@@ -20,6 +20,7 @@ local PROMPT_LIBRARY_CONFIG = {
         'pydocs',
         'python_developer',
         'quickfix',
+        'slides_generator',
         'sql_developer',
         'translator_spa_eng',
         'writer_at_work',
@@ -244,6 +245,25 @@ local function meeting_copilot_prompt()
     )
 end
 
+local function slides_generator_prompt()
+    return build_prompt(
+        'chat',
+        'Act as a slides strategy writing assistant.',
+        'slides_role',
+        M.prompt('slides_generator'),
+        {
+            context = {
+                {
+                    type = 'file',
+                    path = {
+                        '/home/pedro/git-repos/private/notes/mutt/leadership/meetings/quarterly/2026/2026-Q1/ops_plan_2026.md',
+                    },
+                },
+            },
+        }
+    )
+end
+
 -- Prompt library assembly
 function M.build()
     return {
@@ -258,6 +278,7 @@ function M.build()
         ['󰗊 Translator'] = translator_prompt(),
         ['󰧷 GSheets Expert'] = gsheets_expert_prompt(),
         ['󰦑 Meeting Copilot'] = meeting_copilot_prompt(),
+        ['󰐨 Slides Generator'] = slides_generator_prompt(),
     }
 end
 
