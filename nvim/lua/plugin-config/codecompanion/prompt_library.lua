@@ -117,7 +117,7 @@ local function build_prompt(interaction, description, alias, content, extra)
     }, extra or {})
 end
 
--- Prompt definitions
+-- General assistant
 local function helpful_assistant_prompt()
     return build_prompt(
         'chat',
@@ -127,6 +127,7 @@ local function helpful_assistant_prompt()
     )
 end
 
+-- Languages and expertise
 local function bash_developer_prompt()
     return build_prompt(
         'chat',
@@ -192,6 +193,25 @@ local function sql_developer_prompt()
     )
 end
 
+local function gsheets_expert_prompt()
+    return build_prompt(
+        'chat',
+        'Act as a Google Sheets expert.',
+        'gsheets_role',
+        M.prompt('gsheets_expert')
+    )
+end
+
+-- Work and communication
+local function translator_prompt()
+    return build_prompt(
+        'chat',
+        'Act as a translator from Spanish to English.',
+        'translator_role',
+        M.prompt('translator_spa_eng')
+    )
+end
+
 local function writer_at_work_prompt()
     return build_prompt(
         'chat',
@@ -211,24 +231,6 @@ local function writer_at_work_prompt()
                 },
             },
         }
-    )
-end
-
-local function translator_prompt()
-    return build_prompt(
-        'chat',
-        'Act as a translator from Spanish to English.',
-        'translator_role',
-        M.prompt('translator_spa_eng')
-    )
-end
-
-local function gsheets_expert_prompt()
-    return build_prompt(
-        'chat',
-        'Act as a Google Sheets expert.',
-        'gsheets_role',
-        M.prompt('gsheets_expert')
     )
 end
 
@@ -267,16 +269,19 @@ end
 -- Prompt library assembly
 function M.build()
     return {
+        -- General assistant
         [M.SYSTEM_ROLE] = helpful_assistant_prompt(),
+        -- Languages and expertise
         [' Bash Developer'] = bash_developer_prompt(),
         [' LaTeX Developer'] = latex_developer_prompt(),
         [' Lua Developer'] = lua_developer_prompt(),
         [' Python Developer'] = python_developer_prompt(),
         [' PyDocs'] = pydocs_prompt(),
         [' SQL Developer'] = sql_developer_prompt(),
-        [' Writer at Work'] = writer_at_work_prompt(),
-        ['󰗊 Translator'] = translator_prompt(),
         ['󰧷 GSheets Expert'] = gsheets_expert_prompt(),
+        -- Work and communication
+        ['󰗊 Translator'] = translator_prompt(),
+        [' Writer at Work'] = writer_at_work_prompt(),
         ['󰦑 Meeting Copilot'] = meeting_copilot_prompt(),
         ['󰐨 Slides Generator'] = slides_generator_prompt(),
     }
