@@ -8,25 +8,30 @@ local TAVILY_API_KEY = 'cmd:pass show tavily/yahoomail/api-key'
 
 M.MODEL_CONTEXT_WINDOWS = {
     ['gpt-5.4'] = 400000,
-    ['gpt-5-nano'] = 400000,
+    ['gpt-5.4-nano'] = 400000,
     ['gemini-3-flash-preview'] = 1048576,
     ['qwen3.5:0.8b'] = 32768,
 }
 
+-- Helpers
+local function disabled()
+    return false
+end
+
 -- OpenAI
-function M.openai_gpt_54()
+local function openai_responses_adapter(name, model, stream)
     return adapters.extend('openai_responses', {
-        name = 'openai_gpt_54',
+        name = name,
         env = { api_key = OPENAI_API_KEY },
         schema = {
             model = {
-                default = 'gpt-5.4',
+                default = model,
                 choices = {
-                    ['gpt-5.4'] = {
+                    [model] = {
                         opts = {
                             has_vision = true,
                             can_reason = true,
-                            stream = true,
+                            stream = stream,
                         },
                     },
                 },
@@ -34,49 +39,31 @@ function M.openai_gpt_54()
             ['reasoning.effort'] = { default = 'low' },
             verbosity = { default = 'low' },
             top_p = {
-                enabled = function()
-                    return false
-                end,
+                enabled = disabled,
             },
         },
         available_tools = {
             ['web_search'] = {
-                enabled = function()
-                    return false
-                end,
+                enabled = disabled,
             },
         },
     })
 end
 
-function M.openai_gpt_5_nano()
-    return adapters.extend('openai_responses', {
-        name = 'openai_gpt_5_nano',
-        env = { api_key = OPENAI_API_KEY },
-        schema = {
-            model = {
-                default = 'gpt-5-nano',
-                choices = {
-                    ['gpt-5-nano'] = {
-                        opts = {
-                            has_vision = true,
-                            can_reason = true,
-                            stream = false,
-                        },
-                    },
-                },
-            },
-            ['reasoning.effort'] = { default = 'minimal' },
-        },
-    })
+function M.openai_gpt_54()
+    return openai_responses_adapter('openai_gpt_54', 'gpt-5.4', true)
 end
 
-function M.openai_gpt_5_nano_legacy()
+function M.openai_gpt_54_nano()
+    return openai_responses_adapter('openai_gpt_54_nano', 'gpt-5.4-nano', false)
+end
+
+function M.openai_gpt_54_nano_legacy()
     return adapters.extend('openai', {
-        name = 'openai_gpt_5_nano_legacy',
+        name = 'openai_gpt_54_nano_legacy',
         env = { api_key = OPENAI_API_KEY },
         schema = {
-            model = { default = 'gpt-5-nano' },
+            model = { default = 'gpt-5.4-nano' },
             reasoning_effort = { default = 'minimal' },
         },
     })

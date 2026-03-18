@@ -20,8 +20,8 @@ function M.setup()
                     show_model_choices = false,
                 },
                 openai_gpt_54 = adapter_config.openai_gpt_54,
-                openai_gpt_5_nano = adapter_config.openai_gpt_5_nano,
-                openai_gpt_5_nano_legacy = adapter_config.openai_gpt_5_nano_legacy,
+                openai_gpt_54_nano = adapter_config.openai_gpt_54_nano,
+                openai_gpt_54_nano_legacy = adapter_config.openai_gpt_54_nano_legacy,
                 gemini_flash_3 = adapter_config.gemini_flash_3,
                 ollama_qwen35_08b = adapter_config.ollama_qwen35_08b,
                 tavily = adapter_config.tavily,
@@ -155,7 +155,7 @@ function M.setup()
 
             -- Inline
             inline = {
-                adapter = 'openai_gpt_5_nano',
+                adapter = 'openai_gpt_54_nano',
             },
 
             -- Shared
@@ -178,8 +178,8 @@ function M.setup()
                 opts = {
                     auto_generate_title = u.is_online(),
                     title_generation_opts = {
-                        adapter = 'openai_gpt_5_nano_legacy',
-                        model = 'gpt-5-nano',
+                        adapter = 'openai_gpt_54_nano_legacy',
+                        model = 'gpt-5.4-nano',
                         refresh_every_n_prompts = 3,
                         max_refreshes = 10,
                     },
