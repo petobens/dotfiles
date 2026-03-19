@@ -144,7 +144,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- Enable completion triggered by <c-x><c-o>
         vim.bo[e.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
         -- Disable lsp based color highlighting since we use colorizer plugin
-        vim.lsp.document_color.enable(false, e.buf)
+        vim.lsp.document_color.enable(false, { bufnr = e.buf })
 
         -- Mappings
         vim.keymap.set('n', '<Leader>jd', function()
