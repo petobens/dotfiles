@@ -24,6 +24,7 @@ require('nvim-treesitter').install({
 })
 
 -- Ft/Langugage register
+vim.treesitter.language.register('markdown', 'md')
 vim.treesitter.language.register('markdown', 'blink-cmp-documentation')
 vim.treesitter.language.register('markdown', 'codecompanion')
 vim.treesitter.language.register('yaml', 'ghaction')
