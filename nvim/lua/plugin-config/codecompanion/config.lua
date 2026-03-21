@@ -6,6 +6,7 @@ local adapter_config = require('plugin-config.codecompanion.adapters')
 local mappings = require('plugin-config.codecompanion.mappings')
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 local slash_commands = require('plugin-config.codecompanion.slash_commands')
+local tools = require('plugin-config.codecompanion.tools')
 local ui = require('plugin-config.codecompanion.ui')
 
 local M = {}
@@ -137,33 +138,8 @@ function M.setup()
                 -- Slash commands
                 slash_commands = slash_commands.build(),
                 -- Tools
-                tools = {
-                    read_file = {
-                        opts = {
-                            require_approval_before = false,
-                        },
-                    },
-                    groups = {
-                        ws_agent = {
-                            description = 'Agent with workspace file editing and command execution',
-                            tools = {
-                                'create_file',
-                                'file_search',
-                                'get_changed_files',
-                                'grep_search',
-                                'insert_edit_into_file',
-                                'read_file',
-                                'run_command',
-                            },
-                            opts = {
-                                collapse_tools = true,
-                                ignore_system_prompt = false,
-                                ignore_tool_system_prompt = false,
-                            },
-                        },
-                    },
-                },
-                -- Editor context
+                tools = tools.build(),
+                -- Editor context (variables)
                 editor_context = {
                     ['buffer'] = {
                         opts = {
