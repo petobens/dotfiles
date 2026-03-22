@@ -99,6 +99,17 @@ function M.chat_keymaps()
     }
 end
 
+-- Shared interactions keymaps
+function M.shared_keymaps()
+    return {
+        always_accept = { modes = { n = 'aa' } },
+        accept_change = { modes = { n = 'dp' } },
+        reject_change = { modes = { n = 'de' } },
+        next_hunk = { modes = { n = ']h' } },
+        previous_hunk = { modes = { n = '[h' } },
+    }
+end
+
 -- CodeCompanion chat filetype-local mapping callbacks
 local function insert_last_user_prompt()
     vim.cmd.stopinsert()
@@ -310,16 +321,6 @@ local function setup_global_mappings()
 end
 
 -- Public setup
-function M.shared_keymaps()
-    return {
-        always_accept = { modes = { n = 'aa' } },
-        accept_change = { modes = { n = 'dp' } },
-        reject_change = { modes = { n = 'de' } },
-        next_hunk = { modes = { n = ']h' } },
-        previous_hunk = { modes = { n = '[h' } },
-    }
-end
-
 function M.setup()
     setup_filetype_mappings()
     setup_global_mappings()
