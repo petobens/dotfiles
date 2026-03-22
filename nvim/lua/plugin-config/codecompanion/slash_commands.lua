@@ -1,5 +1,6 @@
 local codecompanion = require('codecompanion')
 
+local gws = require('plugin-config.codecompanion.tools.gws')
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
 local file_helpers = require('plugin-config.codecompanion.helpers').files
 local git_helpers = require('plugin-config.codecompanion.helpers').git
@@ -179,6 +180,77 @@ local function py_files_callback(chat)
     chat_helpers.add_context(_G.PyVenv.active_venv.project_files)
 end
 
+-- Google Workspace callbacks
+local function add_google_workspace_context(chat, kind, item, tag)
+    chat:add_context({
+        role = 'user',
+        content = string.format(
+            'Here is the content of the Google %s "%s" (ID: %s):\n\n%s',
+            kind,
+            item.title,
+            item.id,
+            item.text
+        ),
+    }, 'url', string.format('<%s>%s</%s>', tag, item.title, tag))
+end
+
+local function google_doc_callback(chat)
+    vim.ui.input({ prompt = 'Google Doc URL or ID: ' }, function(input)
+        if not input or vim.trim(input) == '' then
+            return
+        end
+
+        local doc, err = gws.read_google_doc(input)
+        if not doc then
+            vim.notify(err, vim.log.levels.ERROR)
+            return
+        end
+
+        add_google_workspace_context(chat, 'Doc', doc, 'gdoc')
+    end)
+end
+
+local function google_sheet_callback(chat)
+    vim.ui.input({ prompt = 'Google Sheet URL or ID: ' }, function(input)
+        if not input or vim.trim(input) == '' then
+            return
+        end
+
+        vim.ui.input({ prompt = 'Sheet range: ', default = 'A1:Z200' }, function(range)
+            if range == nil then
+                return
+            end
+
+            local sheet, err = gws.read_google_sheet(
+                input,
+                vim.trim(range) ~= '' and vim.trim(range) or nil
+            )
+            if not sheet then
+                vim.notify(err, vim.log.levels.ERROR)
+                return
+            end
+
+            add_google_workspace_context(chat, 'Sheet', sheet, 'gsheet')
+        end)
+    end)
+end
+
+local function google_slides_callback(chat)
+    vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
+        if not input or vim.trim(input) == '' then
+            return
+        end
+
+        local slides, err = gws.read_google_slides(input)
+        if not slides then
+            vim.notify(err, vim.log.levels.ERROR)
+            return
+        end
+
+        add_google_workspace_context(chat, 'Slides presentation', slides, 'gslides')
+    end)
+end
+
 -- Git callbacks
 local function conventional_commit_callback(chat, opts)
     local ctx = git_helpers.build_diff_context(opts)
@@ -345,6 +417,19 @@ function M.build()
         ['py_files'] = {
             description = 'Insert all project python files',
             callback = py_files_callback,
+        },
+        -- Google Workspace
+        ['gdoc'] = {
+            description = 'Read a Google Doc via gws',
+            callback = google_doc_callback,
+        },
+        ['gsheet'] = {
+            description = 'Read a Google Sheet via gws',
+            callback = google_sheet_callback,
+        },
+        ['gslides'] = {
+            description = 'Read a Google Slides presentation via gws',
+            callback = google_slides_callback,
         },
         -- Git
         ['conventional_commit'] = {
