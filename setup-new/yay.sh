@@ -184,6 +184,8 @@ $yay_cmd github-cli
 $yay_cmd gnupg
 $yay_cmd go-yq
 $yay_cmd gobject-introspection
+$yay_cmd google-cloud-cli
+$yay_cmd googleworkspace-cli
 $yay_cmd gopass
 $yay_cmd graphviz
 $yay_cmd hadolint-bin
