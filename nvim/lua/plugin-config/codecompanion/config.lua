@@ -89,53 +89,7 @@ function M.setup()
                         vim.cmd.edit(fname)
                     end,
                 },
-                keymaps = {
-                    create_chat = {
-                        modes = { n = '<A-c>', i = '<A-c>' },
-                        description = 'Create new chat',
-                        callback = function()
-                            vim.cmd.CodeCompanionChat()
-                        end,
-                    },
-                    close = { modes = { n = '<A-x>', i = '<A-x>' } },
-                    hide_chats = {
-                        modes = { n = '<C-c>', i = '<C-c>' },
-                        description = 'Hide chats',
-                        callback = mappings.chat_window.hide_chats,
-                    },
-                    next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
-                    previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
-                    next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
-                    send = {
-                        modes = { n = '<C-o>', i = '<C-o>' },
-                        description = 'Send message',
-                        callback = mappings.chat_window.send_message,
-                    },
-                    stop = { modes = { n = '<C-x>', i = '<C-x>' } },
-                    clear = { modes = { n = '<A-w>', i = '<A-w>' } },
-                    yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
-                    fold_code = { modes = { n = 'zc' } },
-                    goto_file_under_cursor = { modes = { n = 'gf' } },
-                    options = {
-                        modes = { n = '<A-h>', i = '<A-h>' },
-                        callback = mappings.chat_window.open_options,
-                    },
-                    change_adapter = { modes = { n = '<A-m>', i = '<A-m>' } },
-                    debug = {
-                        modes = { n = '<A-d>', i = '<A-d>' },
-                        callback = mappings.chat_window.open_debug,
-                    },
-                    buffer_sync_all = { modes = { n = '<Leader>rp' } },
-                    buffer_sync_diff = { modes = { n = '<Leader>rw' } },
-                    system_prompt = { modes = { n = '<Leader>ts' } },
-                    action_palette = {
-                        modes = { n = '<A-a>', i = '<A-a>' },
-                        description = 'Action palette',
-                        callback = function()
-                            vim.cmd.CodeCompanionActions()
-                        end,
-                    },
-                },
+                keymaps = mappings.chat_keymaps(),
                 -- Slash commands
                 slash_commands = slash_commands.build(),
                 -- Tools
@@ -149,21 +103,13 @@ function M.setup()
                     },
                 },
             },
-
             -- Inline
             inline = {
                 adapter = 'openai_gpt_54_nano',
             },
-
             -- Shared
             shared = {
-                keymaps = {
-                    always_accept = { modes = { n = 'aa' } },
-                    accept_change = { modes = { n = 'dp' } },
-                    reject_change = { modes = { n = 'de' } },
-                    next_hunk = { modes = { n = ']h' } },
-                    previous_hunk = { modes = { n = '[h' } },
-                },
+                keymaps = mappings.shared_keymaps(),
             },
         },
         -- Prompt library

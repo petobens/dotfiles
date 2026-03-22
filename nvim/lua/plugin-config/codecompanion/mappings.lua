@@ -11,21 +11,19 @@ local window_helpers = require('plugin-config.codecompanion.helpers').window
 local M = {}
 
 -- Chat window callbacks
-M.chat_window = {}
-
-function M.chat_window.hide_chats()
+local function hide_chats()
     codecompanion.toggle()
     vim.defer_fn(function()
         vim.cmd.stopinsert()
     end, 1)
 end
 
-function M.chat_window.send_message(chat_obj)
+local function send_message(chat_obj)
     vim.cmd.stopinsert()
     keymaps.send.callback(chat_obj)
 end
 
-function M.chat_window.open_options()
+local function open_options()
     keymaps.options.callback()
     vim.defer_fn(function()
         vim.cmd.stopinsert()
@@ -33,7 +31,7 @@ function M.chat_window.open_options()
     end, 1)
 end
 
-function M.chat_window.open_debug(chat_obj)
+local function open_debug(chat_obj)
     keymaps.debug.callback(chat_obj)
     vim.defer_fn(function()
         vim.cmd.stopinsert()
@@ -44,6 +42,61 @@ function M.chat_window.open_debug(chat_obj)
             vim.api.nvim_win_set_config(win_id, win_config)
         end
     end, 1)
+end
+
+-- Chat window keymaps
+function M.chat_keymaps()
+    return {
+        -- Chat lifecycle
+        create_chat = {
+            modes = { n = '<A-c>', i = '<A-c>' },
+            description = 'Create new chat',
+            callback = function()
+                vim.cmd.CodeCompanionChat()
+            end,
+        },
+        hide_chats = {
+            modes = { n = '<C-c>', i = '<C-c>' },
+            description = 'Hide chats',
+            callback = hide_chats,
+        },
+        close = { modes = { n = '<A-x>', i = '<A-x>' } },
+        clear = { modes = { n = '<A-w>', i = '<A-w>' } },
+        -- Message actions
+        send = {
+            modes = { n = '<C-o>', i = '<C-o>' },
+            description = 'Send message',
+            callback = send_message,
+        },
+        stop = { modes = { n = '<C-x>', i = '<C-x>' } },
+        yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
+        -- Navigation
+        next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
+        previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
+        next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
+        fold_code = { modes = { n = 'zc' } },
+        goto_file_under_cursor = { modes = { n = 'gf' } },
+        -- Secondary actions
+        action_palette = {
+            modes = { n = '<A-a>', i = '<A-a>' },
+            description = 'Action palette',
+            callback = function()
+                vim.cmd.CodeCompanionActions()
+            end,
+        },
+        options = {
+            modes = { n = '<A-h>', i = '<A-h>' },
+            callback = open_options,
+        },
+        change_adapter = { modes = { n = '<A-m>', i = '<A-m>' } },
+        debug = {
+            modes = { n = '<A-d>', i = '<A-d>' },
+            callback = open_debug,
+        },
+        system_prompt = { modes = { n = '<Leader>ts' } },
+        buffer_sync_all = { modes = { n = '<Leader>rp' } },
+        buffer_sync_diff = { modes = { n = '<Leader>rw' } },
+    }
 end
 
 -- CodeCompanion chat filetype-local mapping callbacks
@@ -257,6 +310,16 @@ local function setup_global_mappings()
 end
 
 -- Public setup
+function M.shared_keymaps()
+    return {
+        always_accept = { modes = { n = 'aa' } },
+        accept_change = { modes = { n = 'dp' } },
+        reject_change = { modes = { n = 'de' } },
+        next_hunk = { modes = { n = ']h' } },
+        previous_hunk = { modes = { n = '[h' } },
+    }
+end
+
 function M.setup()
     setup_filetype_mappings()
     setup_global_mappings()
