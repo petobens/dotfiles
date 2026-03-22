@@ -47,7 +47,7 @@ local function overseer_last_task(attach)
     vim.keymap.set('n', 'q', function()
         vim.cmd.close()
         vim.cmd.wincmd('p')
-    end, { buffer = true, desc = 'Close Overseer output window and return' })
+    end, { buf = true, desc = 'Close Overseer output window and return' })
 
     if attach then
         vim.cmd.startinsert()
@@ -76,7 +76,7 @@ vim.api.nvim_create_autocmd('FileType', {
             pcall(vim.api.nvim_win_close, 0, true)
             vim.cmd.wincmd('p')
         end, {
-            buffer = e.buf,
+            buf = e.buf,
             desc = 'Close OverseerList window and return to previous window',
         })
     end,

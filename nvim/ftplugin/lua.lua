@@ -68,35 +68,35 @@ vim.keymap.set(
     { 'n', 'i' },
     '<F7>',
     run_overseer,
-    { buffer = true, desc = 'Run lua with Overseer' }
+    { buf = true, desc = 'Run lua with Overseer' }
 )
 
 vim.keymap.set(
     { 'n', 'i' },
     '<F5>',
     run_tmux_pane,
-    { buffer = true, desc = 'Run lua in tmux pane' }
+    { buf = true, desc = 'Run lua in tmux pane' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>rf',
     run_toggleterm,
-    { buffer = true, desc = 'Run lua file in ToggleTerm' }
+    { buf = true, desc = 'Run lua file in ToggleTerm' }
 )
 
 vim.keymap.set('n', '<Leader>rl', function()
     vim.cmd.lua(vim.api.nvim_get_current_line())
-end, { buffer = true, desc = 'Run current line as Lua' })
+end, { buf = true, desc = 'Run current line as Lua' })
 
 vim.keymap.set('n', '<Leader>ri', function()
     vim.cmd.update()
     vim.cmd.luafile('%')
-end, { buffer = true, desc = 'Save and source current Lua file (run interpreter)' })
+end, { buf = true, desc = 'Save and source current Lua file (run interpreter)' })
 
 vim.keymap.set(
     'v',
     '<Leader>ri',
     vim.cmd.RunVisualLua,
-    { buffer = true, desc = 'Run visual selection (run interpreter)' }
+    { buf = true, desc = 'Run visual selection (run interpreter)' }
 )

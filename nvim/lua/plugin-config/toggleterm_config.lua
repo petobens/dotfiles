@@ -42,7 +42,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
             vim.schedule(function()
                 vim.cmd.close({ mods = { silent = true } })
             end)
-        end, { buffer = e.buf, desc = 'Hide toggleterm window' })
+        end, { buf = e.buf, desc = 'Hide toggleterm window' })
     end,
 })
 

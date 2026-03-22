@@ -91,13 +91,13 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set({ 'n', 'x' }, '<CR>', function()
             incremental_select(1)
         end, {
-            buffer = bufnr,
+            buf = bufnr,
             desc = 'Grow incremental selection',
         })
         vim.keymap.set({ 'n', 'x' }, '<BS>', function()
             incremental_select(-1)
         end, {
-            buffer = bufnr,
+            buf = bufnr,
             desc = 'Shrink incremental selection',
         })
     end,
@@ -233,10 +233,10 @@ vim.api.nvim_create_autocmd('FileType', {
     callback = function(e)
         vim.keymap.set({ 'x', 'o' }, 'aq', function()
             ts_select.select_textobject('@fence.outer', 'textobjects')
-        end, { buffer = e.buf, desc = 'Select around fenced code block' })
+        end, { buf = e.buf, desc = 'Select around fenced code block' })
 
         vim.keymap.set({ 'x', 'o' }, 'iq', function()
             ts_select.select_textobject('@fence.inner', 'textobjects')
-        end, { buffer = e.buf, desc = 'Select inside fenced code block' })
+        end, { buf = e.buf, desc = 'Select inside fenced code block' })
     end,
 })

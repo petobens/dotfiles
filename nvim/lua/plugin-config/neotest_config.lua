@@ -82,7 +82,7 @@ local function _parse_neotest_output(task, last_winid)
             vim.cmd.close()
             pcall(vim.api.nvim_set_current_win, calling_winid)
         end, {
-            buffer = true,
+            buf = true,
             desc = 'Close neotest output window and return to previous window',
         })
     end
@@ -285,7 +285,7 @@ vim.keymap.set('n', '<Leader>na', function()
     neotest_run(neotest.run.attach, { delete = false })
     vim.keymap.set('n', 'q', function()
         vim.cmd.close()
-    end, { buffer = true, desc = 'Close neotest attach window and return' })
+    end, { buf = true, desc = 'Close neotest attach window and return' })
     vim.cmd.stopinsert()
     set_output_window_layout()
     vim.cmd.startinsert()
@@ -321,7 +321,7 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
                 pcall(vim.api.nvim_win_close, 0, true)
                 vim.cmd.wincmd('p')
             end, {
-                buffer = e.buf,
+                buf = e.buf,
                 desc = 'Close neotest window and return to previous window',
             })
             -- Options

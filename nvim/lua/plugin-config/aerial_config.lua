@@ -73,7 +73,7 @@ vim.api.nvim_create_autocmd('FileType', {
             'n',
             '<C-t>',
             telescope_filter,
-            { buffer = e.buf, desc = 'Aerial: Telescope symbols' }
+            { buf = e.buf, desc = 'Aerial: Telescope symbols' }
         )
     end,
 })

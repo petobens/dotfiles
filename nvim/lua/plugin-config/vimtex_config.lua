@@ -73,55 +73,55 @@ vim.api.nvim_create_autocmd({ 'User' }, {
             'n',
             '<Leader>tc',
             '<plug>(vimtex-toc-open)',
-            { buffer = e.buf, remap = true, desc = 'Open TOC' }
+            { buf = e.buf, remap = true, desc = 'Open TOC' }
         )
         vim.keymap.set(
             'n',
             '<Leader>ce',
             '<plug>(vimtex-env-change)',
-            { buffer = e.buf, remap = true, desc = 'Change environment' }
+            { buf = e.buf, remap = true, desc = 'Change environment' }
         )
         vim.keymap.set(
             'n',
             '<Leader>ts',
             '<plug>(vimtex-env-toggle-star)',
-            { buffer = e.buf, remap = true, desc = 'Toggle starred environment' }
+            { buf = e.buf, remap = true, desc = 'Toggle starred environment' }
         )
         vim.keymap.set(
             'n',
             '<Leader>td',
             '<plug>(vimtex-delim-toggle-modifier)',
-            { buffer = e.buf, remap = true, desc = 'Toggle delimiter modifier' }
+            { buf = e.buf, remap = true, desc = 'Toggle delimiter modifier' }
         )
         vim.keymap.set(
             'i',
             '<A-d>',
             '<plug>(vimtex-delim-close)',
-            { buffer = e.buf, remap = true, desc = 'Close delimiter' }
+            { buf = e.buf, remap = true, desc = 'Close delimiter' }
         )
         vim.keymap.set(
             'n',
             'vim',
             'vi$',
-            { buffer = e.buf, remap = true, desc = 'Select inside $...$ (inner math)' }
+            { buf = e.buf, remap = true, desc = 'Select inside $...$ (inner math)' }
         )
         vim.keymap.set(
             'n',
             'vam',
             'va$',
-            { buffer = e.buf, remap = true, desc = 'Select around $...$ (around math)' }
+            { buf = e.buf, remap = true, desc = 'Select around $...$ (around math)' }
         )
         vim.keymap.set('n', '<Leader>cw', function()
             vim.cmd.VimtexCountWords({ bang = true })
             vim.cmd.wincmd('J')
             vim.cmd.wincmd('12_')
             vim.cmd.normal({ args = { 'G' }, bang = true, mods = { silent = true } })
-        end, { buffer = e.buf, desc = 'Count words' })
+        end, { buf = e.buf, desc = 'Count words' })
         vim.keymap.set(
             'n',
             '<Leader>vd',
             vim.cmd.VimtexDocPackage,
-            { buffer = e.buf, desc = 'View VimTeX doc for package' }
+            { buf = e.buf, desc = 'View VimTeX doc for package' }
         )
     end,
 })

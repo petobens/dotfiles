@@ -625,7 +625,7 @@ local custom_actions = transform_mod({
         local bufnr = picker.previewer.state.bufnr
         vim.keymap.set('n', '<C-h>', function()
             vim.api.nvim_set_current_win(picker.prompt_win)
-        end, { buffer = bufnr })
+        end, { buf = bufnr })
         vim.cmd(
             string.format(
                 'noautocmd lua vim.api.nvim_set_current_win(%s)',
@@ -715,8 +715,8 @@ vim.api.nvim_create_autocmd('FileType', {
         local prompt_bufnr = e.buf
 
         vim.opt_local.cursorline = false
-        vim.keymap.set('n', 'H', '^lll', { buffer = prompt_bufnr })
-        vim.keymap.set('n', 'L', '$', { buffer = prompt_bufnr })
+        vim.keymap.set('n', 'H', '^lll', { buf = prompt_bufnr })
+        vim.keymap.set('n', 'L', '$', { buf = prompt_bufnr })
 
         vim.schedule(function()
             local picker = action_state.get_current_picker(prompt_bufnr)
@@ -726,7 +726,7 @@ vim.api.nvim_create_autocmd('FileType', {
             if picker.prompt_title == 'Images' then
                 vim.keymap.set('i', '<CR>', function()
                     actions.select_default(prompt_bufnr)
-                end, { buffer = prompt_bufnr })
+                end, { buf = prompt_bufnr })
             end
         end)
     end,

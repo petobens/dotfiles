@@ -154,48 +154,48 @@ vim.api.nvim_create_autocmd('LspAttach', {
                 vim.cmd.split()
             end
             vim.lsp.buf.definition()
-        end, { buffer = e.buf, desc = 'Jump to definition (split/vsplit)' })
+        end, { buf = e.buf, desc = 'Jump to definition (split/vsplit)' })
         vim.keymap.set(
             'n',
             '<Leader>jD',
             vim.lsp.buf.declaration,
-            { buffer = e.buf, desc = 'Jump to declaration' }
+            { buf = e.buf, desc = 'Jump to declaration' }
         )
         vim.keymap.set(
             'n',
             '<Leader>ap',
             vim.lsp.buf.references,
-            { buffer = e.buf, desc = 'List references/appearances' }
+            { buf = e.buf, desc = 'List references/appearances' }
         )
         vim.keymap.set(
             'n',
             '<Leader>rn',
             vim.lsp.buf.rename,
-            { buffer = e.buf, desc = 'Rename symbol' }
+            { buf = e.buf, desc = 'Rename symbol' }
         )
         vim.keymap.set(
             'n',
             'K',
             vim.lsp.buf.hover,
-            { buffer = e.buf, desc = 'Show hover documentation' }
+            { buf = e.buf, desc = 'Show hover documentation' }
         )
         vim.keymap.set(
             'n',
             '<Leader>fs',
             vim.lsp.buf.signature_help,
-            { buffer = e.buf, desc = 'Show (function) signature help' }
+            { buf = e.buf, desc = 'Show (function) signature help' }
         )
         vim.keymap.set('n', '<Leader>ih', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-        end, { buffer = e.buf, desc = 'Toggle inlay hints' })
+        end, { buf = e.buf, desc = 'Toggle inlay hints' })
         vim.keymap.set(
             'n',
             '<Leader>cA',
             vim.lsp.buf.code_action,
-            { buffer = e.buf, desc = 'Code actions' }
+            { buf = e.buf, desc = 'Code actions' }
         )
         vim.keymap.set('n', '<Leader>dc', function()
             vim.lsp.document_color.enable(not vim.lsp.document_color.is_enabled())
-        end, { buffer = e.buf, desc = 'Toggle LSP document color highlighting' })
+        end, { buf = e.buf, desc = 'Toggle LSP document color highlighting' })
     end,
 })

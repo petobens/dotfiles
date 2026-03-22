@@ -254,58 +254,58 @@ vim.keymap.set(
     { 'n', 'i' },
     '<F7>',
     compile_latex,
-    { buffer = true, desc = 'Compile LaTeX (arara)' }
+    { buf = true, desc = 'Compile LaTeX (arara)' }
 )
 vim.keymap.set(
     'n',
     '<Leader>vp',
     view_pdf,
-    { buffer = true, desc = 'View PDF in Zathura' }
+    { buf = true, desc = 'View PDF in Zathura' }
 )
 vim.keymap.set(
     'n',
     '<Leader>sl',
     forward_search,
-    { buffer = true, desc = 'Forward search (synctex)' }
+    { buf = true, desc = 'Forward search (synctex)' }
 )
 vim.keymap.set(
     'n',
     '<Leader>da',
     delete_aux_files,
-    { buffer = true, desc = 'Delete auxiliary files' }
+    { buf = true, desc = 'Delete auxiliary files' }
 )
 vim.keymap.set('n', '<Leader>cm', function()
     convert_pandoc('md')
-end, { buffer = true, desc = 'Convert to Markdown (pandoc)' })
+end, { buf = true, desc = 'Convert to Markdown (pandoc)' })
 vim.keymap.set('n', '<Leader>cx', function()
     convert_pandoc('docx')
-end, { buffer = true, desc = 'Convert to DOCX (pandoc)' })
+end, { buf = true, desc = 'Convert to DOCX (pandoc)' })
 
 ---- Editing
 vim.keymap.set('n', '<Leader>em', function()
     file_edit('main.tex')
-end, { buffer = true, desc = 'Edit main.tex' })
+end, { buf = true, desc = 'Edit main.tex' })
 vim.keymap.set('n', '<Leader>ep', function()
     file_edit('preamble.tex')
-end, { buffer = true, desc = 'Edit preamble.tex' })
+end, { buf = true, desc = 'Edit preamble.tex' })
 vim.keymap.set('n', '<Leader>eb', function()
     file_edit('bib')
-end, { buffer = true, desc = 'Edit bibliography' })
+end, { buf = true, desc = 'Edit bibliography' })
 vim.keymap.set('n', '<Leader>el', function()
     file_edit('log')
-end, { buffer = true, desc = 'Edit log file' })
+end, { buf = true, desc = 'Edit log file' })
 vim.keymap.set('n', '<Leader>ef', function()
     file_edit('float')
-end, { buffer = true, desc = 'Edit float file' })
+end, { buf = true, desc = 'Edit float file' })
 
 ---- Tables
-vim.keymap.set('i', '<A-c>', '<ESC>f&lli', { buffer = true, desc = 'Table: next column' })
-vim.keymap.set('i', '<A-r>', '<ESC>j0f&hi', { buffer = true, desc = 'Table: next row' })
+vim.keymap.set('i', '<A-c>', '<ESC>f&lli', { buf = true, desc = 'Table: next column' })
+vim.keymap.set('i', '<A-r>', '<ESC>j0f&hi', { buf = true, desc = 'Table: next row' })
 
 ---- Lists
 vim.keymap.set(
     'i',
     '<CR>',
     continue_list,
-    { expr = true, buffer = true, desc = 'Continue LaTeX list' }
+    { expr = true, buf = true, desc = 'Continue LaTeX list' }
 )

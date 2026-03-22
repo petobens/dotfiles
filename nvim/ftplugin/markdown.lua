@@ -138,11 +138,11 @@ end
 ---- Compiling
 vim.keymap.set('n', '<F8>', function()
     convert_pandoc('pdf')
-end, { buffer = true, desc = 'Convert markdown to PDF (pandoc)' })
+end, { buf = true, desc = 'Convert markdown to PDF (pandoc)' })
 
 vim.keymap.set('n', '<F9>', function()
     convert_pandoc('html')
-end, { buffer = true, desc = 'Convert markdown to HTML (pandoc)' })
+end, { buf = true, desc = 'Convert markdown to HTML (pandoc)' })
 
 vim.keymap.set('n', '<Leader>vp', function()
     vim.system({
@@ -150,21 +150,21 @@ vim.keymap.set('n', '<Leader>vp', function()
         '--fork',
         vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$') .. '.pdf',
     })
-end, { buffer = true, desc = 'View PDF in Zathura' })
+end, { buf = true, desc = 'View PDF in Zathura' })
 
 ---- Lists
 vim.keymap.set(
     'i',
     '<CR>',
     continue_list,
-    { expr = true, buffer = true, desc = 'Continue markdown list' }
+    { expr = true, buf = true, desc = 'Continue markdown list' }
 )
 
 vim.keymap.set(
     { 'n', 'v' },
     '<Leader>ct',
     toggle_checklist,
-    { buffer = true, desc = 'Toggle checklist state (checklist toggle)' }
+    { buf = true, desc = 'Toggle checklist state (checklist toggle)' }
 )
 
 --- Sphinx (html)
@@ -172,21 +172,21 @@ vim.keymap.set(
     'n',
     '<F7>',
     run_sphinx_build,
-    { buffer = true, desc = 'Build Sphinx docs' }
+    { buf = true, desc = 'Build Sphinx docs' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>da',
     clean_sphinx_build,
-    { buffer = true, desc = 'Delete Sphinx build auxiliary files' }
+    { buf = true, desc = 'Delete Sphinx build auxiliary files' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>vd',
     view_sphinx_docs,
-    { buffer = true, desc = 'View Sphinx HTML docs' }
+    { buf = true, desc = 'View Sphinx HTML docs' }
 )
 
 --- Misc
@@ -194,5 +194,5 @@ vim.keymap.set(
     'n',
     '<Leader>tc',
     'gO',
-    { buffer = true, remap = true, desc = 'Show TOC' }
+    { buf = true, remap = true, desc = 'Show TOC' }
 )

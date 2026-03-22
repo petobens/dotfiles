@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd('FileType', {
             'n',
             '<Leader>rm',
             toggle_mdmath,
-            { buffer = bufnr, desc = 'Toggle MdMath equation rendering' }
+            { buf = bufnr, desc = 'Toggle MdMath equation rendering' }
         )
     end,
 })

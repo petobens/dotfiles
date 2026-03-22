@@ -33,35 +33,35 @@ vim.api.nvim_create_autocmd('FileType', {
             'n',
             'q',
             u.quit_return,
-            { buffer = e.buf, desc = 'Quit Fugitive and return to previous window' }
+            { buf = e.buf, desc = 'Quit Fugitive and return to previous window' }
         )
         vim.keymap.set(
             'n',
             ']h',
             ']c',
-            { buffer = e.buf, remap = true, desc = 'Next hunk' }
+            { buf = e.buf, remap = true, desc = 'Next hunk' }
         )
         vim.keymap.set(
             'n',
             '[h',
             '[c',
-            { buffer = e.buf, remap = true, desc = 'Previous hunk' }
+            { buf = e.buf, remap = true, desc = 'Previous hunk' }
         )
         vim.keymap.set('n', '<Leader>gp', function()
             vim.cmd.Git('push')
-        end, { buffer = e.buf, desc = 'Push' })
+        end, { buf = e.buf, desc = 'Push' })
 
         vim.keymap.set('n', '<Leader>gF', function()
             vim.cmd.Git('push --force-with-lease')
-        end, { buffer = e.buf, desc = 'Force push with lease' })
+        end, { buf = e.buf, desc = 'Force push with lease' })
 
         vim.keymap.set('n', '<Leader>gP', function()
             vim.cmd.Git('pull')
-        end, { buffer = e.buf, desc = 'Pull' })
+        end, { buf = e.buf, desc = 'Pull' })
 
         vim.keymap.set('n', 'ci', function()
             vim.cmd.Git('commit -n')
-        end, { buffer = e.buf, desc = 'Commit ignore check (no verify)' })
+        end, { buf = e.buf, desc = 'Commit ignore check (no verify)' })
 
         vim.keymap.set('n', '<Leader>nd', function()
             local file = vim.fn.FugitiveFind(vim.fn.expand('<cfile>'))
@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.log.levels.INFO
             )
             vim.system({ 'nbdiff-web', 'HEAD', file }, { detach = true })
-        end, { buffer = e.buf, desc = 'Open nbdiff-web for file under cursor' })
+        end, { buf = e.buf, desc = 'Open nbdiff-web for file under cursor' })
     end,
 })
 
@@ -94,13 +94,13 @@ vim.api.nvim_create_autocmd('FileType', {
             'n',
             'q',
             u.quit_return,
-            { buffer = e.buf, desc = 'Quit and return to previous window' }
+            { buf = e.buf, desc = 'Quit and return to previous window' }
         )
         vim.keymap.set(
             'n',
             '<Leader>gh',
             open_file_at_commit_split,
-            { buffer = e.buf, desc = 'Open file at commit in split (diff --git line)' }
+            { buf = e.buf, desc = 'Open file at commit in split (diff --git line)' }
         )
     end,
 })
@@ -119,7 +119,7 @@ vim.api.nvim_create_autocmd('FileType', {
             vim.cmd.normal({ args = { 'dd' }, bang = true })
             vim.cmd.update({ mods = { silent = true, noautocmd = true } })
             vim.cmd.bd()
-        end, { buffer = e.buf, desc = 'Abort commit' })
+        end, { buf = e.buf, desc = 'Abort commit' })
     end,
 })
 

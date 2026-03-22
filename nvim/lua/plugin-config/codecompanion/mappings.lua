@@ -69,14 +69,14 @@ local function setup_codecompanion_filetype_mappings(e)
     local bufnr = e.buf
 
     vim.keymap.set('i', '<C-h>', '<Esc><C-w>h', {
-        buffer = bufnr,
+        buf = bufnr,
         desc = 'Move to left window',
     })
 
     vim.keymap.set({ 'i', 'n' }, '<A-p>', function()
         local chat_obj = codecompanion.buf_get_chat(bufnr)
         vim.print(string.format('Model Params:\n%s', vim.inspect(chat_obj.settings)))
-    end, { buffer = bufnr, desc = 'Show model params' })
+    end, { buf = bufnr, desc = 'Show model params' })
 
     vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
         local system_role = state_helpers.get_current_system_role_prompt()
@@ -84,17 +84,17 @@ local function setup_codecompanion_filetype_mappings(e)
             vim.print(system_role)
         end
     end, {
-        buffer = bufnr,
+        buf = bufnr,
         desc = 'Show system role prompt',
     })
 
     vim.keymap.set({ 'i', 'n' }, '<C-p>', insert_last_user_prompt, {
-        buffer = bufnr,
+        buf = bufnr,
         desc = 'Insert last user prompt',
     })
 
     vim.keymap.set({ 'n', 'i' }, '<A-t>', toggle_chat_zoom, {
-        buffer = bufnr,
+        buf = bufnr,
         desc = 'Toggle CodeCompanion zoom',
     })
 end
@@ -104,7 +104,7 @@ local function setup_qf_filetype_mappings(args)
     vim.keymap.set('n', '<Leader>qf', function()
         chat_helpers.run_slash_command('qfix')
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Explain quickfix diagnostics',
     })
 end
@@ -114,7 +114,7 @@ local function setup_fugitive_filetype_mappings(args)
     vim.keymap.set('n', '<Leader>cc', function()
         chat_helpers.run_slash_command('conventional_commit')
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Generate conventional commit message',
     })
 
@@ -130,14 +130,14 @@ local function setup_fugitive_filetype_mappings(args)
             end
         )
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Conventional commit with base branch',
     })
 
     vim.keymap.set('n', '<Leader>cr', function()
         chat_helpers.run_slash_command('code_review')
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Perform code review',
     })
 
@@ -153,14 +153,14 @@ local function setup_fugitive_filetype_mappings(args)
             end
         )
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Code review with base branch',
     })
 
     vim.keymap.set('n', '<Leader>cl', function()
         chat_helpers.run_slash_command('changelog')
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Generate changelog since last release',
     })
 end
