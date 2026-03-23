@@ -1,6 +1,9 @@
 -- luacheck:ignore 631
 local M = {}
 
+-- Constants
+local DEFAULT_SHEET_RANGE = 'A1:AZ1000'
+
 -- String helpers
 local function trim(s)
     return vim.trim(s or '')
@@ -96,7 +99,7 @@ local function fetch_google_sheet(sheet_id, range)
         '--params',
         vim.json.encode({
             spreadsheetId = sheet_id,
-            range = range or 'A1:Z200',
+            range = range or DEFAULT_SHEET_RANGE,
         }),
     })
     if not stdout then
@@ -262,7 +265,8 @@ local function read_google_sheet(input, range)
 
     return {
         id = sheet_id,
-        title = trim(sheet.range) ~= '' and trim(sheet.range) or (range or 'A1:Z200'),
+        title = trim(sheet.range) ~= '' and trim(sheet.range)
+            or (range or DEFAULT_SHEET_RANGE),
         text = text,
     }
 end
@@ -328,20 +332,25 @@ function M.gsheet(chat)
             return
         end
 
-        vim.ui.input({ prompt = 'Sheet range: ', default = 'A1:Z200' }, function(range)
-            if range == nil then
-                return
-            end
+        vim.ui.input(
+            { prompt = 'Sheet range: ', default = DEFAULT_SHEET_RANGE },
+            function(range)
+                if range == nil then
+                    return
+                end
 
-            local sheet, err =
-                read_google_sheet(input, vim.trim(range) ~= '' and vim.trim(range) or nil)
-            if not sheet then
-                vim.notify(err, vim.log.levels.ERROR)
-                return
-            end
+                local sheet, err = read_google_sheet(
+                    input,
+                    vim.trim(range) ~= '' and vim.trim(range) or nil
+                )
+                if not sheet then
+                    vim.notify(err, vim.log.levels.ERROR)
+                    return
+                end
 
-            add_context(chat, 'Sheet', sheet, 'gsheet')
-        end)
+                add_context(chat, 'Sheet', sheet, 'gsheet')
+            end
+        )
     end)
 end
 
