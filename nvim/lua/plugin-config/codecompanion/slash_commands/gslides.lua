@@ -20,6 +20,50 @@ local function fetch_google_slides(presentation_id)
     return gw.decode_json(stdout, 'the Google Slides presentation')
 end
 
+-- Visual metadata
+local function format_dimension(dimension)
+    local magnitude = vim.tbl_get(dimension, 'magnitude')
+    local unit = vim.tbl_get(dimension, 'unit')
+
+    if type(magnitude) ~= 'number' then
+        return nil
+    end
+
+    return unit and ('%s %s'):format(magnitude, unit) or tostring(magnitude)
+end
+
+local function summarize_element(element, kind, extra)
+    local suffixes = {}
+
+    if extra and extra ~= '' then
+        table.insert(suffixes, extra)
+    end
+
+    local width = format_dimension(vim.tbl_get(element, 'size', 'width'))
+    local height = format_dimension(vim.tbl_get(element, 'size', 'height'))
+    if width and height then
+        table.insert(suffixes, ('size=%s x %s'):format(width, height))
+    end
+
+    local transform = element.transform
+    if type(transform) == 'table' then
+        local x = transform.translateX or 0
+        local y = transform.translateY or 0
+        local unit = transform.unit or ''
+        table.insert(
+            suffixes,
+            ('pos=(%s, %s)%s'):format(x, y, unit ~= '' and (' ' .. unit) or '')
+        )
+    end
+
+    local summary = ('[%s]'):format(kind)
+    if not vim.tbl_isempty(suffixes) then
+        summary = summary .. ' ' .. table.concat(suffixes, ', ')
+    end
+
+    return summary
+end
+
 local function collect_slide_page_elements(parts, page_elements)
     if type(page_elements) ~= 'table' then
         return
@@ -27,11 +71,36 @@ local function collect_slide_page_elements(parts, page_elements)
 
     for _, element in ipairs(page_elements) do
         local text_elements = vim.tbl_get(element, 'shape', 'text', 'textElements') or {}
+        local has_text = false
+
         for _, text_element in ipairs(text_elements) do
             local text_run = vim.tbl_get(text_element, 'textRun', 'content')
             if text_run then
+                has_text = true
                 gw.append_text(parts, text_run)
             end
+        end
+
+        if element.image then
+            gw.append_text(parts, summarize_element(element, 'image') .. '\n')
+        elseif element.table then
+            local rows = vim.tbl_get(element, 'table', 'rows') or '?'
+            local cols = vim.tbl_get(element, 'table', 'columns') or '?'
+            gw.append_text(
+                parts,
+                summarize_element(
+                    element,
+                    'table',
+                    ('rows=%s cols=%s'):format(rows, cols)
+                ) .. '\n'
+            )
+        elseif element.video then
+            gw.append_text(parts, summarize_element(element, 'video') .. '\n')
+        elseif element.sheetsChart then
+            gw.append_text(parts, summarize_element(element, 'chart') .. '\n')
+        elseif element.shape and not has_text then
+            local shape_type = vim.tbl_get(element, 'shape', 'shapeType')
+            gw.append_text(parts, summarize_element(element, 'shape', shape_type) .. '\n')
         end
     end
 end
@@ -77,10 +146,11 @@ local function read_google_slides(input)
         return nil, text_err
     end
 
+    local title = gw.trim(presentation.title)
+
     return {
         id = presentation_id,
-        title = gw.trim(presentation.title) ~= '' and gw.trim(presentation.title)
-            or 'Untitled presentation',
+        title = title ~= '' and title or 'Untitled presentation',
         text = text,
     }
 end
