@@ -188,7 +188,7 @@ local function sql_developer_prompt()
     return build_prompt(
         'chat',
         'Act as an expert SQL developer.',
-        'Sql_role',
+        'sql_role',
         M.prompt('sql_developer')
     )
 end

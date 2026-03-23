@@ -1,7 +1,7 @@
 -- luacheck:ignore 631
 local M = {}
 
--- Generic string helpers
+-- String helpers
 local function trim(s)
     return vim.trim(s or '')
 end
@@ -19,8 +19,8 @@ local function normalize_text(text)
     return vim.trim(text)
 end
 
--- Generic gws process helpers
-function M.decode_json(stdout, err_context)
+-- Process helpers
+local function decode_json(stdout, err_context)
     local ok, decoded = pcall(vim.json.decode, stdout or '')
     if not ok or type(decoded) ~= 'table' then
         return nil, ('gws returned invalid JSON for %s'):format(err_context)
@@ -29,7 +29,7 @@ function M.decode_json(stdout, err_context)
     return decoded
 end
 
-function M.run(args, opts)
+local function run(args, opts)
     local result = vim.system(args, vim.tbl_extend('force', { text = true }, opts or {}))
         :wait()
 
@@ -41,8 +41,8 @@ function M.run(args, opts)
     return result.stdout or ''
 end
 
--- URL/ID extraction helpers
-function M.extract_id(input, kind)
+-- Input parsing helpers
+local function extract_id(input, kind)
     input = trim(input)
     if input == '' then
         return nil, ('Missing Google %s URL or ID'):format(kind)
@@ -69,9 +69,9 @@ function M.extract_id(input, kind)
     return nil, ('Could not extract a Google %s ID from the provided value'):format(kind)
 end
 
--- Raw gws fetchers
-function M.fetch_google_doc(doc_id)
-    local stdout, run_err = M.run({
+-- API fetch helpers
+local function fetch_google_doc(doc_id)
+    local stdout, run_err = run({
         'gws',
         'docs',
         'documents',
@@ -83,11 +83,11 @@ function M.fetch_google_doc(doc_id)
         return nil, run_err
     end
 
-    return M.decode_json(stdout, 'the Google Doc')
+    return decode_json(stdout, 'the Google Doc')
 end
 
-function M.fetch_google_sheet(sheet_id, range)
-    local stdout, run_err = M.run({
+local function fetch_google_sheet(sheet_id, range)
+    local stdout, run_err = run({
         'gws',
         'sheets',
         'spreadsheets',
@@ -103,11 +103,11 @@ function M.fetch_google_sheet(sheet_id, range)
         return nil, run_err
     end
 
-    return M.decode_json(stdout, 'the Google Sheet')
+    return decode_json(stdout, 'the Google Sheet')
 end
 
-function M.fetch_google_slides(presentation_id)
-    local stdout, run_err = M.run({
+local function fetch_google_slides(presentation_id)
+    local stdout, run_err = run({
         'gws',
         'slides',
         'presentations',
@@ -119,10 +119,10 @@ function M.fetch_google_slides(presentation_id)
         return nil, run_err
     end
 
-    return M.decode_json(stdout, 'the Google Slides presentation')
+    return decode_json(stdout, 'the Google Slides presentation')
 end
 
--- Docs text extraction
+-- Content extraction helpers
 local function collect_doc_elements(parts, elements)
     if type(elements) ~= 'table' then
         return
@@ -149,7 +149,7 @@ local function collect_doc_elements(parts, elements)
     end
 end
 
-function M.google_doc_to_text(doc)
+local function google_doc_to_text(doc)
     local parts = {}
     collect_doc_elements(parts, vim.tbl_get(doc, 'body', 'content'))
 
@@ -161,8 +161,7 @@ function M.google_doc_to_text(doc)
     return text
 end
 
--- Sheets text extraction
-function M.google_sheet_to_text(sheet)
+local function google_sheet_to_text(sheet)
     local values = sheet.values or {}
     if vim.tbl_isempty(values) then
         return nil, 'The Google Sheet range appears to be empty'
@@ -182,7 +181,6 @@ function M.google_sheet_to_text(sheet)
     return normalize_text(table.concat(lines, '\n'))
 end
 
--- Slides text extraction
 local function collect_slide_page_elements(parts, page_elements)
     if type(page_elements) ~= 'table' then
         return
@@ -191,15 +189,15 @@ local function collect_slide_page_elements(parts, page_elements)
     for _, element in ipairs(page_elements) do
         local text_elements = vim.tbl_get(element, 'shape', 'text', 'textElements') or {}
         for _, text_element in ipairs(text_elements) do
-            local run = vim.tbl_get(text_element, 'textRun', 'content')
-            if run then
-                append_text(parts, run)
+            local text_run = vim.tbl_get(text_element, 'textRun', 'content')
+            if text_run then
+                append_text(parts, text_run)
             end
         end
     end
 end
 
-function M.google_slides_to_text(presentation)
+local function google_slides_to_text(presentation)
     local lines = {}
 
     for i, slide in ipairs(presentation.slides or {}) do
@@ -222,19 +220,19 @@ function M.google_slides_to_text(presentation)
     return text
 end
 
--- High-level read helpers
-function M.read_google_doc(input)
-    local doc_id, id_err = M.extract_id(input, 'docs')
+-- Read helpers
+local function read_google_doc(input)
+    local doc_id, id_err = extract_id(input, 'docs')
     if not doc_id then
         return nil, id_err
     end
 
-    local doc, fetch_err = M.fetch_google_doc(doc_id)
+    local doc, fetch_err = fetch_google_doc(doc_id)
     if not doc then
         return nil, fetch_err
     end
 
-    local text, text_err = M.google_doc_to_text(doc)
+    local text, text_err = google_doc_to_text(doc)
     if not text then
         return nil, text_err
     end
@@ -246,18 +244,18 @@ function M.read_google_doc(input)
     }
 end
 
-function M.read_google_sheet(input, range)
-    local sheet_id, id_err = M.extract_id(input, 'sheets')
+local function read_google_sheet(input, range)
+    local sheet_id, id_err = extract_id(input, 'sheets')
     if not sheet_id then
         return nil, id_err
     end
 
-    local sheet, fetch_err = M.fetch_google_sheet(sheet_id, range)
+    local sheet, fetch_err = fetch_google_sheet(sheet_id, range)
     if not sheet then
         return nil, fetch_err
     end
 
-    local text, text_err = M.google_sheet_to_text(sheet)
+    local text, text_err = google_sheet_to_text(sheet)
     if not text then
         return nil, text_err
     end
@@ -269,18 +267,18 @@ function M.read_google_sheet(input, range)
     }
 end
 
-function M.read_google_slides(input)
-    local presentation_id, id_err = M.extract_id(input, 'slides')
+local function read_google_slides(input)
+    local presentation_id, id_err = extract_id(input, 'slides')
     if not presentation_id then
         return nil, id_err
     end
 
-    local presentation, fetch_err = M.fetch_google_slides(presentation_id)
+    local presentation, fetch_err = fetch_google_slides(presentation_id)
     if not presentation then
         return nil, fetch_err
     end
 
-    local text, text_err = M.google_slides_to_text(presentation)
+    local text, text_err = google_slides_to_text(presentation)
     if not text then
         return nil, text_err
     end
@@ -291,6 +289,76 @@ function M.read_google_slides(input)
             or 'Untitled presentation',
         text = text,
     }
+end
+
+-- Chat context helpers
+local function add_context(chat, kind, item, tag)
+    chat:add_context({
+        role = 'user',
+        content = string.format(
+            'Here is the content of the Google %s "%s" (ID: %s):\n\n%s',
+            kind,
+            item.title,
+            item.id,
+            item.text
+        ),
+    }, 'url', string.format('<%s>%s</%s>', tag, item.title, tag))
+end
+
+-- Slash commands
+function M.gdoc(chat)
+    vim.ui.input({ prompt = 'Google Doc URL or ID: ' }, function(input)
+        if not input or vim.trim(input) == '' then
+            return
+        end
+
+        local doc, err = read_google_doc(input)
+        if not doc then
+            vim.notify(err, vim.log.levels.ERROR)
+            return
+        end
+
+        add_context(chat, 'Doc', doc, 'gdoc')
+    end)
+end
+
+function M.gsheet(chat)
+    vim.ui.input({ prompt = 'Google Sheet URL or ID: ' }, function(input)
+        if not input or vim.trim(input) == '' then
+            return
+        end
+
+        vim.ui.input({ prompt = 'Sheet range: ', default = 'A1:Z200' }, function(range)
+            if range == nil then
+                return
+            end
+
+            local sheet, err =
+                read_google_sheet(input, vim.trim(range) ~= '' and vim.trim(range) or nil)
+            if not sheet then
+                vim.notify(err, vim.log.levels.ERROR)
+                return
+            end
+
+            add_context(chat, 'Sheet', sheet, 'gsheet')
+        end)
+    end)
+end
+
+function M.gslides(chat)
+    vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
+        if not input or vim.trim(input) == '' then
+            return
+        end
+
+        local slides, err = read_google_slides(input)
+        if not slides then
+            vim.notify(err, vim.log.levels.ERROR)
+            return
+        end
+
+        add_context(chat, 'Slides presentation', slides, 'gslides')
+    end)
 end
 
 return M
