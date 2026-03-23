@@ -82,7 +82,7 @@ local function read_google_doc(input)
     }
 end
 
--- Slash commands
+-- Slash command
 function M.gdoc(chat)
     vim.ui.input({ prompt = 'Google Doc URL or ID: ' }, function(input)
         if not input or vim.trim(input) == '' then

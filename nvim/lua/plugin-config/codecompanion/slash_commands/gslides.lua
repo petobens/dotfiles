@@ -155,7 +155,7 @@ local function read_google_slides(input)
     }
 end
 
--- Slash commands
+-- Slash command
 function M.gslide(chat)
     vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
         if not input or vim.trim(input) == '' then

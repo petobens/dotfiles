@@ -2,6 +2,7 @@ local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
 
 local M = {}
 
+-- Constants
 local DEFAULT_RANGE = 'A1:AZ2000'
 
 -- API fetch
@@ -172,7 +173,7 @@ local function read_google_sheet(input)
     }
 end
 
--- Slash commands
+-- Slash command
 function M.gsheet(chat)
     vim.ui.input({ prompt = 'Google Sheet URL or ID: ' }, function(input)
         if not input or vim.trim(input) == '' then

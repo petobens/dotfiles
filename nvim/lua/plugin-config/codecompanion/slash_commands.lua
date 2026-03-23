@@ -1,6 +1,7 @@
 local coding = require('plugin-config.codecompanion.slash_commands.coding')
 local filesystem = require('plugin-config.codecompanion.slash_commands.filesystem')
 local gdocs = require('plugin-config.codecompanion.slash_commands.gdocs')
+local gdrive = require('plugin-config.codecompanion.slash_commands.gdrive')
 local git = require('plugin-config.codecompanion.slash_commands.git')
 local gsheets = require('plugin-config.codecompanion.slash_commands.gsheets')
 local gslides = require('plugin-config.codecompanion.slash_commands.gslides')
@@ -36,6 +37,10 @@ function M.build()
             callback = filesystem.py_files,
         },
         -- Google Workspace
+        ['gdrive'] = {
+            description = 'Search Google Drive files',
+            callback = gdrive.gdrive,
+        },
         ['gdoc'] = {
             description = 'Read a Google Doc',
             callback = gdocs.gdoc,
