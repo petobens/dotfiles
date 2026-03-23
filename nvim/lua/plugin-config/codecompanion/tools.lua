@@ -2,6 +2,11 @@ local M = {}
 
 local tools = {
     -- Builtin tools
+    grep_search = {
+        opts = {
+            require_approval_before = false,
+        },
+    },
     read_file = {
         opts = {
             require_approval_before = false,
