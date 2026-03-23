@@ -1,8 +1,9 @@
 local coding = require('plugin-config.codecompanion.slash_commands.coding')
 local filesystem = require('plugin-config.codecompanion.slash_commands.filesystem')
+local gdocs = require('plugin-config.codecompanion.slash_commands.gdocs')
 local git = require('plugin-config.codecompanion.slash_commands.git')
-local google_workspace =
-    require('plugin-config.codecompanion.slash_commands.google_workspace')
+local gsheets = require('plugin-config.codecompanion.slash_commands.gsheets')
+local gslides = require('plugin-config.codecompanion.slash_commands.gslides')
 local terminal = require('plugin-config.codecompanion.slash_commands.terminal')
 
 local M = {}
@@ -36,16 +37,16 @@ function M.build()
         },
         -- Google Workspace
         ['gdoc'] = {
-            description = 'Read a Google Doc via gws',
-            callback = google_workspace.gdoc,
+            description = 'Read a Google Doc',
+            callback = gdocs.gdoc,
         },
         ['gsheet'] = {
-            description = 'Read a Google Sheet via gws',
-            callback = google_workspace.gsheet,
+            description = 'Read a Google Sheet',
+            callback = gsheets.gsheet,
         },
         ['gslide'] = {
-            description = 'Read a Google Slides presentation via gws',
-            callback = google_workspace.gslide,
+            description = 'Read a Google Slides presentation',
+            callback = gslides.gslide,
         },
         -- Git
         ['conventional_commit'] = {
