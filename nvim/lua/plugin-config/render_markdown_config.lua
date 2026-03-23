@@ -117,6 +117,18 @@ require('render-markdown').setup({
                             icon = '󰨸 ',
                             highlight = 'Comment',
                         },
+                        gdoc = {
+                            icon = '󰈙 ',
+                            highlight = 'Comment',
+                        },
+                        gsheet = {
+                            icon = '󰧷 ',
+                            highlight = 'Comment',
+                        },
+                        gslides = {
+                            icon = '󰈩 ',
+                            highlight = 'Comment',
+                        },
                         group = {
                             icon = ' ',
                             highlight = 'Comment',
