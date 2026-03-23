@@ -8,7 +8,7 @@ local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
 local M = {}
 
--- Local helpers
+-- Helpers
 local function set_chat_win_title(e)
     local chatmap = {}
     local chats = codecompanion.buf_get_chat()
@@ -162,6 +162,32 @@ local function update_spinner()
     end
 end
 
+-- Chat display
+function M.chat_display()
+    return {
+        intro_message = '',
+        icons = {
+            buffer_sync_all = ' ',
+            buffer_sync_diff = ' ',
+        },
+        window = {
+            layout = 'float',
+            border = 'rounded',
+            height = vim.o.lines - 5,
+            width = 0.45,
+            relative = 'editor',
+            col = vim.o.columns,
+            row = 1,
+            opts = { winfixbuf = true },
+        },
+        debug_window = {
+            width = math.floor(vim.o.columns * 0.535),
+            height = vim.o.lines - 4,
+        },
+    }
+end
+
+-- Setup
 function M.setup()
     -- Icons
     devicons.set_icon({
