@@ -43,9 +43,9 @@ function M.build()
             description = 'Read a Google Sheet via gws',
             callback = google_workspace.gsheet,
         },
-        ['gslides'] = {
+        ['gslide'] = {
             description = 'Read a Google Slides presentation via gws',
-            callback = google_workspace.gslides,
+            callback = google_workspace.gslide,
         },
         -- Git
         ['conventional_commit'] = {

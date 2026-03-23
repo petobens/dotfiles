@@ -345,7 +345,7 @@ function M.gsheet(chat)
     end)
 end
 
-function M.gslides(chat)
+function M.gslide(chat)
     vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
         if not input or vim.trim(input) == '' then
             return
@@ -357,7 +357,7 @@ function M.gslides(chat)
             return
         end
 
-        add_context(chat, 'Slides presentation', slides, 'gslides')
+        add_context(chat, 'Slides presentation', slides, 'gslide')
     end)
 end
 
