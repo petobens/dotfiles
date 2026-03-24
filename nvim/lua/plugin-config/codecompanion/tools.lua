@@ -1,47 +1,104 @@
 local M = {}
 
+-- Constants
+local GROUP_OPTS = {
+    collapse_tools = true,
+    ignore_system_prompt = false,
+    ignore_tool_system_prompt = false,
+}
+local NO_APPROVAL_OPTS = {
+    require_approval_before = false,
+}
+local WRITE_APPROVAL_OPTS = {
+    require_approval_before = true,
+    allowed_in_yolo_mode = false,
+}
+
+-- Helpers
+local function module_tool(description, module_path, opts)
+    return {
+        description = description,
+        callback = function()
+            return require(module_path)
+        end,
+        opts = opts,
+    }
+end
+
+local function gdrive_tool(description, module_path, method_name, kind)
+    return {
+        description = description,
+        callback = function()
+            return require(module_path)[method_name](kind)
+        end,
+        opts = WRITE_APPROVAL_OPTS,
+    }
+end
+
+-- Tool definition
 local tools = {
     -- Builtin tools
     grep_search = {
-        opts = {
-            require_approval_before = false,
-        },
+        opts = NO_APPROVAL_OPTS,
     },
     read_file = {
-        opts = {
-            require_approval_before = false,
-        },
+        opts = NO_APPROVAL_OPTS,
     },
     -- Custom tools
     ---- Gsheets
-    gsheet_inspect = {
-        description = 'Inspect a Google Sheet structure via gws',
-        callback = function()
-            return require('plugin-config.codecompanion.tools.gsheet_inspect')
-        end,
-        opts = {
-            require_approval_before = false,
-        },
-    },
-    gsheet_read = {
-        description = 'Read a Google Sheet via gws',
-        callback = function()
-            return require('plugin-config.codecompanion.tools.gsheet_read')
-        end,
-        opts = {
-            require_approval_before = false,
-        },
-    },
-    gsheet_write = {
-        description = 'Write to a Google Sheet via gws',
-        callback = function()
-            return require('plugin-config.codecompanion.tools.gsheet_write')
-        end,
-        opts = {
-            require_approval_before = true,
-            allowed_in_yolo_mode = false,
-        },
-    },
+    gsheet_create = gdrive_tool(
+        'Create a Google Sheet via gws',
+        'plugin-config.codecompanion.tools.gdrive_create',
+        'create_tool',
+        'sheet'
+    ),
+    gsheet_delete = gdrive_tool(
+        'Delete a Google Sheet via gws',
+        'plugin-config.codecompanion.tools.gdrive_delete',
+        'delete_tool',
+        'sheet'
+    ),
+    gsheet_inspect = module_tool(
+        'Inspect a Google Sheet structure via gws',
+        'plugin-config.codecompanion.tools.gsheet_inspect',
+        NO_APPROVAL_OPTS
+    ),
+    gsheet_read = module_tool(
+        'Read a Google Sheet via gws',
+        'plugin-config.codecompanion.tools.gsheet_read',
+        NO_APPROVAL_OPTS
+    ),
+    gsheet_write = module_tool(
+        'Write to a Google Sheet via gws',
+        'plugin-config.codecompanion.tools.gsheet_write',
+        WRITE_APPROVAL_OPTS
+    ),
+    ---- Gdocs
+    gdoc_create = gdrive_tool(
+        'Create a Google Doc via gws',
+        'plugin-config.codecompanion.tools.gdrive_create',
+        'create_tool',
+        'doc'
+    ),
+    gdoc_delete = gdrive_tool(
+        'Delete a Google Doc via gws',
+        'plugin-config.codecompanion.tools.gdrive_delete',
+        'delete_tool',
+        'doc'
+    ),
+    ---- Gslides
+    gslides_create = gdrive_tool(
+        'Create a Google Slides presentation via gws',
+        'plugin-config.codecompanion.tools.gdrive_create',
+        'create_tool',
+        'slides'
+    ),
+    gslides_delete = gdrive_tool(
+        'Delete a Google Slides presentation via gws',
+        'plugin-config.codecompanion.tools.gdrive_delete',
+        'delete_tool',
+        'slides'
+    ),
     -- Groups
     groups = {
         agent_tools = {
@@ -56,24 +113,18 @@ local tools = {
                 'read_file',
                 'run_command',
             },
-            opts = {
-                collapse_tools = true,
-                ignore_system_prompt = false,
-                ignore_tool_system_prompt = false,
-            },
+            opts = GROUP_OPTS,
         },
         gsheet_tools = {
-            description = 'Tool group with Google Sheets read and write capabilities',
+            description = 'Google Sheets tools',
             tools = {
+                'gsheet_create',
+                'gsheet_delete',
                 'gsheet_inspect',
                 'gsheet_read',
                 'gsheet_write',
             },
-            opts = {
-                collapse_tools = true,
-                ignore_system_prompt = false,
-                ignore_tool_system_prompt = false,
-            },
+            opts = GROUP_OPTS,
         },
     },
 }

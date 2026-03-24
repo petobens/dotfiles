@@ -1,5 +1,5 @@
 local gsheets = require('plugin-config.codecompanion.slash_commands.gsheets')
-local helper = require('plugin-config.codecompanion.tools.gsheet_helpers')
+local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 -- Helpers
 local function read_google_sheet(args)

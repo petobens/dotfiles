@@ -1,6 +1,6 @@
 -- luacheck:ignore 631
 local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
-local helper = require('plugin-config.codecompanion.tools.gsheet_helpers')
+local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 -- Helpers
 local function operation_requires_range(operation)
