@@ -146,11 +146,11 @@ local function read_google_slides(input)
         return nil, text_err
     end
 
-    local title = gw.trim(presentation.title)
+    local title = gw.fallback_text(presentation.title, 'Untitled presentation')
 
     return {
         id = presentation_id,
-        title = title ~= '' and title or 'Untitled presentation',
+        title = title,
         text = text,
     }
 end
@@ -158,7 +158,7 @@ end
 -- Slash command
 function M.gslide(chat)
     vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
-        if not input or vim.trim(input) == '' then
+        if not input or gw.is_blank(input) then
             return
         end
 

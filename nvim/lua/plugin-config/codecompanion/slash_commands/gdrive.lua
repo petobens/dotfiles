@@ -50,7 +50,7 @@ local ROOT_LOCATION_NAMES = {
 local function parse_file_type(input)
     input = gw.trim(input):lower()
 
-    if input == '' or input == 'all' then
+    if gw.is_blank(input) or input == 'all' then
         return FILE_TYPES.all
     end
 
@@ -80,6 +80,14 @@ local function build_drive_query(query, file_type)
 end
 
 -- API fetch
+local function get_drive_file_name(file)
+    return gw.fallback_text(file.name, nil)
+end
+
+local function get_drive_file_title(file)
+    return gw.fallback_text(file.name, 'Untitled')
+end
+
 local function fetch_drive_file_name(file_id)
     local stdout, run_err = gw.run({
         'gws',
@@ -102,8 +110,8 @@ local function fetch_drive_file_name(file_id)
         return nil, decode_err
     end
 
-    local name = gw.trim(file.name)
-    if name == '' then
+    local name = get_drive_file_name(file)
+    if not name then
         return nil, 'Google Drive file metadata did not include a name'
     end
 
@@ -155,7 +163,7 @@ end
 
 local function format_modified_time(value)
     value = gw.trim(value)
-    if value == '' then
+    if gw.is_blank(value) then
         return nil
     end
 
@@ -179,16 +187,14 @@ local function format_modified_time(value)
 end
 
 local function get_file_owner(file)
-    local owner = vim.tbl_get(file, 'owners', 1, 'displayName')
-    owner = gw.trim(owner)
-    return owner ~= '' and owner or nil
+    return gw.fallback_text(vim.tbl_get(file, 'owners', 1, 'displayName'), nil)
 end
 
 local function get_file_location(file, location_cache)
     local parent_id = vim.tbl_get(file, 'parents', 1)
     parent_id = gw.trim(parent_id)
 
-    if parent_id == '' then
+    if gw.is_blank(parent_id) then
         return nil
     end
 
@@ -203,7 +209,7 @@ local function get_file_location(file, location_cache)
     local name = fetch_drive_file_name(parent_id)
     location_cache[parent_id] = name or false
 
-    if name and name ~= '' then
+    if name and not gw.is_blank(name) then
         return name
     end
 
@@ -216,10 +222,7 @@ local function format_drive_entry(file, location_cache)
         return nil
     end
 
-    local title = gw.trim(file.name)
-    if title == '' then
-        title = 'Untitled'
-    end
+    local title = get_drive_file_title(file)
 
     local lines = {
         ('- %s'):format(title),
@@ -277,7 +280,7 @@ end
 -- Read helpers
 local function search_google_drive(query, file_type)
     query = gw.trim(query)
-    if query == '' then
+    if gw.is_blank(query) then
         return nil, 'Missing Google Drive search query'
     end
 
@@ -301,10 +304,11 @@ end
 -- Slash command
 function M.gdrive(chat)
     vim.ui.input({ prompt = 'Google Drive search query: ' }, function(input)
-        input = gw.trim(input)
-        if input == '' then
+        if gw.is_blank(input) then
             return
         end
+
+        input = gw.trim(input)
 
         vim.ui.input({
             prompt = 'Google Drive file type (doc(s)/sheet(s)/slide(s), all, empty = all): ',
