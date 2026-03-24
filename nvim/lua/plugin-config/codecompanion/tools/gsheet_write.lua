@@ -306,7 +306,6 @@ local M = {
                 range
             )
         end,
-
         success = function(self, stdout, meta)
             helper.add_tool_success(
                 meta.tools.chat,

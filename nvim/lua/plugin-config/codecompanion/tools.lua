@@ -13,6 +13,7 @@ local tools = {
         },
     },
     -- Custom tools
+    ---- Gsheets
     gsheet_inspect = {
         description = 'Inspect a Google Sheet structure via gws',
         callback = function()
@@ -47,13 +48,13 @@ local tools = {
             description = 'Tool group with workspace file editing and command execution',
             tools = {
                 'create_file',
+                'delete_file',
                 'file_search',
                 'get_changed_files',
                 'grep_search',
                 'insert_edit_into_file',
                 'read_file',
                 'run_command',
-                'gsheet_write',
             },
             opts = {
                 collapse_tools = true,
