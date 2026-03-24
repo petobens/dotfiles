@@ -10,6 +10,8 @@ local M = {}
 
 -- Helpers
 local function set_chat_win_title(e)
+    e = e or {}
+
     local chatmap = {}
     local chats = codecompanion.buf_get_chat()
 
@@ -32,7 +34,7 @@ local function set_chat_win_title(e)
 
         vim.wait(100)
 
-        if vim.bo.filetype == 'codecompanion' then
+        if vim.bo.filetype == 'codecompanion' and e.data and e.data.title then
             local win_id = vim.api.nvim_get_current_win()
             local current = vim.api.nvim_win_get_config(win_id)
             vim.api.nvim_win_set_config(win_id, {
@@ -206,6 +208,17 @@ function M.setup()
         callback = function(e)
             vim.defer_fn(function()
                 set_chat_win_title(e)
+            end, 1)
+        end,
+    })
+    vim.api.nvim_create_autocmd('DirChanged', {
+        desc = 'Refresh CodeCompanion chat window title after directory change from chat',
+        callback = function()
+            if vim.bo.filetype ~= 'codecompanion' then
+                return
+            end
+            vim.defer_fn(function()
+                set_chat_win_title()
             end, 1)
         end,
     })
