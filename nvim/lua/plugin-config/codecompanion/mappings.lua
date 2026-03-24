@@ -102,11 +102,13 @@ end
 -- Shared interactions keymaps
 function M.shared_keymaps()
     return {
+        view_diff = { modes = { n = 'ds' } },
         always_accept = { modes = { n = 'aa' } },
         accept_change = { modes = { n = 'dp' } },
         reject_change = { modes = { n = 'de' } },
         next_hunk = { modes = { n = ']h' } },
         previous_hunk = { modes = { n = '[h' } },
+        cancel = { modes = { n = 'ct' } },
     }
 end
 
