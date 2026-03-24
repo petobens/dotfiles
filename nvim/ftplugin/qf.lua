@@ -27,37 +27,37 @@ vim.keymap.set('n', 'q', function()
         vim.api.nvim_set_current_win(_G.LastWinId)
     end
     vim.cmd[close_cmd]()
-end, { buf = true, desc = 'Close quickfix/loclist and return to last window' })
+end, { buf = 0, desc = 'Close quickfix/loclist and return to last window' })
 
 vim.keymap.set(
     'n',
     'Q',
     'q',
-    { buf = true, remap = true, desc = "Alias for 'q' (close qf/loclist and return)" }
+    { buf = 0, remap = true, desc = "Alias for 'q' (close qf/loclist and return)" }
 )
 
 vim.keymap.set(
     'n',
     '<C-s>',
     '<C-w><Enter>',
-    { buf = true, desc = 'Open entry in split' }
+    { buf = 0, desc = 'Open entry in split' }
 )
 
 vim.keymap.set(
     'n',
     '<C-v>',
     '<C-w><Enter><C-w>L',
-    { buf = true, desc = 'Open entry in vsplit' }
+    { buf = 0, desc = 'Open entry in vsplit' }
 )
 
 vim.keymap.set('n', '<C-q>', function()
     vim.cmd.cclose()
     vim.cmd.wincmd('p')
     vim.cmd.Telescope('quickfix')
-end, { buf = true, desc = 'Close quickfix and dump entries to Telescope' })
+end, { buf = 0, desc = 'Close quickfix and dump entries to Telescope' })
 
 vim.keymap.set('n', '<C-l>', function()
     vim.cmd.lclose()
     vim.cmd.wincmd('p')
     vim.cmd.Telescope('loclist')
-end, { buf = true, desc = 'Close loclist and dump entries to Telescope' })
+end, { buf = 0, desc = 'Close loclist and dump entries to Telescope' })

@@ -60,26 +60,26 @@ vim.keymap.set(
     { 'n', 'i' },
     '<F7>',
     run_overseer,
-    { buf = true, desc = 'Run shell script with Overseer' }
+    { buf = 0, desc = 'Run shell script with Overseer' }
 )
 
 vim.keymap.set(
     { 'n', 'i' },
     '<F5>',
     run_tmux_pane,
-    { buf = true, desc = 'Run shell script in new tmux pane' }
+    { buf = 0, desc = 'Run shell script in new tmux pane' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>rf',
     run_toggleterm,
-    { buf = true, desc = 'Run shell script in ToggleTerm' }
+    { buf = 0, desc = 'Run shell script in ToggleTerm' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>ri',
     run_toggleterm,
-    { buf = true, desc = 'Run shell script in ToggleTerm (run interpreter)' }
+    { buf = 0, desc = 'Run shell script in ToggleTerm (run interpreter)' }
 )
