@@ -53,9 +53,15 @@ local tools = {
         'sheet'
     ),
     gsheet_delete = gdrive_tool(
-        'Delete a Google Sheet via gws',
+        'Move a Google Sheet to trash via gws',
         'plugin-config.codecompanion.tools.gdrive_delete',
         'delete_tool',
+        'sheet'
+    ),
+    gsheet_rename = gdrive_tool(
+        'Rename a Google Sheet via gws',
+        'plugin-config.codecompanion.tools.gdrive_rename',
+        'rename_tool',
         'sheet'
     ),
     gsheet_inspect = module_tool(
@@ -81,9 +87,15 @@ local tools = {
         'doc'
     ),
     gdoc_delete = gdrive_tool(
-        'Delete a Google Doc via gws',
+        'Move a Google Doc to trash via gws',
         'plugin-config.codecompanion.tools.gdrive_delete',
         'delete_tool',
+        'doc'
+    ),
+    gdoc_rename = gdrive_tool(
+        'Rename a Google Doc via gws',
+        'plugin-config.codecompanion.tools.gdrive_rename',
+        'rename_tool',
         'doc'
     ),
     ---- Gslides
@@ -94,9 +106,15 @@ local tools = {
         'slides'
     ),
     gslides_delete = gdrive_tool(
-        'Delete a Google Slides presentation via gws',
+        'Move a Google Slides presentation to trash via gws',
         'plugin-config.codecompanion.tools.gdrive_delete',
         'delete_tool',
+        'slides'
+    ),
+    gslides_rename = gdrive_tool(
+        'Rename a Google Slides presentation via gws',
+        'plugin-config.codecompanion.tools.gdrive_rename',
+        'rename_tool',
         'slides'
     ),
     -- Groups
@@ -122,6 +140,7 @@ local tools = {
                 'gsheet_delete',
                 'gsheet_inspect',
                 'gsheet_read',
+                'gsheet_rename',
                 'gsheet_write',
             },
             opts = GROUP_OPTS,
