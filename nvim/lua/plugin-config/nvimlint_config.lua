@@ -45,9 +45,27 @@ vim.api.nvim_create_autocmd(
 -- Linter config/args
 local linters = lint.linters
 ---- Lua
-linters.luacheck.args = vim.list_extend(vim.deepcopy(linters.luacheck.args), {
-    '--config=' .. vim.fs.joinpath(vim.env.HOME, '.config', '.luacheckrc'),
-})
+-- Workaround for Arch packaging mismatch: the packaged `luacheck` launcher
+-- runs with Lua 5.5, while its packaged dependencies are installed for Lua 5.4.
+local luacheck_entry = '/usr/lib/luarocks/rocks-5.5/luacheck/1.2.0-1/bin/luacheck'
+local luacheck_path = '/usr/share/lua/5.5/?.lua;/usr/share/lua/5.5/?/init.lua;'
+local lua54_cpath = '/usr/lib/lua/5.4/?.so;'
+linters.luacheck.cmd = 'lua5.4'
+linters.luacheck.args = vim.list_extend(
+    {
+        '-e',
+        table.concat({
+            ('package.path=%q..package.path'):format(luacheck_path),
+            ('package.cpath=%q..package.cpath'):format(lua54_cpath),
+            ('dofile(%q)'):format(luacheck_entry),
+        }, ';'),
+        '--',
+    },
+    vim.list_extend(vim.deepcopy(linters.luacheck.args), {
+        '--config=' .. vim.fs.joinpath(vim.env.HOME, '.config', '.luacheckrc'),
+    })
+)
+
 ---- Markdown
 linters.markdownlint.args = {
     '--config=' .. vim.fs.joinpath(vim.env.HOME, '.markdownlint.json'),
