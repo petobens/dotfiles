@@ -4,7 +4,7 @@ local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 local M = {}
 
 -- API helpers
-local function delete_google_drive_file(kind, target)
+local function trash_google_drive_file(kind, target)
     local file_id = helper.extract_file_id(target, kind)
     if not file_id then
         return nil, 'Could not extract a valid Google file id from target'
@@ -46,7 +46,7 @@ local function delete_google_drive_file(kind, target)
 end
 
 -- Tool helpers
-local function run_delete_gdrive_tool(kind, args)
+local function run_trash_gdrive_tool(kind, args)
     local target = gw.normalize_optional_string(args.target)
     if target == nil then
         return {
@@ -61,7 +61,7 @@ local function run_delete_gdrive_tool(kind, args)
         }
     end
 
-    local data, err = delete_google_drive_file(kind, target)
+    local data, err = trash_google_drive_file(kind, target)
     if not data then
         return {
             status = 'error',
@@ -76,16 +76,16 @@ local function run_delete_gdrive_tool(kind, args)
 end
 
 -- Tool factories
-function M.delete_tool(kind)
+function M.trash_tool(kind)
     local kind_label = helper.validate_kind(kind)
 
-    local tool_name = 'g' .. kind .. '_delete'
+    local tool_name = 'g' .. kind .. '_trash'
 
     return {
         name = tool_name,
         cmds = {
             function(_, args, _)
-                return run_delete_gdrive_tool(kind, args)
+                return run_trash_gdrive_tool(kind, args)
             end,
         },
         schema = {
