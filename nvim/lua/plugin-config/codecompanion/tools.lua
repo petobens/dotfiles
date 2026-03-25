@@ -45,6 +45,12 @@ local tools = {
         opts = NO_APPROVAL_OPTS,
     },
     -- Custom tools
+    ---- Gdrive
+    gdrive_search = module_tool(
+        'Search Google Drive files via gws',
+        'plugin-config.codecompanion.tools.gdrive_search',
+        NO_APPROVAL_OPTS
+    ),
     ---- Gsheets
     gsheet_create = gdrive_tool(
         'Create a Google Sheet via gws',
@@ -166,6 +172,7 @@ local tools = {
         gsheet_tools = {
             description = 'Google Sheets tools',
             tools = {
+                'gdrive_search',
                 'gsheet_create',
                 'gsheet_inspect',
                 'gsheet_read',
@@ -184,12 +191,14 @@ local tools = {
                 'gdoc_rename',
                 'gdoc_trash',
                 'gdoc_write',
+                'gdrive_search',
             },
             opts = GROUP_OPTS,
         },
         gslides_tools = {
             description = 'Google Slides tools',
             tools = {
+                'gdrive_search',
                 'gslides_create',
                 'gslides_inspect',
                 'gslides_read',

@@ -301,6 +301,10 @@ local function search_google_drive(query, file_type)
     }
 end
 
+-- Exports for reuse by tools
+M.parse_file_type = parse_file_type
+M.search_google_drive = search_google_drive
+
 -- Slash command
 function M.gdrive(chat)
     vim.ui.input({ prompt = 'Google Drive search query: ' }, function(input)
