@@ -9,28 +9,6 @@ local function operation_requires_range(operation)
         or operation == 'clear_range'
 end
 
-local function normalize_requests(args)
-    local requests = args.requests_json
-
-    if requests == vim.NIL then
-        requests = nil
-    end
-
-    if type(requests) == 'string' then
-        local ok, decoded = pcall(vim.json.decode, requests)
-        if not ok then
-            return nil, 'requests_json must be valid JSON for raw_batch_update'
-        end
-        requests = decoded
-    end
-
-    if type(requests) ~= 'table' or vim.tbl_isempty(requests) then
-        return nil, 'requests_json must be a non-empty JSON array for raw_batch_update'
-    end
-
-    return requests
-end
-
 local function validate_values(values)
     if type(values) ~= 'table' or vim.tbl_isempty(values) then
         return nil, 'values must be a non-empty 2D array'
@@ -40,52 +18,35 @@ local function validate_values(values)
 end
 
 local function write_google_sheet(args)
-    local spreadsheet_id, id_err = gw.extract_google_id(args.spreadsheet, 'sheets')
+    local spreadsheet_id, id_err =
+        helper.extract_google_id_arg(args.spreadsheet, 'sheets', 'spreadsheet')
     if not spreadsheet_id then
-        return {
-            status = 'error',
-            data = id_err,
-        }
+        return helper.tool_error(id_err)
     end
 
-    local operation = gw.normalize_optional_string(args.operation)
-    local range = gw.normalize_optional_string(args.range)
-
-    if operation == nil then
-        return {
-            status = 'error',
-            data = 'operation must be a string',
-        }
+    local operation, operation_err =
+        helper.normalize_required_string_arg(args.operation, 'operation')
+    if not operation then
+        return helper.tool_error(operation_err)
     end
 
-    if operation == '' then
-        return {
-            status = 'error',
-            data = 'Missing operation',
-        }
-    end
-
+    local range, range_err = helper.normalize_required_string_arg(args.range, 'range', {
+        allow_empty = true,
+    })
     if range == nil then
-        return {
-            status = 'error',
-            data = 'range must be a string',
-        }
+        return helper.tool_error(range_err)
     end
 
     if operation_requires_range(operation) and range == '' then
-        return {
-            status = 'error',
-            data = 'range is required for set_range, append_rows, and clear_range',
-        }
+        return helper.tool_error(
+            'range is required for set_range, append_rows, and clear_range'
+        )
     end
 
     if operation == 'append_rows' or operation == 'set_range' then
         local values, values_err = validate_values(args.values)
         if not values then
-            return {
-                status = 'error',
-                data = values_err,
-            }
+            return helper.tool_error(values_err)
         end
 
         args.values = values
@@ -111,20 +72,16 @@ local function write_google_sheet(args)
         })
 
         if not stdout then
-            return {
-                status = 'error',
-                data = run_err,
-            }
+            return helper.tool_error(run_err)
         end
 
-        return {
-            status = 'success',
-            data = ('Appended %d row(s) to Google Sheet %s at %s'):format(
+        return helper.tool_success(
+            ('Appended %d row(s) to Google Sheet %s at %s'):format(
                 #args.values,
                 spreadsheet_id,
                 range
-            ),
-        }
+            )
+        )
     end
 
     if operation == 'set_range' then
@@ -147,20 +104,16 @@ local function write_google_sheet(args)
         })
 
         if not stdout then
-            return {
-                status = 'error',
-                data = run_err,
-            }
+            return helper.tool_error(run_err)
         end
 
-        return {
-            status = 'success',
-            data = ('Wrote %d row(s) to Google Sheet %s at %s'):format(
+        return helper.tool_success(
+            ('Wrote %d row(s) to Google Sheet %s at %s'):format(
                 #args.values,
                 spreadsheet_id,
                 range
-            ),
-        }
+            )
+        )
     end
 
     if operation == 'clear_range' then
@@ -178,25 +131,22 @@ local function write_google_sheet(args)
         })
 
         if not stdout then
-            return {
-                status = 'error',
-                data = run_err,
-            }
+            return helper.tool_error(run_err)
         end
 
-        return {
-            status = 'success',
-            data = ('Cleared Google Sheet %s at %s'):format(spreadsheet_id, range),
-        }
+        return helper.tool_success(
+            ('Cleared Google Sheet %s at %s'):format(spreadsheet_id, range)
+        )
     end
 
     if operation == 'raw_batch_update' then
-        local requests, requests_err = normalize_requests(args)
+        local requests, requests_err =
+            helper.normalize_json_array_arg(args.requests_json, {
+                invalid_json_error = 'requests_json must be valid JSON for raw_batch_update',
+                empty_error = 'requests_json must be a non-empty JSON array for raw_batch_update',
+            })
         if not requests then
-            return {
-                status = 'error',
-                data = requests_err,
-            }
+            return helper.tool_error(requests_err)
         end
 
         local stdout, run_err = gw.run({
@@ -215,25 +165,20 @@ local function write_google_sheet(args)
         })
 
         if not stdout then
-            return {
-                status = 'error',
-                data = run_err,
-            }
+            return helper.tool_error(run_err)
         end
 
-        return {
-            status = 'success',
-            data = ('Applied raw batchUpdate with %d request(s) to Google Sheet %s'):format(
+        return helper.tool_success(
+            ('Applied raw batchUpdate with %d request(s) to Google Sheet %s'):format(
                 #requests,
                 spreadsheet_id
-            ),
-        }
+            )
+        )
     end
 
-    return {
-        status = 'error',
-        data = 'operation must be one of: set_range, append_rows, clear_range, raw_batch_update',
-    }
+    return helper.tool_error(
+        'operation must be one of: set_range, append_rows, clear_range, raw_batch_update'
+    )
 end
 
 -- Tool definition

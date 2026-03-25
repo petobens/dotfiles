@@ -3,7 +3,7 @@ local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
 
 local M = {}
 
--- Google Workspace constants
+-- Constants
 M.MIME_TYPES = {
     doc = 'application/vnd.google-apps.document',
     sheet = 'application/vnd.google-apps.spreadsheet',
@@ -28,7 +28,45 @@ M.URL_KIND_MAP = {
     slides = 'slides',
 }
 
--- Google Workspace file helpers
+-- Validation helpers
+function M.normalize_required_string_arg(value, name, opts)
+    opts = opts or {}
+
+    local normalized = gw.normalize_optional_string(value)
+    if normalized == nil then
+        return nil, ('%s must be a string'):format(name)
+    end
+
+    if not opts.allow_empty and normalized == '' then
+        return nil, opts.empty_error or ('Missing %s'):format(name)
+    end
+
+    return normalized
+end
+
+function M.normalize_json_array_arg(value, opts)
+    opts = opts or {}
+
+    if value == vim.NIL then
+        value = nil
+    end
+
+    if type(value) == 'string' then
+        local ok, decoded = pcall(vim.json.decode, value)
+        if not ok then
+            return nil, opts.invalid_json_error or 'value must be valid JSON'
+        end
+        value = decoded
+    end
+
+    if type(value) ~= 'table' or vim.tbl_isempty(value) then
+        return nil, opts.empty_error or 'value must be a non-empty JSON array'
+    end
+
+    return value
+end
+
+-- Google Drive file helpers
 function M.validate_kind(kind)
     local kind_label = M.KIND_LABELS[kind]
     if not kind_label then
@@ -36,6 +74,15 @@ function M.validate_kind(kind)
     end
 
     return kind_label
+end
+
+function M.extract_google_id_arg(value, kind, label)
+    local id, err = gw.extract_google_id(value, kind)
+    if not id then
+        return nil, err or ('Missing %s'):format(label or kind)
+    end
+
+    return id
 end
 
 function M.extract_file_id(target, kind)
@@ -75,6 +122,75 @@ function M.fetch_file_metadata(file_id)
     end
 
     return gw.decode_json(stdout, 'the Google Workspace file metadata')
+end
+
+-- Tool result helpers
+function M.tool_success(data)
+    return {
+        status = 'success',
+        data = data,
+    }
+end
+
+function M.tool_error(data)
+    return {
+        status = 'error',
+        data = data,
+    }
+end
+
+-- Factory helpers
+function M.build_read_tool(spec)
+    return {
+        name = spec.name,
+        cmds = {
+            function(_, args, _)
+                local item, err = spec.reader(args[spec.input_key])
+                if not item then
+                    return M.tool_error(err)
+                end
+
+                return M.tool_success(
+                    string.format(spec.template, item.title, item.id, item.text)
+                )
+            end,
+        },
+        schema = {
+            type = 'function',
+            ['function'] = {
+                name = spec.name,
+                description = spec.description,
+                parameters = {
+                    type = 'object',
+                    properties = {
+                        [spec.input_key] = {
+                            type = 'string',
+                            description = spec.input_description,
+                        },
+                    },
+                    required = { spec.input_key },
+                    additionalProperties = false,
+                },
+                strict = true,
+            },
+        },
+        output = {
+            prompt = function(self, _)
+                return spec.prompt_template:format(self.args[spec.input_key])
+            end,
+            success = function(self, stdout, meta)
+                M.add_tool_success(
+                    meta.tools.chat,
+                    self,
+                    stdout,
+                    spec.success_user_output
+                )
+            end,
+            error = function(self, stderr, meta)
+                M.add_tool_error(meta.tools.chat, self, stderr, spec.error_user_output)
+            end,
+        },
+    }
 end
 
 -- Tool output helpers

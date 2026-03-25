@@ -132,6 +132,21 @@ local tools = {
         'rename_tool',
         'slides'
     ),
+    gslides_inspect = module_tool(
+        'Inspect a Google Slides presentation structure via gws',
+        'plugin-config.codecompanion.tools.gslides_inspect',
+        NO_APPROVAL_OPTS
+    ),
+    gslides_read = module_tool(
+        'Read a Google Slides presentation via gws',
+        'plugin-config.codecompanion.tools.gslides_read',
+        NO_APPROVAL_OPTS
+    ),
+    gslides_write = module_tool(
+        'Write to a Google Slides presentation via gws',
+        'plugin-config.codecompanion.tools.gslides_write',
+        WRITE_APPROVAL_OPTS
+    ),
     -- Groups
     groups = {
         agent_tools = {
@@ -169,6 +184,18 @@ local tools = {
                 'gdoc_rename',
                 'gdoc_trash',
                 'gdoc_write',
+            },
+            opts = GROUP_OPTS,
+        },
+        gslides_tools = {
+            description = 'Google Slides tools',
+            tools = {
+                'gslides_create',
+                'gslides_inspect',
+                'gslides_read',
+                'gslides_rename',
+                'gslides_trash',
+                'gslides_write',
             },
             opts = GROUP_OPTS,
         },

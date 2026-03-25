@@ -105,15 +105,28 @@ local function collect_slide_page_elements(parts, page_elements)
     end
 end
 
+local function extract_slide_text(slide)
+    local parts = {}
+    collect_slide_page_elements(parts, slide.pageElements)
+    return gw.normalize_text(table.concat(parts, ''))
+end
+
+local function slide_appears_blank(slide)
+    return extract_slide_text(slide) == ''
+end
+
 -- Content extraction
 local function google_slides_to_text(presentation)
     local lines = {}
 
     for i, slide in ipairs(presentation.slides or {}) do
-        table.insert(lines, ('Slide %d'):format(i))
-        local parts = {}
-        collect_slide_page_elements(parts, slide.pageElements)
-        local text = gw.normalize_text(table.concat(parts, ''))
+        local slide_object_id = gw.fallback_text(slide.objectId, 'unknown')
+        local text = extract_slide_text(slide)
+        local blank_suffix = slide_appears_blank(slide) and ', appears blank' or ''
+        table.insert(
+            lines,
+            ('Slide %d (objectId: %s%s)'):format(i, slide_object_id, blank_suffix)
+        )
         if text ~= '' then
             table.insert(lines, text)
         end
@@ -127,6 +140,38 @@ local function google_slides_to_text(presentation)
     end
 
     return text
+end
+
+local function summarize_google_slides(presentation, presentation_id)
+    local title = gw.fallback_text(presentation.title, 'Untitled presentation')
+    local slides = presentation.slides or {}
+    local lines = {
+        ('Title: %s'):format(title),
+        ('Slides: %d'):format(#slides),
+    }
+
+    for i, slide in ipairs(slides) do
+        local page_elements = slide.pageElements or {}
+        local notes = vim.tbl_get(slide, 'slideProperties', 'notesPage') and 'yes' or 'no'
+        local blank = slide_appears_blank(slide) and 'yes' or 'no'
+        local slide_object_id = gw.fallback_text(slide.objectId, 'unknown')
+        table.insert(
+            lines,
+            ('- Slide %d (objectId: %s): objects=%d, notes=%s, blank=%s'):format(
+                i,
+                slide_object_id,
+                #page_elements,
+                notes,
+                blank
+            )
+        )
+    end
+
+    return {
+        id = presentation_id,
+        title = title,
+        text = table.concat(lines, '\n'),
+    }
 end
 
 -- Read helpers
@@ -154,6 +199,25 @@ local function read_google_slides(input)
         text = text,
     }
 end
+
+local function read_google_slides_metadata(input)
+    local presentation_id, id_err = gw.extract_google_id(input, 'slides')
+    if not presentation_id then
+        return nil, id_err
+    end
+
+    local presentation, fetch_err = fetch_google_slides(presentation_id)
+    if not presentation then
+        return nil, fetch_err
+    end
+
+    return summarize_google_slides(presentation, presentation_id)
+end
+
+-- Exports for reuse by tools
+M.fetch_google_slides = fetch_google_slides
+M.read_google_slides = read_google_slides
+M.read_google_slides_metadata = read_google_slides_metadata
 
 -- Slash command
 function M.gslide(chat)
