@@ -1,4 +1,5 @@
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
 
 local M = {}
 
@@ -7,7 +8,7 @@ local DEFAULT_RANGE = 'A1:AZ2000'
 
 -- API fetch
 local function fetch_google_sheet_metadata(sheet_id)
-    local stdout, run_err = gw.run({
+    local stdout, run_err = gws_helpers.run({
         'gws',
         'sheets',
         'spreadsheets',
@@ -21,11 +22,11 @@ local function fetch_google_sheet_metadata(sheet_id)
         return nil, run_err
     end
 
-    return gw.decode_json(stdout, 'the Google Sheet metadata')
+    return gws_helpers.decode_json(stdout, 'the Google Sheet metadata')
 end
 
 local function fetch_google_sheet_values(sheet_id, ranges, value_render_option)
-    local stdout, run_err = gw.run({
+    local stdout, run_err = gws_helpers.run({
         'gws',
         'sheets',
         'spreadsheets',
@@ -42,19 +43,19 @@ local function fetch_google_sheet_values(sheet_id, ranges, value_render_option)
         return nil, run_err
     end
 
-    return gw.decode_json(stdout, 'the Google Sheet values')
+    return gws_helpers.decode_json(stdout, 'the Google Sheet values')
 end
 
 -- Content extraction
 local function sheet_range_to_title(range)
-    range = gw.trim(range)
+    range = gws_helpers.trim(range)
 
-    local title = gw.trim(range:match("^'(.+)'!"))
+    local title = gws_helpers.trim(range:match("^'(.+)'!"))
     if title ~= '' then
         return title:gsub("''", "'")
     end
 
-    title = gw.trim(range:match('^([^!]+)!'))
+    title = gws_helpers.trim(range:match('^([^!]+)!'))
     if title ~= '' then
         return title
     end
@@ -63,7 +64,7 @@ local function sheet_range_to_title(range)
 end
 
 local function get_spreadsheet_title(metadata)
-    return gw.fallback_text(
+    return gws_helpers.fallback_text(
         vim.tbl_get(metadata, 'properties', 'title'),
         'Untitled spreadsheet'
     )
@@ -100,7 +101,7 @@ local function render_value_ranges(label, value_ranges)
         return nil
     end
 
-    return gw.normalize_text(table.concat(sections, '\n'))
+    return gws_helpers.normalize_text(table.concat(sections, '\n'))
 end
 
 local function summarize_google_sheet_metadata(metadata)
@@ -118,7 +119,7 @@ local function summarize_google_sheet_metadata(metadata)
 
             if
                 type(title) ~= 'string'
-                or gw.is_blank(title)
+                or gws_helpers.is_blank(title)
                 or type(sheet_id) ~= 'number'
             then
                 return nil
@@ -143,7 +144,7 @@ local function summarize_google_sheet_metadata(metadata)
     return {
         id = metadata.spreadsheetId,
         title = get_spreadsheet_title(metadata),
-        text = gw.normalize_text(
+        text = gws_helpers.normalize_text(
             table.concat(vim.list_extend({ 'Worksheets:' }, worksheet_info), '\n')
         ),
     }
@@ -151,7 +152,7 @@ end
 
 -- Read helpers
 local function read_google_sheet(input)
-    local sheet_id, id_err = gw.extract_google_id(input, 'sheets')
+    local sheet_id, id_err = gws_helpers.extract_google_id(input, 'sheets')
     if not sheet_id then
         return nil, id_err
     end
@@ -171,7 +172,7 @@ local function read_google_sheet(input)
             return vim.tbl_get(sheet, 'properties', 'title')
         end)
         :filter(function(title)
-            return type(title) == 'string' and not gw.is_blank(title)
+            return type(title) == 'string' and not gws_helpers.is_blank(title)
         end)
         :totable()
 
@@ -231,12 +232,12 @@ local function read_google_sheet(input)
     return {
         id = sheet_id,
         title = get_spreadsheet_title(metadata),
-        text = gw.normalize_text(table.concat(parts, '\n')),
+        text = gws_helpers.normalize_text(table.concat(parts, '\n')),
     }
 end
 
 local function read_google_sheet_metadata(input)
-    local sheet_id, id_err = gw.extract_google_id(input, 'sheets')
+    local sheet_id, id_err = gws_helpers.extract_google_id(input, 'sheets')
     if not sheet_id then
         return nil, id_err
     end
@@ -256,7 +257,7 @@ M.read_google_sheet_metadata = read_google_sheet_metadata
 -- Slash command
 function M.gsheet(chat)
     vim.ui.input({ prompt = 'Google Sheet URL or ID: ' }, function(input)
-        if not input or gw.is_blank(input) then
+        if not input or gws_helpers.is_blank(input) then
             return
         end
 
@@ -266,7 +267,7 @@ function M.gsheet(chat)
             return
         end
 
-        gw.add_context(chat, 'Sheet', sheet, 'gsheet')
+        gws_helpers.add_context(chat, 'Sheet', sheet, 'gsheet')
     end)
 end
 

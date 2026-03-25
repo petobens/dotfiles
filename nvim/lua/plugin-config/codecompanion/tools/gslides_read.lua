@@ -1,7 +1,7 @@
 local gslides = require('plugin-config.codecompanion.slash_commands.gslides')
-local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
-return helper.build_read_tool({
+return gws_tool_helpers.build_read_tool({
     name = 'gslides_read',
     description = 'Read Google Slides contents.',
     input_key = 'presentation',

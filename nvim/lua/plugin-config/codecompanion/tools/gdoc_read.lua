@@ -1,7 +1,7 @@
 local gdocs = require('plugin-config.codecompanion.slash_commands.gdocs')
-local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
-return helper.build_read_tool({
+return gws_tool_helpers.build_read_tool({
     name = 'gdoc_read',
     description = 'Read Google Doc contents.',
     input_key = 'document',

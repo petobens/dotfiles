@@ -1,10 +1,11 @@
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
 
 local M = {}
 
 -- API fetch
 local function fetch_google_doc(doc_id)
-    local stdout, run_err = gw.run({
+    local stdout, run_err = gws_helpers.run({
         'gws',
         'docs',
         'documents',
@@ -16,7 +17,7 @@ local function fetch_google_doc(doc_id)
         return nil, run_err
     end
 
-    return gw.decode_json(stdout, 'the Google Doc')
+    return gws_helpers.decode_json(stdout, 'the Google Doc')
 end
 
 local function collect_doc_elements(parts, elements)
@@ -29,7 +30,7 @@ local function collect_doc_elements(parts, elements)
             for _, paragraph_element in ipairs(element.paragraph.elements) do
                 local text_run = paragraph_element.textRun
                 if text_run and text_run.content then
-                    gw.append_text(parts, text_run.content)
+                    gws_helpers.append_text(parts, text_run.content)
                 end
             end
         elseif element.table and element.table.tableRows then
@@ -37,7 +38,7 @@ local function collect_doc_elements(parts, elements)
                 for _, cell in ipairs(row.tableCells or {}) do
                     collect_doc_elements(parts, cell.content)
                 end
-                gw.append_text(parts, '\n')
+                gws_helpers.append_text(parts, '\n')
             end
         elseif element.tableOfContents and element.tableOfContents.content then
             collect_doc_elements(parts, element.tableOfContents.content)
@@ -50,7 +51,7 @@ local function google_doc_to_text(doc)
     local parts = {}
     collect_doc_elements(parts, vim.tbl_get(doc, 'body', 'content'))
 
-    local text = gw.normalize_text(table.concat(parts, ''))
+    local text = gws_helpers.normalize_text(table.concat(parts, ''))
     if text == '' then
         return nil, 'The Google Doc appears to be empty or contains no extractable text'
     end
@@ -88,7 +89,8 @@ local function summarize_google_doc(doc, doc_id)
 
     walk(body)
 
-    local title = gw.trim(doc.title) ~= '' and gw.trim(doc.title) or 'Untitled document'
+    local title = gws_helpers.trim(doc.title) ~= '' and gws_helpers.trim(doc.title)
+        or 'Untitled document'
     local lines = {
         ('Title: %s'):format(title),
         ('Paragraphs: %d'):format(paragraph_count),
@@ -105,7 +107,7 @@ end
 
 -- Read helpers
 local function read_google_doc(input)
-    local doc_id, id_err = gw.extract_google_id(input, 'docs')
+    local doc_id, id_err = gws_helpers.extract_google_id(input, 'docs')
     if not doc_id then
         return nil, id_err
     end
@@ -122,13 +124,14 @@ local function read_google_doc(input)
 
     return {
         id = doc_id,
-        title = gw.trim(doc.title) ~= '' and gw.trim(doc.title) or 'Untitled document',
+        title = gws_helpers.trim(doc.title) ~= '' and gws_helpers.trim(doc.title)
+            or 'Untitled document',
         text = text,
     }
 end
 
 local function read_google_doc_metadata(input)
-    local doc_id, id_err = gw.extract_google_id(input, 'docs')
+    local doc_id, id_err = gws_helpers.extract_google_id(input, 'docs')
     if not doc_id then
         return nil, id_err
     end
@@ -158,7 +161,7 @@ function M.gdoc(chat)
             return
         end
 
-        gw.add_context(chat, 'Doc', doc, 'gdoc')
+        gws_helpers.add_context(chat, 'Doc', doc, 'gdoc')
     end)
 end
 

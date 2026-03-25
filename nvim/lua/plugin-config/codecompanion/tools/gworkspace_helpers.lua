@@ -1,5 +1,6 @@
 -- luacheck:ignore 631
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
 
 local M = {}
 
@@ -32,7 +33,7 @@ M.URL_KIND_MAP = {
 function M.normalize_required_string_arg(value, name, opts)
     opts = opts or {}
 
-    local normalized = gw.normalize_optional_string(value)
+    local normalized = gws_helpers.normalize_optional_string(value)
     if normalized == nil then
         return nil, ('%s must be a string'):format(name)
     end
@@ -77,7 +78,7 @@ function M.validate_kind(kind)
 end
 
 function M.extract_google_id_arg(value, kind, label)
-    local id, err = gw.extract_google_id(value, kind)
+    local id, err = gws_helpers.extract_google_id(value, kind)
     if not id then
         return nil, err or ('Missing %s'):format(label or kind)
     end
@@ -88,14 +89,14 @@ end
 function M.extract_file_id(target, kind)
     local url_kind = M.URL_KIND_MAP[kind]
     if url_kind then
-        local id = gw.extract_google_id(target, url_kind)
+        local id = gws_helpers.extract_google_id(target, url_kind)
         if id then
             return id
         end
     end
 
     if type(target) == 'string' then
-        target = gw.trim(target)
+        target = gws_helpers.trim(target)
         if target:match('^[%w%-_]+$') then
             return target
         end
@@ -105,7 +106,7 @@ function M.extract_file_id(target, kind)
 end
 
 function M.fetch_file_metadata(file_id)
-    local stdout, run_err = gw.run({
+    local stdout, run_err = gws_helpers.run({
         'gws',
         'drive',
         'files',
@@ -121,7 +122,7 @@ function M.fetch_file_metadata(file_id)
         return nil, run_err
     end
 
-    return gw.decode_json(stdout, 'the Google Workspace file metadata')
+    return gws_helpers.decode_json(stdout, 'the Google Workspace file metadata')
 end
 
 -- Tool result helpers

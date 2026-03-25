@@ -1,25 +1,26 @@
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
-local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
+local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 local M = {}
 
 -- API helpers
 local function rename_google_drive_file(kind, target, new_title)
-    local file_id = helper.extract_file_id(target, kind)
+    local file_id = gws_tool_helpers.extract_file_id(target, kind)
     if not file_id then
         return nil, 'Could not extract a valid Google file id from target'
     end
 
-    local metadata, metadata_err = helper.fetch_file_metadata(file_id)
+    local metadata, metadata_err = gws_tool_helpers.fetch_file_metadata(file_id)
     if not metadata then
         return nil, metadata_err
     end
 
-    if gw.trim(metadata.mimeType) ~= helper.MIME_TYPES[kind] then
-        return nil, ('Target is not a %s'):format(helper.KIND_LABELS[kind])
+    if gws_helpers.trim(metadata.mimeType) ~= gws_tool_helpers.MIME_TYPES[kind] then
+        return nil, ('Target is not a %s'):format(gws_tool_helpers.KIND_LABELS[kind])
     end
 
-    local stdout, run_err = gw.run({
+    local stdout, run_err = gws_helpers.run({
         'gws',
         'drive',
         'files',
@@ -39,16 +40,16 @@ local function rename_google_drive_file(kind, target, new_title)
         return nil, run_err
     end
 
-    local file, decode_err = gw.decode_json(stdout, 'the Google Drive file')
+    local file, decode_err = gws_helpers.decode_json(stdout, 'the Google Drive file')
     if not file then
         return nil, decode_err
     end
 
-    local updated_name = gw.fallback_text(file.name, new_title)
+    local updated_name = gws_helpers.fallback_text(file.name, new_title)
 
     return ('Renamed %s "%s" to "%s" (ID: %s)'):format(
-        helper.KIND_LABELS[kind],
-        gw.fallback_text(metadata.name, 'Untitled'),
+        gws_tool_helpers.KIND_LABELS[kind],
+        gws_helpers.fallback_text(metadata.name, 'Untitled'),
         updated_name,
         file_id
     )
@@ -56,8 +57,8 @@ end
 
 -- Tool helpers
 local function run_rename_gdrive_tool(kind, args)
-    local target = gw.normalize_optional_string(args.target)
-    local new_title = gw.normalize_optional_string(args.new_title)
+    local target = gws_helpers.normalize_optional_string(args.target)
+    local new_title = gws_helpers.normalize_optional_string(args.new_title)
 
     if target == nil then
         return {
@@ -101,7 +102,7 @@ end
 
 -- Tool factories
 function M.rename_tool(kind)
-    local kind_label = helper.validate_kind(kind)
+    local kind_label = gws_tool_helpers.validate_kind(kind)
 
     local tool_name = 'g' .. kind .. '_rename'
 
@@ -144,7 +145,7 @@ function M.rename_tool(kind)
                 )
             end,
             success = function(self, stdout, meta)
-                helper.add_tool_success(
+                gws_tool_helpers.add_tool_success(
                     meta.tools.chat,
                     self,
                     stdout,
@@ -152,7 +153,7 @@ function M.rename_tool(kind)
                 )
             end,
             error = function(self, stderr, meta)
-                helper.add_tool_error(
+                gws_tool_helpers.add_tool_error(
                     meta.tools.chat,
                     self,
                     stderr,

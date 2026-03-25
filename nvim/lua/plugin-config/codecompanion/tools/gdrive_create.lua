@@ -1,11 +1,12 @@
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
-local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
+local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 local M = {}
 
 -- API helpers
 local function create_google_drive_file(kind, title)
-    local stdout, run_err = gw.run({
+    local stdout, run_err = gws_helpers.run({
         'gws',
         'drive',
         'files',
@@ -18,7 +19,7 @@ local function create_google_drive_file(kind, title)
         '--json',
         vim.json.encode({
             name = title,
-            mimeType = helper.MIME_TYPES[kind],
+            mimeType = gws_tool_helpers.MIME_TYPES[kind],
             parents = { 'root' }, -- Force creation in My Drive
         }),
     })
@@ -26,26 +27,26 @@ local function create_google_drive_file(kind, title)
         return nil, run_err
     end
 
-    local file, decode_err = gw.decode_json(stdout, 'the Google Drive file')
+    local file, decode_err = gws_helpers.decode_json(stdout, 'the Google Drive file')
     if not file then
         return nil, decode_err
     end
 
-    local id = gw.trim(file.id)
+    local id = gws_helpers.trim(file.id)
     if id == '' then
         return nil, 'Created file response did not include an id'
     end
 
-    local name = gw.fallback_text(file.name, title)
-    local url = gw.trim(file.webViewLink)
+    local name = gws_helpers.fallback_text(file.name, title)
+    local url = gws_helpers.trim(file.webViewLink)
     if url == '' then
-        url = helper.EDIT_URLS[file.mimeType]
-                and helper.EDIT_URLS[file.mimeType]:format(id)
+        url = gws_tool_helpers.EDIT_URLS[file.mimeType]
+                and gws_tool_helpers.EDIT_URLS[file.mimeType]:format(id)
             or ''
     end
 
     local lines = {
-        ('Created %s "%s" (ID: %s)'):format(helper.KIND_LABELS[kind], name, id),
+        ('Created %s "%s" (ID: %s)'):format(gws_tool_helpers.KIND_LABELS[kind], name, id),
     }
 
     if url ~= '' then
@@ -57,7 +58,7 @@ end
 
 -- Tool helpers
 local function run_create_gdrive_tool(kind, args)
-    local title = gw.normalize_optional_string(args.title)
+    local title = gws_helpers.normalize_optional_string(args.title)
     if title == nil then
         return {
             status = 'error',
@@ -87,7 +88,7 @@ end
 
 -- Tool factories
 function M.create_tool(kind)
-    local kind_label = helper.validate_kind(kind)
+    local kind_label = gws_tool_helpers.validate_kind(kind)
 
     local tool_name = 'g' .. kind .. '_create'
 
@@ -122,7 +123,7 @@ function M.create_tool(kind)
                 return ('Create %s `%s`?'):format(kind_label, self.args.title)
             end,
             success = function(self, stdout, meta)
-                helper.add_tool_success(
+                gws_tool_helpers.add_tool_success(
                     meta.tools.chat,
                     self,
                     stdout,
@@ -130,7 +131,7 @@ function M.create_tool(kind)
                 )
             end,
             error = function(self, stderr, meta)
-                helper.add_tool_error(
+                gws_tool_helpers.add_tool_error(
                     meta.tools.chat,
                     self,
                     stderr,

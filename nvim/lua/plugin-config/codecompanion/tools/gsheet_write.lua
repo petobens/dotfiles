@@ -1,6 +1,7 @@
 -- luacheck:ignore 631
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
-local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
+local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 -- Helpers
 local function operation_requires_range(operation)
@@ -19,26 +20,27 @@ end
 
 local function write_google_sheet(args)
     local spreadsheet_id, id_err =
-        helper.extract_google_id_arg(args.spreadsheet, 'sheets', 'spreadsheet')
+        gws_tool_helpers.extract_google_id_arg(args.spreadsheet, 'sheets', 'spreadsheet')
     if not spreadsheet_id then
-        return helper.tool_error(id_err)
+        return gws_tool_helpers.tool_error(id_err)
     end
 
     local operation, operation_err =
-        helper.normalize_required_string_arg(args.operation, 'operation')
+        gws_tool_helpers.normalize_required_string_arg(args.operation, 'operation')
     if not operation then
-        return helper.tool_error(operation_err)
+        return gws_tool_helpers.tool_error(operation_err)
     end
 
-    local range, range_err = helper.normalize_required_string_arg(args.range, 'range', {
-        allow_empty = true,
-    })
+    local range, range_err =
+        gws_tool_helpers.normalize_required_string_arg(args.range, 'range', {
+            allow_empty = true,
+        })
     if range == nil then
-        return helper.tool_error(range_err)
+        return gws_tool_helpers.tool_error(range_err)
     end
 
     if operation_requires_range(operation) and range == '' then
-        return helper.tool_error(
+        return gws_tool_helpers.tool_error(
             'range is required for set_range, append_rows, and clear_range'
         )
     end
@@ -46,14 +48,14 @@ local function write_google_sheet(args)
     if operation == 'append_rows' or operation == 'set_range' then
         local values, values_err = validate_values(args.values)
         if not values then
-            return helper.tool_error(values_err)
+            return gws_tool_helpers.tool_error(values_err)
         end
 
         args.values = values
     end
 
     if operation == 'append_rows' then
-        local stdout, run_err = gw.run({
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'sheets',
             'spreadsheets',
@@ -72,10 +74,10 @@ local function write_google_sheet(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Appended %d row(s) to Google Sheet %s at %s'):format(
                 #args.values,
                 spreadsheet_id,
@@ -85,7 +87,7 @@ local function write_google_sheet(args)
     end
 
     if operation == 'set_range' then
-        local stdout, run_err = gw.run({
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'sheets',
             'spreadsheets',
@@ -104,10 +106,10 @@ local function write_google_sheet(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Wrote %d row(s) to Google Sheet %s at %s'):format(
                 #args.values,
                 spreadsheet_id,
@@ -117,7 +119,7 @@ local function write_google_sheet(args)
     end
 
     if operation == 'clear_range' then
-        local stdout, run_err = gw.run({
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'sheets',
             'spreadsheets',
@@ -131,25 +133,25 @@ local function write_google_sheet(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Cleared Google Sheet %s at %s'):format(spreadsheet_id, range)
         )
     end
 
     if operation == 'raw_batch_update' then
         local requests, requests_err =
-            helper.normalize_json_array_arg(args.requests_json, {
+            gws_tool_helpers.normalize_json_array_arg(args.requests_json, {
                 invalid_json_error = 'requests_json must be valid JSON for raw_batch_update',
                 empty_error = 'requests_json must be a non-empty JSON array for raw_batch_update',
             })
         if not requests then
-            return helper.tool_error(requests_err)
+            return gws_tool_helpers.tool_error(requests_err)
         end
 
-        local stdout, run_err = gw.run({
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'sheets',
             'spreadsheets',
@@ -165,10 +167,10 @@ local function write_google_sheet(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Applied raw batchUpdate with %d request(s) to Google Sheet %s'):format(
                 #requests,
                 spreadsheet_id
@@ -176,7 +178,7 @@ local function write_google_sheet(args)
         )
     end
 
-    return helper.tool_error(
+    return gws_tool_helpers.tool_error(
         'operation must be one of: set_range, append_rows, clear_range, raw_batch_update'
     )
 end
@@ -249,7 +251,8 @@ local M = {
                 )
             end
 
-            local range = gw.fallback_text(self.args.range, '(no range provided)')
+            local range =
+                gws_helpers.fallback_text(self.args.range, '(no range provided)')
 
             return ('Write to Google Sheet `%s` using `%s` on `%s`?'):format(
                 self.args.spreadsheet,
@@ -258,7 +261,7 @@ local M = {
             )
         end,
         success = function(self, stdout, meta)
-            helper.add_tool_success(
+            gws_tool_helpers.add_tool_success(
                 meta.tools.chat,
                 self,
                 stdout,
@@ -266,7 +269,7 @@ local M = {
             )
         end,
         error = function(self, stderr, meta)
-            helper.add_tool_error(
+            gws_tool_helpers.add_tool_error(
                 meta.tools.chat,
                 self,
                 stderr,

@@ -1,15 +1,17 @@
 -- luacheck:ignore 631
 local gslides = require('plugin-config.codecompanion.slash_commands.gslides')
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
-local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
+local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 -- Helpers
 local function resolve_slide_object_id(presentation_id, args)
-    local slide_object_id, slide_object_id_err = helper.normalize_required_string_arg(
-        args.slide_object_id,
-        'slide_object_id',
-        { allow_empty = true }
-    )
+    local slide_object_id, slide_object_id_err =
+        gws_tool_helpers.normalize_required_string_arg(
+            args.slide_object_id,
+            'slide_object_id',
+            { allow_empty = true }
+        )
     if slide_object_id == nil then
         return nil, slide_object_id_err
     end
@@ -32,7 +34,7 @@ local function resolve_slide_object_id(presentation_id, args)
     end
 
     local slide = (slides.slides or {})[args.slide_index]
-    local object_id = slide and gw.fallback_text(slide.objectId, nil)
+    local object_id = slide and gws_helpers.fallback_text(slide.objectId, nil)
     if not object_id then
         return nil, ('Slide index %d was not found'):format(args.slide_index)
     end
@@ -41,26 +43,29 @@ local function resolve_slide_object_id(presentation_id, args)
 end
 
 local function write_google_slides(args)
-    local presentation_id, id_err =
-        helper.extract_google_id_arg(args.presentation, 'slides', 'presentation')
+    local presentation_id, id_err = gws_tool_helpers.extract_google_id_arg(
+        args.presentation,
+        'slides',
+        'presentation'
+    )
     if not presentation_id then
-        return helper.tool_error(id_err)
+        return gws_tool_helpers.tool_error(id_err)
     end
 
     local operation, operation_err =
-        helper.normalize_required_string_arg(args.operation, 'operation')
+        gws_tool_helpers.normalize_required_string_arg(args.operation, 'operation')
     if not operation then
-        return helper.tool_error(operation_err)
+        return gws_tool_helpers.tool_error(operation_err)
     end
 
     if operation == 'delete_slide' then
         local slide_object_id, slide_object_id_err =
             resolve_slide_object_id(presentation_id, args)
         if not slide_object_id then
-            return helper.tool_error(slide_object_id_err)
+            return gws_tool_helpers.tool_error(slide_object_id_err)
         end
 
-        local stdout, run_err = gw.run({
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'slides',
             'presentations',
@@ -82,10 +87,10 @@ local function write_google_slides(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Deleted slide %s from Google Slides %s'):format(
                 slide_object_id,
                 presentation_id
@@ -94,24 +99,28 @@ local function write_google_slides(args)
     end
 
     if operation == 'replace_all_text' then
-        local match_text, match_text_err =
-            helper.normalize_required_string_arg(args.match_text, 'match_text', {
+        local match_text, match_text_err = gws_tool_helpers.normalize_required_string_arg(
+            args.match_text,
+            'match_text',
+            {
                 empty_error = 'match_text is required for replace_all_text',
-            })
-        if not match_text then
-            return helper.tool_error(match_text_err)
-        end
-
-        local replace_text, replace_text_err = helper.normalize_required_string_arg(
-            args.replace_text,
-            'replace_text',
-            { allow_empty = true }
+            }
         )
-        if replace_text == nil then
-            return helper.tool_error(replace_text_err)
+        if not match_text then
+            return gws_tool_helpers.tool_error(match_text_err)
         end
 
-        local stdout, run_err = gw.run({
+        local replace_text, replace_text_err =
+            gws_tool_helpers.normalize_required_string_arg(
+                args.replace_text,
+                'replace_text',
+                { allow_empty = true }
+            )
+        if replace_text == nil then
+            return gws_tool_helpers.tool_error(replace_text_err)
+        end
+
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'slides',
             'presentations',
@@ -137,10 +146,10 @@ local function write_google_slides(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Replaced all matches of "%s" in Google Slides %s'):format(
                 match_text,
                 presentation_id
@@ -150,15 +159,15 @@ local function write_google_slides(args)
 
     if operation == 'raw_batch_update' then
         local requests, requests_err =
-            helper.normalize_json_array_arg(args.requests_json, {
+            gws_tool_helpers.normalize_json_array_arg(args.requests_json, {
                 invalid_json_error = 'requests_json must be valid JSON for raw_batch_update',
                 empty_error = 'requests_json must be a non-empty JSON array for raw_batch_update',
             })
         if not requests then
-            return helper.tool_error(requests_err)
+            return gws_tool_helpers.tool_error(requests_err)
         end
 
-        local stdout, run_err = gw.run({
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'slides',
             'presentations',
@@ -174,10 +183,10 @@ local function write_google_slides(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Applied raw batchUpdate with %d request(s) to Google Slides %s'):format(
                 #requests,
                 presentation_id
@@ -185,7 +194,7 @@ local function write_google_slides(args)
         )
     end
 
-    return helper.tool_error(
+    return gws_tool_helpers.tool_error(
         'operation must be one of: delete_slide, replace_all_text, raw_batch_update'
     )
 end
@@ -259,7 +268,7 @@ local M = {
                 if not target and type(self.args.slide_index) == 'number' then
                     target = ('slide #%d'):format(self.args.slide_index)
                 end
-                target = gw.fallback_text(target, '(no slide target provided)')
+                target = gws_helpers.fallback_text(target, '(no slide target provided)')
 
                 return ('Delete `%s` from Google Slides `%s`?'):format(
                     target,
@@ -267,8 +276,10 @@ local M = {
                 )
             end
 
-            local match_text =
-                gw.fallback_text(self.args.match_text, '(no match_text provided)')
+            local match_text = gws_helpers.fallback_text(
+                self.args.match_text,
+                '(no match_text provided)'
+            )
 
             return ('Write to Google Slides `%s` using `%s` with match `%s`?'):format(
                 self.args.presentation,
@@ -277,7 +288,7 @@ local M = {
             )
         end,
         success = function(self, stdout, meta)
-            helper.add_tool_success(
+            gws_tool_helpers.add_tool_success(
                 meta.tools.chat,
                 self,
                 stdout,
@@ -285,7 +296,7 @@ local M = {
             )
         end,
         error = function(self, stderr, meta)
-            helper.add_tool_error(
+            gws_tool_helpers.add_tool_error(
                 meta.tools.chat,
                 self,
                 stderr,

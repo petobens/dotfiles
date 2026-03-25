@@ -1,11 +1,12 @@
 -- luacheck:ignore 631
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
 
 local M = {}
 
 -- API fetch
 local function fetch_google_slides(presentation_id)
-    local stdout, run_err = gw.run({
+    local stdout, run_err = gws_helpers.run({
         'gws',
         'slides',
         'presentations',
@@ -17,7 +18,7 @@ local function fetch_google_slides(presentation_id)
         return nil, run_err
     end
 
-    return gw.decode_json(stdout, 'the Google Slides presentation')
+    return gws_helpers.decode_json(stdout, 'the Google Slides presentation')
 end
 
 -- Visual metadata
@@ -77,16 +78,16 @@ local function collect_slide_page_elements(parts, page_elements)
             local text_run = vim.tbl_get(text_element, 'textRun', 'content')
             if text_run then
                 has_text = true
-                gw.append_text(parts, text_run)
+                gws_helpers.append_text(parts, text_run)
             end
         end
 
         if element.image then
-            gw.append_text(parts, summarize_element(element, 'image') .. '\n')
+            gws_helpers.append_text(parts, summarize_element(element, 'image') .. '\n')
         elseif element.table then
             local rows = vim.tbl_get(element, 'table', 'rows') or '?'
             local cols = vim.tbl_get(element, 'table', 'columns') or '?'
-            gw.append_text(
+            gws_helpers.append_text(
                 parts,
                 summarize_element(
                     element,
@@ -95,12 +96,15 @@ local function collect_slide_page_elements(parts, page_elements)
                 ) .. '\n'
             )
         elseif element.video then
-            gw.append_text(parts, summarize_element(element, 'video') .. '\n')
+            gws_helpers.append_text(parts, summarize_element(element, 'video') .. '\n')
         elseif element.sheetsChart then
-            gw.append_text(parts, summarize_element(element, 'chart') .. '\n')
+            gws_helpers.append_text(parts, summarize_element(element, 'chart') .. '\n')
         elseif element.shape and not has_text then
             local shape_type = vim.tbl_get(element, 'shape', 'shapeType')
-            gw.append_text(parts, summarize_element(element, 'shape', shape_type) .. '\n')
+            gws_helpers.append_text(
+                parts,
+                summarize_element(element, 'shape', shape_type) .. '\n'
+            )
         end
     end
 end
@@ -108,7 +112,7 @@ end
 local function extract_slide_text(slide)
     local parts = {}
     collect_slide_page_elements(parts, slide.pageElements)
-    return gw.normalize_text(table.concat(parts, ''))
+    return gws_helpers.normalize_text(table.concat(parts, ''))
 end
 
 local function slide_appears_blank(slide)
@@ -120,7 +124,7 @@ local function google_slides_to_text(presentation)
     local lines = {}
 
     for i, slide in ipairs(presentation.slides or {}) do
-        local slide_object_id = gw.fallback_text(slide.objectId, 'unknown')
+        local slide_object_id = gws_helpers.fallback_text(slide.objectId, 'unknown')
         local text = extract_slide_text(slide)
         local blank_suffix = slide_appears_blank(slide) and ', appears blank' or ''
         table.insert(
@@ -133,7 +137,7 @@ local function google_slides_to_text(presentation)
         table.insert(lines, '')
     end
 
-    local text = gw.normalize_text(table.concat(lines, '\n'))
+    local text = gws_helpers.normalize_text(table.concat(lines, '\n'))
     if text == '' then
         return nil,
             'The Google Slides presentation appears to be empty or contains no extractable text'
@@ -143,7 +147,7 @@ local function google_slides_to_text(presentation)
 end
 
 local function summarize_google_slides(presentation, presentation_id)
-    local title = gw.fallback_text(presentation.title, 'Untitled presentation')
+    local title = gws_helpers.fallback_text(presentation.title, 'Untitled presentation')
     local slides = presentation.slides or {}
     local lines = {
         ('Title: %s'):format(title),
@@ -154,7 +158,7 @@ local function summarize_google_slides(presentation, presentation_id)
         local page_elements = slide.pageElements or {}
         local notes = vim.tbl_get(slide, 'slideProperties', 'notesPage') and 'yes' or 'no'
         local blank = slide_appears_blank(slide) and 'yes' or 'no'
-        local slide_object_id = gw.fallback_text(slide.objectId, 'unknown')
+        local slide_object_id = gws_helpers.fallback_text(slide.objectId, 'unknown')
         table.insert(
             lines,
             ('- Slide %d (objectId: %s): objects=%d, notes=%s, blank=%s'):format(
@@ -176,7 +180,7 @@ end
 
 -- Read helpers
 local function read_google_slides(input)
-    local presentation_id, id_err = gw.extract_google_id(input, 'slides')
+    local presentation_id, id_err = gws_helpers.extract_google_id(input, 'slides')
     if not presentation_id then
         return nil, id_err
     end
@@ -191,7 +195,7 @@ local function read_google_slides(input)
         return nil, text_err
     end
 
-    local title = gw.fallback_text(presentation.title, 'Untitled presentation')
+    local title = gws_helpers.fallback_text(presentation.title, 'Untitled presentation')
 
     return {
         id = presentation_id,
@@ -201,7 +205,7 @@ local function read_google_slides(input)
 end
 
 local function read_google_slides_metadata(input)
-    local presentation_id, id_err = gw.extract_google_id(input, 'slides')
+    local presentation_id, id_err = gws_helpers.extract_google_id(input, 'slides')
     if not presentation_id then
         return nil, id_err
     end
@@ -222,7 +226,7 @@ M.read_google_slides_metadata = read_google_slides_metadata
 -- Slash command
 function M.gslide(chat)
     vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
-        if not input or gw.is_blank(input) then
+        if not input or gws_helpers.is_blank(input) then
             return
         end
 
@@ -232,7 +236,7 @@ function M.gslide(chat)
             return
         end
 
-        gw.add_context(chat, 'Slides presentation', slides, 'gslide')
+        gws_helpers.add_context(chat, 'Slides presentation', slides, 'gslide')
     end)
 end
 

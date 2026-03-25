@@ -1,37 +1,39 @@
 local gdrive = require('plugin-config.codecompanion.slash_commands.gdrive')
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
-local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
+local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 -- Tool helpers
 local function run_gdrive_search(args)
-    local query, query_err = helper.normalize_required_string_arg(args.query, 'query')
+    local query, query_err =
+        gws_tool_helpers.normalize_required_string_arg(args.query, 'query')
     if not query then
-        return helper.tool_error(query_err)
+        return gws_tool_helpers.tool_error(query_err)
     end
 
-    local file_type_input, file_type_err = helper.normalize_required_string_arg(
+    local file_type_input, file_type_err = gws_tool_helpers.normalize_required_string_arg(
         args.file_type,
         'file_type',
         { allow_empty = true }
     )
     if file_type_input == nil then
-        return helper.tool_error(file_type_err)
+        return gws_tool_helpers.tool_error(file_type_err)
     end
 
     local file_type, parsed_file_type_err = gdrive.parse_file_type(file_type_input)
     if not file_type then
-        return helper.tool_error(parsed_file_type_err)
+        return gws_tool_helpers.tool_error(parsed_file_type_err)
     end
 
     local result, err = gdrive.search_google_drive(query, file_type)
     if not result then
-        return helper.tool_error(err)
+        return gws_tool_helpers.tool_error(err)
     end
 
-    return helper.tool_success(
+    return gws_tool_helpers.tool_success(
         ('Here are the Google Drive %s results for "%s":\n\n%s'):format(
             file_type.label,
-            gw.trim(query),
+            gws_helpers.trim(query),
             result.text
         )
     )
@@ -80,14 +82,14 @@ local M = {
     },
     output = {
         prompt = function(self, _)
-            local file_type = gw.fallback_text(self.args.file_type, 'all')
+            local file_type = gws_helpers.fallback_text(self.args.file_type, 'all')
             return ('Search Google Drive for `%s` in `%s`?'):format(
                 self.args.query,
                 file_type
             )
         end,
         success = function(self, stdout, meta)
-            helper.add_tool_success(
+            gws_tool_helpers.add_tool_success(
                 meta.tools.chat,
                 self,
                 stdout,
@@ -95,7 +97,7 @@ local M = {
             )
         end,
         error = function(self, stderr, meta)
-            helper.add_tool_error(
+            gws_tool_helpers.add_tool_error(
                 meta.tools.chat,
                 self,
                 stderr,

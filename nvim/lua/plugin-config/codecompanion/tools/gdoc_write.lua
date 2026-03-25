@@ -1,30 +1,32 @@
 -- luacheck:ignore 631
-local gw = require('plugin-config.codecompanion.slash_commands.gworkspace')
-local helper = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local gws_helpers =
+    require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
+local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 -- Helpers
 local function write_google_doc(args)
     local document_id, id_err =
-        helper.extract_google_id_arg(args.document, 'docs', 'document')
+        gws_tool_helpers.extract_google_id_arg(args.document, 'docs', 'document')
     if not document_id then
-        return helper.tool_error(id_err)
+        return gws_tool_helpers.tool_error(id_err)
     end
 
     local operation, operation_err =
-        helper.normalize_required_string_arg(args.operation, 'operation')
+        gws_tool_helpers.normalize_required_string_arg(args.operation, 'operation')
     if not operation then
-        return helper.tool_error(operation_err)
+        return gws_tool_helpers.tool_error(operation_err)
     end
 
     if operation == 'append_text' then
-        local text, text_err = helper.normalize_required_string_arg(args.text, 'text', {
-            empty_error = 'text is required for append_text',
-        })
+        local text, text_err =
+            gws_tool_helpers.normalize_required_string_arg(args.text, 'text', {
+                empty_error = 'text is required for append_text',
+            })
         if not text then
-            return helper.tool_error(text_err)
+            return gws_tool_helpers.tool_error(text_err)
         end
 
-        local stdout, run_err = gw.run({
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'docs',
             '+write',
@@ -35,31 +37,37 @@ local function write_google_doc(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(('Appended text to Google Doc %s'):format(document_id))
+        return gws_tool_helpers.tool_success(
+            ('Appended text to Google Doc %s'):format(document_id)
+        )
     end
 
     if operation == 'replace_all_text' then
-        local match_text, match_text_err =
-            helper.normalize_required_string_arg(args.match_text, 'match_text', {
+        local match_text, match_text_err = gws_tool_helpers.normalize_required_string_arg(
+            args.match_text,
+            'match_text',
+            {
                 empty_error = 'match_text is required for replace_all_text',
-            })
-        if not match_text then
-            return helper.tool_error(match_text_err)
-        end
-
-        local replace_text, replace_text_err = helper.normalize_required_string_arg(
-            args.replace_text,
-            'replace_text',
-            { allow_empty = true }
+            }
         )
-        if replace_text == nil then
-            return helper.tool_error(replace_text_err)
+        if not match_text then
+            return gws_tool_helpers.tool_error(match_text_err)
         end
 
-        local stdout, run_err = gw.run({
+        local replace_text, replace_text_err =
+            gws_tool_helpers.normalize_required_string_arg(
+                args.replace_text,
+                'replace_text',
+                { allow_empty = true }
+            )
+        if replace_text == nil then
+            return gws_tool_helpers.tool_error(replace_text_err)
+        end
+
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'docs',
             'documents',
@@ -85,10 +93,10 @@ local function write_google_doc(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Replaced all matches of "%s" in Google Doc %s'):format(
                 match_text,
                 document_id
@@ -98,15 +106,15 @@ local function write_google_doc(args)
 
     if operation == 'raw_batch_update' then
         local requests, requests_err =
-            helper.normalize_json_array_arg(args.requests_json, {
+            gws_tool_helpers.normalize_json_array_arg(args.requests_json, {
                 invalid_json_error = 'requests_json must be valid JSON',
                 empty_error = 'requests_json must be a non-empty JSON array',
             })
         if not requests then
-            return helper.tool_error(requests_err)
+            return gws_tool_helpers.tool_error(requests_err)
         end
 
-        local stdout, run_err = gw.run({
+        local stdout, run_err = gws_helpers.run({
             'gws',
             'docs',
             'documents',
@@ -122,10 +130,10 @@ local function write_google_doc(args)
         })
 
         if not stdout then
-            return helper.tool_error(run_err)
+            return gws_tool_helpers.tool_error(run_err)
         end
 
-        return helper.tool_success(
+        return gws_tool_helpers.tool_success(
             ('Applied raw batchUpdate with %d request(s) to Google Doc %s'):format(
                 #requests,
                 document_id
@@ -133,7 +141,7 @@ local function write_google_doc(args)
         )
     end
 
-    return helper.tool_error(
+    return gws_tool_helpers.tool_error(
         'operation must be one of: append_text, replace_all_text, raw_batch_update'
     )
 end
@@ -202,8 +210,10 @@ local M = {
                 return ('Append text to Google Doc `%s`?'):format(self.args.document)
             end
 
-            local match_text =
-                gw.fallback_text(self.args.match_text, '(no match_text provided)')
+            local match_text = gws_helpers.fallback_text(
+                self.args.match_text,
+                '(no match_text provided)'
+            )
 
             return ('Write to Google Doc `%s` using `%s` with match `%s`?'):format(
                 self.args.document,
@@ -212,7 +222,7 @@ local M = {
             )
         end,
         success = function(self, stdout, meta)
-            helper.add_tool_success(
+            gws_tool_helpers.add_tool_success(
                 meta.tools.chat,
                 self,
                 stdout,
@@ -220,7 +230,7 @@ local M = {
             )
         end,
         error = function(self, stderr, meta)
-            helper.add_tool_error(
+            gws_tool_helpers.add_tool_error(
                 meta.tools.chat,
                 self,
                 stderr,
