@@ -98,6 +98,21 @@ local tools = {
         'rename_tool',
         'doc'
     ),
+    gdoc_inspect = module_tool(
+        'Inspect a Google Doc structure via gws',
+        'plugin-config.codecompanion.tools.gdoc_inspect',
+        NO_APPROVAL_OPTS
+    ),
+    gdoc_read = module_tool(
+        'Read a Google Doc via gws',
+        'plugin-config.codecompanion.tools.gdoc_read',
+        NO_APPROVAL_OPTS
+    ),
+    gdoc_write = module_tool(
+        'Write to a Google Doc via gws',
+        'plugin-config.codecompanion.tools.gdoc_write',
+        WRITE_APPROVAL_OPTS
+    ),
     ---- Gslides
     gslides_create = gdrive_tool(
         'Create a Google Slides presentation via gws',
@@ -137,11 +152,23 @@ local tools = {
             description = 'Google Sheets tools',
             tools = {
                 'gsheet_create',
-                'gsheet_trash',
                 'gsheet_inspect',
                 'gsheet_read',
                 'gsheet_rename',
+                'gsheet_trash',
                 'gsheet_write',
+            },
+            opts = GROUP_OPTS,
+        },
+        gdoc_tools = {
+            description = 'Google Docs tools',
+            tools = {
+                'gdoc_create',
+                'gdoc_inspect',
+                'gdoc_read',
+                'gdoc_rename',
+                'gdoc_trash',
+                'gdoc_write',
             },
             opts = GROUP_OPTS,
         },

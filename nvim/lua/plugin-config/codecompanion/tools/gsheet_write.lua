@@ -95,13 +95,19 @@ local function write_google_sheet(args)
         local stdout, run_err = gw.run({
             'gws',
             'sheets',
-            '+append',
-            '--spreadsheet',
-            spreadsheet_id,
-            '--range',
-            range,
-            '--json-values',
-            vim.json.encode(args.values),
+            'spreadsheets',
+            'values',
+            'append',
+            '--params',
+            vim.json.encode({
+                spreadsheetId = spreadsheet_id,
+                range = range,
+                valueInputOption = 'USER_ENTERED',
+            }),
+            '--json',
+            vim.json.encode({
+                values = args.values,
+            }),
         })
 
         if not stdout then

@@ -58,6 +58,51 @@ local function google_doc_to_text(doc)
     return text
 end
 
+local function summarize_google_doc(doc, doc_id)
+    local body = vim.tbl_get(doc, 'body', 'content') or {}
+    local paragraph_count = 0
+    local table_count = 0
+    local toc_count = 0
+
+    local function walk(elements)
+        if type(elements) ~= 'table' then
+            return
+        end
+
+        for _, element in ipairs(elements) do
+            if element.paragraph then
+                paragraph_count = paragraph_count + 1
+            elseif element.table then
+                table_count = table_count + 1
+                for _, row in ipairs(element.table.tableRows or {}) do
+                    for _, cell in ipairs(row.tableCells or {}) do
+                        walk(cell.content)
+                    end
+                end
+            elseif element.tableOfContents then
+                toc_count = toc_count + 1
+                walk(element.tableOfContents.content)
+            end
+        end
+    end
+
+    walk(body)
+
+    local title = gw.trim(doc.title) ~= '' and gw.trim(doc.title) or 'Untitled document'
+    local lines = {
+        ('Title: %s'):format(title),
+        ('Paragraphs: %d'):format(paragraph_count),
+        ('Tables: %d'):format(table_count),
+        ('Tables of contents: %d'):format(toc_count),
+    }
+
+    return {
+        id = doc_id,
+        title = title,
+        text = table.concat(lines, '\n'),
+    }
+end
+
 -- Read helpers
 local function read_google_doc(input)
     local doc_id, id_err = gw.extract_google_id(input, 'docs')
@@ -81,6 +126,24 @@ local function read_google_doc(input)
         text = text,
     }
 end
+
+local function read_google_doc_metadata(input)
+    local doc_id, id_err = gw.extract_google_id(input, 'docs')
+    if not doc_id then
+        return nil, id_err
+    end
+
+    local doc, fetch_err = fetch_google_doc(doc_id)
+    if not doc then
+        return nil, fetch_err
+    end
+
+    return summarize_google_doc(doc, doc_id)
+end
+
+-- Exports for reuse by tools
+M.read_google_doc = read_google_doc
+M.read_google_doc_metadata = read_google_doc_metadata
 
 -- Slash command
 function M.gdoc(chat)
