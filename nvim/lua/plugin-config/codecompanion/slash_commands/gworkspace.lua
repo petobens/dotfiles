@@ -1,8 +1,13 @@
 local M = {}
 
+-- Local helpers
+local function is_nil_like(value)
+    return value == nil or value == vim.NIL
+end
+
 -- Strings
 function M.trim(s)
-    if s == nil or s == vim.NIL then
+    if is_nil_like(s) then
         return ''
     end
 
@@ -17,18 +22,6 @@ function M.is_blank(value)
     return M.trim(value) == ''
 end
 
-function M.normalize_optional_string(value)
-    if value == nil or value == vim.NIL then
-        return ''
-    end
-
-    if type(value) ~= 'string' then
-        return nil
-    end
-
-    return M.trim(value)
-end
-
 function M.fallback_text(value, fallback)
     local text = M.trim(value)
     if text == '' then
@@ -39,7 +32,7 @@ function M.fallback_text(value, fallback)
 end
 
 function M.append_text(parts, text)
-    if text == nil or text == vim.NIL then
+    if is_nil_like(text) then
         return
     end
 
@@ -53,7 +46,7 @@ function M.append_text(parts, text)
 end
 
 function M.normalize_text(text)
-    if text == nil or text == vim.NIL then
+    if is_nil_like(text) then
         text = ''
     elseif type(text) ~= 'string' then
         text = tostring(text)
@@ -64,9 +57,21 @@ function M.normalize_text(text)
     return vim.trim(text)
 end
 
+function M.normalize_optional_string(value)
+    if is_nil_like(value) then
+        return ''
+    end
+
+    if type(value) ~= 'string' then
+        return nil
+    end
+
+    return M.trim(value)
+end
+
 -- Process
 function M.decode_json(stdout, err_context)
-    if stdout == nil or stdout == vim.NIL then
+    if is_nil_like(stdout) then
         stdout = ''
     elseif type(stdout) ~= 'string' then
         stdout = tostring(stdout)
@@ -94,7 +99,7 @@ end
 
 -- Input parsing
 function M.extract_google_id(input, kind)
-    if input == nil or input == vim.NIL then
+    if is_nil_like(input) then
         return nil, ('Missing Google %s URL or ID'):format(kind)
     end
 
