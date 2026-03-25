@@ -23,7 +23,7 @@ local function set_chat_win_title(e)
         return codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
     end)
 
-    if not ok then
+    if not ok or not chat or not chat.ui or not chat.ui.winnr then
         vim.defer_fn(function()
             local picker =
                 telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
