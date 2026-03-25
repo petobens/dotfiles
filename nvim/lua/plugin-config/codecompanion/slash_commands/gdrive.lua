@@ -80,14 +80,6 @@ local function build_drive_query(query, file_type)
 end
 
 -- API fetch
-local function get_drive_file_name(file)
-    return gw.fallback_text(file.name, nil)
-end
-
-local function get_drive_file_title(file)
-    return gw.fallback_text(file.name, 'Untitled')
-end
-
 local function fetch_drive_file_name(file_id)
     local stdout, run_err = gw.run({
         'gws',
@@ -110,7 +102,7 @@ local function fetch_drive_file_name(file_id)
         return nil, decode_err
     end
 
-    local name = get_drive_file_name(file)
+    local name = gw.fallback_text(file.name, nil)
     if not name then
         return nil, 'Google Drive file metadata did not include a name'
     end
@@ -222,7 +214,7 @@ local function format_drive_entry(file, location_cache)
         return nil
     end
 
-    local title = get_drive_file_title(file)
+    local title = gw.fallback_text(file.name, 'Untitled')
 
     local lines = {
         ('- %s'):format(title),
