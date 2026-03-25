@@ -4,12 +4,6 @@ local gws_helpers =
 local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
 -- Helpers
-local function operation_requires_range(operation)
-    return operation == 'append_rows'
-        or operation == 'set_range'
-        or operation == 'clear_range'
-end
-
 local function validate_values(values)
     if type(values) ~= 'table' or vim.tbl_isempty(values) then
         return nil, 'values must be a non-empty 2D array'
@@ -39,7 +33,13 @@ local function write_google_sheet(args)
         return gws_tool_helpers.tool_error(range_err)
     end
 
-    if operation_requires_range(operation) and range == '' then
+    if
+        (
+            operation == 'append_rows'
+            or operation == 'set_range'
+            or operation == 'clear_range'
+        ) and range == ''
+    then
         return gws_tool_helpers.tool_error(
             'range is required for set_range, append_rows, and clear_range'
         )

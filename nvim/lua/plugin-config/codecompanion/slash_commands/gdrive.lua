@@ -64,14 +64,10 @@ local function parse_file_type(input)
         'Invalid file type. Use one of: docs, sheets, slides, doc, sheet, slide, all, or leave empty'
 end
 
-local function escape_drive_query_string(value)
-    return value:gsub('\\', '\\\\'):gsub("'", "\\'")
-end
-
 local function build_drive_query(query, file_type)
     local clauses = {
         ("(name contains '%s')"):format(
-            escape_drive_query_string(gws_helpers.trim(query))
+            gws_helpers.trim(query):gsub('\\', '\\\\'):gsub("'", "\\'")
         ),
     }
 
@@ -182,10 +178,6 @@ local function format_modified_time(value)
     )
 end
 
-local function get_file_owner(file)
-    return gws_helpers.fallback_text(vim.tbl_get(file, 'owners', 1, 'displayName'), nil)
-end
-
 local function get_file_location(file, location_cache)
     local parent_id = vim.tbl_get(file, 'parents', 1)
     parent_id = gws_helpers.trim(parent_id)
@@ -230,7 +222,8 @@ local function format_drive_entry(file, location_cache)
         table.insert(lines, ('  modified: %s'):format(modified_time))
     end
 
-    local owner = get_file_owner(file)
+    local owner =
+        gws_helpers.fallback_text(vim.tbl_get(file, 'owners', 1, 'displayName'), nil)
     if owner then
         table.insert(lines, ('  owner: %s'):format(owner))
     end
