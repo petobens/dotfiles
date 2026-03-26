@@ -46,7 +46,10 @@ function M.setup()
                     show_preset_prompts = false,
                 },
             },
-            diff = { layout = 'vertical' },
+            diff = {
+                layout = 'vertical',
+                threshold_for_chat = 15,
+            },
         },
         -- Interactions
         interactions = {
