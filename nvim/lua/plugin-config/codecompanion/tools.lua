@@ -1,6 +1,7 @@
 local M = {}
 
--- Constants
+local prompt_library = require('plugin-config.codecompanion.prompt_library')
+
 local GROUP_OPTS = {
     collapse_tools = true,
     ignore_system_prompt = false,
@@ -197,6 +198,21 @@ local tools = {
         },
         gslides_tools = {
             description = 'Google Slides tools',
+            tools = {
+                'gdrive_search',
+                'gslides_create',
+                'gslides_inspect',
+                'gslides_read',
+                'gslides_rename',
+                'gslides_trash',
+                'gslides_write',
+            },
+            opts = GROUP_OPTS,
+        },
+        -- Agents
+        mutt_slides_agent = {
+            description = 'Muttdata slide creation agent',
+            system_prompt = prompt_library.prompt_file('mutt_slides_agent'),
             tools = {
                 'gdrive_search',
                 'gslides_create',

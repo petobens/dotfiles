@@ -92,6 +92,19 @@ end
 
 -- Public accessor for loaded prompt text
 local PROMPT_LIBRARY = load_prompt_library()
+
+-- Read a raw prompt file by md basename bypassing the preloaded cache
+function M.prompt_file(relative_path)
+    local stat = vim.uv.fs_stat(PROMPT_LIBRARY_CONFIG.prompt_dir)
+    local read_opts = {
+        use_url = not (stat and stat.type == 'directory'),
+        base_url = PROMPT_LIBRARY_CONFIG.base_url,
+        prompt_dir = PROMPT_LIBRARY_CONFIG.prompt_dir,
+    }
+
+    return read_prompt_file(relative_path, read_opts)
+end
+
 function M.prompt(name)
     return PROMPT_LIBRARY[name]
 end
@@ -252,17 +265,7 @@ local function slides_generator_prompt()
         'chat',
         'Act as a slides strategy writing assistant.',
         'slides_role',
-        M.prompt('slides_generator'),
-        {
-            context = {
-                {
-                    type = 'file',
-                    path = {
-                        '/home/pedro/git-repos/private/notes/mutt/leadership/meetings/quarterly/2026/2026-Q1/ops_plan_2026.md',
-                    },
-                },
-            },
-        }
+        M.prompt('slides_generator')
     )
 end
 
