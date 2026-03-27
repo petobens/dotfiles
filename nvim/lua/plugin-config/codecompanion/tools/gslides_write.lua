@@ -416,7 +416,6 @@ local M = {
                     self.args.presentation
                 )
             end
-
             if self.args.operation == 'delete_slide' then
                 local target = self.args.slide_object_id
                 if not target and type(self.args.slide_index) == 'number' then
@@ -434,7 +433,6 @@ local M = {
                 self.args.match_text,
                 '(no match_text provided)'
             )
-
             return ('Write to Google Slides `%s` using `%s` with match `%s`?'):format(
                 self.args.presentation,
                 self.args.operation,
