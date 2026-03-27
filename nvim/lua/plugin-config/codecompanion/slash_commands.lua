@@ -37,21 +37,21 @@ function M.build()
             callback = filesystem.py_files,
         },
         -- Google Workspace
-        ['gdrive'] = {
+        ['gdrive_search'] = {
             description = 'Search Google Drive files',
-            callback = gdrive.gdrive,
+            callback = gdrive.gdrive_search,
         },
-        ['gdoc'] = {
+        ['gdoc_read'] = {
             description = 'Read a Google Doc',
-            callback = gdocs.gdoc,
+            callback = gdocs.gdoc_read,
         },
-        ['gsheet'] = {
+        ['gsheet_read'] = {
             description = 'Read a Google Sheet',
-            callback = gsheets.gsheet,
+            callback = gsheets.gsheet_read,
         },
-        ['gslide'] = {
+        ['gslide_read'] = {
             description = 'Read a Google Slides presentation',
-            callback = gslides.gslide,
+            callback = gslides.gslide_read,
         },
         -- Git
         ['conventional_commit'] = {

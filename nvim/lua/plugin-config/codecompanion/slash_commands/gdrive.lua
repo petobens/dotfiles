@@ -295,7 +295,7 @@ M.parse_file_type = parse_file_type
 M.search_google_drive = search_google_drive
 
 -- Slash command
-function M.gdrive(chat)
+function M.gdrive_search(chat)
     vim.ui.input({ prompt = 'Google Drive search query: ' }, function(input)
         if gws_helpers.is_blank(input) then
             return

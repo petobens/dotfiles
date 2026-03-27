@@ -255,7 +255,7 @@ M.read_google_sheet = read_google_sheet
 M.read_google_sheet_metadata = read_google_sheet_metadata
 
 -- Slash command
-function M.gsheet(chat)
+function M.gsheet_read(chat)
     vim.ui.input({ prompt = 'Google Sheet URL or ID: ' }, function(input)
         if not input or gws_helpers.is_blank(input) then
             return

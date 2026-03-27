@@ -224,7 +224,7 @@ M.read_google_slides = read_google_slides
 M.read_google_slides_metadata = read_google_slides_metadata
 
 -- Slash command
-function M.gslide(chat)
+function M.gslide_read(chat)
     vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
         if not input or gws_helpers.is_blank(input) then
             return

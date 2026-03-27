@@ -149,7 +149,7 @@ M.read_google_doc = read_google_doc
 M.read_google_doc_metadata = read_google_doc_metadata
 
 -- Slash command
-function M.gdoc(chat)
+function M.gdoc_read(chat)
     vim.ui.input({ prompt = 'Google Doc URL or ID: ' }, function(input)
         if not input or vim.trim(input) == '' then
             return
