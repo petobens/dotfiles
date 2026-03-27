@@ -1,3 +1,4 @@
+local assets = require('plugin-config.codecompanion.slash_commands.assets')
 local coding = require('plugin-config.codecompanion.slash_commands.coding')
 local filesystem = require('plugin-config.codecompanion.slash_commands.filesystem')
 local gdocs = require('plugin-config.codecompanion.slash_commands.gdocs')
@@ -27,6 +28,10 @@ function M.build()
         ['directory'] = {
             description = 'Insert all files in a directory',
             callback = filesystem.directory,
+        },
+        ['assets'] = {
+            description = 'Load all assets from an assets subdirectory as context',
+            callback = assets.assets,
         },
         ['git_files'] = {
             description = 'Insert all files in git repo',

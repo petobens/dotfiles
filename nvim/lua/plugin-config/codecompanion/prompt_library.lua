@@ -90,10 +90,10 @@ local function load_prompt_library()
     return prompt_library
 end
 
--- Public accessor for loaded prompt text
+-- Loaded prompt text
 local PROMPT_LIBRARY = load_prompt_library()
 
--- Read a raw prompt file by md basename bypassing the preloaded cache
+-- Read a raw prompt file by markdown basename, bypassing the preloaded cache
 function M.prompt_file(relative_path)
     local stat = vim.uv.fs_stat(PROMPT_LIBRARY_CONFIG.prompt_dir)
     local read_opts = {

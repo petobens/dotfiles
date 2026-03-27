@@ -211,8 +211,8 @@ local tools = {
         },
         -- Agents
         mutt_slides_agent = {
-            description = 'Muttdata slide creation agent',
-            system_prompt = prompt_library.prompt_file('mutt_slides_agent'),
+            description = 'Create muttdata slides',
+            system_prompt = prompt_library.prompt_file('mutt_slides'),
             tools = {
                 'gdrive_search',
                 'gslides_create',
