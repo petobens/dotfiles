@@ -6,7 +6,7 @@ return gws_tool_helpers.build_read_tool({
     description = 'Read Google Doc structure.',
     input_key = 'document',
     input_description = 'Google Doc URL or document ID',
-    reader = gdocs.read_google_doc_metadata,
+    reader = gdocs.read_doc_metadata,
     template = 'Here is the structure of the Google Doc "%s" (ID: %s):\n\n%s',
     prompt_template = 'Inspect Google Doc `%s` structure?',
     success_user_output = 'Read Google Doc structure',

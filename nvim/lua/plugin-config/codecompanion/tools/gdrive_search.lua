@@ -16,7 +16,7 @@ local FILE_TYPE_ENUM = {
 }
 
 -- Search
-local function search_google_drive(args)
+local function search_drive(args)
     local query, query_err =
         gws_tool_helpers.normalize_required_string_arg(args.query, 'query')
     if not query then
@@ -37,7 +37,7 @@ local function search_google_drive(args)
         return gws_tool_helpers.tool_error(parsed_file_type_err)
     end
 
-    local result, err = gdrive.search_google_drive(query, file_type)
+    local result, err = gdrive.search_drive(query, file_type)
     if not result then
         return gws_tool_helpers.tool_error(err)
     end
@@ -72,7 +72,7 @@ local M = {
     name = 'gdrive_search',
     cmds = {
         function(_, args, _)
-            return search_google_drive(args)
+            return search_drive(args)
         end,
     },
     schema = {

@@ -11,7 +11,7 @@ local OPERATION_ENUM = {
 }
 
 -- API
-local function batch_update_document(document_id, requests)
+local function batch_update_doc(document_id, requests)
     return gws_helpers.run({
         'gws',
         'docs',
@@ -71,7 +71,7 @@ local function replace_all_text_operation(document_id, args)
         return gws_tool_helpers.tool_error(replace_text_err)
     end
 
-    local stdout, run_err = batch_update_document(document_id, {
+    local stdout, run_err = batch_update_doc(document_id, {
         {
             replaceAllText = {
                 containsText = { text = match_text, matchCase = true },
@@ -98,7 +98,7 @@ local function raw_batch_update_operation(document_id, args)
         return gws_tool_helpers.tool_error(requests_err)
     end
 
-    local stdout, run_err = batch_update_document(document_id, requests)
+    local stdout, run_err = batch_update_doc(document_id, requests)
     if not stdout then
         return gws_tool_helpers.tool_error(run_err)
     end
@@ -148,7 +148,7 @@ local SCHEMA_PROPERTIES = {
 }
 
 -- Dispatch
-local function write_google_doc(args)
+local function write_doc(args)
     local document_id, id_err =
         gws_tool_helpers.extract_google_id_arg(args.document, 'docs', 'document')
     if not document_id then
@@ -172,7 +172,7 @@ local M = {
     name = 'gdoc_write',
     cmds = {
         function(_, args, _)
-            return write_google_doc(args)
+            return write_doc(args)
         end,
     },
     schema = {

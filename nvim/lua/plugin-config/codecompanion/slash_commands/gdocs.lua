@@ -4,7 +4,7 @@ local gws_helpers =
 local M = {}
 
 -- API
-local function fetch_google_doc(doc_id)
+local function fetch_doc(doc_id)
     local stdout, run_err = gws_helpers.run({
         'gws',
         'docs',
@@ -51,7 +51,7 @@ local function collect_doc_elements(parts, elements)
     end
 end
 
-local function google_doc_to_text(doc)
+local function doc_to_text(doc)
     local parts = {}
     collect_doc_elements(parts, vim.tbl_get(doc, 'body', 'content'))
 
@@ -62,7 +62,7 @@ local function google_doc_to_text(doc)
     return text
 end
 
-local function summarize_google_doc(doc, doc_id)
+local function summarize_doc(doc, doc_id)
     local counts = {
         paragraph = 0,
         table = 0,
@@ -106,18 +106,18 @@ local function summarize_google_doc(doc, doc_id)
 end
 
 -- Read
-local function read_google_doc(input)
+local function read_doc(input)
     local doc_id, id_err = gws_helpers.extract_google_id(input, 'docs')
     if not doc_id then
         return nil, id_err
     end
 
-    local doc, fetch_err = fetch_google_doc(doc_id)
+    local doc, fetch_err = fetch_doc(doc_id)
     if not doc then
         return nil, fetch_err
     end
 
-    local text, text_err = google_doc_to_text(doc)
+    local text, text_err = doc_to_text(doc)
     if not text then
         return nil, text_err
     end
@@ -129,23 +129,23 @@ local function read_google_doc(input)
     }
 end
 
-local function read_google_doc_metadata(input)
+local function read_doc_metadata(input)
     local doc_id, id_err = gws_helpers.extract_google_id(input, 'docs')
     if not doc_id then
         return nil, id_err
     end
 
-    local doc, fetch_err = fetch_google_doc(doc_id)
+    local doc, fetch_err = fetch_doc(doc_id)
     if not doc then
         return nil, fetch_err
     end
 
-    return summarize_google_doc(doc, doc_id)
+    return summarize_doc(doc, doc_id)
 end
 
 -- Exports
-M.read_google_doc = read_google_doc
-M.read_google_doc_metadata = read_google_doc_metadata
+M.read_doc = read_doc
+M.read_doc_metadata = read_doc_metadata
 
 -- Command
 function M.gdoc_read(chat)
@@ -154,7 +154,7 @@ function M.gdoc_read(chat)
             return
         end
 
-        local doc, err = read_google_doc(input)
+        local doc, err = read_doc(input)
         if not doc then
             vim.notify(err, vim.log.levels.ERROR)
             return

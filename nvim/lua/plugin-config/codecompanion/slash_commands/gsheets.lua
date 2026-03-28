@@ -3,11 +3,11 @@ local gws_helpers =
 
 local M = {}
 
--- Const
+-- Constants
 local DEFAULT_RANGE = 'A1:AZ2000'
 
 -- API
-local function fetch_google_sheet_metadata(sheet_id)
+local function fetch_sheet_metadata(sheet_id)
     local stdout, run_err = gws_helpers.run({
         'gws',
         'sheets',
@@ -23,7 +23,7 @@ local function fetch_google_sheet_metadata(sheet_id)
     return gws_helpers.decode_json(stdout, 'the Google Sheet metadata')
 end
 
-local function fetch_google_sheet_values(sheet_id, ranges, value_render_option)
+local function fetch_sheet_values(sheet_id, ranges, value_render_option)
     local stdout, run_err = gws_helpers.run({
         'gws',
         'sheets',
@@ -127,7 +127,7 @@ local function render_value_ranges(label, value_ranges)
         or nil
 end
 
-local function summarize_google_sheet_metadata(metadata)
+local function summarize_sheet_metadata(metadata)
     return {
         id = metadata.spreadsheetId,
         title = get_spreadsheet_title(metadata),
@@ -141,13 +141,13 @@ local function summarize_google_sheet_metadata(metadata)
 end
 
 -- Read
-local function read_google_sheet(input)
+local function read_sheet(input)
     local sheet_id, id_err = gws_helpers.extract_google_id(input, 'sheets')
     if not sheet_id then
         return nil, id_err
     end
 
-    local metadata, metadata_err = fetch_google_sheet_metadata(sheet_id)
+    local metadata, metadata_err = fetch_sheet_metadata(sheet_id)
     if not metadata then
         return nil, metadata_err
     end
@@ -174,13 +174,12 @@ local function read_google_sheet(input)
         :totable()
 
     local values_data, values_err =
-        fetch_google_sheet_values(sheet_id, ranges, 'FORMATTED_VALUE')
+        fetch_sheet_values(sheet_id, ranges, 'FORMATTED_VALUE')
     if not values_data then
         return nil, values_err
     end
 
-    local formulas_data, formulas_err =
-        fetch_google_sheet_values(sheet_id, ranges, 'FORMULA')
+    local formulas_data, formulas_err = fetch_sheet_values(sheet_id, ranges, 'FORMULA')
     if not formulas_data then
         return nil, formulas_err
     end
@@ -214,23 +213,23 @@ local function read_google_sheet(input)
     }
 end
 
-local function read_google_sheet_metadata(input)
+local function read_sheet_metadata(input)
     local sheet_id, id_err = gws_helpers.extract_google_id(input, 'sheets')
     if not sheet_id then
         return nil, id_err
     end
 
-    local metadata, metadata_err = fetch_google_sheet_metadata(sheet_id)
+    local metadata, metadata_err = fetch_sheet_metadata(sheet_id)
     if not metadata then
         return nil, metadata_err
     end
 
-    return summarize_google_sheet_metadata(metadata)
+    return summarize_sheet_metadata(metadata)
 end
 
 -- Exports
-M.read_google_sheet = read_google_sheet
-M.read_google_sheet_metadata = read_google_sheet_metadata
+M.read_sheet = read_sheet
+M.read_sheet_metadata = read_sheet_metadata
 
 -- Command
 function M.gsheet_read(chat)
@@ -239,7 +238,7 @@ function M.gsheet_read(chat)
             return
         end
 
-        local sheet, err = read_google_sheet(input)
+        local sheet, err = read_sheet(input)
         if not sheet then
             vim.notify(err, vim.log.levels.ERROR)
             return

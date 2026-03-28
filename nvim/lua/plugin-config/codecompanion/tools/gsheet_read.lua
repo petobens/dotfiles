@@ -6,7 +6,7 @@ return gws_tool_helpers.build_read_tool({
     description = 'Read Google Sheet contents.',
     input_key = 'spreadsheet',
     input_description = 'Google Sheet URL or spreadsheet ID',
-    reader = gsheets.read_google_sheet,
+    reader = gsheets.read_sheet,
     template = 'Here is the content of the Google Sheet "%s" (ID: %s):\n\n%s',
     prompt_template = 'Read Google Sheet `%s`?',
     success_user_output = 'Read Google Sheet contents',

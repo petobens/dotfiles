@@ -35,7 +35,7 @@ local function resolve_sheet_range(args)
 end
 
 -- API
-local function run_sheet_values_operation(spreadsheet_id, action, range, values)
+local function update_sheet_values(spreadsheet_id, action, range, values)
     local cmd = {
         'gws',
         'sheets',
@@ -56,7 +56,7 @@ local function run_sheet_values_operation(spreadsheet_id, action, range, values)
     return gws_helpers.run(cmd)
 end
 
-local function run_sheet_clear_operation(spreadsheet_id, range)
+local function clear_sheet_values(spreadsheet_id, range)
     return gws_helpers.run({
         'gws',
         'sheets',
@@ -68,7 +68,7 @@ local function run_sheet_clear_operation(spreadsheet_id, range)
     })
 end
 
-local function run_sheet_batch_update(spreadsheet_id, requests)
+local function batch_update_sheet(spreadsheet_id, requests)
     return gws_helpers.run({
         'gws',
         'sheets',
@@ -93,8 +93,7 @@ local function append_rows_operation(spreadsheet_id, args)
         return gws_tool_helpers.tool_error(values_err)
     end
 
-    local stdout, run_err =
-        run_sheet_values_operation(spreadsheet_id, 'append', range, values)
+    local stdout, run_err = update_sheet_values(spreadsheet_id, 'append', range, values)
     if not stdout then
         return gws_tool_helpers.tool_error(run_err)
     end
@@ -119,8 +118,7 @@ local function set_range_operation(spreadsheet_id, args)
         return gws_tool_helpers.tool_error(values_err)
     end
 
-    local stdout, run_err =
-        run_sheet_values_operation(spreadsheet_id, 'update', range, values)
+    local stdout, run_err = update_sheet_values(spreadsheet_id, 'update', range, values)
     if not stdout then
         return gws_tool_helpers.tool_error(run_err)
     end
@@ -140,7 +138,7 @@ local function clear_range_operation(spreadsheet_id, args)
         return gws_tool_helpers.tool_error(range_err)
     end
 
-    local stdout, run_err = run_sheet_clear_operation(spreadsheet_id, range)
+    local stdout, run_err = clear_sheet_values(spreadsheet_id, range)
     if not stdout then
         return gws_tool_helpers.tool_error(run_err)
     end
@@ -160,7 +158,7 @@ local function raw_batch_update_operation(spreadsheet_id, args)
         return gws_tool_helpers.tool_error(requests_err)
     end
 
-    local stdout, run_err = run_sheet_batch_update(spreadsheet_id, requests)
+    local stdout, run_err = batch_update_sheet(spreadsheet_id, requests)
     if not stdout then
         return gws_tool_helpers.tool_error(run_err)
     end
@@ -235,7 +233,7 @@ local SCHEMA_PROPERTIES = {
 }
 
 -- Dispatch
-local function write_google_sheet(args)
+local function write_sheet(args)
     local spreadsheet_id, id_err =
         gws_tool_helpers.extract_google_id_arg(args.spreadsheet, 'sheets', 'spreadsheet')
     if not spreadsheet_id then
@@ -259,7 +257,7 @@ local M = {
     name = 'gsheet_write',
     cmds = {
         function(_, args, _)
-            return write_google_sheet(args)
+            return write_sheet(args)
         end,
     },
     schema = {

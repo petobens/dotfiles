@@ -6,7 +6,7 @@ return gws_tool_helpers.build_read_tool({
     description = 'Read Google Slides contents.',
     input_key = 'presentation',
     input_description = 'Google Slides URL or presentation ID',
-    reader = gslides.read_google_slides,
+    reader = gslides.read_slides,
     template = 'Here is the content of the Google Slides "%s" (ID: %s):\n\n%s',
     prompt_template = 'Read Google Slides `%s`?',
     success_user_output = 'Read Google Slides contents',

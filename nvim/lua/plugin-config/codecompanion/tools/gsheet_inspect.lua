@@ -6,7 +6,7 @@ return gws_tool_helpers.build_read_tool({
     description = 'Read Google Sheet structure.',
     input_key = 'spreadsheet',
     input_description = 'Google Sheet URL or spreadsheet ID',
-    reader = gsheets.read_google_sheet_metadata,
+    reader = gsheets.read_sheet_metadata,
     template = 'Here is the structure of the Google Sheet "%s" (ID: %s):\n\n%s',
     prompt_template = 'Inspect Google Sheet `%s` structure?',
     success_user_output = 'Read Google Sheet structure',

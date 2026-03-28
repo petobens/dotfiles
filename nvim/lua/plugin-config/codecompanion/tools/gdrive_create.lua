@@ -5,7 +5,7 @@ local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_h
 local M = {}
 
 -- API
-local function create_google_drive_file(kind, title)
+local function create_drive_file(kind, title)
     local stdout, run_err = gws_helpers.run({
         'gws',
         'drive',
@@ -55,14 +55,14 @@ local function create_google_drive_file(kind, title)
 end
 
 -- Ops
-local function run_create_operation(kind, args)
+local function create_operation(kind, args)
     local title, title_err =
         gws_tool_helpers.normalize_required_string_arg(args.title, 'title')
     if not title then
         return gws_tool_helpers.tool_error(title_err)
     end
 
-    local data, err = create_google_drive_file(kind, title)
+    local data, err = create_drive_file(kind, title)
     if not data then
         return gws_tool_helpers.tool_error(err)
     end
@@ -91,7 +91,7 @@ function M.create_tool(kind)
         name = tool_name,
         cmds = {
             function(_, args, _)
-                return run_create_operation(kind, args)
+                return create_operation(kind, args)
             end,
         },
         schema = {

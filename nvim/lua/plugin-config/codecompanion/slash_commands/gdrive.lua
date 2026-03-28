@@ -4,7 +4,7 @@ local gws_helpers =
 
 local M = {}
 
--- Const
+-- Constants
 local DEFAULT_PAGE_SIZE = 10
 local ALL_FILE_TYPES_QUERY = table.concat({
     "mimeType = 'application/vnd.google-apps.document'",
@@ -107,7 +107,7 @@ local function fetch_drive_file_name(file_id)
     return name
 end
 
-local function fetch_google_drive_files(query, file_type)
+local function fetch_drive_files(query, file_type)
     local stdout, run_err = gws_helpers.run({
         'gws',
         'drive',
@@ -219,7 +219,7 @@ local function format_drive_entry(file, location_cache)
     return table.concat(lines, '\n')
 end
 
-local function google_drive_search_to_text(query, file_type, files)
+local function drive_search_to_text(query, file_type, files)
     local location_cache = {}
     local entries = vim.iter(files or {})
         :map(function(file)
@@ -247,7 +247,7 @@ local function google_drive_search_to_text(query, file_type, files)
 end
 
 -- Read
-local function search_google_drive(query, file_type)
+local function search_drive(query, file_type)
     query = gws_helpers.trim(query)
     if gws_helpers.is_blank(query) then
         return nil, 'Missing Google Drive search query'
@@ -255,12 +255,12 @@ local function search_google_drive(query, file_type)
 
     file_type = file_type or FILE_TYPES.all
 
-    local response, response_err = fetch_google_drive_files(query, file_type)
+    local response, response_err = fetch_drive_files(query, file_type)
     if not response then
         return nil, response_err
     end
 
-    local text, text_err = google_drive_search_to_text(query, file_type, response.files)
+    local text, text_err = drive_search_to_text(query, file_type, response.files)
     if not text then
         return nil, text_err
     end
@@ -270,7 +270,7 @@ end
 
 -- Exports
 M.parse_file_type = parse_file_type
-M.search_google_drive = search_google_drive
+M.search_drive = search_drive
 
 -- Command
 function M.gdrive_search(chat)
@@ -293,7 +293,7 @@ function M.gdrive_search(chat)
                 return
             end
 
-            local result, err = search_google_drive(input, file_type)
+            local result, err = search_drive(input, file_type)
             if not result then
                 vim.notify(err, vim.log.levels.ERROR)
                 return

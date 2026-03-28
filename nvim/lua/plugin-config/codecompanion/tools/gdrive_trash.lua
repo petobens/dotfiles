@@ -5,7 +5,7 @@ local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_h
 local M = {}
 
 -- API
-local function trash_google_drive_file(kind, target)
+local function trash_drive_file(kind, target)
     local file_id = gws_tool_helpers.extract_file_id(target, kind)
     if not file_id then
         return nil, 'Could not extract a valid Google file id from target'
@@ -44,14 +44,14 @@ local function trash_google_drive_file(kind, target)
 end
 
 -- Ops
-local function run_trash_operation(kind, args)
+local function trash_operation(kind, args)
     local target, target_err =
         gws_tool_helpers.normalize_required_string_arg(args.target, 'target')
     if not target then
         return gws_tool_helpers.tool_error(target_err)
     end
 
-    local data, err = trash_google_drive_file(kind, target)
+    local data, err = trash_drive_file(kind, target)
     if not data then
         return gws_tool_helpers.tool_error(err)
     end
@@ -80,7 +80,7 @@ function M.trash_tool(kind)
         name = tool_name,
         cmds = {
             function(_, args, _)
-                return run_trash_operation(kind, args)
+                return trash_operation(kind, args)
             end,
         },
         schema = {

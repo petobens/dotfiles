@@ -5,7 +5,7 @@ local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_h
 local M = {}
 
 -- API
-local function rename_google_drive_file(kind, target, new_title)
+local function rename_drive_file(kind, target, new_title)
     local file_id = gws_tool_helpers.extract_file_id(target, kind)
     if not file_id then
         return nil, 'Could not extract a valid Google file id from target'
@@ -51,7 +51,7 @@ local function rename_google_drive_file(kind, target, new_title)
 end
 
 -- Ops
-local function run_rename_operation(kind, args)
+local function rename_operation(kind, args)
     local target, target_err =
         gws_tool_helpers.normalize_required_string_arg(args.target, 'target')
     if not target then
@@ -64,7 +64,7 @@ local function run_rename_operation(kind, args)
         return gws_tool_helpers.tool_error(new_title_err)
     end
 
-    local data, err = rename_google_drive_file(kind, target, new_title)
+    local data, err = rename_drive_file(kind, target, new_title)
     if not data then
         return gws_tool_helpers.tool_error(err)
     end
@@ -97,7 +97,7 @@ function M.rename_tool(kind)
         name = tool_name,
         cmds = {
             function(_, args, _)
-                return run_rename_operation(kind, args)
+                return rename_operation(kind, args)
             end,
         },
         schema = {

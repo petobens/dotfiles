@@ -4,7 +4,7 @@ local gws_helpers =
 
 local M = {}
 
--- Const
+-- Constants
 local TEXT_STYLE_FLAGS = {
     'bold',
     'italic',
@@ -14,7 +14,7 @@ local TEXT_STYLE_FLAGS = {
 }
 
 -- API
-local function fetch_google_slides(presentation_id)
+local function fetch_slides(presentation_id)
     local stdout, run_err = gws_helpers.run({
         'gws',
         'slides',
@@ -265,7 +265,7 @@ local function summarize_slide_page_elements(page_elements)
 end
 
 -- Read
-local function google_slides_to_text(presentation)
+local function slides_to_text(presentation)
     local lines = {}
 
     for i, slide in ipairs(presentation.slides or {}) do
@@ -291,7 +291,7 @@ local function google_slides_to_text(presentation)
     return text
 end
 
-local function summarize_google_slides(presentation, presentation_id)
+local function summarize_slides(presentation, presentation_id)
     local slides = presentation.slides or {}
     local lines = {
         ('Title: %s'):format(
@@ -325,18 +325,18 @@ local function summarize_google_slides(presentation, presentation_id)
     }
 end
 
-local function read_google_slides(input)
+local function read_slides(input)
     local presentation_id, id_err = gws_helpers.extract_google_id(input, 'slides')
     if not presentation_id then
         return nil, id_err
     end
 
-    local presentation, fetch_err = fetch_google_slides(presentation_id)
+    local presentation, fetch_err = fetch_slides(presentation_id)
     if not presentation then
         return nil, fetch_err
     end
 
-    local text, text_err = google_slides_to_text(presentation)
+    local text, text_err = slides_to_text(presentation)
     if not text then
         return nil, text_err
     end
@@ -348,18 +348,18 @@ local function read_google_slides(input)
     }
 end
 
-local function read_google_slides_metadata(input)
+local function read_slides_metadata(input)
     local presentation_id, id_err = gws_helpers.extract_google_id(input, 'slides')
     if not presentation_id then
         return nil, id_err
     end
 
-    local presentation, fetch_err = fetch_google_slides(presentation_id)
+    local presentation, fetch_err = fetch_slides(presentation_id)
     if not presentation then
         return nil, fetch_err
     end
 
-    local ok, result = pcall(summarize_google_slides, presentation, presentation_id)
+    local ok, result = pcall(summarize_slides, presentation, presentation_id)
     if not ok then
         return nil, ('Failed to inspect Google Slides metadata: %s'):format(result)
     end
@@ -368,24 +368,24 @@ local function read_google_slides_metadata(input)
 end
 
 -- Exports
-M.fetch_google_slides = fetch_google_slides
-M.read_google_slides = read_google_slides
-M.read_google_slides_metadata = read_google_slides_metadata
+M.fetch_slides = fetch_slides
+M.read_slides = read_slides
+M.read_slides_metadata = read_slides_metadata
 
 -- Command
-function M.gslide_read(chat)
+function M.gslides_read(chat)
     vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
         if not input or gws_helpers.is_blank(input) then
             return
         end
 
-        local slides, err = read_google_slides(input)
+        local slides, err = read_slides(input)
         if not slides then
             vim.notify(err, vim.log.levels.ERROR)
             return
         end
 
-        gws_helpers.add_context(chat, 'Slides presentation', slides, 'gslide')
+        gws_helpers.add_context(chat, 'Slides presentation', slides, 'gslides')
     end)
 end
 

@@ -6,7 +6,7 @@ return gws_tool_helpers.build_read_tool({
     description = 'Read Google Doc contents.',
     input_key = 'document',
     input_description = 'Google Doc URL or document ID',
-    reader = gdocs.read_google_doc,
+    reader = gdocs.read_doc,
     template = 'Here is the content of the Google Doc "%s" (ID: %s):\n\n%s',
     prompt_template = 'Read Google Doc `%s`?',
     success_user_output = 'Read Google Doc contents',

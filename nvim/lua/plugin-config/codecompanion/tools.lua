@@ -186,13 +186,13 @@ local tools = {
         gdoc_tools = {
             description = 'Google Docs tools',
             tools = {
+                'gdrive_search',
                 'gdoc_create',
                 'gdoc_inspect',
                 'gdoc_read',
                 'gdoc_rename',
                 'gdoc_trash',
                 'gdoc_write',
-                'gdrive_search',
             },
             opts = GROUP_OPTS,
         },

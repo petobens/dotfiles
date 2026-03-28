@@ -6,7 +6,7 @@ return gws_tool_helpers.build_read_tool({
     description = 'Read Google Slides structure.',
     input_key = 'presentation',
     input_description = 'Google Slides URL or presentation ID',
-    reader = gslides.read_google_slides_metadata,
+    reader = gslides.read_slides_metadata,
     template = 'Here is the structure of the Google Slides "%s" (ID: %s):\n\n%s',
     prompt_template = 'Inspect Google Slides `%s` structure?',
     success_user_output = 'Read Google Slides structure',

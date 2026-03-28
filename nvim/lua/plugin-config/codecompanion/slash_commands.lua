@@ -54,9 +54,9 @@ function M.build()
             description = 'Read a Google Sheet',
             callback = gsheets.gsheet_read,
         },
-        ['gslide_read'] = {
+        ['gslides_read'] = {
             description = 'Read a Google Slides presentation',
-            callback = gslides.gslide_read,
+            callback = gslides.gslides_read,
         },
         -- Git
         ['conventional_commit'] = {

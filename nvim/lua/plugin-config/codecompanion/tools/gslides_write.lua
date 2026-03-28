@@ -137,7 +137,7 @@ local function normalize_requests_payload(value)
 end
 
 -- API
-local function batch_update_presentation(presentation_id, requests)
+local function batch_update_slides(presentation_id, requests)
     return gws_helpers.run({
         'gws',
         'slides',
@@ -150,8 +150,8 @@ local function batch_update_presentation(presentation_id, requests)
     })
 end
 
-local function fetch_presentation(presentation_id)
-    return gslides.fetch_google_slides(presentation_id)
+local function fetch_slides_presentation(presentation_id)
+    return gslides.fetch_slides(presentation_id)
 end
 
 local function resolve_slide_object_id(presentation_id, args)
@@ -175,7 +175,7 @@ local function resolve_slide_object_id(presentation_id, args)
         return nil, 'slide_object_id or slide_index is required'
     end
 
-    local presentation, fetch_err = fetch_presentation(presentation_id)
+    local presentation, fetch_err = fetch_slides_presentation(presentation_id)
     if not presentation then
         return nil, fetch_err
     end
@@ -636,7 +636,7 @@ local function create_slide_operation(presentation_id, args)
         create_slide.slideLayoutReference = { predefinedLayout = layout_reference }
     end
 
-    local stdout, run_err = batch_update_presentation(presentation_id, {
+    local stdout, run_err = batch_update_slides(presentation_id, {
         { createSlide = create_slide },
     })
     if not stdout then
@@ -682,7 +682,7 @@ local function duplicate_slide_operation(presentation_id, args)
         duplicate_object.objectIds = object_ids
     end
 
-    local stdout, run_err = batch_update_presentation(presentation_id, {
+    local stdout, run_err = batch_update_slides(presentation_id, {
         { duplicateObject = duplicate_object },
     })
     if not stdout then
@@ -704,7 +704,7 @@ local function delete_slide_operation(presentation_id, args)
         return gws_tool_helpers.tool_error(slide_object_id_err)
     end
 
-    local stdout, run_err = batch_update_presentation(presentation_id, {
+    local stdout, run_err = batch_update_slides(presentation_id, {
         { deleteObject = { objectId = slide_object_id } },
     })
     if not stdout then
@@ -751,7 +751,7 @@ local function replace_all_text_operation(presentation_id, args)
         replace_all_text.pageObjectIds = { slide_object_id }
     end
 
-    local stdout, run_err = batch_update_presentation(presentation_id, {
+    local stdout, run_err = batch_update_slides(presentation_id, {
         {
             replaceAllText = replace_all_text,
         },
@@ -769,7 +769,7 @@ local function replace_all_text_operation(presentation_id, args)
 end
 
 local function update_text_style_operation(presentation_id, args)
-    local presentation, fetch_err = fetch_presentation(presentation_id)
+    local presentation, fetch_err = fetch_slides_presentation(presentation_id)
     if not presentation then
         return gws_tool_helpers.tool_error(fetch_err)
     end
@@ -789,7 +789,7 @@ local function update_text_style_operation(presentation_id, args)
         return gws_tool_helpers.tool_error(style_err)
     end
 
-    local stdout, run_err = batch_update_presentation(presentation_id, {
+    local stdout, run_err = batch_update_slides(presentation_id, {
         {
             updateTextStyle = {
                 objectId = element.objectId,
@@ -818,7 +818,7 @@ local function raw_batch_update_operation(presentation_id, args)
         return gws_tool_helpers.tool_error(requests_err)
     end
 
-    local stdout, run_err = batch_update_presentation(presentation_id, requests)
+    local stdout, run_err = batch_update_slides(presentation_id, requests)
     if not stdout then
         return gws_tool_helpers.tool_error(run_err)
     end
@@ -998,7 +998,7 @@ local SCHEMA_PROPERTIES = {
 }
 
 -- Dispatch
-local function write_google_slides(args)
+local function write_slides(args)
     local presentation_id, id_err = gws_tool_helpers.extract_google_id_arg(
         args.presentation,
         'slides',
@@ -1026,7 +1026,7 @@ local M = {
     name = 'gslides_write',
     cmds = {
         function(_, args, _)
-            return write_google_slides(args)
+            return write_slides(args)
         end,
     },
     schema = {
