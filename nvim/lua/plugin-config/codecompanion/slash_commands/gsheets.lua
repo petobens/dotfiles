@@ -3,10 +3,10 @@ local gws_helpers =
 
 local M = {}
 
--- Constants
+-- Const
 local DEFAULT_RANGE = 'A1:AZ2000'
 
--- API fetch
+-- API
 local function fetch_google_sheet_metadata(sheet_id)
     local stdout, run_err = gws_helpers.run({
         'gws',
@@ -14,9 +14,7 @@ local function fetch_google_sheet_metadata(sheet_id)
         'spreadsheets',
         'get',
         '--params',
-        vim.json.encode({
-            spreadsheetId = sheet_id,
-        }),
+        vim.json.encode({ spreadsheetId = sheet_id }),
     })
     if not stdout then
         return nil, run_err
@@ -46,7 +44,14 @@ local function fetch_google_sheet_values(sheet_id, ranges, value_render_option)
     return gws_helpers.decode_json(stdout, 'the Google Sheet values')
 end
 
--- Content extraction
+-- Format
+local function get_spreadsheet_title(metadata)
+    return gws_helpers.fallback_text(
+        vim.tbl_get(metadata, 'properties', 'title'),
+        'Untitled spreadsheet'
+    )
+end
+
 local function sheet_range_to_title(range)
     range = gws_helpers.trim(range)
 
@@ -56,18 +61,39 @@ local function sheet_range_to_title(range)
     end
 
     title = gws_helpers.trim(range:match('^([^!]+)!'))
-    if title ~= '' then
-        return title
-    end
-
-    return 'Unknown worksheet'
+    return title ~= '' and title or 'Unknown worksheet'
 end
 
-local function get_spreadsheet_title(metadata)
-    return gws_helpers.fallback_text(
-        vim.tbl_get(metadata, 'properties', 'title'),
-        'Untitled spreadsheet'
-    )
+local function worksheet_lines(metadata)
+    return vim.iter(metadata.sheets or {})
+        :map(function(sheet)
+            local properties = sheet.properties or {}
+            if
+                type(properties.title) ~= 'string'
+                or gws_helpers.is_blank(properties.title)
+            then
+                return nil
+            end
+
+            local suffix = {}
+            local grid = properties.gridProperties or {}
+            if type(grid.rowCount) == 'number' then
+                suffix[#suffix + 1] = ('rows: %d'):format(grid.rowCount)
+            end
+            if type(grid.columnCount) == 'number' then
+                suffix[#suffix + 1] = ('cols: %d'):format(grid.columnCount)
+            end
+
+            return ('- %s (sheetId: %d%s)'):format(
+                properties.title,
+                properties.sheetId or -1,
+                #suffix > 0 and (', ' .. table.concat(suffix, ', ')) or ''
+            )
+        end)
+        :filter(function(line)
+            return line ~= nil
+        end)
+        :totable()
 end
 
 local function render_value_ranges(label, value_ranges)
@@ -79,78 +105,42 @@ local function render_value_ranges(label, value_ranges)
     local nonempty_tabs = 0
 
     for _, value_range in ipairs(value_ranges) do
-        local title = sheet_range_to_title(value_range.range)
         local values = value_range.values or {}
-
         if not vim.tbl_isempty(values) then
             nonempty_tabs = nonempty_tabs + 1
-            table.insert(sections, ('Worksheet: %s'):format(title))
-
-            local lines = vim.iter(values)
-                :map(function(row)
-                    return vim.iter(row):map(tostring):join(' | ')
-                end)
-                :totable()
-
-            vim.list_extend(sections, lines)
-            table.insert(sections, '')
+            sections[#sections + 1] = ('Worksheet: %s'):format(
+                sheet_range_to_title(value_range.range)
+            )
+            vim.list_extend(
+                sections,
+                vim.iter(values)
+                    :map(function(row)
+                        return vim.iter(row):map(tostring):join(' | ')
+                    end)
+                    :totable()
+            )
+            sections[#sections + 1] = ''
         end
     end
 
-    if nonempty_tabs == 0 then
-        return nil
-    end
-
-    return gws_helpers.normalize_text(table.concat(sections, '\n'))
+    return nonempty_tabs > 0 and gws_helpers.normalize_text(table.concat(sections, '\n'))
+        or nil
 end
 
 local function summarize_google_sheet_metadata(metadata)
-    local worksheet_info = vim.iter(metadata.sheets or {})
-        :map(function(sheet)
-            local properties = vim.tbl_get(sheet, 'properties') or {}
-            local title = properties.title
-            local sheet_id = properties.sheetId
-            local row_count = properties.gridProperties
-                    and properties.gridProperties.rowCount
-                or nil
-            local column_count = properties.gridProperties
-                    and properties.gridProperties.columnCount
-                or nil
-
-            if
-                type(title) ~= 'string'
-                or gws_helpers.is_blank(title)
-                or type(sheet_id) ~= 'number'
-            then
-                return nil
-            end
-
-            local suffix = {}
-            if type(row_count) == 'number' then
-                table.insert(suffix, ('rows: %d'):format(row_count))
-            end
-            if type(column_count) == 'number' then
-                table.insert(suffix, ('cols: %d'):format(column_count))
-            end
-
-            local extra = #suffix > 0 and (', ' .. table.concat(suffix, ', ')) or ''
-            return ('- %s (sheetId: %d%s)'):format(title, sheet_id, extra)
-        end)
-        :filter(function(line)
-            return line ~= nil
-        end)
-        :totable()
-
     return {
         id = metadata.spreadsheetId,
         title = get_spreadsheet_title(metadata),
         text = gws_helpers.normalize_text(
-            table.concat(vim.list_extend({ 'Worksheets:' }, worksheet_info), '\n')
+            table.concat(
+                vim.list_extend({ 'Worksheets:' }, worksheet_lines(metadata)),
+                '\n'
+            )
         ),
     }
 end
 
--- Read helpers
+-- Read
 local function read_google_sheet(input)
     local sheet_id, id_err = gws_helpers.extract_google_id(input, 'sheets')
     if not sheet_id then
@@ -161,13 +151,11 @@ local function read_google_sheet(input)
     if not metadata then
         return nil, metadata_err
     end
-
-    local sheets = metadata.sheets or {}
-    if vim.tbl_isempty(sheets) then
+    if vim.tbl_isempty(metadata.sheets or {}) then
         return nil, 'No worksheets found in the Google Sheet'
     end
 
-    local titles = vim.iter(sheets)
+    local titles = vim.iter(metadata.sheets or {})
         :map(function(sheet)
             return vim.tbl_get(sheet, 'properties', 'title')
         end)
@@ -175,17 +163,13 @@ local function read_google_sheet(input)
             return type(title) == 'string' and not gws_helpers.is_blank(title)
         end)
         :totable()
-
-    local metadata_summary = summarize_google_sheet_metadata(metadata)
-    local worksheet_info = vim.split(metadata_summary.text, '\n', { plain = true })
-
     if vim.tbl_isempty(titles) then
         return nil, 'No readable worksheets found in the Google Sheet'
     end
 
     local ranges = vim.iter(titles)
         :map(function(title)
-            return string.format("'%s'!%s", title:gsub("'", "''"), DEFAULT_RANGE)
+            return ("'%s'!%s"):format(title:gsub("'", "''"), DEFAULT_RANGE)
         end)
         :totable()
 
@@ -203,7 +187,6 @@ local function read_google_sheet(input)
 
     local values_text = render_value_ranges('values', values_data.valueRanges)
     local formulas_text = render_value_ranges('formulas', formulas_data.valueRanges)
-
     if not values_text and not formulas_text then
         return nil, 'The Google Sheet appears to be empty'
     end
@@ -212,21 +195,16 @@ local function read_google_sheet(input)
         ('Range: %s'):format(DEFAULT_RANGE),
         'Tabs: all',
         '',
+        'Worksheets:',
     }
-
-    if not vim.tbl_isempty(worksheet_info) then
-        table.insert(parts, 'Worksheets:')
-        vim.list_extend(parts, worksheet_info)
-        table.insert(parts, '')
-    end
-
+    vim.list_extend(parts, worksheet_lines(metadata))
+    parts[#parts + 1] = ''
     if values_text then
-        table.insert(parts, values_text)
-        table.insert(parts, '')
+        parts[#parts + 1] = values_text
+        parts[#parts + 1] = ''
     end
-
     if formulas_text then
-        table.insert(parts, formulas_text)
+        parts[#parts + 1] = formulas_text
     end
 
     return {
@@ -250,11 +228,11 @@ local function read_google_sheet_metadata(input)
     return summarize_google_sheet_metadata(metadata)
 end
 
--- Exports for reuse by tools
+-- Exports
 M.read_google_sheet = read_google_sheet
 M.read_google_sheet_metadata = read_google_sheet_metadata
 
--- Slash command
+-- Command
 function M.gsheet_read(chat)
     vim.ui.input({ prompt = 'Google Sheet URL or ID: ' }, function(input)
         if not input or gws_helpers.is_blank(input) then

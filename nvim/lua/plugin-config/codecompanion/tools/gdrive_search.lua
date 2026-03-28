@@ -3,8 +3,20 @@ local gws_helpers =
     require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
 local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
 
--- Tool helpers
-local function run_gdrive_search(args)
+-- Constants
+local FILE_TYPE_ENUM = {
+    '',
+    'all',
+    'doc',
+    'docs',
+    'sheet',
+    'sheets',
+    'slide',
+    'slides',
+}
+
+-- Search
+local function search_google_drive(args)
     local query, query_err =
         gws_tool_helpers.normalize_required_string_arg(args.query, 'query')
     if not query then
@@ -39,12 +51,28 @@ local function run_gdrive_search(args)
     )
 end
 
--- Tool definition
+-- Prompt builders
+local function build_prompt(args)
+    return ('Search Google Drive for `%s` in `%s`?'):format(
+        args.query,
+        gws_helpers.fallback_text(args.file_type, 'all')
+    )
+end
+
+local SCHEMA_PROPERTIES = {
+    query = { type = 'string', description = 'Search query.' },
+    file_type = {
+        type = 'string',
+        enum = FILE_TYPE_ENUM,
+        description = 'Optional type filter.',
+    },
+}
+
 local M = {
     name = 'gdrive_search',
     cmds = {
         function(_, args, _)
-            return run_gdrive_search(args)
+            return search_google_drive(args)
         end,
     },
     schema = {
@@ -54,26 +82,7 @@ local M = {
             description = 'Search Google Drive files.',
             parameters = {
                 type = 'object',
-                properties = {
-                    query = {
-                        type = 'string',
-                        description = 'Search query.',
-                    },
-                    file_type = {
-                        type = 'string',
-                        enum = {
-                            '',
-                            'all',
-                            'doc',
-                            'docs',
-                            'sheet',
-                            'sheets',
-                            'slide',
-                            'slides',
-                        },
-                        description = 'Optional type filter.',
-                    },
-                },
+                properties = SCHEMA_PROPERTIES,
                 required = { 'query' },
                 additionalProperties = false,
             },
@@ -82,11 +91,7 @@ local M = {
     },
     output = {
         prompt = function(self, _)
-            local file_type = gws_helpers.fallback_text(self.args.file_type, 'all')
-            return ('Search Google Drive for `%s` in `%s`?'):format(
-                self.args.query,
-                file_type
-            )
+            return build_prompt(self.args)
         end,
         success = function(self, stdout, meta)
             gws_tool_helpers.add_tool_success(

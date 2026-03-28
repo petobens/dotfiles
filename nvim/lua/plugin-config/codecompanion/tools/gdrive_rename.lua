@@ -4,7 +4,7 @@ local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_h
 
 local M = {}
 
--- API helpers
+-- API
 local function rename_google_drive_file(kind, target, new_title)
     local file_id = gws_tool_helpers.extract_file_id(target, kind)
     if not file_id then
@@ -15,7 +15,6 @@ local function rename_google_drive_file(kind, target, new_title)
     if not metadata then
         return nil, metadata_err
     end
-
     if gws_helpers.trim(metadata.mimeType) ~= gws_tool_helpers.MIME_TYPES[kind] then
         return nil, ('Target is not a %s'):format(gws_tool_helpers.KIND_LABELS[kind])
     end
@@ -32,9 +31,7 @@ local function rename_google_drive_file(kind, target, new_title)
             fields = 'id,name,mimeType,webViewLink',
         }),
         '--json',
-        vim.json.encode({
-            name = new_title,
-        }),
+        vim.json.encode({ name = new_title }),
     })
     if not stdout then
         return nil, run_err
@@ -45,72 +42,62 @@ local function rename_google_drive_file(kind, target, new_title)
         return nil, decode_err
     end
 
-    local updated_name = gws_helpers.fallback_text(file.name, new_title)
-
     return ('Renamed %s "%s" to "%s" (ID: %s)'):format(
         gws_tool_helpers.KIND_LABELS[kind],
         gws_helpers.fallback_text(metadata.name, 'Untitled'),
-        updated_name,
+        gws_helpers.fallback_text(file.name, new_title),
         file_id
     )
 end
 
--- Tool helpers
-local function run_rename_gdrive_tool(kind, args)
-    local target = gws_helpers.normalize_optional_string(args.target)
-    local new_title = gws_helpers.normalize_optional_string(args.new_title)
-
-    if target == nil then
-        return {
-            status = 'error',
-            data = 'target must be a string',
-        }
-    end
-    if target == '' then
-        return {
-            status = 'error',
-            data = 'Missing target',
-        }
+-- Ops
+local function run_rename_operation(kind, args)
+    local target, target_err =
+        gws_tool_helpers.normalize_required_string_arg(args.target, 'target')
+    if not target then
+        return gws_tool_helpers.tool_error(target_err)
     end
 
-    if new_title == nil then
-        return {
-            status = 'error',
-            data = 'new_title must be a string',
-        }
-    end
-    if new_title == '' then
-        return {
-            status = 'error',
-            data = 'Missing new_title',
-        }
+    local new_title, new_title_err =
+        gws_tool_helpers.normalize_required_string_arg(args.new_title, 'new_title')
+    if not new_title then
+        return gws_tool_helpers.tool_error(new_title_err)
     end
 
     local data, err = rename_google_drive_file(kind, target, new_title)
     if not data then
-        return {
-            status = 'error',
-            data = err,
-        }
+        return gws_tool_helpers.tool_error(err)
     end
 
-    return {
-        status = 'success',
-        data = data,
-    }
+    return gws_tool_helpers.tool_success(data)
 end
 
--- Tool factories
+-- Prompt builders
+local function build_prompt(kind_label, args)
+    return ('Rename %s `%s` to `%s`?'):format(kind_label, args.target, args.new_title)
+end
+
+local SCHEMA_PROPERTIES = {
+    target = {
+        type = 'string',
+        description = 'File URL or file ID.',
+    },
+    new_title = {
+        type = 'string',
+        description = 'New title for the file.',
+    },
+}
+
+-- Factory
 function M.rename_tool(kind)
     local kind_label = gws_tool_helpers.validate_kind(kind)
-
     local tool_name = 'g' .. kind .. '_rename'
 
     return {
         name = tool_name,
         cmds = {
             function(_, args, _)
-                return run_rename_gdrive_tool(kind, args)
+                return run_rename_operation(kind, args)
             end,
         },
         schema = {
@@ -120,16 +107,7 @@ function M.rename_tool(kind)
                 description = ('Rename a %s.'):format(kind_label),
                 parameters = {
                     type = 'object',
-                    properties = {
-                        target = {
-                            type = 'string',
-                            description = 'File URL or file ID.',
-                        },
-                        new_title = {
-                            type = 'string',
-                            description = 'New title for the file.',
-                        },
-                    },
+                    properties = SCHEMA_PROPERTIES,
                     required = { 'target', 'new_title' },
                     additionalProperties = false,
                 },
@@ -138,11 +116,7 @@ function M.rename_tool(kind)
         },
         output = {
             prompt = function(self, _)
-                return ('Rename %s `%s` to `%s`?'):format(
-                    kind_label,
-                    self.args.target,
-                    self.args.new_title
-                )
+                return build_prompt(kind_label, self.args)
             end,
             success = function(self, stdout, meta)
                 gws_tool_helpers.add_tool_success(

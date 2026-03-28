@@ -4,7 +4,7 @@ local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_h
 
 local M = {}
 
--- API helpers
+-- API
 local function create_google_drive_file(kind, title)
     local stdout, run_err = gws_helpers.run({
         'gws',
@@ -20,7 +20,7 @@ local function create_google_drive_file(kind, title)
         vim.json.encode({
             name = title,
             mimeType = gws_tool_helpers.MIME_TYPES[kind],
-            parents = { 'root' }, -- Force creation in My Drive
+            parents = { 'root' },
         }),
     })
     if not stdout then
@@ -40,63 +40,58 @@ local function create_google_drive_file(kind, title)
     local name = gws_helpers.fallback_text(file.name, title)
     local url = gws_helpers.trim(file.webViewLink)
     if url == '' then
-        url = gws_tool_helpers.EDIT_URLS[file.mimeType]
-                and gws_tool_helpers.EDIT_URLS[file.mimeType]:format(id)
-            or ''
+        local edit_url = gws_tool_helpers.EDIT_URLS[file.mimeType]
+        url = edit_url and edit_url:format(id) or ''
     end
 
     local lines = {
         ('Created %s "%s" (ID: %s)'):format(gws_tool_helpers.KIND_LABELS[kind], name, id),
     }
-
     if url ~= '' then
-        table.insert(lines, ('URL: %s'):format(url))
+        lines[#lines + 1] = ('URL: %s'):format(url)
     end
 
     return table.concat(lines, '\n')
 end
 
--- Tool helpers
-local function run_create_gdrive_tool(kind, args)
-    local title = gws_helpers.normalize_optional_string(args.title)
-    if title == nil then
-        return {
-            status = 'error',
-            data = 'title must be a string',
-        }
-    end
-    if title == '' then
-        return {
-            status = 'error',
-            data = 'Missing title',
-        }
+-- Ops
+local function run_create_operation(kind, args)
+    local title, title_err =
+        gws_tool_helpers.normalize_required_string_arg(args.title, 'title')
+    if not title then
+        return gws_tool_helpers.tool_error(title_err)
     end
 
     local data, err = create_google_drive_file(kind, title)
     if not data then
-        return {
-            status = 'error',
-            data = err,
-        }
+        return gws_tool_helpers.tool_error(err)
     end
 
-    return {
-        status = 'success',
-        data = data,
-    }
+    return gws_tool_helpers.tool_success(data)
 end
 
--- Tool factories
+-- Prompt builders
+local function build_prompt(kind_label, args)
+    return ('Create %s `%s`?'):format(kind_label, args.title)
+end
+
+local SCHEMA_PROPERTIES = {
+    title = {
+        type = 'string',
+        description = 'Title of the new file.',
+    },
+}
+
+-- Factory
 function M.create_tool(kind)
     local kind_label = gws_tool_helpers.validate_kind(kind)
-
     local tool_name = 'g' .. kind .. '_create'
 
     return {
         name = tool_name,
         cmds = {
             function(_, args, _)
-                return run_create_gdrive_tool(kind, args)
+                return run_create_operation(kind, args)
             end,
         },
         schema = {
@@ -106,12 +101,7 @@ function M.create_tool(kind)
                 description = ('Create a %s.'):format(kind_label),
                 parameters = {
                     type = 'object',
-                    properties = {
-                        title = {
-                            type = 'string',
-                            description = 'Title of the new file.',
-                        },
-                    },
+                    properties = SCHEMA_PROPERTIES,
                     required = { 'title' },
                     additionalProperties = false,
                 },
@@ -120,7 +110,7 @@ function M.create_tool(kind)
         },
         output = {
             prompt = function(self, _)
-                return ('Create %s `%s`?'):format(kind_label, self.args.title)
+                return build_prompt(kind_label, self.args)
             end,
             success = function(self, stdout, meta)
                 gws_tool_helpers.add_tool_success(

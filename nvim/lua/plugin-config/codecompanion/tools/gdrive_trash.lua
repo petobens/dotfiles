@@ -4,7 +4,7 @@ local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_h
 
 local M = {}
 
--- API helpers
+-- API
 local function trash_google_drive_file(kind, target)
     local file_id = gws_tool_helpers.extract_file_id(target, kind)
     if not file_id then
@@ -15,7 +15,6 @@ local function trash_google_drive_file(kind, target)
     if not metadata then
         return nil, metadata_err
     end
-
     if gws_helpers.trim(metadata.mimeType) ~= gws_tool_helpers.MIME_TYPES[kind] then
         return nil, ('Target is not a %s'):format(gws_tool_helpers.KIND_LABELS[kind])
     end
@@ -31,9 +30,7 @@ local function trash_google_drive_file(kind, target)
             supportsAllDrives = true,
         }),
         '--json',
-        vim.json.encode({
-            trashed = true,
-        }),
+        vim.json.encode({ trashed = true }),
     })
     if not stdout then
         return nil, run_err
@@ -46,47 +43,44 @@ local function trash_google_drive_file(kind, target)
     )
 end
 
--- Tool helpers
-local function run_trash_gdrive_tool(kind, args)
-    local target = gws_helpers.normalize_optional_string(args.target)
-    if target == nil then
-        return {
-            status = 'error',
-            data = 'target must be a string',
-        }
-    end
-    if target == '' then
-        return {
-            status = 'error',
-            data = 'Missing target',
-        }
+-- Ops
+local function run_trash_operation(kind, args)
+    local target, target_err =
+        gws_tool_helpers.normalize_required_string_arg(args.target, 'target')
+    if not target then
+        return gws_tool_helpers.tool_error(target_err)
     end
 
     local data, err = trash_google_drive_file(kind, target)
     if not data then
-        return {
-            status = 'error',
-            data = err,
-        }
+        return gws_tool_helpers.tool_error(err)
     end
 
-    return {
-        status = 'success',
-        data = data,
-    }
+    return gws_tool_helpers.tool_success(data)
 end
 
--- Tool factories
+-- Prompt builders
+local function build_prompt(kind_label, args)
+    return ('Move %s `%s` to trash?'):format(kind_label, args.target)
+end
+
+local SCHEMA_PROPERTIES = {
+    target = {
+        type = 'string',
+        description = 'File URL or file ID.',
+    },
+}
+
+-- Factory
 function M.trash_tool(kind)
     local kind_label = gws_tool_helpers.validate_kind(kind)
-
     local tool_name = 'g' .. kind .. '_trash'
 
     return {
         name = tool_name,
         cmds = {
             function(_, args, _)
-                return run_trash_gdrive_tool(kind, args)
+                return run_trash_operation(kind, args)
             end,
         },
         schema = {
@@ -96,12 +90,7 @@ function M.trash_tool(kind)
                 description = ('Move a %s to trash.'):format(kind_label),
                 parameters = {
                     type = 'object',
-                    properties = {
-                        target = {
-                            type = 'string',
-                            description = 'File URL or file ID.',
-                        },
-                    },
+                    properties = SCHEMA_PROPERTIES,
                     required = { 'target' },
                     additionalProperties = false,
                 },
@@ -110,7 +99,7 @@ function M.trash_tool(kind)
         },
         output = {
             prompt = function(self, _)
-                return ('Move %s `%s` to trash?'):format(kind_label, self.args.target)
+                return build_prompt(kind_label, self.args)
             end,
             success = function(self, stdout, meta)
                 gws_tool_helpers.add_tool_success(

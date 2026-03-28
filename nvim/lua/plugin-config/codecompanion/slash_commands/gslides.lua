@@ -4,7 +4,16 @@ local gws_helpers =
 
 local M = {}
 
--- API fetch
+-- Const
+local TEXT_STYLE_FLAGS = {
+    'bold',
+    'italic',
+    'underline',
+    'strikethrough',
+    'smallCaps',
+}
+
+-- API
 local function fetch_google_slides(presentation_id)
     local stdout, run_err = gws_helpers.run({
         'gws',
@@ -21,39 +30,56 @@ local function fetch_google_slides(presentation_id)
     return gws_helpers.decode_json(stdout, 'the Google Slides presentation')
 end
 
--- Visual metadata
-local function format_dimension(dimension)
-    local magnitude = vim.tbl_get(dimension, 'magnitude')
-    local unit = vim.tbl_get(dimension, 'unit')
+-- Format
+local function safe_tbl_get(tbl, ...)
+    if type(tbl) ~= 'table' then
+        return nil
+    end
 
+    local value = tbl
+    for i = 1, select('#', ...) do
+        if type(value) ~= 'table' then
+            return nil
+        end
+
+        value = value[select(i, ...)]
+        if value == nil then
+            return nil
+        end
+    end
+
+    return value
+end
+
+local function format_dimension(dimension)
+    local magnitude = safe_tbl_get(dimension, 'magnitude')
     if type(magnitude) ~= 'number' then
         return nil
     end
 
+    local unit = safe_tbl_get(dimension, 'unit')
     return unit and ('%s %s'):format(magnitude, unit) or tostring(magnitude)
 end
 
 local function summarize_element(element, kind, extra)
     local suffixes = {}
-
     if extra and extra ~= '' then
-        table.insert(suffixes, extra)
+        suffixes[#suffixes + 1] = extra
     end
 
-    local width = format_dimension(vim.tbl_get(element, 'size', 'width'))
-    local height = format_dimension(vim.tbl_get(element, 'size', 'height'))
+    local width = format_dimension(safe_tbl_get(element, 'size', 'width'))
+    local height = format_dimension(safe_tbl_get(element, 'size', 'height'))
     if width and height then
-        table.insert(suffixes, ('size=%s x %s'):format(width, height))
+        suffixes[#suffixes + 1] = ('size=%s x %s'):format(width, height)
     end
 
     local transform = element.transform
     if type(transform) == 'table' then
-        local x = transform.translateX or 0
-        local y = transform.translateY or 0
         local unit = transform.unit or ''
-        table.insert(
-            suffixes,
-            ('pos=(%s, %s)%s'):format(x, y, unit ~= '' and (' ' .. unit) or '')
+        suffixes[#suffixes + 1] = ('pos=(%s, %s)%s'):format(
+            transform.translateX or 0,
+            transform.translateY or 0,
+            unit ~= '' and (' ' .. unit) or ''
         )
     end
 
@@ -61,57 +87,95 @@ local function summarize_element(element, kind, extra)
     if not vim.tbl_isempty(suffixes) then
         summary = summary .. ' ' .. table.concat(suffixes, ', ')
     end
-
     return summary
 end
 
-local function collect_slide_page_elements(parts, page_elements)
+local function summarize_style_flags(style)
+    return vim.iter(TEXT_STYLE_FLAGS)
+        :filter(function(key)
+            return style[key]
+        end)
+        :totable()
+end
+
+-- Text
+local function text_elements(element)
+    return safe_tbl_get(element, 'shape', 'text', 'textElements') or {}
+end
+
+local function extract_shape_text(element)
+    local parts = {}
+
+    for _, text_element in ipairs(text_elements(element)) do
+        local content = safe_tbl_get(text_element, 'textRun', 'content')
+        if type(content) == 'string' then
+            parts[#parts + 1] = content
+        end
+    end
+
+    return gws_helpers.normalize_text(table.concat(parts, ''))
+end
+
+local function shape_summary_line(element)
+    local text = extract_shape_text(element)
+    local object_id = gws_helpers.fallback_text(element.objectId, 'unknown')
+
+    if text ~= '' then
+        return ('[text objectId=%s] %s'):format(object_id, text)
+    end
+
+    return nil
+end
+
+local function collect_slide_page_elements(parts, page_elements, opts)
+    opts = opts or {}
+
     if type(page_elements) ~= 'table' then
         return
     end
 
     for _, element in ipairs(page_elements) do
-        local text_elements = vim.tbl_get(element, 'shape', 'text', 'textElements') or {}
-        local has_text = false
-
-        for _, text_element in ipairs(text_elements) do
-            local text_run = vim.tbl_get(text_element, 'textRun', 'content')
-            if text_run then
-                has_text = true
-                gws_helpers.append_text(parts, text_run)
+        local text = extract_shape_text(element)
+        if text ~= '' then
+            if opts.include_text_object_ids then
+                gws_helpers.append_text(parts, shape_summary_line(element) .. '\n')
+            else
+                gws_helpers.append_text(parts, text)
             end
-        end
-
-        if element.image then
+        elseif element.image then
             gws_helpers.append_text(parts, summarize_element(element, 'image') .. '\n')
         elseif element.table then
-            local rows = vim.tbl_get(element, 'table', 'rows') or '?'
-            local cols = vim.tbl_get(element, 'table', 'columns') or '?'
             gws_helpers.append_text(
                 parts,
                 summarize_element(
                     element,
                     'table',
-                    ('rows=%s cols=%s'):format(rows, cols)
+                    ('rows=%s cols=%s'):format(
+                        safe_tbl_get(element, 'table', 'rows') or '?',
+                        safe_tbl_get(element, 'table', 'columns') or '?'
+                    )
                 ) .. '\n'
             )
         elseif element.video then
             gws_helpers.append_text(parts, summarize_element(element, 'video') .. '\n')
         elseif element.sheetsChart then
             gws_helpers.append_text(parts, summarize_element(element, 'chart') .. '\n')
-        elseif element.shape and not has_text then
-            local shape_type = vim.tbl_get(element, 'shape', 'shapeType')
+        elseif element.shape then
             gws_helpers.append_text(
                 parts,
-                summarize_element(element, 'shape', shape_type) .. '\n'
+                summarize_element(
+                    element,
+                    'shape',
+                    safe_tbl_get(element, 'shape', 'shapeType')
+                ) .. '\n'
             )
         end
     end
 end
 
-local function extract_slide_text(slide)
+local function extract_slide_text(slide, opts)
     local parts = {}
-    collect_slide_page_elements(parts, slide.pageElements)
+    collect_slide_page_elements(parts, slide.pageElements, opts)
     return gws_helpers.normalize_text(table.concat(parts, ''))
 end
 
@@ -119,22 +183,103 @@ local function slide_appears_blank(slide)
     return extract_slide_text(slide) == ''
 end
 
--- Content extraction
+-- Meta
+local function summarize_text_runs(element)
+    local lines = {}
+
+    for _, text_element in ipairs(text_elements(element)) do
+        local text_run = text_element.textRun
+        if text_run and type(text_run.content) == 'string' then
+            local style_parts = summarize_style_flags(text_run.style or {})
+            local suffix = #style_parts > 0
+                    and (' style=%s'):format(table.concat(style_parts, ','))
+                or ''
+
+            lines[#lines + 1] = ('    - [%s,%s): %s%s'):format(
+                tostring(text_element.startIndex),
+                tostring(text_element.endIndex),
+                text_run.content:gsub('\n', '\\n'),
+                suffix
+            )
+        end
+    end
+
+    return lines
+end
+
+local function summarize_page_element(element, element_index)
+    local kind, extra = 'unknown', nil
+
+    if element.image then
+        kind = 'image'
+    elseif element.table then
+        kind = 'table'
+        extra = ('rows=%s cols=%s'):format(
+            safe_tbl_get(element, 'table', 'rows') or '?',
+            safe_tbl_get(element, 'table', 'columns') or '?'
+        )
+    elseif element.video then
+        kind = 'video'
+    elseif element.sheetsChart then
+        kind = 'chart'
+    elseif element.shape then
+        kind = 'shape'
+        extra = safe_tbl_get(element, 'shape', 'shapeType')
+    end
+
+    local lines = {
+        ('  - Element %d (objectId: %s) %s'):format(
+            element_index,
+            gws_helpers.fallback_text(element.objectId, 'unknown'),
+            summarize_element(element, kind, extra)
+        ),
+    }
+
+    if element.shape then
+        local shape_text = extract_shape_text(element)
+        if shape_text ~= '' then
+            lines[#lines + 1] = ('    text: %s'):format(shape_text:gsub('\n', '\\n'))
+        end
+
+        local text_run_lines = summarize_text_runs(element)
+        if #text_run_lines > 0 then
+            lines[#lines + 1] = '    text runs:'
+            vim.list_extend(lines, text_run_lines)
+        end
+    end
+
+    return lines
+end
+
+local function summarize_slide_page_elements(page_elements)
+    local lines = {}
+    if type(page_elements) ~= 'table' then
+        return lines
+    end
+
+    for index, element in ipairs(page_elements) do
+        vim.list_extend(lines, summarize_page_element(element, index))
+    end
+
+    return lines
+end
+
+-- Read
 local function google_slides_to_text(presentation)
     local lines = {}
 
     for i, slide in ipairs(presentation.slides or {}) do
-        local slide_object_id = gws_helpers.fallback_text(slide.objectId, 'unknown')
-        local text = extract_slide_text(slide)
-        local blank_suffix = slide_appears_blank(slide) and ', appears blank' or ''
-        table.insert(
-            lines,
-            ('Slide %d (objectId: %s%s)'):format(i, slide_object_id, blank_suffix)
+        lines[#lines + 1] = ('Slide %d (objectId: %s%s)'):format(
+            i,
+            gws_helpers.fallback_text(slide.objectId, 'unknown'),
+            slide_appears_blank(slide) and ', appears blank' or ''
         )
+
+        local text = extract_slide_text(slide, { include_text_object_ids = true })
         if text ~= '' then
-            table.insert(lines, text)
+            lines[#lines + 1] = text
         end
-        table.insert(lines, '')
+        lines[#lines + 1] = ''
     end
 
     local text = gws_helpers.normalize_text(table.concat(lines, '\n'))
@@ -147,38 +292,39 @@ local function google_slides_to_text(presentation)
 end
 
 local function summarize_google_slides(presentation, presentation_id)
-    local title = gws_helpers.fallback_text(presentation.title, 'Untitled presentation')
     local slides = presentation.slides or {}
     local lines = {
-        ('Title: %s'):format(title),
+        ('Title: %s'):format(
+            gws_helpers.fallback_text(presentation.title, 'Untitled presentation')
+        ),
         ('Slides: %d'):format(#slides),
     }
 
     for i, slide in ipairs(slides) do
-        local page_elements = slide.pageElements or {}
-        local notes = vim.tbl_get(slide, 'slideProperties', 'notesPage') and 'yes' or 'no'
-        local blank = slide_appears_blank(slide) and 'yes' or 'no'
-        local slide_object_id = gws_helpers.fallback_text(slide.objectId, 'unknown')
-        table.insert(
-            lines,
-            ('- Slide %d (objectId: %s): objects=%d, notes=%s, blank=%s'):format(
-                i,
-                slide_object_id,
-                #page_elements,
-                notes,
-                blank
-            )
+        local page_elements = type(slide.pageElements) == 'table' and slide.pageElements
+            or {}
+        local slide_properties = type(slide.slideProperties) == 'table'
+                and slide.slideProperties
+            or nil
+        local has_notes = slide_properties and slide_properties.notesPage ~= nil
+
+        lines[#lines + 1] = ('- Slide %d (objectId: %s): objects=%d, notes=%s, blank=%s'):format(
+            i,
+            gws_helpers.fallback_text(slide.objectId, 'unknown'),
+            #page_elements,
+            has_notes and 'yes' or 'no',
+            slide_appears_blank(slide) and 'yes' or 'no'
         )
+        vim.list_extend(lines, summarize_slide_page_elements(page_elements))
     end
 
     return {
         id = presentation_id,
-        title = title,
-        text = table.concat(lines, '\n'),
+        title = gws_helpers.fallback_text(presentation.title, 'Untitled presentation'),
+        text = gws_helpers.normalize_text(table.concat(lines, '\n')),
     }
 end
 
--- Read helpers
 local function read_google_slides(input)
     local presentation_id, id_err = gws_helpers.extract_google_id(input, 'slides')
     if not presentation_id then
@@ -195,11 +341,9 @@ local function read_google_slides(input)
         return nil, text_err
     end
 
-    local title = gws_helpers.fallback_text(presentation.title, 'Untitled presentation')
-
     return {
         id = presentation_id,
-        title = title,
+        title = gws_helpers.fallback_text(presentation.title, 'Untitled presentation'),
         text = text,
     }
 end
@@ -215,15 +359,20 @@ local function read_google_slides_metadata(input)
         return nil, fetch_err
     end
 
-    return summarize_google_slides(presentation, presentation_id)
+    local ok, result = pcall(summarize_google_slides, presentation, presentation_id)
+    if not ok then
+        return nil, ('Failed to inspect Google Slides metadata: %s'):format(result)
+    end
+
+    return result
 end
 
--- Exports for reuse by tools
+-- Exports
 M.fetch_google_slides = fetch_google_slides
 M.read_google_slides = read_google_slides
 M.read_google_slides_metadata = read_google_slides_metadata
 
--- Slash command
+-- Command
 function M.gslide_read(chat)
     vim.ui.input({ prompt = 'Google Slides URL or ID: ' }, function(input)
         if not input or gws_helpers.is_blank(input) then

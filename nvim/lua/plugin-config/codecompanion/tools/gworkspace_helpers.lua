@@ -152,7 +152,12 @@ function M.build_read_tool(spec)
                 end
 
                 return M.tool_success(
-                    string.format(spec.template, item.title, item.id, item.text)
+                    string.format(
+                        spec.template,
+                        gws_helpers.fallback_text(item.title, 'Untitled'),
+                        gws_helpers.fallback_text(item.id, 'unknown'),
+                        gws_helpers.fallback_text(item.text, '')
+                    )
                 )
             end,
         },

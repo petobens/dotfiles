@@ -77,7 +77,9 @@ function M.decode_json(stdout, err_context)
         stdout = tostring(stdout)
     end
 
-    local ok, decoded = pcall(vim.json.decode, stdout)
+    local ok, decoded = pcall(vim.json.decode, stdout, {
+        luanil = { object = true },
+    })
     if not ok or type(decoded) ~= 'table' then
         return nil, ('gws returned invalid JSON for %s'):format(err_context)
     end
