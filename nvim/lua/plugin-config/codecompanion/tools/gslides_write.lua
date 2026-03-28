@@ -80,10 +80,6 @@ local function normalize_required_string(value, name, opts)
     return gws_tool_helpers.normalize_required_string_arg(value, name, opts)
 end
 
-local function has_value(value)
-    return value ~= nil and value ~= vim.NIL
-end
-
 local function normalize_hex_color(value, name)
     local text, text_err = normalize_required_string(value, name, { allow_empty = false })
     if not text then
@@ -196,14 +192,19 @@ local function find_slide(presentation, slide_object_id)
 end
 
 -- Text matching
-local function normalize_for_fuzzy_search(text)
+local function normalize_for_fuzzy_search(text, opts)
+    opts = opts or {}
+
     local normalized_parts = {}
     local normalized_to_original = {}
     local last_was_space = false
 
     for i = 1, #text do
         local char = text:sub(i, i)
-        if char:match('%s') then
+        local is_space = char:match('%s') ~= nil
+        local is_alnum = char:match('[%w]') ~= nil
+
+        if is_space or (opts.strip_punctuation and not is_alnum) then
             if not last_was_space then
                 normalized_parts[#normalized_parts + 1] = ' '
                 normalized_to_original[#normalized_to_original + 1] = i
@@ -213,6 +214,21 @@ local function normalize_for_fuzzy_search(text)
             normalized_parts[#normalized_parts + 1] = char:lower()
             normalized_to_original[#normalized_to_original + 1] = i
             last_was_space = false
+        end
+    end
+
+    return table.concat(normalized_parts, ''), normalized_to_original
+end
+
+local function normalize_for_token_search(text)
+    local normalized_parts = {}
+    local normalized_to_original = {}
+
+    for i = 1, #text do
+        local char = text:sub(i, i)
+        if char:match('[%w]') then
+            normalized_parts[#normalized_parts + 1] = char:lower()
+            normalized_to_original[#normalized_to_original + 1] = i
         end
     end
 
@@ -236,7 +252,60 @@ local function find_occurrence_range(haystack, needle, occurrence_index)
     end
 end
 
+local function find_text_match_bounds(full_text, match_text, occurrence_index)
+    local exact_start, exact_end =
+        find_occurrence_range(full_text, match_text, occurrence_index)
+    if exact_start and exact_end then
+        return exact_start, exact_end
+    end
+
+    local normalized_full_text, normalized_to_original =
+        normalize_for_fuzzy_search(full_text)
+    local normalized_match_text = normalize_for_fuzzy_search(match_text)
+    local fuzzy_start, fuzzy_end = find_occurrence_range(
+        normalized_full_text,
+        normalized_match_text,
+        occurrence_index
+    )
+
+    if fuzzy_start and fuzzy_end then
+        return normalized_to_original[fuzzy_start], normalized_to_original[fuzzy_end]
+    end
+
+    local punctuationless_full_text, punctuationless_to_original =
+        normalize_for_fuzzy_search(full_text, { strip_punctuation = true })
+    local punctuationless_match_text =
+        normalize_for_fuzzy_search(match_text, { strip_punctuation = true })
+    local punctuationless_start, punctuationless_end = find_occurrence_range(
+        punctuationless_full_text,
+        punctuationless_match_text,
+        occurrence_index
+    )
+
+    if punctuationless_start and punctuationless_end then
+        return punctuationless_to_original[punctuationless_start],
+            punctuationless_to_original[punctuationless_end]
+    end
+
+    local tokenized_full_text, tokenized_to_original =
+        normalize_for_token_search(full_text)
+    local tokenized_match_text = normalize_for_token_search(match_text)
+    local tokenized_start, tokenized_end =
+        find_occurrence_range(tokenized_full_text, tokenized_match_text, occurrence_index)
+
+    if tokenized_start and tokenized_end then
+        return tokenized_to_original[tokenized_start],
+            tokenized_to_original[tokenized_end]
+    end
+
+    return nil
+end
+
 -- Shapes
+local function has_value(value)
+    return value ~= nil and value ~= vim.NIL
+end
+
 local function has_text_shape(element)
     return vim.tbl_get(element, 'shape', 'text', 'textElements') ~= nil
 end
@@ -296,13 +365,8 @@ local function shape_text_contains_match(element, match_text)
     end
 
     local full_text = build_shape_text_segments(element)
-    if full_text:find(match_text, 1, true) ~= nil then
-        return true
-    end
-
-    local normalized_full_text = normalize_for_fuzzy_search(full_text)
-    local normalized_match_text = normalize_for_fuzzy_search(match_text)
-    return normalized_full_text:find(normalized_match_text, 1, true) ~= nil
+    local start_pos, end_pos = find_text_match_bounds(full_text, match_text, 1)
+    return start_pos ~= nil and end_pos ~= nil
 end
 
 local function collect_matching_text_shapes(slides, match_text)
@@ -434,41 +498,16 @@ local function range_from_match(element, args)
         return nil
     end
 
-    local exact_start, exact_end =
-        find_occurrence_range(full_text, match_text, occurrence_index)
-    if exact_start and exact_end then
-        local exact_range = map_range(exact_start, exact_end)
-        if exact_range then
-            return exact_range
+    local match_start, match_end =
+        find_text_match_bounds(full_text, match_text, occurrence_index)
+    if match_start and match_end then
+        local match_range = map_range(match_start, match_end)
+        if match_range then
+            return match_range
         end
 
         return nil,
             ('Could not map match_text to a Slides text range in page element %s'):format(
-                element.objectId
-            )
-    end
-
-    local normalized_full_text, normalized_to_original =
-        normalize_for_fuzzy_search(full_text)
-    local normalized_match_text = normalize_for_fuzzy_search(match_text)
-    local fuzzy_start, fuzzy_end = find_occurrence_range(
-        normalized_full_text,
-        normalized_match_text,
-        occurrence_index
-    )
-
-    if fuzzy_start and fuzzy_end then
-        local original_start = normalized_to_original[fuzzy_start]
-        local original_end = normalized_to_original[fuzzy_end]
-        if original_start and original_end then
-            local fuzzy_range = map_range(original_start, original_end)
-            if fuzzy_range then
-                return fuzzy_range
-            end
-        end
-
-        return nil,
-            ('Could not map fuzzy match_text to a Slides text range in page element %s'):format(
                 element.objectId
             )
     end
@@ -658,15 +697,26 @@ local function duplicate_slide_operation(presentation_id, args)
         return gws_tool_helpers.tool_error(source_slide_object_id_err)
     end
 
-    if args.insertion_index ~= nil and args.insertion_index ~= vim.NIL then
-        return gws_tool_helpers.tool_error(
-            'duplicate_slide does not support insertion_index; duplicate the slide first, then reorder it with raw_batch_update if needed'
-        )
+    local insertion_index, insertion_index_err =
+        normalize_int(args.insertion_index, 'insertion_index')
+    if insertion_index_err then
+        return gws_tool_helpers.tool_error(insertion_index_err)
+    end
+
+    local before_presentation = nil
+    if insertion_index then
+        before_presentation, source_slide_object_id_err =
+            fetch_slides_presentation(presentation_id)
+        if not before_presentation then
+            return gws_tool_helpers.tool_error(source_slide_object_id_err)
+        end
     end
 
     local object_ids = nil
+    local new_slide_object_id = nil
     if args.new_slide_object_id ~= nil and args.new_slide_object_id ~= vim.NIL then
-        local new_slide_object_id, new_slide_object_id_err = normalize_required_string(
+        local new_slide_object_id_err
+        new_slide_object_id, new_slide_object_id_err = normalize_required_string(
             args.new_slide_object_id,
             'new_slide_object_id',
             { allow_empty = false }
@@ -687,6 +737,60 @@ local function duplicate_slide_operation(presentation_id, args)
     })
     if not stdout then
         return gws_tool_helpers.tool_error(run_err)
+    end
+
+    if insertion_index then
+        local duplicated_slide_object_id = new_slide_object_id
+
+        if not duplicated_slide_object_id then
+            local after_presentation, after_err =
+                fetch_slides_presentation(presentation_id)
+            if not after_presentation then
+                return gws_tool_helpers.tool_error(after_err)
+            end
+
+            local before_ids = {}
+            for _, slide in ipairs(before_presentation.slides or {}) do
+                before_ids[slide.objectId] = true
+            end
+
+            local new_ids = vim.iter(after_presentation.slides or {})
+                :map(function(slide)
+                    if not before_ids[slide.objectId] then
+                        return slide.objectId
+                    end
+                end)
+                :totable()
+
+            if #new_ids ~= 1 then
+                return gws_tool_helpers.tool_error(
+                    'Could not determine duplicated slide object ID for repositioning; provide new_slide_object_id explicitly when using insertion_index'
+                )
+            end
+
+            duplicated_slide_object_id = new_ids[1]
+        end
+
+        local move_stdout, move_err = batch_update_slides(presentation_id, {
+            {
+                updateSlidesPosition = {
+                    slideObjectIds = { duplicated_slide_object_id },
+                    insertionIndex = insertion_index - 1,
+                },
+            },
+        })
+        if not move_stdout then
+            return gws_tool_helpers.tool_error(move_err)
+        end
+
+        return gws_tool_helpers.tool_success(
+            ('Duplicated slide %s to %s and moved it to position %d in Google Slides %s'):format(
+                source_slide_object_id,
+                duplicated_slide_object_id,
+                insertion_index,
+                presentation_id
+            )
+        )
     end
 
     return gws_tool_helpers.tool_success(
