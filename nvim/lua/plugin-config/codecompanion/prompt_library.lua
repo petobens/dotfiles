@@ -1,7 +1,10 @@
 -- luacheck:ignore 631
 local M = {}
 
+-- Constants
 M.SYSTEM_ROLE = '󰮥 Helpful Assistant'
+local NOTES_DIR = vim.fs.normalize('/home/pedro/git-repos/private/notes')
+local MEMOS_DIR = vim.fs.joinpath(NOTES_DIR, 'mutt', 'ops', 'memos')
 
 -- Prompt library config
 local PROMPT_LIBRARY_CONFIG = {
@@ -70,13 +73,18 @@ local function read_prompt_file(fname, opts)
     return table.concat(filtered, '\n'):gsub('\n$', '')
 end
 
-local function load_prompt_library()
+local function get_prompt_read_opts()
     local stat = vim.uv.fs_stat(PROMPT_LIBRARY_CONFIG.prompt_dir)
-    local read_opts = {
+
+    return {
         use_url = not (stat and stat.type == 'directory'),
         base_url = PROMPT_LIBRARY_CONFIG.base_url,
         prompt_dir = PROMPT_LIBRARY_CONFIG.prompt_dir,
     }
+end
+
+local function load_prompt_library()
+    local read_opts = get_prompt_read_opts()
     local prompt_library = {}
     local formatting_content =
         read_prompt_file(PROMPT_LIBRARY_CONFIG.formatting_file, read_opts)
@@ -93,20 +101,12 @@ end
 -- Loaded prompt text
 local PROMPT_LIBRARY = load_prompt_library()
 
--- Read a raw prompt file by markdown basename, bypassing the preloaded cache
-function M.prompt_file(relative_path)
-    local stat = vim.uv.fs_stat(PROMPT_LIBRARY_CONFIG.prompt_dir)
-    local read_opts = {
-        use_url = not (stat and stat.type == 'directory'),
-        base_url = PROMPT_LIBRARY_CONFIG.base_url,
-        prompt_dir = PROMPT_LIBRARY_CONFIG.prompt_dir,
-    }
-
-    return read_prompt_file(relative_path, read_opts)
-end
-
 function M.prompt(name)
     return PROMPT_LIBRARY[name]
+end
+
+function M.prompt_file(relative_path)
+    return read_prompt_file(relative_path, get_prompt_read_opts())
 end
 
 -- Shared prompt constructor
@@ -236,10 +236,10 @@ local function writer_at_work_prompt()
                 {
                     type = 'file',
                     path = {
-                        '/home/pedro/git-repos/private/notes/mutt/ops/memos/1_tdms.md',
-                        '/home/pedro/git-repos/private/notes/mutt/ops/memos/2_new_structure.md',
-                        '/home/pedro/git-repos/private/notes/mutt/ops/memos/3_portfolios_practices.md',
-                        '/home/pedro/git-repos/private/notes/mutt/ops/memos/4_incentives.md',
+                        vim.fs.joinpath(MEMOS_DIR, '1_tdms.md'),
+                        vim.fs.joinpath(MEMOS_DIR, '2_new_structure.md'),
+                        vim.fs.joinpath(MEMOS_DIR, '3_portfolios_practices.md'),
+                        vim.fs.joinpath(MEMOS_DIR, '4_incentives.md'),
                     },
                 },
             },
