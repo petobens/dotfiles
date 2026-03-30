@@ -53,6 +53,12 @@ local tools = {
         NO_APPROVAL_OPTS
     ),
     ---- Gsheets
+    gsheet_copy = gdrive_tool(
+        'Copy a Google Sheet via gws',
+        'plugin-config.codecompanion.tools.gdrive_copy',
+        'copy_tool',
+        'sheet'
+    ),
     gsheet_create = gdrive_tool(
         'Create a Google Sheet via gws',
         'plugin-config.codecompanion.tools.gdrive_create',
@@ -87,6 +93,12 @@ local tools = {
         WRITE_APPROVAL_OPTS
     ),
     ---- Gdocs
+    gdoc_copy = gdrive_tool(
+        'Copy a Google Doc via gws',
+        'plugin-config.codecompanion.tools.gdrive_copy',
+        'copy_tool',
+        'doc'
+    ),
     gdoc_create = gdrive_tool(
         'Create a Google Doc via gws',
         'plugin-config.codecompanion.tools.gdrive_create',
@@ -121,6 +133,12 @@ local tools = {
         WRITE_APPROVAL_OPTS
     ),
     ---- Gslides
+    gslides_copy = gdrive_tool(
+        'Copy a Google Slides presentation via gws',
+        'plugin-config.codecompanion.tools.gdrive_copy',
+        'copy_tool',
+        'slides'
+    ),
     gslides_create = gdrive_tool(
         'Create a Google Slides presentation via gws',
         'plugin-config.codecompanion.tools.gdrive_create',
@@ -174,6 +192,7 @@ local tools = {
             description = 'Google Sheets tools',
             tools = {
                 'gdrive_search',
+                'gsheet_copy',
                 'gsheet_create',
                 'gsheet_inspect',
                 'gsheet_read',
@@ -187,6 +206,7 @@ local tools = {
             description = 'Google Docs tools',
             tools = {
                 'gdrive_search',
+                'gdoc_copy',
                 'gdoc_create',
                 'gdoc_inspect',
                 'gdoc_read',
@@ -200,6 +220,7 @@ local tools = {
             description = 'Google Slides tools',
             tools = {
                 'gdrive_search',
+                'gslides_copy',
                 'gslides_create',
                 'gslides_inspect',
                 'gslides_read',
@@ -215,6 +236,7 @@ local tools = {
             system_prompt = prompt_library.prompt_file('mutt_slides'),
             tools = {
                 'gdrive_search',
+                'gslides_copy',
                 'gslides_create',
                 'gslides_inspect',
                 'gslides_read',
