@@ -45,7 +45,7 @@ function M.normalize_required_string_arg(value, name, opts)
     return normalized
 end
 
-function M.normalize_json_array_arg(value, opts)
+function M.normalize_json_arg(value, opts)
     opts = opts or {}
 
     if value == vim.NIL then
@@ -60,7 +60,22 @@ function M.normalize_json_array_arg(value, opts)
         value = decoded
     end
 
-    if type(value) ~= 'table' or vim.tbl_isempty(value) then
+    if value == nil then
+        return nil, opts.empty_error or 'value must not be empty'
+    end
+
+    return value
+end
+
+function M.normalize_json_array_arg(value, opts)
+    opts = opts or {}
+
+    value = M.normalize_json_arg(value, opts)
+    if value == nil then
+        return nil, opts.empty_error or 'value must be a non-empty JSON array'
+    end
+
+    if type(value) ~= 'table' or not vim.islist(value) or vim.tbl_isempty(value) then
         return nil, opts.empty_error or 'value must be a non-empty JSON array'
     end
 

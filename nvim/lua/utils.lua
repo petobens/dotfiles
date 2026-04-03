@@ -12,6 +12,7 @@ M.icons = {
     fold_open = '',
 }
 
+-- Files
 function M.split_open(file)
     local split = 'split'
     if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
@@ -28,6 +29,7 @@ function M.mk_non_dir(directory)
     end
 end
 
+-- Vim UI
 function M.vim_session_file()
     local session_dir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'session')
     M.mk_non_dir(session_dir)
@@ -72,6 +74,7 @@ function M.quit_return()
     end
 end
 
+-- Online check
 local last_online_check, online_status
 local online_cache_timeout = 30
 function M.is_online()
@@ -90,6 +93,36 @@ function M.is_online()
     online_status = (res.code == 0)
     last_online_check = now
     return online_status
+end
+
+-- Pass
+local pass_cache = {}
+function M.resolve_pass(path)
+    vim.validate('path', path, 'string')
+
+    local normalized_path = vim.trim(path)
+    if normalized_path == '' then
+        return nil, 'pass path must not be empty'
+    end
+
+    if pass_cache[normalized_path] then
+        return pass_cache[normalized_path]
+    end
+
+    local result = vim.system({ 'pass', 'show', normalized_path }, { text = true }):wait()
+    if result.code ~= 0 then
+        return nil,
+            vim.trim(result.stderr or '') ~= '' and vim.trim(result.stderr)
+                or ('Could not read pass entry: %s'):format(normalized_path)
+    end
+
+    local value = vim.trim(result.stdout or '')
+    if value == '' then
+        return nil, ('Pass entry is empty: %s'):format(normalized_path)
+    end
+
+    pass_cache[normalized_path] = value
+    return value
 end
 
 return M

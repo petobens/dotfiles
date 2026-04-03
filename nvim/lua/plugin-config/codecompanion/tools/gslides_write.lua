@@ -3,6 +3,7 @@ local gslides = require('plugin-config.codecompanion.slash_commands.gslides')
 local gws_helpers =
     require('plugin-config.codecompanion.slash_commands.gworkspace_helpers')
 local gws_tool_helpers = require('plugin-config.codecompanion.tools.gworkspace_helpers')
+local utils = require('utils')
 
 -- Constants
 local STYLE_BOOL_FIELDS = {
@@ -27,6 +28,7 @@ local STYLE_PROMPT_FIELDS = {
 }
 
 local OPERATION_ENUM = {
+    'copy_slide_from_presentation',
     'create_slide',
     'delete_slide',
     'duplicate_slide',
@@ -76,12 +78,12 @@ local function normalize_number(value, name)
     return value
 end
 
-local function normalize_required_string(value, name, opts)
-    return gws_tool_helpers.normalize_required_string_arg(value, name, opts)
-end
-
 local function normalize_hex_color(value, name)
-    local text, text_err = normalize_required_string(value, name, { allow_empty = false })
+    local text, text_err = gws_tool_helpers.normalize_required_string_arg(
+        value,
+        name,
+        { allow_empty = false }
+    )
     if not text then
         return nil, text_err
     end
@@ -146,16 +148,83 @@ local function batch_update_slides(presentation_id, requests)
     })
 end
 
-local function fetch_slides_presentation(presentation_id)
-    return gslides.fetch_slides(presentation_id)
+local function call_copy_slide_webapp(payload)
+    local webapp_url, webapp_url_err =
+        utils.resolve_pass('gcloud/appscript/copy-slides/webapp-url')
+    if not webapp_url then
+        return nil, webapp_url_err
+    end
+
+    local webapp_secret, webapp_secret_err =
+        utils.resolve_pass('gcloud/appscript/copy-slides/webapp-secret')
+    if not webapp_secret then
+        return nil, webapp_secret_err
+    end
+
+    local result = vim.system({
+        'curl',
+        '-sSL',
+        '-H',
+        'Content-Type: application/json',
+        '-d',
+        vim.json.encode({
+            secret = webapp_secret,
+            sourcePresentationId = payload.sourcePresentationId,
+            destinationPresentationId = payload.destinationPresentationId,
+            sourceSlideObjectId = payload.sourceSlideObjectId,
+            sourceSlideIndex = payload.sourceSlideIndex,
+            insertionIndex = payload.insertionIndex,
+        }),
+        '-w',
+        '\n%{http_code}',
+        webapp_url,
+    }, { text = true }):wait()
+
+    if result.code ~= 0 then
+        return nil,
+            gws_helpers.fallback_text(
+                result.stderr,
+                'cross-presentation slide copy failed'
+            )
+    end
+
+    local response_text = result.stdout or ''
+    local body, http_code = response_text:match('^(.*)\n(%d%d%d)%s*$')
+    http_code = tonumber(http_code)
+    if not body or not http_code then
+        return nil, 'Apps Script web app returned an invalid HTTP response'
+    end
+    if http_code >= 400 then
+        return nil,
+            ('Apps Script web app returned HTTP %d: %s'):format(
+                http_code,
+                gws_helpers.fallback_text(body, 'request failed')
+            )
+    end
+
+    local decoded, decode_err =
+        gws_helpers.decode_json(body, 'the Apps Script web app response')
+    if not decoded then
+        return nil, decode_err
+    end
+    if decoded.ok == false then
+        return nil,
+            gws_helpers.fallback_text(
+                decoded.error,
+                'cross-presentation slide copy failed'
+            )
+    end
+
+    return decoded
 end
 
 local function resolve_slide_object_id(presentation_id, args)
-    local slide_object_id, slide_object_id_err = normalize_required_string(
-        args.slide_object_id,
-        'slide_object_id',
-        { allow_empty = true }
-    )
+    local slide_object_id, slide_object_id_err =
+        gws_tool_helpers.normalize_required_string_arg(
+            args.slide_object_id,
+            'slide_object_id',
+            { allow_empty = true }
+        )
     if slide_object_id == nil then
         return nil, slide_object_id_err
     end
@@ -171,7 +240,7 @@ local function resolve_slide_object_id(presentation_id, args)
         return nil, 'slide_object_id or slide_index is required'
     end
 
-    local presentation, fetch_err = fetch_slides_presentation(presentation_id)
+    local presentation, fetch_err = gslides.fetch_slides(presentation_id)
     if not presentation then
         return nil, fetch_err
     end
@@ -189,6 +258,17 @@ local function find_slide(presentation, slide_object_id)
     return vim.iter(presentation.slides or {}):find(function(slide)
         return slide.objectId == slide_object_id
     end)
+end
+
+local function format_slide_target(object_id, slide_index, missing_text)
+    local normalized_object_id = gws_helpers.fallback_text(object_id, nil)
+    if normalized_object_id then
+        return normalized_object_id
+    end
+    if type(slide_index) == 'number' then
+        return ('slide #%d'):format(slide_index)
+    end
+    return missing_text
 end
 
 -- Text matching
@@ -452,7 +532,7 @@ end
 -- Text ranges
 local function range_from_match(element, args)
     local match_text, match_text_err =
-        normalize_required_string(args.match_text, 'match_text', {
+        gws_tool_helpers.normalize_required_string_arg(args.match_text, 'match_text', {
             empty_error = 'match_text is required when text_range_start/text_range_end are not provided',
         })
     if not match_text then
@@ -585,11 +665,12 @@ local function build_text_style(args)
     end
 
     if has_value(args.font_family) then
-        local font_family, font_family_err = normalize_required_string(
-            args.font_family,
-            'font_family',
-            { allow_empty = false }
-        )
+        local font_family, font_family_err =
+            gws_tool_helpers.normalize_required_string_arg(
+                args.font_family,
+                'font_family',
+                { allow_empty = false }
+            )
         if not font_family then
             return nil, nil, font_family_err
         end
@@ -610,7 +691,7 @@ local function build_text_style(args)
 
     if has_value(args.link_url) then
         local link_url, link_url_err =
-            normalize_required_string(args.link_url, 'link_url', {
+            gws_tool_helpers.normalize_required_string_arg(args.link_url, 'link_url', {
                 allow_empty = false,
             })
         if not link_url then
@@ -641,11 +722,12 @@ local function create_slide_operation(presentation_id, args)
     local slide_object_id = nil
     if args.slide_object_id ~= nil and args.slide_object_id ~= vim.NIL then
         local slide_object_id_err
-        slide_object_id, slide_object_id_err = normalize_required_string(
-            args.slide_object_id,
-            'slide_object_id',
-            { allow_empty = false }
-        )
+        slide_object_id, slide_object_id_err =
+            gws_tool_helpers.normalize_required_string_arg(
+                args.slide_object_id,
+                'slide_object_id',
+                { allow_empty = false }
+            )
         if not slide_object_id then
             return gws_tool_helpers.tool_error(slide_object_id_err)
         end
@@ -654,11 +736,12 @@ local function create_slide_operation(presentation_id, args)
     local layout_reference = nil
     if args.layout_reference ~= nil and args.layout_reference ~= vim.NIL then
         local layout_reference_err
-        layout_reference, layout_reference_err = normalize_required_string(
-            args.layout_reference,
-            'layout_reference',
-            { allow_empty = false }
-        )
+        layout_reference, layout_reference_err =
+            gws_tool_helpers.normalize_required_string_arg(
+                args.layout_reference,
+                'layout_reference',
+                { allow_empty = false }
+            )
         if not layout_reference then
             return gws_tool_helpers.tool_error(layout_reference_err)
         end
@@ -706,7 +789,7 @@ local function duplicate_slide_operation(presentation_id, args)
     local before_presentation = nil
     if insertion_index then
         before_presentation, source_slide_object_id_err =
-            fetch_slides_presentation(presentation_id)
+            gslides.fetch_slides(presentation_id)
         if not before_presentation then
             return gws_tool_helpers.tool_error(source_slide_object_id_err)
         end
@@ -716,11 +799,12 @@ local function duplicate_slide_operation(presentation_id, args)
     local new_slide_object_id = nil
     if args.new_slide_object_id ~= nil and args.new_slide_object_id ~= vim.NIL then
         local new_slide_object_id_err
-        new_slide_object_id, new_slide_object_id_err = normalize_required_string(
-            args.new_slide_object_id,
-            'new_slide_object_id',
-            { allow_empty = false }
-        )
+        new_slide_object_id, new_slide_object_id_err =
+            gws_tool_helpers.normalize_required_string_arg(
+                args.new_slide_object_id,
+                'new_slide_object_id',
+                { allow_empty = false }
+            )
         if not new_slide_object_id then
             return gws_tool_helpers.tool_error(new_slide_object_id_err)
         end
@@ -743,8 +827,7 @@ local function duplicate_slide_operation(presentation_id, args)
         local duplicated_slide_object_id = new_slide_object_id
 
         if not duplicated_slide_object_id then
-            local after_presentation, after_err =
-                fetch_slides_presentation(presentation_id)
+            local after_presentation, after_err = gslides.fetch_slides(presentation_id)
             if not after_presentation then
                 return gws_tool_helpers.tool_error(after_err)
             end
@@ -825,14 +908,14 @@ end
 
 local function replace_all_text_operation(presentation_id, args)
     local match_text, match_text_err =
-        normalize_required_string(args.match_text, 'match_text', {
+        gws_tool_helpers.normalize_required_string_arg(args.match_text, 'match_text', {
             empty_error = 'match_text is required for replace_all_text',
         })
     if not match_text then
         return gws_tool_helpers.tool_error(match_text_err)
     end
 
-    local replace_text, replace_text_err = normalize_required_string(
+    local replace_text, replace_text_err = gws_tool_helpers.normalize_required_string_arg(
         args.replace_text,
         'replace_text',
         { allow_empty = true }
@@ -873,7 +956,7 @@ local function replace_all_text_operation(presentation_id, args)
 end
 
 local function update_text_style_operation(presentation_id, args)
-    local presentation, fetch_err = fetch_slides_presentation(presentation_id)
+    local presentation, fetch_err = gslides.fetch_slides(presentation_id)
     if not presentation then
         return gws_tool_helpers.tool_error(fetch_err)
     end
@@ -916,6 +999,64 @@ local function update_text_style_operation(presentation_id, args)
     )
 end
 
+local function copy_slide_from_presentation_operation(presentation_id, args)
+    local source_presentation_id, source_presentation_err =
+        gws_tool_helpers.extract_google_id_arg(
+            args.source_presentation,
+            'slides',
+            'source_presentation'
+        )
+    if not source_presentation_id then
+        return gws_tool_helpers.tool_error(source_presentation_err)
+    end
+
+    local source_slide_object_id =
+        gws_helpers.normalize_optional_string(args.source_slide_object_id)
+    if source_slide_object_id == nil then
+        return gws_tool_helpers.tool_error('source_slide_object_id must be a string')
+    end
+
+    local source_slide_index, source_slide_index_err =
+        normalize_int(args.source_slide_index, 'source_slide_index')
+    if source_slide_index_err then
+        return gws_tool_helpers.tool_error(source_slide_index_err)
+    end
+
+    if source_slide_object_id == '' and not source_slide_index then
+        return gws_tool_helpers.tool_error(
+            'source_slide_object_id or source_slide_index is required for copy_slide_from_presentation'
+        )
+    end
+
+    local insertion_index, insertion_index_err =
+        normalize_int(args.insertion_index, 'insertion_index')
+    if insertion_index_err then
+        return gws_tool_helpers.tool_error(insertion_index_err)
+    end
+
+    local response, response_err = call_copy_slide_webapp({
+        sourcePresentationId = source_presentation_id,
+        destinationPresentationId = presentation_id,
+        sourceSlideObjectId = source_slide_object_id ~= '' and source_slide_object_id
+            or nil,
+        sourceSlideIndex = source_slide_index,
+        insertionIndex = insertion_index,
+    })
+    if not response then
+        return gws_tool_helpers.tool_error(response_err)
+    end
+
+    return gws_tool_helpers.tool_success(
+        ('Copied slide %s from Google Slides %s to Google Slides %s as %s'):format(
+            source_slide_object_id ~= '' and source_slide_object_id
+                or ('#' .. tostring(source_slide_index)),
+            source_presentation_id,
+            presentation_id,
+            gws_helpers.fallback_text(response.newSlideObjectId, 'an unknown slide')
+        )
+    )
+end
+
 local function raw_batch_update_operation(presentation_id, args)
     local requests, requests_err = normalize_requests_payload(args.requests_json)
     if not requests then
@@ -936,6 +1077,7 @@ local function raw_batch_update_operation(presentation_id, args)
 end
 
 local OPERATIONS = {
+    copy_slide_from_presentation = copy_slide_from_presentation_operation,
     create_slide = create_slide_operation,
     delete_slide = delete_slide_operation,
     duplicate_slide = duplicate_slide_operation,
@@ -967,6 +1109,21 @@ local function prompt_text_style(args)
 end
 
 local function build_prompt(args)
+    if args.operation == 'copy_slide_from_presentation' then
+        local source_target = format_slide_target(
+            args.source_slide_object_id,
+            args.source_slide_index,
+            '(no source slide provided)'
+        )
+        return ('Copy `%s` from Google Slides `%s` to Google Slides `%s`?'):format(
+            source_target,
+            gws_helpers.fallback_text(
+                args.source_presentation,
+                '(no source presentation provided)'
+            ),
+            args.presentation
+        )
+    end
     if args.operation == 'raw_batch_update' then
         return ('Apply raw batchUpdate to Google Slides `%s`?'):format(args.presentation)
     end
@@ -977,14 +1134,12 @@ local function build_prompt(args)
         return ('Duplicate a slide in Google Slides `%s`?'):format(args.presentation)
     end
     if args.operation == 'delete_slide' then
-        local target = args.slide_object_id
-        if not target and type(args.slide_index) == 'number' then
-            target = ('slide #%d'):format(args.slide_index)
-        end
-        return ('Delete `%s` from Google Slides `%s`?'):format(
-            gws_helpers.fallback_text(target, '(no slide target provided)'),
-            args.presentation
+        local target = format_slide_target(
+            args.slide_object_id,
+            args.slide_index,
+            '(no slide target provided)'
         )
+        return ('Delete `%s` from Google Slides `%s`?'):format(target, args.presentation)
     end
     if args.operation == 'update_text_style' then
         return prompt_text_style(args)
@@ -1015,13 +1170,17 @@ local SCHEMA_PROPERTIES = {
         type = 'string',
         description = 'Layout for create_slide.',
     },
+    source_presentation = {
+        type = 'string',
+        description = 'Source Google Slides URL or presentation ID for copy_slide_from_presentation.',
+    },
     source_slide_object_id = {
         type = 'string',
-        description = 'Slide ID for duplicate_slide.',
+        description = 'Source slide object ID for duplicate_slide or copy_slide_from_presentation.',
     },
     source_slide_index = {
         type = 'integer',
-        description = '1-based slide index to duplicate.',
+        description = '1-based source slide index for duplicate_slide or copy_slide_from_presentation.',
     },
     new_slide_object_id = {
         type = 'string',
@@ -1113,7 +1272,7 @@ local function write_slides(args)
     end
 
     local operation, operation_err =
-        normalize_required_string(args.operation, 'operation')
+        gws_tool_helpers.normalize_required_string_arg(args.operation, 'operation')
     if not operation then
         return gws_tool_helpers.tool_error(operation_err)
     end
