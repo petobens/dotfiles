@@ -46,6 +46,12 @@ local tools = {
         opts = NO_APPROVAL_OPTS,
     },
     -- Custom tools
+    ---- Terminal
+    safe_run_command = module_tool(
+        'Run approved safe shell commands, require approval otherwise',
+        'plugin-config.codecompanion.tools.safe_run_command',
+        nil
+    ),
     ---- Gdrive
     gdrive_search = module_tool(
         'Search Google Drive files via gws',
@@ -172,6 +178,7 @@ local tools = {
         'plugin-config.codecompanion.tools.gslides_write',
         WRITE_APPROVAL_OPTS
     ),
+
     -- Groups
     groups = {
         agent_tools = {
@@ -184,7 +191,7 @@ local tools = {
                 'grep_search',
                 'insert_edit_into_file',
                 'read_file',
-                'run_command',
+                'safe_run_command',
             },
             opts = GROUP_OPTS,
         },
@@ -230,6 +237,7 @@ local tools = {
             },
             opts = GROUP_OPTS,
         },
+
         -- Agents
         mutt_slides_agent = {
             description = 'Create muttdata slides',
