@@ -53,11 +53,11 @@ function M.chat_keymaps()
             description = 'Create new chat',
             callback = function()
                 vim.cmd.CodeCompanionChat()
-                vim.schedule(function()
-                    -- Force stopinsert to fix completions not loading (i.e by manually
-                    -- switching again to insert mode they will be triggered)
-                    vim.cmd.stopinsert()
-                end)
+                -- Hack to make completions work immediately in a new chat
+                vim.cmd.stopinsert()
+                vim.defer_fn(function()
+                    vim.cmd.startinsert({ bang = true })
+                end, 100)
             end,
         },
         hide_chats = {
