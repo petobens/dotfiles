@@ -3,13 +3,9 @@ local luarocks = vim.fs.joinpath(vim.env.HOME, '.luarocks', 'share', 'lua', '5.1
 package.path = package.path .. ';' .. vim.fs.joinpath(luarocks, '?', 'init.lua') .. ';'
 package.path = package.path .. ';' .. vim.fs.joinpath(luarocks, '?.lua') .. ';'
 
--- Guard image.nvim after :restart TTY/stdout issues.
-local image_ok, image = pcall(require, 'image')
-if not image_ok then
-    return
-end
+local image = require('image')
 
-local setup_ok = pcall(image.setup, {
+image.setup({
     tmux_show_only_in_active_window = true,
     max_height_window_percentage = 30,
     window_overlap_clear_enabled = true,
@@ -22,10 +18,6 @@ local setup_ok = pcall(image.setup, {
         },
     },
 })
-
-if not setup_ok then
-    return
-end
 
 -- Helpers
 local function get_image_path()
