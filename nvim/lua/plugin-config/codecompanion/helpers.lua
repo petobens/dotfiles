@@ -88,10 +88,16 @@ function M.chat.add_context(files)
         if not content then
             vim.notify('Could not read file: ' .. file, vim.log.levels.ERROR)
         else
+            local normalized_file = vim.fs.normalize(file)
+
             chat:add_context({
                 role = 'user',
-                content = string.format('Here is the content of %s:%s', file, content),
-            }, 'file', string.format('<file>%s</file>', vim.fs.basename(file)))
+                content = string.format(
+                    'Here is the content of %s:%s',
+                    normalized_file,
+                    content
+                ),
+            }, 'file', string.format('<file>%s</file>', normalized_file))
         end
     end
 
