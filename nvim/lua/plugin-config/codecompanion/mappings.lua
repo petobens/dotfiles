@@ -150,13 +150,18 @@ local function setup_codecompanion_filetype_mappings(e)
     end, { buf = bufnr, desc = 'Show model params' })
 
     vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
+        vim.cmd.stopinsert()
         local system_role = state_helpers.get_current_system_role_prompt()
-        if system_role then
-            vim.print(system_role)
+        if not system_role or system_role == '' then
+            return
         end
+        vim.print(system_role)
+        vim.schedule(function()
+            vim.cmd.normal({ args = { 'g<' }, bang = true })
+        end)
     end, {
         buf = bufnr,
-        desc = 'Show system role prompt',
+        desc = 'Show system role prompt in message window',
     })
 
     vim.keymap.set({ 'i', 'n' }, '<C-p>', insert_last_user_prompt, {
