@@ -90,7 +90,7 @@ local delta = previewers.new_termopen_previewer({
 
 -- Custom previewer (with image and pdf support)
 -- From https://github.com/3rd/image.nvim/issues/183#issuecomment-2284979815
-local image = require('image')
+local image = nil
 local state = { image = nil, last_path = nil, is_image = false }
 local supported_images = { gif = true, jpeg = true, jpg = true, png = true, svg = true }
 
@@ -110,12 +110,28 @@ vim.api.nvim_create_autocmd('WinClosed', {
 })
 
 local function show_preview_image(path)
-    state.image = image.from_file(path, {
+    if not image then
+        local ok, image_mod = pcall(require, 'image')
+        if not ok then
+            return
+        end
+        image = image_mod
+    end
+    local ok, preview_image = pcall(image.from_file, path, {
         x = vim.o.columns - math.floor(vim.o.columns * 0.45) + 1,
         width = math.floor(vim.o.columns * 0.45),
         y = vim.o.lines - 21,
         height = 20,
     })
+    if not ok then
+        vim.notify(
+            'image.nvim preview is unavailable after :restart',
+            vim.log.levels.WARN
+        )
+        return
+    end
+
+    state.image = preview_image
     if state.image then
         vim.schedule(function()
             state.image:render()
