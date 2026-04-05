@@ -64,7 +64,7 @@ function M.openai_gpt_54_nano_legacy()
         env = { api_key = OPENAI_API_KEY },
         schema = {
             model = { default = 'gpt-5.4-nano' },
-            reasoning_effort = { default = 'minimal' },
+            reasoning_effort = { default = 'none' },
         },
     })
 end
