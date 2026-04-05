@@ -2,6 +2,8 @@ local M = {}
 
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
+-- Constants
+local TOOL_MODULE_PREFIX = 'plugin-config.codecompanion.tools.'
 local GROUP_OPTS = {
     collapse_tools = true,
     ignore_system_prompt = false,
@@ -16,21 +18,21 @@ local WRITE_APPROVAL_OPTS = {
 }
 
 -- Helpers
-local function module_tool(description, module_path, opts)
+local function module_tool(description, module_name, opts)
     return {
         description = description,
         callback = function()
-            return require(module_path)
+            return require(TOOL_MODULE_PREFIX .. module_name)
         end,
         opts = opts,
     }
 end
 
-local function gdrive_tool(description, module_path, method_name, kind)
+local function gdrive_tool(description, module_name, method_name, kind)
     return {
         description = description,
         callback = function()
-            return require(module_path)[method_name](kind)
+            return require(TOOL_MODULE_PREFIX .. module_name)[method_name](kind)
         end,
         opts = WRITE_APPROVAL_OPTS,
     }
@@ -49,133 +51,129 @@ local tools = {
     ---- Terminal
     safe_run_command = module_tool(
         'Run approved safe shell commands, require approval otherwise',
-        'plugin-config.codecompanion.tools.safe_run_command',
+        'safe_run_command',
         nil
     ),
     ---- Gdrive
     gdrive_search = module_tool(
         'Search Google Drive files via gws',
-        'plugin-config.codecompanion.tools.gdrive_search',
+        'gdrive_search',
         NO_APPROVAL_OPTS
     ),
     ---- Gsheets
     gsheet_copy = gdrive_tool(
         'Copy a Google Sheet via gws',
-        'plugin-config.codecompanion.tools.gdrive_copy',
+        'gdrive_copy',
         'copy_tool',
         'sheet'
     ),
     gsheet_create = gdrive_tool(
         'Create a Google Sheet via gws',
-        'plugin-config.codecompanion.tools.gdrive_create',
+        'gdrive_create',
         'create_tool',
         'sheet'
     ),
     gsheet_trash = gdrive_tool(
         'Move a Google Sheet to trash via gws',
-        'plugin-config.codecompanion.tools.gdrive_trash',
+        'gdrive_trash',
         'trash_tool',
         'sheet'
     ),
     gsheet_rename = gdrive_tool(
         'Rename a Google Sheet via gws',
-        'plugin-config.codecompanion.tools.gdrive_rename',
+        'gdrive_rename',
         'rename_tool',
         'sheet'
     ),
     gsheet_inspect = module_tool(
         'Inspect a Google Sheet structure via gws',
-        'plugin-config.codecompanion.tools.gsheet_inspect',
+        'gsheet_inspect',
         NO_APPROVAL_OPTS
     ),
     gsheet_read = module_tool(
         'Read a Google Sheet via gws',
-        'plugin-config.codecompanion.tools.gsheet_read',
+        'gsheet_read',
         NO_APPROVAL_OPTS
     ),
     gsheet_write = module_tool(
         'Write to a Google Sheet via gws',
-        'plugin-config.codecompanion.tools.gsheet_write',
+        'gsheet_write',
         WRITE_APPROVAL_OPTS
     ),
     ---- Gdocs
     gdoc_copy = gdrive_tool(
         'Copy a Google Doc via gws',
-        'plugin-config.codecompanion.tools.gdrive_copy',
+        'gdrive_copy',
         'copy_tool',
         'doc'
     ),
     gdoc_create = gdrive_tool(
         'Create a Google Doc via gws',
-        'plugin-config.codecompanion.tools.gdrive_create',
+        'gdrive_create',
         'create_tool',
         'doc'
     ),
     gdoc_trash = gdrive_tool(
         'Move a Google Doc to trash via gws',
-        'plugin-config.codecompanion.tools.gdrive_trash',
+        'gdrive_trash',
         'trash_tool',
         'doc'
     ),
     gdoc_rename = gdrive_tool(
         'Rename a Google Doc via gws',
-        'plugin-config.codecompanion.tools.gdrive_rename',
+        'gdrive_rename',
         'rename_tool',
         'doc'
     ),
     gdoc_inspect = module_tool(
         'Inspect a Google Doc structure via gws',
-        'plugin-config.codecompanion.tools.gdoc_inspect',
+        'gdoc_inspect',
         NO_APPROVAL_OPTS
     ),
-    gdoc_read = module_tool(
-        'Read a Google Doc via gws',
-        'plugin-config.codecompanion.tools.gdoc_read',
-        NO_APPROVAL_OPTS
-    ),
+    gdoc_read = module_tool('Read a Google Doc via gws', 'gdoc_read', NO_APPROVAL_OPTS),
     gdoc_write = module_tool(
         'Write to a Google Doc via gws',
-        'plugin-config.codecompanion.tools.gdoc_write',
+        'gdoc_write',
         WRITE_APPROVAL_OPTS
     ),
     ---- Gslides
     gslides_copy = gdrive_tool(
         'Copy a Google Slides presentation via gws',
-        'plugin-config.codecompanion.tools.gdrive_copy',
+        'gdrive_copy',
         'copy_tool',
         'slides'
     ),
     gslides_create = gdrive_tool(
         'Create a Google Slides presentation via gws',
-        'plugin-config.codecompanion.tools.gdrive_create',
+        'gdrive_create',
         'create_tool',
         'slides'
     ),
     gslides_trash = gdrive_tool(
         'Move a Google Slides presentation to trash via gws',
-        'plugin-config.codecompanion.tools.gdrive_trash',
+        'gdrive_trash',
         'trash_tool',
         'slides'
     ),
     gslides_rename = gdrive_tool(
         'Rename a Google Slides presentation via gws',
-        'plugin-config.codecompanion.tools.gdrive_rename',
+        'gdrive_rename',
         'rename_tool',
         'slides'
     ),
     gslides_inspect = module_tool(
         'Inspect a Google Slides presentation structure via gws',
-        'plugin-config.codecompanion.tools.gslides_inspect',
+        'gslides_inspect',
         NO_APPROVAL_OPTS
     ),
     gslides_read = module_tool(
         'Read a Google Slides presentation via gws',
-        'plugin-config.codecompanion.tools.gslides_read',
+        'gslides_read',
         NO_APPROVAL_OPTS
     ),
     gslides_write = module_tool(
         'Write to a Google Slides presentation via gws',
-        'plugin-config.codecompanion.tools.gslides_write',
+        'gslides_write',
         WRITE_APPROVAL_OPTS
     ),
 
