@@ -8,6 +8,9 @@ local MEMOS_DIR = vim.fs.joinpath(NOTES_DIR, 'mutt', 'ops', 'memos')
 
 -- Prompt library config
 local PROMPT_LIBRARY_CONFIG = {
+    prompt_dir = vim.fs.normalize(
+        vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'llm-prompts', 'md-prompts')
+    ),
     formatting_file = 'response_formatting',
     prompt_md_files = {
         'bash_developer',
@@ -33,64 +36,44 @@ local PROMPT_LIBRARY_CONFIG = {
         conventional_commits = true,
         explain_code = true,
     },
-    base_url = 'https://raw.githubusercontent.com/petobens/llm-prompts/main/md-prompts/%s.md',
-    prompt_dir = vim.fs.normalize(
-        vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'llm-prompts', 'md-prompts')
-    ),
 }
 
 -- Prompt library loading
-local function read_prompt_file(fname, opts)
-    local lines = {}
-
-    if opts.use_url then
-        local result = vim.system(
-            { 'curl', '-fsSL', string.format(opts.base_url, fname) },
-            { text = true }
-        ):wait()
-        if result.code ~= 0 then
-            vim.notify('Failed to load prompt: ' .. fname, vim.log.levels.WARN)
-            return ''
-        end
-        lines = vim.split(vim.trim(result.stdout or ''), '\n', { plain = true })
-    else
-        local path = vim.fs.joinpath(opts.prompt_dir, fname .. '.md')
-        local fd = io.open(path, 'r')
-        if fd then
-            local content = fd:read('*a')
-            fd:close()
-            lines = vim.split(vim.trim(content or ''), '\n', { plain = true })
-        end
+local function read_prompt_file(fname)
+    local path = vim.fs.joinpath(PROMPT_LIBRARY_CONFIG.prompt_dir, fname .. '.md')
+    local fd = io.open(path, 'r')
+    if not fd then
+        vim.notify(('Prompt file not found: %s'):format(path), vim.log.levels.WARN)
+        return ''
     end
 
+    local content = fd:read('*a')
+    fd:close()
+
     local filtered = {}
-    for _, line in ipairs(lines) do
+    for _, line in ipairs(vim.split(vim.trim(content or ''), '\n', { plain = true })) do
         if not line:lower():find('markdownlint') then
             table.insert(filtered, line)
         end
     end
-
     return table.concat(filtered, '\n'):gsub('\n$', '')
 end
 
-local function get_prompt_read_opts()
-    local stat = vim.uv.fs_stat(PROMPT_LIBRARY_CONFIG.prompt_dir)
-
-    return {
-        use_url = not (stat and stat.type == 'directory'),
-        base_url = PROMPT_LIBRARY_CONFIG.base_url,
-        prompt_dir = PROMPT_LIBRARY_CONFIG.prompt_dir,
-    }
-end
-
 local function load_prompt_library()
-    local read_opts = get_prompt_read_opts()
+    local stat = vim.uv.fs_stat(PROMPT_LIBRARY_CONFIG.prompt_dir)
+    if not (stat and stat.type == 'directory') then
+        vim.notify(
+            ('Prompt directory not found: %s'):format(PROMPT_LIBRARY_CONFIG.prompt_dir),
+            vim.log.levels.WARN
+        )
+        return {}
+    end
+
     local prompt_library = {}
-    local formatting_content =
-        read_prompt_file(PROMPT_LIBRARY_CONFIG.formatting_file, read_opts)
+    local formatting_content = read_prompt_file(PROMPT_LIBRARY_CONFIG.formatting_file)
 
     for _, fname in ipairs(PROMPT_LIBRARY_CONFIG.prompt_md_files) do
-        local content = read_prompt_file(fname, read_opts)
+        local content = read_prompt_file(fname)
         prompt_library[fname] = PROMPT_LIBRARY_CONFIG.user_prompts[fname] and content
             or (formatting_content .. '\n\n' .. content)
     end
@@ -106,7 +89,7 @@ function M.prompt(name)
 end
 
 function M.prompt_file(relative_path)
-    return read_prompt_file(relative_path, get_prompt_read_opts())
+    return read_prompt_file(relative_path)
 end
 
 -- Shared prompt constructor
