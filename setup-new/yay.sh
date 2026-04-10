@@ -167,6 +167,7 @@ $yay_cmd act
 $yay_cmd actionlint
 $yay_cmd bat
 $yay_cmd bind-tools
+$yay_cmd claude-code
 $yay_cmd cronie
 $yay_cmd ctags
 $yay_cmd ctop
@@ -200,6 +201,7 @@ $yay_cmd lsd
 $yay_cmd luacheck
 $yay_cmd oath-toolkit
 $yay_cmd ollama
+$yay_cmd openai-codex
 $yay_cmd openssh
 $yay_cmd p7zip
 $yay_cmd pandoc-cli

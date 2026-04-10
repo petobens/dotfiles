@@ -1,0 +1,9 @@
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+approval_policy = "on-request"
+
+[tui]
+theme = "two-dark"
+
+[projects."/home/pedro/git-repos/private/dotfiles"]
+trust_level = "trusted"

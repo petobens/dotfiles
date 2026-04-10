@@ -155,6 +155,19 @@ if type "bat" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/config/bat" "$HOME/.config/bat"
     echo Created .config/bat folder symlink
 fi
+
+# AI
+if type "claude" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.claude"
+    $ln_cmd -fTs "$dotfiles_dir/config/claude/settings.json" "$HOME/.claude/settings.json"
+    echo Created .claude/settings.json symlink
+fi
+if type "codex" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.codex"
+    $ln_cmd -fTs "$dotfiles_dir/config/codex/config.toml" "$HOME/.codex/config.toml"
+    echo Created .codex/config.toml symlink
+fi
+
 # Browser
 $ln_cmd -fTs "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 echo Created .surfingkeysrc symlink
