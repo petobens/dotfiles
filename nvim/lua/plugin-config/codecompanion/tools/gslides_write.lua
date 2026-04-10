@@ -33,6 +33,7 @@ local OPERATION_ENUM = {
     'delete_slide',
     'duplicate_slide',
     'replace_all_text',
+    'replace_shape_text',
     'raw_batch_update',
     'update_text_style',
 }
@@ -218,6 +219,7 @@ local function call_copy_slide_webapp(payload)
     return decoded
 end
 
+-- Slides
 local function resolve_slide_object_id(presentation_id, args)
     local slide_object_id, slide_object_id_err =
         gws_tool_helpers.normalize_required_string_arg(
@@ -381,13 +383,8 @@ local function find_text_match_bounds(full_text, match_text, occurrence_index)
     return nil
 end
 
--- Shapes
 local function has_value(value)
     return value ~= nil and value ~= vim.NIL
-end
-
-local function has_text_shape(element)
-    return vim.tbl_get(element, 'shape', 'text', 'textElements') ~= nil
 end
 
 local function slide_scope_from_args(presentation_id, presentation, args)
@@ -409,6 +406,44 @@ local function slide_scope_from_args(presentation_id, presentation, args)
     end
 
     return slides
+end
+
+-- Shapes
+local function has_text_shape(element)
+    return vim.tbl_get(element, 'shape', 'text', 'textElements') ~= nil
+end
+
+local function normalize_placeholder_type(value)
+    local placeholder_type, placeholder_type_err =
+        gws_tool_helpers.normalize_required_string_arg(
+            value,
+            'placeholder_type',
+            { allow_empty = true }
+        )
+    if placeholder_type == nil then
+        return nil, placeholder_type_err
+    end
+    if placeholder_type == '' then
+        return nil
+    end
+
+    return placeholder_type:upper()
+end
+
+local function shape_placeholder_matches(element, placeholder_type, placeholder_index)
+    local placeholder = vim.tbl_get(element, 'shape', 'placeholder')
+        or element.placeholder
+    if type(placeholder) ~= 'table' then
+        return false
+    end
+    if placeholder.type ~= placeholder_type then
+        return false
+    end
+    if placeholder_index ~= nil and placeholder.index ~= placeholder_index then
+        return false
+    end
+
+    return true
 end
 
 local function build_shape_text_segments(element)
@@ -437,6 +472,11 @@ local function build_shape_text_segments(element)
     end
 
     return table.concat(parts, ''), segments
+end
+
+local function extract_shape_text(element)
+    local raw_text = build_shape_text_segments(element)
+    return gws_helpers.normalize_text(raw_text)
 end
 
 local function shape_text_contains_match(element, match_text)
@@ -498,13 +538,69 @@ local function find_text_shape(presentation_id, presentation, args)
         return nil, ('Page element %s was not found'):format(page_element_object_id)
     end
 
+    local placeholder_type, placeholder_type_err =
+        normalize_placeholder_type(args.placeholder_type)
+    if placeholder_type_err then
+        return nil, placeholder_type_err
+    end
+
+    local placeholder_index, placeholder_index_err =
+        normalize_int(args.placeholder_index, 'placeholder_index', { allow_zero = true })
+    if placeholder_index_err then
+        return nil, placeholder_index_err
+    end
+
+    if placeholder_type then
+        local matches = {}
+
+        for _, slide in ipairs(slides) do
+            for _, element in ipairs(slide.pageElements or {}) do
+                if
+                    has_text_shape(element)
+                    and shape_placeholder_matches(
+                        element,
+                        placeholder_type,
+                        placeholder_index
+                    )
+                then
+                    matches[#matches + 1] = element
+                end
+            end
+        end
+
+        if #matches == 1 then
+            return matches[1]
+        end
+        if #matches > 1 then
+            local ids = vim.iter(matches)
+                :map(function(element)
+                    return ('%s text=%s'):format(
+                        element.objectId or 'unknown',
+                        gws_helpers.fallback_text(extract_shape_text(element), '(empty)')
+                    )
+                end)
+                :join(', ')
+            return nil,
+                ('placeholder_type matched multiple text shapes, provide page_element_object_id explicitly: %s'):format(
+                    ids
+                )
+        end
+
+        return nil,
+            ('Could not find a text shape for placeholder_type=%s%s in the requested slide scope'):format(
+                placeholder_type,
+                placeholder_index ~= nil
+                        and (', placeholder_index=' .. tostring(placeholder_index))
+                    or ''
+            )
+    end
+
     local match_text =
         gws_tool_helpers.normalize_required_string_arg(args.match_text, 'match_text', {
-            empty_error = 'page_element_object_id or match_text is required for update_text_style',
+            empty_error = 'page_element_object_id, placeholder_type, or match_text is required',
         })
     if not match_text then
-        return nil,
-            'page_element_object_id or match_text is required for update_text_style'
+        return nil, 'page_element_object_id, placeholder_type, or match_text is required'
     end
 
     local matches = collect_matching_text_shapes(slides, match_text)
@@ -514,7 +610,16 @@ local function find_text_shape(presentation_id, presentation, args)
     if #matches > 1 then
         local ids = vim.iter(matches)
             :map(function(element)
-                return element.objectId or 'unknown'
+                local placeholder = vim.tbl_get(element, 'shape', 'placeholder')
+                    or element.placeholder
+                local placeholder_summary = type(placeholder) == 'table'
+                        and placeholder.type
+                    or 'NO_PLACEHOLDER'
+                return ('%s(%s text=%s)'):format(
+                    element.objectId or 'unknown',
+                    placeholder_summary,
+                    gws_helpers.fallback_text(extract_shape_text(element), '(empty)')
+                )
             end)
             :join(', ')
         return nil,
@@ -529,7 +634,151 @@ local function find_text_shape(presentation_id, presentation, args)
         )
 end
 
--- Text ranges
+local function find_shape_font_size_pt(element)
+    for _, text_element in
+        ipairs(vim.tbl_get(element, 'shape', 'text', 'textElements') or {})
+    do
+        local magnitude =
+            vim.tbl_get(text_element, 'textRun', 'style', 'fontSize', 'magnitude')
+        local unit = vim.tbl_get(text_element, 'textRun', 'style', 'fontSize', 'unit')
+        if type(magnitude) == 'number' and unit == 'PT' then
+            return magnitude
+        end
+    end
+
+    return nil
+end
+
+local function shape_has_bullets(element)
+    for _, text_element in
+        ipairs(vim.tbl_get(element, 'shape', 'text', 'textElements') or {})
+    do
+        if vim.tbl_get(text_element, 'paragraphMarker', 'bullet') ~= nil then
+            return true
+        end
+    end
+
+    return false
+end
+
+local function normalize_replacement_text_for_shape(element, text)
+    local placeholder_type = vim.tbl_get(element, 'shape', 'placeholder', 'type')
+        or vim.tbl_get(element, 'placeholder', 'type')
+    local current_raw_text = build_shape_text_segments(element)
+    local normalized = text:gsub('\r\n?', '\n')
+
+    if placeholder_type == 'TITLE' or placeholder_type == 'SUBTITLE' then
+        normalized = gws_helpers.normalize_text(normalized)
+    else
+        local lines = vim.iter(vim.split(normalized, '\n', { plain = true }))
+            :map(function(line)
+                local trimmed = vim.trim(line)
+                if trimmed == '' then
+                    return nil
+                end
+                if shape_has_bullets(element) then
+                    trimmed = trimmed:gsub('^[%-%*•◦▪·]+%s*', '')
+                    trimmed = trimmed:gsub('^%d+[.)]%s*', '')
+                end
+                return trimmed
+            end)
+            :totable()
+
+        normalized = table.concat(lines, '\n')
+    end
+
+    if
+        normalized ~= ''
+        and current_raw_text:sub(-1) == '\n'
+        and normalized:sub(-1) ~= '\n'
+    then
+        normalized = normalized .. '\n'
+    end
+
+    return normalized
+end
+
+local function assess_text_replacement_fit(element, new_text)
+    local current_raw_text = build_shape_text_segments(element)
+    local current_text = gws_helpers.normalize_text(current_raw_text)
+    local current_len = #current_text
+    local new_len = #gws_helpers.normalize_text(new_text)
+    local placeholder_type = vim.tbl_get(element, 'shape', 'placeholder', 'type')
+        or vim.tbl_get(element, 'placeholder', 'type')
+    local font_size_pt = find_shape_font_size_pt(element)
+
+    if new_len == 0 then
+        return nil
+    end
+
+    if
+        placeholder_type == 'TITLE'
+        and current_len > 0
+        and new_len > current_len * 1.5
+    then
+        return ('Replacement text is much longer than the current TITLE text in %s, likely to overflow'):format(
+            element.objectId or 'the target shape'
+        )
+    end
+
+    if
+        placeholder_type == 'SUBTITLE'
+        and current_len > 0
+        and new_len > current_len * 1.75
+    then
+        return ('Replacement text is much longer than the current SUBTITLE text in %s, likely to overflow'):format(
+            element.objectId or 'the target shape'
+        )
+    end
+
+    if
+        font_size_pt
+        and font_size_pt >= 24
+        and current_len > 0
+        and new_len > current_len * 2
+    then
+        return ('Replacement text is much longer than the current large-text content in %s, likely to overflow'):format(
+            element.objectId or 'the target shape'
+        )
+    end
+
+    return nil
+end
+
+local function build_fields_list(tbl)
+    if type(tbl) ~= 'table' or vim.tbl_isempty(tbl) then
+        return nil
+    end
+
+    return table.concat(vim.tbl_keys(tbl), ',')
+end
+
+local function first_text_run_style(element)
+    for _, text_element in
+        ipairs(vim.tbl_get(element, 'shape', 'text', 'textElements') or {})
+    do
+        local style = vim.tbl_get(text_element, 'textRun', 'style')
+        if type(style) == 'table' and not vim.tbl_isempty(style) then
+            return vim.deepcopy(style)
+        end
+    end
+
+    return nil
+end
+
+local function first_paragraph_style(element)
+    for _, text_element in
+        ipairs(vim.tbl_get(element, 'shape', 'text', 'textElements') or {})
+    do
+        local style = vim.tbl_get(text_element, 'paragraphMarker', 'style')
+        if type(style) == 'table' and not vim.tbl_isempty(style) then
+            return vim.deepcopy(style)
+        end
+    end
+
+    return nil
+end
+
 local function range_from_match(element, args)
     local match_text, match_text_err =
         gws_tool_helpers.normalize_required_string_arg(args.match_text, 'match_text', {
@@ -999,6 +1248,91 @@ local function update_text_style_operation(presentation_id, args)
     )
 end
 
+local function replace_shape_text_operation(presentation_id, args)
+    local presentation, fetch_err = gslides.fetch_slides(presentation_id)
+    if not presentation then
+        return gws_tool_helpers.tool_error(fetch_err)
+    end
+
+    local element, element_err = find_text_shape(presentation_id, presentation, args)
+    if not element then
+        return gws_tool_helpers.tool_error(element_err)
+    end
+
+    local text, text_err = gws_tool_helpers.normalize_required_string_arg(
+        args.text,
+        'text',
+        { allow_empty = true }
+    )
+    if text == nil then
+        return gws_tool_helpers.tool_error(text_err)
+    end
+
+    text = normalize_replacement_text_for_shape(element, text)
+
+    local fit_err = assess_text_replacement_fit(element, text)
+    if fit_err then
+        return gws_tool_helpers.tool_error(fit_err)
+    end
+
+    local preserved_text_style = first_text_run_style(element)
+    local preserved_paragraph_style = first_paragraph_style(element)
+    local requests = {
+        {
+            deleteText = {
+                objectId = element.objectId,
+                textRange = { type = 'ALL' },
+            },
+        },
+    }
+
+    if text ~= '' then
+        requests[#requests + 1] = {
+            insertText = {
+                objectId = element.objectId,
+                insertionIndex = 0,
+                text = text,
+            },
+        }
+
+        local text_style_fields = build_fields_list(preserved_text_style)
+        if preserved_text_style and text_style_fields then
+            requests[#requests + 1] = {
+                updateTextStyle = {
+                    objectId = element.objectId,
+                    textRange = { type = 'ALL' },
+                    style = preserved_text_style,
+                    fields = text_style_fields,
+                },
+            }
+        end
+
+        local paragraph_style_fields = build_fields_list(preserved_paragraph_style)
+        if preserved_paragraph_style and paragraph_style_fields then
+            requests[#requests + 1] = {
+                updateParagraphStyle = {
+                    objectId = element.objectId,
+                    textRange = { type = 'ALL' },
+                    style = preserved_paragraph_style,
+                    fields = paragraph_style_fields,
+                },
+            }
+        end
+    end
+
+    local stdout, run_err = batch_update_slides(presentation_id, requests)
+    if not stdout then
+        return gws_tool_helpers.tool_error(run_err)
+    end
+
+    return gws_tool_helpers.tool_success(
+        ('Replaced text in page element %s in Google Slides %s'):format(
+            element.objectId,
+            presentation_id
+        )
+    )
+end
+
 local function copy_slide_from_presentation_operation(presentation_id, args)
     local source_presentation_id, source_presentation_err =
         gws_tool_helpers.extract_google_id_arg(
@@ -1082,6 +1416,7 @@ local OPERATIONS = {
     delete_slide = delete_slide_operation,
     duplicate_slide = duplicate_slide_operation,
     replace_all_text = replace_all_text_operation,
+    replace_shape_text = replace_shape_text_operation,
     raw_batch_update = raw_batch_update_operation,
     update_text_style = update_text_style_operation,
 }
@@ -1144,6 +1479,15 @@ local function build_prompt(args)
     if args.operation == 'update_text_style' then
         return prompt_text_style(args)
     end
+    if args.operation == 'replace_shape_text' then
+        return ('Replace text in Google Slides `%s` for `%s`?'):format(
+            args.presentation,
+            gws_helpers.fallback_text(
+                args.page_element_object_id or args.placeholder_type or args.match_text,
+                '(no target provided)'
+            )
+        )
+    end
 
     return ('Write to Google Slides `%s` using `%s` with match `%s`?'):format(
         args.presentation,
@@ -1188,11 +1532,23 @@ local SCHEMA_PROPERTIES = {
     },
     page_element_object_id = {
         type = 'string',
-        description = 'Text shape object ID for update_text_style.',
+        description = 'Text shape object ID for update_text_style or replace_shape_text.',
+    },
+    placeholder_type = {
+        type = 'string',
+        description = 'Placeholder type such as TITLE, SUBTITLE, or BODY for update_text_style or replace_shape_text.',
+    },
+    placeholder_index = {
+        type = 'integer',
+        description = 'Optional placeholder index, zero-based as returned by Slides metadata.',
     },
     match_text = {
         type = 'string',
-        description = 'Text to match. For update_text_style, matching is scoped to page_element_object_id. If omitted, update_text_style styles the full text range.',
+        description = 'Text to match. For update_text_style or replace_shape_text, matching is scoped to page_element_object_id or placeholder_type when provided. If omitted, update_text_style styles the full text range.',
+    },
+    text = {
+        type = 'string',
+        description = 'Replacement text for replace_shape_text.',
     },
     occurrence_index = {
         type = 'integer',
