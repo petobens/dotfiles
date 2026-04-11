@@ -99,6 +99,8 @@ function M.chat_keymaps()
             callback = open_debug,
         },
         system_prompt = { modes = { n = '<Leader>ts' } },
+        clear_approvals = { modes = { n = '<Leader>ra' } },
+        yolo_mode = { modes = { n = '<Leader>ym' } },
         buffer_sync_all = { modes = { n = '<Leader>rp' } },
         buffer_sync_diff = { modes = { n = '<Leader>rw' } },
     }
