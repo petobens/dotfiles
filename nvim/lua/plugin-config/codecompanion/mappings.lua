@@ -177,6 +177,19 @@ local function setup_codecompanion_filetype_mappings(e)
     })
 end
 
+-- CodeCompanion CLI filetype mappings
+local function setup_codecompanion_cli_mappings(args)
+    vim.keymap.set({ 'n', 'i' }, '<C-o>', function()
+        if vim.api.nvim_get_mode().mode:sub(1, 1) == 'i' then
+            vim.cmd.stopinsert()
+        end
+        vim.cmd.write({ bang = true })
+    end, {
+        buffer = args.buf,
+        desc = 'Write CodeCompanion CLI prompt',
+    })
+end
+
 -- Quickfix filetype mappings
 local function setup_qf_filetype_mappings(args)
     vim.keymap.set('n', '<Leader>qf', function()
@@ -256,6 +269,13 @@ local function setup_filetype_mappings()
 
     vim.api.nvim_create_autocmd('FileType', {
         group = group,
+        pattern = 'codecompanion_input',
+        desc = 'CodeCompanion CLI input mappings',
+        callback = setup_codecompanion_cli_mappings,
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        group = group,
         pattern = 'qf',
         desc = 'CodeCompanion quickfix mapping',
         callback = setup_qf_filetype_mappings,
@@ -295,8 +315,19 @@ local function explain_selection()
     chat_helpers.run_slash_command('explain_code', { bufnr = bufnr, code = code })
 end
 
+local function explain_selection_with_cli()
+    codecompanion.cli('Can you explain this code?', {
+        focus = false,
+        submit = true,
+    })
+    vim.schedule(function()
+        vim.api.nvim_input(vim.keycode('<Esc>'))
+    end)
+end
+
 -- CodeCompanion global mappings
 local function setup_global_mappings()
+    -- Chat and command entry mappings
     vim.keymap.set('n', '<Leader>cg', window_helpers.focus_or_toggle_chat, {
         desc = 'Toggle CodeCompanion chat',
     })
@@ -319,6 +350,24 @@ local function setup_global_mappings()
         desc = 'Explore CodeCompanion open chats',
     })
 
+    -- CLI mappings
+    vim.keymap.set('n', '<Leader>ct', vim.cmd.CodeCompanionCLI, {
+        desc = 'Open CodeCompanion CLI',
+    })
+
+    vim.keymap.set('n', '<Leader>ck', function()
+        vim.cmd.CodeCompanionCLI({ 'Ask' })
+    end, {
+        desc = 'Open CodeCompanion CLI Ask',
+    })
+
+    -- Selection and context mappings
+    vim.keymap.set('n', '<Leader>ac', function()
+        chat_helpers.add_context({ vim.api.nvim_buf_get_name(0) })
+    end, {
+        desc = 'Add current file to CodeCompanion',
+    })
+
     vim.keymap.set('v', '<Leader>cp', paste_selection_to_chat, {
         desc = 'Paste selection to CodeCompanion chat',
     })
@@ -327,10 +376,8 @@ local function setup_global_mappings()
         desc = 'Explain selected code with CodeCompanion',
     })
 
-    vim.keymap.set('n', '<Leader>ac', function()
-        chat_helpers.add_context({ vim.api.nvim_buf_get_name(0) })
-    end, {
-        desc = 'Add current file to CodeCompanion',
+    vim.keymap.set('v', '<Leader>et', explain_selection_with_cli, {
+        desc = 'Explain selected code with CodeCompanion CLI',
     })
 end
 

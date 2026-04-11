@@ -2,6 +2,7 @@
 local codecompanion = require('codecompanion')
 
 local adapter_config = require('plugin-config.codecompanion.adapters')
+local cli = require('plugin-config.codecompanion.cli')
 local extensions = require('plugin-config.codecompanion.extensions')
 local mappings = require('plugin-config.codecompanion.mappings')
 local mcp = require('plugin-config.codecompanion.mcp')
@@ -88,6 +89,8 @@ function M.setup()
                     },
                 },
             },
+            -- CLI
+            cli = cli.build(),
             -- Inline
             inline = {
                 adapter = 'openai_gpt_54_nano',
