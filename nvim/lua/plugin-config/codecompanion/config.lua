@@ -34,6 +34,8 @@ function M.setup()
                     show_presets = false,
                     show_model_choices = false,
                 },
+                claude_code = adapter_config.claude_code,
+                codex = adapter_config.codex,
             },
         },
         -- Display

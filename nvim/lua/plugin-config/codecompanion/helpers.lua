@@ -1,8 +1,6 @@
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 
-local adapter_config = require('plugin-config.codecompanion.adapters')
-
 local M = {
     state = {},
     chat = {},
@@ -60,11 +58,41 @@ function M.state.get_cycle_count()
     return metadata.cycles or 0
 end
 
+function M.state.get_adapter_model(adapter)
+    return vim.tbl_get(adapter, 'schema', 'model', 'default')
+        or vim.tbl_get(adapter, 'defaults', 'model')
+end
+
+function M.state.get_adapter_context_window(adapter)
+    if type(adapter) ~= 'table' then
+        return nil
+    end
+
+    local model = M.state.get_adapter_model(adapter)
+    if not model then
+        return nil
+    end
+
+    local context_window = vim.tbl_get(
+        adapter,
+        'schema',
+        'model',
+        'choices',
+        model,
+        'meta',
+        'context_window'
+    )
+    if type(context_window) == 'number' then
+        return context_window
+    end
+
+    return nil
+end
 function M.state.format_context_usage(adapter)
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
     local tokens = metadata.tokens or 0
-    local max_ctx = adapter_config.MODEL_CONTEXT_WINDOWS[adapter.schema.model.default]
+    local max_ctx = M.state.get_adapter_context_window(adapter)
 
     if not max_ctx then
         return string.format('unknown ctx (%d)', tokens)

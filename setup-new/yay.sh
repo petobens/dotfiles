@@ -167,7 +167,9 @@ $yay_cmd act
 $yay_cmd actionlint
 $yay_cmd bat
 $yay_cmd bind-tools
+$yay_cmd claude-agent-acp-bin
 $yay_cmd claude-code
+$yay_cmd codex-acp
 $yay_cmd cronie
 $yay_cmd ctags
 $yay_cmd ctop
