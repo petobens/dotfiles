@@ -124,7 +124,11 @@ function M.codex()
             OPENAI_API_KEY = OPENAI_API_KEY,
         },
         defaults = {
-            model = 'gpt-5.4',
+            session_config_options = {
+                model = 'gpt-5.4',
+                thought_level = 'low',
+            },
+            mcpServers = 'inherit_from_config',
         },
     })
 end
@@ -136,7 +140,10 @@ function M.claude_code()
             CLAUDE_CODE_OAUTH_TOKEN = CLAUDE_OAUTH_TOKEN,
         },
         defaults = {
-            model = 'opus',
+            session_config_options = {
+                model = 'Opus',
+            },
+            mcpServers = 'inherit_from_config',
         },
     })
 end

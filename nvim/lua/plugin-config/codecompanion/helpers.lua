@@ -60,6 +60,7 @@ end
 
 function M.state.get_adapter_model(adapter)
     return vim.tbl_get(adapter, 'schema', 'model', 'default')
+        or vim.tbl_get(adapter, 'defaults', 'session_config_options', 'model')
         or vim.tbl_get(adapter, 'defaults', 'model')
 end
 
