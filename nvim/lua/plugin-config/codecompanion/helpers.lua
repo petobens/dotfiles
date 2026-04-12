@@ -150,7 +150,10 @@ end
 function M.window.try_focus_chat_float()
     for _, win_id in ipairs(vim.api.nvim_list_wins()) do
         local conf = vim.api.nvim_win_get_config(win_id)
-        if conf.focusable and conf.relative ~= '' and conf.zindex == 45 then
+        local bufnr = vim.api.nvim_win_get_buf(win_id)
+        local filetype = vim.bo[bufnr].filetype
+
+        if conf.focusable and conf.relative ~= '' and filetype == 'codecompanion' then
             vim.api.nvim_set_current_win(win_id)
             return true
         end
@@ -167,7 +170,7 @@ function M.window.focus_or_toggle_chat(opts)
         return
     end
 
-    codecompanion.toggle()
+    codecompanion.toggle_chat()
 
     if startinsert then
         vim.defer_fn(function()

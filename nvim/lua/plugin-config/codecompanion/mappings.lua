@@ -177,8 +177,21 @@ local function setup_codecompanion_filetype_mappings(e)
     })
 end
 
--- CodeCompanion CLI filetype mappings
+-- CodeCompanion CLI terminal filetype mappings
 local function setup_codecompanion_cli_mappings(args)
+    vim.keymap.set('t', '<C-c>', function()
+        vim.api.nvim_feedkeys(vim.keycode('<C-\\><C-n>'), 'n', false)
+        vim.schedule(function()
+            codecompanion.toggle_cli()
+        end)
+    end, {
+        buffer = args.buf,
+        desc = 'Hide CodeCompanion CLI',
+    })
+end
+
+-- CodeCompanion CLI input filetype mappings
+local function setup_codecompanion_cli_input_mappings(args)
     vim.keymap.set({ 'n', 'i' }, '<C-o>', function()
         if vim.api.nvim_get_mode().mode:sub(1, 1) == 'i' then
             vim.cmd.stopinsert()
@@ -269,9 +282,16 @@ local function setup_filetype_mappings()
 
     vim.api.nvim_create_autocmd('FileType', {
         group = group,
+        pattern = 'codecompanion_cli',
+        desc = 'CodeCompanion CLI mappings',
+        callback = setup_codecompanion_cli_mappings,
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        group = group,
         pattern = 'codecompanion_input',
         desc = 'CodeCompanion CLI input mappings',
-        callback = setup_codecompanion_cli_mappings,
+        callback = setup_codecompanion_cli_input_mappings,
     })
 
     vim.api.nvim_create_autocmd('FileType', {
@@ -351,8 +371,10 @@ local function setup_global_mappings()
     })
 
     -- CLI mappings
-    vim.keymap.set('n', '<Leader>ct', vim.cmd.CodeCompanionCLI, {
-        desc = 'Open CodeCompanion CLI',
+    vim.keymap.set('n', '<Leader>ct', function()
+        codecompanion.toggle_cli()
+    end, {
+        desc = 'Toggle CodeCompanion CLI',
     })
 
     vim.keymap.set('n', '<Leader>ck', function()
