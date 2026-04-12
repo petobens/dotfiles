@@ -128,7 +128,6 @@ function M.codex()
                 model = 'gpt-5.4',
                 thought_level = 'low',
             },
-            mcpServers = 'inherit_from_config',
         },
     })
 end
@@ -143,7 +142,6 @@ function M.claude_code()
             session_config_options = {
                 model = 'Opus',
             },
-            mcpServers = 'inherit_from_config',
         },
     })
 end
