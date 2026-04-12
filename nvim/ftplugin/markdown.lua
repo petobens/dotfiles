@@ -162,7 +162,7 @@ vim.keymap.set(
 
 vim.keymap.set(
     { 'n', 'v' },
-    '<Leader>ct',
+    '<Leader>cl',
     toggle_checklist,
     { buf = 0, desc = 'Toggle checklist state (checklist toggle)' }
 )
