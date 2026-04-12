@@ -7,6 +7,7 @@ local extensions = require('plugin-config.codecompanion.extensions')
 local mappings = require('plugin-config.codecompanion.mappings')
 local mcp = require('plugin-config.codecompanion.mcp')
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
+local rules = require('plugin-config.codecompanion.rules')
 local slash_commands = require('plugin-config.codecompanion.slash_commands')
 local tools = require('plugin-config.codecompanion.tools')
 local ui = require('plugin-config.codecompanion.ui')
@@ -104,6 +105,8 @@ function M.setup()
         prompt_library = prompt_library.build(),
         -- MCP
         mcp = mcp.build(),
+        -- Rules
+        rules = rules.build(),
         -- Extensions
         extensions = extensions.build(),
     })

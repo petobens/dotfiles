@@ -141,6 +141,10 @@ require('render-markdown').setup({
                             icon = '󰥶 ',
                             highlight = 'Comment',
                         },
+                        rules = {
+                            icon = ' ',
+                            highlight = 'Comment',
+                        },
                         tmux = {
                             icon = ' ',
                             highlight = 'Comment',
