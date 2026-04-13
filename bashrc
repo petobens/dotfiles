@@ -407,6 +407,24 @@ alias nfssh='sshpass -p "$(pass show synology/synology-flor/flor)" ssh synology-
 # VPN
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 
+# AI
+# Codex
+if type "codex" > /dev/null 2>&1; then
+    codex() {
+        local github_token
+        github_token="$(gopass show git/github/petobens/api-key)" || return 1
+        GITHUB_TOKEN="$github_token" command codex "$@"
+    }
+fi
+# Claude
+if type "claude" > /dev/null 2>&1; then
+    claude() {
+        local github_token
+        github_token="$(gopass show git/github/petobens/api-key)" || return 1
+        GITHUB_TOKEN="$github_token" command claude "$@"
+    }
+fi
+
 # }}}
 # Functions {{{
 

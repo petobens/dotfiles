@@ -5,5 +5,9 @@ approval_policy = "on-request"
 [tui]
 theme = "two-dark"
 
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+bearer_token_env_var = "GITHUB_TOKEN"
+
 [projects."/home/pedro/git-repos/private/dotfiles"]
 trust_level = "trusted"
