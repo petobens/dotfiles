@@ -11,6 +11,9 @@ or environment, for example `nvim/`, `python/`, and `arch/`.
 All Neovim configuration lives in the `nvim/` directory. The following rules
 apply only when working inside that directory.
 
+Ignore `nvim/cache/` for all purposes. Do not parse it, search it, or inspect
+files inside it unless explicitly asked to do so.
+
 ### References
 
 - Neovim Lua API: `/usr/share/nvim/runtime/doc/lua.txt`
