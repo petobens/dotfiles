@@ -248,13 +248,7 @@ local function slides_generator_prompt()
         'chat',
         'Act as a slides strategy writing assistant.',
         'slides_role',
-        M.prompt('slides_generator'),
-        {
-            tools = {
-                'gslides_inspect',
-                'gslides_read',
-            },
-        }
+        M.prompt('slides_generator')
     )
 end
 
