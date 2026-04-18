@@ -9,15 +9,19 @@ local prompt_library = require('plugin-config.codecompanion.prompt_library')
 local M = {}
 
 -- Helpers
+local function cwd_footer()
+    return vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or ''
+end
+
+local function set_footer(winnr, text)
+    vim.api.nvim_win_set_config(winnr, {
+        footer = text,
+        footer_pos = 'center',
+    })
+end
+
 local function set_chat_win_title(e)
     e = e or {}
-
-    local chatmap = {}
-    local chats = codecompanion.buf_get_chat()
-
-    for _, chat in pairs(chats) do
-        chatmap[chat.chat.ui.winnr] = chat.name
-    end
 
     local ok, chat = pcall(function()
         return codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
@@ -44,6 +48,11 @@ local function set_chat_win_title(e)
         return
     end
 
+    local chatmap = {}
+    for _, entry in pairs(codecompanion.buf_get_chat()) do
+        chatmap[entry.chat.ui.winnr] = entry.name
+    end
+
     vim.api.nvim_win_set_config(chat.ui.winnr, {
         title = string.format(
             'CodeCompanion - %s%s',
@@ -52,13 +61,7 @@ local function set_chat_win_title(e)
                     and string.format(' (%s)', chat.opts.title)
                 or ''
         ),
-        footer = string.format(
-            '%s %s',
-            vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or '',
-            (chat.context.filename and chat.context.filename ~= '')
-                    and ('(' .. vim.fs.basename(chat.context.filename) .. ')')
-                or ''
-        ),
+        footer = cwd_footer(),
         footer_pos = 'center',
     })
 end
@@ -120,7 +123,6 @@ end
 
 -- Spinner internals
 local spinner = {
-    ns_id = vim.api.nvim_create_namespace('codecompanion_spinner'),
     states = {
         '⢎ ',
         '⠎⠁',
@@ -132,43 +134,47 @@ local spinner = {
         '⢆⡀',
     },
     bufnr = nil,
-    line = nil,
     timer = nil,
     index = 1,
 }
 
-local function clear_spinner()
-    if spinner.bufnr and vim.api.nvim_buf_is_valid(spinner.bufnr) then
-        vim.api.nvim_buf_clear_namespace(spinner.bufnr, spinner.ns_id, 0, -1)
+local function spinner_winnr()
+    if not (spinner.bufnr and vim.api.nvim_buf_is_valid(spinner.bufnr)) then
+        return nil
     end
+    local winnr = vim.fn.bufwinid(spinner.bufnr)
+    if winnr == -1 or not vim.api.nvim_win_is_valid(winnr) then
+        return nil
+    end
+    return winnr
+end
 
-    spinner.bufnr = nil
-    spinner.line = nil
-    spinner.index = 1
-
+local function clear_spinner()
     if spinner.timer then
         spinner.timer:stop()
         spinner.timer:close()
         spinner.timer = nil
     end
+
+    local winnr = spinner_winnr()
+    if winnr then
+        set_footer(winnr, cwd_footer())
+    end
+
+    spinner.bufnr = nil
 end
 
 local function update_spinner()
-    if spinner.bufnr and spinner.line and vim.api.nvim_buf_is_valid(spinner.bufnr) then
-        vim.api.nvim_buf_clear_namespace(
-            spinner.bufnr,
-            spinner.ns_id,
-            spinner.line,
-            spinner.line + 1
-        )
-        vim.api.nvim_buf_set_extmark(spinner.bufnr, spinner.ns_id, spinner.line, 0, {
-            virt_text = {
-                { ' Working ' .. spinner.states[spinner.index], 'Comment' },
-            },
-            virt_text_pos = 'eol',
-        })
-        spinner.index = spinner.index % #spinner.states + 1
+    local winnr = spinner_winnr()
+    if not winnr then
+        return
     end
+
+    local base = cwd_footer()
+    local glyph = spinner.states[spinner.index]
+    local text = base == '' and glyph or string.format('%s %s', base, glyph)
+    set_footer(winnr, text)
+    spinner.index = spinner.index % #spinner.states + 1
 end
 
 -- Chat display
@@ -232,21 +238,25 @@ function M.setup()
 
     -- Spinner lifecycle
     vim.api.nvim_create_autocmd('User', {
-        pattern = 'CodeCompanionRequestStarted',
-        desc = 'Start CodeCompanion spinner on request start',
-        callback = function()
+        pattern = 'CodeCompanionChatSubmitted',
+        desc = 'Start CodeCompanion spinner when a chat turn begins',
+        callback = function(e)
             clear_spinner()
 
-            spinner.bufnr = vim.api.nvim_get_current_buf()
-            spinner.line = vim.api.nvim_win_get_cursor(0)[1] - 1
+            local bufnr = e.data and e.data.bufnr
+            if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+                return
+            end
+
+            spinner.bufnr = bufnr
             spinner.timer = vim.uv.new_timer()
-            spinner.timer:start(0, 120, vim.schedule_wrap(update_spinner))
+            spinner.timer:start(0, 200, vim.schedule_wrap(update_spinner))
         end,
     })
 
     vim.api.nvim_create_autocmd('User', {
-        pattern = 'CodeCompanionRequestFinished',
-        desc = 'Clear CodeCompanion spinner on request finish',
+        pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
+        desc = 'Clear CodeCompanion spinner when a chat turn ends',
         callback = function()
             vim.defer_fn(clear_spinner, 50)
         end,
