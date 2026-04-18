@@ -47,7 +47,7 @@ use the same fallback as
 `nvim/lua/plugin-config/nvimlint_config.lua`:
 
 ```bash
-lua5.4 -e "package.path='/usr/share/lua/5.5/?.lua;/usr/share/lua/5.5/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/5.4/?.so;'..package.cpath; dofile('/usr/lib/luarocks/rocks-5.5/luacheck/1.2.0-1/bin/luacheck')" -- --config ~/.config/.luacheckrc --globals vim <file>
+lua5.4 -e "package.path='/usr/share/lua/5.5/?.lua;/usr/share/lua/5.5/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/5.4/?.so;'..package.cpath; dofile('/usr/lib/luarocks/rocks-5.5/luacheck/1.2.0-1/bin/luacheck')" -- --config ~/.config/.luacheckrc --globals vim -- <file>
 ```
 
 Run Luacheck on touched Lua files when making changes under `nvim/`.
