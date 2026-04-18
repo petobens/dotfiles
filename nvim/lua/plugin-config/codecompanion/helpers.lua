@@ -165,10 +165,16 @@ end
 
 function M.window.focus_or_toggle_chat(opts)
     opts = opts or {}
-    local startinsert = opts.startinsert ~= false
 
     if M.window.try_focus_chat_float() then
         return
+    end
+
+    local startinsert
+    if opts.startinsert ~= nil then
+        startinsert = opts.startinsert
+    else
+        startinsert = next(codecompanion.buf_get_chat()) == nil
     end
 
     codecompanion.toggle_chat()
