@@ -29,6 +29,15 @@ function M.mk_non_dir(directory)
     end
 end
 
+function M.git_root(path)
+    local target = path or vim.api.nvim_buf_get_name(0)
+    if target == '' then
+        target = vim.uv.cwd()
+    end
+
+    return vim.fs.root(target, '.git')
+end
+
 -- Vim UI
 function M.vim_session_file()
     local session_dir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'session')

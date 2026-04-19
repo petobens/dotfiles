@@ -1,11 +1,44 @@
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
+local u = require('utils')
 
 local M = {
+    repo = {},
     state = {},
     chat = {},
     window = {},
 }
+
+-- Repo/filesystem
+function M.repo.git_root_or_notify(path)
+    local root = u.git_root(path)
+    if root then
+        return root
+    end
+
+    vim.notify(
+        'Not inside a Git repository. Could not determine the project root.',
+        vim.log.levels.ERROR
+    )
+    return nil
+end
+
+function M.repo.git_root_file(filename, path)
+    vim.validate('filename', filename, 'string')
+
+    local root = u.git_root(path)
+    if not root then
+        return nil
+    end
+
+    local filepath = vim.fs.joinpath(root, filename)
+    local stat = vim.uv.fs_stat(filepath)
+    if not stat or stat.type ~= 'file' then
+        return nil
+    end
+
+    return filepath
+end
 
 -- State
 function M.state.get_last_chat()

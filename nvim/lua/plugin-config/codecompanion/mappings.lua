@@ -5,6 +5,7 @@ local telescope_actions = require('telescope.actions')
 local u = require('utils')
 
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local rules = require('plugin-config.codecompanion.rules')
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local window_helpers = require('plugin-config.codecompanion.helpers').window
 
@@ -368,6 +369,10 @@ local function setup_global_mappings()
 
     vim.keymap.set('n', '<Leader>ce', explore_open_chats, {
         desc = 'Explore CodeCompanion open chats',
+    })
+
+    vim.keymap.set('n', '<Leader>ea', rules.edit_rule_file, {
+        desc = 'Edit repo AI rules file',
     })
 
     -- CLI mappings

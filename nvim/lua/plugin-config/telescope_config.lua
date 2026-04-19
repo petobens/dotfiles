@@ -1047,16 +1047,18 @@ end
 local function gitcommits(opts)
     opts = opts or {}
     opts.cwd = utils.buffer_dir()
-    local git_root, _ = utils.get_os_command_output({
-        'git',
-        'rev-parse',
-        '--show-toplevel',
-    }, opts.cwd)
+
+    local git_root = u.git_root(opts.cwd)
+    if not git_root then
+        vim.notify('Current buffer is not in a git repository', vim.log.levels.WARN)
+        return
+    end
+
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0))) -- to fix delta previewing
     builtin.git_commits({
         cwd = opts.cwd,
         prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout,<A-r>:review,<A-c>:changelog)',
-        results_title = git_root[1],
+        results_title = git_root,
         previewer = {
             delta,
             previewers.git_commit_diff_as_was.new(opts),
@@ -1199,12 +1201,12 @@ end, { desc = 'Telescope: Live grep (no VCS ignore)' })
 vim.keymap.set('n', '<A-g>', igrep, { desc = 'Telescope: Live grep in buffer dir' })
 
 vim.keymap.set('n', '<Leader>ir', function()
-    local git_root, _ = utils.get_os_command_output({
-        'git',
-        'rev-parse',
-        '--show-toplevel',
-    }, utils.buffer_dir())
-    igrep(git_root[1])
+    local git_root = u.git_root(utils.buffer_dir())
+    if not git_root then
+        vim.notify('Current buffer is not in a git repository', vim.log.levels.WARN)
+        return
+    end
+    igrep(git_root)
 end, { desc = 'Telescope: Live grep in git root' })
 
 vim.keymap.set('n', '<Leader>io', function()

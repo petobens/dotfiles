@@ -1,4 +1,5 @@
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local repo_helpers = require('plugin-config.codecompanion.helpers').repo
 
 local M = {}
 
@@ -17,20 +18,6 @@ local function send_project_tree(chat, root)
             result.stdout or ''
         ),
     })
-end
-
-local function find_git_root()
-    local git_root = vim.fs.root(vim.uv.cwd(), '.git')
-
-    if not git_root then
-        vim.notify(
-            'Not inside a Git repository. Could not determine the project root.',
-            vim.log.levels.ERROR
-        )
-        return nil
-    end
-
-    return git_root
 end
 
 -- Slash commands
@@ -70,7 +57,7 @@ function M.directory(chat)
 end
 
 function M.git_files(chat)
-    local git_root = find_git_root()
+    local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
     if not git_root then
         return
     end

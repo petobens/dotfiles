@@ -1,6 +1,7 @@
 local codecompanion = require('codecompanion')
 
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local repo_helpers = require('plugin-config.codecompanion.helpers').repo
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
 local M = {}
@@ -63,21 +64,6 @@ local function detect_majority_filetype(files)
     return nil
 end
 
--- Git context helpers
-local function find_git_root_or_notify()
-    local git_root = vim.fs.root(vim.uv.cwd(), '.git')
-
-    if not git_root then
-        vim.notify(
-            'Not inside a Git repository. Could not determine the project root.',
-            vim.log.levels.ERROR
-        )
-        return nil
-    end
-
-    return git_root
-end
-
 local function resolve_diff_and_filelist_cmds(opts)
     local diff_cmd = { 'git', 'diff', '--no-ext-diff' }
     local file_list_cmd = { 'git', 'diff', '--name-only' }
@@ -118,7 +104,7 @@ local function collect_changed_files(git_root, file_list_cmd)
 end
 
 local function build_diff_context(opts)
-    local git_root = find_git_root_or_notify()
+    local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
     if not git_root then
         return nil
     end
@@ -226,7 +212,7 @@ function M.code_review(_, opts)
 end
 
 function M.changelog(chat, opts)
-    local git_root = find_git_root_or_notify()
+    local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
     if not git_root then
         return
     end
