@@ -82,7 +82,7 @@ function M.chat_keymaps()
         next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
         fold_code = { modes = { n = 'zc' } },
         goto_file_under_cursor = { modes = { n = 'gf' } },
-        -- Secondary actions
+        -- Chat tools
         action_palette = {
             modes = { n = '<A-a>', i = '<A-a>' },
             description = 'Action palette',
@@ -99,9 +99,22 @@ function M.chat_keymaps()
             modes = { n = '<A-d>', i = '<A-d>' },
             callback = open_debug,
         },
-        system_prompt = { modes = { n = '<Leader>ts' } },
+        -- Rules
+        rules = {
+            modes = { n = '<Leader>rc', i = '<Leader>rc' },
+        },
+        reload_rules = {
+            modes = { n = '<Leader>rl', i = '<Leader>rl' },
+            description = 'Reload CodeCompanion rules',
+            callback = function(chat)
+                vim.cmd.stopinsert()
+                rules.reload_chat_rules(chat)
+            end,
+        },
+        -- Chat modes
         clear_approvals = { modes = { n = '<Leader>ra' } },
         yolo_mode = { modes = { n = '<Leader>ym' } },
+        -- Buffer sync
         buffer_sync_all = { modes = { n = '<Leader>rp' } },
         buffer_sync_diff = { modes = { n = '<Leader>rw' } },
     }

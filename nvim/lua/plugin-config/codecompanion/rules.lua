@@ -1,3 +1,4 @@
+local codecompanion_rules = require('codecompanion.interactions.shared.rules')
 local repo_helpers = require('plugin-config.codecompanion.helpers').repo
 local u = require('utils')
 
@@ -16,10 +17,6 @@ local function rule_files()
     end
 
     return {}
-end
-
-local function has_rule_files()
-    return not vim.tbl_isempty(rule_files())
 end
 
 -- Globals
@@ -41,6 +38,22 @@ function M.edit_rule_file()
     u.split_open(file)
 end
 
+function M.reload_chat_rules(chat)
+    chat:remove_tagged_message('rules')
+    chat:refresh_context()
+
+    local file = rule_file(vim.uv.cwd())
+    if file then
+        codecompanion_rules.add_to_chat_from_config(chat, {
+            name = 'default',
+            files = { file },
+        })
+    end
+
+    chat:refresh_context()
+    vim.notify('Reloaded CodeCompanion rules', vim.log.levels.INFO)
+end
+
 -- Setup
 function M.build()
     local files = rule_files()
@@ -49,13 +62,15 @@ function M.build()
         default = {
             description = 'Repo-root AI rules, AGENTS.md first, CLAUDE.md fallback',
             files = files,
-            enabled = has_rule_files,
+            enabled = function()
+                return not vim.tbl_isempty(rule_files())
+            end,
             is_preset = true,
         },
         opts = {
             chat = {
                 autoload = function()
-                    return has_rule_files() and 'default' or {}
+                    return rule_file(vim.uv.cwd()) and 'default' or {}
                 end,
                 enabled = true,
             },
