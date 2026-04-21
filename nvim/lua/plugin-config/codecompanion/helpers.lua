@@ -151,15 +151,23 @@ function M.chat.add_context(files)
             vim.notify('Could not read file: ' .. file, vim.log.levels.ERROR)
         else
             local normalized_file = vim.fs.normalize(file)
+            local id = string.format('<file>%s</file>', normalized_file)
 
-            chat:add_context({
+            -- Add context manually (rather than via chat:add_context) because that helper
+            -- drops msg.context.path which ACP adapters need to see the file
+            chat:add_message({
                 role = 'user',
                 content = string.format(
                     'Here is the content of %s:%s',
                     normalized_file,
                     content
                 ),
-            }, 'file', string.format('<file>%s</file>', normalized_file))
+            }, {
+                visible = false,
+                context = { id = id, path = normalized_file },
+                _meta = { tag = 'file' },
+            })
+            chat.context:add({ id = id, path = normalized_file })
         end
     end
 
