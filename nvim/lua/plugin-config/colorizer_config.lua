@@ -1,5 +1,6 @@
 require('colorizer').setup({
-    filetypes = {}, -- disabled by default (toggle it with mapping to enable it)
+    -- Sentinel filetype keeps colorizer off by default (empty table errors).
+    filetypes = { '_colorizer_off' },
     user_default_options = {
         RGB = true,
         RRGGBB = true,
