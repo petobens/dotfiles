@@ -19,7 +19,6 @@ local PROMPT_LIBRARY_CONFIG = {
         'code_reviewer',
         'conventional_commits',
         'explain_code',
-        'gsheets_expert',
         'helpful_assistant',
         'latex_developer',
         'lua_developer',
@@ -190,15 +189,6 @@ local function sql_developer_prompt()
     )
 end
 
-local function gsheets_expert_prompt()
-    return build_prompt(
-        'chat',
-        'Act as a Google Sheets expert.',
-        'gsheets_role',
-        M.prompt('gsheets_expert')
-    )
-end
-
 -- Work and communication
 local function translator_prompt()
     return build_prompt(
@@ -265,7 +255,6 @@ function M.build()
         [' Python Developer'] = python_developer_prompt(),
         [' PyDocs'] = pydocs_prompt(),
         [' SQL Developer'] = sql_developer_prompt(),
-        ['󰧷 GSheets Expert'] = gsheets_expert_prompt(),
         -- Work and communication
         ['󰗊 Translator'] = translator_prompt(),
         [' Writer at Work'] = writer_at_work_prompt(),

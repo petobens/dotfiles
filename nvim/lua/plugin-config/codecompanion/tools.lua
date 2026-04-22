@@ -17,6 +17,38 @@ local WRITE_APPROVAL_OPTS = {
     allowed_in_yolo_mode = false,
 }
 
+-- Shared tool lists
+local GSHEET_TOOL_LIST = {
+    'gdrive_search',
+    'gsheet_copy',
+    'gsheet_create',
+    'gsheet_inspect',
+    'gsheet_read',
+    'gsheet_rename',
+    'gsheet_trash',
+    'gsheet_write',
+}
+local GDOC_TOOL_LIST = {
+    'gdrive_search',
+    'gdoc_copy',
+    'gdoc_create',
+    'gdoc_inspect',
+    'gdoc_read',
+    'gdoc_rename',
+    'gdoc_trash',
+    'gdoc_write',
+}
+local GSLIDES_TOOL_LIST = {
+    'gdrive_search',
+    'gslides_copy',
+    'gslides_create',
+    'gslides_inspect',
+    'gslides_read',
+    'gslides_rename',
+    'gslides_trash',
+    'gslides_write',
+}
+
 -- Helpers
 local function module_tool(description, module_name, opts)
     return {
@@ -195,61 +227,31 @@ local tools = {
         },
         gsheet_tools = {
             description = 'Google Sheets tools',
-            tools = {
-                'gdrive_search',
-                'gsheet_copy',
-                'gsheet_create',
-                'gsheet_inspect',
-                'gsheet_read',
-                'gsheet_rename',
-                'gsheet_trash',
-                'gsheet_write',
-            },
+            tools = GSHEET_TOOL_LIST,
             opts = GROUP_OPTS,
         },
         gdoc_tools = {
             description = 'Google Docs tools',
-            tools = {
-                'gdrive_search',
-                'gdoc_copy',
-                'gdoc_create',
-                'gdoc_inspect',
-                'gdoc_read',
-                'gdoc_rename',
-                'gdoc_trash',
-                'gdoc_write',
-            },
+            tools = GDOC_TOOL_LIST,
             opts = GROUP_OPTS,
         },
         gslides_tools = {
             description = 'Google Slides tools',
-            tools = {
-                'gdrive_search',
-                'gslides_copy',
-                'gslides_create',
-                'gslides_inspect',
-                'gslides_read',
-                'gslides_rename',
-                'gslides_trash',
-                'gslides_write',
-            },
+            tools = GSLIDES_TOOL_LIST,
             opts = GROUP_OPTS,
         },
 
         -- Agents
         mutt_slides_agent = {
             description = 'Create muttdata slides',
-            system_prompt = prompt_library.prompt_file('mutt_slides'),
-            tools = {
-                'gdrive_search',
-                'gslides_copy',
-                'gslides_create',
-                'gslides_inspect',
-                'gslides_read',
-                'gslides_rename',
-                'gslides_trash',
-                'gslides_write',
-            },
+            system_prompt = prompt_library.prompt_file('mutt_slides_agent'),
+            tools = GSLIDES_TOOL_LIST,
+            opts = GROUP_OPTS,
+        },
+        gsheets_agent = {
+            description = 'Create and edit Google Sheets',
+            system_prompt = prompt_library.prompt_file('gsheets_agent'),
+            tools = GSHEET_TOOL_LIST,
             opts = GROUP_OPTS,
         },
     },
