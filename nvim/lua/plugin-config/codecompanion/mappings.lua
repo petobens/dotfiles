@@ -134,6 +134,20 @@ function M.shared_keymaps()
 end
 
 -- CodeCompanion chat filetype-local mapping callbacks
+local function show_adapter_info(chat_obj)
+    local adapter_info = {
+        { 'type', chat_obj.adapter.type },
+        { 'name', chat_obj.adapter.name },
+        { 'model_params', chat_obj.settings },
+    }
+    local lines = vim.iter(adapter_info)
+        :map(function(item)
+            return string.format('%s = %s', item[1], vim.inspect(item[2]))
+        end)
+        :totable()
+    vim.print(string.format('Adapter Info\n%s', table.concat(lines, '\n')))
+end
+
 local function insert_last_user_prompt()
     vim.cmd.stopinsert()
     local last = state_helpers.get_last_user_prompt()
@@ -162,8 +176,8 @@ local function setup_codecompanion_filetype_mappings(e)
 
     vim.keymap.set({ 'i', 'n' }, '<A-p>', function()
         local chat_obj = codecompanion.buf_get_chat(bufnr)
-        vim.print(string.format('Model Params:\n%s', vim.inspect(chat_obj.settings)))
-    end, { buf = bufnr, desc = 'Show model params' })
+        show_adapter_info(chat_obj)
+    end, { buf = bufnr, desc = 'Show adapter info' })
 
     vim.keymap.set({ 'i', 'n' }, '<A-r>', function()
         vim.cmd.stopinsert()
