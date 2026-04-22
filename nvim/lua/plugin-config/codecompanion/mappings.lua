@@ -384,7 +384,7 @@ local function setup_global_mappings()
         desc = 'Explore CodeCompanion open chats',
     })
 
-    vim.keymap.set('n', '<Leader>ea', rules.edit_rule_file, {
+    vim.keymap.set('n', '<Leader>ea', rules.edit_repo_rule_file, {
         desc = 'Edit repo AI rules file',
     })
 

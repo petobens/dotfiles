@@ -8,8 +8,8 @@ local ASSETS_DIR = vim.fs.normalize(
         vim.env.HOME,
         'git-repos',
         'private',
-        'llm-prompts',
-        'md-prompts',
+        'ai-harness',
+        'prompts',
         'assets'
     )
 )

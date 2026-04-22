@@ -5,12 +5,13 @@ local M = {}
 M.SYSTEM_ROLE = '󰮥 Helpful Assistant'
 local NOTES_DIR = vim.fs.normalize('/home/pedro/git-repos/private/notes')
 local MEMOS_DIR = vim.fs.joinpath(NOTES_DIR, 'mutt', 'ops', 'memos')
+local PROMPT_DIR = vim.fs.normalize(
+    vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'ai-harness', 'prompts')
+)
 
 -- Prompt library config
 local PROMPT_LIBRARY_CONFIG = {
-    prompt_dir = vim.fs.normalize(
-        vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'llm-prompts', 'md-prompts')
-    ),
+    prompt_dir = PROMPT_DIR,
     formatting_file = 'response_formatting',
     prompt_md_files = {
         'bash_developer',
