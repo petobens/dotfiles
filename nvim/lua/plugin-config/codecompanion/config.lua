@@ -65,6 +65,10 @@ function M.setup()
                     llm = ui.llm_role,
                 },
                 opts = {
+                    context_management = {
+                        enabled = true,
+                        trigger = 0.6,
+                    },
                     system_prompt = function()
                         return prompt_library.prompt('helpful_assistant')
                     end,
