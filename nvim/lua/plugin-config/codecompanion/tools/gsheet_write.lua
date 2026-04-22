@@ -34,6 +34,32 @@ local function resolve_sheet_range(args)
     return range
 end
 
+local function normalize_requests_payload(value)
+    local decoded, decode_err = gws_tool_helpers.normalize_json_arg(value, {
+        invalid_json_error = 'requests_json must be valid JSON',
+    })
+    if decoded == nil then
+        return nil, decode_err
+    end
+
+    if vim.islist(decoded) then
+        if vim.tbl_isempty(decoded) then
+            return nil, 'requests_json must be a non-empty JSON array'
+        end
+        return decoded
+    end
+
+    if type(decoded) == 'table' and vim.islist(decoded.requests) then
+        if vim.tbl_isempty(decoded.requests) then
+            return nil, 'requests_json.requests must be a non-empty JSON array'
+        end
+        return decoded.requests
+    end
+
+    return nil,
+        'requests_json must be either a JSON array or an object with a non-empty requests array'
+end
+
 -- API
 local function update_sheet_values(spreadsheet_id, action, range, values)
     local cmd = {
@@ -149,11 +175,7 @@ local function clear_range_operation(spreadsheet_id, args)
 end
 
 local function raw_batch_update_operation(spreadsheet_id, args)
-    local requests, requests_err =
-        gws_tool_helpers.normalize_json_array_arg(args.requests_json, {
-            invalid_json_error = 'requests_json must be valid JSON',
-            empty_error = 'requests_json must be a non-empty JSON array',
-        })
+    local requests, requests_err = normalize_requests_payload(args.requests_json)
     if not requests then
         return gws_tool_helpers.tool_error(requests_err)
     end
@@ -229,7 +251,10 @@ local SCHEMA_PROPERTIES = {
             },
         },
     },
-    requests_json = { type = 'string', description = 'Raw batchUpdate JSON.' },
+    requests_json = {
+        type = 'string',
+        description = 'Raw batchUpdate JSON, accepts a JSON array or an object with a requests array.',
+    },
 }
 
 -- Dispatch
