@@ -99,6 +99,7 @@ local plugins = {
     -- Completion & Snippets
     {
         'Saghen/blink.cmp',
+        branch = 'v1',
         dependencies = {
             'saghen/blink.compat',
             'fang2hou/blink-copilot',
