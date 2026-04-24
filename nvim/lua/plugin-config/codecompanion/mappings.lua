@@ -112,6 +112,9 @@ function M.chat_keymaps()
             end,
         },
         -- Chat modes
+        _btw = {
+            modes = { n = '<Leader>bt' },
+        },
         clear_approvals = { modes = { n = '<Leader>ra' } },
         yolo_mode = { modes = { n = '<Leader>ym' } },
         -- Buffer sync
