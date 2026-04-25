@@ -27,8 +27,10 @@ local function openai_responses_adapter(name, model, stream, context_window)
                             context_window = context_window,
                         },
                         opts = {
-                            has_vision = true,
                             can_reason = true,
+                            can_manage_context = true,
+                            has_function_calling = true,
+                            has_vision = true,
                             stream = stream,
                         },
                     },
