@@ -24,7 +24,7 @@ function M.setup()
                     show_presets = false,
                     show_model_choices = false,
                 },
-                openai_gpt_54 = adapter_config.openai_gpt_54,
+                openai_gpt_55 = adapter_config.openai_gpt_55,
                 openai_gpt_54_nano = adapter_config.openai_gpt_54_nano,
                 openai_gpt_54_nano_legacy = adapter_config.openai_gpt_54_nano_legacy,
                 gemini_flash_3 = adapter_config.gemini_flash_3,
@@ -59,7 +59,7 @@ function M.setup()
         interactions = {
             -- Chat
             chat = {
-                adapter = 'openai_gpt_54',
+                adapter = 'openai_gpt_55',
                 roles = {
                     user = 'Me',
                     llm = ui.llm_role,

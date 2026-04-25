@@ -48,8 +48,8 @@ local function openai_responses_adapter(name, model, stream, context_window)
     })
 end
 
-function M.openai_gpt_54()
-    return openai_responses_adapter('openai_gpt_54', 'gpt-5.4', true, 400000)
+function M.openai_gpt_55()
+    return openai_responses_adapter('openai_gpt_55', 'gpt-5.5', true, 1000000)
 end
 
 function M.openai_gpt_54_nano()
@@ -125,8 +125,7 @@ function M.codex()
         },
         defaults = {
             session_config_options = {
-                model = 'gpt-5.4',
-                thought_level = 'low',
+                model = 'gpt-5.5',
             },
         },
     })
