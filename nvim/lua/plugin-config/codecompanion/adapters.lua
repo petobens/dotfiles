@@ -139,7 +139,7 @@ function M.claude_code()
         },
         defaults = {
             session_config_options = {
-                model = 'Opus',
+                model = 'opus[1m]',
             },
         },
     })
