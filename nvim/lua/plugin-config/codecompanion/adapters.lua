@@ -3,10 +3,12 @@ local extend = adapters.extend
 
 local M = {}
 
+-- Credentials
 local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
 local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
 local TAVILY_API_KEY = 'cmd:pass show tavily/yahoomail/api-key'
 local CLAUDE_OAUTH_TOKEN = 'cmd:pass show mutt/claude/oauth-token'
+local GITHUB_TOKEN = 'cmd:pass show git/github/petobens/api-key'
 
 -- Helpers
 local function disabled()
@@ -124,6 +126,7 @@ function M.codex()
     return extend('codex', {
         env = {
             OPENAI_API_KEY = OPENAI_API_KEY,
+            GITHUB_TOKEN = GITHUB_TOKEN,
         },
         defaults = {
             session_config_options = {
@@ -138,6 +141,7 @@ function M.claude_code()
         env = {
             CLAUDE_CODE_EXECUTABLE = '/usr/bin/claude',
             CLAUDE_CODE_OAUTH_TOKEN = CLAUDE_OAUTH_TOKEN,
+            GITHUB_TOKEN = GITHUB_TOKEN,
         },
         defaults = {
             session_config_options = {
