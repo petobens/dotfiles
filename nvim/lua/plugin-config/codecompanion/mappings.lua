@@ -124,10 +124,14 @@ end
 
 -- CodeCompanion chat filetype-local mapping callbacks
 local function show_adapter_info(chat_obj)
+    local adapter = chat_obj.adapter
+    local model = state_helpers.get_adapter_model(adapter)
+    local params = adapter.type == 'acp' and adapter.defaults or chat_obj.settings
     local adapter_info = {
-        { 'type', chat_obj.adapter.type },
-        { 'name', chat_obj.adapter.name },
-        { 'model_params', chat_obj.settings },
+        { 'type', adapter.type },
+        { 'name', adapter.name },
+        { 'model', model },
+        { 'model_params', params },
     }
     local lines = vim.iter(adapter_info)
         :map(function(item)
