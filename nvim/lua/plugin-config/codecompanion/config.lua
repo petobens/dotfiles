@@ -1,7 +1,7 @@
 -- luacheck:ignore 631
 local codecompanion = require('codecompanion')
 
-local adapter_config = require('plugin-config.codecompanion.adapters')
+local adapters = require('plugin-config.codecompanion.adapters')
 local cli = require('plugin-config.codecompanion.cli')
 local extensions = require('plugin-config.codecompanion.extensions')
 local mappings = require('plugin-config.codecompanion.mappings')
@@ -14,8 +14,8 @@ local ui = require('plugin-config.codecompanion.ui')
 
 local M = {}
 
--- Main CodeCompanion setup
 function M.setup()
+    -- General config
     codecompanion.setup({
         -- Adapters
         adapters = {
@@ -24,20 +24,20 @@ function M.setup()
                     show_presets = false,
                     show_model_choices = false,
                 },
-                openai_gpt_55 = adapter_config.openai_gpt_55,
-                openai_gpt_54_nano = adapter_config.openai_gpt_54_nano,
-                openai_gpt_54_nano_legacy = adapter_config.openai_gpt_54_nano_legacy,
-                gemini_flash_3 = adapter_config.gemini_flash_3,
-                ollama_qwen35_08b = adapter_config.ollama_qwen35_08b,
-                tavily = adapter_config.tavily,
+                openai_gpt_55 = adapters.openai_gpt_55,
+                openai_gpt_54_nano = adapters.openai_gpt_54_nano,
+                openai_gpt_54_nano_legacy = adapters.openai_gpt_54_nano_legacy,
+                gemini_flash_3 = adapters.gemini_flash_3,
+                ollama_qwen35_08b = adapters.ollama_qwen35_08b,
+                tavily = adapters.tavily,
             },
             acp = {
                 opts = {
                     show_presets = false,
                     show_model_choices = false,
                 },
-                claude_code = adapter_config.claude_code,
-                codex = adapter_config.codex,
+                claude_code = adapters.claude_code,
+                codex = adapters.codex,
             },
         },
         -- Display
@@ -80,7 +80,11 @@ function M.setup()
                         vim.cmd.edit(fname)
                     end,
                 },
-                keymaps = mappings.chat_keymaps(),
+                keymaps = vim.tbl_extend(
+                    'force',
+                    mappings.chat_keymaps(),
+                    rules.chat_keymaps()
+                ),
                 -- Slash commands
                 slash_commands = slash_commands.build(),
                 -- Tools
@@ -114,6 +118,14 @@ function M.setup()
         -- Extensions
         extensions = extensions.build(),
     })
+    -- UI specific
+    ui.setup()
+    -- Mappings
+    local group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true })
+    cli.setup_mappings(group)
+    mappings.setup(group)
+    rules.setup_mappings()
+    slash_commands.setup_mappings(group)
 end
 
 return M

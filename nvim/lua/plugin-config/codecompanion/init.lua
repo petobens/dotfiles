@@ -5,8 +5,6 @@ local M = {}
 
 function M.setup()
     require(module_prefix .. 'config').setup()
-    require(module_prefix .. 'ui').setup()
-    require(module_prefix .. 'mappings').setup()
 
     -- Global variable to be used by other parts of the config (Telescope, NvimTree, etc)
     _G.CodeCompanionConfig = {

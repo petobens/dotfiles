@@ -2,10 +2,8 @@ local codecompanion = require('codecompanion')
 local keymaps = require('codecompanion.interactions.chat.keymaps')
 local telescope_action_state = require('telescope.actions.state')
 local telescope_actions = require('telescope.actions')
-local u = require('utils')
 
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
-local rules = require('plugin-config.codecompanion.rules')
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local window_helpers = require('plugin-config.codecompanion.helpers').window
 
@@ -98,18 +96,6 @@ function M.chat_keymaps()
         debug = {
             modes = { n = '<A-d>', i = '<A-d>' },
             callback = open_debug,
-        },
-        -- Rules
-        rules = {
-            modes = { n = '<Leader>rc', i = '<Leader>rc' },
-        },
-        reload_rules = {
-            modes = { n = '<Leader>rl', i = '<Leader>rl' },
-            description = 'Reload CodeCompanion rules',
-            callback = function(chat)
-                vim.cmd.stopinsert()
-                rules.reload_chat_rules(chat)
-            end,
         },
         -- Chat modes
         _btw = {
@@ -208,135 +194,12 @@ local function setup_codecompanion_filetype_mappings(e)
     })
 end
 
--- CodeCompanion CLI terminal filetype mappings
-local function setup_codecompanion_cli_mappings(args)
-    vim.keymap.set('t', '<C-c>', function()
-        vim.api.nvim_feedkeys(vim.keycode('<C-\\><C-n>'), 'n', false)
-        vim.schedule(function()
-            codecompanion.toggle_cli()
-        end)
-    end, {
-        buffer = args.buf,
-        desc = 'Hide CodeCompanion CLI',
-    })
-end
-
--- CodeCompanion CLI input filetype mappings
-local function setup_codecompanion_cli_input_mappings(args)
-    vim.keymap.set({ 'n', 'i' }, '<C-o>', function()
-        if vim.api.nvim_get_mode().mode:sub(1, 1) == 'i' then
-            vim.cmd.stopinsert()
-        end
-        vim.cmd.write({ bang = true })
-    end, {
-        buffer = args.buf,
-        desc = 'Write CodeCompanion CLI prompt',
-    })
-end
-
--- Quickfix filetype mappings
-local function setup_qf_filetype_mappings(args)
-    vim.keymap.set('n', '<Leader>qf', function()
-        chat_helpers.run_slash_command('qfix')
-    end, {
-        buf = args.buf,
-        desc = 'Explain quickfix diagnostics',
-    })
-end
-
--- Fugitive filetype mappings
-local function setup_fugitive_filetype_mappings(args)
-    vim.keymap.set('n', '<Leader>cc', function()
-        chat_helpers.run_slash_command('conventional_commit')
-    end, {
-        buf = args.buf,
-        desc = 'Generate conventional commit message',
-    })
-
-    vim.keymap.set('n', '<Leader>bc', function()
-        vim.ui.input(
-            { prompt = 'Base branch for commit diff: ', default = 'main' },
-            function(branch)
-                if branch and branch ~= '' then
-                    chat_helpers.run_slash_command('conventional_commit', {
-                        base_branch = vim.trim(branch),
-                    })
-                end
-            end
-        )
-    end, {
-        buf = args.buf,
-        desc = 'Conventional commit with base branch',
-    })
-
-    vim.keymap.set('n', '<Leader>cr', function()
-        chat_helpers.run_slash_command('code_review')
-    end, {
-        buf = args.buf,
-        desc = 'Perform code review',
-    })
-
-    vim.keymap.set('n', '<Leader>br', function()
-        vim.ui.input(
-            { prompt = 'Base branch for diff: ', default = 'main' },
-            function(branch)
-                if branch and branch ~= '' then
-                    chat_helpers.run_slash_command('code_review', {
-                        base_branch = vim.trim(branch),
-                    })
-                end
-            end
-        )
-    end, {
-        buf = args.buf,
-        desc = 'Code review with base branch',
-    })
-
-    vim.keymap.set('n', '<Leader>cl', function()
-        chat_helpers.run_slash_command('changelog')
-    end, {
-        buf = args.buf,
-        desc = 'Generate changelog since last release',
-    })
-end
-
--- Filetype mappings registration
-local function setup_filetype_mappings()
-    local group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true })
-
+local function setup_filetype_mappings(group)
     vim.api.nvim_create_autocmd('FileType', {
         group = group,
         pattern = 'codecompanion',
         desc = 'CodeCompanion filetype mappings',
         callback = setup_codecompanion_filetype_mappings,
-    })
-
-    vim.api.nvim_create_autocmd('FileType', {
-        group = group,
-        pattern = 'codecompanion_cli',
-        desc = 'CodeCompanion CLI mappings',
-        callback = setup_codecompanion_cli_mappings,
-    })
-
-    vim.api.nvim_create_autocmd('FileType', {
-        group = group,
-        pattern = 'codecompanion_input',
-        desc = 'CodeCompanion CLI input mappings',
-        callback = setup_codecompanion_cli_input_mappings,
-    })
-
-    vim.api.nvim_create_autocmd('FileType', {
-        group = group,
-        pattern = 'qf',
-        desc = 'CodeCompanion quickfix mapping',
-        callback = setup_qf_filetype_mappings,
-    })
-
-    vim.api.nvim_create_autocmd('FileType', {
-        group = group,
-        pattern = 'fugitive',
-        desc = 'CodeCompanion fugitive mappings',
-        callback = setup_fugitive_filetype_mappings,
     })
 end
 
@@ -357,23 +220,6 @@ local function paste_selection_to_chat()
         window_helpers.try_focus_chat_float()
         vim.api.nvim_feedkeys(vim.keycode('<Esc>'), 'n', false)
     end
-end
-
-local function explain_selection()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local code = u.get_selection()
-    vim.cmd.normal({ vim.keycode('<Esc>'), bang = true })
-    chat_helpers.run_slash_command('explain_code', { bufnr = bufnr, code = code })
-end
-
-local function explain_selection_with_cli()
-    codecompanion.cli('Can you explain this code?', {
-        focus = false,
-        submit = true,
-    })
-    vim.schedule(function()
-        vim.api.nvim_input(vim.keycode('<Esc>'))
-    end)
 end
 
 -- CodeCompanion global mappings
@@ -401,23 +247,6 @@ local function setup_global_mappings()
         desc = 'Explore CodeCompanion open chats',
     })
 
-    vim.keymap.set('n', '<Leader>ea', rules.edit_repo_rule_file, {
-        desc = 'Edit repo AI rules file',
-    })
-
-    -- CLI mappings
-    vim.keymap.set('n', '<Leader>ct', function()
-        codecompanion.toggle_cli()
-    end, {
-        desc = 'Toggle CodeCompanion CLI',
-    })
-
-    vim.keymap.set('n', '<Leader>ck', function()
-        vim.cmd.CodeCompanionCLI({ 'Ask' })
-    end, {
-        desc = 'Open CodeCompanion CLI Ask',
-    })
-
     -- Selection and context mappings
     vim.keymap.set('n', '<Leader>ac', function()
         chat_helpers.add_context({ vim.api.nvim_buf_get_name(0) })
@@ -428,19 +257,11 @@ local function setup_global_mappings()
     vim.keymap.set('v', '<Leader>cp', paste_selection_to_chat, {
         desc = 'Paste selection to CodeCompanion chat',
     })
-
-    vim.keymap.set('v', '<Leader>ec', explain_selection, {
-        desc = 'Explain selected code with CodeCompanion',
-    })
-
-    vim.keymap.set('v', '<Leader>et', explain_selection_with_cli, {
-        desc = 'Explain selected code with CodeCompanion CLI',
-    })
 end
 
 -- Public setup
-function M.setup()
-    setup_filetype_mappings()
+function M.setup(group)
+    setup_filetype_mappings(group)
     setup_global_mappings()
 end
 

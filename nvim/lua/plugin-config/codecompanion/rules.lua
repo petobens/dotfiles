@@ -4,6 +4,8 @@ local repo_helpers = require('plugin-config.codecompanion.helpers').repo
 local u = require('utils')
 
 local M = {}
+
+-- Constants
 local RULES_DIR = vim.fs.normalize(
     vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'ai-harness', 'rules')
 )
@@ -37,8 +39,7 @@ local function rule_files(path)
     return files
 end
 
--- Globals
-function M.edit_repo_rule_file()
+local function edit_repo_rule_file()
     local git_root = repo_helpers.git_root_or_notify()
     if not git_root then
         return
@@ -56,7 +57,7 @@ function M.edit_repo_rule_file()
     u.split_open(file)
 end
 
-function M.reload_chat_rules(chat)
+local function reload_chat_rules(chat)
     chat:remove_tagged_message('rules')
     chat:refresh_context()
 
@@ -72,7 +73,7 @@ function M.reload_chat_rules(chat)
     vim.notify('Reloaded CodeCompanion rules', vim.log.levels.INFO)
 end
 
--- Setup
+-- Config
 function M.build()
     return {
         default = {
@@ -94,6 +95,29 @@ function M.build()
             },
         },
     }
+end
+
+-- Mappings
+function M.chat_keymaps()
+    return {
+        rules = {
+            modes = { n = '<Leader>rc', i = '<Leader>rc' },
+        },
+        reload_rules = {
+            modes = { n = '<Leader>rl', i = '<Leader>rl' },
+            description = 'Reload CodeCompanion rules',
+            callback = function(chat)
+                vim.cmd.stopinsert()
+                reload_chat_rules(chat)
+            end,
+        },
+    }
+end
+
+function M.setup_mappings()
+    vim.keymap.set('n', '<Leader>ea', edit_repo_rule_file, {
+        desc = 'Edit repo AI rules file',
+    })
 end
 
 return M
