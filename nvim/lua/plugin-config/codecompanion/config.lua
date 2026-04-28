@@ -69,7 +69,10 @@ function M.setup()
                         enabled = true,
                         trigger = 0.6,
                     },
-                    system_prompt = function()
+                    system_prompt = function(ctx)
+                        if ctx.adapter and ctx.adapter.type == 'acp' then
+                            return ''
+                        end
                         return prompt_library.prompt('helpful_assistant')
                     end,
                     prompt_decorator = function(message)
