@@ -122,6 +122,7 @@ function M.state.get_adapter_context_window(adapter)
 
     return nil
 end
+
 function M.state.format_context_usage(adapter)
     local bufnr = vim.api.nvim_get_current_buf()
     local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}

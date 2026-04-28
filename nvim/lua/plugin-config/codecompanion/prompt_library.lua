@@ -1,4 +1,3 @@
--- luacheck:ignore 631
 local M = {}
 
 -- Constants

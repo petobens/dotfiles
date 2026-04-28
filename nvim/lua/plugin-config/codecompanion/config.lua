@@ -1,22 +1,21 @@
--- luacheck:ignore 631
-local codecompanion = require('codecompanion')
+local module_prefix = 'plugin-config.codecompanion.'
 
-local adapters = require('plugin-config.codecompanion.adapters')
-local cli = require('plugin-config.codecompanion.cli')
-local extensions = require('plugin-config.codecompanion.extensions')
-local mappings = require('plugin-config.codecompanion.mappings')
-local mcp = require('plugin-config.codecompanion.mcp')
-local prompt_library = require('plugin-config.codecompanion.prompt_library')
-local rules = require('plugin-config.codecompanion.rules')
-local slash_commands = require('plugin-config.codecompanion.slash_commands')
-local tools = require('plugin-config.codecompanion.tools')
-local ui = require('plugin-config.codecompanion.ui')
+local adapters = require(module_prefix .. 'adapters')
+local cli = require(module_prefix .. 'cli')
+local extensions = require(module_prefix .. 'extensions')
+local mappings = require(module_prefix .. 'mappings')
+local mcp = require(module_prefix .. 'mcp')
+local prompt_library = require(module_prefix .. 'prompt_library')
+local rules = require(module_prefix .. 'rules')
+local slash_commands = require(module_prefix .. 'slash_commands')
+local tools = require(module_prefix .. 'tools')
+local ui = require(module_prefix .. 'ui')
 
 local M = {}
 
 function M.setup()
     -- General config
-    codecompanion.setup({
+    require('codecompanion').setup({
         -- Adapters
         adapters = {
             http = {
