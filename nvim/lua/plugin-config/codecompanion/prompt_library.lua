@@ -14,20 +14,16 @@ local PROMPT_LIBRARY_CONFIG = {
     prompt_dir = PROMPT_DIR,
     formatting_file = 'response_formatting',
     prompt_md_files = {
-        'bash_developer',
         'changelog_generator',
         'code_reviewer',
         'conventional_commits',
         'explain_code',
         'helpful_assistant',
-        'latex_developer',
-        'lua_developer',
         'meeting_copilot',
         'pydocs',
         'python_developer',
         'quickfix',
         'slides_generator',
-        'sql_developer',
         'translator_spa_eng',
         'writer_at_work',
     },
@@ -124,44 +120,6 @@ local function helpful_assistant_prompt()
 end
 
 -- Languages and expertise
-local function bash_developer_prompt()
-    return build_prompt(
-        'chat',
-        'Act as an expert Bash developer.',
-        'bash_role',
-        M.prompt('bash_developer')
-    )
-end
-
-local function latex_developer_prompt()
-    return build_prompt(
-        'chat',
-        'Act as an expert LaTeX developer.',
-        'latex_role',
-        M.prompt('latex_developer')
-    )
-end
-
-local function lua_developer_prompt()
-    return build_prompt(
-        'chat',
-        'Act as an expert Lua developer.',
-        'lua_role',
-        M.prompt('lua_developer'),
-        {
-            context = {
-                {
-                    type = 'file',
-                    path = {
-                        '/usr/share/nvim/runtime/doc/api.txt',
-                        '/usr/share/nvim/runtime/doc/lua.txt',
-                    },
-                },
-            },
-        }
-    )
-end
-
 local function python_developer_prompt()
     return build_prompt(
         'chat',
@@ -177,15 +135,6 @@ local function pydocs_prompt()
         'Write inline Python docstrings following NumPy-style.',
         'pydocs',
         M.prompt('pydocs')
-    )
-end
-
-local function sql_developer_prompt()
-    return build_prompt(
-        'chat',
-        'Act as an expert SQL developer.',
-        'sql_role',
-        M.prompt('sql_developer')
     )
 end
 
@@ -249,12 +198,8 @@ function M.build()
         -- General assistant
         [M.SYSTEM_ROLE] = helpful_assistant_prompt(),
         -- Languages and expertise
-        [' Bash Developer'] = bash_developer_prompt(),
-        [' LaTeX Developer'] = latex_developer_prompt(),
-        [' Lua Developer'] = lua_developer_prompt(),
         [' Python Developer'] = python_developer_prompt(),
         [' PyDocs'] = pydocs_prompt(),
-        [' SQL Developer'] = sql_developer_prompt(),
         -- Work and communication
         ['󰗊 Translator'] = translator_prompt(),
         [' Writer at Work'] = writer_at_work_prompt(),
