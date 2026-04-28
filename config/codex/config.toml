@@ -1,6 +1,10 @@
 model = "gpt-5.5"
 model_reasoning_effort = "low"
 approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+writable_roots = ["/tmp"]
 
 [tui]
 theme = "two-dark"
