@@ -157,15 +157,20 @@ if type "bat" > /dev/null 2>&1; then
 fi
 
 # AI
+skills_dir="$dotfiles_dir/../ai-harness/skills"
 if type "claude" > /dev/null 2>&1; then
     mkdir -p "$HOME/.claude"
     $ln_cmd -fTs "$dotfiles_dir/config/claude/settings.json" "$HOME/.claude/settings.json"
     echo Created .claude/settings.json symlink
+    $ln_cmd -fTs "$skills_dir" "$HOME/.claude/skills"
+    echo Created .claude/skills folder symlink
 fi
 if type "codex" > /dev/null 2>&1; then
-    mkdir -p "$HOME/.codex"
+    mkdir -p "$HOME/.codex" "$HOME/.agents"
     $ln_cmd -fTs "$dotfiles_dir/config/codex/config.toml" "$HOME/.codex/config.toml"
     echo Created .codex/config.toml symlink
+    $ln_cmd -fTs "$skills_dir" "$HOME/.agents/skills"
+    echo Created .agents/skills folder symlink
 fi
 
 # Browser
