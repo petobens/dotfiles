@@ -22,4 +22,5 @@ arch/config/onedrive/.config.backup
 arch/config/onedrive/.config.hash
 
 # Claude Code
+.claude/
 **/.claude/settings.local.json

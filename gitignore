@@ -45,3 +45,6 @@ Icon?
 # Nvim
 minimal.lua
 lazy-lock.json
+
+# Claude Code
+.claude/
