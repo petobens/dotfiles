@@ -11,6 +11,7 @@ local gdrive = require(SLASH_COMMANDS .. 'gdrive')
 local git = require(SLASH_COMMANDS .. 'git')
 local gsheets = require(SLASH_COMMANDS .. 'gsheets')
 local gslides = require(SLASH_COMMANDS .. 'gslides')
+local skills = require(SLASH_COMMANDS .. 'skills')
 local terminal = require(SLASH_COMMANDS .. 'terminal')
 
 local M = {}
@@ -157,6 +158,11 @@ local slash_commands = {
         description = 'Explain selected code',
         callback = coding.explain_code,
     },
+    -- Skills
+    ['skills'] = {
+        description = 'Pick a skill name from the skills directory',
+        callback = skills.skills,
+    },
     -- Terminal
     ['tmux'] = {
         description = 'Add tmux pane output (window.pane) as context',
@@ -173,6 +179,10 @@ function M.setup_mappings(group)
     -- Global
     vim.keymap.set('v', '<Leader>ec', explain_selection, {
         desc = 'Explain selected code with CodeCompanion',
+    })
+
+    vim.keymap.set('n', '<Leader>bs', skills.browse, {
+        desc = 'Browse skills',
     })
 
     -- Autocmds
