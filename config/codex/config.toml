@@ -1,17 +1,19 @@
+# Model
 model = "gpt-5.5"
 model_reasoning_effort = "low"
-approval_policy = "on-request"
-sandbox_mode = "workspace-write"
 
-[sandbox_workspace_write]
-writable_roots = ["/tmp"]
+# Permissions/Approvals
+default_permissions = ":workspace" # Allow writes inside the workspace
+approval_policy = "on-request"     # Ask before acting outside workspace
 
 [tui]
 theme = "two-dark"
 
+# MCP
 [mcp_servers.github]
 url = "https://api.githubcopilot.com/mcp/"
 bearer_token_env_var = "GITHUB_TOKEN"
 
+# Trusted projects (skip the per-directory trust prompt)
 [projects."/home/pedro/git-repos/private/dotfiles"]
 trust_level = "trusted"
