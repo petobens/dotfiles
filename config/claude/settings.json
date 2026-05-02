@@ -1,4 +1,9 @@
 {
+    "autoUpdates": false,
+    "theme": "dark",
+    "permissions": {
+        "defaultMode": "acceptEdits"
+    },
     "model": "opus[1m]",
     "effortLevel": "low"
 }

@@ -1,3 +1,6 @@
+# Suppress new codex version check on startup
+check_for_updates = false
+
 # Model
 model = "gpt-5.5"
 model_reasoning_effort = "low"
@@ -15,8 +18,7 @@ status_line = [
     "used-tokens",
     "context-used",
 ]
-[tui.model_availability_nux]
-"gpt-5.5" = 4
+show_tooltips = false
 
 # MCP
 [mcp_servers.github]
