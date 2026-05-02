@@ -6,8 +6,17 @@ model_reasoning_effort = "low"
 default_permissions = ":workspace" # Allow writes inside the workspace
 approval_policy = "on-request"     # Ask before acting outside workspace
 
+# TUI
 [tui]
 theme = "two-dark"
+status_line = [
+    "model-with-reasoning",
+    "current-dir",
+    "used-tokens",
+    "context-used",
+]
+[tui.model_availability_nux]
+"gpt-5.5" = 4
 
 # MCP
 [mcp_servers.github]
@@ -16,4 +25,6 @@ bearer_token_env_var = "GITHUB_TOKEN"
 
 # Trusted projects (skip the per-directory trust prompt)
 [projects."/home/pedro/git-repos/private/dotfiles"]
+trust_level = "trusted"
+[projects."/home/pedro/git-repos/private/notes"]
 trust_level = "trusted"
