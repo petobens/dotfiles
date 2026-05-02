@@ -99,17 +99,18 @@ local plugins = {
     -- Completion & Snippets
     {
         'Saghen/blink.cmp',
-        branch = 'v1',
         dependencies = {
+            'saghen/blink.lib',
             'saghen/blink.compat',
             'fang2hou/blink-copilot',
             'mgalliou/blink-cmp-tmux',
             'Kaiser-Yang/blink-cmp-git',
-            'moyiz/blink-emoji.nvim',
             'onsails/lspkind.nvim',
             { 'MattiasMTS/cmp-dbee', branch = 'ms/v2' },
         },
-        build = 'cargo +nightly build --release',
+        build = function()
+            require('blink.cmp').build():wait(20000)
+        end,
         event = 'InsertEnter',
         config = load_plugin_config('blink_cmp_config'),
     },

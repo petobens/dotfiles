@@ -39,7 +39,6 @@ blink_cmp.setup({
                                 codecompanion = '[CodeCompanion]',
                                 copilot = '[Copilot]',
                                 dbee = '[dbee]',
-                                emoji = '[Emoji]',
                                 git = '[Git]',
                                 lsp = '[LSP]',
                                 luasnip = '[Snippet]',
@@ -57,9 +56,7 @@ blink_cmp.setup({
                     },
                 },
             },
-            direction_priority = function()
-                return copilot_multiline_menu_direction or { 's', 'n' }
-            end,
+            direction_priority = { 's', 'n' },
         },
         list = {
             selection = {
@@ -96,6 +93,7 @@ blink_cmp.setup({
         },
     },
     keymap = {
+        preset = 'none',
         ['<C-p>'] = { 'select_prev', 'fallback' },
         ['<C-n>'] = { 'select_next', 'fallback' },
         ['<CR>'] = { 'accept', 'fallback' },
@@ -114,7 +112,6 @@ blink_cmp.setup({
             local sources = {
                 'buffer',
                 'copilot',
-                'emoji',
                 'lsp',
                 'path',
                 'snippets',
@@ -159,16 +156,6 @@ blink_cmp.setup({
                 name = 'dbee',
                 module = 'blink.compat.source',
             },
-            emoji = {
-                name = 'emoji',
-                module = 'blink-emoji',
-                score_offset = function()
-                    if vim.bo.filetype == 'tex' then
-                        return -1
-                    end
-                    return 0
-                end,
-            },
             git = {
                 name = 'git',
                 module = 'blink-cmp-git',
@@ -205,21 +192,30 @@ blink_cmp.setup({
                 auto_show = true,
             },
         },
-        sources = function()
-            local type = vim.fn.getcmdtype()
-            if type == ':' then
-                return { 'cmdline', 'path' }
-            elseif type == '@' then
-                return { 'path' }
-            end
-            return {}
-        end,
+        sources = {
+            default = function()
+                local type = vim.fn.getcmdtype()
+                if type == ':' then
+                    return { 'cmdline', 'path' }
+                elseif type == '@' then
+                    return { 'path' }
+                end
+                return {}
+            end,
+        },
         keymap = {
+            preset = 'cmdline',
             ['<CR>'] = { 'select_and_accept', 'fallback' },
             ['<C-y>'] = { 'select_accept_and_enter' },
         },
     },
 })
+
+-- Override direction_priority post-setup with a function form (the validator
+-- only accepts a list but the runtime supports a function)
+require('blink.cmp.config').completion.menu.direction_priority = function()
+    return copilot_multiline_menu_direction or { 's', 'n' }
+end
 
 -- Extend neovim's client capabilities with the completion ones
 vim.lsp.config(
