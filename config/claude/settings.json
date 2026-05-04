@@ -1,9 +1,20 @@
 {
-    "autoUpdates": false,
     "theme": "dark",
-    "permissions": {
-        "defaultMode": "acceptEdits"
-    },
+    "autoUpdates": false,
     "model": "opus[1m]",
-    "effortLevel": "low"
+    "effortLevel": "low",
+    "permissions": {
+        "defaultMode": "acceptEdits",
+        "allow": [
+            "Bash(stylua *)",
+            "Read(/home/pedro/git-repos/**)"
+        ],
+        "deny": [
+            "Bash(git push --force*)",
+            "Bash(git push -f *)",
+            "Bash(git reset --hard*)",
+            "Bash(rm -rf *)",
+            "Bash(sudo *)"
+        ]
+    }
 }
