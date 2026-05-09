@@ -109,7 +109,7 @@ local plugins = {
             { 'MattiasMTS/cmp-dbee', branch = 'ms/v2' },
         },
         build = function()
-            require('blink.cmp').build():wait(20000)
+            require('blink.cmp').build():wait(15000)
         end,
         event = 'InsertEnter',
         config = load_plugin_config('blink_cmp_config'),
