@@ -65,8 +65,7 @@ function M.setup()
                 },
                 opts = {
                     context_management = {
-                        enabled = true,
-                        trigger = 0.6,
+                        enabled = false,
                     },
                     system_prompt = function(ctx)
                         if ctx.adapter and ctx.adapter.type == 'acp' then
