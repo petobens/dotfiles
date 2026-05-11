@@ -96,6 +96,23 @@ local function worksheet_lines(metadata)
         :totable()
 end
 
+local function append_named_ranges(parts, metadata)
+    if vim.tbl_isempty(metadata.namedRanges or {}) then
+        return
+    end
+    parts[#parts + 1] = ''
+    parts[#parts + 1] = 'Named ranges:'
+    return vim.iter(metadata.namedRanges or {}):each(function(named_range)
+        local range = named_range.range
+        parts[#parts + 1] = ('- %s (sheetId: %d, row: %d, col: %d)'):format(
+            named_range.name,
+            range.sheetId,
+            (range.startRowIndex or 0) + 1,
+            (range.startColumnIndex or 0) + 1
+        )
+    end)
+end
+
 local function render_value_ranges(label, value_ranges)
     if vim.tbl_isempty(value_ranges or {}) then
         return nil
@@ -128,15 +145,14 @@ local function render_value_ranges(label, value_ranges)
 end
 
 local function summarize_sheet_metadata(metadata)
+    local parts = { 'Worksheets:' }
+    vim.list_extend(parts, worksheet_lines(metadata))
+    append_named_ranges(parts, metadata)
+
     return {
         id = metadata.spreadsheetId,
         title = get_spreadsheet_title(metadata),
-        text = gws_helpers.normalize_text(
-            table.concat(
-                vim.list_extend({ 'Worksheets:' }, worksheet_lines(metadata)),
-                '\n'
-            )
-        ),
+        text = gws_helpers.normalize_text(table.concat(parts, '\n')),
     }
 end
 
@@ -197,6 +213,8 @@ local function read_sheet(input)
         'Worksheets:',
     }
     vim.list_extend(parts, worksheet_lines(metadata))
+    append_named_ranges(parts, metadata)
+
     parts[#parts + 1] = ''
     if values_text then
         parts[#parts + 1] = values_text
