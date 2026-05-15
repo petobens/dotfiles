@@ -19,6 +19,7 @@ local WRITE_APPROVAL_OPTS = {
 
 -- Shared tool lists
 local GSHEET_TOOL_LIST = {
+    'gdrive_ls',
     'gdrive_search',
     'gsheet_copy',
     'gsheet_create',
@@ -29,6 +30,7 @@ local GSHEET_TOOL_LIST = {
     'gsheet_write',
 }
 local GDOC_TOOL_LIST = {
+    'gdrive_ls',
     'gdrive_search',
     'gdoc_copy',
     'gdoc_create',
@@ -39,6 +41,7 @@ local GDOC_TOOL_LIST = {
     'gdoc_write',
 }
 local GSLIDES_TOOL_LIST = {
+    'gdrive_ls',
     'gdrive_search',
     'gslides_copy',
     'gslides_create',
@@ -90,6 +93,11 @@ local tools = {
     gdrive_search = module_tool(
         'Search Google Drive files via gws',
         'gdrive_search',
+        NO_APPROVAL_OPTS
+    ),
+    gdrive_ls = module_tool(
+        'List Google Drive folder files recursively via gws',
+        'gdrive_ls',
         NO_APPROVAL_OPTS
     ),
     ---- Gsheets
