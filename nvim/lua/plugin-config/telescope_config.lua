@@ -945,7 +945,7 @@ telescope.setup({
             auto_validate = true,
             db_validate_threshold = 2,
             db_safe_mode = false,
-            matcher = 'fuzzy',
+            matcher = 'default',
         },
         fzf = {
             fuzzy = true,
