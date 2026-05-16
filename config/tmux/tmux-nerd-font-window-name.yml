@@ -1,11 +1,12 @@
 ---
+# The parser expects this file to be indented with 2 spaces
 config:
-    fallback-icon: ''
-    icon-position: 'right'
-    show-name: true
+  fallback-icon: ''
+  icon-position: 'right'
+  show-name: true
 
 icons:
-    ctop: '󰡨'
-    nvim: ''
-    python3: ''
-    python: ''
+  ctop: '󰡨'
+  nvim: ''
+  python3: ''
+  python: ''
