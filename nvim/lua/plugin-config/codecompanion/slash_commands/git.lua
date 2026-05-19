@@ -1,18 +1,8 @@
-local codecompanion = require('codecompanion')
-
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
 local repo_helpers = require('plugin-config.codecompanion.helpers').repo
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
 local M = {}
-
-local ft_prompt_map = {
-    lua = 'lua_role',
-    python = 'python_role',
-    sh = 'bash_role',
-    sql = 'sql_role',
-    tex = 'latex_role',
-}
 
 -- Process helpers
 local function wait_stdout(cmd, opts)
@@ -39,29 +29,6 @@ local function resolve_absolute_paths(files, root)
             return file ~= nil
         end)
         :totable()
-end
-
-local function detect_majority_filetype(files)
-    local counts = {}
-    local majority_filetype
-    local max_count = 0
-
-    for _, file in ipairs(files) do
-        local filetype = vim.filetype.match({ filename = file })
-        if filetype and filetype ~= '' then
-            counts[filetype] = (counts[filetype] or 0) + 1
-            if counts[filetype] > max_count then
-                max_count = counts[filetype]
-                majority_filetype = filetype
-            end
-        end
-    end
-
-    if max_count > (#files / 2) then
-        return majority_filetype
-    end
-
-    return nil
 end
 
 local function resolve_diff_and_filelist_cmds(opts)
@@ -195,10 +162,6 @@ function M.code_review(_, opts)
     if not ctx then
         return
     end
-
-    local ft = detect_majority_filetype(ctx.abs_files)
-    local prompt_alias = ft_prompt_map[ft] or 'assistant_role'
-    codecompanion.prompt(prompt_alias)
 
     local chat = chat_helpers.get_or_create_chat()
     chat_helpers.add_context(ctx.abs_files)
