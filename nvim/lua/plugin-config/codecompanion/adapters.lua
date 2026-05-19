@@ -81,15 +81,15 @@ function M.openai_gpt_54_nano_legacy()
 end
 
 -- Google
-function M.gemini_flash_3()
+function M.gemini_flash_35()
     return extend('gemini', {
-        name = 'gemini_flash_3',
+        name = 'gemini_flash_35',
         env = { api_key = GEMINI_API_KEY },
         schema = {
             model = {
-                default = 'gemini-3-flash-preview',
+                default = 'gemini-3.5-flash',
                 choices = {
-                    ['gemini-3-flash-preview'] = {
+                    ['gemini-3.5-flash'] = {
                         meta = {
                             context_window = 1048576,
                         },
