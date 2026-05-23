@@ -175,9 +175,9 @@ if vim.fn.executable('rg') == 1 then
 end
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Briefly highlight yanked text',
-    group = vim.api.nvim_create_augroup('hl_yank', { clear = true }),
+    group = vim.api.nvim_create_augroup('highlight_yank', { clear = true }),
     callback = function()
-        vim.hl.on_yank({ higroup = 'Visual', timeout = 300 })
+        vim.hl.hl_op({ higroup = 'Visual', timeout = 300 })
     end,
 })
 
