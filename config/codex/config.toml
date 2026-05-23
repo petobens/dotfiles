@@ -3,7 +3,7 @@ check_for_updates = false
 
 # Model
 model = "gpt-5.5"
-model_reasoning_effort = "low"
+model_reasoning_effort = "medium"
 
 # Permissions/Approvals
 default_permissions = ":workspace" # Allow writes inside the workspace

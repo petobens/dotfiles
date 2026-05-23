@@ -2,7 +2,7 @@
     "theme": "dark",
     "autoUpdates": false,
     "model": "opus[1m]",
-    "effortLevel": "low",
+    "effortLevel": "medium",
     "permissions": {
         "defaultMode": "acceptEdits",
         "allow": [
