@@ -6,7 +6,7 @@ import subprocess
 import sys
 from time import sleep
 
-HD_WIDTH = 1920
+HIDPI_WIDTH_THRESHOLD = 3600
 FONT_MAP = {
     0: ('Noto Sans:size={};3', ['11'], ['21']),
     1: ('Noto Sans:size={}:weight=bold;2', ['11'], ['21']),
@@ -47,13 +47,13 @@ def launch_polybar(monitors):
     ]
     nr_monitors = int(active_monitors[0][-1])
     prim_w = int(active_monitors[1][2].split('/')[0])
-    all_hidpi = prim_w > HD_WIDTH
+    all_hidpi = prim_w > HIDPI_WIDTH_THRESHOLD
     if nr_monitors > 1:
         sec_w = int(active_monitors[2][2].split('/')[0])
-        all_hidpi = all_hidpi and sec_w > HD_WIDTH
+        all_hidpi = all_hidpi and sec_w > HIDPI_WIDTH_THRESHOLD
         if nr_monitors > 2:
             third_w = int(active_monitors[3][2].split('/')[0])
-            all_hidpi = all_hidpi and third_w > HD_WIDTH
+            all_hidpi = all_hidpi and third_w > HIDPI_WIDTH_THRESHOLD
 
     xrandr = [line.decode('ascii').split() for line in _sh('xrandr').splitlines()]
     for line in xrandr:
@@ -70,11 +70,11 @@ def launch_polybar(monitors):
                 continue
             env = os.environ.copy()
             env['MONITOR'] = monitor
-            env['POLYHEIGHT'] = '55' if (width > HD_WIDTH) else '28'
-            env['TRAY_SIZE'] = '32' if (width > HD_WIDTH) else '20'
+            env['POLYHEIGHT'] = '55' if (width > HIDPI_WIDTH_THRESHOLD) else '28'
+            env['TRAY_SIZE'] = '32' if (width > HIDPI_WIDTH_THRESHOLD) else '20'
             # If we have a mix of hd and hidpi monitors then we need to scale
             fontmap_index = 1
-            if width > HD_WIDTH and not all_hidpi:
+            if width > HIDPI_WIDTH_THRESHOLD and not all_hidpi:
                 fontmap_index = 2
             for i in range(7):
                 env[f'POLYFONT{i}'] = FONT_MAP[i][0].format(*FONT_MAP[i][fontmap_index])

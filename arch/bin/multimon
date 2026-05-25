@@ -77,7 +77,7 @@ def _xrandr(how, direction):
         raise ValueError(f'{how} mode requires at least 2 connected monitors')
 
     if how == 'primary':
-        dpi_scale = 2 if prim_w > HD_WIDTH else 1
+        dpi_scale = 2 if prim_w > HIDPI_WIDTH_THRESHOLD else 1
         cmd = f'--output {prim_n} --primary --dpi {DPI * dpi_scale}'
         # For 4k laptop reduce resolution a bit (such as with x1-carbon)
         # Won't use as is it doesn't look nice
@@ -92,7 +92,7 @@ def _xrandr(how, direction):
         if nr_monitors == 3:
             cmd += f'--output {third_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '  # noqa
             keep_turnon += [third_n]
-        dpi_scale = 2 if prim_w > HD_WIDTH else 1
+        dpi_scale = 2 if prim_w > HIDPI_WIDTH_THRESHOLD else 1
         cmd += f'--output {prim_n} --dpi {DPI * dpi_scale}'
 
     elif how == 'multi':
@@ -115,7 +115,7 @@ def _xrandr(how, direction):
             # depending on direction value
             wpos = wpos if direction == 'right' else 0
             # If the extra monitor is also hidpi then adjust dpi accordingly
-            if prim_w > HD_WIDTH and sec_w > HD_WIDTH:
+            if prim_w > HIDPI_WIDTH_THRESHOLD and sec_w > HIDPI_WIDTH_THRESHOLD:
                 dpi_scale = 2
         cmd += (
             f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI * dpi_scale}'
@@ -133,21 +133,27 @@ def _xrandr(how, direction):
 
     # Ensure correct XResources
     xrdb_cmd = f'xrdb -merge {str(Path.home())}/.Xresources'
-    if ((how == 'primary' or how == 'mirror') and prim_w > HD_WIDTH) or (
-        nr_monitors == 2 and prim_w > HD_WIDTH and sec_w > HD_WIDTH
+    if ((how == 'primary' or how == 'mirror') and prim_w > HIDPI_WIDTH_THRESHOLD) or (
+        nr_monitors == 2
+        and prim_w > HIDPI_WIDTH_THRESHOLD
+        and sec_w > HIDPI_WIDTH_THRESHOLD
     ):
         xrdb_cmd += '_hidpi'
     print(f"Running the following xrdb command: {xrdb_cmd}")
     _sh(xrdb_cmd)
     # If all monitors are HD then change cursor size
     if (
-        ((how == 'primary' or how == 'mirror') and prim_w <= HD_WIDTH)
-        or (nr_monitors == 2 and prim_w <= HD_WIDTH and sec_w <= HD_WIDTH)
+        ((how == 'primary' or how == 'mirror') and prim_w <= HIDPI_WIDTH_THRESHOLD)
+        or (
+            nr_monitors == 2
+            and prim_w <= HIDPI_WIDTH_THRESHOLD
+            and sec_w <= HIDPI_WIDTH_THRESHOLD
+        )
         or (
             nr_monitors == 3
-            and prim_w <= HD_WIDTH
-            and sec_w <= HD_WIDTH
-            and third_w <= HD_WIDTH
+            and prim_w <= HIDPI_WIDTH_THRESHOLD
+            and sec_w <= HIDPI_WIDTH_THRESHOLD
+            and third_w <= HIDPI_WIDTH_THRESHOLD
         )
     ):
         xrdb_cmd += '_hd_cursor'
@@ -266,7 +272,7 @@ def _resize_win(i3, x, y, w, h):
     x -= 1
     y = int(max_y + (max_h * y))
 
-    polybar_height = 55 if (output_width > 1920) else 28
+    polybar_height = 55 if (output_width > HIDPI_WIDTH_THRESHOLD) else 28
     if y < polybar_height:
         # We always want to leave space for polybar
         y = polybar_height
@@ -343,6 +349,7 @@ if __name__ == '__main__':
 
     # Constants
     HD_WIDTH = 1920
+    HIDPI_WIDTH_THRESHOLD = 3600
     DPI = 96
     VALID_MODES = ['init', 'hotplug', 'primary', 'mirror', 'multi']
     VALID_DIRECTIONS = ['right', 'below']

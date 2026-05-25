@@ -258,7 +258,7 @@ APPS = {
 class Screen:
     """Get screens context using i3."""
 
-    HD_WIDTH = 1920
+    HIDPI_WIDTH_THRESHOLD = 3600
 
     def __init__(self):
         self.is_hidpi = None
@@ -272,8 +272,8 @@ class Screen:
         if ws_name is not None:
             ws = self._get_workspace(self.i3, ws_name)
         output_width, other_output_width, outputs = get_output_width(self.i3, ws)
-        self.is_hidpi = output_width > self.HD_WIDTH
-        self.other_is_hidpi = other_output_width > self.HD_WIDTH
+        self.is_hidpi = output_width > self.HIDPI_WIDTH_THRESHOLD
+        self.other_is_hidpi = other_output_width > self.HIDPI_WIDTH_THRESHOLD
         self.nr_monitors = len(outputs)
         return
 
