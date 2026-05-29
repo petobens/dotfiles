@@ -1,20 +1,20 @@
 {
-    "theme": "dark",
-    "autoUpdates": false,
-    "model": "opus[1m]",
-    "effortLevel": "medium",
-    "permissions": {
-        "defaultMode": "acceptEdits",
-        "allow": [
-            "Bash(stylua *)",
-            "Read(/home/pedro/git-repos/**)"
-        ],
-        "deny": [
-            "Bash(git push --force*)",
-            "Bash(git push -f *)",
-            "Bash(git reset --hard*)",
-            "Bash(rm -rf *)",
-            "Bash(sudo *)"
-        ]
-    }
+  "permissions": {
+    "allow": [
+      "Bash(stylua *)",
+      "Read(/home/pedro/git-repos/**)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "model": "opus[1m]",
+  "effortLevel": "medium",
+  "theme": "dark",
+  "autoUpdates": false
 }
