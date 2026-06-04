@@ -65,7 +65,12 @@ function M.setup()
                 },
                 opts = {
                     context_management = {
-                        enabled = false,
+                        editing = {
+                            trigger = 0.99,
+                        },
+                        compaction = {
+                            trigger = 0.99,
+                        },
                     },
                     system_prompt = function(ctx)
                         if ctx.adapter and ctx.adapter.type == 'acp' then
