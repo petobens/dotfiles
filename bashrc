@@ -451,8 +451,7 @@ sys_update_all() {
     else
         if type "yay" > /dev/null 2>&1; then
             echo -e "\033[1;34m-> YaY...\033[0m"
-            yay -Syu --diffmenu=false --answerclean N --removemake --devel \
-                --timeupdate --combinedupgrade
+            yay -Syu --diffmenu=false --answerclean N --removemake --devel --combinedupgrade
             yay -Yc --noconfirm
         fi
     fi
