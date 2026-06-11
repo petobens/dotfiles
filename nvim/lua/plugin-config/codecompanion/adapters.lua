@@ -40,9 +40,6 @@ local function openai_responses_adapter(name, model, stream, context_window)
             },
             ['reasoning.effort'] = { default = 'medium' },
             verbosity = { default = 'low' },
-            top_p = {
-                enabled = disabled,
-            },
         },
         available_tools = {
             ['web_search'] = {
