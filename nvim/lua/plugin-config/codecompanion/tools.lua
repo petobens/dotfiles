@@ -75,6 +75,15 @@ end
 
 -- Tool definition
 local tools = {
+    -- Default tools
+    opts = {
+        default_tools = {
+            'agent_tools',
+            'fetch_webpage',
+            'web_search',
+        },
+    },
+
     -- Builtin tools
     grep_search = {
         opts = NO_APPROVAL_OPTS,
@@ -82,6 +91,7 @@ local tools = {
     read_file = {
         opts = NO_APPROVAL_OPTS,
     },
+
     -- Custom tools
     ---- Terminal
     safe_run_command = module_tool(
