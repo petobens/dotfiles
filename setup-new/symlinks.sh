@@ -299,6 +299,9 @@ else
     if type "i3" > /dev/null 2>&1; then
         $ln_cmd -fTs "$dotfiles_dir/arch/config/i3" "$HOME/.config/i3"
         echo Created .config/i3 folder symlink
+        mkdir -p "$HOME/.config/systemd/user"
+        $ln_cmd -fTs "$dotfiles_dir/arch/config/systemd/user/i3-session.target" "$HOME/.config/systemd/user/i3-session.target"
+        echo Created .config/systemd/user/i3-session.target symlink
         if type "xfce4-power-manager" > /dev/null 2>&1; then
             sudo $ln_cmd -fTs "$dotfiles_dir/arch/config/i3/i3lock_fancy.sh" "/usr/local/bin/xflock4"
             echo Created /usr/local/bin/xflock4 symlink to i3lock

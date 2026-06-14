@@ -22,4 +22,10 @@ picom &
 xfce4-power-manager &
 multimon init
 nohup soupawhisper > /tmp/soupawhisper.log 2>&1 < /dev/null &
+
+# Activate systemd user graphical session so xdg-desktop-portal works (webcam, screen sharing)
+timeout 10 systemctl --user import-environment DISPLAY XAUTHORITY || true
+timeout 10 dbus-update-activation-environment --systemd DISPLAY XAUTHORITY || true
+timeout 10 systemctl --user start i3-session.target || true
+
 exec i3
