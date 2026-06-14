@@ -12,6 +12,7 @@ configuration {
 	kb-accept-entry: "Return";
 	kb-row-up: "Shift_L+Tab,Ctrl-p,Up,Ctrl-k";
 	kb-row-down: "Ctrl-n,Down,Ctrl-j";
+	kb-secondary-copy: "";
 	kb-cancel: "Ctrl-c,Escape";
 	kb-screenshot: "Ctrl+Alt+r";
 }
@@ -31,7 +32,7 @@ configuration {
     alternate-normal-background: #24272e;
     alternate-active-background: #24272e;
     alternate-urgent-background: #24272e;
-    foreground: #24272e;
+    foreground: #abb2bf;
     foreground-color: #abb2bf;
     normal-foreground: #abb2bf;
     active-foreground: #abb2bf;
@@ -43,8 +44,14 @@ configuration {
     alternate-active-foreground: #abb2bf;
     alternate-urgent-foreground: #abb2bf;
 }
+window {
+    border: 1px;
+    border-color: #4b5263;
+    border-radius: 10px;
+}
 listview {
     scrollbar: false;
+    border: 0;
 }
 element {
     highlight: #528bff;
