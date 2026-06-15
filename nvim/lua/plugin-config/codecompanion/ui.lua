@@ -106,19 +106,14 @@ function M.llm_role(adapter)
 
     local adapter_name = adapter.formatted_name or adapter.name or 'unknown'
     local model = state_helpers.get_adapter_model(adapter) or 'unknown'
-    local base = string.format(
-        '%s (%s) | %s |  %d',
+    return string.format(
+        '%s (%s) | %s |  %d |  %s',
         adapter_name,
         model,
         system_role,
-        state_helpers.get_cycle_count()
+        state_helpers.get_cycle_count(),
+        state_helpers.format_context_usage(adapter)
     )
-
-    if adapter.type == 'acp' then
-        return base
-    end
-
-    return string.format('%s |  %s', base, state_helpers.format_context_usage(adapter))
 end
 
 -- Spinner internals

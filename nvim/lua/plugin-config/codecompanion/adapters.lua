@@ -130,6 +130,13 @@ function M.codex()
                 model = 'gpt-5.5',
             },
         },
+        schema = {
+            model = {
+                choices = {
+                    ['gpt-5.5'] = { meta = { context_window = 1000000 } },
+                },
+            },
+        },
     })
 end
 
@@ -143,6 +150,13 @@ function M.claude_code()
         defaults = {
             session_config_options = {
                 model = 'opus[1m]',
+            },
+        },
+        schema = {
+            model = {
+                choices = {
+                    ['opus[1m]'] = { meta = { context_window = 1000000 } },
+                },
             },
         },
     })
