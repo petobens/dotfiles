@@ -99,6 +99,7 @@ APPS = {
         },
     },
     'kodi': {'type': 'rol_custom', 'args': {'class_name': 'kodi', 'cmd': 'kodi'}},
+    'localsend': {'type': 'gtk', 'args': {'class_name': 'Localsend'}},
     'mailspring': {
         'type': 'electron',
         'args': {'class_name': 'Mailspring', 'event_delay': 30},

@@ -56,6 +56,7 @@ APPS = {
     },
     'Kitty': {'cmd': 'kitty', 'icon': 'kitty', 'desc': 'Terminal Emulator'},
     'Kodi': {'cmd': 'kodi', 'icon': 'kodi', 'desc': 'Media Center'},
+    'LocalSend': {'cmd': 'localsend', 'icon': 'localsend', 'desc': 'File Sharing'},
     'Mailspring': {'cmd': 'mailspring', 'icon': 'mailspring', 'desc': 'Mail Client'},
     'Meet': {'cmd': 'meet', 'icon': 'google-meet', 'desc': 'Google Meet'},
     'Microsoft Teams': {'cmd': 'teams', 'icon': 'teams'},

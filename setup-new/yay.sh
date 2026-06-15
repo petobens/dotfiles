@@ -246,6 +246,7 @@ $yay_cmd firefox
 $yay_cmd gcolor3
 $yay_cmd gnome-font-viewer
 $yay_cmd hplip-plugin
+$yay_cmd localsend-bin
 $yay_cmd mailspring
 $yay_cmd obs-studio
 $yay_cmd onedrive-abraunegg
