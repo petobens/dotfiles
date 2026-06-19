@@ -10,6 +10,7 @@ bluetooth_status="$(
 
 BLACKLIST_NAMES=(
     "MX Master 3S"
+    "MX Master 4"
 )
 
 is_blacklisted() {
