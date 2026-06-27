@@ -6,8 +6,14 @@ model = "gpt-5.5"
 model_reasoning_effort = "medium"
 
 # Permissions/Approvals
-default_permissions = ":workspace" # Allow writes inside the workspace
-approval_policy = "on-request"     # Ask before acting outside workspace
+default_permissions = "workspace_network" # Allow writes inside the workspace
+approval_policy = "on-request"            # Ask before acting outside workspace
+
+# Custom workspace profile with outbound network access
+[permissions.workspace_network]
+extends = ":workspace"
+[permissions.workspace_network.network]
+enabled = true
 
 # TUI
 [tui]
@@ -29,4 +35,10 @@ bearer_token_env_var = "GITHUB_TOKEN"
 [projects."/home/pedro/git-repos/private/dotfiles"]
 trust_level = "trusted"
 [projects."/home/pedro/git-repos/private/notes"]
+trust_level = "trusted"
+
+[projects."/tmp"]
+trust_level = "trusted"
+
+[projects."/home/pedro/git-repos/private/ai-harness"]
 trust_level = "trusted"
