@@ -2,6 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(stylua *)",
+      "Bash(gws *)",
       "Read(/home/pedro/git-repos/**)"
     ],
     "deny": [
