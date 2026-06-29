@@ -119,7 +119,8 @@ vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
 vim.opt.backup = true
 vim.opt.backupdir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'backup') .. '//'
 vim.opt.directory = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'swap') .. '//'
-vim.opt.sessionoptions = vim.opt.sessionoptions - { 'tabpages' } + { 'winpos', 'resize' }
+vim.opt.sessionoptions:remove('tabpages')
+vim.opt.sessionoptions:append({ 'winpos', 'resize' })
 vim.opt.shada = [[!,'150,<50,s10,h]]
 vim.opt.shadafile = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'shada', 'main.shada')
 vim.opt.undodir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'undo') .. '//'
