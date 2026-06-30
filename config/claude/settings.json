@@ -14,8 +14,14 @@
     ],
     "defaultMode": "acceptEdits"
   },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
   "model": "opus[1m]",
   "effortLevel": "medium",
+  "tui": "default",
+  "spinnerTipsEnabled": false,
   "theme": "dark",
   "autoUpdates": false
 }
