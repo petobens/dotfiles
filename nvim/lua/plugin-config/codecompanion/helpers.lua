@@ -7,6 +7,7 @@ local M = {
     state = {},
     chat = {},
     window = {},
+    usage = {},
 }
 
 -- Repo/filesystem
@@ -69,10 +70,8 @@ function M.state.get_last_user_prompt()
     return nil
 end
 
-function M.state.get_cycle_count()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
-    return metadata.cycles or 0
+function M.state.get_cycle_count(chat)
+    return (chat and chat.cycle) or 0
 end
 
 function M.state.get_adapter_model(adapter)
@@ -107,17 +106,56 @@ function M.state.get_adapter_context_window(adapter)
     return nil
 end
 
-function M.state.format_context_usage(adapter)
-    local bufnr = vim.api.nvim_get_current_buf()
-    local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
-    local tokens = metadata.tokens or 0
-    local max_ctx = M.state.get_adapter_context_window(adapter)
-
-    if not max_ctx then
-        return string.format('unknown ctx (%d)', tokens)
+function M.state.format_context_usage(chat)
+    -- Prefer the live token count the plugin maintains on the chat object; fall
+    -- back to the history estimate for a restored chat before its first turn
+    local tokens = chat and chat.tokens
+    if not tokens then
+        local bufnr = (chat and chat.bufnr) or vim.api.nvim_get_current_buf()
+        local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
+        tokens = metadata.tokens or 0
     end
 
-    return string.format('%.1f%% (%d)', (tokens / max_ctx) * 100, tokens)
+    local max_ctx = M.state.get_adapter_context_window(chat and chat.adapter)
+    if not max_ctx then
+        return 'unknown ctx'
+    end
+
+    return string.format('%.1f%%', (tokens / max_ctx) * 100)
+end
+
+-- Usage limits: shell out to the ai_usage script
+local usage_cache = {}
+local usage_labels = { claude_code = 'Claude', codex = 'Codex' }
+
+-- Run the ai_usage script and hand back its ANSI-stripped output
+function M.usage.run(cb)
+    vim.system({ 'ai_usage' }, { text = true }, function(obj)
+        local out = (obj.stdout or ''):gsub('\27%[[0-9;]*m', ''):gsub('%s+$', '')
+        cb(out)
+    end)
+end
+
+function M.usage.get(name)
+    return usage_cache[name]
+end
+
+-- Cache the 5h percent for a claude_code/codex adapter, parsed from the script
+-- output; cb re-renders the footer once fresh data lands
+function M.usage.refresh(name, cb)
+    local label = usage_labels[name]
+    if not label then
+        return
+    end
+    M.usage.run(function(out)
+        local pct = out:match(label .. '%s+5h:%s+([%d%.]+)')
+        if pct then
+            usage_cache[name] = tonumber(pct)
+            if cb then
+                vim.schedule(cb)
+            end
+        end
+    end)
 end
 
 -- Chat

@@ -5,6 +5,7 @@ local telescope_actions = require('telescope.actions')
 
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
 local state_helpers = require('plugin-config.codecompanion.helpers').state
+local usage_helpers = require('plugin-config.codecompanion.helpers').usage
 local window_helpers = require('plugin-config.codecompanion.helpers').window
 
 local M = {}
@@ -213,8 +214,7 @@ end
 
 local function show_ai_usage()
     vim.api.nvim_echo({ { 'Retrieving rate limits...' } }, false, {})
-    vim.system({ 'ai_usage' }, { text = true }, function(obj)
-        local out = (obj.stdout or ''):gsub('\27%[[0-9;]*m', ''):gsub('%s+$', '')
+    usage_helpers.run(function(out)
         vim.schedule(function()
             if out == '' then
                 vim.api.nvim_echo({ { '' } }, false, {})

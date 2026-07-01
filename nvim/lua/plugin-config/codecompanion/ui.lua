@@ -3,12 +3,65 @@ local devicons = require('nvim-web-devicons')
 local telescope_action_state = require('telescope.actions.state')
 
 local state_helpers = require('plugin-config.codecompanion.helpers').state
+local usage_helpers = require('plugin-config.codecompanion.helpers').usage
 
 local M = {}
 
 -- Helpers
 local function cwd_footer()
     return vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or ''
+end
+
+local function chat_footer(chat)
+    local parts = {}
+    local cwd = cwd_footer()
+    if cwd ~= '' then
+        table.insert(parts, ' ' .. cwd)
+    end
+    if chat then
+        table.insert(parts, string.format(' %d', state_helpers.get_cycle_count(chat)))
+        table.insert(
+            parts,
+            string.format(' %s', state_helpers.format_context_usage(chat))
+        )
+        local adapter = chat.adapter
+        if adapter and adapter.type == 'acp' then
+            local pct = usage_helpers.get(adapter.name)
+            if pct then
+                table.insert(parts, string.format(' 5h %.0f%%', pct))
+            end
+        end
+    end
+    return table.concat(parts, ' · ')
+end
+
+local function refresh_chat_footer(bufnr)
+    local ok, chat = pcall(function()
+        return codecompanion.buf_get_chat(bufnr)
+    end)
+    if not ok or not chat or not chat.ui or not chat.ui.winnr then
+        return
+    end
+    if not vim.api.nvim_win_is_valid(chat.ui.winnr) then
+        return
+    end
+    vim.api.nvim_win_set_config(chat.ui.winnr, {
+        footer = chat_footer(chat),
+        footer_pos = 'center',
+    })
+end
+
+-- Fetch the usage limit for claude_code/codex chats and re-render the footer
+local function refresh_chat_usage(bufnr)
+    local ok, chat = pcall(function()
+        return codecompanion.buf_get_chat(bufnr)
+    end)
+    if not ok or not chat or not chat.adapter or chat.adapter.type ~= 'acp' then
+        return
+    end
+    usage_helpers.refresh(chat.adapter.name, function()
+        refresh_chat_footer(bufnr)
+    end)
 end
 
 local function set_chat_win_title(e)
@@ -52,12 +105,13 @@ local function set_chat_win_title(e)
                     and string.format(' (%s)', chat.opts.title)
                 or ''
         ),
-        footer = cwd_footer(),
+        footer = chat_footer(chat),
         footer_pos = 'center',
     })
 end
 
--- Restore history metadata to be used by label below
+-- Seed the footer's context usage for a restored chat: the plugin only sets
+-- chat.tokens live (on the first turn), so fall back to the history estimate
 local function restore_chat_history_metadata(bufnr)
     local history = codecompanion.extensions.history
     local chat = codecompanion.buf_get_chat(bufnr)
@@ -68,13 +122,11 @@ local function restore_chat_history_metadata(bufnr)
     end
 
     _G.codecompanion_chat_metadata = _G.codecompanion_chat_metadata or {}
-    _G.codecompanion_chat_metadata[chat.bufnr] =
-        vim.tbl_deep_extend('force', _G.codecompanion_chat_metadata[chat.bufnr] or {}, {
-            cycles = saved_chat.cycle,
-            tokens = history.get_chats()[save_id].token_estimate,
-        })
+    _G.codecompanion_chat_metadata[chat.bufnr] = {
+        tokens = history.get_chats()[save_id].token_estimate,
+    }
 
-    vim.cmd.redrawstatus()
+    refresh_chat_footer(chat.bufnr)
 end
 
 -- Role label formatter for the chat UI
@@ -82,11 +134,10 @@ function M.llm_role(adapter)
     local adapter_name = adapter.formatted_name or adapter.name or 'unknown'
     local model = state_helpers.get_adapter_model(adapter) or 'unknown'
     return string.format(
-        '%s (%s) |  %d |  %s',
+        '%s (%s) | %s',
         adapter_name,
         model,
-        state_helpers.get_cycle_count(),
-        state_helpers.format_context_usage(adapter)
+        os.date(' %Y-%m-%d %H:%M:%S')
     )
 end
 
@@ -232,6 +283,39 @@ function M.setup()
         desc = 'Clear CodeCompanion spinner when a chat turn ends',
         callback = function()
             vim.defer_fn(clear_spinner, 50)
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
+        desc = 'Refresh CodeCompanion chat footer context usage when a turn ends',
+        callback = function(e)
+            local bufnr = e.data and e.data.bufnr
+            if not bufnr then
+                return
+            end
+            vim.defer_fn(function()
+                refresh_chat_footer(bufnr)
+            end, 50)
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = {
+            'CodeCompanionChatCreated',
+            'CodeCompanionChatOpened',
+            'CodeCompanionChatDone',
+            'CodeCompanionChatStopped',
+        },
+        desc = 'Refresh CodeCompanion usage limit for the chat footer',
+        callback = function(e)
+            local bufnr = e.data and e.data.bufnr
+            if not bufnr then
+                return
+            end
+            vim.defer_fn(function()
+                refresh_chat_usage(bufnr)
+            end, 50)
         end,
     })
 
