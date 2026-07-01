@@ -42,12 +42,15 @@ Preferred command:
 luacheck --config ~/.config/.luacheckrc --globals vim <file>
 ```
 
-If `luacheck` or `lauc` is broken because of the Arch Lua packaging mismatch,
-use the same fallback as
-`nvim/lua/plugin-config/nvimlint_config.lua`:
+If `luacheck` or `lauc` is broken because of the Arch Lua packaging mismatch
+(the `/usr/bin/luacheck` wrapper targets a Lua version whose rock tree no
+longer exists), use this fallback, which derives the installed version from the
+rock path so it survives package bumps:
 
 ```bash
-lua5.4 -e "package.path='/usr/share/lua/5.5/?.lua;/usr/share/lua/5.5/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/5.4/?.so;'..package.cpath; dofile('/usr/lib/luarocks/rocks-5.5/luacheck/1.2.0-1/bin/luacheck')" -- --config ~/.config/.luacheckrc --globals vim -- <file>
+entry=$(printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck | head -1)
+ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
+"lua$ver" -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath; dofile('$entry')" -- --config ~/.config/.luacheckrc --globals vim -- <file>
 ```
 
 Run Luacheck on touched Lua files when making changes under `nvim/`.
