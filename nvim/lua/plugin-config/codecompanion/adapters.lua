@@ -122,10 +122,10 @@ end
 function M.codex()
     return extend('codex', {
         env = {
-            OPENAI_API_KEY = OPENAI_API_KEY,
             GITHUB_TOKEN = GITHUB_TOKEN,
         },
         defaults = {
+            auth_method = 'chatgpt',
             session_config_options = {
                 model = 'gpt-5.5',
             },

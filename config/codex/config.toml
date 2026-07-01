@@ -23,8 +23,11 @@ status_line = [
     "current-dir",
     "used-tokens",
     "context-used",
+    "five-hour-limit",
+    "weekly-limit",
 ]
 show_tooltips = false
+status_line_use_colors = true
 
 # MCP
 [mcp_servers.github]
