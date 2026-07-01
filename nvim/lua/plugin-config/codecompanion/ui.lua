@@ -13,13 +13,6 @@ local function cwd_footer()
     return vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or ''
 end
 
-local function set_footer(winnr, text)
-    vim.api.nvim_win_set_config(winnr, {
-        footer = text,
-        footer_pos = 'center',
-    })
-end
-
 local function set_chat_win_title(e)
     e = e or {}
 
@@ -117,6 +110,8 @@ function M.llm_role(adapter)
 end
 
 -- Spinner internals
+vim.api.nvim_set_hl(0, 'CodeCompanionSpinner', { fg = '#7f848e' })
+
 local spinner = {
     states = {
         '⢎ ',
@@ -128,6 +123,7 @@ local spinner = {
         '⢄⡠',
         '⢆⡀',
     },
+    ns = vim.api.nvim_create_namespace('codecompanion_spinner'),
     bufnr = nil,
     timer = nil,
     index = 1,
@@ -151,24 +147,25 @@ local function clear_spinner()
         spinner.timer = nil
     end
 
-    local winnr = spinner_winnr()
-    if winnr then
-        set_footer(winnr, cwd_footer())
+    if spinner.bufnr and vim.api.nvim_buf_is_valid(spinner.bufnr) then
+        vim.api.nvim_buf_clear_namespace(spinner.bufnr, spinner.ns, 0, -1)
     end
 
     spinner.bufnr = nil
 end
 
 local function update_spinner()
-    local winnr = spinner_winnr()
-    if not winnr then
+    -- Render as right-aligned virtual text on the last line
+    if not spinner_winnr() then
         return
     end
 
-    local base = cwd_footer()
-    local glyph = spinner.states[spinner.index]
-    local text = base == '' and glyph or string.format('%s %s', base, glyph)
-    set_footer(winnr, text)
+    local last_line = vim.api.nvim_buf_line_count(spinner.bufnr) - 1
+    vim.api.nvim_buf_set_extmark(spinner.bufnr, spinner.ns, last_line, 0, {
+        id = 1,
+        virt_text = { { spinner.states[spinner.index], 'CodeCompanionSpinner' } },
+        virt_text_pos = 'right_align',
+    })
     spinner.index = spinner.index % #spinner.states + 1
 end
 
@@ -245,7 +242,7 @@ function M.setup()
 
             spinner.bufnr = bufnr
             spinner.timer = vim.uv.new_timer()
-            spinner.timer:start(0, 200, vim.schedule_wrap(update_spinner))
+            spinner.timer:start(0, 100, vim.schedule_wrap(update_spinner))
         end,
     })
 
