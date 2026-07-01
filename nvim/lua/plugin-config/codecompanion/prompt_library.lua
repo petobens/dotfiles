@@ -19,7 +19,6 @@ local PROMPT_LIBRARY_CONFIG = {
         'explain_code',
         'helpful_assistant',
         'meeting_copilot',
-        'pydocs',
         'python_developer',
         'quickfix',
         'slides_generator',
@@ -91,6 +90,7 @@ end
 local function build_prompt(interaction, description, alias, content, extra)
     local prompt_opts = {
         alias = alias,
+        -- Keep prompt-library chats consistent with ACP adapters.
         ignore_system_prompt = true,
     }
 
@@ -103,7 +103,7 @@ local function build_prompt(interaction, description, alias, content, extra)
         description = description,
         opts = prompt_opts,
         prompts = {
-            { role = 'system', content = content },
+            { role = 'user', content = content },
         },
     }, extra or {})
 end
@@ -125,15 +125,6 @@ local function python_developer_prompt()
         'Act as an expert Python developer.',
         'python_role',
         M.prompt('python_developer')
-    )
-end
-
-local function pydocs_prompt()
-    return build_prompt(
-        'inline',
-        'Write inline Python docstrings following NumPy-style.',
-        'pydocs',
-        M.prompt('pydocs')
     )
 end
 
@@ -198,7 +189,6 @@ function M.build()
         [M.SYSTEM_ROLE] = helpful_assistant_prompt(),
         -- Languages and expertise
         [' Python Developer'] = python_developer_prompt(),
-        [' PyDocs'] = pydocs_prompt(),
         -- Work and communication
         ['󰗊 Translator'] = translator_prompt(),
         [' Writer at Work'] = writer_at_work_prompt(),

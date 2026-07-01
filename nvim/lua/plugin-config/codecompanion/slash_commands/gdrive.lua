@@ -301,11 +301,7 @@ function M.gdrive_search(chat)
 
             chat:add_buf_message({
                 role = 'user',
-                content = ('Searching for "%s"...'):format(input),
-            })
-            chat:add_buf_message({
-                role = 'llm',
-                content = ('Here are the Google Drive %s results for "%s":\n\n%s'):format(
+                content = ('Google Drive %s results for "%s":\n\n%s'):format(
                     file_type.label,
                     input,
                     result.text
