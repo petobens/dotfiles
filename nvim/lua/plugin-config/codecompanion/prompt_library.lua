@@ -1,7 +1,6 @@
 local M = {}
 
 -- Constants
-M.SYSTEM_ROLE = '󰮥 Helpful Assistant'
 local NOTES_DIR = vim.fs.normalize('/home/pedro/git-repos/private/notes')
 local MEMOS_DIR = vim.fs.joinpath(NOTES_DIR, 'mutt', 'ops', 'memos')
 local PROMPT_DIR = vim.fs.normalize(
@@ -17,7 +16,6 @@ local PROMPT_LIBRARY_CONFIG = {
         'code_reviewer',
         'conventional_commits',
         'explain_code',
-        'helpful_assistant',
         'meeting_copilot',
         'python_developer',
         'quickfix',
@@ -88,15 +86,13 @@ end
 
 -- Shared prompt constructor
 local function build_prompt(interaction, description, alias, content, extra)
+    -- These entries feed the action palette. Slash-command invocation (invisible
+    -- injection + auto-submit) is handled separately in the slash_commands module.
     local prompt_opts = {
         alias = alias,
-        -- Keep prompt-library chats consistent with ACP adapters.
+        -- Keep prompt-library chats consistent with ACP adapters
         ignore_system_prompt = true,
     }
-
-    if interaction == 'chat' then
-        prompt_opts.is_slash_cmd = true
-    end
 
     return vim.tbl_deep_extend('force', {
         interaction = interaction,
@@ -106,16 +102,6 @@ local function build_prompt(interaction, description, alias, content, extra)
             { role = 'user', content = content },
         },
     }, extra or {})
-end
-
--- General assistant
-local function helpful_assistant_prompt()
-    return build_prompt(
-        'chat',
-        'Act as a helpful assistant.',
-        'assistant_role',
-        M.prompt('helpful_assistant')
-    )
 end
 
 -- Languages and expertise
@@ -185,8 +171,6 @@ end
 -- Prompt library assembly
 function M.build()
     return {
-        -- General assistant
-        [M.SYSTEM_ROLE] = helpful_assistant_prompt(),
         -- Languages and expertise
         [' Python Developer'] = python_developer_prompt(),
         -- Work and communication

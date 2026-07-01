@@ -1,10 +1,8 @@
 local codecompanion = require('codecompanion')
-local config = require('codecompanion.config')
 local devicons = require('nvim-web-devicons')
 local telescope_action_state = require('telescope.actions.state')
 
 local state_helpers = require('plugin-config.codecompanion.helpers').state
-local prompt_library = require('plugin-config.codecompanion.prompt_library')
 
 local M = {}
 
@@ -81,29 +79,12 @@ end
 
 -- Role label formatter for the chat UI
 function M.llm_role(adapter)
-    local current_system_role_prompt = state_helpers.get_current_system_role_prompt()
-    local system_role = prompt_library.SYSTEM_ROLE
-
-    for name, prompt in pairs(config.prompt_library or {}) do
-        local prompts = prompt and prompt.prompts
-        if type(prompts) == 'table' then
-            local first = prompts[1]
-            if first and type(first.content) == 'string' then
-                if first.content == current_system_role_prompt then
-                    system_role = name
-                    break
-                end
-            end
-        end
-    end
-
     local adapter_name = adapter.formatted_name or adapter.name or 'unknown'
     local model = state_helpers.get_adapter_model(adapter) or 'unknown'
     return string.format(
-        '%s (%s) | %s |  %d |  %s',
+        '%s (%s) |  %d |  %s',
         adapter_name,
         model,
-        system_role,
         state_helpers.get_cycle_count(),
         state_helpers.format_context_usage(adapter)
     )

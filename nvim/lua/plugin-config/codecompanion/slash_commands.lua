@@ -1,4 +1,5 @@
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local prompt_library = require('plugin-config.codecompanion.prompt_library')
 local u = require('utils')
 
 -- Constants
@@ -169,6 +170,40 @@ local slash_commands = {
         callback = terminal.tmux,
     },
 }
+
+-- Role slash commands generated from the prompt library. Unlike the built-in
+-- prompt-library slash commands (which echo the prompt into the buffer and wait
+-- for a manual submit), these inject the prompt invisibly and auto-submit
+local function role_context_files(entry)
+    local files = {}
+    for _, ctx in ipairs(entry.context or {}) do
+        if ctx.type == 'file' then
+            vim.list_extend(files, type(ctx.path) == 'table' and ctx.path or { ctx.path })
+        end
+    end
+    return files
+end
+
+for _, entry in pairs(prompt_library.build()) do
+    local alias = entry.opts and entry.opts.alias
+    if alias then
+        local content = entry.prompts[1].content
+        local files = role_context_files(entry)
+        slash_commands[alias] = {
+            description = entry.description,
+            callback = function(chat)
+                if #files > 0 then
+                    chat_helpers.add_context(files)
+                end
+                chat:add_message(
+                    { role = 'user', content = content },
+                    { visible = false }
+                )
+                chat:submit({ auto_submit = true })
+            end,
+        }
+    end
+end
 
 function M.build()
     return slash_commands

@@ -53,22 +53,6 @@ function M.chat.get_or_create_chat()
     return M.state.get_last_chat() or codecompanion.chat()
 end
 
-function M.state.get_current_system_role_prompt()
-    local chat = M.state.get_last_chat()
-    if not chat or type(chat.messages) ~= 'table' then
-        return nil
-    end
-
-    local system_role = nil
-    for _, entry in ipairs(chat.messages) do
-        if entry.role == 'system' then
-            system_role = entry.content
-        end
-    end
-
-    return system_role
-end
-
 function M.state.get_last_user_prompt()
     local chat = M.state.get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then

@@ -124,6 +124,13 @@ function M.codex()
         env = {
             GITHUB_TOKEN = GITHUB_TOKEN,
         },
+        commands = {
+            default = {
+                'codex-acp',
+                '-c',
+                'sandbox_permissions=["disk-full-read-access"]',
+            },
+        },
         defaults = {
             auth_method = 'chatgpt',
             session_config_options = {

@@ -58,7 +58,7 @@ function M.setup()
         interactions = {
             -- Chat
             chat = {
-                adapter = 'openai_gpt_55',
+                adapter = 'claude_code',
                 roles = {
                     user = 'Me',
                     llm = ui.llm_role,
@@ -76,7 +76,7 @@ function M.setup()
                         if ctx.adapter and ctx.adapter.type == 'acp' then
                             return ''
                         end
-                        return prompt_library.prompt('helpful_assistant')
+                        return 'You are a helpful assistant.'
                     end,
                     prompt_decorator = function(message)
                         return message
