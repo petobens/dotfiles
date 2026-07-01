@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# Claude + Codex rate-limit usage (5h / 7d windows)
+
+# Claude uses the Claude Code CLI credential (needs the user:profile scope).
+cred="$HOME/.claude/.credentials.json"
+claude_usage() {
+    local tok
+    tok=$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2> /dev/null)
+    [ -n "$tok" ] || return 1
+    curl -sS --max-time 5 https://api.anthropic.com/api/oauth/usage \
+        -H "authorization: Bearer $tok" \
+        -H "anthropic-version: 2023-06-01" \
+        -H "anthropic-beta: oauth-2025-04-20"
+}
+if [ -n "$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2> /dev/null)" ]; then
+    j=$(claude_usage)
+    pct=$(jq -r '.five_hour.utilization // empty' <<< "$j" 2> /dev/null)
+    if [ -z "$pct" ]; then
+        # Token likely stale (e.g. after a reboot); a headless run refreshes it.
+        timeout 60 claude -p 'ok' --max-turns 1 > /dev/null 2>&1
+        j=$(claude_usage)
+        pct=$(jq -r '.five_hour.utilization // empty' <<< "$j" 2> /dev/null)
+    fi
+    if [ -n "$pct" ]; then
+        reset=$(jq -r '.five_hour.resets_at // empty' <<< "$j" 2> /dev/null)
+        reset=$(date -d "$reset" +'%H:%M' 2> /dev/null)
+        reset7=$(jq -r '.seven_day.resets_at // empty' <<< "$j" 2> /dev/null)
+        reset7=$(date -d "$reset7" +'%a %H:%M' 2> /dev/null)
+        printf '\033[1;34mClaude\033[0m  5h: %5.1f%% (resets %s)  |  7d: %5.1f%% (resets %s)\n' \
+            "$pct" "$reset" "$(jq -r '.seven_day.utilization' <<< "$j" 2> /dev/null)" "$reset7"
+    else
+        printf '\033[1;34mClaude\033[0m  unavailable\n'
+    fi
+fi
+
+# Codex uses ChatGPT OAuth; the originator header is required or Cloudflare
+# serves an HTML page instead of the JSON usage payload.
+auth="$HOME/.codex/auth.json"
+codex_usage() {
+    local tok acc
+    tok=$(jq -r '.tokens.access_token // empty' "$auth" 2> /dev/null)
+    acc=$(jq -r '.tokens.account_id // empty' "$auth" 2> /dev/null)
+    [ -n "$tok" ] || return 1
+    curl -sS --max-time 5 https://chatgpt.com/backend-api/codex/usage \
+        -H "authorization: Bearer $tok" \
+        -H "chatgpt-account-id: $acc" \
+        -H "originator: codex_cli_rs" \
+        -H "user-agent: codex_cli_rs"
+}
+if [ -n "$(jq -r '.tokens.access_token // empty' "$auth" 2> /dev/null)" ]; then
+    j=$(codex_usage)
+    pct=$(jq -r '.rate_limit.primary_window.used_percent // empty' <<< "$j" 2> /dev/null)
+    if [ -z "$pct" ]; then
+        # Token likely stale (e.g. after a reboot); a status check refreshes it.
+        timeout 30 codex login status > /dev/null 2>&1
+        j=$(codex_usage)
+        pct=$(jq -r '.rate_limit.primary_window.used_percent // empty' <<< "$j" 2> /dev/null)
+    fi
+    if [ -n "$pct" ]; then
+        reset=$(jq -r '.rate_limit.primary_window.reset_at // empty' <<< "$j" 2> /dev/null)
+        reset=$(date -d "@$reset" +'%H:%M' 2> /dev/null)
+        reset7=$(jq -r '.rate_limit.secondary_window.reset_at // empty' <<< "$j" 2> /dev/null)
+        reset7=$(date -d "@$reset7" +'%a %H:%M' 2> /dev/null)
+        printf '\033[1;32mCodex\033[0m   5h: %5.1f%% (resets %s)  |  7d: %5.1f%% (resets %s)\n' \
+            "$pct" "$reset" "$(jq -r '.rate_limit.secondary_window.used_percent' <<< "$j" 2> /dev/null)" "$reset7"
+    else
+        printf '\033[1;32mCodex\033[0m   unavailable\n'
+    fi
+fi

@@ -226,8 +226,26 @@ local function paste_selection_to_chat()
     end
 end
 
+local function show_ai_usage()
+    vim.system({ 'ai_usage' }, { text = true }, function(obj)
+        local out = (obj.stdout or ''):gsub('\27%[[0-9;]*m', ''):gsub('%s+$', '')
+        vim.schedule(function()
+            if out == '' then
+                vim.notify('ai_usage: no output', vim.log.levels.WARN)
+            else
+                vim.api.nvim_echo({ { out } }, false, {})
+            end
+        end)
+    end)
+end
+
 -- CodeCompanion global mappings
 local function setup_global_mappings()
+    -- AI rate limits
+    vim.keymap.set('n', '<Leader>ai', show_ai_usage, {
+        desc = 'Show AI usage (rate limits)',
+    })
+
     -- Chat and command entry mappings
     vim.keymap.set('n', '<Leader>cg', window_helpers.focus_or_toggle_chat, {
         desc = 'Toggle CodeCompanion chat',
