@@ -134,10 +134,10 @@ function M.llm_role(adapter)
     local adapter_name = adapter.formatted_name or adapter.name or 'unknown'
     local model = state_helpers.get_adapter_model(adapter) or 'unknown'
     return string.format(
-        '%s (%s) | %s',
+        '%s (%s) |  %s',
         adapter_name,
         model,
-        os.date(' %Y-%m-%d %H:%M:%S')
+        os.date('%Y-%m-%d %H:%M:%S')
     )
 end
 
@@ -187,7 +187,6 @@ local function clear_spinner()
 end
 
 local function update_spinner()
-    -- Render as right-aligned virtual text on the last line
     if not spinner_winnr() then
         return
     end
@@ -286,6 +285,7 @@ function M.setup()
         end,
     })
 
+    -- Footer
     vim.api.nvim_create_autocmd('User', {
         pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
         desc = 'Refresh CodeCompanion chat footer context usage when a turn ends',

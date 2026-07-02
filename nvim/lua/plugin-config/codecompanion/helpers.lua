@@ -211,6 +211,20 @@ function M.chat.run_slash_command(name, opts)
     end
 end
 
+function M.chat.submit_user_message(chat, content)
+    chat:add_buf_message({
+        role = config.constants.USER_ROLE,
+        content = content,
+    })
+    chat:add_message({
+        role = config.constants.USER_ROLE,
+        content = content,
+    }, {
+        visible = false,
+    })
+    chat:submit({ auto_submit = true })
+end
+
 -- Chat windows
 function M.window.try_focus_chat_float()
     for _, win_id in ipairs(vim.api.nvim_list_wins()) do

@@ -54,11 +54,10 @@ function M.qfix(chat)
     end
 
     chat_helpers.add_context(context)
-    chat:add_buf_message({
-        role = 'user',
-        content = string.format(prompt_library.prompt('quickfix'), entries),
-    })
-    chat:submit()
+    chat_helpers.submit_user_message(
+        chat,
+        string.format(prompt_library.prompt('quickfix'), entries)
+    )
 end
 
 function M.explain_code(chat, opts)
@@ -68,11 +67,10 @@ function M.explain_code(chat, opts)
     local ft = vim.bo[bufnr].filetype ~= '' and vim.bo[bufnr].filetype or 'text'
 
     chat_helpers.add_context({ file })
-    chat:add_buf_message({
-        role = 'user',
-        content = string.format(prompt_library.prompt('explain_code'), ft, code),
-    })
-    chat:submit()
+    chat_helpers.submit_user_message(
+        chat,
+        string.format(prompt_library.prompt('explain_code'), ft, code)
+    )
 end
 
 return M

@@ -146,15 +146,14 @@ function M.conventional_commit(chat, opts)
 
     local diff_output = wait_stdout(ctx.diff_cmd, { text = true, cwd = ctx.git_root })
 
-    chat:add_buf_message({
-        role = 'user',
-        content = string.format(
+    chat_helpers.submit_user_message(
+        chat,
+        string.format(
             prompt_library.prompt('conventional_commits'),
             commit_history,
             diff_output
-        ),
-    })
-    chat:submit()
+        )
+    )
 end
 
 function M.code_review(_, opts)
@@ -167,11 +166,10 @@ function M.code_review(_, opts)
     chat_helpers.add_context(ctx.abs_files)
 
     local diff_output = wait_stdout(ctx.diff_cmd, { text = true, cwd = ctx.git_root })
-    chat:add_buf_message({
-        role = 'user',
-        content = string.format(prompt_library.prompt('code_reviewer'), diff_output),
-    })
-    chat:submit()
+    chat_helpers.submit_user_message(
+        chat,
+        string.format(prompt_library.prompt('code_reviewer'), diff_output)
+    )
 end
 
 function M.changelog(chat, opts)
@@ -205,14 +203,13 @@ function M.changelog(chat, opts)
         chat_helpers.add_context({ changelog_file })
     end
 
-    chat:add_buf_message({
-        role = 'user',
-        content = string.format(
+    chat_helpers.submit_user_message(
+        chat,
+        string.format(
             prompt_library.prompt('changelog_generator'),
             table.concat(commit_msgs, '\n---\n')
-        ),
-    })
-    chat:submit()
+        )
+    )
 end
 
 return M
