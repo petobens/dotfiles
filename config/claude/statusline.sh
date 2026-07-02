@@ -5,8 +5,10 @@
 input=$(cat)
 
 # Nerd Font icons (swap the glyphs to taste; terminal needs a patched Nerd Font).
-CTX_ICON=$''   # nf-fa-window_maximize
-RL_ICON=$''    # nf-fa-clock_o
+BOT_ICON=$'󰚩' # nf-md-robot
+DIR_ICON=$'' # nf-fa-folder_open
+CTX_ICON=$'' # nf-fa-window_maximize
+RL_ICON=$''  # nf-fa-clock_o
 
 # Model and reasoning effort (effort is absent for models without the param).
 # Split on tab only: display_name may contain spaces (e.g. "Opus 4.8 (1M context)").
@@ -14,14 +16,14 @@ IFS=$'\t' read -r MODEL EFFORT < <(
     printf '%s' "$input" | jq -r '
         [.model.display_name // "?", (.effort.level // "")] | @tsv'
 )
-MODEL_SEG="$MODEL"
-[ -n "$EFFORT" ] && MODEL_SEG="$MODEL ($EFFORT)"
+MODEL_SEG="$BOT_ICON $MODEL"
+[ -n "$EFFORT" ] && MODEL_SEG="$BOT_ICON $MODEL ($EFFORT)"
 
 # Working directory: last 3 path components, with $HOME abbreviated to ~.
 DIR=$(printf '%s' "$input" | jq -r '.workspace.current_dir // .cwd // ""')
 DIR="${DIR/#$HOME/\~}"
 if [ -n "$DIR" ]; then
-    IFS='/' read -ra PARTS <<<"$DIR"
+    IFS='/' read -ra PARTS <<< "$DIR"
     N=${#PARTS[@]}
     if [ "$N" -gt 3 ]; then
         DIR="…/${PARTS[N - 3]}/${PARTS[N - 2]}/${PARTS[N - 1]}"
@@ -44,7 +46,7 @@ RL_SEG=''
 
 # Assemble line, joining only the segments that exist with a ' │ ' separator.
 SEG=("$MODEL_SEG")
-[ -n "$DIR" ] && SEG+=("$DIR")
+[ -n "$DIR" ] && SEG+=("$DIR_ICON $DIR")
 SEG+=("$CTX_ICON ${PCT}%")
 [ -n "$RL_SEG" ] && SEG+=("$RL_SEG")
 LINE="${SEG[0]}"
