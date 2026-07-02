@@ -10,7 +10,6 @@ local PROMPT_DIR = vim.fs.normalize(
 -- Prompt library config
 local PROMPT_LIBRARY_CONFIG = {
     prompt_dir = PROMPT_DIR,
-    formatting_file = 'response_formatting',
     prompt_md_files = {
         'changelog_generator',
         'code_reviewer',
@@ -22,11 +21,6 @@ local PROMPT_LIBRARY_CONFIG = {
         'slides_generator',
         'translator_spa_eng',
         'writer_at_work',
-    },
-    user_prompts = {
-        code_reviewer = true,
-        conventional_commits = true,
-        explain_code = true,
     },
 }
 
@@ -62,12 +56,9 @@ local function load_prompt_library()
     end
 
     local prompt_library = {}
-    local formatting_content = read_prompt_file(PROMPT_LIBRARY_CONFIG.formatting_file)
 
     for _, fname in ipairs(PROMPT_LIBRARY_CONFIG.prompt_md_files) do
-        local content = read_prompt_file(fname)
-        prompt_library[fname] = PROMPT_LIBRARY_CONFIG.user_prompts[fname] and content
-            or (formatting_content .. '\n\n' .. content)
+        prompt_library[fname] = read_prompt_file(fname)
     end
 
     return prompt_library
