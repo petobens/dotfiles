@@ -98,6 +98,9 @@ local slash_commands = {
             dirs = { '~/Pictures/Screenshots/' },
         },
     },
+    ['resume'] = {
+        keymaps = { modes = { n = '<Leader>rs' } },
+    },
     -- Filesystem
     ['file_path'] = {
         description = 'Insert a filepath',
