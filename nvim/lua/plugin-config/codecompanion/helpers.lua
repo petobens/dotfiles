@@ -140,7 +140,7 @@ end
 local usage_cache = {}
 local usage_labels = { claude_code = 'Claude', codex = 'Codex' }
 local usage_last_run = 0
-local USAGE_TTL = 300
+local USAGE_TTL = 120
 
 -- Run the ai_usage script and hand back its ANSI-stripped output
 function M.usage.run(cb)
