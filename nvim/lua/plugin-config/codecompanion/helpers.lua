@@ -139,6 +139,8 @@ end
 -- Usage limits: shell out to the ai_usage script
 local usage_cache = {}
 local usage_labels = { claude_code = 'Claude', codex = 'Codex' }
+local usage_last_run = 0
+local USAGE_TTL = 300
 
 -- Run the ai_usage script and hand back its ANSI-stripped output
 function M.usage.run(cb)
@@ -152,21 +154,32 @@ function M.usage.get(name)
     return usage_cache[name]
 end
 
--- Cache the 5h usage for a claude_code/codex adapter, parsed from the script
--- output; cb re-renders the footer once fresh data lands
+-- Cache the 5h usage for claude_code/codex, parsed from the script output; cb
+-- re-renders the footer once data lands. One run populates both adapters, and
+-- results are reused for USAGE_TTL seconds
 function M.usage.refresh(name, cb)
-    local label = usage_labels[name]
-    if not label then
+    if not usage_labels[name] then
         return
     end
+    -- Throttle on time regardless of success so a rate-limited window can recover
+    if os.time() - usage_last_run < USAGE_TTL then
+        if cb then
+            vim.schedule(cb)
+        end
+        return
+    end
+    usage_last_run = os.time()
     M.usage.run(function(out)
-        local pct, reset = out:match(label .. '%s+5h:%s+([%d%.]+)%%%s+%(resets ([^)]+)%)')
-        pct = pct or out:match(label .. '%s+5h:%s+([%d%.]+)')
-        if pct then
-            usage_cache[name] = { pct = tonumber(pct), reset = reset }
-            if cb then
-                vim.schedule(cb)
+        for adapter, label in pairs(usage_labels) do
+            local pct, reset =
+                out:match(label .. '%s+5h:%s+([%d%.]+)%%%s+%(resets ([^)]+)%)')
+            pct = pct or out:match(label .. '%s+5h:%s+([%d%.]+)')
+            if pct then
+                usage_cache[adapter] = { pct = tonumber(pct), reset = reset }
             end
+        end
+        if cb then
+            vim.schedule(cb)
         end
     end)
 end
