@@ -14,6 +14,18 @@ end
 
 local function chat_footer(chat)
     local parts = {}
+    local adapter = chat and chat.adapter
+    if adapter then
+        -- acp agents show their name (Claude/Codex); http shows the model
+        local labels = { claude_code = 'Claude', codex = 'Codex' }
+        local label = labels[adapter.name]
+            or state_helpers.get_adapter_model(adapter)
+            or adapter.name
+        table.insert(
+            parts,
+            string.format('%s %s', state_helpers.provider_icon(adapter.name), label)
+        )
+    end
     local cwd = cwd_footer()
     if cwd ~= '' then
         table.insert(parts, ' ' .. cwd)
@@ -24,11 +36,14 @@ local function chat_footer(chat)
             parts,
             string.format(' %s', state_helpers.format_context_usage(chat))
         )
-        local adapter = chat.adapter
         if adapter and adapter.type == 'acp' then
-            local pct = usage_helpers.get(adapter.name)
-            if pct then
-                table.insert(parts, string.format(' 5h %.0f%%', pct))
+            local usage = usage_helpers.get(adapter.name)
+            if usage then
+                local label = string.format(' 5h %.0f%%', usage.pct)
+                if usage.reset then
+                    label = label .. ' (' .. usage.reset .. ')'
+                end
+                table.insert(parts, label)
             end
         end
     end
@@ -316,6 +331,21 @@ function M.setup()
             vim.defer_fn(function()
                 refresh_chat_usage(bufnr)
             end, 50)
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = { 'CodeCompanionChatAdapter', 'CodeCompanionChatModel' },
+        desc = 'Refresh CodeCompanion chat footer when the adapter or model changes',
+        callback = function(e)
+            local bufnr = e.data and e.data.bufnr
+            if not bufnr then
+                return
+            end
+            vim.schedule(function()
+                refresh_chat_footer(bufnr)
+                refresh_chat_usage(bufnr)
+            end)
         end,
     })
 

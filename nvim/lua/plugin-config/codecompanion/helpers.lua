@@ -80,6 +80,18 @@ function M.state.get_adapter_model(adapter)
         or vim.tbl_get(adapter, 'defaults', 'model')
 end
 
+function M.state.provider_icon(name)
+    name = (name or ''):lower()
+    if name:find('claude') or name:find('anthropic') then
+        return '' -- cod-sparkle
+    elseif name:find('codex') or name:find('openai') or name:find('gpt') then
+        return '󰙴' -- md-creation
+    elseif name:find('gemini') or name:find('google') then
+        return '󰊭' -- md-google
+    end
+    return '󰚩' -- md-robot
+end
+
 function M.state.get_adapter_context_window(adapter)
     if type(adapter) ~= 'table' then
         return nil
@@ -140,7 +152,7 @@ function M.usage.get(name)
     return usage_cache[name]
 end
 
--- Cache the 5h percent for a claude_code/codex adapter, parsed from the script
+-- Cache the 5h usage for a claude_code/codex adapter, parsed from the script
 -- output; cb re-renders the footer once fresh data lands
 function M.usage.refresh(name, cb)
     local label = usage_labels[name]
@@ -148,9 +160,10 @@ function M.usage.refresh(name, cb)
         return
     end
     M.usage.run(function(out)
-        local pct = out:match(label .. '%s+5h:%s+([%d%.]+)')
+        local pct, reset = out:match(label .. '%s+5h:%s+([%d%.]+)%%%s+%(resets ([^)]+)%)')
+        pct = pct or out:match(label .. '%s+5h:%s+([%d%.]+)')
         if pct then
-            usage_cache[name] = tonumber(pct)
+            usage_cache[name] = { pct = tonumber(pct), reset = reset }
             if cb then
                 vim.schedule(cb)
             end
