@@ -58,7 +58,7 @@ function M.setup()
         interactions = {
             -- Chat
             chat = {
-                adapter = 'claude_code',
+                adapter = 'codex',
                 roles = {
                     user = 'Me',
                     llm = ui.llm_role,

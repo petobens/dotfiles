@@ -77,11 +77,7 @@ end
 local tools = {
     -- Default tools
     opts = {
-        default_tools = {
-            'agent_tools',
-            'fetch_webpage',
-            'web_search',
-        },
+        default_tools = {},
     },
 
     -- Builtin tools
