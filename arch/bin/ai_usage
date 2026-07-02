@@ -15,9 +15,16 @@ claude_usage() {
 if [ -n "$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2> /dev/null)" ]; then
     j=$(claude_usage)
     pct=$(jq -r '.five_hour.utilization // empty' <<< "$j" 2> /dev/null)
-    if [ -z "$pct" ]; then
-        # Token likely stale (e.g. after a reboot); a headless run refreshes it.
-        timeout 60 claude -p 'ok' --max-turns 1 > /dev/null 2>&1
+    # Only refresh via a headless run when the token is genuinely expired; probing
+    # on every empty response (e.g. a transient rate_limit_error) spams throwaway
+    # 'ok' session files into ~/.claude/projects.
+    exp=$(jq -r '.claudeAiOauth.expiresAt // 0' "$cred" 2> /dev/null)
+    now_ms=$(($(date +%s) * 1000))
+    if [ -z "$pct" ] && [ "$exp" -gt 0 ] && [ "$now_ms" -ge "$exp" ]; then
+        # Pin the probe's session id so we can delete just its throwaway file.
+        sid=$(uuidgen)
+        timeout 60 claude -p 'ok' --max-turns 1 --session-id "$sid" > /dev/null 2>&1
+        rm -f "$HOME"/.claude/projects/*/"$sid".jsonl
         j=$(claude_usage)
         pct=$(jq -r '.five_hour.utilization // empty' <<< "$j" 2> /dev/null)
     fi
