@@ -125,25 +125,6 @@ local function set_chat_win_title(e)
     })
 end
 
--- Seed the footer's context usage for a restored chat: the plugin only sets
--- chat.tokens live (on the first turn), so fall back to the history estimate
-local function restore_chat_history_metadata(bufnr)
-    local history = codecompanion.extensions.history
-    local chat = codecompanion.buf_get_chat(bufnr)
-    local save_id = chat and chat.opts and chat.opts.save_id
-    local saved_chat = save_id and history.load_chat(save_id)
-    if not saved_chat then
-        return
-    end
-
-    _G.codecompanion_chat_metadata = _G.codecompanion_chat_metadata or {}
-    _G.codecompanion_chat_metadata[chat.bufnr] = {
-        tokens = history.get_chats()[save_id].token_estimate,
-    }
-
-    refresh_chat_footer(chat.bufnr)
-end
-
 -- Role label formatter for the chat UI
 function M.llm_role(adapter)
     local adapter_name = adapter.formatted_name or adapter.name or 'unknown'
@@ -349,17 +330,6 @@ function M.setup()
             vim.schedule(function()
                 refresh_chat_footer(bufnr)
                 refresh_chat_usage(bufnr)
-            end)
-        end,
-    })
-
-    -- History extension
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'CodeCompanionChatCreated',
-        desc = 'Restore CodeCompanion history metadata',
-        callback = function(args)
-            vim.schedule(function()
-                restore_chat_history_metadata(args.data.bufnr)
             end)
         end,
     })

@@ -139,14 +139,9 @@ function M.state.get_adapter_context_window(adapter)
 end
 
 function M.state.format_context_usage(chat)
-    -- Prefer the live token count the plugin maintains on the chat object; fall
-    -- back to the history estimate for a restored chat before its first turn
-    local tokens = chat and chat.tokens
-    if not tokens then
-        local bufnr = (chat and chat.bufnr) or vim.api.nvim_get_current_buf()
-        local metadata = (_G.codecompanion_chat_metadata or {})[bufnr] or {}
-        tokens = metadata.tokens or 0
-    end
+    -- The plugin only tracks tokens live, from the first turn onward, so a
+    -- freshly restored chat reads 0 until then
+    local tokens = (chat and chat.tokens) or 0
 
     local max_ctx = M.state.get_adapter_context_window(chat and chat.adapter)
     if not max_ctx then
