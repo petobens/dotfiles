@@ -1,11 +1,37 @@
+local u = require('utils')
+
 local helpers = require('plugin-config.codecompanion.helpers')
 local utils = require('codecompanion.utils')
 local state_helpers = helpers.state
 
 local M = {}
 
-local CLOCK = '\239\128\151' -- nf-fa-clock_o (U+F017)
 local TITLE_WIDTH = 80
+
+-- Prune sessions at most once per calendar day, triggered by the first browse of the day
+local function ensure_daily_prune()
+    local stamp = vim.fs.joinpath(vim.fn.stdpath('cache'), 'ai_session_prune_stamp')
+    local today = os.date('%Y-%m-%d')
+    if vim.trim(u.read_file(stamp) or '') == today then
+        return
+    end
+    utils.notify('Running daily ACP session prune...', vim.log.levels.INFO)
+    local result = vim.system({ 'ai_session_prune' }, { text = true }):wait()
+    if result.code == 0 then
+        local n = tonumber((result.stdout or ''):match('total: deleted (%d+)')) or 0
+        utils.notify(
+            string.format('Deleted %d session%s', n, n == 1 and '' or 's'),
+            vim.log.levels.INFO
+        )
+        local fd = io.open(stamp, 'w')
+        if fd then
+            fd:write(today)
+            fd:close()
+        end
+    else
+        utils.notify('Daily session prune failed', vim.log.levels.ERROR)
+    end
+end
 
 -- Rough token estimate (~4 chars/token) from the session file size
 local function fmt_weight(size)
@@ -304,7 +330,8 @@ local function display_entry(picker_entry)
         e.display_time_width or 0
     )
     local cwd = e.display_cwd or (e.cwd and vim.fn.fnamemodify(e.cwd, ':~') or '')
-    local meta = string.format('(%s)%s   %s %s', weight, weight_pad, CLOCK, time)
+    local clock = '\239\128\151' -- nf-fa-clock_o (U+F017)
+    local meta = string.format('(%s)%s   %s %s', weight, weight_pad, clock, time)
     local line = string.format('%s %s  %s  %s', icon, title, meta, cwd)
 
     local title_end = #icon + 1 + #title
@@ -384,6 +411,8 @@ function M.browse(chat)
             vim.log.levels.WARN
         )
     end
+
+    ensure_daily_prune()
 
     local entries = scan()
     table.sort(entries, function(a, b)
