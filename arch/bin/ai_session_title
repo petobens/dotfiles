@@ -1,0 +1,342 @@
+#!/usr/bin/env python3
+"""Generate whole-conversation titles for Claude Code and Codex sessions.
+
+Writes a session-id -> title cache that the CodeCompanion ACP session picker
+reads, so browsing shows what each session was about rather than its first
+prompt. A title is (re)generated only when its session file has grown since the
+cached run. Titles come from OpenAI gpt-5.4-nano.
+
+Run with -n/--dry-run to preview, --all to force-regenerate every title.
+"""
+
+import argparse
+import glob
+import json
+import os
+import re
+import subprocess
+import time
+from concurrent.futures import ThreadPoolExecutor
+from urllib import error, request
+
+CLAUDE_GLOB = os.path.expanduser("~/.claude/projects/**/*.jsonl")
+CODEX_GLOB = os.path.expanduser("~/.codex/sessions/**/rollout-*.jsonl")
+CACHE_PATH = os.path.expanduser(
+    "~/.local/share/nvim/codecompanion/acp-session-titles.json"
+)
+
+API_URL = "https://api.openai.com/v1/responses"
+MODEL = "gpt-5.4-nano"
+PASS_ENTRY = "openai/yahoomail/apikey"
+
+MAX_MSG_CHARS = 600  # per-message truncation before assembling the transcript
+MAX_TOTAL_CHARS = 8000  # overall transcript budget sent to the model
+HEAD_TURNS = 3  # opening turns (the goal) always kept
+TAIL_TURNS = 9  # closing turns (the outcome) always kept
+WORKERS = 8
+
+PROMPT = """You write short, specific titles for coding-assistant sessions.
+Read the transcript and reply with ONE title of 8 to 10 words that captures what
+the whole session was about and what it accomplished. Plain words only: no
+quotes, no surrounding punctuation, no trailing period. Reply with only the
+title.
+
+Transcript:
+{transcript}
+
+Title:"""
+
+# Context that agents inject ahead of the real prompt (shared rule files, pasted
+# file dumps, system reminders) drowns out the actual instruction, so strip it
+_SHARE_FILE = re.compile(r"Sharing `[^`]+`:(?:\s*\n-{3}\n.*?\n-{3})?", re.S)
+_SHARE_CTX = re.compile(
+    r"Sharing the following file as context:\s*\S+"
+    r"(?:\s*\n-{3}\n.*?\n-{3})?",
+    re.S,
+)
+_XML_BLOCK = re.compile(r"<([A-Za-z][\w-]*)[^>]*>.*?</\1>", re.S)
+_WS = re.compile(r"\s+")
+
+
+def _clean_user(text):
+    """Strip injected context from a user message, return the real ask or None."""
+    if not text:
+        return None
+    text = _SHARE_FILE.sub(" ", text)
+    text = _SHARE_CTX.sub(" ", text)
+    text = _XML_BLOCK.sub(" ", text)
+    # drop pasted-image placeholders left on their own line
+    text = re.sub(r"(?m)^\s*image\s*$", " ", text)
+    text = _WS.sub(" ", text).strip()
+    return text or None
+
+
+def _iter_jsonl(path, cap):
+    """Yield up to `cap` decoded JSON objects from a jsonl file."""
+    try:
+        with open(path, errors="ignore") as fh:
+            for i, line in enumerate(fh):
+                if i >= cap:
+                    break
+                try:
+                    yield json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+    except OSError:
+        return
+
+
+def _text_from_content(content):
+    """Pull plain text out of a Claude message.content (str or content parts)."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = [
+            p["text"]
+            for p in content
+            if isinstance(p, dict) and p.get("type") == "text" and p.get("text")
+        ]
+        return "\n".join(parts)
+    return ""
+
+
+# Session ids are read cheaply (Claude from the filename, Codex from the first
+# session_meta line) so unchanged sessions are skipped on an mtime stat alone,
+# before the expensive full-transcript extraction below
+def claude_id(path):
+    """Claude keys by the file's basename, which equals its sessionId."""
+    return os.path.splitext(os.path.basename(path))[0]
+
+
+def codex_id(path):
+    """Codex keys by the id in its session_meta line."""
+    for d in _iter_jsonl(path, 50):
+        if d.get("type") == "session_meta":
+            return (d.get("payload") or {}).get("id")
+    return None
+
+
+def extract_claude(path):
+    """Return the user/assistant turns of a Claude Code session."""
+    turns = []
+    for d in _iter_jsonl(path, 2000):
+        t = d.get("type")
+        if t not in ("user", "assistant"):
+            continue
+        msg = d.get("message")
+        if not isinstance(msg, dict):
+            continue
+        text = _text_from_content(msg.get("content"))
+        if not text:
+            continue
+        if t == "user":
+            text = _clean_user(text)
+            if text:
+                turns.append(("User", text))
+        else:
+            turns.append(("Assistant", text.strip()))
+    return turns
+
+
+def extract_codex(path):
+    """Return the user/assistant turns of a Codex session."""
+    turns = []
+    for d in _iter_jsonl(path, 2000):
+        if d.get("type") != "event_msg":
+            continue
+        p = d.get("payload") or {}
+        pt = p.get("type")
+        if pt == "user_message":
+            text = _clean_user(p.get("message") or "")
+            if text:
+                turns.append(("User", text))
+        elif pt == "agent_message":
+            text = (p.get("message") or "").strip()
+            if text:
+                turns.append(("Assistant", text))
+    return turns
+
+
+def build_transcript(turns):
+    """Condense turns to the opening + closing exchanges within the char budget."""
+    if len(turns) > HEAD_TURNS + TAIL_TURNS:
+        turns = turns[:HEAD_TURNS] + turns[-TAIL_TURNS:]
+    lines, total = [], 0
+    for role, text in turns:
+        line = f"{role}: {text[:MAX_MSG_CHARS]}"
+        if total + len(line) > MAX_TOTAL_CHARS:
+            break
+        lines.append(line)
+        total += len(line)
+    return "\n".join(lines)
+
+
+def _clean_title(title):
+    """Normalise the model's reply into a bare title."""
+    title = title.strip().strip("\"'").strip()
+    title = re.sub(r"^(?i:title)\s*[:\-]\s*", "", title)
+    title = _WS.sub(" ", title).rstrip(".").strip()
+    words = title.split()
+    if len(words) > 12:  # guard against a runaway reply
+        title = " ".join(words[:12])
+    return title
+
+
+def _output_text(data):
+    """Pull the assistant text out of a Responses API result."""
+    for item in data.get("output", []):
+        if item.get("type") != "message":
+            continue
+        for part in item.get("content", []):
+            if part.get("type") == "output_text" and part.get("text"):
+                return part["text"]
+    return None
+
+
+def generate_title(key, transcript):
+    """Call gpt-5.4-nano for a title; return the title or None on failure."""
+    body = json.dumps(
+        {
+            "model": MODEL,
+            "input": [
+                {"role": "user", "content": PROMPT.format(transcript=transcript)}
+            ],
+            "reasoning": {"effort": "none"},
+            "max_output_tokens": 128,
+        }
+    ).encode()
+    req = request.Request(
+        API_URL,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {key}",
+            "Content-Type": "application/json",
+        },
+    )
+    for attempt in range(3):
+        try:
+            with request.urlopen(req, timeout=30) as resp:
+                data = json.load(resp)
+            content = _output_text(data)
+            title = _clean_title(content) if content else None
+            return title or None
+        except (error.URLError, KeyError, IndexError, ValueError, TimeoutError):
+            if attempt == 2:
+                return None
+            time.sleep(1 + attempt)
+
+
+def get_api_key():
+    """Read the OpenAI key from pass."""
+    try:
+        out = subprocess.run(
+            ["pass", "show", PASS_ENTRY], capture_output=True, text=True, timeout=15
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return out.stdout.splitlines()[0].strip() if out.stdout.strip() else None
+
+
+def load_cache():
+    """Load the id -> title cache."""
+    try:
+        with open(CACHE_PATH) as fh:
+            data = json.load(fh)
+        return data if isinstance(data, dict) else {}
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def save_cache(cache):
+    """Persist the cache atomically."""
+    os.makedirs(os.path.dirname(CACHE_PATH), exist_ok=True)
+    tmp = CACHE_PATH + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(cache, fh, ensure_ascii=False)
+    os.replace(tmp, CACHE_PATH)
+
+
+def main():
+    """Regenerate stale session titles and refresh the picker cache."""
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "-n", "--dry-run", action="store_true", help="preview, generate nothing"
+    )
+    ap.add_argument(
+        "--all", action="store_true", help="regenerate every title, ignoring the cache"
+    )
+    args = ap.parse_args()
+
+    cache = load_cache()
+    sources = [
+        ("claude_code", CLAUDE_GLOB, claude_id, extract_claude),
+        ("codex", CODEX_GLOB, codex_id, extract_codex),
+    ]
+
+    live_keys = set()
+    stale = []  # (cache_key, transcript, mtime)
+    fresh = 0
+    for adapter, pattern, id_of, extract in sources:
+        for path in glob.glob(pattern, recursive=True):
+            try:
+                mtime = int(os.path.getmtime(path))
+            except OSError:
+                continue
+            session_id = id_of(path)
+            if not session_id:
+                continue
+            cache_key = f"{adapter}:{session_id}"
+            live_keys.add(cache_key)
+            entry = cache.get(cache_key)
+            # Skip unchanged sessions on the mtime stat alone, before extracting
+            if not args.all and entry and entry.get("mtime", 0) >= mtime:
+                fresh += 1
+                continue
+            turns = extract(path)
+            if not turns:
+                continue
+            transcript = build_transcript(turns)
+            if transcript:
+                stale.append((cache_key, transcript, mtime))
+
+    removed = [k for k in cache if k not in live_keys]
+    for k in removed:
+        del cache[k]
+
+    if args.dry_run:
+        print(
+            f"titles: would generate {len(stale)}, fresh {fresh}, "
+            f"dropped {len(removed)}"
+        )
+        return
+
+    generated = failed = 0
+    if stale:
+        key = get_api_key()
+        if not key:
+            print("titles: could not read OpenAI key from pass; skipping")
+            return
+
+        def run(job):
+            cache_key, transcript, mtime = job
+            return cache_key, mtime, generate_title(key, transcript)
+
+        with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+            for cache_key, mtime, title in pool.map(run, stale):
+                if title:
+                    cache[cache_key] = {"title": title, "mtime": mtime}
+                    generated += 1
+                else:
+                    failed += 1
+
+    save_cache(cache)
+    print(
+        f"titles: generated {generated}, fresh {fresh}, "
+        f"failed {failed}, dropped {len(removed)}"
+    )
+
+
+if __name__ == "__main__":
+    main()

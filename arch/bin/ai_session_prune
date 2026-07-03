@@ -60,11 +60,6 @@ def user_prompts_codex(path):
     )
 
 
-def _delete(path):
-    """Delete a session file."""
-    os.remove(path)
-
-
 def remove_session_dirs(root, dry_run):
     """Remove Claude session artifact directories below a session root."""
     removed = 0
@@ -101,7 +96,7 @@ def prune(name, files, counter, cutoff, dry_run, delete_all):
         if delete_all:
             old += 1
             if not dry_run:
-                _delete(f)
+                os.remove(f)
             continue
 
         try:
@@ -114,7 +109,7 @@ def prune(name, files, counter, cutoff, dry_run, delete_all):
             else:
                 tiny += 1
             if not dry_run:
-                _delete(f)
+                os.remove(f)
         else:
             kept += 1
     verb = "would delete" if dry_run else "deleted"
