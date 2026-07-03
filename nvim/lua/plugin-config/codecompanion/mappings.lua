@@ -228,7 +228,7 @@ local function show_ai_usage()
         vim.schedule(function()
             if out == '' then
                 vim.api.nvim_echo({ { '' } }, false, {})
-                vim.notify('ai_usage: no output', vim.log.levels.WARN)
+                vim.notify('ai_session_usage: no output', vim.log.levels.WARN)
             else
                 vim.api.nvim_echo({ { out } }, false, {})
             end

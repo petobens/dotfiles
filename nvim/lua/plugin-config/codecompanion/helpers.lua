@@ -151,15 +151,15 @@ function M.state.format_context_usage(chat)
     return string.format('%.1f%%', (tokens / max_ctx) * 100)
 end
 
--- Usage limits: shell out to the ai_usage script
+-- Usage limits: shell out to the ai_session_usage script
 local usage_cache = {}
 local usage_labels = { claude_code = 'Claude', codex = 'Codex' }
 local usage_last_run = 0
 local USAGE_TTL = 120
 
--- Run the ai_usage script and hand back its ANSI-stripped output
+-- Run the ai_session_usage script and hand back its ANSI-stripped output
 function M.usage.run(cb)
-    vim.system({ 'ai_usage' }, { text = true }, function(obj)
+    vim.system({ 'ai_session_usage' }, { text = true }, function(obj)
         local out = (obj.stdout or ''):gsub('\27%[[0-9;]*m', ''):gsub('%s+$', '')
         cb(out)
     end)

@@ -424,7 +424,7 @@ if type "claude" > /dev/null 2>&1; then
         GITHUB_TOKEN="$github_token" command claude "$@"
     }
 fi
-alias aiu='ai_usage'
+alias aisu='ai_session_usage'
 alias aisp='ai_session_prune'
 
 # }}}
