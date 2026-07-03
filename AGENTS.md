@@ -6,6 +6,26 @@ This is a personal dotfiles repository containing configuration for multiple
 tools and environments. Each top-level directory corresponds to a specific tool
 or environment, for example `nvim/`, `python/`, and `arch/`.
 
+## General rules
+
+- Do what has been asked, nothing more and nothing less.
+- Prefer editing existing files over creating new ones.
+- Explain code when appropriate, especially for non-trivial examples.
+
+### Linting and formatting
+
+- For persisted user-facing code files, run the relevant formatter and linter
+  using this repository's existing tools and commands. This does not apply to
+  temporary scratch files or scripts created during agent work.
+- When writing or editing Markdown files, keep lines at 80 characters or fewer.
+  Wrap at natural boundaries while preserving valid Markdown syntax.
+- For Python scripts, use Ruff: `ruff format <file>` and
+  `ruff check --fix <file>`. Add short module or function docstrings when they
+  clarify purpose or usage, but do not add boilerplate docstrings for obvious
+  one-off code.
+- For Bash scripts, run `shellcheck <file>` and `shfmt` if this repository
+  already uses it.
+
 ## Neovim (`nvim/`)
 
 All Neovim configuration lives in the `nvim/` directory. The following rules
@@ -76,11 +96,3 @@ Run Luacheck on touched Lua files when making changes under `nvim/`.
 - Use 4-column indentation.
 - Use single quotes.
 - Keep lines within 90 columns.
-
-## General rules
-
-- Do what has been asked, nothing more and nothing less.
-- Prefer editing existing files over creating new ones.
-- Explain code when appropriate, especially for non-trivial examples.
-- When writing or editing Markdown files, keep lines at 80 characters or fewer.
-  Wrap at natural boundaries while preserving valid Markdown syntax.
