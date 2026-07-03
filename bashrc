@@ -106,7 +106,6 @@ alias ti='hyperfine'
 alias ping='prettyping --nolegend --last 30'
 alias wbs='curl v2.wttr.in/Buenos_Aires'
 alias ff='fastfetch'
-alias aiu='ai_usage'
 
 # Unpack helper
 up() {
@@ -425,6 +424,8 @@ if type "claude" > /dev/null 2>&1; then
         GITHUB_TOKEN="$github_token" command claude "$@"
     }
 fi
+alias aiu='ai_usage'
+alias aisp='ai_session_prune'
 
 # }}}
 # Functions {{{
