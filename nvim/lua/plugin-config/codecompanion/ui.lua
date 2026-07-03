@@ -148,6 +148,10 @@ end
 function M.llm_role(adapter)
     local adapter_name = adapter.formatted_name or adapter.name or 'unknown'
     local model = state_helpers.get_adapter_model(adapter) or 'unknown'
+    local effort = state_helpers.get_adapter_effort(adapter)
+    if effort then
+        model = string.format('%s %s', model, effort)
+    end
     return string.format(
         '%s (%s) |  %s',
         adapter_name,

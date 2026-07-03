@@ -80,6 +80,36 @@ function M.state.get_adapter_model(adapter)
         or vim.tbl_get(adapter, 'defaults', 'model')
 end
 
+local function read_text(path)
+    local fd = io.open(path, 'r')
+    if not fd then
+        return nil
+    end
+    local text = fd:read('*a')
+    fd:close()
+    return text
+end
+
+function M.state.get_adapter_effort(adapter)
+    local effort = vim.tbl_get(adapter, 'schema', 'reasoning.effort', 'default')
+        or vim.tbl_get(adapter, 'schema', 'reasoning_effort', 'default')
+
+    local home = vim.env.HOME
+    if not effort and home and adapter.name == 'claude_code' then
+        local ok, settings =
+            pcall(vim.json.decode, read_text(home .. '/.claude/settings.json') or '')
+        effort = ok and settings.effortLevel or nil
+    elseif not effort and home and adapter.name == 'codex' then
+        effort = (read_text(home .. '/.codex/config.toml') or ''):match(
+            'model_reasoning_effort%s*=%s*["\']([^"\']+)'
+        )
+    end
+
+    if effort and effort ~= '' and effort ~= 'none' then
+        return tostring(effort)
+    end
+end
+
 function M.state.provider_icon(name)
     name = (name or ''):lower()
     if name:find('claude') or name:find('anthropic') then
