@@ -4,7 +4,6 @@ local u = require('utils')
 
 -- Constants
 local SLASH_COMMANDS = 'plugin-config.codecompanion.slash_commands.'
-local acp_sessions = require(SLASH_COMMANDS .. 'acp_sessions')
 local coding = require(SLASH_COMMANDS .. 'coding')
 local gdocs = require(SLASH_COMMANDS .. 'gdocs')
 local gdrive = require(SLASH_COMMANDS .. 'gdrive')
@@ -96,11 +95,6 @@ local slash_commands = {
         opts = {
             dirs = { '~/Pictures/Screenshots/' },
         },
-    },
-    -- ACP
-    ['acp_sessions'] = {
-        description = 'Browse and resume previous ACP sessions',
-        callback = acp_sessions.browse,
     },
     -- Google Workspace
     ['gdrive_search'] = {
