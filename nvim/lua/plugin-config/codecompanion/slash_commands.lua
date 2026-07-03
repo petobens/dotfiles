@@ -5,9 +5,7 @@ local u = require('utils')
 -- Constants
 local SLASH_COMMANDS = 'plugin-config.codecompanion.slash_commands.'
 local acp_sessions = require(SLASH_COMMANDS .. 'acp_sessions')
-local assets = require(SLASH_COMMANDS .. 'assets')
 local coding = require(SLASH_COMMANDS .. 'coding')
-local filesystem = require(SLASH_COMMANDS .. 'filesystem')
 local gdocs = require(SLASH_COMMANDS .. 'gdocs')
 local gdrive = require(SLASH_COMMANDS .. 'gdrive')
 local git = require(SLASH_COMMANDS .. 'git')
@@ -103,28 +101,6 @@ local slash_commands = {
     ['acp_sessions'] = {
         description = 'Browse and resume previous ACP sessions',
         callback = acp_sessions.browse,
-    },
-    -- Filesystem
-    ['file_path'] = {
-        description = 'Insert a filepath',
-        keymaps = { modes = { n = '<C-f>', i = '<C-f>' } },
-        callback = filesystem.file_path,
-    },
-    ['directory'] = {
-        description = 'Insert all files in a directory',
-        callback = filesystem.directory,
-    },
-    ['assets'] = {
-        description = 'Load all assets from an assets subdirectory as context',
-        callback = assets.assets,
-    },
-    ['git_files'] = {
-        description = 'Insert all files in git repo',
-        callback = filesystem.git_files,
-    },
-    ['py_files'] = {
-        description = 'Insert all project python files',
-        callback = filesystem.py_files,
     },
     -- Google Workspace
     ['gdrive_search'] = {
