@@ -353,22 +353,6 @@ function M.setup()
         end,
     })
 
-    -- Diff behavior
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'CodeCompanionDiffAttached',
-        desc = 'Ensure diffs start in normal mode and preserve window order',
-        callback = function()
-            vim.defer_fn(function()
-                vim.cmd.stopinsert()
-                if vim.api.nvim_win_get_config(0).relative ~= '' then
-                    return
-                end
-                vim.cmd.wincmd('x')
-                vim.cmd.wincmd('p')
-            end, 1)
-        end,
-    })
-
     -- History extension
     vim.api.nvim_create_autocmd('User', {
         pattern = 'CodeCompanionChatCreated',

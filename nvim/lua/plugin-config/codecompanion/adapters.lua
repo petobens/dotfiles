@@ -53,10 +53,6 @@ function M.openai_gpt_55()
     return openai_responses_adapter('openai_gpt_55', 'gpt-5.5', true, 1000000)
 end
 
-function M.openai_gpt_54_nano()
-    return openai_responses_adapter('openai_gpt_54_nano', 'gpt-5.4-nano', false, 400000)
-end
-
 function M.openai_gpt_54_nano_legacy()
     return extend('openai', {
         name = 'openai_gpt_54_nano_legacy',
