@@ -80,16 +80,6 @@ function M.state.get_adapter_model(adapter)
         or vim.tbl_get(adapter, 'defaults', 'model')
 end
 
-local function read_text(path)
-    local fd = io.open(path, 'r')
-    if not fd then
-        return nil
-    end
-    local text = fd:read('*a')
-    fd:close()
-    return text
-end
-
 function M.state.get_adapter_effort(adapter)
     local effort = vim.tbl_get(adapter, 'schema', 'reasoning.effort', 'default')
         or vim.tbl_get(adapter, 'schema', 'reasoning_effort', 'default')
@@ -97,10 +87,10 @@ function M.state.get_adapter_effort(adapter)
     local home = vim.env.HOME
     if not effort and home and adapter.name == 'claude_code' then
         local ok, settings =
-            pcall(vim.json.decode, read_text(home .. '/.claude/settings.json') or '')
+            pcall(vim.json.decode, u.read_file(home .. '/.claude/settings.json') or '')
         effort = ok and settings.effortLevel or nil
     elseif not effort and home and adapter.name == 'codex' then
-        effort = (read_text(home .. '/.codex/config.toml') or ''):match(
+        effort = (u.read_file(home .. '/.codex/config.toml') or ''):match(
             'model_reasoning_effort%s*=%s*["\']([^"\']+)'
         )
     end
@@ -219,12 +209,7 @@ function M.chat.add_context(files)
     local chat = M.chat.get_or_create_chat()
 
     for _, file in ipairs(files) do
-        local fd = io.open(file, 'r')
-        local content
-        if fd then
-            content = fd:read('*a')
-            fd:close()
-        end
+        local content = u.read_file(file)
 
         if not content then
             vim.notify('Could not read file: ' .. file, vim.log.levels.ERROR)

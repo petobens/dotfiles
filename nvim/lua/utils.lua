@@ -29,13 +29,36 @@ function M.mk_non_dir(directory)
     end
 end
 
+function M.read_file(path)
+    local fd = io.open(path, 'r')
+    if not fd then
+        return nil
+    end
+    local text = fd:read('*a')
+    fd:close()
+    return text
+end
+
 function M.git_root(path)
     local target = path or vim.api.nvim_buf_get_name(0)
     if target == '' then
         target = vim.uv.cwd()
     end
 
-    return vim.fs.root(target, '.git')
+    -- Ask git for the toplevel rather than scanning for a `.git` marker, which
+    -- can match a stray or nested `.git` that is not the real repo root
+    local stat = vim.uv.fs_stat(target)
+    local dir = (stat and stat.type == 'directory') and target or vim.fs.dirname(target)
+    local result = vim.system(
+        { 'git', '-C', dir, 'rev-parse', '--show-toplevel' },
+        { text = true }
+    )
+        :wait()
+    if result.code ~= 0 then
+        return nil
+    end
+    local root = vim.trim(result.stdout or '')
+    return root ~= '' and root or nil
 end
 
 -- Vim UI
