@@ -1,9 +1,9 @@
 {
   "permissions": {
     "allow": [
+      "Read",
       "Bash(stylua *)",
-      "Bash(gws *)",
-      "Read(/home/pedro/git-repos/**)"
+      "Bash(gws *)"
     ],
     "deny": [
       "Bash(git push --force*)",
