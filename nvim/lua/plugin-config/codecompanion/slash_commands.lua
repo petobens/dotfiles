@@ -4,6 +4,7 @@ local u = require('utils')
 
 -- Constants
 local SLASH_COMMANDS = 'plugin-config.codecompanion.slash_commands.'
+local acp_sessions = require(SLASH_COMMANDS .. 'acp_sessions')
 local assets = require(SLASH_COMMANDS .. 'assets')
 local coding = require(SLASH_COMMANDS .. 'coding')
 local filesystem = require(SLASH_COMMANDS .. 'filesystem')
@@ -98,8 +99,10 @@ local slash_commands = {
             dirs = { '~/Pictures/Screenshots/' },
         },
     },
-    ['resume'] = {
-        keymaps = { modes = { n = '<Leader>rs' } },
+    -- ACP
+    ['acp_sessions'] = {
+        description = 'Browse and resume previous ACP sessions',
+        callback = acp_sessions.browse,
     },
     -- Filesystem
     ['file_path'] = {

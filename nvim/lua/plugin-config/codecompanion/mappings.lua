@@ -3,6 +3,7 @@ local keymaps = require('codecompanion.interactions.chat.keymaps')
 local telescope_action_state = require('telescope.actions.state')
 local telescope_actions = require('telescope.actions')
 
+local acp_sessions = require('plugin-config.codecompanion.slash_commands.acp_sessions')
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local usage_helpers = require('plugin-config.codecompanion.helpers').usage
@@ -182,6 +183,15 @@ local function setup_codecompanion_filetype_mappings(e)
         buf = bufnr,
         desc = 'Toggle CodeCompanion zoom',
     })
+
+    vim.keymap.set({ 'n', 'i' }, '<A-s>', function()
+        local chat = codecompanion.buf_get_chat(bufnr)
+        if chat and chat.adapter and chat.adapter.type == 'acp' then
+            acp_sessions.browse(chat)
+        else
+            codecompanion.extensions.history.browse_chats()
+        end
+    end, { buf = bufnr, desc = 'Browse sessions (ACP) or history (http)' })
 end
 
 local function setup_filetype_mappings(group)

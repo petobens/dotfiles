@@ -16,7 +16,9 @@ local extensions = {
             },
             auto_save = true,
             expiration_days = 30,
-            keymap = { n = '<A-s>', i = '<A-s>' },
+            -- <A-s> is remapped in mappings.lua to dispatch by adapter type
+            -- (acp -> ACP session picker, http -> this history browser)
+            keymap = { n = '<nop>', i = '<nop>' },
             picker_keymaps = {
                 rename = { n = 'r', i = '<A-r>' },
                 delete = { n = 'd', i = '<A-d>' },
