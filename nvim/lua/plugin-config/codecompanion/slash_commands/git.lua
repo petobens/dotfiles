@@ -128,8 +128,39 @@ local function find_release_commit_shas(git_root)
     return shas
 end
 
+-- Describe the diff scope in prose for skill-based (ACP) slash commands
+local function acp_diff_scope_phrase(opts)
+    if opts and opts.base_branch then
+        return string.format(
+            'the changes on the current branch versus `%s` (git diff %s...HEAD)',
+            opts.base_branch,
+            opts.base_branch
+        )
+    elseif opts and opts.commit_sha then
+        return string.format('commit `%s`', opts.commit_sha)
+    end
+    return 'the staged changes'
+end
+
 -- Slash commands
 function M.conventional_commit(chat, opts)
+    if chat.adapter and chat.adapter.type == 'acp' then
+        local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
+        if not git_root then
+            return
+        end
+        chat_helpers.submit_user_message(
+            chat,
+            string.format(
+                'Use your conventional-commit skill to generate a commit '
+                    .. 'message for %s in the git repository at `%s`.',
+                acp_diff_scope_phrase(opts),
+                git_root
+            )
+        )
+        return
+    end
+
     local ctx = build_diff_context(opts)
     if not ctx then
         return
@@ -156,13 +187,29 @@ function M.conventional_commit(chat, opts)
     )
 end
 
-function M.code_review(_, opts)
+function M.code_review(chat, opts)
+    if chat.adapter and chat.adapter.type == 'acp' then
+        local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
+        if not git_root then
+            return
+        end
+        chat_helpers.submit_user_message(
+            chat,
+            string.format(
+                'Use your diff-review skill to review %s in the git '
+                    .. 'repository at `%s`.',
+                acp_diff_scope_phrase(opts),
+                git_root
+            )
+        )
+        return
+    end
+
     local ctx = build_diff_context(opts)
     if not ctx then
         return
     end
 
-    local chat = chat_helpers.get_or_create_chat()
     chat_helpers.add_context(ctx.abs_files)
 
     local diff_output = wait_stdout(ctx.diff_cmd, { text = true, cwd = ctx.git_root })
@@ -173,6 +220,28 @@ function M.code_review(_, opts)
 end
 
 function M.changelog(chat, opts)
+    if chat.adapter and chat.adapter.type == 'acp' then
+        local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
+        if not git_root then
+            return
+        end
+        local shas = opts and opts.commit_shas
+        local scope = shas
+                and not vim.tbl_isempty(shas)
+                and ('these commits: ' .. table.concat(shas, ', '))
+            or 'the commits since the last release'
+        chat_helpers.submit_user_message(
+            chat,
+            string.format(
+                'Use your changelog skill to generate a changelog entry for %s '
+                    .. 'in the git repository at `%s`.',
+                scope,
+                git_root
+            )
+        )
+        return
+    end
+
     local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
     if not git_root then
         return
