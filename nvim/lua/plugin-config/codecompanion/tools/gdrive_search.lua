@@ -13,6 +13,8 @@ local FILE_TYPE_ENUM = {
     'sheets',
     'slide',
     'slides',
+    'pdf',
+    'pdfs',
 }
 
 -- Search

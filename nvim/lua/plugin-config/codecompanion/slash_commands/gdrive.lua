@@ -10,11 +10,12 @@ local ALL_FILE_TYPES_QUERY = table.concat({
     "mimeType = 'application/vnd.google-apps.document'",
     "mimeType = 'application/vnd.google-apps.spreadsheet'",
     "mimeType = 'application/vnd.google-apps.presentation'",
+    "mimeType = 'application/pdf'",
 }, ' or ')
 
 local FILE_TYPES = {
     all = {
-        label = 'docs, sheets, slides',
+        label = 'docs, sheets, slides, pdfs',
         query_suffix = ALL_FILE_TYPES_QUERY,
     },
     docs = {
@@ -29,6 +30,10 @@ local FILE_TYPES = {
         label = 'slides',
         query_suffix = "mimeType = 'application/vnd.google-apps.presentation'",
     },
+    pdfs = {
+        label = 'pdfs',
+        query_suffix = "mimeType = 'application/pdf'",
+    },
 }
 
 local FILE_TYPE_ALIASES = {
@@ -38,6 +43,8 @@ local FILE_TYPE_ALIASES = {
     sheets = FILE_TYPES.sheets,
     slide = FILE_TYPES.slides,
     slides = FILE_TYPES.slides,
+    pdf = FILE_TYPES.pdfs,
+    pdfs = FILE_TYPES.pdfs,
     all = FILE_TYPES.all,
 }
 
@@ -64,7 +71,7 @@ local function parse_file_type(input)
     end
 
     return nil,
-        'Invalid file type. Use one of: docs, sheets, slides, doc, sheet, slide, all, or leave empty'
+        'Invalid file type. Use one of: docs, sheets, slides, pdfs, doc, sheet, slide, pdf, all, or leave empty'
 end
 
 local function build_drive_query(query, file_type)
@@ -281,7 +288,7 @@ function M.gdrive_search(chat)
 
         input = gws_helpers.trim(input)
         vim.ui.input({
-            prompt = 'Google Drive file type (doc(s)/sheet(s)/slide(s), all, empty = all): ',
+            prompt = 'Google Drive file type (doc(s)/sheet(s)/slide(s)/pdf(s), all, empty = all): ',
         }, function(file_type_input)
             if file_type_input == nil then
                 return
