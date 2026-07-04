@@ -389,23 +389,29 @@ function M.browse(chat)
             end)
 
             local function delete()
-                local sel = action_state.get_selected_entry()
-                if not sel then
-                    return
+                local targets = picker:get_multi_selection()
+                if #targets == 0 then
+                    targets = { action_state.get_selected_entry() }
                 end
-                local e = sel.value
-                if not delete_session(e.path) then
-                    return utils.notify('Failed to delete session', vim.log.levels.ERROR)
+
+                local deleted = {}
+                for _, sel in ipairs(targets) do
+                    if sel and delete_session(sel.value.path) then
+                        deleted[sel.value] = true
+                    end
                 end
+
                 for i = #entries, 1, -1 do
-                    if entries[i] == e then
+                    if deleted[entries[i]] then
                         table.remove(entries, i)
                     end
                 end
                 picker:refresh(make_finder(), { reset_prompt = false })
+
+                local n = vim.tbl_count(deleted)
                 utils.notify(
-                    'Deleted session: ' .. (e.title or e.session_id),
-                    vim.log.levels.INFO
+                    string.format('Deleted %d session%s', n, n == 1 and '' or 's'),
+                    n > 0 and vim.log.levels.INFO or vim.log.levels.WARN
                 )
             end
 
