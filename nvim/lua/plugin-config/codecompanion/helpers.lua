@@ -154,12 +154,13 @@ end
 -- Usage limits: shell out to the ai_session_usage script
 local usage_cache = {}
 local usage_labels = { claude_code = 'Claude', codex = 'Codex' }
-local usage_last_run = 0
+local usage_flags = { claude_code = '--claude', codex = '--codex' }
+local usage_last_run = {}
 local USAGE_TTL = 120
 
 -- Run the ai_session_usage script and hand back its ANSI-stripped output
-function M.usage.run(cb)
-    vim.system({ 'ai_session_usage' }, { text = true }, function(obj)
+function M.usage.run(name, cb)
+    vim.system({ 'ai_session_usage', usage_flags[name] }, { text = true }, function(obj)
         local out = (obj.stdout or ''):gsub('\27%[[0-9;]*m', ''):gsub('%s+$', '')
         cb(out)
     end)
@@ -170,28 +171,26 @@ function M.usage.get(name)
 end
 
 -- Cache the 5h usage for claude_code/codex, parsed from the script output; cb
--- re-renders the footer once data lands. One run populates both adapters, and
--- results are reused for USAGE_TTL seconds
+-- re-renders the footer once data lands. Results are reused for USAGE_TTL
+-- seconds per adapter
 function M.usage.refresh(name, cb)
     if not usage_labels[name] then
         return
     end
     -- Throttle on time regardless of success so a rate-limited window can recover
-    if os.time() - usage_last_run < USAGE_TTL then
+    if os.time() - (usage_last_run[name] or 0) < USAGE_TTL then
         if cb then
             vim.schedule(cb)
         end
         return
     end
-    usage_last_run = os.time()
-    M.usage.run(function(out)
-        for adapter, label in pairs(usage_labels) do
-            local pct, reset =
-                out:match(label .. '%s+5h:%s+([%d%.]+)%%%s+%(resets ([^)]+)%)')
-            pct = pct or out:match(label .. '%s+5h:%s+([%d%.]+)')
-            if pct then
-                usage_cache[adapter] = { pct = tonumber(pct), reset = reset }
-            end
+    usage_last_run[name] = os.time()
+    M.usage.run(name, function(out)
+        local label = usage_labels[name]
+        local pct, reset = out:match(label .. '%s+5h:%s+([%d%.]+)%%%s+%(resets ([^)]+)%)')
+        pct = pct or out:match(label .. '%s+5h:%s+([%d%.]+)')
+        if pct then
+            usage_cache[name] = { pct = tonumber(pct), reset = reset }
         end
         if cb then
             vim.schedule(cb)

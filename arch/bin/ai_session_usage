@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Claude + Codex rate-limit usage (5h / 7d windows)
+# Claude + Codex session rate-limit usage (5h / 7d windows)
 
 # Claude uses the Claude Code CLI credential (needs the user:profile scope).
 cred="$HOME/.claude/.credentials.json"
@@ -12,7 +12,14 @@ claude_usage() {
         -H "anthropic-version: 2023-06-01" \
         -H "anthropic-beta: oauth-2025-04-20"
 }
-if [ -n "$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2> /dev/null)" ]; then
+
+print_claude_usage() {
+    local exp j now_ms pct reset reset7 sid
+
+    if [ -z "$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2> /dev/null)" ]; then
+        return
+    fi
+
     j=$(claude_usage)
     pct=$(jq -r '.five_hour.utilization // empty' <<< "$j" 2> /dev/null)
     # Only refresh via a headless run when the token is genuinely expired; probing
@@ -28,6 +35,7 @@ if [ -n "$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2> /dev/null)" ];
         j=$(claude_usage)
         pct=$(jq -r '.five_hour.utilization // empty' <<< "$j" 2> /dev/null)
     fi
+
     if [ -n "$pct" ]; then
         reset=$(jq -r '.five_hour.resets_at // empty' <<< "$j" 2> /dev/null)
         reset=$(date -d "$reset" +'%H:%M' 2> /dev/null)
@@ -38,7 +46,7 @@ if [ -n "$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2> /dev/null)" ];
     else
         printf '\033[1;34mClaude\033[0m  unavailable\n'
     fi
-fi
+}
 
 # Codex uses ChatGPT OAuth; the originator header is required or Cloudflare
 # serves an HTML page instead of the JSON usage payload.
@@ -54,7 +62,14 @@ codex_usage() {
         -H "originator: codex_cli_rs" \
         -H "user-agent: codex_cli_rs"
 }
-if [ -n "$(jq -r '.tokens.access_token // empty' "$auth" 2> /dev/null)" ]; then
+
+print_codex_usage() {
+    local j pct reset reset7
+
+    if [ -z "$(jq -r '.tokens.access_token // empty' "$auth" 2> /dev/null)" ]; then
+        return
+    fi
+
     j=$(codex_usage)
     pct=$(jq -r '.rate_limit.primary_window.used_percent // empty' <<< "$j" 2> /dev/null)
     if [ -z "$pct" ]; then
@@ -63,6 +78,7 @@ if [ -n "$(jq -r '.tokens.access_token // empty' "$auth" 2> /dev/null)" ]; then
         j=$(codex_usage)
         pct=$(jq -r '.rate_limit.primary_window.used_percent // empty' <<< "$j" 2> /dev/null)
     fi
+
     if [ -n "$pct" ]; then
         reset=$(jq -r '.rate_limit.primary_window.reset_at // empty' <<< "$j" 2> /dev/null)
         reset=$(date -d "@$reset" +'%H:%M' 2> /dev/null)
@@ -73,4 +89,48 @@ if [ -n "$(jq -r '.tokens.access_token // empty' "$auth" 2> /dev/null)" ]; then
     else
         printf '\033[1;32mCodex\033[0m   unavailable\n'
     fi
+}
+
+# CLI argument handling.
+usage() {
+    printf 'Usage: ai_session_usage [--claude|--codex]\n' >&2
+}
+
+parse_args() {
+    if [ "$#" -gt 1 ]; then
+        usage
+        exit 2
+    fi
+
+    case "${1:-}" in
+        '')
+            ;;
+        --claude)
+            show_codex=0
+            ;;
+        --codex)
+            show_claude=0
+            ;;
+        -h | --help)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+}
+
+# Main: default to both providers, then let the optional flag narrow it.
+show_claude=1
+show_codex=1
+parse_args "$@"
+
+if [ "$show_claude" -eq 1 ]; then
+    print_claude_usage
+fi
+
+if [ "$show_codex" -eq 1 ]; then
+    print_codex_usage
 fi
