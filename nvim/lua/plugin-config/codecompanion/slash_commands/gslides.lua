@@ -630,6 +630,18 @@ function M.gslides_read(chat)
             return
         end
 
+        if chat.adapter and chat.adapter.type == 'acp' then
+            gws_helpers.submit_acp_user_message(
+                chat,
+                string.format(
+                    'Use your gslides skill to read the Google Slides '
+                        .. 'presentation `%s`.',
+                    vim.trim(input)
+                )
+            )
+            return
+        end
+
         local slides, err = read_slides(input)
         if not slides then
             vim.notify(err, vim.log.levels.ERROR)

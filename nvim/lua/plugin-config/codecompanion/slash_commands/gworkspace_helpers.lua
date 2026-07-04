@@ -1,3 +1,5 @@
+local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+
 local M = {}
 
 -- Local helpers
@@ -97,6 +99,20 @@ function M.run(args, opts)
     end
 
     return result.stdout or ''
+end
+
+-- ACP
+local function stop_insert_mode()
+    local mode = vim.api.nvim_get_mode().mode
+    if mode:sub(1, 1) == 'i' or mode:sub(1, 1) == 'R' then
+        vim.cmd.stopinsert()
+    end
+end
+
+function M.submit_acp_user_message(chat, content)
+    chat_helpers.submit_user_message(chat, content)
+    vim.schedule(stop_insert_mode)
+    vim.defer_fn(stop_insert_mode, 25)
 end
 
 -- Input parsing

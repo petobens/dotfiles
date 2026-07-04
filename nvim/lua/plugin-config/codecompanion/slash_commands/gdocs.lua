@@ -154,6 +154,17 @@ function M.gdoc_read(chat)
             return
         end
 
+        if chat.adapter and chat.adapter.type == 'acp' then
+            gws_helpers.submit_acp_user_message(
+                chat,
+                string.format(
+                    'Use your gdocs skill to read the Google Doc `%s`.',
+                    vim.trim(input)
+                )
+            )
+            return
+        end
+
         local doc, err = read_doc(input)
         if not doc then
             vim.notify(err, vim.log.levels.ERROR)

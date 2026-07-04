@@ -293,6 +293,19 @@ function M.gdrive_search(chat)
                 return
             end
 
+            if chat.adapter and chat.adapter.type == 'acp' then
+                gws_helpers.submit_acp_user_message(
+                    chat,
+                    string.format(
+                        'Use your gdrive skill to search Google Drive for '
+                            .. '%s matching `%s`.',
+                        file_type.label,
+                        input
+                    )
+                )
+                return
+            end
+
             local result, err = search_drive(input, file_type)
             if not result then
                 vim.notify(err, vim.log.levels.ERROR)

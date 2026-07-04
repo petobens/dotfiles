@@ -256,6 +256,17 @@ function M.gsheet_read(chat)
             return
         end
 
+        if chat.adapter and chat.adapter.type == 'acp' then
+            gws_helpers.submit_acp_user_message(
+                chat,
+                string.format(
+                    'Use your gsheets skill to read the Google Sheet `%s`.',
+                    vim.trim(input)
+                )
+            )
+            return
+        end
+
         local sheet, err = read_sheet(input)
         if not sheet then
             vim.notify(err, vim.log.levels.ERROR)
