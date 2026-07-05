@@ -35,16 +35,20 @@ local function chat_model(chat)
         or adapter.name
 end
 
+local function chat_number(entry)
+    local number = (entry.name or ''):match('Chat%s+(%d+)')
+    return number and ('#' .. number) or ('#' .. tostring(entry.bufnr))
+end
+
 -- Build the telescope `display` function, capturing column widths shared by
 -- all rows so they only get computed once.
 local function make_display(entries)
-    local model_w, title_w, cycle_w = 0, 0, 0
+    local model_w, title_w, number_w = 0, 0, 0
     for _, e in ipairs(entries) do
         e.display_title = trim_chars(e.title, TITLE_WIDTH)
-        e.display_cycle = string.format('#%d', e.cycle or 0)
         model_w = math.max(model_w, vim.fn.strdisplaywidth(e.model))
         title_w = math.max(title_w, vim.fn.strdisplaywidth(e.display_title))
-        cycle_w = math.max(cycle_w, vim.fn.strdisplaywidth(e.display_cycle))
+        number_w = math.max(number_w, vim.fn.strdisplaywidth(e.chat_number))
     end
 
     return function(picker_entry)
@@ -53,10 +57,10 @@ local function make_display(entries)
         local icon = state_helpers.provider_icon(e.adapter_name)
         local model = pad_right(e.model, model_w)
         local title = pad_right(e.display_title, title_w)
-        local cycle = pad_right(e.display_cycle, cycle_w)
+        local number = pad_right(e.chat_number, number_w)
         local cwd = e.cwd and vim.fn.fnamemodify(e.cwd, ':~') or ''
         local line =
-            string.format('%s %s %s  %s  %s  %s', active, icon, model, title, cycle, cwd)
+            string.format('%s %s %s  %s  %s  %s', active, icon, model, title, number, cwd)
 
         local title_start = #active + 1 + #icon + 1 + #model + 2
         local title_end = title_start + #title
@@ -110,8 +114,8 @@ local function collect_entries(current_chat)
             active = entry.bufnr == current_bufnr,
             adapter_name = adapter and adapter.name,
             model = chat_model(chat),
+            chat_number = chat_number(entry),
             title = chat_title(chat, entry),
-            cycle = chat and chat.cycle,
             cwd = chat and chat.opts and chat.opts.cwd,
         }
     end
