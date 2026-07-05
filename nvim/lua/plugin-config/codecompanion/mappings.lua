@@ -256,12 +256,12 @@ local function setup_global_mappings()
         desc = 'Open CodeCompanion actions',
     })
 
-    vim.keymap.set('n', '<Leader>cb', vim.cmd.CodeCompanionHistory, {
-        desc = 'Browse CodeCompanion history',
+    vim.keymap.set('n', '<Leader>cb', explore_open_chats, {
+        desc = 'Browse open CodeCompanion chats (buffers)',
     })
 
-    vim.keymap.set('n', '<Leader>ce', explore_open_chats, {
-        desc = 'Explore CodeCompanion open chats',
+    vim.keymap.set('n', '<Leader>ce', vim.cmd.CodeCompanionHistory, {
+        desc = 'Browse CodeCompanion history (extension)',
     })
 
     vim.keymap.set('n', '<Leader>bs', skills_picker.open_file, {
