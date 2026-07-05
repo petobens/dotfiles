@@ -260,6 +260,12 @@ local function setup_global_mappings()
         desc = 'Browse open CodeCompanion chats (buffers)',
     })
 
+    vim.keymap.set('n', '<Leader>cs', function()
+        acp_sessions.browse(codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()))
+    end, {
+        desc = 'Browse ACP sessions',
+    })
+
     vim.keymap.set('n', '<Leader>ce', vim.cmd.CodeCompanionHistory, {
         desc = 'Browse CodeCompanion history (extension)',
     })
