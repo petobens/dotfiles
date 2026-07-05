@@ -54,8 +54,8 @@ function M.chat.get_or_create_chat()
     return M.state.get_last_chat() or codecompanion.chat()
 end
 
-function M.state.get_last_user_prompt()
-    local chat = M.state.get_last_chat()
+function M.state.get_last_user_prompt(chat)
+    chat = chat or M.state.get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then
         return nil
     end

@@ -1,10 +1,9 @@
 local codecompanion = require('codecompanion')
 local keymaps = require('codecompanion.interactions.chat.keymaps')
-local telescope_action_state = require('telescope.actions.state')
-local telescope_actions = require('telescope.actions')
 
-local acp_sessions = require('plugin-config.codecompanion.slash_commands.acp_sessions')
+local acp_sessions = require('plugin-config.codecompanion.pickers.acp_sessions')
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local open_chats = require('plugin-config.codecompanion.pickers.open_chats')
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local usage_helpers = require('plugin-config.codecompanion.helpers').usage
 local window_helpers = require('plugin-config.codecompanion.helpers').window
@@ -192,6 +191,10 @@ local function setup_codecompanion_filetype_mappings(e)
             codecompanion.extensions.history.browse_chats()
         end
     end, { buf = bufnr, desc = 'Browse sessions (ACP) or history (http)' })
+
+    vim.keymap.set({ 'i', 'n' }, '<A-b>', function()
+        open_chats.browse(codecompanion.buf_get_chat(bufnr))
+    end, { buf = bufnr, desc = 'Browse open CodeCompanion chats' })
 end
 
 local function setup_filetype_mappings(group)
@@ -205,13 +208,7 @@ end
 
 -- CodeCompanion global mapping callbacks
 local function explore_open_chats()
-    codecompanion.actions()
-    vim.defer_fn(function()
-        local picker =
-            telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
-        picker:move_selection(-1)
-        telescope_actions.select_default(picker)
-    end, 250)
+    open_chats.browse(codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()))
 end
 
 local function paste_selection_to_chat()
