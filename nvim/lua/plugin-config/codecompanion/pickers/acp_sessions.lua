@@ -3,10 +3,11 @@ local u = require('utils')
 local helpers = require('plugin-config.codecompanion.helpers')
 local utils = require('codecompanion.utils')
 local state_helpers = helpers.state
-local picker_utils = require('plugin-config.codecompanion.pickers')
-local trim_chars = picker_utils.trim_chars
-local pad_right = picker_utils.pad_right
-local TITLE_WIDTH = picker_utils.TITLE_WIDTH
+
+local picker_helpers = require('plugin-config.codecompanion.pickers.helpers')
+local trim_chars = picker_helpers.trim_chars
+local pad_right = picker_helpers.pad_right
+local TITLE_WIDTH = picker_helpers.TITLE_WIDTH
 
 local M = {}
 
