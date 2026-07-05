@@ -4,6 +4,7 @@ local keymaps = require('codecompanion.interactions.chat.keymaps')
 local acp_sessions = require('plugin-config.codecompanion.pickers.acp_sessions')
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
 local open_chats = require('plugin-config.codecompanion.pickers.open_chats')
+local skills_picker = require('plugin-config.codecompanion.pickers.skills')
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local usage_helpers = require('plugin-config.codecompanion.helpers').usage
 local window_helpers = require('plugin-config.codecompanion.helpers').window
@@ -261,6 +262,10 @@ local function setup_global_mappings()
 
     vim.keymap.set('n', '<Leader>ce', explore_open_chats, {
         desc = 'Explore CodeCompanion open chats',
+    })
+
+    vim.keymap.set('n', '<Leader>bs', skills_picker.open_file, {
+        desc = 'Browse skills',
     })
 
     -- Selection and context mappings

@@ -192,10 +192,6 @@ function M.setup_mappings(group)
         desc = 'Explain selected code with CodeCompanion',
     })
 
-    vim.keymap.set('n', '<Leader>bs', skills.browse, {
-        desc = 'Browse skills',
-    })
-
     -- Autocmds
     vim.api.nvim_create_autocmd('FileType', {
         group = group,
