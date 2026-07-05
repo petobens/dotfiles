@@ -5,6 +5,7 @@ local cli = require(module_prefix .. 'cli')
 local extensions = require(module_prefix .. 'extensions')
 local mappings = require(module_prefix .. 'mappings')
 local mcp = require(module_prefix .. 'mcp')
+local monkeypatches = require(module_prefix .. 'monkeypatches')
 local prompt_library = require(module_prefix .. 'prompt_library')
 local rules = require(module_prefix .. 'rules')
 local slash_commands = require(module_prefix .. 'slash_commands')
@@ -119,6 +120,7 @@ function M.setup()
         -- Extensions
         extensions = extensions.build(),
     })
+
     -- UI specific
     ui.setup()
     -- Mappings
@@ -127,6 +129,9 @@ function M.setup()
     mappings.setup(group)
     rules.setup_mappings()
     slash_commands.setup_mappings(group)
+
+    -- Local CodeCompanion monkey patches
+    monkeypatches.apply()
 end
 
 return M
