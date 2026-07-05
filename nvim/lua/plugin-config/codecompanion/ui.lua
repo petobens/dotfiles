@@ -107,19 +107,8 @@ local function set_chat_win_title(e)
         return
     end
 
-    local chatmap = {}
-    for _, entry in pairs(codecompanion.buf_get_chat()) do
-        chatmap[entry.chat.ui.winnr] = entry.name
-    end
-
     vim.api.nvim_win_set_config(chat.ui.winnr, {
-        title = string.format(
-            'CodeCompanion - %s%s',
-            chatmap[chat.ui.winnr],
-            (chat.opts.title and chat.opts.title ~= '')
-                    and string.format(' (%s)', chat.opts.title)
-                or ''
-        ),
+        title = 'CodeCompanion - ' .. state_helpers.get_chat_label(chat),
         footer = chat_footer(chat),
         footer_pos = 'center',
     })

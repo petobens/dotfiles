@@ -50,6 +50,29 @@ function M.state.get_last_chat()
     return nil
 end
 
+function M.state.get_chat_label(chat)
+    local label = nil
+
+    pcall(function()
+        for _, entry in pairs(codecompanion.buf_get_chat()) do
+            if entry.chat == chat then
+                label = entry.name
+                break
+            end
+        end
+    end)
+
+    if not label or label == '' then
+        label = 'Chat ' .. chat.bufnr
+    end
+
+    if chat.opts and chat.opts.title and chat.opts.title ~= '' then
+        label = string.format('%s (%s)', label, chat.opts.title)
+    end
+
+    return label
+end
+
 function M.chat.get_or_create_chat()
     return M.state.get_last_chat() or codecompanion.chat()
 end
