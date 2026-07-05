@@ -264,7 +264,7 @@ local function setup_global_mappings()
         desc = 'Browse CodeCompanion history (extension)',
     })
 
-    vim.keymap.set('n', '<Leader>bs', skills_picker.open_file, {
+    vim.keymap.set('n', '<Leader>sb', skills_picker.open_file, {
         desc = 'Browse skills',
     })
 
