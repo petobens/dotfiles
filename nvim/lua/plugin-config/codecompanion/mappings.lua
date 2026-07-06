@@ -227,7 +227,7 @@ end
 
 local function show_ai_usage()
     vim.api.nvim_echo({ { 'Retrieving rate limits...' } }, false, {})
-    usage_helpers.run(function(out)
+    usage_helpers.run(nil, function(out)
         vim.schedule(function()
             if out == '' then
                 vim.api.nvim_echo({ { '' } }, false, {})
