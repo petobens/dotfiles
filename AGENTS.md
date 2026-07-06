@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 -->
+
 # Dotfiles
 
 This file provides guidance to coding agents when working in this repository.
@@ -8,21 +10,24 @@ or environment, for example `nvim/`, `python/`, and `arch/`.
 
 ## General rules
 
-- Do what has been asked, nothing more and nothing less.
+- Do exactly what was asked; avoid unrelated changes.
 - Prefer editing existing files over creating new ones.
-- Explain code when appropriate, especially for non-trivial examples.
+- Explain non-trivial code or configuration choices when they affect future
+  maintenance.
 
 ### Linting and formatting
 
 - For persisted user-facing code files, run the relevant formatter and linter
   using this repository's existing tools and commands. This does not apply to
   temporary scratch files or scripts created during agent work.
-- When writing or editing Markdown files, keep lines at 80 characters or fewer.
-  Wrap at natural boundaries while preserving valid Markdown syntax.
-- For Python scripts, use Ruff: `ruff format <file>` and
-  `ruff check --fix <file>`. Add short module or function docstrings when they
-  clarify purpose or usage, but do not add boilerplate docstrings for obvious
-  one-off code.
+- For Markdown files, run `markdownlint --config ~/.markdownlint.json <file>`
+  and keep lines at 80 characters or fewer. Wrap at natural boundaries while
+  preserving valid Markdown syntax.
+- For Python scripts, use Ruff (`ruff format <file>` and `ruff check --fix
+<file>`) and type-check with `zmypy`, falling back to `mypy` if `zmypy` is
+  not installed. Add short module or function docstrings when they clarify
+  purpose or usage, but do not add boilerplate docstrings for obvious one-off
+  code.
 - For Bash scripts, run `shellcheck <file>` and `shfmt` if this repository
   already uses it.
 
