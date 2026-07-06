@@ -327,6 +327,9 @@ vim.keymap.set(
     'g<',
     { remap = true, desc = 'Show last message (more message)' }
 )
+vim.keymap.set('n', '<Leader>mc', function()
+    vim.api.nvim_echo({ { '' } }, false, {})
+end, { desc = 'Clear command line message' })
 vim.keymap.set('n', '<Leader>C', function()
     vim.o.scrolloff = 999 - vim.o.scrolloff
 end, { desc = 'Toggle scrolloff between 0 and 999 (center scrolling)' })
