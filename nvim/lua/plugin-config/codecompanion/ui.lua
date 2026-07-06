@@ -201,7 +201,7 @@ function M.chat_display()
             layout = 'float',
             border = 'rounded',
             height = vim.o.lines - 5,
-            width = 0.495,
+            width = 0.45,
             relative = 'editor',
             col = vim.o.columns,
             row = 1,
