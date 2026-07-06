@@ -159,6 +159,9 @@ blink_cmp.setup({
             git = {
                 name = 'git',
                 module = 'blink-cmp-git',
+                opts = {
+                    before_reload_cache = function() end,
+                },
             },
             lazydev = {
                 name = 'lazydev',
