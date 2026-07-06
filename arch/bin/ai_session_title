@@ -10,20 +10,18 @@ Run with -n/--dry-run to preview, --all to force-regenerate every title.
 """
 
 import argparse
-import glob
 import json
-import os
 import re
 import subprocess
 import time
+from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 from urllib import error, request
 
-CLAUDE_GLOB = os.path.expanduser("~/.claude/projects/**/*.jsonl")
-CODEX_GLOB = os.path.expanduser("~/.codex/sessions/**/rollout-*.jsonl")
-CACHE_PATH = os.path.expanduser(
-    "~/.local/share/nvim/codecompanion/acp-session-titles.json"
-)
+CLAUDE_ROOT = Path.home() / ".claude" / "projects"
+CODEX_ROOT = Path.home() / ".codex" / "sessions"
+CACHE_PATH = Path.home() / ".local/share/nvim/codecompanion/acp-session-titles.json"
 
 API_URL = "https://api.openai.com/v1/responses"
 MODEL = "gpt-5.4-nano"
@@ -50,15 +48,14 @@ Title:"""
 # file dumps, system reminders) drowns out the actual instruction, so strip it
 _SHARE_FILE = re.compile(r"Sharing `[^`]+`:(?:\s*\n-{3}\n.*?\n-{3})?", re.S)
 _SHARE_CTX = re.compile(
-    r"Sharing the following file as context:\s*\S+"
-    r"(?:\s*\n-{3}\n.*?\n-{3})?",
+    r"Sharing the following file as context:\s*\S+(?:\s*\n-{3}\n.*?\n-{3})?",
     re.S,
 )
 _XML_BLOCK = re.compile(r"<([A-Za-z][\w-]*)[^>]*>.*?</\1>", re.S)
 _WS = re.compile(r"\s+")
 
 
-def _clean_user(text):
+def _clean_user(text: str | None) -> str | None:
     """Strip injected context from a user message, return the real ask or None."""
     if not text:
         return None
@@ -71,10 +68,10 @@ def _clean_user(text):
     return text or None
 
 
-def _iter_jsonl(path, cap):
+def _iter_jsonl(path: Path, cap: int) -> Iterator[dict]:
     """Yield up to `cap` decoded JSON objects from a jsonl file."""
     try:
-        with open(path, errors="ignore") as fh:
+        with path.open(errors="ignore") as fh:
             for i, line in enumerate(fh):
                 if i >= cap:
                     break
@@ -86,7 +83,7 @@ def _iter_jsonl(path, cap):
         return
 
 
-def _text_from_content(content):
+def _text_from_content(content: str | list | None) -> str:
     """Pull plain text out of a Claude message.content (str or content parts)."""
     if isinstance(content, str):
         return content
@@ -103,12 +100,12 @@ def _text_from_content(content):
 # Session ids are read cheaply (Claude from the filename, Codex from the first
 # session_meta line) so unchanged sessions are skipped on an mtime stat alone,
 # before the expensive full-transcript extraction below
-def claude_id(path):
+def claude_id(path: Path) -> str:
     """Claude keys by the file's basename, which equals its sessionId."""
-    return os.path.splitext(os.path.basename(path))[0]
+    return path.stem
 
 
-def codex_id(path):
+def codex_id(path: Path) -> str | None:
     """Codex keys by the id in its session_meta line."""
     for d in _iter_jsonl(path, 50):
         if d.get("type") == "session_meta":
@@ -116,7 +113,7 @@ def codex_id(path):
     return None
 
 
-def extract_claude(path):
+def extract_claude(path: Path) -> list[tuple[str, str]]:
     """Return the user/assistant turns of a Claude Code session."""
     turns = []
     for d in _iter_jsonl(path, 2000):
@@ -130,21 +127,21 @@ def extract_claude(path):
         if not text:
             continue
         if t == "user":
-            text = _clean_user(text)
-            if text:
-                turns.append(("User", text))
+            cleaned = _clean_user(text)
+            if cleaned:
+                turns.append(("User", cleaned))
         else:
             turns.append(("Assistant", text.strip()))
     return turns
 
 
-def extract_codex(path):
+def extract_codex(path: Path) -> list[tuple[str, str]]:
     """Return the user/assistant turns of a Codex session."""
     turns = []
     for d in _iter_jsonl(path, 2000):
         if d.get("type") != "event_msg":
             continue
-        p = d.get("payload") or {}
+        p: dict = d.get("payload") or {}
         pt = p.get("type")
         if pt == "user_message":
             text = _clean_user(p.get("message") or "")
@@ -157,7 +154,7 @@ def extract_codex(path):
     return turns
 
 
-def build_transcript(turns):
+def build_transcript(turns: list[tuple[str, str]]) -> str:
     """Condense turns to the opening + closing exchanges within the char budget."""
     if len(turns) > HEAD_TURNS + TAIL_TURNS:
         turns = turns[:HEAD_TURNS] + turns[-TAIL_TURNS:]
@@ -171,7 +168,7 @@ def build_transcript(turns):
     return "\n".join(lines)
 
 
-def _clean_title(title):
+def _clean_title(title: str) -> str:
     """Normalise the model's reply into a bare title."""
     title = title.strip().strip("\"'").strip()
     title = re.sub(r"^(?i:title)\s*[:\-]\s*", "", title)
@@ -182,7 +179,7 @@ def _clean_title(title):
     return title
 
 
-def _output_text(data):
+def _output_text(data: dict) -> str | None:
     """Pull the assistant text out of a Responses API result."""
     for item in data.get("output", []):
         if item.get("type") != "message":
@@ -193,7 +190,7 @@ def _output_text(data):
     return None
 
 
-def generate_title(key, transcript):
+def generate_title(key: str, transcript: str) -> str | None:
     """Call gpt-5.4-nano for a title; return the title or None on failure."""
     body = json.dumps(
         {
@@ -224,9 +221,10 @@ def generate_title(key, transcript):
             if attempt == 2:
                 return None
             time.sleep(1 + attempt)
+    return None
 
 
-def get_api_key():
+def get_api_key() -> str | None:
     """Read the OpenAI key from pass."""
     try:
         out = subprocess.run(
@@ -239,26 +237,24 @@ def get_api_key():
     return out.stdout.splitlines()[0].strip() if out.stdout.strip() else None
 
 
-def load_cache():
+def load_cache() -> dict:
     """Load the id -> title cache."""
     try:
-        with open(CACHE_PATH) as fh:
-            data = json.load(fh)
+        data = json.loads(CACHE_PATH.read_text())
         return data if isinstance(data, dict) else {}
     except (OSError, json.JSONDecodeError):
         return {}
 
 
-def save_cache(cache):
+def save_cache(cache: dict) -> None:
     """Persist the cache atomically."""
-    os.makedirs(os.path.dirname(CACHE_PATH), exist_ok=True)
-    tmp = CACHE_PATH + ".tmp"
-    with open(tmp, "w") as fh:
-        json.dump(cache, fh, ensure_ascii=False)
-    os.replace(tmp, CACHE_PATH)
+    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    tmp = CACHE_PATH.with_name(CACHE_PATH.name + ".tmp")
+    tmp.write_text(json.dumps(cache, ensure_ascii=False))
+    tmp.replace(CACHE_PATH)
 
 
-def main():
+def main() -> None:
     """Regenerate stale session titles and refresh the picker cache."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
@@ -271,17 +267,17 @@ def main():
 
     cache = load_cache()
     sources = [
-        ("claude_code", CLAUDE_GLOB, claude_id, extract_claude),
-        ("codex", CODEX_GLOB, codex_id, extract_codex),
+        ("claude_code", CLAUDE_ROOT.glob("**/*.jsonl"), claude_id, extract_claude),
+        ("codex", CODEX_ROOT.glob("**/rollout-*.jsonl"), codex_id, extract_codex),
     ]
 
     live_keys = set()
     stale = []  # (cache_key, transcript, mtime)
     fresh = 0
-    for adapter, pattern, id_of, extract in sources:
-        for path in glob.glob(pattern, recursive=True):
+    for adapter, paths, id_of, extract in sources:
+        for path in paths:
             try:
-                mtime = int(os.path.getmtime(path))
+                mtime = int(path.stat().st_mtime)
             except OSError:
                 continue
             session_id = id_of(path)
@@ -319,7 +315,7 @@ def main():
             print("titles: could not read OpenAI key from pass; skipping")
             return
 
-        def run(job):
+        def run(job: tuple[str, str, int]) -> tuple[str, int, str | None]:
             cache_key, transcript, mtime = job
             return cache_key, mtime, generate_title(key, transcript)
 

@@ -6,28 +6,26 @@ Run with -n/--dry-run to preview.
 """
 
 import argparse
-import glob
 import json
-import os
 import re
 import shutil
 import time
+from collections.abc import Callable
+from pathlib import Path
 
 AGE_DAYS = 60
 MIN_USER_PROMPTS = 2  # keep sessions with at least this many user prompts
 
-CLAUDE_ROOT = os.path.expanduser("~/.claude/projects")
-CODEX_ROOT = os.path.expanduser("~/.codex/sessions")
-CLAUDE_GLOB = os.path.join(CLAUDE_ROOT, "**", "*.jsonl")
-CODEX_GLOB = os.path.join(CODEX_ROOT, "**", "rollout-*.jsonl")
+CLAUDE_ROOT = Path.home() / ".claude" / "projects"
+CODEX_ROOT = Path.home() / ".codex" / "sessions"
 UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 
 
-def _user_prompts(path, is_user, cap):
+def _user_prompts(path: Path, is_user: Callable[[dict], bool], cap: int) -> int:
     """Count user prompts, reading at most `cap` lines (enough for the <2 test)."""
     n = count = 0
     try:
-        with open(path, errors="ignore") as fh:
+        with path.open(errors="ignore") as fh:
             for line in fh:
                 n += 1
                 try:
@@ -43,12 +41,12 @@ def _user_prompts(path, is_user, cap):
     return count
 
 
-def user_prompts_claude(path):
+def user_prompts_claude(path: Path) -> int:
     """Count Claude Code user prompts for pruning."""
     return _user_prompts(path, lambda d: d.get("type") == "user", 500)
 
 
-def user_prompts_codex(path):
+def user_prompts_codex(path: Path) -> int:
     """Count Codex user prompts for pruning."""
     return _user_prompts(
         path,
@@ -60,11 +58,11 @@ def user_prompts_codex(path):
     )
 
 
-def remove_session_dirs(root, dry_run):
+def remove_session_dirs(root: Path, dry_run: bool) -> int:
     """Remove Claude session artifact directories below a session root."""
     removed = 0
-    for path in glob.glob(os.path.join(root, "*", "*")):
-        if not os.path.isdir(path) or not UUID_RE.match(os.path.basename(path)):
+    for path in root.glob("*/*"):
+        if not path.is_dir() or not UUID_RE.match(path.name):
             continue
         if not dry_run:
             shutil.rmtree(path)
@@ -72,35 +70,42 @@ def remove_session_dirs(root, dry_run):
     return removed
 
 
-def remove_empty_dirs(root, dry_run):
+def remove_empty_dirs(root: Path, dry_run: bool) -> int:
     """Remove empty directories below a session root."""
     removed = 0
-    for current_root, _dirs, _files in os.walk(root, topdown=False):
-        if current_root == root:
+    for current, _dirs, _files in root.walk(top_down=False):
+        if current == root:
             continue
         try:
-            if os.listdir(current_root):
+            if any(current.iterdir()):
                 continue
             if not dry_run:
-                os.rmdir(current_root)
+                current.rmdir()
             removed += 1
         except OSError:
             pass
     return removed
 
 
-def prune(name, files, counter, cutoff, dry_run, delete_all):
+def prune(
+    name: str,
+    files: list[Path],
+    counter: Callable[[Path], int],
+    cutoff: float,
+    dry_run: bool,
+    delete_all: bool,
+) -> int:
     """Delete matching session files and report the result."""
     old = tiny = kept = 0
     for f in files:
         if delete_all:
             old += 1
             if not dry_run:
-                os.remove(f)
+                f.unlink()
             continue
 
         try:
-            is_old = os.path.getmtime(f) < cutoff
+            is_old = f.stat().st_mtime < cutoff
         except OSError:
             continue
         if is_old or counter(f) < MIN_USER_PROMPTS:
@@ -109,7 +114,7 @@ def prune(name, files, counter, cutoff, dry_run, delete_all):
             else:
                 tiny += 1
             if not dry_run:
-                os.remove(f)
+                f.unlink()
         else:
             kept += 1
     verb = "would delete" if dry_run else "deleted"
@@ -118,13 +123,13 @@ def prune(name, files, counter, cutoff, dry_run, delete_all):
     return old + tiny
 
 
-def confirm_delete_all():
+def confirm_delete_all() -> bool:
     """Ask for confirmation before deleting every session."""
     answer = input("Delete all Claude and Codex sessions? Type 'yes' to continue: ")
     return answer == "yes"
 
 
-def main():
+def main() -> None:
     """Parse CLI arguments and prune agent sessions."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
@@ -140,7 +145,7 @@ def main():
     cutoff = time.time() - AGE_DAYS * 86400
     total = prune(
         "claude",
-        glob.glob(CLAUDE_GLOB, recursive=True),
+        list(CLAUDE_ROOT.glob("**/*.jsonl")),
         user_prompts_claude,
         cutoff,
         args.dry_run,
@@ -148,7 +153,7 @@ def main():
     )
     total += prune(
         "codex ",
-        glob.glob(CODEX_GLOB, recursive=True),
+        list(CODEX_ROOT.glob("**/rollout-*.jsonl")),
         user_prompts_codex,
         cutoff,
         args.dry_run,
