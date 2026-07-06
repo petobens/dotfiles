@@ -13,6 +13,14 @@ local function cwd_footer()
     return vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or ''
 end
 
+local function chat_title(chat)
+    return string.format(
+        '󰭹%s · %s',
+        state_helpers.format_open_chat_count(),
+        state_helpers.get_chat_label(chat)
+    )
+end
+
 local function chat_footer(chat)
     local parts = {}
     local adapter = chat and chat.adapter
@@ -71,6 +79,21 @@ local function refresh_chat_footer(bufnr)
     })
 end
 
+local function refresh_all_chat_titles()
+    state_helpers.for_each_open_chat(function(chat)
+        if
+            chat
+            and chat.ui
+            and chat.ui.winnr
+            and vim.api.nvim_win_is_valid(chat.ui.winnr)
+        then
+            vim.api.nvim_win_set_config(chat.ui.winnr, {
+                title = chat_title(chat),
+            })
+        end
+    end)
+end
+
 -- Fetch the usage limit for claude_code/codex chats and re-render the footer
 local function refresh_chat_usage(bufnr)
     local ok, chat = pcall(function()
@@ -113,7 +136,7 @@ local function set_chat_win_title(e)
     end
 
     vim.api.nvim_win_set_config(chat.ui.winnr, {
-        title = 'CodeCompanion - ' .. state_helpers.get_chat_label(chat),
+        title = chat_title(chat),
         footer = chat_footer(chat),
         footer_pos = 'center',
     })
@@ -233,11 +256,13 @@ function M.setup()
             'CodeCompanionChatCreated',
             'CodeCompanionChatOpened',
             'CodeCompanionHistoryTitleSet',
+            'CodeCompanionChatClosed',
         },
         desc = 'Set CodeCompanion chat window title after chat events',
         callback = function(e)
             vim.defer_fn(function()
                 set_chat_win_title(e)
+                refresh_all_chat_titles()
             end, 1)
         end,
     })

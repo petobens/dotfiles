@@ -12,6 +12,14 @@ local M = {
     usage = {},
 }
 
+local superscript_nrs = {
+    [1] = '¹',
+    [2] = '²',
+    [3] = '³',
+    [4] = '⁴',
+    [5] = '⁵',
+}
+
 -- Repo/filesystem
 function M.repo.git_root_or_notify(path)
     local root = u.git_root(path)
@@ -69,10 +77,34 @@ function M.state.get_chat_label(chat)
     end
 
     if chat.opts and chat.opts.title and chat.opts.title ~= '' then
-        label = string.format('%s (%s)', label, chat.opts.title)
+        label = string.format('%s · %s', label, chat.opts.title)
     end
 
     return label
+end
+
+function M.state.for_each_open_chat(callback)
+    local ok, chats = pcall(codecompanion.buf_get_chat)
+    if not ok or not chats then
+        return
+    end
+
+    for _, entry in pairs(chats) do
+        callback(entry.chat, entry)
+    end
+end
+
+function M.state.get_open_chat_count()
+    local count = 0
+    M.state.for_each_open_chat(function()
+        count = count + 1
+    end)
+    return count
+end
+
+function M.state.format_open_chat_count()
+    local count = M.state.get_open_chat_count()
+    return superscript_nrs[count] or tostring(count)
 end
 
 function M.chat.get_or_create_chat()
@@ -103,6 +135,38 @@ function M.state.get_adapter_model(adapter)
     return vim.tbl_get(adapter, 'schema', 'model', 'default')
         or vim.tbl_get(adapter, 'defaults', 'session_config_options', 'model')
         or vim.tbl_get(adapter, 'defaults', 'model')
+end
+
+function M.state.get_chat_model_label(chat)
+    local adapter = chat and chat.adapter
+    if not adapter then
+        return 'unknown'
+    end
+
+    local labels = { claude_code = 'Claude', codex = 'Codex' }
+    return labels[adapter.name] or M.state.get_adapter_model(adapter) or adapter.name
+end
+
+function M.state.get_chat_title(chat, entry)
+    if chat and chat.opts and chat.opts.title and chat.opts.title ~= '' then
+        return chat.opts.title
+    end
+
+    local prompt = M.state.get_last_user_prompt(chat)
+    if prompt and prompt ~= '' then
+        return prompt
+    end
+
+    if entry and entry.name then
+        return entry.name
+    end
+
+    return chat and M.state.get_chat_label(chat) or 'Chat'
+end
+
+function M.state.get_chat_number(entry)
+    local number = (entry and entry.name or ''):match('Chat%s+(%d+)')
+    return number and ('#' .. number) or ('#' .. tostring(entry and entry.bufnr or '?'))
 end
 
 function M.state.get_adapter_effort(adapter)

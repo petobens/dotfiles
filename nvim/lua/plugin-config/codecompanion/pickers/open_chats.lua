@@ -11,36 +11,6 @@ local TITLE_WIDTH = picker_helpers.TITLE_WIDTH
 
 local M = {}
 
-local function chat_title(chat, entry)
-    if chat and chat.opts and chat.opts.title and chat.opts.title ~= '' then
-        return chat.opts.title
-    end
-    -- No generated title yet: label by the latest user message so the chat is
-    -- identifiable and the label keeps tracking the conversation
-    local prompt = chat and state_helpers.get_last_user_prompt(chat)
-    if prompt and prompt ~= '' then
-        return prompt
-    end
-    return entry.name
-end
-
-local function chat_model(chat)
-    local adapter = chat and chat.adapter
-    if not adapter then
-        return 'unknown'
-    end
-
-    local labels = { claude_code = 'Claude', codex = 'Codex' }
-    return labels[adapter.name]
-        or state_helpers.get_adapter_model(adapter)
-        or adapter.name
-end
-
-local function chat_number(entry)
-    local number = (entry.name or ''):match('Chat%s+(%d+)')
-    return number and ('#' .. number) or ('#' .. tostring(entry.bufnr))
-end
-
 -- Build the telescope `display` function, capturing column widths shared by
 -- all rows so they only get computed once.
 local function make_display(entries)
@@ -114,9 +84,9 @@ local function collect_entries(current_chat)
             open = entry.open,
             active = entry.bufnr == current_bufnr,
             adapter_name = adapter and adapter.name,
-            model = chat_model(chat),
-            chat_number = chat_number(entry),
-            title = chat_title(chat, entry),
+            model = state_helpers.get_chat_model_label(chat),
+            chat_number = state_helpers.get_chat_number(entry),
+            title = state_helpers.get_chat_title(chat, entry),
             cwd = chat and chat.opts and chat.opts.cwd,
         }
     end
