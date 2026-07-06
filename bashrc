@@ -138,8 +138,8 @@ up() {
 
 # Other binaries
 if [[ -f "$BASE_PKG_DIR/share/bash-completion/bash_completion" ]]; then
-    . "$BASE_PKG_DIR/share/bash-completion/completions/man"
-    complete -F _man m # this is actually defined in fzf_bash file
+    _completion_loader man 2>/dev/null # force-load now so _comp_cmd_man exists
+    complete -F _comp_cmd_man m # give `m` (in fzf_bash) man's completion
 fi
 if type "htop" > /dev/null 2>&1; then
     alias ht='htop'
