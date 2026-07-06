@@ -424,15 +424,17 @@ function M.browse(chat)
         finder = make_finder(),
         sorter = conf.generic_sorter({}),
         attach_mappings = function(prompt_bufnr, map)
+            -- Resumed picker; the upvalue's results_win is a closed window
+            local current = action_state.get_current_picker(prompt_bufnr)
             local selection_hl =
                 vim.api.nvim_get_hl(0, { name = 'TelescopeSelection', link = false })
             selection_hl.bold = true
             vim.api.nvim_set_hl(0, 'CodeCompanionSessionSelection', selection_hl)
-            vim.wo[picker.results_win].winhighlight = table.concat(
+            vim.wo[current.results_win].winhighlight = table.concat(
                 vim.tbl_filter(function(part)
                     return part ~= ''
                 end, {
-                    vim.wo[picker.results_win].winhighlight,
+                    vim.wo[current.results_win].winhighlight,
                     'TelescopeSelection:CodeCompanionSessionSelection',
                 }),
                 ','
@@ -450,7 +452,7 @@ function M.browse(chat)
             end)
 
             local function delete()
-                local targets = picker:get_multi_selection()
+                local targets = current:get_multi_selection()
                 if #targets == 0 then
                     targets = { action_state.get_selected_entry() }
                 end
@@ -467,7 +469,7 @@ function M.browse(chat)
                         table.remove(entries, i)
                     end
                 end
-                picker:refresh(make_finder(), { reset_prompt = false })
+                current:refresh(make_finder(), { reset_prompt = false })
 
                 local n = vim.tbl_count(deleted)
                 utils.notify(
