@@ -101,7 +101,7 @@ require('render-markdown').setup({
                     icons = { '󰪥 ', '  ', ' ', ' ', ' ', '' },
                     custom = {
                         codecompanion_input = {
-                            pattern = '^## Me$',
+                            pattern = '##%s+Me',
                             icon = ' ',
                             background = 'CodeCompanionInputHeader',
                         },
