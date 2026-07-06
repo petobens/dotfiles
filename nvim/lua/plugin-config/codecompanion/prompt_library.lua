@@ -16,7 +16,6 @@ local PROMPT_LIBRARY_CONFIG = {
         'conventional_commits',
         'explain_code',
         'meeting_copilot',
-        'python_developer',
         'quickfix',
         'slides_generator',
         'translator_spa_eng',
@@ -95,16 +94,6 @@ local function build_prompt(interaction, description, alias, content, extra)
     }, extra or {})
 end
 
--- Languages and expertise
-local function python_developer_prompt()
-    return build_prompt(
-        'chat',
-        'Act as an expert Python developer.',
-        'python_role',
-        M.prompt('python_developer')
-    )
-end
-
 -- Work and communication
 local function translator_prompt()
     return build_prompt(
@@ -162,8 +151,6 @@ end
 -- Prompt library assembly
 function M.build()
     return {
-        -- Languages and expertise
-        [' Python Developer'] = python_developer_prompt(),
         -- Work and communication
         ['󰗊 Translator'] = translator_prompt(),
         [' Writer at Work'] = writer_at_work_prompt(),
