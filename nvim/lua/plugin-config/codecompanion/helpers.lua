@@ -274,13 +274,7 @@ function M.chat.submit_user_message(chat, content)
         role = config.constants.USER_ROLE,
         content = content,
     })
-    chat:add_message({
-        role = config.constants.USER_ROLE,
-        content = content,
-    }, {
-        visible = false,
-    })
-    chat:submit({ auto_submit = true })
+    chat:submit()
 end
 
 -- Chat windows
