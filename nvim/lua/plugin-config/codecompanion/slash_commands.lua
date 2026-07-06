@@ -28,7 +28,7 @@ local function setup_qf_filetype_mappings(args)
         chat_helpers.run_slash_command('qfix')
     end, {
         buffer = args.buf,
-        desc = 'Explain quickfix diagnostics',
+        desc = 'Fix quickfix diagnostics',
     })
 end
 
@@ -128,7 +128,7 @@ local slash_commands = {
     },
     -- Coding
     ['qfix'] = {
-        description = 'Explain quickfix/loclist code diagnostics',
+        description = 'Fix quickfix/loclist code diagnostics',
         callback = coding.qfix,
     },
     ['explain_code'] = {
