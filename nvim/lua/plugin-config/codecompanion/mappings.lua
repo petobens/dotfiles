@@ -2,6 +2,7 @@ local codecompanion = require('codecompanion')
 local keymaps = require('codecompanion.interactions.chat.keymaps')
 
 local acp_sessions = require('plugin-config.codecompanion.pickers.acp_sessions')
+local acp_helpers = require('plugin-config.codecompanion.helpers').acp
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
 local open_chats = require('plugin-config.codecompanion.pickers.open_chats')
 local skills_picker = require('plugin-config.codecompanion.pickers.skills')
@@ -169,7 +170,7 @@ local function setup_codecompanion_filetype_mappings(e)
         desc = 'Move to left window',
     })
 
-    vim.keymap.set({ 'i', 'n' }, '<A-p>', function()
+    vim.keymap.set({ 'i', 'n' }, '<A-i>', function()
         local chat_obj = codecompanion.buf_get_chat(bufnr)
         show_adapter_info(chat_obj)
     end, { buf = bufnr, desc = 'Show adapter info' })
@@ -183,6 +184,10 @@ local function setup_codecompanion_filetype_mappings(e)
         buf = bufnr,
         desc = 'Toggle CodeCompanion zoom',
     })
+
+    vim.keymap.set({ 'n', 'i' }, '<A-p>', function()
+        acp_helpers.toggle_plan_mode(codecompanion.buf_get_chat(bufnr))
+    end, { buf = bufnr, desc = 'Toggle ACP plan mode' })
 
     vim.keymap.set({ 'n', 'i' }, '<A-s>', function()
         local chat = codecompanion.buf_get_chat(bufnr)

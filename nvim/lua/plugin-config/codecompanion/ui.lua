@@ -2,6 +2,7 @@ local codecompanion = require('codecompanion')
 local devicons = require('nvim-web-devicons')
 local telescope_action_state = require('telescope.actions.state')
 
+local acp_helpers = require('plugin-config.codecompanion.helpers').acp
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local usage_helpers = require('plugin-config.codecompanion.helpers').usage
 
@@ -21,6 +22,10 @@ local function chat_footer(chat)
         local label = labels[adapter.name]
             or state_helpers.get_adapter_model(adapter)
             or adapter.name
+        local mode = acp_helpers.mode_label(chat)
+        if mode then
+            label = string.format('%s (%s)', label, mode)
+        end
         table.insert(
             parts,
             string.format('%s %s', state_helpers.provider_icon(adapter.name), label)
@@ -319,6 +324,20 @@ function M.setup()
             vim.schedule(function()
                 refresh_chat_footer(bufnr)
                 refresh_chat_usage(bufnr)
+            end)
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'CodeCompanionChatACPModeChanged',
+        desc = 'Refresh CodeCompanion chat footer when the ACP mode changes',
+        callback = function(e)
+            local bufnr = e.data and e.data.bufnr
+            if not bufnr then
+                return
+            end
+            vim.schedule(function()
+                refresh_chat_footer(bufnr)
             end)
         end,
     })

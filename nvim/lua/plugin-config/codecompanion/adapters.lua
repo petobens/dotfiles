@@ -1,6 +1,8 @@
 local adapters = require('codecompanion.adapters')
 local extend = adapters.extend
 
+local acp_helpers = require('plugin-config.codecompanion.helpers').acp
+
 local M = {}
 
 -- Credentials
@@ -116,6 +118,8 @@ end
 
 -- ACP
 function M.codex()
+    local codex_config = acp_helpers.codex_config()
+
     return extend('codex', {
         env = {
             GITHUB_TOKEN = GITHUB_TOKEN,
@@ -129,14 +133,15 @@ function M.codex()
         },
         defaults = {
             auth_method = 'chat-gpt',
+            effort = codex_config.effort,
             session_config_options = {
-                model = 'gpt-5.5',
+                model = codex_config.model,
             },
         },
         schema = {
             model = {
                 choices = {
-                    ['gpt-5.5'] = { meta = { context_window = 1000000 } },
+                    [codex_config.model] = { meta = { context_window = 1000000 } },
                 },
             },
         },
@@ -144,6 +149,8 @@ function M.codex()
 end
 
 function M.claude_code()
+    local claude_config = acp_helpers.claude_config()
+
     return extend('claude_code', {
         env = {
             CLAUDE_CODE_EXECUTABLE = '/usr/bin/claude',
@@ -151,14 +158,16 @@ function M.claude_code()
             GITHUB_TOKEN = GITHUB_TOKEN,
         },
         defaults = {
+            effort = claude_config.effort,
             session_config_options = {
-                model = 'opus[1m]',
+                model = claude_config.model,
+                mode = claude_config.mode,
             },
         },
         schema = {
             model = {
                 choices = {
-                    ['opus[1m]'] = { meta = { context_window = 1000000 } },
+                    [claude_config.model] = { meta = { context_window = 1000000 } },
                 },
             },
         },

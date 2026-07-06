@@ -1,3 +1,4 @@
+local ACP = require('codecompanion.acp')
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local u = require('utils')
@@ -7,6 +8,7 @@ local M = {
     state = {},
     chat = {},
     window = {},
+    acp = {},
     usage = {},
 }
 
@@ -104,19 +106,9 @@ function M.state.get_adapter_model(adapter)
 end
 
 function M.state.get_adapter_effort(adapter)
-    local effort = vim.tbl_get(adapter, 'schema', 'reasoning.effort', 'default')
+    local effort = vim.tbl_get(adapter, 'defaults', 'effort')
+        or vim.tbl_get(adapter, 'schema', 'reasoning.effort', 'default')
         or vim.tbl_get(adapter, 'schema', 'reasoning_effort', 'default')
-
-    local home = vim.env.HOME
-    if not effort and home and adapter.name == 'claude_code' then
-        local ok, settings =
-            pcall(vim.json.decode, u.read_file(home .. '/.claude/settings.json') or '')
-        effort = ok and settings.effortLevel or nil
-    elseif not effort and home and adapter.name == 'codex' then
-        effort = (u.read_file(home .. '/.codex/config.toml') or ''):match(
-            'model_reasoning_effort%s*=%s*["\']([^"\']+)'
-        )
-    end
 
     if effort and effort ~= '' and effort ~= 'none' then
         return tostring(effort)
@@ -172,6 +164,143 @@ function M.state.format_context_usage(chat)
     end
 
     return string.format('%.1f%%', (tokens / max_ctx) * 100)
+end
+
+-- ACP agent config files
+local function read_json(path)
+    local ok, data = pcall(vim.json.decode, u.read_file(path) or '')
+    return ok and data or {}
+end
+
+local function read_toml_value(path, key)
+    return (u.read_file(path) or ''):match(key .. '%s*=%s*["\']([^"\']+)')
+end
+
+function M.acp.claude_config()
+    local home = vim.env.HOME
+    local settings = home and read_json(home .. '/.claude/settings.json') or {}
+    return {
+        model = settings.model,
+        effort = settings.effortLevel,
+        mode = vim.tbl_get(settings, 'permissions', 'defaultMode'),
+    }
+end
+
+function M.acp.codex_config()
+    local home = vim.env.HOME
+    local path = home and (home .. '/.codex/config.toml') or ''
+    return {
+        model = read_toml_value(path, 'model'),
+        effort = read_toml_value(path, 'model_reasoning_effort'),
+    }
+end
+
+-- ACP session state
+local function acp_value_is_plan(value)
+    local text = (tostring(value.value or '') .. tostring(value.name or '')):lower()
+    return text:find('plan', 1, true) ~= nil
+end
+
+local function acp_value_matches(value, expected)
+    if not expected then
+        return false
+    end
+
+    local normalized = tostring(expected):lower()
+    return tostring(value.value or ''):lower() == normalized
+        or tostring(value.name or ''):lower() == normalized
+end
+
+local function acp_default_mode(chat)
+    local mode =
+        vim.tbl_get(chat, 'adapter', 'defaults', 'session_config_options', 'mode')
+    if type(mode) == 'function' then
+        mode = mode(chat.adapter)
+    end
+    return mode
+end
+
+local function acp_mode(chat)
+    local connection = chat and chat.acp_connection
+    if not connection then
+        return nil
+    end
+
+    local opt = vim.iter(connection:get_config_options()):find(function(opt)
+        if opt.category == 'mode' and opt.type == 'select' then
+            return true
+        end
+    end)
+    if not opt then
+        return nil
+    end
+
+    local values = ACP.flatten_config_options(opt.options or {})
+    local current = vim.iter(values):find(function(value)
+        return value.value == opt.currentValue
+    end) or { value = opt.currentValue, name = opt.currentValue }
+    return opt,
+        {
+            value = current.value,
+            name = current.name,
+            is_plan = acp_value_is_plan(current),
+        },
+        values
+end
+
+function M.acp.mode_label(chat)
+    local _, mode = acp_mode(chat)
+    if mode and mode.is_plan then
+        return 'plan'
+    end
+end
+
+function M.acp.toggle_plan_mode(chat)
+    if not chat or not chat.acp_connection then
+        vim.notify('No ACP connection available', vim.log.levels.WARN)
+        return
+    end
+
+    local opt, current, values = acp_mode(chat)
+    if not opt then
+        vim.notify('This ACP adapter does not expose a mode option', vim.log.levels.WARN)
+        return
+    end
+
+    local want_plan = not (current and current.is_plan)
+    local target = not want_plan
+        and vim.iter(values):find(function(value)
+            return value.value ~= opt.currentValue
+                and acp_value_matches(value, acp_default_mode(chat))
+        end)
+
+    target = target
+        or vim.iter(values):find(function(value)
+            return value.value ~= opt.currentValue
+                and acp_value_is_plan(value) == want_plan
+        end)
+
+    if not target then
+        vim.notify(
+            'No alternate ACP mode value is available for this adapter',
+            vim.log.levels.WARN
+        )
+        return
+    end
+
+    if not chat.acp_connection:set_config_option(opt.id, target.value) then
+        vim.notify('Failed to change ACP mode', vim.log.levels.ERROR)
+        return
+    end
+
+    vim.notify('ACP mode: ' .. (target.name or target.value), vim.log.levels.INFO)
+    vim.api.nvim_exec_autocmds('User', {
+        pattern = 'CodeCompanionChatACPModeChanged',
+        data = {
+            bufnr = chat.bufnr,
+            session_id = chat.acp_connection.session_id,
+        },
+    })
 end
 
 -- Usage limits: shell out to the ai_session_usage script

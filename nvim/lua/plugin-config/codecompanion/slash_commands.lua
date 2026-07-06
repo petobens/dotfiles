@@ -90,6 +90,11 @@ end
 -- Slash command definitions
 local slash_commands = {
     -- Built-in
+    ['acp_session_options'] = {
+        keymaps = {
+            modes = { n = '<A-o>', i = '<A-o>' },
+        },
+    },
     ['help'] = { opts = { max_lines = 10000 } },
     ['image'] = {
         opts = {
