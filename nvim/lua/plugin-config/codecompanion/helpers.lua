@@ -12,14 +12,6 @@ local M = {
     usage = {},
 }
 
-local superscript_nrs = {
-    [1] = '¹',
-    [2] = '²',
-    [3] = '³',
-    [4] = '⁴',
-    [5] = '⁵',
-}
-
 -- Repo/filesystem
 function M.repo.git_root_or_notify(path)
     local root = u.git_root(path)
@@ -52,7 +44,7 @@ function M.repo.git_root_file(filename, path)
 end
 
 -- State
-function M.state.get_last_chat()
+local function get_last_chat()
     local ok, chat = pcall(codecompanion.last_chat)
     if ok and chat then
         return chat
@@ -94,7 +86,7 @@ function M.state.for_each_open_chat(callback)
     end
 end
 
-function M.state.get_open_chat_count()
+local function get_open_chat_count()
     local count = 0
     M.state.for_each_open_chat(function()
         count = count + 1
@@ -103,16 +95,22 @@ function M.state.get_open_chat_count()
 end
 
 function M.state.format_open_chat_count()
-    local count = M.state.get_open_chat_count()
-    return superscript_nrs[count] or tostring(count)
+    local count = get_open_chat_count()
+    return ({
+        [1] = '¹',
+        [2] = '²',
+        [3] = '³',
+        [4] = '⁴',
+        [5] = '⁵',
+    })[count] or tostring(count)
 end
 
-function M.chat.get_or_create_chat()
-    return M.state.get_last_chat() or codecompanion.chat()
+local function get_or_create_chat()
+    return get_last_chat() or codecompanion.chat()
 end
 
 function M.state.get_last_user_prompt(chat)
-    chat = chat or M.state.get_last_chat()
+    chat = chat or get_last_chat()
     if not chat or type(chat.messages) ~= 'table' then
         return nil
     end
@@ -191,7 +189,7 @@ function M.state.provider_icon(name)
     return '󰚩' -- md-robot
 end
 
-function M.state.get_adapter_context_window(adapter)
+local function get_adapter_context_window(adapter)
     if type(adapter) ~= 'table' then
         return nil
     end
@@ -222,7 +220,7 @@ function M.state.format_context_usage(chat)
     -- freshly restored chat reads 0 until then
     local tokens = (chat and chat.tokens) or 0
 
-    local max_ctx = M.state.get_adapter_context_window(chat and chat.adapter)
+    local max_ctx = get_adapter_context_window(chat and chat.adapter)
     if not max_ctx then
         return 'unknown ctx'
     end
@@ -416,7 +414,7 @@ end
 
 -- Chat
 function M.chat.add_context(files)
-    local chat = M.chat.get_or_create_chat()
+    local chat = get_or_create_chat()
 
     for _, file in ipairs(files) do
         local content = u.read_file(file)
@@ -451,7 +449,7 @@ end
 function M.chat.run_slash_command(name, opts)
     opts = opts or {}
 
-    local chat = M.chat.get_or_create_chat()
+    local chat = get_or_create_chat()
     local cmd = config.interactions.chat.slash_commands[name]
 
     if cmd and type(cmd.callback) == 'function' then
