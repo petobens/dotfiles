@@ -52,6 +52,10 @@ local function get_last_chat()
     return nil
 end
 
+local function get_or_create_chat()
+    return get_last_chat() or codecompanion.chat()
+end
+
 function M.state.get_chat_label(chat)
     local label = nil
 
@@ -103,10 +107,6 @@ function M.state.format_open_chat_count()
         [4] = '⁴',
         [5] = '⁵',
     })[count] or tostring(count)
-end
-
-local function get_or_create_chat()
-    return get_last_chat() or codecompanion.chat()
 end
 
 function M.state.get_last_user_prompt(chat)
@@ -239,8 +239,7 @@ local function read_toml_value(path, key)
 end
 
 function M.acp.claude_config()
-    local home = vim.env.HOME
-    local settings = home and read_json(home .. '/.claude/settings.json') or {}
+    local settings = read_json(vim.env.HOME .. '/.claude/settings.json')
     return {
         model = settings.model,
         effort = settings.effortLevel,
@@ -249,8 +248,7 @@ function M.acp.claude_config()
 end
 
 function M.acp.codex_config()
-    local home = vim.env.HOME
-    local path = home and (home .. '/.codex/config.toml') or ''
+    local path = vim.env.HOME .. '/.codex/config.toml'
     return {
         model = read_toml_value(path, 'model'),
         effort = read_toml_value(path, 'model_reasoning_effort'),
