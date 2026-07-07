@@ -106,22 +106,19 @@ function M.chat_keymaps()
         },
         clear_approvals = { modes = { n = '<Leader>ra' } },
         yolo_mode = { modes = { n = '<Leader>ym' } },
-        -- Buffer sync
-        buffer_sync_all = { modes = { n = '<Leader>rp' } },
-        buffer_sync_diff = { modes = { n = '<Leader>rw' } },
     }
 end
 
 -- Shared interactions keymaps
 function M.shared_keymaps()
     return {
-        view_diff = { modes = { n = 'ds' } },
-        always_accept = { modes = { n = 'aa' } },
         accept_change = { modes = { n = 'dp' } },
-        reject_change = { modes = { n = 'de' } },
+        always_accept = { modes = { n = 'aa' } },
+        cancel = { modes = { n = 'ct' } },
         next_hunk = { modes = { n = ']h' } },
         previous_hunk = { modes = { n = '[h' } },
-        cancel = { modes = { n = 'ct' } },
+        reject_change = { modes = { n = 'de' } },
+        view_diff = { modes = { n = 'ds' } },
     }
 end
 
@@ -212,11 +209,6 @@ local function setup_filetype_mappings(group)
     })
 end
 
--- CodeCompanion global mapping callbacks
-local function explore_open_chats()
-    open_chats.browse(codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()))
-end
-
 local function paste_selection_to_chat()
     codecompanion.add()
     if vim.bo.filetype ~= 'codecompanion' then
@@ -261,7 +253,9 @@ local function setup_global_mappings()
         desc = 'Open CodeCompanion actions',
     })
 
-    vim.keymap.set('n', '<Leader>cb', explore_open_chats, {
+    vim.keymap.set('n', '<Leader>cb', function()
+        open_chats.browse(codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()))
+    end, {
         desc = 'Browse open CodeCompanion chats (buffers)',
     })
 
