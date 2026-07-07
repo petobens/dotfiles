@@ -22,7 +22,11 @@ function M.split_open(file)
 end
 
 function M.mk_non_dir(directory)
-    local dir = directory or vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+    local bufname = vim.api.nvim_buf_get_name(0)
+    if not directory and (bufname == '' or bufname:match('^[%w+.-]+://')) then
+        return
+    end
+    local dir = directory or vim.fs.dirname(bufname)
     local stat = vim.uv.fs_stat(dir)
     if stat == nil or stat.type ~= 'directory' then
         vim.fn.mkdir(dir, 'p')
