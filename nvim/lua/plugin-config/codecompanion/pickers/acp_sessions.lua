@@ -293,6 +293,8 @@ local function load_entry(chat, entry)
         chat.bufnr,
         chat.acp_connection.session_id
     )
+    -- Store the loaded session cwd so the chat footer can display it.
+    chat.opts.cwd = entry.cwd
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
     -- Mark the chat as claimed so target_chat won't reuse it for another session
     chat._acp_session_loaded = true

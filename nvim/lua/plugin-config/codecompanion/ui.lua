@@ -9,8 +9,16 @@ local usage_helpers = require('plugin-config.codecompanion.helpers').usage
 local M = {}
 
 -- Helpers
-local function cwd_footer()
-    return vim.uv.cwd():match('([^/]+/[^/]+/[^/]+)$') or ''
+local function cwd_footer(chat)
+    local cwd = vim.uv.cwd()
+    if chat and chat.adapter and chat.adapter.type == 'acp' then
+        if not chat.opts.cwd or chat.opts.cwd == '' then
+            chat.opts.cwd = cwd
+        end
+        cwd = chat.opts.cwd
+    end
+
+    return cwd and cwd:match('([^/]+/[^/]+/[^/]+)$') or ''
 end
 
 local function chat_title(chat)
@@ -39,7 +47,7 @@ local function chat_footer(chat)
             string.format('%s %s', state_helpers.provider_icon(adapter.name), label)
         )
     end
-    local cwd = cwd_footer()
+    local cwd = cwd_footer(chat)
     if cwd ~= '' then
         table.insert(parts, ' ' .. cwd)
     end
