@@ -250,7 +250,7 @@ function M.setup()
     })
     devicons.set_icon_by_filetype({ codecompanion = 'codecompanion' })
 
-    -- Window titles
+    -- Window title
     vim.api.nvim_create_autocmd('User', {
         pattern = {
             'CodeCompanionChatCreated',
@@ -266,45 +266,8 @@ function M.setup()
             end, 1)
         end,
     })
-    vim.api.nvim_create_autocmd('DirChanged', {
-        desc = 'Refresh CodeCompanion chat window title after directory change from chat',
-        callback = function()
-            if vim.bo.filetype ~= 'codecompanion' then
-                return
-            end
-            vim.defer_fn(function()
-                set_chat_win_title()
-            end, 1)
-        end,
-    })
 
-    -- Spinner lifecycle
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'CodeCompanionChatSubmitted',
-        desc = 'Start CodeCompanion spinner when a chat turn begins',
-        callback = function(e)
-            clear_spinner()
-
-            local bufnr = e.data and e.data.bufnr
-            if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
-                return
-            end
-
-            spinner.bufnr = bufnr
-            spinner.timer = vim.uv.new_timer()
-            spinner.timer:start(0, 100, vim.schedule_wrap(update_spinner))
-        end,
-    })
-
-    vim.api.nvim_create_autocmd('User', {
-        pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
-        desc = 'Clear CodeCompanion spinner when a chat turn ends',
-        callback = function()
-            vim.defer_fn(clear_spinner, 50)
-        end,
-    })
-
-    -- Footer
+    -- Window footer (statusline)
     vim.api.nvim_create_autocmd('User', {
         pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
         desc = 'Refresh CodeCompanion chat footer context usage when a turn ends',
@@ -364,6 +327,32 @@ function M.setup()
             vim.schedule(function()
                 refresh_chat_footer(bufnr)
             end)
+        end,
+    })
+
+    -- Spinner lifecycle
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'CodeCompanionChatSubmitted',
+        desc = 'Start CodeCompanion spinner when a chat turn begins',
+        callback = function(e)
+            clear_spinner()
+
+            local bufnr = e.data and e.data.bufnr
+            if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+                return
+            end
+
+            spinner.bufnr = bufnr
+            spinner.timer = vim.uv.new_timer()
+            spinner.timer:start(0, 100, vim.schedule_wrap(update_spinner))
+        end,
+    })
+
+    vim.api.nvim_create_autocmd('User', {
+        pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
+        desc = 'Clear CodeCompanion spinner when a chat turn ends',
+        callback = function()
+            vim.defer_fn(clear_spinner, 50)
         end,
     })
 end
