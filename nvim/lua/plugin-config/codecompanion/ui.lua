@@ -277,8 +277,12 @@ function M.setup()
 
     -- Window footer (statusline)
     vim.api.nvim_create_autocmd('User', {
-        pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
-        desc = 'Refresh CodeCompanion chat footer context usage when a turn ends',
+        pattern = {
+            'CodeCompanionChatDone',
+            'CodeCompanionChatStopped',
+            'CodeCompanionACPChatRestored',
+        },
+        desc = 'Refresh CodeCompanion chat footer when displayed state changes',
         callback = function(e)
             local bufnr = e.data and e.data.bufnr
             if not bufnr then

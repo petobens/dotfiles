@@ -262,6 +262,25 @@ local function make_display(entries)
     end
 end
 
+-- ACP restore streams message chunks; count user-message groups as turns
+local function restored_user_turn_count(updates)
+    local count = 0
+    local in_user_message = false
+
+    for _, update in ipairs(updates) do
+        if update.sessionUpdate == 'user_message_chunk' then
+            if not in_user_message then
+                count = count + 1
+                in_user_message = true
+            end
+        elseif update.sessionUpdate ~= 'agent_thought_chunk' then
+            in_user_message = false
+        end
+    end
+
+    return count
+end
+
 local function load_entry(chat, entry)
     if not ensure_connection(chat) then
         return
@@ -296,6 +315,8 @@ local function load_entry(chat, entry)
     -- Store the loaded session cwd so the chat footer can display it.
     chat.opts.cwd = entry.cwd
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
+    -- Rebuild the cycle count for the footer after rendering restored messages
+    chat.cycle = math.max(chat.cycle or 1, restored_user_turn_count(updates) + 1)
     -- Mark the chat as claimed so target_chat won't reuse it for another session
     chat._acp_session_loaded = true
 
@@ -321,6 +342,7 @@ local function load_entry(chat, entry)
     })
 end
 
+-- Reuse a compatible empty chat for the selected session, otherwise create one
 local function target_chat(chat, entry)
     local reusable = chat
         and chat.adapter
