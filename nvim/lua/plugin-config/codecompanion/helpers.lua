@@ -215,17 +215,23 @@ local function get_adapter_context_window(adapter)
     return nil
 end
 
+local function format_token_count(tokens)
+    return string.format('%.1fk', tokens / 1000)
+end
+
 function M.state.format_context_usage(chat)
-    -- The plugin only tracks tokens live, from the first turn onward, so a
-    -- freshly restored chat reads 0 until then
     local tokens = (chat and chat.tokens) or 0
 
     local max_ctx = get_adapter_context_window(chat and chat.adapter)
     if not max_ctx then
-        return 'unknown ctx'
+        return format_token_count(tokens) .. ' unknown ctx'
     end
 
-    return string.format('%.1f%%', (tokens / max_ctx) * 100)
+    return string.format(
+        '%.1f%% (%s)',
+        (tokens / max_ctx) * 100,
+        format_token_count(tokens)
+    )
 end
 
 -- ACP agent config files

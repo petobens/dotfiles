@@ -281,6 +281,38 @@ local function restored_user_turn_count(updates)
     return count
 end
 
+-- Read the saved context token snapshot used by the footer
+local function restored_context_tokens(entry)
+    local tokens
+    local ok, iter = pcall(io.lines, entry.path)
+    if not ok then
+        return nil
+    end
+
+    for line in iter do
+        local decoded_ok, d = pcall(vim.json.decode, line)
+        if decoded_ok then
+            if entry.adapter == 'codex' and d.type == 'event_msg' then
+                local total =
+                    vim.tbl_get(d, 'payload', 'info', 'last_token_usage', 'total_tokens')
+                if type(total) == 'number' then
+                    tokens = total
+                end
+            elseif entry.adapter == 'claude_code' and d.type == 'assistant' then
+                local usage = vim.tbl_get(d, 'message', 'usage')
+                if usage then
+                    tokens = (tonumber(usage.input_tokens) or 0)
+                        + (tonumber(usage.output_tokens) or 0)
+                        + (tonumber(usage.cache_read_input_tokens) or 0)
+                        + (tonumber(usage.cache_creation_input_tokens) or 0)
+                end
+            end
+        end
+    end
+
+    return tokens
+end
+
 local function load_entry(chat, entry)
     if not ensure_connection(chat) then
         return
@@ -317,6 +349,8 @@ local function load_entry(chat, entry)
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
     -- Rebuild the cycle count for the footer after rendering restored messages
     chat.cycle = math.max(chat.cycle or 1, restored_user_turn_count(updates) + 1)
+    -- Restore saved context usage so the footer does not show 0% until next turn
+    chat.tokens = restored_context_tokens(entry) or chat.tokens
     -- Mark the chat as claimed so target_chat won't reuse it for another session
     chat._acp_session_loaded = true
 
