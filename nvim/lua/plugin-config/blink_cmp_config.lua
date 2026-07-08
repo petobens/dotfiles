@@ -1,8 +1,35 @@
 -- luacheck:ignore 631
 local blink_cmp = require('blink.cmp')
-local u = require('utils')
 
 -- Helpers
+local online_status = true
+local last_online_check = 0
+
+local function is_online()
+    if os.time() - last_online_check < 30 then
+        return online_status
+    end
+
+    last_online_check = os.time()
+    local done = false
+    local job
+    job = vim.net.request('https://clients3.google.com/generate_204', {
+        retry = 0,
+    }, function(err)
+        done = true
+        online_status = err == nil
+    end)
+
+    vim.defer_fn(function()
+        if not done then
+            job.close()
+            online_status = false
+        end
+    end, 1000)
+
+    return online_status
+end
+
 local copilot_multiline_menu_direction = nil
 local function is_multiline_copilot_selected()
     local item = blink_cmp.get_selected_item()
@@ -120,7 +147,7 @@ blink_cmp.setup({
             -- Workaround for git source not supporting per_filetype configuration
             -- https://github.com/Kaiser-Yang/blink-cmp-git/issues/62#issuecomment-3062425218
             if vim.bo.filetype == 'gitcommit' then
-                sources = u.is_online() and { 'buffer', 'git' } or { 'buffer' }
+                sources = is_online() and { 'buffer', 'git' } or { 'buffer' }
             end
             return sources
         end,
