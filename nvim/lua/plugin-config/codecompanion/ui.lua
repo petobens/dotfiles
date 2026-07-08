@@ -123,6 +123,7 @@ local function set_chat_win_title(e)
     end)
 
     if not ok or not chat or not chat.ui or not chat.ui.winnr then
+        -- Some picker/restore events arrive before the chat window is registered
         vim.defer_fn(function()
             local picker =
                 telescope_action_state.get_current_picker(vim.api.nvim_get_current_buf())
@@ -263,7 +264,8 @@ function M.setup()
         pattern = {
             'CodeCompanionChatCreated',
             'CodeCompanionChatOpened',
-            'CodeCompanionHistoryTitleSet',
+            'CodeCompanionACPChatRestored',
+            'CodeCompanionBackgroundTitleSet',
             'CodeCompanionChatClosed',
         },
         desc = 'Set CodeCompanion chat window title after chat events',

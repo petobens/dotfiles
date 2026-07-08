@@ -72,8 +72,9 @@ function M.state.get_chat_label(chat)
         label = 'Chat ' .. chat.bufnr
     end
 
-    if chat.opts and chat.opts.title and chat.opts.title ~= '' then
-        label = string.format('%s · %s', label, chat.opts.title)
+    local title = (chat.title ~= '' and chat.title) or (chat.opts and chat.opts.title)
+    if title and title ~= '' then
+        label = string.format('%s · %s', label, title)
     end
 
     return label
@@ -146,6 +147,10 @@ function M.state.get_chat_model_label(chat)
 end
 
 function M.state.get_chat_title(chat, entry)
+    if chat and chat.title and chat.title ~= '' then
+        return chat.title
+    end
+
     if chat and chat.opts and chat.opts.title and chat.opts.title ~= '' then
         return chat.opts.title
     end

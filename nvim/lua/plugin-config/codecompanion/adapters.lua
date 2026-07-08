@@ -18,7 +18,13 @@ local function disabled()
 end
 
 -- OpenAI
-local function openai_responses_adapter(name, model, stream, context_window)
+local function openai_responses_adapter(
+    name,
+    model,
+    stream,
+    context_window,
+    reasoning_effort
+)
     return extend('openai_responses', {
         name = name,
         env = { api_key = OPENAI_API_KEY },
@@ -40,7 +46,7 @@ local function openai_responses_adapter(name, model, stream, context_window)
                     },
                 },
             },
-            ['reasoning.effort'] = { default = 'medium' },
+            ['reasoning.effort'] = { default = reasoning_effort or 'medium' },
             verbosity = { default = 'low' },
         },
         available_tools = {
@@ -55,24 +61,14 @@ function M.openai_gpt_55()
     return openai_responses_adapter('openai_gpt_55', 'gpt-5.5', true, 1000000)
 end
 
-function M.openai_gpt_54_nano_legacy()
-    return extend('openai', {
-        name = 'openai_gpt_54_nano_legacy',
-        env = { api_key = OPENAI_API_KEY },
-        schema = {
-            model = {
-                default = 'gpt-5.4-nano',
-                choices = {
-                    ['gpt-5.4-nano'] = {
-                        meta = {
-                            context_window = 400000,
-                        },
-                    },
-                },
-            },
-            reasoning_effort = { default = 'none' },
-        },
-    })
+function M.openai_gpt_54_nano()
+    return openai_responses_adapter(
+        'openai_gpt_54_nano',
+        'gpt-5.4-nano',
+        false,
+        400000,
+        'none'
+    )
 end
 
 -- Google

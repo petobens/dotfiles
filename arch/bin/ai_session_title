@@ -35,9 +35,12 @@ WORKERS = 8
 
 PROMPT = """You write short, specific titles for coding-assistant sessions.
 Read the transcript and reply with ONE title of 8 to 10 words that captures what
-the whole session was about and what it accomplished. Plain words only: no
-quotes, no surrounding punctuation, no trailing period. Reply with only the
-title.
+the whole session was about and what it accomplished. Prefer the final exchanges
+and actual outcome over the initial request when the topic changes, but do not
+title the session after a tiny final tweak unless that was the main result. Name
+the durable implementation or decision that would matter when finding this
+session later. Plain words only: no quotes, no surrounding punctuation, no
+trailing period. Reply with only the title.
 
 Transcript:
 {transcript}
@@ -157,7 +160,11 @@ def extract_codex(path: Path) -> list[tuple[str, str]]:
 def build_transcript(turns: list[tuple[str, str]]) -> str:
     """Condense turns to the opening + closing exchanges within the char budget."""
     if len(turns) > HEAD_TURNS + TAIL_TURNS:
-        turns = turns[:HEAD_TURNS] + turns[-TAIL_TURNS:]
+        turns = (
+            turns[:HEAD_TURNS]
+            + [("System", "[middle of session omitted; final exchanges follow]")]
+            + turns[-TAIL_TURNS:]
+        )
     lines, total = [], 0
     for role, text in turns:
         line = f"{role}: {text[:MAX_MSG_CHARS]}"
