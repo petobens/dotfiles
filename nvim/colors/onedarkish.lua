@@ -86,7 +86,6 @@ local groups = {
     TabLineFill = { fg = p.comment_grey, bg = p.visual_grey },
     TabLineSel = { link = 'WildMenu' },
     TermCursor = { bg = p.blue },
-    TermCursorNC = { link = 'CursorColumn' },
     Title = { fg = p.green },
     VertSplit = { link = 'FloatBorder' },
     Visual = { bg = p.visual_grey },
