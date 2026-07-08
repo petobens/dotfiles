@@ -29,7 +29,7 @@ function M.mk_non_dir(directory)
     local dir = directory or vim.fs.dirname(bufname)
     local stat = vim.uv.fs_stat(dir)
     if stat == nil or stat.type ~= 'directory' then
-        vim.fn.mkdir(dir, 'p')
+        vim.fs.mkdir(dir, { parents = true })
     end
 end
 
