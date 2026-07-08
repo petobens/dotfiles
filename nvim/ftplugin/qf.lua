@@ -6,7 +6,14 @@ vim.opt_local.buflisted = false
 vim.opt_local.winfixbuf = true
 -- Show qf as bottom window
 vim.cmd.wincmd('J')
-vim.api.nvim_win_set_height(0, math.max(1, math.min(vim.api.nvim_buf_line_count(0), 15)))
+vim.api.nvim_win_resize(
+    0,
+    -1,
+    math.max(1, math.min(vim.api.nvim_buf_line_count(0), 15)),
+    {
+        anchor = 'bottom',
+    }
+)
 
 -- Autocmd options
 vim.api.nvim_create_autocmd({ 'QuitPre', 'BufDelete' }, {
@@ -36,12 +43,7 @@ vim.keymap.set(
     { buf = 0, remap = true, desc = "Alias for 'q' (close qf/loclist and return)" }
 )
 
-vim.keymap.set(
-    'n',
-    '<C-s>',
-    '<C-w><Enter>',
-    { buf = 0, desc = 'Open entry in split' }
-)
+vim.keymap.set('n', '<C-s>', '<C-w><Enter>', { buf = 0, desc = 'Open entry in split' })
 
 vim.keymap.set(
     'n',

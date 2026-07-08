@@ -29,7 +29,7 @@ local function open_options()
     keymaps.options.callback()
     vim.defer_fn(function()
         vim.cmd.stopinsert()
-        vim.api.nvim_win_set_width(0, math.min(160, vim.o.columns))
+        vim.api.nvim_win_resize(0, math.min(160, vim.o.columns), -1, {})
     end, 1)
 end
 
@@ -40,7 +40,8 @@ local function open_debug(chat_obj)
         local win_id = vim.api.nvim_get_current_win()
         local win_config = vim.api.nvim_win_get_config(win_id)
         if win_config.relative == 'editor' then
-            win_config.col = 1
+            local width = tonumber(win_config.width) or vim.api.nvim_win_get_width(win_id)
+            win_config.col = math.max(0, math.floor((vim.o.columns - width) / 2))
             vim.api.nvim_win_set_config(win_id, win_config)
         end
     end, 1)
