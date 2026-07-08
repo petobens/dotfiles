@@ -94,6 +94,8 @@ local groups = {
     WarningMsg = { fg = p.orange },
     Whitespace = { fg = p.special_grey },
     WildMenu = { fg = p.black, bg = p.light_blue },
+    WinBar = { fg = p.comment_grey, bg = p.cursorline },
+    WinBarNC = { link = 'FloatTitle' },
     WinSeparator = { link = 'FloatBorder' },
 
     -- Syntax
