@@ -30,7 +30,7 @@ local function setup_codecompanion_cli_mappings(args)
             codecompanion.toggle_cli()
         end)
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Hide CodeCompanion CLI',
     })
 end
@@ -42,7 +42,7 @@ local function setup_codecompanion_cli_input_mappings(args)
         end
         vim.cmd.write({ bang = true })
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Write CodeCompanion CLI prompt',
     })
 end

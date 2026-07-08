@@ -27,7 +27,7 @@ local function setup_qf_filetype_mappings(args)
     vim.keymap.set('n', '<Leader>qf', function()
         chat_helpers.run_slash_command('qfix')
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Fix quickfix diagnostics',
     })
 end
@@ -36,7 +36,7 @@ local function setup_fugitive_filetype_mappings(args)
     vim.keymap.set('n', '<Leader>cc', function()
         chat_helpers.run_slash_command('conventional_commit')
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Generate conventional commit message',
     })
 
@@ -52,14 +52,14 @@ local function setup_fugitive_filetype_mappings(args)
             end
         )
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Conventional commit with base branch',
     })
 
     vim.keymap.set('n', '<Leader>cr', function()
         chat_helpers.run_slash_command('code_review')
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Perform code review',
     })
 
@@ -75,14 +75,14 @@ local function setup_fugitive_filetype_mappings(args)
             end
         )
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Code review with base branch',
     })
 
     vim.keymap.set('n', '<Leader>cl', function()
         chat_helpers.run_slash_command('changelog')
     end, {
-        buffer = args.buf,
+        buf = args.buf,
         desc = 'Generate changelog since last release',
     })
 end
