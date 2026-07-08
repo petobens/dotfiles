@@ -78,7 +78,7 @@ function M:update_status()
     local buffers = {}
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
         if
-            vim.api.nvim_buf_get_option(bufnr, 'buflisted')
+            vim.bo[bufnr].buflisted
             and vim.bo[bufnr].buftype ~= 'quickfix'
             and vim.bo[bufnr].filetype ~= 'fugitive'
         then

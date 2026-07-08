@@ -40,10 +40,7 @@ end, { silent = false, desc = 'Source current file' })
 vim.api.nvim_create_user_command('RestoreSession', function()
     vim.cmd.source({ args = { u.vim_session_file() }, mods = { silent = true } })
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-        if
-            vim.api.nvim_buf_get_option(bufnr, 'buflisted')
-            and vim.bo[bufnr].buftype ~= 'quickfix'
-        then
+        if vim.bo[bufnr].buflisted and vim.bo[bufnr].buftype ~= 'quickfix' then
             if vim.uv.fs_stat(vim.api.nvim_buf_get_name(bufnr)) == nil then
                 vim.cmd.bwipeout(tostring(bufnr))
             end
