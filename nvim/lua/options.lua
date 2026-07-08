@@ -31,7 +31,7 @@ vim.opt.foldtext = 'v:lua.my_custom_foldtext()'
 vim.opt.iskeyword:append(':')
 vim.opt.lazyredraw = false
 vim.opt.modeline = false
-vim.opt.shortmess = 'aoOtTIcF'
+vim.opt.shortmess = 'aoOtTIcCF'
 vim.opt.signcolumn = 'number'
 vim.opt.termguicolors = true
 vim.opt.timeoutlen = 550
