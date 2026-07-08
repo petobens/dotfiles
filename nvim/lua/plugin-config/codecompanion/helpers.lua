@@ -507,6 +507,12 @@ function M.window.focus_or_toggle_chat(opts)
         startinsert = next(codecompanion.buf_get_chat()) == nil
     end
 
+    if startinsert and config.adapters.acp[config.interactions.chat.adapter] then
+        -- With default opts, startinsert means this creates a new chat
+        -- Root new ACP sessions at the repo to avoid metadata dirs in a buffer cwd
+        vim.api.nvim_set_current_dir(u.git_root(vim.uv.cwd()) or vim.uv.cwd())
+    end
+
     codecompanion.toggle_chat()
 
     if startinsert then
