@@ -6,11 +6,11 @@ local acp_helpers = require('plugin-config.codecompanion.helpers').acp
 local M = {}
 
 -- Credentials
-local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
-local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
-local TAVILY_API_KEY = 'cmd:pass show tavily/yahoomail/api-key'
 local CLAUDE_OAUTH_TOKEN = 'cmd:pass show mutt/claude/oauth-token'
+local GEMINI_API_KEY = 'cmd:pass show google/muttmail/gemini/api-key'
 local GITHUB_TOKEN = 'cmd:pass show git/github/petobens/api-key'
+local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
+local TAVILY_API_KEY = 'cmd:pass show tavily/yahoomail/api-key'
 
 -- Helpers
 local function disabled()

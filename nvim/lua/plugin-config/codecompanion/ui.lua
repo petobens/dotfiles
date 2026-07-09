@@ -40,9 +40,8 @@ local function chat_footer(chat)
         local label = labels[adapter.name]
             or state_helpers.get_adapter_model(adapter)
             or adapter.name
-        local mode = acp_helpers.mode_label(chat)
-        if mode then
-            label = string.format('%s (%s)', label, mode)
+        if acp_helpers.mode_label(chat) then
+            label = string.format('%s ( Plan)', label) -- nf-fa-compass
         end
         table.insert(
             parts,
