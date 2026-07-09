@@ -2,6 +2,7 @@ local codecompanion = require('codecompanion')
 local devicons = require('nvim-web-devicons')
 local telescope_action_state = require('telescope.actions.state')
 
+local u = require('utils')
 local acp_helpers = require('plugin-config.codecompanion.helpers').acp
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local usage_helpers = require('plugin-config.codecompanion.helpers').usage
@@ -12,8 +13,9 @@ local M = {}
 local function cwd_footer(chat)
     local cwd = vim.uv.cwd()
     if chat and chat.adapter and chat.adapter.type == 'acp' then
+        -- ACP agents run at the git root (see patch_acp_cwd), so reflect that
         if not chat.opts.cwd or chat.opts.cwd == '' then
-            chat.opts.cwd = cwd
+            chat.opts.cwd = u.git_root(cwd) or cwd
         end
         cwd = chat.opts.cwd
     end
