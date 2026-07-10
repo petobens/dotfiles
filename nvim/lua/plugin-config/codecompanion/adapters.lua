@@ -57,8 +57,8 @@ local function openai_responses_adapter(
     })
 end
 
-function M.openai_gpt_55()
-    return openai_responses_adapter('openai_gpt_55', 'gpt-5.5', true, 1000000)
+function M.openai_gpt_56_sol()
+    return openai_responses_adapter('openai_gpt_56_sol', 'gpt-5.6-sol', true, 1050000)
 end
 
 function M.openai_gpt_54_nano()
@@ -137,7 +137,7 @@ function M.codex()
         schema = {
             model = {
                 choices = {
-                    [codex_config.model] = { meta = { context_window = 1000000 } },
+                    [codex_config.model] = { meta = { context_window = 1050000 } },
                 },
             },
         },
