@@ -60,7 +60,7 @@ require('render-markdown').setup({
         language_border = '',
     },
     quote = { icon = '▐' },
-    pipe_table = { cell = 'raw' },
+    pipe_table = { cell = 'padded' },
     link = {
         wiki = { icon = '󱗖 ', highlight = 'RenderMarkdownWikiLink' },
         custom = {
