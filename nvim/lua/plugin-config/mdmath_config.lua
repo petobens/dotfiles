@@ -29,6 +29,7 @@ end
 
 -- Setup
 mdmath.setup({
+    dynamic_scale = 0.75,
     filetypes = {},
 })
 
