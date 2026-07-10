@@ -46,7 +46,18 @@ local function open_image_inline()
         vim.notify('No image path found on current line', vim.log.levels.WARN)
         return
     end
-    image.from_file(path, {}):render()
+    local win = vim.api.nvim_get_current_win()
+    local buf = vim.api.nvim_get_current_buf()
+    local row = vim.api.nvim_win_get_cursor(win)[1] - 1
+    local preview = image.from_file(path, {
+        window = win,
+        buffer = buf,
+        y = row,
+        with_virtual_padding = true,
+    })
+    if preview then
+        preview:render()
+    end
 end
 
 local function open_image_system()
@@ -61,6 +72,12 @@ local function open_image_system()
     end
 end
 
+local function clear_images()
+    for _, preview in ipairs(image.get_images()) do
+        preview:clear()
+    end
+end
+
 -- Mappings
 vim.keymap.set(
     'n',
@@ -68,7 +85,7 @@ vim.keymap.set(
     open_image_inline,
     { desc = 'Open image under cursor inline' }
 )
-vim.keymap.set('n', '<Leader>iw', image.clear, { desc = 'Wipe all inline images' })
+vim.keymap.set('n', '<Leader>iw', clear_images, { desc = 'Wipe all inline images' })
 vim.keymap.set(
     'n',
     '<Leader>is',
