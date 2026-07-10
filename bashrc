@@ -475,7 +475,12 @@ sys_update_all() {
     fi
     if type "npm" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating Node packages...\033[0m"
-        npm_config_loglevel=error npm update --no-fund -g
+        outdated="$(npm outdated -g --json 2> /dev/null)"
+        if npm_config_loglevel=error npm update --no-fund -g > /dev/null; then
+            jq -r 'to_entries[] |
+                "\(.key) updated from \(.value.current) to \(.value.wanted)"' \
+                <<< "$outdated"
+        fi
     fi
     if type "cargo-install-update" > /dev/null 2>&1; then
         echo -e "\033[1;34m\n-> Updating rust binaries...\033[0m"
