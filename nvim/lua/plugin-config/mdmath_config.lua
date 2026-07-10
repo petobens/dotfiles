@@ -1,4 +1,16 @@
+local image_colors = require('mdmath.highlight-colors')
 local mdmath = require('mdmath')
+
+-- Kitty's Unicode-placeholder protocol encodes the image ID in foreground RGB.
+-- Neovim's winblend alters that color in floats, so Kitty cannot match the
+-- placeholder to its image. Disable blending only for mdmath's generated
+-- placeholder highlights; the floating windows still keep winblend=6.
+local image_color = getmetatable(image_colors).__index
+getmetatable(image_colors).__index = function(colors, id)
+    local name = image_color(colors, id)
+    vim.api.nvim_set_hl(0, name, { fg = id, blend = 0 })
+    return name
+end
 
 -- Helpers
 local function toggle_mdmath()
@@ -23,8 +35,7 @@ mdmath.setup({
 -- Autocmd mappings
 vim.api.nvim_create_autocmd('FileType', {
     desc = 'Setup MdMath toggle mapping for certain filetypes',
-    -- FIXME: Doesn't work in floating windows as codecompanion
-    pattern = { 'markdown', 'tex' },
+    pattern = { 'codecompanion', 'markdown', 'tex' },
     callback = function(args)
         local bufnr = args.buf
         vim.b[bufnr].mdmath_enabled = false
