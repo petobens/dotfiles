@@ -47,24 +47,47 @@ local function open_image_preview()
         vim.notify('No image path found on current line', vim.log.levels.WARN)
         return
     end
-    local preview = image.from_file(path, {})
+
+    local sized = image.from_file(path, {})
     local term_size = image_utils.term.get_size()
-    if not preview or not term_size then
+    if not sized or not term_size then
         return
     end
     local width, height = image_utils.math.adjust_to_aspect_ratio(
         term_size,
-        preview.image_width,
-        preview.image_height,
-        math.floor(vim.o.columns * 0.8),
-        math.floor(vim.o.lines * 0.8)
+        sized.image_width,
+        sized.image_height,
+        math.floor(vim.o.columns * 0.7),
+        math.floor(vim.o.lines * 0.7)
     )
-    preview:render({
-        x = math.floor((vim.o.columns - width) / 2),
-        y = math.floor((vim.o.lines - height) / 2),
+
+    -- Back the image with a scratch float of its exact size so it sits on a
+    -- solid backdrop instead of bleeding through the code buffer underneath
+    local buf = vim.api.nvim_create_buf(false, true)
+    local win = vim.api.nvim_open_win(buf, true, {
+        relative = 'editor',
+        row = math.floor((vim.o.lines - height) / 2),
+        col = math.floor((vim.o.columns - width) / 2),
         width = width,
         height = height,
+        style = 'minimal',
     })
+    local preview = image.from_file(path, {
+        window = win,
+        buffer = buf,
+        max_width_window_percentage = 100,
+        max_height_window_percentage = 100,
+    })
+
+    local function close()
+        preview:clear()
+        pcall(vim.api.nvim_win_close, win, true)
+    end
+    for _, key in ipairs({ 'q', '<Esc>' }) do
+        vim.keymap.set('n', key, close, { buffer = buf, desc = 'Close image preview' })
+    end
+
+    preview:render({ x = 0, y = 0, width = width, height = height })
 end
 
 local function open_image_system()
@@ -79,20 +102,13 @@ local function open_image_system()
     end
 end
 
-local function clear_images()
-    for _, preview in ipairs(image.get_images()) do
-        preview:clear()
-    end
-end
-
 -- Mappings
 vim.keymap.set(
     'n',
-    '<Leader>ii',
+    '<Leader>ip',
     open_image_preview,
     { desc = 'Preview image under cursor' }
 )
-vim.keymap.set('n', '<Leader>iw', clear_images, { desc = 'Wipe all image previews' })
 vim.keymap.set(
     'n',
     '<Leader>is',
