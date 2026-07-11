@@ -326,12 +326,12 @@ local function load_entry(chat, entry)
     end
 
     local updates = {}
-    local saved_context = {}
-    local saved_context_paths = {}
-    local function save_context(icon, path)
-        if not saved_context_paths[path] then
-            table.insert(saved_context, ('> - %s %s'):format(icon, path))
-            saved_context_paths[path] = true
+    local restored_context = {}
+    local restored_context_paths = {}
+    local function restore_context(icon, path)
+        if not restored_context_paths[path] then
+            table.insert(restored_context, { icon = icon, path = path })
+            restored_context_paths[path] = true
         end
     end
     local ok = chat.acp_connection:load_session(entry.session_id, {
@@ -342,7 +342,7 @@ local function load_entry(chat, entry)
                 for _, extension in ipairs({ 'png', 'jpg', 'jpeg', 'svg', 'bmp' }) do
                     local pattern = 'Image path: (/%S-%.' .. extension .. ')'
                     text = text:gsub(pattern, function(path)
-                        save_context('󰋩', path)
+                        restore_context('󰋩', path)
                         return ''
                     end)
                 end
@@ -350,9 +350,11 @@ local function load_entry(chat, entry)
                 local path, rest = text:match(
                     '^Sharing the following file as context: (/%S-%.%l[%l%d]*)(.*)'
                 )
-                path = path or text:match('^Sharing `([^`]+)`:')
+                if not path then
+                    path, rest = text:match('^Sharing `([^`]+)`:(.*)')
+                end
                 if path then
-                    save_context('󰈙', path)
+                    restore_context('󰈙', path)
                     if not rest or rest == '' then
                         return
                     end
@@ -381,17 +383,6 @@ local function load_entry(chat, entry)
     end
 
     local restored_turns = restored_user_turn_count(updates)
-    if #saved_context > 0 then
-        table.insert(saved_context, 1, '> Saved Context:')
-        table.insert(updates, {
-            sessionUpdate = 'user_message_chunk',
-            content = {
-                type = 'text',
-                text = table.concat(saved_context, '\n') .. '\n\n',
-            },
-        })
-    end
-
     require('codecompanion.interactions.chat.acp.commands').link_buffer_to_session(
         chat.bufnr,
         chat.acp_connection.session_id
@@ -399,6 +390,13 @@ local function load_entry(chat, entry)
     -- Store the loaded session cwd so the chat footer can display it.
     chat.opts.cwd = entry.cwd
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
+    -- Render context metadata only; ACP already retains the content server-side
+    for _, context in ipairs(restored_context) do
+        chat.context:add({
+            id = ('%s %s'):format(context.icon, context.path),
+            path = context.path,
+        })
+    end
     -- Rebuild the cycle count for the footer after rendering restored messages
     chat.cycle = math.max(chat.cycle or 1, restored_turns + 1)
     -- Restore saved context usage so the footer does not show 0% until next turn
