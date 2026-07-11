@@ -41,7 +41,7 @@ local function get_image_path()
     return img_path
 end
 
-local function open_image_inline()
+local function open_image_preview()
     local path = get_image_path()
     if not path or path == '' then
         vim.notify('No image path found on current line', vim.log.levels.WARN)
@@ -89,10 +89,10 @@ end
 vim.keymap.set(
     'n',
     '<Leader>ii',
-    open_image_inline,
-    { desc = 'Open image under cursor inline' }
+    open_image_preview,
+    { desc = 'Preview image under cursor' }
 )
-vim.keymap.set('n', '<Leader>iw', clear_images, { desc = 'Wipe all inline images' })
+vim.keymap.set('n', '<Leader>iw', clear_images, { desc = 'Wipe all image previews' })
 vim.keymap.set(
     'n',
     '<Leader>is',
