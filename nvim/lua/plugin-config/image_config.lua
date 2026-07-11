@@ -31,11 +31,11 @@ local function get_image_path()
     end
     if not img_path then
         -- Match the first filename-like word ending with an image extension
-        img_path = line:match('([%w%._%-:]+%.png)')
-            or line:match('([%w%._%-:]+%.jpg)')
-            or line:match('([%w%._%-:]+%.jpeg)')
-            or line:match('([%w%._%-:]+%.svg)')
-            or line:match('([%w%._%-:]+%.bmp)')
+        img_path = line:match('([%w/%._%-:]+%.png)')
+            or line:match('([%w/%._%-:]+%.jpg)')
+            or line:match('([%w/%._%-:]+%.jpeg)')
+            or line:match('([%w/%._%-:]+%.svg)')
+            or line:match('([%w/%._%-:]+%.bmp)')
     end
     return img_path
 end
