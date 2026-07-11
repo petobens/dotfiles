@@ -37,9 +37,10 @@ local function openai_responses_adapter(
                             context_window = context_window,
                         },
                         opts = {
-                            can_reason = true,
+                            can_form_structured_outputs = true,
                             can_manage_context = true,
-                            has_function_calling = true,
+                            can_reason = true,
+                            can_use_tools = true,
                             has_vision = true,
                             stream = stream,
                         },
