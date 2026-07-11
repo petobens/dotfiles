@@ -313,6 +313,57 @@ local function restored_context_tokens(entry)
     return tokens
 end
 
+-- Add restored context once per path
+local function restore_context(context, paths, icon, path)
+    if not paths[path] then
+        table.insert(context, { icon = icon, path = path })
+        paths[path] = true
+    end
+end
+
+-- Extract context markers and discard encoded media from ACP replay updates
+local function collect_session_update(update, updates, context, paths)
+    local text = vim.tbl_get(update, 'content', 'text')
+    if type(text) == 'string' then
+        for _, extension in ipairs({ 'png', 'jpg', 'jpeg', 'svg', 'bmp' }) do
+            local pattern = 'Image path: (/%S-%.' .. extension .. ')'
+            text = text:gsub(pattern, function(path)
+                restore_context(context, paths, '󰋩', path)
+                return ''
+            end)
+        end
+        text = text:gsub(
+            'Sharing the following file as context: (/%S+)',
+            function(candidate)
+                local path = candidate
+                while not vim.uv.fs_stat(path) and path ~= '/' do
+                    path = path:sub(1, -2)
+                end
+                if path == '/' then
+                    return candidate
+                end
+                restore_context(context, paths, '󰈙', path)
+                return candidate:sub(#path + 1)
+            end
+        )
+        text = text:gsub('Sharing `([^`]+)`:', function(path)
+            restore_context(context, paths, '󰈙', path)
+            return ''
+        end)
+        update.content.text = text
+        if text == '' then
+            return
+        end
+    end
+    if
+        vim.tbl_get(update, 'content', 'type') == 'image'
+        or type(text) == 'string' and text:match('^%[@image%]%(data:image/')
+    then
+        return
+    end
+    table.insert(updates, update)
+end
+
 local function load_entry(chat, entry)
     if not ensure_connection(chat) then
         return
@@ -328,49 +379,14 @@ local function load_entry(chat, entry)
     local updates = {}
     local restored_context = {}
     local restored_context_paths = {}
-    local function restore_context(icon, path)
-        if not restored_context_paths[path] then
-            table.insert(restored_context, { icon = icon, path = path })
-            restored_context_paths[path] = true
-        end
-    end
     local ok = chat.acp_connection:load_session(entry.session_id, {
         on_session_update = function(update)
-            -- Collect context markers that ACP replays as ordinary message text
-            local text = vim.tbl_get(update, 'content', 'text')
-            if type(text) == 'string' then
-                for _, extension in ipairs({ 'png', 'jpg', 'jpeg', 'svg', 'bmp' }) do
-                    local pattern = 'Image path: (/%S-%.' .. extension .. ')'
-                    text = text:gsub(pattern, function(path)
-                        restore_context('󰋩', path)
-                        return ''
-                    end)
-                end
-                update.content.text = text
-                local path, rest = text:match(
-                    '^Sharing the following file as context: (/%S-%.%l[%l%d]*)(.*)'
-                )
-                if not path then
-                    path, rest = text:match('^Sharing `([^`]+)`:(.*)')
-                end
-                if path then
-                    restore_context('󰈙', path)
-                    if not rest or rest == '' then
-                        return
-                    end
-                    text = rest
-                    update.content.text = text
-                elseif text == '' then
-                    return
-                end
-            end
-            if
-                vim.tbl_get(update, 'content', 'type') == 'image'
-                or type(text) == 'string' and text:match('^%[@image%]%(data:image/')
-            then
-                return
-            end
-            table.insert(updates, update)
+            collect_session_update(
+                update,
+                updates,
+                restored_context,
+                restored_context_paths
+            )
         end,
     })
 
@@ -389,6 +405,7 @@ local function load_entry(chat, entry)
     )
     -- Store the loaded session cwd so the chat footer can display it.
     chat.opts.cwd = entry.cwd
+    -- Actually restore the session
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
     -- Render context metadata only; ACP already retains the content server-side
     for _, context in ipairs(restored_context) do
