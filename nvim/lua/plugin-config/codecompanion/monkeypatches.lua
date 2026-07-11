@@ -15,6 +15,8 @@ local function patch_acp_model_choices()
 end
 
 local function patch_tool_approval_notification()
+    -- Identify the requesting chat because CodeCompanion's generic notification
+    -- is ambiguous when several chats are open
     local approval_prompt =
         require('codecompanion.interactions.chat.helpers.approval_prompt')
     local original_request = approval_prompt.request
@@ -67,6 +69,23 @@ local function patch_acp_cwd()
     end
 end
 
+local function patch_image_paths()
+    -- ACP image blocks discard local paths, so persist each path as hidden text
+    -- that can be recovered when the agent session is restored
+    local Chat = require('codecompanion.interactions.chat')
+    local add_image_message = Chat.add_image_message
+
+    Chat.add_image_message = function(self, image, opts)
+        if image.path then
+            self:add_message({
+                role = 'user',
+                content = 'Image path: ' .. image.path,
+            }, { visible = false })
+        end
+        return add_image_message(self, image, opts)
+    end
+end
+
 function M.apply()
     if applied then
         return
@@ -75,6 +94,7 @@ function M.apply()
     patch_acp_model_choices()
     patch_tool_approval_notification()
     patch_acp_cwd()
+    patch_image_paths()
 
     applied = true
 end

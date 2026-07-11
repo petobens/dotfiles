@@ -328,6 +328,40 @@ local function load_entry(chat, entry)
     local updates = {}
     local ok = chat.acp_connection:load_session(entry.session_id, {
         on_session_update = function(update)
+            -- ACP replay loses CodeCompanion's compact-context metadata
+            local text = vim.tbl_get(update, 'content', 'text')
+            local path, rest
+            if type(text) == 'string' then
+                path, rest = text:match(
+                    '^Sharing the following file as context: (/%S-%.%l[%l%d]*)(.*)'
+                )
+                path = path or text:match('^Sharing `([^`]+)`:')
+            end
+            if
+                vim.tbl_get(update, 'content', 'type') == 'image'
+                or type(text) == 'string' and text:match('^%[@image%]%(data:image/')
+            then
+                local previous = updates[#updates]
+                local previous_text = vim.tbl_get(previous, 'content', 'text')
+                local image_path, image_rest
+                if type(previous_text) == 'string' then
+                    image_path, image_rest =
+                        previous_text:match('Image path: (/%S-%.%l[%l%d]*)(.*)')
+                end
+                if image_path then
+                    previous.content.text = image_rest
+                end
+                update.content = {
+                    type = 'text',
+                    text = '\n󰋩 Saved Image'
+                        .. (image_path and ': ' .. image_path or ''),
+                }
+            elseif path then
+                update.content.text = ('> Saved Context:\n> - 󰈙 %s\n\n%s'):format(
+                    path,
+                    rest or ''
+                )
+            end
             table.insert(updates, update)
         end,
     })
