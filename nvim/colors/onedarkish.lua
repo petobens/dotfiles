@@ -396,6 +396,7 @@ local groups = {
 
     -- CodeCompanion
     CodeCompanionInputHeader = { fg = p.red },
+    CodeCompanionReasoningHeader = { fg = p.gray },
 
     -- dbee
     dbee_source = { fg = p.yellow },

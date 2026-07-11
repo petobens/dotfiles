@@ -105,6 +105,16 @@ require('render-markdown').setup({
                             icon = ' ',
                             background = 'CodeCompanionInputHeader',
                         },
+                        codecompanion_reasoning = {
+                            pattern = '##%s+Reasoning',
+                            icon = ' ',
+                            background = 'CodeCompanionReasoningHeader',
+                        },
+                        codecompanion_response = {
+                            pattern = '##%s+Response',
+                            icon = ' ',
+                            background = 'CodeCompanionReasoningHeader',
+                        },
                     },
                 },
                 html = {
