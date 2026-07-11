@@ -4,6 +4,7 @@ package.path = package.path .. ';' .. vim.fs.joinpath(luarocks, '?', 'init.lua')
 package.path = package.path .. ';' .. vim.fs.joinpath(luarocks, '?.lua') .. ';'
 
 local image = require('image')
+local image_utils = require('image/utils')
 
 image.setup({
     tmux_show_only_in_active_window = true,
@@ -46,18 +47,24 @@ local function open_image_inline()
         vim.notify('No image path found on current line', vim.log.levels.WARN)
         return
     end
-    local win = vim.api.nvim_get_current_win()
-    local buf = vim.api.nvim_get_current_buf()
-    local row = vim.api.nvim_win_get_cursor(win)[1] - 1
-    local preview = image.from_file(path, {
-        window = win,
-        buffer = buf,
-        y = row,
-        with_virtual_padding = true,
-    })
-    if preview then
-        preview:render()
+    local preview = image.from_file(path, {})
+    local term_size = image_utils.term.get_size()
+    if not preview or not term_size then
+        return
     end
+    local width, height = image_utils.math.adjust_to_aspect_ratio(
+        term_size,
+        preview.image_width,
+        preview.image_height,
+        math.floor(vim.o.columns * 0.8),
+        math.floor(vim.o.lines * 0.8)
+    )
+    preview:render({
+        x = math.floor((vim.o.columns - width) / 2),
+        y = math.floor((vim.o.lines - height) / 2),
+        width = width,
+        height = height,
+    })
 end
 
 local function open_image_system()
