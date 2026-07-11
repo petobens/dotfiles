@@ -326,41 +326,47 @@ local function load_entry(chat, entry)
     end
 
     local updates = {}
+    local saved_context = {}
+    local saved_context_paths = {}
+    local function save_context(icon, path)
+        if not saved_context_paths[path] then
+            table.insert(saved_context, ('> - %s %s'):format(icon, path))
+            saved_context_paths[path] = true
+        end
+    end
     local ok = chat.acp_connection:load_session(entry.session_id, {
         on_session_update = function(update)
-            -- ACP replay loses CodeCompanion's compact-context metadata
+            -- Collect context markers that ACP replays as ordinary message text
             local text = vim.tbl_get(update, 'content', 'text')
-            local path, rest
             if type(text) == 'string' then
-                path, rest = text:match(
+                for _, extension in ipairs({ 'png', 'jpg', 'jpeg', 'svg', 'bmp' }) do
+                    local pattern = 'Image path: (/%S-%.' .. extension .. ')'
+                    text = text:gsub(pattern, function(path)
+                        save_context('󰋩', path)
+                        return ''
+                    end)
+                end
+                update.content.text = text
+                local path, rest = text:match(
                     '^Sharing the following file as context: (/%S-%.%l[%l%d]*)(.*)'
                 )
                 path = path or text:match('^Sharing `([^`]+)`:')
+                if path then
+                    save_context('󰈙', path)
+                    if not rest or rest == '' then
+                        return
+                    end
+                    text = rest
+                    update.content.text = text
+                elseif text == '' then
+                    return
+                end
             end
             if
                 vim.tbl_get(update, 'content', 'type') == 'image'
                 or type(text) == 'string' and text:match('^%[@image%]%(data:image/')
             then
-                local previous = updates[#updates]
-                local previous_text = vim.tbl_get(previous, 'content', 'text')
-                local image_path, image_rest
-                if type(previous_text) == 'string' then
-                    image_path, image_rest =
-                        previous_text:match('Image path: (/%S-%.%l[%l%d]*)(.*)')
-                end
-                if image_path then
-                    previous.content.text = image_rest
-                end
-                update.content = {
-                    type = 'text',
-                    text = '\n󰋩 Saved Image'
-                        .. (image_path and ': ' .. image_path or ''),
-                }
-            elseif path then
-                update.content.text = ('> Saved Context:\n> - 󰈙 %s\n\n%s'):format(
-                    path,
-                    rest or ''
-                )
+                return
             end
             table.insert(updates, update)
         end,
@@ -374,6 +380,18 @@ local function load_entry(chat, entry)
         return utils.notify('Failed to load ACP session', vim.log.levels.ERROR)
     end
 
+    local restored_turns = restored_user_turn_count(updates)
+    if #saved_context > 0 then
+        table.insert(saved_context, 1, '> Saved Context:')
+        table.insert(updates, {
+            sessionUpdate = 'user_message_chunk',
+            content = {
+                type = 'text',
+                text = table.concat(saved_context, '\n') .. '\n\n',
+            },
+        })
+    end
+
     require('codecompanion.interactions.chat.acp.commands').link_buffer_to_session(
         chat.bufnr,
         chat.acp_connection.session_id
@@ -382,7 +400,7 @@ local function load_entry(chat, entry)
     chat.opts.cwd = entry.cwd
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
     -- Rebuild the cycle count for the footer after rendering restored messages
-    chat.cycle = math.max(chat.cycle or 1, restored_user_turn_count(updates) + 1)
+    chat.cycle = math.max(chat.cycle or 1, restored_turns + 1)
     -- Restore saved context usage so the footer does not show 0% until next turn
     chat.tokens = restored_context_tokens(entry) or chat.tokens
     -- Mark the chat as claimed so target_chat won't reuse it for another session
