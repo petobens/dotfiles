@@ -461,7 +461,7 @@ local function load_entry(chat, entry)
     if entry.title and entry.title ~= '' then
         vim.schedule(function()
             if vim.api.nvim_buf_is_valid(chat.bufnr) then
-                chat.opts.title = entry.title
+                chat.opts.title = entry.title -- Persist in the history extension
                 chat:set_title(entry.title)
                 restored_event.title = entry.title
                 utils.fire('ACPChatRestored', restored_event)
