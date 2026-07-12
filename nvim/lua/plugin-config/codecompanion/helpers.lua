@@ -56,17 +56,28 @@ local function get_or_create_chat()
     return get_last_chat() or codecompanion.chat()
 end
 
-function M.state.get_chat_label(chat)
-    local label = nil
-
-    pcall(function()
-        for _, entry in pairs(codecompanion.buf_get_chat()) do
-            if entry.chat == chat then
-                label = entry.name
-                break
-            end
+local function get_chat_ordinal(bufnr)
+    for i, chat_bufnr in ipairs(_G.codecompanion_buffers or {}) do
+        if chat_bufnr == bufnr then
+            return i
         end
-    end)
+    end
+end
+
+function M.state.get_chat_label(chat)
+    local ordinal = get_chat_ordinal(chat.bufnr)
+    local label = ordinal and ('Chat ' .. ordinal) or nil
+
+    if not label then
+        pcall(function()
+            for _, entry in pairs(codecompanion.buf_get_chat()) do
+                if entry.chat == chat then
+                    label = entry.name
+                    break
+                end
+            end
+        end)
+    end
 
     if not label or label == '' then
         label = 'Chat ' .. chat.bufnr
@@ -161,14 +172,16 @@ function M.state.get_chat_title(chat, entry)
     end
 
     if entry and entry.name then
-        return entry.name
+        local ordinal = get_chat_ordinal(entry.bufnr)
+        return ordinal and ('Chat ' .. ordinal) or entry.name
     end
 
     return chat and M.state.get_chat_label(chat) or 'Chat'
 end
 
 function M.state.get_chat_number(entry)
-    local number = (entry and entry.name or ''):match('Chat%s+(%d+)')
+    local number = get_chat_ordinal(entry and entry.bufnr)
+        or (entry and entry.name or ''):match('Chat%s+(%d+)')
     return number and ('#' .. number) or ('#' .. tostring(entry and entry.bufnr or '?'))
 end
 
