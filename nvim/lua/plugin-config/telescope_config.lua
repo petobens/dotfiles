@@ -670,6 +670,29 @@ local custom_actions = transform_mod({
             img_clip.paste_image(nil, filepath)
         end
     end,
+    -- Add PDFs as documents to CodeCompanion
+    add_codecompanion_documents = function(prompt_bufnr)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local multi = picker:get_multi_selection()
+        actions.close(prompt_bufnr)
+
+        local entries = not vim.tbl_isempty(multi) and multi
+            or { action_state.get_selected_entry() }
+        local files = vim.iter(entries)
+            :map(function(entry)
+                return string.format('%s/%s', entry.cwd, entry.filename)
+            end)
+            :filter(function(file)
+                return file:lower():match('%.pdf$') ~= nil
+            end)
+            :totable()
+
+        if vim.tbl_isempty(files) then
+            vim.notify('Select at least one PDF', vim.log.levels.WARN)
+            return
+        end
+        _G.CodeCompanionConfig.add_documents(files)
+    end,
     -- Run codecompanion code review
     codecompanion_code_review = function(prompt_bufnr)
         actions.close(prompt_bufnr)
@@ -849,6 +872,8 @@ telescope.setup({
             },
         },
         find_files = {
+            prompt_title = 'Files (<A-c>:dir,<A-p>:parents,<A-g>:grep,'
+                .. '<A-a>:context,<A-i>:image,<A-d>:document)',
             find_command = {
                 'fd',
                 '--type',
@@ -870,6 +895,7 @@ telescope.setup({
                     ['<A-g>'] = custom_actions.entry_igrep,
                     ['<A-a>'] = stopinsert(custom_actions.add_codecompanion_references),
                     ['<A-i>'] = custom_actions.paste_img_clip,
+                    ['<A-d>'] = stopinsert(custom_actions.add_codecompanion_documents),
                 },
             },
         },

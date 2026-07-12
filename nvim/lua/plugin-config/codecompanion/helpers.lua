@@ -468,6 +468,20 @@ function M.chat.add_context(files)
     M.window.focus_or_toggle_chat({ startinsert = false })
 end
 
+function M.chat.add_documents(files)
+    local chat = get_or_create_chat()
+    local command = require('codecompanion.interactions.shared.slash_commands.file').new({
+        Chat = chat,
+        config = config.interactions.chat.slash_commands.file,
+    })
+
+    for _, file in ipairs(files) do
+        command:output({ path = file })
+    end
+
+    M.window.focus_or_toggle_chat({ startinsert = false })
+end
+
 function M.chat.run_slash_command(name, opts)
     opts = opts or {}
 

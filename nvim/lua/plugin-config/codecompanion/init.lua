@@ -9,6 +9,7 @@ function M.setup()
     -- Global variable to be used by other parts of the config (Telescope, NvimTree, etc)
     _G.CodeCompanionConfig = {
         add_context = chat_helpers.add_context,
+        add_documents = chat_helpers.add_documents,
         run_slash_command = chat_helpers.run_slash_command,
     }
 end
