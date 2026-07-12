@@ -86,6 +86,28 @@ local function patch_image_paths()
     end
 end
 
+local function patch_acp_context_separator()
+    -- ACP shares each file as a bare "Sharing the following file as context:
+    -- <path>" block with no trailing newline, so consecutive markers and the
+    -- following user prompt render glued together. Terminate each marker with
+    -- a newline to keep them on their own lines
+    local helpers = require('codecompanion.adapters.acp.helpers')
+    local form_messages = helpers.form_messages
+
+    helpers.form_messages = function(...)
+        local parts = form_messages(...)
+        for _, part in ipairs(parts) do
+            if
+                type(part.text) == 'string'
+                and part.text:match('^Sharing the following file as context:')
+            then
+                part.text = part.text .. '\n'
+            end
+        end
+        return parts
+    end
+end
+
 function M.apply()
     if applied then
         return
@@ -95,6 +117,7 @@ function M.apply()
     patch_tool_approval_notification()
     patch_acp_cwd()
     patch_image_paths()
+    patch_acp_context_separator()
 
     applied = true
 end
