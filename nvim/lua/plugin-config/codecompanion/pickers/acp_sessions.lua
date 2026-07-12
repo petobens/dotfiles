@@ -7,6 +7,7 @@ local helpers = require('plugin-config.codecompanion.helpers')
 local utils = require('codecompanion.utils')
 local state_helpers = helpers.state
 local chat_helpers = require('codecompanion.interactions.chat.helpers')
+local extract_text = require('codecompanion.acp.prompt_builder').extract_text
 local registry = require('codecompanion.interactions.shared.registry')
 
 local picker_helpers = require('plugin-config.codecompanion.pickers.helpers')
@@ -281,6 +282,28 @@ local function restored_user_turn_count(updates)
     return count
 end
 
+-- Rebuild structured {role, content} messages from ACP updates for /clone,
+-- coalescing the streamed chunks of each turn
+local function restored_messages(updates)
+    local messages = {}
+    for _, update in ipairs(updates) do
+        local role = ({
+            user_message_chunk = 'user',
+            agent_message_chunk = 'llm',
+        })[update.sessionUpdate]
+        local text = role and extract_text(update.content)
+        if text and text ~= '' then
+            local previous = messages[#messages]
+            if previous and previous.role == role then
+                previous.content = previous.content .. text
+            else
+                table.insert(messages, { role = role, content = text })
+            end
+        end
+    end
+    return messages
+end
+
 -- Read the saved context token snapshot used by the footer
 local function restored_context_tokens(entry)
     local tokens
@@ -407,6 +430,8 @@ local function load_entry(chat, entry)
     chat.opts.cwd = entry.cwd
     -- Actually restore the session
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
+    -- ACP restore renders only to the buffer, so retain structured messages for /clone
+    chat._acp_restored_messages = restored_messages(updates)
     -- Render context metadata only; ACP already retains the content server-side
     for _, context in ipairs(restored_context) do
         chat.context:add({

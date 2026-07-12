@@ -4,6 +4,7 @@ local u = require('utils')
 
 -- Constants
 local SLASH_COMMANDS = 'plugin-config.codecompanion.slash_commands.'
+local clone = require(SLASH_COMMANDS .. 'clone')
 local coding = require(SLASH_COMMANDS .. 'coding')
 local gdocs = require(SLASH_COMMANDS .. 'gdocs')
 local gdrive = require(SLASH_COMMANDS .. 'gdrive')
@@ -96,6 +97,10 @@ local slash_commands = {
         },
     },
     ['help'] = { opts = { max_lines = 10000 } },
+    ['clone'] = {
+        description = 'Clone this chat into a new session',
+        callback = clone.clone_chat,
+    },
     ['image'] = {
         opts = {
             dirs = { '~/Pictures/Screenshots/' },
