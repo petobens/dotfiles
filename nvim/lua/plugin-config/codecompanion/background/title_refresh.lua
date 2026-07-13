@@ -1,4 +1,5 @@
 local native = require('codecompanion.interactions.background.builtin.chat_make_title')
+local tags = require('codecompanion.interactions.shared.tags')
 local utils = require('codecompanion.utils')
 
 local M = {}
@@ -6,6 +7,25 @@ local M = {}
 local REFRESH_EVERY_N_TURNS = 3
 local baseline_turns = {}
 local pending = {}
+
+local function format_messages(messages)
+    messages = vim.iter(messages or {})
+        :map(function(message)
+            -- Upstream strips images but not documents, whose base64
+            -- payload overflows the title model's context
+            if message._meta and message._meta.tag == tags.DOCUMENT then
+                return vim.tbl_extend(
+                    'force',
+                    message,
+                    { content = '[Document content omitted]' }
+                )
+            end
+            return message
+        end)
+        :totable()
+
+    return native.format_messages(messages)
+end
 
 function M.request(background, chat)
     local bufnr = chat.bufnr
@@ -50,7 +70,7 @@ function M.request(background, chat)
         },
         {
             role = 'user',
-            content = 'Chat transcript:\n\n' .. native.format_messages(chat.messages),
+            content = 'Chat transcript:\n\n' .. format_messages(chat.messages),
         },
     }, {
         method = 'async',
