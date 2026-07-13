@@ -357,7 +357,7 @@ function _G.TelescopeConfig.py_venvs(opts)
 
     pickers
         .new(opts, {
-            prompt_title = manager .. ' venvs',
+            prompt_title = manager .. ' venvs (<CR>:activate)',
             finder = finders.new_table({
                 results = venvs,
                 entry_maker = opts.entry_maker,
@@ -837,6 +837,7 @@ telescope.setup({
     },
     pickers = {
         buffers = {
+            prompt_title = 'Buffers (<C-d>:delete)',
             sort_mru = true,
             mappings = {
                 i = {
@@ -881,6 +882,7 @@ telescope.setup({
             },
         },
         live_grep = {
+            prompt_title = 'Grep (<C-space>:select)',
             path_display = { shorten = 3 },
             mappings = {
                 i = {
@@ -891,6 +893,7 @@ telescope.setup({
             },
         },
         lsp_document_symbols = {
+            prompt_title = 'Document Symbols (<C-x>:complete)',
             mappings = {
                 i = {
                     ['<C-x>'] = actions.complete_tag,
@@ -898,6 +901,7 @@ telescope.setup({
             },
         },
         lsp_workspace_symbols = {
+            prompt_title = 'Workspace Symbols (<C-x>:complete)',
             mappings = {
                 i = {
                     ['<C-x>'] = actions.complete_tag,
@@ -905,6 +909,8 @@ telescope.setup({
             },
         },
         git_commits = {
+            prompt_title = 'Commits (<C-d>:delta,<C-o>:checkout,<C-y>:yank,'
+                .. '<A-r>:review,<A-c>:changelog)',
             layout_config = { preview_width = 0.55 },
             mappings = {
                 i = {
@@ -919,6 +925,8 @@ telescope.setup({
             },
         },
         git_bcommits = {
+            prompt_title = 'Buffer Commits (<C-d>:delta,<C-o>:checkout,<C-y>:yank,'
+                .. '<A-r>:review,<A-c>:changelog)',
             layout_config = { preview_width = 0.55 },
             mappings = {
                 i = {
@@ -940,6 +948,7 @@ telescope.setup({
             },
         },
         spell_suggest = {
+            prompt_title = 'Spelling Suggestions (<CR>:fix word,<C-o>:fix all)',
             mappings = {
                 i = {
                     ['<C-o>'] = custom_actions.spell_fix_all,
@@ -964,6 +973,7 @@ telescope.setup({
             provider = 'dictionaryapi', -- or 'datamuse'
         },
         undo = {
+            prompt_title = 'Undo (<C-y>:yank,<C-r>:restore)',
             layout_config = { preview_width = 0.7 },
             mappings = {
                 i = {
@@ -994,7 +1004,7 @@ end
 
 local function frecent_files()
     telescope.extensions.frecency.frecency({
-        prompt_title = 'Frecent Files (<C-d>:delete)',
+        prompt_title = 'Frecent Files (<C-d>:delete,<C-y>:yank)',
         attach_mappings = function(_, map)
             map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
             map('i', '<C-y>', custom_actions.yank)
@@ -1064,7 +1074,6 @@ local function gitcommits(opts)
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0))) -- to fix delta previewing
     builtin.git_commits({
         cwd = opts.cwd,
-        prompt_title = 'Repo Commits (<C-d>:delta-diff,<C-o>:git-checkout,<A-r>:review,<A-c>:changelog)',
         results_title = git_root,
         previewer = {
             delta,
@@ -1082,7 +1091,6 @@ local function gitcommits_buffer(opts)
     builtin.git_bcommits({
         cwd = opts.cwd,
         results_title = vim.api.nvim_buf_get_name(0),
-        prompt_title = 'File Commits (<C-d>:delta-diff,<C-o>:git-checkout,<A-r>:review)',
         previewer = {
             delta,
             previewers.git_commit_diff_as_was.new(opts),
@@ -1127,9 +1135,7 @@ vim.keymap.set('n', '<Leader>tq', function()
     vim.cmd.Telescope('quickfix')
 end, { desc = 'Telescope: Quickfix' })
 
-vim.keymap.set('n', '<Leader>be', function()
-    builtin.buffers({ prompt_title = 'Buffers (<C-d>:delete)' })
-end, { desc = 'Telescope: Buffers' })
+vim.keymap.set('n', '<Leader>be', builtin.buffers, { desc = 'Telescope: Buffers' })
 
 vim.keymap.set(
     'n',
@@ -1291,7 +1297,8 @@ end, { desc = 'Telescope: Search history' })
 
 vim.keymap.set('n', '<Leader>yh', function()
     telescope.extensions.neoclip.default({
-        prompt_title = 'Neoclip: Register + (<C-y>:yank, <CR>:paste)',
+        prompt_title = 'Neoclip: Register + (<C-d>:delete,<C-q>:replay,'
+            .. '<C-y>:yank,<CR>:paste)',
         preview_title = 'Yank History Preview',
     })
 end, { desc = 'Telescope: Yank history (neoclip)' })
@@ -1316,7 +1323,6 @@ end, { desc = 'Telescope: Buffer-local keymaps' })
 vim.keymap.set('n', '<Leader>sg', function()
     builtin.spell_suggest({
         fuzzy = false,
-        prompt_title = 'Spelling Suggestions (<CR>:fix-word,<C-o>:fix-all)',
     })
 end, { desc = 'Telescope: Spelling suggestions' })
 
@@ -1330,7 +1336,6 @@ end, { desc = 'Telescope: LSP references/appearances' })
 
 vim.keymap.set('n', '<Leader>te', function()
     builtin.lsp_document_symbols({
-        prompt_title = 'LSP Symbols (<C-x>:complete-tag)',
         results_title = vim.api.nvim_buf_get_name(0),
         preview_title = 'LSP Document Symbols Preview',
     })
@@ -1338,7 +1343,6 @@ end, { desc = 'Telescope: LSP document symbols' })
 
 vim.keymap.set('n', '<Leader>we', function()
     builtin.lsp_workspace_symbols({
-        prompt_title = 'LSP Workspace Symbols (<C-x>:complete-tag)',
         preview_title = 'LSP Workspace Symbols Preview',
     })
 end, { desc = 'Telescope: LSP workspace symbols' })
@@ -1358,7 +1362,6 @@ end, { desc = 'Telescope: Snippets (luasnip)' })
 
 vim.keymap.set('n', '<Leader>gu', function()
     require('telescope').extensions.undo.undo({
-        prompt_title = 'Undo Tree (<C-r>:restore, <C-y>:yank)',
         preview_title = 'Undo Diff',
     })
 end, { desc = 'Telescope: Undo tree' })
