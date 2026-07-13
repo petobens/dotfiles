@@ -401,6 +401,21 @@ end
 
 -- Custom actions
 local transform_mod = require('telescope.actions.mt').transform_mod
+
+local function selected_files(prompt_bufnr)
+    local picker = action_state.get_current_picker(prompt_bufnr)
+    local multi = picker:get_multi_selection()
+    actions.close(prompt_bufnr)
+
+    local entries = not vim.tbl_isempty(multi) and multi
+        or { action_state.get_selected_entry() }
+    return vim.iter(entries)
+        :map(function(entry)
+            return string.format('%s/%s', entry.cwd, entry.filename)
+        end)
+        :totable()
+end
+
 local custom_actions = transform_mod({
     -- Open one or many files at once
     open_one_or_many = function(prompt_bufnr)
@@ -636,52 +651,11 @@ local custom_actions = transform_mod({
     end,
     -- Add files as a reference/context to codecompanion
     add_codecompanion_references = function(prompt_bufnr)
-        local picker = action_state.get_current_picker(prompt_bufnr)
-        local multi = picker:get_multi_selection()
-        actions.close(prompt_bufnr)
-
-        local files = {}
-        if not vim.tbl_isempty(multi) then
-            for _, v in pairs(multi) do
-                table.insert(files, string.format('%s/%s', v.cwd, v.filename))
-            end
-        else
-            local entry = action_state.get_selected_entry()
-            table.insert(files, string.format('%s/%s', entry.cwd, entry.filename))
-        end
-        _G.CodeCompanionConfig.add_context(files)
-    end,
-    -- Paste images with img-clip plugin
-    paste_img_clip = function(prompt_bufnr)
-        local picker = action_state.get_current_picker(prompt_bufnr)
-        local multi = picker:get_multi_selection()
-        actions.close(prompt_bufnr)
-
-        local entries = not vim.tbl_isempty(multi) and multi
-            or { action_state.get_selected_entry() }
-        local files = vim.iter(entries)
-            :map(function(entry)
-                return string.format('%s/%s', entry.cwd, entry.filename)
-            end)
-            :totable()
-
-        local img_clip = require('img-clip')
-        for _, filepath in ipairs(files) do
-            img_clip.paste_image(nil, filepath)
-        end
+        _G.CodeCompanionConfig.add_context(selected_files(prompt_bufnr))
     end,
     -- Add PDFs as documents to CodeCompanion
     add_codecompanion_documents = function(prompt_bufnr)
-        local picker = action_state.get_current_picker(prompt_bufnr)
-        local multi = picker:get_multi_selection()
-        actions.close(prompt_bufnr)
-
-        local entries = not vim.tbl_isempty(multi) and multi
-            or { action_state.get_selected_entry() }
-        local files = vim.iter(entries)
-            :map(function(entry)
-                return string.format('%s/%s', entry.cwd, entry.filename)
-            end)
+        local files = vim.iter(selected_files(prompt_bufnr))
             :filter(function(file)
                 return file:lower():match('%.pdf$') ~= nil
             end)
@@ -692,6 +666,13 @@ local custom_actions = transform_mod({
             return
         end
         _G.CodeCompanionConfig.add_documents(files)
+    end,
+    -- Paste images with img-clip plugin
+    paste_img_clip = function(prompt_bufnr)
+        local img_clip = require('img-clip')
+        for _, filepath in ipairs(selected_files(prompt_bufnr)) do
+            img_clip.paste_image(nil, filepath)
+        end
     end,
     -- Run codecompanion code review
     codecompanion_code_review = function(prompt_bufnr)
