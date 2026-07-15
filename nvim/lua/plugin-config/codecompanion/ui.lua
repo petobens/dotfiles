@@ -1,6 +1,7 @@
 local codecompanion = require('codecompanion')
 local devicons = require('nvim-web-devicons')
 local telescope_action_state = require('telescope.actions.state')
+local tool_labels = require('codecompanion.interactions.chat.tools.labels')
 
 local u = require('utils')
 local acp_helpers = require('plugin-config.codecompanion.helpers').acp
@@ -339,6 +340,19 @@ function M.setup()
             vim.schedule(function()
                 refresh_chat_footer(bufnr)
             end)
+        end,
+    })
+
+    -- Tool approval notification
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'CodeCompanionToolApprovalFinished',
+        desc = 'Clear CodeCompanion tool approval notification',
+        callback = function(e)
+            -- But keep the notification visible on rejection/cancel
+            local choice = e.data.choice
+            if choice ~= 'cancelled' and not tool_labels.is_rejection(choice) then
+                vim.api.nvim_echo({ { '' } }, false, {})
+            end
         end,
     })
 
