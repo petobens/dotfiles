@@ -171,60 +171,57 @@ end
 -- Spinner internals
 vim.api.nvim_set_hl(0, 'CodeCompanionSpinner', { fg = '#7f848e' })
 
-local spinner = {
-    states = {
-        '⢎ ',
-        '⠎⠁',
-        '⠊⠑',
-        '⠈⠱',
-        ' ⡱',
-        '⢀⡰',
-        '⢄⡠',
-        '⢆⡀',
-    },
-    ns = vim.api.nvim_create_namespace('codecompanion_spinner'),
-    bufnr = nil,
-    timer = nil,
-    index = 1,
+local spinner_states = {
+    '⢎ ',
+    '⠎⠁',
+    '⠊⠑',
+    '⠈⠱',
+    ' ⡱',
+    '⢀⡰',
+    '⢄⡠',
+    '⢆⡀',
 }
+local spinner_ns = vim.api.nvim_create_namespace('codecompanion_spinner')
+local spinners = {}
 
-local function spinner_winnr()
-    if not (spinner.bufnr and vim.api.nvim_buf_is_valid(spinner.bufnr)) then
+local function spinner_winnr(bufnr)
+    if not vim.api.nvim_buf_is_valid(bufnr) then
         return nil
     end
-    local winnr = vim.fn.bufwinid(spinner.bufnr)
+    local winnr = vim.fn.bufwinid(bufnr)
     if winnr == -1 or not vim.api.nvim_win_is_valid(winnr) then
         return nil
     end
     return winnr
 end
 
-local function clear_spinner()
-    if spinner.timer then
-        spinner.timer:stop()
-        spinner.timer:close()
-        spinner.timer = nil
-    end
-
-    if spinner.bufnr and vim.api.nvim_buf_is_valid(spinner.bufnr) then
-        vim.api.nvim_buf_clear_namespace(spinner.bufnr, spinner.ns, 0, -1)
-    end
-
-    spinner.bufnr = nil
-end
-
-local function update_spinner()
-    if not spinner_winnr() then
+local function clear_spinner(bufnr)
+    local spinner = spinners[bufnr]
+    if not spinner then
         return
     end
 
-    local last_line = vim.api.nvim_buf_line_count(spinner.bufnr) - 1
-    vim.api.nvim_buf_set_extmark(spinner.bufnr, spinner.ns, last_line, 0, {
+    spinner.timer:stop()
+    spinner.timer:close()
+    if vim.api.nvim_buf_is_valid(bufnr) then
+        vim.api.nvim_buf_clear_namespace(bufnr, spinner_ns, 0, -1)
+    end
+    spinners[bufnr] = nil
+end
+
+local function update_spinner(bufnr)
+    local spinner = spinners[bufnr]
+    if not spinner or not spinner_winnr(bufnr) then
+        return
+    end
+
+    local last_line = vim.api.nvim_buf_line_count(bufnr) - 1
+    vim.api.nvim_buf_set_extmark(bufnr, spinner_ns, last_line, 0, {
         id = 1,
-        virt_text = { { spinner.states[spinner.index], 'CodeCompanionSpinner' } },
+        virt_text = { { spinner_states[spinner.index], 'CodeCompanionSpinner' } },
         virt_text_pos = 'right_align',
     })
-    spinner.index = spinner.index % #spinner.states + 1
+    spinner.index = spinner.index % #spinner_states + 1
 end
 
 -- Chat display
@@ -350,24 +347,34 @@ function M.setup()
         pattern = 'CodeCompanionChatSubmitted',
         desc = 'Start CodeCompanion spinner when a chat turn begins',
         callback = function(e)
-            clear_spinner()
-
             local bufnr = e.data and e.data.bufnr
             if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
                 return
             end
 
-            spinner.bufnr = bufnr
-            spinner.timer = vim.uv.new_timer()
-            spinner.timer:start(0, 100, vim.schedule_wrap(update_spinner))
+            clear_spinner(bufnr)
+            spinners[bufnr] = { timer = vim.uv.new_timer(), index = 1 }
+            spinners[bufnr].timer:start(
+                0,
+                100,
+                vim.schedule_wrap(function()
+                    update_spinner(bufnr)
+                end)
+            )
         end,
     })
 
     vim.api.nvim_create_autocmd('User', {
         pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
         desc = 'Clear CodeCompanion spinner when a chat turn ends',
-        callback = function()
-            vim.defer_fn(clear_spinner, 50)
+        callback = function(e)
+            local bufnr = e.data and e.data.bufnr
+            if not bufnr then
+                return
+            end
+            vim.defer_fn(function()
+                clear_spinner(bufnr)
+            end, 50)
         end,
     })
 end
