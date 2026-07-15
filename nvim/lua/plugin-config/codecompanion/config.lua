@@ -38,6 +38,7 @@ function M.setup()
                 },
                 claude_code = adapters.claude_code,
                 codex = adapters.codex,
+                codex_pi = adapters.codex_pi,
             },
         },
         -- Display

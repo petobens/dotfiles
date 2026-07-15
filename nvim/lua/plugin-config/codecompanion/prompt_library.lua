@@ -23,9 +23,13 @@ local PROMPT_LIBRARY_CONFIG = {
     },
 }
 
+function M.prompt_path(name)
+    return vim.fs.joinpath(PROMPT_LIBRARY_CONFIG.prompt_dir, name .. '.md')
+end
+
 -- Prompt library loading
 local function read_prompt_file(fname)
-    local path = vim.fs.joinpath(PROMPT_LIBRARY_CONFIG.prompt_dir, fname .. '.md')
+    local path = M.prompt_path(fname)
     local fd = io.open(path, 'r')
     if not fd then
         vim.notify(('Prompt file not found: %s'):format(path), vim.log.levels.WARN)

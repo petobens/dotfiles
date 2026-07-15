@@ -124,8 +124,6 @@ function M.codex()
         commands = {
             default = {
                 'codex-acp',
-                '-c',
-                'sandbox_permissions=["disk-full-read-access"]',
             },
         },
         defaults = {
@@ -143,6 +141,21 @@ function M.codex()
             },
         },
     })
+end
+
+function M.codex_pi()
+    local adapter = M.codex()
+    local pi_system_prompt_path =
+        require('plugin-config.codecompanion.prompt_library').prompt_path(
+            'pi_system_prompt'
+        )
+    adapter.name = 'codex_pi'
+    adapter.formatted_name = 'Codex Pi'
+    adapter.env.CODEX_CONFIG = vim.json.encode({
+        model_instructions_file = pi_system_prompt_path,
+    })
+
+    return adapter
 end
 
 function M.claude_code()
