@@ -99,19 +99,18 @@ function M.setup()
                 slash_commands = slash_commands.build(),
                 -- Tools
                 tools = tools.build(),
-                -- Editor context (variables)
-                editor_context = {
-                    ['buffer'] = {
-                        opts = {
-                            default_params = 'diff',
-                        },
-                    },
-                },
             },
             -- CLI
             cli = cli.build(),
             -- Shared
             shared = {
+                editor_context = {
+                    buffer = {
+                        opts = {
+                            default_params = 'diff',
+                        },
+                    },
+                },
                 keymaps = mappings.shared_keymaps(),
             },
         },
