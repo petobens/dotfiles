@@ -1,16 +1,16 @@
 #cloud-config
 ---
 users:
-  - name: arch
+  - name: pedro
     groups: [wheel, video, render, input]
     # Fish is installed later by the repository package profile
     shell: /bin/bash
-    sudo: ALL=(ALL) NOPASSWD:ALL
+    sudo: ALL=(ALL:ALL) ALL
     lock_passwd: false
 chpasswd:
   expire: false
   users:
-    - {name: arch, password: wayland, type: text}
+    - {name: pedro, password: wayland, type: text}
 ssh_pwauth: true
 mounts:
   - [
@@ -22,33 +22,16 @@ mounts:
     "0",
   ]
 runcmd:
-  - [cp, -a, /mnt/dotfiles, /home/arch/dotfiles-wayland]
-  - [chown, -R, arch:arch, /home/arch/dotfiles-wayland]
+  - [install, -d, -o, pedro, -g, pedro, /home/pedro/git-repos/private]
   - [
-    sudo,
-    -u,
-    arch,
-    /home/arch/dotfiles-wayland/setup/install.sh,
-    --all,
-    --vm,
-    --non-interactive,
+    cp,
+    -a,
+    /mnt/dotfiles,
+    /home/pedro/git-repos/private/dotfiles,
   ]
-  # Use the read-only host checkout for live Hyprland changes
   - [
-    sudo,
-    -u,
-    arch,
-    ln,
-    -sfn,
-    /mnt/dotfiles/hypr,
-    /home/arch/.config/hypr,
+    chown,
+    -R,
+    pedro:pedro,
+    /home/pedro/git-repos/private/dotfiles,
   ]
-  # Remove package archives after provisioning the disposable guest
-  - [pacman, -Scc, --noconfirm]
-  - [systemctl, enable, --now, qemu-guest-agent]
-  - [systemctl, enable, --now, sshd]
-power_state:
-  mode: reboot
-  message: Rebooting after dotfiles provisioning
-  timeout: 30
-  condition: true

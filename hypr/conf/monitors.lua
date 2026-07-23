@@ -1,4 +1,4 @@
--- Safe fallback for the VM and unknown hardware
+-- Safe fallback for unknown displays
 hl.monitor({ output = '', mode = 'preferred', position = 'auto', scale = 1 })
 
 -- LG UltraGear 39GX950B. Enable after checking the connector with

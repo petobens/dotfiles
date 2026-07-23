@@ -22,18 +22,15 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Screenshots      | Grim, Slurp, and wl-clipboard |
 | Bootloader       | systemd-boot                  |
 
-Package profiles under `setup/packages/` are divided by where they run and how
-they are installed:
+Package profiles under `setup/packages/` are divided by purpose:
 
-| Profile        | Purpose                                                    |
-| -------------- | ---------------------------------------------------------- |
-| `base`         | Command-line tools shared by physical and VM installations |
-| `desktop`      | Wayland desktop shared by physical and VM installations    |
-| `applications` | Physical-machine applications from Arch repositories       |
-| `aur`          | Physical-machine applications installed with Yay           |
-| `development`  | Physical-machine development tools                         |
-| `host`         | Intel hardware support and QEMU host tools                 |
-| `vm`           | QEMU guest integration                                     |
+| Profile        | Purpose                                          |
+| -------------- | ------------------------------------------------ |
+| `base`         | Command-line and system tools                    |
+| `desktop`      | Wayland desktop and Intel hardware support       |
+| `applications` | Desktop applications from Arch repositories      |
+| `aur`          | Additional applications installed with Yay       |
+| `development`  | Development, data, document, and QEMU host tools |
 
 ## Layout
 
@@ -55,19 +52,32 @@ From a fresh Arch installation:
 git clone \
     --branch dotfiles-wayland \
     https://github.com/petobens/dotfiles.git \
-    ~/git-repos/private/dotfiles-wayland
-cd ~/git-repos/private/dotfiles-wayland
-./setup/install.sh --all
+    ~/git-repos/private/dotfiles
+cd ~/git-repos/private/dotfiles
+./setup/install.sh
 ```
 
-The installer installs the host profiles, enables the required
-services, and symlinks the configuration into the home directory. Existing
-real files at symlink destinations are backed up under
+The installer lets you choose packages, optional native TeX Live managed by
+`tlmgr`, symlinks, or all three. It enables the required services and symlinks
+the configuration into the home directory. Existing real files at symlink
+destinations are backed up under
 `~/.local/state/dotfiles-backup/`.
+
+For explicit component selection, `--all` installs packages and symlinks but
+not LaTeX. Add `--latex` to include it:
+
+```bash
+./setup/install.sh --all
+./setup/install.sh --all --latex
+```
 
 The installer sets Fish as the login shell. After entering the username and
 password at the tty1 login prompt, that Fish login starts Hyprland
 automatically.
+
+Both the standard and LTS kernels, including their headers, are installed.
+Choosing between them requires corresponding entries in the machine's
+bootloader.
 
 See `hypr/conf/monitors.lua` for monitor configuration.
 

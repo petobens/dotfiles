@@ -13,6 +13,10 @@ gopass
 htop
 jq
 less
+linux
+linux-headers
+linux-lts
+linux-lts-headers
 lsd
 luacheck
 markdownlint-cli

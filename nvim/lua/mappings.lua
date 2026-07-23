@@ -397,7 +397,7 @@ vim.keymap.set('n', '<Leader>eb', function()
 end, { desc = 'Edit Fish config' })
 vim.keymap.set('n', '<Leader>eh', function()
     vim.cmd.edit(
-        vim.fs.joinpath(git_repos, 'private', 'dotfiles-wayland', 'hypr', 'hyprland.lua')
+        vim.fs.joinpath(git_repos, 'private', 'dotfiles', 'hypr', 'hyprland.lua')
     )
 end, { desc = 'Edit Hyprland config' })
 

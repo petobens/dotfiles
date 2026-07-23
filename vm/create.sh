@@ -3,7 +3,6 @@ set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-wayland-vm
-base="$state_dir/arch-cloud.qcow2"
 disk="$state_dir/wayland.qcow2"
 seed="$state_dir/cloud-init.iso"
 firmware_vars="$state_dir/OVMF_VARS.4m.fd"
@@ -24,13 +23,14 @@ mkdir -p "$state_dir"
 	exit 1
 }
 checksum=$(curl --fail --location "$checksum_url" | awk '{print $1}')
-# Keep guest writes in a small overlay on top of the verified base image
+base="$state_dir/arch-cloud-$checksum.qcow2"
+# Keep guest writes in a sparse overlay on top of the verified base image
 if [[ ! -f $base ]] || ! printf '%s  %s\n' "$checksum" "$base" | sha256sum --check --status; then
 	curl --fail --location --output "$base.part" "$image_url"
 	mv "$base.part" "$base"
 fi
 printf '%s  %s\n' "$checksum" "$base" | sha256sum --check
-[[ -f $disk ]] || qemu-img create -f qcow2 -F qcow2 -b "$base" "$disk" 16G
+[[ -f $disk ]] || qemu-img create -f qcow2 -F qcow2 -b "$base" "$disk" 64G
 [[ -f $firmware_vars ]] || cp "$firmware_vars_template" "$firmware_vars"
 
 tmp=$(mktemp -d)

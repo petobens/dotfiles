@@ -15,6 +15,8 @@ hyprpwcenter
 hyprshutdown
 impala
 imv
+intel-media-driver
+intel-ucode
 libnotify
 libsecret
 mako
@@ -33,8 +35,10 @@ qt5-wayland
 qt6-wayland
 rofi
 slurp
+sof-firmware
 ttf-jetbrains-mono-nerd
 udiskie
+vulkan-intel
 waybar
 wireplumber
 wl-clipboard

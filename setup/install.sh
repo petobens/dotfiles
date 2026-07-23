@@ -3,8 +3,8 @@ set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 install_packages=false
+install_latex=false
 install_symlinks=false
-vm=false
 
 for arg in "$@"; do
 	case $arg in
@@ -13,9 +13,8 @@ for arg in "$@"; do
 		install_symlinks=true
 		;;
 	--packages) install_packages=true ;;
+	--latex) install_latex=true ;;
 	--symlinks) install_symlinks=true ;;
-	--vm) vm=true ;;
-	--non-interactive) ;;
 	*)
 		echo "unknown option: $arg" >&2
 		exit 2
@@ -23,7 +22,7 @@ for arg in "$@"; do
 	esac
 done
 
-if ! $install_packages && ! $install_symlinks; then
+if ! $install_packages && ! $install_latex && ! $install_symlinks; then
 	printf 'Install [p]ackages, [s]ymlinks, or [a]ll? '
 	read -r choice
 	case $choice in
@@ -35,15 +34,22 @@ if ! $install_packages && ! $install_symlinks; then
 		;;
 	*) exit 1 ;;
 	esac
+
+	if $install_packages; then
+		printf 'Install LaTeX with tlmgr? [y/N] '
+		read -r choice
+		[[ $choice == [yY] ]] && install_latex=true
+	fi
 fi
 
-if $install_packages; then
-	package_args=()
-	$vm && package_args+=(--vm)
-	"$script_dir/install-packages.sh" "${package_args[@]}"
-fi
 if $install_symlinks; then
 	"$script_dir/symlinks.sh"
+fi
+if $install_packages; then
+	"$script_dir/install-packages.sh"
+fi
+if $install_latex; then
+	"$script_dir/install-latex.sh"
 fi
 
 if command -v fish >/dev/null && [[ $(getent passwd "$USER" | cut -d: -f7) != "$(command -v fish)" ]]; then

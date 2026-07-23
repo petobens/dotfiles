@@ -81,9 +81,7 @@ symlink "$repo/config/home/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 skills_dir="$repo/../ai-harness/skills"
 symlink_if_exists "$skills_dir" "$HOME/.claude/skills"
 symlink_if_exists "$skills_dir" "$HOME/.agents/skills"
-if command -v gopass >/dev/null; then
-	symlink "$(command -v gopass)" "$HOME/.local/bin/pass"
-fi
+symlink /usr/bin/gopass "$HOME/.local/bin/pass"
 # SSH material appears after the first OneDrive synchronization
 symlink_if_exists "$HOME/OneDrive/programming/arch/ssh/config" "$HOME/.ssh/config"
 symlink_if_exists "$HOME/OneDrive/programming/arch/ssh/id_rsa.pub" "$HOME/.ssh/id_rsa.pub"

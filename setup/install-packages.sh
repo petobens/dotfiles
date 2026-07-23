@@ -2,15 +2,7 @@
 set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-profiles=(base desktop)
-vm=false
-if [[ ${1:-} == --vm ]]; then
-	profiles+=(vm)
-	vm=true
-else
-	# QEMU belongs on the physical host, not inside the test guest
-	profiles+=(applications development host)
-fi
+profiles=(base desktop applications development)
 
 # Merge declarative package profiles before calling pacman
 mapfile -t packages < <(
@@ -33,13 +25,13 @@ for mime in image/gif image/jpeg image/png image/svg+xml image/webp; do
 	xdg-mime default imv.desktop "$mime"
 done
 
-if ! $vm; then
+if grep -qw vmx /proc/cpuinfo; then
 	sudo modprobe kvm_intel
-	sudo usermod -aG docker "$USER"
-	if [[ ! -f /var/lib/postgres/data/PG_VERSION ]]; then
-		sudo -iu postgres initdb --locale=C.UTF-8 --encoding=UTF8 -D /var/lib/postgres/data
-	fi
-	sudo systemctl enable --now docker postgresql systemd-timesyncd
-	"$script_dir/install-aur.sh"
-	"$script_dir/install-tools.sh"
 fi
+sudo usermod -aG docker "$USER"
+if [[ ! -f /var/lib/postgres/data/PG_VERSION ]]; then
+	sudo -iu postgres initdb --locale=C.UTF-8 --encoding=UTF8 -D /var/lib/postgres/data
+fi
+sudo systemctl enable --now docker postgresql systemd-timesyncd
+"$script_dir/install-aur.sh"
+"$script_dir/install-tools.sh"

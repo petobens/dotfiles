@@ -21,29 +21,32 @@ fi
 }
 
 printf '%s\n' \
-	'Existing VM state is reused; only a new or reset guest is provisioned.' \
-	'On first boot, run "sudo journalctl -fu cloud-final" or wait for its reboot.'
+	'First boot only: log in as pedro with password wayland.' \
+	'Run: sudo cloud-init status --wait' \
+	'Then run: cd ~/git-repos/private/dotfiles && ./setup/install.sh' \
+	'If Hyprland starts, the guest is already installed and no setup is needed.'
 
 args=(
 	-name dotfiles-wayland
 	-enable-kvm
 	-machine "q35,accel=kvm"
 	-cpu host
-	-smp 4
-	-m 4096
+	-smp 8
+	-m 8192
 	-device virtio-vga-gl
 	-display "gtk,gl=on,grab-on-hover=on,zoom-to-fit=on"
+	-audiodev "pipewire,id=audio0"
+	-device ich9-intel-hda
+	-device "hda-duplex,audiodev=audio0"
 	-device virtio-keyboard-pci
 	-device virtio-mouse-pci
+	-device virtio-rng-pci
 	-drive "if=pflash,format=raw,unit=0,readonly=on,file=$firmware_code"
 	-drive "if=pflash,format=raw,unit=1,file=$firmware_vars"
 	-drive "if=virtio,format=qcow2,file=$disk"
 	-drive "if=virtio,media=cdrom,readonly=on,file=$seed"
 	-nic "user,model=virtio-net-pci,hostfwd=tcp::2222-:22"
-	# Provision from this checkout without allowing the guest to modify it
+	# Copy this checkout into a new guest without allowing it to modify the host
 	-virtfs "local,path=$repo,mount_tag=dotfiles,security_model=none,readonly=on"
-	-device virtio-serial-pci
-	-chardev "spicevmc,id=vdagent,name=vdagent"
-	-device "virtserialport,chardev=vdagent,name=com.redhat.spice.0"
 )
 exec qemu-system-x86_64 "${args[@]}"

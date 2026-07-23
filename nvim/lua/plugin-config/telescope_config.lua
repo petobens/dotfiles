@@ -277,12 +277,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
             prompt_title = 'Directory Bookmarks',
             finder = finders.new_table({
                 results = {
-                    vim.fs.joinpath(
-                        vim.env.HOME,
-                        'git-repos',
-                        'private',
-                        'dotfiles-wayland'
-                    ),
+                    vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'dotfiles'),
                     vim.fs.joinpath(
                         vim.env.HOME,
                         'git-repos',

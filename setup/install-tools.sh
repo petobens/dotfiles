@@ -31,8 +31,3 @@ npm install --global "${npm_packages[@]}"
 
 rustup default stable
 cargo install cargo-update devicon-lookup
-
-# Keep the personal BibLaTeX style in the standard per-user TeX tree
-if [[ ! -d $HOME/texmf ]]; then
-	git clone https://github.com/petobens/mybibformat "$HOME/texmf"
-fi
