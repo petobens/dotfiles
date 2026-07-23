@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+section() {
+	printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
+}
+
+section 'Installing Python tools'
 uv tool install --force aws-mfa
 uv tool install --force black
 uv tool install --force --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib,jupyter-ruff jupyterlab
@@ -17,6 +22,7 @@ uv tool install --force uv-upx
 uv tool install --force yamllint
 uv tool install --force zuban
 
+section 'Installing Node tools'
 npm config set prefix "$HOME/.npm-global"
 npm_packages=(
 	@agentclientprotocol/claude-agent-acp
@@ -29,5 +35,6 @@ npm_packages=(
 )
 npm install --global "${npm_packages[@]}"
 
+section 'Installing Rust tools'
 rustup default stable
 cargo install cargo-update devicon-lookup

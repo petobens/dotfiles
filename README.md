@@ -44,7 +44,50 @@ Package profiles under `setup/packages/` are divided by purpose:
 Hyprland configuration is divided by responsibility under `hypr/conf/`. Its
 helper commands live in `hypr/scripts/`.
 
-## Install
+## Install Arch
+
+Boot the official Arch installation USB in UEFI mode, connect to the internet,
+and fetch this branch in the live environment:
+
+```bash
+pacman -Sy --needed git
+git clone \
+    --depth 1 \
+    --branch dotfiles-wayland \
+    https://github.com/petobens/dotfiles.git \
+    /tmp/dotfiles
+cd /tmp/dotfiles
+./setup/install-arch.sh
+```
+
+The interactive installer handles the disk layout, filesystems, `pacstrap`,
+locale, timezone, hostname, users, services, systemd-boot, and both kernels.
+On physical hardware, it defaults to hostname `x1-carbon`, a 1 GiB EFI
+partition, a 60 GiB root partition, and an ext4 home partition using the
+remaining space.
+
+Virtualization is detected automatically. A VM defaults to hostname `arch-vm`,
+a 1 GiB EFI partition, a 40 GiB root partition, and an ext4 home partition
+using the remaining VM space. It also skips the repository clone so the VM can
+use the live host checkout, which it configures to mount automatically after
+installation. The hostname, root size, and home size remain editable in the
+prompts. Pass `--vm` or `--physical` to override environment detection.
+
+The VM's 96 GiB QCOW2 disk is sparse. This is its maximum guest-visible
+capacity, not 96 GiB reserved on the host. The host file starts small and grows
+as the guest writes data. VM resets also retain one sparse backup, whose actual
+written data consumes host space until the next reset replaces it.
+
+The selected disk is completely erased. The script rejects mounted disks,
+shows the proposed layout, and continues only after its exact
+`ERASE /dev/...` confirmation is entered. It does not support encryption,
+dual boot, RAID, LVM, hibernation, or Secure Boot enrollment.
+
+At the end, accept the default prompt to clone the Wayland branch into
+`~/git-repos/private/dotfiles`. Inspect `/mnt/etc/fstab`, then reboot as
+instructed.
+
+## Install dotfiles
 
 From a fresh Arch installation:
 
@@ -54,8 +97,12 @@ git clone \
     https://github.com/petobens/dotfiles.git \
     ~/git-repos/private/dotfiles
 cd ~/git-repos/private/dotfiles
+tmux
 ./setup/install.sh
 ```
+
+For scrollback, press `Ctrl+B`, release both keys, and then press `[`. Press
+`q` to return to the live command.
 
 The installer lets you choose packages, optional native TeX Live managed by
 `tlmgr`, symlinks, or all three. It enables the required services and symlinks

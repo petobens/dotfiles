@@ -2,6 +2,8 @@
 set -euo pipefail
 
 layout=${1:?usage: place-window LAYOUT}
+
+# Read the active window and its monitor geometry
 read -r address monitor_x monitor_y monitor_w monitor_h < <(
 	hyprctl activewindow -j | jq -r '[.address, .monitor] | @tsv' | {
 		read -r address monitor
@@ -10,6 +12,7 @@ read -r address monitor_x monitor_y monitor_w monitor_h < <(
 	}
 )
 
+# Map named layouts to monitor-relative percentages
 case "$layout" in
 full)
 	x=0

@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+section() {
+	printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
+}
+
+# Verify the system dependencies needed by the native installer
 for command in curl git perl tar; do
 	command -v "$command" >/dev/null || {
 		echo "Missing $command. Install the system packages first." >&2
@@ -8,11 +13,13 @@ for command in curl git perl tar; do
 	}
 done
 
+# Reuse the newest native TeX Live installation when available
 texlive_root=/usr/local/texlive
 tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' -type f 2>/dev/null |
 	sort -V | tail -1)
 
 if [[ -z $tlmgr ]]; then
+	section 'Installing TeX Live'
 	tmp=$(mktemp -d)
 	trap 'rm -rf "$tmp"' EXIT
 	archive="$tmp/install-tl-unx.tar.gz"
@@ -30,6 +37,7 @@ fi
 	exit 1
 }
 
+# Keep the requested TeX packages explicit and reproducible
 packages=(
 	algorithm2e
 	algorithmicx
@@ -121,6 +129,7 @@ packages=(
 	xstring
 )
 
+section 'Installing TeX Live packages'
 sudo "$tlmgr" update --self
 sudo "$tlmgr" option docfiles 1
 sudo "$tlmgr" install "${packages[@]}"
@@ -128,5 +137,6 @@ sudo "$tlmgr" update --all
 sudo "$tlmgr" path add
 
 if [[ ! -d $HOME/texmf ]]; then
+	section 'Installing personal BibLaTeX style'
 	git clone https://github.com/petobens/mybibformat "$HOME/texmf"
 fi

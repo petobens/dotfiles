@@ -4,15 +4,19 @@ set -euo pipefail
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-wayland-vm
 disk="$state_dir/wayland.qcow2"
-seed="$state_dir/cloud-init.iso"
 firmware_vars="$state_dir/OVMF_VARS.4m.fd"
-image_url=https://geo.mirror.pkgbuild.com/images/latest/Arch-Linux-x86_64-cloudimg.qcow2
-checksum_url=$image_url.SHA256
+iso_url=https://geo.mirror.pkgbuild.com/iso/latest/archlinux-x86_64.iso
+checksum_url=https://geo.mirror.pkgbuild.com/iso/latest/sha256sums.txt
 firmware_vars_template=/usr/share/edk2/x64/OVMF_VARS.4m.fd
 
-for command in curl qemu-img cloud-localds; do
+section() {
+	printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
+}
+
+# Check the host tools and firmware needed to build the VM
+for command in curl qemu-img; do
 	command -v "$command" >/dev/null || {
-		echo "Missing $command. Install qemu-desktop and cloud-image-utils." >&2
+		echo "Missing $command. Install qemu-desktop." >&2
 		exit 1
 	}
 done
@@ -22,20 +26,36 @@ mkdir -p "$state_dir"
 	echo 'Missing OVMF firmware. Install edk2-ovmf.' >&2
 	exit 1
 }
-checksum=$(curl --fail --location "$checksum_url" | awk '{print $1}')
-base="$state_dir/arch-cloud-$checksum.qcow2"
-# Keep guest writes in a sparse overlay on top of the verified base image
-if [[ ! -f $base ]] || ! printf '%s  %s\n' "$checksum" "$base" | sha256sum --check --status; then
-	curl --fail --location --output "$base.part" "$image_url"
-	mv "$base.part" "$base"
-fi
-printf '%s  %s\n' "$checksum" "$base" | sha256sum --check
-[[ -f $disk ]] || qemu-img create -f qcow2 -F qcow2 -b "$base" "$disk" 64G
-[[ -f $firmware_vars ]] || cp "$firmware_vars_template" "$firmware_vars"
 
-tmp=$(mktemp -d)
-trap 'rm -rf "$tmp"' EXIT
-cp "$script_dir/user-data" "$tmp/user-data"
-printf 'instance-id: dotfiles-wayland\nlocal-hostname: wayland-vm\n' >"$tmp/meta-data"
-cloud-localds "$seed" "$tmp/user-data" "$tmp/meta-data"
+section 'Preparing Arch installation media'
+checksum=$(curl --fail --location "$checksum_url" |
+	awk '$2 == "archlinux-x86_64.iso" {print $1}')
+[[ -n $checksum ]] || {
+	echo 'Could not find the Arch ISO checksum.' >&2
+	exit 1
+}
+iso="$state_dir/archlinux-$checksum.iso"
+if [[ ! -f $iso ]] || ! printf '%s  %s\n' "$checksum" "$iso" | sha256sum --check --status; then
+	curl --fail --location --output "$iso.part" "$iso_url"
+	mv "$iso.part" "$iso"
+fi
+printf '%s  %s\n' "$checksum" "$iso" | sha256sum --check
+
+# Create persistent guest storage and writable UEFI variables
+if [[ ! -f $disk ]]; then
+	section 'Creating VM disk'
+	qemu-img create -f qcow2 "$disk" 96G
+fi
+if [[ ! -f $firmware_vars ]]; then
+	section 'Initializing UEFI firmware'
+	cp "$firmware_vars_template" "$firmware_vars"
+fi
+
+# Keep only the current installer ISO
+shopt -s nullglob
+for old_iso in "$state_dir"/archlinux-*.iso; do
+	[[ $old_iso == "$iso" ]] || rm -- "$old_iso"
+done
+shopt -u nullglob
+
 printf 'VM created in %s\nRun %s/launch.sh\n' "$state_dir" "$script_dir"

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Resolve the requested app's launch and matching rules
 case ${1:-} in
 brave)
 	tag=brave
@@ -92,6 +93,7 @@ terminal)
 	;;
 esac
 
+# Focus a matching window or launch the app on its assigned workspace
 # Tags distinguish browser apps that otherwise share the same process class
 address=$(hyprctl clients -j | jq -r --arg class "$class" --arg tag "$tag" \
 	'.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address' |

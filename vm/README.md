@@ -1,66 +1,81 @@
 # Arch Wayland VM
 
-The VM uses QEMU/KVM with UEFI, the official Arch cloud image, cloud-init, and
-a sparse qcow2 overlay. Cloud-init creates the `pedro` user and exposes this
-checkout read-only at the same path used on the physical machine. Installation
-is then run interactively through the same installer.
+The VM boots the official Arch installation ISO with UEFI and a blank NVMe
+disk. It uses the same interactive installer, partitioning, `pacstrap`,
+systemd-boot, standard kernel, and LTS kernel setup as the future machine.
 
-For the first VM, create and launch it from the repository root:
+Create and launch the first VM from the repository root:
 
 ```bash
 ./vm/create.sh
 ./vm/launch.sh
 ```
 
-To replace an existing VM with a clean guest, run:
+The first launch boots the Arch ISO. Mount the read-only host checkout in the
+live environment and run its installer:
+
+```bash
+mount -m -t 9p -o trans=virtio dotfiles /run/dotfiles
+/run/dotfiles/setup/install-arch.sh
+```
+
+The installer detects QEMU and defaults to hostname `arch-vm`, a 1 GiB EFI
+partition, a 40 GiB root partition, and a home partition using the remaining
+space. At the `Target disk` prompt, type the complete device path
+`/dev/nvme0n1` and press Enter. It skips the repository clone and configures
+the read-only host checkout automatically.
+
+After the installer finishes:
+
+```bash
+umount -R /mnt
+reboot
+```
+
+After the installed system boots, log in as `pedro`. The checkout is available
+at `~/git-repos/private/dotfiles`; run the normal interactive installer:
+
+```bash
+cd ~/git-repos/private/dotfiles
+tmux
+./setup/install.sh
+sudo reboot
+```
+
+For scrollback, press `Ctrl+B`, release both keys, and then press `[`. Press
+`q` to return to the live command.
+
+Host edits are visible in the guest immediately. The guest cannot modify the
+checkout. Applications may still need to reload their configuration.
+
+Verify that systemd-boot exposes both kernels:
+
+```bash
+bootctl list
+```
+
+On later boots, Fish starts Hyprland automatically after login. If the VM opens
+directly into the graphical desktop, installation is complete.
+
+To replace the VM with a blank disk and repeat the complete Arch installation:
 
 ```bash
 ./vm/reset.sh
 ./vm/launch.sh
 ```
 
-`reset.sh` runs `create.sh` automatically, so do not run both. It preserves the
-current overlay as the only timestamped backup, then removes older backups and
-unreferenced cloud base images. A reset is required after changes to cloud-init
-settings or virtual disk capacity.
+`reset.sh` runs `create.sh` automatically. It preserves the current disk and
+firmware state as the only timestamped backup, removes older backups, and
+downloads a newer Arch ISO when one is released.
 
-On the first boot of a new or reset guest, log in through the graphical console
-as `pedro` with password `wayland`. Wait for
-`~/git-repos/private/dotfiles` to appear, then start the installer:
-
-```bash
-cd ~/git-repos/private/dotfiles
-./setup/install.sh
-```
-
-Choose packages, optional native TeX Live managed by `tlmgr`, symlinks, or all
-three when prompted. The installation uses the same profiles, AUR packages,
-tools, services, and symlinks as the physical machine. It includes the QEMU
-host tooling, so nested virtualization is available when the physical host
-supports it. Reboot when installation finishes; Hyprland starts automatically
-after authentication.
-
-```bash
-sudo reboot
-```
-
-On later boots, Fish starts Hyprland automatically after login. If the VM opens
-directly into the graphical desktop, installation is already complete and
-there is nothing else to run.
-
-The guest path `~/git-repos/private/dotfiles` points to the read-only host
-checkout. Host edits are visible in the guest immediately, without relaunching
-or resetting the VM. Applications may still need to reload their configuration.
-The guest cannot modify the checkout.
-
-QEMU grabs the mouse and keyboard while the pointer is over the VM display, so
-desktop shortcuts are sent to the guest. Press `Ctrl+Alt+G` to release or
-recapture input. The guest also has accelerated graphics, PipeWire-backed
-audio, and a virtual entropy source.
+QEMU grabs the mouse and keyboard while the pointer is over the VM display.
+Press `Ctrl+Alt+G` to release or recapture input. The guest also has accelerated
+graphics, PipeWire-backed audio, and a virtual entropy source.
 
 State is stored in `~/.local/state/dotfiles-wayland-vm`. The virtual disk has a
-sparse 64 GB capacity and consumes only the space written by the guest.
-
-The cloud image replaces the physical Arch bootstrap, and QEMU provides
-virtual hardware. From the interactive dotfiles installation onward, the VM
-and physical machine follow the same path.
+96 GiB guest-visible capacity but is sparse. It does not reserve 96 GiB on the
+host: the QCOW2 file starts small and grows as the guest writes data. Guest
+TRIM requests are passed through so `fstrim.timer` can return unused blocks to
+the host. The verified Arch ISO is retained between resets. The single VM
+backup is also sparse, but its previously written data continues to consume
+host space until a later reset replaces that backup.

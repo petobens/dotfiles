@@ -1,5 +1,4 @@
 actionlint
-cloud-image-utils
 cmake
 curl
 edk2-ovmf
