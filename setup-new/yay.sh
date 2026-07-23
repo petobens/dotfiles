@@ -168,6 +168,7 @@ $yay_cmd actionlint
 $yay_cmd bat
 $yay_cmd bind-tools
 $yay_cmd claude-code
+$yay_cmd cloud-image-utils
 $yay_cmd cronie
 $yay_cmd ctags
 $yay_cmd ctop
@@ -176,6 +177,7 @@ $yay_cmd docker-buildx
 $yay_cmd docker-compose
 $yay_cmd dragon-drop
 $yay_cmd dust
+$yay_cmd edk2-ovmf
 $yay_cmd fastfetch
 $yay_cmd fd
 $yay_cmd forgit
@@ -208,6 +210,7 @@ $yay_cmd pandoc-cli
 $yay_cmd pandoc-crossref
 $yay_cmd prettyping
 $yay_cmd procs
+$yay_cmd qemu-desktop
 $yay_cmd qrencode
 $yay_cmd ripgrep
 $yay_cmd rsync
@@ -226,7 +229,6 @@ $yay_cmd tk
 $yay_cmd tree
 $yay_cmd unrar
 $yay_cmd unzip
-$yay_cmd virtualbox
 $yay_cmd vivid
 $yay_cmd w3m
 $yay_cmd wget
