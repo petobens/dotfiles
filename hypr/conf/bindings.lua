@@ -194,7 +194,8 @@ exec('SUPER + SHIFT + J', 'playerctl --player=spotify next', 'Next track')
 exec('SUPER + SHIFT + K', 'playerctl --player=spotify previous', 'Previous track')
 exec(
     'SUPER + SHIFT + T',
-    [[sh -c 'playerctl --player=spotify metadata --format "{{artist}} — {{title}}" | xargs -r notify-send Spotify']],
+    [[sh -c 'playerctl --player=spotify metadata --format "{{artist}} — {{title}}" ]]
+        .. [[| xargs -r notify-send Spotify']],
     'Show current track'
 )
 exec('SUPER + ALT + RIGHT', 'brightnessctl set 5%+', 'Raise brightness')

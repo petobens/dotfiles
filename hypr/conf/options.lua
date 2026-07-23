@@ -18,7 +18,7 @@ hl.config({
         blur = { enabled = true, size = 6, passes = 2 },
     },
     animations = { enabled = true },
-    dwindle = { pseudotile = true, preserve_split = true },
+    dwindle = { preserve_split = true },
     input = {
         kb_layout = 'us',
         follow_mouse = 1,

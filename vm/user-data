@@ -12,9 +12,16 @@ chpasswd:
   users:
     - {name: arch, password: wayland, type: text}
 ssh_pwauth: true
+mounts:
+  - [
+    dotfiles,
+    /mnt/dotfiles,
+    9p,
+    "trans=virtio,version=9p2000.L,ro,nofail",
+    "0",
+    "0",
+  ]
 runcmd:
-  - [mkdir, -p, /mnt/dotfiles]
-  - [mount, -t, 9p, -o, "trans=virtio,version=9p2000.L", dotfiles, /mnt/dotfiles]
   - [cp, -a, /mnt/dotfiles, /home/arch/dotfiles-wayland]
   - [chown, -R, arch:arch, /home/arch/dotfiles-wayland]
   - [
@@ -25,6 +32,16 @@ runcmd:
     --all,
     --vm,
     --non-interactive,
+  ]
+  # Use the read-only host checkout for live Hyprland changes
+  - [
+    sudo,
+    -u,
+    arch,
+    ln,
+    -sfn,
+    /mnt/dotfiles/hypr,
+    /home/arch/.config/hypr,
   ]
   # Remove package archives after provisioning the disposable guest
   - [pacman, -Scc, --noconfirm]

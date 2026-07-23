@@ -84,7 +84,7 @@ terminal)
 	tag=terminal
 	class='^com.mitchellh.ghostty$'
 	workspace=5
-	command='ghostty'
+	command='ghostty -e fish -l -c tm'
 	;;
 *)
 	echo "usage: app {brave|calendar|clickup|edge|slack|teams|zoom|mailspring|meet|gmail|spotify|transmission|onlyoffice|terminal}" >&2
@@ -99,5 +99,5 @@ address=$(hyprctl clients -j | jq -r --arg class "$class" --arg tag "$tag" \
 if [[ -n $address ]]; then
 	hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
 else
-	hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace silent', tag = '+$tag' })"
+	hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
 fi

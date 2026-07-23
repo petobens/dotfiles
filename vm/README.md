@@ -2,7 +2,8 @@
 
 The VM uses QEMU/KVM with UEFI, the official Arch cloud image, cloud-init, and
 a sparse qcow2 overlay. It copies this checkout into a clean guest, runs the
-Wayland installer, and reboots.
+Wayland installer, links the installed configuration to a read-only host
+share, and reboots.
 
 Create and launch it from the repository root:
 
@@ -20,6 +21,17 @@ available at:
 
 ```bash
 ssh -p 2222 arch@localhost
+```
+
+QEMU grabs the mouse and keyboard while the pointer is over the VM display, so
+desktop shortcuts are sent to the guest. Press `Ctrl+Alt+G` to release or
+recapture input.
+
+Host changes under `hypr/` are immediately visible through the guest's
+configuration symlink. Reload Hyprland to apply configuration changes:
+
+```bash
+hyprctl reload
 ```
 
 The guest installs the `base`, `desktop`, and `vm` package profiles. This is

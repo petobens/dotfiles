@@ -20,6 +20,10 @@ fi
 	exit 1
 }
 
+printf '%s\n' \
+	'Existing VM state is reused; only a new or reset guest is provisioned.' \
+	'On first boot, run "sudo journalctl -fu cloud-final" or wait for its reboot.'
+
 args=(
 	-name dotfiles-wayland
 	-enable-kvm
@@ -28,7 +32,7 @@ args=(
 	-smp 4
 	-m 4096
 	-device virtio-vga-gl
-	-display "gtk,gl=on"
+	-display "gtk,gl=on,grab-on-hover=on,zoom-to-fit=on"
 	-device virtio-keyboard-pci
 	-device virtio-mouse-pci
 	-drive "if=pflash,format=raw,unit=0,readonly=on,file=$firmware_code"

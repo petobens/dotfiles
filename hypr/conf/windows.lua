@@ -7,10 +7,7 @@ hl.window_rule({
 })
 hl.window_rule({ match = { class = '^(Spotify|mpv)$' }, workspace = '3 silent' })
 hl.window_rule({ match = { class = '^(transmission-gtk|obs)$' }, workspace = '4 silent' })
-hl.window_rule({
-    match = { class = '^com.mitchellh.ghostty$' },
-    workspace = '5 silent',
-})
+hl.window_rule({ match = { class = '^com.mitchellh.ghostty$' }, maximize = true })
 
 hl.window_rule({
     match = { class = '^(Spotify|Slack|brave-teams|zoom|Mailspring|mpv|obs)$' },

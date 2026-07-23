@@ -44,7 +44,7 @@ they are installed:
 - `setup/`: package profiles, installer, and symlink script
 - `vm/`: disposable QEMU test machine
 
-Hyprland configuration is divided by responsibility under `hypr/conf.d/`. Its
+Hyprland configuration is divided by responsibility under `hypr/conf/`. Its
 helper commands live in `hypr/scripts/`.
 
 ## Install
@@ -69,7 +69,7 @@ The installer sets Fish as the login shell. After entering the username and
 password at the tty1 login prompt, that Fish login starts Hyprland
 automatically.
 
-See `hypr/conf.d/monitors.lua` for monitor configuration.
+See `hypr/conf/monitors.lua` for monitor configuration.
 
 ## VM test
 
