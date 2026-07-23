@@ -1,9 +1,9 @@
 # Arch Wayland VM
 
 The VM uses QEMU/KVM with UEFI, the official Arch cloud image, cloud-init, and
-a sparse qcow2 overlay. Cloud-init creates the `pedro` user and copies this
-checkout to the same path used on the physical machine. Installation is then
-run interactively through the same installer.
+a sparse qcow2 overlay. Cloud-init creates the `pedro` user and exposes this
+checkout read-only at the same path used on the physical machine. Installation
+is then run interactively through the same installer.
 
 For the first VM, create and launch it from the repository root:
 
@@ -25,14 +25,8 @@ unreferenced cloud base images. A reset is required after changes to cloud-init
 settings or virtual disk capacity.
 
 On the first boot of a new or reset guest, log in through the graphical console
-as `pedro` with password `wayland`. Wait for cloud-init to finish copying the
-checkout:
-
-```bash
-sudo cloud-init status --wait
-```
-
-When it reports `status: done`, start the installer:
+as `pedro` with password `wayland`. Wait for
+`~/git-repos/private/dotfiles` to appear, then start the installer:
 
 ```bash
 cd ~/git-repos/private/dotfiles
@@ -53,6 +47,11 @@ sudo reboot
 On later boots, Fish starts Hyprland automatically after login. If the VM opens
 directly into the graphical desktop, installation is already complete and
 there is nothing else to run.
+
+The guest path `~/git-repos/private/dotfiles` points to the read-only host
+checkout. Host edits are visible in the guest immediately, without relaunching
+or resetting the VM. Applications may still need to reload their configuration.
+The guest cannot modify the checkout.
 
 QEMU grabs the mouse and keyboard while the pointer is over the VM display, so
 desktop shortcuts are sent to the guest. Press `Ctrl+Alt+G` to release or

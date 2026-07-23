@@ -24,14 +24,14 @@ mounts:
 runcmd:
   - [install, -d, -o, pedro, -g, pedro, /home/pedro/git-repos/private]
   - [
-    cp,
-    -a,
+    ln,
+    -s,
     /mnt/dotfiles,
     /home/pedro/git-repos/private/dotfiles,
   ]
   - [
     chown,
-    -R,
+    -h,
     pedro:pedro,
     /home/pedro/git-repos/private/dotfiles,
   ]

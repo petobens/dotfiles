@@ -22,8 +22,9 @@ fi
 
 printf '%s\n' \
 	'First boot only: log in as pedro with password wayland.' \
-	'Run: sudo cloud-init status --wait' \
+	'Wait for ~/git-repos/private/dotfiles to appear.' \
 	'Then run: cd ~/git-repos/private/dotfiles && ./setup/install.sh' \
+	'Host edits are reflected live in the read-only guest checkout.' \
 	'If Hyprland starts, the guest is already installed and no setup is needed.'
 
 args=(
@@ -46,7 +47,7 @@ args=(
 	-drive "if=virtio,format=qcow2,file=$disk"
 	-drive "if=virtio,media=cdrom,readonly=on,file=$seed"
 	-nic "user,model=virtio-net-pci,hostfwd=tcp::2222-:22"
-	# Copy this checkout into a new guest without allowing it to modify the host
+	# Expose this checkout live without allowing the guest to modify the host
 	-virtfs "local,path=$repo,mount_tag=dotfiles,security_model=none,readonly=on"
 )
 exec qemu-system-x86_64 "${args[@]}"
