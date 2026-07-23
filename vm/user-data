@@ -1,0 +1,37 @@
+#cloud-config
+---
+users:
+  - name: arch
+    groups: [wheel, video, render, input]
+    # Fish is installed later by the repository package profile
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: false
+chpasswd:
+  expire: false
+  users:
+    - {name: arch, password: wayland, type: text}
+ssh_pwauth: true
+runcmd:
+  - [mkdir, -p, /mnt/dotfiles]
+  - [mount, -t, 9p, -o, "trans=virtio,version=9p2000.L", dotfiles, /mnt/dotfiles]
+  - [cp, -a, /mnt/dotfiles, /home/arch/dotfiles-wayland]
+  - [chown, -R, arch:arch, /home/arch/dotfiles-wayland]
+  - [
+    sudo,
+    -u,
+    arch,
+    /home/arch/dotfiles-wayland/setup/install.sh,
+    --all,
+    --vm,
+    --non-interactive,
+  ]
+  # Remove package archives after provisioning the disposable guest
+  - [pacman, -Scc, --noconfirm]
+  - [systemctl, enable, --now, qemu-guest-agent]
+  - [systemctl, enable, --now, sshd]
+power_state:
+  mode: reboot
+  message: Rebooting after dotfiles provisioning
+  timeout: 30
+  condition: true

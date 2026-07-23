@@ -1,0 +1,60 @@
+configuration {
+	font: "JetBrainsMono Nerd Font 11";
+	location: 0;
+	yoffset: -50;
+	fixed-num-lines: false;
+	show-icons: true;
+	terminal: "ghostty";
+	matching: "fuzzy";
+	dpi: 0;
+	kb-remove-to-eol: "";
+	kb-accept-entry: "Return";
+	kb-row-up: "Shift_L+Tab,Ctrl-p,Up,Ctrl-k";
+	kb-row-down: "Ctrl-n,Down,Ctrl-j";
+	kb-secondary-copy: "";
+	kb-cancel: "Ctrl-c,Escape";
+	kb-screenshot: "Ctrl+Alt+r";
+}
+
+
+/* Theme overrides */
+@theme "default"
+* {
+    background: #24272e;
+    background-color: #24272e;
+    normal-background: #24272e;
+    active-background: #24272e;
+    urgent-background: #24272e;
+    selected-normal-background: #61afef;
+    selected-active-background: #c678dd;
+    selected-urgent-background: #e06c75;
+    alternate-normal-background: #24272e;
+    alternate-active-background: #24272e;
+    alternate-urgent-background: #24272e;
+    foreground: #abb2bf;
+    foreground-color: #abb2bf;
+    normal-foreground: #abb2bf;
+    active-foreground: #abb2bf;
+    urgent-foreground: #abb2bf;
+    selected-normal-foreground: #24272e;
+    selected-active-foreground: #24272e;
+    selected-urgent-foreground: #24272e;
+    alternate-normal-foreground: #abb2bf;
+    alternate-active-foreground: #abb2bf;
+    alternate-urgent-foreground: #abb2bf;
+}
+window {
+    border: 1px;
+    border-color: #4b5263;
+    border-radius: 10px;
+}
+listview {
+    scrollbar: false;
+    border: 0;
+}
+element {
+    highlight: #528bff;
+}
+element selected {
+    highlight: bold;
+}

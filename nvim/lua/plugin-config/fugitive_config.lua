@@ -35,12 +35,7 @@ vim.api.nvim_create_autocmd('FileType', {
             u.quit_return,
             { buf = e.buf, desc = 'Quit Fugitive and return to previous window' }
         )
-        vim.keymap.set(
-            'n',
-            ']h',
-            ']c',
-            { buf = e.buf, remap = true, desc = 'Next hunk' }
-        )
+        vim.keymap.set('n', ']h', ']c', { buf = e.buf, remap = true, desc = 'Next hunk' })
         vim.keymap.set(
             'n',
             '[h',

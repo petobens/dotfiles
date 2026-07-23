@@ -393,21 +393,13 @@ vim.keymap.set('n', '<Leader>ets', function()
     vim.cmd.edit(vim.fs.joinpath(private_notes, 'programming', 'todos_coding_setup.md'))
 end, { desc = 'Edit todos setup' })
 vim.keymap.set('n', '<Leader>eb', function()
-    vim.cmd.edit(vim.fs.joinpath(vim.env.HOME, '.bashrc'))
-end, { desc = 'Edit .bashrc' })
+    vim.cmd.edit(vim.fs.joinpath(vim.env.HOME, '.config', 'fish', 'config.fish'))
+end, { desc = 'Edit Fish config' })
 vim.keymap.set('n', '<Leader>eh', function()
     vim.cmd.edit(
-        vim.fs.joinpath(
-            git_repos,
-            'private',
-            'dotfiles',
-            'arch',
-            'config',
-            'i3',
-            'config'
-        )
+        vim.fs.joinpath(git_repos, 'private', 'dotfiles-wayland', 'hypr', 'hyprland.lua')
     )
-end, { desc = 'Edit i3 config' })
+end, { desc = 'Edit Hyprland config' })
 
 -- Quick edit
 vim.keymap.set('n', '<Leader>dd', function()
@@ -434,8 +426,8 @@ vim.keymap.set('n', 'gf', function()
     vim.cmd.wincmd({ args = { 'f' }, mods = mods })
 end, { desc = 'Go to file under cursor (vertical if wide)' })
 vim.keymap.set('n', '<Leader>fm', function()
-    vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.uv.cwd(), 'ranger' })
-end, { desc = 'Open ranger file-manager in tmux split' })
+    vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.uv.cwd(), 'yazi' })
+end, { desc = 'Open Yazi in tmux split' })
 
 -- Quickfix and Location
 vim.keymap.set('n', '<Leader>qf', vim.cmd.copen, { desc = 'Open quickfix list' })

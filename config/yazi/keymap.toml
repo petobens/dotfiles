@@ -1,0 +1,49 @@
+[[mgr.prepend_keymap]]
+on = ["g", "d"]
+run = "cd ~/Downloads"
+desc = "Downloads"
+
+[[mgr.prepend_keymap]]
+on = ["g", "g"]
+run = "cd ~/git-repos"
+desc = "Git repositories"
+
+[[mgr.prepend_keymap]]
+on = ["g", "m"]
+run = "cd ~/OneDrive/mutt"
+desc = "Muttdata"
+
+[[mgr.prepend_keymap]]
+on = ["g", "o"]
+run = "cd ~/OneDrive"
+desc = "OneDrive"
+
+[[mgr.prepend_keymap]]
+on = ["g", "p"]
+run = "cd ~/Pictures"
+desc = "Pictures"
+
+[[mgr.prepend_keymap]]
+on = ["g", "s"]
+run = "cd ~/Pictures/Screenshots"
+desc = "Screenshots"
+
+[[mgr.prepend_keymap]]
+on = ["g", "u"]
+run = "cd /run/media"
+desc = "Removable media"
+
+[[mgr.prepend_keymap]]
+on = ["<C-f>"]
+run = "filter --smart"
+desc = "Filter files"
+
+[[mgr.prepend_keymap]]
+on = ["<C-z>"]
+run = "plugin zoxide"
+desc = "Jump with zoxide"
+
+[[mgr.prepend_keymap]]
+on = ["d"]
+run = "remove --force"
+desc = "Trash selected files"

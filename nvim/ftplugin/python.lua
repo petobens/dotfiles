@@ -502,12 +502,7 @@ vim.keymap.set('n', '<Leader>tx', function()
 end, { buf = 0, desc = 'Send carriage return to IPython terminal' })
 
 ---- Debugging
-vim.keymap.set(
-    'n',
-    '<Leader>bp',
-    add_breakpoint,
-    { buf = 0, desc = 'Add breakpoint()' }
-)
+vim.keymap.set('n', '<Leader>bp', add_breakpoint, { buf = 0, desc = 'Add breakpoint()' })
 vim.keymap.set(
     'n',
     '<Leader>rb',
@@ -575,12 +570,7 @@ vim.keymap.set('n', '<Leader>vi', function()
 end, { buf = 0, desc = 'View Sphinx index.html' })
 
 ---- Editing
-vim.keymap.set(
-    'n',
-    '<Leader>etf',
-    edit_test_file,
-    { buf = 0, desc = 'Edit test file' }
-)
+vim.keymap.set('n', '<Leader>etf', edit_test_file, { buf = 0, desc = 'Edit test file' })
 vim.keymap.set(
     'n',
     '<Leader>etp',

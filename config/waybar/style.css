@@ -1,0 +1,29 @@
+@define-color background #24272e;
+@define-color foreground #abb2bf;
+@define-color muted #828997;
+@define-color blue #61afef;
+@define-color red #e06c75;
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar { background: alpha(@background, 0.94); color: @foreground; }
+#workspaces button { color: @muted; padding: 0 10px; }
+#workspaces button.active { background: @blue; color: @background; }
+#workspaces button.urgent, #battery.critical { background: @red; color: @background; }
+#window,
+#clock,
+#custom-onedrive,
+#tray,
+#network,
+#bluetooth,
+#pulseaudio,
+#backlight,
+#battery {
+    padding: 0 10px;
+}

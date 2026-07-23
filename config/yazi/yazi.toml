@@ -1,0 +1,29 @@
+[mgr]
+ratio = [1, 3, 4]
+sort_by = "natural"
+sort_sensitive = false
+sort_dir_first = true
+linemode = "size"
+show_hidden = false
+show_symlink = true
+scrolloff = 5
+
+[preview]
+wrap = "no"
+tab_size = 4
+max_width = 1200
+max_height = 1800
+
+[opener]
+edit = [{ run = '${EDITOR:-nvim} %s', block = true, for = "unix" }]
+open = [{ run = 'xdg-open %s1', orphan = true, for = "unix" }]
+play = [{ run = 'mpv --force-window %s', orphan = true, for = "unix" }]
+
+[open]
+prepend_rules = [
+    { mime = "text/*", use = "edit" },
+    { mime = "application/json", use = "edit" },
+    { mime = "application/pdf", use = "open" },
+    { mime = "image/*", use = "open" },
+    { mime = "video/*", use = "play" },
+]

@@ -256,12 +256,7 @@ vim.keymap.set(
     compile_latex,
     { buf = 0, desc = 'Compile LaTeX (arara)' }
 )
-vim.keymap.set(
-    'n',
-    '<Leader>vp',
-    view_pdf,
-    { buf = 0, desc = 'View PDF in Zathura' }
-)
+vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
 vim.keymap.set(
     'n',
     '<Leader>sl',

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+state=$(systemctl --user is-active onedrive 2>/dev/null || true)
+case $state in
+active)
+	text='󰅟'
+	class=active
+	;;
+*)
+	text='󰅖'
+	class=inactive
+	;;
+esac
+detail=$(journalctl --user-unit onedrive -n 1 --no-pager -o cat 2>/dev/null || true)
+jq -cn --arg text "$text" --arg tooltip "OneDrive: $state${detail:+\n$detail}" --arg class "$class" '{text: $text, tooltip: $tooltip, class: $class}'

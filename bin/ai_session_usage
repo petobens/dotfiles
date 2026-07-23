@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# Claude + Codex session rate-limit usage (5h / 7d windows)
+
+# Claude uses the Claude Code CLI credential (needs the user:profile scope).
+cred="$HOME/.claude/.credentials.json"
+claude_usage() {
+	local tok
+	tok=$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2>/dev/null)
+	[ -n "$tok" ] || return 1
+	curl -sS --max-time 5 https://api.anthropic.com/api/oauth/usage \
+		-H "authorization: Bearer $tok" \
+		-H "anthropic-version: 2023-06-01" \
+		-H "anthropic-beta: oauth-2025-04-20"
+}
+
+print_claude_usage() {
+	local exp j now_ms pct reset reset7 sid
+
+	if [ -z "$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2>/dev/null)" ]; then
+		return
+	fi
+
+	j=$(claude_usage)
+	pct=$(jq -r '.five_hour.utilization // empty' <<<"$j" 2>/dev/null)
+	# Only refresh via a headless run when the token is genuinely expired; probing
+	# on every empty response (e.g. a transient rate_limit_error) spams throwaway
+	# 'ok' session files into ~/.claude/projects.
+	exp=$(jq -r '.claudeAiOauth.expiresAt // 0' "$cred" 2>/dev/null)
+	now_ms=$(($(date +%s) * 1000))
+	if [ -z "$pct" ] && [ "$exp" -gt 0 ] && [ "$now_ms" -ge "$exp" ]; then
+		# Pin the probe's session id so we can delete just its throwaway file.
+		sid=$(uuidgen)
+		timeout 60 claude -p 'ok' --max-turns 1 --session-id "$sid" >/dev/null 2>&1
+		rm -f "$HOME"/.claude/projects/*/"$sid".jsonl
+		j=$(claude_usage)
+		pct=$(jq -r '.five_hour.utilization // empty' <<<"$j" 2>/dev/null)
+	fi
+
+	if [ -n "$pct" ]; then
+		reset=$(jq -r '.five_hour.resets_at // empty' <<<"$j" 2>/dev/null)
+		reset=$(date -d "$reset" +'%H:%M' 2>/dev/null)
+		reset7=$(jq -r '.seven_day.resets_at // empty' <<<"$j" 2>/dev/null)
+		reset7=$(date -d "$reset7" +'%a %H:%M' 2>/dev/null)
+		printf '\033[1;34mClaude\033[0m  5h: %5.1f%% (resets %s)  |  7d: %5.1f%% (resets %s)\n' \
+			"$pct" "$reset" "$(jq -r '.seven_day.utilization' <<<"$j" 2>/dev/null)" "$reset7"
+	else
+		printf '\033[1;34mClaude\033[0m  unavailable\n'
+	fi
+}
+
+# Codex uses ChatGPT OAuth; the originator header is required or Cloudflare
+# serves an HTML page instead of the JSON usage payload.
+auth="$HOME/.codex/auth.json"
+codex_usage() {
+	local tok acc
+	tok=$(jq -r '.tokens.access_token // empty' "$auth" 2>/dev/null)
+	acc=$(jq -r '.tokens.account_id // empty' "$auth" 2>/dev/null)
+	[ -n "$tok" ] || return 1
+	curl -sS --max-time 5 https://chatgpt.com/backend-api/codex/usage \
+		-H "authorization: Bearer $tok" \
+		-H "chatgpt-account-id: $acc" \
+		-H "originator: codex_cli_rs" \
+		-H "user-agent: codex_cli_rs"
+}
+
+print_codex_usage() {
+	local j pct reset reset7
+
+	if [ -z "$(jq -r '.tokens.access_token // empty' "$auth" 2>/dev/null)" ]; then
+		return
+	fi
+
+	j=$(codex_usage)
+	pct=$(jq -r '.rate_limit.primary_window.used_percent // empty' <<<"$j" 2>/dev/null)
+	if [ -z "$pct" ]; then
+		# Token likely stale (e.g. after a reboot); a status check refreshes it.
+		timeout 30 codex login status >/dev/null 2>&1
+		j=$(codex_usage)
+		pct=$(jq -r '.rate_limit.primary_window.used_percent // empty' <<<"$j" 2>/dev/null)
+	fi
+
+	if [ -n "$pct" ]; then
+		reset=$(jq -r '.rate_limit.primary_window.reset_at // empty' <<<"$j" 2>/dev/null)
+		reset=$(date -d "@$reset" +'%H:%M' 2>/dev/null)
+		reset7=$(jq -r '.rate_limit.secondary_window.reset_at // empty' <<<"$j" 2>/dev/null)
+		reset7=$(date -d "@$reset7" +'%a %H:%M' 2>/dev/null)
+		printf '\033[1;32mCodex\033[0m   5h: %5.1f%% (resets %s)  |  7d: %5.1f%% (resets %s)\n' \
+			"$pct" "$reset" "$(jq -r '.rate_limit.secondary_window.used_percent' <<<"$j" 2>/dev/null)" "$reset7"
+	else
+		printf '\033[1;32mCodex\033[0m   unavailable\n'
+	fi
+}
+
+# CLI argument handling.
+usage() {
+	printf 'Usage: ai_session_usage [--claude|--codex]\n' >&2
+}
+
+parse_args() {
+	if [ "$#" -gt 1 ]; then
+		usage
+		exit 2
+	fi
+
+	case "${1:-}" in
+	'')
+		;;
+	--claude)
+		show_codex=0
+		;;
+	--codex)
+		show_claude=0
+		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		usage
+		exit 2
+		;;
+	esac
+}
+
+# Main: default to both providers, then let the optional flag narrow it.
+show_claude=1
+show_codex=1
+parse_args "$@"
+
+if [ "$show_claude" -eq 1 ]; then
+	print_claude_usage
+fi
+
+if [ "$show_codex" -eq 1 ]; then
+	print_codex_usage
+fi

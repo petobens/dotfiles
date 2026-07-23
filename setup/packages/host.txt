@@ -1,0 +1,6 @@
+cloud-image-utils
+edk2-ovmf
+intel-media-driver
+qemu-desktop
+sof-firmware
+vulkan-intel

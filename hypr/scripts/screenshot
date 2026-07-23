@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mkdir -p "$HOME/Pictures/Screenshots"
+file="$HOME/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png"
+case ${1:-selection} in
+full) grim "$file" ;;
+selection) grim -g "$(slurp)" "$file" ;;
+active)
+	# Grim expects the active window as an "x,y widthxheight" region
+	geometry=$(hyprctl activewindow -j | jq -r '"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"')
+	grim -g "$geometry" "$file"
+	;;
+*)
+	echo "usage: screenshot {full|selection|active}" >&2
+	exit 2
+	;;
+esac
+wl-copy <"$file"
+notify-send "Screenshot saved" "$file"

@@ -1,0 +1,52 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 4,
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["custom/onedrive", "tray", "network", "bluetooth", "pulseaudio", "backlight", "battery"],
+    "hyprland/workspaces": {
+        "format": "{name}",
+        "persistent-workspaces": {"*": 5},
+        "on-click": "activate"
+    },
+    "hyprland/window": {"format": "{class}: {title}", "max-length": 70, "separate-outputs": true},
+    "clock": {
+        "format": "  {:%H:%M  %d %b %Y}",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "network": {
+        "format-wifi": "  {essid}",
+        "format-ethernet": "󰈀  {ipaddr}/{cidr}",
+        "format-disconnected": "󰖪",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+        "on-click": "ghostty -e impala"
+    },
+    "custom/onedrive": {
+        "exec": "~/.config/hypr/scripts/onedrive-status",
+        "interval": 15,
+        "return-type": "json",
+        "on-click": "ghostty -e journalctl --user-unit onedrive -f"
+    },
+    "bluetooth": {"format": "", "format-connected": " {num_connections}", "on-click": "blueman-manager"},
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰖁 muted",
+        "format-icons": ["", "", ""],
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-click-right": "hyprpwcenter"
+    },
+    "backlight": {
+        "format": "󰃠 {percent}%",
+        "on-scroll-up": "brightnessctl set 5%+",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+    "battery": {
+        "states": {"warning": 25, "critical": 10},
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-icons": ["󰁺", "󰁻", "󰁽", "󰁿", "󰂂", "󰁹"]
+    },
+    "tray": {"spacing": 8}
+}

@@ -1,0 +1,43 @@
+# vi: ft=dosini
+[main]
+smart_completion = True
+wider_completion_menu = False
+multi_line = True
+multi_line_mode = psql
+destructive_warning = True
+generate_aliases = False
+keyword_casing = upper
+case_column_headers = True
+timing = True
+table_format = psql
+syntax_style = one-dark
+vi = False
+on_error = STOP
+row_limit = 1000
+less_chatty = False
+prompt = '\u@\h:\d> '
+multiline_continuation_char = ''
+null_string = '<null>'
+enable_pager = True
+keyring = True
+
+[colors]
+completion-menu.completion.current = 'bg:#61afef #24272e'
+completion-menu.completion = 'bg:#333841 #abb2bf'
+completion-menu.meta.completion.current = 'bg:#61afef #24272e'
+completion-menu.meta.completion = 'bg:#333841 #abb2bf'
+completion-menu.multi-column-meta = 'bg:#333841 #abb2bf'
+scrollbar.arrow = 'bg:#333841 #abb2bf'
+scrollbar = 'bg:#333841 #abb2bf'
+selected = '#ffffff bg:#6666aa'
+search = '#ffffff bg:#4444aa'
+search.current = '#ffffff bg:#44aa44'
+bottom-toolbar = 'bg:#282c34 #abb2bf'
+bottom-toolbar.off = 'bg:#282c34 #5c6370'
+bottom-toolbar.on = 'bg:#282c34 #abb2bf'
+bottom-toolbar.transaction.valid = 'bg:#222222 #00ff5f bold'
+bottom-toolbar.transaction.failed = 'bg:#222222 #ff005f bold'
+
+[named queries]
+
+[alias_dsn]

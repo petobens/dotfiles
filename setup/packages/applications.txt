@@ -1,0 +1,9 @@
+docker
+docker-buildx
+docker-compose
+firefox
+gnome-font-viewer
+obs-studio
+postgresql
+transmission-gtk
+wf-recorder

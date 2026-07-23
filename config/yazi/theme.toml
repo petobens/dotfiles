@@ -1,0 +1,17 @@
+[mgr]
+cwd = { fg = "#61afef", bold = true }
+hovered = { fg = "#24272e", bg = "#61afef" }
+preview_hovered = { underline = true }
+find_keyword = { fg = "#e5c07b", bold = true }
+find_position = { fg = "#c678dd" }
+marker_copied = { fg = "#98c379", bg = "#98c379" }
+marker_cut = { fg = "#e06c75", bg = "#e06c75" }
+marker_marked = { fg = "#61afef", bg = "#61afef" }
+marker_selected = { fg = "#e5c07b", bg = "#e5c07b" }
+
+[status]
+separator_open = ""
+separator_close = ""
+mode_normal = { fg = "#24272e", bg = "#61afef", bold = true }
+mode_select = { fg = "#24272e", bg = "#98c379", bold = true }
+mode_unset = { fg = "#24272e", bg = "#e06c75", bold = true }

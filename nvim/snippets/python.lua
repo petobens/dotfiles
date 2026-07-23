@@ -214,15 +214,6 @@ return {
         )
     ),
     s(
-        { trig = 'iss', dscr = 'isort skip' },
-        fmta(
-            [[
-            # isort: skip
-        ]],
-            {}
-        )
-    ),
-    s(
         { trig = 'prd', dscr = 'Pyright disable' },
         fmta(
             [[

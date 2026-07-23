@@ -1,0 +1,40 @@
+# Temp files
+*.swp
+*.swo
+.cache/
+tmp/
+scratch/
+
+# Python
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.pyc
+*.pkl
+/venv/
+.coverage
+.ipynb_checkpoints
+pip-wheel-metadata/
+
+# Office Temp Files
+~$*
+
+# Latex
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+
+# Nvim
+minimal.lua
+lazy-lock.json
+
+# Claude Code
+.claude/

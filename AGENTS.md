@@ -4,9 +4,21 @@
 
 This file provides guidance to coding agents when working in this repository.
 
-This is a personal dotfiles repository containing configuration for multiple
-tools and environments. Each top-level directory corresponds to a specific tool
-or environment, for example `nvim/`, `python/`, and `arch/`.
+This repository contains the Arch Linux Wayland configuration for a Hyprland
+desktop.
+
+## Repository layout
+
+- `config/` contains application configuration. Home-directory
+  dotfiles live in `config/home/`, Python tooling in `config/python/`, and
+  formatter and linter configuration in `config/linters/`.
+- `hypr/` contains the Hyprland configuration and desktop helper scripts.
+- `nvim/` contains the Neovim configuration.
+- `bin/` contains personal command-line scripts.
+- `setup/` contains package profiles and installation scripts.
+  `setup/symlinks.sh` owns the mapping from repository files to home-directory
+  destinations and must be updated when configuration files move.
+- `vm/` contains the disposable QEMU test environment.
 
 ## General rules
 
@@ -23,8 +35,8 @@ or environment, for example `nvim/`, `python/`, and `arch/`.
 - For Markdown files, run `markdownlint --config ~/.markdownlint.json <file>`
   and keep lines at 80 characters or fewer. Wrap at natural boundaries while
   preserving valid Markdown syntax.
-- For Python scripts, use Ruff (`ruff format <file>` and `ruff check --fix
-<file>`) and type-check with `zmypy`, falling back to `mypy` if `zmypy` is
+- For Python scripts, use `ruff format <file>` and `ruff check --fix <file>`,
+  and type-check with `zmypy`, falling back to `mypy` if `zmypy` is
   not installed. Add short module or function docstrings when they clarify
   purpose or usage, but do not add boilerplate docstrings for obvious one-off
   code.
@@ -53,7 +65,7 @@ Consult these before answering questions about Neovim APIs or plugin internals.
 
 ```bash
 stylua \
-  --config-path ~/git-repos/private/dotfiles/linters/stylua.toml \
+  --config-path config/linters/stylua.toml \
   <file>
 ```
 
@@ -64,10 +76,10 @@ Run this before committing changes to Neovim Lua files.
 Preferred command:
 
 ```bash
-luacheck --config ~/.config/.luacheckrc --globals vim <file>
+luacheck --config ~/.config/.luacheckrc --globals vim -- <file>
 ```
 
-If `luacheck` or `lauc` is broken because of the Arch Lua packaging mismatch
+If `luacheck` or `luac` is broken because of the Arch Lua packaging mismatch
 (the `/usr/bin/luacheck` wrapper targets a Lua version whose rock tree no
 longer exists), use this fallback, which derives the installed version from the
 rock path so it survives package bumps:

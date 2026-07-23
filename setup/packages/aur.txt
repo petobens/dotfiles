@@ -1,0 +1,11 @@
+brave-bin
+claude-code
+hadolint-bin
+localsend-bin
+mailspring-bin
+microsoft-edge-dev-bin
+onedrive-abraunegg
+onlyoffice-bin
+slack-desktop
+spotify
+zoom

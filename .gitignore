@@ -9,18 +9,14 @@ nvim/cache/
 config/tmux/plugins/
 config/tmux/resurrect/
 
-# Arch
-arch/config/onedrive/items*
-arch/config/onedrive/refresh_token
-arch/bin/tmux_tree
+# Local tool state
+/.ruff_cache/
 
-# Ranger
-config/ranger/plugins/
-config/ranger/devicons.py
-
-# Onedrive
-arch/config/onedrive/.config.backup
-arch/config/onedrive/.config.hash
+# OneDrive runtime state
+config/onedrive/items*
+config/onedrive/refresh_token
+config/onedrive/.config.backup
+config/onedrive/.config.hash
 
 # Claude Code
 .claude/
