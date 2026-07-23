@@ -143,7 +143,7 @@ vim.api.nvim_create_autocmd('BufWinLeave', {
     group = session_acg,
     pattern = session_patterns,
     callback = function(args)
-        if not vim.wo.previewwindow then
+        if vim.bo[args.buf].buftype == '' and not vim.wo.previewwindow then
             vim.api.nvim_buf_call(args.buf, function()
                 vim.cmd.mkview()
             end)
@@ -155,7 +155,7 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
     group = session_acg,
     pattern = session_patterns,
     callback = function(args)
-        if not vim.wo.previewwindow then
+        if vim.bo[args.buf].buftype == '' and not vim.wo.previewwindow then
             vim.api.nvim_buf_call(args.buf, function()
                 pcall(vim.cmd.loadview)
             end)
