@@ -168,7 +168,6 @@ $yay_cmd actionlint
 $yay_cmd bat
 $yay_cmd bind-tools
 $yay_cmd claude-code
-$yay_cmd cloud-image-utils
 $yay_cmd cronie
 $yay_cmd ctags
 $yay_cmd ctop
