@@ -34,11 +34,9 @@ fi
 if [[ $mode == vm ]]; then
     default_hostname=arch-vm
     default_root_gib=40
-    default_home_gib=remaining
 else
     default_hostname=x1-carbon
     default_root_gib=60
-    default_home_gib=remaining
 fi
 
 printf 'Installation mode: %s%s\n' \
@@ -70,16 +68,7 @@ username=${username:-pedro}
 
 read -r -p "Root partition size in GiB [$default_root_gib]: " root_gib
 root_gib=${root_gib:-$default_root_gib}
-[[ $root_gib =~ ^[0-9]+$ && $root_gib -ge 10 ]] ||
-    die 'Root size must be an integer of at least 10 GiB'
-if ((root_gib < 20)); then
-    printf 'Warning: less than 20 GiB may be too small for the full package profile\n'
-fi
-
-read -r -p "Home partition size in GiB or 'remaining' [$default_home_gib]: " home_gib
-home_gib=${home_gib:-$default_home_gib}
-[[ $home_gib == remaining || $home_gib =~ ^[0-9]+$ && $home_gib -ge 10 ]] ||
-    die "Home size must be an integer of at least 10 GiB or 'remaining'"
+[[ $root_gib =~ ^[1-9][0-9]*$ ]] || die 'Root size must be a positive integer'
 
 section 'Selecting the installation disk'
 lsblk -dp -o NAME,SIZE,MODEL,TRAN,RM,TYPE
@@ -89,23 +78,10 @@ if lsblk -nrpo MOUNTPOINTS "$disk" | grep '[^[:space:]]' > /dev/null; then
     die "$disk or one of its partitions is mounted"
 fi
 
-disk_bytes=$(blockdev --getsize64 "$disk")
-if [[ $home_gib == remaining ]]; then
-    minimum_bytes=$(((root_gib + 2) * 1024 * 1024 * 1024))
-    home_description='remaining space'
-    home_partition_spec='type=L, name="Home"'
-else
-    minimum_bytes=$(((root_gib + home_gib + 2) * 1024 * 1024 * 1024))
-    home_description="$home_gib GiB"
-    home_partition_spec="size=${home_gib}GiB, type=L, name=\"Home\""
-fi
-((disk_bytes >= minimum_bytes)) ||
-    die "$disk is too small for the selected EFI, root, and home partitions"
-
 printf '\n%s will be completely erased and replaced with:\n' "$disk"
 printf '  EFI:   1 GiB, FAT32, mounted at /boot\n'
 printf '  Root:  %s GiB, ext4\n' "$root_gib"
-printf '  Home:  %s, ext4\n\n' "$home_description"
+printf '  Home:  remaining space, ext4\n\n'
 read -r -p "Type 'ERASE $disk' to continue: " confirmation
 [[ $confirmation == "ERASE $disk" ]] || die 'Installation cancelled'
 
@@ -123,7 +99,7 @@ sfdisk --lock --wipe always --wipe-partitions always "$disk" << EOF
 label: gpt
 size=1GiB, type=U, name="EFI"
 size=${root_gib}GiB, type=L, name="Arch root"
-$home_partition_spec
+type=L, name="Home"
 EOF
 udevadm settle
 

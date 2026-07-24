@@ -74,8 +74,8 @@ remaining space.
 Virtualization is detected automatically. A VM defaults to hostname `arch-vm`,
 a 1 GiB EFI partition, a 40 GiB root partition, and an ext4 home partition
 using the remaining VM space. It otherwise uses the same repository clone and
-handoff as the physical machine. The hostname, root size, and home size remain
-editable in the prompts.
+handoff as the physical machine. The hostname and root size remain editable in
+the prompts.
 
 The VM's 96 GiB QCOW2 disk is sparse. This is its maximum guest-visible
 capacity, not 96 GiB reserved on the host. The host file starts small and grows
