@@ -1,8 +1,13 @@
+# Font
 font-family = Source Code Pro
 font-size = 11.5
+
+# Colors
 background = #24272e
 foreground = #abb2bf
 cursor-color = #528bff
+cursor-text = #0b0b0b
+cursor-style-blink = false
 selection-background = #3e4452
 selection-foreground = #abb2bf
 palette = 0=#24272e
@@ -21,15 +26,27 @@ palette = 12=#61afef
 palette = 13=#c678dd
 palette = 14=#56b6c2
 palette = 15=#5c6370
+
+# Window
 window-decoration = false
 window-padding-x = 0
 window-padding-y = 0
+
+# Behavior
 clipboard-read = allow
 clipboard-write = allow
+confirm-close-surface = false
 shell-integration = none
+bell-features = no-system,no-audio
+
+# Keybindings
 keybind = super+c=copy_to_clipboard
 keybind = super+v=paste_from_clipboard
-keybind = super+w=close_surface
-keybind = super+equal=increase_font_size:1
-keybind = super+minus=decrease_font_size:1
-keybind = super+0=reset_font_size
+keybind = super+w=close_window
+keybind = all:super+equal=increase_font_size:1
+keybind = all:super+minus=decrease_font_size:1
+keybind = all:super+0=reset_font_size
+keybind = all:super+u=increase_font_size:12
+keybind = all:super+d=decrease_font_size:12
+keybind = super+home=scroll_to_top
+keybind = super+end=scroll_to_bottom
