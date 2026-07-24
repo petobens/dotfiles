@@ -15,8 +15,8 @@ openai-codex
 openblas
 perl
 python-numpy
-python-pillow
 python-pip
+python-send2trash
 qemu-desktop
 rustup
 socat

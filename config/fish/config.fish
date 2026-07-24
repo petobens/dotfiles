@@ -146,13 +146,35 @@ end
 
 function sys_update_all --description 'Update system and language tooling'
     sudo true; or return
+    set -l section_color (set_color --bold blue)
+    set -l normal_color (set_color normal)
+
+    printf '%s\n-> System packages...%s\n' $section_color $normal_color
     if type -q yay
         yay -Syu --diffmenu=false --answerclean N --removemake --cleanafter; or return
         yay -Sc --noconfirm; or return
     else
         sudo pacman -Syu; or return
     end
-    type -q uv; and uv tool upgrade --all
-    type -q cargo-install-update; and cargo install-update --all
-    type -q npm; and npm update --global --no-fund
+
+    if type -q python
+        printf '%s\n-> Python user packages...%s\n' $section_color $normal_color
+        set -l outdated (python -m pip list --user --outdated --format=json | jq -r '.[].name')
+        if test (count $outdated) -gt 0
+            printf '%s\n' $outdated
+            python -m pip install --user --break-system-packages --upgrade $outdated
+        end
+    end
+    if type -q uv
+        printf '%s\n-> Python tools...%s\n' $section_color $normal_color
+        uv tool upgrade --all
+    end
+    if type -q npm
+        printf '%s\n-> Node packages...%s\n' $section_color $normal_color
+        npm update --global --no-fund
+    end
+    if type -q cargo-install-update
+        printf '%s\n-> Rust packages...%s\n' $section_color $normal_color
+        cargo install-update --all
+    end
 end

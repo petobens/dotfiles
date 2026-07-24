@@ -5,6 +5,9 @@ section() {
     printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
 }
 
+section 'Installing Python user packages'
+python -m pip install --user --break-system-packages --upgrade pdbpp
+
 section 'Installing Python language tools'
 uv tool install --force aws-mfa
 uv tool install --force black
