@@ -229,13 +229,6 @@ initrd /intel-ucode.img
 initrd /initramfs-linux.img
 options root=UUID=$root_uuid rw quiet
 EOF
-install -Dm644 /dev/stdin /mnt/boot/loader/entries/arch-fallback.conf <<EOF
-title Arch Linux fallback
-linux /vmlinuz-linux
-initrd /intel-ucode.img
-initrd /initramfs-linux-fallback.img
-options root=UUID=$root_uuid rw
-EOF
 install -Dm644 /dev/stdin /mnt/boot/loader/entries/arch-lts.conf <<EOF
 title Arch Linux LTS
 linux /vmlinuz-linux-lts
@@ -245,29 +238,16 @@ options root=UUID=$root_uuid rw
 EOF
 
 section 'Preparing the dotfiles handoff'
-clone_dotfiles=n
 checkout="/home/$username/git-repos/private/dotfiles"
-if [[ $mode == vm ]]; then
-	fstab_entry='dotfiles /mnt/dotfiles 9p trans=virtio,version=9p2000.L,ro,nofail 0 0'
-	install -d /mnt/mnt/dotfiles
-	grep -Fqx "$fstab_entry" /mnt/etc/fstab ||
-		printf '%s\n' "$fstab_entry" >>/mnt/etc/fstab
+read -r -p 'Clone the Wayland dotfiles into the installed system? [Y/n] ' clone_dotfiles
+if [[ ! $clone_dotfiles =~ ^[nN]$ ]]; then
 	arch-chroot /mnt install -d -o "$username" -g "$username" \
 		"$(dirname "$checkout")"
-	ln -sfnT /mnt/dotfiles "/mnt$checkout"
-	arch-chroot /mnt chown -h "$username:$username" "$checkout"
-	printf 'Configured the read-only host checkout for the installed VM\n'
-	handoff="After login: cd $checkout, start tmux, then run ./setup/install.sh"
-else
-	read -r -p 'Clone the Wayland dotfiles into the installed system? [Y/n] ' clone_dotfiles
-fi
-if [[ $mode == physical && ! $clone_dotfiles =~ ^[nN]$ ]]; then
-	arch-chroot /mnt install -d -o "$username" -g "$username" "$(dirname "$checkout")"
 	arch-chroot /mnt runuser -u "$username" -- \
 		git clone --branch dotfiles-wayland \
 		https://github.com/petobens/dotfiles.git "$checkout"
 	handoff="After login: cd $checkout, start tmux, then run ./setup/install.sh"
-elif [[ $mode == physical ]]; then
+else
 	handoff='After login, prepare the checkout, start tmux, then run ./setup/install.sh'
 fi
 

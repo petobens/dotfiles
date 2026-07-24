@@ -34,12 +34,15 @@ playerctl
 qt5-wayland
 qt6-wayland
 rofi
+rtkit
 slurp
 sof-firmware
 ttf-jetbrains-mono-nerd
 udiskie
+upower
 vulkan-intel
 waybar
+wireless-regdb
 wireplumber
 wl-clipboard
 xdg-desktop-portal-gtk

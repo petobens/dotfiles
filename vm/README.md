@@ -11,19 +11,25 @@ Create and launch the first VM from the repository root:
 ./vm/launch.sh
 ```
 
-The first launch boots the Arch ISO. Mount the read-only host checkout in the
-live environment and run its installer:
+Commit and push the Wayland branch before testing. The first launch boots the
+Arch ISO; fetch the branch exactly as on the physical machine:
 
 ```bash
-mount -m -t 9p -o trans=virtio dotfiles /run/dotfiles
-/run/dotfiles/setup/install-arch.sh
+pacman -Sy --needed git
+git clone \
+    --depth 1 \
+    --branch dotfiles-wayland \
+    https://github.com/petobens/dotfiles.git \
+    /tmp/dotfiles
+cd /tmp/dotfiles
+./setup/install-arch.sh
 ```
 
 The installer detects QEMU and defaults to hostname `arch-vm`, a 1 GiB EFI
 partition, a 40 GiB root partition, and a home partition using the remaining
 space. At the `Target disk` prompt, type the complete device path
-`/dev/nvme0n1` and press Enter. It skips the repository clone and configures
-the read-only host checkout automatically.
+`/dev/nvme0n1` and press Enter. Accept the default prompt to clone the Wayland
+branch into the installed system.
 
 After the installer finishes:
 
@@ -32,8 +38,8 @@ umount -R /mnt
 reboot
 ```
 
-After the installed system boots, log in as `pedro`. The checkout is available
-at `~/git-repos/private/dotfiles`; run the normal interactive installer:
+After the installed system boots, log in as `pedro` and run the normal
+interactive installer:
 
 ```bash
 cd ~/git-repos/private/dotfiles
@@ -45,8 +51,29 @@ sudo reboot
 For scrollback, press `Ctrl+B`, release both keys, and then press `[`. Press
 `q` to return to the live command.
 
-Host edits are visible in the guest immediately. The guest cannot modify the
-checkout. Applications may still need to reload their configuration.
+The VM has an independent Git checkout, just like the physical machine. Push
+host changes before testing them, then update the VM with:
+
+```bash
+cd ~/git-repos/private/dotfiles
+git pull
+```
+
+After each clean VM installation, authorize the host's existing SSH key:
+
+```bash
+chmod 600 ~/.ssh/id_rsa
+ssh-copy-id -F none \
+    -i ~/.ssh/id_rsa.pub \
+    -p 2222 pedro@127.0.0.1
+ssh -F none \
+    -i ~/.ssh/id_rsa \
+    -p 2222 pedro@127.0.0.1
+```
+
+Enter the VM password for `ssh-copy-id`. This affects only the VM; the physical
+installation does not install an authorized key. Unattended SSH also requires
+the local private key to have no passphrase or to be loaded in `ssh-agent`.
 
 Verify that systemd-boot exposes both kernels:
 

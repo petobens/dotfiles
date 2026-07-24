@@ -2,7 +2,6 @@
 set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-repo=$(cd "$script_dir/.." && pwd)
 state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-wayland-vm
 disk="$state_dir/wayland.qcow2"
 firmware_code=/usr/share/edk2/x64/OVMF_CODE.4m.fd
@@ -31,15 +30,15 @@ iso=$(find "$state_dir" -maxdepth 1 -name 'archlinux-*.iso' -print -quit)
 
 printf '%s\n' \
 	'First boot:' \
-	'mount -m -t 9p -o trans=virtio dotfiles /run/dotfiles' \
-	'/run/dotfiles/setup/install-arch.sh' \
+	'pacman -Sy --needed git' \
+	'git clone --depth 1 --branch dotfiles-wayland https://github.com/petobens/dotfiles.git /tmp/dotfiles' \
+	'cd /tmp/dotfiles && ./setup/install-arch.sh' \
 	'At the Target disk prompt, type: /dev/nvme0n1' \
 	'After reboot: cd ~/git-repos/private/dotfiles && tmux' \
 	'Inside tmux: ./setup/install.sh' \
-	'Host edits are reflected live in the read-only guest checkout.' \
 	'If Hyprland starts, the guest is already installed and no setup is needed.'
 
-# Match the intended physical machine closely while keeping host integration local
+# Match the intended physical machine while keeping QEMU integration local
 args=(
 	-name dotfiles-wayland
 	-enable-kvm
@@ -61,8 +60,6 @@ args=(
 	-device "nvme,drive=nvme0,serial=dotfiles-wayland"
 	-drive "if=virtio,media=cdrom,readonly=on,file=$iso"
 	-nic "user,model=virtio-net-pci,hostfwd=tcp::2222-:22"
-	# Expose this checkout live without allowing the guest to modify the host
-	-virtfs "local,path=$repo,mount_tag=dotfiles,security_model=none,readonly=on"
 )
 
 section 'Launching Wayland VM'

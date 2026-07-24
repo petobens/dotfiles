@@ -11,6 +11,7 @@ config/tmux/resurrect/
 
 # Local tool state
 /.ruff_cache/
+config/fish/fish_variables
 
 # OneDrive runtime state
 config/onedrive/items*
