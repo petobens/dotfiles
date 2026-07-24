@@ -28,7 +28,7 @@ mapfile -t packages < <(
     sed -e '/^[[:space:]]*#/d' -e '/^[[:space:]]*$/d' "$script_dir/packages/aur.txt"
 )
 
-if systemd-detect-virt --quiet; then
+if systemd-detect-virt --vm --quiet; then
     section 'Skipping unnecessary applications in the VM'
     filtered_packages=()
     for package in "${packages[@]}"; do

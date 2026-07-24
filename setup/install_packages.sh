@@ -16,7 +16,7 @@ mapfile -t packages < <(
     done | sort -u
 )
 
-if systemd-detect-virt --quiet; then
+if systemd-detect-virt --vm --quiet; then
     section 'Skipping Firefox in the VM'
     filtered_packages=()
     for package in "${packages[@]}"; do

@@ -15,33 +15,7 @@ die() {
     exit 1
 }
 
-mode=auto
-virtualization=
-while (($#)); do
-    case $1 in
-        --vm)
-            [[ $mode == auto || $mode == vm ]] || die 'Choose only one installation mode'
-            mode=vm
-            ;;
-        --physical)
-            [[ $mode == auto || $mode == physical ]] || die 'Choose only one installation mode'
-            mode=physical
-            ;;
-        --help)
-            printf '%s\n' \
-                'Usage: install_arch.sh [--vm|--physical]' \
-                '' \
-                'Interactively installs Arch Linux on one empty UEFI disk.' \
-                'The selected disk is completely erased.' \
-                '' \
-                'Installation mode is detected automatically unless overridden.'
-            exit
-            ;;
-        *) die "Unknown option: $1" ;;
-    esac
-    shift
-done
-
+(($# == 0)) || die 'This script does not accept arguments'
 [[ $EUID == 0 ]] || die 'Run this script as root from the Arch installation ISO'
 [[ -d /sys/firmware/efi/efivars ]] || die 'Boot the installation ISO in UEFI mode'
 mountpoint -q /mnt && die 'Unmount the existing installation from /mnt first'
@@ -50,13 +24,11 @@ for command in arch-chroot curl genfstab pacstrap sfdisk systemd-detect-virt; do
     command -v "$command" > /dev/null || die "Missing $command; use the official Arch installation ISO"
 done
 
-if [[ $mode == auto ]]; then
-    if virtualization=$(systemd-detect-virt --vm 2> /dev/null); then
-        mode=vm
-    else
-        mode=physical
-        virtualization=
-    fi
+if virtualization=$(systemd-detect-virt --vm 2> /dev/null); then
+    mode=vm
+else
+    mode=physical
+    virtualization=
 fi
 
 if [[ $mode == vm ]]; then
