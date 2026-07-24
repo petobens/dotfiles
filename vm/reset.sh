@@ -10,23 +10,16 @@ section() {
 }
 
 section 'Resetting Wayland VM'
-timestamp=$(date +%Y%m%d-%H%M%S)
-if [[ -f $disk ]]; then
-	# Keep only the guest being replaced as a recoverable backup
-	shopt -s nullglob
-	old_backups=("$disk".*.bak "$firmware_vars".*.bak)
-	((${#old_backups[@]} == 0)) || rm -- "${old_backups[@]}"
-	shopt -u nullglob
-
-	mv "$disk" "$disk.$timestamp.bak"
-	[[ -f $firmware_vars ]] && mv "$firmware_vars" "$firmware_vars.$timestamp.bak"
-fi
+shopt -s nullglob
+old_state=("$disk" "$firmware_vars" "$disk".*.bak "$firmware_vars".*.bak)
+((${#old_state[@]} == 0)) || rm -- "${old_state[@]}"
+shopt -u nullglob
 "$(dirname "${BASH_SOURCE[0]}")/create.sh"
 
 # Remove obsolete state from the previous cloud-image VM
 [[ ! -f $state_dir/cloud-init.iso ]] || rm -- "$state_dir/cloud-init.iso"
 
-# Remove legacy cloud images once no retained disk references them
+# Remove legacy cloud images once the new disk no longer references them
 referenced_bases=()
 shopt -s nullglob
 images=("$disk" "$disk".*.bak)

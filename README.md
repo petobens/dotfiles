@@ -77,8 +77,8 @@ detection.
 
 The VM's 96 GiB QCOW2 disk is sparse. This is its maximum guest-visible
 capacity, not 96 GiB reserved on the host. The host file starts small and grows
-as the guest writes data. VM resets also retain one sparse backup, whose actual
-written data consumes host space until the next reset replaces it.
+as the guest writes data. VM resets permanently discard the previous disk and
+firmware state while retaining the verified Arch ISO.
 
 The selected disk is completely erased. The script rejects mounted disks,
 shows the proposed layout, and continues only after its exact

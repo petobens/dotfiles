@@ -94,9 +94,9 @@ To replace the VM with a blank disk and repeat the complete Arch installation:
 ./vm/launch.sh
 ```
 
-`reset.sh` runs `create.sh` automatically. It preserves the current disk and
-firmware state as the only timestamped backup, removes older backups, and
-downloads a newer Arch ISO when one is released.
+`reset.sh` permanently removes the current disk, firmware state, and any old
+backups before running `create.sh` automatically. It retains the verified Arch
+ISO and downloads a newer one only when a new release is available.
 
 QEMU grabs the mouse and keyboard while the pointer is over the VM display.
 Press `Ctrl+Alt+G` to release or recapture input. The guest also has accelerated
@@ -106,6 +106,4 @@ State is stored in `~/.local/state/dotfiles-wayland-vm`. The virtual disk has a
 96 GiB guest-visible capacity but is sparse. It does not reserve 96 GiB on the
 host: the QCOW2 file starts small and grows as the guest writes data. Guest
 TRIM requests are passed through so `fstrim.timer` can return unused blocks to
-the host. The verified Arch ISO is retained between resets. The single VM
-backup is also sparse, but its previously written data continues to consume
-host space until a later reset replaces that backup.
+the host. The verified Arch ISO is retained between resets.
