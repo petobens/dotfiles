@@ -1,7 +1,7 @@
 # Arch Wayland VM
 
-The VM boots the official Arch installation ISO with UEFI and a blank NVMe
-disk. It uses the same interactive installer, partitioning, `pacstrap`,
+The VM's installation mode boots the official Arch ISO with UEFI and a blank
+NVMe disk. It uses the same interactive installer, partitioning, `pacstrap`,
 systemd-boot, standard kernel, and LTS kernel setup as the future machine.
 The package installer skips Firefox, OneDrive, OnlyOffice, Zoom, and Microsoft
 Edge in the VM to avoid spending several gigabytes on applications that are
@@ -11,11 +11,12 @@ Create and launch the first VM from the repository root:
 
 ```bash
 ./vm/create.sh
-./vm/launch.sh
+./vm/launch.sh --install
 ```
 
 Commit and push the Wayland branch before testing. The first launch boots the
-Arch ISO; fetch the branch exactly as on the physical machine:
+Arch ISO because `--install` attaches it; fetch the branch exactly as on the
+physical machine:
 
 ```bash
 pacman -Sy --needed git
@@ -83,15 +84,21 @@ ssh -F none \
 Enter the VM password for `ssh-copy-id`. This affects only the VM; the physical
 installation does not install an authorized key. Unattended SSH also requires
 the local private key to have no passphrase or to be loaded in `ssh-agent`.
+The forwarded SSH port listens only on the host's loopback interface.
 
 On later boots, Fish starts Hyprland automatically after login. If the VM opens
-directly into the graphical desktop, installation is complete.
+directly into the graphical desktop, installation is complete. Launch an
+installed VM without the Arch ISO:
+
+```bash
+./vm/launch.sh
+```
 
 To replace the VM with a blank disk and repeat the complete Arch installation:
 
 ```bash
 ./vm/reset.sh
-./vm/launch.sh
+./vm/launch.sh --install
 ```
 
 `reset.sh` permanently removes the current disk, firmware state, and any old

@@ -58,4 +58,4 @@ for old_iso in "$state_dir"/archlinux-*.iso; do
 done
 shopt -u nullglob
 
-printf 'VM created in %s\nRun %s/launch.sh\n' "$state_dir" "$script_dir"
+printf 'VM created in %s\nRun %s/launch.sh --install\n' "$state_dir" "$script_dir"

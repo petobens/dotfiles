@@ -13,9 +13,18 @@ gopass config mounts.path "$HOME/.password-store"
 section 'Configuring login and system services'
 # Fish login sessions start Hyprland after tty1 authentication
 sudo chsh -s "$(command -v fish)" "$USER"
-sudo systemctl enable NetworkManager bluetooth sshd tlp
-systemctl --user enable pipewire pipewire-pulse wireplumber gnome-keyring-daemon.socket 2> /dev/null || true
-sudo systemctl enable --now avahi-daemon.service cups.socket ipp-usb.service ollama.service
+sudo systemctl enable --now avahi-daemon.service
+sudo systemctl enable bluetooth
+sudo systemctl enable --now cups.socket
+sudo systemctl enable --now ipp-usb.service
+sudo systemctl enable NetworkManager
+sudo systemctl enable --now ollama.service
+sudo systemctl enable sshd
+sudo systemctl enable tlp
+systemctl --user enable gnome-keyring-daemon.socket
+systemctl --user enable pipewire
+systemctl --user enable pipewire-pulse
+systemctl --user enable wireplumber
 
 section 'Configuring compressed swap'
 printf '[zram0]\n' | sudo tee /etc/systemd/zram-generator.conf > /dev/null
@@ -42,4 +51,5 @@ sudo tee /etc/docker/daemon.json > /dev/null << EOF
     "data-root": "$HOME/.cache/docker"
 }
 EOF
-sudo systemctl enable --now docker.socket systemd-timesyncd
+sudo systemctl enable --now docker.socket
+sudo systemctl enable --now systemd-timesyncd
