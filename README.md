@@ -34,8 +34,9 @@ Package profiles under `setup/packages/` are divided by purpose:
 | `aur`          | Additional applications installed with Yay       |
 | `development`  | Development, data, document, and QEMU host tools |
 
-`setup/install_packages.sh` installs these profiles, then delegates system and
-user configuration to `setup/post_install.sh`.
+`setup/install.sh` runs the Pacman, AUR, language-tool, optional LaTeX, and
+post-install stages in dependency order, then creates the configuration
+symlinks.
 
 ## Layout
 

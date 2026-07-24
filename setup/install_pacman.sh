@@ -27,11 +27,3 @@ fi
 
 section 'Installing Pacman packages'
 sudo pacman -Syu --needed --noconfirm "${packages[@]}"
-
-"$script_dir/install_aur.sh"
-"$script_dir/install_tools.sh"
-"$script_dir/post_install.sh"
-
-section 'Cleaning package caches'
-yay -Yc --noconfirm
-yay -Sc --noconfirm

@@ -34,10 +34,15 @@ fi
 
 # Run selected components in dependency order
 if $install_packages; then
-    "$script_dir/install_packages.sh"
+    "$script_dir/install_pacman.sh"
+    "$script_dir/install_aur.sh"
+    "$script_dir/install_language_tools.sh"
 fi
 if $install_latex; then
     "$script_dir/install_latex.sh"
+fi
+if $install_packages; then
+    "$script_dir/post_install.sh"
 fi
 if $install_symlinks; then
     "$script_dir/symlinks.sh"

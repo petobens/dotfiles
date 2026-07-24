@@ -5,7 +5,7 @@ section() {
     printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
 }
 
-section 'Installing Python tools'
+section 'Installing Python language tools'
 uv tool install --force aws-mfa
 uv tool install --force black
 uv tool install --force --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib,jupyter-ruff jupyterlab
@@ -22,7 +22,7 @@ uv tool install --force uv-upx
 uv tool install --force yamllint
 uv tool install --force zuban
 
-section 'Installing Node tools'
+section 'Installing Node language tools'
 npm config set prefix "$HOME/.npm-global"
 npm_packages=(
     @agentclientprotocol/claude-agent-acp
@@ -36,6 +36,6 @@ npm_packages=(
 npm install --global "${npm_packages[@]}"
 npm list --global --depth=0 "${npm_packages[@]}"
 
-section 'Installing Rust tools'
+section 'Installing Rust language tools'
 rustup default stable
 cargo install cargo-update devicon-lookup

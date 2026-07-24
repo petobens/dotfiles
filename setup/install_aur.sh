@@ -41,3 +41,7 @@ if systemd-detect-virt --vm --quiet; then
 fi
 
 yay -S --needed --noconfirm --answerdiff=None --removemake --cleanafter "${packages[@]}"
+
+section 'Cleaning package caches'
+yay -Yc --noconfirm
+yay -Sc --noconfirm
