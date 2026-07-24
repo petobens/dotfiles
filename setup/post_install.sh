@@ -15,7 +15,7 @@ section 'Configuring login and system services'
 sudo chsh -s "$(command -v fish)" "$USER"
 sudo systemctl enable NetworkManager bluetooth sshd tlp
 systemctl --user enable pipewire pipewire-pulse wireplumber gnome-keyring-daemon.socket 2> /dev/null || true
-sudo systemctl enable --now avahi-daemon.service cups.socket ollama.service
+sudo systemctl enable --now avahi-daemon.service cups.socket ipp-usb.service ollama.service
 
 section 'Configuring compressed swap'
 printf '[zram0]\n' | sudo tee /etc/systemd/zram-generator.conf > /dev/null
