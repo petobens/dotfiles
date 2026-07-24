@@ -3,97 +3,97 @@ set -euo pipefail
 
 # Resolve the requested app's launch and matching rules
 case ${1:-} in
-brave)
-	tag=brave
-	class='^brave-browser$'
-	workspace=1
-	command='brave --ozone-platform=wayland'
-	;;
-calendar)
-	tag=calendar
-	class='^brave-calendar$'
-	workspace=1
-	command='brave --ozone-platform=wayland --class=brave-calendar --new-window --app=https://calendar.google.com/calendar/b/0/r'
-	;;
-clickup)
-	tag=clickup
-	class='^edge-clickup$'
-	workspace=1
-	command='microsoft-edge-dev --ozone-platform=wayland --class=edge-clickup --new-window --app=https://app.clickup.com'
-	;;
-edge)
-	tag=edge
-	class='^microsoft-edge-dev$'
-	workspace=1
-	command='microsoft-edge-dev --ozone-platform=wayland'
-	;;
-slack)
-	tag=slack
-	class='^Slack$'
-	workspace=2
-	command='slack --enable-features=UseOzonePlatform --ozone-platform=wayland'
-	;;
-teams)
-	tag=teams
-	class='^brave-teams$'
-	workspace=2
-	command='brave --ozone-platform=wayland --class=brave-teams --new-window --app=https://teams.live.com'
-	;;
-zoom)
-	tag=zoom
-	class='^zoom$'
-	workspace=2
-	command='zoom'
-	;;
-meet)
-	tag=meet
-	class='^brave-meet$'
-	workspace=2
-	command='brave --ozone-platform=wayland --class=brave-meet --new-window --app=https://meet.google.com'
-	;;
-gmail)
-	tag=gmail
-	class='^brave-gmail$'
-	workspace=2
-	command='brave --ozone-platform=wayland --class=brave-gmail --new-window --app=https://mail.google.com'
-	;;
-spotify)
-	tag=spotify
-	class='^Spotify$'
-	workspace=3
-	command='spotify --enable-features=UseOzonePlatform --ozone-platform=wayland'
-	;;
-transmission)
-	tag=transmission
-	class='^transmission-gtk$'
-	workspace=4
-	command='transmission-gtk'
-	;;
-onlyoffice)
-	tag=onlyoffice
-	class='^DesktopEditors$'
-	workspace=4
-	command='onlyoffice-desktopeditors'
-	;;
-terminal)
-	tag=terminal
-	class='^com.mitchellh.ghostty$'
-	workspace=5
-	command='ghostty -e fish -l -c tm'
-	;;
-*)
-	echo "usage: app {brave|calendar|clickup|edge|slack|teams|zoom|meet|gmail|spotify|transmission|onlyoffice|terminal}" >&2
-	exit 2
-	;;
+    brave)
+        tag=brave
+        class='^brave-browser$'
+        workspace=1
+        command='brave --ozone-platform=wayland'
+        ;;
+    calendar)
+        tag=calendar
+        class='^brave-calendar$'
+        workspace=1
+        command='brave --ozone-platform=wayland --class=brave-calendar --new-window --app=https://calendar.google.com/calendar/b/0/r'
+        ;;
+    clickup)
+        tag=clickup
+        class='^edge-clickup$'
+        workspace=1
+        command='microsoft-edge-dev --ozone-platform=wayland --class=edge-clickup --new-window --app=https://app.clickup.com'
+        ;;
+    edge)
+        tag=edge
+        class='^microsoft-edge-dev$'
+        workspace=1
+        command='microsoft-edge-dev --ozone-platform=wayland'
+        ;;
+    slack)
+        tag=slack
+        class='^Slack$'
+        workspace=2
+        command='slack --enable-features=UseOzonePlatform --ozone-platform=wayland'
+        ;;
+    teams)
+        tag=teams
+        class='^brave-teams$'
+        workspace=2
+        command='brave --ozone-platform=wayland --class=brave-teams --new-window --app=https://teams.live.com'
+        ;;
+    zoom)
+        tag=zoom
+        class='^zoom$'
+        workspace=2
+        command='zoom'
+        ;;
+    meet)
+        tag=meet
+        class='^brave-meet$'
+        workspace=2
+        command='brave --ozone-platform=wayland --class=brave-meet --new-window --app=https://meet.google.com'
+        ;;
+    gmail)
+        tag=gmail
+        class='^brave-gmail$'
+        workspace=2
+        command='brave --ozone-platform=wayland --class=brave-gmail --new-window --app=https://mail.google.com'
+        ;;
+    spotify)
+        tag=spotify
+        class='^Spotify$'
+        workspace=3
+        command='spotify --enable-features=UseOzonePlatform --ozone-platform=wayland'
+        ;;
+    transmission)
+        tag=transmission
+        class='^transmission-gtk$'
+        workspace=4
+        command='transmission-gtk'
+        ;;
+    onlyoffice)
+        tag=onlyoffice
+        class='^DesktopEditors$'
+        workspace=4
+        command='onlyoffice-desktopeditors'
+        ;;
+    terminal)
+        tag=terminal
+        class='^com.mitchellh.ghostty$'
+        workspace=5
+        command='ghostty -e fish -l -c tm'
+        ;;
+    *)
+        echo "usage: app {brave|calendar|clickup|edge|slack|teams|zoom|meet|gmail|spotify|transmission|onlyoffice|terminal}" >&2
+        exit 2
+        ;;
 esac
 
 # Focus a matching window or launch the app on its assigned workspace
 # Tags distinguish browser apps that otherwise share the same process class
 address=$(hyprctl clients -j | jq -r --arg class "$class" --arg tag "$tag" \
-	'.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address' |
-	head -n 1)
+    '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address' |
+    head -n 1)
 if [[ -n $address ]]; then
-	hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
+    hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
 else
-	hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
+    hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
 fi

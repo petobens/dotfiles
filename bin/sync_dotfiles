@@ -7,64 +7,64 @@ cd "$repo"
 
 branch=$(git branch --show-current)
 if [[ $branch != dotfiles-wayland ]]; then
-	echo "Run this from the dotfiles-wayland branch, not $branch." >&2
-	exit 1
+    echo "Run this from the dotfiles-wayland branch, not $branch." >&2
+    exit 1
 fi
 if [[ -n $(git status --porcelain) ]]; then
-	echo 'Commit or stash Wayland changes before syncing.' >&2
-	exit 1
+    echo 'Commit or stash Wayland changes before syncing.' >&2
+    exit 1
 fi
 
 git fetch origin master
 if git merge-base --is-ancestor origin/master HEAD; then
-	echo 'dotfiles-wayland already contains origin/master.'
-	exit
+    echo 'dotfiles-wayland already contains origin/master.'
+    exit
 fi
 
 if git merge --no-edit -X ours origin/master; then
-	echo 'Merged origin/master into dotfiles-wayland.'
-	exit
+    echo 'Merged origin/master into dotfiles-wayland.'
+    exit
 fi
 
 # The merge strategy handles content conflicts. Resolve remaining cases, such
 # as modify/delete conflicts, from the Wayland side too.
 mapfile -d '' -t conflicts < <(
-	git diff --name-only --diff-filter=U -z
+    git diff --name-only --diff-filter=U -z
 )
 if ((${#conflicts[@]} == 0)); then
-	echo 'Merge failed without resolvable file conflicts.' >&2
-	exit 1
+    echo 'Merge failed without resolvable file conflicts.' >&2
+    exit 1
 fi
 
 printf '\nConflicts (the Wayland version will be kept):\n'
 for path in "${conflicts[@]}"; do
-	printf '\n--- %s ---\n' "$path"
-	if git cat-file -e ":2:$path" 2>/dev/null; then
-		if git cat-file -e ":3:$path" 2>/dev/null; then
-			echo 'Wayland (kept) -> master:'
-			git --no-pager diff --no-ext-diff --color=auto ":2:$path" ":3:$path"
-		else
-			echo 'master deleted this file; showing the Wayland changes:'
-			git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":2:$path"
-		fi
-	else
-		echo 'Wayland deleted this file; showing the master changes:'
-		git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":3:$path"
-	fi
+    printf '\n--- %s ---\n' "$path"
+    if git cat-file -e ":2:$path" 2> /dev/null; then
+        if git cat-file -e ":3:$path" 2> /dev/null; then
+            echo 'Wayland (kept) -> master:'
+            git --no-pager diff --no-ext-diff --color=auto ":2:$path" ":3:$path"
+        else
+            echo 'master deleted this file; showing the Wayland changes:'
+            git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":2:$path"
+        fi
+    else
+        echo 'Wayland deleted this file; showing the master changes:'
+        git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":3:$path"
+    fi
 done
 
 for path in "${conflicts[@]}"; do
-	if git cat-file -e ":2:$path" 2>/dev/null; then
-		git checkout --ours -- "$path"
-		git add -- "$path"
-	else
-		git rm --ignore-unmatch -- "$path"
-	fi
+    if git cat-file -e ":2:$path" 2> /dev/null; then
+        git checkout --ours -- "$path"
+        git add -- "$path"
+    else
+        git rm --ignore-unmatch -- "$path"
+    fi
 done
 
 if git diff --name-only --diff-filter=U | grep -q .; then
-	echo 'Some conflicts could not be resolved automatically.' >&2
-	exit 1
+    echo 'Some conflicts could not be resolved automatically.' >&2
+    exit 1
 fi
 
 git commit --no-edit

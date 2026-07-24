@@ -3,9 +3,9 @@ set -euo pipefail
 
 action=$(printf '%s\n' lock logout suspend reboot poweroff | rofi -dmenu -p 'session')
 case "$action" in
-lock) loginctl lock-session ;;
-logout) hyprshutdown ;;
-suspend) systemctl suspend ;;
-reboot) hyprshutdown -t 'Restarting...' --post-cmd 'systemctl reboot' ;;
-poweroff) hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff' ;;
+    lock) loginctl lock-session ;;
+    logout) hyprshutdown ;;
+    suspend) systemctl suspend ;;
+    reboot) hyprshutdown -t 'Restarting...' --post-cmd 'systemctl reboot' ;;
+    poweroff) hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff' ;;
 esac

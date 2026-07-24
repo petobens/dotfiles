@@ -5,29 +5,29 @@ repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 backup_root=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-backup/$(date +%Y%m%d-%H%M%S)
 
 section() {
-	printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
+    printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
 }
 
 symlink() {
-	local source=$1 target=$2
-	mkdir -p "$(dirname "$target")"
-	# Preserve real files but replace existing symlinks atomically
-	if [[ -e $target && ! -L $target ]]; then
-		local backup="$backup_root/${target#"$HOME"/}"
-		mkdir -p "$(dirname "$backup")"
-		mv "$target" "$backup"
-		printf 'Backed up %s to %s\n' "$target" "$backup"
-	fi
-	ln -sfn "$source" "$target"
+    local source=$1 target=$2
+    mkdir -p "$(dirname "$target")"
+    # Preserve real files but replace existing symlinks atomically
+    if [[ -e $target && ! -L $target ]]; then
+        local backup="$backup_root/${target#"$HOME"/}"
+        mkdir -p "$(dirname "$backup")"
+        mv "$target" "$backup"
+        printf 'Backed up %s to %s\n' "$target" "$backup"
+    fi
+    ln -sfn "$source" "$target"
 }
 
 symlink_if_exists() {
-	local source=$1 target=$2
-	if [[ -e $source ]]; then
-		symlink "$source" "$target"
-	else
-		printf 'Skipped missing source: %s\n' "$source"
-	fi
+    local source=$1 target=$2
+    if [[ -e $source ]]; then
+        symlink "$source" "$target"
+    else
+        printf 'Skipped missing source: %s\n' "$source"
+    fi
 }
 
 section 'Symlinking configuration'

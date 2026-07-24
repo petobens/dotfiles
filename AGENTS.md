@@ -40,8 +40,8 @@ desktop.
   not installed. Add short module or function docstrings when they clarify
   purpose or usage, but do not add boilerplate docstrings for obvious one-off
   code.
-- For Bash scripts, run `shellcheck <file>` and `shfmt` if this repository
-  already uses it.
+- For Bash scripts, run `shfmt -w -i 4 -ci -sr <file>` and
+  `shellcheck <file>`. These options match Conform's Bash formatter.
 
 ## Neovim (`nvim/`)
 

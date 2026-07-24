@@ -5,97 +5,97 @@ layout=${1:?usage: place_window LAYOUT}
 
 # Read the active window and its monitor geometry
 read -r address monitor_x monitor_y monitor_w monitor_h < <(
-	hyprctl activewindow -j | jq -r '[.address, .monitor] | @tsv' | {
-		read -r address monitor
-		hyprctl monitors -j | jq -r --argjson monitor "$monitor" --arg address "$address" \
-			'.[] | select(.id == $monitor) | [$address, .x, .y, .width, .height] | @tsv'
-	}
+    hyprctl activewindow -j | jq -r '[.address, .monitor] | @tsv' | {
+        read -r address monitor
+        hyprctl monitors -j | jq -r --argjson monitor "$monitor" --arg address "$address" \
+            '.[] | select(.id == $monitor) | [$address, .x, .y, .width, .height] | @tsv'
+    }
 )
 
 # Map named layouts to monitor-relative percentages
 case "$layout" in
-full)
-	x=0
-	y=0
-	w=100
-	h=100
-	;;
-left)
-	x=0
-	y=0
-	w=50
-	h=100
-	;;
-right)
-	x=50
-	y=0
-	w=50
-	h=100
-	;;
-top)
-	x=0
-	y=0
-	w=100
-	h=50
-	;;
-bottom)
-	x=0
-	y=50
-	w=100
-	h=50
-	;;
-top-left)
-	x=0
-	y=0
-	w=50
-	h=50
-	;;
-top-right)
-	x=50
-	y=0
-	w=50
-	h=50
-	;;
-bottom-left)
-	x=0
-	y=50
-	w=50
-	h=50
-	;;
-bottom-right)
-	x=50
-	y=50
-	w=50
-	h=50
-	;;
-center)
-	x=15
-	y=10
-	w=70
-	h=80
-	;;
-rectangle)
-	x=12
-	y=12
-	w=76
-	h=76
-	;;
-dialog)
-	x=25
-	y=25
-	w=50
-	h=50
-	;;
-semi-full)
-	x=5
-	y=5
-	w=90
-	h=90
-	;;
-*)
-	echo "unknown layout: $layout" >&2
-	exit 2
-	;;
+    full)
+        x=0
+        y=0
+        w=100
+        h=100
+        ;;
+    left)
+        x=0
+        y=0
+        w=50
+        h=100
+        ;;
+    right)
+        x=50
+        y=0
+        w=50
+        h=100
+        ;;
+    top)
+        x=0
+        y=0
+        w=100
+        h=50
+        ;;
+    bottom)
+        x=0
+        y=50
+        w=100
+        h=50
+        ;;
+    top-left)
+        x=0
+        y=0
+        w=50
+        h=50
+        ;;
+    top-right)
+        x=50
+        y=0
+        w=50
+        h=50
+        ;;
+    bottom-left)
+        x=0
+        y=50
+        w=50
+        h=50
+        ;;
+    bottom-right)
+        x=50
+        y=50
+        w=50
+        h=50
+        ;;
+    center)
+        x=15
+        y=10
+        w=70
+        h=80
+        ;;
+    rectangle)
+        x=12
+        y=12
+        w=76
+        h=76
+        ;;
+    dialog)
+        x=25
+        y=25
+        w=50
+        h=50
+        ;;
+    semi-full)
+        x=5
+        y=5
+        w=90
+        h=90
+        ;;
+    *)
+        echo "unknown layout: $layout" >&2
+        exit 2
+        ;;
 esac
 
 # Percentages keep layouts consistent in the VM and on the ultrawide

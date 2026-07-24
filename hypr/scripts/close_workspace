@@ -2,8 +2,8 @@
 set -euo pipefail
 
 hyprctl clients -j | jq -r \
-	--argjson workspace "$(hyprctl activeworkspace -j | jq '.id')" \
-	'.[] | select(.workspace.id == $workspace) | .address' |
-	while read -r address; do
-		hyprctl dispatch "hl.dsp.window.close({ window = 'address:$address' })"
-	done
+    --argjson workspace "$(hyprctl activeworkspace -j | jq '.id')" \
+    '.[] | select(.workspace.id == $workspace) | .address' |
+    while read -r address; do
+        hyprctl dispatch "hl.dsp.window.close({ window = 'address:$address' })"
+    done

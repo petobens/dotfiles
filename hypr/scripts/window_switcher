@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Hide the address after the tab while keeping it available for selection
 selection=$(hyprctl clients -j | jq -r \
-	'.[] | "\(.address)\t[\(.workspace.name)] \(.class): \(.title)"' |
-	rofi -dmenu -display-columns 2 -p 'window')
+    '.[] | "\(.address)\t[\(.workspace.name)] \(.class): \(.title)"' |
+    rofi -dmenu -display-columns 2 -p 'window')
 [[ -n $selection ]] || exit 0
 hyprctl dispatch "hl.dsp.focus({ window = 'address:${selection%%$'\t'*}' })"

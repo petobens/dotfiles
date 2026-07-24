@@ -6,7 +6,7 @@ disk="$state_dir/wayland.qcow2"
 firmware_vars="$state_dir/OVMF_VARS.4m.fd"
 
 section() {
-	printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
+    printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
 }
 
 section 'Resetting Wayland VM'
@@ -25,17 +25,17 @@ shopt -s nullglob
 images=("$disk" "$disk".*.bak)
 shopt -u nullglob
 for image in "${images[@]}"; do
-	[[ -f $image ]] || continue
-	base=$(qemu-img info --output=json "$image" | jq -r '.["full-backing-filename"] // empty')
-	[[ -z $base ]] || referenced_bases+=("$base")
+    [[ -f $image ]] || continue
+    base=$(qemu-img info --output=json "$image" | jq -r '.["full-backing-filename"] // empty')
+    [[ -z $base ]] || referenced_bases+=("$base")
 done
 
 shopt -s nullglob
 for base in "$state_dir"/arch-cloud*.qcow2; do
-	keep=false
-	for referenced_base in "${referenced_bases[@]}"; do
-		[[ $base == "$referenced_base" ]] && keep=true
-	done
-	$keep || rm -- "$base"
+    keep=false
+    for referenced_base in "${referenced_bases[@]}"; do
+        [[ $base == "$referenced_base" ]] && keep=true
+    done
+    $keep || rm -- "$base"
 done
 shopt -u nullglob
