@@ -9,7 +9,7 @@ section() {
 
 # Complete Microsoft's browser authorization on the first run
 section 'Synchronizing OneDrive'
-onedrive --synchronize
+onedrive --sync
 systemctl --user enable --now onedrive
 
 section 'Refreshing configuration symlinks'

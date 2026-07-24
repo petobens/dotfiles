@@ -31,8 +31,8 @@ cd /tmp/dotfiles
 The installer detects QEMU and defaults to hostname `arch-vm`, a 1 GiB EFI
 partition, a 40 GiB root partition, and a home partition using the remaining
 space. At the `Target disk` prompt, type the complete device path
-`/dev/nvme0n1` and press Enter. Accept the default prompt to clone the Wayland
-branch into the installed system.
+`/dev/nvme0n1` and press Enter. The installer clones the Wayland branch into
+the installed system automatically.
 
 After the installer finishes:
 

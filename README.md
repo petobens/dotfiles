@@ -88,23 +88,23 @@ shows the proposed layout, and continues only after its exact
 `ERASE /dev/...` confirmation is entered. It does not support encryption,
 dual boot, RAID, LVM, hibernation, or Secure Boot enrollment.
 
-At the end, accept the default prompt to clone the Wayland branch into
-`~/git-repos/private/dotfiles`. Inspect `/mnt/etc/fstab`, then reboot as
-instructed.
+At the end, the installer clones the Wayland branch into
+`~/git-repos/private/dotfiles` automatically. Inspect `/mnt/etc/fstab`, then
+reboot as instructed.
 
 ## Install dotfiles
 
-From a fresh Arch installation:
+The Arch installer leaves the repository ready in the installed system. Log in
+as the normal user and run:
 
 ```bash
-git clone \
-    --branch dotfiles-wayland \
-    https://github.com/petobens/dotfiles.git \
-    ~/git-repos/private/dotfiles
 cd ~/git-repos/private/dotfiles
 tmux
 ./setup/install.sh
 ```
+
+After a manual installation, clone the Wayland branch to that location first
+if the checkout is missing.
 
 For scrollback, press `Ctrl+B`, release both keys, and then press `[`. Press
 `q` to return to the live command.
@@ -134,6 +134,17 @@ Choosing between them requires corresponding entries in the machine's
 bootloader.
 
 See `hypr/conf/monitors.lua` for monitor configuration.
+
+After the first Hyprland boot, complete OneDrive's browser authorization and
+start its user service:
+
+```bash
+cd ~/git-repos/private/dotfiles
+./setup/finish_onedrive.sh
+```
+
+The helper performs the initial synchronization and reruns the symlink script
+so synchronized SSH and Git credential files become available.
 
 ## Sync from master
 
