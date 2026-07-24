@@ -69,6 +69,9 @@ abbr -a uvp 'uv run python'
 abbr -a uvd 'uv run python -m pdb -cc'
 abbr -a uvt 'uv run pytest -n auto --cov'
 abbr -a uvh 'uv run pre-commit run --all-files'
+abbr -a mpnfs 'sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
+abbr -a mfnfs 'sudo mount synology-flor:/volume1/Shared-DS220 /mnt/nfs'
+abbr -a unfs 'sudo umount /mnt/nfs'
 abbr -a ua sys_update_all
 if type -q lsd
     abbr -a ls 'lsd -F --color=auto'
@@ -88,6 +91,16 @@ end
 function tm --description 'Attach to the main tmux session'
     set -l session (test "$USER" = pedro; and echo petobens; or echo "$USER")
     command tmux -f "$HOME/.config/tmux/tmux.conf" new -A -s "$session" $argv
+end
+
+function npssh --description 'SSH into the DS220 Synology'
+    set -lx SSHPASS (pass show -o synology/synology-ds/petobens)
+    sshpass -e ssh synology -t 'cd /volume1/Shared-DS220; bash --login'
+end
+
+function nfssh --description 'SSH into the Flor Synology'
+    set -lx SSHPASS (pass show -o synology/synology-flor/flor)
+    sshpass -e ssh synology-flor -t 'cd /volume1/Shared-DS220; bash --login'
 end
 
 function y --description 'Run Yazi and change to its final directory'

@@ -4,11 +4,13 @@ curl
 edk2-ovmf
 gcc-fortran
 googleworkspace-cli
+imagemagick
 inotify-tools
 lua
 luarocks
 nodejs
 npm
+ollama
 openai-codex
 openblas
 perl

@@ -49,10 +49,10 @@ if $install_symlinks; then
 	"$script_dir/symlinks.sh"
 fi
 if $install_packages; then
-	"$script_dir/install-packages.sh"
+	"$script_dir/install_packages.sh"
 fi
 if $install_latex; then
-	"$script_dir/install-latex.sh"
+	"$script_dir/install_latex.sh"
 fi
 
 if command -v fish >/dev/null && [[ $(getent passwd "$USER" | cut -d: -f7) != "$(command -v fish)" ]]; then

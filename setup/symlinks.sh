@@ -73,8 +73,6 @@ symlink "$repo/config/linters/yamllint.yaml" "$HOME/.config/yamllint/config"
 symlink "$repo/config/pgcli/config" "$HOME/.config/pgcli/config"
 
 # Python tooling
-symlink "$repo/config/python/pdbrc" "$HOME/.pdbrc"
-symlink "$repo/config/python/pdbrc.py" "$HOME/.pdbrc.py"
 symlink "$repo/config/python/matplotlib" "$HOME/.config/matplotlib"
 symlink "$repo/config/python/pylintrc" "$HOME/.pylintrc"
 symlink "$repo/config/python/mypy.ini" "$HOME/.mypy.ini"

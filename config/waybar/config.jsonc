@@ -24,7 +24,7 @@
         "on-click": "ghostty -e impala"
     },
     "custom/onedrive": {
-        "exec": "~/.config/hypr/scripts/onedrive-status",
+        "exec": "~/.config/hypr/scripts/onedrive_status",
         "interval": 15,
         "return-type": "json",
         "on-click": "ghostty -e journalctl --user-unit onedrive -f"

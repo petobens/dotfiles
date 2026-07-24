@@ -15,7 +15,7 @@ if ! command -v yay >/dev/null; then
 	section 'Installing Yay'
 	build_dir=$(mktemp -d /tmp/yay-build.XXXXXX)
 	trap 'rm -rf -- "$build_dir"' EXIT
-	git clone https://aur.archlinux.org/yay.git "$build_dir/yay"
+	git clone https://aur.archlinux.org/yay-bin.git "$build_dir/yay"
 	(
 		cd "$build_dir/yay"
 		makepkg -si --needed --noconfirm --clean --rmdeps
@@ -29,11 +29,11 @@ mapfile -t packages < <(
 )
 
 if systemd-detect-virt --quiet; then
-	section 'Skipping large desktop applications in the VM'
+	section 'Skipping unnecessary applications in the VM'
 	filtered_packages=()
 	for package in "${packages[@]}"; do
 		case $package in
-		microsoft-edge-dev-bin | onlyoffice-bin | zoom) ;;
+		microsoft-edge-dev-bin | onedrive-abraunegg | onlyoffice-bin | zoom) ;;
 		*) filtered_packages+=("$package") ;;
 		esac
 	done

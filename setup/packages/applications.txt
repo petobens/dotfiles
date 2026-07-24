@@ -1,8 +1,12 @@
+cups
+cups-pk-helper
 docker
 docker-buildx
 docker-compose
 firefox
 gnome-font-viewer
+ipp-usb
 obs-studio
+system-config-printer
 transmission-gtk
 wf-recorder

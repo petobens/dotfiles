@@ -21,12 +21,14 @@ lsd
 luacheck
 markdownlint-cli
 neovim
+nfs-utils
 openssh
 python
 ripgrep
 rsync
 shellcheck
 shfmt
+sshpass
 starship
 stylua
 taplo-cli

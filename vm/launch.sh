@@ -32,7 +32,7 @@ printf '%s\n' \
 	'First boot:' \
 	'pacman -Sy --needed git' \
 	'git clone --depth 1 --branch dotfiles-wayland https://github.com/petobens/dotfiles.git /tmp/dotfiles' \
-	'cd /tmp/dotfiles && ./setup/install-arch.sh' \
+	'cd /tmp/dotfiles && ./setup/install_arch.sh' \
 	'At the Target disk prompt, type: /dev/nvme0n1' \
 	'After reboot: cd ~/git-repos/private/dotfiles && tmux' \
 	'Inside tmux: ./setup/install.sh' \

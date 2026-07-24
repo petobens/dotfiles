@@ -231,7 +231,6 @@ vim.filetype.add({
         ['config.rasi'] = 'css',
         ['gitconfig'] = 'gitconfig',
         ['matplotlibrc'] = 'confini',
-        ['pdbrc'] = 'python',
         ['poetry.lock'] = 'toml',
         ['pylintrc'] = 'config',
         ['ripgreprc'] = 'confini',

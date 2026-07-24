@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-layout=${1:?usage: place-window LAYOUT}
+layout=${1:?usage: place_window LAYOUT}
 
 # Read the active window and its monitor geometry
 read -r address monitor_x monitor_y monitor_w monitor_h < <(

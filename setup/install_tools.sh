@@ -34,6 +34,7 @@ npm_packages=(
 	jsonlint
 )
 npm install --global "${npm_packages[@]}"
+npm list --global --depth=0 "${npm_packages[@]}"
 
 section 'Installing Rust tools'
 rustup default stable

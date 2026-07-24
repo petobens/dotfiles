@@ -1,3 +1,4 @@
+adobe-source-code-pro-fonts
 blueman
 bluez
 bluez-utils
@@ -5,6 +6,7 @@ brightnessctl
 ghostty
 gnome-keyring
 grim
+gst-plugin-libcamera
 hypridle
 hyprland
 hyprlock
@@ -17,6 +19,8 @@ impala
 imv
 intel-media-driver
 intel-ucode
+libcamera
+libcamera-tools
 libnotify
 libsecret
 mako
@@ -29,6 +33,7 @@ noto-fonts-emoji
 pipewire
 pipewire-alsa
 pipewire-jack
+pipewire-libcamera
 pipewire-pulse
 playerctl
 qt5-wayland
@@ -37,8 +42,8 @@ rofi
 rtkit
 slurp
 sof-firmware
-ttf-jetbrains-mono-nerd
 tlp
+ttf-jetbrains-mono-nerd
 udiskie
 upower
 vulkan-intel

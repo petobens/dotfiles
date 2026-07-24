@@ -14,10 +14,10 @@ hl.bind(
     { description = 'Toggle fullscreen' }
 )
 hl.bind('SUPER + Q', hl.dsp.window.close({}), { description = 'Close window' })
-exec('SUPER + SHIFT + W', scripts .. 'close-workspace', 'Close workspace windows')
-exec('SUPER + SHIFT + Q', scripts .. 'session-menu', 'Session menu')
-exec('SUPER + SHIFT + S', scripts .. 'session-menu', 'Session menu')
-exec('SUPER + SHIFT + R', scripts .. 'session-menu', 'Session menu')
+exec('SUPER + SHIFT + W', scripts .. 'close_workspace', 'Close workspace windows')
+exec('SUPER + SHIFT + Q', scripts .. 'session_menu', 'Session menu')
+exec('SUPER + SHIFT + S', scripts .. 'session_menu', 'Session menu')
+exec('SUPER + SHIFT + R', scripts .. 'session_menu', 'Session menu')
 exec('SUPER + SHIFT + L', 'loginctl lock-session', 'Lock session')
 hl.bind(
     'SUPER + mouse:272',
@@ -47,7 +47,7 @@ local placements = {
     ['SUPER + CTRL + 8'] = 'semi-full',
 }
 for keys, placement in pairs(placements) do
-    exec(keys, scripts .. 'place-window ' .. placement, 'Place window ' .. placement)
+    exec(keys, scripts .. 'place_window ' .. placement, 'Place window ' .. placement)
 end
 hl.bind(
     'SUPER + H',
@@ -111,11 +111,11 @@ for workspace = 1, 9 do
     )
 end
 
-exec('ALT + TAB', scripts .. 'window-switcher', 'Window switcher')
-exec('SUPER + W', scripts .. 'window-switcher', 'Window switcher')
+exec('ALT + TAB', scripts .. 'window_switcher', 'Window switcher')
+exec('SUPER + W', scripts .. 'window_switcher', 'Window switcher')
 exec('SUPER + S', 'rofi -show drun', 'Application launcher')
 exec('SUPER + A', 'rofi -show drun', 'Application launcher')
-exec('SUPER + Z', scripts .. 'password-menu', 'Password menu')
+exec('SUPER + Z', scripts .. 'password_menu', 'Password menu')
 exec('SUPER + CTRL + Y', 'hyprpicker -a', 'Copy picked color')
 exec('SUPER + X', 'ghostty', 'Terminal')
 exec('SUPER + CTRL + C', scripts .. 'app terminal', 'Terminal')

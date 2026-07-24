@@ -29,7 +29,7 @@ while (($#)); do
 		;;
 	--help)
 		printf '%s\n' \
-			'Usage: install-arch.sh [--vm|--physical]' \
+			'Usage: install_arch.sh [--vm|--physical]' \
 			'' \
 			'Interactively installs Arch Linux on one empty UEFI disk.' \
 			'The selected disk is completely erased.' \

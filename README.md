@@ -34,6 +34,9 @@ Package profiles under `setup/packages/` are divided by purpose:
 | `aur`          | Additional applications installed with Yay       |
 | `development`  | Development, data, document, and QEMU host tools |
 
+`setup/install_packages.sh` installs these profiles, then delegates system and
+user configuration to `setup/post_install.sh`.
+
 ## Layout
 
 - `bin/`: personal command-line scripts
@@ -59,7 +62,7 @@ git clone \
     https://github.com/petobens/dotfiles.git \
     /tmp/dotfiles
 cd /tmp/dotfiles
-./setup/install-arch.sh
+./setup/install_arch.sh
 ```
 
 The interactive installer handles the disk layout, filesystems, `pacstrap`,

@@ -3,9 +3,9 @@
 The VM boots the official Arch installation ISO with UEFI and a blank NVMe
 disk. It uses the same interactive installer, partitioning, `pacstrap`,
 systemd-boot, standard kernel, and LTS kernel setup as the future machine.
-The package installer skips Firefox, OnlyOffice, Zoom, and Microsoft Edge in
-the VM to avoid spending several gigabytes on applications that are not needed
-for configuration testing.
+The package installer skips Firefox, OneDrive, OnlyOffice, Zoom, and Microsoft
+Edge in the VM to avoid spending several gigabytes on applications that are
+not needed for configuration testing.
 
 Create and launch the first VM from the repository root:
 
@@ -25,7 +25,7 @@ git clone \
     https://github.com/petobens/dotfiles.git \
     /tmp/dotfiles
 cd /tmp/dotfiles
-./setup/install-arch.sh
+./setup/install_arch.sh
 ```
 
 The installer detects QEMU and defaults to hostname `arch-vm`, a 1 GiB EFI
@@ -62,6 +62,12 @@ cd ~/git-repos/private/dotfiles
 git pull
 ```
 
+If this installation replaced an earlier VM, remove the old VM host key:
+
+```bash
+ssh-keygen -R '[127.0.0.1]:2222'
+```
+
 After each clean VM installation, authorize the host's existing SSH key:
 
 ```bash
@@ -77,12 +83,6 @@ ssh -F none \
 Enter the VM password for `ssh-copy-id`. This affects only the VM; the physical
 installation does not install an authorized key. Unattended SSH also requires
 the local private key to have no passphrase or to be loaded in `ssh-agent`.
-
-Verify that systemd-boot exposes both kernels:
-
-```bash
-bootctl list
-```
 
 On later boots, Fish starts Hyprland automatically after login. If the VM opens
 directly into the graphical desktop, installation is complete.
