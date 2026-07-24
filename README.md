@@ -136,6 +136,19 @@ bootloader.
 
 See `hypr/conf/monitors.lua` for monitor configuration.
 
+## Sync from master
+
+After committing and pushing changes to `master`, update the Wayland branch
+from its clean checkout with:
+
+```bash
+sync_dotfiles
+```
+
+The command fetches `origin/master` and merges it into `dotfiles-wayland`.
+Non-conflicting changes are applied normally. Conflicts are resolved in favor
+of the existing Wayland version.
+
 ## VM test
 
 See [vm/README.md](vm/README.md) for the clean Arch VM test.

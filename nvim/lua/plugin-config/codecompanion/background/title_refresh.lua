@@ -5,8 +5,26 @@ local utils = require('codecompanion.utils')
 local M = {}
 
 local REFRESH_EVERY_N_TURNS = 3
-local baseline_turns = {}
-local pending = {}
+local baseline_turns = setmetatable({}, { __mode = 'k' })
+local pending = setmetatable({}, { __mode = 'k' })
+
+-- Mirror upstream: request a JSON title so native.on_done decodes a field
+-- instead of dumping the raw model reply as the title
+local TITLE_SCHEMA = {
+    name = 'title',
+    schema = {
+        type = 'object',
+        properties = {
+            title = {
+                type = 'string',
+                description = 'A specific title of 8 words or fewer capturing the chat',
+            },
+        },
+        required = { 'title' },
+        additionalProperties = false,
+    },
+    strict = true,
+}
 
 local function format_messages(messages)
     messages = vim.iter(messages or {})
@@ -28,39 +46,52 @@ local function format_messages(messages)
 end
 
 function M.request(background, chat)
-    local bufnr = chat.bufnr
-    local completed_turns = (chat.cycle or 1) - 1
-    local has_title = chat.title and chat.title ~= ''
-
-    if pending[bufnr] then
+    local cycle = chat.cycle or 1
+    local completed_turns = cycle - 1
+    -- Supersede a request from an earlier turn that never completed (e.g. a
+    -- cancelled turn), otherwise a stuck flag blocks all future titles
+    if pending[chat] and pending[chat] >= cycle then
         return
     end
 
-    if baseline_turns[bufnr] == nil then
-        baseline_turns[bufnr] = completed_turns
-        if has_title then
+    -- A freshly loaded ACP session dispatches on_ready before
+    -- _acp_session_loaded is set, with an empty chat.messages; skip without
+    -- establishing the refresh baseline
+    local transcript = format_messages(chat.messages)
+    if vim.trim(transcript) == '' then
+        return
+    end
+
+    if baseline_turns[chat] == nil then
+        -- First time we see this chat. Only a restored session carries
+        -- opts.title; a title an ACP agent pushes live (Codex/Claude, built
+        -- from the combined prompt) lands in chat.title, which we ignore so it
+        -- gets replaced by one generated from the real conversation
+        baseline_turns[chat] = completed_turns - (chat._acp_session_loaded and 1 or 0)
+        local restored = chat.opts and chat.opts.title and chat.opts.title ~= ''
+        if restored then
+            if (chat.title or '') ~= chat.opts.title then
+                chat:set_title(chat.opts.title)
+            end
+            return
+        end
+    else
+        -- Afterwards only refresh on the cadence, never on every turn
+        local turns_since_title = completed_turns - baseline_turns[chat]
+        if turns_since_title <= 0 or turns_since_title % REFRESH_EVERY_N_TURNS ~= 0 then
             return
         end
     end
 
-    local turns_since_title = completed_turns - baseline_turns[bufnr]
-    local should_refresh = has_title
-        and turns_since_title > 0
-        and turns_since_title % REFRESH_EVERY_N_TURNS == 0
-
-    if has_title and not should_refresh then
-        return
-    end
-
-    local title_before = chat.title or ''
-    local cycle_before = chat.cycle
-    pending[bufnr] = true
+    pending[chat] = cycle
     background:ask({
         {
             role = 'system',
             content = table.concat({
-                'Write a specific title of 6 to 8 words for this chat that captures',
-                'the durable implementation or decision.',
+                'Write a specific title of 8 words or fewer for this chat that',
+                'captures the durable implementation or decision.',
+                'Keep a short user request unchanged when it already makes a',
+                'good title.',
                 'Prefer the final outcome over the initial request when the topic',
                 'changes.',
                 'Do not title the chat after a tiny final tweak unless that was',
@@ -70,25 +101,23 @@ function M.request(background, chat)
         },
         {
             role = 'user',
-            content = 'Chat transcript:\n\n' .. format_messages(chat.messages),
+            content = 'Chat transcript:\n\n' .. transcript,
         },
     }, {
         method = 'async',
         silent = true,
+        structured_output = TITLE_SCHEMA,
         on_done = function(result)
-            pending[bufnr] = nil
-            if chat.cycle ~= cycle_before then
+            if pending[chat] ~= cycle then
                 return
             end
-            if (chat.title or '') ~= title_before then
-                return
-            end
+            pending[chat] = nil
             local title = native.on_done(result)
             if not title then
                 return
             end
             chat:set_title(title)
-            baseline_turns[bufnr] = completed_turns
+            baseline_turns[chat] = completed_turns
             -- Persist title so saved http chats show it instead of a timestamp
             local history = require('codecompanion').extensions.history
             if history then
@@ -102,7 +131,9 @@ function M.request(background, chat)
             })
         end,
         on_error = function()
-            pending[bufnr] = nil
+            if pending[chat] == cycle then
+                pending[chat] = nil
+            end
         end,
     })
 end
