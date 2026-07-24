@@ -108,17 +108,16 @@ tmux
 For scrollback, press `Ctrl+B`, release both keys, and then press `[`. Press
 `q` to return to the live command.
 
-The installer lets you choose packages, optional native TeX Live managed by
-`tlmgr`, symlinks, or all three. It enables the required services and symlinks
-the configuration into the home directory. Existing real files at symlink
-destinations are backed up under
-`~/.local/state/dotfiles-backup/`.
+With no arguments, the installer installs packages and symlinks and asks
+whether to install native TeX Live managed by `tlmgr`. It installs packages
+before creating the configuration symlinks. Existing real files at symlink
+destinations are backed up under `~/.local/state/dotfiles-backup/`.
 
 The optional LaTeX installation includes the headless Java runtime required by
 `arara`. No Java runtime is installed when LaTeX is skipped.
 
-For explicit component selection, `--all` installs packages and symlinks but
-not LaTeX. Add `--latex` to include it:
+For explicit component selection, `--all` behaves like running without
+arguments and asks about LaTeX. Add `--latex` to include it without prompting:
 
 ```bash
 ./setup/install.sh --all
