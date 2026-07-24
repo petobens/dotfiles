@@ -185,22 +185,16 @@ initrd /initramfs-linux-lts.img
 options root=UUID=$root_uuid rw
 EOF
 
-section 'Preparing the dotfiles handoff'
+section 'Cloning the Wayland dotfiles'
 checkout="/home/$username/git-repos/private/dotfiles"
-read -r -p 'Clone the Wayland dotfiles into the installed system? [Y/n] ' clone_dotfiles
-if [[ ! $clone_dotfiles =~ ^[nN]$ ]]; then
-    arch-chroot /mnt install -d -o "$username" -g "$username" \
-        "$(dirname "$checkout")"
-    arch-chroot /mnt runuser -u "$username" -- \
-        git clone --branch dotfiles-wayland \
-        https://github.com/petobens/dotfiles.git "$checkout"
-    handoff="After login: cd $checkout, start tmux, then run ./setup/install.sh"
-else
-    handoff='After login, prepare the checkout, start tmux, then run ./setup/install.sh'
-fi
+arch-chroot /mnt install -d -o "$username" -g "$username" \
+    "$(dirname "$checkout")"
+arch-chroot /mnt runuser -u "$username" -- \
+    git clone --branch dotfiles-wayland \
+    https://github.com/petobens/dotfiles.git "$checkout"
 
 section 'Installation complete'
 printf '%s\n' \
     'Inspect /mnt/etc/fstab and the messages above before rebooting.' \
     'Then run: umount -R /mnt && reboot' \
-    "$handoff"
+    "After login: cd $checkout, start tmux, then run ./setup/install.sh"
