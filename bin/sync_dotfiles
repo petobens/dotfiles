@@ -36,6 +36,23 @@ if ((${#conflicts[@]} == 0)); then
 	exit 1
 fi
 
+printf '\nConflicts (the Wayland version will be kept):\n'
+for path in "${conflicts[@]}"; do
+	printf '\n--- %s ---\n' "$path"
+	if git cat-file -e ":2:$path" 2>/dev/null; then
+		if git cat-file -e ":3:$path" 2>/dev/null; then
+			echo 'Wayland (kept) -> master:'
+			git --no-pager diff --no-ext-diff --color=auto ":2:$path" ":3:$path"
+		else
+			echo 'master deleted this file; showing the Wayland changes:'
+			git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":2:$path"
+		fi
+	else
+		echo 'Wayland deleted this file; showing the master changes:'
+		git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":3:$path"
+	fi
+done
+
 for path in "${conflicts[@]}"; do
 	if git cat-file -e ":2:$path" 2>/dev/null; then
 		git checkout --ours -- "$path"

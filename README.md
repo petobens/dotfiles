@@ -147,7 +147,7 @@ sync_dotfiles
 
 The command fetches `origin/master` and merges it into `dotfiles-wayland`.
 Non-conflicting changes are applied normally. Conflicts are resolved in favor
-of the existing Wayland version.
+of the existing Wayland version after their paths and diffs are printed.
 
 ## VM test
 
