@@ -137,7 +137,6 @@ local apps = {
     { 'SUPER + CTRL + L', 'slack', 'Slack' },
     { 'SUPER + CTRL + S', 'teams', 'Teams' },
     { 'SUPER + CTRL + Z', 'zoom', 'Zoom' },
-    { 'SUPER + CTRL + T', 'mailspring', 'Mailspring' },
     { 'SUPER + CTRL + O', 'meet', 'Google Meet' },
     { 'SUPER + CTRL + G', 'gmail', 'Gmail' },
     { 'SUPER + CTRL + M', 'spotify', 'Spotify' },

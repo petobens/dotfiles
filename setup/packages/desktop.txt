@@ -38,6 +38,7 @@ rtkit
 slurp
 sof-firmware
 ttf-jetbrains-mono-nerd
+tlp
 udiskie
 upower
 vulkan-intel
@@ -51,3 +52,4 @@ xdg-user-dirs
 xdg-utils
 zathura
 zathura-pdf-poppler
+zram-generator

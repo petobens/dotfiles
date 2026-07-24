@@ -134,7 +134,8 @@ end
 function sys_update_all --description 'Update system and language tooling'
     sudo true; or return
     if type -q yay
-        yay -Syu --diffmenu=false --answerclean N --removemake; or return
+        yay -Syu --diffmenu=false --answerclean N --removemake --cleanafter; or return
+        yay -Sc --noconfirm; or return
     else
         sudo pacman -Syu; or return
     end

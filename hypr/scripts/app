@@ -45,12 +45,6 @@ zoom)
 	workspace=2
 	command='zoom'
 	;;
-mailspring)
-	tag=mailspring
-	class='^Mailspring$'
-	workspace=2
-	command='mailspring --password-store=gnome-libsecret'
-	;;
 meet)
 	tag=meet
 	class='^brave-meet$'
@@ -88,7 +82,7 @@ terminal)
 	command='ghostty -e fish -l -c tm'
 	;;
 *)
-	echo "usage: app {brave|calendar|clickup|edge|slack|teams|zoom|mailspring|meet|gmail|spotify|transmission|onlyoffice|terminal}" >&2
+	echo "usage: app {brave|calendar|clickup|edge|slack|teams|zoom|meet|gmail|spotify|transmission|onlyoffice|terminal}" >&2
 	exit 2
 	;;
 esac

@@ -18,6 +18,8 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Multiplexer      | tmux                          |
 | Audio            | PipeWire and WirePlumber      |
 | Network          | NetworkManager and Impala     |
+| Power management | TLP                           |
+| Compressed swap  | zram-generator                |
 | Lock and idle    | Hyprlock and Hypridle         |
 | Screenshots      | Grim, Slurp, and wl-clipboard |
 | Bootloader       | systemd-boot                  |
@@ -109,6 +111,9 @@ The installer lets you choose packages, optional native TeX Live managed by
 the configuration into the home directory. Existing real files at symlink
 destinations are backed up under
 `~/.local/state/dotfiles-backup/`.
+
+The optional LaTeX installation includes the headless Java runtime required by
+`arara`. No Java runtime is installed when LaTeX is skipped.
 
 For explicit component selection, `--all` installs packages and symlinks but
 not LaTeX. Add `--latex` to include it:

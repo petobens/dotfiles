@@ -3,6 +3,9 @@
 The VM boots the official Arch installation ISO with UEFI and a blank NVMe
 disk. It uses the same interactive installer, partitioning, `pacstrap`,
 systemd-boot, standard kernel, and LTS kernel setup as the future machine.
+The package installer skips Firefox, OnlyOffice, Zoom, and Microsoft Edge in
+the VM to avoid spending several gigabytes on applications that are not needed
+for configuration testing.
 
 Create and launch the first VM from the repository root:
 

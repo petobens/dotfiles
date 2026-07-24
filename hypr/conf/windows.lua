@@ -2,7 +2,7 @@
 hl.window_rule({ match = { class = '.*' }, float = true, suppress_event = 'maximize' })
 
 hl.window_rule({
-    match = { class = '^(Slack|brave-teams|brave-meet|brave-gmail|zoom|Mailspring)$' },
+    match = { class = '^(Slack|brave-teams|brave-meet|brave-gmail|zoom)$' },
     workspace = '2 silent',
 })
 hl.window_rule({ match = { class = '^(Spotify|mpv)$' }, workspace = '3 silent' })
@@ -10,7 +10,7 @@ hl.window_rule({ match = { class = '^(transmission-gtk|obs)$' }, workspace = '4 
 hl.window_rule({ match = { class = '^com.mitchellh.ghostty$' }, maximize = true })
 
 hl.window_rule({
-    match = { class = '^(Spotify|Slack|brave-teams|zoom|Mailspring|mpv|obs)$' },
+    match = { class = '^(Spotify|Slack|brave-teams|zoom|mpv|obs)$' },
     size = { '(monitor_w*0.92)', '(monitor_h*0.92)' },
     center = true,
 })

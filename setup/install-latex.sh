@@ -13,6 +13,9 @@ for command in curl git perl tar; do
 	}
 done
 
+section 'Installing the arara Java runtime'
+sudo pacman -S --needed --noconfirm jre21-openjdk-headless
+
 # Reuse the newest native TeX Live installation when available
 texlive_root=/usr/local/texlive
 tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' -type f 2>/dev/null |
