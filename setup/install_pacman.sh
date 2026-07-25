@@ -17,12 +17,11 @@ mapfile -t packages < <(
 )
 
 if systemd-detect-virt --vm --quiet; then
-    section 'Skipping Firefox in the VM'
-    filtered_packages=()
-    for package in "${packages[@]}"; do
-        [[ $package == firefox ]] || filtered_packages+=("$package")
-    done
-    packages=("${filtered_packages[@]}")
+    section 'Skipping unnecessary applications in the VM'
+    mapfile -t packages < <(
+        printf '%s\n' "${packages[@]}" |
+            grep -Fvx -f "$script_dir/packages/vm_skip.txt"
+    )
 fi
 
 section 'Installing Pacman packages'

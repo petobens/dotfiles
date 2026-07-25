@@ -30,14 +30,10 @@ mapfile -t packages < <(
 
 if systemd-detect-virt --vm --quiet; then
     section 'Skipping unnecessary applications in the VM'
-    filtered_packages=()
-    for package in "${packages[@]}"; do
-        case $package in
-            microsoft-edge-dev-bin | onedrive-abraunegg | onlyoffice-bin | zoom) ;;
-            *) filtered_packages+=("$package") ;;
-        esac
-    done
-    packages=("${filtered_packages[@]}")
+    mapfile -t packages < <(
+        printf '%s\n' "${packages[@]}" |
+            grep -Fvx -f "$script_dir/packages/vm_skip.txt"
+    )
 fi
 
 yay -S --needed --noconfirm --answerdiff=None --removemake --cleanafter "${packages[@]}"

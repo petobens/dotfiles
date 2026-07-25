@@ -1,0 +1,8 @@
+firefox
+microsoft-edge-dev-bin
+ollama
+onedrive-abraunegg
+onlyoffice-bin
+slack-desktop
+spotify
+zoom

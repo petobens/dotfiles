@@ -92,5 +92,5 @@ State is stored in `~/.local/state/dotfiles-wayland-vm`. The 96 GiB QCOW2 disk
 is sparse and grows as the guest writes data. Guest TRIM can return unused
 blocks to the host.
 
-The VM package installation skips Firefox, OneDrive, OnlyOffice, Zoom, and
-Microsoft Edge.
+The VM package installation skips Firefox, Microsoft Edge, Ollama, OneDrive,
+OnlyOffice, Slack, Spotify, and Zoom.

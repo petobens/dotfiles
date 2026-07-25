@@ -85,7 +85,10 @@ longer exists), use this fallback, which derives the installed version from the
 rock path so it survives package bumps:
 
 ```bash
-entry=$(printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck | head -1)
+entry=$(
+    printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck |
+        head -1
+)
 ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
 "lua$ver" -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath; dofile('$entry')" -- --config ~/.config/.luacheckrc --globals vim -- <file>
 ```
@@ -105,7 +108,9 @@ Run Luacheck on touched Lua files when making changes under `nvim/`.
 - **Single-command mappings:** pass the command function directly:
 
   ```lua
-  vim.keymap.set('n', '<Leader>sp', vim.cmd.split, { desc = 'Horizontal split' })
+  vim.keymap.set('n', '<Leader>sp', vim.cmd.split, {
+      desc = 'Horizontal split',
+  })
   ```
 
 ### Formatting rules

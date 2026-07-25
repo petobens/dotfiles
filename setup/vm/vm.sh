@@ -105,8 +105,6 @@ reset_state() {
         "$firmware_vars"
         "$disk".*.bak
         "$firmware_vars".*.bak
-        "$state_dir"/cloud-init.iso
-        "$state_dir"/arch-cloud*.qcow2
     )
     rm -f -- "${old_state[@]}"
     shopt -u nullglob
@@ -127,7 +125,7 @@ launch_vm() {
         -device ich9-intel-hda
         -device "hda-duplex,audiodev=audio0"
         -device virtio-keyboard-pci
-        -device virtio-mouse-pci
+        -device virtio-tablet-pci
         -device virtio-rng-pci
         -drive "if=pflash,format=raw,unit=0,readonly=on,file=$firmware_code"
         -drive "if=pflash,format=raw,unit=1,file=$firmware_vars"

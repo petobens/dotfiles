@@ -18,7 +18,9 @@ sudo systemctl enable bluetooth
 sudo systemctl enable --now cups.socket
 sudo systemctl enable --now ipp-usb.service
 sudo systemctl enable NetworkManager
-sudo systemctl enable --now ollama.service
+if ! systemd-detect-virt --vm --quiet; then
+    sudo systemctl enable --now ollama.service
+fi
 sudo systemctl enable sshd
 sudo systemctl enable tlp
 systemctl --user enable gnome-keyring-daemon.socket
@@ -40,9 +42,6 @@ section 'Creating mount points'
 sudo install -d /mnt/nfs
 
 section 'Configuring development services'
-if grep -qw vmx /proc/cpuinfo; then
-    sudo modprobe kvm_intel
-fi
 sudo usermod -aG docker "$USER"
 mkdir -p "$HOME/.cache/docker"
 sudo install -d /etc/docker

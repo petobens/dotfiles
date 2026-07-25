@@ -54,6 +54,7 @@ From the repository on the installed system, run:
 ```bash
 cd ~/git-repos/private/dotfiles
 ./setup/install.sh
+sudo reboot
 ```
 
 The script installs the package profiles, configures the system, and creates

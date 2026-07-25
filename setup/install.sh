@@ -4,8 +4,21 @@ set -euo pipefail
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 install_packages=false
 install_latex=false
+install_post=false
 install_symlinks=false
 prompt_latex=false
+
+usage() {
+    cat << EOF
+usage: $0 [--all] [--packages] [--latex] [--post] [--symlinks]
+
+  --all       Install packages and symlinks, and optionally LaTeX (default)
+  --packages  Install packages and run post-install configuration
+  --latex     Install LaTeX
+  --post      Run post-install only (included by --all and --packages)
+  --symlinks  Create configuration symlinks
+EOF
+}
 
 (($#)) || set -- --all
 
@@ -18,9 +31,15 @@ for arg in "$@"; do
             ;;
         --packages) install_packages=true ;;
         --latex) install_latex=true ;;
+        --post) install_post=true ;;
         --symlinks) install_symlinks=true ;;
+        -h | --help)
+            usage
+            exit
+            ;;
         *)
             echo "unknown option: $arg" >&2
+            usage >&2
             exit 2
             ;;
     esac
@@ -41,7 +60,7 @@ fi
 if $install_latex; then
     "$script_dir/install_latex.sh"
 fi
-if $install_packages; then
+if $install_packages || $install_post; then
     "$script_dir/post_install.sh"
 fi
 if $install_symlinks; then
