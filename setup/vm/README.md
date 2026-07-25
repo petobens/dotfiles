@@ -4,6 +4,23 @@ This disposable QEMU VM tests the same interactive Arch installer and dotfiles
 workflow used on physical hardware. It boots with UEFI, a virtual NVMe disk,
 accelerated graphics, PipeWire audio, and SSH forwarding on host port 2222.
 
+## Host requirements
+
+On an Arch host, install QEMU and the OVMF firmware:
+
+```bash
+sudo pacman -S --needed qemu-desktop edk2-ovmf
+```
+
+Enable hardware virtualization in the firmware settings. After booting the
+host, confirm that KVM is available to the current user:
+
+```bash
+test -r /dev/kvm && test -w /dev/kvm && echo 'KVM ready'
+```
+
+The VM script checks these requirements before creating or launching a VM.
+
 ## First installation
 
 Commit and push the Wayland branch, then run from the repository root:
@@ -32,7 +49,8 @@ Use `Ctrl-b [` to enter tmux scrollback, then `q` to leave it.
 
 At the `Target disk` prompt, press Enter to accept `/dev/nvme0n1`. The VM
 defaults to hostname `arch-vm`, a 1 GiB EFI partition, a 40 GiB root partition,
-and the remaining space for home.
+the remaining space for home, and username `pedro`. The examples below use
+that username; substitute the selected username when different.
 
 After the installer finishes:
 
@@ -41,7 +59,8 @@ umount -R /mnt
 reboot
 ```
 
-Log in as `pedro` and complete the dotfiles installation:
+Log in with the username selected during installation and complete the
+dotfiles installation:
 
 ```bash
 cd ~/git-repos/private/dotfiles
@@ -71,12 +90,13 @@ After a reset, remove the previous host key and authorize the host's existing
 SSH key:
 
 ```bash
+username=pedro
 ssh-keygen -R '[127.0.0.1]:2222'
 chmod 600 ~/.ssh/id_rsa
 ssh-copy-id -F none \
     -i ~/.ssh/id_rsa.pub \
-    -p 2222 pedro@127.0.0.1
-ssh -F none -p 2222 pedro@127.0.0.1
+    -p 2222 "$username@127.0.0.1"
+ssh -F none -p 2222 "$username@127.0.0.1"
 ```
 
 The forwarded port listens only on the host's loopback interface. Unattended

@@ -108,8 +108,8 @@ section 'Partitioning and formatting'
 sfdisk --lock --wipe always --wipe-partitions always "$disk" << EOF
 label: gpt
 size=1GiB, type=U, name="EFI"
-size=${root_gib}GiB, type=L, name="Arch root"
-type=L, name="Home"
+size=${root_gib}GiB, type="Linux root (x86-64)", name="Arch root"
+type=H, name="Home"
 EOF
 udevadm settle
 

@@ -32,15 +32,19 @@ cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
 
-Use `Ctrl-b [` to enter tmux scrollback, then `q` to leave it.
-
-The interactive installer erases the selected disk only after an exact
-confirmation, installs the base system, and clones this branch into
-`~/git-repos/private/dotfiles`.
+The installer asks for the normal username, defaulting to `pedro`. It erases
+the selected disk only after an exact confirmation, installs the base system,
+and clones this branch into `~/git-repos/private/dotfiles` for that user.
 
 ### Test in a VM
 
-Use the disposable QEMU VM to test the complete Arch and dotfiles installation
+On an Arch host, install QEMU and the OVMF firmware:
+
+```bash
+sudo pacman -S --needed qemu-desktop edk2-ovmf
+```
+
+Then use the disposable VM to test the complete Arch and dotfiles installation
 before running it on physical hardware:
 
 ```bash
