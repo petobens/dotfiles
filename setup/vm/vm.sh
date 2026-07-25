@@ -171,6 +171,7 @@ case $action in
 esac
 
 check_host
+# Existing disks launch normally; resets and first installs prepare the ISO
 if [[ $action == reset ]]; then
     prepare_install_media
     reset_state
