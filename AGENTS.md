@@ -9,16 +9,16 @@ desktop.
 
 ## Repository layout
 
+- `bin/` contains personal command-line scripts.
 - `config/` contains application configuration. Home-directory
   dotfiles live in `config/home/`, Python tooling in `config/python/`, and
   formatter and linter configuration in `config/linters/`.
 - `hypr/` contains the Hyprland configuration and desktop helper scripts.
 - `nvim/` contains the Neovim configuration.
-- `bin/` contains personal command-line scripts.
-- `setup/` contains package profiles and installation scripts.
-  `setup/symlinks.sh` owns the mapping from repository files to home-directory
-  destinations and must be updated when configuration files move.
-- `vm/` contains the disposable QEMU test environment.
+- `setup/` contains package profiles, installation scripts, and the disposable
+  QEMU test environment under `setup/vm/`. `setup/symlinks.sh` owns the mapping
+  from repository files to home-directory destinations and must be updated when
+  configuration files move.
 
 ## General rules
 

@@ -41,10 +41,11 @@ Use the disposable QEMU VM to test the complete Arch and dotfiles installation
 before running it on physical hardware:
 
 ```bash
-./vm/vm.sh
+./setup/vm/vm.sh
 ```
 
-See [vm/README.md](vm/README.md) for installation, reset, and SSH instructions.
+See [setup/vm/README.md](setup/vm/README.md) for installation, reset, and SSH
+instructions.
 
 ## Install dotfiles
 
@@ -65,8 +66,8 @@ using these dotfiles without the Arch installer.
 - `config/`: application, home, and development-tool configuration
 - `hypr/`: Hyprland configuration and desktop helpers
 - `nvim/`: Neovim configuration
-- `setup/`: package profiles, installation, and symlink scripts
-- `vm/`: disposable QEMU test machine
+- `setup/`: package profiles, installation, symlink scripts, and the disposable
+  QEMU test machine
 
 ## Sync from master
 

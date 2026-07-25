@@ -9,7 +9,7 @@ accelerated graphics, PipeWire audio, and SSH forwarding on host port 2222.
 Commit and push the Wayland branch, then run from the repository root:
 
 ```bash
-./vm/vm.sh
+./setup/vm/vm.sh
 ```
 
 When no VM disk exists, the command downloads and verifies the current Arch
@@ -47,15 +47,15 @@ tmux
 sudo reboot
 ```
 
-Later invocations of `./vm/vm.sh` detect the existing disk and launch without
-attaching the cached ISO.
+Later invocations of `./setup/vm/vm.sh` detect the existing disk and launch
+without attaching the cached ISO.
 
 ## Reset
 
 To discard the VM and repeat the complete installation:
 
 ```bash
-./vm/vm.sh reset
+./setup/vm/vm.sh reset
 ```
 
 The command verifies the ISO before deleting the disk, firmware state, and old
@@ -73,9 +73,7 @@ chmod 600 ~/.ssh/id_rsa
 ssh-copy-id -F none \
     -i ~/.ssh/id_rsa.pub \
     -p 2222 pedro@127.0.0.1
-ssh -F none \
-    -i ~/.ssh/id_rsa \
-    -p 2222 pedro@127.0.0.1
+ssh -F none -p 2222 pedro@127.0.0.1
 ```
 
 The forwarded port listens only on the host's loopback interface. Unattended
