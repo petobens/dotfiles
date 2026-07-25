@@ -138,11 +138,9 @@ launch_vm() {
         args+=(-drive "if=virtio,media=cdrom,readonly=on,file=$iso")
         printf '%s\n' \
             'Run inside the Arch ISO:' \
-            'pacman -Sy --needed git tmux' \
-            'tmux' \
+            'pacman -Sy --needed git tmux && tmux' \
             'git clone --depth 1 --branch dotfiles-wayland https://github.com/petobens/dotfiles.git /tmp/dotfiles' \
-            'cd /tmp/dotfiles && ./setup/install_arch.sh' \
-            'Press Enter to accept the default target disk: /dev/nvme0n1'
+            'cd /tmp/dotfiles && ./setup/install_arch.sh'
     fi
 
     section 'Launching VM'
