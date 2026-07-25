@@ -21,7 +21,8 @@ Boot the official Arch installation USB in UEFI mode, connect to the internet,
 and run:
 
 ```bash
-pacman -Sy --needed git
+pacman -Sy --needed git tmux
+tmux
 git clone \
     --depth 1 \
     --branch dotfiles-wayland \
@@ -30,6 +31,8 @@ git clone \
 cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
+
+Use `Ctrl-b [` to enter tmux scrollback, then `q` to leave it.
 
 The interactive installer erases the selected disk only after an exact
 confirmation, installs the base system, and clones this branch into

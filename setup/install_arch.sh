@@ -72,7 +72,17 @@ root_gib=${root_gib:-$default_root_gib}
 
 section 'Selecting the installation disk'
 lsblk -dp -o NAME,SIZE,MODEL,TRAN,RM,TYPE
-read -r -p 'Target disk (enter the full path, for example /dev/nvme0n1): ' disk
+default_disk=$(
+    lsblk -bdpno NAME,SIZE,TYPE |
+        awk '$3 == "disk" && $2 > largest {
+            largest = $2
+            disk = $1
+        }
+        END { print disk }'
+)
+[[ -n $default_disk ]] || die 'No whole disks found'
+read -r -p "Target disk [$default_disk]: " disk
+disk=${disk:-$default_disk}
 [[ -b $disk && $(lsblk -dnro TYPE "$disk") == disk ]] || die "Not a whole disk: $disk"
 if lsblk -nrpo MOUNTPOINTS "$disk" | grep '[^[:space:]]' > /dev/null; then
     die "$disk or one of its partitions is mounted"

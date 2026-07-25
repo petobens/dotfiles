@@ -17,7 +17,8 @@ ISO, creates the VM state, and boots with the ISO attached. In the Arch live
 environment, run:
 
 ```bash
-pacman -Sy --needed git
+pacman -Sy --needed git tmux
+tmux
 git clone \
     --depth 1 \
     --branch dotfiles-wayland \
@@ -27,9 +28,11 @@ cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
 
-At the `Target disk` prompt, enter `/dev/nvme0n1`. The VM defaults to hostname
-`arch-vm`, a 1 GiB EFI partition, a 40 GiB root partition, and the remaining
-space for home.
+Use `Ctrl-b [` to enter tmux scrollback, then `q` to leave it.
+
+At the `Target disk` prompt, press Enter to accept `/dev/nvme0n1`. The VM
+defaults to hostname `arch-vm`, a 1 GiB EFI partition, a 40 GiB root partition,
+and the remaining space for home.
 
 After the installer finishes:
 
