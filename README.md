@@ -2,58 +2,23 @@
 
 Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 
-## Desktop
+## Stack
 
-| Role             | Tool                          |
-| ---------------- | ----------------------------- |
-| Compositor       | Hyprland                      |
-| Bar              | Waybar                        |
-| Launcher         | Rofi                          |
-| Notifications    | Mako                          |
-| Terminal         | Ghostty                       |
-| Shell and prompt | Fish and Starship             |
-| File manager     | Yazi                          |
-| Image viewer     | imv                           |
-| Editor           | Neovim                        |
-| Multiplexer      | tmux                          |
-| Audio            | PipeWire and WirePlumber      |
-| Network          | NetworkManager and Impala     |
-| Power management | TLP                           |
-| Compressed swap  | zram-generator                |
-| Lock and idle    | Hyprlock and Hypridle         |
-| Screenshots      | Grim, Slurp, and wl-clipboard |
-| Bootloader       | systemd-boot                  |
-
-Package profiles under `setup/packages/` are divided by purpose:
-
-| Profile        | Purpose                                          |
-| -------------- | ------------------------------------------------ |
-| `base`         | Command-line and system tools                    |
-| `desktop`      | Wayland desktop and Intel hardware support       |
-| `applications` | Desktop applications from Arch repositories      |
-| `aur`          | Additional applications installed with Yay       |
-| `development`  | Development, data, document, and QEMU host tools |
-
-`setup/install.sh` runs the Pacman, AUR, language-tool, optional LaTeX, and
-post-install stages in dependency order, then creates the configuration
-symlinks.
-
-## Layout
-
-- `bin/`: personal command-line scripts
-- `config/`: application, desktop, home, and development-tool configuration
-- `hypr/`: Hyprland configuration and desktop helper scripts
-- `nvim/`: Neovim configuration
-- `setup/`: package profiles, installer, and symlink script
-- `vm/`: disposable QEMU test machine
-
-Hyprland configuration is divided by responsibility under `hypr/conf/`. Its
-helper commands live in `hypr/scripts/`.
+| Area            | Tools                                         |
+| --------------- | --------------------------------------------- |
+| Audio           | PipeWire, WirePlumber                         |
+| Development     | Neovim                                        |
+| Desktop         | Hyprland, Mako, Rofi, Waybar                  |
+| Files and media | imv, Yazi                                     |
+| Network         | Impala, NetworkManager                        |
+| Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard |
+| System          | systemd-boot, TLP, zram-generator             |
+| Terminal        | Fish, Ghostty, Starship, tmux                 |
 
 ## Install Arch
 
 Boot the official Arch installation USB in UEFI mode, connect to the internet,
-and fetch this branch in the live environment:
+and run:
 
 ```bash
 pacman -Sy --needed git
@@ -66,85 +31,42 @@ cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
 
-The interactive installer handles the disk layout, filesystems, `pacstrap`,
-locale, timezone, hostname, users, services, systemd-boot, and both kernels.
-On physical hardware, it defaults to hostname `x1-carbon`, a 1 GiB EFI
-partition, a 60 GiB root partition, and an ext4 home partition using the
-remaining space.
+The interactive installer erases the selected disk only after an exact
+confirmation, installs the base system, and clones this branch into
+`~/git-repos/private/dotfiles`.
 
-Virtualization is detected automatically. A VM defaults to hostname `arch-vm`,
-a 1 GiB EFI partition, a 40 GiB root partition, and an ext4 home partition
-using the remaining VM space. It otherwise uses the same repository clone and
-handoff as the physical machine. The hostname and root size remain editable in
-the prompts.
+### Test in a VM
 
-The VM's 96 GiB QCOW2 disk is sparse. This is its maximum guest-visible
-capacity, not 96 GiB reserved on the host. The host file starts small and grows
-as the guest writes data. VM resets permanently discard the previous disk and
-firmware state while retaining the verified Arch ISO.
+Use the disposable QEMU VM to test the complete Arch and dotfiles installation
+before running it on physical hardware:
 
-The selected disk is completely erased. The script rejects mounted disks,
-shows the proposed layout, and continues only after its exact
-`ERASE /dev/...` confirmation is entered. It does not support encryption,
-dual boot, RAID, LVM, hibernation, or Secure Boot enrollment.
+```bash
+./vm/vm.sh
+```
 
-At the end, the installer clones the Wayland branch into
-`~/git-repos/private/dotfiles` automatically. Inspect `/mnt/etc/fstab`, then
-reboot as instructed.
+See [vm/README.md](vm/README.md) for installation, reset, and SSH instructions.
 
 ## Install dotfiles
 
-The Arch installer leaves the repository ready in the installed system. Log in
-as the normal user and run:
+From the repository on the installed system, run:
 
 ```bash
 cd ~/git-repos/private/dotfiles
-tmux
 ./setup/install.sh
 ```
 
-After a manual installation, clone the Wayland branch to that location first
-if the checkout is missing.
+The script installs the package profiles, configures the system, and creates
+the dotfile symlinks. Clone the Wayland branch to that location first when
+using these dotfiles without the Arch installer.
 
-For scrollback, press `Ctrl+B`, release both keys, and then press `[`. Press
-`q` to return to the live command.
+## Repository
 
-With no arguments, the installer installs packages and symlinks and asks
-whether to install native TeX Live managed by `tlmgr`. It installs packages
-before creating the configuration symlinks. Existing real files at symlink
-destinations are backed up under `~/.local/state/dotfiles-backup/`.
-
-The optional LaTeX installation includes the headless Java runtime required by
-`arara`. No Java runtime is installed when LaTeX is skipped.
-
-For explicit component selection, `--all` behaves like running without
-arguments and asks about LaTeX. Add `--latex` to include it without prompting:
-
-```bash
-./setup/install.sh --all
-./setup/install.sh --all --latex
-```
-
-The installer sets Fish as the login shell. After entering the username and
-password at the tty1 login prompt, that Fish login starts Hyprland
-automatically.
-
-Both the standard and LTS kernels, including their headers, are installed.
-Choosing between them requires corresponding entries in the machine's
-bootloader.
-
-See `hypr/conf/monitors.lua` for monitor configuration.
-
-After the first Hyprland boot, complete OneDrive's browser authorization and
-start its user service:
-
-```bash
-cd ~/git-repos/private/dotfiles
-./setup/finish_onedrive.sh
-```
-
-The helper performs the initial synchronization and reruns the symlink script
-so synchronized SSH and Git credential files become available.
+- `bin/`: command-line scripts
+- `config/`: application, home, and development-tool configuration
+- `hypr/`: Hyprland configuration and desktop helpers
+- `nvim/`: Neovim configuration
+- `setup/`: package profiles, installation, and symlink scripts
+- `vm/`: disposable QEMU test machine
 
 ## Sync from master
 
@@ -158,7 +80,3 @@ sync_dotfiles
 The command fetches `origin/master` and merges it into `dotfiles-wayland`.
 Non-conflicting changes are applied normally. Conflicts are resolved in favor
 of the existing Wayland version after their paths and diffs are printed.
-
-## VM test
-
-See [vm/README.md](vm/README.md) for the clean Arch VM test.
