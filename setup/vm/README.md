@@ -92,7 +92,6 @@ SSH key:
 ```bash
 username=pedro
 ssh-keygen -R '[127.0.0.1]:2222'
-chmod 600 ~/.ssh/id_rsa
 ssh-copy-id -F none \
     -i ~/.ssh/id_rsa.pub \
     -p 2222 "$username@127.0.0.1"
