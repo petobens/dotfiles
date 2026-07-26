@@ -282,6 +282,36 @@ local function restored_user_turn_count(updates)
     return count
 end
 
+-- ACP restore joins every consecutive agent chunk without spacing, including
+-- complete messages such as Codex commentary followed by its final answer
+local function restore_agent_message_boundaries(updates)
+    local previous_id
+    local previous_text
+
+    for _, update in ipairs(updates) do
+        if update.sessionUpdate == 'user_message_chunk' then
+            previous_id = nil
+            previous_text = nil
+        elseif update.sessionUpdate == 'agent_message_chunk' then
+            local text = extract_text(update.content)
+            if text and text ~= '' then
+                if
+                    previous_id
+                    and update.messageId
+                    and update.messageId ~= previous_id
+                    and not previous_text:match('\n$')
+                    and not text:match('^\n')
+                then
+                    update.content.text = '\n\n' .. text
+                    text = update.content.text
+                end
+                previous_id = update.messageId or previous_id
+                previous_text = text
+            end
+        end
+    end
+end
+
 -- Rebuild structured {role, content} messages from ACP updates for /clone,
 -- coalescing the streamed chunks of each turn
 local function restored_messages(updates)
@@ -421,6 +451,7 @@ local function load_entry(chat, entry)
         return utils.notify('Failed to load ACP session', vim.log.levels.ERROR)
     end
 
+    restore_agent_message_boundaries(updates)
     local restored_turns = restored_user_turn_count(updates)
     require('codecompanion.interactions.chat.acp.commands').link_buffer_to_session(
         chat.bufnr,
