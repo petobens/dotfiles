@@ -68,6 +68,10 @@ The script installs the package profiles, configures the system, and creates
 the dotfile symlinks. Clone the Wayland branch to that location first when
 using these dotfiles without the Arch installer.
 
+Setup scripts resolve repository paths from their own location. They can also
+be run from inside `setup/` as `./install.sh`, `./symlinks.sh`, or
+`./sync_dotfiles`.
+
 ## Repository
 
 - `bin/`: command-line scripts
