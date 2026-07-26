@@ -165,8 +165,8 @@ EOF
 
 section 'Enabling system services'
 arch-chroot /mnt systemctl enable \
-    NetworkManager \
     fstrim.timer \
+    NetworkManager \
     systemd-boot-update.service \
     systemd-timesyncd
 
@@ -178,7 +178,7 @@ install -Dm644 /dev/stdin /mnt/boot/loader/loader.conf << 'EOF'
 default arch.conf
 timeout 3
 console-mode keep
-editor no
+editor yes
 EOF
 install -Dm644 /dev/stdin /mnt/boot/loader/entries/arch.conf << EOF
 title Arch Linux
