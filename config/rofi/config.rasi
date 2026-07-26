@@ -1,5 +1,5 @@
 configuration {
-	font: "JetBrainsMono Nerd Font 11";
+	font: "Source Code Pro 11";
 	location: 0;
 	yoffset: -50;
 	fixed-num-lines: false;

@@ -1,8 +1,10 @@
+edk2-ovmf
 firefox
 microsoft-edge-dev-bin
 ollama
 onedrive-abraunegg
 onlyoffice-bin
+qemu-desktop
 slack-desktop
 spotify
 zoom

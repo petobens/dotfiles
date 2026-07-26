@@ -1,10 +1,11 @@
 cups
 cups-pk-helper
-docker
-docker-buildx
-docker-compose
 firefox
+imv
 ipp-usb
+mpv
 obs-studio
 system-config-printer
 transmission-gtk
+zathura
+zathura-pdf-poppler

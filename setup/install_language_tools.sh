@@ -18,6 +18,7 @@ uv tool install --force pgcli
 uv tool install --force pre-commit
 uv tool install --force ruff
 uv tool install --force sqlfluff
+uv tool install --force git+https://github.com/will8211/unimatrix
 uv tool install --force uv-upx
 uv tool install --force yamllint
 uv tool install --force zuban

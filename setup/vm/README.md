@@ -115,4 +115,4 @@ is sparse and grows as the guest writes data. Guest TRIM can return unused
 blocks to the host.
 
 The VM package installation skips Firefox, Microsoft Edge, Ollama, OneDrive,
-OnlyOffice, Slack, Spotify, and Zoom.
+OnlyOffice, QEMU and its firmware, Slack, Spotify, and Zoom.

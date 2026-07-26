@@ -76,6 +76,9 @@ abbr -a ua sys_update_all
 if type -q lsd
     abbr -a ls 'lsd -F --color=auto'
 end
+if type -q unimatrix
+    abbr -a iamneo 'unimatrix -s 90'
+end
 
 # Initialize interactive tools
 if type -q zoxide
