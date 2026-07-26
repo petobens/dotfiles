@@ -74,8 +74,8 @@ using these dotfiles without the Arch installer.
 - `config/`: application, home, and development-tool configuration
 - `hypr/`: Hyprland configuration and desktop helpers
 - `nvim/`: Neovim configuration
-- `setup/`: package profiles, installation, symlink scripts, and the disposable
-  QEMU test machine
+- `setup/`: package profiles, installation, sync and symlink scripts, and the
+  disposable QEMU test machine
 
 ## Sync from master
 
@@ -83,7 +83,7 @@ After committing and pushing changes to `master`, update the Wayland branch
 from its clean checkout with:
 
 ```bash
-sync_dotfiles
+./setup/sync_dotfiles
 ```
 
 The command fetches `origin/master` and merges it into `dotfiles-wayland`.
