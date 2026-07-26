@@ -1,7 +1,7 @@
 # Dotfiles gitignore
 
 # Nvim
-/nvim.log
+nvim.log
 nvim/plugin/
 nvim/cache/
 
