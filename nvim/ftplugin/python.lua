@@ -232,7 +232,7 @@ local function list_breakpoints(local_buffer)
         use_regex = true,
         search = 'breakpoint()',
     }
-    if local_buf == true then
+    if local_buffer == true then
         local buf_name = vim.api.nvim_buf_get_name(0)
         opts = vim.tbl_extend('keep', opts, {
             results_title = buf_name,
@@ -252,24 +252,6 @@ local function list_breakpoints(local_buffer)
 end
 
 -- Virtual Envs
-local function get_venv_info(venv, project_root)
-    if venv and venv ~= '' then
-        return { path = venv, manager = nil }
-    end
-    -- Prefer uv over poetry
-    local uv_venv = vim.fs.joinpath(project_root, '.venv')
-    if vim.uv.fs_stat(uv_venv) and vim.uv.fs_stat(uv_venv).type == 'directory' then
-        return { path = uv_venv, manager = 'uv' }
-    end
-    local result = vim.system({ 'poetry', 'env', 'info', '--path' }, { text = true })
-        :wait()
-    local poetry_venv = vim.trim(result.stdout or '')
-    if poetry_venv ~= '' and result.code == 0 then
-        return { path = poetry_venv, manager = 'poetry' }
-    end
-    return nil
-end
-
 local function set_lsp_path(path)
     -- From https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/basedpyright.lua#L28
     local client = vim.lsp.get_clients({ name = 'basedpyright' })[1]
@@ -283,7 +265,7 @@ local function set_lsp_path(path)
     end
 end
 
-function _G.PyVenv.activate(venv)
+function _G.PyVenv.activate()
     if vim.b.pyvenv and vim.b.pyvenv == _G.PyVenv.active_venv.path then
         return
     else
@@ -310,9 +292,10 @@ function _G.PyVenv.activate(venv)
     -- If there is no active venv look for one (but just once)
     if vim.b.pyvenv == nil then
         local project_root = _project_root()
-        local venv_info = get_venv_info(venv, project_root)
-        if venv_info then
-            vim.b.pyvenv = venv_info.path
+        local venv_path = vim.fs.joinpath(project_root, '.venv')
+        local stat = vim.uv.fs_stat(venv_path)
+        if stat and stat.type == 'directory' then
+            vim.b.pyvenv = venv_path
             local py_files = vim.fs.find(function(name, path)
                 return name:match('.*%.py$')
                     and not vim.startswith(path, project_root .. '/.venv/')
@@ -322,13 +305,13 @@ function _G.PyVenv.activate(venv)
                 path = project_root,
             })
             local result = vim.system(
-                { venv_info.manager, 'run', 'python', '--version' },
+                { 'uv', 'run', 'python', '--version' },
                 { text = true, cwd = project_root }
             ):wait()
             local py_version = vim.trim(result.stdout or ''):match('%d+.%d+.%d+')
             _G.PyVenv.active_venv = {
-                package_manager = venv_info.manager,
-                path = venv_info.path,
+                package_manager = 'uv',
+                path = venv_path,
                 project_files = py_files,
                 project_root = project_root,
                 python_version = py_version,
@@ -385,7 +368,7 @@ local function clean_sphinx_build()
 
     vim.notify('Cleaning sphinx html build...')
     vim.system(
-        { _G.PyVenv.active_venv.package_manager, 'run', 'make', 'clean' },
+        { 'uv', 'run', 'make', 'clean' },
         { cwd = vim.fs.joinpath(_project_root(), 'docs'), text = true },
         on_exit
     )
@@ -537,10 +520,6 @@ end, { buf = 0, desc = 'Activate Python venv' })
 vim.keymap.set('n', '<Leader>vd', function()
     _G.PyVenv.deactivate()
 end, { buf = 0, desc = 'Deactivate Python venv' })
-
-vim.keymap.set('n', '<Leader>vl', function()
-    _G.TelescopeConfig.py_venvs({ project_root = _project_root() })
-end, { buf = 0, desc = 'List Python venvs' })
 
 vim.keymap.set('n', '<Leader>ve', function()
     vim.print(_G.PyVenv.active_venv)

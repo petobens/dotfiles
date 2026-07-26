@@ -1,7 +1,5 @@
 """pdbpp config."""
 
-# pylint:disable=E1101
-
 import pdb
 
 from pygments.style import Style
@@ -72,7 +70,7 @@ class Config(pdb.DefaultConfig):  # type: ignore
     pygments_formatter_class = "pygments.formatters.TerminalTrueColorFormatter"
     pygments_formatter_kwargs = {"style": OneDarkish}
 
-    def setup(self, pdb):  # pylint:disable=W0621
+    def setup(self, pdb):
         """Override PDB++ mappings."""
         pdb_class = pdb.__class__
         pdb_class.do_l = pdb_class.do_longlist

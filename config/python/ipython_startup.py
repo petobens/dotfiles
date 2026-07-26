@@ -1,5 +1,4 @@
 """My ipython startup settings."""
-# pylint:disable=W0108
 
 from IPython import get_ipython
 from prompt_toolkit.filters import emacs_insert_mode, vi_insert_mode

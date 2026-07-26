@@ -181,16 +181,7 @@ return {
         { trig = 'nl', dscr = 'No lint' },
         fmta(
             [[
-            # type: ignore # noqa # pylint:disable=
-        ]],
-            {}
-        )
-    ),
-    s(
-        { trig = 'pld', dscr = 'Pylint disable' },
-        fmta(
-            [[
-            # pylint:disable=
+            # type: ignore # noqa
         ]],
             {}
         )

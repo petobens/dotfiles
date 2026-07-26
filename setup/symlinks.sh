@@ -60,9 +60,7 @@ chmod 700 "$HOME/.gnupg"
 symlink "$repo/config/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
 
 # Formatter and linter configuration
-symlink "$repo/config/linters/eslintrc.yaml" "$HOME/.eslintrc.yaml"
 symlink "$repo/config/linters/hadolint.yaml" "$HOME/.config/hadolint.yaml"
-symlink "$repo/config/linters/htmlhintrc" "$HOME/.htmlhintrc"
 symlink "$repo/config/linters/luacheckrc" "$HOME/.config/.luacheckrc"
 symlink "$repo/config/linters/markdownlint.json" "$HOME/.markdownlint.json"
 symlink "$repo/config/pgcli/config" "$HOME/.config/pgcli/config"
@@ -73,7 +71,6 @@ symlink "$repo/config/linters/taplo.toml" "$HOME/taplo.toml"
 symlink "$repo/config/linters/yamllint.yaml" "$HOME/.config/yamllint/config"
 
 # Python tooling
-symlink "$repo/config/python/black.toml" "$HOME/.config/.black.toml"
 symlink "$repo/config/python/ipython_config.py" "$HOME/.ipython/profile_default/ipython_config.py"
 symlink "$repo/config/python/ipython_startup.py" "$HOME/.ipython/profile_default/startup/ipython_startup.py"
 symlink "$repo/config/python/jupyterlab/jupyterlab_code_formatter" "$HOME/.jupyter/lab/user-settings/jupyterlab_code_formatter"
@@ -82,7 +79,6 @@ symlink "$repo/config/python/matplotlib" "$HOME/.config/matplotlib"
 symlink "$repo/config/python/mypy.ini" "$HOME/.mypy.ini"
 symlink "$repo/config/python/pdbrc" "$HOME/.pdbrc"
 symlink "$repo/config/python/pdbrc.py" "$HOME/.pdbrc.py"
-symlink "$repo/config/python/pylintrc" "$HOME/.pylintrc"
 symlink "$repo/config/python/ruff" "$HOME/.config/ruff"
 
 # Home-directory defaults

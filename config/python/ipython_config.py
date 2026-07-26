@@ -1,7 +1,5 @@
 """My ipython config."""
 
-# pylint:disable=W0212
-
 import subprocess
 import sys
 from pathlib import Path
@@ -27,7 +25,7 @@ from pygments.token import (
     Token,
 )
 
-c = get_config()  # type: ignore # noqa # pylint:disable=E0602
+c = get_config()  # type: ignore # noqa
 
 # Options
 c.TerminalInteractiveShell.true_color = True
@@ -53,7 +51,7 @@ def set_input_mode(self, mode):
     shape = {InputMode.NAVIGATION: 2, InputMode.REPLACE: 4}.get(mode, 6)
     raw = '\x1b[{} q'.format(shape)
     if hasattr(sys.stdout, '_cli'):
-        out = sys.stdout._cli.output.write_raw  # type: ignore # pylint:disable=E1101
+        out = sys.stdout._cli.output.write_raw  # type: ignore
     else:
         out = sys.stdout.write
     out(raw)

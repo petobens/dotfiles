@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 // Preamble {{{
 
 // For surfingkeys 1.0

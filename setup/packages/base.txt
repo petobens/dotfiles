@@ -3,6 +3,7 @@ base-devel
 bat
 fastfetch
 fd
+ffmpeg
 fish
 fzf
 git
@@ -23,6 +24,7 @@ markdownlint-cli
 neovim
 nfs-utils
 openssh
+poppler
 python
 ripgrep
 rsync
