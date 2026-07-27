@@ -178,6 +178,16 @@ fi
 # Browser
 $ln_cmd -fTs "$dotfiles_dir/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 echo Created .surfingkeysrc symlink
+if type "brave" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/arch/config/brave-flags.conf" \
+        "$HOME/.config/brave-flags.conf"
+    echo Created .config/brave-flags.conf symlink
+fi
+if type "microsoft-edge-dev" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/arch/config/microsoft-edge-dev-flags.conf" \
+        "$HOME/.config/microsoft-edge-dev-flags.conf"
+    echo Created .config/microsoft-edge-dev-flags.conf symlink
+fi
 
 # Linters
 if type "eslint" > /dev/null 2>&1; then

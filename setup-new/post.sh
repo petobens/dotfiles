@@ -142,6 +142,28 @@ EOF'
         sudo systemctl restart docker
     fi
 
+    # Use periodic TRIM to avoid latency from continuous ext4 discard
+    sudo sed -i -E \
+        '/^[^#].*[[:space:]]ext4[[:space:]]/ s/,discard(,?)/\1/g' \
+        /etc/fstab
+    sudo systemctl enable --now fstrim.timer
+
+    # Favor responsiveness while keeping conservative battery CPU behavior
+    sudo install -d /etc/tlp.d
+    sudo tee /etc/tlp.d/10-performance.conf > /dev/null << 'EOF'
+CPU_HWP_DYN_BOOST_ON_AC=1
+CPU_HWP_DYN_BOOST_ON_BAT=0
+CPU_HWP_DYN_BOOST_ON_SAV=0
+INTEL_GPU_POWER_PROFILE_ON_BAT=base
+WIFI_PWR_ON_BAT=off
+EOF
+
+    sudo install -d /etc/scx_loader
+    sudo tee /etc/scx_loader/config.toml > /dev/null << 'EOF'
+default_sched = "scx_lavd"
+default_mode = "Auto"
+EOF
+
     # Enable some services
     echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
     # Start pipewire
@@ -168,19 +190,17 @@ EOF'
     sudo systemctl restart bluetooth.service
     # TLP
     sudo systemctl enable tlp.service
-    sudo systemctl start tlp.service
+    sudo systemctl restart tlp.service
+    # sched_ext
+    sudo systemctl enable --now scx_loader.service
     # Printer
     sudo systemctl enable cups.service
     sudo systemctl start cups.service
     # Disable rfkill (for tlp)
     sudo systemctl mask systemd-rfkill.service
     sudo systemctl mask systemd-rfkill.socket
-    # SSH
-    sudo systemctl enable sshd.service
-    sudo systemctl start sshd.service
-    # Ollama
-    sudo systemctl enable ollama.service
-    sudo systemctl start ollama.service
+    # Keep on-demand services disabled by default
+    sudo systemctl disable --now sshd.service ollama.service
 
     # Remove previous pacman cache dir (we changed it in pacman.conf)
     echo -e "\\033[1;34m--> Removing old pacman cache dir...\\033[0m"

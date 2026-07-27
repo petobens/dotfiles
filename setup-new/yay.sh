@@ -15,7 +15,7 @@ fi
 if type "pacman" > /dev/null 2>&1; then
     sudo ln -fTs "$parent_dir/arch/config/pacman.conf" "/etc/pacman.conf"
     echo Created /etc/pacman.conf symlink
-    sudo pacman -Sy --needed reflector
+    sudo pacman -Syu --needed reflector
     read -p $'\033[1mDo you want to update package mirrorlist (y/n)? \033[0m' -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -113,6 +113,7 @@ $yay_cmd feh
 $yay_cmd i3-wm
 $yay_cmd i3lock-color
 $yay_cmd inotify-tools # used by nvim
+$yay_cmd intel-gpu-tools
 $yay_cmd intltool
 $yay_cmd kwayland5        # neded for pinentry-qt
 $yay_cmd kwindowsystem    # neded for pinentry-qt
@@ -132,6 +133,7 @@ $yay_cmd playerctl
 $yay_cmd polybar
 $yay_cmd rofi
 $yay_cmd sane-airscan
+$yay_cmd scx-tools
 $yay_cmd tlp
 $yay_cmd udiskie
 $yay_cmd unclutter-xfixes-git
@@ -197,6 +199,7 @@ $yay_cmd hyperfine
 $yay_cmd inetutils
 $yay_cmd jq
 $yay_cmd libgit2
+$yay_cmd libva-utils
 $yay_cmd lsb-release
 $yay_cmd lsd
 $yay_cmd luacheck
