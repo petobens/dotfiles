@@ -10,7 +10,7 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Development     | Neovim                                        |
 | Desktop         | Hyprland, Mako, Rofi, Waybar                  |
 | Files and media | imv, Yazi                                     |
-| Network         | Impala, NetworkManager                        |
+| Network         | NetworkManager, nmtui                         |
 | Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard |
 | System          | Btrfs, systemd-boot, TLP, UKI, zram           |
 | Terminal        | Fish, Ghostty, Starship, tmux                 |

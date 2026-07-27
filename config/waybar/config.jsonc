@@ -21,7 +21,7 @@
         "format-ethernet": "󰈀  {ipaddr}/{cidr}",
         "format-disconnected": "󰖪",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
-        "on-click": "ghostty -e impala"
+        "on-click": "ghostty -e nmtui"
     },
     "custom/onedrive": {
         "exec": "~/.config/hypr/scripts/onedrive_status",

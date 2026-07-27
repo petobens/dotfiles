@@ -15,7 +15,6 @@ hyprpicker
 hyprpolkitagent
 hyprpwcenter
 hyprshutdown
-impala
 intel-media-driver
 libcamera
 libcamera-tools
