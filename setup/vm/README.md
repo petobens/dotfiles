@@ -48,9 +48,10 @@ cd /tmp/dotfiles
 Use `Ctrl-b [` to enter tmux scrollback, then `q` to leave it.
 
 At the `Target disk` prompt, press Enter to accept `/dev/nvme0n1`. The VM
-defaults to hostname `arch-vm`, a 1 GiB EFI partition, a 40 GiB root partition,
-the remaining space for home, and username `pedro`. The examples below use
-that username; substitute the selected username when different.
+defaults to hostname `arch-vm`, a 1 GiB EFI partition, and a Btrfs root using
+the remaining space. The filesystem uses zstd compression with separate `@`
+and `@home` subvolumes. The examples below use username `pedro`; substitute the
+selected username when different.
 
 After the installer finishes:
 
@@ -59,8 +60,8 @@ umount -R /mnt
 reboot
 ```
 
-Log in with the username selected during installation and complete the
-dotfiles installation:
+Log in with the username selected during installation and complete the dotfiles
+installation:
 
 ```bash
 cd ~/git-repos/private/dotfiles

@@ -12,7 +12,7 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Files and media | imv, Yazi                                     |
 | Network         | Impala, NetworkManager                        |
 | Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard |
-| System          | systemd-boot, TLP, zram-generator             |
+| System          | Btrfs, systemd-boot, TLP, UKI, zram           |
 | Terminal        | Fish, Ghostty, Starship, tmux                 |
 
 ## Install Arch
@@ -33,12 +33,24 @@ cd /tmp/dotfiles
 ```
 
 The installer asks for the normal username, defaulting to `pedro`. It erases
-the selected disk only after an exact confirmation, installs the base system,
-and clones this branch into `~/git-repos/private/dotfiles` for that user.
+the selected disk only after an exact confirmation. It creates a 1 GiB EFI
+partition and a zstd-compressed Btrfs filesystem with separate `@` and `@home`
+subvolumes. Discoverable partitions mount root and the EFI partition; the only
+`fstab` entry mounts `@home`. The installer also creates unified kernel images
+for systemd-boot, then clones this branch into `~/git-repos/private/dotfiles`.
+Snapshot tooling is intentionally not installed; the flat subvolume layout
+leaves room to add root snapshots later without including `/home`.
+
+After installation, unmount before rebooting:
+
+```bash
+umount -R /mnt
+reboot
+```
 
 ### Test in a VM
 
-On an Arch host, install QEMU and the OVMF firmware:
+On an Arch host, install QEMU and OVMF:
 
 ```bash
 sudo pacman -S --needed qemu-desktop edk2-ovmf

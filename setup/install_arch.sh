@@ -2,7 +2,7 @@
 set -euo pipefail
 
 current_step=0
-total_steps=12
+total_steps=13
 
 section() {
     ((current_step += 1))
@@ -20,7 +20,8 @@ die() {
 [[ -d /sys/firmware/efi/efivars ]] || die 'Boot the installation ISO in UEFI mode'
 mountpoint -q /mnt && die 'Unmount the existing installation from /mnt first'
 
-for command in arch-chroot curl genfstab pacstrap sfdisk systemd-detect-virt; do
+for command in arch-chroot blkid btrfs curl mkfs.btrfs pacstrap sfdisk \
+    systemd-detect-virt; do
     command -v "$command" > /dev/null || die "Missing $command; use the official Arch installation ISO"
 done
 
@@ -33,10 +34,8 @@ fi
 
 if [[ $mode == vm ]]; then
     default_hostname=arch-vm
-    default_root_gib=40
 else
     default_hostname=x1-carbon
-    default_root_gib=60
 fi
 
 printf 'Installation mode: %s%s\n' \
@@ -66,10 +65,6 @@ read -r -p 'Username [pedro]: ' username
 username=${username:-pedro}
 [[ $username =~ ^[a-z_][a-z0-9_-]*$ ]] || die "Invalid username: $username"
 
-read -r -p "Root partition size in GiB [$default_root_gib]: " root_gib
-root_gib=${root_gib:-$default_root_gib}
-[[ $root_gib =~ ^[1-9][0-9]*$ ]] || die 'Root size must be a positive integer'
-
 section 'Selecting the installation disk'
 lsblk -dp -o NAME,SIZE,MODEL,TRAN,RM,TYPE
 default_disk=$(
@@ -90,8 +85,7 @@ fi
 
 printf '\n%s will be completely erased and replaced with:\n' "$disk"
 printf '  EFI:   1 GiB, FAT32, mounted at /boot\n'
-printf '  Root:  %s GiB, ext4\n' "$root_gib"
-printf '  Home:  remaining space, ext4\n\n'
+printf '  Root:  remaining space, Btrfs with zstd compression\n\n'
 read -r -p "Type 'ERASE $disk' to continue: " confirmation
 [[ $confirmation == "ERASE $disk" ]] || die 'Installation cancelled'
 
@@ -102,30 +96,35 @@ else
 fi
 efi_partition=${partition_prefix}1
 root_partition=${partition_prefix}2
-home_partition=${partition_prefix}3
 
 section 'Partitioning and formatting'
 sfdisk --lock --wipe always --wipe-partitions always "$disk" << EOF
 label: gpt
 size=1GiB, type=U, name="EFI"
-size=${root_gib}GiB, type="Linux root (x86-64)", name="Arch root"
-type=H, name="Home"
+type="Linux root (x86-64)", name="Arch root"
 EOF
 udevadm settle
 
 mkfs.fat -F 32 "$efi_partition"
-mkfs.ext4 -F "$root_partition"
-mkfs.ext4 -F "$home_partition"
+mkfs.btrfs -f "$root_partition"
 
 section 'Mounting filesystems'
 mount "$root_partition" /mnt
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs property set /mnt/@ compression zstd
+btrfs property set /mnt/@home compression zstd
+btrfs subvolume set-default /mnt/@
+umount /mnt
+mount "$root_partition" /mnt
+mount --mkdir -o subvol=@home "$root_partition" /mnt/home
 mount --mkdir -o umask=0077 "$efi_partition" /mnt/boot
-mount --mkdir "$home_partition" /mnt/home
 findmnt /mnt
 
 section 'Installing the base system'
 pacstrap -K /mnt \
     base \
+    btrfs-progs \
     git \
     intel-ucode \
     linux \
@@ -133,9 +132,14 @@ pacstrap -K /mnt \
     linux-lts \
     networkmanager \
     sudo \
+    systemd-ukify \
     tmux \
     vim
-genfstab -U /mnt > /mnt/etc/fstab
+
+section 'Configuring filesystem mounts'
+root_uuid=$(blkid -s UUID -o value "$root_partition")
+printf 'UUID=%s /home btrfs subvol=@home 0 0\n' \
+    "$root_uuid" > /mnt/etc/fstab
 
 section 'Configuring locale and system identity'
 ln -sf "/usr/share/zoneinfo/$timezone" /mnt/etc/localtime
@@ -170,30 +174,34 @@ arch-chroot /mnt systemctl enable \
     systemd-boot-update.service \
     systemd-timesyncd
 
-section 'Installing systemd-boot'
+section 'Installing unified kernel images'
 arch-chroot -S /mnt bootctl install
-root_uuid=$(blkid -s UUID -o value "$root_partition")
-install -d /mnt/boot/loader/entries
+install -Dm644 /dev/stdin \
+    /mnt/etc/mkinitcpio.conf.d/10-systemd.conf << 'EOF'
+HOOKS=(
+    base systemd autodetect microcode modconf kms keyboard
+    sd-vconsole block filesystems
+)
+EOF
+printf 'rw quiet\n' > /mnt/etc/kernel/cmdline
+sed -i -E \
+    -e "s|^PRESETS=.*|PRESETS=('default')|" \
+    -e 's|^default_image=|#default_image=|' \
+    -e 's|^#default_uki=.*|default_uki="/boot/EFI/Linux/arch-linux.efi"|' \
+    /mnt/etc/mkinitcpio.d/linux.preset
+sed -i -E \
+    -e "s|^PRESETS=.*|PRESETS=('default')|" \
+    -e 's|^default_image=|#default_image=|' \
+    -e 's|^#default_uki=.*|default_uki="/boot/EFI/Linux/arch-linux-lts.efi"|' \
+    /mnt/etc/mkinitcpio.d/linux-lts.preset
 install -Dm644 /dev/stdin /mnt/boot/loader/loader.conf << 'EOF'
-default arch.conf
+default @saved
 timeout 3
 console-mode keep
 editor yes
 EOF
-install -Dm644 /dev/stdin /mnt/boot/loader/entries/arch.conf << EOF
-title Arch Linux
-linux /vmlinuz-linux
-initrd /intel-ucode.img
-initrd /initramfs-linux.img
-options root=UUID=$root_uuid rw quiet
-EOF
-install -Dm644 /dev/stdin /mnt/boot/loader/entries/arch-lts.conf << EOF
-title Arch Linux LTS
-linux /vmlinuz-linux-lts
-initrd /intel-ucode.img
-initrd /initramfs-linux-lts.img
-options root=UUID=$root_uuid rw
-EOF
+rm -f /mnt/boot/initramfs-linux*.img
+arch-chroot /mnt mkinitcpio -P
 
 section 'Cloning the Wayland dotfiles'
 checkout="/home/$username/git-repos/private/dotfiles"
@@ -205,6 +213,5 @@ arch-chroot /mnt runuser -u "$username" -- \
 
 section 'Installation complete'
 printf '%s\n' \
-    'Inspect /mnt/etc/fstab and the messages above before rebooting.' \
-    'Then run: umount -R /mnt && reboot' \
+    'Run: umount -R /mnt && reboot' \
     "After login: cd $checkout, start tmux, then run ./setup/install.sh"

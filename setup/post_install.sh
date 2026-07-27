@@ -29,7 +29,11 @@ systemctl --user enable pipewire-pulse
 systemctl --user enable wireplumber
 
 section 'Configuring compressed swap'
-printf '[zram0]\n' | sudo tee /etc/systemd/zram-generator.conf > /dev/null
+sudo tee /etc/systemd/zram-generator.conf > /dev/null << 'EOF'
+[zram0]
+zram-size = ram / 2
+compression-algorithm = zstd
+EOF
 
 section 'Setting desktop defaults'
 xdg-user-dirs-update

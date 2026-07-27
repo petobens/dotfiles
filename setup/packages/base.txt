@@ -1,5 +1,6 @@
 7zip
 bat
+btrfs-progs
 curl
 fastfetch
 fd
@@ -25,6 +26,7 @@ ripgrep
 rsync
 sshpass
 starship
+systemd-ukify
 tlp
 tmux
 trash-cli
