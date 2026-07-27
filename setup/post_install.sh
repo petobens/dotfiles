@@ -38,7 +38,10 @@ sudo systemctl enable NetworkManager
 if ! systemd-detect-virt --vm --quiet; then
     sudo systemctl enable fwupd-refresh.timer
     sudo systemctl enable --now intel_lpmd.service
-    sudo systemctl enable --now thermald.service
+    # Lenovo DYTC provides the thermal policy on supported ThinkPads
+    if [[ ! -e /sys/devices/platform/thinkpad_acpi/dytc_lapmode ]]; then
+        sudo systemctl enable --now thermald.service
+    fi
 else
     sudo systemctl enable sshd
 fi

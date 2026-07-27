@@ -12,10 +12,12 @@ git
 gnupg
 gopass
 htop
+intel-gpu-tools
 intel-lpmd
 intel-ucode
 jq
 less
+libva-utils
 linux
 linux-firmware-intel
 linux-lts
