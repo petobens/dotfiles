@@ -27,6 +27,7 @@ poppler
 python
 ripgrep
 rsync
+scx-tools
 sshpass
 starship
 systemd-ukify

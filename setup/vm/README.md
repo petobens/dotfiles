@@ -118,4 +118,7 @@ return unused blocks to the host.
 
 The VM package installation skips Firefox, firmware updates, Microsoft Edge,
 Ollama, OneDrive, OnlyOffice, QEMU and its firmware, Slack, Spotify, and Zoom.
-It also skips thermald, which only benefits physical hardware.
+It also skips thermald, which only benefits physical hardware. The VM loads
+`scx_lavd` in automatic mode to verify the same scheduler setup used on the
+physical machine, but it cannot reproduce laptop responsiveness, power use, or
+thermal behavior.

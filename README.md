@@ -12,7 +12,8 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Files and media | imv, Yazi                                            |
 | Network         | NetworkManager, nmtui                                |
 | Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard        |
-| System          | Btrfs, fwupd, systemd-boot, thermald, TLP, UKI, zram |
+| System          | Btrfs, fwupd, scx_lavd, systemd-boot, thermald, TLP, |
+|                 | UKI, zram                                            |
 | Terminal        | Fish, Ghostty, Starship, tmux                        |
 
 ## Install Arch
@@ -43,9 +44,16 @@ kernel images for systemd-boot, then clones this branch into
 installed; the flat subvolume layout leaves room to add root snapshots later
 without including `/home`, logs, or cached packages.
 
+Disk encryption and Secure Boot are intentionally omitted because their added
+complexity is not useful for this personal setup.
+
 The base install uses Intel-specific firmware for the target laptop. The
 dotfiles post-install enables weekly package-cache cleanup, tunes zram for
-in-memory swap, and runs thermald only on physical hardware.
+in-memory swap, and loads the `scx_lavd` CPU scheduler in automatic mode.
+Thermald runs only on physical hardware.
+
+Run `scxctl get` to inspect the active scheduler. Disable
+`scx_loader.service` to return to the kernel's default scheduler.
 
 After installation, unmount before rebooting:
 

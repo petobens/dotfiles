@@ -10,6 +10,13 @@ gopass config generate.autoclip false
 gopass config core.notifications false
 gopass config mounts.path "$HOME/.password-store"
 
+section 'Configuring CPU scheduler'
+sudo install -d /etc/scx_loader
+sudo tee /etc/scx_loader/config.toml > /dev/null << 'EOF'
+default_sched = "scx_lavd"
+default_mode = "Auto"
+EOF
+
 section 'Configuring login and system services'
 # Fish login sessions start Hyprland after tty1 authentication
 sudo chsh -s "$(command -v fish)" "$USER"
@@ -24,6 +31,7 @@ if ! systemd-detect-virt --vm --quiet; then
     sudo systemctl enable --now thermald.service
 fi
 sudo systemctl enable paccache.timer
+sudo systemctl enable scx_loader.service
 sudo systemctl enable sshd
 sudo systemctl enable tlp
 systemctl --user enable gnome-keyring-daemon.socket
