@@ -40,20 +40,15 @@ subvolumes, plus `@var_log` and `@pkg` so future root snapshots exclude logs
 and cached packages. Discoverable partitions mount root and the EFI partition;
 `fstab` mounts the remaining subvolumes. The installer also creates unified
 kernel images for systemd-boot, then clones this branch into
-`~/git-repos/private/dotfiles`. Snapshot tooling is intentionally not
-installed; the flat subvolume layout leaves room to add root snapshots later
-without including `/home`, logs, or cached packages.
+`~/git-repos/private/dotfiles`.
 
-Disk encryption and Secure Boot are intentionally omitted because their added
-complexity is not useful for this personal setup.
+Snapshot tooling, disk encryption, and Secure Boot are intentionally omitted.
+The flat subvolume layout leaves room to add root snapshots later without
+including `/home`, logs, or cached packages.
 
 The base install uses Intel-specific firmware for the target laptop. The
-dotfiles post-install enables weekly package-cache cleanup, tunes zram for
-in-memory swap, and loads the `scx_lavd` CPU scheduler in automatic mode.
-Thermald runs only on physical hardware.
-
-Run `scxctl get` to inspect the active scheduler. Disable
-`scx_loader.service` to return to the kernel's default scheduler.
+dotfiles post-install also configures weekly package-cache cleanup and modern
+system tooling such as zram, thermald, and the `scx_lavd` CPU scheduler.
 
 After installation, unmount before rebooting:
 

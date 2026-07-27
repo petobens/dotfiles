@@ -194,9 +194,11 @@ HOOKS=(
 EOF
 printf 'rootflags=noatime rw quiet\n' > /mnt/etc/kernel/cmdline
 sed -i -E \
-    -e "s|^PRESETS=.*|PRESETS=('default')|" \
+    -e "s|^PRESETS=.*|PRESETS=('default' 'fallback')|" \
     -e 's|^default_image=|#default_image=|' \
     -e 's|^#default_uki=.*|default_uki="/boot/EFI/Linux/arch-linux.efi"|' \
+    -e 's|^fallback_image=|#fallback_image=|' \
+    -e 's|^#fallback_uki=.*|fallback_uki="/boot/EFI/Linux/arch-linux-fallback.efi"|' \
     /mnt/etc/mkinitcpio.d/linux.preset
 sed -i -E \
     -e "s|^PRESETS=.*|PRESETS=('default')|" \
