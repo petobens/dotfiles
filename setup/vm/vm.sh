@@ -83,7 +83,7 @@ initialize_state() {
             exit 1
         }
         section 'Creating disk'
-        qemu-img create -f qcow2 "$disk" 96G
+        qemu-img create -f qcow2 -o nocow=on "$disk" 96G
     fi
     if [[ ! -f $firmware_vars ]]; then
         [[ -r $firmware_vars_template ]] || {

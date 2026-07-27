@@ -49,9 +49,9 @@ Use `Ctrl-b [` to enter tmux scrollback, then `q` to leave it.
 
 At the `Target disk` prompt, press Enter to accept `/dev/nvme0n1`. The VM
 defaults to hostname `arch-vm`, a 1 GiB EFI partition, and a Btrfs root using
-the remaining space. The filesystem uses zstd compression with separate `@`
-and `@home` subvolumes. The examples below use username `pedro`; substitute the
-selected username when different.
+the remaining space. The filesystem uses zstd compression with separate `@`,
+`@home`, `@var_log`, and `@pkg` subvolumes. The examples below use username
+`pedro`; substitute the selected username when different.
 
 After the installer finishes:
 
@@ -112,8 +112,10 @@ git pull
 ## Details
 
 State is stored in `~/.local/state/dotfiles-wayland-vm`. The 96 GiB QCOW2 disk
-is sparse and grows as the guest writes data. Guest TRIM can return unused
-blocks to the host.
+is sparse and grows as the guest writes data. When the state directory is on
+Btrfs, QEMU disables copy-on-write for newly created disks. Guest TRIM can
+return unused blocks to the host.
 
 The VM package installation skips Firefox, firmware updates, Microsoft Edge,
 Ollama, OneDrive, OnlyOffice, QEMU and its firmware, Slack, Spotify, and Zoom.
+It also skips thermald, which only benefits physical hardware.

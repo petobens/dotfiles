@@ -21,7 +21,9 @@ sudo systemctl enable NetworkManager
 if ! systemd-detect-virt --vm --quiet; then
     sudo systemctl enable fwupd-refresh.timer
     sudo systemctl enable --now ollama.service
+    sudo systemctl enable --now thermald.service
 fi
+sudo systemctl enable paccache.timer
 sudo systemctl enable sshd
 sudo systemctl enable tlp
 systemctl --user enable gnome-keyring-daemon.socket
@@ -34,6 +36,10 @@ sudo tee /etc/systemd/zram-generator.conf > /dev/null << 'EOF'
 [zram0]
 zram-size = ram / 2
 compression-algorithm = zstd
+EOF
+sudo tee /etc/sysctl.d/99-zram.conf > /dev/null << 'EOF'
+vm.page-cluster = 0
+vm.swappiness = 180
 EOF
 
 section 'Setting desktop defaults'

@@ -16,11 +16,13 @@ intel-ucode
 jq
 less
 linux
+linux-firmware-intel
 linux-lts
 lsd
 networkmanager
 nfs-utils
 openssh
+pacman-contrib
 poppler
 python
 ripgrep
@@ -28,6 +30,7 @@ rsync
 sshpass
 starship
 systemd-ukify
+thermald
 tlp
 tmux
 trash-cli

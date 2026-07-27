@@ -8,4 +8,5 @@ onlyoffice-bin
 qemu-desktop
 slack-desktop
 spotify
+thermald
 zoom

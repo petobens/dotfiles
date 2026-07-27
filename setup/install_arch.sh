@@ -112,12 +112,18 @@ section 'Mounting filesystems'
 mount "$root_partition" /mnt
 btrfs subvolume create /mnt/@
 btrfs subvolume create /mnt/@home
-btrfs property set /mnt/@ compression zstd
-btrfs property set /mnt/@home compression zstd
+btrfs subvolume create /mnt/@pkg
+btrfs subvolume create /mnt/@var_log
+for subvolume in @ @home @pkg @var_log; do
+    btrfs property set "/mnt/$subvolume" compression zstd
+done
 btrfs subvolume set-default /mnt/@
 umount /mnt
-mount "$root_partition" /mnt
-mount --mkdir -o subvol=@home "$root_partition" /mnt/home
+mount -o noatime "$root_partition" /mnt
+mount --mkdir -o noatime,subvol=@home "$root_partition" /mnt/home
+mount --mkdir -o noatime,subvol=@pkg \
+    "$root_partition" /mnt/var/cache/pacman/pkg
+mount --mkdir -o noatime,subvol=@var_log "$root_partition" /mnt/var/log
 mount --mkdir -o umask=0077 "$efi_partition" /mnt/boot
 findmnt /mnt
 
@@ -128,7 +134,7 @@ pacstrap -K /mnt \
     git \
     intel-ucode \
     linux \
-    linux-firmware \
+    linux-firmware-intel \
     linux-lts \
     networkmanager \
     sudo \
@@ -138,8 +144,11 @@ pacstrap -K /mnt \
 
 section 'Configuring filesystem mounts'
 root_uuid=$(blkid -s UUID -o value "$root_partition")
-printf 'UUID=%s /home btrfs subvol=@home 0 0\n' \
-    "$root_uuid" > /mnt/etc/fstab
+printf '%s\n' \
+    "UUID=$root_uuid /home btrfs noatime,subvol=@home 0 0" \
+    "UUID=$root_uuid /var/cache/pacman/pkg btrfs noatime,subvol=@pkg 0 0" \
+    "UUID=$root_uuid /var/log btrfs noatime,subvol=@var_log 0 0" \
+    > /mnt/etc/fstab
 
 section 'Configuring locale and system identity'
 ln -sf "/usr/share/zoneinfo/$timezone" /mnt/etc/localtime
@@ -183,7 +192,7 @@ HOOKS=(
     sd-vconsole block filesystems
 )
 EOF
-printf 'rw quiet\n' > /mnt/etc/kernel/cmdline
+printf 'rootflags=noatime rw quiet\n' > /mnt/etc/kernel/cmdline
 sed -i -E \
     -e "s|^PRESETS=.*|PRESETS=('default')|" \
     -e 's|^default_image=|#default_image=|' \

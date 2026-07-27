@@ -4,16 +4,16 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 
 ## Stack
 
-| Area            | Tools                                         |
-| --------------- | --------------------------------------------- |
-| Audio           | PipeWire, WirePlumber                         |
-| Development     | Neovim                                        |
-| Desktop         | Hyprland, Mako, Rofi, Waybar                  |
-| Files and media | imv, Yazi                                     |
-| Network         | NetworkManager, nmtui                         |
-| Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard |
-| System          | Btrfs, fwupd, systemd-boot, TLP, UKI, zram    |
-| Terminal        | Fish, Ghostty, Starship, tmux                 |
+| Area            | Tools                                                |
+| --------------- | ---------------------------------------------------- |
+| Audio           | PipeWire, WirePlumber                                |
+| Development     | Neovim                                               |
+| Desktop         | Hyprland, Mako, Rofi, Waybar                         |
+| Files and media | imv, Yazi                                            |
+| Network         | NetworkManager, nmtui                                |
+| Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard        |
+| System          | Btrfs, fwupd, systemd-boot, thermald, TLP, UKI, zram |
+| Terminal        | Fish, Ghostty, Starship, tmux                        |
 
 ## Install Arch
 
@@ -35,11 +35,17 @@ cd /tmp/dotfiles
 The installer asks for the normal username, defaulting to `pedro`. It erases
 the selected disk only after an exact confirmation. It creates a 1 GiB EFI
 partition and a zstd-compressed Btrfs filesystem with separate `@` and `@home`
-subvolumes. Discoverable partitions mount root and the EFI partition; the only
-`fstab` entry mounts `@home`. The installer also creates unified kernel images
-for systemd-boot, then clones this branch into `~/git-repos/private/dotfiles`.
-Snapshot tooling is intentionally not installed; the flat subvolume layout
-leaves room to add root snapshots later without including `/home`.
+subvolumes, plus `@var_log` and `@pkg` so future root snapshots exclude logs
+and cached packages. Discoverable partitions mount root and the EFI partition;
+`fstab` mounts the remaining subvolumes. The installer also creates unified
+kernel images for systemd-boot, then clones this branch into
+`~/git-repos/private/dotfiles`. Snapshot tooling is intentionally not
+installed; the flat subvolume layout leaves room to add root snapshots later
+without including `/home`, logs, or cached packages.
+
+The base install uses Intel-specific firmware for the target laptop. The
+dotfiles post-install enables weekly package-cache cleanup, tunes zram for
+in-memory swap, and runs thermald only on physical hardware.
 
 After installation, unmount before rebooting:
 
