@@ -12,8 +12,8 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Files and media | imv, Yazi                                            |
 | Network         | NetworkManager, nmtui                                |
 | Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard        |
-| System          | Btrfs, fwupd, scx_lavd, systemd-boot, thermald, TLP, |
-|                 | UKI, zram                                            |
+| System          | Btrfs, fwupd, Intel LPMD, scx_lavd, systemd-boot,    |
+|                 | thermald, TLP, UKI, zram                             |
 | Terminal        | Fish, Ghostty, Starship, tmux                        |
 
 ## Install Arch
@@ -22,7 +22,7 @@ Boot the official Arch installation USB in UEFI mode, connect to the internet,
 and run:
 
 ```bash
-pacman -Sy --needed git tmux
+pacman -Syu --needed git tmux
 tmux
 git clone \
     --depth 1 \
@@ -47,8 +47,9 @@ The flat subvolume layout leaves room to add root snapshots later without
 including `/home`, logs, or cached packages.
 
 The base install uses Intel-specific firmware for the target laptop. The
-dotfiles post-install also configures weekly package-cache cleanup and modern
-system tooling such as zram, thermald, and the `scx_lavd` CPU scheduler.
+installation also configures monthly Btrfs scrubs, weekly package-cache
+cleanup, and modern system tooling such as zram, thermald, and the `scx_lavd`
+CPU scheduler.
 
 After installation, unmount before rebooting:
 

@@ -68,14 +68,21 @@ username=${username:-pedro}
 section 'Selecting the installation disk'
 lsblk -dp -o NAME,SIZE,MODEL,TRAN,RM,TYPE
 default_disk=$(
-    lsblk -bdpno NAME,SIZE,TYPE |
-        awk '$3 == "disk" && $2 > largest {
-            largest = $2
-            disk = $1
-        }
-        END { print disk }'
+    largest=0
+    while read -r candidate size type removable; do
+        [[ $type == disk && $removable == 0 ]] || continue
+        if lsblk -nrpo MOUNTPOINTS "$candidate" |
+            grep -q '[^[:space:]]'; then
+            continue
+        fi
+        if ((size > largest)); then
+            largest=$size
+            disk=$candidate
+        fi
+    done < <(lsblk -bdpno NAME,SIZE,TYPE,RM)
+    printf '%s\n' "${disk:-}"
 )
-[[ -n $default_disk ]] || die 'No whole disks found'
+[[ -n $default_disk ]] || die 'No unmounted, non-removable whole disks found'
 read -r -p "Target disk [$default_disk]: " disk
 disk=${disk:-$default_disk}
 [[ -b $disk && $(lsblk -dnro TYPE "$disk") == disk ]] || die "Not a whole disk: $disk"
@@ -119,11 +126,11 @@ for subvolume in @ @home @pkg @var_log; do
 done
 btrfs subvolume set-default /mnt/@
 umount /mnt
-mount -o noatime "$root_partition" /mnt
-mount --mkdir -o noatime,subvol=@home "$root_partition" /mnt/home
-mount --mkdir -o noatime,subvol=@pkg \
+mount -o noatime,nodiscard "$root_partition" /mnt
+mount --mkdir -o noatime,nodiscard,subvol=@home "$root_partition" /mnt/home
+mount --mkdir -o noatime,nodiscard,subvol=@pkg \
     "$root_partition" /mnt/var/cache/pacman/pkg
-mount --mkdir -o noatime,subvol=@var_log "$root_partition" /mnt/var/log
+mount --mkdir -o noatime,nodiscard,subvol=@var_log "$root_partition" /mnt/var/log
 mount --mkdir -o umask=0077 "$efi_partition" /mnt/boot
 findmnt /mnt
 
@@ -139,15 +146,16 @@ pacstrap -K /mnt \
     networkmanager \
     sudo \
     systemd-ukify \
+    terminus-font \
     tmux \
     vim
 
 section 'Configuring filesystem mounts'
 root_uuid=$(blkid -s UUID -o value "$root_partition")
 printf '%s\n' \
-    "UUID=$root_uuid /home btrfs noatime,subvol=@home 0 0" \
-    "UUID=$root_uuid /var/cache/pacman/pkg btrfs noatime,subvol=@pkg 0 0" \
-    "UUID=$root_uuid /var/log btrfs noatime,subvol=@var_log 0 0" \
+    "UUID=$root_uuid /home btrfs noatime,nodiscard,subvol=@home 0 0" \
+    "UUID=$root_uuid /var/cache/pacman/pkg btrfs noatime,nodiscard,subvol=@pkg 0 0" \
+    "UUID=$root_uuid /var/log btrfs noatime,nodiscard,subvol=@var_log 0 0" \
     > /mnt/etc/fstab
 
 section 'Configuring locale and system identity'
@@ -159,7 +167,7 @@ sed -i -E \
     /mnt/etc/locale.gen
 arch-chroot /mnt locale-gen
 printf 'LANG=en_US.UTF-8\n' > /mnt/etc/locale.conf
-printf 'KEYMAP=%s\n' "$keymap" > /mnt/etc/vconsole.conf
+printf 'KEYMAP=%s\nFONT=ter-132n\n' "$keymap" > /mnt/etc/vconsole.conf
 printf '%s\n' "$hostname" > /mnt/etc/hostname
 printf '%s\n' \
     '127.0.0.1 localhost' \
@@ -178,6 +186,7 @@ EOF
 
 section 'Enabling system services'
 arch-chroot /mnt systemctl enable \
+    btrfs-scrub@-.timer \
     fstrim.timer \
     NetworkManager \
     systemd-boot-update.service \
@@ -192,7 +201,7 @@ HOOKS=(
     sd-vconsole block filesystems
 )
 EOF
-printf 'rootflags=noatime rw quiet\n' > /mnt/etc/kernel/cmdline
+printf 'rootflags=noatime,nodiscard rw quiet\n' > /mnt/etc/kernel/cmdline
 sed -i -E \
     -e "s|^PRESETS=.*|PRESETS=('default' 'fallback')|" \
     -e 's|^default_image=|#default_image=|' \
@@ -206,7 +215,7 @@ sed -i -E \
     -e 's|^#default_uki=.*|default_uki="/boot/EFI/Linux/arch-linux-lts.efi"|' \
     /mnt/etc/mkinitcpio.d/linux-lts.preset
 install -Dm644 /dev/stdin /mnt/boot/loader/loader.conf << 'EOF'
-default @saved
+default arch-linux.efi
 timeout 3
 console-mode keep
 editor yes

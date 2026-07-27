@@ -17,6 +17,16 @@ default_sched = "scx_lavd"
 default_mode = "Auto"
 EOF
 
+section 'Configuring CPU power management'
+sudo install -d /etc/tlp.d
+sudo tee /etc/tlp.d/10-performance.conf > /dev/null << 'EOF'
+CPU_HWP_DYN_BOOST_ON_AC=1
+CPU_HWP_DYN_BOOST_ON_BAT=0
+CPU_HWP_DYN_BOOST_ON_SAV=0
+INTEL_GPU_POWER_PROFILE_ON_BAT=base
+WIFI_PWR_ON_BAT=off
+EOF
+
 section 'Configuring login and system services'
 # Fish login sessions start Hyprland after tty1 authentication
 sudo chsh -s "$(command -v fish)" "$USER"
@@ -27,12 +37,13 @@ sudo systemctl enable --now ipp-usb.service
 sudo systemctl enable NetworkManager
 if ! systemd-detect-virt --vm --quiet; then
     sudo systemctl enable fwupd-refresh.timer
-    sudo systemctl enable --now ollama.service
+    sudo systemctl enable --now intel_lpmd.service
     sudo systemctl enable --now thermald.service
+else
+    sudo systemctl enable sshd
 fi
 sudo systemctl enable paccache.timer
 sudo systemctl enable scx_loader.service
-sudo systemctl enable sshd
 sudo systemctl enable tlp
 systemctl --user enable gnome-keyring-daemon.socket
 systemctl --user enable pipewire
@@ -70,6 +81,9 @@ sudo install -d /mnt/nfs
 section 'Configuring development services'
 sudo usermod -aG docker "$USER"
 mkdir -p "$HOME/.cache/docker"
+if [[ $(findmnt -no FSTYPE --target "$HOME/.cache/docker") == btrfs ]]; then
+    chattr +C "$HOME/.cache/docker"
+fi
 sudo install -d /etc/docker
 sudo tee /etc/docker/daemon.json > /dev/null << EOF
 {

@@ -1,6 +1,7 @@
 edk2-ovmf
 firefox
 fwupd
+intel-lpmd
 microsoft-edge-dev-bin
 ollama
 onedrive-abraunegg
@@ -9,4 +10,5 @@ qemu-desktop
 slack-desktop
 spotify
 thermald
+vpl-gpu-rt
 zoom

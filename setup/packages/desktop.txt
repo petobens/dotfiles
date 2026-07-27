@@ -39,6 +39,7 @@ sof-firmware
 ttf-nerd-fonts-symbols
 udiskie
 upower
+vpl-gpu-rt
 vulkan-intel
 waybar
 wireplumber

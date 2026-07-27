@@ -12,6 +12,7 @@ git
 gnupg
 gopass
 htop
+intel-lpmd
 intel-ucode
 jq
 less
@@ -19,6 +20,8 @@ linux
 linux-firmware-intel
 linux-lts
 lsd
+man-db
+man-pages
 networkmanager
 nfs-utils
 openssh
@@ -31,6 +34,7 @@ scx-tools
 sshpass
 starship
 systemd-ukify
+terminus-font
 thermald
 tlp
 tmux
