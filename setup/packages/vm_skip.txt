@@ -1,5 +1,6 @@
 edk2-ovmf
 firefox
+fwupd
 microsoft-edge-dev-bin
 ollama
 onedrive-abraunegg

@@ -6,6 +6,7 @@ fastfetch
 fd
 ffmpeg
 fish
+fwupd
 fzf
 git
 gnupg

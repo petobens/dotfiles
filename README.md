@@ -12,7 +12,7 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Files and media | imv, Yazi                                     |
 | Network         | NetworkManager, nmtui                         |
 | Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard |
-| System          | Btrfs, systemd-boot, TLP, UKI, zram           |
+| System          | Btrfs, fwupd, systemd-boot, TLP, UKI, zram    |
 | Terminal        | Fish, Ghostty, Starship, tmux                 |
 
 ## Install Arch

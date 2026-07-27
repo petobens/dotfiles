@@ -19,6 +19,7 @@ sudo systemctl enable --now cups.socket
 sudo systemctl enable --now ipp-usb.service
 sudo systemctl enable NetworkManager
 if ! systemd-detect-virt --vm --quiet; then
+    sudo systemctl enable fwupd-refresh.timer
     sudo systemctl enable --now ollama.service
 fi
 sudo systemctl enable sshd
