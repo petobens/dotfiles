@@ -7,9 +7,13 @@ section() {
     printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
 }
 
-section 'Disabling AUR debug packages'
+section 'Configuring AUR builds'
 sudo install -d /etc/makepkg.conf.d
-printf 'OPTIONS+=(!debug)\n' | sudo tee /etc/makepkg.conf.d/dotfiles.conf > /dev/null
+sudo tee /etc/makepkg.conf.d/dotfiles.conf > /dev/null << 'EOF'
+BUILDDIR=/tmp/makepkg
+MAKEFLAGS="-j$(nproc)"
+OPTIONS+=(!debug)
+EOF
 
 if ! command -v yay > /dev/null; then
     section 'Installing Yay'

@@ -42,6 +42,13 @@ vm.page-cluster = 0
 vm.swappiness = 180
 EOF
 
+section 'Limiting persistent logs'
+sudo install -d /etc/systemd/journald.conf.d
+sudo tee /etc/systemd/journald.conf.d/size.conf > /dev/null << 'EOF'
+[Journal]
+SystemMaxUse=250M
+EOF
+
 section 'Setting desktop defaults'
 xdg-user-dirs-update
 xdg-mime default org.pwmt.zathura-pdf-poppler.desktop application/pdf
