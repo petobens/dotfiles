@@ -119,9 +119,7 @@ is sparse and grows as the guest writes data. When the state directory is on
 Btrfs, QEMU disables copy-on-write for newly created disks. Guest TRIM can
 return unused blocks to the host.
 
-The VM package installation skips Firefox, firmware updates, Intel LPMD and
-VPL, Microsoft Edge, Ollama, OneDrive, OnlyOffice, QEMU and its firmware, Slack,
-Spotify, and Zoom. It also skips thermald, which only benefits physical
-hardware. The VM loads `scx_lavd` in automatic mode to verify the same scheduler
-setup used on the physical machine, but it cannot reproduce laptop
-responsiveness, power use, or thermal behavior.
+The VM package installation excludes the packages listed in
+[`vm_skip.txt`](../packages/vm_skip.txt). The VM loads `scx_lavd` in automatic
+mode to verify the same scheduler setup used on the physical machine, but it
+cannot reproduce laptop responsiveness, power use, or thermal behavior.

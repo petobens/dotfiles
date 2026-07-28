@@ -38,9 +38,9 @@ the selected disk only after an exact confirmation. It creates a 1 GiB EFI
 partition and a zstd-compressed Btrfs filesystem with separate `@` and `@home`
 subvolumes, plus `@var_log` and `@pkg` so future root snapshots exclude logs
 and cached packages. Discoverable partitions mount root and the EFI partition;
-`fstab` mounts the remaining subvolumes. The installer also creates unified
-kernel images for systemd-boot, then clones this branch into
-`~/git-repos/private/dotfiles`.
+`fstab` mounts the remaining subvolumes. The installer also creates default and
+fallback unified kernel images for both the standard and LTS kernels, then
+clones this branch into `~/git-repos/private/dotfiles`.
 
 Snapshot tooling, disk encryption, and Secure Boot are intentionally omitted.
 The flat subvolume layout leaves room to add root snapshots later without
@@ -48,8 +48,7 @@ including `/home`, logs, or cached packages.
 
 The base install uses Intel-specific firmware for the target laptop. The
 installation also configures monthly Btrfs scrubs, weekly package-cache
-cleanup, and modern system tooling such as zram, thermald, and the `scx_lavd`
-CPU scheduler.
+cleanup, zram, and the `scx_lavd` CPU scheduler.
 
 After installation, unmount before rebooting:
 
