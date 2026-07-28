@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+current_step=0
+total_steps=$(grep -c "^section '" "${BASH_SOURCE[0]}")
+
 section() {
-    printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
+    ((current_step += 1))
+    printf '\033[1;34m\n-> [%d/%d] %s...\033[0m\n' \
+        "$current_step" "$total_steps" "$1"
 }
 
 section 'Configuring CPU scheduler'
@@ -118,6 +124,38 @@ xdg-mime default org.pwmt.zathura-pdf-poppler.desktop application/pdf
 for mime in image/gif image/jpeg image/png image/svg+xml image/webp; do
     xdg-mime default imv.desktop "$mime"
 done
+
+section 'Installing browser policies'
+sudo install -Dm644 \
+    "$script_dir/../config/browser-policies/brave.json" \
+    /etc/brave/policies/managed/dotfiles.json
+sudo install -Dm644 \
+    "$script_dir/../config/browser-policies/chromium-recommended.json" \
+    /etc/brave/policies/recommended/dotfiles.json
+sudo install -Dm644 \
+    "$script_dir/../config/browser-policies/edge.json" \
+    /etc/opt/edge/policies/managed/dotfiles.json
+sudo install -Dm644 \
+    "$script_dir/../config/browser-policies/chromium-recommended.json" \
+    /etc/opt/edge/policies/recommended/dotfiles.json
+sudo install -Dm644 \
+    "$script_dir/../config/browser-policies/firefox.json" \
+    /etc/firefox/policies/policies.json
+
+section 'Setting application defaults'
+if command -v zoom > /dev/null && [[ ! -e $HOME/.config/zoomus.conf ]]; then
+    mkdir -p "$HOME/.config"
+    printf '%s\n' \
+        '[General]' \
+        'autoScale=false' \
+        'scaleFactor=2' \
+        > "$HOME/.config/zoomus.conf"
+fi
+if command -v spotify > /dev/null &&
+    [[ ! -e $HOME/.config/spotify/prefs ]]; then
+    mkdir -p "$HOME/.config/spotify"
+    printf 'app.autostart-mode="off"\n' > "$HOME/.config/spotify/prefs"
+fi
 
 section 'Configuring Gopass'
 gopass config generate.autoclip false

@@ -7,25 +7,25 @@ case ${1:-} in
         tag=brave
         class='^brave-browser$'
         workspace=1
-        command='brave --ozone-platform=wayland'
+        command='brave'
         ;;
     calendar)
         tag=calendar
         class='^brave-calendar$'
         workspace=1
-        command='brave --ozone-platform=wayland --class=brave-calendar --new-window --app=https://calendar.google.com/calendar/b/0/r'
+        command='brave --class=brave-calendar --new-window --app=https://calendar.google.com/calendar/b/0/r'
         ;;
     clickup)
         tag=clickup
         class='^edge-clickup$'
         workspace=1
-        command='microsoft-edge-dev --ozone-platform=wayland --class=edge-clickup --new-window --app=https://app.clickup.com'
+        command='microsoft-edge-dev --class=edge-clickup --new-window --app=https://app.clickup.com'
         ;;
     edge)
         tag=edge
         class='^microsoft-edge-dev$'
         workspace=1
-        command='microsoft-edge-dev --ozone-platform=wayland'
+        command='microsoft-edge-dev'
         ;;
     slack)
         tag=slack
@@ -37,7 +37,7 @@ case ${1:-} in
         tag=teams
         class='^brave-teams$'
         workspace=2
-        command='brave --ozone-platform=wayland --class=brave-teams --new-window --app=https://teams.live.com'
+        command='brave --class=brave-teams --new-window --app=https://teams.live.com'
         ;;
     zoom)
         tag=zoom
@@ -49,13 +49,13 @@ case ${1:-} in
         tag=meet
         class='^brave-meet$'
         workspace=2
-        command='brave --ozone-platform=wayland --class=brave-meet --new-window --app=https://meet.google.com'
+        command='brave --class=brave-meet --new-window --app=https://meet.google.com'
         ;;
     gmail)
         tag=gmail
         class='^brave-gmail$'
         workspace=2
-        command='brave --ozone-platform=wayland --class=brave-gmail --new-window --app=https://mail.google.com'
+        command='brave --class=brave-gmail --new-window --app=https://mail.google.com'
         ;;
     spotify)
         tag=spotify

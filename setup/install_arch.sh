@@ -2,7 +2,7 @@
 set -euo pipefail
 
 current_step=0
-total_steps=13
+total_steps=$(grep -c "^section '" "${BASH_SOURCE[0]}")
 
 section() {
     ((current_step += 1))

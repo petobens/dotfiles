@@ -85,9 +85,20 @@ cd ~/git-repos/private/dotfiles
 sudo reboot
 ```
 
-The script installs the package profiles, configures the system, and creates
-the dotfile symlinks. Clone the Wayland branch to that location first when
-using these dotfiles without the Arch installer.
+The script installs the packages, applies the system and application defaults,
+and creates the dotfile symlinks.
+
+After rebooting into Hyprland, finish the personal setup:
+
+```bash
+cd ~/git-repos/private/dotfiles
+./setup/finish_setup.sh
+```
+
+The helper synchronizes OneDrive and restores the personal credentials,
+repositories, and wallpaper configured in
+`~/OneDrive/programming/arch/personal.json`. Its keys are documented in
+`setup/load_personal.sh`.
 
 Setup scripts resolve repository paths from their own location. They can also
 be run from inside `setup/` as `./install.sh`, `./symlinks.sh`, or
