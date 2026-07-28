@@ -1,15 +1,20 @@
-edk2-ovmf
-firefox
+# Hardware and host services
 fwupd
-google-cloud-cli
 intel-lpmd
-microsoft-edge-dev-bin
-ollama
 onedrive-abraunegg
-onlyoffice-bin
-qemu-desktop
-slack-desktop
-spotify
 thermald
 vpl-gpu-rt
+
+# Desktop applications
+firefox
+microsoft-edge-dev-bin
+onlyoffice-bin
+slack-desktop
+spotify
 zoom
+
+# Development and virtualization
+edk2-ovmf
+google-cloud-cli
+ollama
+qemu-desktop

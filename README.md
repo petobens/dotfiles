@@ -110,7 +110,7 @@ be run from inside `setup/` as `./install.sh`, `./symlinks.sh`, or
 - `config/`: application, home, and development-tool configuration
 - `hypr/`: Hyprland configuration and desktop helpers
 - `nvim/`: Neovim configuration
-- `setup/`: package profiles, installation, sync and symlink scripts, and the
+- `setup/`: package lists, installation, sync and symlink scripts, and the
   disposable QEMU test machine
 
 ## Sync from master

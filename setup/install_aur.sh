@@ -36,7 +36,10 @@ if systemd-detect-virt --vm --quiet; then
     section 'Skipping unnecessary applications in the VM'
     mapfile -t packages < <(
         printf '%s\n' "${packages[@]}" |
-            grep -Fvx -f "$script_dir/packages/vm_skip.txt"
+            grep -Fvx -f <(
+                sed -e '/^[[:space:]]*#/d' -e '/^[[:space:]]*$/d' \
+                    "$script_dir/packages/vm_skip.txt"
+            )
     )
 fi
 

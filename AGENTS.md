@@ -15,7 +15,7 @@ desktop.
   formatter and linter configuration in `config/linters/`.
 - `hypr/` contains the Hyprland configuration and desktop helper scripts.
 - `nvim/` contains the Neovim configuration.
-- `setup/` contains package profiles, installation scripts, and the disposable
+- `setup/` contains package lists, installation scripts, and the disposable
   QEMU test environment under `setup/vm/`. `setup/symlinks.sh` owns the mapping
   from repository files to home-directory destinations and must be updated when
   configuration files move.
