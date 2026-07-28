@@ -1,3 +1,5 @@
+-- luacheck: globals hl
+
 hl.on('hyprland.start', function()
     -- Export the session before starting services that use desktop portals
     hl.exec_cmd(

@@ -1,3 +1,5 @@
+-- luacheck: globals hl
+
 local home = os.getenv('HOME')
 local scripts = home .. '/.config/hypr/scripts/'
 

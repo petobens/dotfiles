@@ -170,17 +170,17 @@ function claude --description 'Run Claude with the GitHub MCP token'
 end
 
 function gdp --description 'Write the unstaged Git diff to a file'
-    git diff > "$argv[1]"
+    git diff >"$argv[1]"
 end
 
 function gdcp --description 'Write the staged Git diff to a file'
-    git diff --cached > "$argv[1]"
+    git diff --cached >"$argv[1]"
 end
 
 function y --description 'Run Yazi and change to its final directory'
     set -l tmp (mktemp -t yazi-cwd.XXXXXX)
     command yazi $argv --cwd-file="$tmp"
-    if read -z cwd < "$tmp"; and test -n "$cwd"; and test "$cwd" != "$PWD"
+    if read -z cwd <"$tmp"; and test -n "$cwd"; and test "$cwd" != "$PWD"
         builtin cd -- "$cwd"
     end
     command rm -f -- "$tmp"
@@ -204,17 +204,30 @@ function uvsh --description 'Activate the nearest uv virtual environment'
 end
 
 function up --description 'Extract an archive'
-    test -f "$argv[1]"; or begin; echo "Not a file: $argv[1]" >&2; return 1; end
+    test -f "$argv[1]"; or begin
+        echo "Not a file: $argv[1]" >&2
+        return 1
+    end
     switch "$argv[1]"
-        case '*.tar.bz2' '*.tbz2'; tar xjf "$argv[1]"
-        case '*.tar.gz' '*.tgz'; tar xzf "$argv[1]"
-        case '*.tar' '*.tar.xz' '*.tar.zst'; tar xf "$argv[1]"
-        case '*.bz2'; bunzip2 "$argv[1]"
-        case '*.gz'; gunzip "$argv[1]"
-        case '*.rar'; unrar x "$argv[1]"
-        case '*.zip'; unzip "$argv[1]"
-        case '*.7z' '*.7Z'; 7z x "$argv[1]"
-        case '*'; echo "Unsupported archive: $argv[1]" >&2; return 1
+        case '*.tar.bz2' '*.tbz2'
+            tar xjf "$argv[1]"
+        case '*.tar.gz' '*.tgz'
+            tar xzf "$argv[1]"
+        case '*.tar' '*.tar.xz' '*.tar.zst'
+            tar xf "$argv[1]"
+        case '*.bz2'
+            bunzip2 "$argv[1]"
+        case '*.gz'
+            gunzip "$argv[1]"
+        case '*.rar'
+            unrar x "$argv[1]"
+        case '*.zip'
+            unzip "$argv[1]"
+        case '*.7z' '*.7Z'
+            7z x "$argv[1]"
+        case '*'
+            echo "Unsupported archive: $argv[1]" >&2
+            return 1
     end
 end
 

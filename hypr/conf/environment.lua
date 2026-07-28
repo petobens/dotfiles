@@ -1,3 +1,5 @@
+-- luacheck: globals hl
+
 -- Prefer Wayland while retaining XWayland fallbacks for older applications
 local environment = {
     XCURSOR_SIZE = '24',

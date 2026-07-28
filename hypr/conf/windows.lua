@@ -1,3 +1,5 @@
+-- luacheck: globals hl
+
 -- Open applications floating by default
 hl.window_rule({ match = { class = '.*' }, float = true, suppress_event = 'maximize' })
 

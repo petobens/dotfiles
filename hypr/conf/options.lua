@@ -1,3 +1,5 @@
+-- luacheck: globals hl
+
 hl.config({
     general = {
         gaps_in = 4,

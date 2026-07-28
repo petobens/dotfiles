@@ -23,6 +23,7 @@ conform.formatters.taplo = {
 conform.setup({
     formatters_by_ft = {
         ['_'] = { 'trim_whitespace' },
+        fish = { 'fish_indent' },
         ghaction = { 'prettierd' },
         json = { 'jq' },
         lua = { 'stylua' },
