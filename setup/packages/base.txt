@@ -26,6 +26,7 @@ man-db
 man-pages
 networkmanager
 nfs-utils
+nss-mdns
 openssh
 pacman-contrib
 poppler

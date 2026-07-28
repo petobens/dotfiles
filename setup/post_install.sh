@@ -53,10 +53,17 @@ AllowUsers $USER
 EOF
 sudo ssh-keygen -A
 sudo /usr/bin/sshd -t
+
+section 'Configuring local hostname discovery'
 sudo sed -i \
     -e '/^deny-interfaces=docker0,virbr0$/d' \
     -e '/^\[server\]$/a deny-interfaces=docker0,virbr0' \
     /etc/avahi/avahi-daemon.conf
+if ! grep -q '^hosts:.*mdns_minimal' /etc/nsswitch.conf; then
+    sudo sed -i \
+        '/^hosts:/ s/mymachines/mymachines mdns_minimal [NOTFOUND=return]/' \
+        /etc/nsswitch.conf
+fi
 
 section 'Enabling system services'
 sudo systemctl enable scx_loader.service
