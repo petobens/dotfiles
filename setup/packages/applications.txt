@@ -2,7 +2,6 @@ cups
 cups-pk-helper
 firefox
 imv
-ipp-usb
 mpv
 obs-studio
 system-config-printer

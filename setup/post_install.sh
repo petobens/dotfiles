@@ -75,7 +75,6 @@ sudo systemctl enable --now avahi-daemon.service
 sudo systemctl enable --now sshd.service
 sudo systemctl enable bluetooth
 sudo systemctl enable --now cups.socket
-sudo systemctl enable --now ipp-usb.service
 sudo systemctl enable paccache.timer
 
 section 'Configuring login and user services'
