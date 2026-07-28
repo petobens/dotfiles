@@ -87,8 +87,8 @@ is retained between resets and replaced when a new Arch release is available.
 
 ## SSH and updates
 
-The post-install script enables SSH in the VM. It does not enable the server on
-physical laptops.
+The post-install script enables password-based recovery SSH on every
+installation, including the VM and physical laptops.
 
 After a reset, remove the previous host key and authorize the host's existing
 SSH key:
