@@ -35,12 +35,12 @@ WORKERS = 8
 
 PROMPT = """You write short, specific titles for coding-assistant sessions.
 Read the transcript and reply with ONE title of 8 to 10 words that captures what
-the whole session was about and what it accomplished. Prefer the final exchanges
-and actual outcome over the initial request when the topic changes, but do not
-title the session after a tiny final tweak unless that was the main result. Name
-the durable implementation or decision that would matter when finding this
-session later. Plain words only: no quotes, no surrounding punctuation, no
-trailing period. Reply with only the title.
+the whole session was about and what it accomplished. Give extra weight to the
+latest substantial topic and its outcome, even when earlier work occupied more
+of the session. Do not switch titles for a tiny final tweak or incidental
+follow-up. Name the durable implementation, diagnosis, or decision that would
+matter when finding this session later. Plain words only: no quotes, no
+surrounding punctuation, no trailing period. Reply with only the title.
 
 Transcript:
 {transcript}
