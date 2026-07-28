@@ -164,6 +164,19 @@ default_sched = "scx_lavd"
 default_mode = "Auto"
 EOF
 
+    # Keep password-based SSH available for local recovery
+    sudo install -d /etc/ssh/sshd_config.d
+    sudo tee /etc/ssh/sshd_config.d/10-recovery.conf > /dev/null << EOF
+PasswordAuthentication yes
+KbdInteractiveAuthentication no
+PermitRootLogin no
+AllowUsers $USER
+EOF
+    sudo sed -i \
+        -e '/^deny-interfaces=docker0,virbr0$/d' \
+        -e '/^\[server\]$/a deny-interfaces=docker0,virbr0' \
+        /etc/avahi/avahi-daemon.conf
+
     # Enable some services
     echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"
     # Start pipewire
@@ -176,6 +189,8 @@ EOF
     # Time Sync (ntp)
     sudo systemctl enable systemd-timesyncd.service
     sudo systemctl start systemd-timesyncd.service
+    # Local hostname discovery
+    sudo systemctl enable --now avahi-daemon.service
     # Connman
     sudo systemctl enable connman.service
     # Lock
@@ -199,8 +214,12 @@ EOF
     # Disable rfkill (for tlp)
     sudo systemctl mask systemd-rfkill.service
     sudo systemctl mask systemd-rfkill.socket
-    # Keep on-demand services disabled by default
-    sudo systemctl disable --now sshd.service ollama.service
+    # Recovery SSH
+    sudo ssh-keygen -A
+    sudo /usr/bin/sshd -t
+    sudo systemctl enable --now sshd.service
+    # Keep Ollama on demand
+    sudo systemctl disable --now ollama.service
 
     # Remove previous pacman cache dir (we changed it in pacman.conf)
     echo -e "\\033[1;34m--> Removing old pacman cache dir...\\033[0m"
