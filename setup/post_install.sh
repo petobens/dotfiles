@@ -54,6 +54,12 @@ EOF
 sudo ssh-keygen -A
 sudo /usr/bin/sshd -t
 
+section 'Configuring wireless regulatory domain'
+sudo sed -i -E \
+    -e 's/^WIRELESS_REGDOM=/#&/' \
+    -e 's/^#WIRELESS_REGDOM="00"$/WIRELESS_REGDOM="00"/' \
+    /etc/conf.d/wireless-regdom
+
 section 'Configuring local hostname discovery'
 sudo sed -i \
     -e '/^deny-interfaces=docker0,virbr0$/d' \
