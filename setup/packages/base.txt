@@ -1,7 +1,9 @@
 7zip
 bat
 btrfs-progs
+chafa
 curl
+eza
 fastfetch
 fd
 ffmpeg
@@ -21,7 +23,6 @@ libva-utils
 linux
 linux-firmware-intel
 linux-lts
-lsd
 man-db
 man-pages
 networkmanager
@@ -31,6 +32,7 @@ openssh
 pacman-contrib
 poppler
 python
+qrencode
 ripgrep
 rsync
 scx-tools
@@ -42,9 +44,11 @@ thermald
 tlp
 tmux
 trash-cli
+tree
 unrar
 unzip
 wireless-regdb
 yazi
+zbar
 zoxide
 zram-generator

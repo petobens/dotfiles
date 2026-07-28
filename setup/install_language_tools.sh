@@ -34,6 +34,5 @@ npm_packages=(
 npm install --global "${npm_packages[@]}"
 npm list --global --depth=0 "${npm_packages[@]}"
 
-section 'Installing Rust language tools'
+section 'Configuring Rust toolchain'
 rustup default stable
-cargo install cargo-update devicon-lookup

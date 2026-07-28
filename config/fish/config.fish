@@ -33,6 +33,8 @@ abbr -a c clear
 abbr -a md 'mkdir -p'
 abbr -a open xdg-open
 abbr -a ss 'sudo -i'
+abbr -a cp 'cp -i'
+abbr -a mv 'mv -i'
 abbr -a df 'df -h'
 abbr -a rsync 'rsync -auP'
 abbr -a ff fastfetch
@@ -41,6 +43,7 @@ abbr -a fm yazi
 abbr -a dog bat
 abbr -a v nvim
 abbr -a py python
+abbr -a ping 'prettyping --nolegend --last 30'
 abbr -a gs 'git status'
 abbr -a gcl 'git clone'
 abbr -a gco 'git switch'
@@ -48,6 +51,7 @@ abbr -a gcob 'git switch -c'
 abbr -a gcp 'git cherry-pick'
 abbr -a gb 'git branch'
 abbr -a gbd 'git branch -D'
+abbr -a gbdr 'git push origin --delete'
 abbr -a gp 'git push'
 abbr -a gF 'git push --force-with-lease'
 abbr -a gP 'git pull'
@@ -55,9 +59,25 @@ abbr -a gPr 'git pull --rebase'
 abbr -a gf 'git fetch'
 abbr -a gr 'git rebase'
 abbr -a grc 'git rebase --continue'
+abbr -a gra 'git remote add'
 abbr -a gst 'git stash'
 abbr -a gsp 'git stash pop'
+abbr -a gap 'git apply'
+abbr -a grl 'git reset --soft HEAD^'
+abbr -a gcb 'git-forgit checkout_branch'
+abbr -a gdb 'git-forgit branch_delete'
+abbr -a gl 'git-forgit log'
+abbr -a glg 'env FORGIT_LOG_GRAPH_ENABLE=false git-forgit log'
+abbr -a gd 'git-forgit diff'
+abbr -a ga 'git-forgit add'
+abbr -a gsv 'git-forgit stash_show'
+abbr -a ghi 'gh issue'
 abbr -a ghp 'gh pr'
+abbr -a ghr 'gh repo'
+abbr -a ghcp 'gh pr checkout'
+abbr -a nbd 'nbdiff-web HEAD'
+abbr -a aisu ai_session_usage
+abbr -a aisp ai_session_prune
 abbr -a uva 'uv add'
 abbr -a uvad 'uv add --dev'
 abbr -a uvrm 'uv remove'
@@ -73,8 +93,8 @@ abbr -a mpnfs 'sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
 abbr -a mfnfs 'sudo mount synology-flor:/volume1/Shared-DS220 /mnt/nfs'
 abbr -a unfs 'sudo umount /mnt/nfs'
 abbr -a ua sys_update_all
-if type -q lsd
-    abbr -a ls 'lsd -F --color=auto'
+if type -q eza
+    abbr -a ls 'eza -F --color=auto --icons=auto'
 end
 if type -q unimatrix
     abbr -a iamneo 'unimatrix -s 90'
@@ -86,6 +106,7 @@ if type -q zoxide
 end
 if type -q fzf
     fzf --fish | source
+    source "$__fish_config_dir/fzf_workflows.fish"
 end
 if type -q starship
     starship init fish | source
@@ -104,6 +125,28 @@ end
 function nfssh --description 'SSH into the Flor Synology'
     set -lx SSHPASS (pass show -o synology/synology-flor/flor)
     sshpass -e ssh synology-flor -t 'cd /volume1/Shared-DS220; bash --login'
+end
+
+function codex --description 'Run Codex with the GitHub MCP token'
+    set -l github_token (pass show git/github/petobens/api-key)
+    or return
+    set -lx GITHUB_TOKEN "$github_token"
+    command codex $argv
+end
+
+function claude --description 'Run Claude with the GitHub MCP token'
+    set -l github_token (pass show git/github/petobens/api-key)
+    or return
+    set -lx GITHUB_TOKEN "$github_token"
+    command claude $argv
+end
+
+function gdp --description 'Write the unstaged Git diff to a file'
+    git diff > "$argv[1]"
+end
+
+function gdcp --description 'Write the staged Git diff to a file'
+    git diff --cached > "$argv[1]"
 end
 
 function y --description 'Run Yazi and change to its final directory'
@@ -181,8 +224,8 @@ function sys_update_all --description 'Update system, firmware, and language too
         printf '%s\n-> Node packages...%s\n' $section_color $normal_color
         npm update --global --no-fund
     end
-    if type -q cargo-install-update
-        printf '%s\n-> Rust packages...%s\n' $section_color $normal_color
-        cargo install-update --all
+    if type -q rustup
+        printf '%s\n-> Rust toolchains...%s\n' $section_color $normal_color
+        rustup update
     end
 end

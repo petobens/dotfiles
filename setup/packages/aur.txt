@@ -1,11 +1,17 @@
 brave-bin
 claude-code
+downgrade
+dragon-drop
+forgit
+google-cloud-cli
 hadolint-bin
 localsend-bin
 microsoft-edge-dev-bin
+neovim-git
 onedrive-abraunegg
 onlyoffice-bin
 pandoc-bin
+prettyping
 slack-desktop
 spotify
 zoom

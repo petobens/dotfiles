@@ -1,3 +1,4 @@
+act
 actionlint
 base-devel
 blas-openblas
@@ -15,7 +16,6 @@ lua
 luacheck
 luarocks
 markdownlint-cli
-neovim
 nodejs
 npm
 ollama

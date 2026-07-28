@@ -1,4 +1,5 @@
 cups
+cups-pdf
 cups-pk-helper
 firefox
 imv

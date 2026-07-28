@@ -1,6 +1,7 @@
 edk2-ovmf
 firefox
 fwupd
+google-cloud-cli
 intel-lpmd
 microsoft-edge-dev-bin
 ollama
