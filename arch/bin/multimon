@@ -29,10 +29,8 @@ def multi(how, direction):
 
 
 def _xrandr(how, direction):
-    if how == 'init' or how == 'hotplug':
-        # When starting or plugging and unplugging (using udev rules) wait a bit before
-        # querying xrandr (because xrandr seems to lag)
-        # FIXME: Must run `sudo udevadm control --reload` for hotplug?
+    if how == 'init':
+        # When starting, wait a bit before querying xrandr because it seems to lag
         sleep(0.5)
 
     xrandr_out = [
@@ -70,15 +68,15 @@ def _xrandr(how, direction):
             print(f"Third monitor: {third_n}-{third_w}x{third_h}")
             conn.remove(third)
 
-    if how == 'init' or how == 'hotplug':
+    if how == 'init':
         how = 'primary' if nr_monitors == 1 else 'multi'
 
-    if how in ('mirror', 'multi') and nr_monitors < 2:
+    if how in ('mirror', 'multi', 'multi-1920') and nr_monitors < 2:
         raise ValueError(f'{how} mode requires at least 2 connected monitors')
 
     if how == 'primary':
         dpi_scale = 2 if prim_w > HIDPI_WIDTH_THRESHOLD else 1
-        cmd = f'--output {prim_n} --primary --dpi {DPI * dpi_scale}'
+        cmd = f'--output {prim_n} --preferred --primary --dpi {DPI * dpi_scale}'
         # For 4k laptop reduce resolution a bit (such as with x1-carbon)
         # Won't use as is it doesn't look nice
         # if prim_w > 3200:
@@ -93,9 +91,14 @@ def _xrandr(how, direction):
             cmd += f'--output {third_n} --auto --scale-from {prim_w}x{prim_h} --same-as {prim_n} '  # noqa
             keep_turnon += [third_n]
         dpi_scale = 2 if prim_w > HIDPI_WIDTH_THRESHOLD else 1
-        cmd += f'--output {prim_n} --dpi {DPI * dpi_scale}'
+        cmd += f'--output {prim_n} --preferred --dpi {DPI * dpi_scale}'
 
-    elif how == 'multi':
+    elif how in ('multi', 'multi-1920'):
+        if how == 'multi-1920' and prim_w > HIDPI_WIDTH_THRESHOLD:
+            prim_w, prim_h = 1920, 1200
+            prim_mode = '--mode 1920x1200 --set "scaling mode" "Full aspect"'
+        else:
+            prim_mode = '--preferred'
         sec_scale_factor, sec_scale = _scale(sec_w, nr_monitors)
         cmd = f'--output {sec_n} {sec_scale} --auto --pos 0x0 '
         wpos = int(sec_scale_factor * sec_w)
@@ -118,7 +121,8 @@ def _xrandr(how, direction):
             if prim_w > HIDPI_WIDTH_THRESHOLD and sec_w > HIDPI_WIDTH_THRESHOLD:
                 dpi_scale = 2
         cmd += (
-            f'--output {prim_n} --primary --pos {wpos}x{hpos} --dpi {DPI * dpi_scale}'
+            f'--output {prim_n} {prim_mode} --primary --pos {wpos}x{hpos} '
+            f'--dpi {DPI * dpi_scale}'
         )
 
     # Turn off unused monitors
@@ -351,7 +355,7 @@ if __name__ == '__main__':
     HD_WIDTH = 1920
     HIDPI_WIDTH_THRESHOLD = 3600
     DPI = 96
-    VALID_MODES = ['init', 'hotplug', 'primary', 'mirror', 'multi']
+    VALID_MODES = ['init', 'primary', 'mirror', 'multi', 'multi-1920']
     VALID_DIRECTIONS = ['right', 'below']
 
     chosen_mode = parse_args.how
