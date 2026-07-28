@@ -172,10 +172,17 @@ KbdInteractiveAuthentication no
 PermitRootLogin no
 AllowUsers $USER
 EOF
+
+    # Configure local hostname discovery
     sudo sed -i \
         -e '/^deny-interfaces=docker0,virbr0$/d' \
         -e '/^\[server\]$/a deny-interfaces=docker0,virbr0' \
         /etc/avahi/avahi-daemon.conf
+    if ! grep -q '^hosts:.*mdns_minimal' /etc/nsswitch.conf; then
+        sudo sed -i \
+            '/^hosts:/ s/mymachines/mymachines mdns_minimal [NOTFOUND=return]/' \
+            /etc/nsswitch.conf
+    fi
 
     # Enable some services
     echo -e "\\033[1;34m--> Enabling some systemd services...\\033[0m"

@@ -126,6 +126,7 @@ $yay_cmd mpv
 $yay_cmd networkmanager
 $yay_cmd nfs-utils
 $yay_cmd nmap
+$yay_cmd nss-mdns
 $yay_cmd ntfs-3g
 $yay_cmd pavucontrol
 $yay_cmd picom
@@ -139,6 +140,7 @@ $yay_cmd udiskie
 $yay_cmd unclutter-xfixes-git
 $yay_cmd update-grub
 $yay_cmd upower
+$yay_cmd wireless-regdb
 $yay_cmd xclip
 $yay_cmd xdg-user-dirs
 $yay_cmd xdotool
