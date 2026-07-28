@@ -173,6 +173,12 @@ PermitRootLogin no
 AllowUsers $USER
 EOF
 
+    # Use world regulatory rules until Wi-Fi learns the access point country
+    sudo sed -i -E \
+        -e 's/^WIRELESS_REGDOM=/#&/' \
+        -e 's/^#WIRELESS_REGDOM="00"$/WIRELESS_REGDOM="00"/' \
+        /etc/conf.d/wireless-regdom
+
     # Configure local hostname discovery
     sudo sed -i \
         -e '/^deny-interfaces=docker0,virbr0$/d' \
