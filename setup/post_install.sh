@@ -27,6 +27,21 @@ INTEL_GPU_POWER_PROFILE_ON_BAT=base
 WIFI_PWR_ON_BAT=off
 EOF
 
+section 'Configuring recovery SSH'
+sudo install -d /etc/ssh/sshd_config.d
+sudo tee /etc/ssh/sshd_config.d/10-recovery.conf > /dev/null << EOF
+PasswordAuthentication yes
+KbdInteractiveAuthentication no
+PermitRootLogin no
+AllowUsers $USER
+EOF
+sudo ssh-keygen -A
+sudo /usr/bin/sshd -t
+sudo sed -i \
+    -e '/^deny-interfaces=docker0,virbr0$/d' \
+    -e '/^\[server\]$/a deny-interfaces=docker0,virbr0' \
+    /etc/avahi/avahi-daemon.conf
+
 section 'Configuring login and system services'
 # Fish login sessions start Hyprland after tty1 authentication
 sudo chsh -s "$(command -v fish)" "$USER"
@@ -42,11 +57,10 @@ if ! systemd-detect-virt --vm --quiet; then
     if [[ ! -e /sys/devices/platform/thinkpad_acpi/dytc_lapmode ]]; then
         sudo systemctl enable --now thermald.service
     fi
-else
-    sudo systemctl enable sshd
 fi
 sudo systemctl enable paccache.timer
 sudo systemctl enable scx_loader.service
+sudo systemctl enable --now sshd.service
 sudo systemctl enable tlp
 systemctl --user enable gnome-keyring-daemon.socket
 systemctl --user enable pipewire
