@@ -30,6 +30,8 @@ or environment, for example `nvim/`, `python/`, and `arch/`.
   code.
 - For Bash scripts, run `shfmt -w -i 4 -ci -sr <file>` and
   `shellcheck <file>`.
+- For Fish scripts, run `fish_indent -w <file>` and
+  `fish --no-execute <file>`.
 
 ## Neovim (`nvim/`)
 

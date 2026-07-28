@@ -75,8 +75,9 @@ if [[ "$install_node" = true ]]; then
     $yay_cmd npm
 fi
 
-# Alacritty, kitty, neovim and tmux and more bash
+# Shells, terminals, Neovim, and tmux
 $yay_cmd alacritty
+$yay_cmd fish
 $yay_cmd kitty
 $yay_cmd neovim-git
 $yay_cmd tree-sitter-cli
