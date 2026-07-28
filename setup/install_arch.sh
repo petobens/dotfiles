@@ -210,9 +210,11 @@ sed -i -E \
     -e 's|^#fallback_uki=.*|fallback_uki="/boot/EFI/Linux/arch-linux-fallback.efi"|' \
     /mnt/etc/mkinitcpio.d/linux.preset
 sed -i -E \
-    -e "s|^PRESETS=.*|PRESETS=('default')|" \
+    -e "s|^PRESETS=.*|PRESETS=('default' 'fallback')|" \
     -e 's|^default_image=|#default_image=|' \
     -e 's|^#default_uki=.*|default_uki="/boot/EFI/Linux/arch-linux-lts.efi"|' \
+    -e 's|^fallback_image=|#fallback_image=|' \
+    -e 's|^#fallback_uki=.*|fallback_uki="/boot/EFI/Linux/arch-linux-lts-fallback.efi"|' \
     /mnt/etc/mkinitcpio.d/linux-lts.preset
 install -Dm644 /dev/stdin /mnt/boot/loader/loader.conf << 'EOF'
 default arch-linux.efi
