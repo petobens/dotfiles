@@ -20,7 +20,9 @@ hl.config({
     animations = { enabled = true },
     dwindle = { preserve_split = true },
     input = {
-        kb_layout = 'us',
+        kb_layout = 'personal,personal',
+        kb_variant = 'us,es',
+        kb_options = 'grp:win_space_toggle,ctrl:nocaps',
         follow_mouse = 1,
         sensitivity = 0,
         touchpad = {

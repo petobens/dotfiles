@@ -50,6 +50,7 @@ symlink "$repo/config/rofi" "$HOME/.config/rofi"
 symlink "$repo/config/starship.toml" "$HOME/.config/starship.toml"
 symlink "$repo/config/tmux" "$HOME/.config/tmux"
 symlink "$repo/config/waybar" "$HOME/.config/waybar"
+symlink "$repo/config/xkb" "$HOME/.config/xkb"
 symlink "$repo/config/yazi" "$HOME/.config/yazi"
 symlink "$repo/config/zathura" "$HOME/.config/zathura"
 

@@ -5,22 +5,48 @@ set -gx PAGER less
 set -gx TERMINAL ghostty
 set -gx BROWSER xdg-open
 set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgrep/ripgreprc"
+set -gx SHELLCHECK_OPTS '-e SC1090'
 fish_add_path \
     "$HOME/bin" \
     "$HOME/.local/bin" \
     "$HOME/.cargo/bin" \
     "$HOME/.npm-global/bin"
+set -l texlive_bins /usr/local/texlive/*/bin/x86_64-linux
+test (count $texlive_bins) -eq 0; or fish_add_path "$texlive_bins[-1]"
 
 set -g fish_greeting
 set -g fish_history main
-fish_vi_key_bindings
+
+function __set_vi_key_bindings
+    set -g fish_key_bindings fish_vi_key_bindings
+    bind -M default H beginning-of-line
+    bind -M default L end-of-line
+    bind -M default \ce edit_command_buffer
+    bind -M default j true
+    bind -M default k true
+    bind -M default v true
+end
+
+function __toggle_key_bindings
+    if test "$fish_key_bindings" = fish_vi_key_bindings
+        set -g fish_key_bindings fish_default_key_bindings
+        bind --erase -M default H L \ce j k v
+        bind -M default \cw __toggle_key_bindings
+    else
+        __set_vi_key_bindings
+    end
+end
+
+__set_vi_key_bindings
 bind -M insert -m default jj repaint-mode
 bind -M insert \cp history-search-backward
 bind -M insert \cn history-search-forward
 bind -M insert \ce end-of-line
 bind -M insert \ca beginning-of-line
-bind -M default H beginning-of-line
-bind -M default L end-of-line
+bind -M insert \cx backward-kill-line
+
+bind -M default \cw __toggle_key_bindings
+bind -M insert \cw __toggle_key_bindings
 
 # Short commands used throughout the terminal workflow
 abbr -a u 'cd ..'
@@ -81,6 +107,7 @@ abbr -a aisp ai_session_prune
 abbr -a uva 'uv add'
 abbr -a uvad 'uv add --dev'
 abbr -a uvrm 'uv remove'
+abbr -a uvrmd 'uv remove --dev'
 abbr -a uvs 'uv sync'
 abbr -a uvi 'uv sync --locked'
 abbr -a uvl 'uv pip list'
@@ -89,6 +116,7 @@ abbr -a uvp 'uv run python'
 abbr -a uvd 'uv run python -m pdb -cc'
 abbr -a uvt 'uv run pytest -n auto --cov'
 abbr -a uvh 'uv run pre-commit run --all-files'
+abbr -a uvj 'uv run jupyter lab'
 abbr -a mpnfs 'sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
 abbr -a mfnfs 'sudo mount synology-flor:/volume1/Shared-DS220 /mnt/nfs'
 abbr -a unfs 'sudo umount /mnt/nfs'
