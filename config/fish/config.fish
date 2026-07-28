@@ -1,4 +1,4 @@
-# Interactive shell defaults
+# Environment and paths
 set -gx EDITOR nvim
 set -gx VISUAL nvim
 set -gx PAGER less
@@ -14,9 +14,11 @@ fish_add_path \
 set -l texlive_bins /usr/local/texlive/*/bin/x86_64-linux
 test (count $texlive_bins) -eq 0; or fish_add_path "$texlive_bins[-1]"
 
+# Shell behavior
 set -g fish_greeting
 set -g fish_history main
 
+# Key bindings
 function __set_vi_key_bindings
     set -g fish_key_bindings fish_vi_key_bindings
     bind -M default H beginning-of-line
@@ -48,7 +50,19 @@ bind -M insert \cx backward-kill-line
 bind -M default \cw __toggle_key_bindings
 bind -M insert \cw __toggle_key_bindings
 
-# Short commands used throughout the terminal workflow
+# Interactive tools
+if type -q zoxide
+    zoxide init fish | source
+end
+if type -q fzf
+    fzf --fish | source
+    source "$__fish_config_dir/fzf_workflows.fish"
+end
+if type -q starship
+    starship init fish | source
+end
+
+# Navigation and shell abbreviations
 abbr -a u 'cd ..'
 abbr -a 2u 'cd ../..'
 abbr -a 3u 'cd ../../..'
@@ -59,6 +73,8 @@ abbr -a c clear
 abbr -a md 'mkdir -p'
 abbr -a open xdg-open
 abbr -a ss 'sudo -i'
+
+# File and command abbreviations
 abbr -a cp 'cp -i'
 abbr -a mv 'mv -i'
 abbr -a df 'df -h'
@@ -70,6 +86,14 @@ abbr -a dog bat
 abbr -a v nvim
 abbr -a py python
 abbr -a ping 'prettyping --nolegend --last 30'
+if type -q eza
+    abbr -a ls 'eza -F --color=auto --icons=auto'
+end
+if type -q unimatrix
+    abbr -a iamneo 'unimatrix -s 90'
+end
+
+# Git abbreviations
 abbr -a gs 'git status'
 abbr -a gcl 'git clone'
 abbr -a gco 'git switch'
@@ -97,13 +121,19 @@ abbr -a glg 'env FORGIT_LOG_GRAPH_ENABLE=false git-forgit log'
 abbr -a gd 'git-forgit diff'
 abbr -a ga 'git-forgit add'
 abbr -a gsv 'git-forgit stash_show'
+
+# GitHub abbreviations
 abbr -a ghi 'gh issue'
 abbr -a ghp 'gh pr'
 abbr -a ghr 'gh repo'
 abbr -a ghcp 'gh pr checkout'
-abbr -a nbd 'nbdiff-web HEAD'
+
+# AI abbreviations
 abbr -a aisu ai_session_usage
 abbr -a aisp ai_session_prune
+
+# Python abbreviations
+abbr -a nbd 'nbdiff-web HEAD'
 abbr -a uva 'uv add'
 abbr -a uvad 'uv add --dev'
 abbr -a uvrm 'uv remove'
@@ -117,64 +147,19 @@ abbr -a uvd 'uv run python -m pdb -cc'
 abbr -a uvt 'uv run pytest -n auto --cov'
 abbr -a uvh 'uv run pre-commit run --all-files'
 abbr -a uvj 'uv run jupyter lab'
+
+# Network storage abbreviations
 abbr -a mpnfs 'sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
 abbr -a mfnfs 'sudo mount synology-flor:/volume1/Shared-DS220 /mnt/nfs'
 abbr -a unfs 'sudo umount /mnt/nfs'
+
+# System abbreviations
 abbr -a ua sys_update_all
-if type -q eza
-    abbr -a ls 'eza -F --color=auto --icons=auto'
-end
-if type -q unimatrix
-    abbr -a iamneo 'unimatrix -s 90'
-end
 
-# Initialize interactive tools
-if type -q zoxide
-    zoxide init fish | source
-end
-if type -q fzf
-    fzf --fish | source
-    source "$__fish_config_dir/fzf_workflows.fish"
-end
-if type -q starship
-    starship init fish | source
-end
-
+# Terminal and file helpers
 function tm --description 'Attach to the main tmux session'
     set -l session (test "$USER" = pedro; and echo petobens; or echo "$USER")
     command tmux -f "$HOME/.config/tmux/tmux.conf" new -A -s "$session" $argv
-end
-
-function npssh --description 'SSH into the DS220 Synology'
-    set -lx SSHPASS (pass show -o synology/synology-ds/petobens)
-    sshpass -e ssh synology -t 'cd /volume1/Shared-DS220; bash --login'
-end
-
-function nfssh --description 'SSH into the Flor Synology'
-    set -lx SSHPASS (pass show -o synology/synology-flor/flor)
-    sshpass -e ssh synology-flor -t 'cd /volume1/Shared-DS220; bash --login'
-end
-
-function codex --description 'Run Codex with the GitHub MCP token'
-    set -l github_token (pass show git/github/petobens/api-key)
-    or return
-    set -lx GITHUB_TOKEN "$github_token"
-    command codex $argv
-end
-
-function claude --description 'Run Claude with the GitHub MCP token'
-    set -l github_token (pass show git/github/petobens/api-key)
-    or return
-    set -lx GITHUB_TOKEN "$github_token"
-    command claude $argv
-end
-
-function gdp --description 'Write the unstaged Git diff to a file'
-    git diff >"$argv[1]"
-end
-
-function gdcp --description 'Write the staged Git diff to a file'
-    git diff --cached >"$argv[1]"
 end
 
 function y --description 'Run Yazi and change to its final directory'
@@ -184,23 +169,6 @@ function y --description 'Run Yazi and change to its final directory'
         builtin cd -- "$cwd"
     end
     command rm -f -- "$tmp"
-end
-
-function uvsh --description 'Activate the nearest uv virtual environment'
-    set -l dir "$PWD"
-    while test "$dir" != /
-        if test -f "$dir/pyproject.toml"
-            if test -f "$dir/.venv/bin/activate.fish"
-                source "$dir/.venv/bin/activate.fish"
-                return
-            end
-            echo "Python venv not found: $dir/.venv" >&2
-            return 1
-        end
-        set dir (path dirname "$dir")
-    end
-    echo 'pyproject.toml not found in a parent directory' >&2
-    return 1
 end
 
 function up --description 'Extract an archive'
@@ -231,6 +199,60 @@ function up --description 'Extract an archive'
     end
 end
 
+# Git helpers
+function gdp --description 'Write the unstaged Git diff to a file'
+    git diff >"$argv[1]"
+end
+
+function gdcp --description 'Write the staged Git diff to a file'
+    git diff --cached >"$argv[1]"
+end
+
+# Python helpers
+function uvsh --description 'Activate the nearest uv virtual environment'
+    set -l dir "$PWD"
+    while test "$dir" != /
+        if test -f "$dir/pyproject.toml"
+            if test -f "$dir/.venv/bin/activate.fish"
+                source "$dir/.venv/bin/activate.fish"
+                return
+            end
+            echo "Python venv not found: $dir/.venv" >&2
+            return 1
+        end
+        set dir (path dirname "$dir")
+    end
+    echo 'pyproject.toml not found in a parent directory' >&2
+    return 1
+end
+
+# Remote access helpers
+function npssh --description 'SSH into the DS220 Synology'
+    set -lx SSHPASS (pass show -o synology/synology-ds/petobens)
+    sshpass -e ssh synology -t 'cd /volume1/Shared-DS220; bash --login'
+end
+
+function nfssh --description 'SSH into the Flor Synology'
+    set -lx SSHPASS (pass show -o synology/synology-flor/flor)
+    sshpass -e ssh synology-flor -t 'cd /volume1/Shared-DS220; bash --login'
+end
+
+# AI helpers
+function codex --description 'Run Codex with the GitHub MCP token'
+    set -l github_token (pass show git/github/petobens/api-key)
+    or return
+    set -lx GITHUB_TOKEN "$github_token"
+    command codex $argv
+end
+
+function claude --description 'Run Claude with the GitHub MCP token'
+    set -l github_token (pass show git/github/petobens/api-key)
+    or return
+    set -lx GITHUB_TOKEN "$github_token"
+    command claude $argv
+end
+
+# System maintenance
 function sys_update_all --description 'Update system, firmware, and language tooling'
     sudo true; or return
     set -l section_color (set_color --bold blue)
