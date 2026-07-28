@@ -58,7 +58,7 @@ sudo sed -i \
     -e '/^\[server\]$/a deny-interfaces=docker0,virbr0' \
     /etc/avahi/avahi-daemon.conf
 
-section 'Configuring login and system services'
+section 'Enabling system services'
 sudo systemctl enable scx_loader.service
 sudo systemctl enable tlp
 if ! systemd-detect-virt --vm --quiet; then
@@ -77,6 +77,8 @@ sudo systemctl enable bluetooth
 sudo systemctl enable --now cups.socket
 sudo systemctl enable --now ipp-usb.service
 sudo systemctl enable paccache.timer
+
+section 'Configuring login and user services'
 # Fish login sessions start Hyprland after tty1 authentication
 sudo chsh -s "$(command -v fish)" "$USER"
 systemctl --user enable gnome-keyring-daemon.socket

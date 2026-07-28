@@ -32,7 +32,8 @@ symlink_if_exists() {
 
 section 'Symlinking configuration'
 
-# Desktop and shell configuration
+# Desktop, shell, and command-line configuration
+symlink "$repo/bin" "$HOME/bin"
 symlink "$repo/config/bat" "$HOME/.config/bat"
 symlink "$repo/config/brave-flags.conf" "$HOME/.config/brave-flags.conf"
 symlink "$repo/config/fish" "$HOME/.config/fish"
@@ -44,7 +45,6 @@ symlink "$repo/config/microsoft-edge-dev-flags.conf" \
 symlink "$repo/config/mpv" "$HOME/.config/mpv"
 symlink "$repo/nvim" "$HOME/.config/nvim"
 symlink "$repo/config/onedrive" "$HOME/.config/onedrive"
-symlink "$repo/config/pip" "$HOME/.config/pip"
 symlink "$repo/config/ripgrep" "$HOME/.config/ripgrep"
 symlink "$repo/config/rofi" "$HOME/.config/rofi"
 symlink "$repo/config/starship.toml" "$HOME/.config/starship.toml"
@@ -53,20 +53,28 @@ symlink "$repo/config/waybar" "$HOME/.config/waybar"
 symlink "$repo/config/yazi" "$HOME/.config/yazi"
 symlink "$repo/config/zathura" "$HOME/.config/zathura"
 
-# Credentials and agent configuration
-symlink "$repo/bin" "$HOME/bin"
+# Agent configuration
 symlink "$repo/config/claude/settings.json" "$HOME/.claude/settings.json"
 symlink "$repo/config/claude/statusline.sh" "$HOME/.claude/statusline.sh"
 symlink "$repo/config/codex/config.toml" "$HOME/.codex/config.toml"
+skills_dir="$repo/../ai-harness/skills"
+symlink_if_exists "$skills_dir" "$HOME/.agents/skills"
+symlink_if_exists "$skills_dir" "$HOME/.claude/skills"
+
+# Credentials
 mkdir -p "$HOME/.gnupg"
 chmod 700 "$HOME/.gnupg"
 symlink "$repo/config/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
+symlink /usr/bin/gopass "$HOME/.local/bin/pass"
+symlink_if_exists "$HOME/OneDrive/programming/arch/git/.netrc.gpg" "$HOME/.netrc.gpg"
+# SSH material appears after the first OneDrive synchronization
+symlink_if_exists "$HOME/OneDrive/programming/arch/ssh/config" "$HOME/.ssh/config"
+symlink_if_exists "$HOME/OneDrive/programming/arch/ssh/id_rsa.pub" "$HOME/.ssh/id_rsa.pub"
 
 # Formatter and linter configuration
 symlink "$repo/config/linters/hadolint.yaml" "$HOME/.config/hadolint.yaml"
 symlink "$repo/config/linters/luacheckrc" "$HOME/.config/.luacheckrc"
 symlink "$repo/config/linters/markdownlint.json" "$HOME/.markdownlint.json"
-symlink "$repo/config/pgcli/config" "$HOME/.config/pgcli/config"
 symlink "$repo/config/linters/prettierrc.yaml" "$HOME/.prettierrc.yaml"
 symlink "$repo/config/linters/sqlfluff" "$HOME/.sqlfluff"
 symlink "$repo/config/linters/stylua.toml" "$HOME/.config/stylua.toml"
@@ -82,6 +90,8 @@ symlink "$repo/config/python/matplotlib" "$HOME/.config/matplotlib"
 symlink "$repo/config/python/mypy.ini" "$HOME/.mypy.ini"
 symlink "$repo/config/python/pdbrc" "$HOME/.pdbrc"
 symlink "$repo/config/python/pdbrc.py" "$HOME/.pdbrc.py"
+symlink "$repo/config/pgcli/config" "$HOME/.config/pgcli/config"
+symlink "$repo/config/pip" "$HOME/.config/pip"
 symlink "$repo/config/python/ruff" "$HOME/.config/ruff"
 
 # Home-directory defaults
@@ -91,16 +101,6 @@ symlink "$repo/config/home/gitconfig" "$HOME/.gitconfig"
 symlink "$repo/config/home/gitignore" "$HOME/.gitignore"
 symlink "$repo/config/home/lesskey" "$HOME/.lesskey"
 symlink "$repo/config/home/surfingkeysrc.js" "$HOME/.surfingkeysrc"
-
-# Optional repositories and synchronized credentials
-skills_dir="$repo/../ai-harness/skills"
-symlink_if_exists "$skills_dir" "$HOME/.agents/skills"
-symlink_if_exists "$skills_dir" "$HOME/.claude/skills"
-symlink /usr/bin/gopass "$HOME/.local/bin/pass"
-symlink_if_exists "$HOME/OneDrive/programming/arch/git/.netrc.gpg" "$HOME/.netrc.gpg"
-# SSH material appears after the first OneDrive synchronization
-symlink_if_exists "$HOME/OneDrive/programming/arch/ssh/config" "$HOME/.ssh/config"
-symlink_if_exists "$HOME/OneDrive/programming/arch/ssh/id_rsa.pub" "$HOME/.ssh/id_rsa.pub"
 
 # User data directories
 mkdir -p "$HOME/Pictures/Screenshots"
