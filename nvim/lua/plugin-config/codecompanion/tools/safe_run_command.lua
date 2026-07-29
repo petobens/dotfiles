@@ -107,6 +107,7 @@ tool.schema['function'].description =
 tool.opts = vim.tbl_deep_extend('force', tool.opts or {}, {
     allowed_in_yolo_mode = false,
     require_cmd_approval = true,
+    timeout = 300000,
     require_approval_before = function(run_tool)
         local cmd = run_tool and run_tool.args and run_tool.args.cmd
         return not is_whitelisted(cmd)
