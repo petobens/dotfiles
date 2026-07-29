@@ -18,7 +18,6 @@ hl.on('hyprland.start', function()
     -- Session services
     hl.exec_cmd('hypridle')
     hl.exec_cmd('systemctl --user start hyprpolkitagent')
-    hl.exec_cmd('systemctl --user start gnome-keyring-daemon.socket')
 
     -- Hardware integration
     hl.exec_cmd('blueman-applet')

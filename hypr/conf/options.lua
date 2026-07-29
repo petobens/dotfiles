@@ -32,6 +32,7 @@ hl.config({
     },
     animations = { enabled = true },
     dwindle = { preserve_split = true },
+    ecosystem = { no_update_news = true },
     input = {
         follow_mouse = 1,
         kb_layout = 'personal,personal',

@@ -11,6 +11,17 @@ section() {
         "$current_step" "$total_steps" "$1"
 }
 
+ensure_pam_rule() {
+    local file=$1 anchor=$2 rule=$3
+    local rule_pattern=${rule// /[[:space:]]+}
+    grep -Eq "^$rule_pattern$" "$file" && return
+    grep -Eq "$anchor" "$file" || {
+        printf 'PAM anchor not found in %s: %s\n' "$file" "$anchor" >&2
+        return 1
+    }
+    sudo sed -i -E "/$anchor/a $rule" "$file"
+}
+
 section 'Configuring CPU scheduler'
 sudo install -d /etc/scx_loader
 sudo tee /etc/scx_loader/config.toml > /dev/null << 'EOF'
@@ -99,6 +110,18 @@ sudo systemctl enable paccache.timer
 section 'Configuring login and user services'
 # Fish login sessions start Hyprland after tty1 authentication
 sudo chsh -s "$(command -v fish)" "$USER"
+ensure_pam_rule \
+    /etc/pam.d/login \
+    '^auth[[:space:]]+include[[:space:]]+system-local-login$' \
+    'auth optional pam_gnome_keyring.so'
+ensure_pam_rule \
+    /etc/pam.d/login \
+    '^session[[:space:]]+include[[:space:]]+system-local-login$' \
+    'session optional pam_gnome_keyring.so auto_start'
+ensure_pam_rule \
+    /etc/pam.d/passwd \
+    '^password[[:space:]]+include[[:space:]]+system-auth$' \
+    'password optional pam_gnome_keyring.so'
 systemctl --user enable gnome-keyring-daemon.socket
 systemctl --user enable pipewire
 systemctl --user enable pipewire-pulse
