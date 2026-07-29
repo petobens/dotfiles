@@ -109,9 +109,6 @@ local plugins = {
             { 'MattiasMTS/cmp-dbee', branch = 'ms/v2' },
         },
         build = function()
-            -- Reload modules that may have been cached before Lazy updated Blink
-            package.loaded['blink.cmp'] = nil
-            package.loaded['blink.lib.native.managed'] = nil
             require('blink.cmp').build():pwait()
         end,
         event = 'InsertEnter',
