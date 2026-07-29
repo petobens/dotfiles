@@ -93,7 +93,11 @@ local tools = {
     safe_run_command = module_tool(
         'Run approved safe shell commands, require approval otherwise',
         'safe_run_command',
-        nil
+        {
+            allowed_in_yolo_mode = false,
+            require_cmd_approval = true,
+            timeout = 300000,
+        }
     ),
     ---- Gdrive
     gdrive_search = module_tool(

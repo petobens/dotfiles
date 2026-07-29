@@ -105,9 +105,6 @@ tool.schema['function'].name = 'safe_run_command'
 tool.schema['function'].description =
     'Run approved safe shell commands, require approval otherwise'
 tool.opts = vim.tbl_deep_extend('force', tool.opts or {}, {
-    allowed_in_yolo_mode = false,
-    require_cmd_approval = true,
-    timeout = 300000,
     require_approval_before = function(run_tool)
         local cmd = run_tool and run_tool.args and run_tool.args.cmd
         return not is_whitelisted(cmd)
