@@ -26,6 +26,7 @@ conform.setup({
         fish = { 'fish_indent' },
         ghaction = { 'prettierd' },
         json = { 'jq' },
+        jsonc = { 'prettierd' },
         lua = { 'stylua' },
         markdown = { 'prettierd', 'injected' },
         python = { 'ruff_fix', 'ruff_format' },
