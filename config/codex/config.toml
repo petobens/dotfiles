@@ -8,6 +8,7 @@ model_reasoning_effort = "medium"
 # Permissions/Approvals
 default_permissions = "workspace_network" # Allow writes inside the workspace
 approval_policy = "on-request"            # Ask before acting outside workspace
+approvals_reviewer = "auto_review"        # Automatically review routine escalations
 
 # Custom workspace profile with outbound network access
 [permissions.workspace_network]
