@@ -20,3 +20,6 @@ claude-code
 google-cloud-cli
 hadolint-bin
 neovim-git
+
+# Fonts
+ttf-ms-fonts

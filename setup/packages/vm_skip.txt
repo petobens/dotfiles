@@ -11,6 +11,7 @@ microsoft-edge-dev-bin
 onlyoffice-bin
 slack-desktop
 spotify
+ttf-ms-fonts
 zoom
 
 # Development and virtualization
