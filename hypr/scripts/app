@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+cycle=false
+
 # Resolve the requested app's launch and matching rules
 case ${1:-} in
+    audio)
+        tag=audio
+        class='^(hyprpwcenter|org.hyprland.hyprpwcenter)$'
+        workspace=current
+        command='hyprpwcenter'
+        ;;
+    bluetooth)
+        tag=bluetooth
+        class='^(blueman-manager|Blueman-manager)$'
+        workspace=current
+        command='blueman-manager'
+        ;;
     brave)
         tag=brave
         class='^brave-browser$'
@@ -21,11 +35,24 @@ case ${1:-} in
         workspace=1
         command='microsoft-edge-dev --class=edge-clickup --new-window --app=https://app.clickup.com'
         ;;
+    docker)
+        tag=docker
+        class='^docker-info$'
+        workspace=current
+        command="ghostty --class=docker-info --title=docker-info -e sh -c 'docker info | less +F'"
+        ;;
     edge)
         tag=edge
         class='^microsoft-edge-dev$'
         workspace=1
         command='microsoft-edge-dev'
+        ;;
+    files)
+        tag=files
+        class='^yazi$'
+        workspace=current
+        working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
+        command="ghostty --class=yazi --title=yazi --working-directory=\"$working_directory\" -e yazi"
         ;;
     slack)
         tag=slack
@@ -57,6 +84,38 @@ case ${1:-} in
         workspace=2
         command='brave --class=brave-gmail --new-window --app=https://mail.google.com'
         ;;
+    htop)
+        tag=htop
+        class='^htop$'
+        workspace=current
+        command='ghostty --class=htop --title=htop -e htop'
+        ;;
+    images)
+        tag=images
+        class='^imv$'
+        workspace=current
+        command='imv ~/Pictures'
+        cycle=true
+        ;;
+    numbers)
+        tag=numbers
+        class='^numbers$'
+        workspace=current
+        command='ghostty --class=numbers --title=numbers -e ipython'
+        ;;
+    onedrive)
+        tag=onedrive
+        class='^onedrive$'
+        workspace=current
+        command='ghostty --class=onedrive --title=OneDrive -e journalctl --user-unit onedrive -f'
+        ;;
+    quickterm)
+        tag=quickterm
+        class='^quickterm$'
+        workspace=current
+        working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
+        command="ghostty --class=quickterm --title=QuickTerm --working-directory=\"$working_directory\""
+        ;;
     spotify)
         tag=spotify
         class='^Spotify$'
@@ -71,28 +130,56 @@ case ${1:-} in
         ;;
     onlyoffice)
         tag=onlyoffice
-        class='^DesktopEditors$'
+        class='^(DesktopEditors|ONLYOFFICE)$'
         workspace=4
         command='onlyoffice-desktopeditors'
         ;;
     terminal)
         tag=terminal
-        class='^com.mitchellh.ghostty$'
+        class='^terminal$'
         workspace=5
-        command='ghostty -e fish -l -c tm'
+        command='ghostty --class=terminal -e fish -l -c tm'
+        ;;
+    wifi)
+        tag=wifi
+        class='^nmtui$'
+        workspace=current
+        command='ghostty --class=nmtui --title=nmtui -e nmtui'
+        ;;
+    zathura)
+        tag=zathura
+        class='^org.pwmt.zathura$'
+        workspace=current
+        command='zathura'
+        cycle=true
         ;;
     *)
-        echo "usage: app {brave|calendar|clickup|edge|slack|teams|zoom|meet|gmail|spotify|transmission|onlyoffice|terminal}" >&2
+        echo 'usage: app APPLICATION' >&2
         exit 2
         ;;
 esac
 
+if [[ $workspace == current ]]; then
+    workspace=$(hyprctl activeworkspace -j | jq -r '.id')
+fi
+
 # Focus a matching window or launch the app on its assigned workspace
 # Tags distinguish browser apps that otherwise share the same process class
-address=$(hyprctl clients -j | jq -r --arg class "$class" --arg tag "$tag" \
-    '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address' |
-    head -n 1)
-if [[ -n $address ]]; then
+mapfile -t addresses < <(
+    hyprctl clients -j | jq -r --arg class "$class" --arg tag "$tag" \
+        '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address'
+)
+if ((${#addresses[@]})); then
+    address=${addresses[0]}
+    if $cycle && ((${#addresses[@]} > 1)); then
+        active=$(hyprctl activewindow -j | jq -r '.address')
+        for i in "${!addresses[@]}"; do
+            if [[ ${addresses[$i]} == "$active" ]]; then
+                address=${addresses[$(((i + 1) % ${#addresses[@]}))]}
+                break
+            fi
+        done
+    fi
     hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
 else
     hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"

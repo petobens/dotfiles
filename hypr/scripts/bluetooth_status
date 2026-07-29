@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+btctl() {
+    bluetoothctl "$@" 2> /dev/null
+}
+
+state=disconnected
+text='󰂲'
+if [[ $(btctl show | awk '/Powered:/ { print $2; exit }') != yes ]]; then
+    state=disabled
+    text=''
+elif btctl devices Connected |
+    awk 'BEGIN { IGNORECASE = 1 } !/MX Master (3S|4)/ { found = 1 } END { exit !found }'; then
+    state=connected
+    text='󰂯'
+fi
+
+jq -cn \
+    --arg text "$text" \
+    --arg tooltip "Bluetooth: $state" \
+    --arg class "$state" \
+    '{text: $text, tooltip: $tooltip, class: $class}'

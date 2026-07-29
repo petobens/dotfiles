@@ -1,175 +1,233 @@
 -- luacheck: globals hl
 
-local home = os.getenv('HOME')
-local scripts = home .. '/.config/hypr/scripts/'
+-- Commands
+local scripts = os.getenv('HOME') .. '/.config/hypr/scripts/'
+local app_command = scripts .. 'app '
+local place_command = scripts .. 'place_window '
+local player_command = 'playerctl --player=spotify'
+local volume_up = 'wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+'
+local volume_down = 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-'
+local volume_mute = 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle'
 
-local function exec(keys, command, description, flags)
-    flags = flags or {}
-    flags.description = description
-    hl.bind(keys, hl.dsp.exec_cmd(command), flags)
+-- Modifiers
+local alt = 'ALT'
+local super = 'SUPER'
+local super_alt = super .. ' + ALT'
+local super_ctrl = super .. ' + CTRL'
+local super_shift = super .. ' + SHIFT'
+local ctrl_alt = 'CTRL + ALT'
+local ctrl_shift = 'CTRL + SHIFT'
+
+-- Helpers
+local function bind(keys, dispatcher, description, options)
+    options = options or {}
+    options.description = description
+    hl.bind(keys, dispatcher, options)
 end
 
-exec('SUPER + CTRL + R', 'hyprctl reload', 'Reload Hyprland')
-hl.bind(
-    'SUPER + E',
+local function exec(keys, command, description, options)
+    bind(keys, hl.dsp.exec_cmd(command), description, options)
+end
+
+local function launch(keys, app, description)
+    exec(keys, app_command .. app, description)
+end
+
+-- Session and windows
+exec(super_ctrl .. ' + R', 'hyprctl reload', 'Reload Hyprland')
+bind(
+    super .. ' + E',
     hl.dsp.window.fullscreen({ action = 'toggle' }),
-    { description = 'Toggle fullscreen' }
+    'Toggle fullscreen'
 )
-hl.bind('SUPER + Q', hl.dsp.window.close({}), { description = 'Close window' })
-exec('SUPER + SHIFT + W', scripts .. 'close_workspace', 'Close workspace windows')
-exec('SUPER + SHIFT + Q', scripts .. 'session_menu', 'Session menu')
-exec('SUPER + SHIFT + S', scripts .. 'session_menu', 'Session menu')
-exec('SUPER + SHIFT + R', scripts .. 'session_menu', 'Session menu')
-exec('SUPER + SHIFT + L', 'loginctl lock-session', 'Lock session')
-hl.bind(
-    'SUPER + mouse:272',
-    hl.dsp.window.drag(),
-    { mouse = true, description = 'Move window' }
-)
-hl.bind(
-    'SUPER + mouse:273',
-    hl.dsp.window.resize(),
-    { mouse = true, description = 'Resize window' }
-)
-
--- Place floating windows in predictable screen regions
-local placements = {
-    ['SUPER + UP'] = 'full',
-    ['SUPER + LEFT'] = 'left',
-    ['SUPER + RIGHT'] = 'right',
-    ['SUPER + ALT + UP'] = 'top',
-    ['SUPER + ALT + DOWN'] = 'bottom',
-    ['SUPER + CTRL + 1'] = 'top-left',
-    ['SUPER + CTRL + 2'] = 'top-right',
-    ['SUPER + CTRL + 3'] = 'bottom-left',
-    ['SUPER + CTRL + 4'] = 'bottom-right',
-    ['SUPER + CTRL + 5'] = 'center',
-    ['SUPER + CTRL + 6'] = 'rectangle',
-    ['SUPER + CTRL + 7'] = 'dialog',
-    ['SUPER + CTRL + 8'] = 'semi-full',
-}
-for keys, placement in pairs(placements) do
-    exec(keys, scripts .. 'place_window ' .. placement, 'Place window ' .. placement)
+bind(super .. ' + Q', hl.dsp.window.close({}), 'Close window')
+exec(super_shift .. ' + W', scripts .. 'close_workspace', 'Close workspace windows')
+for _, keys in ipairs({
+    super_shift .. ' + Q',
+    super_shift .. ' + S',
+    super_shift .. ' + R',
+}) do
+    exec(keys, scripts .. 'session_menu', 'Session menu')
 end
-hl.bind(
-    'SUPER + H',
-    hl.dsp.window.resize({ x = -60, y = 0, relative = true }),
-    { repeating = true }
-)
-hl.bind(
-    'SUPER + J',
-    hl.dsp.window.resize({ x = 0, y = 60, relative = true }),
-    { repeating = true }
-)
-hl.bind(
-    'SUPER + K',
-    hl.dsp.window.resize({ x = 0, y = -60, relative = true }),
-    { repeating = true }
-)
-hl.bind(
-    'SUPER + L',
-    hl.dsp.window.resize({ x = 60, y = 0, relative = true }),
-    { repeating = true }
-)
+exec(super_shift .. ' + L', 'loginctl lock-session', 'Lock session')
+bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = true })
+bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse = true })
 
-hl.bind('SUPER + N', hl.dsp.focus({ workspace = 'm+1' }))
-hl.bind('SUPER + P', hl.dsp.focus({ workspace = 'm-1' }))
-hl.bind('ALT + grave', hl.dsp.focus({ monitor = '+1' }))
-hl.bind('ALT + escape', hl.dsp.focus({ monitor = '-1' }))
-hl.bind('SUPER + CTRL + RIGHT', hl.dsp.window.move({ monitor = '+1', follow = true }))
-hl.bind('SUPER + CTRL + LEFT', hl.dsp.window.move({ monitor = '-1', follow = true }))
-hl.bind('SUPER + SHIFT + RIGHT', hl.dsp.workspace.move({ monitor = '+1' }))
-hl.bind('SUPER + SHIFT + LEFT', hl.dsp.workspace.move({ monitor = '-1' }))
-hl.bind('SUPER + CTRL + J', function()
+-- Window placement
+local placements = {
+    { super .. ' + UP', 'full' },
+    { super .. ' + LEFT', 'left' },
+    { super .. ' + RIGHT', 'right' },
+    { super_alt .. ' + UP', 'top' },
+    { super_alt .. ' + DOWN', 'bottom' },
+    { super_ctrl .. ' + 1', 'top-left' },
+    { super_ctrl .. ' + 2', 'top-right' },
+    { super_ctrl .. ' + 3', 'bottom-left' },
+    { super_ctrl .. ' + 4', 'bottom-right' },
+    { super_ctrl .. ' + 5', 'center' },
+    { super_ctrl .. ' + 6', 'rectangle' },
+    { super_ctrl .. ' + 7', 'dialog' },
+    { super_ctrl .. ' + 8', 'semi-full' },
+}
+for _, placement in ipairs(placements) do
+    exec(placement[1], place_command .. placement[2], 'Place window ' .. placement[2])
+end
+
+local step = 60
+local edge_resizes = {
+    { super .. ' + H', step, 0, -step, 0, 'Grow window left' },
+    { super_alt .. ' + L', -step, 0, step, 0, 'Shrink window left' },
+    { super .. ' + L', step, 0, 0, 0, 'Grow window right' },
+    { super_alt .. ' + H', -step, 0, 0, 0, 'Shrink window right' },
+    { super .. ' + K', 0, step, 0, -step, 'Grow window up' },
+    { super_alt .. ' + J', 0, -step, 0, step, 'Shrink window up' },
+    { super .. ' + J', 0, step, 0, 0, 'Grow window down' },
+    { super_alt .. ' + K', 0, -step, 0, 0, 'Shrink window down' },
+}
+local function resize_edge(resize)
+    return function()
+        hl.dispatch(hl.dsp.window.resize({
+            x = resize[2],
+            y = resize[3],
+            relative = true,
+        }))
+        if resize[4] ~= 0 or resize[5] ~= 0 then
+            hl.dispatch(hl.dsp.window.move({
+                x = resize[4],
+                y = resize[5],
+                relative = true,
+            }))
+        end
+    end
+end
+for _, resize in ipairs(edge_resizes) do
+    bind(resize[1], resize_edge(resize), resize[6], { repeating = true })
+end
+
+-- Navigation and workspaces
+bind(super .. ' + N', hl.dsp.focus({ workspace = 'm+1' }), 'Next workspace')
+bind(super .. ' + P', hl.dsp.focus({ workspace = 'm-1' }), 'Previous workspace')
+bind(alt .. ' + grave', hl.dsp.focus({ monitor = 'r' }), 'Focus monitor right')
+bind(alt .. ' + escape', hl.dsp.focus({ monitor = 'd' }), 'Focus monitor down')
+
+local monitor_directions = {
+    { 'RIGHT', 'r', 'right' },
+    { 'LEFT', 'l', 'left' },
+    { 'DOWN', 'd', 'down' },
+    { 'UP', 'u', 'up' },
+}
+for _, direction in ipairs(monitor_directions) do
+    bind(
+        super_ctrl .. ' + ' .. direction[1],
+        hl.dsp.window.move({ monitor = direction[2], follow = true }),
+        'Move window to monitor ' .. direction[3]
+    )
+    bind(
+        super_shift .. ' + ' .. direction[1],
+        hl.dsp.workspace.move({ monitor = direction[2] }),
+        'Move workspace to monitor ' .. direction[3]
+    )
+end
+exec(super .. ' + Return', scripts .. 'monitor_mode primary', 'Use laptop display')
+exec(super_ctrl .. ' + Return', scripts .. 'monitor_mode multi', 'Use all displays')
+bind(super_ctrl .. ' + J', function()
     hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
     hl.dispatch(hl.dsp.window.bring_to_top())
-end)
+end, 'Focus previous window')
 
--- Provide four reusable quick window marks
 local marks = {
-    { 'SUPER + ALT + M', 'SUPER + CTRL + K', 'markedwin1' },
-    { 'SUPER + ALT + bracketleft', 'SUPER + CTRL + bracketleft', 'markedwin2' },
-    { 'SUPER + ALT + bracketright', 'SUPER + CTRL + bracketright', 'markedwin3' },
-    { 'SUPER + ALT + period', 'SUPER + CTRL + period', 'markedwin4' },
+    { super_alt .. ' + M', super_ctrl .. ' + K' },
+    { super_alt .. ' + bracketleft', super_ctrl .. ' + bracketleft' },
+    { super_alt .. ' + bracketright', super_ctrl .. ' + bracketright' },
+    { super_alt .. ' + period', super_ctrl .. ' + period' },
 }
-for _, mark in ipairs(marks) do
-    local tag = mark[3]
-    hl.bind(mark[1], function()
+for index, mark in ipairs(marks) do
+    local tag = 'markedwin' .. index
+    bind(mark[1], function()
         hl.dispatch(hl.dsp.window.tag({ tag = '-' .. tag, window = 'tag:' .. tag }))
         hl.dispatch(hl.dsp.window.tag({ tag = '+' .. tag }))
-    end, { description = 'Mark window' })
-    hl.bind(
+    end, 'Mark window ' .. index)
+    bind(
         mark[2],
         hl.dsp.focus({ window = 'tag:' .. tag }),
-        { description = 'Focus marked window' }
+        'Focus marked window ' .. index
     )
 end
 
 for workspace = 1, 9 do
-    hl.bind('SUPER + ' .. workspace, hl.dsp.focus({ workspace = tostring(workspace) }))
-    hl.bind(
-        'SUPER + SHIFT + ' .. workspace,
-        hl.dsp.window.move({ workspace = tostring(workspace), follow = true })
+    local name = tostring(workspace)
+    bind(super .. ' + ' .. name, hl.dsp.focus({ workspace = name }), 'Workspace ' .. name)
+    bind(
+        super_shift .. ' + ' .. name,
+        hl.dsp.window.move({ workspace = name, follow = true }),
+        'Move window to workspace ' .. name
     )
 end
 
-exec('ALT + TAB', scripts .. 'window_switcher', 'Window switcher')
-exec('SUPER + W', scripts .. 'window_switcher', 'Window switcher')
-exec('SUPER + S', 'rofi -show drun', 'Application launcher')
-exec('SUPER + A', 'rofi -show drun', 'Application launcher')
-exec('SUPER + Z', scripts .. 'password_menu', 'Password menu')
-exec('SUPER + CTRL + Y', 'hyprpicker -a', 'Copy picked color')
-exec('SUPER + X', 'ghostty', 'Terminal')
-exec('SUPER + CTRL + C', scripts .. 'app terminal', 'Terminal')
-exec('SUPER + CTRL + F', 'ghostty -e yazi', 'File manager')
-exec('SUPER + CTRL + P', 'zathura', 'PDF viewer')
-exec('SUPER + CTRL + V', 'imv ~/Pictures', 'Image viewer')
-exec('SUPER + CTRL + W', 'ghostty -e nmtui', 'Wi-Fi')
-exec('SUPER + CTRL + Q', 'ghostty', 'Quick terminal')
-exec('SUPER + CTRL + N', 'ghostty -e ipython', 'IPython')
-exec('SUPER + CTRL + H', 'ghostty -e htop', 'Process monitor')
-exec('SUPER + CTRL + B', 'blueman-manager', 'Bluetooth')
-exec('CTRL + ALT + Delete', 'ghostty -e htop', 'Process manager')
+-- Launchers and applications
+exec(alt .. ' + TAB', scripts .. 'window_switcher', 'Window switcher')
+exec(super .. ' + W', scripts .. 'window_switcher current', 'Workspace window switcher')
+exec(super .. ' + S', 'rofi -show drun', 'Application launcher')
+exec(super .. ' + A', 'rofi -show drun', 'Application launcher')
+exec(super .. ' + Z', scripts .. 'password_menu', 'Password menu')
+exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
+exec(super .. ' + X', 'ghostty --class=terminal', 'Terminal')
 
-local apps = {
-    { 'SUPER + CTRL + I', 'brave', 'Brave' },
-    { 'SUPER + CTRL + A', 'calendar', 'Calendar' },
-    { 'SUPER + CTRL + comma', 'clickup', 'ClickUp' },
-    { 'SUPER + CTRL + E', 'edge', 'Edge' },
-    { 'SUPER + CTRL + L', 'slack', 'Slack' },
-    { 'SUPER + CTRL + S', 'teams', 'Teams' },
-    { 'SUPER + CTRL + Z', 'zoom', 'Zoom' },
-    { 'SUPER + CTRL + O', 'meet', 'Google Meet' },
-    { 'SUPER + CTRL + G', 'gmail', 'Gmail' },
-    { 'SUPER + CTRL + M', 'spotify', 'Spotify' },
-    { 'SUPER + CTRL + U', 'transmission', 'Transmission' },
-    { 'SUPER + CTRL + D', 'onlyoffice', 'OnlyOffice' },
+local applications = {
+    -- Assigned workspaces
+    { super_ctrl .. ' + I', 'brave', 'Brave' },
+    { super_ctrl .. ' + A', 'calendar', 'Calendar' },
+    { super_ctrl .. ' + comma', 'clickup', 'ClickUp' },
+    { super_ctrl .. ' + E', 'edge', 'Edge' },
+    { super_ctrl .. ' + L', 'slack', 'Slack' },
+    { super_ctrl .. ' + S', 'teams', 'Teams' },
+    { super_ctrl .. ' + Z', 'zoom', 'Zoom' },
+    { super_ctrl .. ' + O', 'meet', 'Google Meet' },
+    { super_ctrl .. ' + G', 'gmail', 'Gmail' },
+    { super_ctrl .. ' + M', 'spotify', 'Spotify' },
+    { super_ctrl .. ' + U', 'transmission', 'Transmission' },
+    { super_ctrl .. ' + D', 'onlyoffice', 'OnlyOffice' },
+    { super_ctrl .. ' + C', 'terminal', 'Terminal' },
+
+    -- Current workspace
+    { super_ctrl .. ' + F', 'files', 'File manager' },
+    { super_ctrl .. ' + P', 'zathura', 'PDF viewer' },
+    { super_ctrl .. ' + V', 'images', 'Image viewer' },
+    { super_ctrl .. ' + W', 'wifi', 'Wi-Fi' },
+    { super_ctrl .. ' + Q', 'quickterm', 'Quick terminal' },
+    { super_ctrl .. ' + N', 'numbers', 'IPython' },
+    { super_ctrl .. ' + H', 'htop', 'Process monitor' },
+    { super_ctrl .. ' + B', 'bluetooth', 'Bluetooth' },
+    { ctrl_alt .. ' + Delete', 'htop', 'Process manager' },
 }
-for _, app in ipairs(apps) do
-    exec(app[1], scripts .. 'app ' .. app[2], app[3])
+for _, application in ipairs(applications) do
+    launch(application[1], application[2], application[3])
 end
 
+-- Screenshots
 exec('Print', scripts .. 'screenshot full', 'Full screenshot')
-exec('SUPER + SHIFT + C', scripts .. 'screenshot selection', 'Selection screenshot')
-exec('SUPER + SHIFT + 0', scripts .. 'screenshot active', 'Window screenshot')
+exec(super_shift .. ' + C', scripts .. 'screenshot selection', 'Selection screenshot')
+exec(super_shift .. ' + 0', scripts .. 'screenshot active', 'Window screenshot')
+
+-- Audio and media
+exec('XF86AudioRaiseVolume', volume_up, 'Raise volume', { repeating = true })
+exec('XF86AudioLowerVolume', volume_down, 'Lower volume', { repeating = true })
+exec('XF86AudioMute', volume_mute, 'Mute audio', { locked = true })
+exec(super_shift .. ' + PLUS', volume_up, 'Raise volume')
+exec(super_shift .. ' + MINUS', volume_down, 'Lower volume')
+exec(super_shift .. ' + M', volume_mute, 'Mute audio')
+launch(super_shift .. ' + V', 'audio', 'Audio controls')
+exec(super_shift .. ' + P', player_command .. ' play-pause', 'Play or pause')
+exec(super_shift .. ' + J', player_command .. ' next', 'Next track')
+exec(super_shift .. ' + K', player_command .. ' previous', 'Previous track')
 exec(
-    'XF86AudioRaiseVolume',
-    'wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+',
-    'Raise volume',
-    { repeating = true }
+    super_shift .. ' + T',
+    [[sh -c 'playerctl --player=spotify metadata --format "{{artist}} — {{title}}" ]]
+        .. [[| xargs -r notify-send Spotify']],
+    'Show current track'
 )
-exec(
-    'XF86AudioLowerVolume',
-    'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-',
-    'Lower volume',
-    { repeating = true }
-)
-exec(
-    'XF86AudioMute',
-    'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle',
-    'Mute audio',
-    { locked = true }
-)
+
+-- Hardware and desktop
 exec(
     'XF86MonBrightnessUp',
     'brightnessctl set 5%+',
@@ -182,31 +240,19 @@ exec(
     'Lower brightness',
     { repeating = true }
 )
+exec(super_alt .. ' + RIGHT', 'brightnessctl set 5%+', 'Raise brightness')
+exec(super_alt .. ' + LEFT', 'brightnessctl set 5%-', 'Lower brightness')
 exec(
-    'SUPER + SHIFT + PLUS',
-    'wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+',
-    'Raise volume'
+    super_alt .. ' + semicolon',
+    scripts .. 'keyboard_backlight',
+    'Cycle keyboard backlight'
 )
-exec('SUPER + SHIFT + MINUS', 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-', 'Lower volume')
-exec('SUPER + SHIFT + M', 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle', 'Mute audio')
-exec('SUPER + SHIFT + V', 'hyprpwcenter', 'Audio controls')
-exec('SUPER + SHIFT + P', 'playerctl --player=spotify play-pause', 'Play or pause')
-exec('SUPER + SHIFT + J', 'playerctl --player=spotify next', 'Next track')
-exec('SUPER + SHIFT + K', 'playerctl --player=spotify previous', 'Previous track')
-exec(
-    'SUPER + SHIFT + T',
-    [[sh -c 'playerctl --player=spotify metadata --format "{{artist}} — {{title}}" ]]
-        .. [[| xargs -r notify-send Spotify']],
-    'Show current track'
-)
-exec('SUPER + ALT + RIGHT', 'brightnessctl set 5%+', 'Raise brightness')
-exec('SUPER + ALT + LEFT', 'brightnessctl set 5%-', 'Lower brightness')
-exec('SUPER + B', 'pkill -SIGUSR1 waybar', 'Toggle Waybar')
-exec('CTRL + ALT + SPACE', 'makoctl dismiss', 'Dismiss notification')
-exec('CTRL + SHIFT + SPACE', 'makoctl dismiss --all', 'Dismiss all notifications')
+exec(super .. ' + B', 'pkill -SIGUSR2 waybar', 'Reload Waybar')
+exec(ctrl_alt .. ' + SPACE', 'makoctl dismiss', 'Dismiss notification')
+exec(ctrl_shift .. ' + SPACE', 'makoctl dismiss --all', 'Dismiss all notifications')
 exec('CTRL + grave', 'makoctl restore', 'Restore notification')
 exec(
-    'CTRL + SHIFT + J',
+    ctrl_shift .. ' + J',
     'makoctl menu -- rofi -dmenu -p notification',
     'Notification actions'
 )

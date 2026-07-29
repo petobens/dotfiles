@@ -1,29 +1,52 @@
 @define-color background #24272e;
 @define-color foreground #abb2bf;
-@define-color muted #828997;
-@define-color blue #61afef;
+@define-color focused #2c323c;
+@define-color muted #5c6370;
 @define-color red #e06c75;
 
 * {
     border: none;
     border-radius: 0;
-    font-family: "Source Code Pro", "Symbols Nerd Font", sans-serif;
+    font-family: 'Noto Sans', 'Symbols Nerd Font', sans-serif;
     font-size: 13px;
     min-height: 0;
 }
 
-window#waybar { background: alpha(@background, 0.94); color: @foreground; }
-#workspaces button { color: @muted; padding: 0 10px; }
-#workspaces button.active { background: @blue; color: @background; }
-#workspaces button.urgent, #battery.critical { background: @red; color: @background; }
-#window,
-#clock,
+window#waybar {
+    background: @background;
+    color: @foreground;
+}
+#workspaces button {
+    color: @muted;
+    padding: 0 10px;
+}
+#workspaces button.active {
+    background: @focused;
+    color: @foreground;
+}
+#workspaces button.urgent,
+#battery.critical,
+#custom-docker.inactive,
+#custom-onedrive.inactive,
+#custom-bluetooth.disabled,
+#network.disconnected {
+    color: @red;
+}
+#custom-arch,
+#custom-window-count,
+#custom-docker,
 #custom-onedrive,
+#language,
+#custom-vpn,
 #tray,
 #network,
-#bluetooth,
+#custom-bluetooth,
 #pulseaudio,
-#backlight,
-#battery {
+#battery,
+#clock {
     padding: 0 10px;
+}
+
+#window {
+    padding: 0;
 }

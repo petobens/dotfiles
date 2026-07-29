@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+case ${1:-} in
+    primary)
+        rules="eval hl.monitor({ output = 'eDP-1', mode = 'preferred', position = '0x0', scale = 1.5 })"
+        rules+=" ; eval hl.monitor({ output = 'DP-1', disabled = true })"
+        rules+=" ; eval hl.monitor({ output = 'DP-3', disabled = true })"
+        ;;
+    multi)
+        rules="eval hl.monitor({ output = 'DP-1', mode = '1920x1080@60', position = '0x0', scale = 1 })"
+        rules+=" ; eval hl.monitor({ output = 'DP-3', mode = '1920x1080@60', position = '1920x0', scale = 1 })"
+        rules+=" ; eval hl.monitor({ output = 'eDP-1', mode = 'preferred', position = '960x1080', scale = 1.5 })"
+        ;;
+    *)
+        echo 'usage: monitor_mode {primary|multi}' >&2
+        exit 2
+        ;;
+esac
+
+hyprctl --batch "$rules"

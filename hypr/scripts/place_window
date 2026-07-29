@@ -8,89 +8,91 @@ read -r address monitor_x monitor_y monitor_w monitor_h < <(
     hyprctl activewindow -j | jq -r '[.address, .monitor] | @tsv' | {
         read -r address monitor
         hyprctl monitors -j | jq -r --argjson monitor "$monitor" --arg address "$address" \
-            '.[] | select(.id == $monitor) | [$address, .x, .y, .width, .height] | @tsv'
+            '.[] | select(.id == $monitor) |
+            [$address, .x, .y, (.width / .scale | floor), (.height / .scale | floor)] |
+            @tsv'
     }
 )
 
-# Map named layouts to monitor-relative percentages
+# Map named layouts to monitor-relative thousandths
 case "$layout" in
     full)
         x=0
         y=0
-        w=100
-        h=100
+        w=1000
+        h=1000
         ;;
     left)
         x=0
         y=0
-        w=50
-        h=100
+        w=500
+        h=1000
         ;;
     right)
-        x=50
+        x=500
         y=0
-        w=50
-        h=100
+        w=500
+        h=1000
         ;;
     top)
         x=0
         y=0
-        w=100
-        h=50
+        w=1000
+        h=500
         ;;
     bottom)
         x=0
-        y=50
-        w=100
-        h=50
+        y=500
+        w=1000
+        h=500
         ;;
     top-left)
         x=0
         y=0
-        w=50
-        h=50
+        w=500
+        h=500
         ;;
     top-right)
-        x=50
+        x=500
         y=0
-        w=50
-        h=50
+        w=500
+        h=500
         ;;
     bottom-left)
         x=0
-        y=50
-        w=50
-        h=50
+        y=500
+        w=500
+        h=500
         ;;
     bottom-right)
-        x=50
-        y=50
-        w=50
-        h=50
+        x=500
+        y=500
+        w=500
+        h=500
         ;;
     center)
-        x=15
-        y=10
-        w=70
-        h=80
+        x=250
+        y=250
+        w=500
+        h=500
         ;;
     rectangle)
-        x=12
-        y=12
-        w=76
-        h=76
+        x=125
+        y=200
+        w=750
+        h=600
         ;;
     dialog)
-        x=25
-        y=25
-        w=50
-        h=50
+        x=330
+        y=300
+        w=350
+        h=250
         ;;
     semi-full)
-        x=5
-        y=5
-        w=90
-        h=90
+        x=10
+        y=0
+        w=985
+        h=990
         ;;
     *)
         echo "unknown layout: $layout" >&2
@@ -98,11 +100,11 @@ case "$layout" in
         ;;
 esac
 
-# Percentages keep layouts consistent in the VM and on the ultrawide
-px=$((monitor_x + monitor_w * x / 100))
-py=$((monitor_y + monitor_h * y / 100))
-pw=$((monitor_w * w / 100))
-ph=$((monitor_h * h / 100))
+# Relative dimensions keep layouts consistent across displays
+px=$((monitor_x + monitor_w * x / 1000))
+py=$((monitor_y + monitor_h * y / 1000))
+pw=$((monitor_w * w / 1000))
+ph=$((monitor_h * h / 1000))
 window="address:$address"
 hyprctl dispatch "hl.dsp.window.float({ action = 'set', window = '$window' })"
 hyprctl dispatch "hl.dsp.window.resize({ x = $pw, y = $ph, window = '$window' })"

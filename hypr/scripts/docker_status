@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if systemctl is-active --quiet docker.service; then
+    state=active
+else
+    state=inactive
+fi
+
+jq -cn \
+    --arg text '' \
+    --arg tooltip "Docker: $state" \
+    --arg class "$state" \
+    '{text: $text, tooltip: $tooltip, class: $class}'

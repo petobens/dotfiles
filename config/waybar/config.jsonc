@@ -3,50 +3,109 @@
     "position": "top",
     "height": 32,
     "spacing": 4,
-    "modules-left": ["hyprland/workspaces", "hyprland/window"],
-    "modules-center": ["clock"],
-    "modules-right": ["custom/onedrive", "tray", "network", "bluetooth", "pulseaudio", "backlight", "battery"],
+    "modules-left": ["custom/arch", "custom/window-count", "hyprland/window"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": [
+        "custom/docker",
+        "custom/onedrive",
+        "hyprland/language",
+        "custom/vpn",
+        "network",
+        "custom/bluetooth",
+        "pulseaudio",
+        "battery",
+        "clock",
+        "tray",
+    ],
+    "custom/arch": {
+        "format": "",
+        "on-click": "~/.config/hypr/scripts/session_menu",
+        "tooltip": false,
+    },
+    "custom/window-count": {
+        "exec": "~/.config/hypr/scripts/window_count",
+        "interval": 1,
+        "on-click": "~/.config/hypr/scripts/window_switcher current",
+        "return-type": "json",
+    },
+    "hyprland/window": {
+        "format": "{title}",
+        "max-length": 30,
+        "separate-outputs": true,
+    },
     "hyprland/workspaces": {
-        "format": "{name}",
-        "persistent-workspaces": {"*": 5},
-        "on-click": "activate"
+        "format": "{icon} {id}",
+        "format-icons": {
+            "1": "󰖟",
+            "2": "",
+            "3": "󰝚",
+            "4": "󰙀",
+            "5": "󰞷",
+            "6": "󰗚",
+            "default": "󰙀",
+        },
+        "on-click": "activate",
+        "sort-by": "number",
     },
-    "hyprland/window": {"format": "{class}: {title}", "max-length": 70, "separate-outputs": true},
-    "clock": {
-        "format": "  {:%H:%M  %d %b %Y}",
-        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
-    },
-    "network": {
-        "format-wifi": "  {essid}",
-        "format-ethernet": "󰈀  {ipaddr}/{cidr}",
-        "format-disconnected": "󰖪",
-        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
-        "on-click": "ghostty -e nmtui"
+    "custom/docker": {
+        "exec": "~/.config/hypr/scripts/docker_status",
+        "interval": 5,
+        "on-click": "~/.config/hypr/scripts/app docker",
+        "return-type": "json",
     },
     "custom/onedrive": {
         "exec": "~/.config/hypr/scripts/onedrive_status",
-        "interval": 15,
+        "interval": 5,
+        "on-click": "~/.config/hypr/scripts/app onedrive",
         "return-type": "json",
-        "on-click": "ghostty -e journalctl --user-unit onedrive -f"
     },
-    "bluetooth": {"format": "", "format-connected": " {num_connections}", "on-click": "blueman-manager"},
+    "hyprland/language": {
+        "format": "{short}",
+    },
+    "custom/vpn": {
+        "exec": "printf '󰛶'",
+        "exec-if": "pgrep -x 'openconnect|openvpn|vpnc|snx'",
+        "interval": 5,
+    },
+    "network": {
+        "format-wifi": "{icon} {signalStrength}%",
+        "format-ethernet": "󰈁",
+        "format-disconnected": "󰖪",
+        "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+        "on-click": "~/.config/hypr/scripts/app wifi",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+    },
+    "custom/bluetooth": {
+        "exec": "~/.config/hypr/scripts/bluetooth_status",
+        "interval": 5,
+        "on-click": "~/.config/hypr/scripts/app bluetooth",
+        "on-click-right": "bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect",
+        "return-type": "json",
+    },
     "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": "󰖁 muted",
-        "format-icons": ["", "", ""],
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-        "on-click-right": "hyprpwcenter"
-    },
-    "backlight": {
-        "format": "󰃠 {percent}%",
-        "on-scroll-up": "brightnessctl set 5%+",
-        "on-scroll-down": "brightnessctl set 5%-"
+        "format": "{icon}",
+        "format-icons": ["", "󰖀", "󰕾", ""],
+        "format-muted": "",
+        "on-click": "~/.config/hypr/scripts/app audio",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     },
     "battery": {
-        "states": {"warning": 25, "critical": 10},
         "format": "{icon} {capacity}%",
-        "format-charging": "󰂄 {capacity}%",
-        "format-icons": ["󰁺", "󰁻", "󰁽", "󰁿", "󰂂", "󰁹"]
+        "format-charging": " {capacity}%",
+        "format-full": "󰂄 100%",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"],
+        "states": {
+            "critical": 10,
+            "warning": 25,
+        },
     },
-    "tray": {"spacing": 8}
+    "clock": {
+        "format": "󰃰 {:%a %d %H:%M}",
+        "format-alt": "󰃰 {:%A %d %b %Y %H:%M:%S}",
+        "on-click": "~/.config/hypr/scripts/app calendar",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
+    },
+    "tray": {
+        "spacing": 8,
+    },
 }

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+workspace=$(hyprctl activeworkspace -j | jq '.id')
+count=$(hyprctl clients -j | jq --argjson workspace "$workspace" \
+    '[.[] | select(.workspace.id == $workspace)] | length')
+
+jq -cn \
+    --arg text " $count" \
+    --arg tooltip "$count windows on workspace $workspace" \
+    '{text: $text, tooltip: $tooltip}'

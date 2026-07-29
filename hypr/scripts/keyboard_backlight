@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+device='tpacpi::kbd_backlight'
+level=$(brightnessctl --device="$device" get)
+maximum=$(brightnessctl --device="$device" max)
+level=$(((level + 1) % (maximum + 1)))
+brightnessctl --device="$device" set "$level" > /dev/null
+notify-send -i keyboard-brightness-symbolic 'Keyboard backlight' "Level: $level"
