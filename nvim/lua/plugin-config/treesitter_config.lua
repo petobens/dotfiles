@@ -7,7 +7,6 @@ require('nvim-treesitter').install({
     'fish',
     'html',
     'hyprlang',
-    'java',
     'json',
     'latex',
     'lua',
