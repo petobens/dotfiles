@@ -20,21 +20,17 @@ die() {
 [[ -d /sys/firmware/efi/efivars ]] || die 'Boot the installation ISO in UEFI mode'
 mountpoint -q /mnt && die 'Unmount the existing installation from /mnt first'
 
-for command in arch-chroot blkid btrfs curl mkfs.btrfs pacstrap sfdisk \
+for command in arch-chroot blkid btrfs curl mkfs.btrfs mkfs.fat pacstrap sfdisk \
     systemd-detect-virt; do
     command -v "$command" > /dev/null || die "Missing $command; use the official Arch installation ISO"
 done
 
 if virtualization=$(systemd-detect-virt --vm 2> /dev/null); then
     mode=vm
+    default_hostname=arch-vm
 else
     mode=physical
     virtualization=
-fi
-
-if [[ $mode == vm ]]; then
-    default_hostname=arch-vm
-else
     default_hostname=x1-carbon
 fi
 
@@ -117,11 +113,8 @@ mkfs.btrfs -f "$root_partition"
 
 section 'Mounting filesystems'
 mount "$root_partition" /mnt
-btrfs subvolume create /mnt/@
-btrfs subvolume create /mnt/@home
-btrfs subvolume create /mnt/@pkg
-btrfs subvolume create /mnt/@var_log
 for subvolume in @ @home @pkg @var_log; do
+    btrfs subvolume create "/mnt/$subvolume"
     btrfs property set "/mnt/$subvolume" compression zstd
 done
 btrfs subvolume set-default /mnt/@
@@ -202,20 +195,15 @@ HOOKS=(
 )
 EOF
 printf 'rootflags=noatime,nodiscard rw quiet\n' > /mnt/etc/kernel/cmdline
-sed -i -E \
-    -e "s|^PRESETS=.*|PRESETS=('default' 'fallback')|" \
-    -e 's|^default_image=|#default_image=|' \
-    -e 's|^#default_uki=.*|default_uki="/boot/EFI/Linux/arch-linux.efi"|' \
-    -e 's|^fallback_image=|#fallback_image=|' \
-    -e 's|^#fallback_uki=.*|fallback_uki="/boot/EFI/Linux/arch-linux-fallback.efi"|' \
-    /mnt/etc/mkinitcpio.d/linux.preset
-sed -i -E \
-    -e "s|^PRESETS=.*|PRESETS=('default' 'fallback')|" \
-    -e 's|^default_image=|#default_image=|' \
-    -e 's|^#default_uki=.*|default_uki="/boot/EFI/Linux/arch-linux-lts.efi"|' \
-    -e 's|^fallback_image=|#fallback_image=|' \
-    -e 's|^#fallback_uki=.*|fallback_uki="/boot/EFI/Linux/arch-linux-lts-fallback.efi"|' \
-    /mnt/etc/mkinitcpio.d/linux-lts.preset
+for kernel in linux linux-lts; do
+    sed -i -E \
+        -e "s|^PRESETS=.*|PRESETS=('default' 'fallback')|" \
+        -e 's|^default_image=|#default_image=|' \
+        -e "s|^#default_uki=.*|default_uki=\"/boot/EFI/Linux/arch-$kernel.efi\"|" \
+        -e 's|^fallback_image=|#fallback_image=|' \
+        -e "s|^#fallback_uki=.*|fallback_uki=\"/boot/EFI/Linux/arch-$kernel-fallback.efi\"|" \
+        "/mnt/etc/mkinitcpio.d/$kernel.preset"
+done
 install -Dm644 /dev/stdin /mnt/boot/loader/loader.conf << 'EOF'
 default arch-linux.efi
 timeout 3
