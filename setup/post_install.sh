@@ -24,6 +24,8 @@ ensure_pam_rule() {
     sudo sed -i -E "/$anchor/a $rule" "$file"
 }
 
+printf '\033[1;32m\n:: Starting post-install configuration\033[0m\n'
+
 section 'Configuring CPU scheduler'
 sudo install -Dm644 /dev/stdin /etc/scx_loader/config.toml << 'EOF'
 default_sched = "scx_lavd"

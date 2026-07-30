@@ -11,7 +11,7 @@ section() {
 }
 
 die() {
-    printf 'Error: %s\n' "$1" >&2
+    printf '\033[1;31mError: %s\033[0m\n' "$1" >&2
     exit 1
 }
 
@@ -24,6 +24,8 @@ for command in arch-chroot blkid btrfs curl mkfs.btrfs mkfs.fat pacstrap sfdisk 
     systemd-detect-virt; do
     command -v "$command" > /dev/null || die "Missing $command; use the official Arch installation ISO"
 done
+
+printf '\033[1;32m\n:: Starting Arch installation\033[0m\n'
 
 if virtualization=$(systemd-detect-virt --vm 2> /dev/null); then
     mode=vm

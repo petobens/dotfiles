@@ -24,7 +24,7 @@ section() {
 }
 
 die() {
-    printf '%s\n' "$1" >&2
+    printf '\033[1;31mError: %s\033[0m\n' "$1" >&2
     exit 1
 }
 
@@ -146,6 +146,8 @@ case $action in
         exit 2
         ;;
 esac
+
+printf '\033[1;32m\n:: Starting Wayland VM\033[0m\n'
 
 check_host
 mkdir -p "$state_dir"

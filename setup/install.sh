@@ -45,6 +45,8 @@ for arg in "$@"; do
     esac
 done
 
+printf '\033[1;32m\n:: Starting dotfiles installation\033[0m\n'
+
 if $prompt_latex && ! $install_latex; then
     read -r -p 'Install LaTeX with tlmgr? [y/n] ' choice
     [[ $choice == [yY] ]] && install_latex=true

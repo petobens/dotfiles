@@ -7,6 +7,8 @@ section() {
     printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
 }
 
+printf '\033[1;32m\n:: Starting Pacman package installation\033[0m\n'
+
 mapfile -t packages < <(
     sed -e '/^[[:space:]]*#/d' -e '/^[[:space:]]*$/d' \
         "$script_dir/packages/pacman.txt"

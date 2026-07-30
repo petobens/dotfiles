@@ -8,9 +8,11 @@ section() {
 }
 
 die() {
-    printf '%s\n' "$1" >&2
+    printf '\033[1;31mError: %s\033[0m\n' "$1" >&2
     exit 1
 }
+
+printf '\033[1;32m\n:: Starting LaTeX installation\033[0m\n'
 
 # Verify the system dependencies needed by the native installer
 for command in curl git perl tar; do

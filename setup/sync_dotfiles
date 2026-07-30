@@ -6,9 +6,11 @@ repo=$(git -C "$(dirname "$script_path")/.." rev-parse --show-toplevel)
 cd "$repo"
 
 die() {
-    printf '%s\n' "$1" >&2
+    printf '\033[1;31mError: %s\033[0m\n' "$1" >&2
     exit 1
 }
+
+printf '\033[1;32m\n:: Starting dotfiles synchronization\033[0m\n'
 
 branch=$(git branch --show-current)
 [[ $branch == dotfiles-wayland ]] ||

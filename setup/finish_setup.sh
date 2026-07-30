@@ -18,9 +18,11 @@ section() {
 }
 
 die() {
-    printf 'Error: %s\n' "$1" >&2
+    printf '\033[1;31mError: %s\033[0m\n' "$1" >&2
     exit 1
 }
+
+printf '\033[1;32m\n:: Starting personal setup\033[0m\n'
 
 # Complete Microsoft's browser authorization on the first run
 section 'Synchronizing OneDrive'
