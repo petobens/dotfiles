@@ -38,7 +38,7 @@ for arg in "$@"; do
             exit
             ;;
         *)
-            echo "unknown option: $arg" >&2
+            printf 'unknown option: %s\n' "$arg" >&2
             usage >&2
             exit 2
             ;;
@@ -46,8 +46,7 @@ for arg in "$@"; do
 done
 
 if $prompt_latex && ! $install_latex; then
-    printf 'Install LaTeX with tlmgr? [y/n] '
-    read -r choice
+    read -r -p 'Install LaTeX with tlmgr? [y/n] ' choice
     [[ $choice == [yY] ]] && install_latex=true
 fi
 
