@@ -13,7 +13,7 @@ hl.on('hyprland.start', function()
 
     -- Initial display state
     hl.exec_cmd('brightnessctl set 30%')
-    hl.exec_cmd([[sh -c '[ -f "$HOME/Pictures/wallpaper.png" ] && hyprpaper']])
+    hl.exec_cmd('hyprpaper')
 
     -- Session services
     hl.exec_cmd('hypridle')

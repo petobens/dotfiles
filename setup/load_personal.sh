@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # personal.json uses OneDrive-relative paths for gpg_private, gpg_public, netrc,
-# ssh_config, ssh_private, ssh_public, and wallpaper. pass_repo is a URL and
-# repos is an array of URLs.
+# ssh_config, ssh_private, and ssh_public. pass_repo is a URL and repos is an
+# array of URLs.
 # shellcheck disable=SC2034
 onedrive=${ONEDRIVE_DIR:-"$HOME/OneDrive"}
 personal_config=${PERSONAL_CONFIG:-"$onedrive/programming/arch/personal.json"}
@@ -20,7 +20,6 @@ load_personal() {
     ssh_config="$onedrive/$(jq -er '.ssh_config' "$personal_config")"
     ssh_private="$onedrive/$(jq -er '.ssh_private' "$personal_config")"
     ssh_public="$onedrive/$(jq -er '.ssh_public' "$personal_config")"
-    wallpaper="$onedrive/$(jq -er '.wallpaper' "$personal_config")"
     mapfile -t repos < <(jq -er '.repos[]' "$personal_config")
     ((${#repos[@]}))
 }

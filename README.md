@@ -95,10 +95,9 @@ cd ~/git-repos/private/dotfiles
 ./setup/finish_setup.sh
 ```
 
-The helper synchronizes OneDrive and restores the personal credentials,
-repositories, and wallpaper configured in
-`~/OneDrive/programming/arch/personal.json`. Its keys are documented in
-`setup/load_personal.sh`.
+The helper synchronizes OneDrive and restores the personal credentials and
+repositories configured in `~/OneDrive/programming/arch/personal.json`. Its
+keys are documented in `setup/load_personal.sh`.
 
 Setup scripts resolve repository paths from their own location. They can also
 be run from inside `setup/` as `./install.sh`, `./symlinks.sh`, or

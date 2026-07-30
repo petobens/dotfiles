@@ -4,7 +4,7 @@ set -euo pipefail
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 backup_root=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-backup/$(date +%Y%m%d-%H%M%S)
 
-declare netrc personal_config ssh_config ssh_public wallpaper
+declare netrc personal_config ssh_config ssh_public
 
 # shellcheck disable=SC1091
 source "$repo/setup/load_personal.sh"
@@ -114,9 +114,6 @@ fi
 
 # User data directories
 mkdir -p "$HOME/Pictures/Screenshots"
-if [[ -n ${wallpaper:-} ]]; then
-    symlink_if_exists "$wallpaper" "$HOME/Pictures/wallpaper.png"
-fi
 
 printf 'Symlinked Wayland dotfiles from %s\n' "$repo"
 [[ ! -d $backup_root ]] || printf 'Previous files: %s\n' "$backup_root"
