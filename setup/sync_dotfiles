@@ -5,15 +5,16 @@ script_path=$(readlink -f "${BASH_SOURCE[0]}")
 repo=$(git -C "$(dirname "$script_path")/.." rev-parse --show-toplevel)
 cd "$repo"
 
+die() {
+    printf '%s\n' "$1" >&2
+    exit 1
+}
+
 branch=$(git branch --show-current)
-if [[ $branch != dotfiles-wayland ]]; then
-    echo "Run this from the dotfiles-wayland branch, not $branch." >&2
-    exit 1
-fi
-if [[ -n $(git status --porcelain) ]]; then
-    echo 'Commit or stash Wayland changes before syncing.' >&2
-    exit 1
-fi
+[[ $branch == dotfiles-wayland ]] ||
+    die "Run this from the dotfiles-wayland branch, not $branch."
+[[ -z $(git status --porcelain) ]] ||
+    die 'Commit or stash Wayland changes before syncing.'
 
 git fetch origin master
 if git merge-base --is-ancestor origin/master HEAD; then
@@ -31,10 +32,8 @@ fi
 mapfile -d '' -t conflicts < <(
     git diff --name-only --diff-filter=U -z
 )
-if ((${#conflicts[@]} == 0)); then
-    echo 'Merge failed without resolvable file conflicts.' >&2
-    exit 1
-fi
+((${#conflicts[@]})) ||
+    die 'Merge failed without resolvable file conflicts.'
 
 printf '\nConflicts (the Wayland version will be kept):\n'
 for path in "${conflicts[@]}"; do
@@ -58,14 +57,12 @@ for path in "${conflicts[@]}"; do
         git checkout --ours -- "$path"
         git add -- "$path"
     else
-        git rm --ignore-unmatch -- "$path"
+        git rm -- "$path"
     fi
 done
 
-if git diff --name-only --diff-filter=U | grep -q .; then
-    echo 'Some conflicts could not be resolved automatically.' >&2
-    exit 1
-fi
+git diff --quiet --diff-filter=U ||
+    die 'Some conflicts could not be resolved automatically.'
 
 git commit --no-edit
 echo 'Merged origin/master into dotfiles-wayland with Wayland conflicts kept.'
