@@ -13,7 +13,7 @@ mapfile -t packages < <(
 )
 
 if systemd-detect-virt --vm --quiet; then
-    section 'Skipping unnecessary applications in the VM'
+    section 'Skipping packages unnecessary in the VM'
     mapfile -t packages < <(
         printf '%s\n' "${packages[@]}" |
             grep -Fvx -f <(
