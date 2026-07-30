@@ -2,7 +2,7 @@
 set -euo pipefail
 
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-backup_root=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-backup/$(date +%Y%m%d-%H%M%S)
+backup_root=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles-backup/$(date +%Y%m%d-%H%M%S-%N)
 
 declare netrc personal_config ssh_config ssh_public
 
@@ -16,7 +16,7 @@ section() {
 symlink() {
     local source=$1 target=$2
     mkdir -p "$(dirname "$target")"
-    # Preserve real files but replace existing symlinks atomically
+    # Preserve real files but replace existing symlinks
     if [[ -e $target && ! -L $target ]]; then
         local backup="$backup_root/${target#"$HOME"/}"
         mkdir -p "$(dirname "$backup")"
@@ -99,8 +99,7 @@ symlink_if_exists "$skills_dir" "$HOME/.agents/skills"
 symlink_if_exists "$skills_dir" "$HOME/.claude/skills"
 
 # Credentials synchronized after the personal setup
-mkdir -p "$HOME/.gnupg"
-chmod 700 "$HOME/.gnupg"
+install -d -m700 "$HOME/.gnupg"
 symlink "$repo/config/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
 symlink /usr/bin/gopass "$HOME/.local/bin/pass"
 if [[ -r $personal_config ]]; then
