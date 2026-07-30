@@ -12,16 +12,10 @@ section 'Installing Python language tools'
 uv tool install --force aws-mfa
 uv tool install --force --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib,jupyter-ruff jupyterlab
 uv tool install --force --with numpy,pandas,matplotlib,matplotlib-backend-kitty --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
-uv tool install --force mypy
-uv tool install --force nbdime
-uv tool install --force pgcli
-uv tool install --force pre-commit
-uv tool install --force ruff
-uv tool install --force sqlfluff
-uv tool install --force git+https://github.com/will8211/unimatrix
-uv tool install --force uv-upx
-uv tool install --force yamllint
-uv tool install --force zuban
+for tool in mypy nbdime pgcli pre-commit ruff sqlfluff \
+    git+https://github.com/will8211/unimatrix uv-upx yamllint zuban; do
+    uv tool install --force "$tool"
+done
 
 section 'Installing Node language tools'
 npm config set prefix "$HOME/.npm-global"

@@ -1,16 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
 section() {
     printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
 }
 
+die() {
+    printf '%s\n' "$1" >&2
+    exit 1
+}
+
 # Verify the system dependencies needed by the native installer
 for command in curl git perl tar; do
-    command -v "$command" > /dev/null || {
-        echo "Missing $command. Install the system packages first." >&2
-        exit 1
-    }
+    command -v "$command" > /dev/null ||
+        die "Missing $command. Install the system packages first."
 done
 
 section 'Installing the arara Java runtime'
@@ -24,7 +29,7 @@ tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' -type f 2> /dev/nu
 if [[ -z $tlmgr ]]; then
     section 'Installing TeX Live'
     tmp=$(mktemp -d)
-    trap 'rm -rf "$tmp"' EXIT
+    trap 'rm -rf -- "$tmp"' EXIT
     archive="$tmp/install-tl-unx.tar.gz"
     curl --fail --location --output "$archive" \
         https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
@@ -35,102 +40,10 @@ if [[ -z $tlmgr ]]; then
         sort -V | tail -1)
 fi
 
-[[ -x $tlmgr ]] || {
-    echo 'TeX Live installation did not produce tlmgr.' >&2
-    exit 1
-}
+[[ -x $tlmgr ]] || die 'TeX Live installation did not produce tlmgr.'
 
 # Keep the requested TeX packages explicit and reproducible
-packages=(
-    algorithm2e
-    algorithmicx
-    arara
-    beamer
-    biber
-    biblatex
-    bitset
-    blkarray
-    booktabs
-    breqn
-    caption
-    catchfile
-    changelog
-    changepage
-    chktex
-    cleveref
-    collection-basic
-    collection-fontsrecommended
-    collection-langenglish
-    collection-langspanish
-    collection-latex
-    csquotes
-    embedfile
-    emptypage
-    enumitem
-    environ
-    etoolbox
-    fancyvrb
-    float
-    floatrow
-    fontawesome
-    footmisc
-    framed
-    fvextra
-    ifmtarg
-    ifoddpage
-    ifplatform
-    imakeidx
-    import
-    infwarerr
-    jknapltx
-    l3backend
-    l3kernel
-    l3packages
-    letltxmacro
-    lineno
-    lipsum
-    listings
-    logreq
-    mathabx
-    mathtools
-    mdwtools
-    microtype
-    minted
-    moderncv
-    multirow
-    newfloat
-    optidef
-    parskip
-    pdfescape
-    pdflscape
-    pdfpages
-    pdftexcmds
-    pgfplots
-    relsize
-    sansmath
-    setspace
-    silence
-    siunitx
-    soul
-    spreadtab
-    standalone
-    tcolorbox
-    texcount
-    texdoc
-    titlesec
-    todonotes
-    translations
-    translator
-    trimspaces
-    ulem
-    upquote
-    wrapfig
-    xcolor
-    xifthen
-    xkeyval
-    xpatch
-    xstring
-)
+mapfile -t packages < "$script_dir/packages/latex.txt"
 
 section 'Installing TeX Live packages'
 sudo "$tlmgr" update --self
