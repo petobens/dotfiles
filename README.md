@@ -35,7 +35,7 @@ cd /tmp/dotfiles
 
 Setup scripts resolve repository paths from their own location, so they can be
 run from the repository root as above or directly from inside `setup/`, for
-example as `./install_arch.sh`, `./install.sh`, or `./symlinks.sh`.
+example as `./install_arch.sh`, `./vm.sh`, or `./symlinks.sh`.
 
 The installer asks for the username, defaulting to `pedro`, and erases the
 selected disk only after an exact confirmation. It creates a 1 GiB EFI

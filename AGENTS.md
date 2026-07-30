@@ -48,7 +48,7 @@ desktop.
 ## Neovim (`nvim/`)
 
 All Neovim configuration lives in the `nvim/` directory. The following rules
-apply only when working inside that directory.
+apply only when working inside that directory unless stated otherwise.
 
 Ignore `nvim/cache/` for all purposes. Do not parse it, search it, or inspect
 files inside it unless explicitly asked to do so.
@@ -71,7 +71,7 @@ stylua \
   <file>
 ```
 
-Run this before committing changes to Neovim Lua files.
+Run StyLua on touched Lua files under `nvim/` or `hypr/`.
 
 #### Linting
 
@@ -95,7 +95,7 @@ ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
 "lua$ver" -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath; dofile('$entry')" -- --config ~/.config/.luacheckrc --globals vim -- <file>
 ```
 
-Run Luacheck on touched Lua files when making changes under `nvim/`.
+Run Luacheck on touched Lua files under `nvim/` or `hypr/`.
 
 ### Code conventions
 
