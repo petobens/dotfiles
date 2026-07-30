@@ -44,6 +44,7 @@ section 'Linking synchronized files'
 section 'Importing GPG keys'
 fingerprint=$(gpg --show-keys --with-colons "$gpg_public" |
     awk -F: '$1 == "fpr" && !found { print $10; found=1 }')
+[[ -n $fingerprint ]] || die "No GPG key found in $gpg_public"
 gpg --import "$gpg_public"
 if ! gpg --list-secret-keys "$fingerprint" > /dev/null 2>&1; then
     gpg --decrypt "$gpg_private" | gpg --import

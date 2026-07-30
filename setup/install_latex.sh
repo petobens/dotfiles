@@ -23,8 +23,11 @@ sudo pacman -S --needed --noconfirm jre21-openjdk-headless
 
 # Reuse the newest native TeX Live installation when available
 texlive_root=/usr/local/texlive
-tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' -type f 2> /dev/null |
-    sort -V | tail -1)
+tlmgr=
+if [[ -d $texlive_root ]]; then
+    tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' -type f |
+        sort -V | tail -1)
+fi
 
 if [[ -z $tlmgr ]]; then
     section 'Installing TeX Live'
@@ -35,6 +38,8 @@ if [[ -z $tlmgr ]]; then
         https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
     tar -xzf "$archive" -C "$tmp"
     installer=("$tmp"/install-tl-*/install-tl)
+    [[ -f ${installer[0]} ]] ||
+        die 'TeX Live archive did not contain the installer.'
     sudo perl "${installer[0]}" --no-interaction --scheme=basic
     tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' -type f |
         sort -V | tail -1)

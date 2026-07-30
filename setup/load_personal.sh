@@ -21,5 +21,8 @@ load_personal() {
     ssh_private="$onedrive/$(jq -er '.ssh_private' "$personal_config")"
     ssh_public="$onedrive/$(jq -er '.ssh_public' "$personal_config")"
     mapfile -t repos < <(jq -er '.repos[]' "$personal_config")
-    ((${#repos[@]}))
+    ((${#repos[@]})) || {
+        printf 'No repositories configured in %s\n' "$personal_config" >&2
+        return 1
+    }
 }
