@@ -71,6 +71,20 @@ sudo reboot
 Later invocations of `./setup/vm/vm.sh` detect the existing disk and launch
 without attaching the cached ISO.
 
+## Multiple displays
+
+Launch the VM with three 1920x1080 virtual displays:
+
+```bash
+./setup/vm/vm.sh multi
+```
+
+If the VM does not exist yet, `multi` creates it and boots the Arch installer
+like a normal launch, but with three displays. QEMU shows each display in a
+separate GTK tab, and Hyprland configures the virtual outputs through its
+fallback monitor rule. The physical display names and workspace assignments
+are not reproduced.
+
 ## Reset
 
 To discard the VM and repeat the complete installation:

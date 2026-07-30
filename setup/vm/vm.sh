@@ -12,9 +12,10 @@ iso=
 
 usage() {
     cat << EOF
-usage: $0 [launch|reset]
+usage: $0 [launch|multi|reset]
 
   launch  Launch the VM, preparing its first installation if needed (default)
+  multi   Launch the VM with three 1920x1080 virtual displays
   reset   Delete the VM, recreate it, and launch the Arch ISO
 EOF
 }
@@ -90,14 +91,23 @@ reset_state() {
 
 launch_vm() {
     local install_mode=$1
+    local display='gtk,gl=on,grab-on-hover=on,zoom-to-fit=on'
+    local gpu=virtio-vga-gl
+    if [[ $action == multi ]]; then
+        display+=',show-tabs=on'
+        gpu='{"driver":"virtio-vga-gl","max_outputs":3,"outputs":['
+        gpu+='{"name":"QEMU-1","xres":1920,"yres":1080},'
+        gpu+='{"name":"QEMU-2","xres":1920,"yres":1080},'
+        gpu+='{"name":"QEMU-3","xres":1920,"yres":1080}]}'
+    fi
     local args=(
         -name dotfiles-wayland
         -machine "q35,accel=kvm"
         -cpu host
         -smp 8
         -m 8192
-        -device virtio-vga-gl
-        -display "gtk,gl=on,grab-on-hover=on,zoom-to-fit=on"
+        -device "$gpu"
+        -display "$display"
         -audiodev "pipewire,id=audio0"
         -device ich9-intel-hda
         -device "hda-duplex,audiodev=audio0"
@@ -132,7 +142,7 @@ launch_vm() {
 action=${1:-launch}
 install_mode=false
 case $action in
-    launch)
+    launch | multi)
         ;;
     reset)
         install_mode=true
