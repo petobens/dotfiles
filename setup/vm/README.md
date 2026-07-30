@@ -1,8 +1,9 @@
 # Arch Wayland VM
 
 This disposable QEMU VM tests the same interactive Arch installer and dotfiles
-workflow used on physical hardware. It boots with UEFI, a virtual NVMe disk,
-accelerated graphics, PipeWire audio, and SSH forwarding on host port 2222.
+workflow used on physical hardware. It uses a virtual NVMe disk, provides SSH
+access through host port 2222, and installs the normal package set except for
+packages listed in [`vm_skip.txt`](../packages/vm_skip.txt).
 
 ## Host requirements
 
@@ -12,18 +13,21 @@ On an Arch host, install QEMU and the OVMF firmware:
 sudo pacman -S --needed qemu-desktop edk2-ovmf
 ```
 
-Enable hardware virtualization in the firmware settings. After booting the
-host, confirm that KVM is available to the current user:
+Hardware virtualization is commonly enabled by default. After booting the host,
+confirm that KVM is available to the current user:
 
 ```bash
 test -r /dev/kvm && test -w /dev/kvm && echo 'KVM ready'
 ```
 
+If the check fails because hardware virtualization is disabled, enable Intel
+VT-x or AMD SVM in the firmware settings.
+
 The VM script checks these requirements before creating or launching a VM.
 
 ## First installation
 
-Commit and push the Wayland branch, then run from the repository root:
+Commit and push the Wayland branch, then start the VM:
 
 ```bash
 ./setup/vm/vm.sh
@@ -46,12 +50,6 @@ cd /tmp/dotfiles
 ```
 
 Use `Ctrl-b [` to enter tmux scrollback, then `q` to leave it.
-
-At the `Target disk` prompt, press Enter to accept `/dev/nvme0n1`. The VM
-defaults to hostname `arch-vm`, a 1 GiB EFI partition, and a Btrfs root using
-the remaining space. The filesystem uses zstd compression with separate `@`,
-`@home`, `@var_log`, and `@pkg` subvolumes. The examples below use username
-`pedro`; substitute the selected username when different.
 
 After the installer finishes:
 
@@ -87,11 +85,11 @@ is retained between resets and replaced when a new Arch release is available.
 
 ## SSH and updates
 
-The post-install script enables password-based recovery SSH on every
-installation, including the VM and physical laptops.
+The [`post_install.sh`](../post_install.sh) script enables password-based
+recovery SSH on every installation, including the VM and physical laptops.
 
-After a reset, remove the previous host key and authorize the host's existing
-SSH key:
+After a reset, set `username` to the account selected during installation,
+remove the previous host key, and authorize the host's existing SSH key:
 
 ```bash
 username=pedro
