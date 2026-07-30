@@ -54,6 +54,7 @@ symlink "$repo/config/brave-flags.conf" "$HOME/.config/brave-flags.conf"
 symlink "$repo/config/fish" "$HOME/.config/fish"
 symlink "$repo/config/ghostty" "$HOME/.config/ghostty"
 symlink "$repo/hypr" "$HOME/.config/hypr"
+symlink "$repo/config/kitty" "$HOME/.config/kitty"
 symlink "$repo/config/mako" "$HOME/.config/mako"
 symlink "$repo/config/microsoft-edge-dev-flags.conf" \
     "$HOME/.config/microsoft-edge-dev-flags.conf"

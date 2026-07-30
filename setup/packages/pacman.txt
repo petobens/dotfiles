@@ -73,6 +73,7 @@ hyprpicker
 hyprpolkitagent
 hyprpwcenter
 hyprshutdown
+kitty
 libnotify
 libsecret
 mako

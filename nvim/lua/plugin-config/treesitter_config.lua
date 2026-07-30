@@ -7,6 +7,7 @@ require('nvim-treesitter').install({
     'fish',
     'html',
     'hyprlang',
+    'ini',
     'json',
     'latex',
     'lua',
@@ -25,6 +26,7 @@ require('nvim-treesitter').install({
 })
 
 -- Ft/Langugage register
+vim.treesitter.language.register('ini', 'ghostty')
 vim.treesitter.language.register('markdown', 'md')
 vim.treesitter.language.register('markdown', 'blink-cmp-documentation')
 vim.treesitter.language.register('markdown', 'codecompanion')
