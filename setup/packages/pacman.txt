@@ -43,6 +43,7 @@ htop
 jq
 less
 poppler
+prettyping
 python
 qrencode
 ripgrep

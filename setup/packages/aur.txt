@@ -13,7 +13,6 @@ dragon-drop
 forgit
 onedrive-abraunegg
 pandoc-bin
-prettyping
 
 # Development
 claude-code
