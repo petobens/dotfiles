@@ -43,21 +43,21 @@ section 'Linking synchronized files'
 
 section 'Importing GPG keys'
 fingerprint=$(gpg --show-keys --with-colons "$gpg_public" |
-    awk -F: '$1 == "fpr" { print $10; exit }')
+    awk -F: '$1 == "fpr" && !found { print $10; found=1 }')
 gpg --import "$gpg_public"
 if ! gpg --list-secret-keys "$fingerprint" > /dev/null 2>&1; then
     gpg --decrypt "$gpg_private" | gpg --import
 fi
 
 section 'Restoring SSH credentials'
-install -d -m 700 "$HOME/.ssh"
+install -d -m700 "$HOME/.ssh"
 if [[ ! -e $HOME/.ssh/id_rsa ]]; then
     (
         umask 077
         temporary_key=$(mktemp "$HOME/.ssh/id_rsa.XXXXXX")
         trap 'rm -f -- "$temporary_key"' EXIT
         gpg --output "$temporary_key" --decrypt "$ssh_private"
-        mv "$temporary_key" "$HOME/.ssh/id_rsa"
+        mv -- "$temporary_key" "$HOME/.ssh/id_rsa"
         trap - EXIT
     )
 fi
