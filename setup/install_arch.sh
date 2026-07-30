@@ -44,7 +44,10 @@ curl --fail --location --silent --show-error --output /dev/null https://archlinu
     die 'Connect to Ethernet or Wi-Fi before continuing'
 timedatectl set-ntp true
 
-section 'Checking installation settings'
+section 'Entering installation settings'
+read -r -p 'Use a larger console font? [y/N] ' choice
+[[ $choice == [yY] ]] && setfont ter-132n
+
 read -r -p 'Keyboard layout [us]: ' keymap
 keymap=${keymap:-us}
 localectl list-keymaps | grep -Fx "$keymap" > /dev/null || die "Unknown keyboard layout: $keymap"
