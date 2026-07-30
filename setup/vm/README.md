@@ -79,9 +79,9 @@ To discard the VM and repeat the complete installation:
 ./setup/vm/vm.sh reset
 ```
 
-The command verifies the ISO before deleting the disk, firmware state, and old
-backups. It then creates a blank VM and boots the installer. The verified ISO
-is retained between resets and replaced when a new Arch release is available.
+The command verifies the ISO before deleting the disk and firmware state. It
+then creates a blank VM and boots the installer. The verified ISO is retained
+between resets and replaced when a new Arch release is available.
 
 ## SSH and updates
 

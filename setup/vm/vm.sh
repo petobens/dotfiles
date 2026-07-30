@@ -23,39 +23,32 @@ section() {
     printf '\033[1;34m\n-> %s\033[0m\n' "$1"
 }
 
+die() {
+    printf '%s\n' "$1" >&2
+    exit 1
+}
+
 check_host() {
-    command -v qemu-system-x86_64 > /dev/null || {
-        echo 'Missing qemu-system-x86_64. Install qemu-desktop.' >&2
-        exit 1
-    }
-    if [[ ! -r /dev/kvm || ! -w /dev/kvm ]]; then
-        echo 'KVM is unavailable. Reboot, then check that /dev/kvm exists.' >&2
-        exit 1
-    fi
-    [[ -r $firmware_code ]] || {
-        echo 'Missing OVMF firmware. Install edk2-ovmf.' >&2
-        exit 1
-    }
+    command -v qemu-system-x86_64 > /dev/null ||
+        die 'Missing qemu-system-x86_64. Install qemu-desktop.'
+    [[ -r /dev/kvm && -w /dev/kvm ]] ||
+        die 'KVM is unavailable. Reboot, then check that /dev/kvm exists.'
+    [[ -r $firmware_code ]] ||
+        die 'Missing OVMF firmware. Install edk2-ovmf.'
 }
 
 prepare_install_media() {
     local checksum required_command
 
     for required_command in curl sha256sum awk; do
-        command -v "$required_command" > /dev/null || {
-            echo "Missing $required_command." >&2
-            exit 1
-        }
+        command -v "$required_command" > /dev/null ||
+            die "Missing $required_command."
     done
 
-    mkdir -p "$state_dir"
     section 'Preparing Arch ISO'
     checksum=$(curl --fail --location "$checksum_url" |
         awk '$2 == "archlinux-x86_64.iso" {print $1}')
-    [[ -n $checksum ]] || {
-        echo 'Could not find the Arch ISO checksum.' >&2
-        exit 1
-    }
+    [[ -n $checksum ]] || die 'Could not find the Arch ISO checksum.'
 
     iso="$state_dir/archlinux-$checksum.iso"
     if [[ ! -f $iso ]] ||
@@ -66,7 +59,7 @@ prepare_install_media() {
             sha256sum --check --status
         mv "$iso.part" "$iso"
     fi
-    printf '%s  %s\n' "$checksum" "$iso" | sha256sum --check
+    printf 'Verified %s\n' "$iso"
 
     shopt -s nullglob
     for old_iso in "$state_dir"/archlinux-*.iso; do
@@ -76,45 +69,29 @@ prepare_install_media() {
 }
 
 initialize_state() {
-    mkdir -p "$state_dir"
     if [[ ! -f $disk ]]; then
-        command -v qemu-img > /dev/null || {
-            echo 'Missing qemu-img. Install qemu-desktop.' >&2
-            exit 1
-        }
+        command -v qemu-img > /dev/null ||
+            die 'Missing qemu-img. Install qemu-desktop.'
         section 'Creating disk'
         qemu-img create -f qcow2 -o nocow=on "$disk" 96G
     fi
     if [[ ! -f $firmware_vars ]]; then
-        [[ -r $firmware_vars_template ]] || {
-            echo 'Missing OVMF firmware. Install edk2-ovmf.' >&2
-            exit 1
-        }
+        [[ -r $firmware_vars_template ]] ||
+            die 'Missing OVMF firmware. Install edk2-ovmf.'
         section 'Initializing firmware'
         cp "$firmware_vars_template" "$firmware_vars"
     fi
 }
 
 reset_state() {
-    local -a old_state
-
     section 'Resetting VM'
-    shopt -s nullglob
-    old_state=(
-        "$disk"
-        "$firmware_vars"
-        "$disk".*.bak
-        "$firmware_vars".*.bak
-    )
-    rm -f -- "${old_state[@]}"
-    shopt -u nullglob
+    rm -f -- "$disk" "$firmware_vars"
 }
 
 launch_vm() {
     local install_mode=$1
     local args=(
         -name dotfiles-wayland
-        -enable-kvm
         -machine "q35,accel=kvm"
         -cpu host
         -smp 8
@@ -171,6 +148,7 @@ case $action in
 esac
 
 check_host
+mkdir -p "$state_dir"
 # Existing disks launch normally; resets and first installs prepare the ISO
 if [[ $action == reset ]]; then
     prepare_install_media
