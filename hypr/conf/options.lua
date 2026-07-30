@@ -7,10 +7,10 @@ hl.config({
     general = {
         layout = 'dwindle',
         gaps_in = 4,
-        gaps_out = 8,
+        gaps_out = 4,
         border_size = 2,
         col = {
-            active_border = '#61afef',
+            active_border = '#4b5263',
             inactive_border = '#282c34',
         },
         resize_on_border = true,
