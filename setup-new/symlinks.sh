@@ -158,8 +158,11 @@ fi
 
 # AI
 skills_dir="$dotfiles_dir/../ai-harness/skills"
+user_rules="$dotfiles_dir/../ai-harness/rules/USER.md"
 if type "claude" > /dev/null 2>&1; then
     mkdir -p "$HOME/.claude"
+    $ln_cmd -fTs "$user_rules" "$HOME/.claude/CLAUDE.md"
+    echo Created .claude/CLAUDE.md symlink
     $ln_cmd -fTs "$dotfiles_dir/config/claude/settings.json" "$HOME/.claude/settings.json"
     echo Created .claude/settings.json symlink
     $ln_cmd -fTs "$dotfiles_dir/config/claude/statusline.sh" "$HOME/.claude/statusline.sh"
@@ -169,6 +172,8 @@ if type "claude" > /dev/null 2>&1; then
 fi
 if type "codex" > /dev/null 2>&1; then
     mkdir -p "$HOME/.codex" "$HOME/.agents"
+    $ln_cmd -fTs "$user_rules" "$HOME/.codex/AGENTS.md"
+    echo Created .codex/AGENTS.md symlink
     $ln_cmd -fTs "$dotfiles_dir/config/codex/config.toml" "$HOME/.codex/config.toml"
     echo Created .codex/config.toml symlink
     $ln_cmd -fTs "$skills_dir" "$HOME/.agents/skills"

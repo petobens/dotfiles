@@ -25,20 +25,14 @@ local function repo_rule_file(path)
         or repo_helpers.git_root_file('CLAUDE.md', path)
 end
 
-local function rule_files(opts)
-    opts = opts or {}
-
+local function rule_files(path)
     local files = {}
     local user_file = user_rule_file()
     if user_file then
         table.insert(files, user_file)
     end
 
-    if opts.skip_repo_rules then
-        return files
-    end
-
-    local file = repo_rule_file(opts.path or vim.uv.cwd())
+    local file = repo_rule_file(path or vim.uv.cwd())
     if file then
         table.insert(files, file)
     end
@@ -68,7 +62,7 @@ local function reload_chat_rules(chat)
     chat:remove_tagged_message('rules')
     chat:refresh_context()
 
-    local files = rule_files({ skip_repo_rules = chat.adapter.type == 'acp' })
+    local files = chat.adapter.type == 'acp' and {} or rule_files()
     if not vim.tbl_isempty(files) then
         codecompanion_rules.add_to_chat_from_config(chat, {
             name = 'default',
@@ -92,13 +86,14 @@ function M.build()
             chat = {
                 autoload = function()
                     local adapter_name = codecompanion_config.interactions.chat.adapter
+                    if codecompanion_config.adapters.acp[adapter_name] then
+                        codecompanion_config.rules.default.files = {}
+                        return {}
+                    end
+
                     local bufname = vim.api.nvim_buf_get_name(0)
                     local dir = bufname ~= '' and vim.fs.dirname(bufname) or vim.uv.cwd()
-                    local files = rule_files({
-                        path = dir,
-                        skip_repo_rules = codecompanion_config.adapters.acp[adapter_name]
-                            ~= nil,
-                    })
+                    local files = rule_files(dir)
                     codecompanion_config.rules.default.files = files
                     return not vim.tbl_isempty(files) and 'default' or {}
                 end,
