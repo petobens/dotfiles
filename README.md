@@ -4,17 +4,17 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 
 ## Stack
 
-| Area            | Tools                                                |
-| --------------- | ---------------------------------------------------- |
-| Audio           | PipeWire, WirePlumber                                |
-| Development     | Neovim                                               |
-| Desktop         | Hyprland, Mako, Rofi, Waybar                         |
-| Files and media | imv, Yazi                                            |
-| Network         | NetworkManager, nmtui                                |
-| Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard        |
-| System          | Btrfs, fwupd, Intel LPMD, scx_lavd, systemd-boot,    |
-|                 | thermald, TLP, UKI, zram                             |
-| Terminal        | Fish, Ghostty, Starship, tmux                        |
+| Area            | Tools                                             |
+| --------------- | ------------------------------------------------- |
+| Audio           | PipeWire, WirePlumber                             |
+| Development     | Neovim                                            |
+| Desktop         | Hyprland, Mako, Rofi, Waybar                      |
+| Files and media | imv, Yazi                                         |
+| Network         | NetworkManager, nmtui                             |
+| Session         | Grim, Hypridle, Hyprlock, Slurp, wl-clipboard     |
+| System          | Btrfs, fwupd, Intel LPMD, scx_lavd, systemd-boot, |
+|                 | thermald, TLP, UKI, zram                          |
+| Terminal        | Fish, Ghostty, Starship, tmux                     |
 
 ## Install Arch
 
@@ -33,22 +33,25 @@ cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
 
-The installer asks for the normal username, defaulting to `pedro`. It erases
-the selected disk only after an exact confirmation. It creates a 1 GiB EFI
-partition and a zstd-compressed Btrfs filesystem with separate `@` and `@home`
-subvolumes, plus `@var_log` and `@pkg` so future root snapshots exclude logs
-and cached packages. Discoverable partitions mount root and the EFI partition;
-`fstab` mounts the remaining subvolumes. The installer also creates default and
-fallback unified kernel images for both the standard and LTS kernels, then
-clones this branch into `~/git-repos/private/dotfiles`.
+Setup scripts resolve repository paths from their own location, so they can be
+run from the repository root as above or directly from inside `setup/`, for
+example as `./install_arch.sh`, `./install.sh`, or `./symlinks.sh`.
 
-Snapshot tooling, disk encryption, and Secure Boot are intentionally omitted.
-The flat subvolume layout leaves room to add root snapshots later without
-including `/home`, logs, or cached packages.
+The installer asks for the username, defaulting to `pedro`, and erases the
+selected disk only after an exact confirmation. It creates a 1 GiB EFI
+partition and a zstd-compressed Btrfs filesystem with `@`, `@home`, `@var_log`,
+and `@pkg` subvolumes. This layout keeps home files, logs, and cached packages
+out of future root snapshots, although snapshot tooling and disk encryption are
+not included.
 
-The base install uses Intel-specific firmware for the target laptop. The
-installation also configures monthly Btrfs scrubs, weekly package-cache
-cleanup, zram, and the `scx_lavd` CPU scheduler.
+Root and EFI use discoverable partitions, while `fstab` mounts the remaining
+subvolumes. The installer creates default and fallback unified kernel images
+for the standard and LTS kernels without enabling Secure Boot. It then clones
+this branch into `~/git-repos/private/dotfiles`.
+
+The installation uses Intel firmware for the target system and configures,
+among other things, monthly Btrfs scrubs, weekly package-cache cleanup, zram,
+and the `scx_lavd` CPU scheduler.
 
 After installation, unmount before rebooting:
 
@@ -95,13 +98,9 @@ cd ~/git-repos/private/dotfiles
 ./setup/finish_setup.sh
 ```
 
-The helper synchronizes OneDrive and restores the personal credentials and
-repositories configured in `~/OneDrive/programming/arch/personal.json`. Its
-keys are documented in `setup/load_personal.sh`.
-
-Setup scripts resolve repository paths from their own location. They can also
-be run from inside `setup/` as `./install.sh`, `./symlinks.sh`, or
-`./sync_dotfiles`.
+The helper restores personal credentials and repositories from a
+`personal.json` file stored in cloud storage. Its supported keys are documented
+in `setup/load_personal.sh`.
 
 ## Repository
 
