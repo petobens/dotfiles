@@ -2,6 +2,8 @@
 set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+policies_dir="$script_dir/../config/browser-policies"
+
 current_step=0
 total_steps=$(grep -c "^section '" "${BASH_SOURCE[0]}")
 
@@ -23,15 +25,13 @@ ensure_pam_rule() {
 }
 
 section 'Configuring CPU scheduler'
-sudo install -d /etc/scx_loader
-sudo tee /etc/scx_loader/config.toml > /dev/null << 'EOF'
+sudo install -Dm644 /dev/stdin /etc/scx_loader/config.toml << 'EOF'
 default_sched = "scx_lavd"
 default_mode = "Auto"
 EOF
 
 section 'Configuring CPU power management'
-sudo install -d /etc/tlp.d
-sudo tee /etc/tlp.d/10-performance.conf > /dev/null << 'EOF'
+sudo install -Dm644 /dev/stdin /etc/tlp.d/10-performance.conf << 'EOF'
 CPU_HWP_DYN_BOOST_ON_AC=1
 CPU_HWP_DYN_BOOST_ON_BAT=0
 CPU_HWP_DYN_BOOST_ON_SAV=0
@@ -40,29 +40,27 @@ WIFI_PWR_ON_BAT=off
 EOF
 
 section 'Configuring compressed swap'
-sudo tee /etc/systemd/zram-generator.conf > /dev/null << 'EOF'
+sudo install -Dm644 /dev/stdin /etc/systemd/zram-generator.conf << 'EOF'
 [zram0]
 zram-size = ram / 2
 compression-algorithm = zstd
 EOF
-sudo tee /etc/sysctl.d/99-zram.conf > /dev/null << 'EOF'
+sudo install -Dm644 /dev/stdin /etc/sysctl.d/99-zram.conf << 'EOF'
 vm.page-cluster = 0
 vm.swappiness = 180
 EOF
 
 section 'Limiting persistent logs'
-sudo install -d /etc/systemd/journald.conf.d
-sudo tee /etc/systemd/journald.conf.d/size.conf > /dev/null << 'EOF'
+sudo install -Dm644 /dev/stdin /etc/systemd/journald.conf.d/size.conf << 'EOF'
 [Journal]
 SystemMaxUse=250M
 EOF
 
-section 'Creating mount points'
+section 'Creating NFS mount point'
 sudo install -d /mnt/nfs
 
 section 'Configuring recovery SSH'
-sudo install -d /etc/ssh/sshd_config.d
-sudo tee /etc/ssh/sshd_config.d/10-recovery.conf > /dev/null << EOF
+sudo install -Dm644 /dev/stdin /etc/ssh/sshd_config.d/10-recovery.conf << EOF
 PasswordAuthentication yes
 KbdInteractiveAuthentication no
 PermitRootLogin no
@@ -89,25 +87,27 @@ if ! grep -q '^hosts:.*mdns_minimal' /etc/nsswitch.conf; then
 fi
 
 section 'Enabling system services'
-sudo systemctl enable scx_loader.service
-sudo systemctl enable tlp
+sudo systemctl enable \
+    bluetooth \
+    NetworkManager \
+    paccache.timer \
+    scx_loader.service \
+    tlp
+sudo systemctl enable --now \
+    avahi-daemon.socket \
+    cups.socket \
+    sshd.service \
+    systemd-timesyncd
 if ! systemd-detect-virt --vm --quiet; then
+    sudo systemctl enable fwupd-refresh.timer
     sudo systemctl enable --now intel_lpmd.service
     # Lenovo DYTC provides the thermal policy on supported ThinkPads
     if [[ ! -e /sys/devices/platform/thinkpad_acpi/dytc_lapmode ]]; then
         sudo systemctl enable --now thermald.service
     fi
-    sudo systemctl enable fwupd-refresh.timer
 fi
-sudo systemctl enable NetworkManager
-sudo systemctl enable --now systemd-timesyncd
-sudo systemctl enable --now avahi-daemon.socket
-sudo systemctl enable --now sshd.service
-sudo systemctl enable bluetooth
-sudo systemctl enable --now cups.socket
-sudo systemctl enable paccache.timer
 
-section 'Configuring login and user services'
+section 'Configuring login and keyring'
 # Fish login sessions start Hyprland after tty1 authentication
 sudo chsh -s "$(command -v fish)" "$USER"
 ensure_pam_rule \
@@ -122,19 +122,21 @@ ensure_pam_rule \
     /etc/pam.d/passwd \
     '^password[[:space:]]+include[[:space:]]+system-auth$' \
     'password optional pam_gnome_keyring.so'
-systemctl --user enable gnome-keyring-daemon.socket
-systemctl --user enable pipewire
-systemctl --user enable pipewire-pulse
-systemctl --user enable wireplumber
 
-section 'Configuring development services'
+section 'Enabling user services'
+systemctl --user enable \
+    gnome-keyring-daemon.socket \
+    pipewire \
+    pipewire-pulse \
+    wireplumber
+
+section 'Configuring Docker'
 sudo usermod -aG docker "$USER"
 mkdir -p "$HOME/.cache/docker"
 if [[ $(findmnt -no FSTYPE --target "$HOME/.cache/docker") == btrfs ]]; then
     chattr +C "$HOME/.cache/docker"
 fi
-sudo install -d /etc/docker
-sudo tee /etc/docker/daemon.json > /dev/null << EOF
+sudo install -Dm644 /dev/stdin /etc/docker/daemon.json << EOF
 {
     "data-root": "$HOME/.cache/docker"
 }
@@ -150,19 +152,19 @@ done
 
 section 'Installing browser policies'
 sudo install -Dm644 \
-    "$script_dir/../config/browser-policies/brave.json" \
+    "$policies_dir/brave.json" \
     /etc/brave/policies/managed/dotfiles.json
 sudo install -Dm644 \
-    "$script_dir/../config/browser-policies/chromium-recommended.json" \
+    "$policies_dir/chromium-recommended.json" \
     /etc/brave/policies/recommended/dotfiles.json
 sudo install -Dm644 \
-    "$script_dir/../config/browser-policies/edge.json" \
+    "$policies_dir/edge.json" \
     /etc/opt/edge/policies/managed/dotfiles.json
 sudo install -Dm644 \
-    "$script_dir/../config/browser-policies/chromium-recommended.json" \
+    "$policies_dir/chromium-recommended.json" \
     /etc/opt/edge/policies/recommended/dotfiles.json
 sudo install -Dm644 \
-    "$script_dir/../config/browser-policies/firefox.json" \
+    "$policies_dir/firefox.json" \
     /etc/firefox/policies/policies.json
 
 section 'Setting application defaults'
@@ -180,7 +182,7 @@ if command -v spotify > /dev/null &&
     printf 'app.autostart-mode="off"\n' > "$HOME/.config/spotify/prefs"
 fi
 
-section 'Configuring Gopass'
+section 'Configuring gopass'
 gopass config generate.autoclip false
 gopass config core.notifications false
 gopass config mounts.path "$HOME/.password-store"
