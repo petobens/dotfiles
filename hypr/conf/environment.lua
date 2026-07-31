@@ -6,6 +6,7 @@ local environment = {
     -- Cursors
     HYPRCURSOR_SIZE = cursor_size,
     XCURSOR_SIZE = cursor_size,
+    XCURSOR_THEME = 'capitaine-cursors',
 
     -- Application toolkits
     ELECTRON_OZONE_PLATFORM_HINT = 'auto',

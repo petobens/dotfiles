@@ -1,5 +1,6 @@
 configuration {
 	font: "Source Code Pro 11";
+	icon-theme: "Papirus-Dark";
 	location: 0;
 	yoffset: -50;
 	fixed-num-lines: false;

@@ -147,6 +147,11 @@ EOF
 sudo systemctl enable --now docker.socket
 
 section 'Setting desktop defaults'
+gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+gsettings set org.gnome.desktop.interface cursor-size 24
+gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors
+gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
+gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark
 xdg-user-dirs-update
 xdg-mime default org.pwmt.zathura-pdf-poppler.desktop application/pdf
 for mime in image/gif image/jpeg image/png image/svg+xml image/webp; do
