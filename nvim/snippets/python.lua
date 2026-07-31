@@ -311,18 +311,6 @@ return {
         ),
         { condition = line_begin }
     ),
-    s(
-        { trig = 'imk', dscr = 'Import kitty backend' },
-        fmta(
-            [[
-            import matplotlib
-
-            matplotlib.use('module://matplotlib-backend-kitty')
-        ]],
-            {}
-        ),
-        { condition = line_begin }
-    ),
     ---- Datetime
     s(
         { trig = 'fdt', dscr = 'From datetime' },

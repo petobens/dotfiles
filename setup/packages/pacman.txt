@@ -29,8 +29,10 @@ zram-generator
 # Command-line tools
 7zip
 bat
+bind
 chafa
 curl
+dust
 eza
 fastfetch
 fd
@@ -39,16 +41,20 @@ fish
 fzf
 git
 gnupg
+go-yq
 gopass
 htop
+hyperfine
 jq
 less
+lsof
+nmap
 poppler
 prettyping
 python
-qrencode
 ripgrep
 rsync
+sqlite
 sshpass
 starship
 tmux
@@ -63,8 +69,10 @@ zoxide
 
 # Wayland desktop
 adobe-source-code-pro-fonts
+capitaine-cursors
 ghostty
 gnome-keyring
+gnome-themes-extra
 grim
 hypridle
 hyprland
@@ -81,6 +89,7 @@ mako
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
+papirus-icon-theme
 qt6-wayland
 rofi
 slurp
@@ -118,7 +127,6 @@ wireplumber
 
 # Applications
 cups
-cups-pdf
 cups-pk-helper
 firefox
 imv
@@ -141,8 +149,6 @@ git-delta
 github-cli
 googleworkspace-cli
 imagemagick
-linux-headers
-linux-lts-headers
 lua
 luacheck
 luarocks
@@ -157,7 +163,6 @@ qemu-desktop
 rustup
 shellcheck
 shfmt
-socat
 stylua
 taplo-cli
 tree-sitter-cli

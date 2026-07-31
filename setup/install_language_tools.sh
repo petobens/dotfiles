@@ -13,9 +13,18 @@ python -m pip install --user --break-system-packages --upgrade pdbpp
 section 'Installing Python language tools'
 uv tool install --force aws-mfa
 uv tool install --force --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib,jupyter-ruff jupyterlab
-uv tool install --force --with numpy,pandas,matplotlib,matplotlib-backend-kitty --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
-for tool in mypy nbdime pgcli pre-commit ruff sqlfluff \
-    git+https://github.com/will8211/unimatrix uv-upx yamllint zuban; do
+uv tool install --force --with numpy,pandas,matplotlib --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
+for tool in \
+    mypy \
+    nbdime \
+    pgcli \
+    pre-commit \
+    ruff \
+    sqlfluff \
+    git+https://github.com/will8211/unimatrix \
+    uv-upx \
+    yamllint \
+    zuban; do
     uv tool install --force "$tool"
 done
 
