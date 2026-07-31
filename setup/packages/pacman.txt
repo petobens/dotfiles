@@ -133,7 +133,6 @@ zathura-pdf-poppler
 act
 actionlint
 base-devel
-blas-openblas
 docker
 docker-buildx
 docker-compose
@@ -153,7 +152,6 @@ npm
 ollama
 openai-codex
 perl
-python-numpy
 python-pip
 qemu-desktop
 rustup
