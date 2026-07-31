@@ -13,6 +13,7 @@ dragon-drop
 forgit
 onedrive-abraunegg
 pandoc-bin
+voxtype-bin
 
 # Development
 claude-code

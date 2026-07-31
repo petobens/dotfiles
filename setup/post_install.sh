@@ -189,6 +189,11 @@ if command -v spotify > /dev/null &&
     mkdir -p "$HOME/.config/spotify"
     printf 'app.autostart-mode="off"\n' > "$HOME/.config/spotify/prefs"
 fi
+# This runs before config symlinks, so keep the model in sync with
+# config/voxtype/config.toml
+if command -v voxtype > /dev/null; then
+    voxtype setup --download --model small
+fi
 
 section 'Configuring gopass'
 gopass config generate.autoclip false

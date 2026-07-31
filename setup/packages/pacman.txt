@@ -96,6 +96,7 @@ ttf-nerd-fonts-symbols
 waybar
 wf-recorder
 wl-clipboard
+wtype
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland
 xdg-user-dirs

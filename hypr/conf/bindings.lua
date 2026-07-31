@@ -311,6 +311,10 @@ exec(super_shift .. ' + J', player_command .. ' next', 'Next track')
 exec(super_shift .. ' + K', player_command .. ' previous', 'Previous track')
 exec(super_shift .. ' + T', scripts .. 'spotify_track', 'Show current track')
 
+-- Dictation (hold to talk; the text is typed into the focused window)
+exec('F10', 'voxtype record start', 'Start dictation')
+exec('F10', 'voxtype record stop', 'Stop dictation', { release = true })
+
 -- Hardware and desktop
 exec(
     'XF86MonBrightnessUp',

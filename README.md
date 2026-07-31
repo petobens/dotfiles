@@ -8,7 +8,7 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | --------------- | ------------------------------------------------- |
 | Audio           | PipeWire, WirePlumber                             |
 | Development     | Neovim                                            |
-| Desktop         | Hyprland, Mako, Rofi, Waybar                      |
+| Desktop         | Hyprland, Mako, Rofi, Voxtype, Waybar             |
 | Files and media | imv, Yazi                                         |
 | Network         | NetworkManager, nmtui                             |
 | Session         | Grim, Hypridle, Hyprlock, Slurp, wf-recorder,     |
