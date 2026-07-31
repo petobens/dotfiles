@@ -10,6 +10,19 @@ die() {
     exit 1
 }
 
+review_new_files() {
+    local answer files
+    files=$(git diff --cached --name-only --diff-filter=A)
+    [[ -z $files ]] && return 0
+
+    printf '\nNew files from master:\n%s\n' "$files"
+    read -r -p 'Keep these files and complete the merge? [y/N] ' answer ||
+        answer=
+    [[ $answer == [Yy] ]] && return 0
+    git merge --abort
+    die 'Merge aborted because new files were not approved.'
+}
+
 printf '\033[1;32m\n:: Starting dotfiles synchronization\033[0m\n'
 
 branch=$(git branch --show-current)
@@ -24,7 +37,9 @@ if git merge-base --is-ancestor origin/master HEAD; then
     exit
 fi
 
-if git merge --no-edit -X ours origin/master; then
+if git merge --no-commit --no-ff -X ours origin/master; then
+    review_new_files
+    git commit --no-edit
     echo 'Merged origin/master into dotfiles-wayland.'
     exit
 fi
@@ -66,5 +81,6 @@ done
 git diff --quiet --diff-filter=U ||
     die 'Some conflicts could not be resolved automatically.'
 
+review_new_files
 git commit --no-edit
 echo 'Merged origin/master into dotfiles-wayland with Wayland conflicts kept.'
