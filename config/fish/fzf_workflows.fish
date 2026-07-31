@@ -242,7 +242,11 @@ function bt --description 'Manage Bluetooth devices with FZF'
             set action remove
     end
     for device in $out[2..]
-        bluetoothctl "$action" (string split ' ' "$device")[2]
+        if test "$action" = pair
+            bluetoothctl --agent KeyboardDisplay pair (string split ' ' "$device")[2]
+        else
+            bluetoothctl "$action" (string split ' ' "$device")[2]
+        end
     end
 end
 

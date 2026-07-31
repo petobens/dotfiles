@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="video4linux", SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="085e", RUN+="/usr/bin/v4l2-ctl --set-ctrl=zoom_absolute=160 --device=/dev/%k"

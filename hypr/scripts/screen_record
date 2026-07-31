@@ -42,13 +42,22 @@ esac
 geometry=$(slurp) || exit 0
 mkdir -p "$directory"
 video="$directory/$(date +'%Y-%m-%d_%H-%M-%S').mp4"
-wf-recorder -g "$geometry" -f "$video" > /dev/null 2>&1 &
-printf '%s %s %s\n' "$!" "$video" "$format" > "$state"
+# Encode on the Intel GPU when its render node is accessible
+encoder=()
+[[ -w /dev/dri/renderD128 ]] && encoder=(-c h264_vaapi -d /dev/dri/renderD128)
+wf-recorder -g "$geometry" "${encoder[@]}" -f "$video" > /dev/null 2>&1 &
+pid=$!
 sleep 0.1
-if ! kill -0 "$!" 2> /dev/null; then
-    rm -f "$state"
+if ! kill -0 "$pid" 2> /dev/null && ((${#encoder[@]})); then
+    wait "$pid" || true
+    wf-recorder -g "$geometry" -f "$video" > /dev/null 2>&1 &
+    pid=$!
+    sleep 0.1
+fi
+if ! kill -0 "$pid" 2> /dev/null; then
     notify-send -u critical -i media-record 'Recording failed to start'
     exit 1
 fi
+printf '%s %s %s\n' "$pid" "$video" "$format" > "$state"
 notify-send -t 2000 -i media-record "Recording started ($format)" \
     'Press the same shortcut to stop'

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ $(printf '%s\n' no yes | rofi -dmenu -p 'eject media drives?') == yes ]] || exit 0
+
+udiskie-umount --all --detach
+notify-send -t 2500 -i media-removable 'Media drives ejected'

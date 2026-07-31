@@ -31,9 +31,9 @@ case ${1:-} in
         ;;
     bluetooth)
         tag=bluetooth
-        class='^(blueman-manager|Blueman-manager)$'
+        class='^bluetooth$'
         workspace=current
-        command='blueman-manager'
+        command='ghostty --class=bluetooth --title=bluetooth -e fish -c bt'
         ;;
     brave)
         tag=brave

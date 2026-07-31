@@ -85,6 +85,11 @@ separate GTK tab, and Hyprland configures the virtual outputs through its
 fallback monitor rule. The physical display names and workspace assignments
 are not reproduced.
 
+`Super+Shift+Return` mirrors onto the virtual outputs and can be tested here,
+while `Super+Return` falls back to the multi-display layout because the VM has
+no laptop panel. On hardware that binding disables every other output,
+including displays matched only by the fallback rule.
+
 ## Reset
 
 To discard the VM and repeat the complete installation:

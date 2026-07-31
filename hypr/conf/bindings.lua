@@ -257,6 +257,7 @@ exec(super .. ' + W', scripts .. 'window_switcher current', 'Workspace window sw
 exec(super .. ' + S', 'rofi -show drun', 'Application launcher')
 launch(super .. ' + A', 'menu', 'Curated application launcher')
 exec(super .. ' + Z', scripts .. 'password_menu', 'Password menu')
+exec(super .. ' + V', scripts .. 'clipboard_menu', 'Clipboard history')
 exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
 exec(super .. ' + X', 'ghostty --class=terminal', 'Terminal')
 
@@ -337,6 +338,7 @@ exec(
 )
 exec(super .. ' + B', 'pkill -SIGUSR2 waybar', 'Reload Waybar')
 exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
+exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 launch(super_alt .. ' + B', 'trash', 'Show trash')
 exec(ctrl_alt .. ' + SPACE', 'makoctl dismiss', 'Dismiss notification')
 exec(ctrl_shift .. ' + SPACE', 'makoctl dismiss --all', 'Dismiss all notifications')

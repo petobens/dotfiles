@@ -39,7 +39,7 @@ window_rule('^Qemu-system-x86_64$', { workspace = '1', maximize = true })
 
 -- Application layouts
 window_rule(
-    '^(about|blueman-manager|Blueman-manager|hyprpwcenter|'
+    '^(about|bluetooth|hyprpwcenter|'
         .. 'org.hyprland.hyprpwcenter|localsend|localsend_app|numbers|quickterm)$',
     { size = { half_width, half_height }, center = true }
 )

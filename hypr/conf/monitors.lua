@@ -17,13 +17,6 @@ local function laptop_monitor(position)
     })
 end
 
-local function primary()
-    laptop_monitor('0x0')
-    for _, output in ipairs(others) do
-        hl.monitor({ output = output, disabled = true })
-    end
-end
-
 local function multi()
     hl.monitor({
         output = external_left,
@@ -50,6 +43,23 @@ local function multi()
         mirror = '',
         disabled = false,
     })
+end
+
+local function primary()
+    -- Disabling every other output without the laptop panel connected, as in
+    -- the VM, would leave no display enabled at all
+    local connected = false
+    for _, monitor in ipairs(hl.get_monitors()) do
+        connected = connected or monitor.name == laptop
+    end
+    if not connected then
+        return multi()
+    end
+
+    laptop_monitor('0x0')
+    for _, output in ipairs(others) do
+        hl.monitor({ output = output, disabled = true })
+    end
 end
 
 -- Duplicate the laptop screen on every other display (projectors, TVs)

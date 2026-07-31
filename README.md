@@ -11,8 +11,8 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Desktop         | Hyprland, Mako, Rofi, Voxtype, Waybar             |
 | Files and media | imv, Yazi                                         |
 | Network         | NetworkManager, nmtui                             |
-| Session         | Grim, Hypridle, Hyprlock, Slurp, wf-recorder,     |
-|                 | wl-clipboard                                      |
+| Session         | cliphist, Grim, Hypridle, Hyprlock, Slurp,        |
+|                 | wf-recorder, wl-clipboard                         |
 | System          | Btrfs, fwupd, Intel LPMD, scx_lavd, systemd-boot, |
 |                 | thermald, TLP, UKI, zram                          |
 | Terminal        | Fish, Ghostty, Starship, tmux                     |
@@ -109,8 +109,8 @@ in `setup/load_personal.sh`.
 - `config/`: application, home, and development-tool configuration
 - `hypr/`: Hyprland configuration and desktop helpers
 - `nvim/`: Neovim configuration
-- `setup/`: package lists, installation, sync and symlink scripts, and the
-  disposable QEMU test machine
+- `setup/`: package lists, installation, sync and symlink scripts, udev rules,
+  and the disposable QEMU test machine
 
 ## Sync from master
 

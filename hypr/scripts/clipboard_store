@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+marker="${XDG_RUNTIME_DIR:?}/cliphist-ignore"
+if [[ ! -e $marker ]]; then
+    cliphist store
+    exit
+fi
+
+payload=$(mktemp "$XDG_RUNTIME_DIR/cliphist.XXXXXX")
+trap 'rm -f "$payload"' EXIT
+cat > "$payload"
+
+read -r _ expected < "$marker"
+digest=$(sha256sum "$payload")
+[[ ${digest%% *} == "$expected" ]] && exit 0
+rm -f "$marker"
+cliphist store < "$payload"

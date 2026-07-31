@@ -1,5 +1,7 @@
 # Environment
 set -gx BROWSER xdg-open
+# Exported so tools such as git-delta know the terminal width
+set -gx COLUMNS $COLUMNS
 set -gx EDITOR nvim
 set -gx MANPAGER 'nvim +Man!'
 set -gx PAGER less

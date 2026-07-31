@@ -146,10 +146,20 @@ sudo install -Dm644 /dev/stdin /etc/docker/daemon.json << EOF
 EOF
 sudo systemctl enable --now docker.socket
 
+section 'Installing udev rules'
+# Reset the zoom level of the external Logitech webcam when it is plugged in
+sudo install -Dm644 \
+    "$script_dir/udev/99-webcam.rules" \
+    /etc/udev/rules.d/99-webcam.rules
+sudo udevadm control --reload
+
 section 'Setting desktop defaults'
+# The video group grants write access to the backlight brightness files
+sudo usermod -aG video "$USER"
 gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 gsettings set org.gnome.desktop.interface cursor-size 24
 gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors
+gsettings set org.gnome.desktop.interface font-name 'Noto Sans 10'
 gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
 gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark
 xdg-user-dirs-update
