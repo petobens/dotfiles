@@ -1,61 +1,89 @@
-# Keep the same information order as Trueline with a simpler unboxed layout
+# Reproduce the Trueline segment order and Powerline styling
 format = """
+$character\
 $username\
 $hostname\
+[ ](bg:white)\
+[](fg:white bg:special_grey)\
 $aws\
 $python\
-$conda\
+${custom.git_remote}\
 $git_branch\
 $git_status\
+[](fg:special_grey bg:cursor_grey)\
 $directory\
 $jobs\
 $status\
-$line_break\
-$character"""
+[](fg:cursor_grey) """
 palette = "onedark"
 add_newline = false
 
 [palettes.onedark]
 background = "#24272e"
-foreground = "#abb2bf"
-cursor_grey = "#282c34"
-special_grey = "#3b4048"
 blue = "#61afef"
+cursor_grey = "#282c34"
 green = "#98c379"
+foreground = "#abb2bf"
+mono = "#828997"
 orange = "#d19a66"
 purple = "#c678dd"
 red = "#e06c75"
+special_grey = "#3b4048"
 white = "#d0d0d0"
+
+[character]
+format = "$symbol"
+success_symbol = "[ I ](bold fg:background bg:blue)[](fg:blue bg:white)"
+error_symbol = "[ I ](bold fg:background bg:blue)[](fg:blue bg:white)"
+vimcmd_symbol = "[ N ](bold fg:background bg:green)[](fg:green bg:white)"
+vimcmd_replace_one_symbol = "[ R ](bold fg:background bg:purple)[](fg:purple bg:white)"
+vimcmd_replace_symbol = "[ R ](bold fg:background bg:purple)[](fg:purple bg:white)"
+vimcmd_visual_symbol = "[ V ](bold fg:background bg:blue)[](fg:blue bg:white)"
 
 [username]
 show_always = true
-format = "[$user]($style) "
-style_user = "bold white"
-style_root = "bold red"
+format = "[ $user]($style)"
+style_user = "bold fg:background bg:white"
+style_root = "bold red bg:white"
 
-# Trueline adds the host only in SSH sessions
 [hostname]
 ssh_only = true
-format = "[@$hostname](bold white) "
+ssh_symbol = "󰌘 "
+format = "[ $ssh_symbol@$hostname]($style)"
+style = "bold fg:background bg:white"
 
 [aws]
-format = "[ $profile](bold orange) "
+format = "[  $profile ](bold fg:orange bg:special_grey)"
 
 [python]
-format = "[ $virtualenv](bold purple) "
+format = "[  $virtualenv ](bold fg:purple bg:special_grey)"
+detect_extensions = []
+detect_files = []
+detect_folders = []
 
-[conda]
-ignore_base = true
-format = "[ $environment](bold purple) "
+[custom.git_remote]
+command = '''
+remote=$(git ls-remote --get-url 2>/dev/null)
+case "$remote" in
+    *github*) printf '' ;;
+    *bitbucket*) printf '' ;;
+    *gitlab*) printf '' ;;
+    *) printf '' ;;
+esac
+'''
+when = true
+require_repo = true
+unsafe_no_escape = true
+shell = ["sh"]
+format = "[ $output ](fg:foreground bg:special_grey)"
 
 [git_branch]
-symbol = " "
-format = "[$symbol$branch]($style) "
-style = "foreground"
+symbol = ""
+format = "[$branch ](fg:foreground bg:special_grey)"
 
 [git_status]
-format = "[$all_status$ahead_behind]($style) "
-style = "red"
+format = "[$all_status$ahead_behind]($style)"
+style = "red bg:special_grey"
 conflicted = ""
 deleted = ""
 modified = "${count} "
@@ -69,27 +97,23 @@ behind = "${count} "
 diverged = "${ahead_count} ${behind_count} "
 
 [directory]
-format = "[$path]($style)[$read_only]($read_only_style) "
-style = "bold blue"
+format = "[   $path]($style)[$read_only]($read_only_style)"
+style = "fg:mono bg:cursor_grey"
 read_only = " "
-read_only_style = "bold orange"
+read_only_style = "bold fg:orange bg:cursor_grey"
+home_symbol = ""
 truncation_length = 3
 truncate_to_repo = false
+substitutions = [
+    { from = "^.*/([^/]+/[^/]+/[^/]+)$", to = "$1", regex = true },
+    { from = "/", to = "  " },
+]
 
 [jobs]
-format = "[ $number](bold orange) "
+format = "[  $number](bold fg:orange bg:cursor_grey)"
 number_threshold = 1
 symbol_threshold = 1
 
 [status]
 disabled = false
-format = "[ $status](bold red) "
-
-# Fish supplies the vi mode while Starship renders its final indicator
-[character]
-success_symbol = "[I ❯](bold blue)"
-error_symbol = "[I ❯](bold red)"
-vimcmd_symbol = "[N ❮](bold green)"
-vimcmd_replace_one_symbol = "[R ❮](bold purple)"
-vimcmd_replace_symbol = "[R ❮](bold purple)"
-vimcmd_visual_symbol = "[V ❮](bold blue)"
+format = "[  $status](bold fg:red bg:cursor_grey)"
