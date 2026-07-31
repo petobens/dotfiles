@@ -228,17 +228,22 @@ vim.opt.spelllang = { 'en', 'es' }
 -- Filetype detection
 vim.filetype.add({
     filename = {
-        ['config.rasi'] = 'css',
+        ['fdignore'] = 'gitignore',
         ['gitconfig'] = 'gitconfig',
+        ['gitignore'] = 'gitignore',
+        ['luacheckrc'] = 'lua',
         ['matplotlibrc'] = 'confini',
+        ['pdbrc'] = 'python',
         ['ripgreprc'] = 'confini',
         ['sqlfluff'] = 'toml',
-        ['zathurarc'] = 'config',
     },
     pattern = {
         ['.*doc/.*'] = 'help',
         ['.*github/workflows/.*'] = 'ghaction',
-        ['.*onedrive/config'] = 'config',
+        ['.*imv/config'] = 'confini',
+        ['.*mako/config'] = 'confini',
+        ['.*onedrive/config'] = 'confini',
+        ['.*pgcli/config'] = 'dosini',
         ['.*sql'] = 'sql',
         ['.*ssh/config'] = 'sshconfig',
     },
