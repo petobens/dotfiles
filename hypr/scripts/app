@@ -3,6 +3,18 @@ set -euo pipefail
 
 cycle=false
 
+if [[ ${1:-} == menu ]]; then
+    app=$(
+        printf '%s\n' \
+            audio bluetooth brave calendar clickup docker edge files gmail htop \
+            images meet numbers onedrive onlyoffice quickterm slack spotify teams \
+            terminal transmission trash wifi zathura zoom |
+            rofi -dmenu -p 'app'
+    )
+    [[ -n $app ]] || exit 0
+    exec "$0" "$app"
+fi
+
 # Resolve the requested app's launch and matching rules
 case ${1:-} in
     audio)
@@ -54,30 +66,6 @@ case ${1:-} in
         working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
         command="ghostty --class=yazi --title=yazi --working-directory=\"$working_directory\" -e yazi"
         ;;
-    slack)
-        tag=slack
-        class='^Slack$'
-        workspace=2
-        command='slack --enable-features=UseOzonePlatform --ozone-platform=wayland'
-        ;;
-    teams)
-        tag=teams
-        class='^brave-teams$'
-        workspace=2
-        command='brave --class=brave-teams --new-window --app=https://teams.live.com'
-        ;;
-    zoom)
-        tag=zoom
-        class='^zoom$'
-        workspace=2
-        command='zoom'
-        ;;
-    meet)
-        tag=meet
-        class='^brave-meet$'
-        workspace=2
-        command='brave --class=brave-meet --new-window --app=https://meet.google.com'
-        ;;
     gmail)
         tag=gmail
         class='^brave-gmail$'
@@ -97,6 +85,12 @@ case ${1:-} in
         command='imv ~/Pictures'
         cycle=true
         ;;
+    meet)
+        tag=meet
+        class='^brave-meet$'
+        workspace=2
+        command='brave --class=brave-meet --new-window --app=https://meet.google.com'
+        ;;
     numbers)
         tag=numbers
         class='^numbers$'
@@ -109,6 +103,12 @@ case ${1:-} in
         workspace=current
         command='ghostty --class=onedrive --title=OneDrive -e journalctl --user-unit onedrive -f'
         ;;
+    onlyoffice)
+        tag=onlyoffice
+        class='^(DesktopEditors|ONLYOFFICE)$'
+        workspace=4
+        command='onlyoffice-desktopeditors'
+        ;;
     quickterm)
         tag=quickterm
         class='^quickterm$'
@@ -116,11 +116,29 @@ case ${1:-} in
         working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
         command="ghostty --class=quickterm --title=QuickTerm --working-directory=\"$working_directory\""
         ;;
+    slack)
+        tag=slack
+        class='^Slack$'
+        workspace=2
+        command='slack --enable-features=UseOzonePlatform --ozone-platform=wayland'
+        ;;
     spotify)
         tag=spotify
         class='^Spotify$'
         workspace=3
         command='spotify --enable-features=UseOzonePlatform --ozone-platform=wayland'
+        ;;
+    teams)
+        tag=teams
+        class='^brave-teams$'
+        workspace=2
+        command='brave --class=brave-teams --new-window --app=https://teams.live.com'
+        ;;
+    terminal)
+        tag=terminal
+        class='^terminal$'
+        workspace=5
+        command='ghostty --class=terminal -e fish -l -c tm'
         ;;
     transmission)
         tag=transmission
@@ -134,18 +152,6 @@ case ${1:-} in
         workspace=current
         command="ghostty --class=trash --title='Trash Can' -e sh -c 'trash-list | less'"
         ;;
-    onlyoffice)
-        tag=onlyoffice
-        class='^(DesktopEditors|ONLYOFFICE)$'
-        workspace=4
-        command='onlyoffice-desktopeditors'
-        ;;
-    terminal)
-        tag=terminal
-        class='^terminal$'
-        workspace=5
-        command='ghostty --class=terminal -e fish -l -c tm'
-        ;;
     wifi)
         tag=wifi
         class='^nmtui$'
@@ -158,6 +164,12 @@ case ${1:-} in
         workspace=current
         command='zathura'
         cycle=true
+        ;;
+    zoom)
+        tag=zoom
+        class='^zoom$'
+        workspace=2
+        command='zoom'
         ;;
     *)
         echo 'usage: app APPLICATION' >&2

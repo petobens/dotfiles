@@ -5,10 +5,44 @@ local external_right = 'DP-3'
 local laptop = 'eDP-1'
 local full_hd = '1920x1080@60'
 
+local function primary()
+    hl.monitor({
+        output = laptop,
+        mode = 'preferred',
+        position = '0x0',
+        scale = 1.5,
+        disabled = false,
+    })
+    hl.monitor({ output = external_left, disabled = true })
+    hl.monitor({ output = external_right, disabled = true })
+end
+
+local function multi()
+    hl.monitor({
+        output = external_left,
+        mode = full_hd,
+        position = '0x0',
+        scale = 1,
+        disabled = false,
+    })
+    hl.monitor({
+        output = external_right,
+        mode = full_hd,
+        position = '1920x0',
+        scale = 1,
+        disabled = false,
+    })
+    hl.monitor({
+        output = laptop,
+        mode = 'preferred',
+        position = '960x1080',
+        scale = 1.5,
+        disabled = false,
+    })
+end
+
 -- Two 1080p displays above the centered X1 Carbon screen
-hl.monitor({ output = external_left, mode = full_hd, position = '0x0', scale = 1 })
-hl.monitor({ output = external_right, mode = full_hd, position = '1920x0', scale = 1 })
-hl.monitor({ output = laptop, mode = 'preferred', position = '960x1080', scale = 1.5 })
+multi()
 
 -- Other displays
 hl.monitor({ output = '', mode = 'preferred', position = 'auto', scale = 1 })
@@ -32,3 +66,5 @@ for _, workspace in ipairs(workspaces) do
         default = workspace[3],
     })
 end
+
+return { primary = primary, multi = multi }

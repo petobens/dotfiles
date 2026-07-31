@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-action=$(printf '%s\n' lock logout suspend reboot poweroff | rofi -dmenu -p 'session')
+action=$(printf '%s\n' lock 'quit apps' logout suspend reboot poweroff | rofi -dmenu -p 'session')
 case "$action" in
     lock) loginctl lock-session ;;
+    'quit apps')
+        [[ $(printf '%s\n' no yes | rofi -dmenu -p 'quit all apps?') == yes ]] || exit 0
+        hyprctl clients -j | jq -r '.[].address' | while read -r address; do
+            hyprctl dispatch "hl.dsp.window.close({ window = 'address:$address' })"
+        done
+        ;;
     logout) hyprshutdown ;;
     suspend) systemctl suspend ;;
     reboot) hyprshutdown -t 'Restarting...' --post-cmd 'systemctl reboot' ;;

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+state=${XDG_RUNTIME_DIR:?}/hypr-spotify-playing
+case ${1:-} in
+    lock)
+        [[ ! -e $state ]] || exit 0
+        if [[ $(playerctl --player=spotify status 2> /dev/null || true) == Playing ]]; then
+            playerctl --player=spotify pause
+            touch "$state"
+        fi
+        ;;
+    unlock)
+        [[ -e $state ]] || exit 0
+        rm -f "$state"
+        playerctl --player=spotify play 2> /dev/null || true
+        ;;
+    *)
+        echo 'usage: lock_media {lock|unlock}' >&2
+        exit 2
+        ;;
+esac

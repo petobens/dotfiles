@@ -3,14 +3,20 @@ set -euo pipefail
 
 # Hide the address after the tab while keeping it available for selection
 workspace=null
+selected_row=1
 if [[ ${1:-} == current ]]; then
     workspace=$(hyprctl activeworkspace -j | jq '.id')
+    selected_row=0
 elif (($#)); then
     echo 'usage: window_switcher [current]' >&2
     exit 2
 fi
 selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
-    '.[] | select($workspace == null or .workspace.id == $workspace) | "\(.address)\t[\(.workspace.name)] \(.class): \(.title)"' |
-    rofi -dmenu -display-columns 2 -p 'window')
+    'sort_by([.focusHistoryID < 0, .focusHistoryID])[] |
+    select($workspace == null or .workspace.id == $workspace) |
+    "\(.address)\t[\(.workspace.name)] \(.class): \(.title)"' |
+    rofi -dmenu -display-columns 2 -selected-row "$selected_row" \
+        -kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' \
+        -kb-row-up 'Ctrl-p,Shift+ISO_Left_Tab' -p 'window')
 [[ -n $selection ]] || exit 0
 hyprctl dispatch "hl.dsp.focus({ window = 'address:${selection%%$'\t'*}' })"

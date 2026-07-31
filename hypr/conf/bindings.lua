@@ -1,10 +1,11 @@
 -- luacheck: globals hl
 
+local monitor_modes = require('conf.monitors')
+
 -- Commands
 local scripts = os.getenv('HOME') .. '/.config/hypr/scripts/'
 local app_command = scripts .. 'app '
 local brightness_command = scripts .. 'brightness '
-local place_command = scripts .. 'place_window '
 local player_command = 'playerctl --player=spotify'
 local volume_command = scripts .. 'volume '
 local volume_up = volume_command .. 'up'
@@ -35,6 +36,89 @@ local function launch(keys, app, description)
     exec(keys, app_command .. app, description)
 end
 
+local function close_workspace()
+    for _, window in ipairs(hl.get_workspace_windows(hl.get_active_workspace())) do
+        hl.dispatch(hl.dsp.window.close({ window = window }))
+    end
+end
+
+local function place_window(placement)
+    return function()
+        local window = hl.get_active_window()
+        if not window then
+            return
+        end
+
+        local monitor = window.monitor
+        local width = monitor.width / monitor.scale
+        local height = monitor.height / monitor.scale
+        hl.dispatch(hl.dsp.window.float({ action = 'enable', window = window }))
+        hl.dispatch(hl.dsp.window.resize({
+            x = width * placement[5],
+            y = height * placement[6],
+            window = window,
+        }))
+        hl.dispatch(hl.dsp.window.move({
+            x = monitor.x + width * placement[3],
+            y = monitor.y + height * placement[4],
+            window = window,
+        }))
+    end
+end
+
+local function move_to_monitor(kind, direction)
+    return function()
+        local source = hl.get_active_monitor()
+        local target = hl.get_monitor(direction)
+        if not source or not target or source == target then
+            return
+        end
+
+        local windows
+        if kind == 'window' then
+            local window = hl.get_active_window()
+            if not window then
+                return
+            end
+            windows = { window }
+        else
+            windows = hl.get_workspace_windows(hl.get_active_workspace())
+        end
+
+        local geometries = {}
+        for _, window in ipairs(windows) do
+            if window.fullscreen == 0 then
+                table.insert(geometries, {
+                    window = window,
+                    position = window.at,
+                    size = window.size,
+                })
+            end
+        end
+
+        if kind == 'window' then
+            hl.dispatch(hl.dsp.window.move({ monitor = direction, follow = true }))
+        else
+            hl.dispatch(hl.dsp.workspace.move({ monitor = direction }))
+        end
+
+        local scale_x = target.width / target.scale / (source.width / source.scale)
+        local scale_y = target.height / target.scale / (source.height / source.scale)
+        for _, geometry in ipairs(geometries) do
+            hl.dispatch(hl.dsp.window.resize({
+                x = geometry.size.x * scale_x,
+                y = geometry.size.y * scale_y,
+                window = geometry.window,
+            }))
+            hl.dispatch(hl.dsp.window.move({
+                x = target.x + (geometry.position.x - source.x) * scale_x,
+                y = target.y + (geometry.position.y - source.y) * scale_y,
+                window = geometry.window,
+            }))
+        end
+    end
+end
+
 -- Session and windows
 exec(super_ctrl .. ' + R', 'hyprctl reload', 'Reload Hyprland')
 bind(
@@ -43,7 +127,7 @@ bind(
     'Toggle fullscreen'
 )
 bind(super .. ' + Q', hl.dsp.window.close({}), 'Close window')
-exec(super_shift .. ' + W', scripts .. 'close_workspace', 'Close workspace windows')
+bind(super_shift .. ' + W', close_workspace, 'Close workspace windows')
 for _, keys in ipairs({
     super_shift .. ' + Q',
     super_shift .. ' + S',
@@ -57,22 +141,22 @@ bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse =
 
 -- Window placement
 local placements = {
-    { super .. ' + UP', 'full' },
-    { super .. ' + LEFT', 'left' },
-    { super .. ' + RIGHT', 'right' },
-    { super_alt .. ' + UP', 'top' },
-    { super_alt .. ' + DOWN', 'bottom' },
-    { super_ctrl .. ' + 1', 'top-left' },
-    { super_ctrl .. ' + 2', 'top-right' },
-    { super_ctrl .. ' + 3', 'bottom-left' },
-    { super_ctrl .. ' + 4', 'bottom-right' },
-    { super_ctrl .. ' + 5', 'center' },
-    { super_ctrl .. ' + 6', 'rectangle' },
-    { super_ctrl .. ' + 7', 'dialog' },
-    { super_ctrl .. ' + 8', 'semi-full' },
+    { super .. ' + UP', 'full', 0, 0, 1, 1 },
+    { super .. ' + LEFT', 'left', 0, 0, 0.5, 1 },
+    { super .. ' + RIGHT', 'right', 0.5, 0, 0.5, 1 },
+    { super_alt .. ' + UP', 'top', 0, 0, 1, 0.5 },
+    { super_alt .. ' + DOWN', 'bottom', 0, 0.5, 1, 0.5 },
+    { super_ctrl .. ' + 1', 'top-left', 0, 0, 0.5, 0.5 },
+    { super_ctrl .. ' + 2', 'top-right', 0.5, 0, 0.5, 0.5 },
+    { super_ctrl .. ' + 3', 'bottom-left', 0, 0.5, 0.5, 0.5 },
+    { super_ctrl .. ' + 4', 'bottom-right', 0.5, 0.5, 0.5, 0.5 },
+    { super_ctrl .. ' + 5', 'center', 0.25, 0.25, 0.5, 0.5 },
+    { super_ctrl .. ' + 6', 'rectangle', 0.125, 0.2, 0.75, 0.6 },
+    { super_ctrl .. ' + 7', 'dialog', 0.33, 0.3, 0.35, 0.25 },
+    { super_ctrl .. ' + 8', 'semi-full', 0.01, 0, 0.985, 0.99 },
 }
 for _, placement in ipairs(placements) do
-    exec(placement[1], place_command .. placement[2], 'Place window ' .. placement[2])
+    bind(placement[1], place_window(placement), 'Place window ' .. placement[2])
 end
 
 local step = 60
@@ -121,17 +205,17 @@ local monitor_directions = {
 for _, direction in ipairs(monitor_directions) do
     bind(
         super_ctrl .. ' + ' .. direction[1],
-        hl.dsp.window.move({ monitor = direction[2], follow = true }),
+        move_to_monitor('window', direction[2]),
         'Move window to monitor ' .. direction[3]
     )
     bind(
         super_shift .. ' + ' .. direction[1],
-        hl.dsp.workspace.move({ monitor = direction[2] }),
+        move_to_monitor('workspace', direction[2]),
         'Move workspace to monitor ' .. direction[3]
     )
 end
-exec(super .. ' + Return', scripts .. 'monitor_mode primary', 'Use laptop display')
-exec(super_ctrl .. ' + Return', scripts .. 'monitor_mode multi', 'Use all displays')
+bind(super .. ' + Return', monitor_modes.primary, 'Use laptop display')
+bind(super_ctrl .. ' + Return', monitor_modes.multi, 'Use all displays')
 bind(super_ctrl .. ' + J', function()
     hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
     hl.dispatch(hl.dsp.window.bring_to_top())
@@ -170,7 +254,7 @@ end
 exec(alt .. ' + TAB', scripts .. 'window_switcher', 'Window switcher')
 exec(super .. ' + W', scripts .. 'window_switcher current', 'Workspace window switcher')
 exec(super .. ' + S', 'rofi -show drun', 'Application launcher')
-exec(super .. ' + A', 'rofi -show drun', 'Application launcher')
+launch(super .. ' + A', 'menu', 'Curated application launcher')
 exec(super .. ' + Z', scripts .. 'password_menu', 'Password menu')
 exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
 exec(super .. ' + X', 'ghostty --class=terminal', 'Terminal')
@@ -200,11 +284,11 @@ local applications = {
     { super_ctrl .. ' + N', 'numbers', 'IPython' },
     { super_ctrl .. ' + H', 'htop', 'Process monitor' },
     { super_ctrl .. ' + B', 'bluetooth', 'Bluetooth' },
-    { ctrl_alt .. ' + Delete', 'htop', 'Process manager' },
 }
 for _, application in ipairs(applications) do
     launch(application[1], application[2], application[3])
 end
+exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
 
 -- Screenshots
 exec('Print', scripts .. 'screenshot full', 'Full screenshot')
