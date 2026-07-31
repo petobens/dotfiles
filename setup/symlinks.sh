@@ -118,9 +118,6 @@ else
     printf 'Skipped missing personal configuration: %s\n' "$personal_config"
 fi
 
-# User data directories
-mkdir -p "$HOME/Pictures/Screenshots"
-
 # Yazi plugins
 if command -v ya > /dev/null; then
     section 'Installing Yazi plugins'
