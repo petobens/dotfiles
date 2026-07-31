@@ -8,6 +8,7 @@ local picker_helpers = require('plugin-config.codecompanion.pickers.helpers')
 local trim_chars = picker_helpers.trim_chars
 local pad_right = picker_helpers.pad_right
 local TITLE_WIDTH = picker_helpers.TITLE_WIDTH
+local TURN_ICONS = { ready = '✓', running = '●' }
 
 local M = {}
 
@@ -25,20 +26,35 @@ local function make_display(entries)
     return function(picker_entry)
         local e = picker_entry.value
         local active = e.active and '*' or ' '
+        local status = TURN_ICONS[e.status] or ' '
         local icon = state_helpers.provider_icon(e.adapter_name)
         local model = pad_right(e.model, model_w)
         local title = pad_right(e.display_title, title_w)
         local number = pad_right(e.chat_number, number_w)
         local cwd = e.cwd and vim.fn.fnamemodify(e.cwd, ':~') or ''
-        local line =
-            string.format('%s %s %s  %s  %s  %s', active, icon, model, title, number, cwd)
+        local line = string.format(
+            '%s%s %s %s  %s  %s  %s',
+            active,
+            status,
+            icon,
+            model,
+            title,
+            number,
+            cwd
+        )
 
-        local title_start = #active + 1 + #icon + 1 + #model + 2
+        local status_start = #active
+        local status_end = status_start + #status
+        local title_start = status_end + 1 + #icon + 1 + #model + 2
         local title_end = title_start + #title
 
         return line,
             {
                 { { 0, #active }, e.active and 'TelescopeSelection' or 'Comment' },
+                {
+                    { status_start, status_end },
+                    e.status == 'ready' and 'DiagnosticOk' or 'DiagnosticInfo',
+                },
                 {
                     { title_start, title_end },
                     e.active and 'TelescopeSelection' or 'Normal',
@@ -88,6 +104,7 @@ local function collect_entries(current_chat)
             chat_number = state_helpers.get_chat_number(entry),
             title = state_helpers.get_chat_title(chat, entry),
             cwd = chat and chat.opts and chat.opts.cwd,
+            status = vim.b[entry.bufnr].codecompanion_turn_state,
         }
     end
 
