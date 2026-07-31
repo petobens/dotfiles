@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ $(printf '%s\n' no yes | rofi -dmenu -p 'empty trash?') == yes ]] || exit 0
+
+trash-empty -f
+hyprctl dispatch "hl.dsp.window.close({ window = 'class:^trash$' })" || true
+notify-send -t 2500 -i user-trash 'Trash emptied'

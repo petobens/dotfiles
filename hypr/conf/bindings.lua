@@ -245,6 +245,8 @@ exec(
     'Cycle keyboard backlight'
 )
 exec(super .. ' + B', 'pkill -SIGUSR2 waybar', 'Reload Waybar')
+exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
+launch(super_alt .. ' + B', 'trash', 'Show trash')
 exec(ctrl_alt .. ' + SPACE', 'makoctl dismiss', 'Dismiss notification')
 exec(ctrl_shift .. ' + SPACE', 'makoctl dismiss --all', 'Dismiss all notifications')
 exec('CTRL + grave', 'makoctl restore', 'Restore notification')

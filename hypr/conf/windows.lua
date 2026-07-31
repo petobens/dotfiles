@@ -44,7 +44,7 @@ window_rule(
     { size = { half_width, half_height }, center = true }
 )
 window_rule(
-    '^(docker-info|htop|nmtui|onedrive|yazi)$',
+    '^(docker-info|htop|nmtui|onedrive|trash|yazi)$',
     { size = rectangle_size, center = true }
 )
 window_rule('^(org.pwmt.zathura|imv)$', {
