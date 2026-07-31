@@ -1,5 +1,4 @@
 local codecompanion = require('codecompanion')
-local codecompanion_utils = require('codecompanion.utils')
 local devicons = require('nvim-web-devicons')
 local telescope_action_state = require('telescope.actions.state')
 local tool_labels = require('codecompanion.interactions.chat.tools.labels')
@@ -140,13 +139,12 @@ local function notify_chat_done(bufnr)
         return
     end
 
-    codecompanion_utils.notify(
-        string.format(
-            '%s finished · %s',
-            state_helpers.get_chat_model_label(chat),
-            state_helpers.get_chat_label(chat)
-        )
+    local message = string.format(
+        '%s finished (%s)',
+        state_helpers.get_chat_model_label(chat),
+        state_helpers.get_chat_name(chat)
     )
+    vim.api.nvim_echo({ { message, 'DiagnosticOk' } }, true, {})
 end
 
 -- Fetch the usage limit for claude_code/codex chats and re-render the footer

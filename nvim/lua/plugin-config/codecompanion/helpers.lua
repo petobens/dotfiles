@@ -64,7 +64,7 @@ local function get_chat_ordinal(bufnr)
     end
 end
 
-function M.state.get_chat_label(chat)
+function M.state.get_chat_name(chat)
     local ordinal = get_chat_ordinal(chat.bufnr)
     local label = ordinal and ('Chat ' .. ordinal) or nil
 
@@ -83,6 +83,11 @@ function M.state.get_chat_label(chat)
         label = 'Chat ' .. chat.bufnr
     end
 
+    return label
+end
+
+function M.state.get_chat_label(chat)
+    local label = M.state.get_chat_name(chat)
     local title = (chat.title ~= '' and chat.title) or (chat.opts and chat.opts.title)
     if title and title ~= '' then
         label = string.format('%s · %s', label, title)
