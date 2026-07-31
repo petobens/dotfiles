@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+case ${1:-} in
+    up) brightnessctl set 5%+ > /dev/null ;;
+    down) brightnessctl set 5%- > /dev/null ;;
+    *)
+        echo 'usage: brightness {up|down}' >&2
+        exit 2
+        ;;
+esac
+
+brightness=$(brightnessctl get)
+maximum=$(brightnessctl max)
+percentage=$(((brightness * 100 + maximum / 2) / maximum))
+printf -v bar '%*s' "$((percentage / 5))" ''
+bar=${bar// /─}
+notify-send -i display-brightness -t 2000 \
+    -h string:x-dunst-stack-tag:brightness "   $bar  $percentage%"

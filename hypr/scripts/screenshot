@@ -17,4 +17,4 @@ case ${1:-selection} in
         ;;
 esac
 wl-copy < "$file"
-notify-send "Screenshot saved" "$file"
+notify-send -i applets-screenshooter 'Screenshot Taken' "Saved as $file"

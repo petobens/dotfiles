@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+sink='@DEFAULT_AUDIO_SINK@'
+
+case ${1:-} in
+    up)
+        wpctl set-mute "$sink" 0
+        wpctl set-volume -l 1 "$sink" 5%+
+        ;;
+    down)
+        wpctl set-mute "$sink" 0
+        wpctl set-volume "$sink" 5%-
+        ;;
+    mute)
+        wpctl set-mute "$sink" toggle
+        makoctl dismiss
+        exit
+        ;;
+    *)
+        echo 'usage: volume {up|down|mute}' >&2
+        exit 2
+        ;;
+esac
+
+volume=$(wpctl get-volume "$sink" | awk '{ printf "%d", $2 * 100 + 0.5 }')
+device=$(wpctl inspect "$sink")
+device=${device,,}
+if [[ $device == *bluez* || $device == *headphone* || $device == *headset* ]]; then
+    icon=audio-headphones
+else
+    icon=audio-speakers
+fi
+
+printf -v bar '%*s' "$((volume / 5))" ''
+bar=${bar// /─}
+notify-send -i "$icon" -t 2000 -h string:x-dunst-stack-tag:volume \
+    "   $bar  $volume%"

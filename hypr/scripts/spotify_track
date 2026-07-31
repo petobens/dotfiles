@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+metadata=$(
+    playerctl --player=spotify metadata \
+        --format $'{{status}}\t{{title}}\t{{artist}}\t{{album}}' 2> /dev/null
+) || exit 0
+IFS=$'\t' read -r status title artist album <<< "$metadata"
+
+case $status in
+    Playing) symbol='▶' ;;
+    Paused) symbol='⏸' ;;
+    Stopped) symbol='⏹' ;;
+    *) symbol='' ;;
+esac
+
+notify-send -a Spotify -i spotify "${symbol:+$symbol }$title" "$artist"$'\n'"$album"

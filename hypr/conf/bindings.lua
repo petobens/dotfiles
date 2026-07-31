@@ -3,11 +3,13 @@
 -- Commands
 local scripts = os.getenv('HOME') .. '/.config/hypr/scripts/'
 local app_command = scripts .. 'app '
+local brightness_command = scripts .. 'brightness '
 local place_command = scripts .. 'place_window '
 local player_command = 'playerctl --player=spotify'
-local volume_up = 'wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+'
-local volume_down = 'wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-'
-local volume_mute = 'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle'
+local volume_command = scripts .. 'volume '
+local volume_up = volume_command .. 'up'
+local volume_down = volume_command .. 'down'
+local volume_mute = volume_command .. 'mute'
 
 -- Modifiers
 local alt = 'ALT'
@@ -220,28 +222,23 @@ launch(super_shift .. ' + V', 'audio', 'Audio controls')
 exec(super_shift .. ' + P', player_command .. ' play-pause', 'Play or pause')
 exec(super_shift .. ' + J', player_command .. ' next', 'Next track')
 exec(super_shift .. ' + K', player_command .. ' previous', 'Previous track')
-exec(
-    super_shift .. ' + T',
-    [[sh -c 'playerctl --player=spotify metadata --format "{{artist}} — {{title}}" ]]
-        .. [[| xargs -r notify-send Spotify']],
-    'Show current track'
-)
+exec(super_shift .. ' + T', scripts .. 'spotify_track', 'Show current track')
 
 -- Hardware and desktop
 exec(
     'XF86MonBrightnessUp',
-    'brightnessctl set 5%+',
+    brightness_command .. 'up',
     'Raise brightness',
     { repeating = true }
 )
 exec(
     'XF86MonBrightnessDown',
-    'brightnessctl set 5%-',
+    brightness_command .. 'down',
     'Lower brightness',
     { repeating = true }
 )
-exec(super_alt .. ' + RIGHT', 'brightnessctl set 5%+', 'Raise brightness')
-exec(super_alt .. ' + LEFT', 'brightnessctl set 5%-', 'Lower brightness')
+exec(super_alt .. ' + RIGHT', brightness_command .. 'up', 'Raise brightness')
+exec(super_alt .. ' + LEFT', brightness_command .. 'down', 'Lower brightness')
 exec(
     super_alt .. ' + semicolon',
     scripts .. 'keyboard_backlight',

@@ -1,13 +1,34 @@
-font=Source Code Pro 11
-background-color=#282c34ee
+font=Noto Sans 11
+background-color=#24272ef2
 text-color=#abb2bf
-border-color=#61afef
+border-color=#282c34
 border-size=2
-border-radius=4
-padding=12
-default-timeout=5000
+border-radius=10
+padding=12,8
+width=440
+height=300
+outer-margin=45,0,0,0
+margin=0
+anchor=top-right
+icon-location=right
+max-icon-size=96
+icon-path=/usr/share/icons/Papirus
+format=<b>%s</b>\n%b
+default-timeout=7000
+max-history=20
 max-visible=5
+sort=-priority
+group-by=app-name,summary,body
 
 [urgency=critical]
 border-color=#e06c75
 default-timeout=0
+
+[grouped]
+format=(%g) <b>%s</b>\n%b
+
+[app-name=Spotify]
+default-timeout=3000
+
+[mode=do-not-disturb]
+invisible=1
