@@ -13,7 +13,7 @@ function fish_should_add_to_history --description 'Filter low-value shell histor
     string match -qr '^\s' -- "$argv[1]"; and return 1
     set -l commandline (string trim -- "$argv[1]")
     test (string length -- "$commandline") -le 2; and return 1
-    string match -qr '^(cd|fm|nvim|v|y|yazi)(\s|$)' -- "$commandline"; and return 1
+    string match -qr '^(cd|fm|nvim|v|yazi)(\s|$)' -- "$commandline"; and return 1
     return 0
 end
 
@@ -57,6 +57,8 @@ bind -M insert -m default jj repaint-mode
 
 # Interactive tools
 if type -q fzf
+    set -l FZF_ALT_C_COMMAND
+    set -l FZF_CTRL_T_COMMAND
     fzf --fish | source
     source "$__fish_config_dir/fzf_workflows.fish"
 end
@@ -80,7 +82,7 @@ alias df 'df -h'
 alias diff 'diff -u --color'
 alias dog bat
 alias ff fastfetch
-alias fm y
+alias fm _y
 alias h 'cd ~'
 alias ht htop
 if type -q unimatrix
@@ -214,7 +216,7 @@ function up --description 'Extract an archive'
     end
 end
 
-function y --description 'Run Yazi and change to its final directory'
+function _y --description 'Run Yazi and change to its final directory'
     set -l tmp (mktemp -t yazi-cwd.XXXXXX)
     command yazi $argv --cwd-file="$tmp"
     if read -z cwd <"$tmp"; and test -n "$cwd"; and test "$cwd" != "$PWD"

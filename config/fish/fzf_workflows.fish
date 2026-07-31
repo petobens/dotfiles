@@ -12,21 +12,25 @@ function __fzf_dir_icons
     end
 end
 
-function __fzf_files
-    set -l fd_args --type f --hidden --follow --exclude .git --color never
-    if test "$argv[1]" = no-ignore
+function __fzf_fd
+    set -l fd_args --type "$argv[1]" --hidden --follow --exclude .git --color never
+    if test "$argv[2]" = no-ignore
         set -a fd_args --no-ignore-vcs
     end
-    if test -n "$argv[2]"
-        set -a fd_args . "$argv[2]"
+    if test -n "$argv[3]"
+        set -a fd_args . "$argv[3]"
     else
         set -a fd_args --strip-cwd-prefix
     end
+    fd $fd_args
+end
 
-    set -l out (fd $fd_args | __fzf_icons | fzf \
-        --ansi --multi --border-label='Find Files' \
+function __fzf_files
+    set -l out (__fzf_fd f "$argv[1]" "$argv[2]" | __fzf_icons | fzf \
+        --multi --scheme=path --border-label='Find Files' \
+        --with-shell='sh -c' \
         --expect=enter,tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,alt-g \
-        --bind='ctrl-y:execute-silent(printf %s {+2..} | wl-copy)+abort' \
+        --bind='ctrl-y:execute-silent(printf "%s\n" {+2..} | head -c -1 | wl-copy)+abort' \
         --header='enter=edit, tab=insert, C-t=find here, C-o=open, A-c=cd, A-p=parents, A-f=yazi, A-g=grep, C-y=yank' \
         --preview='if file --mime-type {2..} | grep -qF image/; then chafa --size ${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} {2..}; else bat --line-range :200 {2..}; fi')
     or return
@@ -50,28 +54,17 @@ function __fzf_files
         case alt-p
             __fzf_parents (path dirname "$files[1]")
         case alt-f
-            y "$files[1]"
+            _y "$files[1]"
         case alt-g
             ig (path dirname "$files[1]")
         case '*'
             "$EDITOR" $files
     end
-    commandline -f repaint
 end
 
 function __fzf_dirs
-    set -l fd_args --type d --hidden --follow --exclude .git --color never
-    if test "$argv[1]" = no-ignore
-        set -a fd_args --no-ignore-vcs
-    end
-    if test -n "$argv[2]"
-        set -a fd_args . "$argv[2]"
-    else
-        set -a fd_args --strip-cwd-prefix
-    end
-
-    set -l out (fd $fd_args | __fzf_icons | fzf \
-        --ansi --border-label='Find Dirs' \
+    set -l out (__fzf_fd d "$argv[1]" "$argv[2]" | __fzf_icons | fzf \
+        --scheme=path --border-label='Find Dirs' \
         --expect=enter,ctrl-o,alt-c,alt-p,alt-f,alt-g \
         --bind='ctrl-y:execute-silent(printf %s {2..} | wl-copy)+abort' \
         --header='enter=find files, C-o=cd, A-c=find dirs, A-p=parents, A-f=yazi, A-g=grep, C-y=yank' \
@@ -88,7 +81,7 @@ function __fzf_dir_action
         case ctrl-o
             builtin cd "$dir"
         case alt-f
-            y "$dir"
+            _y "$dir"
         case alt-c
             __fzf_dirs no-ignore "$dir"
         case alt-p
@@ -98,7 +91,6 @@ function __fzf_dir_action
         case '*'
             __fzf_files no-ignore "$dir"
     end
-    commandline -f repaint
 end
 
 function __fzf_parents
@@ -114,7 +106,7 @@ function __fzf_parents
     end
 
     set -l out (printf '%s\n' $dirs | __fzf_dir_icons | fzf \
-        --ansi --border-label='Parent Dirs' \
+        --scheme=path --border-label='Parent Dirs' \
         --expect=enter,ctrl-o,alt-c,alt-p,alt-f,alt-g \
         --bind='ctrl-y:execute-silent(printf %s {2..} | wl-copy)+abort' \
         --header='enter=find files, C-o=cd, A-c=find dirs, A-p=parents, A-f=yazi, A-g=grep, C-y=yank' \
@@ -144,9 +136,10 @@ function ig --description 'Search files with ripgrep and FZF'
     test (count $paths) -gt 0; or set paths .
     set -l escaped_paths (string join ' ' (string escape -- $paths))
     set -l reload "rg --smart-case --vimgrep --no-heading --color=always --colors=path:none --colors=line:none --colors=column:none --trim {q} $escaped_paths | sed 's/^/󰈔 /'"
-    set -l out (true | fzf --ansi --disabled --multi --delimiter=: \
+    set -l out (fzf --ansi --disabled --multi --delimiter=: \
         --border-label='Live Grep' --header='enter=open, A-r=refine search' \
-        --bind="change:reload:$reload || true" \
+        --bind="start:reload:$reload || true" \
+        --bind="change:reload:sleep 0.1; $reload || true" \
         --bind='alt-r:unbind(change,alt-r)+change-border-label(Find Word)+enable-search+clear-query' \
         --preview='bat --highlight-line {2} $(printf %s {1} | sed "s/^[^ ]* //")' \
         --preview-window='+{2}-/2')
@@ -170,7 +163,8 @@ function ll --description 'Browse the current directory with FZF'
     set -l root .
     test (count $argv) -gt 0; and set root "$argv[1]"
     set -l out (fd --hidden --no-ignore --min-depth 1 --max-depth 1 --color never . "$root" |
-        __fzf_icons | fzf --ansi --border-label=Files \
+        __fzf_icons | fzf --scheme=path --border-label=Files \
+        --with-shell='sh -c' \
         --bind='ctrl-y:execute-silent(printf %s {2..} | wl-copy)+abort' \
         --header='enter=open, C-y=yank' \
         --preview='if [ -d {2..} ]; then eza -F --tree --level=2 --color=always --icons=always {2..}; else bat --line-range :200 {2..}; fi')
@@ -319,10 +313,13 @@ end
 
 complete -c m -w man
 
+# Files
 bind -M insert \ct '__fzf_files; commandline -f repaint'
 bind -M default \ct '__fzf_files; commandline -f repaint'
 bind -M insert \et '__fzf_files no-ignore; commandline -f repaint'
 bind -M default \et '__fzf_files no-ignore; commandline -f repaint'
+
+# Directories
 bind -M insert \ec '__fzf_dirs; commandline -f repaint'
 bind -M default \ec '__fzf_dirs; commandline -f repaint'
 bind -M insert \ed '__fzf_dirs no-ignore; commandline -f repaint'
@@ -333,5 +330,7 @@ bind -M insert \ep '__fzf_parents; commandline -f repaint'
 bind -M default \ep '__fzf_parents; commandline -f repaint'
 bind -M insert \ez 'zoi; commandline -f repaint'
 bind -M default \ez 'zoi; commandline -f repaint'
+
+# Search
 bind -M insert \eg 'ig; commandline -f repaint'
 bind -M default \eg 'ig; commandline -f repaint'
