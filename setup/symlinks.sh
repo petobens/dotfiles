@@ -118,12 +118,5 @@ else
     printf 'Skipped missing personal configuration: %s\n' "$personal_config"
 fi
 
-# Yazi plugins
-if command -v ya > /dev/null; then
-    section 'Installing Yazi plugins'
-    mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/yazi"
-    ya pkg install
-fi
-
 printf 'Symlinked Wayland dotfiles from %s\n' "$repo"
 [[ ! -d $backup_root ]] || printf 'Previous files: %s\n' "$backup_root"

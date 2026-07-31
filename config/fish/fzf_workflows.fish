@@ -54,7 +54,7 @@ function __fzf_files
         case alt-p
             __fzf_parents (path dirname "$files[1]")
         case alt-f
-            _y "$files[1]"
+            yazi "$files[1]"
         case alt-g
             ig (path dirname "$files[1]")
         case '*'
@@ -81,7 +81,7 @@ function __fzf_dir_action
         case ctrl-o
             builtin cd "$dir"
         case alt-f
-            _y "$dir"
+            yazi "$dir"
         case alt-c
             __fzf_dirs no-ignore "$dir"
         case alt-p

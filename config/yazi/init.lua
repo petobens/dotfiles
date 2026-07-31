@@ -18,7 +18,7 @@ require('bookmarks'):setup({
         s = home .. '/Pictures/Screenshots',
         t = home .. '/Desktop',
         u = '/run/media',
-        v = home .. '/git-repos/private/dotfiles-wayland/nvim',
+        v = home .. '/git-repos/private/dotfiles/nvim',
         w = home .. '/git-repos/work',
     },
     path = (os.getenv('XDG_STATE_HOME') or home .. '/.local/state') .. '/yazi/bookmarks',

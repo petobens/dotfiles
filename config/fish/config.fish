@@ -82,7 +82,7 @@ alias df 'df -h'
 alias diff 'diff -u --color'
 alias dog bat
 alias ff fastfetch
-alias fm _y
+alias fm yazi
 alias h 'cd ~'
 alias ht htop
 if type -q unimatrix
@@ -216,13 +216,27 @@ function up --description 'Extract an archive'
     end
 end
 
-function _y --description 'Run Yazi and change to its final directory'
+function yazi --description 'Run Yazi and change to its final directory'
+    set -l config_home "$HOME/.config"
+    set -q XDG_CONFIG_HOME; and set config_home "$XDG_CONFIG_HOME"
+    for plugin in full-border git toggle-pane
+        if not test -d "$config_home/yazi/plugins/$plugin.yazi"
+            set -l state_home "$HOME/.local/state"
+            set -q XDG_STATE_HOME; and set state_home "$XDG_STATE_HOME"
+            command mkdir -p "$state_home/yazi"
+            command ya pkg install; or return
+            break
+        end
+    end
+
     set -l tmp (mktemp -t yazi-cwd.XXXXXX)
     command yazi $argv --cwd-file="$tmp"
+    set -l yazi_status $status
     if read -z cwd <"$tmp"; and test -n "$cwd"; and test "$cwd" != "$PWD"
         builtin cd -- "$cwd"
     end
     command rm -f -- "$tmp"
+    return $yazi_status
 end
 
 # Python helpers
