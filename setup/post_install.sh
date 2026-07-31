@@ -155,7 +155,7 @@ gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark
 xdg-user-dirs-update
 xdg-mime default org.pwmt.zathura-pdf-poppler.desktop application/pdf
 for mime in image/gif image/jpeg image/png image/svg+xml image/webp; do
-    xdg-mime default imv.desktop "$mime"
+    xdg-mime default imv-dir.desktop "$mime"
 done
 
 section 'Installing browser policies'

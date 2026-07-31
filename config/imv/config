@@ -1,0 +1,48 @@
+[options]
+background = 24272e
+overlay = true
+overlay_font = Noto Sans Mono:10
+overlay_text_color = abb2bf
+overlay_background_color = 282c34
+overlay_background_alpha = ff
+overlay_position_bottom = true
+suppress_default_binds = true
+
+[binds]
+# vimiv's library and thumbnail modes (f/i/t) have no imv equivalent
+q = quit
+gg = goto 1
+<Shift+G> = goto -1
+
+j = next
+l = next
+k = prev
+h = prev
+n = next
+p = prev
+<PageDown> = next
+<PageUp> = prev
+
+<Shift+K> = pan 0 50
+<Shift+J> = pan 0 -50
+<Shift+L> = pan -50 0
+<Shift+H> = pan 50 0
+<Shift+M> = center
+
+<Shift+W> = scaling full
+w = scaling full
+<equal> = scaling full
+<Shift+O> = zoom actual
+<Shift+plus> = zoom 1
+<minus> = zoom -1
+<Meta+equal> = zoom 1
+<Meta+minus> = zoom -1
+
+<Shift+E> = fullscreen
+b = overlay
+<greater> = rotate by 90
+<less> = rotate by -90
+<space> = toggle_playing
+
+x = exec trash-put "$imv_current_file"; close
+dd = exec trash-put "$imv_current_file"; close
