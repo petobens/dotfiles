@@ -30,7 +30,6 @@ zram-generator
 7zip
 bat
 bind
-chafa
 curl
 dust
 eza

@@ -32,7 +32,7 @@ function __fzf_files
         --expect=enter,tab,ctrl-t,ctrl-o,alt-c,alt-p,alt-f,alt-g \
         --bind='ctrl-y:execute-silent(printf "%s\n" {+2..} | head -c -1 | wl-copy)+abort' \
         --header='enter=edit, tab=insert, C-t=find here, C-o=open, A-c=cd, A-p=parents, A-f=yazi, A-g=grep, C-y=yank' \
-        --preview='if file --mime-type {2..} | grep -qF image/; then chafa --size ${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} {2..}; else bat --line-range :200 {2..}; fi')
+        --preview='if file --mime-type {2..} | grep -qF image/; then /usr/share/fzf/fzf-preview.sh {2..}; else bat --line-range :200 {2..}; fi')
     or return
     test (count $out) -gt 1; or return 1
 
