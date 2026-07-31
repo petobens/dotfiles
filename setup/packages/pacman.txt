@@ -1,5 +1,6 @@
 # System
 btrfs-progs
+btrfsmaintenance
 linux
 linux-firmware-intel
 linux-lts

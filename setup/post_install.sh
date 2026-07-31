@@ -91,6 +91,7 @@ fi
 section 'Enabling system services'
 sudo systemctl enable \
     bluetooth \
+    btrfs-scrub.timer \
     NetworkManager \
     paccache.timer \
     scx_loader.service \

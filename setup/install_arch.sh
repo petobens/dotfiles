@@ -118,7 +118,7 @@ mkfs.btrfs -f "$root_partition"
 
 section 'Mounting filesystems'
 mount "$root_partition" /mnt
-for subvolume in @ @home @pkg @var_log; do
+for subvolume in @ @home @pkg @snapshots @var_log; do
     btrfs subvolume create "/mnt/$subvolume"
     btrfs property set "/mnt/$subvolume" compression zstd
 done
@@ -126,8 +126,8 @@ btrfs subvolume set-default /mnt/@
 umount /mnt
 mount -o noatime,nodiscard "$root_partition" /mnt
 mount --mkdir -o noatime,nodiscard,subvol=@home "$root_partition" /mnt/home
-mount --mkdir -o noatime,nodiscard,subvol=@pkg \
-    "$root_partition" /mnt/var/cache/pacman/pkg
+mount --mkdir -o noatime,nodiscard,subvol=@pkg "$root_partition" /mnt/var/cache/pacman/pkg
+mount --mkdir -o noatime,nodiscard,subvol=@snapshots "$root_partition" /mnt/.snapshots
 mount --mkdir -o noatime,nodiscard,subvol=@var_log "$root_partition" /mnt/var/log
 mount --mkdir -o umask=0077 "$efi_partition" /mnt/boot
 findmnt /mnt
@@ -153,6 +153,7 @@ root_uuid=$(blkid -s UUID -o value "$root_partition")
 printf '%s\n' \
     "UUID=$root_uuid /home btrfs noatime,nodiscard,subvol=@home 0 0" \
     "UUID=$root_uuid /var/cache/pacman/pkg btrfs noatime,nodiscard,subvol=@pkg 0 0" \
+    "UUID=$root_uuid /.snapshots btrfs noatime,nodiscard,subvol=@snapshots 0 0" \
     "UUID=$root_uuid /var/log btrfs noatime,nodiscard,subvol=@var_log 0 0" \
     > /mnt/etc/fstab
 
@@ -184,7 +185,6 @@ EOF
 
 section 'Enabling system services'
 arch-chroot /mnt systemctl enable \
-    btrfs-scrub@-.timer \
     fstrim.timer \
     NetworkManager \
     systemd-boot-update.service \
