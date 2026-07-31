@@ -94,6 +94,7 @@ rofi
 slurp
 ttf-nerd-fonts-symbols
 waybar
+wf-recorder
 wl-clipboard
 xdg-desktop-portal-gtk
 xdg-desktop-portal-hyprland

@@ -4,17 +4,24 @@ local external_left = 'DP-1'
 local external_right = 'DP-3'
 local laptop = 'eDP-1'
 local full_hd = '1920x1080@60'
+-- An empty output name matches every display without a rule of its own
+local others = { external_left, external_right, '' }
 
-local function primary()
+local function laptop_monitor(position)
     hl.monitor({
         output = laptop,
         mode = 'preferred',
-        position = '0x0',
+        position = position,
         scale = 1.5,
         disabled = false,
     })
-    hl.monitor({ output = external_left, disabled = true })
-    hl.monitor({ output = external_right, disabled = true })
+end
+
+local function primary()
+    laptop_monitor('0x0')
+    for _, output in ipairs(others) do
+        hl.monitor({ output = output, disabled = true })
+    end
 end
 
 local function multi()
@@ -23,6 +30,7 @@ local function multi()
         mode = full_hd,
         position = '0x0',
         scale = 1,
+        mirror = '',
         disabled = false,
     })
     hl.monitor({
@@ -30,22 +38,37 @@ local function multi()
         mode = full_hd,
         position = '1920x0',
         scale = 1,
+        mirror = '',
         disabled = false,
     })
+    laptop_monitor('960x1080')
     hl.monitor({
-        output = laptop,
+        output = '',
         mode = 'preferred',
-        position = '960x1080',
-        scale = 1.5,
+        position = 'auto',
+        scale = 1,
+        mirror = '',
         disabled = false,
     })
 end
 
+-- Duplicate the laptop screen on every other display (projectors, TVs)
+local function mirror()
+    laptop_monitor('0x0')
+    for _, output in ipairs(others) do
+        hl.monitor({
+            output = output,
+            mode = 'preferred',
+            position = 'auto',
+            scale = 1,
+            mirror = laptop,
+            disabled = false,
+        })
+    end
+end
+
 -- Two 1080p displays above the centered X1 Carbon screen
 multi()
-
--- Other displays
-hl.monitor({ output = '', mode = 'preferred', position = 'auto', scale = 1 })
 
 -- Workspaces
 local workspaces = {
@@ -67,4 +90,4 @@ for _, workspace in ipairs(workspaces) do
     })
 end
 
-return { primary = primary, multi = multi }
+return { primary = primary, multi = multi, mirror = mirror }

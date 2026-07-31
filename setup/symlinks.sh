@@ -45,6 +45,7 @@ symlink "$repo/config/home/arararc.yaml" "$HOME/.arararc.yaml"
 symlink "$repo/config/home/fdignore" "$HOME/.fdignore"
 symlink "$repo/config/home/gitconfig" "$HOME/.gitconfig"
 symlink "$repo/config/home/gitignore" "$HOME/.gitignore"
+symlink "$repo/config/home/inputrc" "$HOME/.inputrc"
 symlink "$repo/config/home/lesskey" "$HOME/.lesskey"
 symlink "$repo/config/home/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 

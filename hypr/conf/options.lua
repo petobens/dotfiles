@@ -31,6 +31,8 @@ hl.config({
         },
     },
     animations = { enabled = true },
+    -- Hide the pointer while it sits still, as unclutter did under X
+    cursor = { inactive_timeout = 1 },
     dwindle = { preserve_split = true },
     ecosystem = { no_update_news = true },
     input = {

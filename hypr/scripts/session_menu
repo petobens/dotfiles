@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-action=$(printf '%s\n' lock 'quit apps' logout suspend reboot poweroff | rofi -dmenu -p 'session')
+action=$(printf '%s\n' 'about arch' lock 'quit apps' logout suspend reboot poweroff |
+    rofi -dmenu -p 'session')
 case "$action" in
+    'about arch') "$(dirname "$0")/app" about ;;
     lock) loginctl lock-session ;;
     'quit apps')
         [[ $(printf '%s\n' no yes | rofi -dmenu -p 'quit all apps?') == yes ]] || exit 0

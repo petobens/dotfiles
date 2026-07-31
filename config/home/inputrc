@@ -1,0 +1,9 @@
+set completion-ignore-case On
+set show-all-if-ambiguous On
+set skip-completed-text On
+set colored-stats Off
+set blink-matching-paren Off
+set menu-complete-display-prefix On
+set colored-completion-prefix On
+set mark-symlinked-directories On
+set enable-bracketed-paste On

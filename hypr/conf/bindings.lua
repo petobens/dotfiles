@@ -216,6 +216,7 @@ for _, direction in ipairs(monitor_directions) do
 end
 bind(super .. ' + Return', monitor_modes.primary, 'Use laptop display')
 bind(super_ctrl .. ' + Return', monitor_modes.multi, 'Use all displays')
+bind(super_shift .. ' + Return', monitor_modes.mirror, 'Mirror laptop display')
 bind(super_ctrl .. ' + J', function()
     hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
     hl.dispatch(hl.dsp.window.bring_to_top())
@@ -290,10 +291,12 @@ for _, application in ipairs(applications) do
 end
 exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
 
--- Screenshots
+-- Screenshots and recordings
 exec('Print', scripts .. 'screenshot full', 'Full screenshot')
 exec(super_shift .. ' + C', scripts .. 'screenshot selection', 'Selection screenshot')
 exec(super_shift .. ' + 0', scripts .. 'screenshot active', 'Window screenshot')
+exec(super_shift .. ' + G', scripts .. 'screen_record gif', 'Toggle GIF recording')
+exec(super_alt .. ' + G', scripts .. 'screen_record video', 'Toggle video recording')
 
 -- Audio and media
 exec('XF86AudioRaiseVolume', volume_up, 'Raise volume', { repeating = true })

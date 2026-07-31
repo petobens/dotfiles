@@ -6,9 +6,9 @@ cycle=false
 if [[ ${1:-} == menu ]]; then
     app=$(
         printf '%s\n' \
-            audio bluetooth brave calendar clickup docker edge files gmail htop \
-            images meet numbers onedrive onlyoffice quickterm slack spotify teams \
-            terminal transmission trash wifi zathura zoom |
+            about audio bluetooth brave calendar clickup docker edge files gmail \
+            htop images meet numbers onedrive onlyoffice quickterm slack spotify \
+            teams terminal transmission trash wifi zathura zoom |
             rofi -dmenu -p 'app'
     )
     [[ -n $app ]] || exit 0
@@ -17,6 +17,12 @@ fi
 
 # Resolve the requested app's launch and matching rules
 case ${1:-} in
+    about)
+        tag=about
+        class='^about$'
+        workspace=current
+        command="ghostty --class=about --title='About Arch' -e sh -c 'fastfetch; read -r _'"
+        ;;
     audio)
         tag=audio
         class='^(hyprpwcenter|org.hyprland.hyprpwcenter)$'

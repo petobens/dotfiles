@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Record a screen region, converting it to a GIF when asked; the same
+# invocation stops an ongoing recording
+state="${XDG_RUNTIME_DIR:?}/hypr-screen-record"
+directory="$HOME/Videos/Recordings"
+
+if [[ -f $state ]]; then
+    read -r pid video format < "$state"
+    rm -f "$state"
+    # Match the output path so stale state cannot signal a reused PID
+    if kill -0 "$pid" 2> /dev/null &&
+        tr '\0' '\n' < "/proc/$pid/cmdline" | grep -Fxq -- "$video"; then
+        # wf-recorder only finalizes the file on SIGINT
+        kill -INT "$pid"
+        while kill -0 "$pid" 2> /dev/null; do
+            sleep 0.1
+        done
+
+        file=$video
+        if [[ $format == gif ]]; then
+            file="${video%.mp4}.gif"
+            ffmpeg -loglevel error -y -i "$video" \
+                -vf 'fps=15,split[a][b];[a]palettegen[p];[b][p]paletteuse' "$file"
+            rm -f "$video"
+        fi
+        notify-send -i media-record 'Recording saved' "$file"
+        exit
+    fi
+fi
+
+format=${1:-video}
+case $format in
+    gif | video) ;;
+    *)
+        echo 'usage: screen_record [video|gif]' >&2
+        exit 2
+        ;;
+esac
+
+geometry=$(slurp) || exit 0
+mkdir -p "$directory"
+video="$directory/$(date +'%Y-%m-%d_%H-%M-%S').mp4"
+wf-recorder -g "$geometry" -f "$video" > /dev/null 2>&1 &
+printf '%s %s %s\n' "$!" "$video" "$format" > "$state"
+sleep 0.1
+if ! kill -0 "$!" 2> /dev/null; then
+    rm -f "$state"
+    notify-send -u critical -i media-record 'Recording failed to start'
+    exit 1
+fi
+notify-send -t 2000 -i media-record "Recording started ($format)" \
+    'Press the same shortcut to stop'

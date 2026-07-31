@@ -22,4 +22,5 @@ hl.on('hyprland.start', function()
     -- Hardware integration
     hl.exec_cmd('blueman-applet')
     hl.exec_cmd('udiskie --tray')
+    hl.exec_cmd(os.getenv('HOME') .. '/.config/hypr/scripts/battery_monitor')
 end)
