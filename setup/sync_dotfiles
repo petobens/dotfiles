@@ -40,6 +40,7 @@ fi
 if git merge --no-commit --no-ff -X ours origin/master; then
     review_new_files
     git commit --no-edit
+    git --no-pager log --graph --oneline HEAD^1..HEAD
     echo 'Merged origin/master into dotfiles-wayland.'
     exit
 fi
@@ -83,4 +84,5 @@ git diff --quiet --diff-filter=U ||
 
 review_new_files
 git commit --no-edit
+git --no-pager log --graph --oneline HEAD^1..HEAD
 echo 'Merged origin/master into dotfiles-wayland with Wayland conflicts kept.'
