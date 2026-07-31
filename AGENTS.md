@@ -45,6 +45,32 @@ desktop.
 - For Fish scripts, run `fish_indent -w <file>` and
   `fish --no-execute <file>`.
 
+#### Lua
+
+Run StyLua and Luacheck on every touched persisted Lua file, regardless of its
+directory:
+
+```bash
+stylua \
+  --config-path config/linters/stylua.toml \
+  <file>
+luacheck --config config/linters/luacheckrc -- <file>
+```
+
+If `luacheck` or `luac` is broken because of the Arch Lua packaging mismatch
+(the `/usr/bin/luacheck` wrapper targets a Lua version whose rock tree no
+longer exists), use this fallback, which derives the installed version from the
+rock path so it survives package bumps:
+
+```bash
+entry=$(
+    printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck |
+        head -1
+)
+ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
+"lua$ver" -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath; dofile('$entry')" -- --config config/linters/luacheckrc -- <file>
+```
+
 ## Neovim (`nvim/`)
 
 All Neovim configuration lives in the `nvim/` directory. The following rules
@@ -60,42 +86,6 @@ files inside it unless explicitly asked to do so.
 - Plugin sources (lazy.nvim): `~/.local/share/nvim/lazy/`
 
 Consult these before answering questions about Neovim APIs or plugin internals.
-
-### Commands
-
-#### Formatting
-
-```bash
-stylua \
-  --config-path config/linters/stylua.toml \
-  <file>
-```
-
-Run StyLua on touched Lua files under `nvim/` or `hypr/`.
-
-#### Linting
-
-Preferred command:
-
-```bash
-luacheck --config ~/.config/.luacheckrc --globals vim -- <file>
-```
-
-If `luacheck` or `luac` is broken because of the Arch Lua packaging mismatch
-(the `/usr/bin/luacheck` wrapper targets a Lua version whose rock tree no
-longer exists), use this fallback, which derives the installed version from the
-rock path so it survives package bumps:
-
-```bash
-entry=$(
-    printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck |
-        head -1
-)
-ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
-"lua$ver" -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath; dofile('$entry')" -- --config ~/.config/.luacheckrc --globals vim -- <file>
-```
-
-Run Luacheck on touched Lua files under `nvim/` or `hypr/`.
 
 ### Code conventions
 

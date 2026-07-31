@@ -3,7 +3,7 @@ ratio = [1, 3, 4]
 sort_by = "natural"
 sort_sensitive = false
 sort_dir_first = true
-linemode = "size"
+linemode = "none"
 show_hidden = false
 show_symlink = true
 scrolloff = 5
@@ -27,3 +27,13 @@ prepend_rules = [
     { mime = "image/*", use = "open" },
     { mime = "video/*", use = "play" },
 ]
+
+[[plugin.prepend_fetchers]]
+url = "*"
+run = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+url = "*/"
+run = "git"
+group = "git"

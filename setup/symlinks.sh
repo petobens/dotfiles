@@ -54,6 +54,7 @@ symlink "$repo/config/brave-flags.conf" "$HOME/.config/brave-flags.conf"
 symlink "$repo/config/fish" "$HOME/.config/fish"
 symlink "$repo/config/ghostty" "$HOME/.config/ghostty"
 symlink "$repo/hypr" "$HOME/.config/hypr"
+symlink "$repo/config/imv" "$HOME/.config/imv"
 symlink "$repo/config/kitty" "$HOME/.config/kitty"
 symlink "$repo/config/mako" "$HOME/.config/mako"
 symlink "$repo/config/microsoft-edge-dev-flags.conf" \
@@ -119,6 +120,13 @@ fi
 
 # User data directories
 mkdir -p "$HOME/Pictures/Screenshots"
+
+# Yazi plugins
+if command -v ya > /dev/null; then
+    section 'Installing Yazi plugins'
+    mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/yazi"
+    ya pkg install
+fi
 
 printf 'Symlinked Wayland dotfiles from %s\n' "$repo"
 [[ ! -d $backup_root ]] || printf 'Previous files: %s\n' "$backup_root"

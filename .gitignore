@@ -12,6 +12,9 @@ config/tmux/resurrect/
 # Local tool state
 /.ruff_cache/
 config/fish/fish_variables
+config/yazi/plugins/full-border.yazi/
+config/yazi/plugins/git.yazi/
+config/yazi/plugins/toggle-pane.yazi/
 
 # OneDrive runtime state
 config/onedrive/items*
