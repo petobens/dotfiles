@@ -34,7 +34,7 @@
         "separate-outputs": true,
     },
     "hyprland/workspaces": {
-        "format": "{icon} {id}",
+        "format": "{icon} <sup>{id}</sup>",
         "format-icons": {
             "1": "󰖟",
             "2": "",
