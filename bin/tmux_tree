@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+active_session=${1:-}
+active_session_id=
+
+if [[ -n $active_session ]]; then
+    active_session_id=$(
+        tmux list-sessions -F '#{session_id} #{session_name}' |
+            while read -r session_id session_name; do
+                if [[ $active_session == "$session_name" ]]; then
+                    printf '%s\n' "$session_id"
+                    break
+                fi
+            done
+    )
+fi
+
+tmux list-sessions \
+    -F '#{session_id} #{session_name}: #{T:tree_mode_format}' |
+    while read -r session_id session_info; do
+        if [[ $active_session_id == "$session_id" ]]; then
+            printf '\033[1;34m%s\033[0m\n' "$session_info"
+        else
+            printf '\033[1m%s\033[0m\n' "$session_info"
+        fi
+        tmux list-windows -t "$session_id" -F '   #{T:tree_mode_format}'
+    done

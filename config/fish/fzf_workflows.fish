@@ -199,7 +199,7 @@ function tms --description 'Create or select a tmux session'
         --multi --exit-0 --border-label='Tmux Sessions' \
         --expect=enter,alt-k,alt-r \
         --header='enter=switch, A-k=kill, A-r=rename' \
-        --preview="tmux capture-pane -ep -t '{}:' | tail -n 200 | bat --style plain")
+        --preview="tmux_tree '{}' | bat --style plain")
     or return
     test (count $out) -gt 1; or return 1
 
