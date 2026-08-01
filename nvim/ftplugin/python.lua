@@ -314,7 +314,7 @@ function _G.PyVenv.activate(venv)
         if venv_info then
             vim.b.pyvenv = venv_info.path
             local py_files = vim.fs.find(function(name, path)
-                return name:match('.*%.py$')
+                return vim.fs.ext(name) == 'py'
                     and not vim.startswith(path, project_root .. '/.venv/')
             end, {
                 limit = math.huge,

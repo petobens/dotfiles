@@ -131,8 +131,8 @@ local function custom_buffer_previewer_maker(filepath, bufnr, opts)
     end
     state.last_path = filepath
 
-    local ext = filepath:lower():match('%.([a-z0-9]+)$')
-    if ext and supported_images[ext] then
+    local ext = vim.fs.ext(filepath):lower()
+    if supported_images[ext] then
         local path = filepath:gsub(' ', '%%20'):gsub('\\', '')
         show_preview_image(path)
     elseif ext == 'pdf' then
@@ -657,7 +657,7 @@ local custom_actions = transform_mod({
     add_codecompanion_documents = function(prompt_bufnr)
         local files = vim.iter(selected_files(prompt_bufnr))
             :filter(function(file)
-                return file:lower():match('%.pdf$') ~= nil
+                return vim.fs.ext(file):lower() == 'pdf'
             end)
             :totable()
 

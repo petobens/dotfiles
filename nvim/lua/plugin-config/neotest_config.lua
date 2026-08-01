@@ -97,7 +97,7 @@ local function _parse_neotest_output(task, last_winid)
             if has_output then
                 -- overseer run_action creates a new empty buffer so we delete it
                 local buffers = vim.api.nvim_list_bufs()
-                vim.api.nvim_buf_delete(buffers[#buffers], {})
+                vim.api.nvim_buf_delete(buffers[#buffers])
             end
         else
             -- Reset qf and diagnostics
@@ -246,7 +246,7 @@ neotest.setup({
 -- Autocmds options
 vim.api.nvim_create_autocmd('FileType', {
     desc = 'Configure neotest output panel window',
-    group = vim.api.nvim_create_augroup('NeotestConfig', {}),
+    group = vim.api.nvim_create_augroup('NeotestConfig'),
     pattern = 'neotest-output-panel',
     callback = set_output_window_layout,
 })
@@ -309,7 +309,7 @@ vim.keymap.set('n', '<Leader>nt', function()
 end, { desc = 'Toggle test summary' })
 
 -- Filetype-mappings
-local neotest_ft_augroup = vim.api.nvim_create_augroup('NeotestFtAu', {})
+local neotest_ft_augroup = vim.api.nvim_create_augroup('NeotestFtAu')
 for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
     vim.api.nvim_create_autocmd('FileType', {
         desc = 'Configure neotest ' .. ft .. ' window',

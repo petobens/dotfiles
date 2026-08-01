@@ -81,6 +81,7 @@ vim.opt.pumborder = 'rounded'
 vim.opt.pumheight = 15
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 3
+vim.opt.scrolloffpad = 1
 vim.opt.showmode = false
 vim.opt.smoothscroll = true
 vim.opt.splitbelow = true
@@ -263,7 +264,7 @@ local function set_ft_option(ft, vim_cmd)
     vim.api.nvim_create_autocmd('FileType', {
         desc = ('Set filetype-specific options: %s'):format(vim.inspect(ft)),
         pattern = ft,
-        group = vim.api.nvim_create_augroup('FtOptions', {}),
+        group = vim.api.nvim_create_augroup('FtOptions'),
         command = vim_cmd,
     })
 end

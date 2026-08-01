@@ -353,9 +353,7 @@ local function summarize_text_metrics(element)
         :filter(function(text_element)
             return type(safe_tbl_get(text_element, 'textRun', 'content')) == 'string'
         end)
-        :fold(0, function(acc)
-            return acc + 1
-        end)
+        :count()
 
     return ('text_metrics=(chars=%d, lines=%d, runs=%d)'):format(
         #raw_text,
