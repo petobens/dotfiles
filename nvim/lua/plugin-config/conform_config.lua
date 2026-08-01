@@ -1,7 +1,7 @@
 local conform = require('conform')
 
 -- Global options
-vim.o.formatexpr = [[v:lua.require('conform').formatexpr()]]
+vim.o.formatexpr = conform.formatexpr
 
 -- Formatters args
 conform.formatters.jq = { args = { '--indent', '4' } }
