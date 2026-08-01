@@ -3,51 +3,58 @@
 local external_left = 'DP-1'
 local external_right = 'DP-3'
 local laptop = 'eDP-1'
-local full_hd = '1920x1080@60'
--- An empty output name matches every display without a rule of its own
-local others = { external_left, external_right, '' }
+local scale_by_resolution = {
+    ['1920x1080'] = 1,
+    ['2880x1800'] = 1.5,
+    ['3840x2160'] = 2,
+}
+local positions = {
+    [external_left] = '0x0',
+    [external_right] = '1920x0',
+    [laptop] = '960x1080',
+}
+local active_mode
 
-local function laptop_monitor(position)
+local function monitor_scale(monitor)
+    local resolution = string.format('%dx%d', monitor.width, monitor.height)
+    return scale_by_resolution[resolution] or 'auto'
+end
+
+local function configure_monitor(monitor, position, mirror)
     hl.monitor({
-        output = laptop,
+        output = monitor.name,
         mode = 'preferred',
         position = position,
-        scale = 1.5,
+        scale = monitor_scale(monitor),
+        mirror = mirror or '',
         disabled = false,
     })
 end
 
+local function laptop_monitor(position)
+    local monitor = hl.get_monitor(laptop)
+    if monitor then
+        configure_monitor(monitor, position)
+    end
+end
+
 local function multi()
-    hl.monitor({
-        output = external_left,
-        mode = full_hd,
-        position = '0x0',
-        scale = 1,
-        mirror = '',
-        disabled = false,
-    })
-    hl.monitor({
-        output = external_right,
-        mode = full_hd,
-        position = '1920x0',
-        scale = 1,
-        mirror = '',
-        disabled = false,
-    })
-    laptop_monitor('960x1080')
+    active_mode = 'multi'
     hl.monitor({
         output = '',
         mode = 'preferred',
         position = 'auto',
-        scale = 1,
+        scale = 'auto',
         mirror = '',
         disabled = false,
     })
+    for _, monitor in ipairs(hl.get_monitors()) do
+        configure_monitor(monitor, positions[monitor.name] or 'auto')
+    end
 end
 
 local function primary()
-    -- Disabling every other output without the laptop panel connected, as in
-    -- the VM, would leave no display enabled at all
+    -- Keep connected outputs enabled when no laptop panel is present
     local connected = false
     for _, monitor in ipairs(hl.get_monitors()) do
         connected = connected or monitor.name == laptop
@@ -56,28 +63,46 @@ local function primary()
         return multi()
     end
 
+    active_mode = 'primary'
     laptop_monitor('0x0')
-    for _, output in ipairs(others) do
-        hl.monitor({ output = output, disabled = true })
+    for _, monitor in ipairs(hl.get_monitors()) do
+        if monitor.name ~= laptop then
+            hl.monitor({ output = monitor.name, disabled = true })
+        end
     end
+    hl.monitor({ output = '', disabled = true })
 end
 
 -- Duplicate the laptop screen on every other display (projectors, TVs)
 local function mirror()
+    active_mode = 'mirror'
     laptop_monitor('0x0')
-    for _, output in ipairs(others) do
-        hl.monitor({
-            output = output,
-            mode = 'preferred',
-            position = 'auto',
-            scale = 1,
-            mirror = laptop,
-            disabled = false,
-        })
+    hl.monitor({
+        output = '',
+        mode = 'preferred',
+        position = 'auto',
+        scale = 'auto',
+        mirror = laptop,
+        disabled = false,
+    })
+    for _, monitor in ipairs(hl.get_monitors()) do
+        if monitor.name ~= laptop then
+            configure_monitor(monitor, 'auto', laptop)
+        end
     end
 end
 
--- Two 1080p displays above the centered X1 Carbon screen
+hl.on('monitor.added', function()
+    if active_mode == 'primary' then
+        primary()
+    elseif active_mode == 'mirror' then
+        mirror()
+    else
+        multi()
+    end
+end)
+
+-- Two external displays above the centered X1 Carbon screen
 multi()
 
 -- Workspaces
