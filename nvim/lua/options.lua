@@ -81,7 +81,6 @@ vim.opt.pumborder = 'rounded'
 vim.opt.pumheight = 15
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 3
-vim.opt.scrolloffpad = 1
 vim.opt.showmode = false
 vim.opt.smoothscroll = true
 vim.opt.splitbelow = true
