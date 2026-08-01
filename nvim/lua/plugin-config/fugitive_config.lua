@@ -47,6 +47,16 @@ vim.api.nvim_create_autocmd('FileType', {
             '[c',
             { buf = e.buf, remap = true, desc = 'Previous hunk' }
         )
+        vim.keymap.set('n', '<Leader>md', function()
+            local height = vim.w.fugitive_restore_height
+            if height then
+                vim.api.nvim_win_set_height(0, height)
+                vim.w.fugitive_restore_height = nil
+            else
+                vim.w.fugitive_restore_height = vim.api.nvim_win_get_height(0)
+                vim.cmd.wincmd('_')
+            end
+        end, { buf = e.buf, desc = 'Toggle maximize Fugitive height' })
         vim.keymap.set('n', '<Leader>gp', function()
             vim.cmd.Git('push')
         end, { buf = e.buf, desc = 'Push' })
