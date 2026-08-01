@@ -48,7 +48,7 @@ end
 function M.normalize_json_arg(value, opts)
     opts = opts or {}
 
-    if value == vim.NIL then
+    if vim.isnil(value) then
         value = nil
     end
 
@@ -216,7 +216,7 @@ end
 
 -- Tool output helpers
 local function normalize_tool_output(output)
-    if output == nil or output == vim.NIL then
+    if vim.isnil(output) then
         return ''
     end
 
@@ -228,7 +228,7 @@ local function normalize_tool_output(output)
         return vim.iter(output)
             :flatten()
             :map(function(value)
-                if value == nil or value == vim.NIL then
+                if vim.isnil(value) then
                     return nil
                 end
                 return tostring(value)

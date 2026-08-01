@@ -84,7 +84,7 @@ local function open_image_preview()
         pcall(vim.api.nvim_win_close, win, true)
     end
     for _, key in ipairs({ 'q', '<Esc>' }) do
-        vim.keymap.set('n', key, close, { buffer = buf, desc = 'Close image preview' })
+        vim.keymap.set('n', key, close, { buf = buf, desc = 'Close image preview' })
     end
 
     preview:render({ x = 0, y = 0, width = width, height = height })

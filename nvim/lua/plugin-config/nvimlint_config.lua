@@ -96,7 +96,7 @@ linters.ruff.parser = function(output, bufnr)
     local diagnostics = ruff_parser(output, bufnr)
     for _, v in pairs(diagnostics) do
         local code = v.code
-        if code == nil or code == vim.NIL or type(code) ~= 'string' then
+        if vim.isnil(code) or type(code) ~= 'string' then
             code = 'E'
         elseif vim.startswith(code, 'invalid-syntax') then
             code = 'E'

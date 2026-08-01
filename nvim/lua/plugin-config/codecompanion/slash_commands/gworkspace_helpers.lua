@@ -2,14 +2,9 @@ local chat_helpers = require('plugin-config.codecompanion.helpers').chat
 
 local M = {}
 
--- Local helpers
-local function is_nil_like(value)
-    return value == nil or value == vim.NIL
-end
-
 -- Strings
 function M.trim(s)
-    if is_nil_like(s) then
+    if vim.isnil(s) then
         return ''
     end
 
@@ -34,7 +29,7 @@ function M.fallback_text(value, fallback)
 end
 
 function M.append_text(parts, text)
-    if is_nil_like(text) then
+    if vim.isnil(text) then
         return
     end
 
@@ -48,7 +43,7 @@ function M.append_text(parts, text)
 end
 
 function M.normalize_text(text)
-    if is_nil_like(text) then
+    if vim.isnil(text) then
         text = ''
     elseif type(text) ~= 'string' then
         text = tostring(text)
@@ -60,7 +55,7 @@ function M.normalize_text(text)
 end
 
 function M.normalize_optional_string(value)
-    if is_nil_like(value) then
+    if vim.isnil(value) then
         return ''
     end
 
@@ -73,7 +68,7 @@ end
 
 -- Process
 function M.decode_json(stdout, err_context)
-    if is_nil_like(stdout) then
+    if vim.isnil(stdout) then
         stdout = ''
     elseif type(stdout) ~= 'string' then
         stdout = tostring(stdout)
@@ -117,7 +112,7 @@ end
 
 -- Input parsing
 function M.extract_google_id(input, kind)
-    if is_nil_like(input) then
+    if vim.isnil(input) then
         return nil, ('Missing Google %s URL or ID'):format(kind)
     end
 
