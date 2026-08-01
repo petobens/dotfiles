@@ -211,17 +211,21 @@ local function ensure_connection(chat)
     return true
 end
 
--- Build the telescope `display` function (<icon> <title> (~weight)  <clock>
--- <time>  <cwd>), capturing column widths shared by all rows
+-- Build the telescope `display` function (<icon> <title> <provider> <short-id>
+-- (~weight) <clock> <age> (<timestamp>) <cwd>), capturing shared column widths
 local function make_display(entries)
-    local title_w, provider_w, weight_w, time_w = 0, 0, 0, 0
+    local title_w, provider_w, id_w, weight_w, time_w = 0, 0, 0, 0, 0
     for _, e in ipairs(entries) do
         e.display_title = trim_chars(e.title or e.session_id, TITLE_WIDTH)
         e.display_provider = '[' .. adapter_label(e.adapter) .. ']'
+        e.display_id = e.session_id and e.session_id:sub(-7) or '?'
         e.display_weight = fmt_weight(e.size)
         e.display_time = e.updated_at and utils.make_relative(e.updated_at) or '?'
+        e.display_timestamp = e.updated_at and os.date('%Y-%m-%d %H:%M', e.updated_at)
+            or '?'
         title_w = math.max(title_w, vim.fn.strdisplaywidth(e.display_title))
         provider_w = math.max(provider_w, vim.fn.strdisplaywidth(e.display_provider))
+        id_w = math.max(id_w, vim.fn.strdisplaywidth(e.display_id))
         weight_w = math.max(weight_w, vim.fn.strdisplaywidth(e.display_weight))
         time_w = math.max(time_w, vim.fn.strdisplaywidth(e.display_time))
     end
@@ -233,6 +237,7 @@ local function make_display(entries)
         local icon = state_helpers.provider_icon(e.adapter)
         local title = pad_right(e.display_title, title_w)
         local provider = pad_right(e.display_provider, provider_w)
+        local id = pad_right(e.display_id, id_w)
         local weight_pad = string.rep(
             ' ',
             math.max(weight_w - vim.fn.strdisplaywidth(e.display_weight), 0)
@@ -240,18 +245,20 @@ local function make_display(entries)
         local time = pad_right(e.display_time, time_w)
         local cwd = e.cwd and vim.fn.fnamemodify(e.cwd, ':~') or ''
         local meta = string.format(
-            '(%s)%s   %s %s',
+            '(%s)%s   %s %s (%s)',
             e.display_weight,
             weight_pad,
             ICONS.clock,
-            time
+            time,
+            e.display_timestamp
         )
         local line = string.format(
-            '%s %s %s  %s  %s  %s',
+            '%s %s %s  %s  %s  %s  %s',
             marker,
             icon,
             title,
             provider,
+            id,
             meta,
             cwd
         )
@@ -591,6 +598,12 @@ function M.browse(chat)
                         .. ' '
                         .. (e.title or '')
                         .. ' '
+                        .. (e.session_id or '')
+                        .. ' '
+                        .. (e.display_time or '')
+                        .. ' '
+                        .. (e.display_timestamp or '')
+                        .. ' '
                         .. (e.cwd or ''),
                 }
             end,
@@ -602,12 +615,15 @@ function M.browse(chat)
     local picker
     picker = pickers.new({}, {
         prompt_title = string.format(
-            'ACP Sessions (%s current %s loaded | <A-d>:delete)',
+            'ACP Sessions (%s current %s loaded | <C-y>:yank ID,<A-d>:delete)',
             ICONS.current,
             ICONS.loaded
         ),
         finder = make_finder(),
         sorter = conf.generic_sorter({}),
+        tiebreak = function()
+            return false
+        end,
         attach_mappings = function(prompt_bufnr, map)
             -- Resumed picker; the upvalue's results_win is a closed window
             local current = action_state.get_current_picker(prompt_bufnr)
@@ -663,8 +679,18 @@ function M.browse(chat)
                 )
             end
 
+            local function yank_session_id()
+                local sel = action_state.get_selected_entry()
+                if sel then
+                    actions.close(prompt_bufnr)
+                    vim.fn.setreg('+', sel.value.session_id)
+                end
+            end
+
             map('n', 'd', delete)
+            map('n', '<C-y>', yank_session_id)
             map('i', '<A-d>', delete)
+            map('i', '<C-y>', yank_session_id)
             return true
         end,
     })
