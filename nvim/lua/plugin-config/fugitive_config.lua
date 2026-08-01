@@ -42,6 +42,7 @@ vim.api.nvim_create_autocmd('FileType', {
             '[c',
             { buf = e.buf, remap = true, desc = 'Previous hunk' }
         )
+
         vim.keymap.set('n', '<Leader>gp', function()
             vim.cmd.Git('push')
         end, { buf = e.buf, desc = 'Push' })
@@ -73,6 +74,17 @@ vim.api.nvim_create_autocmd('FileType', {
             )
             vim.system({ 'nbdiff-web', 'HEAD', file }, { detach = true })
         end, { buf = e.buf, desc = 'Open nbdiff-web for file under cursor' })
+
+        vim.keymap.set('n', '<Leader>dm', function()
+            local height = vim.w.fugitive_restore_height
+            if height then
+                vim.api.nvim_win_set_height(0, height)
+                vim.w.fugitive_restore_height = nil
+            else
+                vim.w.fugitive_restore_height = vim.api.nvim_win_get_height(0)
+                vim.cmd.wincmd('_')
+            end
+        end, { buf = e.buf, desc = 'Toggle maximize Fugitive height' })
     end,
 })
 
