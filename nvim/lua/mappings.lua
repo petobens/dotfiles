@@ -46,7 +46,7 @@ vim.api.nvim_create_user_command('RestoreSession', function()
             end
         end
     end
-end, {})
+end)
 vim.keymap.set(
     'n',
     '<Leader>ps',
@@ -55,7 +55,7 @@ vim.keymap.set(
 )
 vim.keymap.set('n', '<Leader>rv', function()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    vim.cmd.restart({ args = { '+qall!', 'RestoreSession' } })
+    vim.cmd.restart({ bang = true, args = { '+qall!', 'RestoreSession' } })
 end, { desc = 'Restart nvim and restore session' })
 vim.keymap.set('n', '<Leader>kv', vim.cmd.qall, { desc = 'Quit all (exit/kill nvim)' })
 
@@ -325,11 +325,11 @@ vim.keymap.set(
     { remap = true, desc = 'Show last message (more message)' }
 )
 vim.keymap.set('n', '<Leader>mc', function()
-    vim.api.nvim_echo({ { '' } }, false, {})
+    vim.api.nvim_echo({ { '' } }, false)
 end, { desc = 'Clear command line message' })
 vim.keymap.set('n', '<Leader>C', function()
-    vim.o.scrolloff = 999 - vim.o.scrolloff
-end, { desc = 'Toggle scrolloff between 0 and 999 (center scrolling)' })
+    vim.wo.scrolloff = vim.wo.scrolloff == 999 and vim.go.scrolloff or 999
+end, { desc = 'Toggle centered scrolling' })
 vim.keymap.set('n', '<Leader>ic', function()
     vim.opt.list = not vim.opt.list:get()
 end, { desc = 'Toggle listchars (invisible chars)' })

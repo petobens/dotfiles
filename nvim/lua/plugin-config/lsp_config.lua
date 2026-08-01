@@ -142,7 +142,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
     callback = function(e)
         -- Enable completion triggered by <c-x><c-o>
-        vim.bo[e.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+        vim.bo[e.buf].omnifunc = vim.lsp.omnifunc
         -- Disable lsp based color highlighting since we use colorizer plugin
         vim.lsp.document_color.enable(false, { bufnr = e.buf })
 

@@ -43,7 +43,7 @@ local function diagnostic_format_float(diagnostic)
     else
         msg = string.format('%s %s', icon, message)
     end
-    if code and code ~= vim.NIL and not_in(msg, code) then
+    if not vim.isnil(code) and not_in(msg, code) then
         msg = string.format('%s [%s]', msg, code)
     end
     return msg
@@ -52,7 +52,7 @@ end
 local function diagnostic_suffix(diagnostic)
     local code = diagnostic.code
     local message = diagnostic.message
-    if not code or code == vim.NIL then
+    if vim.isnil(code) then
         return ''
     end
     if not_in(message, code) then
@@ -114,7 +114,7 @@ vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
         for _, v in vim.iter(pairs(diagnostics)) do
             local old_msg = v.message
             local source = v.source and tostring(v.source) or ''
-            local code = v.code and v.code ~= vim.NIL and tostring(v.code) or nil
+            local code = not vim.isnil(v.code) and tostring(v.code) or nil
 
             if source ~= '' and not string.find(old_msg, source, 1, true) then
                 v.message = string.format('%s: %s', source, old_msg)

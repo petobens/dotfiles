@@ -136,7 +136,8 @@ function M.codex()
         schema = {
             model = {
                 choices = {
-                    [codex_config.model] = { meta = { context_window = 1050000 } },
+                    -- Codex exposes 95% of its current 272k-token product limit
+                    [codex_config.model] = { meta = { context_window = 258400 } },
                 },
             },
         },
@@ -177,6 +178,7 @@ function M.claude_code()
         schema = {
             model = {
                 choices = {
+                    -- The opus[1m] suffix enables Claude Code's full extended context
                     [claude_config.model] = { meta = { context_window = 1000000 } },
                 },
             },

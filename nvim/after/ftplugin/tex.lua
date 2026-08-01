@@ -1,7 +1,5 @@
 -- luacheck:ignore 631
-_G.TexFolding = {}
-
-function _G.TexFolding.custom_foldtext()
+local function custom_foldtext()
     local bufnr = vim.api.nvim_get_current_buf()
     local fold_start = vim.v.foldstart
     local fold_text = vim.api.nvim_buf_get_lines(bufnr, fold_start - 1, fold_start, false)[1]
@@ -30,4 +28,4 @@ function _G.TexFolding.custom_foldtext()
     return fold_text
 end
 
-vim.opt_local.foldtext = 'v:lua.TexFolding.custom_foldtext()'
+vim.opt_local.foldtext = custom_foldtext

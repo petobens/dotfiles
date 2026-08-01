@@ -6,7 +6,7 @@ local u = require('utils')
 vim.opt_local.textwidth = 88
 vim.opt_local.commentstring = '#%s'
 vim.opt_local.foldmethod = 'expr'
-vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt_local.foldexpr = vim.treesitter.foldexpr
 vim.opt_local.foldtext = ''
 _G.OverseerConfig.python_errorformat = ''
     -- luacheck:ignore 631
@@ -297,7 +297,7 @@ function _G.PyVenv.activate()
         if stat and stat.type == 'directory' then
             vim.b.pyvenv = venv_path
             local py_files = vim.fs.find(function(name, path)
-                return name:match('.*%.py$')
+                return vim.fs.ext(name) == 'py'
                     and not vim.startswith(path, project_root .. '/.venv/')
             end, {
                 limit = math.huge,

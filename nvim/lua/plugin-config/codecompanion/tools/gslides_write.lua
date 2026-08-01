@@ -42,7 +42,7 @@ local OPERATION_ENUM = {
 local function normalize_int(value, name, opts)
     opts = opts or {}
 
-    if value == nil or value == vim.NIL then
+    if vim.isnil(value) then
         return nil
     end
     if type(value) ~= 'number' or value % 1 ~= 0 then
@@ -60,7 +60,7 @@ local function normalize_int(value, name, opts)
 end
 
 local function normalize_bool(value, name, default)
-    if value == nil or value == vim.NIL then
+    if vim.isnil(value) then
         return default
     end
     if type(value) ~= 'boolean' then
@@ -70,7 +70,7 @@ local function normalize_bool(value, name, default)
 end
 
 local function normalize_number(value, name)
-    if value == nil or value == vim.NIL then
+    if vim.isnil(value) then
         return nil
     end
     if type(value) ~= 'number' then
@@ -384,7 +384,7 @@ local function find_text_match_bounds(full_text, match_text, occurrence_index)
 end
 
 local function has_value(value)
-    return value ~= nil and value ~= vim.NIL
+    return not vim.isnil(value)
 end
 
 local function slide_scope_from_args(presentation_id, presentation, args)
@@ -969,7 +969,7 @@ local function create_slide_operation(presentation_id, args)
     end
 
     local slide_object_id = nil
-    if args.slide_object_id ~= nil and args.slide_object_id ~= vim.NIL then
+    if not vim.isnil(args.slide_object_id) then
         local slide_object_id_err
         slide_object_id, slide_object_id_err =
             gws_tool_helpers.normalize_required_string_arg(
@@ -983,7 +983,7 @@ local function create_slide_operation(presentation_id, args)
     end
 
     local layout_reference = nil
-    if args.layout_reference ~= nil and args.layout_reference ~= vim.NIL then
+    if not vim.isnil(args.layout_reference) then
         local layout_reference_err
         layout_reference, layout_reference_err =
             gws_tool_helpers.normalize_required_string_arg(
@@ -1046,7 +1046,7 @@ local function duplicate_slide_operation(presentation_id, args)
 
     local object_ids = nil
     local new_slide_object_id = nil
-    if args.new_slide_object_id ~= nil and args.new_slide_object_id ~= vim.NIL then
+    if not vim.isnil(args.new_slide_object_id) then
         local new_slide_object_id_err
         new_slide_object_id, new_slide_object_id_err =
             gws_tool_helpers.normalize_required_string_arg(

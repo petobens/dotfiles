@@ -167,8 +167,7 @@ local function delete_aux_files()
     for name, type in vim.fs.dir(dir) do
         if type == 'file' then
             local f = vim.fs.joinpath(dir, name)
-            local ext = f:match('%.([^/%.]+)$')
-            if ext and aux_extensions[ext] then
+            if aux_extensions[vim.fs.ext(f)] then
                 table.insert(rm_files, f)
             end
         end

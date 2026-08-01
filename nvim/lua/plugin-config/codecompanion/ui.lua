@@ -144,7 +144,7 @@ local function notify_chat_done(bufnr)
         state_helpers.get_chat_model_label(chat),
         state_helpers.get_chat_name(chat)
     )
-    vim.api.nvim_echo({ { message, 'DiagnosticOk' } }, true, {})
+    vim.api.nvim_echo({ { message, 'DiagnosticOk' } }, true)
 end
 
 -- Fetch the usage limit for claude_code/codex chats and re-render the footer
@@ -405,7 +405,7 @@ function M.setup()
             -- But keep the notification visible on rejection/cancel
             local choice = e.data.choice
             if choice ~= 'cancelled' and not tool_labels.is_rejection(choice) then
-                vim.api.nvim_echo({ { '' } }, false, {})
+                vim.api.nvim_echo({ { '' } }, false)
             end
         end,
     })

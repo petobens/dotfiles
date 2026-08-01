@@ -1,5 +1,6 @@
 local codecompanion = require('codecompanion')
 local keymaps = require('codecompanion.interactions.chat.keymaps')
+local u = require('utils')
 
 local acp_sessions = require('plugin-config.codecompanion.pickers.acp_sessions')
 local acp_helpers = require('plugin-config.codecompanion.helpers').acp
@@ -29,7 +30,7 @@ local function open_options()
     keymaps.options.callback()
     vim.defer_fn(function()
         vim.cmd.stopinsert()
-        vim.api.nvim_win_resize(0, math.min(160, vim.o.columns), -1, {})
+        vim.api.nvim_win_resize(0, math.min(160, vim.o.columns), -1)
     end, 1)
 end
 
@@ -47,6 +48,39 @@ local function open_debug(chat_obj)
     end, 1)
 end
 
+local function create_chat()
+    vim.cmd.CodeCompanionChat()
+    -- Hack to make completions work immediately in a new chat
+    vim.cmd.stopinsert()
+    vim.defer_fn(function()
+        vim.cmd.startinsert({ bang = true })
+    end, 100)
+end
+
+local function create_chat_in_directory(chat_obj)
+    local cwd = vim.fn.getcwd()
+    local root = u.git_root(cwd)
+    vim.ui.input({
+        prompt = 'Chat directory: ',
+        default = (root and vim.fs.dirname(root) or cwd) .. '/',
+        completion = 'dir',
+    }, function(dir)
+        if not dir or dir == '' then
+            return
+        end
+
+        dir = vim.fs.normalize(dir)
+        if vim.fn.isdirectory(dir) == 0 then
+            return vim.notify('Not a directory: ' .. dir, vim.log.levels.ERROR)
+        end
+
+        chat_obj.ui:hide()
+        vim.cmd.cd(dir)
+        create_chat()
+        codecompanion.last_chat().opts.cwd = u.git_root(dir) or dir
+    end)
+end
+
 -- Chat window keymaps
 function M.chat_keymaps()
     return {
@@ -54,14 +88,12 @@ function M.chat_keymaps()
         create_chat = {
             modes = { n = '<A-c>', i = '<A-c>' },
             description = 'Create new chat',
-            callback = function()
-                vim.cmd.CodeCompanionChat()
-                -- Hack to make completions work immediately in a new chat
-                vim.cmd.stopinsert()
-                vim.defer_fn(function()
-                    vim.cmd.startinsert({ bang = true })
-                end, 100)
-            end,
+            callback = create_chat,
+        },
+        create_chat_in_directory = {
+            modes = { n = '<A-e>', i = '<A-e>' },
+            description = 'Create new chat in directory',
+            callback = create_chat_in_directory,
         },
         hide_chats = {
             modes = { n = '<C-c>', i = '<C-c>' },
@@ -219,14 +251,14 @@ local function paste_selection_to_chat()
 end
 
 local function show_ai_usage()
-    vim.api.nvim_echo({ { 'Retrieving rate limits...' } }, false, {})
+    vim.api.nvim_echo({ { 'Retrieving rate limits...' } }, false)
     usage_helpers.run(nil, function(out)
         vim.schedule(function()
             if out == '' then
-                vim.api.nvim_echo({ { '' } }, false, {})
+                vim.api.nvim_echo({ { '' } }, false)
                 vim.notify('ai_session_usage: no output', vim.log.levels.WARN)
             else
-                vim.api.nvim_echo({ { out } }, false, {})
+                vim.api.nvim_echo({ { out } }, false)
             end
         end)
     end)

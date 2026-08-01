@@ -34,7 +34,7 @@ function Buffer:get_props()
             dev = ''
         else
             local bufname = vim.api.nvim_buf_get_name(self.bufnr)
-            local ext = bufname:match('%.([^.]+)$') or ''
+            local ext = vim.fs.ext(bufname)
             dev, _ = get_icon(self.file, ext)
         end
         if dev then

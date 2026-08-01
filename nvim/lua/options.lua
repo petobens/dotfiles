@@ -1,7 +1,7 @@
 local u = require('utils')
 
 -- Helpers
-function _G.my_custom_foldtext()
+local function custom_foldtext()
     local bufnr = vim.api.nvim_get_current_buf()
     local foldstart = vim.v.foldstart
     local line = vim.api.nvim_buf_get_lines(bufnr, foldstart - 1, foldstart, false)[1]
@@ -27,7 +27,7 @@ vim.opt.diffopt = {
 vim.opt.foldcolumn = 'auto'
 vim.opt.foldlevelstart = 0
 vim.opt.foldopen:append({ 'insert', 'jump' })
-vim.opt.foldtext = 'v:lua.my_custom_foldtext()'
+vim.opt.foldtext = custom_foldtext
 vim.opt.iskeyword:append(':')
 vim.opt.lazyredraw = false
 vim.opt.modeline = false
@@ -81,6 +81,7 @@ vim.opt.pumborder = 'rounded'
 vim.opt.pumheight = 15
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 3
+vim.opt.scrolloffpad = 1
 vim.opt.showmode = false
 vim.opt.smoothscroll = true
 vim.opt.splitbelow = true
@@ -254,7 +255,7 @@ local function set_ft_option(ft, vim_cmd)
     vim.api.nvim_create_autocmd('FileType', {
         desc = ('Set filetype-specific options: %s'):format(vim.inspect(ft)),
         pattern = ft,
-        group = vim.api.nvim_create_augroup('FtOptions', {}),
+        group = vim.api.nvim_create_augroup('FtOptions'),
         command = vim_cmd,
     })
 end

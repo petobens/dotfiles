@@ -5,7 +5,7 @@ return {
         -- TODO: We probably want this for other filetypes too
         local precommit_root = vim.fs.root(0, '.pre-commit-config.yaml') or vim.uv.cwd()
         local py_files = vim.fs.find(function(name)
-            return name:match('.*%.py$')
+            return vim.fs.ext(name) == 'py'
         end, {
             limit = math.huge,
             type = 'file',
