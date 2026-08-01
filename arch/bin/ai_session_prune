@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Prune Claude Code and Codex agent session files.
 
-Deletes old or single-exchange sessions. Pass --all to delete every session.
-Run with -n/--dry-run to preview.
+Deletes old sessions and small single-exchange sessions. Pass --all to delete
+every session. Run with -n/--dry-run to preview.
 """
 
 import argparse
@@ -15,6 +15,7 @@ from pathlib import Path
 
 AGE_DAYS = 60
 MIN_USER_PROMPTS = 2  # keep sessions with at least this many user prompts
+MIN_SINGLE_EXCHANGE_SIZE = 128 * 1024
 
 CLAUDE_ROOT = Path.home() / ".claude" / "projects"
 CODEX_ROOT = Path.home() / ".codex" / "sessions"
@@ -96,7 +97,7 @@ def prune(
     delete_all: bool,
 ) -> int:
     """Delete matching session files and report the result."""
-    old = tiny = kept = 0
+    old = small = kept = 0
     for f in files:
         if delete_all:
             old += 1
@@ -105,22 +106,26 @@ def prune(
             continue
 
         try:
-            is_old = f.stat().st_mtime < cutoff
+            stat = f.stat()
         except OSError:
             continue
-        if is_old or counter(f) < MIN_USER_PROMPTS:
+        is_old = stat.st_mtime < cutoff
+        is_small_single_exchange = (
+            stat.st_size < MIN_SINGLE_EXCHANGE_SIZE and counter(f) < MIN_USER_PROMPTS
+        )
+        if is_old or is_small_single_exchange:
             if is_old:
                 old += 1
             else:
-                tiny += 1
+                small += 1
             if not dry_run:
                 f.unlink()
         else:
             kept += 1
     verb = "would delete" if dry_run else "deleted"
-    detail = "all" if delete_all else f"old={old}, single-exchange={tiny}"
-    print(f"{name}: {verb} {old + tiny} ({detail}), kept {kept}")
-    return old + tiny
+    detail = "all" if delete_all else f"old={old}, small-single-exchange={small}"
+    print(f"{name}: {verb} {old + small} ({detail}), kept {kept}")
+    return old + small
 
 
 def confirm_delete_all() -> bool:
