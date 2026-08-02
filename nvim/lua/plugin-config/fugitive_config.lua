@@ -78,7 +78,7 @@ vim.api.nvim_create_autocmd('FileType', {
         vim.keymap.set('n', '<Leader>dm', function()
             local height = vim.w.fugitive_restore_height
             if height then
-                vim.api.nvim_win_set_height(0, height)
+                vim.api.nvim_win_resize(0, -1, height)
                 vim.w.fugitive_restore_height = nil
             else
                 vim.w.fugitive_restore_height = vim.api.nvim_win_get_height(0)
