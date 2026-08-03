@@ -45,7 +45,32 @@ local function open_status_file_diff()
 
     u.quit_return()
     vim.cmd.edit(file)
+    local worktree_bufnr = vim.api.nvim_get_current_buf()
     vim.cmd.Gdiffsplit({ bang = true })
+
+    local function add_review_comment(range)
+        vim.cmd.CodeCompanionCodeReview({ args = { 'Comment' }, range = range })
+    end
+
+    vim.keymap.set('n', '<Leader>ra', function()
+        add_review_comment()
+    end, {
+        buf = worktree_bufnr,
+        desc = 'Add CodeCompanion review comment',
+    })
+    vim.keymap.set('v', '<Leader>ra', function()
+        local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+        local anchor_line = vim.fn.line('v')
+        vim.cmd.normal({ vim.keycode('<Esc>'), bang = true })
+        add_review_comment({
+            math.min(anchor_line, cursor_line),
+            math.max(anchor_line, cursor_line),
+        })
+    end, {
+        buf = worktree_bufnr,
+        desc = 'Add CodeCompanion review comment',
+    })
+
     vim.keymap.set('n', '<Leader>de', function()
         vim.keymap.del('n', '<Leader>de', { buffer = 0 })
         vim.fn['fugitive#DiffClose']()

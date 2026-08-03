@@ -1,4 +1,7 @@
+local code_review = require('codecompanion.interactions.code_review')
+local codecompanion = require('codecompanion')
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
+local window_helpers = require('plugin-config.codecompanion.helpers').window
 local prompt_library = require('plugin-config.codecompanion.prompt_library')
 local u = require('utils')
 
@@ -34,6 +37,53 @@ local function setup_qf_filetype_mappings(args)
 end
 
 local function setup_fugitive_filetype_mappings(args)
+    vim.keymap.set('n', '<Leader>rs', function()
+        if #code_review.pending() == 0 then
+            vim.notify('No pending CodeCompanion review comments', vim.log.levels.WARN)
+            return
+        end
+
+        local chat = codecompanion.last_chat()
+        if not chat then
+            vim.notify('No CodeCompanion chat available', vim.log.levels.WARN)
+            return
+        end
+
+        chat_helpers.submit_user_message(chat, 'Please address #{code_review}')
+        window_helpers.focus_or_toggle_chat({ startinsert = false })
+    end, {
+        buf = args.buf,
+        desc = 'Send CodeCompanion review comments',
+    })
+
+    vim.keymap.set('n', '<Leader>re', function()
+        local comments = code_review.pending()
+        if #comments == 0 then
+            vim.notify('No pending CodeCompanion review comments', vim.log.levels.WARN)
+            return
+        end
+
+        local root = vim.fn.FugitiveWorkTree()
+        local items = vim.iter(comments)
+            :map(function(comment)
+                return {
+                    filename = vim.fs.joinpath(root, comment.path),
+                    lnum = comment.start_line,
+                    end_lnum = comment.end_line,
+                    text = comment.comment:gsub('%s+', ' '),
+                }
+            end)
+            :totable()
+        vim.fn.setqflist({}, ' ', {
+            title = 'CodeCompanion Review Comments',
+            items = items,
+        })
+        vim.cmd.copen()
+    end, {
+        buf = args.buf,
+        desc = 'Explore CodeCompanion review comments',
+    })
+
     vim.keymap.set('n', '<Leader>cc', function()
         chat_helpers.run_slash_command('conventional_commit')
     end, {
