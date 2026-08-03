@@ -123,6 +123,10 @@ require('render-markdown').setup({
                             icon = '󰌹 ',
                             highlight = 'Comment',
                         },
+                        comment = {
+                            icon = '󰅺 ',
+                            highlight = 'Comment',
+                        },
                         file = {
                             icon = '󰨸 ',
                             highlight = 'Comment',

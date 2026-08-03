@@ -410,6 +410,8 @@ local function collect_session_update(update, updates, context, paths)
             restore_context(context, paths, '󰈙', path)
             return ''
         end)
+        text = text:gsub('(<comment [^\n]+>\n)````[^\n]*\n[ \t\n]-````\n', '%1')
+        text = text:gsub('</comment>(%S)', '</comment>\n\n%1')
         update.content.text = text
         if text == '' then
             return
