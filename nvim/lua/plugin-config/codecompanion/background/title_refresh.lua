@@ -48,6 +48,9 @@ end
 function M.request(background, chat)
     local cycle = chat.cycle or 1
     local completed_turns = cycle - 1
+    if chat._title_pinned then
+        return
+    end
     -- Supersede a request from an earlier turn that never completed (e.g. a
     -- cancelled turn), otherwise a stuck flag blocks all future titles
     if pending[chat] and pending[chat] >= cycle then
@@ -112,6 +115,9 @@ function M.request(background, chat)
                 return
             end
             pending[chat] = nil
+            if chat._title_pinned then
+                return
+            end
             local title = native.on_done(result)
             if not title then
                 return

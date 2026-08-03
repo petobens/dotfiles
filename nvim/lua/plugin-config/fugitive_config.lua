@@ -46,6 +46,7 @@ local function open_status_file_diff()
     u.quit_return()
     vim.cmd.edit(file)
     vim.cmd.Gdiffsplit({ bang = true })
+
     vim.keymap.set('n', '<Leader>de', function()
         vim.keymap.del('n', '<Leader>de', { buffer = 0 })
         vim.fn['fugitive#DiffClose']()
