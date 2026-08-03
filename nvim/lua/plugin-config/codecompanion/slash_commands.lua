@@ -56,34 +56,6 @@ local function setup_fugitive_filetype_mappings(args)
         desc = 'Send CodeCompanion review comments',
     })
 
-    vim.keymap.set('n', '<Leader>re', function()
-        local comments = code_review.pending()
-        if #comments == 0 then
-            vim.notify('No pending CodeCompanion review comments', vim.log.levels.WARN)
-            return
-        end
-
-        local root = vim.fn.FugitiveWorkTree()
-        local items = vim.iter(comments)
-            :map(function(comment)
-                return {
-                    filename = vim.fs.joinpath(root, comment.path),
-                    lnum = comment.start_line,
-                    end_lnum = comment.end_line,
-                    text = comment.comment:gsub('%s+', ' '),
-                }
-            end)
-            :totable()
-        vim.fn.setqflist({}, ' ', {
-            title = 'CodeCompanion Review Comments',
-            items = items,
-        })
-        vim.cmd.copen()
-    end, {
-        buf = args.buf,
-        desc = 'Explore CodeCompanion review comments',
-    })
-
     vim.keymap.set('n', '<Leader>cc', function()
         chat_helpers.run_slash_command('conventional_commit')
     end, {
