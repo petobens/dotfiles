@@ -18,6 +18,45 @@ local function open_file_at_commit_split()
     end
 end
 
+local function open_git_status()
+    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+    vim.cmd('botright Git')
+    vim.cmd.wincmd('J')
+    vim.cmd.resize('15')
+    vim.cmd.normal({ args = { '4j' }, bang = true })
+    _G.fugitiveConfig.gstatus_winid = vim.api.nvim_get_current_win()
+end
+
+local function open_status_file_diff()
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    vim.cmd.normal({ args = { '$' }, bang = true })
+    local file = vim.fn.FugitiveFind(vim.fn.expand('<cfile>'))
+    vim.api.nvim_win_set_cursor(0, cursor)
+    if not file or file == '' or not vim.uv.fs_stat(file) then
+        vim.notify('File does not exist: ' .. tostring(file), vim.log.levels.ERROR)
+        return
+    end
+
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.api.nvim_win_get_config(win).relative ~= '' then
+            vim.api.nvim_win_hide(win)
+        end
+    end
+
+    u.quit_return()
+    vim.cmd.edit(file)
+    vim.cmd.Gdiffsplit({ bang = true })
+    vim.keymap.set('n', '<Leader>de', function()
+        vim.keymap.del('n', '<Leader>de', { buffer = 0 })
+        vim.fn['fugitive#DiffClose']()
+        open_git_status()
+    end, { buf = 0, desc = 'Close diff and return to Fugitive status' })
+
+    vim.cmd.normal({ args = { 'gg' }, bang = true })
+    pcall(vim.cmd.normal, { args = { ']c' }, bang = true })
+    vim.cmd.normal({ args = { 'zz' }, bang = true })
+end
+
 -- Autocmds
 vim.api.nvim_create_autocmd('FileType', {
     desc = 'Set up Fugitive git status options and mappings',
@@ -42,6 +81,10 @@ vim.api.nvim_create_autocmd('FileType', {
             '[c',
             { buf = e.buf, remap = true, desc = 'Previous hunk' }
         )
+        vim.keymap.set('n', '<Leader>ds', open_status_file_diff, {
+            buf = e.buf,
+            desc = 'Open file diff and close Fugitive status',
+        })
 
         vim.keymap.set('n', '<Leader>gp', function()
             vim.cmd.Git('push')
@@ -157,14 +200,12 @@ vim.api.nvim_create_autocmd({ 'BufLeave' }, {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>gs', function()
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
-    vim.cmd('botright Git')
-    vim.cmd.wincmd('J')
-    vim.cmd.resize('15')
-    vim.cmd.normal({ args = { '4j' }, bang = true })
-    _G.fugitiveConfig.gstatus_winid = vim.api.nvim_get_current_win()
-end, { desc = 'Open Fugitive status window' })
+vim.keymap.set(
+    'n',
+    '<Leader>gs',
+    open_git_status,
+    { desc = 'Open Fugitive status window' }
+)
 
 vim.keymap.set('n', '<Leader>gd', function()
     vim.cmd.Gdiffsplit({ bang = true })
