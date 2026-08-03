@@ -14,6 +14,7 @@ local gdrive = require(SLASH_COMMANDS .. 'gdrive')
 local git = require(SLASH_COMMANDS .. 'git')
 local gsheets = require(SLASH_COMMANDS .. 'gsheets')
 local gslides = require(SLASH_COMMANDS .. 'gslides')
+local session = require(SLASH_COMMANDS .. 'session')
 local skills = require(SLASH_COMMANDS .. 'skills')
 local terminal = require(SLASH_COMMANDS .. 'terminal')
 
@@ -127,6 +128,11 @@ local slash_commands = {
         opts = {
             dirs = { '~/Pictures/Screenshots/' },
         },
+    },
+    -- ACP sessions
+    ['find_session'] = {
+        description = 'Find an ACP session by conversation topic',
+        callback = session.find_session,
     },
     -- Google Workspace
     ['gdrive_search'] = {
