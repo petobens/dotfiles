@@ -134,7 +134,7 @@ function M.browse(chat)
     local display = make_display(entries)
     pickers
         .new({}, {
-            prompt_title = 'Open CodeCompanion Chats',
+            prompt_title = 'Open CodeCompanion Chats (<A-r>:rename)',
             finder = finders.new_table({
                 results = entries,
                 entry_maker = function(e)
@@ -154,7 +154,7 @@ function M.browse(chat)
                 define_preview = make_preview,
             }),
             sorter = conf.generic_sorter({}),
-            attach_mappings = function(prompt_bufnr)
+            attach_mappings = function(prompt_bufnr, map)
                 actions.select_default:replace(function()
                     local sel = action_state.get_selected_entry()
                     actions.close(prompt_bufnr)
@@ -162,6 +162,34 @@ function M.browse(chat)
                         sel.value.open()
                     end
                 end)
+
+                local function rename_chat()
+                    local sel = action_state.get_selected_entry()
+                    local selected_chat = sel
+                        and codecompanion.buf_get_chat(sel.value.bufnr)
+                    if not selected_chat then
+                        return
+                    end
+                    actions.close(prompt_bufnr)
+
+                    vim.ui.input({
+                        prompt = 'Chat title: ',
+                        default = sel.value.title,
+                    }, function(input)
+                        local title = input and vim.trim(input)
+                        if not title or title == '' or title == sel.value.title then
+                            return
+                        end
+
+                        selected_chat._title_pinned = true
+                        selected_chat.opts.title = title
+                        selected_chat:set_title(title)
+                        M.browse(chat)
+                    end)
+                end
+
+                map('n', 'r', rename_chat)
+                map('i', '<A-r>', rename_chat)
                 return true
             end,
         })
