@@ -1,3 +1,4 @@
+local code_review = require('codecompanion.interactions.code_review')
 local codecompanion = require('codecompanion')
 local keymaps = require('codecompanion.interactions.chat.keymaps')
 local u = require('utils')
@@ -250,6 +251,40 @@ local function paste_selection_to_chat()
     end
 end
 
+local function add_review_comment(range)
+    if vim.bo.buftype ~= '' or vim.api.nvim_buf_get_name(0) == '' then
+        vim.notify('Review comments require a regular file buffer', vim.log.levels.WARN)
+        return
+    end
+    vim.cmd.CodeCompanionCodeReview({ args = { 'Comment' }, range = range })
+end
+
+local function explore_review_comments()
+    local comments = code_review.pending()
+    if #comments == 0 then
+        vim.notify('No pending CodeCompanion review comments', vim.log.levels.WARN)
+        return
+    end
+
+    local cwd = vim.uv.cwd() or vim.fn.getcwd()
+    local root = u.git_root(cwd) or vim.fs.normalize(cwd)
+    local items = vim.iter(comments)
+        :map(function(comment)
+            return {
+                filename = vim.fs.joinpath(root, comment.path),
+                lnum = comment.start_line,
+                end_lnum = comment.end_line,
+                text = comment.comment:gsub('%s+', ' '),
+            }
+        end)
+        :totable()
+    vim.fn.setqflist({}, ' ', {
+        title = 'CodeCompanion Review Comments',
+        items = items,
+    })
+    vim.cmd.copen()
+end
+
 local function show_ai_usage()
     vim.api.nvim_echo({ { 'Retrieving rate limits...' } }, false)
     usage_helpers.run(nil, function(out)
@@ -315,6 +350,25 @@ local function setup_global_mappings()
 
     vim.keymap.set('v', '<Leader>cp', paste_selection_to_chat, {
         desc = 'Paste selection to CodeCompanion chat',
+    })
+
+    -- Code review
+    vim.keymap.set('n', '<Leader>ra', add_review_comment, {
+        desc = 'Add CodeCompanion review comment',
+    })
+
+    vim.keymap.set('v', '<Leader>ra', function()
+        local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+        local anchor_line = vim.fn.line('v')
+        vim.cmd.normal({ vim.keycode('<Esc>'), bang = true })
+        add_review_comment({
+            math.min(anchor_line, cursor_line),
+            math.max(anchor_line, cursor_line),
+        })
+    end, { desc = 'Add CodeCompanion review comment' })
+
+    vim.keymap.set('n', '<Leader>re', explore_review_comments, {
+        desc = 'Explore CodeCompanion review comments',
     })
 end
 
