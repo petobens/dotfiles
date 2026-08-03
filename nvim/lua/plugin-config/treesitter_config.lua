@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd(
 -- Helpers
 local function incremental_select(direction)
     local buf = vim.api.nvim_get_current_buf()
-    if vim.treesitter.get_parser(buf, nil, { error = false }) then
+    if vim.treesitter.get_parser(buf) then
         vim.treesitter.select(direction > 0 and 'parent' or 'child', vim.v.count1)
     else
         vim.lsp.buf.selection_range(direction * vim.v.count1)

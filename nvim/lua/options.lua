@@ -22,6 +22,7 @@ vim.opt.diffopt = {
     'closeoff',
     'indent-heuristic',
     'algorithm:histogram',
+    'inline:char',
     'linematch:60',
 }
 vim.opt.foldcolumn = 'auto'
@@ -121,7 +122,7 @@ vim.opt.backupdir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'backup') .. '//'
 vim.opt.directory = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'swap') .. '//'
 vim.opt.sessionoptions:remove('tabpages')
 vim.opt.sessionoptions:append({ 'winpos', 'resize' })
-vim.opt.shada = [[!,'150,<50,s10,h]]
+vim.opt.shada = [[!,'150,<50,s10,h,r/tmp/]]
 vim.opt.shadafile = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'shada', 'main.shada')
 vim.opt.undodir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'undo') .. '//'
 vim.opt.undofile = true

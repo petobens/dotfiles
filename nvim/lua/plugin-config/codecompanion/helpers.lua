@@ -44,6 +44,45 @@ function M.repo.git_root_file(filename, path)
 end
 
 -- State
+-- Shared status vocabulary for window titles and picker rows
+M.state.turn_states = {
+    attention = { icon = '!', hl = 'DiagnosticWarn' },
+    running = { icon = u.icons.running, hl = 'DiagnosticInfo' },
+    ready = { icon = '●', hl = 'DiagnosticOk' },
+    stopped = { icon = '×', hl = 'DiagnosticError' },
+    idle = { icon = ' ', hl = 'Comment' },
+}
+
+local superscript_digits = {
+    ['0'] = '⁰',
+    ['1'] = '¹',
+    ['2'] = '²',
+    ['3'] = '³',
+    ['4'] = '⁴',
+    ['5'] = '⁵',
+    ['6'] = '⁶',
+    ['7'] = '⁷',
+    ['8'] = '⁸',
+    ['9'] = '⁹',
+}
+
+function M.state.get_turn_state(bufnr)
+    if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+        return vim.b[bufnr].codecompanion_turn_state
+    end
+end
+
+function M.state.set_turn_state(bufnr, state)
+    if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+        vim.b[bufnr].codecompanion_turn_state = state
+    end
+end
+
+function M.state.superscript(number)
+    local formatted = tostring(number):gsub('%d', superscript_digits)
+    return formatted
+end
+
 local function get_last_chat()
     local ok, chat = pcall(codecompanion.last_chat)
     if ok and chat then
@@ -107,23 +146,17 @@ function M.state.for_each_open_chat(callback)
     end
 end
 
-local function get_open_chat_count()
-    local count = 0
-    M.state.for_each_open_chat(function()
-        count = count + 1
+function M.state.get_turn_state_counts()
+    local counts = {}
+    local open_chat_count = 0
+    M.state.for_each_open_chat(function(chat)
+        open_chat_count = open_chat_count + 1
+        local state = M.state.get_turn_state(chat.bufnr)
+        if state then
+            counts[state] = (counts[state] or 0) + 1
+        end
     end)
-    return count
-end
-
-function M.state.format_open_chat_count()
-    local count = get_open_chat_count()
-    return ({
-        [1] = '¹',
-        [2] = '²',
-        [3] = '³',
-        [4] = '⁴',
-        [5] = '⁵',
-    })[count] or tostring(count)
+    return counts, open_chat_count
 end
 
 function M.state.get_last_user_prompt(chat)
