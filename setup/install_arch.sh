@@ -6,7 +6,7 @@ total_steps=$(grep -c "^section '" "${BASH_SOURCE[0]}")
 
 section() {
     ((current_step += 1))
-    printf '\033[1;34m\n-> [%d/%d] %s...\033[0m\n' \
+    printf '\033[1;34m\n  -> [%d/%d] %s...\033[0m\n' \
         "$current_step" "$total_steps" "$1"
 }
 

@@ -10,7 +10,7 @@ declare netrc personal_config ssh_config ssh_public
 source "$repo/setup/load_personal.sh"
 
 section() {
-    printf '\033[1;34m\n-> %s...\033[0m\n' "$1"
+    printf '\033[1;34m\n  -> %s...\033[0m\n' "$1"
 }
 
 symlink() {
