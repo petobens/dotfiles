@@ -122,11 +122,11 @@ function M.request(background, chat)
                 return
             end
             chat:set_title(title)
+            chat.opts.title = title
             baseline_turns[chat] = completed_turns
             -- Persist title so saved http chats show it instead of a timestamp
             local history = require('codecompanion').extensions.history
             if history then
-                chat.opts.title = title
                 pcall(history.save_chat, chat)
             end
             utils.fire('BackgroundTitleSet', {
