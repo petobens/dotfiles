@@ -1,0 +1,68 @@
+configuration {
+    show-icons: false;
+}
+
+* {
+    background: #24272e;
+    foreground: #abb2bf;
+    button-background: #2c3038;
+    button-selected-background: #3e4451;
+    border-color: #4b5263;
+    selected-border-color: #61afef;
+}
+
+window {
+    location: center;
+    width: 420px;
+    y-offset: 0px;
+    padding: 12px;
+    background-color: @background;
+    border: 1px;
+    border-color: @border-color;
+    border-radius: 10px;
+}
+
+mainbox {
+    spacing: 14px;
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    children: [ prompt ];
+}
+
+prompt {
+    text-color: @foreground;
+}
+
+listview {
+    columns: 2;
+    lines: 1;
+    layout: horizontal;
+    flow: horizontal;
+    fixed-columns: true;
+    fixed-height: true;
+    spacing: 6px;
+}
+
+element {
+    padding: 8px 18px;
+    background-color: @button-background;
+    text-color: @foreground;
+    border: 1px;
+    border-color: @border-color;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+element selected {
+    background-color: @button-selected-background;
+    text-color: @foreground;
+    border-color: @selected-border-color;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    background-color: transparent;
+    text-color: inherit;
+}

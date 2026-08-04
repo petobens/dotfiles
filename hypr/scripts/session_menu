@@ -1,19 +1,29 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+script_dir=$(dirname "$0")
 action=$(printf '%s\n' 'about arch' lock 'quit apps' logout suspend reboot poweroff |
     rofi -dmenu -p 'session')
 case "$action" in
-    'about arch') "$(dirname "$0")/app" about ;;
+    'about arch') "$script_dir/app" about ;;
     lock) loginctl lock-session ;;
     'quit apps')
-        [[ $(printf '%s\n' no yes | rofi -dmenu -p 'quit all apps?') == yes ]] || exit 0
+        "$script_dir/confirm" 'Do you want to quit all applications?' || exit 0
         hyprctl clients -j | jq -r '.[].address' | while read -r address; do
             hyprctl dispatch "hl.dsp.window.close({ window = 'address:$address' })"
         done
         ;;
-    logout) hyprshutdown ;;
+    logout)
+        "$script_dir/confirm" 'Do you want to log out?' || exit 0
+        hyprshutdown
+        ;;
     suspend) systemctl suspend ;;
-    reboot) hyprshutdown -t 'Restarting...' --post-cmd 'systemctl reboot' ;;
-    poweroff) hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff' ;;
+    reboot)
+        "$script_dir/confirm" 'Do you want to reboot?' || exit 0
+        hyprshutdown -t 'Restarting...' --post-cmd 'systemctl reboot'
+        ;;
+    poweroff)
+        "$script_dir/confirm" 'Do you want to shut down?' || exit 0
+        hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff'
+        ;;
 esac

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+selection=$(printf '%s\n' '✓ OK' 'Cancel' |
+    rofi -dmenu -no-custom -selected-row 1 -format i -p "$1" \
+        -theme "$script_dir/../../config/rofi/confirm.rasi") || exit 1
+
+[[ $selection == 0 ]]

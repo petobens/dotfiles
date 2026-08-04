@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-[[ $(printf '%s\n' no yes | rofi -dmenu -p 'empty trash?') == yes ]] || exit 0
+"$(dirname "$0")/confirm" 'Do you want to empty the trash?' || exit 0
 
 trash-empty -f
 hyprctl dispatch "hl.dsp.window.close({ window = 'class:^trash$' })" || true
