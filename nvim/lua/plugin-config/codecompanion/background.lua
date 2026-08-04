@@ -1,7 +1,7 @@
 local M = {}
 
 local background = {
-    adapter = 'openai_gpt_54_nano',
+    adapter = 'openai_gpt_56_luna',
     chat = {
         callbacks = {
             ['on_ready'] = {

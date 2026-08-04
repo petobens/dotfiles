@@ -25,10 +25,10 @@ function M.setup()
                     show_presets = false,
                     show_model_choices = false,
                 },
-                openai_gpt_56_sol = adapters.openai_gpt_56_sol,
-                openai_gpt_54_nano = adapters.openai_gpt_54_nano,
                 gemini_flash_35 = adapters.gemini_flash_35,
                 ollama_qwen35_08b = adapters.ollama_qwen35_08b,
+                openai_gpt_56_luna = adapters.openai_gpt_56_luna,
+                openai_gpt_56_sol = adapters.openai_gpt_56_sol,
                 tavily = adapters.tavily,
             },
             acp = {

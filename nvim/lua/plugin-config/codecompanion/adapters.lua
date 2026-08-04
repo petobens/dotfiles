@@ -62,12 +62,12 @@ function M.openai_gpt_56_sol()
     return openai_responses_adapter('openai_gpt_56_sol', 'gpt-5.6-sol', true, 1050000)
 end
 
-function M.openai_gpt_54_nano()
+function M.openai_gpt_56_luna()
     return openai_responses_adapter(
-        'openai_gpt_54_nano',
-        'gpt-5.4-nano',
+        'openai_gpt_56_luna',
+        'gpt-5.6-luna',
         false,
-        400000,
+        1050000,
         'none'
     )
 end

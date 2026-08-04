@@ -4,7 +4,7 @@
 Writes a session-id -> title cache that the CodeCompanion ACP session picker
 reads, so browsing shows what each session was about rather than its first
 prompt. A title is (re)generated only when its session file has grown since the
-cached run. Titles come from OpenAI gpt-5.4-nano.
+cached run. Titles come from OpenAI gpt-5.6-luna.
 
 Run with -n/--dry-run to preview, --all to force-regenerate every title.
 """
@@ -24,23 +24,26 @@ CODEX_ROOT = Path.home() / ".codex" / "sessions"
 CACHE_PATH = Path.home() / ".local/share/nvim/codecompanion/acp-session-titles.json"
 
 API_URL = "https://api.openai.com/v1/responses"
-MODEL = "gpt-5.4-nano"
+MODEL = "gpt-5.6-luna"
 PASS_ENTRY = "openai/yahoomail/apikey"
 
 MAX_MSG_CHARS = 600  # per-message truncation before assembling the transcript
 MAX_TOTAL_CHARS = 8000  # overall transcript budget sent to the model
-HEAD_TURNS = 3  # opening turns (the goal) always kept
-TAIL_TURNS = 9  # closing turns (the outcome) always kept
+HEAD_TURNS = 7  # opening turns (the goal and early refinements) always kept
+TAIL_TURNS = 5  # closing turns (the outcome) always kept
 WORKERS = 8
 
 PROMPT = """You write short, specific titles for coding-assistant sessions.
-Read the transcript and reply with ONE title of 8 to 10 words that captures what
-the whole session was about and what it accomplished. Give extra weight to the
-latest substantial topic and its outcome, even when earlier work occupied more
-of the session. Do not switch titles for a tiny final tweak or incidental
-follow-up. Name the durable implementation, diagnosis, or decision that would
-matter when finding this session later. Plain words only: no quotes, no
-surrounding punctuation, no trailing period. Reply with only the title.
+Read the transcript and reply with ONE title of 8 to 10 words that makes the
+session easy to find later. Never exceed 12 words. When the session covers
+multiple clearly distinct, substantial topics, include each as a compact noun
+phrase, ordered by when it appeared and joined naturally. Also preserve a
+substantial investigation when it leads to a narrower implementation worth
+finding independently. Do not list routine steps, tiny tweaks, or incidental
+follow-ups as topics. For a single-topic session, name its durable
+implementation, diagnosis, or decision.
+Plain words only: no quotes, no surrounding punctuation, no trailing period.
+Reply with only the title.
 
 Transcript:
 {transcript}
@@ -182,7 +185,12 @@ def _clean_title(title: str) -> str:
     title = _WS.sub(" ", title).rstrip(".").strip()
     words = title.split()
     if len(words) > 12:  # guard against a runaway reply
-        title = " ".join(words[:12])
+        words = words[:12]
+        if len(words) > 1 and words[-2].lower() in ("and", "or"):
+            words = words[:-2]
+        elif words[-1].lower() in ("and", "or"):
+            words = words[:-1]
+        title = " ".join(words).rstrip(",;:")
     return title
 
 
@@ -198,7 +206,7 @@ def _output_text(data: dict) -> str | None:
 
 
 def generate_title(key: str, transcript: str) -> str | None:
-    """Call gpt-5.4-nano for a title; return the title or None on failure."""
+    """Call gpt-5.6-luna for a title; return the title or None on failure."""
     body = json.dumps(
         {
             "model": MODEL,

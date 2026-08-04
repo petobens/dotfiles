@@ -34,15 +34,15 @@ status_line_use_colors = true
 [mcp_servers.github]
 url = "https://api.githubcopilot.com/mcp/"
 bearer_token_env_var = "GITHUB_TOKEN"
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
 
 # Trusted projects (skip the per-directory trust prompt)
 [projects."/home/pedro/git-repos/private/dotfiles"]
 trust_level = "trusted"
 [projects."/home/pedro/git-repos/private/notes"]
 trust_level = "trusted"
-
 [projects."/tmp"]
 trust_level = "trusted"
-
 [projects."/home/pedro/git-repos/private/ai-harness"]
 trust_level = "trusted"
