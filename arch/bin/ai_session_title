@@ -29,18 +29,20 @@ PASS_ENTRY = "openai/yahoomail/apikey"
 
 MAX_MSG_CHARS = 600  # per-message truncation before assembling the transcript
 MAX_TOTAL_CHARS = 8000  # overall transcript budget sent to the model
-HEAD_TURNS = 3  # opening turns (the goal) always kept
-TAIL_TURNS = 9  # closing turns (the outcome) always kept
+HEAD_TURNS = 7  # opening turns (the goal and early refinements) always kept
+TAIL_TURNS = 5  # closing turns (the outcome) always kept
 WORKERS = 8
 
 PROMPT = """You write short, specific titles for coding-assistant sessions.
-Read the transcript and reply with ONE title of 8 to 10 words that captures what
-the whole session was about and what it accomplished. Give extra weight to the
-latest substantial topic and its outcome, even when earlier work occupied more
-of the session. Do not switch titles for a tiny final tweak or incidental
-follow-up. Name the durable implementation, diagnosis, or decision that would
-matter when finding this session later. Plain words only: no quotes, no
-surrounding punctuation, no trailing period. Reply with only the title.
+Read the transcript and reply with ONE title of 8 to 12 words that makes the
+session easy to find later. When the session covers multiple clearly distinct,
+substantial topics, include each as a compact noun phrase, ordered by when it
+appeared and joined naturally. Also preserve a substantial investigation when
+it leads to a narrower implementation worth finding independently. Do not list
+routine steps, tiny tweaks, or incidental follow-ups as topics. For a
+single-topic session, name its durable implementation, diagnosis, or decision.
+Plain words only: no quotes, no surrounding punctuation, no trailing period.
+Reply with only the title.
 
 Transcript:
 {transcript}

@@ -18,7 +18,7 @@ local M = {}
 
 local ADAPTERS = { 'claude_code', 'codex' }
 local PRUNE_INTERVAL = 2 * 60 * 60
-local TITLE_WIDTH = picker_helpers.TITLE_WIDTH
+local TITLE_WIDTH = picker_helpers.TITLE_WIDTH + 10
 local ICONS = {
     current = '\226\151\143', -- ● session open in the current chat
     loaded = '\226\151\139', -- ○ session open in another chat
