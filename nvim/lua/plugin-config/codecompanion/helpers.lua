@@ -167,7 +167,7 @@ function M.state.get_last_user_prompt(chat)
 
     for i = #chat.messages, 1, -1 do
         local msg = chat.messages[i]
-        if msg.role == 'user' then
+        if msg.role == 'user' and not msg.context then
             return msg.content
         end
     end
@@ -196,6 +196,10 @@ function M.state.get_chat_model_label(chat)
 end
 
 function M.state.get_chat_title(chat, entry)
+    if chat and chat.adapter and chat.adapter.type == 'acp' and not chat.opts.title then
+        return M.state.get_chat_name(chat)
+    end
+
     if chat and chat.title and chat.title ~= '' then
         return chat.title
     end
