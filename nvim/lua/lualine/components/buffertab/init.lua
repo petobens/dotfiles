@@ -11,6 +11,7 @@ local default_options = {
     filetype_ignore = {
         aerial = true,
         codecompanion = true,
+        codecompanion_input = true,
         dbui = true,
         help = true,
         lazy = true,
