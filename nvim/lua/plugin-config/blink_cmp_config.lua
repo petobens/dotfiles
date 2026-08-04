@@ -279,6 +279,16 @@ vim.api.nvim_create_autocmd('User', {
             0,
             80,
             vim.schedule_wrap(function()
+                -- Self-terminate instead of relying on BlinkCmpMenuClose, which
+                -- Blink skips when the menu window is invalidated externally
+                if not blink_cmp.is_menu_visible() then
+                    if not timer:is_closing() then
+                        timer:stop()
+                        timer:close()
+                    end
+                    copilot_multiline_menu_direction = nil
+                    return
+                end
                 if
                     not copilot_multiline_menu_direction
                     and is_multiline_copilot_selected()
@@ -287,17 +297,5 @@ vim.api.nvim_create_autocmd('User', {
                 end
             end)
         )
-
-        vim.api.nvim_create_autocmd('User', {
-            desc = 'Stop Copilot multiline direction timer on Blink menu close',
-            group = blink_cmp_augroup,
-            pattern = 'BlinkCmpMenuClose',
-            once = true,
-            callback = function()
-                timer:stop()
-                timer:close()
-                copilot_multiline_menu_direction = nil
-            end,
-        })
     end,
 })
