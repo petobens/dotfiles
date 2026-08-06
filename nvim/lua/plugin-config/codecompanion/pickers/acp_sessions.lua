@@ -341,24 +341,62 @@ local function restored_messages(updates)
     return messages
 end
 
--- Read the saved context token snapshot used by the footer
-local function restored_context_tokens(entry)
+local function has_text_content(message)
+    return vim.iter(message and message.content or {}):any(function(content)
+        return content.type == 'text' and content.text and content.text ~= ''
+    end)
+end
+
+local function restore_header_timestamps(chat, timestamps)
+    local lines = vim.api.nvim_buf_get_lines(chat.bufnr, 0, -1, false)
+    local marker = ' |  '
+    local timestamp_index = 1
+
+    for i, line in ipairs(lines) do
+        local marker_start = line:match('^## ') and line:find(marker, 1, true)
+        local iso = timestamps[timestamp_index]
+        if marker_start then
+            local timestamp = type(iso) == 'string' and utils.timestamp_from_iso(iso)
+            if timestamp then
+                vim.api.nvim_buf_set_text(
+                    chat.bufnr,
+                    i - 1,
+                    marker_start + #marker - 1,
+                    i - 1,
+                    #line,
+                    { os.date('%Y-%m-%d %H:%M:%S', timestamp) }
+                )
+            end
+            timestamp_index = timestamp_index + 1
+        end
+    end
+end
+
+-- Read metadata omitted by ACP replay from the agent's native session file
+local function restored_session_metadata(entry)
     local tokens
+    local timestamps = {}
+    local awaiting_agent = false
     local ok, iter = pcall(io.lines, entry.path)
     if not ok then
-        return nil
+        return nil, timestamps
     end
 
     for line in iter do
         local decoded_ok, d = pcall(vim.json.decode, line)
         if decoded_ok then
-            if entry.adapter == 'codex' and d.type == 'event_msg' then
+            local role
+            if entry.adapter == 'codex' then
+                local payload = d.payload or {}
                 local total =
-                    vim.tbl_get(d, 'payload', 'info', 'last_token_usage', 'total_tokens')
+                    vim.tbl_get(payload, 'info', 'last_token_usage', 'total_tokens')
                 if type(total) == 'number' then
                     tokens = total
                 end
-            elseif entry.adapter == 'claude_code' and d.type == 'assistant' then
+                if d.type == 'event_msg' then
+                    role = ({ user_message = 'user', agent_message = 'agent' })[payload.type]
+                end
+            elseif entry.adapter == 'claude_code' then
                 local usage = vim.tbl_get(d, 'message', 'usage')
                 if usage then
                     tokens = (tonumber(usage.input_tokens) or 0)
@@ -366,11 +404,21 @@ local function restored_context_tokens(entry)
                         + (tonumber(usage.cache_read_input_tokens) or 0)
                         + (tonumber(usage.cache_creation_input_tokens) or 0)
                 end
+                if has_text_content(d.message) then
+                    role = ({ user = 'user', assistant = 'agent' })[d.type]
+                end
+            end
+
+            if role == 'user' then
+                awaiting_agent = true
+            elseif role == 'agent' and awaiting_agent then
+                table.insert(timestamps, d.timestamp)
+                awaiting_agent = false
             end
         end
     end
 
-    return tokens
+    return tokens, timestamps
 end
 
 -- Add restored context once per path
@@ -461,6 +509,7 @@ local function load_entry(chat, entry)
     end
 
     restore_agent_message_boundaries(updates)
+    local restored_tokens, restored_timestamps = restored_session_metadata(entry)
     local restored_turns = restored_user_turn_count(updates)
     require('codecompanion.interactions.chat.acp.commands').link_buffer_to_session(
         chat.bufnr,
@@ -470,6 +519,7 @@ local function load_entry(chat, entry)
     chat.opts.cwd = entry.cwd
     -- Actually restore the session
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
+    restore_header_timestamps(chat, restored_timestamps)
     -- ACP restore renders only to the buffer, so retain structured messages for /clone
     chat._acp_restored_messages = restored_messages(updates)
     -- Render context metadata only; ACP already retains the content server-side
@@ -482,7 +532,7 @@ local function load_entry(chat, entry)
     -- Rebuild the cycle count for the footer after rendering restored messages
     chat.cycle = math.max(chat.cycle or 1, restored_turns + 1)
     -- Restore saved context usage so the footer does not show 0% until next turn
-    chat.tokens = restored_context_tokens(entry) or chat.tokens
+    chat.tokens = restored_tokens or chat.tokens
     -- Mark the chat as claimed so target_chat won't reuse it for another session
     chat._acp_session_loaded = true
 
