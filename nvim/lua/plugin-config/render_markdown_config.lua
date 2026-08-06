@@ -101,17 +101,17 @@ require('render-markdown').setup({
                     icons = { '󰪥 ', '  ', ' ', ' ', ' ', '' },
                     custom = {
                         codecompanion_input = {
-                            pattern = '##%s+Me',
+                            pattern = '##%s+Me%f[%A]',
                             icon = ' ',
                             background = 'CodeCompanionInputHeader',
                         },
                         codecompanion_reasoning = {
-                            pattern = '##%s+Reasoning',
+                            pattern = '##%s+Reasoning%f[%A]',
                             icon = ' ',
                             background = 'CodeCompanionReasoningHeader',
                         },
                         codecompanion_response = {
-                            pattern = '##%s+Response',
+                            pattern = '##%s+Response%f[%A]',
                             icon = ' ',
                             background = 'CodeCompanionReasoningHeader',
                         },
