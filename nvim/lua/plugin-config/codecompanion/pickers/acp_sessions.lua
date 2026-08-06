@@ -174,7 +174,8 @@ scanners.codex = function()
                 break
             end
         end
-        if meta and meta.id and meta.cwd then
+        local is_subagent = meta and type(meta.source) == 'table' and meta.source.subagent
+        if meta and meta.id and meta.cwd and not is_subagent then
             local cached = titles['codex:' .. meta.id]
             entries[#entries + 1] = {
                 adapter = 'codex',
