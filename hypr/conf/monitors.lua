@@ -14,6 +14,7 @@ local positions = {
     [laptop] = '960x1080',
 }
 local active_mode
+local lid_closed = false
 
 local function monitor_scale(monitor)
     local resolution = string.format('%dx%d', monitor.width, monitor.height)
@@ -92,17 +93,44 @@ local function mirror()
     end
 end
 
-hl.on('monitor.added', function()
-    if active_mode == 'primary' then
+-- Preserve and restore the selected layout across lid and monitor events
+local function external_only()
+    local previous_mode = active_mode
+    multi()
+    active_mode = previous_mode
+    hl.monitor({ output = laptop, disabled = true })
+end
+
+local function restore_active_mode()
+    if lid_closed then
+        external_only()
+    elseif active_mode == 'primary' then
         primary()
     elseif active_mode == 'mirror' then
         mirror()
     else
         multi()
     end
+end
+
+hl.on('monitor.added', function()
+    restore_active_mode()
 end)
 
--- Two external displays above the centered X1 Carbon screen
+-- Handle lid close and open events by disabling and restoring the laptop panel
+hl.bind('switch:on:Lid Switch', function()
+    lid_closed = true
+    restore_active_mode()
+end, { description = 'Disable laptop display on lid close', locked = true })
+
+hl.bind('switch:off:Lid Switch', function()
+    lid_closed = false
+    local previous_mode = active_mode
+    multi()
+    active_mode = previous_mode
+end, { description = 'Restore laptop display on lid open', locked = true })
+
+-- Start in the multi-display layout
 multi()
 
 -- Workspaces
