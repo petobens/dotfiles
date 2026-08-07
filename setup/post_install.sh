@@ -63,10 +63,15 @@ sudo install -d /mnt/nfs
 
 section 'Configuring recovery SSH'
 sudo install -Dm644 /dev/stdin /etc/ssh/sshd_config.d/10-recovery.conf << EOF
-PasswordAuthentication yes
-KbdInteractiveAuthentication no
-PermitRootLogin no
 AllowUsers $USER
+DisableForwarding yes
+KbdInteractiveAuthentication no
+LoginGraceTime 30
+MaxAuthTries 3
+PasswordAuthentication yes
+PermitEmptyPasswords no
+PermitRootLogin no
+PubkeyAuthentication yes
 EOF
 sudo ssh-keygen -A
 sudo /usr/bin/sshd -t

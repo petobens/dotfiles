@@ -105,7 +105,8 @@ between resets and replaced when a new Arch release is available.
 ## SSH and updates
 
 The [`post_install.sh`](../post_install.sh) script enables password-based
-recovery SSH on every installation, including the VM and physical laptops.
+recovery SSH. The VM exposes it only through the host's loopback-only forwarded
+port.
 
 After a reset, set `username` to the account selected during installation,
 remove the previous host key, and authorize the host's existing SSH key:
