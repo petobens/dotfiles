@@ -7,6 +7,7 @@ hl.on('hyprland.start', function()
     -- Session environment
     hl.exec_cmd('dbus-update-activation-environment --systemd ' .. desktop_environment)
     hl.exec_cmd('systemctl --user import-environment ' .. desktop_environment)
+    hl.exec_cmd('systemctl --user start hyprland-session.target')
 
     -- Desktop services
     hl.exec_cmd('waybar')
@@ -29,4 +30,9 @@ hl.on('hyprland.start', function()
     -- Hardware integration
     hl.exec_cmd('udiskie --tray')
     hl.exec_cmd(scripts .. 'battery_monitor')
+end)
+
+-- Stop graphical services before Hyprland exits
+hl.on('hyprland.shutdown', function()
+    os.execute('systemctl --user stop hyprland-session.target && sleep 0.1')
 end)

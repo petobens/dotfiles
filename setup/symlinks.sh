@@ -67,6 +67,9 @@ symlink "$repo/config/pgcli/config" "$HOME/.config/pgcli/config"
 symlink "$repo/config/ripgrep" "$HOME/.config/ripgrep"
 symlink "$repo/config/rofi" "$HOME/.config/rofi"
 symlink "$repo/config/starship.toml" "$HOME/.config/starship.toml"
+symlink \
+    "$repo/config/systemd/user/hyprland-session.target" \
+    "$HOME/.config/systemd/user/hyprland-session.target"
 symlink "$repo/config/tmux" "$HOME/.config/tmux"
 symlink "$repo/config/voxtype" "$HOME/.config/voxtype"
 symlink "$repo/config/waybar" "$HOME/.config/waybar"
