@@ -192,6 +192,16 @@ local function toggle_chat_zoom()
     window_helpers.toggle_cc_zoom()
 end
 
+local function open_file_link()
+    local file, line = vim.api.nvim_get_current_line():match('%b[]%((.-):(%d+)%)')
+    if not file then
+        return
+    end
+    u.split_open(file)
+    vim.api.nvim_win_set_cursor(0, { tonumber(line), 0 })
+    vim.cmd.normal('zz')
+end
+
 -- CodeCompanion chat filetype-local mappings
 local function setup_codecompanion_filetype_mappings(e)
     local bufnr = e.buf
@@ -232,6 +242,11 @@ local function setup_codecompanion_filetype_mappings(e)
     vim.keymap.set({ 'i', 'n' }, '<A-b>', function()
         open_chats.browse(codecompanion.buf_get_chat(bufnr))
     end, { buf = bufnr, desc = 'Browse open CodeCompanion chats' })
+
+    vim.keymap.set('n', '<Leader>gf', open_file_link, {
+        buf = bufnr,
+        desc = 'Open file link on current line',
+    })
 end
 
 local function setup_filetype_mappings(group)

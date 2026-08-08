@@ -353,9 +353,11 @@ local function acp_mode(chat)
     end
 
     local opt = vim.iter(connection:get_config_options()):find(function(opt)
-        if opt.category == 'mode' and opt.type == 'select' then
-            return true
+        if opt.type ~= 'select' then
+            return false
         end
+        return vim.iter(ACP.flatten_config_options(opt.options or {}))
+            :any(acp_value_is_plan)
     end)
     if not opt then
         return nil
