@@ -68,8 +68,8 @@ vim.keymap.set('n', '<Leader>bd', function()
     vim.cmd.bdelete('#')
 end, { desc = 'Delete buffer and go to previous' })
 vim.keymap.set('n', '<Leader>cd', function()
-    vim.api.nvim_set_current_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
-end, { desc = 'Set CWD to current buffer directory' })
+    vim.cmd.bcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
+end, { desc = 'Set buffer CWD to current buffer directory' })
 
 -- Window manipulation
 vim.keymap.set('n', '<C-A-h>', function()
