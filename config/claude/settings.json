@@ -6,9 +6,9 @@
   "model": "opus[1m]",
   "permissions": {
     "allow": [
-      "Read",
+      "Bash(gws *)",
       "Bash(stylua *)",
-      "Bash(gws *)"
+      "Read"
     ],
     "defaultMode": "auto",
     "deny": [
@@ -16,11 +16,15 @@
       "Bash(git push*)",
       "Bash(git reset --hard*)",
       "Bash(rm -rf *)",
-      "Bash(sudo *)"
-    ]
+      "Bash(sudo *)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.ssh/**)"
+    ],
+    "disableBypassPermissionsMode": "disable"
   },
   "sandbox": {
-    "enabled": true
+    "enabled": true,
+    "failIfUnavailable": true
   },
   "spinnerTipsEnabled": false,
   "statusLine": {
