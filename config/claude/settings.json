@@ -1,28 +1,32 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "autoCompactWindow": 350000,
+  "effortLevel": "medium",
+  "includeGitInstructions": false,
+  "model": "opus[1m]",
   "permissions": {
     "allow": [
       "Read",
       "Bash(stylua *)",
       "Bash(gws *)"
     ],
+    "defaultMode": "auto",
     "deny": [
-      "Bash(git push --force*)",
-      "Bash(git push -f *)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
       "Bash(git reset --hard*)",
       "Bash(rm -rf *)",
       "Bash(sudo *)"
-    ],
-    "defaultMode": "acceptEdits"
+    ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
+  "sandbox": {
+    "enabled": true
   },
-  "model": "opus[1m]",
-  "effortLevel": "medium",
-  "autoCompactWindow": 350000,
-  "tui": "default",
   "spinnerTipsEnabled": false,
+  "statusLine": {
+    "command": "~/.claude/statusline.sh",
+    "type": "command"
+  },
   "theme": "dark",
-  "autoUpdates": false
+  "tui": "default"
 }
