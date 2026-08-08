@@ -8,6 +8,11 @@ install_post=false
 install_symlinks=false
 prompt_latex=false
 
+run_component() {
+    printf '\n'
+    "$@"
+}
+
 usage() {
     cat << EOF
 usage: $0 [--all] [--packages] [--latex] [--post] [--symlinks]
@@ -45,7 +50,7 @@ for arg in "$@"; do
     esac
 done
 
-printf '\033[1;32m\n:: Starting dotfiles installation\033[0m\n'
+printf '\033[1;32m:: Starting dotfiles installation\033[0m\n'
 
 if $prompt_latex && ! $install_latex; then
     read -r -p 'Install LaTeX with tlmgr? [y/n] ' choice
@@ -54,16 +59,16 @@ fi
 
 # Run selected components in dependency order
 if $install_packages; then
-    "$script_dir/install_pacman.sh"
-    "$script_dir/install_aur.sh"
-    "$script_dir/install_language_tools.sh"
+    run_component "$script_dir/install_pacman.sh"
+    run_component "$script_dir/install_aur.sh"
+    run_component "$script_dir/install_language_tools.sh"
 fi
 if $install_latex; then
-    "$script_dir/install_latex.sh"
+    run_component "$script_dir/install_latex.sh"
 fi
 if $install_packages || $install_post; then
-    "$script_dir/post_install.sh"
+    run_component "$script_dir/post_install.sh"
 fi
 if $install_symlinks; then
-    "$script_dir/symlinks.sh"
+    run_component "$script_dir/symlinks.sh"
 fi

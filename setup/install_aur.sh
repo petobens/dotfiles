@@ -7,7 +7,7 @@ section() {
     printf '\033[1;34m\n  -> %s...\033[0m\n' "$1"
 }
 
-printf '\033[1;32m\n:: Starting AUR package installation\033[0m\n'
+printf '\033[1;32m:: Starting AUR package installation\033[0m\n'
 
 section 'Configuring AUR builds'
 sudo install -Dm644 /dev/stdin /etc/makepkg.conf.d/dotfiles.conf << 'EOF'

@@ -22,7 +22,12 @@ die() {
     exit 1
 }
 
-printf '\033[1;32m\n:: Starting personal setup\033[0m\n'
+run_component() {
+    printf '\n'
+    "$@"
+}
+
+printf '\033[1;32m:: Starting personal setup\033[0m\n'
 
 # Complete Microsoft's browser authorization on the first run
 section 'Synchronizing OneDrive'
@@ -41,7 +46,7 @@ for required_file in \
 done
 
 section 'Linking synchronized files'
-"$script_dir/symlinks.sh"
+run_component "$script_dir/symlinks.sh"
 
 section 'Importing GPG keys'
 fingerprint=$(gpg --show-keys --with-colons "$gpg_public" |
@@ -90,4 +95,4 @@ for repository in "${repos[@]}"; do
 done
 
 section 'Refreshing configuration symlinks'
-"$script_dir/symlinks.sh"
+run_component "$script_dir/symlinks.sh"

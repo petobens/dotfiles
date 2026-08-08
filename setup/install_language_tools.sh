@@ -5,7 +5,7 @@ section() {
     printf '\033[1;34m\n  -> %s...\033[0m\n' "$1"
 }
 
-printf '\033[1;32m\n:: Starting language tool installation\033[0m\n'
+printf '\033[1;32m:: Starting language tool installation\033[0m\n'
 
 section 'Installing Python user packages'
 python -m pip install --user --break-system-packages --upgrade pdbpp

@@ -35,7 +35,7 @@ symlink_if_exists() {
     fi
 }
 
-printf '\033[1;32m\n:: Starting dotfile symlinking\033[0m\n'
+printf '\033[1;32m:: Starting dotfile symlinking\033[0m\n'
 
 section 'Symlinking configuration'
 

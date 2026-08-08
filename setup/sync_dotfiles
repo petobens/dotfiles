@@ -23,7 +23,7 @@ review_new_files() {
     die 'Merge aborted because new files were not approved.'
 }
 
-printf '\033[1;32m\n:: Starting dotfiles synchronization\033[0m\n'
+printf '\033[1;32m:: Starting dotfiles synchronization\033[0m\n'
 
 branch=$(git branch --show-current)
 [[ $branch == dotfiles-wayland ]] ||

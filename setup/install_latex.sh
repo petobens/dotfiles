@@ -12,7 +12,7 @@ die() {
     exit 1
 }
 
-printf '\033[1;32m\n:: Starting LaTeX installation\033[0m\n'
+printf '\033[1;32m:: Starting LaTeX installation\033[0m\n'
 
 # Verify the system dependencies needed by the native installer
 for command in curl git perl tar; do

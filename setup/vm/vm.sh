@@ -157,7 +157,7 @@ case $action in
         ;;
 esac
 
-printf '\033[1;32m\n:: Starting Wayland VM\033[0m\n'
+printf '\033[1;32m:: Starting Wayland VM\033[0m\n'
 
 check_host
 mkdir -p "$state_dir"
