@@ -1,9 +1,10 @@
 # Suppress new codex version check on startup
-check_for_updates = false
+check_for_update_on_startup = false
 
 # Model
 model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "high"
 
 # Permissions/Approvals
 default_permissions = "workspace_network" # Allow writes inside the workspace
