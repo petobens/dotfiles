@@ -193,13 +193,16 @@ local function toggle_chat_zoom()
 end
 
 local function open_file_link()
-    local file, line = vim.api.nvim_get_current_line():match('%b[]%((.-):(%d+)%)')
-    if not file then
+    local target = vim.api.nvim_get_current_line():match('%b[]%((.-)%)')
+    if not target then
         return
     end
-    u.split_open(file)
-    vim.api.nvim_win_set_cursor(0, { tonumber(line), 0 })
-    vim.cmd.normal('zz')
+    local file, line = target:match('^(.-):(%d+)$')
+    u.split_open(file or target)
+    if line then
+        vim.api.nvim_win_set_cursor(0, { tonumber(line), 0 })
+        vim.cmd.normal('zz')
+    end
 end
 
 -- CodeCompanion chat filetype-local mappings
