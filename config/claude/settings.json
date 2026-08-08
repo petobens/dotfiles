@@ -5,9 +5,10 @@
   "includeGitInstructions": false,
   "model": "opus[1m]",
   "permissions": {
+    "additionalDirectories": [
+      "~/git-repos/private"
+    ],
     "allow": [
-      "Bash(gws *)",
-      "Bash(stylua *)",
       "Read"
     ],
     "defaultMode": "auto",
@@ -17,6 +18,7 @@
       "Bash(git reset --hard*)",
       "Bash(rm -rf *)",
       "Bash(sudo *)",
+      "Read(~/.claude/.credentials.json)",
       "Read(~/.gnupg/**)",
       "Read(~/.ssh/**)"
     ],

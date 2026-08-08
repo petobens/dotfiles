@@ -343,8 +343,15 @@ local function restored_messages(updates)
 end
 
 local function has_text_content(message)
-    return vim.iter(message and message.content or {}):any(function(content)
-        return content.type == 'text' and content.text and content.text ~= ''
+    local content = message and message.content
+    if type(content) == 'string' then
+        return content ~= ''
+    elseif type(content) ~= 'table' then
+        return false
+    end
+
+    return vim.iter(content):any(function(part)
+        return part.type == 'text' and part.text and part.text ~= ''
     end)
 end
 
