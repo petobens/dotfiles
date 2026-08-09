@@ -17,7 +17,7 @@ require('bookmarks'):setup({
         p = home .. '/Pictures',
         s = home .. '/Pictures/Screenshots',
         t = home .. '/Desktop',
-        u = '/run/media',
+        u = '/run/media/' .. os.getenv('USER'),
         v = home .. '/git-repos/private/dotfiles/nvim',
         w = home .. '/git-repos/work',
     },
