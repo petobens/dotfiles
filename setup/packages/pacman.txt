@@ -27,9 +27,11 @@ intel-lpmd
 intel-ucode
 level-zero-loader
 libva-utils
+mesa-utils
 scx-tools
 thermald
 tlp
+vulkan-tools
 zram-generator
 
 # Command-line tools
