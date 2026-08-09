@@ -203,7 +203,7 @@ function tm --description 'Attach to the main tmux session'
     command tmux -f "$HOME/.config/tmux/tmux.conf" new -A -s "$session" $argv
 end
 
-function up --description 'Extract an archive'
+function up --description 'Unpack an archive'
     test -f "$argv[1]"; or begin
         echo "Not a file: $argv[1]" >&2
         return 1
@@ -219,11 +219,7 @@ function up --description 'Extract an archive'
             bunzip2 "$argv[1]"
         case '*.gz'
             gunzip "$argv[1]"
-        case '*.rar'
-            unrar x "$argv[1]"
-        case '*.zip'
-            unzip "$argv[1]"
-        case '*.7z' '*.7Z'
+        case '*.rar' '*.zip' '*.7z' '*.7Z'
             7z x "$argv[1]"
         case '*'
             echo "Unsupported archive: $argv[1]" >&2
