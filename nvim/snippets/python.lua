@@ -311,6 +311,18 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'imk', dscr = 'Use terminal plot backend' },
+        fmta(
+            [[
+            import matplotlib
+
+            matplotlib.use('kitcat')
+        ]],
+            {}
+        ),
+        { condition = line_begin }
+    ),
     ---- Datetime
     s(
         { trig = 'fdt', dscr = 'From datetime' },
