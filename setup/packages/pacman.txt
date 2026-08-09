@@ -11,6 +11,8 @@ nfs-utils
 nss-mdns
 openssh
 pacman-contrib
+snap-pac
+snapper
 systemd-ukify
 terminus-font
 wireless-regdb

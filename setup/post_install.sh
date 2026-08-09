@@ -52,6 +52,22 @@ vm.page-cluster = 0
 vm.swappiness = 180
 EOF
 
+section 'Configuring root snapshots'
+sudo install -Dm600 \
+    /usr/share/snapper/config-templates/default \
+    /etc/snapper/configs/root
+sudo sed -i -E \
+    -e 's/^NUMBER_CLEANUP=.*/NUMBER_CLEANUP="yes"/' \
+    -e 's/^NUMBER_LIMIT=.*/NUMBER_LIMIT="2"/' \
+    -e 's/^NUMBER_LIMIT_IMPORTANT=.*/NUMBER_LIMIT_IMPORTANT="0"/' \
+    -e 's/^TIMELINE_CREATE=.*/TIMELINE_CREATE="no"/' \
+    -e 's/^TIMELINE_CLEANUP=.*/TIMELINE_CLEANUP="no"/' \
+    /etc/snapper/configs/root
+sudo install -Dm644 /dev/stdin /etc/conf.d/snapper << 'EOF'
+SNAPPER_CONFIGS="root"
+EOF
+sudo chmod 750 /.snapshots
+
 section 'Limiting persistent logs'
 sudo install -Dm644 /dev/stdin /etc/systemd/journald.conf.d/size.conf << 'EOF'
 [Journal]
@@ -100,6 +116,7 @@ sudo systemctl enable \
     NetworkManager \
     paccache.timer \
     scx_loader.service \
+    snapper-cleanup.timer \
     tlp
 sudo systemctl enable --now \
     avahi-daemon.socket \

@@ -42,8 +42,9 @@ The installer asks for the username, defaulting to `pedro`, and erases the
 selected disk only after an exact confirmation. It creates a 1 GiB EFI
 partition and a zstd-compressed Btrfs filesystem with `@`, `@home`, `@pkg`,
 `@snapshots`, and `@var_log` subvolumes. This layout keeps home files, cached
-packages, and logs out of future root snapshots and reserves `/.snapshots` for
-future snapshot tooling. Snapshot tooling and disk encryption are not included.
+packages, and logs out of root snapshots. Snapper retains the last two pre/post
+pairs that `snap-pac` creates for package transactions. Disk encryption is not
+included.
 
 Root and EFI use discoverable partitions, while `fstab` mounts the remaining
 subvolumes. The installer creates default and fallback unified kernel images
