@@ -201,6 +201,7 @@ local plugins = {
     { 'jamessan/vim-gnupg' },
     {
         '3rd/image.nvim',
+        build = false,
         ft = 'markdown',
         config = load_plugin_config('image_config'),
     },
