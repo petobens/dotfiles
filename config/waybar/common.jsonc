@@ -64,7 +64,7 @@
     },
     "custom/vpn": {
         "exec": "printf '󰛶'",
-        "exec-if": "pgrep -x 'openconnect|openvpn|vpnc|snx'",
+        "exec-if": "nmcli -t -f TYPE connection show --active | grep -qx vpn",
         "interval": 5,
     },
     "network": {

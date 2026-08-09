@@ -176,6 +176,14 @@ abbr -a unfs 'sudo umount /mnt/nfs'
 # System abbreviations
 abbr -a ua sys_update_all
 
+# Network helpers
+function kvpn --description 'Disconnect active VPN connections'
+    for uuid in (nmcli -t -f UUID,TYPE connection show --active |
+            string replace -rf ':vpn$' '')
+        nmcli connection down uuid $uuid
+    end
+end
+
 # Terminal and file helpers
 function cd --description 'Change directory and list its contents'
     builtin cd $argv; or return
