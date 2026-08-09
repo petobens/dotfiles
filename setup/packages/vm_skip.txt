@@ -1,6 +1,9 @@
 # Hardware and host services
+clinfo
 fwupd
+intel-compute-runtime
 intel-lpmd
+level-zero-loader
 onedrive-abraunegg
 thermald
 vpl-gpu-rt
