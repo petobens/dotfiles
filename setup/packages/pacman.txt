@@ -76,7 +76,6 @@ zoxide
 
 # Wayland desktop
 adobe-source-code-pro-fonts
-capitaine-cursors
 cliphist
 ghostty
 gnome-keyring

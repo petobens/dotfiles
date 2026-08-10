@@ -5,8 +5,9 @@ local cursor_size = '24'
 local environment = {
     -- Cursors
     HYPRCURSOR_SIZE = cursor_size,
+    HYPRCURSOR_THEME = 'macOS-hypr',
     XCURSOR_SIZE = cursor_size,
-    XCURSOR_THEME = 'capitaine-cursors',
+    XCURSOR_THEME = 'macOS',
 
     -- Application toolkits
     ELECTRON_OZONE_PLATFORM_HINT = 'auto',

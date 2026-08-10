@@ -1,3 +1,7 @@
+# Desktop
+apple_cursor
+apple_hyprcursor
+
 # Applications
 brave-bin
 localsend-bin
