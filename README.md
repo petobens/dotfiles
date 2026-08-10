@@ -11,7 +11,7 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Desktop         | Hyprland, Mako, Rofi, Voxtype, Waybar             |
 | Files and media | imv, Yazi                                         |
 | Network         | NetworkManager, nmtui                             |
-| Session         | cliphist, Grim, Hypridle, Hyprlock, Slurp,        |
+| Session         | cliphist, Hypridle, Hyprlock, Hyprshot, Slurp,    |
 |                 | wf-recorder, wl-clipboard                         |
 | System          | Btrfs, fwupd, Intel LPMD, scx_lavd, systemd-boot, |
 |                 | thermald, TLP, UKI, zram                          |

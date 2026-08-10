@@ -294,9 +294,9 @@ end
 exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
 
 -- Screenshots and recordings
-exec('Print', scripts .. 'screenshot full', 'Full screenshot')
-exec(super_shift .. ' + C', scripts .. 'screenshot selection', 'Selection screenshot')
-exec(super_shift .. ' + 0', scripts .. 'screenshot active', 'Window screenshot')
+exec('Print', 'hyprshot -m active -m output', 'Monitor screenshot')
+exec(super_shift .. ' + C', 'hyprshot -m region --freeze', 'Selection screenshot')
+exec(super_shift .. ' + 0', 'hyprshot -m active -m window', 'Window screenshot')
 exec(super_shift .. ' + G', scripts .. 'screen_record gif', 'Toggle GIF recording')
 exec(super_alt .. ' + G', scripts .. 'screen_record video', 'Toggle video recording')
 

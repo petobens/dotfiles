@@ -86,7 +86,6 @@ cliphist
 ghostty
 gnome-keyring
 gnome-themes-extra
-grim
 hypridle
 hyprland
 hyprlock
@@ -94,6 +93,7 @@ hyprpaper
 hyprpicker
 hyprpolkitagent
 hyprpwcenter
+hyprshot
 hyprshutdown
 kitty
 libnotify

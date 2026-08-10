@@ -9,6 +9,9 @@ local environment = {
     XCURSOR_SIZE = cursor_size,
     XCURSOR_THEME = 'macOS',
 
+    -- Screenshots
+    HYPRSHOT_DIR = os.getenv('HOME') .. '/Pictures/Screenshots',
+
     -- Application toolkits
     ELECTRON_OZONE_PLATFORM_HINT = 'auto',
     GDK_BACKEND = 'wayland,x11,*',

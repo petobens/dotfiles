@@ -88,6 +88,7 @@ alias cp 'cp -i'
 alias df 'df -h'
 alias diff 'diff -u --color'
 alias dog bat
+alias ds dust
 alias ff fastfetch
 alias fm yazi
 alias h 'cd ~'
@@ -189,14 +190,6 @@ end
 function cd --description 'Change directory and list its contents'
     builtin cd $argv; or return
     ls
-end
-
-function ds --description 'Browse disk usage with FZF'
-    set -l targets $argv
-    if not set -q targets[1]
-        set targets *
-    end
-    du -shc $targets | sort -rh | fzf
 end
 
 function tm --description 'Attach to the main tmux session'
