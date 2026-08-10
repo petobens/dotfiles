@@ -360,7 +360,9 @@ else
     fi
 fi
 
+hyprland_active=0
 if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && hyprctl version > /dev/null 2>&1; then
+    hyprland_active=1
     add_result PASS 'Hyprland session' 'active'
     # Hyprland autostarts these without systemd units
     missing_daemons=()
@@ -374,6 +376,20 @@ if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && hyprctl version > /dev/null 2>&1
     fi
 else
     add_result WARN 'Hyprland session' 'not active in this shell'
+fi
+
+graphical_targets=(hyprland-session.target graphical-session.target)
+inactive_graphical_targets=()
+for unit in "${graphical_targets[@]}"; do
+    systemctl --user is-active --quiet "$unit" 2> /dev/null ||
+        inactive_graphical_targets+=("$unit")
+done
+if ((${#inactive_graphical_targets[@]} == 0)); then
+    add_result PASS 'Graphical targets' 'Hyprland and graphical session active'
+elif ((hyprland_active)); then
+    add_result FAIL 'Graphical targets' "not active: ${inactive_graphical_targets[*]}"
+else
+    add_result WARN 'Graphical targets' "not active: ${inactive_graphical_targets[*]}"
 fi
 
 # Diagnostic evidence written below the summary
@@ -478,6 +494,8 @@ collect_evidence() {
     run 'Thunderbolt devices' boltctl list
     run 'Thunderbolt domains' boltctl domains
     run 'Session daemons' pgrep -a -u "$USER" '^(hypridle|mako|waybar)$'
+    run 'Graphical session targets' systemctl --user status \
+        "${graphical_targets[@]}" --no-pager
 
     run 'Network devices' nmcli -f DEVICE,TYPE,STATE device status
 
