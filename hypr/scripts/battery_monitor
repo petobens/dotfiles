@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Warn while the battery drains and suspend before it dies
-interval=60
+# Warn while the battery drains and suspend at the emergency threshold
+poll_interval=30
 low=20
 critical=10
-action=5
+suspend_at=3
 
 shopt -s nullglob
 batteries=(/sys/class/power_supply/BAT*)
@@ -15,15 +15,15 @@ battery=${batteries[0]}
 # Highest threshold already announced during the current discharge
 announced=100
 
-while sleep "$interval"; do
+while sleep "$poll_interval"; do
     capacity=$(< "$battery/capacity")
     if [[ $(< "$battery/status") != Discharging ]]; then
         announced=100
         continue
     fi
 
-    if ((capacity <= action && announced > action)); then
-        announced=$action
+    if ((capacity <= suspend_at && announced > suspend_at)); then
+        announced=$suspend_at
         notify-send -u critical -i battery-caution 'Battery critically low' \
             "Suspending at $capacity%"
         sleep 5

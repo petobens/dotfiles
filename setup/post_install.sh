@@ -58,8 +58,9 @@ sudo install -Dm600 \
     /etc/snapper/configs/root
 sudo sed -i -E \
     -e 's/^NUMBER_CLEANUP=.*/NUMBER_CLEANUP="yes"/' \
-    -e 's/^NUMBER_LIMIT=.*/NUMBER_LIMIT="2"/' \
+    -e 's/^NUMBER_LIMIT=.*/NUMBER_LIMIT="10"/' \
     -e 's/^NUMBER_LIMIT_IMPORTANT=.*/NUMBER_LIMIT_IMPORTANT="0"/' \
+    -e 's/^EMPTY_PRE_POST_CLEANUP=.*/EMPTY_PRE_POST_CLEANUP="yes"/' \
     -e 's/^TIMELINE_CREATE=.*/TIMELINE_CREATE="no"/' \
     -e 's/^TIMELINE_CLEANUP=.*/TIMELINE_CLEANUP="no"/' \
     /etc/snapper/configs/root
