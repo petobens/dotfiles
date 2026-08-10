@@ -1,0 +1,503 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+usage() {
+    cat << 'EOF'
+Usage: system_report [--sudo] [--output FILE]
+
+Create a read-only Arch/Hyprland installation report. By default it is saved
+with mode 0600 below ~/.local/state/dotfiles/reports.
+
+  --sudo        add read-only checks that require administrator access
+  --output FILE save to FILE instead of the default report directory
+  -h, --help    show this help
+
+Common personal and machine identifiers are always redacted. Review the report
+before sharing it.
+EOF
+}
+
+die() {
+    printf 'system_report: %s\n' "$*" >&2
+    exit 1
+}
+
+# Command-line options
+use_sudo=0
+output=
+while (($#)); do
+    case $1 in
+        --sudo)
+            use_sudo=1
+            ;;
+        --output)
+            (($# >= 2)) || die '--output requires a file'
+            output=$2
+            shift
+            ;;
+        -h | --help)
+            usage
+            exit 0
+            ;;
+        *)
+            usage >&2
+            die "unknown argument: $1"
+            ;;
+    esac
+    shift
+done
+
+((EUID != 0)) || die 'run as your normal user; use --sudo for privileged checks'
+
+# Private output and temporary-file lifecycle
+umask 077
+timestamp=$(date +%Y%m%d-%H%M%S)
+if [[ -z $output ]]; then
+    report_dir=${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/reports
+    mkdir -p "$report_dir" || die "cannot create $report_dir"
+    output=$report_dir/system-report-$timestamp.txt
+else
+    output=$(realpath -m "$output")
+    mkdir -p "$(dirname "$output")" || die "cannot create output directory"
+fi
+[[ ! -e $output ]] || die "$output already exists"
+if ((use_sudo)); then
+    printf 'Authenticating for privileged checks...\n' >&2
+    sudo -v || die 'could not authenticate for privileged checks'
+fi
+
+report_tmp=$(mktemp "${output}.tmp.XXXXXX") || die 'cannot create temporary report'
+redacted_tmp=
+cleanup() {
+    rm -f "$report_tmp"
+    [[ -z $redacted_tmp ]] || rm -f "$redacted_tmp"
+}
+trap cleanup EXIT
+
+# Summary results shown at the top of the report
+declare -a result_status result_name result_detail
+add_result() {
+    result_status+=("$1")
+    result_name+=("$2")
+    result_detail+=("$3")
+}
+
+printf 'Evaluating installation checks...\n' >&2
+
+# Environment, boot, and storage checks
+is_vm=0
+if systemd-detect-virt --vm --quiet 2> /dev/null; then
+    is_vm=1
+fi
+
+mount_paths=(/ /home /var/cache/pacman/pkg /.snapshots /var/log)
+mount_roots=(/ /@home /@pkg /@snapshots /@var_log)
+invalid_mounts=()
+for i in "${!mount_paths[@]}"; do
+    fs_type=
+    fs_root=
+    read -r fs_type fs_root < <(
+        findmnt -n --mountpoint "${mount_paths[$i]}" -o FSTYPE,FSROOT 2> /dev/null
+    )
+    if [[ $fs_type != btrfs || $fs_root != "${mount_roots[$i]}" ]]; then
+        invalid_mounts+=("${mount_paths[$i]}")
+    fi
+done
+if ((${#invalid_mounts[@]} == 0)); then
+    add_result PASS 'Btrfs layout' 'all expected subvolumes mounted'
+else
+    add_result FAIL 'Btrfs layout' "unexpected mounts: ${invalid_mounts[*]}"
+fi
+
+uki_presets_ok=1
+grep -qx 'default_uki="/boot/EFI/Linux/arch-linux.efi"' \
+    /etc/mkinitcpio.d/linux.preset 2> /dev/null || uki_presets_ok=0
+grep -qx 'fallback_uki="/boot/EFI/Linux/arch-linux-fallback.efi"' \
+    /etc/mkinitcpio.d/linux.preset 2> /dev/null || uki_presets_ok=0
+grep -qx 'default_uki="/boot/EFI/Linux/arch-linux-lts.efi"' \
+    /etc/mkinitcpio.d/linux-lts.preset 2> /dev/null || uki_presets_ok=0
+grep -qx 'fallback_uki="/boot/EFI/Linux/arch-linux-lts-fallback.efi"' \
+    /etc/mkinitcpio.d/linux-lts.preset 2> /dev/null || uki_presets_ok=0
+if [[ -d /sys/firmware/efi ]] && ((uki_presets_ok)); then
+    add_result PASS 'Boot' 'UEFI with all expected UKI presets'
+else
+    add_result FAIL 'Boot' 'not booted with UEFI or UKI presets are incomplete'
+fi
+
+if grep -qE '^SNAPPER_CONFIGS=.*\broot\b' /etc/conf.d/snapper 2> /dev/null; then
+    add_result PASS 'Snapshots' 'Snapper root configuration present'
+else
+    add_result FAIL 'Snapshots' 'Snapper root configuration missing'
+fi
+
+if swapon --show --noheadings --output NAME 2> /dev/null | grep -q '/dev/zram'; then
+    add_result PASS 'Compressed swap' 'zram device active'
+else
+    add_result FAIL 'Compressed swap' 'no active zram device'
+fi
+
+# Expected system and user services
+expected_services=(
+    NetworkManager.service
+    avahi-daemon.socket
+    bluetooth.service
+    btrfs-scrub.timer
+    cups.socket
+    docker.socket
+    fstrim.timer
+    paccache.timer
+    reflector.timer
+    scx_loader.service
+    snapper-cleanup.timer
+    sshd.service
+    systemd-boot-update.service
+    systemd-timesyncd.service
+    tlp.service
+    ufw.service
+)
+if ((!is_vm)); then
+    expected_services+=(fwupd-refresh.timer intel_lpmd.service)
+    if [[ ! -e /sys/devices/platform/thinkpad_acpi/dytc_lapmode ]]; then
+        expected_services+=(thermald.service)
+    fi
+fi
+disabled_services=()
+for unit in "${expected_services[@]}"; do
+    systemctl is-enabled --quiet "$unit" 2> /dev/null || disabled_services+=("$unit")
+done
+if ((${#disabled_services[@]} == 0)); then
+    add_result PASS 'System services' 'all expected units enabled'
+else
+    add_result FAIL 'System services' "not enabled: ${disabled_services[*]}"
+fi
+
+expected_user_services=(
+    gnome-keyring-daemon.socket
+    pipewire.service
+    pipewire-pulse.service
+    wireplumber.service
+)
+((is_vm)) || expected_user_services+=(onedrive.service)
+disabled_user_services=()
+for unit in "${expected_user_services[@]}"; do
+    systemctl --user is-enabled --quiet "$unit" 2> /dev/null ||
+        disabled_user_services+=("$unit")
+done
+if ((${#disabled_user_services[@]} == 0)); then
+    add_result PASS 'User services' 'all expected units enabled'
+else
+    add_result FAIL 'User services' "not enabled: ${disabled_user_services[*]}"
+fi
+
+failed_system=$(systemctl --failed --no-legend --plain 2>&1)
+failed_system_status=$?
+failed_user=$(systemctl --user --failed --no-legend --plain 2>&1)
+failed_user_status=$?
+if ((failed_system_status != 0 || failed_user_status != 0)); then
+    add_result WARN 'Failed units' 'could not query both systemd managers'
+elif [[ -z $failed_system && -z $failed_user ]]; then
+    add_result PASS 'Failed units' 'none'
+else
+    failed_count=$(printf '%s\n%s\n' "$failed_system" "$failed_user" |
+        sed '/^[[:space:]]*$/d' | wc -l)
+    add_result FAIL 'Failed units' "$failed_count system or user units"
+fi
+
+# Runtime configuration and hardware checks
+scheduler_state=$(cat /sys/kernel/sched_ext/state 2> /dev/null || true)
+scheduler_name=$(cat /sys/kernel/sched_ext/root/ops 2> /dev/null || true)
+if [[ $scheduler_state == enabled && $scheduler_name == *lavd* ]]; then
+    add_result PASS 'CPU scheduler' "$scheduler_name active"
+else
+    add_result FAIL 'CPU scheduler' 'scx_lavd inactive'
+fi
+
+if ((is_vm)); then
+    add_result WARN 'Laptop power' 'physical hardware check skipped in VM'
+elif systemctl is-active --quiet tlp.service 2> /dev/null; then
+    add_result PASS 'Laptop power' 'TLP active'
+else
+    add_result FAIL 'Laptop power' 'TLP inactive'
+fi
+
+configured_regdom=$(sed -n 's/^WIRELESS_REGDOM="\([A-Z0-9]\{2\}\)"$/\1/p' \
+    /etc/conf.d/wireless-regdom 2> /dev/null | tail -1)
+effective_regdom=$(iw reg get 2> /dev/null |
+    sed -n 's/^[[:space:]]*country \([A-Z0-9]\{2\}\):.*/\1/p' |
+    sort -u | paste -sd, -)
+if [[ $configured_regdom == 00 ]]; then
+    add_result PASS 'Wi-Fi regulatory domain' \
+        "configured 00; active ${effective_regdom:-unknown}"
+else
+    add_result WARN 'Wi-Fi regulatory domain' \
+        "expected 00; configured ${configured_regdom:-unknown}; active ${effective_regdom:-unknown}"
+fi
+
+if command -v ufw > /dev/null &&
+    grep -qx 'ENABLED=yes' /etc/ufw/ufw.conf 2> /dev/null &&
+    systemctl is-active --quiet ufw.service 2> /dev/null; then
+    add_result PASS 'Firewall' 'UFW enabled and active'
+else
+    add_result FAIL 'Firewall' 'UFW missing, disabled, or inactive'
+fi
+
+docker_ip=$(jq -r '.ip // empty' /etc/docker/daemon.json 2> /dev/null || true)
+docker_bridge_ip=$(jq -r \
+    '."default-network-opts".bridge."com.docker.network.bridge.host_binding_ipv4" // empty' \
+    /etc/docker/daemon.json 2> /dev/null || true)
+if [[ $docker_ip == 127.0.0.1 && $docker_bridge_ip == 127.0.0.1 ]]; then
+    add_result PASS 'Docker exposure' 'default published ports bind to loopback'
+else
+    add_result FAIL 'Docker exposure' 'default published ports are not loopback-only'
+fi
+
+if ((use_sudo)); then
+    # Root-only boot, snapshot, firewall, and SSH verification
+    privileged_failures=()
+    sudo -n bootctl is-installed --quiet 2> /dev/null ||
+        privileged_failures+=(systemd-boot)
+    for image in \
+        arch-linux.efi \
+        arch-linux-fallback.efi \
+        arch-linux-lts.efi \
+        arch-linux-lts-fallback.efi; do
+        if ! sudo -n test -f "/boot/EFI/Linux/$image"; then
+            privileged_failures+=(UKIs)
+            break
+        fi
+    done
+    sudo -n snapper -c root get-config > /dev/null 2>&1 ||
+        privileged_failures+=(Snapper)
+    ufw_status=$(sudo -n ufw status verbose 2> /dev/null || true)
+    if ! grep -q '^Status: active' <<< "$ufw_status" ||
+        ! grep -q '^Default: deny (incoming), allow (outgoing)' <<< "$ufw_status" ||
+        ! grep -Eq '^22/tcp.*LIMIT IN' <<< "$ufw_status" ||
+        ! grep -Eq '^53317/tcp.*ALLOW IN' <<< "$ufw_status" ||
+        ! grep -Eq '^53317/udp.*ALLOW IN' <<< "$ufw_status"; then
+        privileged_failures+=(UFW)
+    fi
+    sshd_settings=$(sudo -n /usr/bin/sshd -T 2> /dev/null || true)
+    for setting in \
+        'disableforwarding yes' \
+        'maxauthtries 3' \
+        'passwordauthentication yes' \
+        'permitrootlogin no'; do
+        if ! grep -qx "$setting" <<< "$sshd_settings"; then
+            privileged_failures+=(SSH)
+            break
+        fi
+    done
+    if ((${#privileged_failures[@]} == 0)); then
+        add_result PASS 'Privileged checks' \
+            'systemd-boot, UKIs, Snapper, UFW, and SSH verified'
+    else
+        add_result FAIL 'Privileged checks' \
+            "not verified: ${privileged_failures[*]}"
+    fi
+fi
+
+if ((is_vm)); then
+    add_result WARN 'Intel GPU and NPU' 'physical hardware check skipped in VM'
+else
+    display_info=$(lspci -nnk -d ::0300 2> /dev/null || true)
+    if grep -q 'Kernel driver in use: xe' <<< "$display_info"; then
+        add_result PASS 'Intel GPU' 'xe kernel driver active'
+    elif grep -qi 'Intel' <<< "$display_info"; then
+        add_result WARN 'Intel GPU' 'detected, but xe is not the active driver'
+    else
+        add_result FAIL 'Intel GPU' 'Intel display controller not detected'
+    fi
+
+    if [[ -e /dev/accel/accel0 ]]; then
+        add_result PASS 'Intel NPU' '/dev/accel/accel0 present'
+    else
+        add_result WARN 'Intel NPU' '/dev/accel/accel0 not present'
+    fi
+fi
+
+wpctl_status=$(timeout 10 wpctl status 2> /dev/null || true)
+if grep -q 'Audio' <<< "$wpctl_status"; then
+    add_result PASS 'PipeWire audio' 'audio graph available'
+else
+    add_result FAIL 'PipeWire audio' 'audio graph unavailable'
+fi
+
+if ((is_vm)); then
+    add_result WARN 'Camera and fingerprint' 'physical hardware check skipped in VM'
+else
+    libcamera_info=$(timeout 10 cam -l 2>&1 || true)
+    v4l2_info=$(timeout 10 v4l2-ctl --list-devices 2>&1 || true)
+    if grep -qE '^[[:space:]]*[0-9]+:' <<< "$libcamera_info" ||
+        grep -q '/dev/video' <<< "$v4l2_info"; then
+        add_result PASS 'Camera' 'video device discovered'
+    else
+        add_result WARN 'Camera' 'no usable video device discovered'
+    fi
+
+    if timeout 10 fprintd-list "$USER" > /dev/null 2>&1; then
+        add_result PASS 'Fingerprint reader' 'fprintd reached a reader'
+    else
+        add_result WARN 'Fingerprint reader' 'not detected or unavailable'
+    fi
+fi
+
+if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && hyprctl version > /dev/null 2>&1; then
+    add_result PASS 'Hyprland session' 'active'
+else
+    add_result WARN 'Hyprland session' 'not active in this shell'
+fi
+
+# Diagnostic evidence written below the summary
+section() {
+    printf '\n### %s\n' "$1" >> "$report_tmp"
+}
+
+run() {
+    local command title=$1
+    if ((count_only)); then
+        ((progress_total += 1))
+        return
+    fi
+    command=$2
+    shift 2
+    ((progress_current += 1))
+    printf '[%d/%d %3d%%] %s\n' \
+        "$progress_current" \
+        "$progress_total" \
+        "$((progress_current * 100 / progress_total))" \
+        "$title" >&2
+    section "$title"
+    {
+        printf '$'
+        printf ' %q' "$command" "$@"
+        printf '\n'
+    } >> "$report_tmp"
+    if ! command -v "$command" > /dev/null; then
+        printf '[not installed]\n' >> "$report_tmp"
+        return
+    fi
+    timeout 20 "$command" "$@" >> "$report_tmp" 2>&1 ||
+        printf '[command exited with status %d]\n' "$?" >> "$report_tmp"
+}
+
+hostname=$(< /proc/sys/kernel/hostname)
+{
+    printf 'System report\n'
+    printf 'Generated: %s\n' "$(date --iso-8601=seconds)"
+    printf 'Host: %s\n' "${hostname:-unknown}"
+    printf 'User: %s\n' "$USER"
+    printf 'Privacy: common identifiers redacted\n'
+    printf 'Privileged checks: %s\n' "$([[ $use_sudo == 1 ]] && printf yes || printf no)"
+    printf '\nReview this file before sharing it.\n'
+    printf '\n### Summary\n'
+    for i in "${!result_status[@]}"; do
+        printf '%-4s  %-24s %s\n' \
+            "${result_status[$i]}" "${result_name[$i]}" "${result_detail[$i]}"
+    done
+} >> "$report_tmp"
+
+collect_evidence() {
+    run 'Operating system' bash -c \
+        'cat /etc/os-release; printf "Kernel: "; uname -r; printf "Uptime: "; uptime -p'
+    # The variables below belong to the diagnostic's nested shell
+    # shellcheck disable=SC2016
+    run 'Machine and firmware' bash -c \
+        'for f in product_name product_version bios_version bios_date; do printf "%s: " "$f"; cat "/sys/class/dmi/id/$f" 2>/dev/null || printf "unavailable\n"; done; systemd-detect-virt'
+    run 'CPU and memory' bash -c \
+        'lscpu; printf "\n"; free -h'
+    run 'Kernel command line' cat /proc/cmdline
+    run 'Unified kernel image presets' grep -E '^(PRESETS|default_uki|fallback_uki)=' \
+        /etc/mkinitcpio.d/linux.preset /etc/mkinitcpio.d/linux-lts.preset
+    run 'Filesystems' findmnt -o TARGET,SOURCE,FSTYPE,OPTIONS
+    run 'Btrfs root subvolumes' btrfs subvolume list /
+    run 'Swap and zram' bash -c \
+        'swapon --show; printf "\n"; zramctl'
+    run 'System failures' systemctl --failed --no-pager --plain
+    run 'User failures' systemctl --user --failed --no-pager --plain
+    run 'Expected system units' systemctl is-enabled "${expected_services[@]}"
+    run 'Expected user units' systemctl --user is-enabled "${expected_user_services[@]}"
+    run 'CPU scheduler' scxctl get
+    run 'TLP status' tlp-stat -s
+    run 'Wireless regulatory domain' iw reg get
+
+    run 'Firewall service' systemctl status ufw.service --no-pager
+    run 'Docker daemon configuration' jq . /etc/docker/daemon.json
+    run 'Listening network sockets' ss -lntup
+
+    if ((use_sudo)); then
+        run 'Boot status' sudo -n bootctl status --no-pager
+        run 'Snapper root configuration' sudo -n snapper -c root get-config
+        run 'Firewall rules' sudo -n ufw status verbose
+        run 'Recovery SSH settings' bash -o pipefail -c \
+            "sudo -n /usr/bin/sshd -T | rg '^(disableforwarding|maxauthtries|passwordauthentication|permitrootlogin) '"
+    fi
+
+    run 'PCI devices and drivers' lspci -nnk
+    run 'DRM and accelerator devices' ls -la /dev/dri /dev/accel
+    run 'OpenCL devices' clinfo -l
+    run 'OpenGL renderer' glxinfo -B
+    run 'Vulkan devices' vulkaninfo --summary
+    run 'VA-API devices' vainfo
+    run 'Hyprland version' hyprctl version
+    run 'Hyprland monitors' hyprctl monitors all
+    run 'PipeWire graph' wpctl status
+    run 'Camera discovery (libcamera)' cam -l
+    run 'Camera discovery (V4L2)' v4l2-ctl --list-devices
+    run 'Fingerprint reader' fprintd-list "$USER"
+    run 'Power devices' upower -e
+    run 'Radio state' rfkill
+
+    run 'Network devices' nmcli -f DEVICE,TYPE,STATE device status
+
+    run 'Relevant kernel messages' bash -o pipefail -c \
+        "journalctl -b -k --no-pager | rg -i 'xe|i915|intel_vpu|ivpu|sof|camera|ipu|thunderbolt|firmware'"
+    run 'Desktop portals' systemctl --user status \
+        xdg-desktop-portal.service xdg-desktop-portal-hyprland.service --no-pager
+}
+
+# Count the active evidence branch before executing it
+count_only=1
+progress_current=0
+progress_total=0
+collect_evidence
+count_only=0
+printf '[0/%d   0%%] Collecting diagnostic evidence\n' "$progress_total" >&2
+collect_evidence
+
+# Redact only after every command has written its output
+redacted_tmp=$(mktemp "${output}.redacted.XXXXXX") || die 'cannot redact report'
+if ! REPORT_USER=$USER REPORT_HOSTNAME=$hostname REPORT_HOME=$HOME perl -pe '
+        s/\Q$ENV{REPORT_HOME}\E/~/g;
+        s/\Q$ENV{REPORT_USER}\E/<user>/g if length $ENV{REPORT_USER};
+        s/\Q$ENV{REPORT_HOSTNAME}\E/<hostname>/g if length $ENV{REPORT_HOSTNAME};
+        s/\b(?:[0-9a-f]{2}:){5}[0-9a-f]{2}\b/<mac>/ig;
+        s/\b(?:\d{1,3}\.){3}\d{1,3}\b/<ipv4>/g;
+        s/(?<![0-9a-f:])(?:[0-9a-f]{1,4}:){7}[0-9a-f]{1,4}(?![0-9a-f:])/<ipv6>/ig;
+        s/(?<![0-9a-f:])[0-9a-f:]*::[0-9a-f:]*(?![0-9a-f:])/<ipv6>/ig;
+        s/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/<uuid>/ig;
+        s/^.*(?:serial number|ssid|ip[46]\.address).*$/[redacted line]/i;
+' "$report_tmp" > "$redacted_tmp"; then
+    die 'could not redact report'
+fi
+mv "$redacted_tmp" "$report_tmp" || die 'could not save redacted report'
+redacted_tmp=
+
+mv "$report_tmp" "$output" || die "cannot save $output"
+trap - EXIT
+
+# Concise terminal result and automation-friendly exit status
+pass_count=0
+warn_count=0
+fail_count=0
+for status in "${result_status[@]}"; do
+    case $status in
+        PASS) ((pass_count += 1)) ;;
+        WARN) ((warn_count += 1)) ;;
+        FAIL) ((fail_count += 1)) ;;
+    esac
+done
+
+printf 'System report: %d PASS, %d WARN, %d FAIL\n' \
+    "$pass_count" "$warn_count" "$fail_count"
+printf 'Saved to %s\n' "$output"
+((fail_count == 0))

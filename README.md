@@ -104,6 +104,15 @@ The helper restores personal credentials and repositories from a
 `personal.json` file stored in cloud storage. Its supported keys are documented
 in `setup/load_personal.sh`.
 
+Verify the finished installation after rebooting with:
+
+```bash
+system_report
+```
+
+Use `system_report --sudo` to include protected boot, Snapper, firewall, and
+SSH checks. Run `system_report --help` for all options.
+
 ## Repository
 
 - `bin/`: command-line scripts
