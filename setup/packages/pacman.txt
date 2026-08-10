@@ -22,6 +22,7 @@ ufw
 wireless-regdb
 
 # Hardware and power
+bolt
 clinfo
 fprintd
 fwupd

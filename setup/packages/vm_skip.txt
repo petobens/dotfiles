@@ -1,4 +1,5 @@
 # Hardware and host services
+bolt
 caligula
 clinfo
 exfatprogs
