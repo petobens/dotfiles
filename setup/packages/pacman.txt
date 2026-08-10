@@ -21,6 +21,7 @@ wireless-regdb
 
 # Hardware and power
 clinfo
+fprintd
 fwupd
 intel-compute-runtime
 intel-gpu-tools
