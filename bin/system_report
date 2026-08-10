@@ -315,6 +315,25 @@ else
     fi
 fi
 
+if ((is_vm)); then
+    add_result WARN 'Thunderbolt' 'physical hardware check skipped in VM'
+elif ! command -v boltctl > /dev/null; then
+    add_result FAIL 'Thunderbolt' 'boltctl missing; install bolt'
+elif ! bolt_list=$(timeout 10 boltctl list 2> /dev/null); then
+    add_result FAIL 'Thunderbolt' 'could not query boltd'
+else
+    # Query D-Bus-activated boltd; stored disconnected devices are neutral
+    bolt_authorized=$(grep -Ec 'status:[[:space:]]+authorized' <<< "$bolt_list")
+    bolt_unauthorized=$(grep -Ec 'status:[[:space:]]+(connected|auth-error)' <<< "$bolt_list")
+    if ((bolt_unauthorized > 0)); then
+        add_result WARN 'Thunderbolt' "connected devices not authorized: $bolt_unauthorized"
+    elif ((bolt_authorized > 0)); then
+        add_result PASS 'Thunderbolt' "authorized devices: $bolt_authorized"
+    else
+        add_result PASS 'Thunderbolt' 'boltd available; no devices connected'
+    fi
+fi
+
 wpctl_status=$(timeout 10 wpctl status 2> /dev/null || true)
 if grep -q 'Audio' <<< "$wpctl_status"; then
     add_result PASS 'PipeWire audio' 'audio graph available'
@@ -343,6 +362,16 @@ fi
 
 if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && hyprctl version > /dev/null 2>&1; then
     add_result PASS 'Hyprland session' 'active'
+    # Hyprland autostarts these without systemd units
+    missing_daemons=()
+    for daemon in hypridle mako waybar; do
+        pgrep -u "$USER" -x "$daemon" > /dev/null 2>&1 || missing_daemons+=("$daemon")
+    done
+    if ((${#missing_daemons[@]} == 0)); then
+        add_result PASS 'Session daemons' 'hypridle, Mako, and Waybar running'
+    else
+        add_result FAIL 'Session daemons' "not running: ${missing_daemons[*]}"
+    fi
 else
     add_result WARN 'Hyprland session' 'not active in this shell'
 fi
@@ -446,6 +475,9 @@ collect_evidence() {
     run 'Fingerprint reader' fprintd-list "$USER"
     run 'Power devices' upower -e
     run 'Radio state' rfkill
+    run 'Thunderbolt devices' boltctl list
+    run 'Thunderbolt domains' boltctl domains
+    run 'Session daemons' pgrep -a -u "$USER" '^(hypridle|mako|waybar)$'
 
     run 'Network devices' nmcli -f DEVICE,TYPE,STATE device status
 
