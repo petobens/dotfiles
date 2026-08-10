@@ -1,5 +1,7 @@
 # Hardware and host services
+caligula
 clinfo
+exfatprogs
 fwupd
 intel-compute-runtime
 intel-lpmd

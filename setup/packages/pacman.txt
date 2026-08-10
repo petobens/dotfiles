@@ -1,6 +1,7 @@
 # System
 btrfs-progs
 btrfsmaintenance
+exfatprogs
 linux
 linux-firmware-intel
 linux-lts
@@ -40,6 +41,7 @@ zram-generator
 7zip
 bat
 bind
+caligula
 curl
 dust
 eza
