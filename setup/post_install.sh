@@ -92,6 +92,15 @@ EOF
 sudo ssh-keygen -A
 sudo /usr/bin/sshd -t
 
+section 'Configuring firewall'
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw limit 22/tcp comment 'recovery SSH'
+sudo ufw allow 53317/tcp comment 'LocalSend'
+sudo ufw allow 53317/udp comment 'LocalSend'
+sudo ufw --force enable
+sudo systemctl enable --now ufw.service
+
 section 'Configuring wireless regulatory domain'
 sudo sed -i -E \
     -e 's/^WIRELESS_REGDOM=/#&/' \
@@ -173,7 +182,13 @@ if [[ $(findmnt -no FSTYPE --target "$HOME/.cache/docker") == btrfs ]]; then
 fi
 sudo install -Dm644 /dev/stdin /etc/docker/daemon.json << EOF
 {
-    "data-root": "$HOME/.cache/docker"
+    "data-root": "$HOME/.cache/docker",
+    "ip": "127.0.0.1",
+    "default-network-opts": {
+        "bridge": {
+            "com.docker.network.bridge.host_binding_ipv4": "127.0.0.1"
+        }
+    }
 }
 EOF
 sudo systemctl enable --now docker.socket

@@ -18,6 +18,7 @@ snap-pac
 snapper
 systemd-ukify
 terminus-font
+ufw
 wireless-regdb
 
 # Hardware and power
