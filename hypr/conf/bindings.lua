@@ -127,7 +127,8 @@ bind(
     'Toggle fullscreen'
 )
 bind(super .. ' + Q', hl.dsp.window.close({}), 'Close window')
-bind(super_shift .. ' + W', close_workspace, 'Close workspace windows')
+bind(super_shift .. ' + W', hl.dsp.window.kill({}), 'Force close window')
+bind(super_alt .. ' + W', close_workspace, 'Close workspace windows')
 for _, keys in ipairs({
     super_shift .. ' + Q',
     super_shift .. ' + S',
