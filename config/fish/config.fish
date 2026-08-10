@@ -102,7 +102,7 @@ alias md 'mkdir -p'
 alias mv 'mv -i'
 alias o open
 alias open xdg-open
-alias ping 'prettyping --nolegend --last 30'
+alias ping gping
 alias py python
 alias q exit
 alias rm 'rm -v'

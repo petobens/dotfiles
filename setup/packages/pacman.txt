@@ -54,6 +54,7 @@ git
 gnupg
 go-yq
 gopass
+gping
 htop
 hyperfine
 jq
@@ -61,7 +62,6 @@ less
 lsof
 nmap
 poppler
-prettyping
 python
 ripgrep
 rsync
