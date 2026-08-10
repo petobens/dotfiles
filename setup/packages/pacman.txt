@@ -12,6 +12,7 @@ nfs-utils
 nss-mdns
 openssh
 pacman-contrib
+reflector
 snap-pac
 snapper
 systemd-ukify

@@ -98,6 +98,15 @@ sudo sed -i -E \
     -e 's/^#WIRELESS_REGDOM="00"$/WIRELESS_REGDOM="00"/' \
     /etc/conf.d/wireless-regdom
 
+section 'Configuring Pacman mirrors'
+sudo install -Dm644 /dev/stdin /etc/xdg/reflector/reflector.conf << 'EOF'
+--save /etc/pacman.d/mirrorlist
+--protocol https
+--latest 10
+--sort rate
+--number 5
+EOF
+
 section 'Configuring local hostname discovery'
 sudo sed -i \
     -e '/^deny-interfaces=docker0,virbr0$/d' \
@@ -115,6 +124,7 @@ sudo systemctl enable \
     btrfs-scrub.timer \
     NetworkManager \
     paccache.timer \
+    reflector.timer \
     scx_loader.service \
     snapper-cleanup.timer \
     tlp
