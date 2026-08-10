@@ -110,6 +110,7 @@ alias rsync 'rsync -auP'
 alias ss 'sudo -i'
 alias ti hyperfine
 alias u 'cd ..'
+alias up 'ouch decompress'
 alias v nvim
 alias yay 'yay --diffmenu=false --answerclean N --removemake'
 
@@ -201,30 +202,6 @@ end
 function tm --description 'Attach to the main tmux session'
     set -l session (test "$USER" = pedro; and echo petobens; or echo "$USER")
     command tmux -f "$HOME/.config/tmux/tmux.conf" new -A -s "$session" $argv
-end
-
-function up --description 'Unpack an archive'
-    test -f "$argv[1]"; or begin
-        echo "Not a file: $argv[1]" >&2
-        return 1
-    end
-    switch "$argv[1]"
-        case '*.tar.bz2' '*.tbz2'
-            tar xjf "$argv[1]"
-        case '*.tar.gz' '*.tgz'
-            tar xzf "$argv[1]"
-        case '*.tar' '*.tar.xz' '*.tar.zst'
-            tar xf "$argv[1]"
-        case '*.bz2'
-            bunzip2 "$argv[1]"
-        case '*.gz'
-            gunzip "$argv[1]"
-        case '*.rar' '*.zip' '*.7z' '*.7Z'
-            7z x "$argv[1]"
-        case '*'
-            echo "Unsupported archive: $argv[1]" >&2
-            return 1
-    end
 end
 
 function yazi --description 'Run Yazi and change to its final directory'

@@ -28,7 +28,7 @@ hl.on('hyprland.start', function()
     hl.exec_cmd('wl-paste --type image --watch ' .. scripts .. 'clipboard_store')
 
     -- Hardware integration
-    hl.exec_cmd('udiskie --tray')
+    hl.exec_cmd('udiskie') -- the tray icon needs AppIndicator under Wayland
     hl.exec_cmd(scripts .. 'battery_monitor')
 end)
 

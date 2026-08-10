@@ -1,4 +1,5 @@
 # System
+avahi
 btrfs-progs
 btrfsmaintenance
 exfatprogs
@@ -63,6 +64,7 @@ jq
 less
 lsof
 nmap
+ouch
 poppler
 python
 ripgrep

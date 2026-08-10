@@ -113,9 +113,8 @@ local function restore_active_mode()
     end
 end
 
-hl.on('monitor.added', function()
-    restore_active_mode()
-end)
+hl.on('monitor.added', restore_active_mode)
+hl.on('monitor.removed', restore_active_mode)
 
 -- Handle lid close and open events by disabling and restoring the laptop panel
 hl.bind('switch:on:Lid Switch', function()
