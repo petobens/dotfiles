@@ -34,6 +34,7 @@ conform.setup({
         sh = { 'shfmt' },
         sql = { 'sqlfluff' },
         toml = { 'taplo' },
+        typst = { 'typstyle' },
         yaml = { 'prettierd' },
     },
     format_on_save = function(bufnr)

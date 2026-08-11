@@ -90,6 +90,8 @@ vim.lsp.config('basedpyright', {
 vim.lsp.config('texlab', {
     handlers = { ['textDocument/publishDiagnostics'] = function() end },
 })
+---- Typst
+vim.lsp.config('tinymist', {})
 
 -- Enable all of the above servers
 vim.lsp.enable({
@@ -98,6 +100,7 @@ vim.lsp.enable({
     'marksman',
     'basedpyright',
     'texlab',
+    'tinymist',
 })
 
 -- Autocmds

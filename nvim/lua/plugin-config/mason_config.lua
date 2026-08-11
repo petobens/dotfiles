@@ -8,6 +8,7 @@ require('mason-tool-installer').setup({
         'lua-language-server',
         'marksman',
         'texlab',
+        'tinymist',
     },
 })
 
