@@ -18,6 +18,9 @@ conform.formatters.taplo = {
         '-',
     },
 }
+conform.formatters.typstyle = {
+    prepend_args = { '--line-width', '80', '--wrap-text=fill' },
+}
 
 -- Setup
 conform.setup({
