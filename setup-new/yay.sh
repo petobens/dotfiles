@@ -70,6 +70,8 @@ $yay_cmd python-pip
 $yay_cmd uv
 $yay_cmd rustup
 $yay_cmd jdk-openjdk
+$yay_cmd typst
+$yay_cmd typstyle
 if [[ "$install_node" = true ]]; then
     $yay_cmd nodejs
     $yay_cmd npm

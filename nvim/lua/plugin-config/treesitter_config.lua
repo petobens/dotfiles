@@ -20,6 +20,7 @@ require('nvim-treesitter').install({
     'rst',
     'sql',
     'toml',
+    'typst',
     'vim',
     'vimdoc',
     'yaml',
