@@ -4,6 +4,9 @@ vim.opt_local.softtabstop = 2
 vim.opt_local.spell = true
 vim.opt_local.textwidth = 80
 vim.opt_local.formatexpr = ''
+vim.opt_local.foldmethod = 'expr'
+vim.opt_local.foldexpr = vim.treesitter.foldexpr
+vim.opt_local.foldtext = ''
 
 local function document_paths()
     local source = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
@@ -74,6 +77,19 @@ local function view_pdf()
     vim.system({ 'zathura', '--fork', pdf })
 end
 
+local function continue_list()
+    local row = vim.api.nvim_win_get_cursor(0)[1]
+    local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ''
+    local indent, marker = line:match('^(%s*)([-+]%s+)')
+    if not marker then
+        return '<CR>'
+    end
+    if line == indent .. marker then
+        return '<C-U>'
+    end
+    return '<CR>' .. marker
+end
+
 vim.keymap.set(
     { 'n', 'i' },
     '<F7>',
@@ -81,3 +97,9 @@ vim.keymap.set(
     { buf = 0, desc = 'Compile Typst document' }
 )
 vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
+vim.keymap.set(
+    'i',
+    '<CR>',
+    continue_list,
+    { expr = true, buf = 0, desc = 'Continue Typst list' }
+)

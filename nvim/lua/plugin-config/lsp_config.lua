@@ -91,7 +91,11 @@ vim.lsp.config('texlab', {
     handlers = { ['textDocument/publishDiagnostics'] = function() end },
 })
 ---- Typst
-vim.lsp.config('tinymist', {})
+vim.lsp.config('tinymist', {
+    settings = {
+        lint = { enabled = true, when = 'onSave' },
+    },
+})
 
 -- Enable all of the above servers
 vim.lsp.enable({
