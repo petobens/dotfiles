@@ -182,4 +182,6 @@ shfmt
 stylua
 taplo-cli
 tree-sitter-cli
+typst
+typstyle
 uv
