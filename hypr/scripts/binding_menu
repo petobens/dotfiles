@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Descriptions come from bindings.lua; modmask is a bitfield of held modifiers
+hyprctl binds -j |
+    jq -r '
+        map(select(.has_description))
+        | map(
+            . as $bind
+            | [[64, "Super"], [4, "Ctrl"], [8, "Alt"], [1, "Shift"]]
+            | map(select(($bind.modmask / .[0] | floor) % 2 == 1) | .[1])
+            | (. + [$bind.key] | join(" + ")) as $keys
+            | "\($bind.description)\t\($keys)"
+        )
+        | sort[]
+    ' |
+    column -t -s $'\t' -o '  ' |
+    rofi -dmenu -i -p bindings > /dev/null

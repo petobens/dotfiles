@@ -259,6 +259,7 @@ exec(super .. ' + S', 'rofi -show drun', 'Application launcher')
 launch(super .. ' + A', 'menu', 'Curated application launcher')
 exec(super .. ' + Z', scripts .. 'password_menu', 'Password menu')
 exec(super .. ' + V', scripts .. 'clipboard_menu', 'Clipboard history')
+exec(super .. ' + slash', scripts .. 'binding_menu', 'Keybinding cheatsheet')
 exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
 exec(super .. ' + X', 'ghostty --class=terminal', 'Terminal')
 

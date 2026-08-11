@@ -1,6 +1,7 @@
 # Desktop
 apple_cursor
 apple_hyprcursor
+hyprprop-git
 
 # Applications
 brave-bin

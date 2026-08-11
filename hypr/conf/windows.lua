@@ -53,6 +53,11 @@ window_rule('^(org.pwmt.zathura|imv)$', {
 })
 window_rule('^xdg-desktop-portal-gtk$', { size = rectangle_size, center = true })
 
+-- Keep the session awake while call apps are focused or mpv is fullscreen
+window_rule('^(zoom|brave-meet|brave-teams)$', { idle_inhibit = 'focus' })
+window_rule('^mpv$', { idle_inhibit = 'fullscreen' })
+
 -- Layers
 hl.layer_rule({ match = { namespace = 'waybar' }, blur = true, ignore_alpha = 0.2 })
-hl.layer_rule({ match = { namespace = 'rofi' }, blur = true })
+-- Rofi lists passwords and clipboard history, so hide it from screen shares
+hl.layer_rule({ match = { namespace = 'rofi' }, blur = true, no_screen_share = true })
