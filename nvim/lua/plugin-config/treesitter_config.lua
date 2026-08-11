@@ -52,7 +52,7 @@ vim.api.nvim_create_autocmd(
     {
         desc = 'Refresh folds for filetypes where we use treesitter foldexpr',
         group = vim.api.nvim_create_augroup('treesitter_folds', { clear = true }),
-        pattern = { '*.md', '*.py' },
+        pattern = { '*.md', '*.py', '*.typ' },
         callback = function()
             vim.schedule(function()
                 if not require('luasnip').choice_active() then
