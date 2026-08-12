@@ -131,6 +131,12 @@ if type "nvim" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/nvim" "$HOME/.config/nvim"
     echo Created .config/nvim folder symlink
 fi
+if type "typst" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.local/share/typst/packages"
+    $ln_cmd -fTs "$dotfiles_dir/typst/packages/local" \
+        "$HOME/.local/share/typst/packages/local"
+    echo Created local Typst packages symlink
+fi
 if type "code" > /dev/null 2>&1; then
     mkdir -p "$HOME/.config/Code/User"
     for f in settings.json keybindings.json extensions.txt; do

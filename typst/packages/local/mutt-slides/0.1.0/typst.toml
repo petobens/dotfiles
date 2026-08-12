@@ -1,0 +1,11 @@
+[package]
+name = "mutt-slides"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["Muttdata"]
+description = "Muttdata proposal and presentation slides."
+compiler = "0.15.0"
+
+[template]
+path = "template"
+entrypoint = "main.typ"
