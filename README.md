@@ -121,6 +121,7 @@ SSH checks. Run `system_report --help` for all options.
 - `nvim/`: Neovim configuration
 - `setup/`: package lists, installation, sync and symlink scripts, udev rules,
   and the disposable QEMU test machine
+- `typst/`: reusable local document packages and templates
 
 ## Sync from master
 
