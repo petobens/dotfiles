@@ -76,7 +76,7 @@ for_window [class="^(Peek|Pavucontrol|Localsend)$"] $nexec $resize Center
 for_window [title="^(QuickTerm|numbers|ProcKiller|About Arch|bluetooth-fzf|Zoom - Free Account)$"] $nexec $resize Center
 for_window [class="^(cmst)$"] $nexec $resize Rectangle
 for_window [title="^(htop|Trash Can|OneDrive|Open Files|ranger|Downloads|webcam|docker-info)$"] $nexec $resize Rectangle
-for_window [class="^(feh|Matplotlib|Zathura|vimiv)$"] $nexec $resize Right
+for_window [class="^(feh|Matplotlib|org.pwmt.zathura|vimiv)$"] $nexec $resize Right
 for_window [window_type="splash"] floating enable, move position center
 for_window [window_type="dialog" class="^(?!gtk_qt_dialog).+" window_role="^(?!GtkFileChooserDialog).+"] $nexec $reize Dialog
 for_window [window_role="^(GtkFileChooserDialog)$"] $nexec $resize Rectangle

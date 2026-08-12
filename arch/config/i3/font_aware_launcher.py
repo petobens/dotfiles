@@ -247,7 +247,10 @@ APPS = {
     },
     'vimiv': {'type': 'qt', 'args': {'class_name': 'vimiv', 'cycle': True}},
     'vscode': {'type': 'electron', 'args': {'class_name': 'Code', 'event_delay': 30}},
-    'zathura': {'type': 'gtk', 'args': {'class_name': 'Zathura', 'cycle': True}},
+    'zathura': {
+        'type': 'gtk',
+        'args': {'class_name': 'org.pwmt.zathura', 'cycle': True},
+    },
     'zoom': {
         'type': 'rol_custom',
         'args': {'class_name': 'Zoom', 'cmd': 'zoom', 'event_delay': 30},
