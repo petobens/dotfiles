@@ -14,6 +14,52 @@
 #let border-gray = rgb("#D9E0ED")
 #let muted = rgb("#53627A")
 
+// Localization
+#let localized(spanish, english) = context {
+  if text.lang == "es" { spanish } else { english }
+}
+
+#let localized-title(title, spanish, english) = {
+  if title == auto { localized(spanish, english) } else { title }
+}
+
+#let localized-date(date, language) = {
+  if type(date) != datetime { date } else {
+    let months = if language == "es" {
+      (
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+      )
+    } else {
+      (
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      )
+    }
+    [#months.at(date.month() - 1) #date.year()]
+  }
+}
+
 // Slide chrome
 #let slide-numbering(n, parentheses: false) = context {
   let section = query(heading.where(level: 1).before(here())).len()
@@ -164,7 +210,7 @@
   title: [],
   subtitle: [],
   eyebrow: [MUTTDATA],
-  date: datetime.today().display(),
+  date: datetime.today(),
 ) = title-slide[
   #block(
     width: 100%,
@@ -259,9 +305,12 @@
   subtitle: [],
   author: [Pedro Ferrari],
   eyebrow: [MUTTDATA],
-  date: datetime.today().display(),
+  date: datetime.today(),
+  language: "es",
   body,
 ) = {
+  let date = localized-date(date, language)
+
   show: simple-theme.with(
     aspect-ratio: "16-9",
     header: slide-title,
@@ -293,7 +342,7 @@
     ),
   )
 
-  set text(font: "Arial", fill: mutt-navy, size: 14pt)
+  set text(font: "Arial", fill: mutt-navy, size: 14pt, lang: language)
   show raw: set text(font: "DejaVu Sans Mono")
   show raw.where(block: true): block.with(
     fill: soft-gray,
@@ -337,7 +386,7 @@
 #let theorem(body, note: none, title: auto, numbered: true) = figure(
   body,
   kind: "theorem",
-  supplement: if title == auto { [Theorem] } else { title },
+  supplement: localized-title(title, [Teorema], [Theorem]),
   numbering: if numbered { n => slide-numbering(n) } else { none },
   caption: note,
   outlined: false,
@@ -346,7 +395,7 @@
 #let solution(body, note: none, title: auto) = theorem(
   body,
   note: note,
-  title: title,
+  title: localized-title(title, [Solución], [Solution]),
   numbered: false,
 )
 

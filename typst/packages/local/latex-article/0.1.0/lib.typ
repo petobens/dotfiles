@@ -12,6 +12,43 @@
   if title == auto { localized(spanish, english) } else { title }
 }
 
+#let localized-date(date, language) = {
+  if type(date) != datetime { date } else {
+    let months = if language == "es" {
+      (
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+      )
+    } else {
+      (
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      )
+    }
+    [#months.at(date.month() - 1) #date.year()]
+  }
+}
+
 #let article-numbering(n, parentheses: false) = context {
   let numbers = counter(heading).get()
   let appendix = appendix-mode.get()
@@ -102,7 +139,7 @@
 )[
   #set text(size: 9pt)
   #set par(first-line-indent: 0pt)
-  #align(center)[*Abstract*]
+  #align(center)[*#if language == "es" { [Resumen] } else { [Abstract] }*]
   #v(0.5em)
   #abstract
   #if keywords != none {
@@ -323,7 +360,7 @@
   title: [],
   author: "Pedro Ferrari",
   author-note: none,
-  date: datetime.today().display(),
+  date: datetime.today(),
   metadata-date: auto,
   short-title: none,
   language: "es",
@@ -416,7 +453,7 @@
   show footnote.entry: set text(size: 8pt)
   set outline(indent: 1.5em)
 
-  article-title(title, author, author-note, date)
+  article-title(title, author, author-note, localized-date(date, language))
   if author-note != none { counter(footnote).update(0) }
   if abstract != none {
     article-abstract(

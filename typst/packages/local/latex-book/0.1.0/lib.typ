@@ -1,4 +1,4 @@
-#import "@local/latex-article:0.1.0": article-table, navy
+#import "@local/latex-article:0.1.0": article-table, localized-date, navy
 
 // Numbering and localization
 #let book-table = article-table
@@ -356,7 +356,7 @@
   title: [],
   subtitle: none,
   author: "Pedro Ferrari",
-  date: datetime.today().display(),
+  date: datetime.today(),
   metadata-date: auto,
   language: "es",
   institution: none,
@@ -470,7 +470,15 @@
   show outline.entry: book-outline-entry
 
   if half-title { half-title-page(title) }
-  title-page(title, subtitle, author, date, institution, department, logo)
+  title-page(
+    title,
+    subtitle,
+    author,
+    localized-date(date, language),
+    institution,
+    department,
+    logo,
+  )
   if copyright != none { copyright-page(copyright) }
   if dedication != none { dedication-page(dedication) }
 

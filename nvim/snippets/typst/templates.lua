@@ -1,7 +1,9 @@
 local ls = require('luasnip')
 
+local c = ls.choice_node
 local i = ls.insert_node
 local s = ls.snippet
+local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
@@ -15,11 +17,12 @@ return {
 #import "@local/mutt-slides:0.1.0": *
 
 #show: mutt-slides.with(
+  language: "<>",
   title: [<>],
   subtitle: [<>],
   author: [<>],
   eyebrow: [<>],
-  date: [<>],
+  date: datetime.today(),
 )
 
 = <>
@@ -29,11 +32,11 @@ return {
 <>
             ]],
             {
-                i(1, 'Presentation title'),
-                i(2, 'Subtitle'),
-                i(3, 'Pedro Ferrari'),
-                i(4, 'MUTTDATA × CLIENT'),
-                i(5, 'Date'),
+                c(1, { t('es'), t('en') }),
+                i(2, 'Presentation title'),
+                i(3, 'Subtitle'),
+                i(4, 'Pedro Ferrari'),
+                i(5, 'MUTTDATA × CLIENT'),
                 i(6, 'Section'),
                 i(7, 'Slide title'),
                 i(0),
@@ -48,12 +51,12 @@ return {
 #import "@local/latex-article:0.1.0": *
 
 #show: latex-article.with(
+  language: "<>",
   title: [<>],
   author: "<>",
   author-note: [<>],
-  date: [<>],
+  date: datetime.today(),
   short-title: [<>],
-  language: "<>",
   abstract: [<>],
   keywords: "<>",
   jel: [<>],
@@ -65,17 +68,16 @@ return {
 <>
             ]],
             {
-                i(1, 'Article title'),
-                i(2, 'Pedro Ferrari'),
-                i(3, 'Author affiliation or note'),
-                i(4, 'Date'),
+                c(1, { t('es'), t('en') }),
+                i(2, 'Article title'),
+                i(3, 'Pedro Ferrari'),
+                i(4, 'Author affiliation or note'),
                 i(5, 'Short article title'),
-                i(6, 'es'),
-                i(7, 'Abstract'),
-                i(8, 'Keywords'),
-                i(9, 'JEL codes'),
-                i(10, 'false'),
-                i(11, 'Introduction'),
+                i(6, 'Abstract'),
+                i(7, 'Keywords'),
+                i(8, 'JEL codes'),
+                i(9, 'false'),
+                i(10, 'Introduction'),
                 i(0),
             }
         ),
@@ -88,11 +90,11 @@ return {
 #import "@local/latex-book:0.1.0": *
 
 #show: latex-book.with(
+  language: "<>",
   title: [<>],
   subtitle: [<>],
   author: "<>",
-  date: [<>],
-  language: "<>",
+  date: datetime.today(),
   institution: [<>],
   department: [<>],
   copyright: [<>],
@@ -107,18 +109,17 @@ return {
 <>
             ]],
             {
-                i(1, 'Book title'),
-                i(2, 'Subtitle'),
-                i(3, 'Pedro Ferrari'),
-                i(4, 'Date'),
-                i(5, 'en'),
-                i(6, 'Institution'),
-                i(7, 'Department'),
-                i(8, '© Pedro Ferrari. All rights reserved.'),
-                i(9, 'Dedication'),
-                i(10, 'true'),
-                i(11, 'First chapter'),
-                i(12, 'First section'),
+                c(1, { t('es'), t('en') }),
+                i(2, 'Book title'),
+                i(3, 'Subtitle'),
+                i(4, 'Pedro Ferrari'),
+                i(5, 'Institution'),
+                i(6, 'Department'),
+                i(7, '© Pedro Ferrari. All rights reserved.'),
+                i(8, 'Dedication'),
+                i(9, 'true'),
+                i(10, 'First chapter'),
+                i(11, 'First section'),
                 i(0),
             }
         ),

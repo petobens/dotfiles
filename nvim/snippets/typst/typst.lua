@@ -41,7 +41,7 @@ $ <> $ <<<>>>
             [[
 #bibliography(
   "<>",
-  title: [<>],
+  title: localized([Referencias], [References]),
   style: "<>",
 )
 
@@ -49,8 +49,7 @@ $ <> $ <<<>>>
             ]],
             {
                 i(1, 'references.bib'),
-                i(2, 'Referencias'),
-                i(3, 'harvard-cite-them-right'),
+                i(2, 'harvard-cite-them-right'),
                 i(0),
             }
         ),
