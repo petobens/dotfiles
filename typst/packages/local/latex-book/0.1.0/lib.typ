@@ -142,7 +142,7 @@
         [References for Chapter #chapter-number]
       }
       show bibliography: set heading(offset: 1, outlined: true)
-      show bibliography: set text(size: 8pt)
+      show bibliography: set text(size: 9pt)
       bibliography(
         sources,
         title: chapter-title,
@@ -267,7 +267,7 @@
   #strong[
     #it.supplement
     #if it.numbering != none { [ #context it.counter.display(it.numbering)] }
-    #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }.
+    #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }
   ] #it.body
 ])
 

@@ -1,3 +1,4 @@
+-- Options
 vim.opt_local.shiftwidth = 2
 vim.opt_local.tabstop = 2
 vim.opt_local.softtabstop = 2
@@ -8,6 +9,7 @@ vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = vim.treesitter.foldexpr
 vim.opt_local.foldtext = ''
 
+-- Paths
 local function document_paths()
     local source = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
     local base = source:match('(.+)%.[^/]+$')
@@ -31,6 +33,7 @@ local function project_root(source)
     return marker and vim.fs.dirname(marker) or vim.fs.dirname(source)
 end
 
+-- Compilation
 local function clear_typst_errors()
     if vim.fn.getqflist({ title = 1 }).title == 'Typst' then
         vim.fn.setqflist({}, 'r')
@@ -104,6 +107,7 @@ local function compile_typst(notify_success)
     )
 end
 
+-- PDF viewer
 local function view_pdf()
     local _, pdf = document_paths()
     if not pdf or not vim.uv.fs_stat(pdf) then
@@ -113,6 +117,7 @@ local function view_pdf()
     vim.system({ 'zathura', '--fork', pdf })
 end
 
+-- Editing
 local function continue_list()
     local row = vim.api.nvim_win_get_cursor(0)[1]
     local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ''
@@ -126,6 +131,7 @@ local function continue_list()
     return '<CR>' .. marker
 end
 
+-- Mappings and autocmds
 vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     compile_typst(true)
 end, { buf = 0, desc = 'Compile Typst document' })

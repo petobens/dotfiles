@@ -42,15 +42,33 @@
   let page-number = counter(page).get().first()
   let running-title = if calc.even(page-number) { author } else { short-title }
   if page-number > 1 and running-title != none and running-title != [] {
-    align(center, text(size: 8pt, upper(running-title)))
+    if calc.even(page-number) {
+      grid(
+        columns: (1fr, auto, 1fr),
+        align: (left, center, right),
+        text(size: 9pt, numbering("1", page-number)),
+        text(size: 10pt, upper(running-title)),
+        [],
+      )
+    } else {
+      grid(
+        columns: (1fr, auto, 1fr),
+        align: (left, center, right),
+        [],
+        text(size: 10pt, upper(running-title)),
+        text(size: 9pt, numbering("1", page-number)),
+      )
+    }
   }
 }
 
 #let article-footer = context {
-  align(center, text(size: 9pt, counter(page).display("1")))
+  if counter(page).get().first() == 1 {
+    align(center, text(size: 9pt, counter(page).display("1")))
+  }
 }
 
-#let article-title(title, author, date) = block(
+#let article-title(title, author, author-note, date) = block(
   width: 100%,
   breakable: false,
   below: 3em,
@@ -60,7 +78,12 @@
   #align(center)[
     #text(size: 20.74pt, weight: "bold")[#title]
     #v(1.65em)
-    #text(size: 14.4pt)[#smallcaps(author)]
+    #text(size: 14.4pt)[
+      #smallcaps(author)
+      #if author-note != none {
+        footnote(author-note, numbering: _ => [†])
+      }
+    ]
     #v(1em)
     #date
   ]
@@ -74,7 +97,7 @@
 ) = block(
   width: 100%,
   above: 0pt,
-  below: 2em,
+  below: 3.5em,
   inset: (x: 1.5em),
 )[
   #set text(size: 9pt)
@@ -84,6 +107,7 @@
   #abstract
   #if keywords != none {
     parbreak()
+    v(0.45em)
     strong(if language == "es" { [Palabras Clave: ] } else { [Keywords: ] })
     emph(keywords)
   }
@@ -182,7 +206,7 @@
   #strong[
     #it.supplement
     #if it.numbering != none { [ #context it.counter.display(it.numbering)] }
-    #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }.
+    #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }
   ] #it.body
 ])
 
@@ -298,6 +322,7 @@
 #let latex-article(
   title: [],
   author: "Pedro Ferrari",
+  author-note: none,
   date: datetime.today().display(),
   metadata-date: auto,
   short-title: none,
@@ -321,7 +346,7 @@
     numbering: "1",
     margin: (top: 3.7cm, bottom: 5cm, inside: 3.5cm, outside: 3.5cm),
     header: article-header(short-title, author),
-    header-ascent: 45%,
+    header-ascent: 25%,
     footer: article-footer,
     footer-descent: 30%,
   )
@@ -336,6 +361,7 @@
   show link: set text(fill: navy)
   show ref: set text(fill: navy)
   show cite: set text(fill: navy)
+  show bibliography: set text(size: 9pt)
   set par(
     leading: 0.55em,
     spacing: 0.55em,
@@ -390,7 +416,8 @@
   show footnote.entry: set text(size: 8pt)
   set outline(indent: 1.5em)
 
-  article-title(title, author, date)
+  article-title(title, author, author-note, date)
+  if author-note != none { counter(footnote).update(0) }
   if abstract != none {
     article-abstract(
       abstract,
