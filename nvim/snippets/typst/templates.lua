@@ -31,7 +31,7 @@ return {
             {
                 i(1, 'Presentation title'),
                 i(2, 'Subtitle'),
-                i(3, 'Muttdata'),
+                i(3, 'Pedro Ferrari'),
                 i(4, 'MUTTDATA × CLIENT'),
                 i(5, 'Date'),
                 i(6, 'Section'),
@@ -41,7 +41,6 @@ return {
         ),
         { condition = line_begin }
     ),
-    -- Standalone outputs
     s(
         { trig = 'art', dscr = 'LaTeX-style article' },
         fmta(
@@ -51,6 +50,7 @@ return {
 #show: latex-article.with(
   title: [<>],
   author: "<>",
+  author-note: [<>],
   date: [<>],
   short-title: [<>],
   language: "<>",
@@ -66,20 +66,65 @@ return {
             ]],
             {
                 i(1, 'Article title'),
-                i(2, 'Author'),
-                i(3, 'Date'),
-                i(4, 'Short article title'),
-                i(5, 'es'),
-                i(6, 'Abstract'),
-                i(7, 'Keywords'),
-                i(8, 'JEL codes'),
-                i(9, 'false'),
-                i(10, 'Introduction'),
+                i(2, 'Pedro Ferrari'),
+                i(3, 'Author affiliation or note'),
+                i(4, 'Date'),
+                i(5, 'Short article title'),
+                i(6, 'es'),
+                i(7, 'Abstract'),
+                i(8, 'Keywords'),
+                i(9, 'JEL codes'),
+                i(10, 'false'),
+                i(11, 'Introduction'),
                 i(0),
             }
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'bok', dscr = 'LaTeX-style book' },
+        fmta(
+            [[
+#import "@local/latex-book:0.1.0": *
+
+#show: latex-book.with(
+  title: [<>],
+  subtitle: [<>],
+  author: "<>",
+  date: [<>],
+  language: "<>",
+  institution: [<>],
+  department: [<>],
+  copyright: [<>],
+  dedication: [<>],
+  toc: <>,
+)
+
+= <>
+
+== <>
+
+<>
+            ]],
+            {
+                i(1, 'Book title'),
+                i(2, 'Subtitle'),
+                i(3, 'Pedro Ferrari'),
+                i(4, 'Date'),
+                i(5, 'en'),
+                i(6, 'Institution'),
+                i(7, 'Department'),
+                i(8, '© Pedro Ferrari. All rights reserved.'),
+                i(9, 'Dedication'),
+                i(10, 'true'),
+                i(11, 'First chapter'),
+                i(12, 'First section'),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    -- Standalone outputs
     s(
         { trig = 'sfig', dscr = 'Standalone CeTZ figure' },
         fmta(

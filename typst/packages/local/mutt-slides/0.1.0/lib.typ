@@ -1,6 +1,7 @@
 #import "@preview/touying:0.7.4": *
 #import themes.simple: *
 
+// Palette
 #let mutt-blue = rgb("#0045FB")
 #let mutt-navy = rgb("#001237")
 #let mutt-cyan = rgb("#00ECFF")
@@ -13,6 +14,7 @@
 #let border-gray = rgb("#D9E0ED")
 #let muted = rgb("#53627A")
 
+// Slide chrome
 #let slide-numbering(n, parentheses: false) = context {
   let section = query(heading.where(level: 1).before(here())).len()
   numbering(if parentheses { "(1.1)" } else { "1.1" }, section, n)
@@ -98,6 +100,7 @@
   bodies.pos().sum(default: none),
 )
 
+// Agenda and title slides
 #let agenda-entry(cover: false, ..args, it) = {
   let sections = query(heading.where(level: 1, outlined: true))
   let number = (
@@ -250,10 +253,11 @@
   ]
 ]
 
+// Document template
 #let mutt-slides(
   title: [],
   subtitle: [],
-  author: [Muttdata],
+  author: [Pedro Ferrari],
   eyebrow: [MUTTDATA],
   date: datetime.today().display(),
   body,
@@ -329,6 +333,7 @@
   body
 }
 
+// Content components
 #let theorem(body, note: none, title: auto, numbered: true) = figure(
   body,
   kind: "theorem",

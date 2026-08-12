@@ -1,5 +1,6 @@
 #import "@preview/subpar:0.2.2"
 
+// Numbering and localization
 #let navy = rgb("#000080")
 #let appendix-mode = state("latex-article-appendix", false)
 
@@ -36,19 +37,38 @@
   counter(figure.where(kind: "theorem")).update(0)
 }
 
+// Page furniture and front matter
 #let article-header(short-title, author) = context {
   let page-number = counter(page).get().first()
   let running-title = if calc.even(page-number) { author } else { short-title }
   if page-number > 1 and running-title != none and running-title != [] {
-    align(center, text(size: 8pt, upper(running-title)))
+    if calc.even(page-number) {
+      grid(
+        columns: (1fr, auto, 1fr),
+        align: (left, center, right),
+        text(size: 9pt, numbering("1", page-number)),
+        text(size: 10pt, upper(running-title)),
+        [],
+      )
+    } else {
+      grid(
+        columns: (1fr, auto, 1fr),
+        align: (left, center, right),
+        [],
+        text(size: 10pt, upper(running-title)),
+        text(size: 9pt, numbering("1", page-number)),
+      )
+    }
   }
 }
 
 #let article-footer = context {
-  align(center, text(size: 9pt, counter(page).display("1")))
+  if counter(page).get().first() == 1 {
+    align(center, text(size: 9pt, counter(page).display("1")))
+  }
 }
 
-#let article-title(title, author, date) = block(
+#let article-title(title, author, author-note, date) = block(
   width: 100%,
   breakable: false,
   below: 3em,
@@ -58,7 +78,12 @@
   #align(center)[
     #text(size: 20.74pt, weight: "bold")[#title]
     #v(1.65em)
-    #text(size: 14.4pt)[#smallcaps(author)]
+    #text(size: 14.4pt)[
+      #smallcaps(author)
+      #if author-note != none {
+        footnote(author-note, numbering: _ => [†])
+      }
+    ]
     #v(1em)
     #date
   ]
@@ -72,7 +97,7 @@
 ) = block(
   width: 100%,
   above: 0pt,
-  below: 2em,
+  below: 3.5em,
   inset: (x: 1.5em),
 )[
   #set text(size: 9pt)
@@ -82,6 +107,7 @@
   #abstract
   #if keywords != none {
     parbreak()
+    v(0.45em)
     strong(if language == "es" { [Palabras Clave: ] } else { [Keywords: ] })
     emph(keywords)
   }
@@ -96,6 +122,7 @@
   }
 ]
 
+// Tables and subfigures
 #let article-table(columns, header, rows, align: auto) = table(
   columns: columns,
   align: align,
@@ -157,6 +184,7 @@
   )
 }
 
+// Theorem environments
 #let statement(
   supplement,
   body,
@@ -164,10 +192,7 @@
   italic: false,
   numbered: true,
 ) = figure(
-  block(width: 100%)[
-    #set par(first-line-indent: 0pt)
-    #align(left, if italic { emph(body) } else { body })
-  ],
+  if italic { emph(body) } else { body },
   kind: "theorem",
   supplement: supplement,
   numbering: if numbered { n => article-numbering(n) } else { none },
@@ -175,6 +200,15 @@
   outlined: false,
   gap: 0.35em,
 )
+
+#let show-statement(it) = align(left, block(width: 100%)[
+  #set par(first-line-indent: 0pt)
+  #strong[
+    #it.supplement
+    #if it.numbering != none { [ #context it.counter.display(it.numbering)] }
+    #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }
+  ] #it.body
+])
 
 #let theorem(body, note: none, title: auto, numbered: true) = statement(
   localized-title(title, [Teorema], [Theorem]),
@@ -262,6 +296,15 @@
   #emph(localized-title(title, [Demostración], [Proof])). #body #h(1fr) $square$
 ]
 
+// Sections and appendices
+#let heading-title(it) = context {
+  if it.numbering != none {
+    numbering(it.numbering, ..counter(heading).at(it.location()))
+    h(0.8em)
+  }
+  it.body
+}
+
 #let appendix(title: auto, body) = {
   pagebreak(weak: true)
   appendix-mode.update(true)
@@ -275,9 +318,11 @@
   body
 }
 
+// Document template
 #let latex-article(
   title: [],
-  author: "",
+  author: "Pedro Ferrari",
+  author-note: none,
   date: datetime.today().display(),
   metadata-date: auto,
   short-title: none,
@@ -301,7 +346,7 @@
     numbering: "1",
     margin: (top: 3.7cm, bottom: 5cm, inside: 3.5cm, outside: 3.5cm),
     header: article-header(short-title, author),
-    header-ascent: 45%,
+    header-ascent: 25%,
     footer: article-footer,
     footer-descent: 30%,
   )
@@ -316,6 +361,7 @@
   show link: set text(fill: navy)
   show ref: set text(fill: navy)
   show cite: set text(fill: navy)
+  show bibliography: set text(size: 9pt)
   set par(
     leading: 0.55em,
     spacing: 0.55em,
@@ -331,27 +377,16 @@
   )
   set figure(numbering: n => article-numbering(n), gap: 5pt)
   show figure.where(kind: table): set figure.caption(position: top)
-  show figure.where(kind: "theorem"): set figure.caption(position: top)
+  show figure.where(kind: "theorem"): show-statement
   show figure.caption: it => {
     set text(size: 9pt)
-    if it.kind == "theorem" {
-      let caption = [#it.supplement]
-      if it.numbering != none {
-        caption += [ #context it.counter.display(it.numbering)]
-      }
-      if it.body != [] {
-        caption += [ (#it.body)]
-      }
-      align(left)[
-        #strong(caption + [.])
-      ]
-    } else if it.kind == table {
+    if it.kind == table {
       align(center)[
         #strong[#it.supplement #context it.counter.display(it.numbering)]
         #linebreak()
         #it.body
       ]
-    } else {
+    } else if it.kind != "theorem" {
       align(center)[
         #strong[#it.supplement #context it.counter.display(it.numbering)]
         #h(1em)
@@ -363,25 +398,26 @@
     reset-numbering()
     block(above: 1.5em, below: 1em)[
       #set text(size: 14.4pt, weight: "bold")
-      #it
+      #heading-title(it)
     ]
   }
   show heading.where(level: 2): it => {
     context if appendix-mode.get() { reset-numbering() }
     block(above: 1.4em, below: 0.65em)[
       #set text(size: 12pt, weight: "bold")
-      #it
+      #heading-title(it)
     ]
   }
   show heading.where(level: 3): it => block(above: 1.4em, below: 0.65em)[
     #set text(size: 10pt, weight: "bold")
-    #it
+    #heading-title(it)
   ]
   set footnote.entry(indent: 15pt)
   show footnote.entry: set text(size: 8pt)
   set outline(indent: 1.5em)
 
-  article-title(title, author, date)
+  article-title(title, author, author-note, date)
+  if author-note != none { counter(footnote).update(0) }
   if abstract != none {
     article-abstract(
       abstract,

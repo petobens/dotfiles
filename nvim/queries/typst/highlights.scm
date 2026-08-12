@@ -1,5 +1,9 @@
 ; extends
 
+((math
+  "$" @punctuation.delimiter.math)
+  (#set! priority 130))
+
 ((ref) @markup.link.reference.typst
   (#set! priority 120))
 
