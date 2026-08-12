@@ -44,7 +44,7 @@
   }
 }
 
-// Shared document styling
+// Colors and tables
 #let navy = rgb("#000080")
 
 #let latex-table(columns, header, rows, align: auto) = table(
@@ -59,6 +59,7 @@
   table.hline(stroke: 0.8pt),
 )
 
+// Numbering and captions
 #let reset-numbering() = {
   counter(math.equation).update(0)
   counter(figure.where(kind: image)).update(0)

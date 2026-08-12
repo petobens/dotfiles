@@ -237,6 +237,7 @@
   ]
 ]
 
+// Content components
 #let theorem-card(title, body) = block(
   width: 100%,
   fill: white,
@@ -254,90 +255,6 @@
   ]
 ]
 
-// Document template
-#let mutt-slides(
-  title: [],
-  subtitle: [],
-  author: [Pedro Ferrari],
-  eyebrow: [MUTTDATA],
-  date: datetime.today(),
-  language: "es",
-  body,
-) = {
-  let date = localized-date(date, language)
-
-  show: simple-theme.with(
-    aspect-ratio: "16-9",
-    header: slide-title,
-    header-right: section-chip,
-    footer: deck-footer,
-    footer-right: none,
-    subslide-preamble: none,
-    config-page(
-      margin: (top: 2.7em, bottom: 2.6em, left: 2.2em, right: 2.6em),
-      footer-descent: 0em,
-    ),
-    config-common(
-      new-section-slide-fn: section-divider,
-      default-composer: vertical-center,
-      reset-page-counter-to-slide-counter: false,
-    ),
-    config-colors(
-      primary: mutt-blue,
-      secondary: mutt-cyan,
-      tertiary: mutt-purple,
-      neutral-lightest: white,
-      neutral-darkest: mutt-navy,
-    ),
-    config-info(
-      title: title,
-      subtitle: subtitle,
-      author: author,
-      date: date,
-    ),
-  )
-
-  set text(font: "Arial", fill: mutt-navy, size: 14pt, lang: language)
-  show raw: set text(font: "DejaVu Sans Mono")
-  show raw.where(block: true): block.with(
-    fill: soft-gray,
-    stroke: 0.5pt + border-gray,
-    inset: 10pt,
-    radius: 4pt,
-  )
-  show strong: set text(fill: mutt-blue)
-  show emph: set text(fill: muted)
-  set list(indent: 17pt, body-indent: 8pt, spacing: 5pt)
-  set enum(indent: 19pt, body-indent: 8pt, spacing: 5pt)
-  set footnote.entry(separator: none)
-  show footnote.entry: it => move(dy: 21pt, it)
-  set table(stroke: 1pt + rgb("#CBD3E1"), inset: 7pt)
-  show table: it => align(center, it)
-  set math.equation(
-    numbering: n => slide-numbering(n, parentheses: true),
-    supplement: none,
-  )
-  show figure.where(kind: "theorem"): it => theorem-card(
-    [
-      #it.supplement
-      #if it.numbering != none {
-        [ #context it.counter.display(it.numbering)]
-      }
-      #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }
-    ],
-    it.body,
-  )
-
-  branded-title-slide(
-    title: title,
-    subtitle: subtitle,
-    eyebrow: eyebrow,
-    date: date,
-  )
-  body
-}
-
-// Content components
 #let theorem(body, note: none, title: auto, numbered: true) = figure(
   body,
   kind: "theorem",
@@ -427,3 +344,89 @@
 )[#align(center)[#body]]
 
 #let small(body) = text(size: 11.5pt, fill: muted, body)
+
+// Document template
+#let mutt-slides(
+  title: [],
+  subtitle: [],
+  author: [Pedro Ferrari],
+  eyebrow: [MUTTDATA],
+  date: datetime.today(),
+  language: "es",
+  body,
+) = {
+  let date = localized-date(date, language)
+
+  // Theme
+  show: simple-theme.with(
+    aspect-ratio: "16-9",
+    header: slide-title,
+    header-right: section-chip,
+    footer: deck-footer,
+    footer-right: none,
+    subslide-preamble: none,
+    config-page(
+      margin: (top: 2.7em, bottom: 2.6em, left: 2.2em, right: 2.6em),
+      footer-descent: 0em,
+    ),
+    config-common(
+      new-section-slide-fn: section-divider,
+      default-composer: vertical-center,
+      reset-page-counter-to-slide-counter: false,
+    ),
+    config-colors(
+      primary: mutt-blue,
+      secondary: mutt-cyan,
+      tertiary: mutt-purple,
+      neutral-lightest: white,
+      neutral-darkest: mutt-navy,
+    ),
+    config-info(
+      title: title,
+      subtitle: subtitle,
+      author: author,
+      date: date,
+    ),
+  )
+
+  // Content styling
+  set text(font: "Arial", fill: mutt-navy, size: 14pt, lang: language)
+  show raw: set text(font: "DejaVu Sans Mono")
+  show raw.where(block: true): block.with(
+    fill: soft-gray,
+    stroke: 0.5pt + border-gray,
+    inset: 10pt,
+    radius: 4pt,
+  )
+  show strong: set text(fill: mutt-blue)
+  show emph: set text(fill: muted)
+  set list(indent: 17pt, body-indent: 8pt, spacing: 5pt)
+  set enum(indent: 19pt, body-indent: 8pt, spacing: 5pt)
+  set footnote.entry(separator: none)
+  show footnote.entry: it => move(dy: 21pt, it)
+  set table(stroke: 1pt + rgb("#CBD3E1"), inset: 7pt)
+  show table: it => align(center, it)
+  set math.equation(
+    numbering: n => slide-numbering(n, parentheses: true),
+    supplement: none,
+  )
+  show figure.where(kind: "theorem"): it => theorem-card(
+    [
+      #it.supplement
+      #if it.numbering != none {
+        [ #context it.counter.display(it.numbering)]
+      }
+      #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }
+    ],
+    it.body,
+  )
+
+  // Title and slides
+  branded-title-slide(
+    title: title,
+    subtitle: subtitle,
+    eyebrow: eyebrow,
+    date: date,
+  )
+  body
+}

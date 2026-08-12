@@ -1,8 +1,6 @@
 #import "@local/template-utils:0.1.0": *
 
 // Numbering
-#let book-table = latex-table
-
 #let book-phase = state("latex-book-phase", "title")
 #let page-style-enabled = state("latex-book-page-style", true)
 #let main-page-reset = state("latex-book-main-page-reset", false)
@@ -230,6 +228,9 @@
   #pagebreak(to: "odd")
 ]
 
+// Tables
+#let book-table = latex-table
+
 // Theorem environments
 #let book-environments = statement-environments(n => book-numbering(n))
 #let statement = book-environments.statement
@@ -270,6 +271,7 @@
   preface-title: auto,
   body,
 ) = {
+  // Document metadata and page
   set document(title: title, author: author, date: metadata-date)
   set page(
     paper: "a4",
@@ -281,6 +283,8 @@
     footer: book-footer,
     footer-descent: 30%,
   )
+
+  // Typography
   set text(
     font: "New Computer Modern",
     size: 10pt,
@@ -299,6 +303,8 @@
     justify: true,
   )
   set block(spacing: 1.2em)
+
+  // Numbering and components
   set heading(numbering: "1.1.1")
   set math.equation(
     numbering: n => book-numbering(n, parentheses: true),
@@ -354,6 +360,7 @@
   set outline(indent: 1.5em)
   show outline.entry: book-outline-entry
 
+  // Front matter
   if half-title { half-title-page(title) }
   title-page(
     title,
@@ -381,6 +388,7 @@
     preface
   }
 
+  // Main matter
   pagebreak()
   book-phase.update("main")
   set page(numbering: "1")

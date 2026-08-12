@@ -197,6 +197,7 @@
   toc: false,
   body,
 ) = {
+  // Document metadata and page
   set document(
     title: title,
     author: author,
@@ -214,6 +215,8 @@
     footer: article-footer,
     footer-descent: 30%,
   )
+
+  // Typography
   set text(
     font: "New Computer Modern",
     size: 10pt,
@@ -233,6 +236,8 @@
     justify: true,
   )
   set block(spacing: 1.2em)
+
+  // Numbering and components
   set heading(numbering: "1.1")
   set math.equation(
     numbering: n => article-numbering(n, parentheses: true),
@@ -265,6 +270,7 @@
   show footnote.entry: set text(size: 8pt)
   set outline(indent: 1.5em)
 
+  // Front matter and content
   article-title(title, author, author-note, localized-date(date, language))
   if author-note != none { counter(footnote).update(0) }
   if abstract != none {
