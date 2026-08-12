@@ -344,6 +344,11 @@ local groups = {
     ['@table_brackets.toml'] = { fg = p.yellow },
     ['@punctuation.bracket.toml'] = { fg = p.fg },
 
+    -- Typst
+    ['@markup.link.label.typst'] = { fg = p.yellow },
+    ['@markup.link.reference.typst'] = { fg = p.purple },
+    ['@punctuation.bracket.typst'] = { fg = p.blue },
+
     -- vim & vimdoc
     ['@comment.note.vimdoc'] = { link = '@comment.note.comment' },
     ['@comment.warning.vimdoc'] = { link = 'WarningMsg' },

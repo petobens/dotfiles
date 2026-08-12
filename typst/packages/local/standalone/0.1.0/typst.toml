@@ -1,0 +1,11 @@
+[package]
+name = "standalone"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["Pedro"]
+description = "Content-sized standalone figures and tables."
+compiler = "0.15.0"
+
+[template]
+path = "template"
+entrypoint = "main.typ"

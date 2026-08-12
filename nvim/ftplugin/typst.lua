@@ -11,10 +11,34 @@ vim.opt_local.foldtext = ''
 local function document_paths()
     local source = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
     local base = source:match('(.+)%.[^/]+$')
-    return source, base and (base .. '.pdf') or nil
+    local output = vim.iter(vim.api.nvim_buf_get_lines(0, 0, 10, false))
+        :map(function(line)
+            return line:match('^//%s*output:%s*(.-)%s*$')
+        end)
+        :find(function(path)
+            return path ~= ''
+        end)
+    local pdf = output and vim.fs.joinpath(vim.fs.dirname(source), output)
+        or (base and (base .. '.pdf') or nil)
+    return source, pdf
 end
 
-local function compile_typst()
+local function project_root(source)
+    local marker = vim.fs.find({ '.typst-root', '.git' }, {
+        path = vim.fs.dirname(source),
+        upward = true,
+    })[1]
+    return marker and vim.fs.dirname(marker) or vim.fs.dirname(source)
+end
+
+local function clear_typst_errors()
+    if vim.fn.getqflist({ title = 1 }).title == 'Typst' then
+        vim.fn.setqflist({}, 'r')
+        vim.cmd.cclose()
+    end
+end
+
+local function compile_typst(notify_success)
     if vim.fn.executable('typst') == 0 then
         vim.notify('Typst executable not found', vim.log.levels.ERROR)
         return
@@ -26,14 +50,26 @@ local function compile_typst()
         return
     end
 
+    local root = project_root(source)
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     vim.system(
-        { 'typst', 'compile', '--diagnostic-format', 'short', source, pdf },
-        { cwd = vim.fs.dirname(source), text = true },
+        {
+            'typst',
+            'compile',
+            '--root',
+            root,
+            '--diagnostic-format',
+            'short',
+            source,
+            pdf,
+        },
+        { cwd = root, text = true },
         vim.schedule_wrap(function(result)
-            vim.cmd.cclose()
             if result.code == 0 then
-                vim.notify('Compiled ' .. vim.fs.basename(pdf), vim.log.levels.INFO)
+                clear_typst_errors()
+                if notify_success then
+                    vim.notify('Compiled ' .. vim.fs.basename(pdf), vim.log.levels.INFO)
+                end
                 return
             end
 
@@ -90,13 +126,17 @@ local function continue_list()
     return '<CR>' .. marker
 end
 
-vim.keymap.set(
-    { 'n', 'i' },
-    '<F7>',
-    compile_typst,
-    { buf = 0, desc = 'Compile Typst document' }
-)
+vim.keymap.set({ 'n', 'i' }, '<F7>', function()
+    compile_typst(true)
+end, { buf = 0, desc = 'Compile Typst document' })
 vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
+vim.api.nvim_create_autocmd('BufWritePost', {
+    buffer = 0,
+    desc = 'Compile Typst document',
+    callback = function()
+        compile_typst(false)
+    end,
+})
 vim.keymap.set(
     'i',
     '<CR>',
