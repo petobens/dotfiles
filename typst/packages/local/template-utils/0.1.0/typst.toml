@@ -1,0 +1,7 @@
+[package]
+name = "template-utils"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["Pedro Ferrari"]
+description = "Shared utilities for local document templates."
+compiler = "0.15.0"

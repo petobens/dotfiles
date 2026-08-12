@@ -1,5 +1,6 @@
 #import "@preview/touying:0.7.4": *
 #import themes.simple: *
+#import "@local/template-utils:0.1.0": *
 
 // Palette
 #let mutt-blue = rgb("#0045FB")
@@ -13,52 +14,6 @@
 #let chip-gray = rgb("#D9DEE7")
 #let border-gray = rgb("#D9E0ED")
 #let muted = rgb("#53627A")
-
-// Localization
-#let localized(spanish, english) = context {
-  if text.lang == "es" { spanish } else { english }
-}
-
-#let localized-title(title, spanish, english) = {
-  if title == auto { localized(spanish, english) } else { title }
-}
-
-#let localized-date(date, language) = {
-  if type(date) != datetime { date } else {
-    let months = if language == "es" {
-      (
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre",
-      )
-    } else {
-      (
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      )
-    }
-    [#months.at(date.month() - 1) #date.year()]
-  }
-}
 
 // Slide chrome
 #let slide-numbering(n, parentheses: false) = context {
