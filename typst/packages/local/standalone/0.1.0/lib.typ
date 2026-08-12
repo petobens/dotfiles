@@ -1,3 +1,4 @@
+// Content-sized figure and table documents
 #let standalone(
   body,
   width: auto,

@@ -1,5 +1,6 @@
 #import "@preview/subpar:0.2.2"
 
+// Numbering and localization
 #let navy = rgb("#000080")
 #let appendix-mode = state("latex-article-appendix", false)
 
@@ -36,6 +37,7 @@
   counter(figure.where(kind: "theorem")).update(0)
 }
 
+// Page furniture and front matter
 #let article-header(short-title, author) = context {
   let page-number = counter(page).get().first()
   let running-title = if calc.even(page-number) { author } else { short-title }
@@ -96,6 +98,7 @@
   }
 ]
 
+// Tables and subfigures
 #let article-table(columns, header, rows, align: auto) = table(
   columns: columns,
   align: align,
@@ -157,6 +160,7 @@
   )
 }
 
+// Theorem environments
 #let statement(
   supplement,
   body,
@@ -164,10 +168,7 @@
   italic: false,
   numbered: true,
 ) = figure(
-  block(width: 100%)[
-    #set par(first-line-indent: 0pt)
-    #align(left, if italic { emph(body) } else { body })
-  ],
+  if italic { emph(body) } else { body },
   kind: "theorem",
   supplement: supplement,
   numbering: if numbered { n => article-numbering(n) } else { none },
@@ -175,6 +176,15 @@
   outlined: false,
   gap: 0.35em,
 )
+
+#let show-statement(it) = align(left, block(width: 100%)[
+  #set par(first-line-indent: 0pt)
+  #strong[
+    #it.supplement
+    #if it.numbering != none { [ #context it.counter.display(it.numbering)] }
+    #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }.
+  ] #it.body
+])
 
 #let theorem(body, note: none, title: auto, numbered: true) = statement(
   localized-title(title, [Teorema], [Theorem]),
@@ -262,6 +272,15 @@
   #emph(localized-title(title, [Demostración], [Proof])). #body #h(1fr) $square$
 ]
 
+// Sections and appendices
+#let heading-title(it) = context {
+  if it.numbering != none {
+    numbering(it.numbering, ..counter(heading).at(it.location()))
+    h(0.8em)
+  }
+  it.body
+}
+
 #let appendix(title: auto, body) = {
   pagebreak(weak: true)
   appendix-mode.update(true)
@@ -275,9 +294,10 @@
   body
 }
 
+// Document template
 #let latex-article(
   title: [],
-  author: "",
+  author: "Pedro Ferrari",
   date: datetime.today().display(),
   metadata-date: auto,
   short-title: none,
@@ -331,27 +351,16 @@
   )
   set figure(numbering: n => article-numbering(n), gap: 5pt)
   show figure.where(kind: table): set figure.caption(position: top)
-  show figure.where(kind: "theorem"): set figure.caption(position: top)
+  show figure.where(kind: "theorem"): show-statement
   show figure.caption: it => {
     set text(size: 9pt)
-    if it.kind == "theorem" {
-      let caption = [#it.supplement]
-      if it.numbering != none {
-        caption += [ #context it.counter.display(it.numbering)]
-      }
-      if it.body != [] {
-        caption += [ (#it.body)]
-      }
-      align(left)[
-        #strong(caption + [.])
-      ]
-    } else if it.kind == table {
+    if it.kind == table {
       align(center)[
         #strong[#it.supplement #context it.counter.display(it.numbering)]
         #linebreak()
         #it.body
       ]
-    } else {
+    } else if it.kind != "theorem" {
       align(center)[
         #strong[#it.supplement #context it.counter.display(it.numbering)]
         #h(1em)
@@ -363,19 +372,19 @@
     reset-numbering()
     block(above: 1.5em, below: 1em)[
       #set text(size: 14.4pt, weight: "bold")
-      #it
+      #heading-title(it)
     ]
   }
   show heading.where(level: 2): it => {
     context if appendix-mode.get() { reset-numbering() }
     block(above: 1.4em, below: 0.65em)[
       #set text(size: 12pt, weight: "bold")
-      #it
+      #heading-title(it)
     ]
   }
   show heading.where(level: 3): it => block(above: 1.4em, below: 0.65em)[
     #set text(size: 10pt, weight: "bold")
-    #it
+    #heading-title(it)
   ]
   set footnote.entry(indent: 15pt)
   show footnote.entry: set text(size: 8pt)
