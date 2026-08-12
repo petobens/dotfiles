@@ -73,8 +73,10 @@ luasnip.filetype_extend('markdown_inline', { 'markdown' })
 vim.keymap.set({ 'i', 's' }, '<C-s>', function()
     if luasnip.expandable() then
         luasnip.expand({})
+    elseif luasnip.jumpable(1) then
+        luasnip.jump(1)
     end
-end, { desc = 'Expand snippet' })
+end, { desc = 'Expand snippet or jump to next field' })
 
 vim.keymap.set({ 'i', 's' }, '<C-j>', function()
     if luasnip.jumpable(1) then
@@ -96,7 +98,7 @@ end, { desc = 'Cycle through snippet choices' })
 
 vim.keymap.set('n', '<Leader>es', function()
     local ft = vim.bo.filetype
-    local special_fts = { tex = true, lua = true, markdown = true }
+    local special_fts = { tex = true, lua = true, markdown = true, typst = true }
     if special_fts[ft] then
         require('telescope.builtin').find_files({
             cwd = vim.fs.joinpath(snippets_dir, ft),

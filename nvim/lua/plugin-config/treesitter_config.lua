@@ -55,7 +55,7 @@ vim.api.nvim_create_autocmd(
         pattern = { '*.md', '*.py', '*.typ' },
         callback = function()
             vim.schedule(function()
-                if not require('luasnip').choice_active() then
+                if not require('luasnip').in_snippet() then
                     vim.cmd.normal({ args = { 'zx' }, bang = true })
                 end
             end)

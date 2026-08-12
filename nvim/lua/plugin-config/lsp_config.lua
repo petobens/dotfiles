@@ -92,6 +92,7 @@ vim.lsp.config('texlab', {
 })
 ---- Typst
 vim.lsp.config('tinymist', {
+    root_markers = { '.typst-root', '.git' },
     settings = {
         lint = { enabled = true, when = 'onSave' },
     },
