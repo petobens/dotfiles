@@ -1,6 +1,8 @@
 #import "@preview/touying:0.7.4": *
 #import themes.simple: *
-#import "@local/template-utils:0.1.0": *
+#import "@local/template-utils:0.1.0": (
+  localized, localized-date, localized-title,
+)
 
 // Palette
 #let mutt-blue = rgb("#0045FB")
@@ -31,39 +33,38 @@
   #align(right + horizon)[#circle(radius: 4.5pt, fill: mutt-blue)]
 ]
 
-#let slide-title(self) = move(
-  dy: 15pt,
-  box[
-    #toggle-icon
-    #h(8pt)
+#let section-chip(self) = block(
+  width: 138pt,
+  fill: chip-gray,
+  inset: (x: 7pt, y: 5pt),
+  radius: 6pt,
+  stroke: 0.9pt + border-gray.darken(8%),
+)[
+  #align(center)[
     #text(
+      size: 9pt,
+      weight: "bold",
+      fill: mutt-navy,
+      utils.display-current-heading(level: 1, depth: self.slide-level),
+    )
+  ]
+]
+
+#let slide-title(self) = move(dy: 15pt, block(width: 100%)[
+  #place(top + right, dy: 41pt, section-chip(self))
+  #grid(
+    columns: (auto, 1fr),
+    column-gutter: 8pt,
+    align: (left + top, left + top),
+    move(dy: 4pt, toggle-icon),
+    text(
       size: 22pt,
       weight: "bold",
       fill: mutt-blue,
       utils.display-current-heading(level: 2, depth: self.slide-level),
-    )
-  ],
-)
-
-#let section-chip(self) = move(
-  dy: 12pt,
-  block(
-    width: 138pt,
-    fill: chip-gray,
-    inset: (x: 7pt, y: 5pt),
-    radius: 6pt,
-    stroke: 0.9pt + border-gray.darken(8%),
-  )[
-    #align(center)[
-      #text(
-        size: 9pt,
-        weight: "bold",
-        fill: mutt-navy,
-        utils.display-current-heading(level: 1, depth: self.slide-level),
-      )
-    ]
-  ],
-)
+    ),
+  )
+])
 
 #let deck-footer = context {
   let current-page = counter(page).get().first()
@@ -271,6 +272,13 @@
   numbered: false,
 )
 
+#let proof(body, title: auto) = block(width: 100%)[
+  #set par(first-line-indent: 0pt)
+  #text(weight: "bold", fill: mutt-navy)[
+    #localized-title(title, [Demostración], [Proof]).
+  ] #body #h(1fr) $square$
+]
+
 #let card(
   title,
   body,
@@ -361,7 +369,7 @@
   show: simple-theme.with(
     aspect-ratio: "16-9",
     header: slide-title,
-    header-right: section-chip,
+    header-right: none,
     footer: deck-footer,
     footer-right: none,
     subslide-preamble: none,
@@ -406,6 +414,15 @@
   show footnote.entry: it => move(dy: 21pt, it)
   set table(stroke: 1pt + rgb("#CBD3E1"), inset: 7pt)
   show table: it => align(center, it)
+  set figure(numbering: n => slide-numbering(n), gap: 5pt)
+  show figure.where(kind: image): set figure.caption(position: bottom)
+  show figure.where(kind: table): set figure.caption(position: top)
+  show figure.caption: it => align(center, text(
+    size: 11.5pt,
+    weight: "medium",
+    fill: muted.darken(25%),
+    it,
+  ))
   set math.equation(
     numbering: n => slide-numbering(n, parentheses: true),
     supplement: none,
