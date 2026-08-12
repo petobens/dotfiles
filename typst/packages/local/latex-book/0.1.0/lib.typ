@@ -1,21 +1,11 @@
-#import "@local/latex-article:0.1.0": article-table, navy
+#import "@local/template-utils:0.1.0": *
 
-// Numbering and localization
-#let book-table = article-table
-
+// Numbering
 #let book-phase = state("latex-book-phase", "title")
 #let page-style-enabled = state("latex-book-page-style", true)
 #let main-page-reset = state("latex-book-main-page-reset", false)
 #let main-start-page = state("latex-book-main-start-page", none)
 #let appendix-mode = state("latex-book-appendix", false)
-
-#let localized(spanish, english) = context {
-  if text.lang == "es" { spanish } else { english }
-}
-
-#let localized-title(title, spanish, english) = {
-  if title == auto { localized(spanish, english) } else { title }
-}
 
 #let book-numbering(n, parentheses: false) = context {
   let numbers = counter(heading).get()
@@ -29,13 +19,6 @@
     "1.1.1"
   }
   numbering(pattern, chapter, section, n)
-}
-
-#let reset-numbering() = {
-  counter(math.equation).update(0)
-  counter(figure.where(kind: image)).update(0)
-  counter(figure.where(kind: table)).update(0)
-  counter(figure.where(kind: "theorem")).update(0)
 }
 
 // Running heads and folios
@@ -245,105 +228,23 @@
   #pagebreak(to: "odd")
 ]
 
+// Tables
+#let book-table = latex-table
+
 // Theorem environments
-#let statement(
-  supplement,
-  body,
-  note: none,
-  italic: false,
-  numbered: true,
-) = figure(
-  if italic { emph(body) } else { body },
-  kind: "theorem",
-  supplement: supplement,
-  numbering: if numbered { n => book-numbering(n) } else { none },
-  caption: if note == none { [] } else { note },
-  outlined: false,
-  gap: 0.35em,
-)
-
-#let show-statement(it) = align(left, block(width: 100%)[
-  #set par(first-line-indent: 0pt)
-  #strong[
-    #it.supplement
-    #if it.numbering != none { [ #context it.counter.display(it.numbering)] }
-    #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }
-  ] #it.body
-])
-
-#let theorem(body, note: none, title: auto, numbered: true) = statement(
-  localized-title(title, [Teorema], [Theorem]),
-  body,
-  note: note,
-  italic: true,
-  numbered: numbered,
-)
-#let proposition(body, note: none, title: auto, numbered: true) = statement(
-  localized-title(title, [Proposición], [Proposition]),
-  body,
-  note: note,
-  italic: true,
-  numbered: numbered,
-)
-#let lemma(body, note: none, title: auto, numbered: true) = statement(
-  localized-title(title, [Lema], [Lemma]),
-  body,
-  note: note,
-  italic: true,
-  numbered: numbered,
-)
-#let corollary(body, note: none, title: auto, numbered: true) = statement(
-  localized-title(title, [Corolario], [Corollary]),
-  body,
-  note: note,
-  italic: true,
-  numbered: numbered,
-)
-#let definition(body, note: none, title: auto, numbered: true) = statement(
-  localized-title(title, [Definición], [Definition]),
-  body,
-  note: note,
-  numbered: numbered,
-)
-#let example(body, note: none, title: auto, numbered: true) = statement(
-  localized-title(title, [Ejemplo], [Example]),
-  body,
-  note: note,
-  numbered: numbered,
-)
-#let exercise(body, note: none, title: auto, numbered: true) = statement(
-  localized-title(title, [Ejercicio], [Exercise]),
-  body,
-  note: note,
-  numbered: numbered,
-)
-#let remark(body, note: none, title: auto, numbered: true) = statement(
-  emph(localized-title(title, [Observación], [Remark])),
-  body,
-  note: note,
-  numbered: numbered,
-)
-#let solution(body, note: none, title: auto) = statement(
-  localized-title(title, [Solución], [Solution]),
-  body,
-  note: note,
-  numbered: false,
-)
-
-#let proof(body, title: auto) = block(width: 100%)[
-  #set par(first-line-indent: 0pt)
-  #emph(localized-title(title, [Demostración], [Proof])). #body #h(1fr) $square$
-]
+#let book-environments = statement-environments(n => book-numbering(n))
+#let statement = book-environments.statement
+#let theorem = book-environments.theorem
+#let proposition = book-environments.proposition
+#let lemma = book-environments.lemma
+#let corollary = book-environments.corollary
+#let definition = book-environments.definition
+#let example = book-environments.example
+#let exercise = book-environments.exercise
+#let remark = book-environments.remark
+#let solution = book-environments.solution
 
 // Sections and appendices
-#let heading-title(it) = context {
-  if it.numbering != none {
-    numbering(it.numbering, ..counter(heading).at(it.location()))
-    h(0.8em)
-  }
-  it.body
-}
-
 #let appendix(title: auto, body) = {
   appendix-mode.update(true)
   counter(heading).update(0)
@@ -356,7 +257,7 @@
   title: [],
   subtitle: none,
   author: "Pedro Ferrari",
-  date: datetime.today().display(),
+  date: datetime.today(),
   metadata-date: auto,
   language: "es",
   institution: none,
@@ -370,6 +271,7 @@
   preface-title: auto,
   body,
 ) = {
+  // Document metadata and page
   set document(title: title, author: author, date: metadata-date)
   set page(
     paper: "a4",
@@ -381,6 +283,8 @@
     footer: book-footer,
     footer-descent: 30%,
   )
+
+  // Typography
   set text(
     font: "New Computer Modern",
     size: 10pt,
@@ -399,6 +303,8 @@
     justify: true,
   )
   set block(spacing: 1.2em)
+
+  // Numbering and components
   set heading(numbering: "1.1.1")
   set math.equation(
     numbering: n => book-numbering(n, parentheses: true),
@@ -408,22 +314,7 @@
   set figure(numbering: n => book-numbering(n), gap: 5pt)
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: "theorem"): show-statement
-  show figure.caption: it => {
-    set text(size: 9pt)
-    if it.kind == table {
-      align(center)[
-        #strong[#it.supplement #context it.counter.display(it.numbering)]
-        #linebreak()
-        #it.body
-      ]
-    } else if it.kind != "theorem" {
-      align(center)[
-        #strong[#it.supplement #context it.counter.display(it.numbering)]
-        #h(1em)
-        #it.body
-      ]
-    }
-  }
+  show figure.caption: show-figure-caption
   show heading.where(level: 1): it => {
     page-style-enabled.update(false)
     pagebreak(weak: true, to: "odd")
@@ -469,8 +360,17 @@
   set outline(indent: 1.5em)
   show outline.entry: book-outline-entry
 
+  // Front matter
   if half-title { half-title-page(title) }
-  title-page(title, subtitle, author, date, institution, department, logo)
+  title-page(
+    title,
+    subtitle,
+    author,
+    localized-date(date, language),
+    institution,
+    department,
+    logo,
+  )
   if copyright != none { copyright-page(copyright) }
   if dedication != none { dedication-page(dedication) }
 
@@ -488,6 +388,7 @@
     preface
   }
 
+  // Main matter
   pagebreak()
   book-phase.update("main")
   set page(numbering: "1")

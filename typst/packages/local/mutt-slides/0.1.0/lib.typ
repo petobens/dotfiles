@@ -1,5 +1,8 @@
 #import "@preview/touying:0.7.4": *
 #import themes.simple: *
+#import "@local/template-utils:0.1.0": (
+  localized, localized-date, localized-title,
+)
 
 // Palette
 #let mutt-blue = rgb("#0045FB")
@@ -30,39 +33,38 @@
   #align(right + horizon)[#circle(radius: 4.5pt, fill: mutt-blue)]
 ]
 
-#let slide-title(self) = move(
-  dy: 15pt,
-  box[
-    #toggle-icon
-    #h(8pt)
+#let section-chip(self) = block(
+  width: 138pt,
+  fill: chip-gray,
+  inset: (x: 7pt, y: 5pt),
+  radius: 6pt,
+  stroke: 0.9pt + border-gray.darken(8%),
+)[
+  #align(center)[
     #text(
+      size: 9pt,
+      weight: "bold",
+      fill: mutt-navy,
+      utils.display-current-heading(level: 1, depth: self.slide-level),
+    )
+  ]
+]
+
+#let slide-title(self) = move(dy: 15pt, block(width: 100%)[
+  #place(top + right, dy: 41pt, section-chip(self))
+  #grid(
+    columns: (auto, 1fr),
+    column-gutter: 8pt,
+    align: (left + top, left + top),
+    move(dy: 4pt, toggle-icon),
+    text(
       size: 22pt,
       weight: "bold",
       fill: mutt-blue,
       utils.display-current-heading(level: 2, depth: self.slide-level),
-    )
-  ],
-)
-
-#let section-chip(self) = move(
-  dy: 12pt,
-  block(
-    width: 138pt,
-    fill: chip-gray,
-    inset: (x: 7pt, y: 5pt),
-    radius: 6pt,
-    stroke: 0.9pt + border-gray.darken(8%),
-  )[
-    #align(center)[
-      #text(
-        size: 9pt,
-        weight: "bold",
-        fill: mutt-navy,
-        utils.display-current-heading(level: 1, depth: self.slide-level),
-      )
-    ]
-  ],
-)
+    ),
+  )
+])
 
 #let deck-footer = context {
   let current-page = counter(page).get().first()
@@ -164,7 +166,7 @@
   title: [],
   subtitle: [],
   eyebrow: [MUTTDATA],
-  date: datetime.today().display(),
+  date: datetime.today(),
 ) = title-slide[
   #block(
     width: 100%,
@@ -236,6 +238,7 @@
   ]
 ]
 
+// Content components
 #let theorem-card(title, body) = block(
   width: 100%,
   fill: white,
@@ -253,91 +256,10 @@
   ]
 ]
 
-// Document template
-#let mutt-slides(
-  title: [],
-  subtitle: [],
-  author: [Pedro Ferrari],
-  eyebrow: [MUTTDATA],
-  date: datetime.today().display(),
-  body,
-) = {
-  show: simple-theme.with(
-    aspect-ratio: "16-9",
-    header: slide-title,
-    header-right: section-chip,
-    footer: deck-footer,
-    footer-right: none,
-    subslide-preamble: none,
-    config-page(
-      margin: (top: 2.7em, bottom: 2.6em, left: 2.2em, right: 2.6em),
-      footer-descent: 0em,
-    ),
-    config-common(
-      new-section-slide-fn: section-divider,
-      default-composer: vertical-center,
-      reset-page-counter-to-slide-counter: false,
-    ),
-    config-colors(
-      primary: mutt-blue,
-      secondary: mutt-cyan,
-      tertiary: mutt-purple,
-      neutral-lightest: white,
-      neutral-darkest: mutt-navy,
-    ),
-    config-info(
-      title: title,
-      subtitle: subtitle,
-      author: author,
-      date: date,
-    ),
-  )
-
-  set text(font: "Arial", fill: mutt-navy, size: 14pt)
-  show raw: set text(font: "DejaVu Sans Mono")
-  show raw.where(block: true): block.with(
-    fill: soft-gray,
-    stroke: 0.5pt + border-gray,
-    inset: 10pt,
-    radius: 4pt,
-  )
-  show strong: set text(fill: mutt-blue)
-  show emph: set text(fill: muted)
-  set list(indent: 17pt, body-indent: 8pt, spacing: 5pt)
-  set enum(indent: 19pt, body-indent: 8pt, spacing: 5pt)
-  set footnote.entry(separator: none)
-  show footnote.entry: it => move(dy: 21pt, it)
-  set table(stroke: 1pt + rgb("#CBD3E1"), inset: 7pt)
-  show table: it => align(center, it)
-  set math.equation(
-    numbering: n => slide-numbering(n, parentheses: true),
-    supplement: none,
-  )
-  show figure.where(kind: "theorem"): it => theorem-card(
-    [
-      #it.supplement
-      #if it.numbering != none {
-        [ #context it.counter.display(it.numbering)]
-      }
-      #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }
-    ],
-    it.body,
-  )
-
-  branded-title-slide(
-    title: title,
-    subtitle: subtitle,
-    eyebrow: eyebrow,
-    date: date,
-  )
-  body
-}
-
-// Content components
 #let theorem(body, note: none, title: auto, numbered: true) = figure(
   body,
   kind: "theorem",
-  supplement: if title == auto { [Theorem] } else { title },
+  supplement: localized-title(title, [Teorema], [Theorem]),
   numbering: if numbered { n => slide-numbering(n) } else { none },
   caption: note,
   outlined: false,
@@ -346,9 +268,16 @@
 #let solution(body, note: none, title: auto) = theorem(
   body,
   note: note,
-  title: title,
+  title: localized-title(title, [Solución], [Solution]),
   numbered: false,
 )
+
+#let proof(body, title: auto) = block(width: 100%)[
+  #set par(first-line-indent: 0pt)
+  #text(weight: "bold", fill: mutt-navy)[
+    #localized-title(title, [Demostración], [Proof]).
+  ] #body #h(1fr) $square$
+]
 
 #let card(
   title,
@@ -423,3 +352,98 @@
 )[#align(center)[#body]]
 
 #let small(body) = text(size: 11.5pt, fill: muted, body)
+
+// Document template
+#let mutt-slides(
+  title: [],
+  subtitle: [],
+  author: [Pedro Ferrari],
+  eyebrow: [MUTTDATA],
+  date: datetime.today(),
+  language: "es",
+  body,
+) = {
+  let date = localized-date(date, language)
+
+  // Theme
+  show: simple-theme.with(
+    aspect-ratio: "16-9",
+    header: slide-title,
+    header-right: none,
+    footer: deck-footer,
+    footer-right: none,
+    subslide-preamble: none,
+    config-page(
+      margin: (top: 2.7em, bottom: 2.6em, left: 2.2em, right: 2.6em),
+      footer-descent: 0em,
+    ),
+    config-common(
+      new-section-slide-fn: section-divider,
+      default-composer: vertical-center,
+      reset-page-counter-to-slide-counter: false,
+    ),
+    config-colors(
+      primary: mutt-blue,
+      secondary: mutt-cyan,
+      tertiary: mutt-purple,
+      neutral-lightest: white,
+      neutral-darkest: mutt-navy,
+    ),
+    config-info(
+      title: title,
+      subtitle: subtitle,
+      author: author,
+      date: date,
+    ),
+  )
+
+  // Content styling
+  set text(font: "Arial", fill: mutt-navy, size: 14pt, lang: language)
+  show raw: set text(font: "DejaVu Sans Mono")
+  show raw.where(block: true): block.with(
+    fill: soft-gray,
+    stroke: 0.5pt + border-gray,
+    inset: 10pt,
+    radius: 4pt,
+  )
+  show strong: set text(fill: mutt-blue)
+  show emph: set text(fill: muted)
+  set list(indent: 17pt, body-indent: 8pt, spacing: 5pt)
+  set enum(indent: 19pt, body-indent: 8pt, spacing: 5pt)
+  set footnote.entry(separator: none)
+  show footnote.entry: it => move(dy: 21pt, it)
+  set table(stroke: 1pt + rgb("#CBD3E1"), inset: 7pt)
+  show table: it => align(center, it)
+  set figure(numbering: n => slide-numbering(n), gap: 5pt)
+  show figure.where(kind: image): set figure.caption(position: bottom)
+  show figure.where(kind: table): set figure.caption(position: top)
+  show figure.caption: it => align(center, text(
+    size: 11.5pt,
+    weight: "medium",
+    fill: muted.darken(25%),
+    it,
+  ))
+  set math.equation(
+    numbering: n => slide-numbering(n, parentheses: true),
+    supplement: none,
+  )
+  show figure.where(kind: "theorem"): it => theorem-card(
+    [
+      #it.supplement
+      #if it.numbering != none {
+        [ #context it.counter.display(it.numbering)]
+      }
+      #if it.caption != none and it.caption.body != [] { [ (#it.caption.body)] }
+    ],
+    it.body,
+  )
+
+  // Title and slides
+  branded-title-slide(
+    title: title,
+    subtitle: subtitle,
+    eyebrow: eyebrow,
+    date: date,
+  )
+  body
+}
