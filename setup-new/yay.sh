@@ -86,7 +86,9 @@ $yay_cmd tree-sitter-cli
 $yay_cmd tmux
 
 # Audio/video
+$yay_cmd ffmpeg
 $yay_cmd gst-plugin-libcamera
+$yay_cmd imagemagick
 $yay_cmd libcamera
 $yay_cmd libcamera-tools
 $yay_cmd pipewire
@@ -211,10 +213,12 @@ $yay_cmd luacheck
 $yay_cmd oath-toolkit
 $yay_cmd ollama
 $yay_cmd openai-codex
+$yay_cmd openbsd-netcat
 $yay_cmd openssh
 $yay_cmd p7zip
 $yay_cmd pandoc-cli
 $yay_cmd pandoc-crossref
+$yay_cmd poppler
 $yay_cmd prettyping
 $yay_cmd procs
 $yay_cmd qemu-desktop
@@ -232,6 +236,9 @@ $yay_cmd sshpass
 $yay_cmd stylua
 $yay_cmd taplo-cli
 $yay_cmd tealdeer
+$yay_cmd tesseract
+$yay_cmd tesseract-data-eng
+$yay_cmd tesseract-data-spa
 $yay_cmd tk
 $yay_cmd tree
 $yay_cmd unrar
