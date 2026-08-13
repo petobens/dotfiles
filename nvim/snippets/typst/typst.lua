@@ -1,5 +1,6 @@
 local ls = require('luasnip')
 
+local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
 
@@ -7,12 +8,38 @@ local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
-    -- Text and math
+    -- Text
     s(
         { trig = 'lorem', dscr = 'Lorem ipsum text' },
         fmta('#lorem(<>)<>', { i(1, '100'), i(0) }),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'tb', dscr = 'Strong text' },
+        fmta('*<><>*<>', {
+            f(_G.LuaSnipConfig.visual_selection),
+            i(1),
+            i(0),
+        })
+    ),
+    s(
+        { trig = 'ti', dscr = 'Emphasized text' },
+        fmta('_<><>_<>', {
+            f(_G.LuaSnipConfig.visual_selection),
+            i(1),
+            i(0),
+        })
+    ),
+    s(
+        { trig = 'fn', dscr = 'Footnote' },
+        fmta('#footnote[<><>]<>', {
+            f(_G.LuaSnipConfig.visual_selection),
+            i(1),
+            i(0),
+        })
+    ),
+
+    -- Math
     s(
         { trig = 'eq', dscr = 'Numbered equation' },
         fmta(
@@ -25,15 +52,31 @@ $ <> $ <<<>>>
         ),
         { condition = line_begin }
     ),
+
     -- References
+    s({ trig = 'lab', dscr = 'Label' }, fmta('<<<>>><>', { i(1, 'label'), i(0) })),
     s({ trig = 'ref', dscr = 'Reference' }, fmta('@<><>', { i(1, 'label'), i(0) })),
     s(
         { trig = 'refp', dscr = 'Page reference' },
         fmta('#ref(<<<>>>, form: "page")<>', { i(1, 'label'), i(0) })
     ),
+
+    -- Citations
     s(
         { trig = 'cite', dscr = 'Citation' },
         fmta('@<><>', { i(1, 'citation-key'), i(0) })
+    ),
+    s(
+        { trig = 'tc', dscr = 'Prose citation' },
+        fmta('#cite(<<<>>>, form: "prose")<>', { i(1, 'citation-key'), i(0) })
+    ),
+    s(
+        { trig = 'fc', dscr = 'Full citation' },
+        fmta('#cite(<<<>>>, form: "full")<>', { i(1, 'citation-key'), i(0) })
+    ),
+    s(
+        { trig = 'noc', dscr = 'Include source without citation' },
+        fmta('#cite(<<<>>>, form: none)<>', { i(1, 'citation-key'), i(0) })
     ),
     s(
         { trig = 'bib', dscr = 'Bibliography' },
@@ -55,7 +98,7 @@ $ <> $ <<<>>>
         ),
         { condition = line_begin }
     ),
-    s({ trig = 'lab', dscr = 'Label' }, fmta('<<<>>><>', { i(1, 'label'), i(0) })),
+
     -- Figures and tables
     s(
         { trig = 'fig', dscr = 'Figure' },
@@ -151,6 +194,7 @@ $ <> $ <<<>>>
         ),
         { condition = line_begin }
     ),
+
     -- Statements
     s(
         { trig = 'thm', dscr = 'Theorem' },
@@ -191,9 +235,28 @@ $ <> $ <<<>>>
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'prf', dscr = 'Proof' },
+        fmta(
+            [[
+#proof[
+  <><>
+]
+
+<>
+            ]],
+            {
+                f(_G.LuaSnipConfig.visual_selection),
+                i(1, 'Proof'),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
     -- Functions
     s(
-        { trig = 'fn', dscr = 'Content function' },
+        { trig = 'fun', dscr = 'Content block function' },
         fmta(
             [[
 #<>[
@@ -207,4 +270,19 @@ $ <> $ <<<>>>
         { trig = 'call', dscr = 'Function call' },
         fmta('#<>(<>)<>', { i(1, 'foo'), i(2, 'arguments'), i(0) })
     ),
-}, {}
+}, {
+
+    -- Headings
+    s(
+        { trig = '([1-9])h', regTrig = true, dscr = 'Heading', docTrig = '2h' },
+        fmta('<> <><>', {
+            f(function(_, snip)
+                local level = tonumber(snip.captures[1])
+                return level and string.rep('=', level) or ''
+            end, {}),
+            i(1, 'Heading'),
+            i(0),
+        }),
+        { condition = line_begin }
+    ),
+}

@@ -13,20 +13,14 @@ vim.opt_local.foldtext = ''
 local function document_paths()
     local source = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
     local base = source:match('(.+)%.[^/]+$')
-    local output = vim.iter(vim.api.nvim_buf_get_lines(0, 0, 10, false))
-        :map(function(line)
-            return line:match('^//%s*output:%s*(.-)%s*$')
-        end)
-        :find(function(path)
-            return path ~= ''
-        end)
-    local pdf = output and vim.fs.joinpath(vim.fs.dirname(source), output)
-        or (base and (base .. '.pdf') or nil)
-    return source, pdf
+    return source, base and (base .. '.pdf') or nil
 end
 
 local function project_root(source)
-    local marker = vim.fs.find({ '.typst-root', '.git' }, {
+    local marker = vim.fs.find('.typst-root', {
+        path = vim.fs.dirname(source),
+        upward = true,
+    })[1] or vim.fs.find('.git', {
         path = vim.fs.dirname(source),
         upward = true,
     })[1]

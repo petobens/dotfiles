@@ -18,6 +18,6 @@
   item: (ident) @_ref
   (group
     (label) @markup.link.reference.typst))
-  (#eq? @_ref "ref")
+  (#any-of? @_ref "ref" "cite")
   (#offset! @markup.link.reference.typst 0 1 0 -1)
   (#set! priority 130))

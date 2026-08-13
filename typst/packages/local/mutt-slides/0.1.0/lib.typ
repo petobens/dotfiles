@@ -34,7 +34,7 @@
 ]
 
 #let section-chip(self) = block(
-  width: 138pt,
+  width: 128pt,
   fill: chip-gray,
   inset: (x: 7pt, y: 5pt),
   radius: 6pt,
@@ -50,8 +50,12 @@
   ]
 ]
 
-#let slide-title(self) = move(dy: 15pt, block(width: 100%)[
-  #place(top + right, dy: 41pt, section-chip(self))
+#let slide-title(self) = move(dy: 25.5pt, block(
+  width: 100%,
+  height: 26.4pt,
+)[
+  #set align(top + left)
+  #place(top + right, dy: 37pt, section-chip(self))
   #grid(
     columns: (auto, 1fr),
     column-gutter: 8pt,
@@ -87,7 +91,7 @@
               fill: mutt-blue,
             )[Muttdata]
             #linebreak()
-            #text(size: 8pt, fill: muted)[
+            #text(size: 9pt, fill: mutt-navy)[
               #current-page/#counter(page).final().first()
             ]
           ]
@@ -408,21 +412,46 @@
   )
   show strong: set text(fill: mutt-blue)
   show emph: set text(fill: muted)
+  show ref: it => context {
+    let target = query(it.target).first()
+    if target.func() in (math.equation, figure) {
+      let section = query(
+        heading.where(level: 1).before(target.location()),
+      ).len()
+      let target-counter = if target.func() == math.equation {
+        counter(math.equation)
+      } else {
+        target.counter
+      }
+      let n = target-counter.at(target.location()).last()
+      let prefix = if target.func() == figure { target.supplement + [ ] } else {
+        []
+      }
+      link(
+        target.location(),
+        text(
+          fill: mutt-blue,
+          prefix
+            + numbering(
+              if target.func() == math.equation { "(1.1)" } else { "1.1" },
+              section,
+              n,
+            ),
+        ),
+      )
+    } else {
+      text(fill: mutt-blue, it)
+    }
+  }
   set list(indent: 17pt, body-indent: 8pt, spacing: 5pt)
   set enum(indent: 19pt, body-indent: 8pt, spacing: 5pt)
   set footnote.entry(separator: none)
+  show footnote.entry: set text(size: 9pt)
   show footnote.entry: it => move(dy: 21pt, it)
   set table(stroke: 1pt + rgb("#CBD3E1"), inset: 7pt)
   show table: it => align(center, it)
   set figure(numbering: n => slide-numbering(n), gap: 5pt)
-  show figure.where(kind: image): set figure.caption(position: bottom)
-  show figure.where(kind: table): set figure.caption(position: top)
-  show figure.caption: it => align(center, text(
-    size: 11.5pt,
-    weight: "medium",
-    fill: muted.darken(25%),
-    it,
-  ))
+  show figure.caption: none
   set math.equation(
     numbering: n => slide-numbering(n, parentheses: true),
     supplement: none,
