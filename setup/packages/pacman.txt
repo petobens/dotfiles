@@ -64,6 +64,7 @@ jq
 less
 lsof
 nmap
+openbsd-netcat
 ouch
 poppler
 python
@@ -72,6 +73,9 @@ rsync
 sqlite
 sshpass
 starship
+tesseract
+tesseract-data-eng
+tesseract-data-spa
 tmux
 trash-cli
 tree
