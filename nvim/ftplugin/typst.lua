@@ -125,18 +125,22 @@ local function continue_list()
     return '<CR>' .. marker
 end
 
--- Mappings and autocmds
+-- Autocmds
+vim.api.nvim_create_autocmd('BufWritePost', {
+    buffer = 0,
+    desc = 'Compile Typst document outside packages',
+    callback = function(args)
+        if not vim.fs.root(args.buf, 'typst.toml') then
+            compile_typst(false)
+        end
+    end,
+})
+
+-- Mappings
 vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     compile_typst(true)
 end, { buf = 0, desc = 'Compile Typst document' })
 vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
-vim.api.nvim_create_autocmd('BufWritePost', {
-    buffer = 0,
-    desc = 'Compile Typst document',
-    callback = function()
-        compile_typst(false)
-    end,
-})
 vim.keymap.set(
     'i',
     '<CR>',
