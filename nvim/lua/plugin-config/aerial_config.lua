@@ -1,5 +1,28 @@
 local u = require('utils')
 
+-- Helpers
+local function telescope_filter(opts)
+    opts = opts or {}
+    opts.attach_mappings = function(_, map)
+        map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_aerial)
+        return true
+    end
+    -- Switch to previous buffer since aerial telescope acts upon current buffer
+    vim.cmd.wincmd('p')
+    require('telescope').extensions.aerial.aerial(opts)
+end
+
+local function number_headings(items, prefix)
+    for i, item in ipairs(items) do
+        local number = prefix and prefix .. '.' .. i or tostring(i)
+        item.name = number .. ' ' .. item.name
+        if item.children then
+            number_headings(item.children, number)
+        end
+    end
+end
+
+-- Setup
 require('aerial').setup({
     backends = {
         ['_'] = { 'treesitter', 'lsp', 'markdown', 'man' },
@@ -24,6 +47,13 @@ require('aerial').setup({
             return 'Comment'
         end
     end,
+    post_add_all_symbols = function(bufnr, items)
+        if vim.bo[bufnr].filetype ~= 'typst' then
+            return items
+        end
+        number_headings(items)
+        return items
+    end,
     keymaps = {
         ['v'] = 'actions.jump_vsplit',
         ['s'] = 'actions.jump_split',
@@ -46,18 +76,6 @@ require('aerial').setup({
         experimental_selection_range = true,
     },
 })
-
--- Helpers
-local function telescope_filter(opts)
-    opts = opts or {}
-    opts.attach_mappings = function(_, map)
-        map('i', '<CR>', _G.TelescopeConfig.custom_actions.open_aerial)
-        return true
-    end
-    -- Switch to previous buffer since aerial telescope acts upon current buffer
-    vim.cmd.wincmd('p')
-    require('telescope').extensions.aerial.aerial(opts)
-end
 
 -- Autocmds
 vim.api.nvim_create_autocmd('FileType', {
