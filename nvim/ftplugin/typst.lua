@@ -26,7 +26,10 @@ local function document_paths()
 end
 
 local function project_root(source)
-    local marker = vim.fs.find({ '.typst-root', '.git' }, {
+    local marker = vim.fs.find('.typst-root', {
+        path = vim.fs.dirname(source),
+        upward = true,
+    })[1] or vim.fs.find('.git', {
         path = vim.fs.dirname(source),
         upward = true,
     })[1]
