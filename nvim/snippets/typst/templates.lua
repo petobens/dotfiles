@@ -130,7 +130,6 @@ return {
         { trig = 'sfig', dscr = 'Standalone CeTZ figure' },
         fmta(
             [[
-// output: <>
 #import "@local/standalone:0.1.0": *
 #import "@preview/cetz:0.5.2"
 
@@ -149,11 +148,10 @@ return {
 <>
             ]],
             {
-                i(1, 'figure.pdf'),
-                i(2, 'auto'),
-                i(3, '3pt'),
-                i(4, 'none'),
-                i(5, 'line((0, 0), (4, 0), stroke: rgb("#000080") + 1.5pt)'),
+                i(1, 'auto'),
+                i(2, '3pt'),
+                i(3, 'none'),
+                i(4, 'line((0, 0), (4, 0), stroke: rgb("#000080") + 1.5pt)'),
                 i(0),
             }
         ),
@@ -163,7 +161,6 @@ return {
         { trig = 'stab', dscr = 'Standalone table' },
         fmta(
             [[
-// output: <>
 #import "@local/standalone:0.1.0": *
 
 #show: standalone.with(
@@ -185,17 +182,16 @@ return {
 )
             ]],
             {
-                i(1, 'table.pdf'),
-                i(2, '14cm'),
-                i(3, '3pt'),
-                i(4, 'none'),
-                i(5, '(2fr, 1fr, 1fr)'),
-                i(6, '(left, right, right)'),
-                i(7, 'Indicator'),
-                i(8, '2020'),
-                i(9, '2025'),
-                i(10, 'Productivity'),
-                i(11, '100'),
+                i(1, '14cm'),
+                i(2, '3pt'),
+                i(3, 'none'),
+                i(4, '(2fr, 1fr, 1fr)'),
+                i(5, '(left, right, right)'),
+                i(6, 'Indicator'),
+                i(7, '2020'),
+                i(8, '2025'),
+                i(9, 'Productivity'),
+                i(10, '100'),
                 i(0, '114'),
             }
         ),
