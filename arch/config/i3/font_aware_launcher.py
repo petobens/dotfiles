@@ -266,6 +266,7 @@ class Screen:
     def __init__(self):
         self.is_hidpi = None
         self.other_is_hidpi = None
+        self.cursor_size = None
         self.nr_monitors = None
         self.i3 = i3ipc.Connection()
 
@@ -277,6 +278,8 @@ class Screen:
         output_width, other_output_width, outputs = get_output_width(self.i3, ws)
         self.is_hidpi = output_width > self.HIDPI_WIDTH_THRESHOLD
         self.other_is_hidpi = other_output_width > self.HIDPI_WIDTH_THRESHOLD
+        max_width = max(output.rect.width for output in outputs)
+        self.cursor_size = 48 if max_width > self.HIDPI_WIDTH_THRESHOLD else 36
         self.nr_monitors = len(outputs)
         return
 
@@ -554,7 +557,10 @@ class ElectronApp(ROLApp):
         cmd = self._raiseorlauch_cmd()
         # Note: we set gdk env variables so that gtk dialogs spawned by these
         # apps have correct font size
-        cmd += f' -e "{self.screen.gdk_env}{self.class_name.lower()}'
+        env = self.screen.gdk_env
+        if self.class_name == 'Brave':
+            env += f'XCURSOR_SIZE={self.screen.cursor_size} '
+        cmd += f' -e "{env}{self.class_name.lower()}'
         if (self.screen.is_hidpi and not self.screen.other_is_hidpi) or (
             self.screen.is_hidpi
             and self.screen.other_is_hidpi
