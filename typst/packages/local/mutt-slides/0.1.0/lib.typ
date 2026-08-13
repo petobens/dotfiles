@@ -424,14 +424,20 @@
         target.counter
       }
       let n = target-counter.at(target.location()).last()
-      let prefix = if target.func() == figure { target.supplement + [ ] } else { [] }
+      let prefix = if target.func() == figure { target.supplement + [ ] } else {
+        []
+      }
       link(
         target.location(),
-        text(fill: mutt-blue, prefix + numbering(
-          if target.func() == math.equation { "(1.1)" } else { "1.1" },
-          section,
-          n,
-        )),
+        text(
+          fill: mutt-blue,
+          prefix
+            + numbering(
+              if target.func() == math.equation { "(1.1)" } else { "1.1" },
+              section,
+              n,
+            ),
+        ),
       )
     } else {
       text(fill: mutt-blue, it)

@@ -242,6 +242,7 @@
 #let example = book-environments.example
 #let exercise = book-environments.exercise
 #let remark = book-environments.remark
+#let notation = book-environments.notation
 #let solution = book-environments.solution
 
 // Sections and appendices
