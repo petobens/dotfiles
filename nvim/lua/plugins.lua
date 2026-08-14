@@ -111,7 +111,6 @@ local plugins = {
         build = function()
             require('blink.cmp').build():pwait()
         end,
-        event = 'InsertEnter',
         config = load_plugin_config('blink_cmp_config'),
     },
     {

@@ -247,12 +247,6 @@ require('blink.cmp.config').completion.menu.direction_priority = function()
     return copilot_multiline_menu_direction or { 's', 'n' }
 end
 
--- Extend neovim's client capabilities with the completion ones
-vim.lsp.config(
-    '*',
-    { capabilities = require('blink.cmp').get_lsp_capabilities(nil, true) }
-)
-
 -- Autocmd settings
 local blink_cmp_augroup = vim.api.nvim_create_augroup('blink_cmp', { clear = true })
 vim.api.nvim_create_autocmd('User', {
