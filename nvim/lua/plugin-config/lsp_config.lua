@@ -194,7 +194,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
             { buf = e.buf, desc = 'Show (function) signature help' }
         )
         vim.keymap.set('n', '<Leader>ih', function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+            local filter = { bufnr = e.buf }
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
         end, { buf = e.buf, desc = 'Toggle inlay hints' })
         vim.keymap.set(
             'n',
@@ -203,7 +204,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
             { buf = e.buf, desc = 'Code actions' }
         )
         vim.keymap.set('n', '<Leader>dc', function()
-            vim.lsp.document_color.enable(not vim.lsp.document_color.is_enabled())
+            local filter = { bufnr = e.buf }
+            vim.lsp.document_color.enable(
+                not vim.lsp.document_color.is_enabled(filter),
+                filter
+            )
         end, { buf = e.buf, desc = 'Toggle LSP document color highlighting' })
     end,
 })
