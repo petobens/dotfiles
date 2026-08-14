@@ -78,11 +78,11 @@ symlink "$repo/config/zathura" "$HOME/.config/zathura"
 # Formatter and linter configuration
 symlink "$repo/config/linters/hadolint.yaml" "$HOME/.config/hadolint.yaml"
 symlink "$repo/config/linters/luacheckrc" "$HOME/.config/.luacheckrc"
-symlink "$repo/config/linters/markdownlint.json" "$HOME/.markdownlint.json"
-symlink "$repo/config/linters/prettierrc.yaml" "$HOME/.prettierrc.yaml"
+symlink "$repo/config/linters/oxfmtrc.json" "$HOME/.oxfmtrc.json"
+symlink "$repo/config/linters/rumdl.toml" "$HOME/.config/rumdl/rumdl.toml"
 symlink "$repo/config/linters/sqlfluff" "$HOME/.sqlfluff"
 symlink "$repo/config/linters/stylua.toml" "$HOME/.config/stylua.toml"
-symlink "$repo/config/linters/taplo.toml" "$HOME/taplo.toml"
+symlink "$repo/config/linters/tombi.toml" "$HOME/.config/tombi/config.toml"
 symlink "$repo/config/linters/yamllint.yaml" "$HOME/.config/yamllint/config"
 
 # Python tooling

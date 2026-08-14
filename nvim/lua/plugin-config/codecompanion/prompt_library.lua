@@ -38,14 +38,7 @@ local function read_prompt_file(fname)
 
     local content = fd:read('*a')
     fd:close()
-
-    local filtered = {}
-    for _, line in ipairs(vim.split(vim.trim(content or ''), '\n', { plain = true })) do
-        if not line:lower():find('markdownlint') then
-            table.insert(filtered, line)
-        end
-    end
-    return table.concat(filtered, '\n'):gsub('\n$', '')
+    return vim.trim(content or '')
 end
 
 local function load_prompt_library()

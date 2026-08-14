@@ -20,7 +20,7 @@ for tool in \
     pgcli \
     pre-commit \
     ruff \
-    sqlfluff \
+    'sqlfluff[rs]' \
     git+https://github.com/will8211/unimatrix \
     uv-upx \
     yamllint \
@@ -33,8 +33,8 @@ npm config set prefix "$HOME/.npm-global"
 npm_packages=(
     @agentclientprotocol/claude-agent-acp
     @agentclientprotocol/codex-acp
-    @fsouza/prettierd
-    jsonlint
+    oxfmt
+    oxlint
 )
 npm install --global "${npm_packages[@]}"
 npm list --global --depth=0 "${npm_packages[@]}"

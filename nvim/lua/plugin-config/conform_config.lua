@@ -11,12 +11,12 @@ conform.formatters.stylua = {
     },
 }
 conform.formatters.shfmt = { prepend_args = { '-i', '4', '-ci', '-sr' } }
-conform.formatters.taplo = {
+conform.formatters.oxfmt = {
     args = {
-        'format',
-        '--config=' .. vim.fs.joinpath(vim.env.HOME, 'taplo.toml'),
-        '-',
+        '--config=' .. vim.fs.joinpath(vim.env.HOME, '.oxfmtrc.json'),
+        '$FILENAME',
     },
+    stdin = false,
 }
 conform.formatters.typstyle = {
     prepend_args = { '--line-width', '80', '--wrap-text=fill' },
@@ -26,19 +26,22 @@ conform.formatters.typstyle = {
 conform.setup({
     formatters_by_ft = {
         ['_'] = { 'trim_whitespace' },
+        css = { 'oxfmt' },
         fish = { 'fish_indent' },
-        ghaction = { 'prettierd' },
+        ghaction = { 'oxfmt' },
+        html = { 'oxfmt' },
+        javascript = { 'oxfmt' },
         json = { 'jq' },
-        jsonc = { 'prettierd' },
+        jsonc = { 'oxfmt' },
         lua = { 'stylua' },
-        markdown = { 'prettierd', 'injected' },
+        markdown = { 'oxfmt', 'injected', 'trim_whitespace' },
         python = { 'ruff_fix', 'ruff_format' },
         query = { 'format-queries' },
         sh = { 'shfmt' },
         sql = { 'sqlfluff' },
-        toml = { 'taplo' },
+        toml = { 'tombi' },
         typst = { 'typstyle' },
-        yaml = { 'prettierd' },
+        yaml = { 'oxfmt' },
     },
     format_on_save = function(bufnr)
         local format_options = { timeout_ms = 700, quiet = true, lsp_format = 'never' }

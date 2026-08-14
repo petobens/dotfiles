@@ -172,7 +172,6 @@ imagemagick
 lua
 luacheck
 luarocks
-markdownlint-cli
 nodejs
 npm
 ollama
@@ -180,11 +179,12 @@ openai-codex
 perl
 python-pip
 qemu-desktop
+rumdl
 rustup
 shellcheck
 shfmt
 stylua
-taplo-cli
+tombi
 tree-sitter-cli
 typst
 typstyle
