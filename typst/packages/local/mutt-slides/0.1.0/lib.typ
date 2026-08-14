@@ -33,8 +33,10 @@
   #align(right + horizon)[#circle(radius: 4.5pt, fill: mutt-blue)]
 ]
 
+#let section-chip-width = 128pt
+
 #let section-chip(self) = block(
-  width: 128pt,
+  width: section-chip-width,
   fill: chip-gray,
   inset: (x: 7pt, y: 5pt),
   radius: 6pt,
@@ -50,16 +52,15 @@
   ]
 ]
 
-#let slide-title(self) = move(dy: 25.5pt, block(
+#let slide-title(self) = move(dy: 14pt, block(
   width: 100%,
   height: 26.4pt,
 )[
   #set align(top + left)
-  #place(top + right, dy: 37pt, section-chip(self))
   #grid(
-    columns: (auto, 1fr),
+    columns: (auto, 1fr, section-chip-width),
     column-gutter: 8pt,
-    align: (left + top, left + top),
+    align: (left + top, left + top, right + top),
     move(dy: 4pt, toggle-icon),
     text(
       size: 22pt,
@@ -67,6 +68,7 @@
       fill: mutt-blue,
       utils.display-current-heading(level: 2, depth: self.slide-level),
     ),
+    move(dy: 4pt, section-chip(self)),
   )
 ])
 
@@ -109,35 +111,59 @@
 // Agenda and title slides
 #let agenda-entry(cover: false, ..args, it) = {
   let sections = query(heading.where(level: 1, outlined: true))
+  let appendix-prefix = regex("(?i)^(apéndice|appendix)\\b")
+  let appendix-title-prefix = regex(
+    "(?i)^(apéndice|appendix)\\s+[a-z]+[.:]\\s*",
+  )
+  let is-appendix(section) = (
+    section.body.func() == text and section.body.text.contains(appendix-prefix)
+  )
+  let appendices = sections.filter(is-appendix)
   let number = (
     sections.position(section => (
       section.location() == it.element.location()
     ))
       + 1
   )
-  block(
+  let label = if is-appendix(it.element) {
+    let appendix-number = (
+      appendices.position(section => (
+        section.location() == it.element.location()
+      ))
+        + 1
+    )
+    numbering("A.", appendix-number)
+  } else {
+    numbering("01.", number)
+  }
+  let title = if is-appendix(it.element) {
+    it.element.body.text.replace(appendix-title-prefix, "")
+  } else {
+    it.element.body
+  }
+  link(it.element.location(), block(
     width: 100%,
     inset: (y: 8pt),
     stroke: (bottom: 0.8pt + mutt-navy.lighten(85%)),
   )[
     #grid(
-      columns: (auto, 1fr),
+      columns: (42pt, 1fr),
       column-gutter: 12pt,
       align: (left + horizon, left + horizon),
       text(
         font: "DejaVu Sans Mono",
         size: 23pt,
         fill: if cover { mutt-navy.lighten(45%) } else { mutt-blue },
-        numbering("01.", number),
+        label,
       ),
       text(
         size: 22pt,
         weight: if cover { "regular" } else { "bold" },
         fill: if cover { mutt-navy.lighten(45%) } else { mutt-blue },
-        it.element.body,
+        title,
       ),
     )
-  ]
+  ])
 }
 
 #let section-divider(config: (:), body) = centered-slide(
@@ -454,6 +480,7 @@
   show figure.caption: none
   set math.equation(
     numbering: n => slide-numbering(n, parentheses: true),
+    number-align: left + horizon,
     supplement: none,
   )
   show figure.where(kind: "theorem"): it => theorem-card(
