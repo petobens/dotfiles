@@ -43,7 +43,7 @@ fi
 $uv_install_cmd ranger-fm
 $uv_install_cmd ruff
 $uv_install_cmd git+https://github.com/AlexanderMakarov/soupawhisper-streaming
-$uv_install_cmd sqlfluff
+$uv_install_cmd 'sqlfluff[rs]'
 $uv_install_cmd trash-cli
 $uv_install_cmd git+https://github.com/will8211/unimatrix
 $uv_install_cmd uv-upx

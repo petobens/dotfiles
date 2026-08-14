@@ -2,45 +2,77 @@
 local lint = require('lint')
 
 -- Automatically run linters
-vim.api.nvim_create_autocmd(
-    { 'BufEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
-    {
-        desc = 'Run nvim-lint on buffer events',
-        group = vim.api.nvim_create_augroup('nvim_lint', { clear = true }),
-        callback = function(e)
-            local win_config = vim.api.nvim_win_get_config(0)
-            local is_float = win_config.relative ~= ''
-            local title = win_config.title
+local lint_group = vim.api.nvim_create_augroup('nvim_lint', { clear = true })
+local lint_generation = {}
 
-            -- Don't lint markdown floating windows
-            if is_float and e.buf and vim.bo[e.buf].filetype == 'markdown' then
-                return
+local function should_lint(bufnr)
+    local win_config = vim.api.nvim_win_get_config(0)
+    local title = win_config.title
+    local is_float = win_config.relative ~= ''
+    if is_float and vim.bo[bufnr].filetype == 'markdown' then
+        return false
+    end
+    if
+        is_float
+        and type(title) == 'table'
+        and type(title[1]) == 'table'
+        and title[1][1] == 'Debug Chat'
+    then
+        return false
+    end
+    return vim.bo[bufnr].buftype ~= 'nofile' or vim.bo[bufnr].buflisted
+end
+
+local function run_linters(bufnr, filter)
+    if vim.api.nvim_buf_is_valid(bufnr) then
+        vim.api.nvim_buf_call(bufnr, function()
+            if should_lint(bufnr) then
+                lint.try_lint(nil, { ignore_errors = true, filter = filter })
             end
-            -- Don't lint codecompanion debug window
+        end)
+    end
+end
+
+local function live_linter(linter)
+    return linter.stdin and linter.name ~= 'rumdl' and linter.name ~= 'sqlfluff'
+end
+
+vim.api.nvim_create_autocmd('BufEnter', {
+    desc = 'Run live nvim-lint linters when entering buffers',
+    group = lint_group,
+    callback = function(e)
+        lint_generation[e.buf] = (lint_generation[e.buf] or 0) + 1
+        run_linters(e.buf, live_linter)
+    end,
+})
+
+vim.api.nvim_create_autocmd('BufWritePost', {
+    desc = 'Run all nvim-lint linters after saving',
+    group = lint_group,
+    callback = function(e)
+        lint_generation[e.buf] = (lint_generation[e.buf] or 0) + 1
+        run_linters(e.buf)
+    end,
+})
+
+vim.api.nvim_create_autocmd({ 'TextChanged', 'InsertLeave' }, {
+    desc = 'Run stdin-aware nvim-lint linters after edits',
+    group = lint_group,
+    callback = function(e)
+        local bufnr = e.buf
+        lint_generation[bufnr] = (lint_generation[bufnr] or 0) + 1
+        local generation = lint_generation[bufnr]
+        vim.defer_fn(function()
             if
-                is_float
-                and type(title) == 'table'
-                and type(title[1]) == 'table'
-                and title[1][1] == 'Debug Chat'
+                lint_generation[bufnr] ~= generation
+                or not vim.api.nvim_buf_is_valid(bufnr)
             then
                 return
             end
-            -- Don't lint temporary scratch/diff buffers (as codecompanion diff window)
-            if
-                e.buf
-                and vim.bo[e.buf].buftype == 'nofile'
-                and not vim.bo[e.buf].buflisted
-            then
-                return
-            end
-
-            -- Defer linting to avoid blocking UI
-            vim.defer_fn(function()
-                lint.try_lint(nil, { ignore_errors = true })
-            end, 1)
-        end,
-    }
-)
+            run_linters(bufnr, live_linter)
+        end, 300)
+    end,
+})
 
 -- Linter config/args
 local linters = lint.linters
@@ -76,10 +108,49 @@ if lua_ver then
 end
 
 ---- Markdown
-linters.markdownlint.args = {
-    '--config=' .. vim.fs.joinpath(vim.env.HOME, '.markdownlint.json'),
-    '--stdin',
+linters.rumdl.stream = 'stdout'
+---- TOML
+linters.tombi.args = {
+    'lint',
+    '--quiet',
+    '--stdin-filename',
+    function()
+        return vim.api.nvim_buf_get_name(0)
+    end,
+    '-',
 }
+linters.tombi.stdin = true
+linters.tombi.stream = 'both'
+local tombi_severities = {
+    Error = vim.diagnostic.severity.ERROR,
+    Warning = vim.diagnostic.severity.WARN,
+}
+linters.tombi.parser = function(output, bufnr)
+    local diagnostics = {}
+    local message
+    local severity
+    for line in vim.gsplit(output, '\n', { trimempty = true }) do
+        local level, text = line:match('^%s*(%a+):%s*(.+)$')
+        if tombi_severities[level] then
+            message = text
+            severity = tombi_severities[level]
+        elseif message then
+            local lnum, col = line:match('^%s*at .+:(%d+):(%d+)%s*$')
+            if lnum then
+                diagnostics[#diagnostics + 1] = {
+                    bufnr = bufnr,
+                    lnum = tonumber(lnum) - 1,
+                    col = tonumber(col) - 1,
+                    severity = severity,
+                    message = message,
+                    source = 'tombi',
+                }
+                message = nil
+            end
+        end
+    end
+    return diagnostics
+end
 ---- Python
 -- Ruff:
 local severity = vim.diagnostic.severity
@@ -185,13 +256,15 @@ lint.linters_by_ft = {
     dockerfile = { 'hadolint' },
     fish = { 'fish' },
     ghaction = { 'actionlint' },
-    json = { 'jsonlint' },
+    javascript = { 'oxlint' },
+    json = { 'jq' },
     lua = { 'luacheck' },
-    markdown = { 'markdownlint' },
+    markdown = { 'rumdl' },
     python = { 'zmypy', 'ruff' },
     sh = { 'shellcheck' },
     sql = { 'sqlfluff' },
     tex = { 'chktex' },
+    toml = { 'tombi' },
     yaml = { 'yamllint' },
 }
 

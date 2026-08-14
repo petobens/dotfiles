@@ -200,22 +200,15 @@ if type "microsoft-edge-dev" > /dev/null 2>&1; then
     echo Created .config/microsoft-edge-dev-flags.conf symlink
 fi
 
-# Linters
-if type "eslint" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/eslintrc.yaml" "$HOME/.eslintrc.yaml"
-    echo Created .eslintrc.yaml symlink
+# Linters and formatters
+if type "rumdl" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.config/rumdl"
+    $ln_cmd -fTs "$dotfiles_dir/linters/rumdl.toml" "$HOME/.config/rumdl/rumdl.toml"
+    echo Created .config/rumdl/rumdl.toml symlink
 fi
-if type "htmlhint" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/htmlhintrc" "$HOME/.htmlhintrc"
-    echo Created .htmlhintrc symlink
-fi
-if type "markdownlint" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/markdownlint.json" "$HOME/.markdownlint.json"
-    echo Created .markdownlint.json symlink
-fi
-if type "prettierd" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/prettierrc.yaml" "$HOME/.prettierrc.yaml"
-    echo Created .prettierrc.yaml symlink
+if type "oxfmt" > /dev/null 2>&1; then
+    $ln_cmd -fTs "$dotfiles_dir/linters/oxfmtrc.json" "$HOME/.oxfmtrc.json"
+    echo Created .oxfmtrc.json symlink
 fi
 if type "hadolint" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/hadolint.yaml" "$HOME/.config/hadolint.yaml"
@@ -233,9 +226,10 @@ if type "sqlfluff" > /dev/null 2>&1; then
     $ln_cmd -fTs "$dotfiles_dir/linters/sqlfluff" "$HOME/.sqlfluff"
     echo Created .sqlfluff symlink
 fi
-if type "taplo" > /dev/null 2>&1; then
-    $ln_cmd -fTs "$dotfiles_dir/linters/taplo.toml" "$HOME/taplo.toml"
-    echo Created taplo.toml symlink
+if type "tombi" > /dev/null 2>&1; then
+    mkdir -p "$HOME/.config/tombi"
+    $ln_cmd -fTs "$dotfiles_dir/linters/tombi.toml" "$HOME/.config/tombi/config.toml"
+    echo Created .config/tombi/config.toml symlink
 fi
 if type "yamllint" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/yamllint"

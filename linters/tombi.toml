@@ -1,0 +1,5 @@
+[format.rules]
+indent-width = 4
+
+[schema]
+enabled = false

@@ -6,13 +6,9 @@ chown -R "$USER" "$global_npm_dir"
 npm config set prefix "$global_npm_dir"
 PATH="$global_npm_dir/bin:$PATH"
 
-# Linters
-npm install -g eslint
-npm install -g htmlhint
-npm install -g js-beautify
-npm install -g jsonlint
-npm install -g markdownlint-cli
-npm install -g @fsouza/prettierd
+# Linters and formatters
+npm install -g oxfmt
+npm install -g oxlint
 
 # AI
 npm install -g @agentclientprotocol/claude-agent-acp

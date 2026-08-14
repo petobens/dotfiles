@@ -1,5 +1,3 @@
-<!-- markdownlint-disable MD013 -->
-
 # Dotfiles
 
 This file provides guidance to coding agents when working in this repository.
@@ -20,9 +18,8 @@ or environment, for example `nvim/`, `python/`, and `arch/`.
 - For persisted user-facing code files, run the relevant formatter and linter
   using this repository's existing tools and commands. This does not apply to
   temporary scratch files or scripts created during agent work.
-- For Markdown files, run `markdownlint --config ~/.markdownlint.json <file>`
-  and keep lines at 80 characters or fewer. Wrap at natural boundaries while
-  preserving valid Markdown syntax.
+- For Markdown files, run `rumdl check <file>` and keep lines at 80 characters
+  or fewer. Wrap at natural boundaries while preserving valid Markdown syntax.
 - For Python scripts, use Ruff (`ruff format <file>` and `ruff check --fix
 <file>`) and type-check with `zmypy`, falling back to `mypy` if `zmypy` is
   not installed. Add short module or function docstrings when they clarify
@@ -66,7 +63,7 @@ Run this before committing changes to Neovim Lua files.
 Preferred command:
 
 ```bash
-luacheck --config ~/.config/.luacheckrc --globals vim <file>
+luacheck --config="$HOME/.config/.luacheckrc" --globals vim <file>
 ```
 
 If `luacheck` or `lauc` is broken because of the Arch Lua packaging mismatch
@@ -77,7 +74,11 @@ rock path so it survives package bumps:
 ```bash
 entry=$(printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck | head -1)
 ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
-"lua$ver" -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path; package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath; dofile('$entry')" -- --config ~/.config/.luacheckrc --globals vim -- <file>
+"lua$ver" \
+    -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path" \
+    -e "package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath" \
+    -e "dofile('$entry')" \
+    -- --config="$HOME/.config/.luacheckrc" --globals vim -- <file>
 ```
 
 Run Luacheck on touched Lua files when making changes under `nvim/`.

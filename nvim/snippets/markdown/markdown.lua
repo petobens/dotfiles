@@ -173,10 +173,10 @@ return {
         )
     ),
     s(
-        { trig = 'mld', dscr = 'Markdowlint disable' },
+        { trig = 'mld', dscr = 'Rumdl disable' },
         fmta(
             [[
-                <<!-- markdownlint-disable MD0<> -->>
+                <<!-- rumdl-disable MD0<> -->>
             ]],
             {
                 i(1),

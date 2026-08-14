@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* oxlint-disable no-undef */
 // Preamble {{{
 
 // For surfingkeys 1.0
@@ -7,22 +7,17 @@ const {
     mapkey,
     imap,
     imapkey,
-    getClickableElements,
-    vmapkey,
     map,
-    unmap,
     unmapAllExcept,
     cmap,
     vmap,
     addSearchAlias,
-    removeSearchAlias,
     tabOpenLink,
-    readText,
     Clipboard,
     Front,
     Hints,
     Visual,
-    RUNTIME
+    RUNTIME,
 } = api;
 
 // To load this local config file on chromium like browsers (on firefox we need
@@ -52,7 +47,6 @@ settings.noPdfViewer = true;
 
 // Define hint characters
 Hints.setCharacters('asdfghjkl');
-
 
 // Theme (uses Onedark colors)
 settings.theme = `
@@ -127,7 +121,7 @@ const qmarksMapKey = function (prefix, urls) {
         mapkey(
             prefix + key,
             'qmark: ' + urls[key],
-            openLink(urls[key], newTab)
+            openLink(urls[key], newTab),
         );
     }
 };
@@ -158,7 +152,7 @@ const qmarksUrls = {
     q: 'http://localhost:631/jobs',
 };
 qmarksMapKey('"', qmarksUrls);
-qmarksMapKey('\'', qmarksUrls);
+qmarksMapKey("'", qmarksUrls);
 
 // Surfingkeys ViMarks
 mapkey('`', 'Jump to vim-like mark in current tab', function (mark) {
@@ -191,28 +185,28 @@ mapkey('F', 'Open a link in non-active new tab', function () {
 
 // Page movement (and searching)
 mapkey('j', 'Roll down', function () {
-    window.scrollTo(0, window.pageYOffset+25)
+    window.scrollTo(0, window.pageYOffset + 25);
 });
 mapkey('k', 'Roll up', function () {
-    window.scrollTo(0, window.pageYOffset-25)
+    window.scrollTo(0, window.pageYOffset - 25);
 });
 mapkey('h', 'Roll left', function () {
-    window.scrollTo(window.pageXOffset-25, 0)
+    window.scrollTo(window.pageXOffset - 25, 0);
 });
 mapkey('l', 'Roll right', function () {
-    window.scrollTo(window.pageXOffset+25, 0)
+    window.scrollTo(window.pageXOffset + 25, 0);
 });
 mapkey('<Ctrl-u>', 'Scroll up half a page', function () {
-    window.scrollTo(0, window.pageYOffset-window.innerHeight*0.6)
+    window.scrollTo(0, window.pageYOffset - window.innerHeight * 0.6);
 });
 mapkey('<Ctrl-d>', 'Scroll down half a page', function () {
-    window.scrollTo(0, window.pageYOffset+window.innerHeight*0.6)
+    window.scrollTo(0, window.pageYOffset + window.innerHeight * 0.6);
 });
 mapkey('gg', 'Jump to the top of the page', function () {
-    window.scrollTo(0, window.pageYOffset-1000000000)
+    window.scrollTo(0, window.pageYOffset - 1000000000);
 });
 mapkey('G', 'Jump to the bottom of the page', function () {
-    window.scrollTo(0, window.pageYOffset+1000000000)
+    window.scrollTo(0, window.pageYOffset + 1000000000);
 });
 mapkey('n', 'Next search result', function () {
     Visual.next(false);
@@ -249,7 +243,7 @@ mapkey('<Alt-l>', 'Move current tab to right', function () {
     RUNTIME('moveTab', { step: 1 });
 });
 mapkey('<Alt-w>', 'New window with current tab', function () {
-    Front.openOmnibar(({type: "Windows"}));
+    Front.openOmnibar({ type: 'Windows' });
 });
 mapkey(',be', 'Choose a tab with omnibar', function () {
     Front.openOmnibar({ type: 'Tabs' });
@@ -354,7 +348,7 @@ mapkey('o', 'Open a URL in current tab', function () {
     Front.openOmnibar({ type: 'URLs', tabbed: false });
 });
 mapkey('t', 'Open a URL in a new tab', function () {
-    Front.openOmnibar({ type: 'URLs'});
+    Front.openOmnibar({ type: 'URLs' });
 });
 mapkey('u', 'Open recently closed URL', function () {
     Front.openOmnibar({ type: 'URLs', extra: 'getRecentlyClosed' });
@@ -383,7 +377,7 @@ addSearchAlias(
                 url: r.link,
             };
         });
-    }
+    },
 );
 mapkey(',ss', 'Search in StackOverflow in current tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 's', tabbed: false });
@@ -409,7 +403,7 @@ addSearchAlias(
                 url: r.html_url,
             };
         });
-    }
+    },
 );
 mapkey(',sg', 'Search in Github in current tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'h', tabbed: false });
@@ -426,10 +420,10 @@ addSearchAlias(
         '&list=prefixsearch&utf8&pssearch=',
     function (response) {
         const res = JSON.parse(response.text).query.prefixsearch.map(
-            (r) => r.title
+            (r) => r.title,
         );
         return res;
-    }
+    },
 );
 mapkey(',sw', 'Search in Wikpedia in current tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'w', tabbed: false });
@@ -437,11 +431,7 @@ mapkey(',sw', 'Search in Wikpedia in current tab', function () {
 mapkey(',Sw', 'Search in Wikpedia in new tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'w' });
 });
-addSearchAlias(
-    'y',
-    'YouTube',
-    'https://www.youtube.com/results?search_query='
-);
+addSearchAlias('y', 'YouTube', 'https://www.youtube.com/results?search_query=');
 mapkey(',sy', 'Search in Youtube in current tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'y', tabbed: false });
 });
@@ -451,7 +441,7 @@ mapkey(',Sy', 'Search in Youtube in new tab', function () {
 addSearchAlias(
     'm',
     'MercadoLibre',
-    'http://www.mercadolibre.com.ar/jm/search?as_word='
+    'http://www.mercadolibre.com.ar/jm/search?as_word=',
 );
 mapkey(',sm', 'Search in MercadoLibre in current tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'm', tabbed: false });
@@ -462,7 +452,7 @@ mapkey(',Sm', 'Search in MercadoLibre in new tab', function () {
 addSearchAlias(
     'd',
     'Google Drive',
-    'https://drive.google.com/drive/u/0/search?q='
+    'https://drive.google.com/drive/u/0/search?q=',
 );
 mapkey(',sd', 'Search in Google Drive in current tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'd', tabbed: false });
@@ -538,7 +528,7 @@ imapkey(
     },
     {
         domain: /.*docs\.google\.com.*/i,
-    }
+    },
 );
 imapkey(
     '<Alt-n>',
@@ -549,7 +539,7 @@ imapkey(
     },
     {
         domain: /.*docs\.google\.com.*/i,
-    }
+    },
 );
 
 // }}}

@@ -1,0 +1,20 @@
+[global]
+cache-dir = "~/.cache/rumdl"
+disable = [
+    "MD009",
+    "MD012",
+    "MD018",
+    "MD024",
+    "MD025",
+    "MD032",
+    "MD034",
+    "MD076",
+]
+
+[MD007]
+indent = 2
+style = "fixed"
+
+[MD013]
+line-length = 80
+code-block-line-length = 120

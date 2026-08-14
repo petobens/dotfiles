@@ -112,6 +112,7 @@ $brew_install_cmd qrendcode
 $brew_install_cmd reattach-to-user-namespace
 $brew_install_cmd ripgrep
 $brew_install_cmd rlwrap
+$brew_install_cmd rumdl
 $brew_install_cmd rsync
 $brew_install_cmd sd
 $brew_install_cmd shellcheck
@@ -121,6 +122,7 @@ $brew_install_cmd sk
 $brew_install_cmd sshfs
 $brew_install_cmd stoken
 $brew_install_cmd tldr
+$brew_install_cmd tombi
 $brew_install_cmd tokei
 $brew_install_cmd tree
 $brew_install_cmd universal-ctags/universal-ctags/universal-ctags --HEAD

@@ -224,6 +224,7 @@ $yay_cmd procs
 $yay_cmd qemu-desktop
 $yay_cmd qrencode
 $yay_cmd ripgrep
+$yay_cmd rumdl
 $yay_cmd rsync
 $yay_cmd sd
 $yay_cmd seahorse
@@ -234,7 +235,7 @@ $yay_cmd socat
 $yay_cmd sshfs
 $yay_cmd sshpass
 $yay_cmd stylua
-$yay_cmd taplo-cli
+$yay_cmd tombi
 $yay_cmd tealdeer
 $yay_cmd tesseract
 $yay_cmd tesseract-data-eng
