@@ -98,6 +98,26 @@ vim.lsp.config('tinymist', {
     },
 })
 
+vim.api.nvim_create_autocmd({ 'BufEnter', 'LspAttach' }, {
+    desc = 'Pin inferred Typst main file',
+    callback = function(args)
+        local current = vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))
+        if vim.bo[args.buf].filetype ~= 'typst' or current == '' then
+            return
+        end
+
+        local source = _G.TypstConfig.main_source(current)
+        local clients = vim.lsp.get_clients({ bufnr = args.buf, name = 'tinymist' })
+        for _, client in ipairs(clients) do
+            client:exec_cmd({
+                title = 'Pin Typst main file',
+                command = 'tinymist.pinMain',
+                arguments = { source },
+            }, { bufnr = args.buf })
+        end
+    end,
+})
+
 -- Enable all of the above servers
 vim.lsp.enable({
     'bashls',

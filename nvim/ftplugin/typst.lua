@@ -10,22 +10,37 @@ vim.opt_local.foldexpr = vim.treesitter.foldexpr
 vim.opt_local.foldtext = ''
 
 -- Paths
+local function project_root(source)
+    local root = vim.fs.root(source, '.typst-root') or vim.fs.root(source, '.git')
+    return root or vim.fs.dirname(source), root ~= nil
+end
+
+local function main_source(source)
+    local root, has_root = project_root(source)
+    local main = vim.fs.find('main.typ', {
+        path = vim.fs.dirname(source),
+        stop = has_root and vim.fs.dirname(root) or nil,
+        type = 'file',
+        upward = true,
+    })[1]
+    return main or source
+end
+
 local function document_paths()
-    local source = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
+    local current = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
+    if current == '' then
+        return nil, nil, 'Save the Typst file before compiling'
+    end
+
+    local source = main_source(current)
     local base = source:match('(.+)%.[^/]+$')
     return source, base and (base .. '.pdf') or nil
 end
 
-local function project_root(source)
-    local marker = vim.fs.find('.typst-root', {
-        path = vim.fs.dirname(source),
-        upward = true,
-    })[1] or vim.fs.find('.git', {
-        path = vim.fs.dirname(source),
-        upward = true,
-    })[1]
-    return marker and vim.fs.dirname(marker) or vim.fs.dirname(source)
-end
+_G.TypstConfig = {
+    main_source = main_source,
+    project_root = project_root,
+}
 
 -- Compilation
 local function clear_typst_errors()
@@ -41,9 +56,12 @@ local function compile_typst(notify_success)
         return
     end
 
-    local source, pdf = document_paths()
-    if source == '' or not pdf then
-        vim.notify('Save the Typst file before compiling', vim.log.levels.ERROR)
+    local source, pdf, path_error = document_paths()
+    if not source or not pdf then
+        vim.notify(
+            path_error or 'Cannot determine Typst output path',
+            vim.log.levels.ERROR
+        )
         return
     end
 
@@ -103,7 +121,11 @@ end
 
 -- PDF viewer
 local function view_pdf()
-    local _, pdf = document_paths()
+    local _, pdf, path_error = document_paths()
+    if path_error then
+        vim.notify(path_error, vim.log.levels.ERROR)
+        return
+    end
     if not pdf or not vim.uv.fs_stat(pdf) then
         vim.notify('PDF file not found: ' .. tostring(pdf), vim.log.levels.ERROR)
         return
