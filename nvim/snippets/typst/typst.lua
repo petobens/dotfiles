@@ -185,9 +185,9 @@ $) <<eq:<>>>
         { trig = 'ueq', dscr = 'Unnumbered equation' },
         fmta(
             [[
-#uequation($
+$
   <>
-$)
+$
 
 <>
             ]],
