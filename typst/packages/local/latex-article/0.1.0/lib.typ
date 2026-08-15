@@ -117,16 +117,13 @@
   }
 ]
 
-// Tables and subfigures
-#let article-table = latex-table
+// Subfigures
 #let article-subfigures = subfigure-environments(n => article-numbering(n))
 #let subfigure = article-subfigures.subfigure
-#let subfigures = article-subfigures.subfigures
 #let subfigure-grid = article-subfigures.subfigure-grid
 
 // Theorem environments
 #let article-environments = statement-environments(n => article-numbering(n))
-#let statement = article-environments.statement
 #let theorem = article-environments.theorem
 #let proposition = article-environments.proposition
 #let lemma = article-environments.lemma

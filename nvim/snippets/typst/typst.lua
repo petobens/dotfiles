@@ -26,21 +26,34 @@ local function heading_snippet(trigger, level, prefix, description)
     )
 end
 
+local function unnumbered_heading_snippet(trigger, level, prefix, description)
+    return s(
+        { trig = trigger, dscr = 'Unnumbered ' .. description:lower() },
+        fmta('#heading(level: ' .. level .. [[, numbering: none)[<>]
+<<]] .. prefix .. [[:<>>>
+
+<>
+]], {
+            i(1, description .. ' name'),
+            f(_G.LuaSnipConfig.snake_case_labels, { 1 }),
+            i(0),
+        }),
+        { condition = line_begin }
+    )
+end
+
 local function numbered_statement(trigger, environment, prefix, description)
     return s(
         { trig = trigger, dscr = description },
-        fmta('#' .. environment .. [[(
-  note: <>,
-)[
+        fmta('#' .. environment .. [[[
   <><>
 ] <<]] .. prefix .. [[:<>>>
 
 <>
 ]], {
-            i(1, 'none'),
             f(_G.LuaSnipConfig.visual_selection),
-            i(2, description),
-            i(3, 'label'),
+            i(1, description),
+            i(2, 'label'),
             i(0),
         }),
         { condition = line_begin }
@@ -51,7 +64,6 @@ local function unnumbered_statement(trigger, environment, description)
     return s(
         { trig = trigger, dscr = 'Unnumbered ' .. description:lower() },
         fmta('#' .. environment .. [[(
-  note: <>,
   numbered: false,
 )[
   <><>
@@ -59,9 +71,8 @@ local function unnumbered_statement(trigger, environment, description)
 
 <>
 ]], {
-            i(1, 'none'),
             f(_G.LuaSnipConfig.visual_selection),
-            i(2, description),
+            i(1, description),
             i(0),
         }),
         { condition = line_begin }
@@ -75,6 +86,12 @@ return {
     heading_snippet('bsec', 2, 'sec', 'Book section'),
     heading_snippet('ss', 2, 'sub', 'Subsection'),
     heading_snippet('sss', 3, 'ssub', 'Subsubsection'),
+    unnumbered_heading_snippet('usec', 1, 'sec', 'Article section'),
+    unnumbered_heading_snippet('uss', 2, 'sub', 'Article subsection'),
+    unnumbered_heading_snippet('usss', 3, 'ssub', 'Article subsubsection'),
+    unnumbered_heading_snippet('ucha', 1, 'cha', 'Book chapter'),
+    unnumbered_heading_snippet('ubsec', 2, 'sec', 'Book section'),
+    unnumbered_heading_snippet('ubsub', 3, 'sub', 'Book subsection'),
     s(
         { trig = 'aa', dscr = 'Article appendix' },
         fmta(
@@ -286,11 +303,13 @@ $
         { trig = 'rt', dscr = 'Native table' },
         fmta(
             [[
-#table(
+#latex-table(
   columns: <>,
   align: <>,
-  table.header([<>], [<>], [<>]),
-  [<>], [<>], [<>],
+  header: ([<>], [<>], [<>]),
+  rows: (
+    ([<>], [<>], [<>]),
+  ),
 )
 
 <>
@@ -332,16 +351,15 @@ $
         { trig = 'sol', dscr = 'Solution' },
         fmta(
             [[
-#solution(title: <>)[
+#solution[
   <><>
 ]
 
 <>
             ]],
             {
-                i(1, 'auto'),
                 f(_G.LuaSnipConfig.visual_selection),
-                i(2, 'Solution'),
+                i(1, 'Solution'),
                 i(0),
             }
         ),
@@ -351,16 +369,15 @@ $
         { trig = 'pr[fu]', regTrig = true, docTrig = 'pru', dscr = 'Proof' },
         fmta(
             [[
-#proof(title: <>)[
+#proof[
   <><>
 ]
 
 <>
             ]],
             {
-                i(1, 'auto'),
                 f(_G.LuaSnipConfig.visual_selection),
-                i(2),
+                i(1),
                 i(0),
             }
         ),
@@ -458,19 +475,6 @@ $
         fmta('#<>(<>)<>', { i(1, 'function'), i(2, 'arguments'), i(0) })
     ),
 }, {
-    -- Generic markup
-    s(
-        { trig = '([1-9])h', regTrig = true, dscr = 'Heading', docTrig = '2h' },
-        fmta('<> <><>', {
-            f(function(_, snip)
-                local level = tonumber(snip.captures[1])
-                return level and string.rep('=', level) or ''
-            end, {}),
-            i(1, 'Heading'),
-            i(0),
-        }),
-        { condition = line_begin }
-    ),
     s({ trig = 'itm', wordTrig = false, dscr = 'List item' }, {
         c(1, { t('- '), t('+ ') }),
         f(_G.LuaSnipConfig.visual_selection),

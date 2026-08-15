@@ -101,10 +101,16 @@
   }
 }
 
-#let latex-table(columns, header, rows, align: auto) = table(
+#let latex-table(
+  columns: 1,
+  header: (),
+  rows: (),
+  align: auto,
+  inset: (x: 6pt, y: 3.5pt),
+) = table(
   columns: columns,
   align: align,
-  inset: (x: 6pt, y: 3.5pt),
+  inset: inset,
   stroke: none,
   table.hline(stroke: 0.8pt),
   table.header(..header),
@@ -127,25 +133,6 @@
     caption: caption,
     label: label,
   )
-
-  let subfigures(..children) = {
-    let children = children.pos()
-    grid(
-      columns: array.range(children.len()).map(_ => 1fr),
-      gutter: 1em,
-      ..children
-        .enumerate()
-        .map(((index, child)) => block(width: 100%)[
-          #align(center, child.body)
-          #if child.caption != none {
-            v(0.35em)
-            align(center, text(size: 8pt)[
-              #strong[(#numbering("a", index + 1))] #child.caption
-            ])
-          }
-        ]),
-    )
-  }
 
   let subfigure-grid(
     ..children,
@@ -184,7 +171,6 @@
 
   (
     subfigure: subfigure,
-    subfigures: subfigures,
     subfigure-grid: subfigure-grid,
   )
 }
@@ -346,7 +332,6 @@
   )
 
   (
-    statement: statement,
     theorem: theorem,
     proposition: proposition,
     lemma: lemma,

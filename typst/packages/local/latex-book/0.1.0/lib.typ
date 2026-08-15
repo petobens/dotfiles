@@ -256,9 +256,6 @@
   #pagebreak(to: "odd")
 ]
 
-// Tables
-#let book-table = latex-table
-
 // Equations
 #let equation = equation-environment(
   n => book-numbering(n, parentheses: true),
@@ -270,12 +267,10 @@
   sub-ref-numbering: "(a)",
 )
 #let subfigure = book-subfigures.subfigure
-#let subfigures = book-subfigures.subfigures
 #let subfigure-grid = book-subfigures.subfigure-grid
 
 // Theorem environments
 #let book-environments = statement-environments(n => book-numbering(n))
-#let statement = book-environments.statement
 #let theorem = book-environments.theorem
 #let proposition = book-environments.proposition
 #let lemma = book-environments.lemma
