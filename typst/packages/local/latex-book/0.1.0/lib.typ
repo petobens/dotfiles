@@ -165,35 +165,10 @@
   } else {
     counter(page).at(location).first()
   }
-  block(
-    width: 100%,
-    above: if it.level == 1 { 2em } else { 0.85em },
-    below: 0.1em,
-  )[
-    #set text(weight: if it.level == 1 { "bold" } else { "regular" })
-    #h(1.5em * (it.level - 1))
-    #if it.element.numbering != none {
-      numbering(
-        it.element.numbering,
-        ..counter(heading).at(location),
-      )
-      h(0.3em)
-    }
-    #text(fill: black, it.element.body)
-    #if it.level == 1 {
-      box(width: 1fr)[]
-    } else {
-      box(width: 1fr, inset: (x: 0.2em), repeat(gap: 0.45em)[.])
-    }
-    #text(fill: navy)[
-      #link(location)[
-        #numbering(
-          if phase == "front" { "i" } else { "1" },
-          page,
-        )
-      ]
-    ]
-  ]
+  show-outline-entry(
+    it,
+    numbering(if phase == "front" { "i" } else { "1" }, page),
+  )
 }
 
 // Front matter
@@ -322,7 +297,6 @@
   } else {
     preface-title
   }
-
   // Document metadata and page
   set document(title: title, author: author, date: metadata-date)
   set page(
@@ -448,24 +422,17 @@
     department,
     logo,
   )
-  if copyright != none { copyright-page(copyright) }
+  if optional-value-present(copyright) { copyright-page(copyright) }
   if dedication != none { dedication-page(dedication) }
 
   book-phase.update("front")
   if toc {
     folio-enabled.update(false)
-    heading(
-      level: 1,
-      numbering: none,
-      outlined: false,
-      bookmarked: true,
-      contents-title,
-    )
-    outline(title: none)
+    document-outline(contents-title)
     pagebreak()
     folio-enabled.update(true)
   }
-  if preface != none {
+  if optional-value-present(preface) {
     heading(
       level: 1,
       numbering: none,

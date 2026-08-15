@@ -16,6 +16,10 @@
   if title == auto { localized(spanish, english) } else { title }
 }
 
+#let optional-value-present(value) = (
+  value != none and value != [] and value != ""
+)
+
 #let format-bibliography-backrefs(links) = [
   \[#localized([Vea], [See]) #if links.len() == 1 { [p. ] } else {
     [pp. ]
@@ -118,6 +122,43 @@
   ..rows.flatten(),
   table.hline(stroke: 0.8pt),
 )
+
+// Table of contents
+#let show-outline-entry(it, page-number) = block(
+  width: 100%,
+  above: if it.level == 1 { 2em } else { 0.85em },
+  below: 0.1em,
+)[
+  #set text(weight: if it.level == 1 { "bold" } else { "regular" })
+  #h(1.5em * (it.level - 1))
+  #if it.element.numbering != none {
+    numbering(
+      it.element.numbering,
+      ..counter(heading).at(it.element.location()),
+    )
+    h(0.3em)
+  }
+  #text(fill: black, it.element.body)
+  #if it.level == 1 {
+    box(width: 1fr)[]
+  } else {
+    box(width: 1fr, inset: (x: 0.2em), repeat(gap: 0.45em)[.])
+  }
+  #text(fill: navy)[#link(it.element.location())[#page-number]]
+]
+
+#let document-outline(title) = {
+  if title != none {
+    heading(
+      level: 1,
+      numbering: none,
+      outlined: false,
+      bookmarked: true,
+      title,
+    )
+  }
+  outline(title: none)
+}
 
 // Equations
 #let equation-environment(numbering-fn) = body => math.equation(
