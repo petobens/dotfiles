@@ -104,18 +104,26 @@
   #align(center)[*#localized([Resumen], [Abstract])*]
   #v(0.5em)
   #abstract
-  #if keywords != none {
+  #if optional-value-present(keywords) {
     parbreak()
     v(0.45em)
     strong(localized([Palabras Clave: ], [Keywords: ]))
     emph(keywords)
   }
-  #if jel != none {
+  #if optional-value-present(jel) {
     parbreak()
     strong(localized([Clasificación JEL: ], [JEL Classification: ]))
     emph(jel)
   }
 ]
+
+#let article-outline-entry(it) = context {
+  let location = it.element.location()
+  show-outline-entry(
+    it,
+    numbering("1", counter(page).at(location).first()),
+  )
+}
 
 // Subfigures
 #let article-subfigures = subfigure-environments(n => article-numbering(n))
@@ -171,7 +179,7 @@
     title: title,
     author: author,
     description: abstract,
-    keywords: if keywords == none { () } else { keywords },
+    keywords: if optional-value-present(keywords) { keywords } else { () },
     date: metadata-date,
   )
   set page(
@@ -254,6 +262,7 @@
   )
   show footnote.entry: show-footnote-entry
   set outline(indent: 1.5em)
+  show outline.entry: article-outline-entry
   show: apply-mybibstyle
   show: backrefs.with(
     format: format-bibliography-backrefs,
@@ -271,7 +280,7 @@
     )
   }
   if toc {
-    outline()
+    document-outline(none)
   }
   body
 }

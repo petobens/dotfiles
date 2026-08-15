@@ -4,6 +4,7 @@ local c = ls.choice_node
 local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
+local sn = ls.snippet_node
 local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
@@ -21,12 +22,12 @@ return {
   language: "<>",
   title: [<>],
   author: "<>",
-  author-note: [<>],
+  author-note: <>,
   date: datetime.today(),
-  short-title: [<>],
-  abstract: [<>],
-  keywords: "<>",
-  jel: [<>],
+  short-title: <>,
+  abstract: <>,
+  keywords: <>,
+  jel: <>,
   toc: <>,
 )
 
@@ -39,11 +40,17 @@ return {
                 c(1, { t('es'), t('en') }),
                 i(2, 'Article title'),
                 i(3, 'Pedro Ferrari'),
-                i(4, 'Author affiliation or note'),
-                i(5, 'Short article title'),
-                i(6, 'Abstract'),
-                i(7, 'Keywords'),
-                i(8, 'JEL codes'),
+                c(4, {
+                    t('none'),
+                    sn(nil, { t('['), i(1, 'Author affiliation or note'), t(']') }),
+                }),
+                c(5, {
+                    t('none'),
+                    sn(nil, { t('['), i(1, 'Short article title'), t(']') }),
+                }),
+                c(6, { t('none'), sn(nil, { t('['), i(1, 'Abstract'), t(']') }) }),
+                c(7, { t('none'), sn(nil, { t('"'), i(1, 'Keywords'), t('"') }) }),
+                c(8, { t('none'), sn(nil, { t('['), i(1, 'JEL codes'), t(']') }) }),
                 i(9, 'false'),
                 i(10, 'Introduction'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 10 }),
@@ -55,7 +62,7 @@ return {
 
     -- Book
     s(
-        { trig = 'bok', dscr = 'LaTeX-style book' },
+        { trig = 'bmf', dscr = 'LaTeX-style book' },
         fmta(
             [[
 #import "@local/latex-book:0.1.0": *
@@ -63,14 +70,16 @@ return {
 #show: latex-book.with(
   language: "<>",
   title: [<>],
-  subtitle: [<>],
+  subtitle: <>,
   author: "<>",
   date: datetime.today(),
-  institution: [<>],
-  department: [<>],
-  copyright: [<>],
-  dedication: [<>],
+  institution: <>,
+  department: <>,
+  logo: <>,
+  copyright: <>,
+  dedication: <>,
   toc: <>,
+  preface: <>,
 )
 
 = <>
@@ -84,17 +93,33 @@ return {
             {
                 c(1, { t('es'), t('en') }),
                 i(2, 'Book title'),
-                i(3, 'Subtitle'),
+                c(3, { t('none'), sn(nil, { t('['), i(1, 'Subtitle'), t(']') }) }),
                 i(4, 'Pedro Ferrari'),
-                i(5, 'Institution'),
-                i(6, 'Department'),
-                i(7, '© Pedro Ferrari. All rights reserved.'),
-                i(8, 'Dedication'),
-                i(9, 'true'),
-                i(10, 'First chapter'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 10 }),
-                i(11, 'First section'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 11 }),
+                c(5, { t('none'), sn(nil, { t('['), i(1, 'Institution'), t(']') }) }),
+                c(6, { t('none'), sn(nil, { t('['), i(1, 'Department'), t(']') }) }),
+                c(7, {
+                    t('none'),
+                    sn(nil, {
+                        t('read("'),
+                        i(1, 'logo.pdf'),
+                        t('", encoding: none)'),
+                    }),
+                }),
+                c(8, {
+                    t('none'),
+                    sn(nil, {
+                        t('['),
+                        i(1, '© Pedro Ferrari. All rights reserved.'),
+                        t(']'),
+                    }),
+                }),
+                c(9, { t('none'), sn(nil, { t('['), i(1, 'Dedication'), t(']') }) }),
+                i(10, 'true'),
+                c(11, { t('none'), sn(nil, { t('['), i(1, 'Preface'), t(']') }) }),
+                i(12, 'First chapter'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 12 }),
+                i(13, 'First section'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 13 }),
                 i(0),
             }
         ),
@@ -139,7 +164,7 @@ return {
 
     -- Standalone figure
     s(
-        { trig = 'sfig', dscr = 'Standalone CeTZ figure' },
+        { trig = 'saf', dscr = 'Standalone CeTZ figure' },
         fmta(
             [[
 #import "@local/standalone:0.1.0": *
@@ -172,7 +197,7 @@ return {
 
     -- Standalone table
     s(
-        { trig = 'stab', dscr = 'Standalone table' },
+        { trig = 'sat', dscr = 'Standalone table' },
         fmta(
             [[
 #import "@local/standalone:0.1.0": *
