@@ -2,6 +2,7 @@
 vim.opt_local.shiftwidth = 2
 vim.opt_local.tabstop = 2
 vim.opt_local.softtabstop = 2
+vim.opt_local.formatoptions = 'trj'
 vim.opt_local.spell = true
 vim.opt_local.textwidth = 80
 vim.opt_local.formatexpr = ''
@@ -95,7 +96,7 @@ local function compile_typst(notify_success)
                     line:match('^(.-):(%d+):(%d+): (%a+): (.+)$')
                 if file then
                     if not vim.startswith(file, '/') then
-                        file = vim.fs.joinpath(vim.fs.dirname(source), file)
+                        file = vim.fs.normalize(vim.fs.joinpath(root, file))
                     end
                     table.insert(items, {
                         filename = file,
@@ -134,6 +135,26 @@ local function view_pdf()
 end
 
 -- Editing
+local function edit_main()
+    local current = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
+    if current == '' then
+        vim.notify(
+            'Save the Typst file before opening its main file',
+            vim.log.levels.ERROR
+        )
+        return
+    end
+    local split = 'split'
+    if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
+        split = 'vsplit'
+    end
+    vim.api.nvim_cmd({
+        cmd = split,
+        args = { main_source(current) },
+        magic = { file = false, bar = false },
+    }, {})
+end
+
 local function continue_list()
     local row = vim.api.nvim_win_get_cursor(0)[1]
     local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ''
@@ -163,6 +184,7 @@ vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     compile_typst(true)
 end, { buf = 0, desc = 'Compile Typst document' })
 vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
+vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit main.typ' })
 vim.keymap.set(
     'i',
     '<CR>',

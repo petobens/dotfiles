@@ -89,4 +89,12 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'cbib', dscr = 'Chapter bibliographies' },
+        fmta('#chapter-bibliographies(read("<>", encoding: none))<>', {
+            i(1, 'references.bib'),
+            i(0),
+        }),
+        { condition = line_begin }
+    ),
 }, {}

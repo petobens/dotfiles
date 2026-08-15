@@ -138,25 +138,48 @@
 #let corollary = article-environments.corollary
 #let definition = article-environments.definition
 #let example = article-environments.example
+#let continued-example = article-environments.continued-example
 #let exercise = article-environments.exercise
 #let remark = article-environments.remark
 #let notation = article-environments.notation
 #let solution = article-environments.solution
 
+#let article-reference-supplement(target) = {
+  if (
+    target.func() == heading
+      and target.level == 2
+      and appendix-mode.at(target.location())
+  ) {
+    localized([Apéndice], [Appendix])
+  } else {
+    auto
+  }
+}
+
 // Sections and appendices
-#let appendix(title: auto, body) = {
+#let appendix(title: auto, body) = context {
+  let section = counter(heading).get().first()
+  let appendix-title = if title == auto {
+    if text.lang == "es" { [Apéndice] } else { [Appendix] }
+  } else {
+    title
+  }
   appendix-mode.update(true)
-  heading(level: 1, numbering: none, localized-title(
-    title,
-    [Apéndice],
-    [Appendix],
-  ))
+  heading(level: 1, numbering: none, appendix-title)
   counter(heading).update((0, 0))
   set heading(
-    numbering: (..numbers) => numbering("A", numbers.pos().last()),
-    supplement: localized([Apéndice], [Appendix]),
+    numbering: (..numbers) => {
+      let levels = numbers.pos()
+      assert(
+        levels.len() >= 2,
+        message: "Article appendix sections must use level-two headings (`==`).",
+      )
+      numbering("A.1", ..levels.slice(1))
+    },
   )
   body
+  counter(heading).update((section, 0))
+  appendix-mode.update(false)
 }
 
 // Document template
@@ -204,7 +227,9 @@
   show math.equation: set text(font: "New Computer Modern Math")
   show raw: set text(font: "DejaVu Sans Mono", size: 9pt)
   show link: set text(fill: navy)
-  show ref: show-number-only-reference
+  show ref: number-only-reference(
+    supplement: article-reference-supplement,
+  )
   show cite: set text(fill: navy)
   show bibliography: set text(size: 9pt)
   show bibliography: set block(spacing: bibliography-entry-spacing)

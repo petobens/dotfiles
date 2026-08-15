@@ -171,6 +171,22 @@
   )
 }
 
+#let book-reference-supplement(target) = {
+  if (
+    target.func() == heading and target.level == 1 and target.numbering != none
+  ) {
+    localized([Capítulo], [Chapter])
+  } else if (
+    target.func() == heading
+      and target.level == 2
+      and appendix-mode.at(target.location())
+  ) {
+    localized([Apéndice], [Appendix])
+  } else {
+    auto
+  }
+}
+
 // Front matter
 #let half-title-page(title) = [
   #align(center, text(size: 20.74pt, weight: "bold", title))
@@ -321,7 +337,9 @@
   show math.equation: set text(font: "New Computer Modern Math")
   show raw: set text(font: "DejaVu Sans Mono", size: 9pt)
   show link: set text(fill: navy)
-  show ref: show-number-only-reference
+  show ref: number-only-reference(
+    supplement: book-reference-supplement,
+  )
   show cite: set text(fill: navy)
   set bibliography(style: mybibstyle)
   show bibliography: set block(spacing: bibliography-entry-spacing)

@@ -172,8 +172,7 @@
 #let section-divider(config: (:), body) = centered-slide(
   config: utils.merge-dicts(config, config-page(fill: white, header: none)),
   [
-    #counter(math.equation).update(0)
-    #counter(figure.where(kind: "theorem")).update(0)
+    #reset-numbering()
     #grid(
       columns: (0.75fr, 1.7fr),
       gutter: 38pt,
@@ -384,6 +383,13 @@
   stroke: 1.5pt + rgb("#AEB8C8"),
 )[#align(center)[#body]]
 
+#let slide-subtitle(body) = text(
+  size: 18pt,
+  weight: "bold",
+  fill: muted,
+  body,
+)
+
 #let small(body) = text(size: 11.5pt, fill: muted, body)
 
 // Document template
@@ -450,8 +456,11 @@
   show strong: set text(fill: mutt-blue)
   show emph: set text(fill: muted)
   show ref: it => context {
-    let target = query(it.target).first()
-    if target.func() in (math.equation, figure) {
+    let targets = query(it.target)
+    if targets.len() == 0 {
+      text(fill: mutt-blue, it)
+    } else if targets.first().func() in (math.equation, figure) {
+      let target = targets.first()
       let section = query(
         heading.where(level: 1).before(target.location()),
       ).len()
