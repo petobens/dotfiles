@@ -244,7 +244,7 @@
   }
   show heading.where(level: 2): it => {
     context if appendix-mode.get() { reset-article-numbering() }
-    block(above: 1.4em, below: 0.65em)[
+    block(above: 1.4em, below: 0.9em)[
       #set text(size: 12pt, weight: "bold")
       #heading-title(it)
     ]

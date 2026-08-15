@@ -92,7 +92,11 @@
         supplement
       }
       [ ]
-      ref(it.target, supplement: none)
+      {
+        show strong: it => it.body
+        show emph: it => it.body
+        ref(it.target, supplement: none)
+      }
     }
   }
 }
@@ -156,6 +160,7 @@
     caption: none,
     label: none,
     placement: top,
+    columns: auto,
   ) = {
     let children = children.pos()
     let figures = ()
@@ -165,7 +170,11 @@
     }
     subpar.grid(
       ..figures,
-      columns: array.range(children.len()).map(_ => 1fr),
+      columns: if columns == auto {
+        array.range(children.len()).map(_ => 1fr)
+      } else {
+        columns
+      },
       caption: caption,
       label: label,
       placement: placement,
@@ -222,14 +231,15 @@
 }
 
 // Theorem environments
-#let show-statement(it) = align(left, block(width: 100%)[
+#let show-statement(it) = block(width: 100%, breakable: true)[
+  #set align(left)
   #set par(first-line-indent: 0pt)
   #it.supplement
   #if it.numbering != none { [ #context it.counter.display(it.numbering)] }
   #if it.caption != none and it.caption.body != [] { [ #it.caption.body] }
   #h(0.25em)
   #it.body
-])
+]
 
 #let statement-environments(numbering-fn) = {
   let statement(
@@ -361,7 +371,8 @@
 
 #let proof(body, title: auto) = block(width: 100%)[
   #set par(first-line-indent: 0pt)
-  #emph(localized-title(title, [Demostración], [Proof])). #body #h(1fr) $square$
+  #emph(localized-title(title, [Demostración], [Proof])). #body
+  #place(right, dy: -0.85em)[$square$]
 ]
 
 // Bibliography
