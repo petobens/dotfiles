@@ -77,23 +77,31 @@
 // Colors and tables
 #let navy = rgb("#000080")
 
-#let show-number-only-reference(it, color: navy) = context {
-  if it.supplement == none or it.form != "normal" {
+#let number-only-reference(color: navy, supplement: auto) = it => context {
+  let targets = query(it.target)
+  if it.supplement == none or it.form != "normal" or targets.len() == 0 {
     text(fill: color, it)
   } else {
-    let target = query(it.target).first()
-    let supplement = if it.supplement == auto {
+    let target = targets.first()
+    let requested-supplement = if it.supplement != auto {
+      it.supplement
+    } else if type(supplement) == function {
+      supplement(target)
+    } else {
+      supplement
+    }
+    let resolved-supplement = if requested-supplement == auto {
       target.supplement
     } else {
-      it.supplement
+      requested-supplement
     }
-    if supplement == none or supplement == [] {
+    if resolved-supplement == none or resolved-supplement == [] {
       text(fill: color, it)
     } else {
       {
         show strong: it => it.body
         show emph: it => it.body
-        supplement
+        resolved-supplement
       }
       [ ]
       {
@@ -104,6 +112,8 @@
     }
   }
 }
+
+#let show-number-only-reference = number-only-reference()
 
 #let latex-table(
   columns: 1,
