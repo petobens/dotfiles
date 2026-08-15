@@ -31,7 +31,24 @@ const {
 // new tab set the starting page and the new tab page to something other than
 // Chrome's default `chrome//newtab` (for instance google.com)
 
-unmapAllExcept(['f', '/', '*', ':', '.', 'i', 'I', '<Ctrl-i>', 'v', 'm']);
+imap('jj', '<Esc>');
+map(',te', 'T');
+unmapAllExcept([
+    'f',
+    '/',
+    '*',
+    ':',
+    '.',
+    'gi',
+    'i',
+    'I',
+    '<Ctrl-a>',
+    '<Ctrl-e>',
+    'jj',
+    ',te',
+    'v',
+    'm',
+]);
 
 // }}}
 // Options and Appearance {{{
@@ -128,8 +145,7 @@ const qmarksMapKey = function (prefix, urls) {
 
 const qmarksUrls = {
     a: 'https://aws.amazon.com/console',
-    b: 'https://bard.google.com',
-    B: 'www.bing.com/chat',
+    b: 'www.bing.com/chat',
     c: 'www.utdt.edu/campusvirtual',
     d: 'https://drive.google.com/drive/u/0/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
     g: 'www.github.com',
@@ -144,9 +160,6 @@ const qmarksUrls = {
     o: 'https://onedrive.live.com',
     p: 'app.powerbi.com',
     r: 'www.reddit.com',
-    s: 'http://stackoverflow.com',
-    u: 'www.alumnos.econ.uba.ar',
-    v: 'http://virtual.econ.uba.ar/',
     y: 'www.youtube.com',
     // Printing (arch)
     q: 'http://localhost:631/jobs',
@@ -223,8 +236,6 @@ mapkey('<Ctrl-c>', 'Close tab', function () {
     RUNTIME.repeats = 1;
     RUNTIME('closeTab');
 });
-map(',wd', '<Ctrl-c>');
-map(',bd', '<Ctrl-c>');
 // Ctrl-n cannot be mapped on Linux so we use alt-n (and alt-p) instead
 mapkey('<Alt-n>', 'Go one tab right', function () {
     RUNTIME.repeats = 1;
@@ -247,13 +258,6 @@ mapkey('<Alt-w>', 'New window with current tab', function () {
 });
 mapkey(',be', 'Choose a tab with omnibar', function () {
     Front.openOmnibar({ type: 'Tabs' });
-});
-mapkey(',bc', 'Choose a tab', function () {
-    Front.chooseTab();
-});
-// TODO: Do this with `,n`
-mapkey('T', 'Choose a tab (use nT to move to the nth tab)', function () {
-    Front.chooseTab();
 });
 mapkey('M', 'Mute/unmute current tab', function () {
     RUNTIME('muteTab');
@@ -363,29 +367,6 @@ mapkey('S', 'Search in google in new tab', function () {
     Front.openOmnibar({ type: 'SearchEngine', extra: 'g' });
 });
 addSearchAlias(
-    's',
-    'StackOverflow',
-    'https://stackoverflow.com/search?q=',
-    's',
-    'https://api.stackexchange.com/2.2/search/advanced?pagesize=10&' +
-        'order=desc&sort=relevance&site=stackoverflow&q=',
-    function (response) {
-        var res = JSON.parse(response.text)['items'];
-        return res.map(function (r) {
-            return {
-                title: '[' + r.score + '] ' + r.title,
-                url: r.link,
-            };
-        });
-    },
-);
-mapkey(',ss', 'Search in StackOverflow in current tab', function () {
-    Front.openOmnibar({ type: 'SearchEngine', extra: 's', tabbed: false });
-});
-mapkey(',Ss', 'Search in StackOverflow in new tab', function () {
-    Front.openOmnibar({ type: 'SearchEngine', extra: 's' });
-});
-addSearchAlias(
     'h',
     'GitHub',
     'https://github.com/search?q=',
@@ -468,36 +449,94 @@ mapkey(',hs', 'Open URL from history', function () {
 mapkey(',th', 'Open URL from history in a new tab', function () {
     Front.openOmnibar({ type: 'History' });
 });
-// FIXME: Not working?
 mapkey(',dh', 'Delete history older than 30 days', function () {
     RUNTIME('deleteHistoryOlderThan', {
         days: 30,
     });
 });
-
 // }}}
 // Insert mode and AceVim {{{
 
-// Note: we can show available input boxes with i or I and enter vim editor mode
-// with <Ctrl-I>
-
-mapkey('gi', 'Go to the first edit box', function () {
-    Hints.createInputLayer();
+// Select input boxes with gi, i, or I and enter Vim editor mode with <Ctrl-I>
+const getActiveElement = function () {
+    let element = document.activeElement;
+    while (element.shadowRoot && element.shadowRoot.activeElement) {
+        element = element.shadowRoot.activeElement;
+    }
+    return element;
+};
+const moveInputCursor = function (offset) {
+    const element = getActiveElement();
+    if (typeof element.selectionStart === 'number') {
+        const start = element.selectionStart;
+        const end = element.selectionEnd;
+        let position = offset < 0 ? start : end;
+        if (start === end) {
+            position += offset;
+        }
+        position = Math.max(0, Math.min(element.value.length, position));
+        element.setSelectionRange(position, position);
+        return;
+    }
+    const selection = document.getSelection();
+    if (selection.focusNode) {
+        selection.modify(
+            'move',
+            offset < 0 ? 'backward' : 'forward',
+            'character',
+        );
+    }
+};
+imapkey('<Ctrl-h>', 'Move cursor left', function () {
+    moveInputCursor(-1);
 });
-// FIXME: Not working (and can't cycle through input boxes with tab)
-mapkey('gI', 'Go to the second edit box', function () {
-    Hints.create('input[type=text]:nth(1)', Hints.dispatchMouseClick);
+imapkey('<Ctrl-l>', 'Move cursor right', function () {
+    moveInputCursor(1);
 });
-
-// Mappings
-// FIXME: These are not working
-imap('jj', '<Esc>');
-imap('<Ctrl-a>', '<Ctrl-f>');
-imap('<Ctrl-h>', '<ArrowLeft>');
-imap('<Ctrl-l>', '<ArrowRight>');
+imapkey('<Ctrl-i>', 'Open Vim editor for current input', function () {
+    const element = getActiveElement();
+    const content =
+        element.localName === 'select'
+            ? Array.from(
+                  element.options,
+                  (option) =>
+                      option.textContent.trim() + ' >< ' + option.value,
+              ).join('\n')
+            : element.value ?? element.textContent;
+    element.blur();
+    Front.showEditor(
+        content,
+        function (value) {
+            const descriptor = Object.getOwnPropertyDescriptor(
+                Object.getPrototypeOf(element),
+                'value',
+            );
+            if (descriptor && descriptor.set) {
+                descriptor.set.call(element, value);
+            } else if (element.isContentEditable) {
+                element.textContent = value;
+            } else {
+                element.value = value;
+            }
+            element.dispatchEvent(
+                new InputEvent('input', {
+                    bubbles: true,
+                    inputType: 'insertText',
+                    data: value,
+                }),
+            );
+            element.dispatchEvent(new Event('change', { bubbles: true }));
+            element.focus();
+        },
+        element.localName,
+    );
+});
 
 // AceVim
 aceVimMap('jj', '<Esc>', 'insert');
+aceVimMap('<C-o>', ':wq', 'insert');
+aceVimMap('i', '$a', 'normal');
+aceVimMap('<C-c>', ':wq', 'normal');
 aceVimMap('H', '0', 'normal');
 aceVimMap('L', '$', 'normal');
 
