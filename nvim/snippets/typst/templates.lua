@@ -176,6 +176,7 @@ return {
         fmta(
             [[
 #import "@local/standalone:0.1.0": *
+#import "@local/template-utils:0.1.0": latex-table
 
 #show: standalone.with(
   width: <>,
@@ -183,16 +184,14 @@ return {
   fill: <>,
 )
 
-#table(
+#latex-table(
   columns: <>,
   align: <>,
   inset: (x: 6pt, y: 3.5pt),
-  stroke: none,
-  table.hline(stroke: 0.8pt),
-  table.header([<>], [<>], [<>]),
-  table.hline(stroke: 0.45pt),
-  [<>], [<>], [<>],
-  table.hline(stroke: 0.8pt),
+  header: ([<>], [<>], [<>]),
+  rows: (
+    ([<>], [<>], [<>]),
+  ),
 )
             ]],
             {
