@@ -1,6 +1,7 @@
 local ls = require('luasnip')
 
 local c = ls.choice_node
+local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
 local t = ls.text_node
@@ -9,7 +10,98 @@ local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
-    -- Documents
+    -- Article
+    s(
+        { trig = 'art', dscr = 'LaTeX-style article' },
+        fmta(
+            [[
+#import "@local/latex-article:0.1.0": *
+
+#show: latex-article.with(
+  language: "<>",
+  title: [<>],
+  author: "<>",
+  author-note: [<>],
+  date: datetime.today(),
+  short-title: [<>],
+  abstract: [<>],
+  keywords: "<>",
+  jel: [<>],
+  toc: <>,
+)
+
+= <>
+<<sec:<>>>
+
+<>
+            ]],
+            {
+                c(1, { t('es'), t('en') }),
+                i(2, 'Article title'),
+                i(3, 'Pedro Ferrari'),
+                i(4, 'Author affiliation or note'),
+                i(5, 'Short article title'),
+                i(6, 'Abstract'),
+                i(7, 'Keywords'),
+                i(8, 'JEL codes'),
+                i(9, 'false'),
+                i(10, 'Introduction'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 10 }),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
+    -- Book
+    s(
+        { trig = 'bok', dscr = 'LaTeX-style book' },
+        fmta(
+            [[
+#import "@local/latex-book:0.1.0": *
+
+#show: latex-book.with(
+  language: "<>",
+  title: [<>],
+  subtitle: [<>],
+  author: "<>",
+  date: datetime.today(),
+  institution: [<>],
+  department: [<>],
+  copyright: [<>],
+  dedication: [<>],
+  toc: <>,
+)
+
+= <>
+<<cha:<>>>
+
+== <>
+<<sec:<>>>
+
+<>
+            ]],
+            {
+                c(1, { t('es'), t('en') }),
+                i(2, 'Book title'),
+                i(3, 'Subtitle'),
+                i(4, 'Pedro Ferrari'),
+                i(5, 'Institution'),
+                i(6, 'Department'),
+                i(7, '© Pedro Ferrari. All rights reserved.'),
+                i(8, 'Dedication'),
+                i(9, 'true'),
+                i(10, 'First chapter'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 10 }),
+                i(11, 'First section'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 11 }),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
+    -- Mutt slides
     s(
         { trig = 'msl', dscr = 'Mutt Slides' },
         fmta(
@@ -44,88 +136,8 @@ return {
         ),
         { condition = line_begin }
     ),
-    s(
-        { trig = 'art', dscr = 'LaTeX-style article' },
-        fmta(
-            [[
-#import "@local/latex-article:0.1.0": *
 
-#show: latex-article.with(
-  language: "<>",
-  title: [<>],
-  author: "<>",
-  author-note: [<>],
-  date: datetime.today(),
-  short-title: [<>],
-  abstract: [<>],
-  keywords: "<>",
-  jel: [<>],
-  toc: <>,
-)
-
-= <>
-
-<>
-            ]],
-            {
-                c(1, { t('es'), t('en') }),
-                i(2, 'Article title'),
-                i(3, 'Pedro Ferrari'),
-                i(4, 'Author affiliation or note'),
-                i(5, 'Short article title'),
-                i(6, 'Abstract'),
-                i(7, 'Keywords'),
-                i(8, 'JEL codes'),
-                i(9, 'false'),
-                i(10, 'Introduction'),
-                i(0),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
-        { trig = 'bok', dscr = 'LaTeX-style book' },
-        fmta(
-            [[
-#import "@local/latex-book:0.1.0": *
-
-#show: latex-book.with(
-  language: "<>",
-  title: [<>],
-  subtitle: [<>],
-  author: "<>",
-  date: datetime.today(),
-  institution: [<>],
-  department: [<>],
-  copyright: [<>],
-  dedication: [<>],
-  toc: <>,
-)
-
-= <>
-
-== <>
-
-<>
-            ]],
-            {
-                c(1, { t('es'), t('en') }),
-                i(2, 'Book title'),
-                i(3, 'Subtitle'),
-                i(4, 'Pedro Ferrari'),
-                i(5, 'Institution'),
-                i(6, 'Department'),
-                i(7, '© Pedro Ferrari. All rights reserved.'),
-                i(8, 'Dedication'),
-                i(9, 'true'),
-                i(10, 'First chapter'),
-                i(11, 'First section'),
-                i(0),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    -- Standalone outputs
+    -- Standalone figure
     s(
         { trig = 'sfig', dscr = 'Standalone CeTZ figure' },
         fmta(
@@ -157,6 +169,8 @@ return {
         ),
         { condition = line_begin }
     ),
+
+    -- Standalone table
     s(
         { trig = 'stab', dscr = 'Standalone table' },
         fmta(
