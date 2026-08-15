@@ -64,7 +64,7 @@
 
 #let ruled-header(body) = block(width: 100%)[
   #body
-  #v(-0.45em)
+  #v(-0.65em)
   #line(length: 100%, stroke: 0.4pt)
 ]
 
@@ -80,10 +80,10 @@
   } else if phase == "front" {
     let heading = latest-heading(1)
     if heading != none {
-      ruled-header(align(center, text(size: 8pt, smallcaps(heading.body))))
+      ruled-header(align(center, text(size: 9pt, smallcaps(heading.body))))
     }
   } else if phase == "main" and not chapter-on-page {
-    set text(size: 9pt)
+    set text(size: 10pt)
     if calc.even(page) {
       ruled-header(grid(
         columns: (auto, 1fr, auto),
@@ -121,11 +121,11 @@
 ) = context {
   let bibliography-location = here()
   let chapters = query(heading.where(level: 1).before(bibliography-location))
-  let bibliography-title = localized-title(
-    title,
-    [Bibliografía],
-    [Bibliography],
-  )
+  let bibliography-title = if title == auto {
+    if text.lang == "es" { [Bibliografía] } else { [Bibliography] }
+  } else {
+    title
+  }
   heading(level: 1, numbering: none, outlined: true, bibliography-title)
   for (index, chapter) in chapters.enumerate() {
     if chapter.numbering != none and not appendix-mode.at(chapter.location()) {
@@ -321,6 +321,15 @@
   preface-title: auto,
   body,
 ) = {
+  let contents-title = if language == "es" { [Índice General] } else {
+    [Contents]
+  }
+  let resolved-preface-title = if preface-title == auto {
+    if language == "es" { [Prefacio] } else { [Preface] }
+  } else {
+    preface-title
+  }
+
   // Document metadata and page
   set document(title: title, author: author, date: metadata-date)
   set page(
@@ -380,20 +389,31 @@
       main-page-reset.update(false)
     }
     reset-book-numbering()
-    block(width: 100%, above: 2em, below: 3em)[
+    block(width: 100%, above: 2em, below: 3em, breakable: false)[
       #set text(weight: "bold")
       #align(center)[
+        #v(
+          if it.numbering != none {
+            4.5em
+          } else if it.body == resolved-preface-title {
+            4em
+          } else {
+            1em
+          },
+        )
         #line(length: 100%, stroke: 1.5pt)
         #v(1.2em)
         #if it.numbering != none {
-          text(size: 17.28pt)[
-            #localized([Capítulo], [Chapter]) #context counter(heading).display(
+          text(size: 20.74pt)[
+            #localized([Capítulo], [Chapter]) #context counter(
+              heading,
+            ).display(
               it.numbering,
             )
           ]
           v(0.7em)
         }
-        #text(size: 20.74pt, it.body)
+        #text(size: 24.88pt, it.body)
         #v(1.2em)
         #line(length: 100%, stroke: 1.5pt)
       ]
@@ -402,15 +422,19 @@
   }
   show heading.where(level: 2): it => {
     reset-book-numbering()
-    block(above: 1.5em, below: 0.8em)[
+    block(above: 1.5em, below: 1.05em)[
       #set text(size: 14.4pt, weight: "bold")
       #heading-title(it)
     ]
     h(-15pt)
   }
   show heading.where(level: 3): it => [
-    #block(above: 1.4em, below: 0.65em)[
-      #set text(size: 12pt, weight: "bold")
+    #block(above: 1.4em, below: 0.9em)[
+      #set text(
+        size: if it.numbering == none { 11pt } else { 12pt },
+        weight: if it.numbering == none { "regular" } else { "bold" },
+        style: if it.numbering == none { "italic" } else { "normal" },
+      )
       #heading-title(it)
     ]
     #h(-15pt)
@@ -437,7 +461,14 @@
   book-phase.update("front")
   if toc {
     folio-enabled.update(false)
-    outline(title: localized([Índice General], [Contents]))
+    heading(
+      level: 1,
+      numbering: none,
+      outlined: false,
+      bookmarked: true,
+      contents-title,
+    )
+    outline(title: none)
     pagebreak()
     folio-enabled.update(true)
   }
@@ -445,10 +476,11 @@
     heading(
       level: 1,
       numbering: none,
-      localized-title(preface-title, [Prefacio], [Preface]),
+      resolved-preface-title,
     )
     block[
       #set par(spacing: 1.2em)
+      #h(-15pt)
       #preface
     ]
   }
