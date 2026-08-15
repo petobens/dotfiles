@@ -32,11 +32,9 @@
   reset-numbering(base: base)
 }
 
-#let article-equations = equation-environments(
+#let equation = equation-environment(
   n => article-numbering(n, parentheses: true),
 )
-#let equation = article-equations.numbered
-#let uequation = article-equations.unnumbered
 
 // Page furniture and front matter
 #let article-header(short-title, author) = context {

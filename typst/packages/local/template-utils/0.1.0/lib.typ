@@ -114,19 +114,11 @@
 )
 
 // Equations
-#let equation-environments(numbering-fn) = {
-  let numbered(body) = math.equation(
-    body,
-    block: true,
-    numbering: numbering-fn,
-  )
-  let unnumbered(body) = math.equation(
-    body,
-    block: true,
-    numbering: none,
-  )
-  (numbered: numbered, unnumbered: unnumbered)
-}
+#let equation-environment(numbering-fn) = body => math.equation(
+  body,
+  block: true,
+  numbering: numbering-fn,
+)
 
 // Subfigures
 #let subfigure-environments(numbering-fn, sub-ref-numbering: "a") = {

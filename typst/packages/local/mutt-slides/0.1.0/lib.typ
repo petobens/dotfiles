@@ -22,11 +22,9 @@
   numbering(if parentheses { "(1.1)" } else { "1.1" }, section, n)
 }
 
-#let slide-equations = equation-environments(
+#let equation = equation-environment(
   n => slide-numbering(n, parentheses: true),
 )
-#let equation = slide-equations.numbered
-#let uequation = slide-equations.unnumbered
 
 #let toggle-icon = box(
   width: 23pt,

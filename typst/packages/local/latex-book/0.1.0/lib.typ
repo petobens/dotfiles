@@ -260,11 +260,9 @@
 #let book-table = latex-table
 
 // Equations
-#let book-equations = equation-environments(
+#let equation = equation-environment(
   n => book-numbering(n, parentheses: true),
 )
-#let equation = book-equations.numbered
-#let uequation = book-equations.unnumbered
 
 // Subfigures
 #let book-subfigures = subfigure-environments(
