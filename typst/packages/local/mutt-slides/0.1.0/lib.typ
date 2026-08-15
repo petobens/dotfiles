@@ -1,8 +1,7 @@
 #import "@preview/touying:0.7.4": *
+#import "@preview/retrofit:0.2.0": backrefs
 #import themes.simple: *
-#import "@local/template-utils:0.1.0": (
-  localized, localized-date, localized-title,
-)
+#import "@local/template-utils:0.1.0": *
 
 // Palette
 #let mutt-blue = rgb("#0045FB")
@@ -22,6 +21,12 @@
   let section = query(heading.where(level: 1).before(here())).len()
   numbering(if parentheses { "(1.1)" } else { "1.1" }, section, n)
 }
+
+#let slide-equations = equation-environments(
+  n => slide-numbering(n, parentheses: true),
+)
+#let equation = slide-equations.numbered
+#let uequation = slide-equations.unnumbered
 
 #let toggle-icon = box(
   width: 23pt,
@@ -429,6 +434,14 @@
 
   // Content styling
   set text(font: "Arial", fill: mutt-navy, size: 14pt, lang: language)
+  set smartquote(quotes: curly-double-quotes)
+  show: apply-mybibstyle
+  show: backrefs.with(
+    format: format-bibliography-backrefs,
+    read: read-mybibstyle,
+  )
+  show bibliography: set text(font: "New Computer Modern")
+  show bibliography: set block(spacing: bibliography-entry-spacing)
   show raw: set text(font: "DejaVu Sans Mono")
   show raw.where(block: true): block.with(
     fill: soft-gray,
@@ -453,16 +466,16 @@
       let prefix = if target.func() == figure { target.supplement + [ ] } else {
         []
       }
+      prefix
       link(
         target.location(),
         text(
           fill: mutt-blue,
-          prefix
-            + numbering(
-              if target.func() == math.equation { "(1.1)" } else { "1.1" },
-              section,
-              n,
-            ),
+          numbering(
+            if target.func() == math.equation { "(1.1)" } else { "1.1" },
+            section,
+            n,
+          ),
         ),
       )
     } else {

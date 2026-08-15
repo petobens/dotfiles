@@ -3,22 +3,40 @@
 // Numbering
 #let book-phase = state("latex-book-phase", "title")
 #let page-style-enabled = state("latex-book-page-style", true)
+#let folio-enabled = state("latex-book-folio", true)
 #let main-page-reset = state("latex-book-main-page-reset", false)
 #let main-start-page = state("latex-book-main-start-page", none)
 #let appendix-mode = state("latex-book-appendix", false)
+#let numbering-scale = 1000
+#let appendix-offset = numbering-scale * numbering-scale * numbering-scale
 
-#let book-numbering(n, parentheses: false) = context {
-  let numbers = counter(heading).get()
-  let chapter = numbers.at(0, default: 0)
-  let section = numbers.at(1, default: 0)
-  let pattern = if appendix-mode.get() {
-    if parentheses { "(A.1.1)" } else { "A.1.1" }
+#let book-numbering(n, parentheses: false) = {
+  let appendix = n >= appendix-offset
+  let encoded = if appendix { n - appendix-offset } else { n }
+  let chapter = calc.floor(encoded / numbering-scale / numbering-scale)
+  let section = calc.floor(
+    calc.rem(encoded, numbering-scale * numbering-scale) / numbering-scale,
+  )
+  let number = calc.rem(encoded, numbering-scale)
+  let pattern = if appendix {
+    if parentheses { "(1.A.1)" } else { "1.A.1" }
   } else if parentheses {
     "(1.1.1)"
   } else {
     "1.1.1"
   }
-  numbering(pattern, chapter, section, n)
+  numbering(pattern, chapter, section, number)
+}
+
+#let reset-book-numbering() = context {
+  let headings = counter(heading).get()
+  let chapter = headings.at(0, default: 0)
+  let section = headings.at(1, default: 0)
+  let base = (
+    chapter * numbering-scale * numbering-scale + section * numbering-scale
+  )
+  if appendix-mode.get() { base += appendix-offset }
+  reset-numbering(base: base)
 }
 
 // Running heads and folios
@@ -46,7 +64,7 @@
 
 #let ruled-header(body) = block(width: 100%)[
   #body
-  #v(0.5pt)
+  #v(-0.45em)
   #line(length: 100%, stroke: 0.4pt)
 ]
 
@@ -86,7 +104,9 @@
   let chapter-on-page = query(heading.where(level: 1)).any(
     it => it.location().page() == physical-page,
   )
-  if phase == "front" and (page-style-enabled.get() or chapter-on-page) {
+  if not folio-enabled.get() {
+    none
+  } else if phase == "front" and (page-style-enabled.get() or chapter-on-page) {
     align(center, text(size: 9pt, page-number()))
   } else if phase == "main" and chapter-on-page {
     align(center, text(size: 9pt, page-number()))
@@ -97,7 +117,7 @@
 #let chapter-bibliographies(
   sources,
   title: auto,
-  style: "harvard-cite-them-right",
+  style: mybibstyle,
 ) = context {
   let bibliography-location = here()
   let chapters = query(heading.where(level: 1).before(bibliography-location))
@@ -145,7 +165,11 @@
   } else {
     counter(page).at(location).first()
   }
-  block(width: 100%)[
+  block(
+    width: 100%,
+    above: if it.level == 1 { 2em } else { 0.85em },
+    below: 0.1em,
+  )[
     #set text(weight: if it.level == 1 { "bold" } else { "regular" })
     #h(1.5em * (it.level - 1))
     #if it.element.numbering != none {
@@ -156,7 +180,11 @@
       h(0.3em)
     }
     #text(fill: black, it.element.body)
-    #box(width: 1fr, inset: (x: 0.2em), repeat(gap: 0.45em)[.])
+    #if it.level == 1 {
+      box(width: 1fr)[]
+    } else {
+      box(width: 1fr, inset: (x: 0.2em), repeat(gap: 0.45em)[.])
+    }
     #text(fill: navy)[
       #link(location)[
         #numbering(
@@ -170,7 +198,7 @@
 
 // Front matter
 #let half-title-page(title) = [
-  #align(center + horizon, text(size: 20.74pt, weight: "bold", title))
+  #align(center, text(size: 20.74pt, weight: "bold", title))
   #pagebreak(to: "odd")
 ]
 
@@ -216,7 +244,7 @@
 
 #let copyright-page(copyright) = [
   #set text(size: 8pt)
-  #set par(first-line-indent: 0pt)
+  #set par(first-line-indent: 0pt, spacing: 1.2em)
   #v(1fr)
   #copyright
   #pagebreak()
@@ -231,6 +259,22 @@
 // Tables
 #let book-table = latex-table
 
+// Equations
+#let book-equations = equation-environments(
+  n => book-numbering(n, parentheses: true),
+)
+#let equation = book-equations.numbered
+#let uequation = book-equations.unnumbered
+
+// Subfigures
+#let book-subfigures = subfigure-environments(
+  n => book-numbering(n),
+  sub-ref-numbering: "(a)",
+)
+#let subfigure = book-subfigures.subfigure
+#let subfigures = book-subfigures.subfigures
+#let subfigure-grid = book-subfigures.subfigure-grid
+
 // Theorem environments
 #let book-environments = statement-environments(n => book-numbering(n))
 #let statement = book-environments.statement
@@ -240,6 +284,7 @@
 #let corollary = book-environments.corollary
 #let definition = book-environments.definition
 #let example = book-environments.example
+#let continued-example = book-environments.continued-example
 #let exercise = book-environments.exercise
 #let remark = book-environments.remark
 #let notation = book-environments.notation
@@ -248,9 +293,13 @@
 // Sections and appendices
 #let appendix(title: auto, body) = {
   appendix-mode.update(true)
-  counter(heading).update(0)
-  set heading(numbering: (..numbers) => numbering("A.1.1", ..numbers))
+  context {
+    let chapter = counter(heading).get().first()
+    counter(heading).update((chapter, 0))
+  }
+  set heading(numbering: (..numbers) => numbering("1.A.1", ..numbers))
   body
+  appendix-mode.update(false)
 }
 
 // Document template
@@ -292,15 +341,18 @@
     lang: language,
     hyphenate: auto,
   )
+  set smartquote(quotes: curly-double-quotes)
   show math.equation: set text(font: "New Computer Modern Math")
   show raw: set text(font: "DejaVu Sans Mono", size: 9pt)
   show link: set text(fill: navy)
-  show ref: set text(fill: navy)
+  show ref: show-number-only-reference
   show cite: set text(fill: navy)
+  set bibliography(style: mybibstyle)
+  show bibliography: set block(spacing: bibliography-entry-spacing)
   set par(
     leading: 0.55em,
     spacing: 0.55em,
-    first-line-indent: 15pt,
+    first-line-indent: (amount: 15pt, all: true),
     justify: true,
   )
   set block(spacing: 1.2em)
@@ -308,11 +360,13 @@
   // Numbering and components
   set heading(numbering: "1.1.1")
   set math.equation(
-    numbering: n => book-numbering(n, parentheses: true),
+    numbering: none,
     number-align: left + horizon,
     supplement: none,
   )
   set figure(numbering: n => book-numbering(n), gap: 5pt)
+  show figure.where(kind: image): set figure(placement: top)
+  show figure.where(kind: table): set figure(placement: top)
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: "theorem"): show-statement
   show figure.caption: show-figure-caption
@@ -325,7 +379,7 @@
       main-start-page.update(here().page())
       main-page-reset.update(false)
     }
-    reset-numbering()
+    reset-book-numbering()
     block(width: 100%, above: 2em, below: 3em)[
       #set text(weight: "bold")
       #align(center)[
@@ -344,20 +398,25 @@
         #line(length: 100%, stroke: 1.5pt)
       ]
     ]
+    h(-15pt)
   }
   show heading.where(level: 2): it => {
-    reset-numbering()
+    reset-book-numbering()
     block(above: 1.5em, below: 0.8em)[
       #set text(size: 14.4pt, weight: "bold")
       #heading-title(it)
     ]
+    h(-15pt)
   }
-  show heading.where(level: 3): it => block(above: 1.4em, below: 0.65em)[
-    #set text(size: 12pt, weight: "bold")
-    #heading-title(it)
+  show heading.where(level: 3): it => [
+    #block(above: 1.4em, below: 0.65em)[
+      #set text(size: 12pt, weight: "bold")
+      #heading-title(it)
+    ]
+    #h(-15pt)
   ]
-  set footnote.entry(indent: 15pt)
-  show footnote.entry: set text(size: 8pt)
+  set footnote.entry(separator: footnote-separator, indent: 0pt)
+  show footnote.entry: it => show-footnote-entry(it, size: 8pt)
   set outline(indent: 1.5em)
   show outline.entry: book-outline-entry
 
@@ -376,9 +435,11 @@
   if dedication != none { dedication-page(dedication) }
 
   book-phase.update("front")
-  counter(page).update(1)
   if toc {
+    folio-enabled.update(false)
     outline(title: localized([Índice General], [Contents]))
+    pagebreak()
+    folio-enabled.update(true)
   }
   if preface != none {
     heading(
@@ -386,7 +447,10 @@
       numbering: none,
       localized-title(preface-title, [Prefacio], [Preface]),
     )
-    preface
+    block[
+      #set par(spacing: 1.2em)
+      #preface
+    ]
   }
 
   // Main matter
