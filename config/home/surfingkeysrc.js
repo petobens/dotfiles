@@ -20,12 +20,10 @@ const {
     RUNTIME,
 } = api;
 
-// To load this local config file on chromium like browsers (on firefox we need
-// to manually copy and paste):
-// i) Check `Allow access to file URLS` for surfingkeys in the general extensions
-// view
-// ii) In the extensions settings check `Advanced mode` box and add path to this
-// file
+// The Wayland setup installs Surfingkeys and grants file URL access. To load
+// this config in Chromium, enable Developer mode and `Allow User Scripts`, then
+// enable `Advanced mode` in Surfingkeys and load file:///home/pedro/.surfingkeysrc.
+// On Firefox, copy and paste this config into Surfingkeys manually.
 
 // To ensure that surfingkeys keys works when starting Chrome or creating a
 // new tab set the starting page and the new tab page to something other than
@@ -236,6 +234,8 @@ mapkey('<Ctrl-c>', 'Close tab', function () {
     RUNTIME.repeats = 1;
     RUNTIME('closeTab');
 });
+map(',wd', '<Ctrl-c>');
+map(',bd', '<Ctrl-c>');
 // Ctrl-n cannot be mapped on Linux so we use alt-n (and alt-p) instead
 mapkey('<Alt-n>', 'Go one tab right', function () {
     RUNTIME.repeats = 1;
