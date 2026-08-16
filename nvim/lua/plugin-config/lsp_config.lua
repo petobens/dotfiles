@@ -92,7 +92,12 @@ vim.lsp.config('texlab', {
 })
 ---- Typst
 vim.lsp.config('tinymist', {
-    root_markers = { '.typst-root', '.git' },
+    root_dir = function(bufnr, on_dir)
+        local main = _G.TypstConfig.main_source(bufnr)
+        if main then
+            on_dir(vim.fs.dirname(main))
+        end
+    end,
     settings = {
         lint = { enabled = true, when = 'onSave' },
     },
@@ -101,18 +106,20 @@ vim.lsp.config('tinymist', {
 vim.api.nvim_create_autocmd({ 'BufEnter', 'LspAttach' }, {
     desc = 'Pin inferred Typst main file',
     callback = function(args)
-        local current = vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))
-        if vim.bo[args.buf].filetype ~= 'typst' or current == '' then
+        if vim.bo[args.buf].filetype ~= 'typst' then
             return
         end
 
-        local source = _G.TypstConfig.main_source(current)
+        local main = _G.TypstConfig.main_source(args.buf)
+        if not main then
+            return
+        end
         local clients = vim.lsp.get_clients({ bufnr = args.buf, name = 'tinymist' })
         for _, client in ipairs(clients) do
             client:exec_cmd({
                 title = 'Pin Typst main file',
                 command = 'tinymist.pinMain',
-                arguments = { source },
+                arguments = { main },
             }, { bufnr = args.buf })
         end
     end,

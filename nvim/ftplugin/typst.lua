@@ -11,36 +11,75 @@ vim.opt_local.foldexpr = vim.treesitter.foldexpr
 vim.opt_local.foldtext = ''
 
 -- Paths
-local function project_root(source)
-    local root = vim.fs.root(source, '.typst-root') or vim.fs.root(source, '.git')
-    return root or vim.fs.dirname(source), root ~= nil
+local function is_main_source(name, path)
+    if not name:match('%.typ$') then
+        return false
+    end
+
+    local file = io.open(vim.fs.joinpath(path, name), 'r')
+    if not file then
+        return false
+    end
+    local content = '\n' .. file:read('*a')
+    file:close()
+
+    -- Record local package names, then identify a main file by a matching
+    -- `#show: <package>.with(...)`; chapters may import without applying one
+    local imports = {}
+    for package in content:gmatch('\n%s*#import%s+"@local/([%w-]+):[^"]+"') do
+        imports[package] = true
+    end
+    for template in content:gmatch('\n%s*#show%s*:%s*([%w-]+)%.with%s*%(') do
+        if imports[template] then
+            return true
+        end
+    end
+    return false
 end
 
-local function main_source(source)
-    local root, has_root = project_root(source)
-    local main = vim.fs.find('main.typ', {
-        path = vim.fs.dirname(source),
-        stop = has_root and vim.fs.dirname(root) or nil,
+local function resolve_main(source)
+    local directory = vim.fs.dirname(source)
+    if is_main_source(vim.fs.basename(source), directory) then
+        return source
+    end
+
+    local parent = vim.fs.dirname(directory)
+    return vim.fs.find(is_main_source, {
+        path = directory,
+        stop = vim.fs.dirname(parent),
         type = 'file',
         upward = true,
-    })[1]
-    return main or source
+    })[1] or source
+end
+
+local function main_source(bufnr)
+    local source = vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))
+    if source == '' then
+        return nil
+    end
+
+    local main = vim.b[bufnr].typst_main
+    if main and vim.uv.fs_stat(main) then
+        return main
+    end
+
+    main = resolve_main(source)
+    vim.b[bufnr].typst_main = main
+    return main
 end
 
 local function document_paths()
-    local current = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
-    if current == '' then
+    local main = main_source(0)
+    if not main then
         return nil, nil, 'Save the Typst file before compiling'
     end
 
-    local source = main_source(current)
-    local base = source:match('(.+)%.[^/]+$')
-    return source, base and (base .. '.pdf') or nil
+    local pdf = main:gsub('%.typ$', '.pdf')
+    return main, pdf
 end
 
 _G.TypstConfig = {
     main_source = main_source,
-    project_root = project_root,
 }
 
 -- Compilation
@@ -57,8 +96,8 @@ local function compile_typst(notify_success)
         return
     end
 
-    local source, pdf, path_error = document_paths()
-    if not source or not pdf then
+    local main, pdf, path_error = document_paths()
+    if not main or not pdf then
         vim.notify(
             path_error or 'Cannot determine Typst output path',
             vim.log.levels.ERROR
@@ -66,7 +105,7 @@ local function compile_typst(notify_success)
         return
     end
 
-    local root = project_root(source)
+    local root = vim.fs.dirname(main)
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     vim.system(
         {
@@ -76,7 +115,7 @@ local function compile_typst(notify_success)
             root,
             '--diagnostic-format',
             'short',
-            source,
+            main,
             pdf,
         },
         { cwd = root, text = true },
@@ -136,8 +175,8 @@ end
 
 -- Editing
 local function edit_main()
-    local current = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
-    if current == '' then
+    local main = main_source(0)
+    if not main then
         vim.notify(
             'Save the Typst file before opening its main file',
             vim.log.levels.ERROR
@@ -150,7 +189,7 @@ local function edit_main()
     end
     vim.api.nvim_cmd({
         cmd = split,
-        args = { main_source(current) },
+        args = { main },
         magic = { file = false, bar = false },
     }, {})
 end
@@ -173,6 +212,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     buffer = 0,
     desc = 'Compile Typst document outside packages',
     callback = function(args)
+        vim.b[args.buf].typst_main = nil
         if not vim.fs.root(args.buf, 'typst.toml') then
             compile_typst(false)
         end
@@ -184,7 +224,7 @@ vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     compile_typst(true)
 end, { buf = 0, desc = 'Compile Typst document' })
 vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
-vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit main.typ' })
+vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit Typst main file' })
 vim.keymap.set(
     'i',
     '<CR>',
