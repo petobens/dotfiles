@@ -64,7 +64,7 @@
 
 #let ruled-header(body) = block(width: 100%)[
   #body
-  #v(-0.65em)
+  #v(-0.75em)
   #line(length: 100%, stroke: 0.4pt)
 ]
 
@@ -319,7 +319,7 @@
     paper: "a4",
     binding: left,
     numbering: "i",
-    margin: (top: 3.7cm, bottom: 5cm, inside: 3.5cm, outside: 3.5cm),
+    margin: (top: 3.7cm, bottom: 4.7cm, inside: 3.5cm, outside: 3.5cm),
     header: book-header,
     header-ascent: 25%,
     footer: book-footer,

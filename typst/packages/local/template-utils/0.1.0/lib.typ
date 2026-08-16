@@ -212,6 +212,7 @@
       caption: caption,
       label: label,
       placement: placement,
+      gap: 0pt,
       numbering: numbering-fn,
       numbering-sub: "(a)",
       numbering-sub-ref: (n, sub) => [#numbering-fn(n)#numbering(
