@@ -187,6 +187,9 @@
   outline(title: none)
 }
 
+// Math
+#let notsuccsim = math.class("relation", [≿̸])
+
 // Equations
 #let equation-environment(numbering-fn) = body => math.equation(
   body,
