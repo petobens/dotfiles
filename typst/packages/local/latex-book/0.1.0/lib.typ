@@ -374,6 +374,7 @@
       main-page-reset.update(false)
     }
     reset-book-numbering()
+    if it.numbering != none { counter(footnote).update(0) }
     block(width: 100%, above: 2em, below: 3em, breakable: false)[
       #set text(weight: "bold")
       #align(center)[

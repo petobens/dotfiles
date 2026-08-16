@@ -396,7 +396,7 @@
     emphasized-heading: true,
   )
   let notation(body, note: none, title: auto, numbered: true) = statement(
-    localized-title(title, [Notación], [Notation]),
+    localized-title(title, [Notación.], [Notation.]),
     body,
     note: note,
     numbered: numbered,
