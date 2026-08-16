@@ -119,6 +119,19 @@
 
 #let show-number-only-reference = number-only-reference()
 
+// Lists
+#let labeled-item(label, body, indent: 1em, above: 1em) = block(
+  width: 100%,
+  breakable: true,
+  above: above,
+)[
+  #par(first-line-indent: (
+    amount: indent,
+    all: true,
+  ))[#emph[#label]. #body]
+]
+
+// Tables
 #let latex-table(
   columns: 1,
   header: (),
