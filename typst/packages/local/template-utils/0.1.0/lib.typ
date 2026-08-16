@@ -195,11 +195,17 @@
     label: none,
     placement: top,
     columns: auto,
+    panel-height: auto,
   ) = {
     let children = children.pos()
     let figures = ()
     for child in children {
-      figures.push(figure(child.body, caption: child.caption))
+      let body = if panel-height == auto {
+        child.body
+      } else {
+        block(width: 100%, height: panel-height)[#align(bottom, child.body)]
+      }
+      figures.push(figure(body, caption: child.caption))
       if child.label != none { figures.push(child.label) }
     }
     subpar.grid(
