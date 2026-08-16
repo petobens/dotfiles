@@ -379,7 +379,7 @@
       #align(center)[
         #v(
           if it.numbering != none {
-            4.5em
+            3.7em
           } else if it.body == resolved-preface-title {
             4em
           } else {
