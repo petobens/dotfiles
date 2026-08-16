@@ -319,7 +319,7 @@
     paper: "a4",
     binding: left,
     numbering: "i",
-    margin: (top: 3.7cm, bottom: 4.7cm, inside: 3.5cm, outside: 3.5cm),
+    margin: (top: 3.7cm, bottom: 5cm, inside: 3.5cm, outside: 3.5cm),
     header: book-header,
     header-ascent: 25%,
     footer: book-footer,
@@ -424,7 +424,11 @@
     ]
     #h(-15pt)
   ]
-  set footnote.entry(separator: footnote-separator, indent: 0pt)
+  set footnote.entry(
+    separator: footnote-separator,
+    clearance: footnote-rule-spacing,
+    indent: 0pt,
+  )
   show footnote.entry: it => show-footnote-entry(it, size: 8pt)
   set outline(indent: 1.5em)
   show outline.entry: book-outline-entry

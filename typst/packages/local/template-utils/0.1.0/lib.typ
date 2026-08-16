@@ -64,7 +64,11 @@
 }
 
 // Footnotes
-#let footnote-separator = line(length: 2.5cm, stroke: 0.4pt)
+#let footnote-rule-spacing = 0.3cm
+#let footnote-separator = block[
+  #line(length: 2.5cm, stroke: 0.4pt)
+  #v(footnote-rule-spacing)
+]
 
 #let show-footnote-entry(it, size: 9pt) = context {
   set text(size: size)

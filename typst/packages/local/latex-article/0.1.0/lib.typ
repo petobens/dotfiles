@@ -283,6 +283,7 @@
   ]
   set footnote.entry(
     separator: footnote-separator,
+    clearance: footnote-rule-spacing,
     indent: 0pt,
   )
   show footnote.entry: show-footnote-entry
