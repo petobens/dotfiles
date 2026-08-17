@@ -209,7 +209,7 @@
     paper: "a4",
     binding: left,
     numbering: "1",
-    margin: (top: 3.7cm, bottom: 5cm, inside: 3.5cm, outside: 3.5cm),
+    margin: (top: 3.7cm, bottom: 4.7cm, inside: 3.5cm, outside: 3.5cm),
     header: article-header(short-title, author),
     header-ascent: 25%,
     footer: article-footer,

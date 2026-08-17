@@ -119,6 +119,19 @@
 
 #let show-number-only-reference = number-only-reference()
 
+// Lists
+#let labeled-item(label, body, indent: 1em, above: 1em) = block(
+  width: 100%,
+  breakable: true,
+  above: above,
+)[
+  #par(first-line-indent: (
+    amount: indent,
+    all: true,
+  ))[#emph[#label]. #body]
+]
+
+// Tables
 #let latex-table(
   columns: 1,
   header: (),
@@ -174,6 +187,9 @@
   outline(title: none)
 }
 
+// Math
+#let notsuccsim = math.class("relation", [≿̸])
+
 // Equations
 #let equation-environment(numbering-fn) = body => math.equation(
   body,
@@ -195,11 +211,17 @@
     label: none,
     placement: top,
     columns: auto,
+    panel-height: auto,
   ) = {
     let children = children.pos()
     let figures = ()
     for child in children {
-      figures.push(figure(child.body, caption: child.caption))
+      let body = if panel-height == auto {
+        child.body
+      } else {
+        block(width: 100%, height: panel-height)[#align(bottom, child.body)]
+      }
+      figures.push(figure(body, caption: child.caption))
       if child.label != none { figures.push(child.label) }
     }
     subpar.grid(
@@ -212,6 +234,7 @@
       caption: caption,
       label: label,
       placement: placement,
+      gap: 0pt,
       numbering: numbering-fn,
       numbering-sub: "(a)",
       numbering-sub-ref: (n, sub) => [#numbering-fn(n)#numbering(
@@ -373,7 +396,7 @@
     emphasized-heading: true,
   )
   let notation(body, note: none, title: auto, numbered: true) = statement(
-    localized-title(title, [Notación], [Notation]),
+    localized-title(title, [Notación.], [Notation.]),
     body,
     note: note,
     numbered: numbered,

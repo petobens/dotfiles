@@ -345,9 +345,11 @@ local groups = {
     ['@punctuation.bracket.toml'] = { fg = p.fg },
 
     -- Typst
-    ['@markup.link.typst'] = { fg = p.purple },
     ['@markup.link.label.typst'] = { fg = p.yellow },
-    ['@markup.link.reference.typst'] = { fg = p.purple },
+    ['@markup.link.reference.typst'] = { fg = p.orange },
+    ['@markup.link.typst'] = { fg = p.purple },
+    ['@markup.math.script.typst'] = { fg = p.light_blue },
+    ['@operator.math.typst'] = { fg = p.purple },
     ['@punctuation.bracket.typst'] = { fg = p.blue },
     ['@punctuation.delimiter.math.typst'] = { fg = p.blue },
 

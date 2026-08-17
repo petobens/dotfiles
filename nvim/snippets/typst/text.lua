@@ -22,7 +22,7 @@ return {
     -- Emphasis
     wrapped('tb', 'Strong text', '*', '*'),
     wrapped('ti', 'Italic text', '_', '_'),
-    wrapped('emph', 'Emphasized text', '#emph[', ']'),
+    wrapped('em', 'Emphasized text', '#emph[', ']'),
     wrapped('tss', 'Sans-serif text', '#text(font: "DejaVu Sans")[', ']'),
     wrapped('muc', 'Uppercase text', '#upper[', ']'),
     wrapped('quo', 'Inline quotation', '#quote(block: false)[', ']'),

@@ -22,6 +22,7 @@ local default_options = {
         qf = true,
         query = true,
         TelescopePrompt = true,
+        typsttoc = true,
     },
 }
 

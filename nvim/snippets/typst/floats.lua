@@ -12,7 +12,7 @@ return {
     s(
         { trig = 'ig', dscr = 'Image' },
         fmta('#image("<>", width: <>%)<>', {
-            i(1, 'image.svg'),
+            i(1, 'image.pdf'),
             i(2, '100'),
             i(0),
         })
@@ -24,12 +24,13 @@ return {
 #figure(
   image("<>", width: <>%),
   caption: [<>],
+  placement: none,
 ) <<fig:<>>>
 
 <>
             ]],
             {
-                i(1, 'image.svg'),
+                i(1, 'image.pdf'),
                 i(2, '100'),
                 i(3, 'Caption'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 3 }),
@@ -64,30 +65,33 @@ return {
             [[
 #subfigure-grid(
   subfigure(
-    image("<>", width: 100%),
+    image("<>", width: 100%, height: 100%, fit: "contain"),
     caption: [<>],
     label: <<sfig:<>>>,
   ),
   subfigure(
-    image("<>", width: 100%),
+    image("<>", width: 100%, height: 100%, fit: "contain"),
     caption: [<>],
     label: <<sfig:<>>>,
   ),
   caption: [<>],
   label: <<fig:<>>>,
+  panel-height: <>cm,
+  placement: none,
 )
 
 <>
             ]],
             {
-                i(1, 'image-a.svg'),
+                i(1, 'image-a.pdf'),
                 i(2, 'First panel'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
-                i(3, 'image-b.svg'),
+                i(3, 'image-b.pdf'),
                 i(4, 'Second panel'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 4 }),
                 i(5, 'Combined caption'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 5 }),
+                i(6, '5'),
                 i(0),
             }
         ),
@@ -96,7 +100,7 @@ return {
     s(
         { trig = 'cg', dscr = 'Centered image' },
         fmta('#align(center)[#image("<>", width: <>%)]<>', {
-            i(1, 'image.svg'),
+            i(1, 'image.pdf'),
             i(2, '100'),
             i(0),
         })
@@ -120,6 +124,7 @@ return {
   image("<>"),
   kind: table,
   caption: [<>],
+  placement: none,
 ) <<tab:<>>>
 
 <>
