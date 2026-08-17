@@ -126,6 +126,26 @@ local function toc_document_files(main)
     return files
 end
 
+local function toc_special_entries(main)
+    local content = read_file(main) or ''
+    local preface = content:match('preface%s*:%s*include%s+"([^"]+%.typ)"')
+    local offset = content:find('#chapter%-bibliographies%s*%(')
+        or content:find('#bibliography%s*%(')
+    local title = offset and content:sub(offset):match('title%s*:%s*%[([^%]]+)%]')
+    return {
+        preface = preface and {
+            name = 'Prefacio',
+            path = vim.fs.joinpath(vim.fs.dirname(main), preface),
+            lnum = 1,
+        },
+        bibliography = offset and {
+            name = title and vim.trim(title) or 'Bibliografía',
+            path = main,
+            lnum = select(2, content:sub(1, offset):gsub('\n', '')) + 1,
+        },
+    }
+end
+
 local function toc_clear_source_highlight()
     if state.highlight_bufnr and api.nvim_buf_is_valid(state.highlight_bufnr) then
         api.nvim_buf_clear_namespace(state.highlight_bufnr, namespace, 0, -1)
@@ -148,8 +168,9 @@ local function toc_highlight_source()
     })
 end
 
-local function toc_render(outlines, source_path, source_lnum)
-    local lines, entries = {}, {}
+local function toc_render(outlines, special, source_path, source_lnum)
+    local lines = special.preface and { special.preface.name } or {}
+    local entries = special.preface and { special.preface } or {}
 
     -- Flatten Tinymist's symbol trees into display lines and jump targets
     local function toc_add(symbols, path, prefix, depth, index)
@@ -179,6 +200,10 @@ local function toc_render(outlines, source_path, source_lnum)
     for _, outline in ipairs(outlines) do
         root_index = toc_add(outline.symbols, outline.path, nil, 0, root_index)
     end
+    if special.bibliography then
+        table.insert(lines, special.bibliography.name)
+        table.insert(entries, special.bibliography)
+    end
     if #lines == 0 then
         lines = { 'No headings' }
     end
@@ -191,12 +216,14 @@ local function toc_render(outlines, source_path, source_lnum)
     buffer.modifiable = false
     api.nvim_buf_clear_namespace(state.bufnr, namespace, 0, -1)
     for index, entry in ipairs(entries) do
-        local col = entry.depth * 2
-        api.nvim_buf_set_extmark(state.bufnr, namespace, index - 1, col, {
-            end_col = col + #entry.number,
-            hl_group = 'String',
-        })
-        if entry.depth == 0 then
+        local col = (entry.depth or 0) * 2
+        if entry.number then
+            api.nvim_buf_set_extmark(state.bufnr, namespace, index - 1, col, {
+                end_col = col + #entry.number,
+                hl_group = 'String',
+            })
+        end
+        if col == 0 then
             api.nvim_buf_set_extmark(state.bufnr, namespace, index - 1, 0, {
                 end_col = #lines[index],
                 hl_group = 'Bold',
@@ -261,7 +288,7 @@ local function toc_jump(split)
     end
     local bufnr = vim.fn.bufadd(entry.path)
     api.nvim_win_set_buf(0, bufnr)
-    api.nvim_win_set_cursor(0, { entry.lnum, entry.col })
+    api.nvim_win_set_cursor(0, { entry.lnum, entry.col or 0 })
     vim.cmd.normal({ args = { 'zvzz' }, bang = true })
 end
 
@@ -283,7 +310,7 @@ local function toc_populate(main, client, source_path, source_lnum)
         end
         table.insert(outlines, { path = path, symbols = response and response.result })
     end
-    toc_render(outlines, source_path, source_lnum)
+    toc_render(outlines, toc_special_entries(main), source_path, source_lnum)
 end
 
 local function toc_toggle()
