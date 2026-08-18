@@ -128,21 +128,25 @@ end
 
 local function toc_special_entries(main)
     local content = read_file(main) or ''
+    local spanish = (content:match('language%s*:%s*"([^"]+)"') or 'es') == 'es'
     local preface = content:match('preface%s*:%s*include%s+"([^"]+%.typ)"')
     local offset = content:find('#chapter%-bibliographies%s*%(')
         or content:find('#bibliography%s*%(')
     local title = offset and content:sub(offset):match('title%s*:%s*%[([^%]]+)%]')
     return {
         preface = preface and {
-            name = 'Prefacio',
+            name = spanish and 'Prefacio' or 'Preface',
             path = vim.fs.joinpath(vim.fs.dirname(main), preface),
             lnum = 1,
         },
         bibliography = offset and {
-            name = title and vim.trim(title) or 'Bibliografía',
+            name = title and vim.trim(title)
+                or (spanish and 'Bibliografía' or 'Bibliography'),
             path = main,
             lnum = select(2, content:sub(1, offset):gsub('\n', '')) + 1,
         },
+        appendix_name = spanish and 'Apéndice' or 'Appendix',
+        is_book = content:find('@local/latex%-book') ~= nil,
     }
 end
 
@@ -173,15 +177,26 @@ local function toc_render(outlines, special, source_path, source_lnum)
     local entries = special.preface and { special.preface } or {}
 
     -- Flatten Tinymist's symbol trees into display lines and jump targets
-    local function toc_add(symbols, path, prefix, depth, index)
+    local appendix_index = 0
+    local function toc_add(symbols, path, prefix, depth, index, appendix)
         for _, symbol in ipairs(symbols or {}) do
             if symbol.kind == vim.lsp.protocol.SymbolKind.Namespace then
                 index = index + 1
                 local range = symbol.selectionRange or symbol.range
+                local lnum = range.start.line + 1
                 local number = prefix and prefix .. '.' .. index or tostring(index)
+                if appendix and lnum > appendix and depth == 1 then
+                    appendix_index = appendix_index + 1
+                    if not special.is_book and appendix_index == 1 then
+                        table.insert(lines, special.appendix_name)
+                        table.insert(entries, { path = path, lnum = appendix })
+                    end
+                    number = (special.is_book and prefix .. '.' or '')
+                        .. string.char(64 + appendix_index)
+                end
                 local entry = {
                     path = path,
-                    lnum = range.start.line + 1,
+                    lnum = lnum,
                     col = range.start.character,
                     number = number,
                     depth = depth,
@@ -189,16 +204,18 @@ local function toc_render(outlines, special, source_path, source_lnum)
                 local line = string.rep('  ', depth) .. number .. ' ' .. symbol.name
                 table.insert(lines, line)
                 table.insert(entries, entry)
-                toc_add(symbol.children, path, number, depth + 1, 0)
+                toc_add(symbol.children, path, number, depth + 1, 0, appendix)
             else
-                index = toc_add(symbol.children, path, prefix, depth, index)
+                index = toc_add(symbol.children, path, prefix, depth, index, appendix)
             end
         end
         return index
     end
     local root_index = 0
     for _, outline in ipairs(outlines) do
-        root_index = toc_add(outline.symbols, outline.path, nil, 0, root_index)
+        appendix_index = 0
+        root_index =
+            toc_add(outline.symbols, outline.path, nil, 0, root_index, outline.appendix)
     end
     if special.bibliography then
         table.insert(lines, special.bibliography.name)
@@ -308,7 +325,14 @@ local function toc_populate(main, client, source_path, source_lnum)
                 vim.log.levels.WARN
             )
         end
-        table.insert(outlines, { path = path, symbols = response and response.result })
+        local content = read_file(path) or ''
+        local appendix = content:find('#appendix%s*%[')
+        table.insert(outlines, {
+            path = path,
+            symbols = response and response.result,
+            appendix = appendix
+                and select(2, content:sub(1, appendix):gsub('\n', '')) + 1,
+        })
     end
     toc_render(outlines, toc_special_entries(main), source_path, source_lnum)
 end
