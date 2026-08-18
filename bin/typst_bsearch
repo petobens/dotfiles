@@ -3,7 +3,7 @@
 # the project wins; otherwise a lone instance opens the main source and retries
 set -u
 
-pdf=${1:?usage: typst-backward-search <pdf>}
+pdf=${1:?usage: typst_bsearch <pdf>}
 main=${pdf%.pdf}.typ
 escaped_pdf=${pdf//\'/\'\'}
 jump="v:lua.TypstConfig.backward_search('$escaped_pdf')"
