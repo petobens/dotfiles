@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Ask each Neovim to find Zathura's clipboard selection. An instance holding
+# the project wins; otherwise a lone instance opens the main source and retries
+set -u
+
+pdf=${1:?usage: typst-backward-search <pdf>}
+main=${pdf%.pdf}.typ
+escaped_pdf=${pdf//\'/\'\'}
+jump="v:lua.TypstConfig.backward_search('$escaped_pdf')"
+
+sockets=()
+for socket in "${XDG_RUNTIME_DIR:-/run/user/$UID}"/nvim.*; do
+    [[ -S $socket ]] && sockets+=("$socket")
+done
+
+jumped() {
+    [[ $(nvim --server "$1" --remote-expr "$jump" 2> /dev/null) == 1 ]]
+}
+
+for socket in "${sockets[@]}"; do
+    jumped "$socket" && exit 0
+done
+
+if [[ ${#sockets[@]} == 1 && -f $main ]]; then
+    nvim --server "${sockets[0]}" --remote "$main" 2> /dev/null
+    jumped "${sockets[0]}" && exit 0
+fi
+
+notify-send -u critical -i dialog-error \
+    'Typst backward search' 'No Neovim jumped to the selection'
+exit 1

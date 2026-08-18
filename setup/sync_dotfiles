@@ -53,7 +53,7 @@ mapfile -d '' -t conflicts < <(
 ((${#conflicts[@]})) ||
     die 'Merge failed without resolvable file conflicts.'
 
-printf '\nConflicts (the Wayland version will be kept):\n'
+printf '\nConflicts:\n'
 for path in "${conflicts[@]}"; do
     printf '\n--- %s ---\n' "$path"
     if git cat-file -e ":2:$path" 2> /dev/null; then
@@ -64,9 +64,12 @@ for path in "${conflicts[@]}"; do
             echo 'master deleted this file; showing the Wayland changes:'
             git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":2:$path"
         fi
-    else
+    elif git cat-file -e ":1:$path" 2> /dev/null; then
         echo 'Wayland deleted this file; showing the master changes:'
         git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":3:$path"
+    else
+        echo 'master added this file at its Wayland location:'
+        git --no-pager show ":3:$path"
     fi
 done
 
@@ -74,8 +77,10 @@ for path in "${conflicts[@]}"; do
     if git cat-file -e ":2:$path" 2> /dev/null; then
         git checkout --ours -- "$path"
         git add -- "$path"
-    else
+    elif git cat-file -e ":1:$path" 2> /dev/null; then
         git rm -- "$path"
+    else
+        git add -- "$path"
     fi
 done
 

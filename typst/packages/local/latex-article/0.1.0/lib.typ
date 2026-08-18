@@ -291,10 +291,11 @@
   show footnote.entry: show-footnote-entry
   show outline.entry: article-outline-entry
   show: apply-mybibstyle
-  show: backrefs.with(
-    format: format-bibliography-backrefs,
-    read: read-mybibstyle,
-  )
+  // The backrefs plugin costs about a second per compile, so Neovim's forward
+  // search skips it by passing `--input sync=1`
+  show: if "sync" in sys.inputs { doc => doc } else {
+    backrefs.with(format: format-bibliography-backrefs, read: read-mybibstyle)
+  }
 
   // Front matter and content
   article-title(title, author, author-note, localized-date(date, language))

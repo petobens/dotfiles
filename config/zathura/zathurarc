@@ -10,7 +10,7 @@ set highlight-transparency 0.35
 
 # Synctex (activates with ctrl+click)
 set synctex true
-set synctex-editor-command "nvim --server \"$NVIM\" --remote-silent +\%{line} \%{input}"
+set synctex-editor-command "latex-backward-search \%{input} \%{line}"
 
 # Mappings
 map Q quit
@@ -28,6 +28,7 @@ map q quit
 map i toggle_index
 map r recolor
 map <C-Space> feedkeys ":nohlsearch <Return>"
+map <C-s> exec "typst-backward-search '$FILE'"
 # Presentation mode
 map [normal] P toggle_presentation  # we can also do this with <F5>
 map [presentation] q toggle_presentation
