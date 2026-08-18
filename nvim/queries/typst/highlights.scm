@@ -1,37 +1,53 @@
 ; extends
 
-; Extend upstream captures where the parser classifies math syntax too generically
-; Upstream defaults to priority 100, so 120 and 130 make narrower captures win
+; Several rules can capture the same text and the highest priority wins. Upstream
+; typst sits at 100, so each rule below re-captures a piece of it and outbids that.
+; #offset! shrinks a capture, letting a wider, lower one show through at the edges
 
-; Capture math delimiters that upstream leaves inside @markup.math, as in $x + y$
+; $x + y$ is all @markup.math, so re-capture the $ signs alone
 ((math
   "$" @punctuation.delimiter.math)
   (#set! priority 130))
 
-; Reclassify named symbols and dotted paths, such as succ and succ.tilde
-((formula
-  [
-    (field)
-    (ident)
-  ] @operator.math)
+; Symbol names such as succ and succ.tilde. Repeated per parent because formula
+; children alone miss the ones nested deeper
+([
+  (formula
+    [
+      (field)
+      (ident)
+    ] @operator.math)
+  (attach
+    [
+      (field)
+      (ident)
+    ] @operator.math)
+  (fraction
+    [
+      (field)
+      (ident)
+    ] @operator.math)
+]
   (#set! priority 120))
 
-; Reclassify operators represented as symbols or shorthands, such as + and >=
+; Shorthands are always operators, such as >=, -> and |->
 ((formula
-  [
-    (shorthand)
-    (symbol)
-  ] @operator.math)
+  (shorthand) @operator.math)
+  (#set! priority 120))
+
+; Symbols double as punctuation, so keep only the operator-like ones
+((formula
+  (symbol) @operator.math)
   (#any-of? @operator.math
-    "-" "+" "*" "!=" "<" "<=" ">" ">=" "=")
+    "-" "+" "*" "<" ">" "=")
   (#set! priority 120))
 
-; Give the slash nested inside fractions such as 1 / 2 a math-specific capture
+; The slash in 1 / 2 is anonymous, so upstream gives it the plain code @operator
 ((fraction
   "/" @operator.math)
   (#set! priority 120))
 
-; Reclassify in[0, 1] and in(0, 1), which parse as application or a call
+; in[0, 1] and in(0, 1) parse as an application or a call, so the rules above miss it
 ([
   (apply
     item: (ident) @operator.math)
@@ -41,16 +57,7 @@
   (#eq? @operator.math "in")
   (#set! priority 120))
 
-; Reclassify attached symbols such as succ.tilde_i nested below the formula
-((formula
-  (attach
-    [
-      (field)
-      (ident)
-    ] @operator.math))
-  (#set! priority 120))
-
-; Override nested token colors for both parts of scripts such as x_2 and y^2
+; Whole scripts, at 130 so x_2 and y^2 beat any operator nested inside them
 ([
   (attach
     "_" @markup.math.script
@@ -61,10 +68,12 @@
 ]
   (#set! priority 130))
 
-; References and labels, such as @def:name and <def:name>
+; @def:name is one node, so one capture does it
 ((ref) @markup.link.reference.typst
   (#set! priority 120))
 
+; <def:name> wants two colors: paint all of it here, then #offset! repaints just the
+; name below, leaving < and > showing this one
 ((label) @punctuation.bracket.typst
   (#set! priority 110))
 
@@ -72,7 +81,7 @@
   (#offset! @markup.link.label.typst 0 1 0 -1)
   (#set! priority 120))
 
-; Labels passed to ref(<def:name>) and cite(<source>)
+; In ref(<def:name>) and cite(<source>) the name refers instead of declaring
 ((call
   item: (ident) @_ref
   (group
