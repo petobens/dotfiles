@@ -144,11 +144,11 @@
       } else {
         [References for Chapter #chapter-number]
       }
-      show bibliography: set heading(offset: 1, outlined: true)
+      heading(level: 2, numbering: none, outlined: true, chapter-title)
       show bibliography: set text(size: 9pt)
       bibliography(
         sources,
-        title: chapter-title,
+        title: none,
         target: target,
         style: style,
         group: none,
@@ -353,6 +353,7 @@
 
   // Numbering and components
   set heading(numbering: "1.1.1")
+  show heading.where(numbering: none): set heading(outlined: false)
   set math.equation(
     numbering: none,
     number-align: left + horizon,
@@ -431,7 +432,6 @@
     indent: 0pt,
   )
   show footnote.entry: it => show-footnote-entry(it, size: 8pt)
-  set outline(indent: 1.5em)
   show outline.entry: book-outline-entry
 
   // Front matter
@@ -459,6 +459,7 @@
     heading(
       level: 1,
       numbering: none,
+      outlined: true,
       resolved-preface-title,
     )
     block[

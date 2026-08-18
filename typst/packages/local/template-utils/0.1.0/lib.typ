@@ -151,30 +151,35 @@
 )
 
 // Table of contents
-#let show-outline-entry(it, page-number) = block(
-  width: 100%,
-  above: if it.level == 1 { 2em } else { 0.85em },
-  below: 0.1em,
-)[
-  #set text(weight: if it.level == 1 { "bold" } else { "regular" })
-  #h(1.5em * (it.level - 1))
-  #if it.element.numbering != none {
-    numbering(
-      it.element.numbering,
-      ..counter(heading).at(it.element.location()),
-    )
-    h(0.3em)
+#let show-outline-entry(it, page-number, top-level-spacing: 2em) = {
+  let index = calc.min(it.level, 3) - 1
+  let indents = (0em, 1.5em, 3.8em)
+  let number-widths = (1.5em, 2.3em, 3.2em)
+  let number = if it.element.numbering != none {
+    box(width: number-widths.at(index))[
+      #numbering(
+        it.element.numbering,
+        ..counter(heading).at(it.element.location()),
+      )
+    ]
   }
-  #text(fill: black, it.element.body)
-  #if it.level == 1 {
-    box(width: 1fr)[]
-  } else {
-    box(width: 1fr, inset: (x: 0.2em), repeat(gap: 0.45em)[.])
-  }
-  #text(fill: navy)[#link(it.element.location())[#page-number]]
-]
+  block(
+    width: 100%,
+    above: if it.level == 1 { top-level-spacing } else { 0.65em },
+    below: 0.1em,
+  )[
+    #set text(weight: if it.level == 1 { "bold" } else { "regular" })
+    #h(indents.at(index))#number#text(fill: black, it.element.body)
+    #if it.level == 1 {
+      box(width: 1fr)[]
+    } else {
+      box(width: 1fr, inset: (x: 0.2em), repeat(gap: 0.45em)[.])
+    }
+    #text(fill: navy)[#link(it.element.location())[#page-number]]
+  ]
+}
 
-#let document-outline(title) = {
+#let document-outline(title, depth: none) = {
   if title != none {
     heading(
       level: 1,
@@ -184,7 +189,7 @@
       title,
     )
   }
-  outline(title: none)
+  outline(title: none, depth: depth)
 }
 
 // Math
