@@ -126,6 +126,30 @@ local function toc_document_files(main)
     return files
 end
 
+local function toc_special_entries(main)
+    local content = read_file(main) or ''
+    local spanish = (content:match('language%s*:%s*"([^"]+)"') or 'es') == 'es'
+    local preface = content:match('preface%s*:%s*include%s+"([^"]+%.typ)"')
+    local offset = content:find('#chapter%-bibliographies%s*%(')
+        or content:find('#bibliography%s*%(')
+    local title = offset and content:sub(offset):match('title%s*:%s*%[([^%]]+)%]')
+    return {
+        preface = preface and {
+            name = spanish and 'Prefacio' or 'Preface',
+            path = vim.fs.joinpath(vim.fs.dirname(main), preface),
+            lnum = 1,
+        },
+        bibliography = offset and {
+            name = title and vim.trim(title)
+                or (spanish and 'Bibliografía' or 'Bibliography'),
+            path = main,
+            lnum = select(2, content:sub(1, offset):gsub('\n', '')) + 1,
+        },
+        appendix_name = spanish and 'Apéndice' or 'Appendix',
+        is_book = content:find('@local/latex%-book') ~= nil,
+    }
+end
+
 local function toc_clear_source_highlight()
     if state.highlight_bufnr and api.nvim_buf_is_valid(state.highlight_bufnr) then
         api.nvim_buf_clear_namespace(state.highlight_bufnr, namespace, 0, -1)
@@ -148,19 +172,31 @@ local function toc_highlight_source()
     })
 end
 
-local function toc_render(outlines, source_path, source_lnum)
-    local lines, entries = {}, {}
+local function toc_render(outlines, special, source_path, source_lnum)
+    local lines = special.preface and { special.preface.name } or {}
+    local entries = special.preface and { special.preface } or {}
 
     -- Flatten Tinymist's symbol trees into display lines and jump targets
-    local function toc_add(symbols, path, prefix, depth, index)
+    local appendix_index = 0
+    local function toc_add(symbols, path, prefix, depth, index, appendix)
         for _, symbol in ipairs(symbols or {}) do
             if symbol.kind == vim.lsp.protocol.SymbolKind.Namespace then
                 index = index + 1
                 local range = symbol.selectionRange or symbol.range
+                local lnum = range.start.line + 1
                 local number = prefix and prefix .. '.' .. index or tostring(index)
+                if appendix and lnum > appendix and depth == 1 then
+                    appendix_index = appendix_index + 1
+                    if not special.is_book and appendix_index == 1 then
+                        table.insert(lines, special.appendix_name)
+                        table.insert(entries, { path = path, lnum = appendix })
+                    end
+                    number = (special.is_book and prefix .. '.' or '')
+                        .. string.char(64 + appendix_index)
+                end
                 local entry = {
                     path = path,
-                    lnum = range.start.line + 1,
+                    lnum = lnum,
                     col = range.start.character,
                     number = number,
                     depth = depth,
@@ -168,16 +204,22 @@ local function toc_render(outlines, source_path, source_lnum)
                 local line = string.rep('  ', depth) .. number .. ' ' .. symbol.name
                 table.insert(lines, line)
                 table.insert(entries, entry)
-                toc_add(symbol.children, path, number, depth + 1, 0)
+                toc_add(symbol.children, path, number, depth + 1, 0, appendix)
             else
-                index = toc_add(symbol.children, path, prefix, depth, index)
+                index = toc_add(symbol.children, path, prefix, depth, index, appendix)
             end
         end
         return index
     end
     local root_index = 0
     for _, outline in ipairs(outlines) do
-        root_index = toc_add(outline.symbols, outline.path, nil, 0, root_index)
+        appendix_index = 0
+        root_index =
+            toc_add(outline.symbols, outline.path, nil, 0, root_index, outline.appendix)
+    end
+    if special.bibliography then
+        table.insert(lines, special.bibliography.name)
+        table.insert(entries, special.bibliography)
     end
     if #lines == 0 then
         lines = { 'No headings' }
@@ -191,12 +233,14 @@ local function toc_render(outlines, source_path, source_lnum)
     buffer.modifiable = false
     api.nvim_buf_clear_namespace(state.bufnr, namespace, 0, -1)
     for index, entry in ipairs(entries) do
-        local col = entry.depth * 2
-        api.nvim_buf_set_extmark(state.bufnr, namespace, index - 1, col, {
-            end_col = col + #entry.number,
-            hl_group = 'String',
-        })
-        if entry.depth == 0 then
+        local col = (entry.depth or 0) * 2
+        if entry.number then
+            api.nvim_buf_set_extmark(state.bufnr, namespace, index - 1, col, {
+                end_col = col + #entry.number,
+                hl_group = 'String',
+            })
+        end
+        if col == 0 then
             api.nvim_buf_set_extmark(state.bufnr, namespace, index - 1, 0, {
                 end_col = #lines[index],
                 hl_group = 'Bold',
@@ -261,7 +305,7 @@ local function toc_jump(split)
     end
     local bufnr = vim.fn.bufadd(entry.path)
     api.nvim_win_set_buf(0, bufnr)
-    api.nvim_win_set_cursor(0, { entry.lnum, entry.col })
+    api.nvim_win_set_cursor(0, { entry.lnum, entry.col or 0 })
     vim.cmd.normal({ args = { 'zvzz' }, bang = true })
 end
 
@@ -281,9 +325,16 @@ local function toc_populate(main, client, source_path, source_lnum)
                 vim.log.levels.WARN
             )
         end
-        table.insert(outlines, { path = path, symbols = response and response.result })
+        local content = read_file(path) or ''
+        local appendix = content:find('#appendix%s*%[')
+        table.insert(outlines, {
+            path = path,
+            symbols = response and response.result,
+            appendix = appendix
+                and select(2, content:sub(1, appendix):gsub('\n', '')) + 1,
+        })
     end
-    toc_render(outlines, source_path, source_lnum)
+    toc_render(outlines, toc_special_entries(main), source_path, source_lnum)
 end
 
 local function toc_toggle()
@@ -330,7 +381,7 @@ local function toc_toggle()
     window.foldexpr = 'indent(v:lnum + 1) > indent(v:lnum)'
         .. " && indent(v:lnum) < 4 ? '>' . (indent(v:lnum) / 2 + 1)"
         .. ' : indent(v:lnum) / 2'
-    window.winhighlight = 'CursorLine:AerialLine'
+    window.winhighlight = 'CursorLine:AerialLine,Folded:Normal'
     window.winfixbuf, window.winfixwidth = true, true
     api.nvim_win_set_width(state.winid, 43) -- Match the Aerial sidebar
 

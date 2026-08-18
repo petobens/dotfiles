@@ -18,6 +18,9 @@ local utils = require('telescope.utils')
 
 _G.TelescopeConfig = {}
 
+local SUPPORTED_IMAGES =
+    { gif = true, jpeg = true, jpg = true, png = true, svg = true, webp = true }
+
 -- Custom Layout
 layout_strategies.bpane = function(picker, max_columns, max_lines, layout_config)
     local layout =
@@ -93,7 +96,6 @@ local delta = previewers.new_termopen_previewer({
 -- From https://github.com/3rd/image.nvim/issues/183#issuecomment-2284979815
 local image = require('image')
 local state = { image = nil, last_path = nil, is_image = false }
-local supported_images = { gif = true, jpeg = true, jpg = true, png = true, svg = true }
 
 local function clear_preview_image()
     if state.image then
@@ -133,7 +135,7 @@ local function custom_buffer_previewer_maker(filepath, bufnr, opts)
     state.last_path = filepath
 
     local ext = vim.fs.ext(filepath):lower()
-    if supported_images[ext] then
+    if SUPPORTED_IMAGES[ext] then
         local path = filepath:gsub(' ', '%%20'):gsub('\\', '')
         show_preview_image(path)
     elseif ext == 'pdf' then
@@ -353,13 +355,20 @@ local transform_mod = require('telescope.actions.mt').transform_mod
 local function selected_files(prompt_bufnr)
     local picker = action_state.get_current_picker(prompt_bufnr)
     local multi = picker:get_multi_selection()
+    local cwd = picker.cwd or vim.uv.cwd()
     actions.close(prompt_bufnr)
 
     local entries = not vim.tbl_isempty(multi) and multi
         or { action_state.get_selected_entry() }
     return vim.iter(entries)
         :map(function(entry)
-            return string.format('%s/%s', entry.cwd, entry.filename)
+            local path = from_entry.path(entry, false, false)
+            if not path then
+                return nil
+            end
+            path = vim.fs.normalize(path)
+            return vim.startswith(path, '/') and path
+                or vim.fs.joinpath(entry.cwd or cwd, path)
         end)
         :totable()
 end
@@ -615,12 +624,19 @@ local custom_actions = transform_mod({
         end
         _G.CodeCompanionConfig.add_documents(files)
     end,
-    -- Paste images with img-clip plugin
-    paste_img_clip = function(prompt_bufnr)
-        local img_clip = require('img-clip')
-        for _, filepath in ipairs(selected_files(prompt_bufnr)) do
-            img_clip.paste_image(nil, filepath)
+    -- Add images to CodeCompanion
+    add_codecompanion_images = function(prompt_bufnr)
+        local files = vim.iter(selected_files(prompt_bufnr))
+            :filter(function(file)
+                return SUPPORTED_IMAGES[vim.fs.ext(file):lower()]
+            end)
+            :totable()
+
+        if vim.tbl_isempty(files) then
+            vim.notify('Select at least one image', vim.log.levels.WARN)
+            return
         end
+        _G.CodeCompanionConfig.add_images(files)
     end,
     -- Run codecompanion code review
     codecompanion_code_review = function(prompt_bufnr)
@@ -736,6 +752,9 @@ telescope.setup({
                 ['<A-f>'] = stopinsert(custom_actions.open_nvimtree),
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
+                ['<A-a>'] = stopinsert(custom_actions.add_codecompanion_references),
+                ['<A-i>'] = stopinsert(custom_actions.add_codecompanion_images),
+                ['<A-d>'] = stopinsert(custom_actions.add_codecompanion_documents),
                 ['<A-z>'] = actions.to_fuzzy_refine,
                 ['<C-q>'] = stopinsert(custom_actions.send2qf),
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
@@ -763,6 +782,9 @@ telescope.setup({
                 ['<A-f>'] = custom_actions.open_nvimtree,
                 ['<A-p>'] = custom_actions.entry_parent_dirs,
                 ['<A-g>'] = custom_actions.entry_igrep,
+                ['<A-a>'] = custom_actions.add_codecompanion_references,
+                ['<A-i>'] = custom_actions.add_codecompanion_images,
+                ['<A-d>'] = custom_actions.add_codecompanion_documents,
                 ['<A-r>'] = actions.to_fuzzy_refine,
                 ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
                 ['<A-q>'] = actions.send_to_qflist + actions.open_qflist,
@@ -785,7 +807,7 @@ telescope.setup({
     },
     pickers = {
         buffers = {
-            prompt_title = 'Buffers (<C-d>:delete)',
+            prompt_title = 'Buffers (<C-d>:delete,<A-a>:cc-context)',
             sort_mru = true,
             mappings = {
                 i = {
@@ -803,7 +825,7 @@ telescope.setup({
         },
         find_files = {
             prompt_title = 'Files (<A-c>:dir,<A-p>:parents,<A-g>:grep,'
-                .. '<A-a>:context,<A-i>:image,<A-d>:document)',
+                .. '<A-a>:cc-context,<A-i>:cc-image,<A-d>:cc-pdf)',
             find_command = {
                 'fd',
                 '--type',
@@ -823,14 +845,11 @@ telescope.setup({
                     ['<A-c>'] = custom_actions.entry_find_dir,
                     ['<A-p>'] = custom_actions.entry_parent_dirs,
                     ['<A-g>'] = custom_actions.entry_igrep,
-                    ['<A-a>'] = stopinsert(custom_actions.add_codecompanion_references),
-                    ['<A-i>'] = custom_actions.paste_img_clip,
-                    ['<A-d>'] = stopinsert(custom_actions.add_codecompanion_documents),
                 },
             },
         },
         live_grep = {
-            prompt_title = 'Grep (<C-space>:select)',
+            prompt_title = 'Grep (<C-space>:select,<A-a>:cc-context)',
             path_display = { shorten = 3 },
             mappings = {
                 i = {
@@ -952,7 +971,7 @@ end
 
 local function frecent_files()
     telescope.extensions.frecency.frecency({
-        prompt_title = 'Frecent Files (<C-d>:delete,<C-y>:yank)',
+        prompt_title = 'Frecent Files (<C-d>:delete,<C-y>:yank,<A-a>:cc-context)',
         attach_mappings = function(_, map)
             map('i', '<CR>', stopinsert(custom_actions.open_one_or_many))
             map('i', '<C-y>', custom_actions.yank)

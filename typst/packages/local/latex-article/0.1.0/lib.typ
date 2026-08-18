@@ -122,6 +122,7 @@
   show-outline-entry(
     it,
     numbering("1", counter(page).at(location).first()),
+    top-level-spacing: 1em,
   )
 }
 
@@ -165,7 +166,7 @@
     title
   }
   appendix-mode.update(true)
-  heading(level: 1, numbering: none, appendix-title)
+  heading(level: 1, numbering: none, outlined: true, appendix-title)
   counter(heading).update((0, 0))
   set heading(
     numbering: (..numbers) => {
@@ -243,6 +244,7 @@
 
   // Numbering and components
   set heading(numbering: "1.1")
+  show heading.where(numbering: none): set heading(outlined: false)
   set math.equation(
     numbering: none,
     number-align: left + horizon,
@@ -287,7 +289,6 @@
     indent: 0pt,
   )
   show footnote.entry: show-footnote-entry
-  set outline(indent: 1.5em)
   show outline.entry: article-outline-entry
   show: apply-mybibstyle
   show: backrefs.with(
@@ -306,7 +307,7 @@
     )
   }
   if toc {
-    document-outline(none)
+    document-outline(none, depth: 2)
   }
   body
 }
