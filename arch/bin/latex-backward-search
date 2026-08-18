@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Route a SyncTeX jump through Neovim's RPC. Prefer an instance holding the
+# source, then its directory; a lone instance is the final fallback
+set -u
+
+usage='usage: latex-backward-search <file> <line>'
+file=$(realpath -- "${1:?$usage}")
+line=${2:?$usage}
+escaped_file=${file//\'/\'\'}
+jump="execute('drop '.fnameescape('$escaped_file'))"
+jump+=".execute('$line').execute('normal! zvzz')"
+
+sockets=()
+for socket in "${XDG_RUNTIME_DIR:-/run/user/$UID}"/nvim.*; do
+    [[ -S $socket ]] && sockets+=("$socket")
+done
+
+probes=(
+    "bufexists('$escaped_file')"
+    "!empty(filter(getbufinfo(), 'stridx(v:val.name, \"${file%/*}/\") == 0'))"
+)
+[[ ${#sockets[@]} == 1 ]] && probes+=(1)
+
+for probe in "${probes[@]}"; do
+    for socket in "${sockets[@]}"; do
+        answer=$(nvim --server "$socket" --remote-expr "$probe" 2> /dev/null)
+        [[ $answer == 1 ]] || continue
+        nvim --server "$socket" --remote-expr "$jump" > /dev/null && exit 0
+    done
+done
+
+notify-send -u critical -i dialog-error \
+    'LaTeX backward search' "No Neovim jumped to ${file##*/}:$line"
+exit 1

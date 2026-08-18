@@ -31,9 +31,6 @@ $uv_install_cmd litecli
 $uv_install_cmd mycli
 $uv_install_cmd mypy
 $uv_install_cmd nbdime
-if type "nvim" > /dev/null 2>&1; then
-    $uv_install_cmd neovim-remote
-fi
 $uv_install_cmd pgcli
 $uv_install_cmd --with poetry-plugin-up poetry
 $uv_install_cmd pylint
