@@ -381,7 +381,7 @@ local function toc_toggle()
     window.foldexpr = 'indent(v:lnum + 1) > indent(v:lnum)'
         .. " && indent(v:lnum) < 4 ? '>' . (indent(v:lnum) / 2 + 1)"
         .. ' : indent(v:lnum) / 2'
-    window.winhighlight = 'CursorLine:AerialLine'
+    window.winhighlight = 'CursorLine:AerialLine,Folded:Normal'
     window.winfixbuf, window.winfixwidth = true, true
     api.nvim_win_set_width(state.winid, 43) -- Match the Aerial sidebar
 
