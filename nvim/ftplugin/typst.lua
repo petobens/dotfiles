@@ -698,6 +698,18 @@ function _G.TypstConfig.backward_search(pdf)
 end
 
 -- Editing
+local function edit_file(path)
+    local split = 'split'
+    if api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
+        split = 'vsplit'
+    end
+    api.nvim_cmd({
+        cmd = split,
+        args = { path },
+        magic = { file = false, bar = false },
+    }, {})
+end
+
 local function edit_main()
     local main = main_source(0)
     if not main then
@@ -707,15 +719,28 @@ local function edit_main()
         )
         return
     end
-    local split = 'split'
-    if api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
-        split = 'vsplit'
+    edit_file(main)
+end
+
+local function edit_bibliography()
+    local main = main_source(0)
+    if not main then
+        vim.notify(
+            'Save the Typst file before opening its bibliography',
+            vim.log.levels.ERROR
+        )
+        return
     end
-    api.nvim_cmd({
-        cmd = split,
-        args = { main },
-        magic = { file = false, bar = false },
-    }, {})
+
+    local content = read_file(main) or ''
+    local relative = content:match('bibliography%s*%(%s*"([^"]+%.bib)"')
+        or content:match('read%s*%(%s*"([^"]+%.bib)"')
+    local bibliography = relative and vim.fs.joinpath(vim.fs.dirname(main), relative)
+    if not bibliography or not vim.uv.fs_stat(bibliography) then
+        vim.notify('Typst bibliography file not found', vim.log.levels.ERROR)
+        return
+    end
+    edit_file(bibliography)
 end
 
 local function continue_list()
@@ -753,6 +778,10 @@ vim.keymap.set('n', '<Leader>sl', forward_search, {
     desc = 'Forward search (Zathura)',
 })
 vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit Typst main file' })
+vim.keymap.set('n', '<Leader>eb', edit_bibliography, {
+    buf = 0,
+    desc = 'Edit Typst bibliography',
+})
 vim.keymap.set('n', '<Leader>tc', toc_toggle, { buf = 0, desc = 'Toggle Typst TOC' })
 vim.keymap.set(
     'i',
