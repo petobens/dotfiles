@@ -11,33 +11,6 @@ local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
-    -- Minimal document
-    s(
-        { trig = 'mwe', dscr = 'Minimal article' },
-        fmta(
-            [[
-#import "@local/latex-article:0.1.0": *
-
-#show: latex-article.with(
-  title: [<>],
-  abstract: none,
-)
-
-= <>
-<<sec:<>>>
-
-<>
-            ]],
-            {
-                i(1, 'Article title'),
-                i(2, 'Section'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
-                i(0),
-            }
-        ),
-        { condition = line_begin }
-    ),
-
     -- Definitions
     s(
         { trig = 'nc', dscr = 'Define function or value' },
