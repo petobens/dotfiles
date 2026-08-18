@@ -526,6 +526,25 @@ function M.chat.add_documents(files)
     M.window.focus_or_toggle_chat({ startinsert = false })
 end
 
+function M.chat.add_images(files)
+    local image_utils = require('codecompanion.utils.images')
+    local chat = get_or_create_chat()
+
+    for _, file in ipairs(files) do
+        local image = image_utils.from_path(file)
+        if type(image) == 'string' then
+            vim.notify(
+                string.format('Could not encode %s: %s', file, image),
+                vim.log.levels.ERROR
+            )
+        else
+            chat:add_image_message(image)
+        end
+    end
+
+    M.window.focus_or_toggle_chat({ startinsert = false })
+end
+
 function M.chat.run_slash_command(name, opts)
     opts = opts or {}
 
