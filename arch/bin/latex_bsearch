@@ -3,7 +3,7 @@
 # source, then its directory; a lone instance is the final fallback
 set -u
 
-usage='usage: latex-backward-search <file> <line>'
+usage='usage: latex_bsearch <file> <line>'
 file=$(realpath -- "${1:?$usage}")
 line=${2:?$usage}
 escaped_file=${file//\'/\'\'}
