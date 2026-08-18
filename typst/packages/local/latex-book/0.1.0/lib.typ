@@ -346,7 +346,7 @@
   set par(
     leading: 0.55em,
     spacing: 0.55em,
-    first-line-indent: (amount: 15pt, all: true),
+    first-line-indent: 15pt,
     justify: true,
   )
   set block(spacing: 1.2em)
@@ -405,7 +405,6 @@
         #line(length: 100%, stroke: 1.5pt)
       ]
     ]
-    h(-15pt)
   }
   show heading.where(level: 2): it => {
     reset-book-numbering()
@@ -413,7 +412,6 @@
       #set text(size: 14.4pt, weight: "bold")
       #heading-title(it)
     ]
-    h(-15pt)
   }
   show heading.where(level: 3): it => [
     #block(above: 1.4em, below: 0.9em)[
@@ -424,7 +422,6 @@
       )
       #heading-title(it)
     ]
-    #h(-15pt)
   ]
   set footnote.entry(
     separator: footnote-separator,
@@ -464,7 +461,6 @@
     )
     block[
       #set par(spacing: 1.2em)
-      #h(-15pt)
       #preface
     ]
   }

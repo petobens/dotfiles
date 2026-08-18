@@ -4,13 +4,17 @@
 ; typst sits at 100, so each rule below re-captures a piece of it and outbids that.
 ; #offset! shrinks a capture, letting a wider, lower one show through at the edges
 
+; Math
+
 ; $x + y$ is all @markup.math, so re-capture the $ signs alone
 ((math
   "$" @punctuation.delimiter.math)
   (#set! priority 130))
 
 ; Symbol names such as succ and succ.tilde. Repeated per parent because formula
-; children alone miss the ones nested deeper
+; children alone miss the ones nested deeper. A symbol written against its
+; delimiter, as in in(0, 1), parses as a call instead and keeps the plain code
+; colors on purpose: write in (0, 1) so it stays a symbol
 ([
   (formula
     [
@@ -47,16 +51,6 @@
   "/" @operator.math)
   (#set! priority 120))
 
-; in[0, 1] and in(0, 1) parse as an application or a call, so the rules above miss it
-([
-  (apply
-    item: (ident) @operator.math)
-  (call
-    item: (ident) @operator.math)
-]
-  (#eq? @operator.math "in")
-  (#set! priority 120))
-
 ; Whole scripts, at 130 so x_2 and y^2 beat any operator nested inside them
 ([
   (attach
@@ -67,6 +61,8 @@
     sup: (_) @markup.math.script)
 ]
   (#set! priority 130))
+
+; References and labels
 
 ; @def:name is one node, so one capture does it
 ((ref) @markup.link.reference.typst
