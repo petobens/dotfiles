@@ -507,6 +507,175 @@ local function view_pdf()
     vim.system({ 'zathura', '--fork', pdf })
 end
 
+-- Synchronization
+-- Typst emits no SyncTeX data, so forward search compiles a throwaway copy of
+-- the project with an invisible marker at the cursor; the leading `#h(0pt)`
+-- keeps it from starting a paragraph, where it would report the top of the
+-- line rather than its baseline
+local MARKER = '#h(0pt)#context [#metadata((..here().position(), '
+    .. 'size: text.size))<nvim-sync>]'
+
+local function zathura_call(name, method, ...)
+    local command = { 'gdbus', 'call', '--session', '--dest', name }
+    vim.list_extend(command, { '--object-path', '/org/pwmt/zathura' })
+    vim.list_extend(command, { '--method', method, ... })
+    return vim.system(command, { text = true }):wait().stdout or ''
+end
+
+local function zathura_instance(pdf)
+    local get = 'org.freedesktop.DBus.Properties.Get'
+    local pids = vim.system({ 'pgrep', '-x', 'zathura' }, { text = true }):wait()
+    for pid in (pids.stdout or ''):gmatch('%d+') do
+        local name = 'org.pwmt.zathura.PID-' .. pid
+        if zathura_call(name, get, 'org.pwmt.zathura', 'filename'):find(pdf, 1, true) then
+            return name
+        end
+    end
+end
+
+local function highlight_position(pdf, position)
+    local name = zathura_instance(pdf)
+    if not name then
+        vim.system({ 'zathura', '--fork', pdf })
+        vim.wait(3000, function()
+            name = zathura_instance(pdf)
+            return name ~= nil
+        end, 100)
+    end
+    if not name then
+        vim.notify('No Zathura instance showing ' .. pdf, vim.log.levels.ERROR)
+        return
+    end
+
+    -- Zathura's rectangle is (x1, x2, y1, y2) clipped to the page, so an
+    -- overwide band highlights the line holding the reported baseline
+    local y = tonumber((position.y:gsub('pt$', '')))
+    local size = tonumber((position.size:gsub('pt$', '')))
+    local band = string.format('[(0.0,1e4,%.2f,%.2f)]', y - size, y + size / 4)
+    local method = 'org.pwmt.zathura.HighlightRects'
+    zathura_call(name, method, tostring(position.page - 1), band, '[]')
+end
+
+local function forward_search()
+    local main, pdf, path_error = document_paths()
+    if not main then
+        vim.notify(path_error, vim.log.levels.ERROR)
+        return
+    end
+    if not vim.uv.fs_stat(pdf) then
+        vim.notify('PDF file not found: ' .. pdf, vim.log.levels.ERROR)
+        return
+    end
+
+    local root = vim.fs.dirname(main)
+    local copy = vim.fn.tempname()
+    if vim.system({ 'cp', '-r', root, copy }):wait().code ~= 0 then
+        vim.notify('Could not copy the Typst project', vim.log.levels.ERROR)
+        return
+    end
+    local source = vim.fs.normalize(api.nvim_buf_get_name(0))
+    local lines = api.nvim_buf_get_lines(0, 0, -1, false)
+    local cursor = api.nvim_win_get_cursor(0)[1]
+    -- Headings, their labels and blank lines cannot carry the marker inline, so
+    -- it goes before the next line that can; a heading would report the page it
+    -- ends rather than the one it starts
+    while lines[cursor] and lines[cursor]:match('^%s*(.?)'):find('^[=<]?$') do
+        cursor = cursor + 1
+    end
+    table.insert(lines, cursor, MARKER)
+    vim.fn.writefile(lines, copy .. source:sub(#root + 1))
+
+    -- `sync=1` lets templates skip layout-neutral but slow work
+    local command = { 'typst', 'eval', '--root', copy, '--input', 'sync=1' }
+    local query = 'query(<nvim-sync>).first().value'
+    vim.list_extend(command, { '--in', copy .. main:sub(#root + 1), query })
+
+    vim.system(
+        command,
+        { text = true },
+        vim.schedule_wrap(function(result)
+            vim.fs.rm(copy, { recursive = true, force = true })
+            local ok, position = pcall(vim.json.decode, result.stdout)
+            if not ok or type(position) ~= 'table' then
+                vim.notify(
+                    'No document position for the cursor line; try a markup line',
+                    vim.log.levels.ERROR
+                )
+                return
+            end
+            highlight_position(pdf, position)
+        end)
+    )
+end
+
+local sync_ns = api.nvim_create_namespace('typst_sync')
+
+-- 0-based (row, column) of a byte offset in `content`
+local function position_at(content, offset)
+    local before = content:sub(1, offset)
+    return { select(2, before:gsub('\n', '')), #before:match('[^\n]*$') }
+end
+
+-- Zathura passes the PDF it copied the selection from, so backward search can
+-- find the document without needing its source open in the current window
+function _G.TypstConfig.backward_search(pdf)
+    local main = pdf:gsub('%.pdf$', '.typ')
+    if not vim.uv.fs_stat(main) then
+        vim.notify('No Typst source for ' .. pdf, vim.log.levels.ERROR)
+        return 0
+    end
+    -- Zathura asks every Neovim in turn, so only the one editing this project
+    -- answers; the caller reads the 1 as the jump having happened
+    local root = vim.fs.dirname(main) .. '/'
+    local holds = vim.iter(api.nvim_list_bufs()):any(function(bufnr)
+        local path = vim.fs.normalize(api.nvim_buf_get_name(bufnr))
+        return vim.startswith(path .. '/', root)
+    end)
+    if not holds then
+        return 0
+    end
+    local selection = vim.trim(vim.fn.getreg('+'))
+    if selection == '' then
+        vim.notify('Select the text to find in Zathura first', vim.log.levels.WARN)
+        return 0
+    end
+
+    -- Undo hyphenation and match across source line breaks; markup between
+    -- words only shortens the matching prefix
+    local words = {}
+    for word in selection:gsub('%-%s+', ''):gmatch('%S+') do
+        table.insert(words, vim.pesc(word))
+    end
+    local sources = {}
+    for _, path in ipairs(toc_document_files(main)) do
+        table.insert(sources, { path = path, content = read_file(path) or '' })
+    end
+
+    while #words > 0 do
+        local pattern = table.concat(words, '%s+')
+        for _, source in ipairs(sources) do
+            local start, finish = source.content:find(pattern)
+            if start then
+                local from = position_at(source.content, start - 1)
+                local to = position_at(source.content, finish)
+                local bufnr = vim.fn.bufadd(source.path)
+                vim.fn.bufload(bufnr)
+                api.nvim_win_set_buf(0, bufnr)
+                api.nvim_win_set_cursor(0, { from[1] + 1, from[2] })
+                -- Folds only exist once the buffer has been drawn in the window
+                vim.schedule(function()
+                    pcall(vim.cmd.normal, { args = { 'zOzz' }, bang = true })
+                end)
+                vim.hl.range(bufnr, sync_ns, 'Visual', from, to, { timeout = 1000 })
+                return 1
+            end
+        end
+        table.remove(words)
+    end
+    vim.notify('Selection not found in the Typst sources', vim.log.levels.WARN)
+    return 0
+end
+
 -- Editing
 local function edit_main()
     local main = main_source(0)
@@ -558,6 +727,10 @@ vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     compile_typst(true)
 end, { buf = 0, desc = 'Compile Typst document' })
 vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
+vim.keymap.set('n', '<Leader>sl', forward_search, {
+    buf = 0,
+    desc = 'Forward search (Zathura)',
+})
 vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit Typst main file' })
 vim.keymap.set('n', '<Leader>tc', toc_toggle, { buf = 0, desc = 'Toggle Typst TOC' })
 vim.keymap.set(
