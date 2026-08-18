@@ -534,6 +534,11 @@ local function zathura_instance(pdf)
 end
 
 local function highlight_position(pdf, position)
+    local page = tostring(position.page)
+    local pdfinfo = vim.system(
+        { 'pdfinfo', '-f', page, '-l', page, pdf },
+        { text = true, env = { LC_ALL = 'C' } }
+    )
     local name = zathura_instance(pdf)
     if not name then
         vim.system({ 'zathura', '--fork', pdf })
@@ -547,11 +552,27 @@ local function highlight_position(pdf, position)
         return
     end
 
-    -- Zathura's rectangle is (x1, x2, y1, y2) clipped to the page, so an
-    -- overwide band highlights the line holding the reported baseline
+    -- Use PDF width and text height; center prose bands and left-weight wider slides
+    local output = pdfinfo:wait().stdout or ''
+    local page_width, page_height = output:match('size:%s*([%d.]+)%s*x%s*([%d.]+)')
+    page_width, page_height = tonumber(page_width), tonumber(page_height)
+    if not page_width or not page_height then
+        vim.notify('Could not read the PDF page size', vim.log.levels.ERROR)
+        return
+    end
+
     local y = tonumber((position.y:gsub('pt$', '')))
     local size = tonumber((position.size:gsub('pt$', '')))
-    local band = string.format('[(0.0,1e4,%.2f,%.2f)]', y - size, y + size / 4)
+    local landscape = page_width > page_height
+    local width = page_width * (landscape and 0.80 or 0.70)
+    local left = landscape and page_width * 0.02 or (page_width - width) / 2
+    local band = string.format(
+        '[(%.2f,%.2f,%.2f,%.2f)]',
+        left,
+        left + width,
+        y - size,
+        y + size / 4
+    )
     local method = 'org.pwmt.zathura.HighlightRects'
     zathura_call(name, method, tostring(position.page - 1), band, '[]')
 end
