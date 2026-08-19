@@ -734,7 +734,9 @@ local function edit_bibliography()
 
     local content = read_file(main) or ''
     local relative = content:match('bibliography%s*%(%s*"([^"]+%.bib)"')
+        or content:match('bibliography%s*%(%s*"([^"]+%.ya?ml)"')
         or content:match('read%s*%(%s*"([^"]+%.bib)"')
+        or content:match('read%s*%(%s*"([^"]+%.ya?ml)"')
     local bibliography = relative and vim.fs.joinpath(vim.fs.dirname(main), relative)
     if not bibliography or not vim.uv.fs_stat(bibliography) then
         vim.notify('Typst bibliography file not found', vim.log.levels.ERROR)
