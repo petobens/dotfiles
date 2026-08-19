@@ -55,7 +55,7 @@
   ]
 ]
 
-#let slide-title(self) = move(dy: 14pt, block(
+#let slide-title(self) = move(dy: 25pt, block(
   width: 100%,
   height: 26.4pt,
 )[
