@@ -266,8 +266,10 @@ vim.keymap.set(
     { desc = 'Close all folds except current one (focus fold)' }
 )
 vim.keymap.set('n', '<Leader>rz', function()
+    if vim.wo.foldexpr ~= vim.treesitter.foldexpr then
+        return
+    end
     vim.opt_local.foldmethod = 'expr'
-    vim.opt_local.foldexpr = vim.treesitter.foldexpr
     vim.cmd.normal({ args = { 'zx' }, bang = true })
 end, { desc = 'Reset Tree-sitter folds' })
 vim.keymap.set('n', 'l', function()
