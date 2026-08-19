@@ -265,6 +265,11 @@ vim.keymap.set(
     'zMzvzz',
     { desc = 'Close all folds except current one (focus fold)' }
 )
+vim.keymap.set('n', '<Leader>rf', function()
+    vim.opt_local.foldmethod = 'expr'
+    vim.opt_local.foldexpr = vim.treesitter.foldexpr
+    vim.cmd.normal({ args = { 'zx' }, bang = true })
+end, { desc = 'Reset Tree-sitter folds' })
 vim.keymap.set('n', 'l', function()
     -- Open fold from start
     local foldstart_linenr = vim.fn.foldclosed('.')
