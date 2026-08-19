@@ -63,7 +63,7 @@ Run this before committing changes to Neovim Lua files.
 Preferred command:
 
 ```bash
-luacheck --config="$HOME/.config/.luacheckrc" --globals vim <file>
+luacheck --config="$HOME/.config/.luacheckrc" <file>
 ```
 
 If `luacheck` or `lauc` is broken because of the Arch Lua packaging mismatch
@@ -77,8 +77,7 @@ ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
 "lua$ver" \
     -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path" \
     -e "package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath" \
-    -e "dofile('$entry')" \
-    -- --config="$HOME/.config/.luacheckrc" --globals vim -- <file>
+    "$entry" --config="$HOME/.config/.luacheckrc" <file>
 ```
 
 Run Luacheck on touched Lua files when making changes under `nvim/`.
