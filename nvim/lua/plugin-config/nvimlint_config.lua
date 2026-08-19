@@ -97,9 +97,9 @@ if lua_ver then
             table.concat({
                 ('package.path=%q..package.path'):format(luacheck_path),
                 ('package.cpath=%q..package.cpath'):format(luacheck_cpath),
-                ('dofile(%q)'):format(luacheck_entry),
             }, ';'),
-            '--',
+            -- Run it as the script, or Lua takes the next argument as one
+            luacheck_entry,
         },
         vim.list_extend(vim.deepcopy(linters.luacheck.args), {
             '--config=' .. vim.fs.joinpath(vim.env.HOME, '.config', '.luacheckrc'),

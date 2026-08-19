@@ -508,15 +508,13 @@ local function view_pdf()
 end
 
 -- Synchronization
--- Typst emits no SyncTeX data, so forward search compiles a throwaway copy of
--- the project with an invisible marker at the cursor; the leading `#h(0pt)`
--- keeps it from starting a paragraph, where it would report the top of the
--- line rather than its baseline
+-- Typst emits no SyncTeX data, so mark a temporary project copy; `#h(0pt)`
+-- anchors the marker to the surrounding text baseline
 local MARKER = '#h(0pt)#context [#metadata((..here().position(), '
-    .. 'size: text.size))<nvim-sync>]'
+    .. 'size: text.size, width: page.width, height: page.height))<nvim-sync>]'
 
-local function zathura_call(name, method, ...)
-    local command = { 'gdbus', 'call', '--session', '--dest', name }
+local function zathura_call(bus_name, method, ...)
+    local command = { 'gdbus', 'call', '--session', '--dest', bus_name }
     vim.list_extend(command, { '--object-path', '/org/pwmt/zathura' })
     vim.list_extend(command, { '--method', method, ... })
     return vim.system(command, { text = true }):wait().stdout or ''
@@ -526,43 +524,40 @@ local function zathura_instance(pdf)
     local get = 'org.freedesktop.DBus.Properties.Get'
     local pids = vim.system({ 'pgrep', '-x', 'zathura' }, { text = true }):wait()
     for pid in (pids.stdout or ''):gmatch('%d+') do
-        local name = 'org.pwmt.zathura.PID-' .. pid
-        if zathura_call(name, get, 'org.pwmt.zathura', 'filename'):find(pdf, 1, true) then
-            return name
+        local bus_name = 'org.pwmt.zathura.PID-' .. pid
+        local filename = zathura_call(bus_name, get, 'org.pwmt.zathura', 'filename')
+        if filename:find(pdf, 1, true) then
+            return bus_name
         end
     end
 end
 
+local function to_points(length)
+    return tonumber((length:gsub('pt$', '')))
+end
+
 local function highlight_position(pdf, position)
-    local page = tostring(position.page)
-    local pdfinfo = vim.system(
-        { 'pdfinfo', '-f', page, '-l', page, pdf },
-        { text = true, env = { LC_ALL = 'C' } }
-    )
-    local name = zathura_instance(pdf)
-    if not name then
+    local bus_name = zathura_instance(pdf)
+    if not bus_name then
         vim.system({ 'zathura', '--fork', pdf })
         vim.wait(3000, function()
-            name = zathura_instance(pdf)
-            return name ~= nil
+            bus_name = zathura_instance(pdf)
+            return bus_name ~= nil
         end, 100)
     end
-    if not name then
+    if not bus_name then
         vim.notify('No Zathura instance showing ' .. pdf, vim.log.levels.ERROR)
         return
     end
 
-    -- Use PDF width and text height; center prose bands and left-weight wider slides
-    local output = pdfinfo:wait().stdout or ''
-    local page_width, page_height = output:match('size:%s*([%d.]+)%s*x%s*([%d.]+)')
-    page_width, page_height = tonumber(page_width), tonumber(page_height)
+    local page_width, page_height = to_points(position.width), to_points(position.height)
     if not page_width or not page_height then
-        vim.notify('Could not read the PDF page size', vim.log.levels.ERROR)
+        vim.notify('Could not read the page size', vim.log.levels.ERROR)
         return
     end
 
-    local y = tonumber((position.y:gsub('pt$', '')))
-    local size = tonumber((position.size:gsub('pt$', '')))
+    -- Center prose highlights and left-align wider slide highlights
+    local y, size = to_points(position.y), to_points(position.size)
     local landscape = page_width > page_height
     local width = page_width * (landscape and 0.80 or 0.70)
     local left = landscape and page_width * 0.02 or (page_width - width) / 2
@@ -574,7 +569,25 @@ local function highlight_position(pdf, position)
         y + size / 4
     )
     local method = 'org.pwmt.zathura.HighlightRects'
-    zathura_call(name, method, tostring(position.page - 1), band, '[]')
+    zathura_call(bus_name, method, tostring(position.page - 1), band, '[]')
+end
+
+-- Markers cannot appear on blank lines, headings, labels, or inside code groups
+local function accepts_marker(line, row)
+    if line:match('^%s*(.?)'):find('^[=<]?$') then
+        return false
+    end
+    local node = vim.treesitter.get_node({ pos = { row - 1, 0 } })
+    while node do
+        local kind = node:type()
+        if kind == 'group' then
+            return false
+        elseif kind == 'content' or kind == 'source_file' then
+            return true
+        end
+        node = node:parent()
+    end
+    return true
 end
 
 local function forward_search()
@@ -597,18 +610,17 @@ local function forward_search()
     local source = vim.fs.normalize(api.nvim_buf_get_name(0))
     local lines = api.nvim_buf_get_lines(0, 0, -1, false)
     local cursor = api.nvim_win_get_cursor(0)[1]
-    -- Headings, their labels and blank lines cannot carry the marker inline, so
-    -- it goes before the next line that can; a heading would report the page it
-    -- ends rather than the one it starts
-    while lines[cursor] and lines[cursor]:match('^%s*(.?)'):find('^[=<]?$') do
+    vim.treesitter.get_parser(0, 'typst'):parse(true) -- Refresh syntax nodes
+    while lines[cursor] and not accepts_marker(lines[cursor], cursor) do
         cursor = cursor + 1
     end
     table.insert(lines, cursor, MARKER)
     vim.fn.writefile(lines, copy .. source:sub(#root + 1))
 
-    -- `sync=1` lets templates skip layout-neutral but slow work
+    -- `sync=1` skips slow layout-neutral work; querying all matches keeps an
+    -- empty result distinct from an evaluation failure
     local command = { 'typst', 'eval', '--root', copy, '--input', 'sync=1' }
-    local query = 'query(<nvim-sync>).first().value'
+    local query = 'query(<nvim-sync>)'
     vim.list_extend(command, { '--in', copy .. main:sub(#root + 1), query })
 
     vim.system(
@@ -616,37 +628,42 @@ local function forward_search()
         { text = true },
         vim.schedule_wrap(function(result)
             vim.fs.rm(copy, { recursive = true, force = true })
-            local ok, position = pcall(vim.json.decode, result.stdout)
-            if not ok or type(position) ~= 'table' then
+            if result.code ~= 0 then
+                local message = vim.trim(result.stderr or '')
+                vim.notify(
+                    'Typst could not compile the project\n' .. message,
+                    vim.log.levels.ERROR
+                )
+                return
+            end
+            local ok, found = pcall(vim.json.decode, result.stdout)
+            if not ok or type(found) ~= 'table' or not found[1] then
                 vim.notify(
                     'No document position for the cursor line; try a markup line',
                     vim.log.levels.ERROR
                 )
                 return
             end
-            highlight_position(pdf, position)
+            highlight_position(pdf, found[1].value)
         end)
     )
 end
 
 local sync_ns = api.nvim_create_namespace('typst_sync')
 
--- 0-based (row, column) of a byte offset in `content`
+-- Convert a byte offset to a 0-based (row, column)
 local function position_at(content, offset)
     local before = content:sub(1, offset)
     return { select(2, before:gsub('\n', '')), #before:match('[^\n]*$') }
 end
 
--- Zathura passes the PDF it copied the selection from, so backward search can
--- find the document without needing its source open in the current window
+-- Zathura supplies the PDF and asks each Neovim; only the project owner returns 1
 function _G.TypstConfig.backward_search(pdf)
     local main = pdf:gsub('%.pdf$', '.typ')
     if not vim.uv.fs_stat(main) then
         vim.notify('No Typst source for ' .. pdf, vim.log.levels.ERROR)
         return 0
     end
-    -- Zathura asks every Neovim in turn, so only the one editing this project
-    -- answers; the caller reads the 1 as the jump having happened
     local root = vim.fs.dirname(main) .. '/'
     local holds = vim.iter(api.nvim_list_bufs()):any(function(bufnr)
         local path = vim.fs.normalize(api.nvim_buf_get_name(bufnr))
@@ -661,15 +678,24 @@ function _G.TypstConfig.backward_search(pdf)
         return 0
     end
 
-    -- Undo hyphenation and match across source line breaks; markup between
-    -- words only shortens the matching prefix
+    -- Undo PDF hyphenation and progressively shorten cross-line matches
     local words = {}
     for word in selection:gsub('%-%s+', ''):gmatch('%S+') do
         table.insert(words, vim.pesc(word))
     end
+    -- Prefer unsaved buffer text so neither the match nor the jump is stale
+    local unsaved = {}
+    for _, bufnr in ipairs(api.nvim_list_bufs()) do
+        if api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].modified then
+            local path = vim.fs.normalize(api.nvim_buf_get_name(bufnr))
+            local lines = api.nvim_buf_get_lines(bufnr, 0, -1, false)
+            unsaved[path] = table.concat(lines, '\n')
+        end
+    end
     local sources = {}
     for _, path in ipairs(toc_document_files(main)) do
-        table.insert(sources, { path = path, content = read_file(path) or '' })
+        local content = unsaved[path] or read_file(path) or ''
+        table.insert(sources, { path = path, content = content })
     end
 
     while #words > 0 do
@@ -734,7 +760,9 @@ local function edit_bibliography()
 
     local content = read_file(main) or ''
     local relative = content:match('bibliography%s*%(%s*"([^"]+%.bib)"')
+        or content:match('bibliography%s*%(%s*"([^"]+%.ya?ml)"')
         or content:match('read%s*%(%s*"([^"]+%.bib)"')
+        or content:match('read%s*%(%s*"([^"]+%.ya?ml)"')
     local bibliography = relative and vim.fs.joinpath(vim.fs.dirname(main), relative)
     if not bibliography or not vim.uv.fs_stat(bibliography) then
         vim.notify('Typst bibliography file not found', vim.log.levels.ERROR)
