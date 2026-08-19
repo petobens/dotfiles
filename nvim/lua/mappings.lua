@@ -265,7 +265,7 @@ vim.keymap.set(
     'zMzvzz',
     { desc = 'Close all folds except current one (focus fold)' }
 )
-vim.keymap.set('n', '<Leader>rf', function()
+vim.keymap.set('n', '<Leader>rz', function()
     vim.opt_local.foldmethod = 'expr'
     vim.opt_local.foldexpr = vim.treesitter.foldexpr
     vim.cmd.normal({ args = { 'zx' }, bang = true })
