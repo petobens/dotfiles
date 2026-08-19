@@ -25,7 +25,6 @@ vim.opt.diffopt = {
     'inline:char',
     'linematch:60',
 }
-vim.opt.foldcolumn = 'auto'
 vim.opt.foldlevelstart = 0
 vim.opt.foldopen:append({ 'insert', 'jump' })
 vim.opt.foldtext = custom_foldtext
@@ -33,8 +32,6 @@ vim.opt.iskeyword:append(':')
 vim.opt.lazyredraw = false
 vim.opt.modeline = false
 vim.opt.shortmess = 'aoOtTIcCF'
-vim.opt.signcolumn = 'number'
-vim.o.statuscolumn = require('statuscol')
 vim.opt.termguicolors = true
 vim.opt.timeoutlen = 550
 vim.opt.title = true
@@ -114,6 +111,20 @@ vim.api.nvim_create_autocmd({ 'VimEnter', 'WinEnter', 'BufWinEnter' }, {
     group = cline_acg,
     callback = function()
         vim.opt_local.cursorline = true
+    end,
+})
+
+-- Status column
+vim.opt.foldcolumn = 'auto'
+vim.opt.signcolumn = 'number'
+local statuscolumn = require('statuscol')
+vim.o.statuscolumn = statuscolumn
+
+vim.api.nvim_create_autocmd({ 'BufWinEnter', 'FileType' }, {
+    desc = 'Set status column for the current window',
+    group = vim.api.nvim_create_augroup('statuscolumn', { clear = true }),
+    callback = function()
+        vim.wo.statuscolumn = vim.bo.filetype == 'NvimTree' and '' or statuscolumn
     end,
 })
 

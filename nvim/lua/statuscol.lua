@@ -1,10 +1,18 @@
 local api = vim.api
 
--- Signs of the whole buffer, grouped by line and kind, rebuilt once per redraw
-local sign_cache = {}
+_G.StatusColumn = {}
+
 local namespace_names = {}
 
--- Diagnostics and Git signs keep dedicated slots; other signs replace the number
+-- Signs grouped by buffer, line, and kind; reset each redraw
+local sign_cache = {}
+api.nvim_set_decoration_provider(api.nvim_create_namespace('statuscolumn'), {
+    on_start = function()
+        sign_cache = {}
+    end,
+})
+
+-- Diagnostics and Git signs get slots; other signs replace line numbers
 local function sign_kind(sign)
     local name = namespace_names[sign.ns_id]
     if name == nil then
@@ -56,10 +64,10 @@ local function render_sign(sign, cursorline)
     local text = sign.sign_text
     text = (text .. (' '):rep(2 - api.nvim_strwidth(text))):gsub('%%', '%%%%')
     local hl = cursorline and sign.cursorline_hl_group or sign.sign_hl_group
-    return ('%%#%s#%s%%*'):format(hl or 'NoTexthl', text)
+    hl = hl or (cursorline and 'CursorLineSign' or 'SignColumn')
+    return ('%%#%s#%s%%*'):format(hl, text)
 end
 
--- Recreate the plugin's fold glyphs without private Neovim FFI
 local function render_fold(cursorline)
     local line = vim.v.lnum
     local width = api.nvim_eval_statusline('%C', {
@@ -82,8 +90,7 @@ local function render_fold(cursorline)
         local previous = line > 1 and vim.fn.foldlevel(line - 1) or 0
         local starts = math.min(math.max(0, level - previous), range)
         if starts == 0 and vim.wo.foldmethod == 'expr' then
-            local foldexpr = tostring(vim.wo.foldexpr)
-            if foldexpr:find('treesitter.foldexpr', 1, true) then
+            if tostring(vim.wo.foldexpr):find('treesitter.foldexpr', 1, true) then
                 starts = tostring(vim.treesitter.foldexpr(line)):sub(1, 1) == '>' and 1
                     or 0
             end
@@ -100,11 +107,11 @@ local function render_fold(cursorline)
     return ('%%#%s#%s%%*'):format(hl, text)
 end
 
---- Signs placed outside the diagnostic and Git columns replace the line number.
 local function render_number(sign, cursorline)
     if sign then
         return '%=' .. render_sign(sign, cursorline)
-    elseif not vim.wo.number and not vim.wo.relativenumber then
+    end
+    if not (vim.wo.number or vim.wo.relativenumber) then
         return ''
     end
 
@@ -115,13 +122,10 @@ local function render_number(sign, cursorline)
     return '%=' .. (' '):rep(vim.wo.numberwidth - #number) .. number
 end
 
--- Status-column expressions require a globally accessible callback
-_G.StatusColumn = {}
-
+-- Order: diagnostics, Git signs, folds, then line numbers (relative when enabled)
 function _G.StatusColumn.render()
     local signs = buffer_signs(api.nvim_get_current_buf())
-    -- Wrapped and virtual lines repeat neither the signs nor the line number
-    local virtual = vim.v.virtnum ~= 0
+    local virtual = vim.v.virtnum ~= 0 -- Wrapped/virtual lines omit signs and numbers
     local line = not virtual and signs.lines[vim.v.lnum] or {}
     local cursorline = vim.v.relnum == 0
     local column = signs.diagnostic and render_sign(line.diagnostic, cursorline) or ''
@@ -136,23 +140,4 @@ function _G.StatusColumn.render()
         .. ' '
 end
 
-local statuscolumn = '%{%v:lua.StatusColumn.render()%}'
-api.nvim_set_hl(0, 'NoTexthl', { fg = 'NONE' })
-
--- Signs are placed by decoration providers, so the cache can only be trusted
--- for the duration of a single redraw
-api.nvim_set_decoration_provider(api.nvim_create_namespace('statuscolumn'), {
-    on_start = function()
-        sign_cache = {}
-    end,
-})
-
-api.nvim_create_autocmd({ 'BufWinEnter', 'FileType' }, {
-    desc = 'Set status column for the current window',
-    group = api.nvim_create_augroup('StatusColumn', { clear = true }),
-    callback = function()
-        vim.wo.statuscolumn = vim.bo.filetype == 'NvimTree' and '' or statuscolumn
-    end,
-})
-
-return statuscolumn
+return '%{%v:lua.StatusColumn.render()%}'
