@@ -34,6 +34,7 @@ vim.opt.lazyredraw = false
 vim.opt.modeline = false
 vim.opt.shortmess = 'aoOtTIcCF'
 vim.opt.signcolumn = 'number'
+vim.o.statuscolumn = require('statuscol')
 vim.opt.termguicolors = true
 vim.opt.timeoutlen = 550
 vim.opt.title = true
