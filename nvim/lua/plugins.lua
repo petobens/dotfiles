@@ -33,10 +33,6 @@ local plugins = {
         'nvim-lualine/lualine.nvim',
         config = load_plugin_config('lualine_config'),
     },
-    {
-        'luukvbaal/statuscol.nvim',
-        config = load_plugin_config('statuscol_config'),
-    },
 
     -- Editing
     {
