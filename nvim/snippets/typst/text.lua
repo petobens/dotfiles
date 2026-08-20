@@ -54,6 +54,16 @@ return {
         })
     ),
 
+    -- Formatter directives
+    s(
+        { trig = 'tso', dscr = 'Preserve next node formatting' },
+        fmta('// @typstyle off\n<><>', {
+            f(_G.LuaSnipConfig.visual_selection),
+            i(0),
+        }),
+        { condition = line_begin }
+    ),
+
     -- Placeholder text
     s(
         { trig = 'lorem', wordTrig = false, dscr = 'Lorem ipsum text' },
