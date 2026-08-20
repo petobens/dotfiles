@@ -66,7 +66,7 @@
     align: (left + top, left + top, right + top),
     move(dy: 4pt, toggle-icon),
     text(
-      size: 22pt,
+      size: 23pt,
       weight: "bold",
       fill: mutt-blue,
       utils.display-current-heading(level: 2, depth: self.slide-level),
@@ -413,7 +413,7 @@
     footer-right: none,
     subslide-preamble: none,
     config-page(
-      margin: (top: 2.7em, bottom: 2.6em, left: 2.2em, right: 2.6em),
+      margin: (top: 3em, bottom: 2.3em, left: 2.2em, right: 2.6em),
       footer-descent: 0em,
     ),
     config-common(
