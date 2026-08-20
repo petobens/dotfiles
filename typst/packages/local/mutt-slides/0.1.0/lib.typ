@@ -17,9 +17,31 @@
 #let muted = rgb("#53627A")
 
 // Slide chrome
-#let slide-numbering(n, parentheses: false) = context {
-  let section = query(heading.where(level: 1).before(here())).len()
-  numbering(if parentheses { "(1.1)" } else { "1.1" }, section, n)
+#let appendix-mode = state("mutt-slides-appendix", false)
+
+#let slide-section-info(location) = {
+  let sections = query(heading.where(level: 1).before(location))
+  let current = sections.last()
+  let appendix = appendix-mode.at(current.location())
+  let number = sections
+    .filter(
+      section => appendix-mode.at(section.location()) == appendix,
+    )
+    .len()
+  (heading: current, appendix: appendix, number: number)
+}
+
+#let slide-numbering(n, parentheses: false, location: none) = context {
+  let target = if location == none { here() } else { location }
+  let section = slide-section-info(target)
+  let pattern = if section.appendix {
+    if parentheses { "(A.1)" } else { "A.1" }
+  } else if parentheses {
+    "(1.1)"
+  } else {
+    "1.1"
+  }
+  numbering(pattern, section.number, n)
 }
 
 #let equation = equation-environment(
@@ -50,7 +72,17 @@
       size: 9pt,
       weight: "bold",
       fill: mutt-navy,
-      utils.display-current-heading(level: 1, depth: self.slide-level),
+      context {
+        let section = slide-section-info(here())
+        if section.appendix {
+          [#localized([Apéndice], [Appendix]) #numbering(
+              "A.",
+              section.number,
+            ) #section.heading.body]
+        } else {
+          section.heading.body
+        }
+      },
     )
   ]
 ]
@@ -114,13 +146,7 @@
 // Agenda and title slides
 #let agenda-entry(cover: false, ..args, it) = {
   let sections = query(heading.where(level: 1, outlined: true))
-  let appendix-prefix = regex("(?i)^(apéndice|appendix)\\b")
-  let appendix-title-prefix = regex(
-    "(?i)^(apéndice|appendix)\\s+[a-z]+[.:]\\s*",
-  )
-  let is-appendix(section) = (
-    section.body.func() == text and section.body.text.contains(appendix-prefix)
-  )
+  let is-appendix(section) = appendix-mode.at(section.location())
   let appendices = sections.filter(is-appendix)
   let number = (
     sections.position(section => (
@@ -138,11 +164,6 @@
     numbering("A.", appendix-number)
   } else {
     numbering("01.", number)
-  }
-  let title = if is-appendix(it.element) {
-    it.element.body.text.replace(appendix-title-prefix, "")
-  } else {
-    it.element.body
   }
   link(it.element.location(), block(
     width: 100%,
@@ -163,10 +184,16 @@
         size: 22pt,
         weight: if cover { "regular" } else { "bold" },
         fill: if cover { mutt-navy.lighten(45%) } else { mutt-blue },
-        title,
+        it.element.body,
       ),
     )
   ])
+}
+
+#let appendix(body) = {
+  appendix-mode.update(true)
+  body
+  appendix-mode.update(false)
 }
 
 #let section-divider(config: (:), body) = centered-slide(
@@ -461,9 +488,6 @@
       text(fill: mutt-blue, it)
     } else if targets.first().func() in (math.equation, figure) {
       let target = targets.first()
-      let section = query(
-        heading.where(level: 1).before(target.location()),
-      ).len()
       let target-counter = if target.func() == math.equation {
         counter(math.equation)
       } else {
@@ -478,10 +502,10 @@
         target.location(),
         text(
           fill: mutt-blue,
-          numbering(
-            if target.func() == math.equation { "(1.1)" } else { "1.1" },
-            section,
+          slide-numbering(
             n,
+            parentheses: target.func() == math.equation,
+            location: target.location(),
           ),
         ),
       )
