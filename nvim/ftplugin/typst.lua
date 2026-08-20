@@ -147,6 +147,7 @@ local function toc_special_entries(main)
         },
         appendix_name = spanish and 'Apéndice' or 'Appendix',
         is_book = content:find('@local/latex%-book') ~= nil,
+        is_slides = content:find('@local/mutt%-slides') ~= nil,
     }
 end
 
@@ -178,6 +179,7 @@ local function toc_render(outlines, special, source_path, source_lnum)
 
     -- Flatten Tinymist's symbol trees into display lines and jump targets
     local appendix_index = 0
+    local appendix_depth = special.is_slides and 0 or 1
     local function toc_add(symbols, path, prefix, depth, index, appendix)
         for _, symbol in ipairs(symbols or {}) do
             if symbol.kind == vim.lsp.protocol.SymbolKind.Namespace then
@@ -185,9 +187,13 @@ local function toc_render(outlines, special, source_path, source_lnum)
                 local range = symbol.selectionRange or symbol.range
                 local lnum = range.start.line + 1
                 local number = prefix and prefix .. '.' .. index or tostring(index)
-                if appendix and lnum > appendix and depth == 1 then
+                if appendix and lnum > appendix and depth == appendix_depth then
                     appendix_index = appendix_index + 1
-                    if not special.is_book and appendix_index == 1 then
+                    if
+                        not special.is_book
+                        and not special.is_slides
+                        and appendix_index == 1
+                    then
                         table.insert(lines, special.appendix_name)
                         table.insert(entries, { path = path, lnum = appendix })
                     end
