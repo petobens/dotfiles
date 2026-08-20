@@ -27,6 +27,14 @@ return {
             i(0),
         })
     ),
+    s(
+        { trig = 'btx', dscr = 'Unbreakable text in math' },
+        fmta('#box[$upright("<><>")$]<>', {
+            f(_G.LuaSnipConfig.visual_selection),
+            i(1, 'text'),
+            i(0),
+        })
+    ),
 
     -- Math alphabets
     math_font('mcg', 'Calligraphic math', 'cal'),
