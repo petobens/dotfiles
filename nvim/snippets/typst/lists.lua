@@ -54,6 +54,30 @@ return {
         { condition = line_begin }
     ),
     s(
+        { trig = 'citem', dscr = 'Custom bullet list' },
+        fmta(
+            [[
+#[
+  #set list(marker: <>, spacing: <>)
+  - <><>
+
+  - <>
+]
+
+<>
+            ]],
+            {
+                i(1, '[–]'),
+                i(2, '1em'),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(3, 'First item'),
+                i(4, 'Second item'),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
         { trig = 'litm', dscr = 'Labeled items' },
         fmta(
             [[
@@ -73,6 +97,27 @@ return {
                 i(2, 'First item'),
                 i(3, 'Second label'),
                 i(4, 'Second item'),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'wenu', dscr = 'Wide compact numbered list' },
+        fmta(
+            [[
+#wide-enum(numbering: "<>")[
+  + <><>
+  + <>
+]
+
+<>
+            ]],
+            {
+                i(1, '(i)'),
+                f(_G.LuaSnipConfig.visual_selection),
+                i(2, 'First item'),
+                i(3, 'Second item'),
                 i(0),
             }
         ),
