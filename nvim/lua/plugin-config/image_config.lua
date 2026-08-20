@@ -103,6 +103,12 @@ local function open_image_system()
     end
 end
 
+local function clear_images()
+    for _, preview in ipairs(image.get_images()) do
+        preview:clear()
+    end
+end
+
 -- Mappings
 vim.keymap.set(
     'n',
@@ -110,6 +116,7 @@ vim.keymap.set(
     open_image_preview,
     { desc = 'Preview image under cursor' }
 )
+vim.keymap.set('n', '<Leader>iw', clear_images, { desc = 'Wipe all image previews' })
 vim.keymap.set(
     'n',
     '<Leader>is',
