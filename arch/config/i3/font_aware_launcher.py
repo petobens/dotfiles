@@ -558,7 +558,7 @@ class ElectronApp(ROLApp):
         # Note: we set gdk env variables so that gtk dialogs spawned by these
         # apps have correct font size
         env = self.screen.gdk_env
-        if self.class_name == 'Brave':
+        if self.class_name in {'Brave', 'Slack'}:
             env += f'XCURSOR_SIZE={self.screen.cursor_size} '
         cmd += f' -e "{env}{self.class_name.lower()}'
         if (self.screen.is_hidpi and not self.screen.other_is_hidpi) or (
