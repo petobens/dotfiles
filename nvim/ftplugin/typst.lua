@@ -500,6 +500,33 @@ local function compile_typst(notify_success)
     )
 end
 
+local function convert_pandoc()
+    local main = main_source(0)
+    if not main then
+        vim.notify('Save the Typst file before converting', vim.log.levels.ERROR)
+        return
+    end
+
+    local markdown = main:gsub('%.typ$', '.md')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
+    local result = vim.system(
+        { 'pandoc', '-s', main, '-o', markdown },
+        { cwd = vim.fs.dirname(main), text = true }
+    ):wait()
+    if result.code == 0 then
+        vim.notify('Converted .typ file into .md', vim.log.levels.INFO)
+    else
+        vim.notify(
+            string.format(
+                'Pandoc failed (exit code %d): %s',
+                result.code,
+                result.stderr or ''
+            ),
+            vim.log.levels.ERROR
+        )
+    end
+end
+
 -- PDF viewer
 local function view_pdf()
     local _, pdf, path_error = document_paths()
@@ -822,6 +849,10 @@ api.nvim_create_autocmd('BufWritePost', {
 vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     compile_typst(true)
 end, { buf = 0, desc = 'Compile Typst document' })
+vim.keymap.set('n', '<Leader>cm', convert_pandoc, {
+    buf = 0,
+    desc = 'Convert to Markdown (pandoc)',
+})
 vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
 vim.keymap.set('n', '<Leader>sl', forward_search, {
     buf = 0,
