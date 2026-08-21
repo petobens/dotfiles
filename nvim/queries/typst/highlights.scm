@@ -1,22 +1,32 @@
 ; extends
 
-; Several rules can capture the same text and the highest priority wins. Upstream
-; typst sits at 100, so each rule below re-captures a piece of it and outbids that.
-; #offset! shrinks a capture, letting a wider, lower one show through at the edges
+; Upstream uses priority 100 for broad captures. These narrower, higher-priority
+; captures preserve syntax colors where their ranges overlap
 
 ; Math
 
-; $x + y$ is all @markup.math, so re-capture the $ signs alone
+; Color math delimiters separately from their contents
 ((math
   "$" @punctuation.delimiter.math)
   (#set! priority 130))
 
-; Symbol names such as succ and succ.tilde. Repeated per parent because formula
-; children alone miss the ones nested deeper. A symbol written against its
-; delimiter, as in in(0, 1), parses as a call instead and keeps the function-call
-; color on purpose: write in (0, 1) so it stays a symbol. Priority 140 lets a
-; symbol inside a subscript or superscript retain this color over the broader
-; script capture below
+; Color named calls such as frac, tilde and place
+((call
+  item: [
+    (ident)
+    (field)
+  ] @function.call)
+  (#set! priority 130))
+
+; Match a code marker to the call it introduces
+((code
+  "#" @function.call
+  (call))
+  (#set! priority 130))
+
+; Symbol names may be children of a formula, attachment, or fraction. Priority
+; 140 keeps them visible inside scripts at 130. A name touching its delimiter,
+; as in in(0, 1), parses as a call; write in (0, 1) to keep it a symbol
 ([
   (formula
     [
@@ -36,24 +46,24 @@
 ]
   (#set! priority 140))
 
-; Shorthands are always operators, such as >=, -> and |->
+; Typst parses operators such as >=, -> and |-> as shorthands
 ((formula
   (shorthand) @operator.math)
   (#set! priority 120))
 
-; Symbols double as punctuation, so keep only the operator-like ones
+; Only the arithmetic and relation symbols are operators
 ((formula
   (symbol) @operator.math)
   (#any-of? @operator.math
     "-" "+" "*" "<" ">" "=")
   (#set! priority 120))
 
-; The slash in 1 / 2 is anonymous, so upstream gives it the plain code @operator
+; A fraction owns its slash directly rather than through a formula node
 ((fraction
   "/" @operator.math)
   (#set! priority 120))
 
-; Whole scripts, at 130 so x_2 and y^2 beat any operator nested inside them
+; Color complete scripts at 130; symbol names above still win at 140
 ([
   (attach
     "_" @markup.math.script
@@ -64,14 +74,14 @@
 ]
   (#set! priority 130))
 
-; References and labels
+; Labels and references
 
-; @def:name is one node, so one capture does it
+; Direct references such as @fig:name are single nodes
 ((ref) @markup.link.reference.typst
   (#set! priority 120))
 
-; <def:name> wants two colors: paint all of it here, then #offset! repaints just the
-; name below, leaving < and > showing this one
+; Labels use blue brackets and an orange name. #offset! narrows the second
+; capture to leave the brackets visible from the first
 ((label) @punctuation.bracket.typst
   (#set! priority 110))
 
@@ -79,7 +89,7 @@
   (#offset! @markup.link.label.typst 0 1 0 -1)
   (#set! priority 120))
 
-; In ref(<def:name>) and cite(<source>) the name refers instead of declaring
+; A label inside ref() or cite() is a reference, not a declaration
 ((call
   item: (ident) @_ref
   (group
