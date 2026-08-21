@@ -424,7 +424,7 @@
   show heading.where(level: 3): it => [
     #block(above: 1.4em, below: 0.9em)[
       #set text(
-        size: if it.numbering == none { 11pt } else { 12pt },
+        size: 12pt,
         weight: if it.numbering == none { "regular" } else { "bold" },
         style: if it.numbering == none { "italic" } else { "normal" },
       )
