@@ -1,5 +1,6 @@
 local api = vim.api
-local read_file = require('utils').read_file
+local u = require('utils')
+local read_file = u.read_file
 
 -- Options
 vim.opt_local.shiftwidth = 2
@@ -730,18 +731,6 @@ function _G.TypstConfig.backward_search(pdf)
 end
 
 -- Editing
-local function edit_file(path)
-    local split = 'split'
-    if api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
-        split = 'vsplit'
-    end
-    api.nvim_cmd({
-        cmd = split,
-        args = { path },
-        magic = { file = false, bar = false },
-    }, {})
-end
-
 local function edit_main()
     local main = main_source(0)
     if not main then
@@ -751,7 +740,7 @@ local function edit_main()
         )
         return
     end
-    edit_file(main)
+    u.split_open(main)
 end
 
 local function edit_bibliography()
@@ -774,9 +763,35 @@ local function edit_bibliography()
         vim.notify('Typst bibliography file not found', vim.log.levels.ERROR)
         return
     end
-    edit_file(bibliography)
+    u.split_open(bibliography)
 end
 
+local function edit_figure()
+    local asset = api.nvim_get_current_line():match('"([^"]+%.%w+)"')
+    if not asset then
+        vim.notify('No figure path on this line', vim.log.levels.ERROR)
+        return
+    end
+
+    local main = main_source(0)
+    if not main then
+        vim.notify('Save the Typst file before opening a figure', vim.log.levels.ERROR)
+        return
+    end
+
+    local name = vim.fs.basename(asset):gsub('%.%w+$', '.typ')
+    local source = vim.fs.find({ name }, {
+        type = 'file',
+        path = vim.fs.dirname(main),
+    })[1]
+    if not source then
+        vim.notify('Figure source not found: ' .. name, vim.log.levels.ERROR)
+        return
+    end
+    u.split_open(source)
+end
+
+-- Lists
 local function continue_list()
     local row = api.nvim_win_get_cursor(0)[1]
     local line = api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ''
@@ -793,7 +808,7 @@ end
 -- Autocmds
 api.nvim_create_autocmd('BufWritePost', {
     buffer = 0,
-    desc = 'Compile Typst document outside packages',
+    desc = 'Compile Typst document on save',
     callback = function(args)
         vim.b[args.buf].typst_main = nil
         if not vim.fs.root(args.buf, 'typst.toml') then
@@ -803,6 +818,7 @@ api.nvim_create_autocmd('BufWritePost', {
 })
 
 -- Mappings
+---- Compilation
 vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     compile_typst(true)
 end, { buf = 0, desc = 'Compile Typst document' })
@@ -811,12 +827,22 @@ vim.keymap.set('n', '<Leader>sl', forward_search, {
     buf = 0,
     desc = 'Forward search (Zathura)',
 })
+
+---- Editing
 vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit Typst main file' })
 vim.keymap.set('n', '<Leader>eb', edit_bibliography, {
     buf = 0,
     desc = 'Edit Typst bibliography',
 })
+vim.keymap.set('n', '<Leader>ef', edit_figure, {
+    buf = 0,
+    desc = 'Edit Typst figure source',
+})
+
+---- Table of contents
 vim.keymap.set('n', '<Leader>tc', toc_toggle, { buf = 0, desc = 'Toggle Typst TOC' })
+
+---- Lists
 vim.keymap.set(
     'i',
     '<CR>',
