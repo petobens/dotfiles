@@ -45,8 +45,16 @@
   if headings.len() > 0 { headings.last() } else { none }
 }
 
-#let running-heading(level, chapter: false) = {
-  let it = latest-heading(level)
+#let running-heading(level, chapter: false, page-last: false) = {
+  let it = if page-last {
+    let page = here().page()
+    let headings = query(heading.where(level: level)).filter(
+      it => it.location().page() <= page,
+    )
+    if headings.len() > 0 { headings.last() } else { none }
+  } else {
+    latest-heading(level)
+  }
   if it != none {
     if it.numbering != none {
       if chapter { localized([Capítulo], [Chapter]) + [ ] }
@@ -92,7 +100,7 @@
     } else {
       ruled-header(grid(
         columns: (auto, 1fr, auto),
-        smallcaps(running-heading(2)), [], page-number(),
+        smallcaps(running-heading(2, page-last: true)), [], page-number(),
       ))
     }
   }
