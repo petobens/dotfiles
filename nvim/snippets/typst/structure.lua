@@ -52,8 +52,9 @@ local function appendix_snippet(trigger)
         { trig = trigger, dscr = 'Appendix' },
         fmta(
             [[
+// @typstyle off
 #appendix[
-  <>
+<>
 ]
 
 <>

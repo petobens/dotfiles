@@ -120,6 +120,37 @@
 #let show-number-only-reference = number-only-reference()
 
 // Lists
+#let wide-enum = {
+  let format-number = numbering
+  (
+    body,
+    numbering: "(1)",
+    // Places "(i)" at the 1.5em paragraph indent
+    label-width: 2.55em,
+    body-indent: 0.5em,
+    above: 0.5em,
+    spacing: 0pt,
+  ) => {
+    show enum: it => {
+      let start = if it.start == auto { 1 } else { it.start }
+      for (index, item) in it.children.enumerate() {
+        block(
+          width: 100%,
+          breakable: true,
+          above: if index == 0 { above } else { spacing },
+        )[
+          #box(
+            width: label-width,
+            align(right, format-number(numbering, index + start)),
+          )#h(body-indent)#item.body
+        ]
+      }
+    }
+    parbreak()
+    body
+  }
+}
+
 #let labeled-item(label, body, indent: 1em, above: 1em) = block(
   width: 100%,
   breakable: true,
