@@ -63,6 +63,11 @@ return {
         }),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'rpi', dscr = 'Restore paragraph indent after block' },
+        fmta('#restore-paragraph-indent\n<>', { i(0) }),
+        { condition = line_begin }
+    ),
 
     -- Placeholder text
     s(
