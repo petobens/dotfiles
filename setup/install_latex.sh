@@ -53,6 +53,7 @@ fi
 mapfile -t packages < "$script_dir/packages/latex.txt"
 
 section 'Installing TeX Live packages'
+sudo "$tlmgr" option repository ctan
 sudo "$tlmgr" update --self
 sudo "$tlmgr" option docfiles 1
 sudo "$tlmgr" install "${packages[@]}"
