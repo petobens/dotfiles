@@ -13,8 +13,10 @@
 
 ; Symbol names such as succ and succ.tilde. Repeated per parent because formula
 ; children alone miss the ones nested deeper. A symbol written against its
-; delimiter, as in in(0, 1), parses as a call instead and keeps the plain code
-; colors on purpose: write in (0, 1) so it stays a symbol
+; delimiter, as in in(0, 1), parses as a call instead and keeps the function-call
+; color on purpose: write in (0, 1) so it stays a symbol. Priority 140 lets a
+; symbol inside a subscript or superscript retain this color over the broader
+; script capture below
 ([
   (formula
     [
@@ -32,7 +34,7 @@
       (ident)
     ] @operator.math)
 ]
-  (#set! priority 120))
+  (#set! priority 140))
 
 ; Shorthands are always operators, such as >=, -> and |->
 ((formula
