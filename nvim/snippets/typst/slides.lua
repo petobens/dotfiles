@@ -89,14 +89,16 @@ return {
         fmta(
             [[
 #formula[
-  <><>
+  $
+    <><>
+  $
 ]
 
 <>
             ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
-                i(1, '$ x = y $'),
+                i(1, 'x = y'),
                 i(0),
             }
         ),

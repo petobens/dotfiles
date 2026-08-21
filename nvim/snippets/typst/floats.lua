@@ -24,7 +24,6 @@ return {
 #figure(
   image("<>", width: <>%),
   caption: [<>],
-  placement: none,
 ) <<fig:<>>>
 
 <>
@@ -77,7 +76,6 @@ return {
   caption: [<>],
   label: <<fig:<>>>,
   panel-height: <>cm,
-  placement: none,
 )
 
 <>
@@ -124,7 +122,6 @@ return {
   image("<>"),
   kind: table,
   caption: [<>],
-  placement: none,
 ) <<tab:<>>>
 
 <>

@@ -142,7 +142,10 @@ return {
                 }),
                 c(9, { t('none'), sn(nil, { t('['), i(1, 'Dedication'), t(']') }) }),
                 i(10, 'true'),
-                c(11, { t('none'), sn(nil, { t('['), i(1, 'Preface'), t(']') }) }),
+                c(11, {
+                    t('none'),
+                    sn(nil, { t('include "'), i(1, 'preface.typ'), t('"') }),
+                }),
                 i(12, 'First chapter'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 12 }),
                 i(13, 'First section'),
