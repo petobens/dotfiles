@@ -204,7 +204,7 @@ return {
     -- Common structures
     s(
         { trig = 'set', dscr = 'Set' },
-        fmta('{ thin <><> thin }<>', {
+        fmta('{ <><> }<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
             i(0),

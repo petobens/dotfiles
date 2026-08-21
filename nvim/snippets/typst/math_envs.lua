@@ -108,8 +108,8 @@ $
         { trig = 'dca', dscr = 'Cases' },
         fmta(
             [[cases(
-  <> & "<>" <>,
-  <> & "<>" <>,
+  <> & upright("<>") <>,
+  <> & upright("<>") <>,
 )<>]],
             {
                 i(1, 'value'),
