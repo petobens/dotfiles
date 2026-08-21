@@ -352,7 +352,7 @@
   set bibliography(style: mybibstyle)
   show bibliography: set block(spacing: bibliography-entry-spacing)
   set par(
-    leading: 0.55em,
+    leading: 0.53em,
     spacing: 0.55em,
     first-line-indent: 15pt,
     justify: true,
@@ -375,7 +375,11 @@
   show figure.caption: show-figure-caption
   show heading.where(level: 1): it => {
     page-style-enabled.update(false)
-    pagebreak(weak: true, to: "odd")
+    if it.numbering != none {
+      pagebreak(to: "odd")
+    } else {
+      pagebreak(weak: true, to: "odd")
+    }
     page-style-enabled.update(true)
     context if main-page-reset.get() {
       counter(page).update(1)
@@ -384,7 +388,7 @@
     }
     reset-book-numbering()
     if it.numbering != none { counter(footnote).update(0) }
-    block(width: 100%, above: 2em, below: 3em, breakable: false)[
+    block(width: 100%, above: 2em, below: 3.2em, breakable: false)[
       #set text(weight: "bold")
       #align(center)[
         #v(
