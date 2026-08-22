@@ -128,4 +128,29 @@ return {
         ),
         { condition = line_begin }
     ),
+    s(
+        { trig = 'pause', dscr = 'Reveal following slide content' },
+        fmta('#pause\n\n<>', { i(0) }),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'uncover', dscr = 'Reveal while preserving space' },
+        fmta('#uncover("<>-")[<><>]<>', {
+            i(1, '2'),
+            f(_G.LuaSnipConfig.visual_selection),
+            i(2, 'Content'),
+            i(0),
+        }),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'only', dscr = 'Show without preserving hidden space' },
+        fmta('#only("<>")[<><>]<>', {
+            i(1, '2'),
+            f(_G.LuaSnipConfig.visual_selection),
+            i(2, 'Content'),
+            i(0),
+        }),
+        { condition = line_begin }
+    ),
 }, {}

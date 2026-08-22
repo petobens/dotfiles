@@ -108,7 +108,6 @@
 ])
 
 #let deck-footer = context {
-  let current-page = counter(page).get().first()
   box(width: 100%)[
     #move(dy: -4pt)[
       #grid(
@@ -129,7 +128,7 @@
             )[Muttdata]
             #linebreak()
             #text(size: 9pt, fill: mutt-navy)[
-              #current-page/#counter(page).final().first()
+              #utils.slide-counter.display()/#utils.last-slide-number
             ]
           ]
         ],
