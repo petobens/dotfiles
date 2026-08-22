@@ -26,13 +26,16 @@ return {
     wrapped('tss', 'Sans-serif text', '#text(font: "DejaVu Sans")[', ']'),
     wrapped('muc', 'Uppercase text', '#upper[', ']'),
     wrapped('quo', 'Inline quotation', '#quote(block: false)[', ']'),
+    wrapped('ttt', 'Inline code', '`', '`'),
     s(
-        { trig = 'ttt', dscr = 'Monospaced text' },
-        fmta('#raw("<><>")<>', {
+        { trig = 'cb', dscr = 'Code block' },
+        fmta('```<>\n<><>\n```\n<>', {
+            i(1, 'python'),
             f(_G.LuaSnipConfig.visual_selection),
-            i(1),
+            i(2),
             i(0),
-        })
+        }),
+        { condition = line_begin }
     ),
 
     -- Notes and links

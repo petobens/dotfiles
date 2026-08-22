@@ -472,13 +472,7 @@
   )
   show bibliography: set text(font: "New Computer Modern")
   show bibliography: set block(spacing: bibliography-entry-spacing)
-  show raw: set text(font: "DejaVu Sans Mono")
-  show raw.where(block: true): block.with(
-    fill: soft-gray,
-    stroke: 0.5pt + border-gray,
-    inset: 10pt,
-    radius: 4pt,
-  )
+  show: code-style
   show strong: set text(fill: mutt-blue)
   show emph: set text(fill: muted)
   show ref: it => context {
