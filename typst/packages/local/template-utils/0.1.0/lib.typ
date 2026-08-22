@@ -8,7 +8,7 @@
   inset: 10pt,
   radius: 4pt,
 )
-#let code-style(body, size: 0.8em, width: auto) = {
+#let code-style(body, size: 0.8em, width: 100%) = {
   set raw(theme: onedark-theme)
   show raw: set text(font: "DejaVu Sans Mono", size: size)
   show raw.where(block: true): set text(fill: onedark-foreground)

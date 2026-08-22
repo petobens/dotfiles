@@ -226,7 +226,7 @@
   )
   set smartquote(quotes: curly-double-quotes)
   show math.equation: set text(font: "New Computer Modern Math")
-  show: code-style.with(size: 9pt, width: 100%)
+  show: code-style.with(size: 9pt)
   show link: set text(fill: navy)
   show ref: number-only-reference(
     supplement: article-reference-supplement,
