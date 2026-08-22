@@ -1,3 +1,4 @@
+#import "@preview/in-dexter:0.7.2": index, index-main, make-index
 #import "@local/template-utils:0.1.0": *
 
 // Numbering
@@ -311,6 +312,8 @@
   toc: true,
   preface: none,
   preface-title: auto,
+  index: false,
+  index-title: auto,
   body,
 ) = {
   let contents-title = if language == "es" { [Índice General] } else {
@@ -320,6 +323,11 @@
     if language == "es" { [Prefacio] } else { [Preface] }
   } else {
     preface-title
+  }
+  let resolved-index-title = if index-title == auto {
+    if language == "es" { [Índice Alfabético] } else { [Index] }
+  } else {
+    index-title
   }
   // Document metadata and page
   set document(title: title, author: author, date: metadata-date)
@@ -484,4 +492,15 @@
   main-page-reset.update(true)
   counter(heading).update(0)
   body
+  if index {
+    heading(
+      level: 1,
+      numbering: none,
+      outlined: true,
+      resolved-index-title,
+    )
+    columns(2, gutter: 1.5em)[
+      #make-index(title: none, use-page-counter: true)
+    ]
+  }
 }

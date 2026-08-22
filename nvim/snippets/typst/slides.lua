@@ -8,26 +8,7 @@ local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
-    -- Familiar Beamer triggers
-    s(
-        { trig = 'bf', dscr = 'Slide' },
-        fmta(
-            [[
-== <>
-
-<><>
-
-<>
-            ]],
-            {
-                i(1, 'Slide title'),
-                f(_G.LuaSnipConfig.visual_selection),
-                i(2),
-                i(0),
-            }
-        ),
-        { condition = line_begin }
-    ),
+    -- Slide headings
     s(
         { trig = 'ft', dscr = 'Slide title' },
         fmta(
@@ -53,6 +34,8 @@ return {
         }),
         { condition = line_begin }
     ),
+
+    -- Mutt slide components
     s(
         { trig = 'blo', dscr = 'Card' },
         fmta(
@@ -74,7 +57,6 @@ return {
         { condition = line_begin }
     ),
 
-    -- Mutt slide components
     s(
         { trig = 'callout', dscr = 'Callout' },
         fmta('#callout([<><>])<>', {
@@ -126,6 +108,31 @@ return {
             ]],
             { i(1, 'Left column'), i(2, 'Right column'), i(0) }
         ),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'pause', dscr = 'Reveal following slide content' },
+        fmta('#pause\n\n<>', { i(0) }),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'uncover', dscr = 'Reveal while preserving space' },
+        fmta('#uncover("<>-")[<><>]<>', {
+            i(1, '2'),
+            f(_G.LuaSnipConfig.visual_selection),
+            i(2, 'Content'),
+            i(0),
+        }),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'only', dscr = 'Show without preserving hidden space' },
+        fmta('#only("<>")[<><>]<>', {
+            i(1, '2'),
+            f(_G.LuaSnipConfig.visual_selection),
+            i(2, 'Content'),
+            i(0),
+        }),
         { condition = line_begin }
     ),
 }, {}
