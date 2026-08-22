@@ -177,6 +177,23 @@ local function preserve_order_sorter(opts)
     })
 end
 
+-- Custom entry makers
+local default_quickfix_entry_maker = require('telescope.make_entry').gen_from_quickfix({})
+local function colored_quickfix_entry_maker(item)
+    local entry = default_quickfix_entry_maker(item)
+    local default_display = entry.display
+    entry.display = function(display_entry)
+        local line, highlights = default_display(display_entry)
+        local _, lnum_start, _, col_start, col = line:match('^(.-):()(%d+):()(%d+)')
+        vim.list_extend(highlights, {
+            { { 0, lnum_start - 2 }, 'Directory' },
+            { { lnum_start - 1, col_start + #col - 1 }, 'TelescopeResultsNumber' },
+        })
+        return line, highlights
+    end
+    return entry
+end
+
 -- Custom pickers
 function _G.TelescopeConfig.find_dirs(opts)
     opts = opts or {}
@@ -848,6 +865,38 @@ telescope.setup({
                 },
             },
         },
+        git_bcommits = {
+            prompt_title = 'Buffer Commits (<C-d>:delta,<C-o>:checkout,<C-y>:yank,'
+                .. '<A-r>:review,<A-c>:changelog)',
+            layout_config = { preview_width = 0.55 },
+            mappings = {
+                i = {
+                    ['<CR>'] = custom_actions.fugitive_open,
+                    ['<C-s>'] = custom_actions.fugitive_split,
+                    ['<C-v>'] = custom_actions.fugitive_vsplit,
+                    ['<C-d>'] = custom_actions.delta_term,
+                    ['<C-o>'] = actions.git_checkout,
+                    ['<A-r>'] = custom_actions.codecompanion_code_review,
+                    ['<A-c>'] = custom_actions.codecompanion_changelog,
+                },
+            },
+        },
+        git_commits = {
+            prompt_title = 'Commits (<C-d>:delta,<C-o>:checkout,<C-y>:yank,'
+                .. '<A-r>:review,<A-c>:changelog)',
+            layout_config = { preview_width = 0.55 },
+            mappings = {
+                i = {
+                    ['<CR>'] = custom_actions.fugitive_open,
+                    ['<C-s>'] = custom_actions.fugitive_split,
+                    ['<C-v>'] = custom_actions.fugitive_vsplit,
+                    ['<C-d>'] = custom_actions.delta_term,
+                    ['<C-o>'] = actions.git_checkout,
+                    ['<A-r>'] = custom_actions.codecompanion_code_review,
+                    ['<A-c>'] = custom_actions.codecompanion_changelog,
+                },
+            },
+        },
         live_grep = {
             prompt_title = 'Grep (<C-space>:select,<A-a>:cc-context)',
             path_display = { shorten = 3 },
@@ -875,38 +924,7 @@ telescope.setup({
                 },
             },
         },
-        git_commits = {
-            prompt_title = 'Commits (<C-d>:delta,<C-o>:checkout,<C-y>:yank,'
-                .. '<A-r>:review,<A-c>:changelog)',
-            layout_config = { preview_width = 0.55 },
-            mappings = {
-                i = {
-                    ['<CR>'] = custom_actions.fugitive_open,
-                    ['<C-s>'] = custom_actions.fugitive_split,
-                    ['<C-v>'] = custom_actions.fugitive_vsplit,
-                    ['<C-d>'] = custom_actions.delta_term,
-                    ['<C-o>'] = actions.git_checkout,
-                    ['<A-r>'] = custom_actions.codecompanion_code_review,
-                    ['<A-c>'] = custom_actions.codecompanion_changelog,
-                },
-            },
-        },
-        git_bcommits = {
-            prompt_title = 'Buffer Commits (<C-d>:delta,<C-o>:checkout,<C-y>:yank,'
-                .. '<A-r>:review,<A-c>:changelog)',
-            layout_config = { preview_width = 0.55 },
-            mappings = {
-                i = {
-                    ['<CR>'] = custom_actions.fugitive_open,
-                    ['<C-s>'] = custom_actions.fugitive_split,
-                    ['<C-v>'] = custom_actions.fugitive_vsplit,
-                    ['<C-d>'] = custom_actions.delta_term,
-                    ['<C-o>'] = actions.git_checkout,
-                    ['<A-r>'] = custom_actions.codecompanion_code_review,
-                    ['<A-c>'] = custom_actions.codecompanion_changelog,
-                },
-            },
-        },
+        quickfix = { entry_maker = colored_quickfix_entry_maker },
         search_history = {
             mappings = {
                 i = {
