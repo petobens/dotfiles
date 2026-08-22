@@ -767,22 +767,67 @@ function _G.TypstConfig.backward_search(pdf)
 
     while #words > 0 do
         local pattern = table.concat(words, '%s+')
+        local matches = {}
         for _, source in ipairs(sources) do
-            local start, finish = source.content:find(pattern)
-            if start then
+            local offset = 1
+            while offset <= #source.content do
+                local start, finish = source.content:find(pattern, offset)
+                if not start then
+                    break
+                end
                 local from = position_at(source.content, start - 1)
                 local to = position_at(source.content, finish)
-                local bufnr = vim.fn.bufadd(source.path)
-                vim.fn.bufload(bufnr)
-                api.nvim_win_set_buf(0, bufnr)
-                api.nvim_win_set_cursor(0, { from[1] + 1, from[2] })
-                -- Folds only exist once the buffer has been drawn in the window
-                vim.schedule(function()
-                    pcall(vim.cmd.normal, { args = { 'zOzz' }, bang = true })
-                end)
-                vim.hl.range(bufnr, sync_ns, 'Visual', from, to, { timeout = 1000 })
-                return 1
+                table.insert(matches, {
+                    path = source.path,
+                    from = from,
+                    to = to,
+                    text = source.content:match('[^\n]*', start - from[2]),
+                })
+                offset = start + 1
             end
+        end
+        if #matches == 1 then
+            local match = matches[1]
+            local bufnr = vim.fn.bufadd(match.path)
+            vim.fn.bufload(bufnr)
+            api.nvim_win_set_buf(0, bufnr)
+            api.nvim_win_set_cursor(0, { match.from[1] + 1, match.from[2] })
+            -- Folds only exist once the buffer has been drawn in the window
+            vim.schedule(function()
+                pcall(vim.cmd.normal, { args = { 'zOzz' }, bang = true })
+            end)
+            vim.hl.range(
+                bufnr,
+                sync_ns,
+                'Visual',
+                match.from,
+                match.to,
+                { timeout = 1000 }
+            )
+            return 1
+        elseif #matches > 1 then
+            local items = vim.tbl_map(function(match)
+                return {
+                    filename = match.path,
+                    lnum = match.from[1] + 1,
+                    col = match.from[2] + 1,
+                    end_lnum = match.to[1] + 1,
+                    end_col = match.to[2] + 1,
+                    text = match.text,
+                }
+            end, matches)
+            vim.fn.setqflist({}, ' ', {
+                title = 'Typst backward search',
+                items = items,
+            })
+            local id = vim.fn.getqflist({ id = 0 }).id
+            vim.schedule(function()
+                require('telescope.builtin').quickfix({
+                    id = id,
+                    prompt_title = 'Typst backward search',
+                })
+            end)
+            return 1
         end
         table.remove(words)
     end
