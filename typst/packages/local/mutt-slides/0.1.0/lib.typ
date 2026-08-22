@@ -472,7 +472,7 @@
   )
   show bibliography: set text(font: "New Computer Modern")
   show bibliography: set block(spacing: bibliography-entry-spacing)
-  show: code-style
+  show: code-style.with(size: 13pt, width: 100%)
   show strong: set text(fill: mutt-blue)
   show emph: set text(fill: muted)
   show ref: it => context {
