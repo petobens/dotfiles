@@ -86,4 +86,10 @@ return {
         }),
         { condition = line_begin }
     ),
+
+    -- Indexes
+    s(
+        { trig = 'idx', wordTrig = false, dscr = 'Index entry' },
+        fmta('#index("<>")<>', { i(1, 'entry'), i(0) })
+    ),
 }, {}

@@ -107,6 +107,7 @@ return {
   dedication: <>,
   toc: <>,
   preface: <>,
+  index: <>,
 )
 
 = <>
@@ -146,10 +147,11 @@ return {
                     t('none'),
                     sn(nil, { t('include "'), i(1, 'preface.typ'), t('"') }),
                 }),
-                i(12, 'First chapter'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 12 }),
-                i(13, 'First section'),
+                i(12, 'false'),
+                i(13, 'First chapter'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 13 }),
+                i(14, 'First section'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 14 }),
                 i(0),
             }
         ),
