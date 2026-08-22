@@ -1,9 +1,7 @@
 local ls = require('luasnip')
 
-local c = ls.choice_node
 local i = ls.insert_node
 local s = ls.snippet
-local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
@@ -28,48 +26,39 @@ return {
     ),
     s({ trig = 'crt', dscr = 'Table reference' }, fmta('@tab:<><>', { i(1), i(0) })),
     s({ trig = 'cre', dscr = 'Equation reference' }, fmta('@eq:<><>', { i(1), i(0) })),
+    s({ trig = 'crd', dscr = 'Definition reference' }, fmta('@def:<><>', { i(1), i(0) })),
     s(
-        { trig = 'crm', dscr = 'Statement reference' },
-        fmta('@<>:<><>', {
-            c(1, {
-                t('thm'),
-                t('pro'),
-                t('lem'),
-                t('cor'),
-                t('def'),
-                t('exa'),
-                t('exe'),
-                t('rem'),
-            }),
-            i(2),
-            i(0),
-        })
+        { trig = 'crp', dscr = 'Proposition reference' },
+        fmta('@pro:<><>', { i(1), i(0) })
     ),
+    s({ trig = 'crth', dscr = 'Theorem reference' }, fmta('@thm:<><>', { i(1), i(0) })),
+    s({ trig = 'crl', dscr = 'Lemma reference' }, fmta('@lem:<><>', { i(1), i(0) })),
+    s({ trig = 'crco', dscr = 'Corollary reference' }, fmta('@cor:<><>', { i(1), i(0) })),
+    s({ trig = 'crem', dscr = 'Example reference' }, fmta('@exa:<><>', { i(1), i(0) })),
+    s({ trig = 'crex', dscr = 'Exercise reference' }, fmta('@exe:<><>', { i(1), i(0) })),
+    s({ trig = 'crr', dscr = 'Remark reference' }, fmta('@rem:<><>', { i(1), i(0) })),
     s({ trig = 'cri', dscr = 'List-item reference' }, fmta('@item:<><>', { i(1), i(0) })),
 
     -- Citations and bibliography
-    s(
-        { trig = 'cite', dscr = 'Citation' },
-        fmta('@<><>', { i(1, 'citation-key'), i(0) })
-    ),
+    s({ trig = 'cite', dscr = 'Citation' }, fmta('@<><>', { i(1), i(0) })),
     s(
         { trig = 'tc', dscr = 'Prose citation' },
-        fmta('#cite(<<<>>>, form: "prose")<>', { i(1, 'citation-key'), i(0) })
+        fmta('#cite(<<<>>>, form: "prose")<>', { i(1), i(0) })
     ),
     s(
         { trig = 'fc', dscr = 'Full citation' },
-        fmta('#cite(<<<>>>, form: "full")<>', { i(1, 'citation-key'), i(0) })
+        fmta('#cite(<<<>>>, form: "full")<>', { i(1), i(0) })
     ),
     s(
         { trig = 'ffc', wordTrig = false, dscr = 'Footnote with full citation' },
         fmta('#footnote[#cite(<<<>>>, form: "full")]<>', {
-            i(1, 'citation-key'),
+            i(1),
             i(0),
         })
     ),
     s(
         { trig = 'noc', dscr = 'Include source without citation' },
-        fmta('#cite(<<<>>>, form: none)<>', { i(1, 'citation-key'), i(0) })
+        fmta('#cite(<<<>>>, form: none)<>', { i(1), i(0) })
     ),
     s(
         { trig = 'pb', dscr = 'Print bibliography' },
