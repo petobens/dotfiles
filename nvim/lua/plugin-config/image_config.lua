@@ -12,13 +12,15 @@ image.setup({
             only_render_image_at_cursor = true,
             only_render_image_at_cursor_mode = 'inline',
         },
+        typst = { enabled = false },
     },
 })
 
 -- Helpers
 local function get_image_path()
     local line = vim.api.nvim_get_current_line()
-    local img_path = line:match('!%[.*%]%((.+)%)') -- md image ![](path)
+    local img_path = line:match('image%s*%(%s*"([^"]+)"') -- Typst image("path")
+        or line:match('!%[.*%]%((.+)%)') -- md image ![](path)
     if not img_path then
         img_path = line:match('%[.*%]%((.+)%)') -- md-like without !: [](path)
     end

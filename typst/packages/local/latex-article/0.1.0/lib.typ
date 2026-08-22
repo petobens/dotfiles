@@ -235,7 +235,7 @@
   show bibliography: set text(size: 9pt)
   show bibliography: set block(spacing: bibliography-entry-spacing)
   set par(
-    leading: 0.55em,
+    leading: 0.53em,
     spacing: 0.55em,
     first-line-indent: 15pt,
     justify: true,

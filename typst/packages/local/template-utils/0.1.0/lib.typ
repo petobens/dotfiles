@@ -328,7 +328,6 @@
 #let show-statement(it) = {
   block(width: 100%, breakable: true)[
     #set align(left)
-    #set par(first-line-indent: 0pt)
     #it.supplement
     #if it.numbering != none { [ #context it.counter.display(it.numbering)] }
     #if it.caption != none and it.caption.body != [] { [ #it.caption.body] }
@@ -467,7 +466,6 @@
 
 #let proof(body, title: auto) = {
   block(width: 100%, breakable: true, above: 0.8em)[
-    #set par(first-line-indent: 0pt)
     #emph(localized-title(title, [Demostración], [Proof])). #body
     #place(right, dy: -0.85em)[$square$]
   ]

@@ -1,4 +1,6 @@
 local api = vim.api
+local ts_select = require('nvim-treesitter-textobjects.select')
+
 local u = require('utils')
 local read_file = u.read_file
 
@@ -500,6 +502,64 @@ local function compile_typst(notify_success)
     )
 end
 
+local function count_words()
+    local bufnr = api.nvim_get_current_buf()
+    local main = main_source(bufnr)
+    local client = vim.lsp.get_clients({ bufnr = bufnr, name = 'tinymist' })[1]
+    if not main or not client then
+        vim.notify('Save the Typst file and start Tinymist before counting words')
+        return
+    end
+
+    local counting = true
+    vim.defer_fn(function()
+        if counting then
+            api.nvim_echo({ { 'Counting words...' } }, false, {})
+        end
+    end, 500)
+    client:exec_cmd({
+        title = 'Count words',
+        command = 'tinymist.exportText',
+        arguments = { main, {}, { write = false } },
+    }, { bufnr = bufnr }, function(err, result)
+        counting = false
+        if err then
+            vim.notify(err.message, vim.log.levels.ERROR)
+            return
+        end
+        local text = vim.base64.decode(result.data)
+        local _, words = text:gsub('%S+', '')
+        vim.notify(('Words: %d'):format(words))
+    end)
+end
+
+local function convert_pandoc()
+    local main = main_source(0)
+    if not main then
+        vim.notify('Save the Typst file before converting', vim.log.levels.ERROR)
+        return
+    end
+
+    local markdown = main:gsub('%.typ$', '.md')
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
+    local result = vim.system(
+        { 'pandoc', '-s', main, '-o', markdown },
+        { cwd = vim.fs.dirname(main), text = true }
+    ):wait()
+    if result.code == 0 then
+        vim.notify('Converted .typ file into .md', vim.log.levels.INFO)
+    else
+        vim.notify(
+            string.format(
+                'Pandoc failed (exit code %d): %s',
+                result.code,
+                result.stderr or ''
+            ),
+            vim.log.levels.ERROR
+        )
+    end
+end
+
 -- PDF viewer
 local function view_pdf()
     local _, pdf, path_error = document_paths()
@@ -822,11 +882,16 @@ api.nvim_create_autocmd('BufWritePost', {
 vim.keymap.set({ 'n', 'i' }, '<F7>', function()
     compile_typst(true)
 end, { buf = 0, desc = 'Compile Typst document' })
+vim.keymap.set('n', '<Leader>cm', convert_pandoc, {
+    buf = 0,
+    desc = 'Convert to Markdown (pandoc)',
+})
 vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
 vim.keymap.set('n', '<Leader>sl', forward_search, {
     buf = 0,
     desc = 'Forward search (Zathura)',
 })
+vim.keymap.set('n', '<Leader>cw', count_words, { buf = 0, desc = 'Count words' })
 
 ---- Editing
 vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit Typst main file' })
@@ -838,6 +903,14 @@ vim.keymap.set('n', '<Leader>ef', edit_figure, {
     buf = 0,
     desc = 'Edit Typst figure source',
 })
+
+---- Text objects
+vim.keymap.set({ 'x', 'o' }, 'im', function()
+    ts_select.select_textobject('@math.inner', 'textobjects')
+end, { buf = 0, desc = 'Select inside math' })
+vim.keymap.set({ 'x', 'o' }, 'am', function()
+    ts_select.select_textobject('@math.outer', 'textobjects')
+end, { buf = 0, desc = 'Select around math' })
 
 ---- Table of contents
 vim.keymap.set('n', '<Leader>tc', toc_toggle, { buf = 0, desc = 'Toggle Typst TOC' })

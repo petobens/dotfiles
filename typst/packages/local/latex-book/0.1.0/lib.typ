@@ -45,8 +45,16 @@
   if headings.len() > 0 { headings.last() } else { none }
 }
 
-#let running-heading(level, chapter: false) = {
-  let it = latest-heading(level)
+#let running-heading(level, chapter: false, page-last: false) = {
+  let it = if page-last {
+    let page = here().page()
+    let headings = query(heading.where(level: level)).filter(
+      it => it.location().page() <= page,
+    )
+    if headings.len() > 0 { headings.last() } else { none }
+  } else {
+    latest-heading(level)
+  }
   if it != none {
     if it.numbering != none {
       if chapter { localized([Capítulo], [Chapter]) + [ ] }
@@ -92,7 +100,7 @@
     } else {
       ruled-header(grid(
         columns: (auto, 1fr, auto),
-        smallcaps(running-heading(2)), [], page-number(),
+        smallcaps(running-heading(2, page-last: true)), [], page-number(),
       ))
     }
   }
@@ -344,7 +352,7 @@
   set bibliography(style: mybibstyle)
   show bibliography: set block(spacing: bibliography-entry-spacing)
   set par(
-    leading: 0.55em,
+    leading: 0.53em,
     spacing: 0.55em,
     first-line-indent: 15pt,
     justify: true,
@@ -367,7 +375,11 @@
   show figure.caption: show-figure-caption
   show heading.where(level: 1): it => {
     page-style-enabled.update(false)
-    pagebreak(weak: true, to: "odd")
+    if it.numbering != none {
+      pagebreak(to: "odd")
+    } else {
+      pagebreak(weak: true, to: "odd")
+    }
     page-style-enabled.update(true)
     context if main-page-reset.get() {
       counter(page).update(1)
@@ -376,7 +388,7 @@
     }
     reset-book-numbering()
     if it.numbering != none { counter(footnote).update(0) }
-    block(width: 100%, above: 2em, below: 3em, breakable: false)[
+    block(width: 100%, above: 2em, below: 3.2em, breakable: false)[
       #set text(weight: "bold")
       #align(center)[
         #v(
@@ -416,7 +428,7 @@
   show heading.where(level: 3): it => [
     #block(above: 1.4em, below: 0.9em)[
       #set text(
-        size: if it.numbering == none { 11pt } else { 12pt },
+        size: 12pt,
         weight: if it.numbering == none { "regular" } else { "bold" },
         style: if it.numbering == none { "italic" } else { "normal" },
       )

@@ -12,7 +12,7 @@ return {
     s(
         { trig = 'ig', dscr = 'Image' },
         fmta('#image("<>", width: <>%)<>', {
-            i(1, 'image.pdf'),
+            i(1),
             i(2, '100'),
             i(0),
         })
@@ -29,7 +29,7 @@ return {
 <>
             ]],
             {
-                i(1, 'image.pdf'),
+                i(1),
                 i(2, '100'),
                 i(3, 'Caption'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 3 }),
@@ -81,10 +81,10 @@ return {
 <>
             ]],
             {
-                i(1, 'image-a.pdf'),
+                i(1),
                 i(2, 'First panel'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
-                i(3, 'image-b.pdf'),
+                i(3),
                 i(4, 'Second panel'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 4 }),
                 i(5, 'Combined caption'),
@@ -98,7 +98,7 @@ return {
     s(
         { trig = 'cg', dscr = 'Centered image' },
         fmta('#align(center)[#image("<>", width: <>%)]<>', {
-            i(1, 'image.pdf'),
+            i(1),
             i(2, '100'),
             i(0),
         })
@@ -127,7 +127,7 @@ return {
 <>
             ]],
             {
-                i(1, 'table.pdf'),
+                i(1),
                 i(2, 'Caption'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
                 i(0),

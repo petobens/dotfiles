@@ -128,7 +128,7 @@ return {
                     t('none'),
                     sn(nil, {
                         t('read("'),
-                        i(1, 'logo.pdf'),
+                        i(1),
                         t('", encoding: none)'),
                     }),
                 }),
