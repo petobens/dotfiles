@@ -1,4 +1,6 @@
 local api = vim.api
+local ts_select = require('nvim-treesitter-textobjects.select')
+
 local u = require('utils')
 local read_file = u.read_file
 
@@ -869,6 +871,14 @@ vim.keymap.set('n', '<Leader>ef', edit_figure, {
     buf = 0,
     desc = 'Edit Typst figure source',
 })
+
+---- Text objects
+vim.keymap.set({ 'x', 'o' }, 'im', function()
+    ts_select.select_textobject('@math.inner', 'textobjects')
+end, { buf = 0, desc = 'Select inside math' })
+vim.keymap.set({ 'x', 'o' }, 'am', function()
+    ts_select.select_textobject('@math.outer', 'textobjects')
+end, { buf = 0, desc = 'Select around math' })
 
 ---- Table of contents
 vim.keymap.set('n', '<Leader>tc', toc_toggle, { buf = 0, desc = 'Toggle Typst TOC' })
