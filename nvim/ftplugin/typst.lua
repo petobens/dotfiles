@@ -750,18 +750,9 @@ function _G.TypstConfig.backward_search(pdf)
     for word in selection:gsub('%-%s+', ''):gmatch('%S+') do
         table.insert(words, vim.pesc(word))
     end
-    -- Prefer unsaved buffer text so neither the match nor the jump is stale
-    local unsaved = {}
-    for _, bufnr in ipairs(api.nvim_list_bufs()) do
-        if api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].modified then
-            local path = vim.fs.normalize(api.nvim_buf_get_name(bufnr))
-            local lines = api.nvim_buf_get_lines(bufnr, 0, -1, false)
-            unsaved[path] = table.concat(lines, '\n')
-        end
-    end
     local sources = {}
     for _, path in ipairs(toc_document_files(main)) do
-        local content = unsaved[path] or read_file(path) or ''
+        local content = read_file(path) or ''
         table.insert(sources, { path = path, content = content })
     end
 
