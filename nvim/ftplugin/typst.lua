@@ -502,6 +502,37 @@ local function compile_typst(notify_success)
     )
 end
 
+local function count_words()
+    local bufnr = api.nvim_get_current_buf()
+    local main = main_source(bufnr)
+    local client = vim.lsp.get_clients({ bufnr = bufnr, name = 'tinymist' })[1]
+    if not main or not client then
+        vim.notify('Save the Typst file and start Tinymist before counting words')
+        return
+    end
+
+    local counting = true
+    vim.defer_fn(function()
+        if counting then
+            api.nvim_echo({ { 'Counting words...' } }, false, {})
+        end
+    end, 500)
+    client:exec_cmd({
+        title = 'Count words',
+        command = 'tinymist.exportText',
+        arguments = { main, {}, { write = false } },
+    }, { bufnr = bufnr }, function(err, result)
+        counting = false
+        if err then
+            vim.notify(err.message, vim.log.levels.ERROR)
+            return
+        end
+        local text = vim.base64.decode(result.data)
+        local _, words = text:gsub('%S+', '')
+        vim.notify(('Words: %d'):format(words))
+    end)
+end
+
 local function convert_pandoc()
     local main = main_source(0)
     if not main then
@@ -860,6 +891,7 @@ vim.keymap.set('n', '<Leader>sl', forward_search, {
     buf = 0,
     desc = 'Forward search (Zathura)',
 })
+vim.keymap.set('n', '<Leader>cw', count_words, { buf = 0, desc = 'Count words' })
 
 ---- Editing
 vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit Typst main file' })
