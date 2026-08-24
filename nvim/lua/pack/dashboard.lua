@@ -1,15 +1,16 @@
 local M = {}
 
-local manager
+local items = {}
+local manager = require('pack.manager')
 local namespace = vim.api.nvim_create_namespace('nvim-pack')
-local state
+local state = manager.state
 
 local function list(value)
     return type(value) == 'table' and value or { value }
 end
 
 -- Window
-local function float_config(zindex)
+local function float_config()
     local width = math.min(130, math.max(1, vim.o.columns - 4))
     local height = math.max(1, vim.o.lines - 5)
     return {
@@ -20,13 +21,13 @@ local function float_config(zindex)
         height = height,
         style = 'minimal',
         border = 'rounded',
-        title = ' nvim-pack ',
+        title = ' Packages ',
         title_pos = 'center',
-        zindex = zindex,
+        zindex = 50,
     }
 end
 
-local function setup_float(buffer, window, zindex)
+local function setup_float(buffer, window)
     vim.wo[window].colorcolumn = ''
     vim.wo[window].foldenable = false
     vim.wo[window].spell = false
@@ -37,7 +38,7 @@ local function setup_float(buffer, window, zindex)
         desc = 'Resize native package manager',
         callback = function()
             if vim.api.nvim_win_is_valid(window) then
-                vim.api.nvim_win_set_config(window, float_config(zindex))
+                vim.api.nvim_win_set_config(window, float_config())
             end
         end,
     })
@@ -145,12 +146,12 @@ local function render_dashboard(buffer, view)
         '',
     }
     local highlights = {}
-    state.items = {}
+    items = {}
 
     local function add(text, item)
         local line = #lines
         lines[#lines + 1] = text
-        state.items[line + 1] = item
+        items[line + 1] = item
         return line
     end
 
@@ -370,7 +371,7 @@ local function in_repo(plugin, action, callback)
 end
 
 local function open_item_url()
-    local item = state.items[vim.api.nvim_win_get_cursor(0)[1]]
+    local item = items[vim.api.nvim_win_get_cursor(0)[1]]
     local plugin = item and (item.plugin or item)
     local hash = item and (item.hash or item.to)
     if plugin and hash then
@@ -381,7 +382,7 @@ local function open_item_url()
 end
 
 local function show_item_diff()
-    local item = state.items[vim.api.nvim_win_get_cursor(0)[1]]
+    local item = items[vim.api.nvim_win_get_cursor(0)[1]]
     local plugin = item and (item.plugin or item)
     if not plugin then
         return
@@ -436,10 +437,10 @@ local function open_dashboard(initial_view)
     vim.bo[buffer].buftype = 'nofile'
     vim.bo[buffer].filetype = 'nvim-pack'
     vim.bo[buffer].swapfile = false
-    local window = vim.api.nvim_open_win(buffer, true, float_config(50))
+    local window = vim.api.nvim_open_win(buffer, true, float_config())
     local dashboard = { buffer = buffer, window = window }
     state.dashboard = dashboard
-    setup_float(buffer, window, 50)
+    setup_float(buffer, window)
 
     local function cleanup()
         if vim.api.nvim_buf_is_valid(buffer) then
@@ -462,7 +463,6 @@ local function open_dashboard(initial_view)
     local view = initial_view
     local function render(next_view)
         view = next_view or view
-        dashboard.view = view
         render_dashboard(buffer, view)
     end
     dashboard.render = render
@@ -509,24 +509,16 @@ local function open_dashboard(initial_view)
     end
 end
 
--- Public setup
-function M.setup(package_manager)
-    manager = package_manager
-    state = manager.state
+function M.open()
+    open_dashboard('home')
+end
 
-    vim.api.nvim_create_user_command('NvimPack', function(args)
-        local view = vim.list_contains({ 'home', 'log', 'sync' }, args.args) and args.args
-            or 'home'
-        open_dashboard(view)
-    end, {
-        desc = 'Open native package manager',
-        nargs = '?',
-    })
-    vim.api.nvim_create_user_command('NvimPackSync', function()
-        open_dashboard('sync')
-    end, {
-        desc = 'Clean and update native packages',
-    })
+function M.log()
+    open_dashboard('log')
+end
+
+function M.sync()
+    open_dashboard('sync')
 end
 
 return M

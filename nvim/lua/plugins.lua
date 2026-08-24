@@ -1,14 +1,32 @@
--- Native package specification
+---@class PackSpecData
+---@field build? string|fun() Post-install/update function, `:Ex`, or shell command
+---@field cmd? string|string[] User command(s) that defer loading
+---@field config? string|string[] Module name(s) loaded from `plugin-config`
+---@field event? string|string[] Autocommand event(s) that defer loading
+---@field keys? string[] Normal-mode mappings that defer loading
+---@field pattern? string|string[] Autocommand pattern(s) used with `event`
+---@field version? string|vim.VersionRange Revision passed to `vim.pack`
+
+-- Lazy-like fields are stored in `vim.pack.Spec.data`; deferred packages are
+-- configured after their first event, command, or key trigger
+---@param source string Git URI or `owner/repository`
+---@param data? string|PackSpecData Config module shorthand or package metadata
+---@return vim.pack.Spec
 local function plugin(source, data)
-    data = type(data) == 'string' and { config = data } or data
-    local version = data and data.version
-    if data then
-        data.version = nil
+    local metadata
+    if type(data) == 'string' then
+        metadata = { config = data }
+    elseif data then
+        metadata = vim.tbl_extend('force', {}, data)
+    end
+    local version = metadata and metadata.version
+    if metadata then
+        metadata.version = nil
     end
     return {
         src = source:find('://', 1, true) and source or 'https://github.com/' .. source,
         version = version,
-        data = data,
+        data = metadata,
     }
 end
 
@@ -163,16 +181,17 @@ for _, built_in in ipairs({
     vim.g['loaded_' .. built_in] = 1
 end
 
--- Actually install and configure packages
-require('nvim-pack').setup(packages)
+-- Install and configure packages
+local pack = require('pack')
+pack.setup(packages)
 
 -- Mappings
-vim.keymap.set('n', '<Leader>lz', vim.cmd.NvimPack, {
+vim.keymap.set('n', '<Leader>lz', pack.open, {
     desc = 'Open native package manager',
 })
-vim.keymap.set('n', '<Leader>bu', vim.cmd.NvimPackSync, {
+vim.keymap.set('n', '<Leader>bu', pack.sync, {
     desc = 'Sync native packages',
 })
-vim.keymap.set('n', '<Leader>ul', function()
-    vim.cmd.NvimPack('log')
-end, { desc = 'Show native package update log' })
+vim.keymap.set('n', '<Leader>ul', pack.log, {
+    desc = 'Show native package update log',
+})
