@@ -1,5 +1,4 @@
 local M = {}
-local setup_complete = false
 
 local state = {
     dashboard = nil,
@@ -58,16 +57,21 @@ local function configure(plugin)
     end
 end
 
-local function load(plugin)
+local function load(plugin, defer_scripts)
     if plugin.loaded then
         return
     end
 
     local ok, err = pcall(function()
-        vim.cmd.packadd(plugin.spec.name)
+        vim.cmd.packadd({
+            plugin.spec.name,
+            bang = defer_scripts,
+            magic = { file = false },
+        })
 
-        -- Startup sources these later; deferred :packadd calls need them now
-        if setup_complete or vim.v.vim_did_enter == 1 then
+        -- Startup sources plugin/ and after/plugin/ later. Deferred loaders
+        -- need both directories sourced immediately.
+        if not defer_scripts then
             local after = vim.fs.joinpath(plugin.path, 'after', 'plugin')
             if vim.uv.fs_stat(after) then
                 local scripts = vim.iter(vim.fs.dir(after, { depth = math.huge }))
@@ -81,7 +85,7 @@ local function load(plugin)
                     :totable()
                 table.sort(scripts)
                 for _, script in ipairs(scripts) do
-                    vim.cmd.source({ args = { script } })
+                    vim.cmd.source({ args = { script }, magic = { file = false } })
                 end
             end
         end
@@ -119,6 +123,32 @@ local function activate(plugin)
     end
 end
 
+local function autocmd_group_ids(event)
+    local group_ids = {}
+    for _, autocmd in ipairs(vim.api.nvim_get_autocmds({ event = event })) do
+        if autocmd.group then
+            group_ids[autocmd.group] = true
+        end
+    end
+    return group_ids
+end
+
+local function replay_new_autocmds(event, previous_group_ids)
+    local replayed_groups = {}
+    for _, autocmd in ipairs(vim.api.nvim_get_autocmds({ event = event.event })) do
+        local group = autocmd.group
+        if group and not previous_group_ids[group] and not replayed_groups[group] then
+            replayed_groups[group] = true
+            vim.api.nvim_exec_autocmds(event.event, {
+                buffer = event.buf,
+                data = event.data,
+                group = group,
+                modeline = false,
+            })
+        end
+    end
+end
+
 local function setup_deferred_load(plugin)
     local data = metadata(plugin)
     plugin.loaders = { autocmds = {}, commands = {}, keys = {} }
@@ -127,8 +157,12 @@ local function setup_deferred_load(plugin)
             once = true,
             pattern = data.pattern,
             desc = 'Load ' .. plugin.spec.name,
-            callback = function()
+            callback = function(event)
+                local group_ids = autocmd_group_ids(event.event)
                 activate(plugin)
+                -- Handlers registered during an event miss its current dispatch.
+                -- Replay only new groups so existing handlers do not run twice.
+                replay_new_autocmds(event, group_ids)
             end,
         })
         plugin.loaders.autocmds[#plugin.loaders.autocmds + 1] = autocmd
@@ -447,7 +481,7 @@ function M.setup(specs)
         if data.event or data.cmd or data.keys then
             setup_deferred_load(plugin)
         else
-            load(plugin)
+            load(plugin, vim.v.vim_did_init == 0)
         end
     end
 
@@ -463,8 +497,6 @@ function M.setup(specs)
             activate(plugin)
         end
     end
-
-    setup_complete = true
 end
 
 M.is_loaded = is_loaded
