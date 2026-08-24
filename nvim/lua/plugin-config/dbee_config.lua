@@ -67,15 +67,5 @@ dbee.setup({
     },
 })
 
--- Autocmds
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-    desc = 'Enable cmp-dbee completion for SQL files',
-    group = vim.api.nvim_create_augroup('dbee_sql', { clear = true }),
-    pattern = { 'sql' },
-    callback = function()
-        require('cmp-dbee').setup()
-    end,
-})
-
 -- Mappings
 vim.keymap.set('n', '<Leader>db', dbee.toggle, { desc = 'Toggle dbee drawer' })

@@ -109,3 +109,10 @@ vim.keymap.set('n', '<Leader>es', function()
     local snippet_file = vim.fs.joinpath(snippets_dir, ft .. '.lua')
     require('utils').split_open(snippet_file)
 end, { desc = 'Edit snippet file for current filetype' })
+
+vim.keymap.set('n', '<Leader>se', function()
+    require('telescope').extensions.luasnip.luasnip({
+        prompt_title = 'Snippets',
+        preview_title = 'Snippet Preview',
+    })
+end, { desc = 'Telescope: Snippets (luasnip)' })

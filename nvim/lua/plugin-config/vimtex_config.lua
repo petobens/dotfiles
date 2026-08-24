@@ -33,7 +33,8 @@ vim.api.nvim_create_autocmd(
         group = vim.api.nvim_create_augroup('vimtex_folds', { clear = true }),
         pattern = { '*.tex' },
         callback = function()
-            if not require('luasnip').get_active_snip() then
+            local luasnip = package.loaded.luasnip
+            if not luasnip or not luasnip.get_active_snip() then
                 vim.defer_fn(function()
                     pcall(vim.cmd.VimtexRefreshFolds)
                 end, 1)

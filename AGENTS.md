@@ -42,7 +42,7 @@ files inside it unless explicitly asked to do so.
 
 - Neovim Lua API: `/usr/share/nvim/runtime/doc/lua.txt`
 - Neovim C API: `/usr/share/nvim/runtime/doc/api.txt`
-- Plugin sources (lazy.nvim): `~/.local/share/nvim/lazy/`
+- Plugin sources (vim.pack): `~/.local/share/nvim/site/pack/core/opt/`
 
 Consult these before answering questions about Neovim APIs or plugin internals.
 

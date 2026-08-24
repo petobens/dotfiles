@@ -322,7 +322,7 @@ function _G.TelescopeConfig.bookmark_dirs(opts)
                     ),
                     vim.fs.joinpath(vim.env.HOME, 'git-repos', 'work'),
                     vim.fs.joinpath(vim.env.HOME, 'Desktop'),
-                    vim.fs.joinpath(vim.env.HOME, '.local', 'share', 'nvim', 'lazy'),
+                    vim.fs.joinpath(vim.fn.stdpath('data'), 'site/pack/core/opt'),
                 },
                 entry_maker = opts.entry_maker,
             }),
@@ -1389,13 +1389,6 @@ vim.keymap.set('n', '<Leader>ta', function()
         prompt_title = 'Aerial Document Symbols',
     })
 end, { desc = 'Telescope: Aerial document symbols' })
-
-vim.keymap.set('n', '<Leader>se', function()
-    require('telescope').extensions.luasnip.luasnip({
-        prompt_title = 'Snippets',
-        preview_title = 'Snippet Preview',
-    })
-end, { desc = 'Telescope: Snippets (luasnip)' })
 
 vim.keymap.set('n', '<Leader>gu', function()
     require('telescope').extensions.undo.undo({

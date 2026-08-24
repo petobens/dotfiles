@@ -442,12 +442,6 @@ local groups = {
     LualineGitChange = { fg = p.orange, bg = p.special_grey },
     LualineGitDelete = { fg = p.red, bg = p.special_grey },
 
-    -- Lazy
-    LazyCommit = { fg = p.red },
-    LazyHandlerPlugin = { fg = p.purple },
-    LazyDimmed = { fg = p.comment_grey },
-    LazyReasonStart = { fg = p.fg },
-
     -- IndentBlankline
     IblIndent = { fg = p.special_grey },
     IblScope = { fg = p.gray },
