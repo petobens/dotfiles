@@ -34,7 +34,7 @@ local function setup_float(buffer, window)
     vim.wo[window].winhighlight = 'Normal:NormalFloat,EndOfBuffer:NormalFloat'
     vim.wo[window].wrap = true
     vim.api.nvim_create_autocmd('VimResized', {
-        buffer = buffer,
+        buf = buffer,
         desc = 'Resize package manager',
         callback = function()
             if vim.api.nvim_win_is_valid(window) then
@@ -405,7 +405,7 @@ local function show_item_diff()
         if vim.api.nvim_win_is_valid(dashboard.window) then
             vim.api.nvim_win_set_buf(dashboard.window, dashboard.buffer)
         end
-    end, { buffer = buffer, desc = 'Return to package manager' })
+    end, { buf = buffer, desc = 'Return to package manager' })
 end
 
 -- Lifecycle
@@ -466,35 +466,35 @@ local function open_dashboard(initial_view)
         vim.api.nvim_win_close(window, true)
         cleanup()
     end, {
-        buffer = buffer,
+        buf = buffer,
         desc = 'Close package manager',
     })
     vim.keymap.set('n', 'S', function()
         render('sync')
         manager.schedule_sync()
     end, {
-        buffer = buffer,
+        buf = buffer,
         desc = 'Sync packages',
     })
     vim.keymap.set('n', 'R', function()
         render('sync')
         manager.schedule_sync(true)
     end, {
-        buffer = buffer,
+        buf = buffer,
         desc = 'Resync packages',
     })
     vim.keymap.set('n', 'H', function()
         render('home')
-    end, { buffer = buffer, desc = 'Show package manager home' })
+    end, { buf = buffer, desc = 'Show package manager home' })
     vim.keymap.set('n', 'L', function()
         render('log')
-    end, { buffer = buffer, desc = 'Show package log' })
+    end, { buf = buffer, desc = 'Show package log' })
     vim.keymap.set('n', 'd', show_item_diff, {
-        buffer = buffer,
+        buf = buffer,
         desc = 'Show package diff',
     })
     vim.keymap.set('n', 'K', open_item_url, {
-        buffer = buffer,
+        buf = buffer,
         desc = 'Open package change on GitHub',
     })
 

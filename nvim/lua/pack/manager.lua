@@ -140,7 +140,7 @@ local function replay_new_autocmds(event, previous_group_ids)
         if group and not previous_group_ids[group] and not replayed_groups[group] then
             replayed_groups[group] = true
             vim.api.nvim_exec_autocmds(event.event, {
-                buffer = event.buf,
+                buf = event.buf,
                 data = event.data,
                 group = group,
                 modeline = false,

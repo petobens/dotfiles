@@ -280,7 +280,7 @@ local function toc_release_window()
     for option, value in pairs(state.window_options) do
         window[option] = value
     end
-    api.nvim_win_set_width(state.winid, state.window_width)
+    api.nvim_win_resize(state.winid, state.window_width, -1, {})
 end
 
 local function toc_close()
@@ -392,7 +392,7 @@ local function toc_toggle()
         .. ' : indent(v:lnum) / 2'
     window.winhighlight = 'CursorLine:AerialLine,Folded:Normal'
     window.winfixbuf, window.winfixwidth = true, true
-    api.nvim_win_set_width(state.winid, 43) -- Match the Aerial sidebar
+    api.nvim_win_resize(state.winid, 43, -1, {}) -- Match the Aerial sidebar
 
     -- Mappings
     vim.keymap.set('n', '<CR>', toc_jump, {
@@ -412,12 +412,12 @@ local function toc_toggle()
 
     -- Keep the source highlight synchronized with the TOC cursor
     api.nvim_create_autocmd({ 'BufEnter', 'CursorMoved' }, {
-        buffer = state.bufnr,
+        buf = state.bufnr,
         desc = 'Highlight Typst TOC heading in source',
         callback = toc_highlight_source,
     })
     api.nvim_create_autocmd('BufLeave', {
-        buffer = state.bufnr,
+        buf = state.bufnr,
         desc = 'Clear Typst TOC source highlight',
         callback = toc_clear_source_highlight,
     })
@@ -903,7 +903,7 @@ end
 
 -- Autocmds
 api.nvim_create_autocmd('BufWritePost', {
-    buffer = 0,
+    buf = 0,
     desc = 'Compile Typst document on save',
     callback = function(args)
         vim.b[args.buf].typst_main = nil
