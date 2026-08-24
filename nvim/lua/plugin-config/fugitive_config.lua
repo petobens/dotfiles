@@ -48,7 +48,7 @@ local function open_status_file_diff()
     vim.cmd.Gdiffsplit({ bang = true })
 
     vim.keymap.set('n', '<Leader>de', function()
-        vim.keymap.del('n', '<Leader>de', { buffer = 0 })
+        vim.keymap.del('n', '<Leader>de', { buf = 0 })
         vim.fn['fugitive#DiffClose']()
         open_git_status()
     end, { buf = 0, desc = 'Close diff and return to Fugitive status' })
