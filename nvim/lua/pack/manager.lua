@@ -1,7 +1,6 @@
 local M = {}
 
 local state = {
-    add_failed = false,
     dashboard = nil,
     installed = {},
     log = nil,
@@ -20,7 +19,7 @@ end
 
 local function notify_error(action, name, err)
     vim.notify(
-        ('Nvim pack failed to %s %s:\n%s'):format(action, name, err),
+        ('Package manager failed to %s %s:\n%s'):format(action, name, err),
         vim.log.levels.ERROR
     )
 end
@@ -234,11 +233,7 @@ local function run_build(spec, path)
     return ok, err
 end
 
-local function clean()
-    if state.add_failed then
-        return
-    end
-
+local function remove_undeclared()
     local inactive = vim.iter(vim.pack.get(nil, { info = false }))
         :filter(function(plugin)
             return not plugin.active
@@ -369,7 +364,6 @@ local function start_sync()
     local log_path = vim.fs.joinpath(vim.fn.stdpath('log'), 'nvim-pack.log')
     local log_start = vim.uv.fs_stat(log_path) and #vim.fn.readfile(log_path) or 0
     local ok, err = capture_pack_progress(function()
-        clean()
         vim.pack.update(nil, { force = true })
     end)
     if vim.uv.fs_stat(log_path) then
@@ -420,7 +414,7 @@ end
 function M.setup(specs)
     vim.api.nvim_create_autocmd('VimEnter', {
         once = true,
-        desc = 'Finish native package manager startup',
+        desc = 'Finish package manager startup',
         callback = function()
             state.startup_ms = startup_ms()
             local packages_changed = next(state.installed) ~= nil or #state.removed > 0
@@ -430,7 +424,7 @@ function M.setup(specs)
         end,
     })
     vim.api.nvim_create_autocmd('PackChanged', {
-        desc = 'Run native package build hooks',
+        desc = 'Run package build hooks',
         callback = function(event)
             local plugin = {
                 path = event.data.path,
@@ -482,11 +476,11 @@ function M.setup(specs)
     })
     if not ok then
         notify_error('install', 'plugins', err)
-    end
-    state.add_failed = not ok
-    local cleaned, clean_error = pcall(clean)
-    if not cleaned then
-        notify_error('uninstall', 'plugins', clean_error)
+    else
+        local cleaned, clean_error = pcall(remove_undeclared)
+        if not cleaned then
+            notify_error('uninstall', 'plugins', clean_error)
+        end
     end
 
     -- Register deferred loaders and load non-deferred packages
