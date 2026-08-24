@@ -234,11 +234,6 @@ local function render_dashboard(buffer, view)
                 return state.installed[plugin.spec.name]
             end)
             :totable()
-        local pending = vim.iter(all)
-            :filter(function(plugin)
-                return not plugin.active
-            end)
-            :totable()
         local loaded = vim.iter(active)
             :filter(function(plugin)
                 return not state.installed[plugin.spec.name] and manager.is_loaded(plugin)
@@ -260,7 +255,6 @@ local function render_dashboard(buffer, view)
             :totable()
 
         add_package_section('Installed', installed)
-        add_package_section('Pending Uninstall', pending)
         if #state.removed > 0 then
             add_heading('Uninstalled', #state.removed)
             for _, plugin in ipairs(state.removed) do

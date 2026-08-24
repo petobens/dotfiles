@@ -420,9 +420,13 @@ end
 function M.setup(specs)
     vim.api.nvim_create_autocmd('VimEnter', {
         once = true,
-        desc = 'Record native package manager startup time',
+        desc = 'Finish native package manager startup',
         callback = function()
             state.startup_ms = startup_ms()
+            local packages_changed = next(state.installed) ~= nil or #state.removed > 0
+            if packages_changed and #vim.api.nvim_list_uis() > 0 then
+                vim.schedule(require('pack.dashboard').open)
+            end
         end,
     })
     vim.api.nvim_create_autocmd('PackChanged', {
@@ -480,6 +484,10 @@ function M.setup(specs)
         notify_error('install', 'plugins', err)
     end
     state.add_failed = not ok
+    local cleaned, clean_error = pcall(clean)
+    if not cleaned then
+        notify_error('uninstall', 'plugins', clean_error)
+    end
 
     -- Register deferred loaders and load non-deferred packages
     for _, plugin in ipairs(state.plugins) do
