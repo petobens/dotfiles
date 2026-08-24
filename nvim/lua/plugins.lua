@@ -32,7 +32,8 @@ local function plugin(source, data)
     }
 end
 
--- Packages are flat and dependency-first because vim.pack does not resolve dependencies
+-- Packages are flat: dependencies precede consumers, and extensions follow
+-- their main package
 local packages = {
     -- UI
     plugin('nvim-lualine/lualine.nvim', 'lualine_config'),
@@ -54,25 +55,36 @@ local packages = {
     plugin('stevearc/conform.nvim', 'conform_config'),
 
     -- LSP and Tree-sitter
-    plugin('WhoIsSethDaniel/mason-tool-installer.nvim'),
     plugin('mason-org/mason.nvim', 'mason_config'),
+    plugin('WhoIsSethDaniel/mason-tool-installer.nvim'),
     plugin('folke/lazydev.nvim'),
     plugin('neovim/nvim-lspconfig', 'lsp_config'),
-    plugin('nvim-treesitter/nvim-treesitter-textobjects', { version = 'main' }),
     plugin('nvim-treesitter/nvim-treesitter', {
         version = 'main',
         build = ':TSUpdate',
         config = 'treesitter_config',
     }),
+    plugin('nvim-treesitter/nvim-treesitter-textobjects', { version = 'main' }),
     plugin('m-demare/hlargs.nvim', 'hlargs_config'),
 
     -- Completion and snippets
     plugin('saghen/blink.lib'),
+    plugin('onsails/lspkind.nvim'),
+    plugin('L3MON4D3/LuaSnip', {
+        event = 'InsertEnter',
+        keys = { '<Leader>es', '<Leader>se' },
+        config = 'luasnip_config',
+    }),
+    plugin('Saghen/blink.cmp', {
+        build = function()
+            require('blink.cmp').build():pwait()
+        end,
+        config = 'blink_cmp_config',
+    }),
     plugin('saghen/blink.compat'),
     plugin('fang2hou/blink-copilot'),
     plugin('mgalliou/blink-cmp-tmux'),
     plugin('Kaiser-Yang/blink-cmp-git'),
-    plugin('onsails/lspkind.nvim'),
     plugin('MunifTanjim/nui.nvim'),
     plugin('kndndrj/nvim-dbee', {
         build = function()
@@ -89,18 +101,6 @@ local packages = {
         pattern = 'sql',
         version = 'ms/v2',
     }),
-    plugin('Saghen/blink.cmp', {
-        build = function()
-            require('blink.cmp').build():pwait()
-        end,
-        config = 'blink_cmp_config',
-    }),
-    plugin('benfowler/telescope-luasnip.nvim'),
-    plugin('L3MON4D3/LuaSnip', {
-        event = 'InsertEnter',
-        keys = { '<Leader>es', '<Leader>se' },
-        config = 'luasnip_config',
-    }),
 
     -- AI
     plugin('zbirenbaum/copilot.lua', {
@@ -108,18 +108,19 @@ local packages = {
         config = 'copilot_config',
     }),
     plugin('nvim-lua/plenary.nvim'),
-    plugin('ravitemer/codecompanion-history.nvim'),
     plugin('olimorris/codecompanion.nvim', 'codecompanion_config'),
+    plugin('ravitemer/codecompanion-history.nvim'),
 
     -- Fuzzy finding and file explorer
     plugin('3rd/image.nvim', 'image_config'),
+    plugin('nvim-telescope/telescope.nvim', 'telescope_config'),
     plugin('nvim-telescope/telescope-fzf-native.nvim', { build = 'make' }),
+    plugin('benfowler/telescope-luasnip.nvim'),
     plugin('debugloop/telescope-undo.nvim'),
     plugin('nvim-telescope/telescope-frecency.nvim'),
     plugin('nvim-telescope/telescope-z.nvim'),
     plugin('rafi/telescope-thesaurus.nvim'),
     plugin('nvim-telescope/telescope-ui-select.nvim'),
-    plugin('nvim-telescope/telescope.nvim', 'telescope_config'),
     plugin('AckslD/nvim-neoclip.lua', 'neoclip_config'),
     plugin('nvim-tree/nvim-web-devicons'),
     plugin('nvim-tree/nvim-tree.lua', 'nvimtree_config'),
@@ -129,9 +130,9 @@ local packages = {
     plugin('akinsho/toggleterm.nvim', 'toggleterm_config'),
     plugin('nathom/tmux.nvim', 'tmux_config'),
     plugin('stevearc/overseer.nvim', 'overseer_config'),
-    plugin('nvim-neotest/neotest-python'),
     plugin('nvim-neotest/nvim-nio'),
     plugin('nvim-neotest/neotest', 'neotest_config'),
+    plugin('nvim-neotest/neotest-python'),
     plugin('michaelb/sniprun', {
         build = 'sh install.sh',
         config = 'sniprun_config',
@@ -156,10 +157,10 @@ local packages = {
 
     -- Git
     plugin('aymericbeaumet/vim-symlink'),
+    plugin('tpope/vim-fugitive', 'fugitive_config'),
     plugin('shumphrey/fugitive-gitlab.vim'),
     plugin('tommcdo/vim-fubitive'),
     plugin('tpope/vim-rhubarb'),
-    plugin('tpope/vim-fugitive', 'fugitive_config'),
     plugin('lewis6991/gitsigns.nvim', 'gitsigns_config'),
 
     -- LaTeX and Markdown
