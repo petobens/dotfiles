@@ -1,0 +1,1 @@
+require('cmp-dbee').setup()

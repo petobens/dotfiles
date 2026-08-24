@@ -32,7 +32,6 @@ vim.opt.iskeyword:append(':')
 vim.opt.lazyredraw = false
 vim.opt.modeline = false
 vim.opt.shortmess = 'aoOtTIcCF'
-vim.opt.termguicolors = true
 vim.opt.timeoutlen = 550
 vim.opt.title = true
 vim.opt.ttimeoutlen = 0

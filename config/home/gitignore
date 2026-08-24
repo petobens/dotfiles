@@ -34,7 +34,7 @@ pip-wheel-metadata/
 
 # Nvim
 minimal.lua
-lazy-lock.json
+nvim-pack-lock.json
 
 # Claude Code
 .claude/

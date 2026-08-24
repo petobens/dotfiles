@@ -5,17 +5,15 @@ local M = require('lualine.component'):extend()
 _G.LualineBuffertab = {}
 
 local default_options = {
-    filetype_names = {
-        lazy = 'Lazy',
-    },
+    filetype_names = {},
     filetype_ignore = {
         aerial = true,
         codecompanion = true,
         codecompanion_input = true,
         dbui = true,
         help = true,
-        lazy = true,
         neotest = true,
+        ['nvim-pack'] = true,
         NvimTree = true,
         OverseerList = true,
         pager = true,
@@ -83,6 +81,7 @@ function M:update_status()
             vim.bo[bufnr].buflisted
             and vim.bo[bufnr].buftype ~= 'quickfix'
             and vim.bo[bufnr].filetype ~= 'fugitive'
+            and not self.options.filetype_ignore[vim.bo[bufnr].filetype]
         then
             buffers[#buffers + 1] = Buffer({
                 bufnr = bufnr,
@@ -142,6 +141,7 @@ function M:update_status()
             -- If current buffer was not listed and it's not blacklisted then
             -- add it to the the list
             not self.options.filetype_ignore[b.filetype]
+            and b.buftype ~= 'nofile'
             and (b.name and not vim.startswith(b.name, 'TelescopePreview'))
         then
             b.current = true

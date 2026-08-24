@@ -32,35 +32,15 @@ return {
             for _, name in ipairs({ 'config', 'data', 'state', 'cache' }) do
                 vim.env[('XDG_%s_HOME'):format(name:upper())] = vim.fs.joinpath(root, name)
             end
-
-            -- Bootstrap lazy
-            local lazypath = vim.fs.joinpath(root, 'plugins', 'lazy.nvim')
-            if not vim.uv.fs_stat(lazypath) then
-                local result = vim.system({
-                    'git',
-                    'clone',
-                    '--filter=blob:none',
-                    '--single-branch',
-                    'https://github.com/folke/lazy.nvim.git',
-                    lazypath,
-                }, { text = true }):wait()
-                if result.code ~= 0 then
-                    vim.notify(
-                        'Failed to clone lazy.nvim: ' .. (result.stderr or ''),
-                        vim.log.levels.ERROR
-                    )
-                end
-            end
-            vim.opt.runtimepath:prepend(lazypath)
+            vim.opt.packpath:prepend(vim.fs.joinpath(vim.env.XDG_DATA_HOME, 'nvim', 'site'))
+            vim.opt.packlockfile =
+                vim.fs.joinpath(vim.env.XDG_CONFIG_HOME, 'nvim', 'nvim-pack-lock.json')
 
             -- Install plugins
-            local plugins = {
-                { 'folke/tokyonight.nvim' },
-                {'<>'},
-            }
-            require('lazy').setup(plugins, {
-                root = vim.fs.joinpath(root, 'plugins'),
-            })
+            vim.pack.add({
+                'https://github.com/folke/tokyonight.nvim',
+                '<>',
+            }, { confirm = false, load = true })
             vim.cmd.colorscheme('tokyonight')
 
         ]],

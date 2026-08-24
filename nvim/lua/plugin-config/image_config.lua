@@ -61,6 +61,7 @@ local function open_image_preview()
     -- Back the image with a scratch float of its exact size so it sits on a
     -- solid backdrop instead of bleeding through the code buffer underneath
     local buf = vim.api.nvim_create_buf(false, true)
+    local pdf = vim.fs.ext(path):lower() == 'pdf'
     local win = vim.api.nvim_open_win(buf, true, {
         relative = 'editor',
         row = math.floor((vim.o.lines - height) / 2),
@@ -69,6 +70,16 @@ local function open_image_preview()
         height = height,
         style = 'minimal',
     })
+    -- Give transparent PDFs a white page background
+    if pdf then
+        vim.api.nvim_set_hl(0, 'PdfPreview', { bg = '#ffffff' })
+        vim.api.nvim_set_option_value(
+            'winhighlight',
+            'NormalFloat:PdfPreview',
+            { win = win }
+        )
+    end
+
     local preview = image.from_file(path, {
         window = win,
         buffer = buf,
