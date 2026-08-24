@@ -35,7 +35,7 @@ local function setup_float(buffer, window)
     vim.wo[window].wrap = true
     vim.api.nvim_create_autocmd('VimResized', {
         buffer = buffer,
-        desc = 'Resize native package manager',
+        desc = 'Resize package manager',
         callback = function()
             if vim.api.nvim_win_is_valid(window) then
                 vim.api.nvim_win_set_config(window, float_config())
@@ -234,11 +234,6 @@ local function render_dashboard(buffer, view)
                 return state.installed[plugin.spec.name]
             end)
             :totable()
-        local pending = vim.iter(all)
-            :filter(function(plugin)
-                return not plugin.active
-            end)
-            :totable()
         local loaded = vim.iter(active)
             :filter(function(plugin)
                 return not state.installed[plugin.spec.name] and manager.is_loaded(plugin)
@@ -260,7 +255,6 @@ local function render_dashboard(buffer, view)
             :totable()
 
         add_package_section('Installed', installed)
-        add_package_section('Pending Uninstall', pending)
         if #state.removed > 0 then
             add_heading('Uninstalled', #state.removed)
             for _, plugin in ipairs(state.removed) do
@@ -411,7 +405,7 @@ local function show_item_diff()
         if vim.api.nvim_win_is_valid(dashboard.window) then
             vim.api.nvim_win_set_buf(dashboard.window, dashboard.buffer)
         end
-    end, { buffer = buffer, desc = 'Return to native package manager' })
+    end, { buffer = buffer, desc = 'Return to package manager' })
 end
 
 -- Lifecycle
@@ -454,7 +448,7 @@ local function open_dashboard(initial_view)
     vim.api.nvim_create_autocmd('WinClosed', {
         pattern = tostring(window),
         once = true,
-        desc = 'Clean up native package dashboard',
+        desc = 'Clean up package dashboard',
         callback = function()
             vim.schedule(cleanup)
         end,
@@ -473,35 +467,35 @@ local function open_dashboard(initial_view)
         cleanup()
     end, {
         buffer = buffer,
-        desc = 'Close native package manager',
+        desc = 'Close package manager',
     })
     vim.keymap.set('n', 'S', function()
         render('sync')
         manager.schedule_sync()
     end, {
         buffer = buffer,
-        desc = 'Sync native packages',
+        desc = 'Sync packages',
     })
     vim.keymap.set('n', 'R', function()
         render('sync')
         manager.schedule_sync(true)
     end, {
         buffer = buffer,
-        desc = 'Resync native packages',
+        desc = 'Resync packages',
     })
     vim.keymap.set('n', 'H', function()
         render('home')
-    end, { buffer = buffer, desc = 'Show native package manager home' })
+    end, { buffer = buffer, desc = 'Show package manager home' })
     vim.keymap.set('n', 'L', function()
         render('log')
-    end, { buffer = buffer, desc = 'Show native package log' })
+    end, { buffer = buffer, desc = 'Show package log' })
     vim.keymap.set('n', 'd', show_item_diff, {
         buffer = buffer,
-        desc = 'Show native package diff',
+        desc = 'Show package diff',
     })
     vim.keymap.set('n', 'K', open_item_url, {
         buffer = buffer,
-        desc = 'Open native package change on GitHub',
+        desc = 'Open package change on GitHub',
     })
 
     if initial_view == 'sync' then

@@ -7,7 +7,7 @@
 ---@field pattern? string|string[] Autocommand pattern(s) used with `event`
 ---@field version? string|vim.VersionRange Revision passed to `vim.pack`
 
--- Lazy-like fields are stored in `vim.pack.Spec.data`; deferred packages are
+-- Package metadata is stored in `vim.pack.Spec.data`; deferred packages are
 -- configured after their first event, command, or key trigger
 ---@param source string Git URI or `owner/repository`
 ---@param data? string|PackSpecData Config module shorthand or package metadata
@@ -187,11 +187,11 @@ pack.setup(packages)
 
 -- Mappings
 vim.keymap.set('n', '<Leader>lz', pack.open, {
-    desc = 'Open native package manager',
+    desc = 'Open package manager',
 })
 vim.keymap.set('n', '<Leader>bu', pack.sync, {
-    desc = 'Sync native packages',
+    desc = 'Sync packages',
 })
 vim.keymap.set('n', '<Leader>ul', pack.log, {
-    desc = 'Show native package update log',
+    desc = 'Show package update log',
 })
