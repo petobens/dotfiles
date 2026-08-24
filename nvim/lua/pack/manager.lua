@@ -4,7 +4,6 @@ local setup_complete = false
 local state = {
     dashboard = nil,
     installed = {},
-    items = {},
     log = nil,
     plugins = {},
     pending_builds = {},
@@ -46,7 +45,7 @@ local function configure(plugin)
         return
     end
 
-    configs = type(configs) == 'table' and configs or { configs }
+    configs = list(configs)
     local ok, err = pcall(function()
         for _, config in ipairs(configs) do
             require('plugin-config.' .. config)
@@ -280,6 +279,35 @@ local function revision(path)
     return git(path, { 'rev-parse', 'HEAD' })
 end
 
+local function capture_pack_progress(callback)
+    local echo = vim.api.nvim_echo
+    local function capture(chunks, history, opts)
+        if opts and opts.kind == 'progress' and opts.source == 'vim.pack' then
+            state.progress = {
+                percent = opts.percent,
+                status = opts.status,
+                text = chunks,
+            }
+            if state.dashboard then
+                state.dashboard.render('sync')
+            end
+            return opts.id or 1
+        end
+        return opts and echo(chunks, history, opts) or echo(chunks, history)
+    end
+
+    -- vim.pack exposes progress only as structured nvim_echo calls, not through
+    -- a callback. Intercept them during updates so they render in the dashboard.
+    vim.api.nvim_echo = capture
+    local ok, err = pcall(callback)
+    vim.schedule(function()
+        if vim.api.nvim_echo == capture then
+            vim.api.nvim_echo = echo
+        end
+    end)
+    return ok, err
+end
+
 local function start_sync()
     if state.sync.status == 'running' then
         return
@@ -299,33 +327,11 @@ local function start_sync()
         state.dashboard.render('sync')
     end
 
-    -- Keep native package progress in the dashboard instead of the command line
-    local echo = vim.api.nvim_echo
-    local function suppress_progress(chunks, history, opts)
-        if opts and opts.kind == 'progress' and opts.source == 'vim.pack' then
-            state.progress = {
-                percent = opts.percent,
-                status = opts.status,
-                text = chunks,
-            }
-            if state.dashboard then
-                state.dashboard.render('sync')
-            end
-            return opts.id or 1
-        end
-        return opts and echo(chunks, history, opts) or echo(chunks, history)
-    end
-    vim.api.nvim_echo = suppress_progress
     local log_path = vim.fs.joinpath(vim.fn.stdpath('log'), 'nvim-pack.log')
     local log_start = vim.uv.fs_stat(log_path) and #vim.fn.readfile(log_path) or 0
-    local ok, err = pcall(function()
+    local ok, err = capture_pack_progress(function()
         clean()
         vim.pack.update(nil, { force = true })
-    end)
-    vim.schedule(function()
-        if vim.api.nvim_echo == suppress_progress then
-            vim.api.nvim_echo = echo
-        end
     end)
     if vim.uv.fs_stat(log_path) then
         local error_lines = {}
@@ -435,7 +441,7 @@ function M.setup(specs)
         notify_error('install', 'plugins', err)
     end
 
-    -- Register deferred loaders and load eager packages
+    -- Register deferred loaders and load non-deferred packages
     for _, plugin in ipairs(state.plugins) do
         local data = metadata(plugin)
         if data.event or data.cmd or data.keys then
@@ -445,7 +451,7 @@ function M.setup(specs)
         end
     end
 
-    -- Run build hooks, then configure eager packages
+    -- Run build hooks, then configure non-deferred packages
     for _, plugin in ipairs(state.plugins) do
         local build_path = state.pending_builds[plugin.spec.name]
         if build_path then
