@@ -14,6 +14,7 @@ end
 
 -- Packages are flat and dependency-first because vim.pack does not resolve dependencies
 local packages = {
+    -- UI
     plugin('nvim-lualine/lualine.nvim', 'lualine_config'),
 
     -- Editing
@@ -91,7 +92,6 @@ local packages = {
     plugin('olimorris/codecompanion.nvim', 'codecompanion_config'),
 
     -- Fuzzy finding and file explorer
-    -- telescope_config requires image.nvim during setup
     plugin('3rd/image.nvim', 'image_config'),
     plugin('nvim-telescope/telescope-fzf-native.nvim', { build = 'make' }),
     plugin('debugloop/telescope-undo.nvim'),
@@ -163,7 +163,7 @@ for _, built_in in ipairs({
     vim.g['loaded_' .. built_in] = 1
 end
 
--- Install and configure packages
+-- Actually install and configure packages
 require('nvim-pack').setup(packages)
 
 -- Mappings

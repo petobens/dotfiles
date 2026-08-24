@@ -10,11 +10,11 @@ end
 
 -- Window
 local function float_config(zindex)
-    local width = math.min(120, math.max(1, vim.o.columns - 4))
-    local height = math.min(40, math.max(1, vim.o.lines - 4))
+    local width = math.min(130, math.max(1, vim.o.columns - 4))
+    local height = math.max(1, vim.o.lines - 5)
     return {
         relative = 'editor',
-        row = math.floor((vim.o.lines - height) / 2),
+        row = 1,
         col = math.floor((vim.o.columns - width) / 2),
         width = width,
         height = height,
@@ -56,9 +56,9 @@ local function deferred_triggers(plugin)
     end
     if data.cmd then
         triggers[#triggers + 1] = {
-            icon = '',
+            icon = '',
             text = ':' .. table.concat(list(data.cmd), ', :'),
-            group = 'Function',
+            group = 'Statement',
         }
     end
     if data.keys then
