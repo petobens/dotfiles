@@ -5,16 +5,16 @@ local u = require('utils')
 local read_file = u.read_file
 
 -- Options
-vim.opt_local.shiftwidth = 2
-vim.opt_local.tabstop = 2
-vim.opt_local.softtabstop = 2
-vim.opt_local.formatoptions = 'trj'
-vim.opt_local.spell = true
-vim.opt_local.textwidth = 80
-vim.opt_local.formatexpr = ''
-vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldexpr = vim.treesitter.foldexpr
+vim.opt_local.foldmethod = 'expr'
 vim.opt_local.foldtext = ''
+vim.opt_local.formatexpr = ''
+vim.opt_local.formatoptions = 'trj'
+vim.opt_local.shiftwidth = 2
+vim.opt_local.softtabstop = 2
+vim.opt_local.spell = true
+vim.opt_local.tabstop = 2
+vim.opt_local.textwidth = 80
 
 -- Paths
 local function is_main_source(name, path)
