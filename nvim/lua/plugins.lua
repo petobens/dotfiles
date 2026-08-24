@@ -1,3 +1,7 @@
+-- Package specs store build, configuration, and deferred-loading metadata in
+-- `vim.pack.Spec.data`. Deferred packages are configured after their first
+-- event, command, or key trigger
+
 ---@class PackSpecData
 ---@field build? string|fun() Post-install/update function, `:Ex`, or shell command
 ---@field cmd? string|string[] User command(s) that defer loading
@@ -7,8 +11,6 @@
 ---@field pattern? string|string[] Autocommand pattern(s) used with `event`
 ---@field version? string|vim.VersionRange Revision passed to `vim.pack`
 
--- Package metadata is stored in `vim.pack.Spec.data`; deferred packages are
--- configured after their first event, command, or key trigger
 ---@param source string Git URI or `owner/repository`
 ---@param data? string|PackSpecData Config module shorthand or package metadata
 ---@return vim.pack.Spec
