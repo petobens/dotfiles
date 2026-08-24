@@ -1,4 +1,6 @@
-require('mason').setup({})
+require('mason').setup({
+    ui = { backdrop = 100 },
+})
 
 require('mason-tool-installer').setup({
     auto_update = true,
