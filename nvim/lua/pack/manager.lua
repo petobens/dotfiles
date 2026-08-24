@@ -1,6 +1,7 @@
 local M = {}
 
 local state = {
+    add_failed = false,
     dashboard = nil,
     installed = {},
     log = nil,
@@ -234,6 +235,10 @@ local function run_build(spec, path)
 end
 
 local function clean()
+    if state.add_failed then
+        return
+    end
+
     local inactive = vim.iter(vim.pack.get(nil, { info = false }))
         :filter(function(plugin)
             return not plugin.active
@@ -474,6 +479,7 @@ function M.setup(specs)
     if not ok then
         notify_error('install', 'plugins', err)
     end
+    state.add_failed = not ok
 
     -- Register deferred loaders and load non-deferred packages
     for _, plugin in ipairs(state.plugins) do
