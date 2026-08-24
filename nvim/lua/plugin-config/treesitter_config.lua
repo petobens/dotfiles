@@ -227,11 +227,11 @@ vim.keymap.set('n', '<A-h>', function()
 end, { desc = 'Swap with previous parameter' })
 
 -- FileType specific
----- Markdown
+---- Fenced code blocks
 vim.api.nvim_create_autocmd('FileType', {
-    desc = 'Tree-sitter fenced-code-block textobjects for markdown-like filetypes',
-    group = vim.api.nvim_create_augroup('ts_markdown_textobjects', { clear = true }),
-    pattern = { 'markdown', 'codecompanion' },
+    desc = 'Tree-sitter fenced-code-block textobjects',
+    group = vim.api.nvim_create_augroup('ts_fence_textobjects', { clear = true }),
+    pattern = { 'codecompanion', 'markdown', 'typst' },
     callback = function(e)
         vim.keymap.set({ 'x', 'o' }, 'aq', function()
             ts_select.select_textobject('@fence.outer', 'textobjects')
