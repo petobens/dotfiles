@@ -53,6 +53,7 @@ blink_cmp.setup({
         menu = {
             winhighlight = 'Normal:NormalFloat,CursorLine:PmenuSel,Search:None',
             draw = {
+                padding = { 1, 2 },
                 columns = {
                     { 'kind_icon' },
                     { 'label', 'label_description', gap = 1 },
