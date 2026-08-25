@@ -195,13 +195,15 @@ function M.state.get_chat_model_label(chat)
 end
 
 function M.state.get_chat_title(chat, entry)
-    if chat and chat.title and chat.title ~= '' then
+    local accepted_title = chat
+        and (
+            chat._acp_session_loaded
+            or chat._background_title_set
+            or chat._title_pinned
+            or (chat.opts and chat.opts.title and chat.opts.title ~= '')
+        )
+    if accepted_title and chat.title and chat.title ~= '' then
         return chat.title
-    end
-
-    local prompt = M.state.get_last_user_prompt(chat)
-    if prompt and prompt ~= '' then
-        return prompt
     end
 
     if entry and entry.name then
@@ -209,7 +211,7 @@ function M.state.get_chat_title(chat, entry)
         return ordinal and ('Chat ' .. ordinal) or entry.name
     end
 
-    return chat and M.state.get_chat_label(chat) or 'Chat'
+    return chat and M.state.get_chat_name(chat) or 'Chat'
 end
 
 function M.state.get_chat_number(entry)
