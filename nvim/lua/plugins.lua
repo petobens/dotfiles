@@ -92,7 +92,6 @@ local packages = {
     }),
     plugin('nvim-lua/plenary.nvim'),
     plugin('olimorris/codecompanion.nvim', 'codecompanion_config'),
-    plugin('ravitemer/codecompanion-history.nvim'),
 
     -- Fuzzy finding and file explorer
     plugin('3rd/image.nvim', 'image_config'),

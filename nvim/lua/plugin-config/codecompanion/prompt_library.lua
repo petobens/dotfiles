@@ -11,9 +11,6 @@ local PROMPT_DIR = vim.fs.normalize(
 local PROMPT_LIBRARY_CONFIG = {
     prompt_dir = PROMPT_DIR,
     prompt_md_files = {
-        'changelog_generator',
-        'code_reviewer',
-        'conventional_commits',
         'explain_code',
         'meeting_copilot',
         'quickfix',
@@ -23,13 +20,13 @@ local PROMPT_LIBRARY_CONFIG = {
     },
 }
 
-function M.prompt_path(name)
+local function prompt_path(name)
     return vim.fs.joinpath(PROMPT_LIBRARY_CONFIG.prompt_dir, name .. '.md')
 end
 
 -- Prompt library loading
 local function read_prompt_file(fname)
-    local path = M.prompt_path(fname)
+    local path = prompt_path(fname)
     local fd = io.open(path, 'r')
     if not fd then
         vim.notify(('Prompt file not found: %s'):format(path), vim.log.levels.WARN)
@@ -65,10 +62,6 @@ local PROMPT_LIBRARY = load_prompt_library()
 
 function M.prompt(name)
     return PROMPT_LIBRARY[name]
-end
-
-function M.prompt_file(relative_path)
-    return read_prompt_file(relative_path)
 end
 
 -- Shared prompt constructor

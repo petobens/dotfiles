@@ -182,7 +182,6 @@ function M.browse(chat)
                         end
 
                         selected_chat._title_pinned = true
-                        selected_chat.opts.title = title
                         selected_chat:set_title(title)
                         M.browse(chat)
                     end)

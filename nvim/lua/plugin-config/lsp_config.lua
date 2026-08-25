@@ -1,5 +1,7 @@
 _G.LspConfig = {}
 
+local u = require('utils')
+
 -- Define higlights for markdown hover documentation
 local md_docs_ns = vim.api.nvim_create_namespace('markdown_docs_highlights')
 function _G.LspConfig.highlight_doc_patterns(bufnr)
@@ -183,11 +185,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
         -- Mappings
         vim.keymap.set('n', '<Leader>jd', function()
-            if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
-                vim.cmd.vsplit()
-            else
-                vim.cmd.split()
-            end
+            u.split_open()
             vim.lsp.buf.definition()
         end, { buf = e.buf, desc = 'Jump to definition (split/vsplit)' })
         vim.keymap.set(

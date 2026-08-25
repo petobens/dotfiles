@@ -304,10 +304,7 @@ vim.keymap.set('n', '<Leader>ds', function()
                     return
                 end
 
-                local mods
-                if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
-                    mods = { vertical = true }
-                end
+                local mods = u.should_vsplit() and { vertical = true } or nil
                 vim.cmd.diffsplit({ args = { other_file }, mods = mods })
             end
             vim.api.nvim_set_current_win(win_id)
@@ -426,10 +423,7 @@ vim.keymap.set(
     { remap = true, desc = 'Open link under cursor' }
 )
 vim.keymap.set('n', 'gf', function()
-    local mods
-    if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
-        mods = { vertical = true }
-    end
+    local mods = u.should_vsplit() and { vertical = true } or nil
     vim.cmd.wincmd({ args = { 'f' }, mods = mods })
 end, { desc = 'Go to file under cursor (vertical if wide)' })
 vim.keymap.set('n', '<Leader>fm', function()

@@ -31,45 +31,40 @@ function M.clone_chat(chat)
 
         local change_adapter =
             require('codecompanion.interactions.chat.keymaps.change_adapter')
-        vim.ui.select(
-            change_adapter.get_adapters_list(chat.adapter.name),
-            { prompt = 'Clone adapter: ' },
-            function(adapter)
-                if not adapter then
-                    return
-                end
-
-                local cloned_messages = vim.deepcopy(messages)
-                local resolved = require('codecompanion.adapters').resolve(adapter)
-                if resolved.type == 'acp' then
-                    for _, message in ipairs(cloned_messages) do
-                        if message.role == 'user' then
-                            message._meta = message._meta or {}
-                            message._meta.sent = true
-                        end
-                    end
-                    table.insert(cloned_messages, {
-                        role = 'user',
-                        content = 'Conversation cloned from another chat:\n\n'
-                            .. vim.iter(messages)
-                                :map(function(message)
-                                    return message.role .. ': ' .. message.content
-                                end)
-                                :join('\n\n'),
-                        opts = { visible = false },
-                        _meta = { sent = false },
-                    })
-                end
-                table.insert(cloned_messages, { role = 'user', content = '' })
-
-                require('codecompanion.interactions.chat').new({
-                    adapter = adapter,
-                    messages = cloned_messages,
-                    stop_context_insertion = true,
-                    title = 'Clone of: ' .. (chat.title or 'Chat'),
-                })
+        vim.ui.select(change_adapter.get_adapters_list(chat.adapter.name), {
+            prompt = 'Clone adapter: ',
+        }, function(adapter)
+            if not adapter then
+                return
             end
-        )
+
+            local cloned_messages = vim.deepcopy(messages)
+            for _, message in ipairs(cloned_messages) do
+                if message.role == 'user' then
+                    message._meta = message._meta or {}
+                    message._meta.sent = true
+                end
+            end
+            table.insert(cloned_messages, {
+                role = 'user',
+                content = 'Conversation cloned from another chat:\n\n'
+                    .. vim.iter(messages)
+                        :map(function(message)
+                            return message.role .. ': ' .. message.content
+                        end)
+                        :join('\n\n'),
+                opts = { visible = false },
+                _meta = { sent = false },
+            })
+            table.insert(cloned_messages, { role = 'user', content = '' })
+
+            require('codecompanion.interactions.chat').new({
+                adapter = adapter,
+                messages = cloned_messages,
+                stop_context_insertion = true,
+                title = 'Clone of: ' .. (chat.title or 'Chat'),
+            })
+        end)
     end)
 end
 

@@ -127,7 +127,7 @@ end
 
 function M.state.get_chat_label(chat)
     local label = M.state.get_chat_name(chat)
-    local title = (chat.title ~= '' and chat.title) or (chat.opts and chat.opts.title)
+    local title = chat.title
     if title and title ~= '' then
         label = string.format('%s · %s', label, title)
     end
@@ -180,8 +180,7 @@ function M.state.get_cycle_count(chat)
 end
 
 function M.state.get_adapter_model(adapter)
-    return vim.tbl_get(adapter, 'schema', 'model', 'default')
-        or vim.tbl_get(adapter, 'defaults', 'session_config_options', 'model')
+    return vim.tbl_get(adapter, 'defaults', 'session_config_options', 'model')
         or vim.tbl_get(adapter, 'defaults', 'model')
 end
 
@@ -196,16 +195,8 @@ function M.state.get_chat_model_label(chat)
 end
 
 function M.state.get_chat_title(chat, entry)
-    if chat and chat.adapter and chat.adapter.type == 'acp' and not chat.opts.title then
-        return M.state.get_chat_name(chat)
-    end
-
     if chat and chat.title and chat.title ~= '' then
         return chat.title
-    end
-
-    if chat and chat.opts and chat.opts.title and chat.opts.title ~= '' then
-        return chat.opts.title
     end
 
     local prompt = M.state.get_last_user_prompt(chat)
@@ -229,8 +220,6 @@ end
 
 function M.state.get_adapter_effort(adapter)
     local effort = vim.tbl_get(adapter, 'defaults', 'effort')
-        or vim.tbl_get(adapter, 'schema', 'reasoning.effort', 'default')
-        or vim.tbl_get(adapter, 'schema', 'reasoning_effort', 'default')
 
     if effort and effort ~= '' and effort ~= 'none' then
         return tostring(effort)
@@ -239,12 +228,10 @@ end
 
 function M.state.provider_icon(name)
     name = (name or ''):lower()
-    if name:find('claude') or name:find('anthropic') then
+    if name:find('claude') then
         return '' -- cod-sparkle
-    elseif name:find('codex') or name:find('openai') or name:find('gpt') then
+    elseif name:find('codex') then
         return '󰙴' -- md-creation
-    elseif name:find('gemini') or name:find('google') then
-        return '󰊭' -- md-google
     end
     return '󰚩' -- md-robot
 end
@@ -565,6 +552,13 @@ function M.chat.submit_user_message(chat, content)
         content = content,
     })
     chat:submit()
+end
+
+function M.chat.request_skill(chat, skill, request)
+    M.chat.submit_user_message(
+        chat,
+        string.format('Use your %s skill to %s.', skill, request)
+    )
 end
 
 -- Chat windows

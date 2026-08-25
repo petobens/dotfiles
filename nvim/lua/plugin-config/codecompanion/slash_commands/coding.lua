@@ -4,7 +4,7 @@ local prompt_library = require('plugin-config.codecompanion.prompt_library')
 local M = {}
 
 -- Helpers
-local function collect_diagnostics_entries_and_context()
+local function collect_diagnostics()
     local diagnostics = {}
 
     for _, winid in ipairs(vim.api.nvim_list_wins()) do
@@ -18,10 +18,10 @@ local function collect_diagnostics_entries_and_context()
         diagnostics = vim.fn.getqflist()
     end
 
-    local seen, entries, context = {}, {}, {}
+    local seen, entries = {}, {}
 
     for _, item in ipairs(diagnostics) do
-        local filename = vim.fs.basename(vim.api.nvim_buf_get_name(item.bufnr))
+        local filename = vim.api.nvim_buf_get_name(item.bufnr)
         local lnum = item.lnum or 0
         local col = item.col or 0
         local text = item.text or ''
@@ -33,18 +33,15 @@ local function collect_diagnostics_entries_and_context()
                 entries,
                 string.format('%s:%d:%d: %s', filename, lnum, col, text)
             )
-            if filename ~= '' and not vim.tbl_contains(context, filename) then
-                table.insert(context, filename)
-            end
         end
     end
 
-    return table.concat(entries, '\n'), context
+    return table.concat(entries, '\n')
 end
 
 -- Slash commands
 function M.qfix(chat)
-    local entries, context = collect_diagnostics_entries_and_context()
+    local entries = collect_diagnostics()
     if entries == '' then
         vim.notify(
             'No diagnostics found in quickfix or location lists.',
@@ -53,7 +50,6 @@ function M.qfix(chat)
         return
     end
 
-    chat_helpers.add_context(context)
     chat_helpers.submit_user_message(
         chat,
         string.format(prompt_library.prompt('quickfix'), entries)
@@ -63,13 +59,22 @@ end
 function M.explain_code(chat, opts)
     local bufnr = opts and opts.bufnr
     local code = opts and opts.code
-    local file = vim.api.nvim_buf_get_name(bufnr)
-    local ft = vim.bo[bufnr].filetype ~= '' and vim.bo[bufnr].filetype or 'text'
+    if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) or not code or code == '' then
+        vim.notify('Select code in visual mode and use <Leader>ec', vim.log.levels.WARN)
+        return
+    end
 
-    chat_helpers.add_context({ file })
+    local file = vim.api.nvim_buf_get_name(bufnr)
+    local filename = file ~= '' and file or '[unnamed buffer]'
+    local filetype = vim.bo[bufnr].filetype
+    local language = filetype ~= '' and filetype or 'text'
     chat_helpers.submit_user_message(
         chat,
-        string.format(prompt_library.prompt('explain_code'), ft, code)
+        string.format(
+            'Code from `%s`.\n\n%s',
+            filename,
+            string.format(prompt_library.prompt('explain_code'), language, code)
+        )
     )
 end
 
