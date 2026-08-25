@@ -408,11 +408,6 @@ local groups = {
     CodeCompanionInputHeader = { fg = p.red },
     CodeCompanionReasoningHeader = { fg = p.gray },
 
-    -- dbee
-    dbee_source = { fg = p.yellow },
-    dbee_connection = { fg = p.red },
-    dbee_note = { fg = p.orange },
-
     -- Fugitive
     diffAdded = { link = 'DiffAdd' },
     diffRemoved = { link = 'DiffDelete' },
