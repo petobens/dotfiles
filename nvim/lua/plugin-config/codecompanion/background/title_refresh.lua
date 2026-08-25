@@ -115,6 +115,7 @@ function M.request(background, chat)
             if not title then
                 return
             end
+            chat._background_title_set = true
             chat:set_title(title)
             baseline_turns[chat] = completed_turns
             utils.fire('BackgroundTitleSet', {
