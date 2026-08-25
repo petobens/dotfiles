@@ -383,11 +383,11 @@ local function setup_global_mappings()
     })
 
     -- Code review
-    vim.keymap.set('n', '<Leader>ra', add_review_comment, {
+    vim.keymap.set('n', '<Leader>rc', add_review_comment, {
         desc = 'Add CodeCompanion review comment',
     })
 
-    vim.keymap.set('v', '<Leader>ra', function()
+    vim.keymap.set('v', '<Leader>rc', function()
         local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
         local anchor_line = vim.fn.line('v')
         vim.cmd.normal({ vim.keycode('<Esc>'), bang = true })
