@@ -81,7 +81,6 @@ local packages = {
         end,
         config = 'blink_cmp_config',
     }),
-    plugin('saghen/blink.compat'),
     plugin('fang2hou/blink-copilot'),
     plugin('mgalliou/blink-cmp-tmux'),
     plugin('Kaiser-Yang/blink-cmp-git'),
