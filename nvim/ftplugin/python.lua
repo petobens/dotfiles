@@ -232,7 +232,7 @@ local function list_breakpoints(local_buffer)
         use_regex = true,
         search = 'breakpoint()',
     }
-    if local_buf == true then
+    if local_buffer == true then
         local buf_name = vim.api.nvim_buf_get_name(0)
         opts = vim.tbl_extend('keep', opts, {
             results_title = buf_name,
@@ -502,12 +502,7 @@ vim.keymap.set('n', '<Leader>tx', function()
 end, { buf = 0, desc = 'Send carriage return to IPython terminal' })
 
 ---- Debugging
-vim.keymap.set(
-    'n',
-    '<Leader>bp',
-    add_breakpoint,
-    { buf = 0, desc = 'Add breakpoint()' }
-)
+vim.keymap.set('n', '<Leader>bp', add_breakpoint, { buf = 0, desc = 'Add breakpoint()' })
 vim.keymap.set(
     'n',
     '<Leader>rb',
@@ -575,12 +570,7 @@ vim.keymap.set('n', '<Leader>vi', function()
 end, { buf = 0, desc = 'View Sphinx index.html' })
 
 ---- Editing
-vim.keymap.set(
-    'n',
-    '<Leader>etf',
-    edit_test_file,
-    { buf = 0, desc = 'Edit test file' }
-)
+vim.keymap.set('n', '<Leader>etf', edit_test_file, { buf = 0, desc = 'Edit test file' })
 vim.keymap.set(
     'n',
     '<Leader>etp',
