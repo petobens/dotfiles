@@ -94,49 +94,69 @@ local delta = previewers.new_termopen_previewer({
 -- Custom previewer (with image and pdf support)
 -- From https://github.com/3rd/image.nvim/issues/183#issuecomment-2284979815
 local image = require('image')
-local state = { image = nil, last_path = nil, is_image = false }
+local TELESCOPE_IMAGE_NAMESPACE = 'telescope-preview'
+local state = { cleanup = nil, image = nil }
 
 local function clear_preview_image()
+    if state.cleanup then
+        pcall(vim.api.nvim_del_autocmd, state.cleanup)
+        state.cleanup = nil
+    end
     if state.image then
         state.image:clear()
         state.image = nil
-        state.is_image = false
+    end
+    local previews = image.get_images({ namespace = TELESCOPE_IMAGE_NAMESPACE })
+    for _, preview in ipairs(previews) do
+        preview:clear()
     end
 end
 
-vim.api.nvim_create_autocmd('WinClosed', {
-    desc = 'Clear image preview on window close',
-    callback = function()
-        vim.schedule(clear_preview_image)
-    end,
-})
-
-local function show_preview_image(path)
-    state.image = image.from_file(path, {
-        x = vim.o.columns - math.floor(vim.o.columns * 0.45) + 1,
-        width = math.floor(vim.o.columns * 0.45),
-        y = vim.o.lines - 21,
-        height = 20,
+local function show_preview_image(path, bufnr, winid)
+    local preview = image.from_file(path, {
+        buffer = bufnr,
+        window = winid,
+        width = vim.api.nvim_win_get_width(winid),
+        height = vim.api.nvim_win_get_height(winid),
+        max_height_window_percentage = 100,
+        namespace = TELESCOPE_IMAGE_NAMESPACE,
     })
+    state.image = preview
 
-    if state.image then
+    if preview then
+        actions.close:enhance({ pre = clear_preview_image })
+        state.cleanup = vim.api.nvim_create_autocmd('BufWinLeave', {
+            buffer = bufnr,
+            once = true,
+            desc = 'Clear Telescope image preview',
+            callback = clear_preview_image,
+        })
+
         vim.schedule(function()
-            state.image:render()
-            state.is_image = true
+            if
+                state.image ~= preview
+                or not vim.api.nvim_win_is_valid(winid)
+                or vim.api.nvim_win_get_buf(winid) ~= bufnr
+            then
+                preview:clear()
+                return
+            end
+            preview:render()
         end)
     end
 end
 
 local function custom_buffer_previewer_maker(filepath, bufnr, opts)
-    if state.is_image and state.last_path ~= filepath then
+    if state.image then
         clear_preview_image()
     end
-    state.last_path = filepath
 
     local ext = vim.fs.ext(filepath):lower()
     if SUPPORTED_IMAGES[ext] then
         local path = filepath:gsub(' ', '%%20'):gsub('\\', '')
-        show_preview_image(path)
+        if opts.winid then
+            show_preview_image(path, bufnr, opts.winid)
+        end
     elseif ext == 'pdf' then
         vim.system(
             { 'pdftotext', '-layout', filepath, '-' },
