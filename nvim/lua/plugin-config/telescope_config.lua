@@ -496,7 +496,8 @@ local custom_actions = transform_mod({
     -- Context split
     context_split = function(prompt_bufnr)
         local split = 'new'
-        if vim.fn.winwidth(vim.fn.winnr('#')) > 2 * (vim.go.textwidth or 80) then
+        local target_win = vim.fn.win_getid(vim.fn.winnr('#'))
+        if u.should_vsplit(target_win) then
             split = 'vnew'
         end
         return action_set.edit(prompt_bufnr, split)

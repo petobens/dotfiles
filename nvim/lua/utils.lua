@@ -13,12 +13,33 @@ M.icons = {
 }
 
 -- Files
-function M.split_open(file)
-    local split = 'split'
-    if vim.api.nvim_win_get_width(0) > 2 * (vim.go.textwidth or 80) then
-        split = 'vsplit'
+function M.should_vsplit(win)
+    win = win or 0
+
+    -- A near-full-height float would obscure the pane created by a vertical split
+    for _, float in ipairs(vim.api.nvim_list_wins()) do
+        local config = vim.api.nvim_win_get_config(float)
+        if
+            config.relative ~= ''
+            and not config.hide
+            and vim.api.nvim_win_get_width(float) >= vim.o.columns * 0.4
+            and vim.api.nvim_win_get_height(float) >= vim.o.lines * 0.9
+        then
+            return false
+        end
     end
-    vim.cmd[split](file)
+
+    local textwidth = vim.bo[vim.api.nvim_win_get_buf(win)].textwidth
+    return vim.api.nvim_win_get_width(win) > 2 * (textwidth > 0 and textwidth or 80)
+end
+
+function M.split_open(file)
+    local split = M.should_vsplit() and 'vsplit' or 'split'
+    if file then
+        vim.cmd[split](file)
+    else
+        vim.cmd[split]()
+    end
 end
 
 function M.mk_non_dir(directory)
