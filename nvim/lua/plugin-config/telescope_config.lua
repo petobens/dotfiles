@@ -915,16 +915,25 @@ telescope.setup({
         find_files = {
             prompt_title = 'Files (<A-c>:dir,<A-p>:parents,<A-g>:grep,'
                 .. '<A-a>:cc-context,<A-i>:cc-image,<A-d>:cc-pdf)',
-            find_command = {
-                'fd',
-                '--type',
-                'f',
-                '--follow',
-                '--hidden',
-                '--strip-cwd-prefix',
-                '--exclude',
-                '.git',
-            },
+            find_command = function(opts)
+                local command = {
+                    'fd',
+                    '--type',
+                    'f',
+                    '--follow',
+                    '--hidden',
+                    '--strip-cwd-prefix',
+                    '--exclude',
+                    '.git',
+                }
+                local cwd = vim.fs.normalize(opts.cwd or vim.uv.cwd())
+                local screenshots =
+                    vim.fs.joinpath(vim.env.HOME, 'Pictures', 'Screenshots')
+                if cwd == screenshots then
+                    return { 'sh', '-c', table.concat(command, ' ') .. ' | sort -r' }
+                end
+                return command
+            end,
             mappings = {
                 i = {
                     ['<CR>'] = stopinsert(custom_actions.open_one_or_many),

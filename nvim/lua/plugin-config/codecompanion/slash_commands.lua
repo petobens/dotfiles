@@ -125,9 +125,12 @@ local slash_commands = {
         callback = clone.clone_chat,
     },
     ['image'] = {
-        opts = {
-            dirs = { '~/Pictures/Screenshots/' },
-        },
+        description = 'Insert a screenshot',
+        callback = function()
+            require('telescope.builtin').find_files({
+                cwd = vim.fs.joinpath(vim.env.HOME, 'Pictures', 'Screenshots'),
+            })
+        end,
     },
     -- ACP sessions
     ['find_session'] = {
