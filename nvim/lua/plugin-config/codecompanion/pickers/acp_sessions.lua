@@ -691,12 +691,19 @@ function M.browse(chat)
             )
 
             actions.select_default:replace(function()
-                local sel = action_state.get_selected_entry()
+                local targets = current:get_multi_selection()
+                if #targets == 0 then
+                    targets = { action_state.get_selected_entry() }
+                end
+
                 actions.close(prompt_bufnr)
-                if sel then
-                    local selected_chat = target_chat(chat, sel.value)
-                    if selected_chat then
-                        load_entry(selected_chat, sel.value)
+
+                for _, sel in ipairs(targets) do
+                    if sel then
+                        local selected_chat = target_chat(chat, sel.value)
+                        if selected_chat then
+                            load_entry(selected_chat, sel.value)
+                        end
                     end
                 end
             end)
