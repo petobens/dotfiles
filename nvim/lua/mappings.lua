@@ -256,7 +256,7 @@ end
 vim.keymap.set('n', 'zm', 'zM', { desc = 'Close all folds' })
 vim.keymap.set('n', 'zr', 'zR', { desc = 'Open all folds' })
 vim.keymap.set('n', '<Leader>mf', function()
-    vim.opt.foldmethod = 'marker'
+    vim.opt_local.foldmethod = 'marker'
     vim.cmd.normal('zv')
 end, { desc = "Set foldmethod to 'marker' and open folds" })
 vim.keymap.set(
@@ -335,13 +335,13 @@ vim.keymap.set('n', '<Leader>C', function()
     vim.wo.scrolloff = vim.wo.scrolloff == 999 and vim.go.scrolloff or 999
 end, { desc = 'Toggle centered scrolling' })
 vim.keymap.set('n', '<Leader>ic', function()
-    vim.opt.list = not vim.opt.list:get()
+    vim.opt_local.list = not vim.opt_local.list:get()
 end, { desc = 'Toggle listchars (invisible chars)' })
 vim.keymap.set('n', '<Leader>sa', function()
     vim.cmd.sort('i')
 end, { desc = 'Sort lines alphabetically (case-insensitive)' })
 vim.keymap.set('n', '<Leader>sc', function()
-    vim.opt.spell = not vim.opt.spell:get()
+    vim.opt_local.spell = not vim.opt_local.spell:get()
 end, { desc = 'Toggle spell checking' })
 vim.keymap.set('n', '<Leader>lp', function()
     vim.api.nvim_input(':lua vim.print(')
