@@ -10,6 +10,7 @@ local default_options = {
         aerial = true,
         codecompanion = true,
         codecompanion_input = true,
+        dbout = true,
         dbui = true,
         help = true,
         neotest = true,

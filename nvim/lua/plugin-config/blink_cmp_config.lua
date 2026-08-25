@@ -65,7 +65,7 @@ blink_cmp.setup({
                                 buffer = '[Buffer]',
                                 codecompanion = '[CodeCompanion]',
                                 copilot = '[Copilot]',
-                                dbee = '[dbee]',
+                                dadbod = '[Dadbod]',
                                 git = '[Git]',
                                 lsp = '[LSP]',
                                 luasnip = '[Snippet]',
@@ -154,7 +154,7 @@ blink_cmp.setup({
         per_filetype = {
             codecompanion = { 'codecompanion', 'buffer' },
             lua = { inherit_defaults = true, 'lazydev' },
-            sql = { 'dbee', 'buffer' },
+            sql = { 'dadbod', 'buffer' },
         },
         providers = {
             buffer = {
@@ -179,9 +179,9 @@ blink_cmp.setup({
                 module = 'blink-copilot',
                 async = true,
             },
-            dbee = {
-                name = 'dbee',
-                module = 'blink.compat.source',
+            dadbod = {
+                name = 'Dadbod',
+                module = 'vim_dadbod_completion.blink',
             },
             git = {
                 name = 'git',

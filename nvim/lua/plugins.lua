@@ -85,22 +85,6 @@ local packages = {
     plugin('fang2hou/blink-copilot'),
     plugin('mgalliou/blink-cmp-tmux'),
     plugin('Kaiser-Yang/blink-cmp-git'),
-    plugin('MunifTanjim/nui.nvim'),
-    plugin('kndndrj/nvim-dbee', {
-        build = function()
-            require('dbee').install()
-        end,
-        event = 'FileType',
-        keys = { '<Leader>db' },
-        pattern = 'sql',
-        config = 'dbee_config',
-    }),
-    plugin('MattiasMTS/cmp-dbee', {
-        config = 'cmp_dbee_config',
-        event = 'FileType',
-        pattern = 'sql',
-        version = 'ms/v2',
-    }),
 
     -- AI
     plugin('zbirenbaum/copilot.lua', {
@@ -167,6 +151,16 @@ local packages = {
     plugin('lervag/vimtex', 'vimtex_config'),
     plugin('Thiago4532/mdmath.nvim', 'mdmath_config'),
     plugin('MeanderingProgrammer/render-markdown.nvim', 'render_markdown_config'),
+
+    -- SQL
+    plugin('tpope/vim-dadbod', 'dadbod_config'),
+    plugin('kristijanhusak/vim-dadbod-ui', {
+        cmd = { 'DBUIToggle', 'DBUIFindBuffer' },
+    }),
+    plugin('kristijanhusak/vim-dadbod-completion', {
+        event = 'FileType',
+        pattern = 'sql',
+    }),
 }
 
 -- Disable built-ins
