@@ -3,17 +3,21 @@ local module_prefix = 'plugin-config.codecompanion.'
 local adapters = require(module_prefix .. 'adapters')
 local background = require(module_prefix .. 'background')
 local cli = require(module_prefix .. 'cli')
-local extensions = require(module_prefix .. 'extensions')
 local mappings = require(module_prefix .. 'mappings')
-local mcp = require(module_prefix .. 'mcp')
 local monkeypatches = require(module_prefix .. 'monkeypatches')
 local prompt_library = require(module_prefix .. 'prompt_library')
-local rules = require(module_prefix .. 'rules')
 local slash_commands = require(module_prefix .. 'slash_commands')
-local tools = require(module_prefix .. 'tools')
 local ui = require(module_prefix .. 'ui')
 
 local M = {}
+
+local function remove_agent_features()
+    local config = require('codecompanion.config')
+    local opts = config.interactions.chat.tools.opts
+    config.interactions.chat.tools = { groups = {}, opts = opts }
+    config.interactions.chat.slash_commands.mcp = nil
+    config.interactions.chat.slash_commands.rules = nil
+end
 
 function M.setup()
     -- General config
@@ -25,11 +29,6 @@ function M.setup()
                     show_presets = false,
                     show_model_choices = false,
                 },
-                gemini_flash_35 = adapters.gemini_flash_35,
-                ollama_qwen35_08b = adapters.ollama_qwen35_08b,
-                openai_gpt_56_luna = adapters.openai_gpt_56_luna,
-                openai_gpt_56_sol = adapters.openai_gpt_56_sol,
-                tavily = adapters.tavily,
             },
             acp = {
                 opts = {
@@ -38,7 +37,6 @@ function M.setup()
                 },
                 claude_code = adapters.claude_code,
                 codex = adapters.codex,
-                codex_pi = adapters.codex_pi,
             },
         },
         -- Display
@@ -47,7 +45,7 @@ function M.setup()
             action_palette = {
                 prompt = '> ',
                 opts = {
-                    show_preset_actions = true,
+                    show_preset_actions = false,
                     show_preset_prompts = false,
                 },
             },
@@ -59,7 +57,7 @@ function M.setup()
         -- Interactions
         interactions = {
             -- Background
-            background = background.build(),
+            background = background.build(adapters.openai_gpt_56_luna()),
             -- Chat
             chat = {
                 adapter = 'codex',
@@ -68,37 +66,13 @@ function M.setup()
                     llm = ui.llm_role,
                 },
                 opts = {
-                    context_management = {
-                        editing = {
-                            trigger = 0.99,
-                        },
-                        compaction = {
-                            trigger = 0.99,
-                        },
-                    },
-                    system_prompt = function(ctx)
-                        if ctx.adapter and ctx.adapter.type == 'acp' then
-                            return ''
-                        end
-                        return 'You are a helpful assistant.'
-                    end,
-                    prompt_decorator = function(message)
-                        return message
-                    end,
                     goto_file_action = function(fname)
                         vim.cmd.wincmd('h')
                         vim.cmd.edit(fname)
                     end,
                 },
-                keymaps = vim.tbl_extend(
-                    'force',
-                    mappings.chat_keymaps(),
-                    rules.chat_keymaps()
-                ),
-                -- Slash commands
+                keymaps = mappings.chat_keymaps(),
                 slash_commands = slash_commands.build(),
-                -- Tools
-                tools = tools.build(),
             },
             -- CLI
             cli = cli.build(),
@@ -116,13 +90,17 @@ function M.setup()
         },
         -- Prompt library
         prompt_library = prompt_library.build(),
-        -- MCP
-        mcp = mcp.build(),
-        -- Rules
-        rules = rules.build(),
-        -- Extensions
-        extensions = extensions.build(),
+        -- Disable rules since ACP agents load repository instructions themselves
+        rules = {
+            opts = {
+                chat = { autoload = false, enabled = false },
+                show_presets = false,
+            },
+        },
     })
+
+    -- ACP agents provide their own tools and MCP servers
+    remove_agent_features()
 
     -- UI specific
     ui.setup()
@@ -130,7 +108,6 @@ function M.setup()
     local group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true })
     cli.setup_mappings(group)
     mappings.setup(group)
-    rules.setup_mappings()
     slash_commands.setup_mappings(group)
 
     -- Local CodeCompanion monkey patches

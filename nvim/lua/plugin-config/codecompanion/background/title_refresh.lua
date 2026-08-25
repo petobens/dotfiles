@@ -66,16 +66,10 @@ function M.request(background, chat)
     end
 
     if baseline_turns[chat] == nil then
-        -- First time we see this chat. Only a restored session carries
-        -- opts.title; a title an ACP agent pushes live (Codex/Claude, built
-        -- from the combined prompt) lands in chat.title, which we ignore so it
-        -- gets replaced by one generated from the real conversation
+        -- Keep a restored session's title; replace titles pushed during a live
+        -- ACP chat with one generated from the real conversation
         baseline_turns[chat] = completed_turns - (chat._acp_session_loaded and 1 or 0)
-        local restored = chat.opts and chat.opts.title and chat.opts.title ~= ''
-        if restored then
-            if (chat.title or '') ~= chat.opts.title then
-                chat:set_title(chat.opts.title)
-            end
+        if chat._acp_session_loaded and chat.title and chat.title ~= '' then
             return
         end
     else
@@ -122,13 +116,7 @@ function M.request(background, chat)
                 return
             end
             chat:set_title(title)
-            chat.opts.title = title
             baseline_turns[chat] = completed_turns
-            -- Persist title so saved http chats show it instead of a timestamp
-            local history = require('codecompanion').extensions.history
-            if history then
-                pcall(history.save_chat, chat)
-            end
             utils.fire('BackgroundTitleSet', {
                 bufnr = chat.bufnr,
                 id = chat.id,

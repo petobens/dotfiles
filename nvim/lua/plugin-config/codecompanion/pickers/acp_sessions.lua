@@ -544,11 +544,7 @@ local function load_entry(chat, entry)
     -- Mark the chat as claimed so target_chat won't reuse it for another session
     chat._acp_session_loaded = true
 
-    -- Reuse the session's title for the chat: `opts.title` drives local labels
-    -- and `set_title` the CodeCompanion title/buffer name. Deferred because
-    -- restore_session -> chat:clear() triggers the history extension's clear
-    -- handler (schedule_wrapped) which nils opts.title; scheduling ours after it
-    -- lets our title win.
+    -- Reuse the session's title for local labels and the buffer name
     local restored_event = {
         bufnr = chat.bufnr,
         id = chat.id,
@@ -557,17 +553,10 @@ local function load_entry(chat, entry)
     }
 
     if entry.title and entry.title ~= '' then
-        vim.schedule(function()
-            if vim.api.nvim_buf_is_valid(chat.bufnr) then
-                chat.opts.title = entry.title -- Persist in the history extension
-                chat:set_title(entry.title)
-                restored_event.title = entry.title
-                utils.fire('ACPChatRestored', restored_event)
-            end
-        end)
-    else
-        utils.fire('ACPChatRestored', restored_event)
+        chat:set_title(entry.title)
+        restored_event.title = entry.title
     end
+    utils.fire('ACPChatRestored', restored_event)
 end
 
 -- Reuse a compatible empty chat for the selected session, otherwise create one

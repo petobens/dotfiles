@@ -30,8 +30,8 @@ end
 
 local function cwd_footer(chat)
     local cwd = vim.uv.cwd()
-    if chat and chat.adapter and chat.adapter.type == 'acp' then
-        -- ACP agents run at the git root (see patch_acp_cwd), so reflect that
+    if chat then
+        -- Agents run at the git root (see patch_acp_cwd), so reflect that
         if not chat.opts.cwd or chat.opts.cwd == '' then
             chat.opts.cwd = u.git_root(cwd) or cwd
         end
@@ -96,7 +96,7 @@ local function chat_footer(chat)
     end
     table.insert(parts, string.format(' %d', state_helpers.get_cycle_count(chat)))
     table.insert(parts, string.format(' %s', state_helpers.format_context_usage(chat)))
-    if adapter and adapter.type == 'acp' then
+    if adapter then
         local usage = usage_helpers.get(adapter.name)
         if usage then
             local label = string.format(' 5h %.0f%%', usage.pct)
@@ -160,7 +160,7 @@ local function refresh_chat_usage(bufnr)
     local ok, chat = pcall(function()
         return codecompanion.buf_get_chat(bufnr)
     end)
-    if not ok or not chat or not chat.adapter or chat.adapter.type ~= 'acp' then
+    if not ok or not chat or not chat.adapter then
         return
     end
     usage_helpers.refresh(chat.adapter.name, function()

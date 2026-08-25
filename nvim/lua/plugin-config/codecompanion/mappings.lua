@@ -7,6 +7,7 @@ local acp_sessions = require('plugin-config.codecompanion.pickers.acp_sessions')
 local acp_helpers = require('plugin-config.codecompanion.helpers').acp
 local chat_helpers = require('plugin-config.codecompanion.helpers').chat
 local open_chats = require('plugin-config.codecompanion.pickers.open_chats')
+local repo_helpers = require('plugin-config.codecompanion.helpers').repo
 local skills_picker = require('plugin-config.codecompanion.pickers.skills')
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local usage_helpers = require('plugin-config.codecompanion.helpers').usage
@@ -160,12 +161,10 @@ end
 local function show_adapter_info(chat_obj)
     local adapter = chat_obj.adapter
     local model = state_helpers.get_adapter_model(adapter)
-    local params = adapter.type == 'acp' and adapter.defaults or chat_obj.settings
     local adapter_info = {
-        { 'type', adapter.type },
         { 'name', adapter.name },
         { 'model', model },
-        { 'model_params', params },
+        { 'model_params', adapter.defaults },
     }
     local lines = vim.iter(adapter_info)
         :map(function(item)
@@ -234,13 +233,8 @@ local function setup_codecompanion_filetype_mappings(e)
     end, { buf = bufnr, desc = 'Toggle ACP plan mode' })
 
     vim.keymap.set({ 'n', 'i' }, '<A-s>', function()
-        local chat = codecompanion.buf_get_chat(bufnr)
-        if chat and chat.adapter and chat.adapter.type == 'acp' then
-            acp_sessions.browse(chat)
-        else
-            codecompanion.extensions.history.browse_chats()
-        end
-    end, { buf = bufnr, desc = 'Browse sessions (ACP) or history (http)' })
+        acp_sessions.browse(codecompanion.buf_get_chat(bufnr))
+    end, { buf = bufnr, desc = 'Browse ACP sessions' })
 
     vim.keymap.set({ 'i', 'n' }, '<A-b>', function()
         open_chats.browse(codecompanion.buf_get_chat(bufnr))
@@ -317,6 +311,24 @@ local function show_ai_usage()
     end)
 end
 
+local function edit_repo_rules()
+    local git_root = repo_helpers.git_root_or_notify()
+    if not git_root then
+        return
+    end
+
+    local file = repo_helpers.git_root_file('AGENTS.md', git_root)
+        or repo_helpers.git_root_file('CLAUDE.md', git_root)
+    if not file then
+        vim.notify(
+            'No AGENTS.md or CLAUDE.md found at the repository root',
+            vim.log.levels.WARN
+        )
+        return
+    end
+    u.split_open(file)
+end
+
 -- CodeCompanion global mappings
 local function setup_global_mappings()
     -- AI rate limits
@@ -351,12 +363,12 @@ local function setup_global_mappings()
         desc = 'Browse ACP sessions',
     })
 
-    vim.keymap.set('n', '<Leader>ce', vim.cmd.CodeCompanionHistory, {
-        desc = 'Browse CodeCompanion history (extension)',
-    })
-
     vim.keymap.set('n', '<Leader>sb', skills_picker.open_file, {
         desc = 'Browse skills',
+    })
+
+    vim.keymap.set('n', '<Leader>ea', edit_repo_rules, {
+        desc = 'Edit repo AI rules file',
     })
 
     -- Selection and context mappings

@@ -9,11 +9,7 @@ local u = require('utils')
 local SLASH_COMMANDS = 'plugin-config.codecompanion.slash_commands.'
 local clone = require(SLASH_COMMANDS .. 'clone')
 local coding = require(SLASH_COMMANDS .. 'coding')
-local gdocs = require(SLASH_COMMANDS .. 'gdocs')
-local gdrive = require(SLASH_COMMANDS .. 'gdrive')
 local git = require(SLASH_COMMANDS .. 'git')
-local gsheets = require(SLASH_COMMANDS .. 'gsheets')
-local gslides = require(SLASH_COMMANDS .. 'gslides')
 local session = require(SLASH_COMMANDS .. 'session')
 local skills = require(SLASH_COMMANDS .. 'skills')
 local terminal = require(SLASH_COMMANDS .. 'terminal')
@@ -111,6 +107,23 @@ local function setup_fugitive_filetype_mappings(args)
     })
 end
 
+local function skill_input(skill, prompt, request)
+    return function(chat)
+        vim.ui.input({ prompt = prompt }, function(input)
+            input = vim.trim(input or '')
+            if input == '' then
+                return
+            end
+            chat_helpers.request_skill(
+                chat,
+                skill,
+                string.format('%s `%s`', request, input)
+            )
+            vim.schedule(vim.cmd.stopinsert)
+        end)
+    end
+end
+
 -- Slash command definitions
 local slash_commands = {
     -- Built-in
@@ -140,19 +153,31 @@ local slash_commands = {
     -- Google Workspace
     ['gdrive_search'] = {
         description = 'Search Google Drive files',
-        callback = gdrive.gdrive_search,
+        callback = skill_input(
+            'gdrive',
+            'Google Drive search: ',
+            'search Google Drive for files matching'
+        ),
     },
     ['gdoc_read'] = {
         description = 'Read a Google Doc',
-        callback = gdocs.gdoc_read,
+        callback = skill_input('gdocs', 'Google Doc URL or ID: ', 'read the Google Doc'),
     },
     ['gsheet_read'] = {
         description = 'Read a Google Sheet',
-        callback = gsheets.gsheet_read,
+        callback = skill_input(
+            'gsheets',
+            'Google Sheet URL or ID: ',
+            'read the Google Sheet'
+        ),
     },
     ['gslides_read'] = {
         description = 'Read a Google Slides presentation',
-        callback = gslides.gslides_read,
+        callback = skill_input(
+            'gslides',
+            'Google Slides URL or ID: ',
+            'read the Google Slides presentation'
+        ),
     },
     -- Git
     ['conventional_commit'] = {
@@ -173,7 +198,7 @@ local slash_commands = {
         callback = coding.qfix,
     },
     ['explain_code'] = {
-        description = 'Explain selected code',
+        description = 'Explain visually selected code',
         callback = coding.explain_code,
     },
     -- Skills
