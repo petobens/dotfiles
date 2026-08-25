@@ -152,7 +152,7 @@ blink_cmp.setup({
             return sources
         end,
         per_filetype = {
-            codecompanion = { 'codecompanion', 'buffer' },
+            codecompanion = { 'codecompanion', 'path', 'buffer' },
             lua = { inherit_defaults = true, 'lazydev' },
             sql = { 'dadbod', 'buffer' },
         },
