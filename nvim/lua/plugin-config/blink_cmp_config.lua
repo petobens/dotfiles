@@ -53,6 +53,7 @@ blink_cmp.setup({
         menu = {
             winhighlight = 'Normal:NormalFloat,CursorLine:PmenuSel,Search:None',
             draw = {
+                padding = { 1, 2 },
                 columns = {
                     { 'kind_icon' },
                     { 'label', 'label_description', gap = 1 },
@@ -152,7 +153,7 @@ blink_cmp.setup({
             return sources
         end,
         per_filetype = {
-            codecompanion = { 'codecompanion', 'buffer' },
+            codecompanion = { 'codecompanion', 'path', 'buffer' },
             lua = { inherit_defaults = true, 'lazydev' },
             sql = { 'dadbod', 'buffer' },
         },
