@@ -10,53 +10,60 @@ import json
 import re
 import shutil
 import time
-from collections.abc import Callable
 from pathlib import Path
 
 AGE_DAYS = 60
 MIN_USER_PROMPTS = 2  # keep sessions with at least this many user prompts
-MIN_SINGLE_EXCHANGE_SIZE = 128 * 1024
+MAX_SINGLE_EXCHANGE_TEXT_SIZE = 128 * 1024
+MIN_SINGLE_EXCHANGE_AGE = 60 * 60
 
 CLAUDE_ROOT = Path.home() / ".claude" / "projects"
 CODEX_ROOT = Path.home() / ".codex" / "sessions"
 UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 
 
-def _user_prompts(path: Path, is_user: Callable[[dict], bool], cap: int) -> int:
-    """Count user prompts, reading at most `cap` lines (enough for the <2 test)."""
-    n = count = 0
+def session_stats(path: Path, adapter: str) -> tuple[int, int]:
+    """Count human prompts and visible message bytes, excluding session metadata."""
+    prompts = text_size = 0
     try:
         with path.open(errors="ignore") as fh:
             for line in fh:
-                n += 1
                 try:
                     d = json.loads(line)
                 except json.JSONDecodeError:
                     continue
-                if is_user(d):
-                    count += 1
-                if n >= cap:
-                    break
+
+                if adapter == "claude":
+                    role = d.get("type")
+                    content = d.get("message", {}).get("content", "")
+                    if isinstance(content, list):
+                        content = "".join(
+                            part.get("text", "")
+                            for part in content
+                            if isinstance(part, dict) and part.get("type") == "text"
+                        )
+                else:
+                    payload = d.get("payload", {})
+                    role = {
+                        "user_message": "user",
+                        "agent_message": "assistant",
+                    }.get(payload.get("type"))
+                    content = payload.get("message", "")
+
+                if (
+                    role not in {"user", "assistant"}
+                    or not isinstance(content, str)
+                    or not content
+                ):
+                    continue
+                if role == "user":
+                    prompts += 1
+                text_size += len(content.encode())
+                if prompts >= MIN_USER_PROMPTS:
+                    return prompts, text_size
     except OSError:
         pass
-    return count
-
-
-def user_prompts_claude(path: Path) -> int:
-    """Count Claude Code user prompts for pruning."""
-    return _user_prompts(path, lambda d: d.get("type") == "user", 500)
-
-
-def user_prompts_codex(path: Path) -> int:
-    """Count Codex user prompts for pruning."""
-    return _user_prompts(
-        path,
-        lambda d: (
-            d.get("type") == "event_msg"
-            and d.get("payload", {}).get("type") == "user_message"
-        ),
-        300,
-    )
+    return prompts, text_size
 
 
 def remove_session_dirs(root: Path, dry_run: bool) -> int:
@@ -91,8 +98,8 @@ def remove_empty_dirs(root: Path, dry_run: bool) -> int:
 def prune(
     name: str,
     files: list[Path],
-    counter: Callable[[Path], int],
     cutoff: float,
+    single_exchange_cutoff: float,
     dry_run: bool,
     delete_all: bool,
 ) -> int:
@@ -110,9 +117,12 @@ def prune(
         except OSError:
             continue
         is_old = stat.st_mtime < cutoff
-        is_small_single_exchange = (
-            stat.st_size < MIN_SINGLE_EXCHANGE_SIZE and counter(f) < MIN_USER_PROMPTS
-        )
+        is_small_single_exchange = False
+        if not is_old and stat.st_mtime < single_exchange_cutoff:
+            prompts, text_size = session_stats(f, name)
+            is_small_single_exchange = (
+                prompts < MIN_USER_PROMPTS and text_size < MAX_SINGLE_EXCHANGE_TEXT_SIZE
+            )
         if is_old or is_small_single_exchange:
             if is_old:
                 old += 1
@@ -124,7 +134,7 @@ def prune(
             kept += 1
     verb = "would delete" if dry_run else "deleted"
     detail = "all" if delete_all else f"old={old}, small-single-exchange={small}"
-    print(f"{name}: {verb} {old + small} ({detail}), kept {kept}")
+    print(f"{name:<6}: {verb} {old + small} ({detail}), kept {kept}")
     return old + small
 
 
@@ -147,20 +157,22 @@ def main() -> None:
         print("aborted")
         return
 
-    cutoff = time.time() - AGE_DAYS * 86400
+    now = time.time()
+    cutoff = now - AGE_DAYS * 86400
+    single_exchange_cutoff = now - MIN_SINGLE_EXCHANGE_AGE
     total = prune(
         "claude",
         list(CLAUDE_ROOT.glob("**/*.jsonl")),
-        user_prompts_claude,
         cutoff,
+        single_exchange_cutoff,
         args.dry_run,
         args.all,
     )
     total += prune(
-        "codex ",
+        "codex",
         list(CODEX_ROOT.glob("**/rollout-*.jsonl")),
-        user_prompts_codex,
         cutoff,
+        single_exchange_cutoff,
         args.dry_run,
         args.all,
     )
