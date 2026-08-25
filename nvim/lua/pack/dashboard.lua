@@ -10,7 +10,7 @@ local function list(value)
 end
 
 -- Window
-local function float_config(zindex)
+local function float_config()
     local width = math.min(130, math.max(1, vim.o.columns - 4))
     local height = math.max(1, vim.o.lines - 5)
     return {
