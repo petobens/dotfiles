@@ -303,8 +303,8 @@ function M.chat_display()
     return {
         intro_message = '',
         icons = {
-            buffer_sync_all = ' ',
-            buffer_sync_diff = ' ',
+            sync_all = ' ',
+            sync_diff = ' ',
         },
         window = {
             layout = 'float',

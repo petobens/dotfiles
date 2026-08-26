@@ -1,4 +1,5 @@
 local ACP = require('codecompanion.acp')
+local chat_helpers = require('codecompanion.interactions.chat.helpers')
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local u = require('utils')
@@ -472,23 +473,19 @@ function M.chat.add_context(files)
     local chat = get_or_create_chat()
 
     for _, file in ipairs(files) do
-        local content = u.read_file(file)
+        local normalized_file = vim.fs.normalize(file)
+        local ok, formatted = pcall(chat_helpers.format_file_for_llm, normalized_file)
 
-        if not content then
+        if not ok then
             vim.notify('Could not read file: ' .. file, vim.log.levels.ERROR)
         else
-            local normalized_file = vim.fs.normalize(file)
             local id = string.format('<file>%s</file>', normalized_file)
 
             -- Add context manually (rather than via chat:add_context) because that helper
             -- drops msg.context.path which ACP adapters need to see the file
             chat:add_message({
                 role = 'user',
-                content = string.format(
-                    'Here is the content of %s:%s',
-                    normalized_file,
-                    content
-                ),
+                content = formatted.content,
             }, {
                 visible = false,
                 context = { id = id, path = normalized_file },
