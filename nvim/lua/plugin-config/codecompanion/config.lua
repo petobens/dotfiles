@@ -104,6 +104,7 @@ function M.setup()
 
     -- UI specific
     ui.setup()
+
     -- Mappings
     local group = vim.api.nvim_create_augroup('codecompanion-ft', { clear = true })
     cli.setup_mappings(group)
