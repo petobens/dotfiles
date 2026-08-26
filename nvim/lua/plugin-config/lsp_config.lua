@@ -173,7 +173,7 @@ vim.keymap.set('n', '<Leader>li', function()
         vim.log.levels.INFO,
         { title = 'LSP clients (current buffer)' }
     )
-end, { desc = 'Show active LSP clients' })
+end, { desc = '[L]SP clients: [i]nfo' })
 vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'Set up buffer-local keymaps and options after attaching LSP server',
     group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
@@ -187,24 +187,24 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', '<Leader>jd', function()
             u.split_open()
             vim.lsp.buf.definition()
-        end, { buf = e.buf, desc = 'Jump to definition (split/vsplit)' })
+        end, { buf = e.buf, desc = '[J]ump to [d]efinition (split/vsplit)' })
         vim.keymap.set(
             'n',
             '<Leader>jD',
             vim.lsp.buf.declaration,
-            { buf = e.buf, desc = 'Jump to declaration' }
+            { buf = e.buf, desc = '[J]ump to [D]eclaration' }
         )
         vim.keymap.set(
             'n',
             '<Leader>ap',
             vim.lsp.buf.references,
-            { buf = e.buf, desc = 'List references/appearances' }
+            { buf = e.buf, desc = '[Ap]pearances/references' }
         )
         vim.keymap.set(
             'n',
             '<Leader>rn',
             vim.lsp.buf.rename,
-            { buf = e.buf, desc = 'Rename symbol' }
+            { buf = e.buf, desc = '[R]e[n]ame symbol' }
         )
         vim.keymap.set(
             'n',
@@ -216,17 +216,17 @@ vim.api.nvim_create_autocmd('LspAttach', {
             'n',
             '<Leader>fs',
             vim.lsp.buf.signature_help,
-            { buf = e.buf, desc = 'Show (function) signature help' }
+            { buf = e.buf, desc = '[F]unction [s]ignature help' }
         )
         vim.keymap.set('n', '<Leader>ih', function()
             local filter = { bufnr = e.buf }
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
-        end, { buf = e.buf, desc = 'Toggle inlay hints' })
+        end, { buf = e.buf, desc = '[I]nlay [h]ints: toggle' })
         vim.keymap.set(
             'n',
             '<Leader>cA',
             vim.lsp.buf.code_action,
-            { buf = e.buf, desc = 'Code actions' }
+            { buf = e.buf, desc = '[C]ode [A]ctions' }
         )
         vim.keymap.set('n', '<Leader>dc', function()
             local filter = { bufnr = e.buf }
@@ -234,6 +234,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
                 not vim.lsp.document_color.is_enabled(filter),
                 filter
             )
-        end, { buf = e.buf, desc = 'Toggle LSP document color highlighting' })
+        end, { buf = e.buf, desc = '[D]ocument [c]olors: toggle LSP highlighting' })
     end,
 })

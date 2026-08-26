@@ -4,37 +4,37 @@ local u = require('utils')
 -- Save and quit
 vim.keymap.set('n', '<Leader>w', function()
     vim.cmd.write({ bang = true })
-end, { desc = 'Write (save) current buffer' })
+end, { desc = '[W]rite (save) current buffer' })
 vim.keymap.set('n', '<Leader>nw', function()
     vim.cmd.write({ bang = true, mods = { noautocmd = true } })
-end, { desc = 'Write without autocommands' })
+end, { desc = '[N]o autocommands: [w]rite current buffer' })
 vim.keymap.set('n', '<Leader>wc', function()
     vim.cmd.write({ bang = true })
     vim.cmd.close({ mods = { silent = true } })
-end, { desc = 'Write and close window' })
+end, { desc = '[W]rite and [c]lose window' })
 vim.keymap.set('n', '<Leader>wq', function()
     vim.cmd.write({ bang = true })
     vim.cmd.quit({ bang = true })
-end, { desc = 'Write and quit' })
+end, { desc = '[W]rite and [q]uit' })
 vim.keymap.set(
     'n',
     '<Leader>ws',
     vim.cmd.SudaWrite,
-    { desc = 'Write with sudo (SudaWrite)' }
+    { desc = '[W]rite with [s]udo (SudaWrite)' }
 )
 vim.keymap.set('n', '<Leader>rs', function()
     vim.api.nvim_input(':SudaRead ')
-end, { desc = 'Read file with sudo (SudaRead)' })
+end, { desc = '[R]ead file with [s]udo (SudaRead)' })
 vim.keymap.set(
     'n',
     '<Leader>rr',
     vim.cmd.checktime,
-    { desc = 'Re-read file if changed on disk' }
+    { desc = '[R]e-[r]ead file if changed on disk' }
 )
 vim.keymap.set('n', '<Leader>so', function()
     vim.cmd.update()
     vim.cmd.luafile('%')
-end, { silent = false, desc = 'Source current file' })
+end, { silent = false, desc = '[So]urce current file' })
 
 -- Sessions
 vim.api.nvim_create_user_command('RestoreSession', function()
@@ -51,25 +51,25 @@ vim.keymap.set(
     'n',
     '<Leader>ps',
     vim.cmd.RestoreSession,
-    { desc = 'Restore previous session' }
+    { desc = '[P]revious [s]ession: restore' }
 )
 vim.keymap.set('n', '<Leader>rv', function()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     vim.cmd.restart({ bang = true, args = { '+qall!', 'RestoreSession' } })
-end, { desc = 'Restart nvim and restore session' })
-vim.keymap.set('n', '<Leader>kv', vim.cmd.qall, { desc = 'Quit all (exit/kill nvim)' })
+end, { desc = '[R]estart N[v]im and restore session' })
+vim.keymap.set('n', '<Leader>kv', vim.cmd.qall, { desc = '[K]ill N[v]im: quit all' })
 
 -- Buffer manipulation
 vim.keymap.set('n', '<C-n>', vim.cmd.bnext, { desc = 'Next buffer' })
 vim.keymap.set('n', '<C-p>', vim.cmd.bprevious, { desc = 'Previous buffer' })
-vim.keymap.set('n', '<Leader>wd', vim.cmd.bdelete, { desc = 'Delete window' })
+vim.keymap.set('n', '<Leader>wd', vim.cmd.bdelete, { desc = '[W]indow [d]elete' })
 vim.keymap.set('n', '<Leader>bd', function()
     vim.cmd.bprevious()
     vim.cmd.bdelete('#')
-end, { desc = 'Delete buffer and go to previous' })
+end, { desc = '[B]uffer [d]elete and go to previous' })
 vim.keymap.set('n', '<Leader>cd', function()
     vim.cmd.bcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
-end, { desc = 'Set buffer CWD to current buffer directory' })
+end, { desc = '[C]urrent buffer [d]irectory: set as CWD' })
 
 -- Window manipulation
 vim.keymap.set('n', '<C-A-h>', function()
@@ -94,8 +94,8 @@ vim.keymap.set('n', '<A-o>', function()
     vim.cmd.only()
     vim.cmd.normal('zv')
 end, { desc = 'Close all other windows (make current only window)' })
-vim.keymap.set('n', '<Leader>sp', vim.cmd.split, { desc = 'Horizontal split' })
-vim.keymap.set('n', '<Leader>vs', vim.cmd.vsplit, { desc = 'Vertical split' })
+vim.keymap.set('n', '<Leader>sp', vim.cmd.split, { desc = '[Sp]lit horizontally' })
+vim.keymap.set('n', '<Leader>vs', vim.cmd.vsplit, { desc = '[V]ertical [s]plit' })
 vim.keymap.set('n', '<C-x>', function()
     vim.cmd.wincmd('x')
     vim.cmd.normal('zz')
@@ -103,10 +103,10 @@ end, { desc = 'Swap window and center' })
 vim.keymap.set('n', '<Leader>hv', function()
     vim.cmd.wincmd('H')
     vim.cmd.wincmd('x')
-end, { desc = 'Move window to left' })
+end, { desc = '[H]orizontal to [v]ertical split: move window left' })
 vim.keymap.set('n', '<Leader>vh', function()
     vim.cmd.wincmd('K')
-end, { desc = 'Move window to top' })
+end, { desc = '[V]ertical to [h]orizontal split: move window top' })
 
 -- Line navigation and editing
 vim.keymap.set({ 'n', 'i', 'v' }, '<down>', '<nop>', { desc = 'Disable <down>' })
@@ -131,13 +131,13 @@ vim.keymap.set(
     'n',
     '<Leader>oj',
     ']<Space>j',
-    { remap = true, desc = 'Open line below and move down' }
+    { remap = true, desc = '[O]pen line below and move with [j]' }
 )
 vim.keymap.set(
     'n',
     '<Leader>ok',
     '[<Space>k',
-    { remap = true, desc = 'Open line above and move up' }
+    { remap = true, desc = '[O]pen line above and move with [k]' }
 )
 vim.keymap.set('n', '<A-j>', function()
     local line = vim.api.nvim_win_get_cursor(0)[1]
@@ -173,22 +173,22 @@ vim.keymap.set('n', '<Leader>yf', function()
     vim.fn.setreg('+', path)
     vim.fn.setreg('*', path)
     vim.notify(('Yanked file: %s'):format(path), vim.log.levels.INFO)
-end, { desc = 'Yank file path to clipboard' })
+end, { desc = '[Y]ank [f]ile path to clipboard' })
 vim.keymap.set('n', '<Leader>yd', function()
     local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
     vim.fn.setreg('+', dir)
     vim.fn.setreg('*', dir)
     vim.notify(('Yanked directory: %s'):format(dir), vim.log.levels.INFO)
-end, { desc = 'Yank directory path to clipboard' })
+end, { desc = '[Y]ank [d]irectory path to clipboard' })
 vim.keymap.set(
     'n',
     '<Leader>pp',
     vim.cmd.put,
-    { desc = 'Put (paste) from default register below' }
+    { desc = '[P]ut ([p]aste) from default register below' }
 )
 vim.keymap.set('n', '<Leader>P', function()
     vim.cmd.put({ bang = true })
-end, { desc = 'Put (paste) from default register above' })
+end, { desc = '[P]ut (paste) from default register above' })
 vim.keymap.set('n', 'gp', '`[v`]', { desc = 'Visually select just-pasted text' })
 
 -- Search, jumps and marks
@@ -207,7 +207,7 @@ vim.keymap.set(
 vim.keymap.set('n', '<Leader><Space>', function()
     vim.cmd.nohlsearch()
     vim.fn.clearmatches()
-end, { desc = 'Clear search highlights and matches' })
+end, { desc = '[Space]: clear search highlights and matches' })
 vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search match and center' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search match and center' })
 vim.keymap.set('n', '*', function()
@@ -226,18 +226,18 @@ vim.keymap.set(
     'n',
     '<Leader>sw',
     '/<><Left>',
-    { silent = false, remap = true, desc = 'Search for bounded word' }
+    { silent = false, remap = true, desc = '[S]earch bounded [w]ord' }
 )
 vim.keymap.set('n', '<Leader>sr', function()
     vim.api.nvim_input(':%s/')
-end, { desc = 'Start search and replace' })
+end, { desc = '[S]earch and [r]eplace' })
 vim.keymap.set('n', '<C-o>', '<C-o>zvzz', { desc = 'Jump back and center' })
 vim.keymap.set('n', '<C-y>', '<C-i>zvzz', { desc = 'Jump forward and center' })
 vim.keymap.set('n', "'", '`', { desc = 'Jump to mark (backtick instead of quote)' })
 vim.keymap.set('n', '<Leader>dm', function()
     vim.cmd.delmarks({ bang = true })
     vim.cmd.delmarks('A-Z0-9')
-end, { desc = 'Delete all marks' })
+end, { desc = '[D]elete all [m]arks' })
 vim.keymap.set('n', '[m', '[mzz', { desc = 'Previous mark and center' })
 vim.keymap.set('n', ']m', ']mzz', { desc = 'Next mark and center' })
 for i = 1, 6 do
@@ -249,7 +249,7 @@ for i = 1, 6 do
         local pat = ([[\V\<%s\>]]):format(vim.fn.escape(word, '\\'))
         vim.fn.matchadd(('HlWord%s'):format(i), pat, 1, mid)
         vim.cmd.normal({ args = { '`z' }, bang = true })
-    end, { desc = ('Highlight word under cursor (slot %d)'):format(i) })
+    end, { desc = ('[H]ighlight word under cursor (slot [%d])'):format(i) })
 end
 
 -- Folds
@@ -258,12 +258,12 @@ vim.keymap.set('n', 'zr', 'zR', { desc = 'Open all folds' })
 vim.keymap.set('n', '<Leader>mf', function()
     vim.opt_local.foldmethod = 'marker'
     vim.cmd.normal('zv')
-end, { desc = "Set foldmethod to 'marker' and open folds" })
+end, { desc = '[M]arker [f]olds: set method and open' })
 vim.keymap.set(
     'n',
     '<Leader>zf',
     'zMzvzz',
-    { desc = 'Close all folds except current one (focus fold)' }
+    { desc = '[Z]oom [f]old: close all except current' }
 )
 vim.keymap.set('n', '<Leader>rz', function()
     if vim.wo.foldexpr ~= vim.treesitter.foldexpr then
@@ -271,7 +271,7 @@ vim.keymap.set('n', '<Leader>rz', function()
     end
     vim.opt_local.foldmethod = 'expr'
     vim.cmd.normal({ args = { 'zx' }, bang = true })
-end, { desc = 'Reset Tree-sitter folds' })
+end, { desc = '[R]eset [z]-folds (Tree-sitter)' })
 vim.keymap.set('n', 'l', function()
     -- Open fold from start
     local foldstart_linenr = vim.fn.foldclosed('.')
@@ -312,70 +312,80 @@ vim.keymap.set('n', '<Leader>ds', function()
         end
     )
     vim.api.nvim_set_current_dir(save_pwd)
-end, { desc = 'Start diff of current buffer with another file' })
-vim.keymap.set('n', '<Leader>du', vim.cmd.diffupdate, { desc = 'Update diff' })
+end, { desc = '[D]iff [s]tart with another file' })
+vim.keymap.set('n', '<Leader>du', vim.cmd.diffupdate, { desc = '[D]iff [u]pdate' })
 vim.keymap.set('n', '<Leader>de', function()
     vim.cmd.bdelete('#')
     vim.cmd.normal('zz')
-end, { desc = 'End diff and recenter' })
+end, { desc = '[D]iff [e]nd and recenter' })
 
 -- Misc
-vim.keymap.set('n', '<Leader>mr', 'q', { desc = 'Start/stop macro recording' })
-vim.keymap.set('n', '<Leader>mg', vim.cmd.messages, { desc = 'Show message history' })
+vim.keymap.set('n', '<Leader>mr', 'q', { desc = '[M]acro [r]ecording: start/stop' })
+vim.keymap.set('n', '<Leader>mg', vim.cmd.messages, { desc = '[M]essa[g]e history' })
 vim.keymap.set(
     'n',
     '<Leader>mm',
     'g<',
-    { remap = true, desc = 'Show last message (more message)' }
+    { remap = true, desc = '[M]ore [m]essages: show last' }
 )
 vim.keymap.set('n', '<Leader>mc', function()
     vim.api.nvim_echo({ { '' } }, false)
-end, { desc = 'Clear command line message' })
+end, { desc = '[M]essage [c]lear' })
 vim.keymap.set('n', '<Leader>C', function()
     vim.wo.scrolloff = vim.wo.scrolloff == 999 and vim.go.scrolloff or 999
-end, { desc = 'Toggle centered scrolling' })
+end, { desc = '[C]entered scrolling: toggle' })
 vim.keymap.set('n', '<Leader>ic', function()
     vim.opt_local.list = not vim.opt_local.list:get()
-end, { desc = 'Toggle listchars (invisible chars)' })
+end, { desc = '[I]nvisible [c]haracters: toggle listchars' })
 vim.keymap.set('n', '<Leader>sa', function()
     vim.cmd.sort('i')
-end, { desc = 'Sort lines alphabetically (case-insensitive)' })
+end, { desc = '[S]ort [a]lphabetically (case-insensitive)' })
 vim.keymap.set('n', '<Leader>sc', function()
     vim.opt_local.spell = not vim.opt_local.spell:get()
-end, { desc = 'Toggle spell checking' })
+end, { desc = '[S]pell [c]hecking: toggle' })
 vim.keymap.set('n', '<Leader>lp', function()
     vim.api.nvim_input(':lua vim.print(')
-end, { desc = 'Insert `:lua vim.print(` at command line' })
+end, { desc = '[L]ua [p]rint: insert `:lua vim.print(`' })
 vim.keymap.set(
     'n',
     '<Leader>lr',
     ':=',
-    { silent = false, desc = 'Open command-line for Lua expression (lua run)' }
+    { silent = false, desc = '[L]ua [r]un: open expression command-line' }
 )
 vim.keymap.set(
     'n',
     '<Leader>ci',
     vim.cmd.Inspect,
-    { desc = 'Inspect syntax and extmarks at cursor (color inspect)' }
+    { desc = '[C]olor [i]nspect: syntax and extmarks at cursor' }
 )
 vim.keymap.set('n', '<Leader>cw', function()
     vim.print(('Words: %d'):format(vim.fn.wordcount().words))
-end, { desc = 'Show word count' })
+end, { desc = '[C]ount [w]ords' })
 
 -- Commenting
-vim.keymap.set('n', '<Leader>cc', 'gcc', { remap = true, desc = 'Toggle comment line' })
-vim.keymap.set('n', '<Leader>cu', 'gcc', { remap = true, desc = 'Toggle uncomment line' })
+vim.keymap.set(
+    'n',
+    '<Leader>cc',
+    'gcc',
+    { remap = true, desc = '[C]omment [c]urrent line' }
+)
+vim.keymap.set(
+    'n',
+    '<Leader>cu',
+    'gcc',
+    { remap = true, desc = '[C]omment: [u]ncomment line' }
+)
 vim.keymap.set(
     'v',
     '<Leader>cc',
     'gc',
-    { remap = true, desc = 'Toggle comment selection' }
+    { remap = true, desc = '[C]omment [c]urrent selection' }
 )
 vim.keymap.set(
     'v',
     '<Leader>cu',
     'gc',
-    { remap = true, desc = 'Toggle uncomment selection' }
+    { remap = true, desc = '[C]omment: [u]ncomment selection' }
 )
 
 -- Bookmarks
@@ -383,44 +393,44 @@ local git_repos = vim.fs.joinpath(vim.env.HOME, 'git-repos')
 local private_notes = vim.fs.joinpath(git_repos, 'private', 'notes')
 vim.keymap.set('n', '<Leader>ev', function()
     vim.cmd.edit(vim.env.MYVIMRC)
-end, { desc = 'Edit init.lua (MYVIMRC)' })
+end, { desc = '[E]dit N[v]im init.lua (MYVIMRC)' })
 vim.keymap.set('n', '<Leader>em', function()
     vim.cmd.edit(vim.fs.joinpath(vim.env.DOTVIM, 'minimal.lua'))
-end, { desc = 'Edit minimal.lua' })
+end, { desc = '[E]dit [m]inimal.lua' })
 vim.keymap.set('n', '<Leader>ew', function()
     vim.cmd.edit(vim.fs.joinpath(vim.env.DOTVIM, 'spell', 'custom-dictionary.utf-8.add'))
-end, { desc = 'Edit custom words dictionary' })
+end, { desc = '[E]dit custom [w]ords dictionary' })
 vim.keymap.set('n', '<Leader>etm', function()
     vim.cmd.edit(vim.fs.joinpath(private_notes, 'mutt', 'todos_mutt.md'))
-end, { desc = 'Edit todos mutt' })
+end, { desc = '[E]dit [t]odos: [m]utt' })
 vim.keymap.set('n', '<Leader>ets', function()
     vim.cmd.edit(vim.fs.joinpath(private_notes, 'programming', 'todos_coding_setup.md'))
-end, { desc = 'Edit todos setup' })
+end, { desc = '[E]dit [t]odos: [s]etup' })
 vim.keymap.set('n', '<Leader>eb', function()
     vim.cmd.edit(vim.fs.joinpath(vim.env.HOME, '.config', 'fish', 'config.fish'))
-end, { desc = 'Edit Fish config' })
+end, { desc = '[E]dit [b]ashrc replacement (Fish)' })
 vim.keymap.set('n', '<Leader>eh', function()
     vim.cmd.edit(
         vim.fs.joinpath(git_repos, 'private', 'dotfiles', 'hypr', 'hyprland.lua')
     )
-end, { desc = 'Edit Hyprland config' })
+end, { desc = '[E]dit [h]yprland config' })
 
 -- Quick edit
 vim.keymap.set('n', '<Leader>dd', function()
     local dir = vim.fs.joinpath(vim.env.HOME, 'Desktop')
     vim.api.nvim_input((':e %s/'):format(dir))
-end, { desc = 'Edit file in ~/Desktop' })
+end, { desc = '[D]esktop [d]irectory: edit file' })
 vim.keymap.set('n', '<Leader>bs', function()
     local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
     vim.api.nvim_input((':e %s/scratch/'):format(dir))
-end, { desc = 'Edit file in scratch buffer directory' })
+end, { desc = '[B]uffer [s]cratch directory: edit file' })
 
 -- Links & files
 vim.keymap.set(
     { 'n', 'v' },
     '<Leader>ol',
     'gx',
-    { remap = true, desc = 'Open link under cursor' }
+    { remap = true, desc = '[O]pen [l]ink under cursor' }
 )
 vim.keymap.set('n', 'gf', function()
     local mods = u.should_vsplit() and { vertical = true } or nil
@@ -428,11 +438,11 @@ vim.keymap.set('n', 'gf', function()
 end, { desc = 'Go to file under cursor (vertical if wide)' })
 vim.keymap.set('n', '<Leader>fm', function()
     vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.uv.cwd(), 'yazi' })
-end, { desc = 'Open Yazi in tmux split' })
+end, { desc = '[F]ile [m]anager: open Yazi in tmux split' })
 
 -- Quickfix and Location
-vim.keymap.set('n', '<Leader>qf', vim.cmd.copen, { desc = 'Open quickfix list' })
-vim.keymap.set('n', '<Leader>qc', vim.cmd.cclose, { desc = 'Close quickfix list' })
+vim.keymap.set('n', '<Leader>qf', vim.cmd.copen, { desc = '[Q]uick[f]ix list: open' })
+vim.keymap.set('n', '<Leader>qc', vim.cmd.cclose, { desc = '[Q]uickfix list: [c]lose' })
 vim.keymap.set('n', ']q', function()
     pcall(vim.cmd.cnext)
 end, { desc = 'Next quickfix entry' })
@@ -443,9 +453,9 @@ vim.keymap.set('n', ']Q', vim.cmd.clast, { desc = 'Last quickfix entry' })
 vim.keymap.set('n', '[Q', vim.cmd.cfirst, { desc = 'First quickfix entry' })
 vim.keymap.set('n', '<Leader>qr', function()
     vim.api.nvim_input(':cdo %s/')
-end, { desc = 'Start quickfix replace (via :cdo)' })
-vim.keymap.set('n', '<Leader>ll', vim.cmd.lopen, { desc = 'Open location list' })
-vim.keymap.set('n', '<Leader>lc', vim.cmd.lclose, { desc = 'Close location list' })
+end, { desc = '[Q]uickfix [r]eplace (via :cdo)' })
+vim.keymap.set('n', '<Leader>ll', vim.cmd.lopen, { desc = '[L]ocation [l]ist: open' })
+vim.keymap.set('n', '<Leader>lc', vim.cmd.lclose, { desc = '[L]ocation list: [c]lose' })
 vim.keymap.set('n', '<Leader>lC', function()
     local current_win = vim.api.nvim_get_current_win()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -458,7 +468,7 @@ vim.keymap.set('n', '<Leader>lC', function()
         end
     end
     vim.api.nvim_set_current_win(current_win)
-end, { desc = 'Close all location lists' })
+end, { desc = '[L]ocation lists: [C]lose all' })
 vim.keymap.set('n', ']l', function()
     pcall(vim.cmd.lnext)
 end, { desc = 'Next location list entry' })
@@ -497,13 +507,13 @@ vim.keymap.set(
     'v',
     '<Leader>sa',
     ':sort i<CR>',
-    { desc = 'Sort selection alphabetically (case-insensitive)' }
+    { desc = '[S]ort [a]lphabetically (case-insensitive)' }
 )
 vim.keymap.set(
     'v',
     '<Leader>sr',
     ':s/',
-    { silent = false, desc = 'Start search and replace in selection' }
+    { silent = false, desc = '[S]earch and [r]eplace in selection' }
 )
 vim.keymap.set('v', 'G', 'G$', { desc = 'Go to end of selection' })
 vim.keymap.set('v', 'L', 'g_', { desc = 'Go to last non-blank in selection' })

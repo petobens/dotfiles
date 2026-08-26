@@ -13,7 +13,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Definitions
     s(
-        { trig = 'nc', dscr = 'Define function or value' },
+        { trig = 'nc', dscr = '[N]ew [c]ommand: define function or value' },
         fmta('#let <><> = <><>', {
             i(1, 'name'),
             c(2, {
@@ -26,7 +26,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ne', dscr = 'Define content function' },
+        { trig = 'ne', dscr = '[N]ew [e]nvironment: define content function' },
         fmta(
             [[
 #let <>(body) = [
@@ -47,7 +47,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'dmo', dscr = 'Define math operator' },
+        { trig = 'dmo', dscr = '[D]efine [m]ath [o]perator' },
         fmta('#let <> = math.op("<>")<>', {
             i(1, 'operator'),
             i(2, 'operator'),
@@ -58,7 +58,7 @@ return {
 
     -- Content-block function
     s(
-        { trig = 'env', dscr = 'Content-block function' },
+        { trig = 'env', dscr = '[Env]ironment: content-block function' },
         fmta(
             [[
 #<>[
@@ -79,7 +79,7 @@ return {
 
     -- Function call
     s(
-        { trig = 'cmd', dscr = 'Function call' },
+        { trig = 'cmd', dscr = '[C]o[m]man[d]: function call' },
         fmta('#<>(<>)<>', { i(1, 'function'), i(2, 'arguments'), i(0) })
     ),
 }, {}

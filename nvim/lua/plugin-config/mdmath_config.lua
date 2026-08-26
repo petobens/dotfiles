@@ -44,7 +44,7 @@ vim.api.nvim_create_autocmd('FileType', {
             'n',
             '<Leader>rm',
             toggle_mdmath,
-            { buf = bufnr, desc = 'Toggle MdMath equation rendering' }
+            { buf = bufnr, desc = '[R]ender [m]ath equations: toggle MdMath' }
         )
     end,
 })

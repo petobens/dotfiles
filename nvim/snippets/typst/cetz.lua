@@ -10,7 +10,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Canvas
     s(
-        { trig = 'tikz', dscr = 'CeTZ canvas' },
+        { trig = 'tikz', dscr = '[TikZ]-style CeTZ canvas' },
         fmta(
             [[
 #import "@preview/cetz:0.5.2"
@@ -34,7 +34,7 @@ return {
 
     -- Drawing primitives
     s(
-        { trig = 'axis', dscr = 'CeTZ axes' },
+        { trig = 'axis', dscr = '[Axis] (CeTZ)' },
         fmta(
             [[
 line((0, 0), (<>, 0), mark: (end: ">>"), stroke: 0.8pt + black)
@@ -56,7 +56,7 @@ content((-0.25, <>), [$<>$])
         { condition = line_begin }
     ),
     s(
-        { trig = 'draw', dscr = 'CeTZ line' },
+        { trig = 'draw', dscr = '[Draw] line (CeTZ)' },
         fmta('line((<>), (<>), stroke: <>)<>', {
             i(1, '0, 0'),
             i(2, '1, 1'),
@@ -66,7 +66,7 @@ content((-0.25, <>), [$<>$])
         { condition = line_begin }
     ),
     s(
-        { trig = 'dsc', dscr = 'CeTZ smooth curve' },
+        { trig = 'dsc', dscr = '[D]raw [s]mooth [c]urve (CeTZ)' },
         fmta('hobby(<>, stroke: <>)<>', {
             i(1, '(0, 0), (1, 1), (2, 0)'),
             i(2, '1pt + black'),
@@ -75,7 +75,7 @@ content((-0.25, <>), [$<>$])
         { condition = line_begin }
     ),
     s(
-        { trig = 'node', dscr = 'CeTZ content node' },
+        { trig = 'node', dscr = 'CeTZ content [node]' },
         fmta('content((<>), [<>], anchor: "<>")<>', {
             i(1, '0, 0'),
             i(2, 'Text'),
@@ -85,12 +85,12 @@ content((-0.25, <>), [$<>$])
         { condition = line_begin }
     ),
     s(
-        { trig = 'cd', dscr = 'CeTZ named coordinate' },
+        { trig = 'cd', dscr = '[C]oor[d]inate (named, CeTZ)' },
         fmta('anchor("<>", (<>))<>', { i(1, 'name'), i(2, '0, 0'), i(0) }),
         { condition = line_begin }
     ),
     s(
-        { trig = 'cfd', dscr = 'CeTZ filled point' },
+        { trig = 'cfd', dscr = '[C]ircle [f]ill[d]raw: filled point (CeTZ)' },
         fmta('circle((<>), radius: <>, fill: <>, stroke: none)<>', {
             i(1, '0, 0'),
             i(2, '0.08'),
@@ -100,7 +100,7 @@ content((-0.25, <>), [$<>$])
         { condition = line_begin }
     ),
     s(
-        { trig = 'pin', dscr = 'CeTZ pin label' },
+        { trig = 'pin', dscr = '[Pin] label (CeTZ)' },
         fmta(
             [[
 line((<>), (<>), stroke: 0.6pt + black)
@@ -119,7 +119,7 @@ content((<>), [<>], anchor: "<>")
         { condition = line_begin }
     ),
     s(
-        { trig = 'is', dscr = 'CeTZ intersections' },
+        { trig = 'is', dscr = 'CeTZ [i]nter[s]ections' },
         fmta('intersections("<>", "<>", "<>")<>', {
             i(1, 'intersection'),
             i(2, 'first'),
@@ -129,7 +129,7 @@ content((<>), [<>], anchor: "<>")
         { condition = line_begin }
     ),
     s(
-        { trig = 'bra', dscr = 'CeTZ brace' },
+        { trig = 'bra', dscr = '[Bra]ce (CeTZ)' },
         fmta(
             [[
 cetz.decorations.brace((<>), (<>), name: "brace")

@@ -26,7 +26,7 @@ end
 return {
     -- Equation blocks
     s(
-        { trig = 'equ?', regTrig = true, docTrig = 'equ', dscr = 'Numbered equation' },
+        { trig = 'equ?', regTrig = true, docTrig = 'equ', dscr = 'Numbered [equ]ation' },
         fmta(
             [[
 #equation($
@@ -39,10 +39,10 @@ $) <<eq:<>>>
         ),
         { condition = line_begin }
     ),
-    display_equation('ueq', 'Unnumbered equation'),
-    display_equation('be', 'Multiline display equation'),
+    display_equation('ueq', '[U]nnumbered [eq]uation'),
+    display_equation('be', '[B]reakable [e]quation: multiline display'),
     s(
-        { trig = 'ali', dscr = 'Numbered aligned equations' },
+        { trig = 'ali', dscr = 'Numbered [ali]gned equations' },
         fmta(
             [[
 #equation($
@@ -64,7 +64,7 @@ $) <<eq:<>>>
         { condition = line_begin }
     ),
     s(
-        { trig = 'ua', dscr = 'Unnumbered aligned equations' },
+        { trig = 'ua', dscr = '[U]nnumbered [a]ligned equations' },
         fmta(
             [[
 $
@@ -87,7 +87,7 @@ $
 
     -- Structures within math
     s(
-        { trig = 'aed', dscr = 'Aligned rows' },
+        { trig = 'aed', dscr = '[A]lign[ed] rows' },
         fmta(
             [[<> & = <> \
 <> & = <><>]],
@@ -101,11 +101,11 @@ $
         )
     ),
     s(
-        { trig = 'sit', dscr = 'Intertext row' },
+        { trig = 'sit', dscr = '[S]hort [i]n[t]ertext row' },
         fmta('#text[<>] \\<>', { i(1, 'Text'), i(0) })
     ),
     s(
-        { trig = 'dca', dscr = 'Cases' },
+        { trig = 'dca', dscr = '[D]isplay [ca]ses' },
         fmta(
             [[cases(
   <> & upright("<>") <>,
@@ -123,7 +123,7 @@ $
         )
     ),
     s(
-        { trig = 'mat', dscr = 'Matrix' },
+        { trig = 'mat', dscr = '[Mat]rix' },
         fmta(
             [[mat(
   <>, <>;
@@ -133,7 +133,7 @@ $
         )
     ),
     s(
-        { trig = 'max', dscr = 'Optimization problem' },
+        { trig = 'max', dscr = '[Max]/min optimization problem' },
         fmta(
             [[
 #equation($
@@ -159,7 +159,7 @@ $) <<eq:<>>>
 
     -- Economics
     s(
-        { trig = 'fco', dscr = 'First-order conditions' },
+        { trig = 'fco', dscr = '[F]irst-order [co]nditions' },
         fmta(
             [[
 #equation($

@@ -9,7 +9,7 @@ local fmta = require('luasnip.extras.fmt').fmta
 return {
     -- Fonts
     s(
-        { trig = 'tx', dscr = 'Text' },
+        { trig = 'tx', dscr = '[T]e[x]t' },
         fmta(
             [[
         \text{<><>}
@@ -21,7 +21,7 @@ return {
         )
     ),
     s(
-        { trig = 'ti', dscr = 'Textit' },
+        { trig = 'ti', dscr = '[T]ext[i]t' },
         fmta(
             [[
         \textit{<><>}
@@ -33,7 +33,7 @@ return {
         )
     ),
     s(
-        { trig = 'emph', dscr = 'Emphasize' },
+        { trig = 'emph', dscr = '[Emph]asize' },
         fmta(
             [[
         \emph{<><>}
@@ -45,7 +45,7 @@ return {
         )
     ),
     s(
-        { trig = 'tb', dscr = 'Text bold' },
+        { trig = 'tb', dscr = '[T]ext [b]old' },
         fmta(
             [[
         \textbf{<><>}
@@ -57,7 +57,7 @@ return {
         )
     ),
     s(
-        { trig = 'tss', dscr = 'Text sans-serif' },
+        { trig = 'tss', dscr = '[T]ext [s]ans-[s]erif' },
         fmta(
             [[
         \textsf{<><>}
@@ -69,7 +69,7 @@ return {
         )
     ),
     s(
-        { trig = 'ttt', dscr = 'Text typewriter' },
+        { trig = 'ttt', dscr = '[T]ex[tt]t/typewriter' },
         fmta(
             [[
         \texttt{<><>}
@@ -81,7 +81,7 @@ return {
         )
     ),
     s(
-        { trig = 'muc', dscr = 'MakeUppercase' },
+        { trig = 'muc', dscr = '[M]ake [u]pper[c]ase' },
         fmta(
             [[
         \MakeUppercase{<><>}
@@ -93,7 +93,7 @@ return {
         )
     ),
     s(
-        { trig = 'mcg', dscr = 'Math caligraphic' },
+        { trig = 'mcg', dscr = '[M]ath [c]alli[g]raphic' },
         fmta(
             [[
         \mathcal{<><>}
@@ -105,7 +105,7 @@ return {
         )
     ),
     s(
-        { trig = 'mbb', dscr = 'Math blackboard' },
+        { trig = 'mbb', dscr = '[M]ath [b]lackboard [b]old' },
         fmta(
             [[
         \mathbb{<><>}
@@ -117,7 +117,7 @@ return {
         )
     ),
     s(
-        { trig = 'mi', dscr = 'Math italic' },
+        { trig = 'mi', dscr = '[M]ath [i]talic' },
         fmta(
             [[
         \mathit{<><>}
@@ -129,7 +129,7 @@ return {
         )
     ),
     s(
-        { trig = 'mr', dscr = 'Math roman' },
+        { trig = 'mr', dscr = '[M]ath [r]oman' },
         fmta(
             [[
         \mathrm{<><>}
@@ -141,7 +141,7 @@ return {
         )
     ),
     s(
-        { trig = 'mf', dscr = 'Math frak' },
+        { trig = 'mf', dscr = '[M]ath [f]raktur' },
         fmta(
             [[
         \mathfrak{<><>}
@@ -153,7 +153,7 @@ return {
         )
     ),
     s(
-        { trig = 'msc', dscr = 'Math script' },
+        { trig = 'msc', dscr = '[M]ath [sc]ript' },
         fmta(
             [[
         \mathscr{<><>}

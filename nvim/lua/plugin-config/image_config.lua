@@ -122,12 +122,12 @@ vim.keymap.set(
     'n',
     '<Leader>ip',
     open_image_preview,
-    { desc = 'Preview image under cursor' }
+    { desc = '[I]mage [p]review under cursor' }
 )
-vim.keymap.set('n', '<Leader>iw', clear_images, { desc = 'Wipe all image previews' })
+vim.keymap.set('n', '<Leader>iw', clear_images, { desc = '[I]mage previews: [w]ipe all' })
 vim.keymap.set(
     'n',
     '<Leader>is',
     open_image_system,
-    { desc = 'Open image under cursor with system handler' }
+    { desc = '[I]mage [s]ystem handler: open image under cursor' }
 )

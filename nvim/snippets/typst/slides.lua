@@ -10,7 +10,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Slide headings
     s(
-        { trig = 'ft', dscr = 'Slide title' },
+        { trig = 'ft', dscr = '[F]rame/slide [t]itle' },
         fmta(
             [[
 == <><>
@@ -26,7 +26,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'fs', dscr = 'Slide subtitle' },
+        { trig = 'fs', dscr = '[F]rame/[s]lide subtitle' },
         fmta('#slide-subtitle[<><>]<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'Subtitle'),
@@ -37,7 +37,7 @@ return {
 
     -- Mutt slide components
     s(
-        { trig = 'blo', dscr = 'Card' },
+        { trig = 'blo', dscr = '[Blo]ck/card' },
         fmta(
             [[
 #card(
@@ -58,7 +58,7 @@ return {
     ),
 
     s(
-        { trig = 'callout', dscr = 'Callout' },
+        { trig = 'callout', dscr = '[Callout]' },
         fmta('#callout([<><>])<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'Callout'),
@@ -67,7 +67,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'formula', dscr = 'Formula card' },
+        { trig = 'formula', dscr = '[Formula] card' },
         fmta(
             [[
 #formula[
@@ -87,7 +87,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'small', dscr = 'Small slide text' },
+        { trig = 'small', dscr = '[Small] slide text' },
         fmta('#small[<><>]<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'Text'),
@@ -95,7 +95,7 @@ return {
         })
     ),
     s(
-        { trig = 'cols', dscr = 'Two slide columns' },
+        { trig = 'cols', dscr = 'Two slide [col]umn[s]' },
         fmta(
             [[
 #cols(columns: (1fr, 1fr), gutter: 1em)[
@@ -111,12 +111,12 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pause', dscr = 'Reveal following slide content' },
+        { trig = 'pause', dscr = '[Pause]: reveal following slide content' },
         fmta('#pause\n\n<>', { i(0) }),
         { condition = line_begin }
     ),
     s(
-        { trig = 'uncover', dscr = 'Reveal while preserving space' },
+        { trig = 'uncover', dscr = '[Uncover]: reveal while preserving space' },
         fmta('#uncover("<>-")[<><>]<>', {
             i(1, '2'),
             f(_G.LuaSnipConfig.visual_selection),
@@ -126,7 +126,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'only', dscr = 'Show without preserving hidden space' },
+        { trig = 'only', dscr = '[Only]: show without preserving hidden space' },
         fmta('#only("<>")[<><>]<>', {
             i(1, '2'),
             f(_G.LuaSnipConfig.visual_selection),

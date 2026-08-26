@@ -14,7 +14,7 @@ local fmta = require('luasnip.extras.fmt').fmta
 return {
     -- Operators and functions
     s(
-        { trig = 'frac', wordTrig = false, dscr = 'Fraction' },
+        { trig = 'frac', wordTrig = false, dscr = '[Frac]tion' },
         fmta('frac(<><>, <>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'numerator'),
@@ -23,7 +23,7 @@ return {
         })
     ),
     s(
-        { trig = 'sum', dscr = 'Sum or product' },
+        { trig = 'sum', dscr = '[Sum] or product' },
         fmta('<>_(<>)^(<>) <><>', {
             c(1, { t('sum'), t('product') }),
             i(2, 't = 1'),
@@ -33,7 +33,7 @@ return {
         })
     ),
     s(
-        { trig = 'lim', dscr = 'Limit' },
+        { trig = 'lim', dscr = '[Lim]it' },
         fmta('lim_(<> arrow.r <>) <>', {
             i(1, 'x'),
             i(2, 'oo'),
@@ -41,7 +41,7 @@ return {
         })
     ),
     s(
-        { trig = 'pd', dscr = 'Partial derivative' },
+        { trig = 'pd', dscr = '[P]artial [d]erivative' },
         fmta('frac(partial <><>, partial <>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'f'),
@@ -50,7 +50,7 @@ return {
         })
     ),
     s(
-        { trig = 'int', dscr = 'Integral' },
+        { trig = 'int', dscr = '[Int]egral' },
         fmta('integral<> <><> upright(d) <><>', {
             c(1, {
                 sn(nil, { t('_('), i(1, 'a'), t(')^('), i(2, 'b'), t(')') }),
@@ -63,7 +63,7 @@ return {
         })
     ),
     s(
-        { trig = 'sr', dscr = 'Square root' },
+        { trig = 'sr', dscr = '[S]quare [r]oot' },
         c(1, {
             sn(nil, {
                 t('sqrt('),
@@ -82,7 +82,7 @@ return {
         })
     ),
     s(
-        { trig = 'nor', dscr = 'Norm' },
+        { trig = 'nor', dscr = '[Nor]m' },
         fmta('norm(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -90,7 +90,7 @@ return {
         })
     ),
     s(
-        { trig = 'abv', dscr = 'Absolute value' },
+        { trig = 'abv', dscr = '[Ab]solute [v]alue' },
         fmta('abs(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -98,7 +98,7 @@ return {
         })
     ),
     s(
-        { trig = 'log', dscr = 'Logarithm' },
+        { trig = 'log', dscr = '[Log]arithm' },
         fmta('log(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -106,7 +106,7 @@ return {
         })
     ),
     s(
-        { trig = 'ln', dscr = 'Natural logarithm' },
+        { trig = 'ln', dscr = '[ln] Natural logarithm' },
         fmta('ln(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -116,7 +116,7 @@ return {
 
     -- Decorations and annotations
     s(
-        { trig = 'ol', wordTrig = false, dscr = 'Overline' },
+        { trig = 'ol', wordTrig = false, dscr = '[O]ver[l]ine' },
         fmta('overline(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -124,7 +124,7 @@ return {
         })
     ),
     s(
-        { trig = 'ul', wordTrig = false, dscr = 'Underline' },
+        { trig = 'ul', wordTrig = false, dscr = '[U]nder[l]ine' },
         fmta('underline(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -132,7 +132,7 @@ return {
         })
     ),
     s(
-        { trig = 'ob', dscr = 'Overbrace' },
+        { trig = 'ob', dscr = '[O]ver[b]race' },
         fmta('overbrace(<><>, <>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'expression'),
@@ -141,7 +141,7 @@ return {
         })
     ),
     s(
-        { trig = 'ub', dscr = 'Underbrace' },
+        { trig = 'ub', dscr = '[U]nder[b]race' },
         fmta('underbrace(<><>, <>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'expression'),
@@ -150,7 +150,7 @@ return {
         })
     ),
     s(
-        { trig = 'os', dscr = 'Overset' },
+        { trig = 'os', dscr = '[O]ver[s]et' },
         fmta('attach(<><>, t: <>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'symbol'),
@@ -159,7 +159,7 @@ return {
         })
     ),
     s(
-        { trig = 'us', dscr = 'Underset' },
+        { trig = 'us', dscr = '[U]nder[s]et' },
         fmta('attach(<><>, b: <>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'symbol'),
@@ -168,7 +168,7 @@ return {
         })
     ),
     s(
-        { trig = 'bar', dscr = 'Bar' },
+        { trig = 'bar', dscr = '[Bar]' },
         fmta('macron(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -176,7 +176,7 @@ return {
         })
     ),
     s(
-        { trig = 'hat', dscr = 'Hat' },
+        { trig = 'hat', dscr = '[Hat]' },
         fmta('hat(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -184,7 +184,7 @@ return {
         })
     ),
     s(
-        { trig = 'til', dscr = 'Tilde' },
+        { trig = 'til', dscr = '[Til]de' },
         fmta('tilde(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -192,18 +192,18 @@ return {
         })
     ),
     s(
-        { trig = 'dot', dscr = 'Dot' },
+        { trig = 'dot', dscr = '[Dot]' },
         fmta('dot(<><>)<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
             i(0),
         })
     ),
-    s({ trig = 'cdot', wordTrig = false, dscr = 'Centered dot' }, t('dot.op')),
+    s({ trig = 'cdot', wordTrig = false, dscr = '[C]entered [dot]' }, t('dot.op')),
 
     -- Common structures
     s(
-        { trig = 'set', dscr = 'Set' },
+        { trig = 'set', dscr = '[Set]' },
         fmta('{ <><> }<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'x'),
@@ -211,7 +211,7 @@ return {
         })
     ),
     s(
-        { trig = 'vec', wordTrig = false, dscr = 'Vector' },
+        { trig = 'vec', wordTrig = false, dscr = '[Vec]tor' },
         fmta('(<>_1, <>_2, dots.h, <>_(<>))<>', {
             i(1, 'x'),
             rep(1),
@@ -221,7 +221,7 @@ return {
         })
     ),
     s(
-        { trig = 'seq', wordTrig = false, dscr = 'Sequence' },
+        { trig = 'seq', wordTrig = false, dscr = '[Seq]uence' },
         fmta('<>_1, <>_2, dots.h, <>_(<>)<>', {
             i(1, 'x'),
             rep(1),
@@ -231,7 +231,7 @@ return {
         })
     ),
     s(
-        { trig = 'map', dscr = 'Map' },
+        { trig = 'map', dscr = '[Map]' },
         fmta('<> : <> arrow.r <><>', {
             i(1, 'f'),
             i(2, 'X'),

@@ -59,28 +59,33 @@ end
 -- Mappings
 vim.keymap.set('n', '<Leader>st', function()
     vim.cmd.ToggleTerm('direction=horizontal')
-end, { desc = 'Open horizontal terminal' })
+end, { desc = '[S]plit [t]erminal horizontally' })
 
 vim.keymap.set('n', '<Leader>vt', function()
     vim.cmd.ToggleTerm('direction=vertical')
-end, { desc = 'Open vertical terminal' })
+end, { desc = '[V]ertical [t]erminal' })
 
-vim.keymap.set('n', '<Leader>tc', close_all_terminals, { desc = 'Close all terminals' })
+vim.keymap.set(
+    'n',
+    '<Leader>tc',
+    close_all_terminals,
+    { desc = '[T]erminals: [c]lose all' }
+)
 
 vim.keymap.set('n', '<Leader>tw', function()
     vim.cmd.TermExec('cmd=clear')
-end, { desc = 'Clear(wipe) terminal' })
+end, { desc = '[T]erminal [w]ipe (clear)' })
 
 vim.keymap.set(
     'n',
     '<Leader>rl',
     vim.cmd.ToggleTermSendCurrentLine,
-    { desc = 'Run current line in terminal' }
+    { desc = '[R]un current [l]ine in terminal' }
 )
 
 vim.keymap.set(
     'v',
     '<Leader>ri',
     vim.cmd.ToggleTermSendVisualSelection,
-    { desc = 'Run visual selection in terminal interpreter' }
+    { desc = '[R]un selection in [i]nterpreter terminal' }
 )

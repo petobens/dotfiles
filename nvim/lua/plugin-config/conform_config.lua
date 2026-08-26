@@ -56,4 +56,4 @@ conform.setup({
 -- Mappings
 vim.keymap.set({ 'n', 'v' }, '<Leader>fc', function()
     conform.format({ async = true, lsp_format = 'never' })
-end, { desc = 'Format buffer code with conform' })
+end, { desc = '[F]ormat [c]ode with Conform' })

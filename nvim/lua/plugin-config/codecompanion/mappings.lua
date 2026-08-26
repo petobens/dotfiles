@@ -242,7 +242,7 @@ local function setup_codecompanion_filetype_mappings(e)
 
     vim.keymap.set('n', '<Leader>gf', open_file_link, {
         buf = bufnr,
-        desc = 'Open file link on current line',
+        desc = '[G]o to [f]ile link on current line',
     })
 end
 
@@ -333,58 +333,58 @@ end
 local function setup_global_mappings()
     -- AI rate limits
     vim.keymap.set('n', '<Leader>ai', show_ai_usage, {
-        desc = 'Show AI usage (rate limits)',
+        desc = '[A]I usage [i]nfo (rate limits)',
     })
 
     -- Chat and command entry mappings
     vim.keymap.set('n', '<Leader>cg', window_helpers.focus_or_toggle_chat, {
-        desc = 'Toggle CodeCompanion chat',
+        desc = '[C]hat[G]PT: go to or toggle CodeCompanion',
     })
 
     vim.keymap.set({ 'n', 'v' }, '<Leader>cr', function()
         vim.api.nvim_input(':CodeCompanion ')
     end, {
-        desc = 'Run CodeCompanion command-line',
+        desc = '[C]odeCompanion [r]un command-line',
     })
 
     vim.keymap.set({ 'n', 'v' }, '<Leader>ca', vim.cmd.CodeCompanionActions, {
-        desc = 'Open CodeCompanion actions',
+        desc = '[C]odeCompanion [a]ctions: open',
     })
 
     vim.keymap.set('n', '<Leader>cb', function()
         open_chats.browse(codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()))
     end, {
-        desc = 'Browse open CodeCompanion chats (buffers)',
+        desc = '[C]hat [b]uffers: browse open CodeCompanion chats',
     })
 
     vim.keymap.set('n', '<Leader>cs', function()
         acp_sessions.browse(codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()))
     end, {
-        desc = 'Browse ACP sessions',
+        desc = '[C]hat [s]essions: browse ACP history',
     })
 
     vim.keymap.set('n', '<Leader>sb', skills_picker.open_file, {
-        desc = 'Browse skills',
+        desc = '[S]kills: [b]rowse files',
     })
 
     vim.keymap.set('n', '<Leader>ea', edit_repo_rules, {
-        desc = 'Edit repo AI rules file',
+        desc = '[E]dit repo [a]gent rules file',
     })
 
     -- Selection and context mappings
     vim.keymap.set('n', '<Leader>ac', function()
         chat_helpers.add_context({ vim.api.nvim_buf_get_name(0) })
     end, {
-        desc = 'Add current file to CodeCompanion',
+        desc = '[A]dd [c]urrent file to CodeCompanion',
     })
 
     vim.keymap.set('v', '<Leader>cp', paste_selection_to_chat, {
-        desc = 'Paste selection to CodeCompanion chat',
+        desc = '[C]hat [p]aste: add selection to CodeCompanion',
     })
 
     -- Code review
     vim.keymap.set('n', '<Leader>rc', add_review_comment, {
-        desc = 'Add CodeCompanion review comment',
+        desc = '[R]eview [c]omment: add with CodeCompanion',
     })
 
     vim.keymap.set('v', '<Leader>rc', function()
@@ -395,10 +395,10 @@ local function setup_global_mappings()
             math.min(anchor_line, cursor_line),
             math.max(anchor_line, cursor_line),
         })
-    end, { desc = 'Add CodeCompanion review comment' })
+    end, { desc = '[R]eview [c]omment: add with CodeCompanion' })
 
     vim.keymap.set('n', '<Leader>re', explore_review_comments, {
-        desc = 'Explore CodeCompanion review comments',
+        desc = '[R]eview comments: [e]xplore in quickfix',
     })
 end
 

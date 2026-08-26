@@ -64,17 +64,17 @@ function M.setup_mappings(group)
     vim.keymap.set('n', '<Leader>ct', function()
         codecompanion.toggle_cli()
     end, {
-        desc = 'Toggle CodeCompanion CLI',
+        desc = '[C]odeCompanion [t]erminal CLI: toggle',
     })
 
     vim.keymap.set('n', '<Leader>ck', function()
         vim.cmd.CodeCompanionCLI({ 'Ask' })
     end, {
-        desc = 'Open CodeCompanion CLI Ask',
+        desc = '[C]odeCompanion: as[k] in CLI',
     })
 
     vim.keymap.set('v', '<Leader>et', explain_selection_with_cli, {
-        desc = 'Explain selected code with CodeCompanion CLI',
+        desc = '[E]xplain selection in [t]erminal CLI',
     })
 
     -- Autocmds

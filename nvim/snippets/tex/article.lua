@@ -18,7 +18,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     s(
-        { trig = 'art', dscr = 'Article template' },
+        { trig = 'art', dscr = '[Art]icle template' },
         fmta(
             [[
 \documentclass[a4paper,twoside,10pt,leqno]{article}
@@ -444,7 +444,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'tp', dscr = 'Titlepage' },
+        { trig = 'tp', dscr = '[T]itle[p]age' },
         fmta(
             [[
 % Custom titlepage
@@ -490,7 +490,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'tha', wordTrig = false, dscr = 'Thanks' },
+        { trig = 'tha', wordTrig = false, dscr = '[Tha]nks' },
         fmta(
             [[
         \thanks{<><>}
@@ -502,7 +502,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         )
     ),
     s(
-        { trig = 'abs', dscr = 'Abstract' },
+        { trig = 'abs', dscr = '[Abs]tract' },
         fmta(
             [[
 \begin{abstract}
@@ -523,7 +523,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'aa', dscr = 'Article appendix' },
+        { trig = 'aa', dscr = '[A]rticle [a]ppendix' },
         fmta(
             [[
                 % Appendix
@@ -535,7 +535,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'pt', wordTrig = false, dscr = 'Points (for exercises)' },
+        { trig = 'pt', wordTrig = false, dscr = '[P]oin[t]s (for exercises)' },
         fmta(
             [[
         \points{<>}

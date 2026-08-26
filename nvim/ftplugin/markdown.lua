@@ -150,7 +150,7 @@ vim.keymap.set('n', '<Leader>vp', function()
         '--fork',
         vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$') .. '.pdf',
     })
-end, { buf = 0, desc = 'View PDF in Zathura' })
+end, { buf = 0, desc = '[V]iew PDF [p]review in Zathura' })
 
 ---- Lists
 vim.keymap.set(
@@ -164,7 +164,7 @@ vim.keymap.set(
     { 'n', 'v' },
     '<Leader>cl',
     toggle_checklist,
-    { buf = 0, desc = 'Toggle checklist state (checklist toggle)' }
+    { buf = 0, desc = '[C]heck[l]ist state: toggle' }
 )
 
 --- Sphinx (html)
@@ -174,15 +174,19 @@ vim.keymap.set(
     'n',
     '<Leader>da',
     clean_sphinx_build,
-    { buf = 0, desc = 'Delete Sphinx build auxiliary files' }
+    { buf = 0, desc = '[D]elete Sphinx [a]uxiliary files' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>vd',
     view_sphinx_docs,
-    { buf = 0, desc = 'View Sphinx HTML docs' }
+    { buf = 0, desc = '[V]iew Sphinx [d]ocs (HTML)' }
 )
 
 --- Misc
-vim.keymap.set('n', '<Leader>tc', 'gO', { buf = 0, remap = true, desc = 'Show TOC' })
+vim.keymap.set('n', '<Leader>tc', 'gO', {
+    buf = 0,
+    remap = true,
+    desc = '[T]able of [c]ontents: show',
+})

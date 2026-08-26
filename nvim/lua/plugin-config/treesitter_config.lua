@@ -119,7 +119,7 @@ vim.keymap.set('n', '<Leader>it', function()
         require('utils').quit_return,
         { desc = 'Quit InspectTree window' }
     )
-end, { desc = 'Open Tree-sitter InspectTree in vertical split' })
+end, { desc = '[I]nspect [t]ree: open Tree-sitter view' })
 
 -- Text Objects
 require('nvim-treesitter-textobjects').setup({
@@ -160,11 +160,11 @@ end, { desc = 'Select around local scope' })
 
 vim.keymap.set('n', '<Leader>if', function()
     ts_select.select_textobject('@function.inner')
-end, { desc = 'Select inside function (works in injections)' })
+end, { desc = '[I]nside [f]unction: select (works in injections)' })
 
 vim.keymap.set('n', '<Leader>af', function()
     ts_select.select_textobject('@function.outer')
-end, { desc = 'Select around function (works in injections)' })
+end, { desc = '[A]round [f]unction: select (works in injections)' })
 
 -- Move
 vim.keymap.set({ 'n', 'x', 'o' }, ']c', function()

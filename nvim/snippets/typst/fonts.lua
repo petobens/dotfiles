@@ -20,7 +20,7 @@ end
 return {
     -- Text inside math
     s(
-        { trig = 'tx', dscr = 'Text in math' },
+        { trig = 'tx', dscr = '[T]e[x]t in math' },
         fmta('upright("<><>")<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'text'),
@@ -28,7 +28,7 @@ return {
         })
     ),
     s(
-        { trig = 'btx', dscr = 'Unbreakable text in math' },
+        { trig = 'btx', dscr = '[B]oxed [t]e[x]t in math (unbreakable)' },
         fmta('#box[$upright("<><>")$]<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'text'),
@@ -37,10 +37,10 @@ return {
     ),
 
     -- Math alphabets
-    math_font('mcg', 'Calligraphic math', 'cal'),
-    math_font('mbb', 'Blackboard bold math', 'bb'),
-    math_font('mi', 'Italic math', 'italic'),
-    math_font('mr', 'Upright math', 'upright'),
-    math_font('mf', 'Fraktur math', 'frak'),
-    math_font('msc', 'Script math', 'scr'),
+    math_font('mcg', '[M]ath [c]alli[g]raphic', 'cal'),
+    math_font('mbb', '[M]ath [b]lackboard [b]old', 'bb'),
+    math_font('mi', '[M]ath [i]talic', 'italic'),
+    math_font('mr', '[M]ath [r]oman/upright', 'upright'),
+    math_font('mf', '[M]ath [f]raktur', 'frak'),
+    math_font('msc', '[M]ath [sc]ript', 'scr'),
 }, {}

@@ -156,7 +156,7 @@ vim.keymap.set(
     'n',
     '<Leader>fd',
     vim.diagnostic.open_float,
-    { desc = 'Show diagnostics in floating window (float diagnostics)' }
+    { desc = '[F]loating [d]iagnostics: show' }
 )
 
 vim.keymap.set('n', '<Leader>ld', function()
@@ -167,13 +167,13 @@ vim.keymap.set('n', '<Leader>ld', function()
         title = 'Diagnostics: ' .. (rel or bufname or '[No Name]'),
     })
     vim.api.nvim_set_current_win(win_id)
-end, { desc = 'Show diagnostics in location list (location diagnostics)' })
+end, { desc = '[L]ocation [d]iagnostics: show' })
 
 vim.keymap.set(
     'n',
     '<Leader>dt',
     toggle_buffer_diagnostics,
-    { desc = 'Toggle diagnostics for current buffer' }
+    { desc = '[D]iagnostics [t]oggle for current buffer' }
 )
 
 vim.keymap.set('n', '[d', function()

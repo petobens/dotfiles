@@ -20,4 +20,6 @@ require('img-clip').setup({
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>pi', vim.cmd.PasteImage, { desc = 'Paste clipboard image' })
+vim.keymap.set('n', '<Leader>pi', vim.cmd.PasteImage, {
+    desc = '[P]aste clipboard [i]mage',
+})

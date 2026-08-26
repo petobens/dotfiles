@@ -12,5 +12,5 @@ vim.keymap.set(
     'n',
     '<Leader>cz',
     vim.cmd.ColorizerToggle,
-    { desc = 'Toggle colorizer for current buffer' }
+    { desc = '[C]olori[z]er: toggle for current buffer' }
 )

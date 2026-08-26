@@ -920,24 +920,32 @@ vim.keymap.set({ 'n', 'i' }, '<F7>', function()
 end, { buf = 0, desc = 'Compile Typst document' })
 vim.keymap.set('n', '<Leader>cm', convert_pandoc, {
     buf = 0,
-    desc = 'Convert to Markdown (pandoc)',
+    desc = '[C]onvert to [m]arkdown (Pandoc)',
 })
-vim.keymap.set('n', '<Leader>vp', view_pdf, { buf = 0, desc = 'View PDF in Zathura' })
+vim.keymap.set('n', '<Leader>vp', view_pdf, {
+    buf = 0,
+    desc = '[V]iew PDF [p]review in Zathura',
+})
 vim.keymap.set('n', '<Leader>sl', forward_search, {
     buf = 0,
-    desc = 'Forward search (Zathura)',
+    desc = '[S]ource forward search to PDF [l]ocation (Zathura)',
 })
-vim.keymap.set('n', '<Leader>cw', count_words, { buf = 0, desc = 'Count words' })
+vim.keymap.set('n', '<Leader>cw', count_words, { buf = 0, desc = '[C]ount [w]ords' })
 
 ---- Editing
-vim.keymap.set('n', '<Leader>em', edit_main, { buf = 0, desc = 'Edit Typst main file' })
+vim.keymap.set(
+    'n',
+    '<Leader>em',
+    edit_main,
+    { buf = 0, desc = '[E]dit [m]ain Typst file' }
+)
 vim.keymap.set('n', '<Leader>eb', edit_bibliography, {
     buf = 0,
-    desc = 'Edit Typst bibliography',
+    desc = '[E]dit [b]ibliography (Typst)',
 })
 vim.keymap.set('n', '<Leader>ef', edit_figure, {
     buf = 0,
-    desc = 'Edit Typst figure source',
+    desc = '[E]dit [f]igure source (Typst)',
 })
 
 ---- Text objects
@@ -949,7 +957,10 @@ vim.keymap.set({ 'x', 'o' }, 'am', function()
 end, { buf = 0, desc = 'Select around math' })
 
 ---- Table of contents
-vim.keymap.set('n', '<Leader>tc', toc_toggle, { buf = 0, desc = 'Toggle Typst TOC' })
+vim.keymap.set('n', '<Leader>tc', toc_toggle, {
+    buf = 0,
+    desc = '[T]able of [c]ontents: toggle (Typst)',
+})
 
 ---- Lists
 vim.keymap.set(

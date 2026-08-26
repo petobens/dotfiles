@@ -100,12 +100,16 @@ Consult these before answering questions about Neovim APIs or plugin internals.
 - **Ex commands:** always use the function-style form,
   `vim.cmd.sleep('3m')`, never the string form, `vim.cmd('sleep 3m')`.
 - **Descriptions:** always provide a short, meaningful `desc` for
-  `vim.keymap.set` and `vim.api.nvim_create_autocmd`.
+  `vim.keymap.set` and `vim.api.nvim_create_autocmd`. For `<Leader>` mappings,
+  expose the mnemonic with bracketed key letters, preserving historical
+  Vim/plugin terminology when it explains the mapping. Apply the same bracketed
+  mnemonic convention to LuaSnip descriptions; symbol-only triggers are already
+  self-describing and do not need brackets.
 - **Single-command mappings:** pass the command function directly:
 
   ```lua
   vim.keymap.set('n', '<Leader>sp', vim.cmd.split, {
-      desc = 'Horizontal split',
+      desc = '[Sp]lit horizontally',
   })
   ```
 

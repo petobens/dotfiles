@@ -12,7 +12,12 @@ gitsigns.setup({
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>gg', gitsigns.toggle_signs, { desc = 'Toggle gitsigns' })
+vim.keymap.set(
+    'n',
+    '<Leader>gg',
+    gitsigns.toggle_signs,
+    { desc = '[G]it [g]utter: toggle signs (Gitsigns)' }
+)
 
 vim.keymap.set('n', ']h', function()
     if vim.wo.diff then
@@ -34,15 +39,15 @@ vim.keymap.set('n', '[h', function()
     return '<Ignore>'
 end, { expr = true, desc = 'Previous git hunk' })
 
-vim.keymap.set('n', '<Leader>hp', gitsigns.preview_hunk, { desc = 'Preview git hunk' })
+vim.keymap.set('n', '<Leader>hp', gitsigns.preview_hunk, { desc = '[H]unk [p]review' })
 
 vim.keymap.set('n', '<Leader>gm', function()
     gitsigns.blame_line({ full = true })
-end, { desc = 'Show git blame message for current line' })
+end, { desc = '[G]it blame [m]essage for current line' })
 
 vim.keymap.set(
     'n',
     '<Leader>ib',
     gitsigns.toggle_current_line_blame,
-    { desc = 'Toggle inline git blame' }
+    { desc = '[I]nline git [b]lame: toggle' }
 )

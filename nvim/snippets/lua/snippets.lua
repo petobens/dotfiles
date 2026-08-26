@@ -11,7 +11,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     s(
-        { trig = 'lst', dscr = 'Luasnip template' },
+        { trig = 'lst', dscr = '[L]ua[s]nip [t]emplate' },
         fmta(
             [[
 local extras = require('luasnip.extras')
@@ -46,7 +46,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         ),
         { condition = line_begin }
     ),
-    s({ trig = 'sni', dscr = 'Snippet snippet' }, {
+    s({ trig = 'sni', dscr = '[Sni]ppet snippet' }, {
         t({ 's(', "\t{ trig = '" }),
         i(1, 'trigger'),
         t("', "),
@@ -65,7 +65,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         t({ '', '),' }),
     }),
     s(
-        { trig = 'in', dscr = 'Insert node' },
+        { trig = 'in', dscr = '[In]sert node' },
         fmta(
             [[
                 i(<><>),
@@ -77,7 +77,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'tn', dscr = 'Text node' },
+        { trig = 'tn', dscr = '[T]ext [n]ode' },
         fmta(
             [[
                 t('<>'),
@@ -88,7 +88,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'sn', dscr = 'Snippet node' },
+        { trig = 'sn', dscr = '[Sn]ippet node' },
         fmta(
             [[
                 sn(nil, { <> }),
@@ -99,7 +99,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'cn', dscr = 'Choice node' },
+        { trig = 'cn', dscr = '[C]hoice [n]ode' },
         fmta(
             [[
                 c(<>, { <>, <> }),
@@ -115,7 +115,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'fn', dscr = 'Function node' },
+        { trig = 'fn', dscr = '[F]unction [n]ode' },
         fmta(
             [[
                 f(function(node_idx)
@@ -127,7 +127,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'dn', dscr = 'Dynamic node' },
+        { trig = 'dn', dscr = '[D]ynamic [n]ode' },
         fmta(
             [[
                 d(<>, function(args, snip)
@@ -140,7 +140,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'mn', dscr = 'Match node' },
+        { trig = 'mn', dscr = '[M]atch [n]ode' },
         fmta(
             [[
                 m(1, '^<>$', <>, <>),
@@ -153,7 +153,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'ln', dscr = 'Lambda node' },
+        { trig = 'ln', dscr = '[L]ambda [n]ode' },
         fmta(
             [[
                 l(l._1:<>, <>),
@@ -165,7 +165,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'pn', dscr = 'Partial node' },
+        { trig = 'pn', dscr = '[P]artial [n]ode' },
         fmta(
             [[
                 p(<><>),
@@ -177,7 +177,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'rn', dscr = 'Rep node' },
+        { trig = 'rn', dscr = '[R]ep [n]ode' },
         fmta(
             [[
                 rep(<>),
@@ -188,7 +188,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'wt', dscr = 'Word trigger' },
+        { trig = 'wt', dscr = '[W]ord [t]rigger' },
         fmta(
             [[
                 wordTrig = false,
@@ -197,7 +197,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'rt', dscr = 'Regex trigger' },
+        { trig = 'rt', dscr = '[R]egex [t]rigger' },
         fmta(
             [[
                 regTrig = true,
@@ -206,7 +206,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'lbc', dscr = 'Line begin condition' },
+        { trig = 'lbc', dscr = '[L]ine [b]egin [c]ondition' },
         fmta(
             [[
                { condition = line_begin }
@@ -216,7 +216,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         { condition = line_begin }
     ),
     s(
-        { trig = 'vs', dscr = 'Visual selection' },
+        { trig = 'vs', dscr = '[V]isual [s]election' },
         fmta(
             [[
                 f(_G.LuaSnipConfig.visual_selection),
@@ -225,7 +225,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin<>
         )
     ),
     s(
-        { trig = 'vi', dscr = 'Visual indent' },
+        { trig = 'vi', dscr = '[Vi]sual indent' },
         fmta(
             [[
                 isn(<>, { f(_G.LuaSnipConfig.visual_selection) }, '$PARENT_INDENT\t'),

@@ -14,7 +14,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Control flow
     s(
-        { trig = 'class', dscr = 'Class' },
+        { trig = 'class', dscr = '[Class]' },
         fmta(
             [[
             class <>():
@@ -28,7 +28,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'def', dscr = 'Function' },
+        { trig = 'def', dscr = '[Def]ine function' },
         fmta(
             [[
             def <>(<>):
@@ -40,7 +40,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'dec', dscr = 'Decorator' },
+        { trig = 'dec', dscr = '[Dec]orator' },
         fmta(
             [[
             def <>(<>):
@@ -62,7 +62,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'im', dscr = 'If main' },
+        { trig = 'im', dscr = '[I]f [m]ain' },
         fmta(
             [[
                if __name__ == '__main__':
@@ -75,7 +75,7 @@ return {
 
     -- Logging, debugging and docstrings
     s(
-        { trig = 'bl', dscr = 'Basic logger' },
+        { trig = 'bl', dscr = '[B]asic [l]ogger' },
         fmta(
             [[
             logging.basicConfig(
@@ -89,7 +89,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'li', dscr = 'Logger info' },
+        { trig = 'li', dscr = '[L]ogger [i]nfo' },
         fmta(
             [[
             logger.<>(<><>)
@@ -103,7 +103,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'bp', dscr = 'Breakpoint' },
+        { trig = 'bp', dscr = '[B]reak[p]oint' },
         fmta(
             [[
             breakpoint()
@@ -112,7 +112,7 @@ return {
         )
     ),
     s(
-        { trig = 'npd', dscr = 'Numpy docstring' },
+        { trig = 'npd', dscr = '[N]um[P]y [d]ocstring' },
         fmta(
             [[
             """<>
@@ -142,7 +142,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'npp', dscr = 'Numpy parameters' },
+        { trig = 'npp', dscr = '[N]um[P]y [p]arameters' },
         fmta(
             [[
             Parameters
@@ -159,7 +159,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'npr', dscr = 'Numpy returns' },
+        { trig = 'npr', dscr = '[N]um[P]y [r]eturns' },
         fmta(
             [[
             Returns
@@ -178,7 +178,7 @@ return {
 
     -- Linting
     s(
-        { trig = 'nl', dscr = 'No lint' },
+        { trig = 'nl', dscr = '[N]o [l]int' },
         fmta(
             [[
             # type: ignore # noqa
@@ -187,7 +187,7 @@ return {
         )
     ),
     s(
-        { trig = 'mpi', dscr = 'Mypy ignore' },
+        { trig = 'mpi', dscr = '[M]y[p]y [i]gnore' },
         fmta(
             [[
             # type: ignore
@@ -196,7 +196,7 @@ return {
         )
     ),
     s(
-        { trig = 'nq', dscr = 'Ruff noqa' },
+        { trig = 'nq', dscr = 'Ruff [n]o[q]a' },
         fmta(
             [[
             # noqa
@@ -205,7 +205,7 @@ return {
         )
     ),
     s(
-        { trig = 'prd', dscr = 'Pyright disable' },
+        { trig = 'prd', dscr = '[P]y[r]ight [d]isable' },
         fmta(
             [[
             # pyright: ignore
@@ -217,7 +217,7 @@ return {
     -- Libraries
     ---- Pandas
     s(
-        { trig = 'ipd', dscr = 'Import pandas' },
+        { trig = 'ipd', dscr = '[I]mport [p]an[d]as' },
         fmta(
             [[
             import pandas as pd
@@ -227,7 +227,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pmr', dscr = 'Pandas max rows' },
+        { trig = 'pmr', dscr = '[P]andas [m]ax [r]ows' },
         fmta(
             [[
             pd.set_option('display.max_rows', <>)
@@ -237,7 +237,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pmc', dscr = 'Pandas max columns' },
+        { trig = 'pmc', dscr = '[P]andas [m]ax [c]olumns' },
         fmta(
             [[
             pd.set_option('display.width', <>)
@@ -247,7 +247,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pdf', dscr = 'Pandas dataframe' },
+        { trig = 'pdf', dscr = '[P]andas [D]ata[F]rame' },
         fmta(
             [[
             pd.DataFrame(<>, columns=[<>])
@@ -256,7 +256,7 @@ return {
         )
     ),
     s(
-        { trig = 'sdf', dscr = 'Scratch dataframe' },
+        { trig = 'sdf', dscr = '[S]cratch [D]ata[F]rame' },
         fmta(
             [=[
             pd.DataFrame(
@@ -267,7 +267,7 @@ return {
         )
     ),
     s(
-        { trig = 'rdf', dscr = 'Random dataframe' },
+        { trig = 'rdf', dscr = '[R]andom [D]ata[F]rame' },
         fmta(
             [[
             pd.DataFrame(
@@ -289,9 +289,9 @@ return {
             }
         )
     ),
-    ----- Numpy
+    ----- NumPy
     s(
-        { trig = 'inp', dscr = 'Import numpy' },
+        { trig = 'inp', dscr = '[I]mport [N]um[P]y' },
         fmta(
             [[
             import numpy as np
@@ -302,7 +302,7 @@ return {
     ),
     ----- Matplotlib
     s(
-        { trig = 'ipp', dscr = 'Import pyplot as plt' },
+        { trig = 'ipp', dscr = '[I]mport [p]yplot as [p]lt' },
         fmta(
             [[
             import matplotlib.pyplot as plt
@@ -312,7 +312,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'imk', dscr = 'Use terminal plot backend' },
+        { trig = 'imk', dscr = '[I]mport [m]atplotlib [k]itcat backend' },
         fmta(
             [[
             import matplotlib
@@ -325,7 +325,7 @@ return {
     ),
     ---- Datetime
     s(
-        { trig = 'fdt', dscr = 'From datetime' },
+        { trig = 'fdt', dscr = '[F]rom [d]a[t]etime' },
         fmta(
             [[
             from datetime import datetime
@@ -336,7 +336,7 @@ return {
     ),
     ---- (Py)Tests
     s(
-        { trig = 'ptf', dscr = 'Pytest fixture' },
+        { trig = 'ptf', dscr = '[P]y[t]est [f]ixture' },
         fmta(
             [[
             @pytest.fixture
@@ -350,7 +350,7 @@ return {
 
     -- Miscellaneous
     s(
-        { trig = 'pri', dscr = 'print' },
+        { trig = 'pri', dscr = '[pri]nt' },
         fmta(
             [[
             print(<><>)
@@ -359,7 +359,7 @@ return {
         )
     ),
     s(
-        { trig = 'fs', dscr = 'f-string' },
+        { trig = 'fs', dscr = '[f]-[s]tring' },
         fmta(
             [[
             f'<><>'
@@ -368,7 +368,7 @@ return {
         )
     ),
     s(
-        { trig = 'wo', dscr = 'With open' },
+        { trig = 'wo', dscr = '[W]ith [o]pen' },
         fmta(
             [[
             with open(<>, '<>') as <>:
@@ -379,7 +379,7 @@ return {
         { condition = line_begin }
     ),
 }, {
-    s({ trig = 'tq', dscr = 'Triple quotes' }, {
+    s({ trig = 'tq', dscr = '[T]riple [q]uotes' }, {
         t('"""'),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
@@ -387,7 +387,7 @@ return {
         i(0),
     }),
     s(
-        { trig = 'fq', dscr = 'f-string quote' },
+        { trig = 'fq', dscr = '[f]-string [q]uote' },
         fmta(
             [[
                 f<><><><>

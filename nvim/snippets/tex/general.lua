@@ -17,7 +17,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     s(
-        { trig = 'mwe', dscr = 'MWE template' },
+        { trig = 'mwe', dscr = '[MWE] template' },
         fmta(
             [[
 \documentclass{<>}
@@ -35,7 +35,7 @@ return {
     ),
     -- Preamble
     s(
-        { trig = 'ip', dscr = 'Input' },
+        { trig = 'ip', dscr = '[I]n[p]ut' },
         fmta(
             [[
         \input{<>}
@@ -47,7 +47,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ic', dscr = 'Include' },
+        { trig = 'ic', dscr = '[I]n[c]lude' },
         fmta(
             [[
         \include{<>}
@@ -59,7 +59,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'io', dscr = 'Includeonly' },
+        { trig = 'io', dscr = '[I]nclude[o]nly' },
         fmta(
             [[
         \includeonly{<>}
@@ -71,7 +71,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'up', dscr = 'Use package' },
+        { trig = 'up', dscr = '[U]se [p]ackage' },
         fmta(
             [[
         \usepackage<>{<name>}
@@ -84,7 +84,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'nc', dscr = 'New command' },
+        { trig = 'nc', dscr = '[N]ew [c]ommand' },
         fmta(
             [[
                 \<>newcommand*{\<>}<>{\<>}
@@ -99,7 +99,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ne', dscr = 'New environment' },
+        { trig = 'ne', dscr = '[Ne]w environment' },
         fmta(
             [[
                 \newenvironment*{<>}<>
@@ -115,7 +115,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'dmo', dscr = 'Declare math operator' },
+        { trig = 'dmo', dscr = '[D]eclare [m]ath [o]perator' },
         fmta(
             [[
                 \DeclareMathOperator*{\<>}{<>}
@@ -130,7 +130,7 @@ return {
 
     -- Environments & Commands
     s(
-        { trig = 'env', dscr = 'Generic environment' },
+        { trig = 'env', dscr = 'Generic [env]ironment' },
         fmta(
             [[
       \begin{<>}
@@ -147,7 +147,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'end', dscr = 'End environment' },
+        { trig = 'end', dscr = '[End] environment' },
         fmta(
             [[
             \end{<>}
@@ -158,7 +158,7 @@ return {
         )
     ),
     s(
-        { trig = 'cmd', dscr = 'Generic cmd' },
+        { trig = 'cmd', dscr = 'Generic [cmd]' },
         fmta(
             [[
         \<><>
@@ -175,7 +175,11 @@ return {
             }
         )
     ),
-    postfix({ trig = 'kk', snippetType = 'autosnippet', dscr = 'Postfix cmd' }, {
+    postfix({
+        trig = 'kk',
+        snippetType = 'autosnippet',
+        dscr = '[kk] Postfix command',
+    }, {
         d(1, function(_, parent)
             return sn(nil, {
                 t('\\' .. parent.env.POSTFIX_MATCH),
@@ -192,7 +196,7 @@ return {
 
     -- Section environments
     s(
-        { trig = 'part', dscr = 'Part' },
+        { trig = 'part', dscr = '[Part]' },
         fmta(
             [[
                 \part{<>}
@@ -209,7 +213,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'cha', dscr = 'Chapter' },
+        { trig = 'cha', dscr = '[Cha]pter' },
         fmta(
             [[
                 \chapter{<>}
@@ -226,7 +230,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'sec', dscr = 'Section' },
+        { trig = 'sec', dscr = '[Sec]tion' },
         fmta(
             [[
                 \section{<>}
@@ -243,7 +247,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ss', dscr = 'Subsection' },
+        { trig = 'ss', dscr = '[S]ub[s]ection' },
         fmta(
             [[
                 \subsection{<>}
@@ -260,7 +264,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'sss', dscr = 'Subsection' },
+        { trig = 'sss', dscr = '[S]ub[s]ub[s]ection' },
         fmta(
             [[
                 \subsubsection{<>}
@@ -279,7 +283,7 @@ return {
 
     -- Lists
     s(
-        { trig = 'enu', dscr = 'Enumerate' },
+        { trig = 'enu', dscr = '[Enu]merate' },
         fmta(
             [[
       \begin{enumerate}<>
@@ -295,7 +299,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ite', dscr = 'Itemize' },
+        { trig = 'ite', dscr = '[Ite]mize' },
         fmta(
             [[
       \begin{itemize}
@@ -310,7 +314,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ste', dscr = 'Steps' },
+        { trig = 'ste', dscr = '[Ste]ps' },
         fmta(
             [[
       \begin{steps}
@@ -326,7 +330,7 @@ return {
     ),
     -- Linting
     s(
-        { trig = 'ctd', dscr = 'Chktex disable' },
+        { trig = 'ctd', dscr = '[C]hk[t]ex [d]isable' },
         fmta(
             [[
             % chktex <>
@@ -335,7 +339,7 @@ return {
         )
     ),
 }, {
-    s({ trig = 'itm', wordTrig = false, dscr = '\\item' }, {
+    s({ trig = 'itm', wordTrig = false, dscr = '[It]e[m]' }, {
         t('\\item '),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),

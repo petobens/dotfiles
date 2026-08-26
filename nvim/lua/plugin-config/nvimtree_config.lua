@@ -397,10 +397,10 @@ vim.api.nvim_create_autocmd('BufEnter', {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>ff', cd_find_file, { desc = 'Find file in NvimTree' })
+vim.keymap.set('n', '<Leader>ff', cd_find_file, { desc = '[F]ind [f]ile in NvimTree' })
 vim.keymap.set(
     'n',
     '<Leader>fq',
     vim.cmd.NvimTreeClose,
-    { desc = 'Close/quit NvimTree finder' }
+    { desc = '[F]inder [q]uit: close NvimTree' }
 )

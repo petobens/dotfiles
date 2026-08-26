@@ -51,7 +51,7 @@ local function open_status_file_diff()
         vim.keymap.del('n', '<Leader>de', { buf = 0 })
         vim.fn['fugitive#DiffClose']()
         open_git_status()
-    end, { buf = 0, desc = 'Close diff and return to Fugitive status' })
+    end, { buf = 0, desc = '[D]iff [e]nd: return to Fugitive status' })
 
     vim.cmd.normal({ args = { 'gg' }, bang = true })
     pcall(vim.cmd.normal, { args = { ']c' }, bang = true })
@@ -84,20 +84,20 @@ vim.api.nvim_create_autocmd('FileType', {
         )
         vim.keymap.set('n', '<Leader>ds', open_status_file_diff, {
             buf = e.buf,
-            desc = 'Open file diff and close Fugitive status',
+            desc = '[D]iff [s]tart: open file and close Fugitive status',
         })
 
         vim.keymap.set('n', '<Leader>gp', function()
             vim.cmd.Git('push')
-        end, { buf = e.buf, desc = 'Push' })
+        end, { buf = e.buf, desc = '[G]it [p]ush' })
 
         vim.keymap.set('n', '<Leader>gF', function()
             vim.cmd.Git('push --force-with-lease')
-        end, { buf = e.buf, desc = 'Force push with lease' })
+        end, { buf = e.buf, desc = '[G]it [F]orce push with lease' })
 
         vim.keymap.set('n', '<Leader>gP', function()
             vim.cmd.Git('pull')
-        end, { buf = e.buf, desc = 'Pull' })
+        end, { buf = e.buf, desc = '[G]it [P]ull' })
 
         vim.keymap.set('n', 'ci', function()
             vim.cmd.Git('commit -n')
@@ -117,7 +117,7 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.log.levels.INFO
             )
             vim.system({ 'nbdiff-web', 'HEAD', file }, { detach = true })
-        end, { buf = e.buf, desc = 'Open nbdiff-web for file under cursor' })
+        end, { buf = e.buf, desc = '[N]otebook [d]iff for file under cursor' })
 
         vim.keymap.set('n', '<Leader>dm', function()
             local height = vim.w.fugitive_restore_height
@@ -128,7 +128,7 @@ vim.api.nvim_create_autocmd('FileType', {
                 vim.w.fugitive_restore_height = vim.api.nvim_win_get_height(0)
                 vim.cmd.wincmd('_')
             end
-        end, { buf = e.buf, desc = 'Toggle maximize Fugitive height' })
+        end, { buf = e.buf, desc = '[D]iff [m]aximize Fugitive height: toggle' })
     end,
 })
 
@@ -151,7 +151,7 @@ vim.api.nvim_create_autocmd('FileType', {
             'n',
             '<Leader>gh',
             open_file_at_commit_split,
-            { buf = e.buf, desc = 'Open file at commit in split (diff --git line)' }
+            { buf = e.buf, desc = '[G]it [h]istory: open file at commit in split' }
         )
     end,
 })
@@ -170,7 +170,7 @@ vim.api.nvim_create_autocmd('FileType', {
             vim.cmd.normal({ args = { 'dd' }, bang = true })
             vim.cmd.update({ mods = { silent = true, noautocmd = true } })
             vim.cmd.bd()
-        end, { buf = e.buf, desc = 'Abort commit' })
+        end, { buf = e.buf, desc = '[A]bort [c]ommit' })
     end,
 })
 
@@ -201,51 +201,48 @@ vim.api.nvim_create_autocmd({ 'BufLeave' }, {
 })
 
 -- Mappings
-vim.keymap.set(
-    'n',
-    '<Leader>gs',
-    open_git_status,
-    { desc = 'Open Fugitive status window' }
-)
+vim.keymap.set('n', '<Leader>gs', open_git_status, { desc = '[G]it [s]tatus (Fugitive)' })
 
 vim.keymap.set('n', '<Leader>gd', function()
     vim.cmd.Gdiffsplit({ bang = true })
-end, { desc = 'Run Gdiffsplit' })
+end, { desc = '[G]it [d]iff split (Gdiffsplit)' })
 
 vim.keymap.set('n', '<Leader>gD', function()
     vim.cmd.Git('diff')
-end, { desc = 'Git diff prompt' })
+end, { desc = '[G]it [D]iff prompt' })
 
 vim.keymap.set('n', '<Leader>gM', function()
     vim.cmd.Git('mergetool')
-end, { desc = 'Git mergetool' })
+end, { desc = '[G]it [M]ergetool' })
 
 vim.keymap.set('n', '<Leader>gr', function()
     vim.cmd.Git('rebase -i')
-end, { desc = 'Git interactive rebase' })
+end, { desc = '[G]it interactive [r]ebase' })
 
 vim.keymap.set('n', '<Leader>gp', function()
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     vim.cmd.Git('push')
-end, { desc = 'Push' })
+end, { desc = '[G]it [p]ush' })
 
 vim.keymap.set('n', '<Leader>gF', function()
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     vim.cmd.Git('push --force-with-lease')
-end, { desc = 'Force push with lease' })
+end, { desc = '[G]it [F]orce push with lease' })
 
 vim.keymap.set('n', '<Leader>gP', function()
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     vim.cmd.Git('pull')
-end, { desc = 'Pull' })
+end, { desc = '[G]it [P]ull' })
 
-vim.keymap.set({ 'n', 'v' }, '<Leader>gb', ':GBrowse<CR>', { desc = 'Browse git object' })
+vim.keymap.set({ 'n', 'v' }, '<Leader>gb', ':GBrowse<CR>', {
+    desc = '[G]it [b]rowse object',
+})
 
 vim.keymap.set(
     { 'n', 'v' },
     '<Leader>gB',
     ':GBrowse!<CR>',
-    { desc = 'Copy browser git permalink' }
+    { desc = '[G]it [B]rowse permalink: copy' }
 )
 
 vim.keymap.set('n', '<Leader>bl', function()
@@ -253,4 +250,4 @@ vim.keymap.set('n', '<Leader>bl', function()
     vim.cmd.wincmd('j')
     vim.cmd.normal({ args = { '5j' }, bang = true })
     vim.cmd.wincmd('25_')
-end, { desc = 'Open git blame' })
+end, { desc = '[B]lame [l]ines: open Git blame' })

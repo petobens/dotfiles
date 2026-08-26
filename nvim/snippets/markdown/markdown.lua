@@ -17,7 +17,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Editing
     s(
-        { trig = 'ti', dscr = 'Italics' },
+        { trig = 'ti', dscr = '[T]ext [i]talics' },
         fmta(
             [[
         _<><>_
@@ -29,7 +29,7 @@ return {
         )
     ),
     s(
-        { trig = 'tb', dscr = 'Bold' },
+        { trig = 'tb', dscr = '[T]ext [b]old' },
         fmta(
             [[
         **<><>**
@@ -41,7 +41,7 @@ return {
         )
     ),
     s(
-        { trig = 'st', dscr = 'Strikethrough' },
+        { trig = 'st', dscr = '[St]rikethrough' },
         fmta(
             [[
         ~~<><>~~
@@ -53,7 +53,7 @@ return {
         )
     ),
     s(
-        { trig = 'ic', dscr = 'Inline code' },
+        { trig = 'ic', dscr = '[I]nline [c]ode' },
         fmta(
             [[
         `<><>`
@@ -65,7 +65,7 @@ return {
         )
     ),
     s(
-        { trig = 'cb', dscr = 'Code block' },
+        { trig = 'cb', dscr = '[C]ode [b]lock' },
         fmta(
             [[
         ```<>
@@ -82,7 +82,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ite', dscr = 'Itemize' },
+        { trig = 'ite', dscr = '[Ite]mize' },
         fmta(
             [[
         <item_marker> <>
@@ -98,7 +98,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'enu', dscr = 'Enumerate' },
+        { trig = 'enu', dscr = '[Enu]merate' },
         fmta(
             [[
         1. <>
@@ -112,7 +112,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'tl', dscr = 'Todo List' },
+        { trig = 'tl', dscr = '[T]odo [L]ist' },
         fmta(
             [[
         - [ ] To-Do <>
@@ -126,7 +126,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'il', dscr = 'Inline link' },
+        { trig = 'il', dscr = '[I]nline [l]ink' },
         fmta(
             [[
                 [<>](#<><>)
@@ -139,7 +139,7 @@ return {
         )
     ),
     s(
-        { trig = 'url', dscr = 'Url' },
+        { trig = 'url', dscr = '[URL]' },
         fmta(
             [[
                 [<>](<><>)
@@ -151,7 +151,7 @@ return {
             }
         )
     ),
-    s({ trig = 'wl', dscr = 'Wiki Link' }, {
+    s({ trig = 'wl', dscr = '[W]iki [L]ink' }, {
         t('[['),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
@@ -159,7 +159,7 @@ return {
         i(0),
     }),
     s(
-        { trig = 'fig', dscr = 'Figure' },
+        { trig = 'fig', dscr = '[Fig]ure' },
         fmta(
             [[
                 ![<>](<><>)<>
@@ -173,7 +173,7 @@ return {
         )
     ),
     s(
-        { trig = 'mld', dscr = 'Rumdl disable' },
+        { trig = 'mld', dscr = '[M]arkdown [l]inter [d]isable (Rumdl)' },
         fmta(
             [[
                 <<!-- rumdl-disable MD0<> -->>
@@ -187,7 +187,7 @@ return {
 
     -- Pandoc
     s(
-        { trig = 'fm', dscr = 'Front matter' },
+        { trig = 'fm', dscr = '[F]ront [m]atter' },
         fmta(
             [[
                 ---
@@ -208,7 +208,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'eq', dscr = 'Equation' },
+        { trig = 'eq', dscr = '[Eq]uation' },
         fmta(
             [[
         $$
@@ -225,7 +225,7 @@ return {
 
     -- Tables
     s(
-        { trig = '(%d)c', regTrig = true, dscr = 'Columns', docTrig = '3c' },
+        { trig = '(%d)c', regTrig = true, dscr = '[3c] Columns', docTrig = '3c' },
         fmta(
             [[
                <>
@@ -250,7 +250,12 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns', docTrig = '2x3' },
+        {
+            trig = '(%d)x(%d)',
+            regTrig = true,
+            dscr = '[2x3] Rows x columns',
+            docTrig = '2x3',
+        },
         fmta(
             [[
                <>
@@ -295,7 +300,7 @@ return {
 
     -- Note-taking
     s(
-        { trig = 'cd', dscr = 'Current Date' },
+        { trig = 'cd', dscr = '[C]urrent [D]ate' },
         fmta(
             [[
                 <>
@@ -306,7 +311,7 @@ return {
         )
     ),
     s(
-        { trig = 'cD', dscr = 'Current Date - Format' },
+        { trig = 'cD', dscr = '[C]urrent [D]ate - Format' },
         fmta(
             [[
                 <>
@@ -317,7 +322,7 @@ return {
         )
     ),
     s(
-        { trig = 'co', dscr = 'Callout' },
+        { trig = 'co', dscr = '[C]all[o]ut' },
         fmta(
             [[
         >> [!<>]
@@ -334,7 +339,7 @@ return {
     ),
 }, {
     s(
-        { trig = '(%d)h', regTrig = true, dscr = 'Header', docTrig = '2h' },
+        { trig = '(%d)h', regTrig = true, dscr = '[2h] Header', docTrig = '2h' },
         fmta(
             [[
                <> <>
@@ -372,7 +377,7 @@ return {
         i(0),
     }),
     s(
-        { trig = 'bq', dscr = 'Block quotes' },
+        { trig = 'bq', dscr = '[B]lock [q]uotes' },
         fmta(
             [[
         >> <><>

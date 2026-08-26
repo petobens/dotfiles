@@ -29,7 +29,7 @@ local function setup_qf_filetype_mappings(args)
         chat_helpers.run_slash_command('qfix')
     end, {
         buf = args.buf,
-        desc = 'Fix quickfix diagnostics',
+        desc = '[Q]uick[f]ix diagnostics with CodeCompanion',
     })
 end
 
@@ -50,14 +50,14 @@ local function setup_fugitive_filetype_mappings(args)
         window_helpers.focus_or_toggle_chat({ startinsert = false })
     end, {
         buf = args.buf,
-        desc = 'Send CodeCompanion review comments',
+        desc = '[R]eview comments: [s]end to CodeCompanion',
     })
 
     vim.keymap.set('n', '<Leader>cc', function()
         chat_helpers.run_slash_command('conventional_commit')
     end, {
         buf = args.buf,
-        desc = 'Generate conventional commit message',
+        desc = '[C]onventional [c]ommit message: generate',
     })
 
     vim.keymap.set('n', '<Leader>bc', function()
@@ -73,14 +73,14 @@ local function setup_fugitive_filetype_mappings(args)
         )
     end, {
         buf = args.buf,
-        desc = 'Conventional commit with base branch',
+        desc = '[B]ase-branch [c]onventional commit message',
     })
 
     vim.keymap.set('n', '<Leader>cr', function()
         chat_helpers.run_slash_command('code_review')
     end, {
         buf = args.buf,
-        desc = 'Perform code review',
+        desc = '[C]ode [r]eview: perform',
     })
 
     vim.keymap.set('n', '<Leader>br', function()
@@ -96,14 +96,14 @@ local function setup_fugitive_filetype_mappings(args)
         )
     end, {
         buf = args.buf,
-        desc = 'Code review with base branch',
+        desc = '[B]ase-branch code [r]eview',
     })
 
     vim.keymap.set('n', '<Leader>cl', function()
         chat_helpers.run_slash_command('changelog')
     end, {
         buf = args.buf,
-        desc = 'Generate changelog since last release',
+        desc = '[C]hange[l]og since last release: generate',
     })
 end
 
@@ -255,7 +255,7 @@ end
 function M.setup_mappings(group)
     -- Global
     vim.keymap.set('v', '<Leader>ec', explain_selection, {
-        desc = 'Explain selected code with CodeCompanion',
+        desc = '[E]xplain [c]ode selection with CodeCompanion',
     })
 
     -- Autocmds
