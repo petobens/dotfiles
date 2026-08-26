@@ -96,6 +96,44 @@ return {
         { condition = line_begin }
     ),
     s(
+        {
+            trig = 'fflo',
+            dscr = '[F]igure [flo]ats: independently numbered side-by-side figures',
+        },
+        fmta(
+            [[
+#place(top, float: true)[
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    [#figure(
+      image("<>", width: 100%),
+      placement: auto,
+      caption: [<>],
+    ) <<fig:<>>>],
+    [#figure(
+      image("<>", width: 100%),
+      placement: auto,
+      caption: [<>],
+    ) <<fig:<>>>],
+  )
+]
+
+<>
+            ]],
+            {
+                i(1),
+                i(2, 'First caption'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
+                i(3),
+                i(4, 'Second caption'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 4 }),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
         { trig = 'cg', dscr = '[C]entered [g]raphics: image' },
         fmta('#align(center)[#image("<>", width: <>%)]<>', {
             i(1),
