@@ -74,12 +74,12 @@ vim.keymap.set(
     'n',
     '<Leader>rf',
     run_toggleterm,
-    { buf = 0, desc = 'Run shell script in ToggleTerm' }
+    { buf = 0, desc = '[R]un shell [f]ile in ToggleTerm' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>ri',
     run_toggleterm,
-    { buf = 0, desc = 'Run shell script in ToggleTerm (run interpreter)' }
+    { buf = 0, desc = '[R]un shell script in [i]nterpreter (ToggleTerm)' }
 )

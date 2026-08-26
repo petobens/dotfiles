@@ -13,20 +13,20 @@ local function get_comment_string()
 end
 
 return {
-    s({ trig = 'TD', dscr = 'Todo' }, {
+    s({ trig = 'TD', dscr = '[T]o[D]o' }, {
         f(get_comment_string),
         t(' TODO: '),
         f(_G.LuaSnipConfig.visual_selection),
         i(0),
     }),
-    s({ trig = 'FM', dscr = 'Fixme' }, {
+    s({ trig = 'FM', dscr = '[F]ix[M]e' }, {
         f(get_comment_string),
         t(' FIXME: '),
         f(_G.LuaSnipConfig.visual_selection),
         i(0),
     }),
     s(
-        { trig = 'box', dscr = 'Comment box' },
+        { trig = 'box', dscr = 'Comment [box]' },
         fmta(
             [[
                 <box_line>
@@ -48,20 +48,20 @@ return {
 }, {
     -- Autosnippets
     ---- "Abolish" type spelling mistakes
-    s('anio', { t('año') }),
-    s('campaing', { t('campaign') }),
-    s('teh', { t('the') }),
-    s('widht', { t('width') }),
+    s({ trig = 'anio', dscr = 'Correct [anio] to año' }, { t('año') }),
+    s({ trig = 'campaing', dscr = 'Correct [campaing] to campaign' }, { t('campaign') }),
+    s({ trig = 'teh', dscr = 'Correct [teh] to the' }, { t('the') }),
+    s({ trig = 'widht', dscr = 'Correct [widht] to width' }, { t('width') }),
 
     ---- Autopairs
-    s({ trig = 'dq', dscr = 'Double quotes' }, {
+    s({ trig = 'dq', dscr = '[D]ouble [q]uotes' }, {
         t('"'),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t('"'),
         i(0),
     }),
-    s({ trig = 'sq', dscr = 'Single quotes' }, {
+    s({ trig = 'sq', dscr = '[S]ingle [q]uotes' }, {
         t("'"),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),

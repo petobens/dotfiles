@@ -182,11 +182,11 @@ pack.setup(packages)
 
 -- Mappings
 vim.keymap.set('n', '<Leader>lz', pack.open, {
-    desc = 'Open package manager',
+    desc = '[L]a[z]y package manager: open native dashboard',
 })
 vim.keymap.set('n', '<Leader>bu', pack.sync, {
-    desc = 'Sync packages',
+    desc = '[B]undles [u]pdate: sync packages',
 })
 vim.keymap.set('n', '<Leader>ul', pack.log, {
-    desc = 'Show package update log',
+    desc = '[U]pdate [l]og: show package changes',
 })

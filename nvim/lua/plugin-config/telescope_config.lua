@@ -1192,44 +1192,44 @@ end
 -- Mappings
 vim.keymap.set('n', '<Leader>dr', function()
     vim.cmd.Telescope('resume')
-end, { desc = 'Resume last Telescope picker' })
+end, { desc = '[D]enite [r]esume: last Telescope picker' })
 
 vim.keymap.set('n', '<Leader>tp', function()
     vim.cmd.Telescope('pickers')
-end, { desc = 'Telescope: Pickers' })
+end, { desc = '[T]elescope [p]ickers' })
 
 vim.keymap.set('n', '<Leader>tq', function()
     vim.cmd.Telescope('quickfix')
-end, { desc = 'Telescope: Quickfix' })
+end, { desc = '[T]elescope [q]uickfix' })
 
-vim.keymap.set('n', '<Leader>be', builtin.buffers, { desc = 'Telescope: Buffers' })
+vim.keymap.set('n', '<Leader>be', builtin.buffers, { desc = '[B]uffers: [e]xplore' })
 
 vim.keymap.set(
     'n',
     '<Leader>ls',
     _G.TelescopeConfig.find_files_cwd,
-    { desc = 'Telescope: Find files in buffer dir' }
+    { desc = '[L]ist files in [s]ame directory as buffer' }
 )
 
 vim.keymap.set('n', '<Leader>lS', function()
     _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
-end, { desc = 'Telescope: Find all files in buffer dir' })
+end, { desc = '[L]ist all files in [S]ame directory as buffer' })
 
 vim.keymap.set(
     'n',
     '<Leader>lu',
     find_files_upper_cwd,
-    { desc = 'Telescope: Find files in parent dir' }
+    { desc = '[L]ist files one level [u]p' }
 )
 
 vim.keymap.set('n', '<Leader>lU', function()
     find_files_upper_cwd({ no_ignore = true })
-end, { desc = 'Telescope: Find all files in parent dir' })
+end, { desc = '[L]ist all files one level [U]p' })
 
 vim.keymap.set('n', '<Leader>sd', function()
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
     vim.api.nvim_input(':Telescope find_files cwd=')
-end, { desc = 'Telescope: Find files in current file dir' })
+end, { desc = '[S]can [d]irectory for files' })
 
 vim.keymap.set(
     { 'n', 'i' },
@@ -1242,7 +1242,12 @@ vim.keymap.set('n', '<A-t>', function()
     _G.TelescopeConfig.find_files_cwd({ no_ignore = true })
 end, { desc = 'Telescope: Find all files in buffer dir' })
 
-vim.keymap.set('n', '<Leader>rd', frecent_files, { desc = 'Telescope: Frecent files' })
+vim.keymap.set(
+    'n',
+    '<Leader>rd',
+    frecent_files,
+    { desc = '[R]ecent [d]ocuments (frecent)' }
+)
 
 vim.keymap.set(
     'n',
@@ -1262,7 +1267,7 @@ vim.keymap.set(
     'n',
     '<Leader>bm',
     _G.TelescopeConfig.bookmark_dirs,
-    { desc = 'Telescope: Directory bookmarks' }
+    { desc = '[B]ook[m]arks: directories' }
 )
 
 vim.keymap.set(
@@ -1272,11 +1277,16 @@ vim.keymap.set(
     { desc = 'Telescope: Zoxide with tree preview' }
 )
 
-vim.keymap.set('n', '<Leader>ig', igrep, { desc = 'Telescope: Live grep in buffer dir' })
+vim.keymap.set(
+    'n',
+    '<Leader>ig',
+    igrep,
+    { desc = '[I]nteractive [g]rep in buffer directory' }
+)
 
 vim.keymap.set('n', '<Leader>iG', function()
     igrep(nil, nil, { '--no-ignore-vcs' })
-end, { desc = 'Telescope: Live grep (no VCS ignore)' })
+end, { desc = '[I]nteractive [G]rep (no VCS ignore)' })
 
 vim.keymap.set('n', '<A-g>', igrep, { desc = 'Telescope: Live grep in buffer dir' })
 
@@ -1287,32 +1297,37 @@ vim.keymap.set('n', '<Leader>ir', function()
         return
     end
     igrep(git_root)
-end, { desc = 'Telescope: Live grep in git root' })
+end, { desc = '[I]nteractive grep in git [r]oot' })
 
 vim.keymap.set('n', '<Leader>io', function()
     builtin.live_grep({ grep_open_files = true, results_title = 'Open Files' })
-end, { desc = 'Telescope: Live grep open files' })
+end, { desc = '[I]nteractive grep in [o]pen files' })
 
-vim.keymap.set('n', '<Leader>rg', rgrep, { desc = 'Telescope: Prompted live grep' })
+vim.keymap.set(
+    'n',
+    '<Leader>rg',
+    rgrep,
+    { desc = '[R]ecursive [g]rep: prompt for directory' }
+)
 
 vim.keymap.set('n', '<Leader>rG', function()
     rgrep({ '--no-ignore-vcs' })
-end, { desc = 'Telescope: Prompted live grep (no VCS ignore)' })
+end, { desc = '[R]ecursive [G]rep: prompt for directory (no VCS ignore)' })
 
 vim.keymap.set({ 'n', 'v' }, '<Leader>dg', function()
     igrep(nil, u.get_selection())
-end, { desc = 'Telescope: Grep selection in buffer dir' })
+end, { desc = '[D]enite [g]rep: selection in buffer directory' })
 
 vim.keymap.set(
     'n',
     '<Leader>dl',
     search_buffer,
-    { desc = 'Telescope: Fuzzy find in buffer' }
+    { desc = '[D]enite [l]ines: fuzzy find in buffer' }
 )
 
 vim.keymap.set({ 'n', 'v' }, '<Leader>dw', function()
     search_buffer(u.get_selection())
-end, { desc = 'Telescope: Fuzzy find selection in buffer' })
+end, { desc = '[D]enite [w]ord: fuzzy find selection in buffer' })
 
 vim.keymap.set('n', '<Leader>tl', function()
     local buf_name = vim.api.nvim_buf_get_name(0)
@@ -1322,7 +1337,7 @@ vim.keymap.set('n', '<Leader>tl', function()
         search = 'TODO:\\s|FIXME:\\s',
         search_dirs = { buf_name },
     })
-end, { desc = 'Telescope: TODO/FIXME in current file' })
+end, { desc = '[T]ODOs [l]ocal to current file' })
 
 vim.keymap.set('n', '<Leader>tL', function()
     local buffer_dir = utils.buffer_dir()
@@ -1332,35 +1347,30 @@ vim.keymap.set('n', '<Leader>tL', function()
         use_regex = true,
         search = 'TODO:\\s|FIXME:\\s',
     })
-end, { desc = 'Telescope: TODO/FIXME in buffer dir' })
+end, { desc = '[T]ODOs [L]ocal to buffer directory' })
 
-vim.keymap.set('n', '<Leader>gl', gitcommits, { desc = 'Telescope: Git log (repo)' })
+vim.keymap.set('n', '<Leader>gl', gitcommits, { desc = '[G]it [l]og (repository)' })
 
-vim.keymap.set(
-    'n',
-    '<Leader>gL',
-    gitcommits_buffer,
-    { desc = 'Telescope: Git log (buffer)' }
-)
+vim.keymap.set('n', '<Leader>gL', gitcommits_buffer, { desc = '[G]it [L]og (buffer)' })
 
 vim.keymap.set(
     'v',
     '<Leader>gl',
     builtin.git_bcommits_range,
-    { desc = 'Telescope: Git commits (range)' }
+    { desc = '[G]it [l]og commits (visual range)' }
 )
 
 vim.keymap.set('n', '<Leader>gc', function()
     builtin.git_branches({ prompt_title = 'Git Branches (<C-d>:delete)' })
-end, { desc = 'Telescope: Git branches' })
+end, { desc = '[G]it bran[c]hes' })
 
 vim.keymap.set('n', '<Leader>ch', function()
     builtin.command_history({ prompt_title = 'Command History (<Tab>:edit)' })
-end, { desc = 'Telescope: Command history' })
+end, { desc = '[C]ommand [h]istory' })
 
 vim.keymap.set('n', '<Leader>sh', function()
     builtin.search_history({ prompt_title = 'Search History (<Tab>:edit)' })
-end, { desc = 'Telescope: Search history' })
+end, { desc = '[S]earch [h]istory' })
 
 vim.keymap.set('n', '<Leader>yh', function()
     telescope.extensions.neoclip.default({
@@ -1368,30 +1378,30 @@ vim.keymap.set('n', '<Leader>yh', function()
             .. '<C-y>:yank,<CR>:paste)',
         preview_title = 'Yank History Preview',
     })
-end, { desc = 'Telescope: Yank history (neoclip)' })
+end, { desc = '[Y]ank [h]istory (Neoclip)' })
 
-vim.keymap.set('n', '<Leader>he', builtin.help_tags, { desc = 'Telescope: Help tags' })
+vim.keymap.set('n', '<Leader>he', builtin.help_tags, { desc = '[H]elp [e]ntries (tags)' })
 
 vim.keymap.set(
     'n',
     '<Leader>th',
     builtin.highlights,
-    { desc = 'Telescope: Highlight groups' }
+    { desc = '[T]elescope [h]ighlight groups' }
 )
 
-vim.keymap.set('n', '<Leader>tm', builtin.marks, { desc = 'Telescope: Marks' })
+vim.keymap.set('n', '<Leader>tm', builtin.marks, { desc = '[T]elescope [m]arks' })
 
-vim.keymap.set('n', '<Leader>me', builtin.keymaps, { desc = 'Telescope: All keymaps' })
+vim.keymap.set('n', '<Leader>me', builtin.keymaps, { desc = '[M]appings: [e]xplore all' })
 
 vim.keymap.set('n', '<Leader>mE', function()
     builtin.keymaps({ only_buf = true, prompt_title = 'Buffer-local keymaps' })
-end, { desc = 'Telescope: Buffer-local keymaps' })
+end, { desc = '[M]appings: [E]xplore buffer-local' })
 
 vim.keymap.set('n', '<Leader>sg', function()
     builtin.spell_suggest({
         fuzzy = false,
     })
-end, { desc = 'Telescope: Spelling suggestions' })
+end, { desc = '[S]pelling: [g]et suggestions' })
 
 vim.keymap.set('n', '<Leader>la', function()
     builtin.lsp_references({
@@ -1399,38 +1409,38 @@ vim.keymap.set('n', '<Leader>la', function()
         jump_type = 'split',
         fname_width = 50,
     })
-end, { desc = 'Telescope: LSP references/appearances' })
+end, { desc = '[L]SP [a]ppearances/references' })
 
 vim.keymap.set('n', '<Leader>te', function()
     builtin.lsp_document_symbols({
         results_title = vim.api.nvim_buf_get_name(0),
         preview_title = 'LSP Document Symbols Preview',
     })
-end, { desc = 'Telescope: LSP document symbols' })
+end, { desc = '[T]ag [e]ntries: LSP document symbols' })
 
 vim.keymap.set('n', '<Leader>we', function()
     builtin.lsp_workspace_symbols({
         preview_title = 'LSP Workspace Symbols Preview',
     })
-end, { desc = 'Telescope: LSP workspace symbols' })
+end, { desc = '[W]orkspace [e]ntries: LSP symbols' })
 
 vim.keymap.set('n', '<Leader>ta', function()
     require('telescope').extensions.aerial.aerial({
         prompt_title = 'Aerial Document Symbols',
     })
-end, { desc = 'Telescope: Aerial document symbols' })
+end, { desc = '[T]elescope [a]erial document symbols' })
 
 vim.keymap.set('n', '<Leader>gu', function()
     require('telescope').extensions.undo.undo({
         preview_title = 'Undo Diff',
     })
-end, { desc = 'Telescope: Undo tree' })
+end, { desc = '[G]undo [u]ndo tree (Telescope)' })
 
 vim.keymap.set(
     'n',
     '<Leader>tt',
     thesaurus_synonyms,
-    { desc = 'Telescope: Thesaurus synonyms' }
+    { desc = '[T]elescope [t]hesaurus synonyms' }
 )
 
 -- Extensions

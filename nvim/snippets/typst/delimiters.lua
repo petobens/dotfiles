@@ -19,11 +19,14 @@ end
 
 return {
     -- Fixed and scalable math delimiters
-    wrapped('bc', 'Braces', '{ ', ' }'),
-    wrapped('lr(', 'Scalable parentheses', 'lr((', '))'),
-    wrapped('lr[', 'Scalable brackets', 'lr([', '])'),
-    wrapped('lr{', 'Scalable braces', 'lr({ ', ' })'),
+    wrapped('bc', '[B]ra[c]es', '{ ', ' }'),
+    wrapped('lr(', '[L]eft/[r]ight scalable parentheses', 'lr((', '))'),
+    wrapped('lr[', '[L]eft/[r]ight scalable brackets', 'lr([', '])'),
+    wrapped('lr{', '[L]eft/[r]ight scalable braces', 'lr({ ', ' })'),
 
     -- Spacing
-    s({ trig = 'vs', dscr = 'Vertical space' }, fmta('#v(<>)<>', { i(1, '1em'), i(0) })),
+    s(
+        { trig = 'vs', dscr = '[V]ertical [s]pace' },
+        fmta('#v(<>)<>', { i(1, '1em'), i(0) })
+    ),
 }, {}

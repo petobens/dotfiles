@@ -11,5 +11,5 @@ vim.keymap.set(
     'n',
     '<Leader>tc',
     'gO',
-    { buf = 0, remap = true, desc = 'Go to help table of contents' }
+    { buf = 0, remap = true, desc = '[T]able of [c]ontents: show (help)' }
 )

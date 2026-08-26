@@ -18,7 +18,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     s(
-        { trig = 'bea', dscr = 'Beamer template' },
+        { trig = 'bea', dscr = '[Bea]mer template' },
         fmta(
             [[
 \PassOptionsToPackage{table,x11names}{xcolor}
@@ -480,7 +480,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'bf', dscr = 'Beamer frame' },
+        { trig = 'bf', dscr = '[B]eamer [f]rame' },
         fmta(
             [[
                 \begin{frame}[<>]
@@ -498,7 +498,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'ft', dscr = 'Frame title' },
+        { trig = 'ft', dscr = '[F]rame [t]itle' },
         fmta(
             [[
         \frametitle{<><>}
@@ -511,7 +511,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'fs', dscr = 'Frame subtitle' },
+        { trig = 'fs', dscr = '[F]rame [s]ubtitle' },
         fmta(
             [[
         \framesubtitle{<><>}
@@ -524,7 +524,7 @@ es-noshorthands,es-lcroman,es-tabla]]
         { condition = line_begin }
     ),
     s(
-        { trig = 'blo', dscr = 'Beamer block' },
+        { trig = 'blo', dscr = 'Beamer [blo]ck' },
         fmta(
             [[
                 \begin{block}{<>}

@@ -7,4 +7,4 @@ require('ibl').setup({
 })
 hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
 
-vim.keymap.set('n', '<Leader>I', vim.cmd.IBLToggle, { desc = 'Toggle indent lines' })
+vim.keymap.set('n', '<Leader>I', vim.cmd.IBLToggle, { desc = '[I]ndent lines: toggle' })

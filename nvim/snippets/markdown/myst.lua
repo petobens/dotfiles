@@ -14,7 +14,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Parser
     s(
-        { trig = 'mdt', dscr = 'MyST directive' },
+        { trig = 'mdt', dscr = '[M]yST [d]irec[t]ive' },
         fmta(
             [[
             :::{<>}
@@ -29,7 +29,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'mtc', dscr = 'MyST TOC' },
+        { trig = 'mtc', dscr = '[M]yST [T]O[C]' },
         fmta(
             [[
             :::{toctree}<><>
@@ -48,7 +48,7 @@ return {
 
     -- Text
     s(
-        { trig = 'mfn', wordTrig = false, dscr = 'Footnote' },
+        { trig = 'mfn', wordTrig = false, dscr = '[M]yST [f]oot[n]ote' },
         fmta(
             [[
         [^<>]
@@ -65,7 +65,7 @@ return {
 
     -- Math
     s(
-        { trig = 'mlb', dscr = 'Label' },
+        { trig = 'mlb', dscr = '[M]yST [l]a[b]el' },
         fmta(
             [[
             (<>)
@@ -76,7 +76,7 @@ return {
         )
     ),
     s(
-        { trig = 'mer', dscr = 'Equation ref' },
+        { trig = 'mer', dscr = '[M]yST [e]quation [r]eference' },
         fmta(
             [[
         {eq}`eq:<>`
@@ -89,7 +89,7 @@ return {
 
     -- Figures
     s(
-        { trig = 'mfig', dscr = 'MyST figure' },
+        { trig = 'mfig', dscr = '[M]yST [fig]ure' },
         fmta(
             [[
             :::{figure} <>

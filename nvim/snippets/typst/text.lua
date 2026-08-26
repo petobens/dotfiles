@@ -20,15 +20,15 @@ end
 
 return {
     -- Emphasis
-    wrapped('tb', 'Strong text', '*', '*'),
-    wrapped('ti', 'Italic text', '_', '_'),
-    wrapped('em', 'Emphasized text', '#emph[', ']'),
-    wrapped('tss', 'Sans-serif text', '#text(font: "DejaVu Sans")[', ']'),
-    wrapped('muc', 'Uppercase text', '#upper[', ']'),
-    wrapped('quo', 'Inline quotation', '#quote(block: false)[', ']'),
-    wrapped('ttt', 'Inline code', '`', '`'),
+    wrapped('tb', '[T]ext [b]old/strong', '*', '*'),
+    wrapped('ti', '[T]ext [i]talic', '_', '_'),
+    wrapped('em', '[Em]phasized text', '#emph[', ']'),
+    wrapped('tss', '[T]ext [s]ans-[s]erif', '#text(font: "DejaVu Sans")[', ']'),
+    wrapped('muc', '[M]ake [u]pper[c]ase text', '#upper[', ']'),
+    wrapped('quo', 'Inline [quo]tation', '#quote(block: false)[', ']'),
+    wrapped('ttt', '[T]ex[tt]t/typewriter: inline code', '`', '`'),
     s(
-        { trig = 'cb', dscr = 'Code block' },
+        { trig = 'cb', dscr = '[C]ode [b]lock' },
         fmta('```<>\n<><>\n```\n<>', {
             i(1, 'python'),
             f(_G.LuaSnipConfig.visual_selection),
@@ -40,7 +40,7 @@ return {
 
     -- Notes and links
     s(
-        { trig = 'fn', wordTrig = false, dscr = 'Footnote' },
+        { trig = 'fn', wordTrig = false, dscr = '[F]oot[n]ote' },
         fmta('#footnote[<><>]<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1),
@@ -48,7 +48,7 @@ return {
         })
     ),
     s(
-        { trig = 'url', dscr = 'Link' },
+        { trig = 'url', dscr = '[URL] link' },
         fmta('#link("<>")[<><>]<>', {
             i(1, 'https://example.com'),
             f(_G.LuaSnipConfig.visual_selection),
@@ -59,7 +59,7 @@ return {
 
     -- Formatter directives
     s(
-        { trig = 'tso', dscr = 'Preserve next node formatting' },
+        { trig = 'tso', dscr = '[T]yp[s]tyle [o]ff: preserve next node formatting' },
         fmta('// @typstyle off\n<><>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(0),
@@ -67,14 +67,14 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'rpi', dscr = 'Restore paragraph indent after block' },
+        { trig = 'rpi', dscr = '[R]estore [p]aragraph [i]ndent after block' },
         fmta('#restore-paragraph-indent\n<>', { i(0) }),
         { condition = line_begin }
     ),
 
     -- Placeholder text
     s(
-        { trig = 'lorem', wordTrig = false, dscr = 'Lorem ipsum text' },
+        { trig = 'lorem', wordTrig = false, dscr = '[Lorem] ipsum text' },
         fmta('#lorem(<>)<>', { i(1, '100'), i(0) }),
         { condition = line_begin }
     ),

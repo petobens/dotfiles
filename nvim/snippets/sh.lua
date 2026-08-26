@@ -11,7 +11,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Control flow
     s(
-        { trig = 'sb', dscr = 'Shebang (bash)' },
+        { trig = 'sb', dscr = '[S]hebang ([b]ash)' },
         fmta(
             [[
             #!/usr/bin/env bash
@@ -21,7 +21,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'fun', dscr = 'Function' },
+        { trig = 'fun', dscr = '[Fun]ction' },
         fmta(
             [[
                 <>() {
@@ -33,7 +33,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'if', dscr = 'Conditional' },
+        { trig = 'if', dscr = '[If] conditional' },
         fmta(
             [[
                 if <>; then
@@ -52,7 +52,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'for', dscr = 'For loop' },
+        { trig = 'for', dscr = '[For] loop' },
         fmta(
             [[
                 for <>; do
@@ -71,7 +71,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'case', dscr = 'Case' },
+        { trig = 'case', dscr = '[Case]' },
         fmta(
             [[
             case <> in
@@ -88,7 +88,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'da', dscr = 'Declare associative array' },
+        { trig = 'da', dscr = '[D]eclare [a]ssociative array' },
         fmta(
             [[
                 declare -A <>=(
@@ -100,7 +100,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'vb', wordTrig = false, dscr = 'Variable' },
+        { trig = 'vb', wordTrig = false, dscr = '[V]aria[b]le' },
         fmta(
             [[
                 "$<><>"
@@ -112,7 +112,7 @@ return {
         )
     ),
     s(
-        { trig = 'arr', wordTrig = false, dscr = 'Array' },
+        { trig = 'arr', wordTrig = false, dscr = '[Arr]ay' },
         fmta(
             [[
                 "${<>[<>]}"
@@ -125,7 +125,7 @@ return {
     ),
     -- Linting
     s(
-        { trig = 'sd', dscr = 'Shellcheck disable' },
+        { trig = 'sd', dscr = '[S]hellcheck [d]isable' },
         fmta(
             [[
             # shellcheck disable=SC

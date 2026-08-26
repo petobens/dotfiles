@@ -33,7 +33,7 @@ end
 
 return {
     s(
-        { trig = 'art', dscr = 'Article' },
+        { trig = 'art', dscr = '[Art]icle' },
         fmta(
             [[
             @Article{<><>,
@@ -61,7 +61,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'book', dscr = 'Book' },
+        { trig = 'book', dscr = '[Book]' },
         fmta(
             [[
             @Book{<><>,
@@ -89,7 +89,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'in', dscr = 'InBook|Proceedings|Collection' },
+        { trig = 'in', dscr = '[In]Book|Proceedings|Collection' },
         fmta(
             [[
             @In<>{<><>,
@@ -153,7 +153,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'tr', dscr = 'Technical Report' },
+        { trig = 'tr', dscr = '[T]echnical [R]eport' },
         fmta(
             [[
             @TechReport{<><>,
@@ -187,7 +187,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'phd', dscr = 'PhD Thesis' },
+        { trig = 'phd', dscr = '[PhD] Thesis' },
         fmta(
             [[
             @PhDThesis{<><>,

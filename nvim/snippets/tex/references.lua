@@ -12,7 +12,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- References and bookmarks
     s(
-        { trig = 'fn', wordTrig = false, dscr = 'Footnote' },
+        { trig = 'fn', wordTrig = false, dscr = '[F]oot[n]ote' },
         fmta(
             [[
         \footnote{<><>}
@@ -24,7 +24,7 @@ return {
         )
     ),
     s(
-        { trig = 'lab', wordTrig = false, dscr = 'Label' },
+        { trig = 'lab', wordTrig = false, dscr = '[Lab]el' },
         fmta(
             [[
         \label{<><>}
@@ -36,7 +36,7 @@ return {
         )
     ),
     s(
-        { trig = 'nn', wordTrig = false, dscr = 'No number' },
+        { trig = 'nn', wordTrig = false, dscr = '[N]o [n]umber' },
         fmta(
             [[
         \nonumber
@@ -45,7 +45,7 @@ return {
         )
     ),
     s(
-        { trig = 'url', dscr = 'URL' },
+        { trig = 'url', dscr = '[URL]' },
         fmta(
             [[
         \href{<>}{<><>}
@@ -58,7 +58,7 @@ return {
         )
     ),
     s(
-        { trig = 'bm', wordTrig = false, dscr = 'Bookmark' },
+        { trig = 'bm', wordTrig = false, dscr = '[B]ook[m]ark' },
         fmta(
             [[
         \pdfbookmark[<>]{<>}{<>}
@@ -71,7 +71,7 @@ return {
         )
     ),
     s(
-        { trig = 'crg', dscr = 'Cleveref general' },
+        { trig = 'crg', dscr = '[C]leve[r]ef [g]eneral' },
         fmta(
             [[
         \cref{<>}
@@ -82,7 +82,7 @@ return {
         )
     ),
     s(
-        { trig = 'crc', dscr = 'Cleveref chapter' },
+        { trig = 'crc', dscr = '[C]leve[r]ef [c]hapter' },
         fmta(
             [[
         \cref{cha:<>}
@@ -93,7 +93,7 @@ return {
         )
     ),
     s(
-        { trig = 'crs', dscr = 'Cleveref section' },
+        { trig = 'crs', dscr = '[C]leve[r]ef [s]ection' },
         fmta(
             [[
         \cref{sec:<>}
@@ -104,7 +104,7 @@ return {
         )
     ),
     s(
-        { trig = 'crf', dscr = 'Cleveref figure' },
+        { trig = 'crf', dscr = '[C]leve[r]ef [f]igure' },
         fmta(
             [[
         \cref{fig:<>}
@@ -115,7 +115,7 @@ return {
         )
     ),
     s(
-        { trig = 'crsf', dscr = 'Cleveref subfigure' },
+        { trig = 'crsf', dscr = '[C]leve[r]ef [s]ub[f]igure' },
         fmta(
             [[
         \cref{sfig:<>}
@@ -126,7 +126,7 @@ return {
         )
     ),
     s(
-        { trig = 'crt', dscr = 'Cleveref table' },
+        { trig = 'crt', dscr = '[C]leve[r]ef [t]able' },
         fmta(
             [[
         \cref{tab:<>}
@@ -137,7 +137,7 @@ return {
         )
     ),
     s(
-        { trig = 'cre', dscr = 'Cleveref equation' },
+        { trig = 'cre', dscr = '[C]leve[r]ef [e]quation' },
         fmta(
             [[
         \cref{eq:<>}
@@ -148,7 +148,7 @@ return {
         )
     ),
     s(
-        { trig = 'crm', dscr = 'Cleveref math' },
+        { trig = 'crm', dscr = '[C]leve[r]ef [m]ath' },
         fmta(
             [[
         \cref{<>:<>}
@@ -160,7 +160,7 @@ return {
         )
     ),
     s(
-        { trig = 'cri', dscr = 'Cleveref item' },
+        { trig = 'cri', dscr = '[C]leve[r]ef [i]tem' },
         fmta(
             [[
         \cref{item:<>}
@@ -171,7 +171,7 @@ return {
         )
     ),
     s(
-        { trig = 'crr', dscr = 'Cleveref range' },
+        { trig = 'crr', dscr = '[C]leve[r]ef [r]ange' },
         fmta(
             [[
         \crefrange{<>}{<>}
@@ -185,7 +185,7 @@ return {
 
     -- Citations
     s(
-        { trig = 'tc', dscr = 'Textcite' },
+        { trig = 'tc', dscr = '[T]ext[c]ite' },
         fmta(
             [[
         \textcite{<>}
@@ -196,7 +196,7 @@ return {
         )
     ),
     s(
-        { trig = 'fc', dscr = 'Fullcite' },
+        { trig = 'fc', dscr = '[F]ull[c]ite' },
         fmta(
             [[
         \fullcite{<>}
@@ -207,7 +207,7 @@ return {
         )
     ),
     s(
-        { trig = 'ffc', wordTrig = false, dscr = 'Foot fullcite' },
+        { trig = 'ffc', wordTrig = false, dscr = '[F]oot [f]ull[c]ite' },
         fmta(
             [[
         \footfullcite{<>}
@@ -218,7 +218,7 @@ return {
         )
     ),
     s(
-        { trig = 'noc', wordTrig = false, dscr = 'Nocite' },
+        { trig = 'noc', wordTrig = false, dscr = '[Noc]ite' },
         fmta(
             [[
         \nocite{<>}
@@ -229,7 +229,7 @@ return {
         )
     ),
     s(
-        { trig = 'pb', dscr = 'Print bibliography' },
+        { trig = 'pb', dscr = '[P]rint [b]ibliography' },
         fmta(
             [[
         \printbibliography[heading=<>]

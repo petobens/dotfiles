@@ -12,5 +12,5 @@ vim.keymap.set(
     'n',
     '<Leader>zw',
     vim.cmd.NeoZoomToggle,
-    { desc = 'Toggle NeoZoom (zoom window)' }
+    { desc = '[Z]oom [w]indow: toggle NeoZoom' }
 )

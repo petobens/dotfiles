@@ -19,7 +19,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Templates
     s(
-        { trig = 'sat', dscr = 'Standalone table' },
+        { trig = 'sat', dscr = '[S]t[a]ndalone [t]able' },
         fmta(
             [[
 %-----------------------+
@@ -87,7 +87,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'saf', dscr = 'Standalone figure' },
+        { trig = 'saf', dscr = '[S]t[a]ndalone [f]igure' },
         fmta(
             [[
 %-----------------------+
@@ -152,7 +152,7 @@ every pin edge/.style={<<-,>>=stealth'}
 
     -- Floats
     s(
-        { trig = 'flo', dscr = 'General float' },
+        { trig = 'flo', dscr = 'General [flo]at' },
         fmta(
             [[
                 \begin{<>}<><>
@@ -172,7 +172,7 @@ every pin edge/.style={<<-,>>=stealth'}
     ),
     -- Subfloats: flo (without \RawFloats) + sflo snippet sequence
     s(
-        { trig = 'sflo', dscr = 'Subfloat with caption' },
+        { trig = 'sflo', dscr = '[S]ub[flo]at with caption' },
         fmta(
             [[
                 \begin{sub<>}[t]{<>}
@@ -217,7 +217,7 @@ every pin edge/.style={<<-,>>=stealth'}
     ),
     s(
         -- Side-by-side floats: flo (with \RawFloats) + mp snippet sequence
-        { trig = 'mp', dscr = 'Minipage' },
+        { trig = 'mp', dscr = '[M]ini[p]age' },
         fmta(
             [[
                 \begin{minipage}[t]{<>}
@@ -260,7 +260,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'fig', dscr = 'Figure with caption' },
+        { trig = 'fig', dscr = '[Fig]ure with caption' },
         fmta(
             [[
                 \begin{figure}<>
@@ -280,7 +280,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'ig', dscr = 'Include graphics' },
+        { trig = 'ig', dscr = '[I]nclude [g]raphics' },
         fmta(
             [[
                 \includegraphics<>{<path>}
@@ -292,7 +292,7 @@ every pin edge/.style={<<-,>>=stealth'}
         )
     ),
     s(
-        { trig = 'cg', dscr = 'Centered graph' },
+        { trig = 'cg', dscr = '[C]entered [g]raph' },
         fmta(
             [[
                \begin{center}
@@ -307,7 +307,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'cap', dscr = 'Caption' },
+        { trig = 'cap', dscr = '[Cap]tion' },
         fmta(
             [[
                 \caption{<>}
@@ -324,7 +324,7 @@ every pin edge/.style={<<-,>>=stealth'}
 
     -- Tables
     s(
-        { trig = 'tab', dscr = 'Table with caption' },
+        { trig = 'tab', dscr = '[Tab]le with caption' },
         fmta(
             [[
                 \begin{table}<>
@@ -345,7 +345,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'rt', dscr = 'Regular tabular' },
+        { trig = 'rt', dscr = '[R]egular [t]abular' },
         fmta(
             [[
                 \begin{tabular}{<>}
@@ -378,7 +378,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = '(%d)c', regTrig = true, dscr = 'Columns', docTrig = '3c' },
+        { trig = '(%d)c', regTrig = true, dscr = '[3c] Columns', docTrig = '3c' },
         fmta(
             [[
                <><> <>
@@ -400,7 +400,12 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = '(%d)x(%d)', regTrig = true, dscr = 'Rows x columns', docTrig = '2x3' },
+        {
+            trig = '(%d)x(%d)',
+            regTrig = true,
+            dscr = '[2x3] Rows x columns',
+            docTrig = '2x3',
+        },
         fmta(
             [[
                <>
@@ -432,7 +437,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'mul', wordTrig = false, dscr = 'Multicolumn' },
+        { trig = 'mul', wordTrig = false, dscr = '[Mul]ticolumn' },
         fmta(
             [[
                 \multicolumn{<>}{<>}{<><>}
@@ -446,7 +451,7 @@ every pin edge/.style={<<-,>>=stealth'}
         )
     ),
     s(
-        { trig = 'mur', wordTrig = false, dscr = 'Multirow' },
+        { trig = 'mur', wordTrig = false, dscr = '[Mu]lti[r]ow' },
         fmta(
             [[
                 \multirow{<>}{<>}{<><>}
@@ -460,7 +465,7 @@ every pin edge/.style={<<-,>>=stealth'}
         )
     ),
     s(
-        { trig = 'cmr', wordTrig = false, dscr = 'Column Mid-rule' },
+        { trig = 'cmr', wordTrig = false, dscr = '[C]olumn [M]id-[r]ule' },
         fmta(
             [[
                 \cmidrule<>{<>-<>}
@@ -475,7 +480,7 @@ every pin edge/.style={<<-,>>=stealth'}
 
     -- Tikz
     s(
-        { trig = 'tikz', dscr = 'Tikz picture' },
+        { trig = 'tikz', dscr = '[Tikz] picture' },
         fmta(
             [[
                 \begin{tikzpicture}<>
@@ -491,7 +496,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'axis', dscr = 'Axis' },
+        { trig = 'axis', dscr = '[Axis]' },
         fmta(
             [[
                 \draw [big arrow] (0,0) -- (<>,0) node[below, xshift=-1mm, yshift=-0.5mm]
@@ -511,7 +516,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'draw', dscr = 'Draw command' },
+        { trig = 'draw', dscr = '[Draw] command' },
         fmta(
             [[
                 \draw<>(<>) -- (<>);
@@ -525,7 +530,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'dsc', dscr = 'Draw smooth coordinates' },
+        { trig = 'dsc', dscr = '[D]raw [s]mooth [c]oordinates' },
         fmta(
             [[
                 \draw<> plot [smooth] coordinates {<>};
@@ -538,7 +543,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'node', dscr = 'Node' },
+        { trig = 'node', dscr = '[Node]' },
         fmta(
             [[
                 \node<>at (<>) {<>};
@@ -552,7 +557,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'cd', dscr = 'Coordinate' },
+        { trig = 'cd', dscr = '[C]oor[d]inate' },
         fmta(
             [[
                 \coordinate (<>) at (<>);
@@ -565,7 +570,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'cfd', dscr = 'Circle filldraw' },
+        { trig = 'cfd', dscr = '[C]ircle [f]ill[d]raw' },
         fmta(
             [[
                 \filldraw (<>) circle (1.5pt)<>
@@ -588,7 +593,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'pin', dscr = 'Draw pin' },
+        { trig = 'pin', dscr = 'Draw [pin]' },
         fmta(
             [[
                 \node[pin={[pin distance=<>]<>:{<>}}] at (<>) {};
@@ -603,7 +608,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'is', dscr = 'Intersection' },
+        { trig = 'is', dscr = '[I]nter[s]ection' },
         fmta(
             [[
                 \path [name intersections={of=<>, by=<>}]
@@ -616,7 +621,7 @@ every pin edge/.style={<<-,>>=stealth'}
         { condition = line_begin }
     ),
     s(
-        { trig = 'bra', dscr = 'Draw braces' },
+        { trig = 'bra', dscr = 'Draw [bra]ces' },
         fmta(
             [[
                 \draw[thin, decorate,decoration={brace,amplitude=8pt}] (<>) -- (<>)

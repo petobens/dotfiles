@@ -255,47 +255,45 @@ vim.keymap.set(
     compile_latex,
     { buf = 0, desc = 'Compile LaTeX (arara)' }
 )
-vim.keymap.set(
-    'n',
-    '<Leader>vp',
-    view_pdf,
-    { buf = 0, desc = 'View PDF in Zathura' }
-)
+vim.keymap.set('n', '<Leader>vp', view_pdf, {
+    buf = 0,
+    desc = '[V]iew PDF [p]review in Zathura',
+})
 vim.keymap.set(
     'n',
     '<Leader>sl',
     forward_search,
-    { buf = 0, desc = 'Forward search (synctex)' }
+    { buf = 0, desc = '[S]yncTeX forward search to PDF [l]ocation' }
 )
 vim.keymap.set(
     'n',
     '<Leader>da',
     delete_aux_files,
-    { buf = 0, desc = 'Delete auxiliary files' }
+    { buf = 0, desc = '[D]elete [a]uxiliary files' }
 )
 vim.keymap.set('n', '<Leader>cm', function()
     convert_pandoc('md')
-end, { buf = 0, desc = 'Convert to Markdown (pandoc)' })
+end, { buf = 0, desc = '[C]onvert to [m]arkdown (Pandoc)' })
 vim.keymap.set('n', '<Leader>cx', function()
     convert_pandoc('docx')
-end, { buf = 0, desc = 'Convert to DOCX (pandoc)' })
+end, { buf = 0, desc = '[C]onvert to DOC[x] (Pandoc)' })
 
 ---- Editing
 vim.keymap.set('n', '<Leader>em', function()
     file_edit('main.tex')
-end, { buf = 0, desc = 'Edit main.tex' })
+end, { buf = 0, desc = '[E]dit [m]ain.tex' })
 vim.keymap.set('n', '<Leader>ep', function()
     file_edit('preamble.tex')
-end, { buf = 0, desc = 'Edit preamble.tex' })
+end, { buf = 0, desc = '[E]dit [p]reamble.tex' })
 vim.keymap.set('n', '<Leader>eb', function()
     file_edit('bib')
-end, { buf = 0, desc = 'Edit bibliography' })
+end, { buf = 0, desc = '[E]dit [b]ibliography' })
 vim.keymap.set('n', '<Leader>el', function()
     file_edit('log')
-end, { buf = 0, desc = 'Edit log file' })
+end, { buf = 0, desc = '[E]dit [l]og file' })
 vim.keymap.set('n', '<Leader>ef', function()
     file_edit('float')
-end, { buf = 0, desc = 'Edit float file' })
+end, { buf = 0, desc = '[E]dit [f]loat file' })
 
 ---- Tables
 vim.keymap.set('i', '<A-c>', '<ESC>f&lli', { buf = 0, desc = 'Table: next column' })

@@ -101,7 +101,7 @@ vim.api.nvim_create_autocmd('FileType', {
     callback = function(event)
         vim.keymap.set('n', '<Leader>da', vim.cmd.DBUIFindBuffer, {
             buffer = event.buf,
-            desc = 'Attach query to database',
+            desc = '[D]atabase [a]ttach: query buffer',
         })
         vim.keymap.set(
             { 'n', 'x' },
@@ -130,8 +130,8 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- Global mappings
 vim.keymap.set('n', '<Leader>db', vim.cmd.DBUIToggle, {
-    desc = 'Toggle database drawer',
+    desc = '[D]ata[b]ase drawer: toggle',
 })
 vim.keymap.set('n', '<Leader>dk', close_database_workspace, {
-    desc = 'Close database workspace',
+    desc = '[D]atabase workspace: [k]ill',
 })

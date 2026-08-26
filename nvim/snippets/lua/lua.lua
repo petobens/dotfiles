@@ -12,7 +12,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Control flow
     s(
-        { trig = 'fun', dscr = 'Function definition' },
+        { trig = 'fun', dscr = '[Fun]ction definition' },
         fmta(
             [[
                 function <>(<>)
@@ -29,7 +29,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'lf', dscr = 'Local function definition' },
+        { trig = 'lf', dscr = '[L]ocal [f]unction definition' },
         fmta(
             [[
                 local function <>(<>)
@@ -46,7 +46,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ef', dscr = 'Empty function' },
+        { trig = 'ef', dscr = '[E]mpty [f]unction' },
         fmta(
             [[
                 function(<>)
@@ -61,7 +61,7 @@ return {
         )
     ),
     s(
-        { trig = 'for', dscr = 'For loop' },
+        { trig = 'for', dscr = '[For] loop' },
         fmta(
             [[
                 for <> do
@@ -77,7 +77,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'fp', dscr = 'For pair' },
+        { trig = 'fp', dscr = '[F]or [p]air' },
         fmta(
             [[
                 for <>, <> in pairs(<>) do
@@ -95,7 +95,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'if', dscr = 'If condition' },
+        { trig = 'if', dscr = '[If] condition' },
         fmta(
             [[
                 if <> then
@@ -111,7 +111,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pc', dscr = 'pcall' },
+        { trig = 'pc', dscr = '[pc]all' },
         fmta(
             [[
                local ok, <> = pcall(<>, '<>')
@@ -130,7 +130,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'lv', dscr = 'Local variable' },
+        { trig = 'lv', dscr = '[L]ocal [v]ariable' },
         fmta(
             [[
                 local <> = <>
@@ -144,7 +144,7 @@ return {
     ),
     -- Libraries
     s(
-        { trig = 'rq', dscr = 'Require' },
+        { trig = 'rq', dscr = '[R]e[q]uire' },
         fmta(
             [[
                 require('<>')
@@ -156,7 +156,7 @@ return {
     ),
     -- Linting
     s(
-        { trig = 'li', dscr = 'Luacheck ignore' },
+        { trig = 'li', dscr = '[L]uacheck [i]gnore' },
         fmta(
             [[
             -- luacheck:ignore <>
@@ -166,7 +166,7 @@ return {
     ),
     -- Miscellaneous
     s(
-        { trig = 'pri', dscr = 'print' },
+        { trig = 'pri', dscr = '[pri]nt' },
         fmta(
             [[
             print(<><>)
@@ -175,7 +175,7 @@ return {
         )
     ),
     s(
-        { trig = 'sf', dscr = 'String format' },
+        { trig = 'sf', dscr = '[S]tring [f]ormat' },
         fmta(
             [[
             string.format('<><>', <>)
@@ -184,7 +184,7 @@ return {
         )
     ),
 }, {
-    s({ trig = 'db', dscr = 'Double brackets' }, {
+    s({ trig = 'db', dscr = '[D]ouble [b]rackets' }, {
         t('[['),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),

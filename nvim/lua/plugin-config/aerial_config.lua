@@ -101,11 +101,11 @@ vim.keymap.set(
     'n',
     '<Leader>tb',
     vim.cmd.AerialToggle,
-    { desc = 'Aerial: Toggle symbols outline (tagbar)' }
+    { desc = '[T]ag [b]ar: toggle symbols outline (Aerial)' }
 )
 vim.keymap.set(
     'n',
     '<Leader>an',
     vim.cmd.AerialNavToggle,
-    { desc = 'Aerial: Toggle navigation window' }
+    { desc = '[A]erial [n]avigation window: toggle' }
 )

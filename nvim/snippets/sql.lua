@@ -11,7 +11,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Sqlfluff
     s(
-        { trig = 'nq', dscr = 'Sqlfluff noqa' },
+        { trig = 'nq', dscr = 'Sqlfluff [n]o[q]a' },
         fmta(
             [[
             -- noqa
@@ -22,7 +22,7 @@ return {
 
     -- Postgres
     s(
-        { trig = 'pgct', dscr = 'Postgres create table' },
+        { trig = 'pgct', dscr = '[P]ost[g]res [c]reate [t]able' },
         fmta(
             [[
             CREATE TABLE <><> (
@@ -42,7 +42,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pgi', dscr = 'Postgres insert' },
+        { trig = 'pgi', dscr = '[P]ost[g]res [i]nsert' },
         fmta(
             [[
             INSERT INTO <> (<>)

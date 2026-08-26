@@ -10,7 +10,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Images and figures
     s(
-        { trig = 'ig', dscr = 'Image' },
+        { trig = 'ig', dscr = '[I]nclude [g]raphics: image' },
         fmta('#image("<>", width: <>%)<>', {
             i(1),
             i(2, '100'),
@@ -18,7 +18,7 @@ return {
         })
     ),
     s(
-        { trig = 'fig', dscr = 'Figure' },
+        { trig = 'fig', dscr = '[Fig]ure' },
         fmta(
             [[
 #figure(
@@ -39,7 +39,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'flo', dscr = 'General figure' },
+        { trig = 'flo', dscr = '[Flo]at: general figure' },
         fmta(
             [[
 #figure(
@@ -59,7 +59,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'sflo', dscr = 'Referenceable subfigures' },
+        { trig = 'sflo', dscr = '[S]ub[flo]at: referenceable subfigures' },
         fmta(
             [[
 #subfigure-grid(
@@ -96,7 +96,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'cg', dscr = 'Centered image' },
+        { trig = 'cg', dscr = '[C]entered [g]raphics: image' },
         fmta('#align(center)[#image("<>", width: <>%)]<>', {
             i(1),
             i(2, '100'),
@@ -104,7 +104,7 @@ return {
         })
     ),
     s(
-        { trig = 'mp', dscr = 'Fixed-width block' },
+        { trig = 'mp', dscr = '[M]ini[p]age: fixed-width block' },
         fmta('#block(width: <>%)[<><>]<>', {
             i(1, '50'),
             f(_G.LuaSnipConfig.visual_selection),
@@ -115,7 +115,7 @@ return {
 
     -- Tables
     s(
-        { trig = 'tab', dscr = 'Table from image' },
+        { trig = 'tab', dscr = '[Tab]le from image' },
         fmta(
             [[
 #figure(
@@ -136,7 +136,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'rt', dscr = 'Native table' },
+        { trig = 'rt', dscr = '[R]egular [t]able (native)' },
         fmta(
             [[
 #latex-table(
@@ -165,11 +165,12 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'mul', wordTrig = false, dscr = 'Spanning table cell' },
+        { trig = 'mul', wordTrig = false, dscr = '[Mul]ticolumn: spanning table cell' },
         fmta('table.cell(colspan: <>)[<>]<>', { i(1, '2'), i(2), i(0) })
     ),
-    s(
-        { trig = 'mur', wordTrig = false, dscr = 'Spanning table row' },
-        fmta('table.cell(rowspan: <>)[<>]<>', { i(1, '2'), i(2), i(0) })
-    ),
+    s({
+        trig = 'mur',
+        wordTrig = false,
+        dscr = '[Mu]lti[r]ow: spanning table row',
+    }, fmta('table.cell(rowspan: <>)[<>]<>', { i(1, '2'), i(2), i(0) })),
 }, {}

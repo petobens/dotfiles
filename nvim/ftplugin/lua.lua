@@ -82,21 +82,21 @@ vim.keymap.set(
     'n',
     '<Leader>rf',
     run_toggleterm,
-    { buf = 0, desc = 'Run lua file in ToggleTerm' }
+    { buf = 0, desc = '[R]un Lua [f]ile in ToggleTerm' }
 )
 
 vim.keymap.set('n', '<Leader>rl', function()
     vim.cmd.lua(vim.api.nvim_get_current_line())
-end, { buf = 0, desc = 'Run current line as Lua' })
+end, { buf = 0, desc = '[R]un current [l]ine as Lua' })
 
 vim.keymap.set('n', '<Leader>ri', function()
     vim.cmd.update()
     vim.cmd.luafile('%')
-end, { buf = 0, desc = 'Save and source current Lua file (run interpreter)' })
+end, { buf = 0, desc = '[R]un current file in [i]nterpreter (save and source)' })
 
 vim.keymap.set(
     'v',
     '<Leader>ri',
     vim.cmd.RunVisualLua,
-    { buf = 0, desc = 'Run visual selection (run interpreter)' }
+    { buf = 0, desc = '[R]un selection in [i]nterpreter' }
 )

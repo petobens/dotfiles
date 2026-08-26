@@ -82,7 +82,7 @@ local function _parse_neotest_output(task, last_winid)
             vim.cmd.close()
             pcall(vim.api.nvim_set_current_win, calling_winid)
         end, {
-            buf = true,
+            buf = 0,
             desc = 'Close neotest output window and return to previous window',
         })
     end
@@ -254,15 +254,15 @@ vim.api.nvim_create_autocmd('FileType', {
 -- Mappings
 vim.keymap.set('n', '<Leader>nn', function()
     neotest_run(neotest.run.run)
-end, { desc = 'Run nearest test' })
+end, { desc = '[N]eotest [n]earest test: run' })
 
 vim.keymap.set('n', '<Leader>nl', function()
     neotest_run(neotest.run.run_last)
-end, { desc = 'Run last test' })
+end, { desc = '[N]eotest: run [l]ast test' })
 
 vim.keymap.set('n', '<Leader>nf', function()
     neotest_run(neotest.run.run, { vim.api.nvim_buf_get_name(0) })
-end, { desc = 'Run all tests in file' })
+end, { desc = '[N]eotest: run [f]ile' })
 
 vim.keymap.set('n', '<Leader>ns', function()
     local extra_args = {}
@@ -270,7 +270,7 @@ vim.keymap.set('n', '<Leader>ns', function()
         table.insert(extra_args, '--cov')
     end
     neotest_run(neotest.run.run, { suite = true, extra_args = extra_args })
-end, { desc = 'Run test suite' })
+end, { desc = '[N]eotest: run test [s]uite' })
 
 vim.keymap.set('n', '<Leader>nd', function()
     local extra_args = {}
@@ -279,34 +279,36 @@ vim.keymap.set('n', '<Leader>nd', function()
         table.insert(extra_args, '--pdb')
     end
     neotest_run(neotest.run.run, { extra_args = extra_args })
-end, { desc = 'Run test with debugger' })
+end, { desc = '[N]eotest: run with [d]ebugger' })
 
 vim.keymap.set('n', '<Leader>na', function()
     neotest_run(neotest.run.attach, { delete = false })
     vim.keymap.set('n', 'q', function()
         vim.cmd.close()
-    end, { buf = true, desc = 'Close neotest attach window and return' })
+    end, { buf = 0, desc = 'Close neotest attach window and return' })
     vim.cmd.stopinsert()
     set_output_window_layout()
     vim.cmd.startinsert()
-end, { desc = 'Attach to running test' })
+end, { desc = '[N]eotest: [a]ttach to running test' })
 
-vim.keymap.set('n', '<Leader>nc', neotest.run.stop, { desc = 'Stop/cancel running test' })
+vim.keymap.set('n', '<Leader>nc', neotest.run.stop, {
+    desc = '[N]eotest: [c]ancel running test',
+})
 
 vim.keymap.set('n', '<Leader>no', function()
     neotest.output.open({ short = true })
-end, { desc = 'Open test output' })
+end, { desc = '[N]eotest: open [o]utput' })
 
 vim.keymap.set(
     'n',
     '<Leader>np',
     neotest.output_panel.toggle,
-    { desc = 'Toggle test output panel' }
+    { desc = '[N]eotest: toggle output [p]anel' }
 )
 
 vim.keymap.set('n', '<Leader>nt', function()
     neotest_run(neotest.summary.toggle, {}, false)
-end, { desc = 'Toggle test summary' })
+end, { desc = '[N]eotest: toggle [t]est summary' })
 
 -- Filetype-mappings
 local neotest_ft_augroup = vim.api.nvim_create_augroup('NeotestFtAu')

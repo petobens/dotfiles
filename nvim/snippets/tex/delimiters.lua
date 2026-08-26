@@ -9,7 +9,7 @@ local fmta = require('luasnip.extras.fmt').fmta
 return {
     -- Delimiters
     s(
-        { trig = 'bc', wordTrig = false, dscr = 'Braces' },
+        { trig = 'bc', wordTrig = false, dscr = '[B]ra[c]es' },
         fmta(
             [[
         \{<><>\}
@@ -21,7 +21,7 @@ return {
         )
     ),
     s(
-        { trig = 'quo', dscr = 'Quote' },
+        { trig = 'quo', dscr = '[Quo]te' },
         fmta(
             [[
         \enquote{<><>}
@@ -33,7 +33,7 @@ return {
         )
     ),
     s(
-        { trig = 'lr(', wordTrig = false, dscr = 'Left( Right)' },
+        { trig = 'lr(', wordTrig = false, dscr = '[L]eft/[r]ight parentheses' },
         fmta(
             [[
         \left(<><>\right)
@@ -45,7 +45,7 @@ return {
         )
     ),
     s(
-        { trig = 'lr[', wordTrig = false, dscr = 'Left[ Right]' },
+        { trig = 'lr[', wordTrig = false, dscr = '[L]eft/[r]ight square brackets' },
         fmta(
             [[
         \left[<><>\right]
@@ -57,7 +57,7 @@ return {
         )
     ),
     s(
-        { trig = 'lr{', wordTrig = false, dscr = 'Left{ Right}' },
+        { trig = 'lr{', wordTrig = false, dscr = '[L]eft/[r]ight braces' },
         fmta(
             [[
         \left{<><>\right}
@@ -69,7 +69,7 @@ return {
         )
     ),
     s(
-        { trig = 'vs', dscr = 'vspace' },
+        { trig = 'vs', dscr = '[V]ertical [s]pace' },
         fmta(
             [[
         \vspace{<><>}

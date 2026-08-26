@@ -374,5 +374,5 @@ for i = -1, 9 do
     local key = i == -1 and '$' or i
     vim.keymap.set('n', '<Leader>' .. key, function()
         _G.LualineBuffertab.select_buf(i)
-    end, { desc = 'Go to buffer tab ' .. (i == -1 and '$' or i) })
+    end, { desc = '[' .. (i == -1 and '$' or i) .. '] Buffer tab' })
 end

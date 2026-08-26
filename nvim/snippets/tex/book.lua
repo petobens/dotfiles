@@ -17,7 +17,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     s(
-        { trig = 'bmf', dscr = 'Book main file' },
+        { trig = 'bmf', dscr = '[B]ook [m]ain [f]ile' },
         fmta(
             [[
 \documentclass[a4paper,10pt,leqno]{book}
@@ -56,7 +56,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'bp', dscr = 'Book preamble' },
+        { trig = 'bp', dscr = '[B]ook [p]reamble' },
         fmta(
             [[
 %---------------------------------------+
@@ -492,7 +492,7 @@ This document is free; you can redistribute it and/or modify it under the
         { condition = line_begin }
     ),
     s(
-        { trig = 'pf', dscr = 'Preface' },
+        { trig = 'pf', dscr = '[P]re[f]ace' },
         fmta(
             [[
                 \chapter{<>}
@@ -517,7 +517,7 @@ This document is free; you can redistribute it and/or modify it under the
         { condition = line_begin }
     ),
     s(
-        { trig = 'ba', dscr = 'Book appendix' },
+        { trig = 'ba', dscr = '[B]ook [a]ppendix' },
         fmta(
             [[
                 \appendix
@@ -536,7 +536,7 @@ This document is free; you can redistribute it and/or modify it under the
         { condition = line_begin }
     ),
     s(
-        { trig = 'ind', wordTrig = false, dscr = 'Index' },
+        { trig = 'ind', wordTrig = false, dscr = '[Ind]ex' },
         fmta(
             [[
         \index{<><>}

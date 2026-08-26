@@ -74,25 +74,25 @@ vim.api.nvim_create_autocmd({ 'User' }, {
             'n',
             '<Leader>tc',
             '<plug>(vimtex-toc-open)',
-            { buf = e.buf, remap = true, desc = 'Open TOC' }
+            { buf = e.buf, remap = true, desc = '[T]able of [c]ontents: open' }
         )
         vim.keymap.set(
             'n',
             '<Leader>ce',
             '<plug>(vimtex-env-change)',
-            { buf = e.buf, remap = true, desc = 'Change environment' }
+            { buf = e.buf, remap = true, desc = '[C]hange [e]nvironment' }
         )
         vim.keymap.set(
             'n',
             '<Leader>ts',
             '<plug>(vimtex-env-toggle-star)',
-            { buf = e.buf, remap = true, desc = 'Toggle starred environment' }
+            { buf = e.buf, remap = true, desc = '[T]oggle [s]tarred environment' }
         )
         vim.keymap.set(
             'n',
             '<Leader>td',
             '<plug>(vimtex-delim-toggle-modifier)',
-            { buf = e.buf, remap = true, desc = 'Toggle delimiter modifier' }
+            { buf = e.buf, remap = true, desc = '[T]oggle [d]elimiter modifier' }
         )
         vim.keymap.set(
             'i',
@@ -117,12 +117,12 @@ vim.api.nvim_create_autocmd({ 'User' }, {
             vim.cmd.wincmd('J')
             vim.cmd.wincmd('12_')
             vim.cmd.normal({ args = { 'G' }, bang = true, mods = { silent = true } })
-        end, { buf = e.buf, desc = 'Count words' })
+        end, { buf = e.buf, desc = '[C]ount [w]ords' })
         vim.keymap.set(
             'n',
             '<Leader>vd',
             vim.cmd.VimtexDocPackage,
-            { buf = e.buf, desc = 'View VimTeX doc for package' }
+            { buf = e.buf, desc = '[V]imTeX [d]ocs for package' }
         )
     end,
 })

@@ -11,7 +11,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     s(
-        { trig = 'dd', dscr = 'Disable next line diagnostic' },
+        { trig = 'dd', dscr = '[D]isable next line [d]iagnostic' },
         fmta(
             [[
                ---@diagnostic disable-next-line: <>
@@ -22,7 +22,7 @@ return {
         )
     ),
     s(
-        { trig = 'mv', dscr = 'Minimal init' },
+        { trig = 'mv', dscr = '[M]inimal N[v]im init' },
         fmta(
             [[
 
@@ -51,7 +51,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'auc', dscr = 'Autocmd' },
+        { trig = 'auc', dscr = '[Au]to[c]md' },
         fmta(
             [[
                 vim.api.nvim_create_autocmd({'<>'}, {
@@ -74,7 +74,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'cc', dscr = 'Create user command' },
+        { trig = 'cc', dscr = '[C]reate user [c]ommand' },
         fmta(
             [[
                 vim.api.nvim_create_user_command({'<>'}, function()
@@ -90,7 +90,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pp', dscr = 'Pretty print' },
+        { trig = 'pp', dscr = '[P]retty [p]rint' },
         fmta(
             [[
                 vim.print(<><>)<>
@@ -104,7 +104,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'km', dscr = 'Keymap' },
+        { trig = 'km', dscr = '[K]ey[m]ap' },
         fmta(
             [[
                 vim.keymap.set('<>', '<>', <><>)

@@ -28,9 +28,9 @@ end
 
 return {
     -- List blocks
-    list_snippet('enu', 'Numbered list', '+'),
+    list_snippet('enu', '[Enu]merate: numbered list', '+'),
     s(
-        { trig = 'cenu', dscr = 'Custom-numbered list' },
+        { trig = 'cenu', dscr = '[C]ustom [enu]merate: numbered list' },
         fmta(
             [[
 #[
@@ -54,7 +54,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'citem', dscr = 'Custom bullet list' },
+        { trig = 'citem', dscr = '[C]ustom [item]ize: bullet list' },
         fmta(
             [[
 #[
@@ -78,7 +78,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'litm', dscr = 'Labeled items' },
+        { trig = 'litm', dscr = '[L]abeled [it]e[m]s' },
         fmta(
             [[
 #labeled-item[<>][
@@ -103,7 +103,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'wenu', dscr = 'Wide compact numbered list' },
+        { trig = 'wenu', dscr = '[W]ide [enu]merate: compact numbered list' },
         fmta(
             [[
 #wide-enum(numbering: "<>")[
@@ -123,11 +123,11 @@ return {
         ),
         { condition = line_begin }
     ),
-    list_snippet('ste', 'Numbered steps', '+'),
-    list_snippet('ite', 'Bullet list', '-'),
+    list_snippet('ste', 'Numbered [ste]ps', '+'),
+    list_snippet('ite', '[Ite]mize: bullet list', '-'),
 }, {
     -- List item
-    s({ trig = 'itm', wordTrig = false, dscr = 'List item' }, {
+    s({ trig = 'itm', wordTrig = false, dscr = 'List [it]e[m]' }, {
         c(1, { t('- '), t('+ ') }),
         f(_G.LuaSnipConfig.visual_selection),
         i(0),

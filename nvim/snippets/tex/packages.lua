@@ -10,7 +10,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
 return {
     s(
-        { trig = 'll', dscr = 'Listings' },
+        { trig = 'll', dscr = '[L]aTeX [l]istings' },
         fmta(
             [[
       \begin{lstlisting}
@@ -25,7 +25,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'mt', dscr = 'Minted' },
+        { trig = 'mt', dscr = '[M]in[t]ed' },
         fmta(
             [[
       \begin{minted}{<>}
@@ -41,7 +41,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'mtc', dscr = 'Minted with captions' },
+        { trig = 'mtc', dscr = '[M]in[t]ed with [c]aptions' },
         fmta(
             [[
       \begin{listing}[H]
@@ -61,7 +61,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'td', wordTrig = false, dscr = 'Todo' },
+        { trig = 'td', wordTrig = false, dscr = '[T]o[d]o' },
         fmta(
             [[
         \todo{<><>}

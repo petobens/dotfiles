@@ -177,18 +177,8 @@ end
 local function on_attach(bufnr)
     -- Tree
     vim.keymap.set('n', 'q', tree_api.close, { buf = bufnr, desc = 'Close NvimTree' })
-    vim.keymap.set(
-        'n',
-        '<ESC>',
-        tree_api.close,
-        { buf = bufnr, desc = 'Close NvimTree' }
-    )
-    vim.keymap.set(
-        'n',
-        '<C-r>',
-        tree_api.reload,
-        { buf = bufnr, desc = 'Reload tree' }
-    )
+    vim.keymap.set('n', '<ESC>', tree_api.close, { buf = bufnr, desc = 'Close NvimTree' })
+    vim.keymap.set('n', '<C-r>', tree_api.reload, { buf = bufnr, desc = 'Reload tree' })
     vim.keymap.set('n', 'T', cycle_sort, { buf = bufnr, desc = 'Cycle sort method' })
 
     -- Editing
@@ -289,18 +279,8 @@ local function on_attach(bufnr)
         tree_api.collapse_all,
         { buf = bufnr, desc = 'Collapse all' }
     )
-    vim.keymap.set(
-        'n',
-        'zr',
-        tree_api.expand_all,
-        { buf = bufnr, desc = 'Expand all' }
-    )
-    vim.keymap.set(
-        'n',
-        '<Space>',
-        mark_down,
-        { buf = bufnr, desc = 'Mark/unmark node' }
-    )
+    vim.keymap.set('n', 'zr', tree_api.expand_all, { buf = bufnr, desc = 'Expand all' })
+    vim.keymap.set('n', '<Space>', mark_down, { buf = bufnr, desc = 'Mark/unmark node' })
 
     -- Telescope integration
     vim.keymap.set('n', '<C-t>', function()
@@ -417,10 +397,10 @@ vim.api.nvim_create_autocmd('BufEnter', {
 })
 
 -- Mappings
-vim.keymap.set('n', '<Leader>ff', cd_find_file, { desc = 'Find file in NvimTree' })
+vim.keymap.set('n', '<Leader>ff', cd_find_file, { desc = '[F]ind [f]ile in NvimTree' })
 vim.keymap.set(
     'n',
     '<Leader>fq',
     vim.cmd.NvimTreeClose,
-    { desc = 'Close/quit NvimTree finder' }
+    { desc = '[F]inder [q]uit: close NvimTree' }
 )

@@ -13,7 +13,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Minimal working example
     s(
-        { trig = 'mwe', dscr = 'Minimal working example' },
+        { trig = 'mwe', dscr = '[M]inimal [w]orking [e]xample' },
         fmta(
             [[
 #import "@local/latex-article:0.1.0": *
@@ -40,7 +40,7 @@ return {
 
     -- Article
     s(
-        { trig = 'lat', dscr = 'LaTeX-style article template' },
+        { trig = 'lat', dscr = '[L]aTeX [a]rticle [t]emplate' },
         fmta(
             [[
 #import "@local/latex-article:0.1.0": *
@@ -89,7 +89,7 @@ return {
 
     -- Book
     s(
-        { trig = 'lbt', dscr = 'LaTeX-style book template' },
+        { trig = 'lbt', dscr = '[L]aTeX-style [b]ook [t]emplate' },
         fmta(
             [[
 #import "@local/latex-book:0.1.0": *
@@ -160,7 +160,7 @@ return {
 
     -- Mutt slides
     s(
-        { trig = 'mst', dscr = 'Mutt slides template' },
+        { trig = 'mst', dscr = '[M]utt [s]lides [t]emplate' },
         fmta(
             [[
 #import "@local/mutt-slides:0.1.0": *
@@ -196,7 +196,7 @@ return {
 
     -- Standalone figure
     s(
-        { trig = 'sft', dscr = 'Standalone CeTZ figure template' },
+        { trig = 'sft', dscr = '[S]tandalone CeTZ [f]igure [t]emplate' },
         fmta(
             [[
 #import "@local/standalone:0.1.0": *
@@ -229,7 +229,7 @@ return {
 
     -- Standalone table
     s(
-        { trig = 'stt', dscr = 'Standalone table template' },
+        { trig = 'stt', dscr = '[St]andalone [t]able template' },
         fmta(
             [[
 #import "@local/standalone:0.1.0": *

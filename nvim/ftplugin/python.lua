@@ -470,112 +470,118 @@ vim.keymap.set(
     'n',
     '<Leader>rf',
     run_toggleterm,
-    { buf = 0, desc = 'Run Python file in ToggleTerm' }
+    { buf = 0, desc = '[R]un Python [f]ile in ToggleTerm' }
 )
 
 vim.keymap.set('n', '<Leader>rp', function()
     run_toggleterm(true)
-end, { buf = 0, desc = 'Run in ToggleTerm (post-mortem)' })
+end, { buf = 0, desc = '[R]un [p]ost-mortem in ToggleTerm' })
 
 vim.keymap.set('n', '<Leader>oi', function()
     run_ipython('open')
-end, { buf = 0, desc = 'Open terminal interpreter (IPython)' })
+end, { buf = 0, desc = '[O]pen [i]nterpreter terminal (IPython)' })
 
 vim.keymap.set('n', '<Leader>ri', function()
     run_ipython('module')
-end, { buf = 0, desc = 'Run current file in IPython' })
+end, { buf = 0, desc = '[R]un current file in [i]nterpreter (IPython)' })
 
 vim.keymap.set('n', '<Leader>rl', function()
     run_ipython('line')
-end, { buf = 0, desc = 'Run current line in IPython' })
+end, { buf = 0, desc = '[R]un current [l]ine in IPython' })
 
 vim.keymap.set('v', '<Leader>ri', function()
     run_ipython('selection')
-end, { buf = 0, desc = 'Run selection in IPython' })
+end, { buf = 0, desc = '[R]un selection in [i]nterpreter (IPython)' })
 
 vim.keymap.set('n', '<Leader>tr', function()
     run_ipython('reset')
-end, { buf = 0, desc = 'Reset IPython terminal' })
+end, { buf = 0, desc = '[T]erminal [r]eset (IPython)' })
 
 vim.keymap.set('n', '<Leader>tx', function()
     run_ipython('carriage')
-end, { buf = 0, desc = 'Send carriage return to IPython terminal' })
+end, { buf = 0, desc = '[T]erminal e[x]ecute: send return to IPython' })
 
 ---- Debugging
-vim.keymap.set('n', '<Leader>bp', add_breakpoint, { buf = 0, desc = 'Add breakpoint()' })
+vim.keymap.set('n', '<Leader>bp', add_breakpoint, {
+    buf = 0,
+    desc = '[B]reak[p]oint: add breakpoint()',
+})
 vim.keymap.set(
     'n',
     '<Leader>rb',
     remove_breakpoints,
-    { buf = 0, desc = 'Remove all breakpoints()' }
+    { buf = 0, desc = '[R]emove all [b]reakpoints()' }
 )
 vim.keymap.set('n', '<Leader>lb', function()
     list_breakpoints(true)
-end, { buf = 0, desc = 'List breakpoints in buffer' })
+end, { buf = 0, desc = '[L]ist [b]reakpoints in buffer' })
 
 vim.keymap.set('n', '<Leader>lB', function()
     list_breakpoints(false)
-end, { buf = 0, desc = 'List breakpoints in project' })
+end, { buf = 0, desc = '[L]ist [B]reakpoints in project' })
 
 vim.keymap.set(
     'n',
     '<Leader>lt',
     ':Tmux2Qf ',
-    { silent = false, desc = 'Load Tmux output to quickfix' }
+    { silent = false, desc = '[L]oad [t]mux output to quickfix' }
 )
 
 ---- Pre-commit
 vim.keymap.set('n', '<Leader>rh', function()
     run_overseer('run_precommit')
-end, { buf = 0, desc = 'Run pre-commit hooks with Overseer' })
+end, { buf = 0, desc = '[R]un pre-commit [h]ooks with Overseer' })
 
 ---- Virtual Envs
 vim.keymap.set('n', '<Leader>va', function()
     _G.PyVenv.activate()
-end, { buf = 0, desc = 'Activate Python venv' })
+end, { buf = 0, desc = '[V]irtualenv [a]ctivate (Python)' })
 
 vim.keymap.set('n', '<Leader>vd', function()
     _G.PyVenv.deactivate()
-end, { buf = 0, desc = 'Deactivate Python venv' })
+end, { buf = 0, desc = '[V]irtualenv [d]eactivate (Python)' })
 
 vim.keymap.set('n', '<Leader>vl', function()
     _G.TelescopeConfig.py_venvs({ project_root = _project_root() })
-end, { buf = 0, desc = 'List Python venvs' })
+end, { buf = 0, desc = '[V]irtualenv [l]ist (Python)' })
 
 vim.keymap.set('n', '<Leader>ve', function()
     vim.print(_G.PyVenv.active_venv)
-end, { buf = 0, desc = 'Echo active venv info' })
+end, { buf = 0, desc = '[V]irtualenv [e]cho active info' })
 
 ---- Sphinx (docs)
 vim.keymap.set(
     'n',
     '<Leader>bh',
     run_sphinx_build,
-    { buf = 0, desc = 'Build Sphinx HTML docs' }
+    { buf = 0, desc = '[B]uild Sphinx [h]tml docs' }
 )
 vim.keymap.set(
     'n',
     '<Leader>da',
     clean_sphinx_build,
-    { buf = 0, desc = 'Delete Sphinx build auxiliary files' }
+    { buf = 0, desc = '[D]elete Sphinx [a]uxiliary files' }
 )
 vim.keymap.set(
     'n',
     '<Leader>od',
     view_sphinx_docs,
-    { buf = 0, desc = 'Open Sphinx docs' }
+    { buf = 0, desc = '[O]pen [d]ocs (Sphinx)' }
 )
 vim.keymap.set('n', '<Leader>vi', function()
     view_sphinx_docs({ index = true })
-end, { buf = 0, desc = 'View Sphinx index.html' })
+end, { buf = 0, desc = '[V]iew Sphinx [i]ndex.html' })
 
 ---- Editing
-vim.keymap.set('n', '<Leader>etf', edit_test_file, { buf = 0, desc = 'Edit test file' })
+vim.keymap.set('n', '<Leader>etf', edit_test_file, {
+    buf = 0,
+    desc = '[E]dit [t]est [f]ile',
+})
 vim.keymap.set(
     'n',
     '<Leader>etp',
     edit_project_todo,
-    { buf = 0, desc = 'Edit todos project' }
+    { buf = 0, desc = '[E]dit [t]odos [p]roject' }
 )
 
 -- Autocommand mappings
@@ -587,6 +593,6 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
         vim.keymap.set('n', '<Leader>rB', function()
             vim.cmd([[cdo g/breakpoint()/d|silent noautocmd update]])
             vim.cmd.cclose()
-        end, { buf = e.buf, desc = 'Remove all breakpoints from qf' })
+        end, { buf = e.buf, desc = '[R]emove all [B]reakpoints from quickfix' })
     end,
 })

@@ -91,11 +91,15 @@ Run Luacheck on touched Lua files when making changes under `nvim/`.
 - **Ex commands:** always use the function-style form,
   `vim.cmd.sleep('3m')`, never the string form, `vim.cmd('sleep 3m')`.
 - **Descriptions:** always provide a short, meaningful `desc` for
-  `vim.keymap.set` and `vim.api.nvim_create_autocmd`.
+  `vim.keymap.set` and `vim.api.nvim_create_autocmd`. For `<Leader>` mappings,
+  expose the mnemonic with bracketed key letters, preserving historical
+  Vim/plugin terminology when it explains the mapping. Apply the same bracketed
+  mnemonic convention to LuaSnip descriptions; symbol-only triggers are already
+  self-describing and do not need brackets.
 - **Single-command mappings:** pass the command function directly:
 
   ```lua
-  vim.keymap.set('n', '<Leader>sp', vim.cmd.split, { desc = 'Horizontal split' })
+  vim.keymap.set('n', '<Leader>sp', vim.cmd.split, { desc = '[Sp]lit horizontally' })
   ```
 
 ### Formatting rules

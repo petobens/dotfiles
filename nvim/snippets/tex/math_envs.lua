@@ -16,7 +16,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Theorems, propositions, etc
     s(
-        { trig = 'thm', dscr = 'Theorem' },
+        { trig = 'thm', dscr = '[Th]eore[m]' },
         fmta(
             [[
       \begin{theorem}<>
@@ -34,7 +34,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'uthm', dscr = 'Unnumbered theorem' },
+        { trig = 'uthm', dscr = '[U]nnumbered [th]eore[m]' },
         fmta(
             [[
       \begin{theorem*}<>
@@ -50,7 +50,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pro', dscr = 'Proposition' },
+        { trig = 'pro', dscr = '[Pro]position' },
         fmta(
             [[
       \begin{proposition}
@@ -67,7 +67,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'upro', dscr = 'Unnumbered proposition' },
+        { trig = 'upro', dscr = '[U]nnumbered [pro]position' },
         fmta(
             [[
       \begin{proposition*}
@@ -82,7 +82,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'lem', dscr = 'Lemma' },
+        { trig = 'lem', dscr = '[Lem]ma' },
         fmta(
             [[
       \begin{lemma}<>
@@ -100,7 +100,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ulem', dscr = 'Unnumbered lemma' },
+        { trig = 'ulem', dscr = '[U]nnumbered [lem]ma' },
         fmta(
             [[
       \begin{lemma*}<>
@@ -116,7 +116,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'cor', dscr = 'Corollary' },
+        { trig = 'cor', dscr = '[Cor]ollary' },
         fmta(
             [[
       \begin{corollary}
@@ -133,7 +133,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ucor', dscr = 'Unnumbered corollary' },
+        { trig = 'ucor', dscr = '[U]nnumbered [cor]ollary' },
         fmta(
             [[
       \begin{corollary*}
@@ -148,7 +148,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'def', dscr = 'definition' },
+        { trig = 'def', dscr = '[Def]inition' },
         fmta(
             [[
       \begin{definition}
@@ -165,7 +165,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'udef', dscr = 'Unnumbered definition' },
+        { trig = 'udef', dscr = '[U]nnumbered [def]inition' },
         fmta(
             [[
       \begin{definition*}
@@ -180,7 +180,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'exa', dscr = 'example' },
+        { trig = 'exa', dscr = '[Exa]mple' },
         fmta(
             [[
       \begin{example}
@@ -197,7 +197,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'uexa', dscr = 'Unnumbered example' },
+        { trig = 'uexa', dscr = '[U]nnumbered [exa]mple' },
         fmta(
             [[
       \begin{example*}
@@ -212,7 +212,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'exac', dscr = 'Example continued' },
+        { trig = 'exac', dscr = '[Exa]mple [c]ontinued' },
         fmta(
             [[
       \begin{examcont}{exa:<>}
@@ -228,7 +228,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'exe', dscr = 'Exercise' },
+        { trig = 'exe', dscr = '[Exe]rcise' },
         fmta(
             [[
       \begin{exercise}
@@ -245,7 +245,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'uexe', dscr = 'Unnumbered exercise' },
+        { trig = 'uexe', dscr = '[U]nnumbered [exe]rcise' },
         fmta(
             [[
       \begin{exercise*}
@@ -260,7 +260,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ps', dscr = 'Problem statement' },
+        { trig = 'ps', dscr = '[P]roblem [s]tatement' },
         fmta(
             [[
       \begin{problem*}
@@ -275,7 +275,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ans', dscr = 'Answer/Solution' },
+        { trig = 'ans', dscr = '[Ans]wer/Solution' },
         fmta(
             [[
       \begin{solution*}
@@ -290,7 +290,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'rem', dscr = 'Remark' },
+        { trig = 'rem', dscr = '[Rem]ark' },
         fmta(
             [[
       \begin{remark}
@@ -307,7 +307,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'urem', dscr = 'Unnumbered remark' },
+        { trig = 'urem', dscr = '[U]nnumbered [rem]ark' },
         fmta(
             [[
       \begin{remark*}
@@ -322,7 +322,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'not', dscr = 'Notation' },
+        { trig = 'not', dscr = '[Not]ation' },
         fmta(
             [[
       \begin{notation*}
@@ -337,7 +337,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'pru', dscr = 'Proof' },
+        { trig = 'pru', dscr = '[Pru]eba/proof' },
         fmta(
             [[
       \begin{proof}<>
@@ -364,7 +364,7 @@ return {
 
     -- Equation Environments
     s(
-        { trig = 'equ', dscr = 'Equation' },
+        { trig = 'equ', dscr = '[Equ]ation' },
         fmta(
             [[
       \begin{equation}
@@ -381,7 +381,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ueq', dscr = 'Unnumbered equation' },
+        { trig = 'ueq', dscr = '[U]nnumbered [eq]uation' },
         fmta(
             [[
       \begin{equation*}
@@ -396,7 +396,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'be', dscr = 'Breakable equation' },
+        { trig = 'be', dscr = '[B]reakable [e]quation' },
         fmta(
             [[
       \begin{dmath*}
@@ -411,7 +411,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'ali', dscr = 'Align' },
+        { trig = 'ali', dscr = '[Ali]gn' },
         fmta(
             [[
       \begin{align}
@@ -436,7 +436,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'sit', dscr = '(Short)intertext' },
+        { trig = 'sit', dscr = '[S]hort [i]n[t]ertext' },
         fmta(
             [[
         \<>intertext{<>}
@@ -450,7 +450,7 @@ return {
     ),
 
     s(
-        { trig = 'ua', dscr = 'Align*' },
+        { trig = 'ua', dscr = '[U]nnumbered [a]lign' },
         fmta(
             [[
       \begin{align*}
@@ -467,7 +467,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'max', dscr = 'Max/min' },
+        { trig = 'max', dscr = '[Max]/min' },
         fmta(
             [[
       \begin{alignat}{2}
@@ -502,7 +502,7 @@ return {
 
     -- Within Equation Environments
     s(
-        { trig = 'aed', dscr = 'Aligned' },
+        { trig = 'aed', dscr = '[A]lign[ed]' },
         fmta(
             [[
       \begin{aligned}<>
@@ -520,7 +520,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'dca', dscr = '(d)Cases' },
+        { trig = 'dca', dscr = '[dca]ses environment' },
         fmta(
             [[
       \begin{dcases*}
@@ -540,7 +540,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'mat', dscr = 'Matrix' },
+        { trig = 'mat', dscr = '[Mat]rix' },
         fmta(
             [[
       \begin{<>matrix*}<>
