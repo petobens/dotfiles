@@ -22,9 +22,9 @@ vim.keymap.set(
     vim.cmd.SudaWrite,
     { desc = '[W]rite with [s]udo (SudaWrite)' }
 )
-vim.keymap.set('n', '<Leader>rs', function()
+vim.keymap.set('n', '<Leader>rS', function()
     vim.api.nvim_input(':SudaRead ')
-end, { desc = '[R]ead file with [s]udo (SudaRead)' })
+end, { desc = '[R]ead file with [S]udo (SudaRead)' })
 vim.keymap.set(
     'n',
     '<Leader>rr',
