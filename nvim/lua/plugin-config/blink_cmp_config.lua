@@ -204,6 +204,16 @@ blink_cmp.setup({
                 end,
                 transform_items = function(_, items)
                     local cmp_kind = require('blink.cmp.types').CompletionItemKind
+                    for _, item in ipairs(items) do
+                        -- Tinymist's empty filter text prevents path items from matching
+                        if
+                            item.client_name == 'tinymist'
+                            and item.kind == cmp_kind.File
+                            and item.filterText == ''
+                        then
+                            item.filterText = nil
+                        end
+                    end
                     return vim.tbl_filter(function(item)
                         -- Don't show lsp text and snippets
                         return item.kind ~= cmp_kind.Text
