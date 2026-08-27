@@ -17,8 +17,8 @@ return {
         fmta('#let <><> = <><>', {
             i(1, 'name'),
             c(2, {
-                t(''),
                 sn(nil, { t('('), i(1, 'arguments'), t(')') }),
+                t(''),
             }),
             i(3, 'value'),
             i(0),

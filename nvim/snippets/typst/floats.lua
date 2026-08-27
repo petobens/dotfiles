@@ -1,8 +1,11 @@
 local ls = require('luasnip')
 
+local c = ls.choice_node
 local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
+local sn = ls.snippet_node
+local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
@@ -23,7 +26,7 @@ return {
             [[
 #figure(
   image("<>", width: <>%),
-  caption: [<>],
+<>  caption: [<>],
 ) <<fig:<>>>
 
 <>
@@ -31,8 +34,16 @@ return {
             {
                 i(1),
                 i(2, '100'),
-                i(3, 'Caption'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 3 }),
+                c(3, {
+                    sn(nil, {
+                        t('  placement: none,'),
+                        i(1),
+                        t({ '', '' }),
+                    }),
+                    t(''),
+                }),
+                i(4, 'Caption'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 4 }),
                 i(0),
             }
         ),
@@ -90,6 +101,44 @@ return {
                 i(5, 'Combined caption'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 5 }),
                 i(6, '5'),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+    s(
+        {
+            trig = 'fflo',
+            dscr = '[F]igure [flo]ats: independently numbered side-by-side figures',
+        },
+        fmta(
+            [[
+#place(top, float: true)[
+  #grid(
+    columns: (1fr, 1fr),
+    gutter: 1em,
+    [#figure(
+      image("<>", width: 100%),
+      placement: auto,
+      caption: [<>],
+    ) <<fig:<>>>],
+    [#figure(
+      image("<>", width: 100%),
+      placement: auto,
+      caption: [<>],
+    ) <<fig:<>>>],
+  )
+]
+
+<>
+            ]],
+            {
+                i(1),
+                i(2, 'First caption'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
+                i(3),
+                i(4, 'Second caption'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 4 }),
                 i(0),
             }
         ),

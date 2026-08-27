@@ -20,8 +20,8 @@ local function numbered_statement(trigger, environment, prefix, label, dscr)
 <>
 ]], {
             c(1, {
-                t(''),
                 sn(nil, { t('(note: ['), i(1, 'Name'), t('])') }),
+                t(''),
             }),
             f(_G.LuaSnipConfig.visual_selection),
             i(2, label),
@@ -42,8 +42,8 @@ local function unnumbered_statement(trigger, environment, label, dscr)
 <>
 ]], {
             c(1, {
-                t(''),
                 sn(nil, { t(', note: ['), i(1, 'Name'), t(']') }),
+                t(''),
             }),
             f(_G.LuaSnipConfig.visual_selection),
             i(2, label),

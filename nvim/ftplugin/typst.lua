@@ -781,8 +781,37 @@ function _G.TypstConfig.backward_search(pdf)
             local match = matches[1]
             local bufnr = vim.fn.bufadd(match.path)
             vim.fn.bufload(bufnr)
-            api.nvim_win_set_buf(0, bufnr)
-            api.nvim_win_set_cursor(0, { match.from[1] + 1, match.from[2] })
+            local winid = api.nvim_get_current_win()
+            local function editable(candidate)
+                return api.nvim_win_get_config(candidate).relative == ''
+                    and not vim.wo[candidate].winfixbuf
+            end
+            local windows = api.nvim_list_wins()
+            -- If the source is already open, jump there without changing another buffer
+            local source_winid = vim.iter(windows):find(function(candidate)
+                return editable(candidate) and api.nvim_win_get_buf(candidate) == bufnr
+            end)
+            if source_winid then
+                winid = source_winid
+            elseif not editable(winid) then
+                -- For a float or fixed window, jump through another normal window
+                winid = vim.iter(windows):find(function(candidate)
+                    local path = vim.fs.normalize(
+                        api.nvim_buf_get_name(api.nvim_win_get_buf(candidate))
+                    )
+                    return editable(candidate) and vim.startswith(path .. '/', root)
+                end) or vim.iter(windows):find(editable)
+            end
+            if not winid then
+                vim.notify(
+                    'No editable window for the Typst source',
+                    vim.log.levels.ERROR
+                )
+                return 0
+            end
+            api.nvim_set_current_win(winid)
+            api.nvim_win_set_buf(winid, bufnr)
+            api.nvim_win_set_cursor(winid, { match.from[1] + 1, match.from[2] })
             -- Folds only exist once the buffer has been drawn in the window
             vim.schedule(function()
                 pcall(vim.cmd.normal, { args = { 'zOzz' }, bang = true })

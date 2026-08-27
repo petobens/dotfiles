@@ -254,11 +254,17 @@ end
 -- Autocmd settings
 local blink_cmp_augroup = vim.api.nvim_create_augroup('blink_cmp', { clear = true })
 vim.api.nvim_create_autocmd('User', {
-    desc = 'Show Blink completion menu on Luasnip insert node enter',
+    desc = 'Manage Blink completion on Luasnip insert node enter',
     group = blink_cmp_augroup,
     pattern = 'LuasnipInsertNodeEnter',
     callback = function()
         vim.schedule(function()
+            local luasnip = require('luasnip')
+            if luasnip.choice_active() then
+                blink_cmp.cancel()
+                return
+            end
+
             local mode = vim.api.nvim_get_mode().mode
             if not mode:match('^[sS]$') then
                 blink_cmp.show()

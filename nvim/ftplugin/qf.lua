@@ -9,7 +9,7 @@ vim.cmd.wincmd('J')
 vim.api.nvim_win_resize(
     0,
     -1,
-    math.max(1, math.min(vim.api.nvim_buf_line_count(0), 15)),
+    math.max(1, math.min(vim.api.nvim_win_text_height(0, {}).all, 15)),
     {
         anchor = 'bottom',
     }

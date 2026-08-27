@@ -133,6 +133,7 @@ function M.bookmark_dirs(opts)
             finder = finders.new_table({
                 results = {
                     vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'dotfiles'),
+                    vim.fs.joinpath(vim.env.HOME, 'git-repos', 'private', 'ai-harness'),
                     vim.fs.joinpath(
                         vim.env.HOME,
                         'git-repos',
