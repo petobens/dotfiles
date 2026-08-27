@@ -1,6 +1,10 @@
 #import "@preview/in-dexter:0.7.2": index, index-main, make-index
 #import "@local/template-utils:0.1.0": *
 
+#let _default-font-size = 10pt
+#let _small-size(font-size) = font-size - 1pt
+#let _footnote-size(font-size) = font-size - 2pt
+
 // Numbering
 #let book-phase = state("latex-book-phase", "title")
 #let page-style-enabled = state("latex-book-page-style", true)
@@ -77,7 +81,7 @@
   #line(length: 100%, stroke: 0.4pt)
 ]
 
-#let book-header = context {
+#let book-header(font-size) = context {
   let phase = book-phase.get()
   let page = counter(page).get().first()
   let physical-page = here().page()
@@ -89,10 +93,13 @@
   } else if phase == "front" {
     let heading = latest-heading(1)
     if heading != none {
-      ruled-header(align(center, text(size: 9pt, smallcaps(heading.body))))
+      ruled-header(align(center, text(
+        size: _small-size(font-size),
+        smallcaps(heading.body),
+      )))
     }
   } else if phase == "main" and not chapter-on-page {
-    set text(size: 10pt)
+    set text(size: font-size)
     if calc.even(page) {
       ruled-header(grid(
         columns: (auto, 1fr, auto),
@@ -107,7 +114,7 @@
   }
 }
 
-#let book-footer = context {
+#let book-footer(font-size) = context {
   let phase = book-phase.get()
   let physical-page = here().page()
   let chapter-on-page = query(heading.where(level: 1)).any(
@@ -116,9 +123,9 @@
   if not folio-enabled.get() {
     none
   } else if phase == "front" and (page-style-enabled.get() or chapter-on-page) {
-    align(center, text(size: 9pt, page-number()))
+    align(center, text(size: _small-size(font-size), page-number()))
   } else if phase == "main" and chapter-on-page {
-    align(center, text(size: 9pt, page-number()))
+    align(center, text(size: _small-size(font-size), page-number()))
   }
 }
 
@@ -154,7 +161,7 @@
         [References for Chapter #chapter-number]
       }
       heading(level: 2, numbering: none, outlined: true, chapter-title)
-      show bibliography: set text(size: 9pt)
+      show bibliography: set text(size: _small-size(text.size))
       bibliography(
         sources,
         title: none,
@@ -198,7 +205,11 @@
 
 // Front matter
 #let half-title-page(title) = [
-  #align(center, text(size: 20.74pt, weight: "bold", title))
+  #align(center, text(
+    size: 20.74pt,
+    weight: "bold",
+    title,
+  ))
   #pagebreak(to: "odd")
 ]
 
@@ -242,8 +253,8 @@
   #pagebreak()
 ]
 
-#let copyright-page(copyright) = [
-  #set text(size: 8pt)
+#let copyright-page(copyright, font-size) = [
+  #set text(size: _footnote-size(font-size))
   #set par(first-line-indent: 0pt, spacing: 1.2em)
   #v(1fr)
   #copyright
@@ -252,7 +263,11 @@
 
 #let dedication-page(dedication) = [
   #pagebreak(weak: true, to: "odd")
-  #align(center + horizon, text(size: 12pt, style: "italic", dedication))
+  #align(center + horizon, text(
+    size: 12pt,
+    style: "italic",
+    dedication,
+  ))
   #pagebreak(to: "odd")
 ]
 
@@ -303,6 +318,7 @@
   date: datetime.today(),
   metadata-date: auto,
   language: "es",
+  font-size: _default-font-size,
   institution: none,
   department: none,
   logo: none,
@@ -336,22 +352,22 @@
     binding: left,
     numbering: "i",
     margin: (top: 3.7cm, bottom: 4.7cm, inside: 3.5cm, outside: 3.5cm),
-    header: book-header,
+    header: book-header(font-size),
     header-ascent: 25%,
-    footer: book-footer,
+    footer: book-footer(font-size),
     footer-descent: 30%,
   )
 
   // Typography
   set text(
     font: "New Computer Modern",
-    size: 10pt,
+    size: font-size,
     lang: language,
     hyphenate: auto,
   )
   set smartquote(quotes: curly-double-quotes)
   show math.equation: set text(font: "New Computer Modern Math")
-  show: code-style.with(size: 9pt)
+  show: code-style.with(size: _small-size(font-size))
   show link: set text(fill: navy)
   show ref: number-only-reference(
     supplement: book-reference-supplement,
@@ -376,11 +392,11 @@
     supplement: none,
   )
   set figure(numbering: n => book-numbering(n), gap: 5pt)
+  show figure.caption: show-figure-caption.with(_small-size(font-size))
   show figure.where(kind: image): set figure(placement: top)
   show figure.where(kind: table): set figure(placement: top)
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: "theorem"): show-statement
-  show figure.caption: show-figure-caption
   show heading.where(level: 1): it => {
     page-style-enabled.update(false)
     if it.numbering != none {
@@ -448,7 +464,10 @@
     clearance: footnote-rule-spacing,
     indent: 0pt,
   )
-  show footnote.entry: it => show-footnote-entry(it, size: 8pt)
+  show footnote.entry: it => show-footnote-entry(
+    it,
+    size: _footnote-size(font-size),
+  )
   show outline.entry: book-outline-entry
 
   // Front matter
@@ -462,7 +481,7 @@
     department,
     logo,
   )
-  if optional-value-present(copyright) { copyright-page(copyright) }
+  if optional-value-present(copyright) { copyright-page(copyright, font-size) }
   if dedication != none { dedication-page(dedication) }
 
   book-phase.update("front")

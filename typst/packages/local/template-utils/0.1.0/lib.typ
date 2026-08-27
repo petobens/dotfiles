@@ -321,8 +321,8 @@
   it.body
 }
 
-#let show-figure-caption(it) = {
-  set text(size: 9pt)
+#let show-figure-caption(size, it) = {
+  set text(size: size)
   if it.kind == table {
     align(center)[
       #strong[#it.supplement #context it.counter.display(it.numbering)]
