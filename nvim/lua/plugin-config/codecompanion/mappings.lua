@@ -297,6 +297,22 @@ local function explore_review_comments()
     vim.cmd.copen()
 end
 
+local function send_review_comments()
+    if #code_review.pending() == 0 then
+        vim.notify('No pending CodeCompanion review comments', vim.log.levels.WARN)
+        return
+    end
+
+    local chat = codecompanion.last_chat()
+    if not chat then
+        vim.notify('No CodeCompanion chat available', vim.log.levels.WARN)
+        return
+    end
+
+    chat_helpers.submit_user_message(chat, 'Please address #{code_review}')
+    window_helpers.focus_or_toggle_chat({ startinsert = false })
+end
+
 local function show_ai_usage()
     vim.api.nvim_echo({ { 'Retrieving rate limits...' } }, false)
     usage_helpers.run(nil, function(out)
@@ -396,6 +412,10 @@ local function setup_global_mappings()
             math.max(anchor_line, cursor_line),
         })
     end, { desc = '[R]eview [c]omment: add with CodeCompanion' })
+
+    vim.keymap.set('n', '<Leader>rs', send_review_comments, {
+        desc = '[R]eview comments: [s]end to CodeCompanion',
+    })
 
     vim.keymap.set('n', '<Leader>re', explore_review_comments, {
         desc = '[R]eview comments: [e]xplore in quickfix',
