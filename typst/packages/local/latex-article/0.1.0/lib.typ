@@ -308,7 +308,8 @@
     )
   }
   if toc {
-    document-outline(none, depth: 2)
+    let contents-title = if language == "es" { [Índice] } else { [Contents] }
+    document-outline(contents-title, depth: 2)
   }
   body
 }
