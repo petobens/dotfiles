@@ -1,6 +1,10 @@
 #import "@preview/retrofit:0.2.0": backrefs
 #import "@local/template-utils:0.1.0": *
 
+#let _default-font-size = 11pt
+#let _small-size(font-size) = font-size - 1pt
+#let _footnote-size(font-size) = font-size - 2pt
+
 // Numbering
 #let appendix-mode = state("latex-article-appendix", false)
 // Store the section in each counter so cross-references keep their target number
@@ -37,7 +41,7 @@
 )
 
 // Page furniture and front matter
-#let article-header(short-title, author) = context {
+#let article-header(short-title, author, font-size) = context {
   let page-number = counter(page).get().first()
   let running-title = if calc.even(page-number) { author } else { short-title }
   if page-number > 1 and running-title != none and running-title != [] {
@@ -45,8 +49,8 @@
       grid(
         columns: (1fr, auto, 1fr),
         align: (left, center, right),
-        text(size: 9pt, numbering("1", page-number)),
-        text(size: 10pt, upper(running-title)),
+        text(size: _footnote-size(font-size), numbering("1", page-number)),
+        text(size: _small-size(font-size), upper(running-title)),
         [],
       )
     } else {
@@ -54,16 +58,19 @@
         columns: (1fr, auto, 1fr),
         align: (left, center, right),
         [],
-        text(size: 10pt, upper(running-title)),
-        text(size: 9pt, numbering("1", page-number)),
+        text(size: _small-size(font-size), upper(running-title)),
+        text(size: _footnote-size(font-size), numbering("1", page-number)),
       )
     }
   }
 }
 
-#let article-footer = context {
+#let article-footer(font-size) = context {
   if counter(page).get().first() == 1 {
-    align(center, text(size: 9pt, counter(page).display("1")))
+    align(
+      center,
+      text(size: _footnote-size(font-size), counter(page).display("1")),
+    )
   }
 }
 
@@ -91,6 +98,7 @@
 
 #let article-abstract(
   abstract,
+  font-size,
   keywords: none,
   jel: none,
 ) = block(
@@ -99,7 +107,7 @@
   below: 2.5em,
   inset: (x: 2.5em),
 )[
-  #set text(size: 10pt)
+  #set text(size: _small-size(font-size))
   #set par(first-line-indent: 0pt)
   #align(center)[*#localized([Resumen], [Abstract])*]
   #v(0.5em)
@@ -192,6 +200,7 @@
   metadata-date: auto,
   short-title: none,
   language: "es",
+  font-size: _default-font-size,
   abstract: none,
   keywords: none,
   jel: none,
@@ -211,28 +220,28 @@
     binding: left,
     numbering: "1",
     margin: (top: 3.7cm, bottom: 4.7cm, inside: 3.5cm, outside: 3.5cm),
-    header: article-header(short-title, author),
+    header: article-header(short-title, author, font-size),
     header-ascent: 25%,
-    footer: article-footer,
+    footer: article-footer(font-size),
     footer-descent: 30%,
   )
 
   // Typography
   set text(
     font: "New Computer Modern",
-    size: 11pt,
+    size: font-size,
     lang: language,
     hyphenate: auto,
   )
   set smartquote(quotes: curly-double-quotes)
   show math.equation: set text(font: "New Computer Modern Math")
-  show: code-style.with(size: 9pt)
+  show: code-style.with(size: _footnote-size(font-size))
   show link: set text(fill: navy)
   show ref: number-only-reference(
     supplement: article-reference-supplement,
   )
   show cite: set text(fill: navy)
-  show bibliography: set text(size: 9pt)
+  show bibliography: set text(size: _footnote-size(font-size))
   show bibliography: set block(spacing: bibliography-entry-spacing)
   set par(
     leading: 0.53em,
@@ -254,11 +263,11 @@
     numbering: n => article-numbering(n),
     gap: 5pt,
   )
+  show figure.caption: show-figure-caption.with(_small-size(font-size))
   show figure.where(kind: image): set figure(placement: top)
   show figure.where(kind: table): set figure(placement: top)
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: "theorem"): show-statement
-  show figure.caption: show-figure-caption
   show heading.where(level: 1): it => {
     if it.numbering == none {
       v(1.5em)
@@ -288,7 +297,10 @@
     clearance: footnote-rule-spacing,
     indent: 0pt,
   )
-  show footnote.entry: show-footnote-entry
+  show footnote.entry: it => show-footnote-entry(
+    it,
+    size: _footnote-size(font-size),
+  )
   show outline.entry: article-outline-entry
   show: apply-mybibstyle
   // The backrefs plugin costs about a second per compile, so Neovim's forward
@@ -303,6 +315,7 @@
   if abstract != none {
     article-abstract(
       abstract,
+      font-size,
       keywords: keywords,
       jel: jel,
     )

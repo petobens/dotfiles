@@ -3,6 +3,9 @@
 #import themes.simple: *
 #import "@local/template-utils:0.1.0": *
 
+#let _default-font-size = 14pt
+#let _scaled-size(size, font-size) = size / _default-font-size * font-size
+
 // Palette
 #let mutt-blue = rgb("#0045FB")
 #let mutt-navy = rgb("#001237")
@@ -60,7 +63,7 @@
 
 #let section-chip-width = 128pt
 
-#let section-chip(self) = block(
+#let section-chip(self, font-size) = block(
   width: section-chip-width,
   fill: chip-gray,
   inset: (x: 7pt, y: 5pt),
@@ -69,7 +72,7 @@
 )[
   #align(center)[
     #text(
-      size: 9pt,
+      size: _scaled-size(9pt, font-size),
       weight: "bold",
       fill: mutt-navy,
       context {
@@ -87,7 +90,7 @@
   ]
 ]
 
-#let slide-title(self) = move(dy: 25pt, block(
+#let slide-title(self, font-size: _default-font-size) = move(dy: 25pt, block(
   width: 100%,
   height: 26.4pt,
 )[
@@ -98,16 +101,16 @@
     align: (left + top, left + top, right + top),
     move(dy: 4pt, toggle-icon),
     text(
-      size: 23pt,
+      size: _scaled-size(23pt, font-size),
       weight: "bold",
       fill: mutt-blue,
       utils.display-current-heading(level: 2, depth: self.slide-level),
     ),
-    move(dy: 4pt, section-chip(self)),
+    move(dy: 4pt, section-chip(self, font-size)),
   )
 ])
 
-#let deck-footer = context {
+#let deck-footer(font-size) = context {
   box(width: 100%)[
     #move(dy: -4pt)[
       #grid(
@@ -121,13 +124,13 @@
         [
           #align(right)[
             #text(
-              size: 14pt,
+              size: _scaled-size(14pt, font-size),
               weight: "medium",
               tracking: 0.2pt,
               fill: mutt-blue,
             )[Muttdata]
             #linebreak()
-            #text(size: 9pt, fill: mutt-navy)[
+            #text(size: _scaled-size(9pt, font-size), fill: mutt-navy)[
               #utils.slide-counter.display()/#utils.last-slide-number
             ]
           ]
@@ -143,7 +146,7 @@
 )
 
 // Agenda and title slides
-#let agenda-entry(cover: false, ..args, it) = {
+#let agenda-entry(font-size: _default-font-size, cover: false, ..args, it) = {
   let sections = query(heading.where(level: 1, outlined: true))
   let is-appendix(section) = appendix-mode.at(section.location())
   let appendices = sections.filter(is-appendix)
@@ -175,12 +178,12 @@
       align: (left + horizon, left + horizon),
       text(
         font: "DejaVu Sans Mono",
-        size: 23pt,
+        size: _scaled-size(23pt, font-size),
         fill: if cover { mutt-navy.lighten(45%) } else { mutt-blue },
         label,
       ),
       text(
-        size: 22pt,
+        size: _scaled-size(22pt, font-size),
         weight: if cover { "regular" } else { "bold" },
         fill: if cover { mutt-navy.lighten(45%) } else { mutt-blue },
         it.element.body,
@@ -195,7 +198,11 @@
   appendix-mode.update(false)
 }
 
-#let section-divider(config: (:), body) = centered-slide(
+#let section-divider(
+  config: (:),
+  body,
+  font-size: _default-font-size,
+) = centered-slide(
   config: utils.merge-dicts(config, config-page(fill: white, header: none)),
   [
     #reset-numbering()
@@ -204,14 +211,22 @@
       gutter: 38pt,
       align: (top + left, top + left),
       [
-        #text(size: 34pt, weight: "bold", fill: mutt-blue)[Agenda]
+        #text(
+          size: _scaled-size(34pt, font-size),
+          weight: "bold",
+          fill: mutt-blue,
+        )[Agenda]
         #h(12pt)
-        #text(size: 34pt, weight: "bold", fill: mutt-blue)[›]
+        #text(
+          size: _scaled-size(34pt, font-size),
+          weight: "bold",
+          fill: mutt-blue,
+        )[›]
       ],
       components.progressive-outline(
         level: 1,
         alpha: 100%,
-        transform: agenda-entry,
+        transform: agenda-entry.with(font-size: font-size),
         title: none,
         depth: 1,
       ),
@@ -225,6 +240,7 @@
   subtitle: [],
   eyebrow: [MUTTDATA],
   date: datetime.today(),
+  font-size: _default-font-size,
 ) = title-slide[
   #block(
     width: 100%,
@@ -243,19 +259,31 @@
         columns: (1fr,),
         rows: (auto, 1fr, auto),
         align(left)[
-          #text(size: 17pt, weight: "bold", fill: mutt-navy)[#eyebrow]
+          #text(
+            size: _scaled-size(17pt, font-size),
+            weight: "bold",
+            fill: mutt-navy,
+          )[#eyebrow]
         ],
         align(left + horizon)[
-          #text(size: 50pt, weight: "bold", fill: mutt-blue)[#title]
+          #text(
+            size: _scaled-size(50pt, font-size),
+            weight: "bold",
+            fill: mutt-blue,
+          )[#title]
           #v(22pt)
           #text(
             font: "DejaVu Sans Mono",
-            size: 18pt,
+            size: _scaled-size(18pt, font-size),
             fill: mutt-blue,
           )[#subtitle]
         ],
         align(left)[
-          #text(size: 11pt, weight: "bold", fill: mutt-blue)[#date]
+          #text(
+            size: _scaled-size(11pt, font-size),
+            weight: "bold",
+            fill: mutt-blue,
+          )[#date]
         ],
       ),
       align(center + horizon)[
@@ -410,13 +438,13 @@
 )[#align(center)[#body]]
 
 #let slide-subtitle(body) = text(
-  size: 18pt,
+  size: 18em / 14,
   weight: "bold",
   fill: muted,
   body,
 )
 
-#let small(body) = text(size: 11.5pt, fill: muted, body)
+#let small(body) = text(size: 11.5em / 14, fill: muted, body)
 
 // Document template
 #let mutt-slides(
@@ -426,6 +454,7 @@
   eyebrow: [MUTTDATA],
   date: datetime.today(),
   language: "es",
+  font-size: _default-font-size,
   body,
 ) = {
   let date = localized-date(date, language)
@@ -433,9 +462,9 @@
   // Theme
   show: simple-theme.with(
     aspect-ratio: "16-9",
-    header: slide-title,
+    header: slide-title.with(font-size: font-size),
     header-right: none,
-    footer: deck-footer,
+    footer: deck-footer(font-size),
     footer-right: none,
     subslide-preamble: none,
     config-page(
@@ -443,7 +472,7 @@
       footer-descent: 0em,
     ),
     config-common(
-      new-section-slide-fn: section-divider,
+      new-section-slide-fn: section-divider.with(font-size: font-size),
       default-composer: vertical-center,
       reset-page-counter-to-slide-counter: false,
     ),
@@ -463,7 +492,7 @@
   )
 
   // Content styling
-  set text(font: "Arial", fill: mutt-navy, size: 14pt, lang: language)
+  set text(font: "Arial", fill: mutt-navy, size: font-size, lang: language)
   set smartquote(quotes: curly-double-quotes)
   show: apply-mybibstyle
   show: backrefs.with(
@@ -472,7 +501,7 @@
   )
   show bibliography: set text(font: "New Computer Modern")
   show bibliography: set block(spacing: bibliography-entry-spacing)
-  show: code-style.with(size: 13pt)
+  show: code-style.with(size: _scaled-size(13pt, font-size))
   show strong: set text(fill: mutt-blue)
   show emph: set text(fill: muted)
   show ref: it => context {
@@ -509,7 +538,7 @@
   set list(indent: 17pt, body-indent: 8pt, spacing: 5pt)
   set enum(indent: 19pt, body-indent: 8pt, spacing: 5pt)
   set footnote.entry(separator: none)
-  show footnote.entry: set text(size: 9pt)
+  show footnote.entry: set text(size: _scaled-size(9pt, font-size))
   show footnote.entry: it => move(dy: 21pt, it)
   set table(stroke: 1pt + rgb("#CBD3E1"), inset: 7pt)
   show table: it => align(center, it)
@@ -537,6 +566,7 @@
     subtitle: subtitle,
     eyebrow: eyebrow,
     date: date,
+    font-size: font-size,
   )
   body
 }

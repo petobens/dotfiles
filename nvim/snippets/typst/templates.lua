@@ -23,6 +23,7 @@ return {
 #import "@local/latex-article:0.1.0": *
 
 #show: latex-article.with(
+  font-size: <>,
   title: [<>],
   abstract: none,
 )
@@ -33,9 +34,10 @@ return {
 <>
             ]],
             {
-                i(1, 'Article title'),
-                i(2, 'Section'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
+                i(1, '11pt'),
+                i(2, 'Article title'),
+                i(3, 'Section'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 3 }),
                 i(0),
             }
         ),
@@ -51,6 +53,7 @@ return {
 
 #show: latex-article.with(
   language: "<>",
+  font-size: <>,
   title: [<>],
   author: "<>",
   author-note: <>,
@@ -69,31 +72,32 @@ return {
             ]],
             {
                 c(1, { static_choice('es'), static_choice('en') }),
-                i(2, 'Article title'),
-                i(3, 'Pedro Ferrari'),
-                c(4, {
+                i(2, '11pt'),
+                i(3, 'Article title'),
+                i(4, 'Pedro Ferrari'),
+                c(5, {
                     sn(nil, { t('['), i(1, 'Author affiliation or note'), t(']') }),
                     static_choice('none'),
                 }),
-                c(5, {
+                c(6, {
                     sn(nil, { t('['), i(1, 'Short article title'), t(']') }),
                     static_choice('none'),
                 }),
-                c(6, {
+                c(7, {
                     sn(nil, { t('['), i(1, 'Abstract'), t(']') }),
                     static_choice('none'),
                 }),
-                c(7, {
+                c(8, {
                     sn(nil, { t('"'), i(1, 'Keywords'), t('"') }),
                     static_choice('none'),
                 }),
-                c(8, {
+                c(9, {
                     sn(nil, { t('['), i(1, 'JEL codes'), t(']') }),
                     static_choice('none'),
                 }),
-                i(9, 'false'),
-                i(10, 'Introduction'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 10 }),
+                i(10, 'false'),
+                i(11, 'Introduction'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 11 }),
                 i(0),
             }
         ),
@@ -109,6 +113,7 @@ return {
 
 #show: latex-book.with(
   language: "<>",
+  font-size: <>,
   title: [<>],
   subtitle: <>,
   author: "<>",
@@ -133,21 +138,22 @@ return {
             ]],
             {
                 c(1, { static_choice('es'), static_choice('en') }),
-                i(2, 'Book title'),
-                c(3, {
+                i(2, '10pt'),
+                i(3, 'Book title'),
+                c(4, {
                     sn(nil, { t('['), i(1, 'Subtitle'), t(']') }),
                     static_choice('none'),
                 }),
-                i(4, 'Pedro Ferrari'),
-                c(5, {
+                i(5, 'Pedro Ferrari'),
+                c(6, {
                     sn(nil, { t('['), i(1, 'Institution'), t(']') }),
                     static_choice('none'),
                 }),
-                c(6, {
+                c(7, {
                     sn(nil, { t('['), i(1, 'Department'), t(']') }),
                     static_choice('none'),
                 }),
-                c(7, {
+                c(8, {
                     sn(nil, {
                         t('read("'),
                         i(1),
@@ -155,7 +161,7 @@ return {
                     }),
                     static_choice('none'),
                 }),
-                c(8, {
+                c(9, {
                     sn(nil, {
                         t('['),
                         i(1, '© Pedro Ferrari. All rights reserved.'),
@@ -163,20 +169,20 @@ return {
                     }),
                     static_choice('none'),
                 }),
-                c(9, {
+                c(10, {
                     sn(nil, { t('['), i(1, 'Dedication'), t(']') }),
                     static_choice('none'),
                 }),
-                i(10, 'true'),
-                c(11, {
+                i(11, 'true'),
+                c(12, {
                     sn(nil, { t('include "'), i(1, 'preface.typ'), t('"') }),
                     static_choice('none'),
                 }),
-                i(12, 'false'),
-                i(13, 'First chapter'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 13 }),
-                i(14, 'First section'),
+                i(13, 'false'),
+                i(14, 'First chapter'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 14 }),
+                i(15, 'First section'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 15 }),
                 i(0),
             }
         ),
@@ -192,6 +198,7 @@ return {
 
 #show: mutt-slides.with(
   language: "<>",
+  font-size: <>,
   title: [<>],
   subtitle: [<>],
   author: [<>],
@@ -207,12 +214,13 @@ return {
             ]],
             {
                 c(1, { static_choice('es'), static_choice('en') }),
-                i(2, 'Presentation title'),
-                i(3, 'Subtitle'),
-                i(4, 'Pedro Ferrari'),
-                i(5, 'MUTTDATA × CLIENT'),
-                i(6, 'Section'),
-                i(7, 'Slide title'),
+                i(2, '14pt'),
+                i(3, 'Presentation title'),
+                i(4, 'Subtitle'),
+                i(5, 'Pedro Ferrari'),
+                i(6, 'MUTTDATA × CLIENT'),
+                i(7, 'Section'),
+                i(8, 'Slide title'),
                 i(0),
             }
         ),
