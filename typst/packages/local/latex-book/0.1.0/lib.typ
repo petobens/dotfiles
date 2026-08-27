@@ -1,6 +1,7 @@
 #import "@preview/in-dexter:0.7.2": index, index-main, make-index
 #import "@local/template-utils:0.1.0": *
 
+// Font sizes: derive body roles from the base; keep cover and headings fixed
 #let _default-font-size = 10pt
 #let _small-size(font-size) = font-size - 1pt
 #let _footnote-size(font-size) = font-size - 2pt
@@ -312,13 +313,13 @@
 
 // Document template
 #let latex-book(
+  language: "es",
+  font-size: _default-font-size,
   title: [],
   subtitle: none,
   author: "Pedro Ferrari",
   date: datetime.today(),
   metadata-date: auto,
-  language: "es",
-  font-size: _default-font-size,
   institution: none,
   department: none,
   logo: none,

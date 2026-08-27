@@ -3,6 +3,7 @@
 #import themes.simple: *
 #import "@local/template-utils:0.1.0": *
 
+// Font sizes: scale all text roles from the 14pt baseline
 #let _default-font-size = 14pt
 #let _scaled-size(size, font-size) = size / _default-font-size * font-size
 
@@ -448,13 +449,13 @@
 
 // Document template
 #let mutt-slides(
+  language: "es",
+  font-size: _default-font-size,
   title: [],
   subtitle: [],
   author: [Pedro Ferrari],
   eyebrow: [MUTTDATA],
   date: datetime.today(),
-  language: "es",
-  font-size: _default-font-size,
   body,
 ) = {
   let date = localized-date(date, language)

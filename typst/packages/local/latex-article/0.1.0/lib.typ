@@ -1,6 +1,7 @@
 #import "@preview/retrofit:0.2.0": backrefs
 #import "@local/template-utils:0.1.0": *
 
+// Font sizes: derive body roles from the base; keep title and headings fixed
 #let _default-font-size = 11pt
 #let _small-size(font-size) = font-size - 1pt
 #let _footnote-size(font-size) = font-size - 2pt
@@ -193,14 +194,14 @@
 
 // Document template
 #let latex-article(
+  language: "es",
+  font-size: _default-font-size,
   title: [],
   author: "Pedro Ferrari",
   author-note: none,
   date: datetime.today(),
   metadata-date: auto,
   short-title: none,
-  language: "es",
-  font-size: _default-font-size,
   abstract: none,
   keywords: none,
   jel: none,
