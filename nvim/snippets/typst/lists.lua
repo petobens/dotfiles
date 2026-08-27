@@ -4,6 +4,7 @@ local c = ls.choice_node
 local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
+local sn = ls.snippet_node
 local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
@@ -128,7 +129,10 @@ return {
 }, {
     -- List item
     s({ trig = 'itm', wordTrig = false, dscr = 'List [it]e[m]' }, {
-        c(1, { t('- '), t('+ ') }),
+        c(1, {
+            sn(nil, { t('- '), i(1) }),
+            sn(nil, { t('+ '), i(1) }),
+        }),
         f(_G.LuaSnipConfig.visual_selection),
         i(0),
     }),

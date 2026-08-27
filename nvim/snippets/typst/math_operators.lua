@@ -25,7 +25,10 @@ return {
     s(
         { trig = 'sum', dscr = '[Sum] or product' },
         fmta('<>_(<>)^(<>) <><>', {
-            c(1, { t('sum'), t('product') }),
+            c(1, {
+                sn(nil, { t('sum'), i(1) }),
+                sn(nil, { t('product'), i(1) }),
+            }),
             i(2, 't = 1'),
             i(3, 'oo'),
             f(_G.LuaSnipConfig.visual_selection),

@@ -10,6 +10,10 @@ local t = ls.text_node
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
+local function static_choice(value)
+    return sn(nil, { t(value), i(1) })
+end
+
 return {
     -- Minimal working example
     s(
@@ -64,20 +68,29 @@ return {
 <>
             ]],
             {
-                c(1, { t('es'), t('en') }),
+                c(1, { static_choice('es'), static_choice('en') }),
                 i(2, 'Article title'),
                 i(3, 'Pedro Ferrari'),
                 c(4, {
-                    t('none'),
                     sn(nil, { t('['), i(1, 'Author affiliation or note'), t(']') }),
+                    static_choice('none'),
                 }),
                 c(5, {
-                    t('none'),
                     sn(nil, { t('['), i(1, 'Short article title'), t(']') }),
+                    static_choice('none'),
                 }),
-                c(6, { t('none'), sn(nil, { t('['), i(1, 'Abstract'), t(']') }) }),
-                c(7, { t('none'), sn(nil, { t('"'), i(1, 'Keywords'), t('"') }) }),
-                c(8, { t('none'), sn(nil, { t('['), i(1, 'JEL codes'), t(']') }) }),
+                c(6, {
+                    sn(nil, { t('['), i(1, 'Abstract'), t(']') }),
+                    static_choice('none'),
+                }),
+                c(7, {
+                    sn(nil, { t('"'), i(1, 'Keywords'), t('"') }),
+                    static_choice('none'),
+                }),
+                c(8, {
+                    sn(nil, { t('['), i(1, 'JEL codes'), t(']') }),
+                    static_choice('none'),
+                }),
                 i(9, 'false'),
                 i(10, 'Introduction'),
                 f(_G.LuaSnipConfig.snake_case_labels, { 10 }),
@@ -119,33 +132,45 @@ return {
 <>
             ]],
             {
-                c(1, { t('es'), t('en') }),
+                c(1, { static_choice('es'), static_choice('en') }),
                 i(2, 'Book title'),
-                c(3, { t('none'), sn(nil, { t('['), i(1, 'Subtitle'), t(']') }) }),
+                c(3, {
+                    sn(nil, { t('['), i(1, 'Subtitle'), t(']') }),
+                    static_choice('none'),
+                }),
                 i(4, 'Pedro Ferrari'),
-                c(5, { t('none'), sn(nil, { t('['), i(1, 'Institution'), t(']') }) }),
-                c(6, { t('none'), sn(nil, { t('['), i(1, 'Department'), t(']') }) }),
+                c(5, {
+                    sn(nil, { t('['), i(1, 'Institution'), t(']') }),
+                    static_choice('none'),
+                }),
+                c(6, {
+                    sn(nil, { t('['), i(1, 'Department'), t(']') }),
+                    static_choice('none'),
+                }),
                 c(7, {
-                    t('none'),
                     sn(nil, {
                         t('read("'),
                         i(1),
                         t('", encoding: none)'),
                     }),
+                    static_choice('none'),
                 }),
                 c(8, {
-                    t('none'),
                     sn(nil, {
                         t('['),
                         i(1, '© Pedro Ferrari. All rights reserved.'),
                         t(']'),
                     }),
+                    static_choice('none'),
                 }),
-                c(9, { t('none'), sn(nil, { t('['), i(1, 'Dedication'), t(']') }) }),
+                c(9, {
+                    sn(nil, { t('['), i(1, 'Dedication'), t(']') }),
+                    static_choice('none'),
+                }),
                 i(10, 'true'),
                 c(11, {
-                    t('none'),
                     sn(nil, { t('include "'), i(1, 'preface.typ'), t('"') }),
+                    static_choice('none'),
                 }),
                 i(12, 'false'),
                 i(13, 'First chapter'),
@@ -181,7 +206,7 @@ return {
 <>
             ]],
             {
-                c(1, { t('es'), t('en') }),
+                c(1, { static_choice('es'), static_choice('en') }),
                 i(2, 'Presentation title'),
                 i(3, 'Subtitle'),
                 i(4, 'Pedro Ferrari'),
