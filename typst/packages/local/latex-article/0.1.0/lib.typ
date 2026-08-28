@@ -50,7 +50,7 @@
       grid(
         columns: (1fr, auto, 1fr),
         align: (left, center, right),
-        text(size: _footnote-size(font-size), numbering("1", page-number)),
+        text(size: _small-size(font-size), numbering("1", page-number)),
         text(size: _small-size(font-size), upper(running-title)),
         [],
       )
@@ -60,7 +60,7 @@
         align: (left, center, right),
         [],
         text(size: _small-size(font-size), upper(running-title)),
-        text(size: _footnote-size(font-size), numbering("1", page-number)),
+        text(size: _small-size(font-size), numbering("1", page-number)),
       )
     }
   }
@@ -70,7 +70,7 @@
   if counter(page).get().first() == 1 {
     align(
       center,
-      text(size: _footnote-size(font-size), counter(page).display("1")),
+      text(size: _small-size(font-size), counter(page).display("1")),
     )
   }
 }
