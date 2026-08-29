@@ -89,8 +89,15 @@
 #let show-footnote-entry(it, size: 9pt) = context {
   set text(size: size)
   let location = it.note.location()
+  let marker = counter(footnote).display(at: location, it.note.numbering)
   h(15pt)
-  counter(footnote).display(at: location, "1. ")
+  if type(it.note.numbering) == function {
+    super(marker)
+    h(-0.15em)
+  } else {
+    marker
+    [. ]
+  }
   it.note.body
 }
 
