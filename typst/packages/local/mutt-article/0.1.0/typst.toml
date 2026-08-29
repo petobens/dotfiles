@@ -1,0 +1,7 @@
+[package]
+name = "mutt-article"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["Pedro Ferrari"]
+description = "Muttdata internal memos and long-form documents."
+compiler = "0.15.0"
