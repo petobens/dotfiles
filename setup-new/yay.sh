@@ -222,6 +222,7 @@ $yay_cmd poppler
 $yay_cmd prettyping
 $yay_cmd procs
 $yay_cmd qemu-desktop
+$yay_cmd qpdf
 $yay_cmd qrencode
 $yay_cmd ripgrep
 $yay_cmd rumdl
