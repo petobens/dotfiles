@@ -7,16 +7,16 @@
 #let _footnote-size(font-size) = font-size - 2pt
 
 // Numbering
-#let appendix-mode = state("latex-article-appendix", false)
+#let _appendix-mode = state("latex-article-appendix", false)
 // Store the section in each counter so cross-references keep their target number
-#let numbering-scale = 1000
-#let appendix-offset = numbering-scale * numbering-scale
+#let _numbering-scale = 1000
+#let _appendix-offset = _numbering-scale * _numbering-scale
 
-#let article-numbering(n, parentheses: false) = {
-  let appendix = n >= appendix-offset
-  let encoded = if appendix { n - appendix-offset } else { n }
-  let section = calc.floor(encoded / numbering-scale)
-  let number = calc.rem(encoded, numbering-scale)
+#let _article-numbering(n, parentheses: false) = {
+  let appendix = n >= _appendix-offset
+  let encoded = if appendix { n - _appendix-offset } else { n }
+  let section = calc.floor(encoded / _numbering-scale)
+  let number = calc.rem(encoded, _numbering-scale)
   let pattern = if appendix {
     if parentheses { "(A.1)" } else { "A.1" }
   } else if parentheses {
@@ -27,22 +27,22 @@
   numbering(pattern, section, number)
 }
 
-#let reset-article-numbering() = context {
+#let _reset-article-numbering() = context {
   let headings = counter(heading).get()
-  let base = if appendix-mode.get() {
-    appendix-offset + headings.at(1, default: 0) * numbering-scale
+  let base = if _appendix-mode.get() {
+    _appendix-offset + headings.at(1, default: 0) * _numbering-scale
   } else {
-    headings.first() * numbering-scale
+    headings.first() * _numbering-scale
   }
   reset-numbering(base: base)
 }
 
 #let equation = equation-environment(
-  n => article-numbering(n, parentheses: true),
+  n => _article-numbering(n, parentheses: true),
 )
 
 // Page furniture and front matter
-#let article-header(short-title, author, font-size) = context {
+#let _article-header(short-title, author, font-size) = context {
   let page-number = counter(page).get().first()
   let running-title = if calc.even(page-number) { author } else { short-title }
   if page-number > 1 and running-title != none and running-title != [] {
@@ -66,7 +66,7 @@
   }
 }
 
-#let article-footer(font-size) = context {
+#let _article-footer(font-size) = context {
   if counter(page).get().first() == 1 {
     align(
       center,
@@ -75,7 +75,7 @@
   }
 }
 
-#let article-title(title, author, author-note, date) = block(
+#let _article-title(title, author, author-note, date) = block(
   width: 100%,
   breakable: false,
   below: 3em,
@@ -97,7 +97,7 @@
   ]
 ]
 
-#let article-abstract(
+#let _article-abstract(
   abstract,
   font-size,
   keywords: none,
@@ -126,7 +126,7 @@
   }
 ]
 
-#let article-outline-entry(it) = context {
+#let _article-outline-entry(it) = context {
   let location = it.element.location()
   show-outline-entry(
     it,
@@ -136,29 +136,29 @@
 }
 
 // Subfigures
-#let article-subfigures = subfigure-environments(n => article-numbering(n))
-#let subfigure = article-subfigures.subfigure
-#let subfigure-grid = article-subfigures.subfigure-grid
+#let _article-subfigures = subfigure-environments(n => _article-numbering(n))
+#let subfigure = _article-subfigures.subfigure
+#let subfigure-grid = _article-subfigures.subfigure-grid
 
 // Theorem environments
-#let article-environments = statement-environments(n => article-numbering(n))
-#let theorem = article-environments.theorem
-#let proposition = article-environments.proposition
-#let lemma = article-environments.lemma
-#let corollary = article-environments.corollary
-#let definition = article-environments.definition
-#let example = article-environments.example
-#let continued-example = article-environments.continued-example
-#let exercise = article-environments.exercise
-#let remark = article-environments.remark
-#let notation = article-environments.notation
-#let solution = article-environments.solution
+#let _article-environments = statement-environments(n => _article-numbering(n))
+#let theorem = _article-environments.theorem
+#let proposition = _article-environments.proposition
+#let lemma = _article-environments.lemma
+#let corollary = _article-environments.corollary
+#let definition = _article-environments.definition
+#let example = _article-environments.example
+#let continued-example = _article-environments.continued-example
+#let exercise = _article-environments.exercise
+#let remark = _article-environments.remark
+#let notation = _article-environments.notation
+#let solution = _article-environments.solution
 
-#let article-reference-supplement(target) = {
+#let _article-reference-supplement(target) = {
   if (
     target.func() == heading
       and target.level == 2
-      and appendix-mode.at(target.location())
+      and _appendix-mode.at(target.location())
   ) {
     localized([Apéndice], [Appendix])
   } else {
@@ -174,7 +174,7 @@
   } else {
     title
   }
-  appendix-mode.update(true)
+  _appendix-mode.update(true)
   heading(level: 1, numbering: none, outlined: true, appendix-title)
   counter(heading).update((0, 0))
   set heading(
@@ -189,7 +189,7 @@
   )
   body
   counter(heading).update((section, 0))
-  appendix-mode.update(false)
+  _appendix-mode.update(false)
 }
 
 // Document template
@@ -223,9 +223,9 @@
     binding: left,
     numbering: "1",
     margin: (top: 3.7cm, bottom: 4.7cm, inside: 3.5cm, outside: 3.5cm),
-    header: article-header(short-title, author, font-size),
+    header: _article-header(short-title, author, font-size),
     header-ascent: 25%,
-    footer: article-footer(font-size),
+    footer: _article-footer(font-size),
     footer-descent: 30%,
   )
 
@@ -241,7 +241,7 @@
   show: code-style.with(size: _footnote-size(font-size))
   show link: set text(fill: navy)
   show ref: number-only-reference(
-    supplement: article-reference-supplement,
+    supplement: _article-reference-supplement,
   )
   show cite: set text(fill: navy)
   show bibliography: set text(size: _footnote-size(font-size))
@@ -263,7 +263,7 @@
     supplement: none,
   )
   set figure(
-    numbering: n => article-numbering(n),
+    numbering: n => _article-numbering(n),
     gap: 5pt,
   )
   show figure.caption: show-figure-caption.with(_small-size(font-size))
@@ -277,7 +277,7 @@
       text(size: 14.4pt, weight: "bold", it)
       v(1em)
     } else {
-      reset-article-numbering()
+      _reset-article-numbering()
       block(above: 1.5em, below: 1em)[
         #set text(size: 14.4pt, weight: "bold")
         #heading-title(it)
@@ -285,7 +285,7 @@
     }
   }
   show heading.where(level: 2): it => {
-    context if appendix-mode.get() { reset-article-numbering() }
+    context if _appendix-mode.get() { _reset-article-numbering() }
     block(above: 1.4em, below: 0.9em)[
       #set text(size: 12pt, weight: "bold")
       #heading-title(it)
@@ -304,7 +304,7 @@
     it,
     size: _footnote-size(font-size),
   )
-  show outline.entry: article-outline-entry
+  show outline.entry: _article-outline-entry
   show: apply-mybibstyle
   // The backrefs plugin costs about a second per compile, so Neovim's forward
   // search skips it by passing `--input sync=1`
@@ -316,10 +316,10 @@
   }
 
   // Front matter and content
-  article-title(title, author, author-note, localized-date(date, language))
+  _article-title(title, author, author-note, localized-date(date, language))
   if author-note != none { counter(footnote).update(0) }
   if abstract != none {
-    article-abstract(
+    _article-abstract(
       abstract,
       font-size,
       keywords: keywords,
