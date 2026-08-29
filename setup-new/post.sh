@@ -74,6 +74,28 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
         defaults write -app Skim SKTeXEditorArguments "--remote-silent +\'\'%line\'\' %file"
     fi
 else
+    echo -e "\\033[1;34m--> Installing DM fonts...\\033[0m"
+    dm_fonts_commit=9c5708e735fc805514913d46d259945a3b6ba67a
+    dm_fonts_url="https://raw.githubusercontent.com/google/fonts/$dm_fonts_commit/ofl"
+    dm_sans_url="$dm_fonts_url/dmsans"
+    dm_sans_dir="$HOME/.local/share/fonts/DM Sans"
+    mkdir -p "$dm_sans_dir"
+    curl -fsSL --remove-on-error -o "$dm_sans_dir/DMSans.ttf" \
+        "$dm_sans_url/DMSans%5Bopsz%2Cwght%5D.ttf" || exit 1
+    curl -fsSL --remove-on-error -o "$dm_sans_dir/DMSans-Italic.ttf" \
+        "$dm_sans_url/DMSans-Italic%5Bopsz%2Cwght%5D.ttf" || exit 1
+    dm_mono_url="$dm_fonts_url/dmmono"
+    dm_mono_dir="$HOME/.local/share/fonts/DM Mono"
+    mkdir -p "$dm_mono_dir"
+    for dm_mono_file in \
+        DMMono-Light.ttf DMMono-LightItalic.ttf \
+        DMMono-Regular.ttf DMMono-Italic.ttf \
+        DMMono-Medium.ttf DMMono-MediumItalic.ttf; do
+        curl -fsSL --remove-on-error -o "$dm_mono_dir/$dm_mono_file" \
+            "$dm_mono_url/$dm_mono_file" || exit 1
+    done
+    fc-cache -f "$dm_sans_dir" "$dm_mono_dir" || exit 1
+
     # We need to add our user to the "video" group in order to handle screen brightness
     if type "xbacklight" > /dev/null 2>&1; then
         sudo usermod -a -G video "$USER"

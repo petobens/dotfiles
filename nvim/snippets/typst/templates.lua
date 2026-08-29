@@ -100,6 +100,46 @@ return {
         { condition = line_begin }
     ),
 
+    -- Mutt article
+    s(
+        { trig = 'mat', dscr = '[M]utt [a]rticle [t]emplate' },
+        fmta(
+            [[
+#import "@local/mutt-article:0.1.0": *
+
+#show: mutt-article.with(
+  language: "<>",
+  font-size: <>,
+  title: [<>],
+  subtitle: <>,
+  date: datetime.today(),
+  authors: "<>",
+  audience: [<>],
+  revised-date: datetime.today(),
+  toc: <>,
+)
+
+= <>
+<<sec:<>>><>]],
+            {
+                c(1, { t('en'), t('es') }),
+                i(2, '11pt'),
+                i(3, 'Article title'),
+                c(4, {
+                    sn(nil, { t('['), i(1, 'Subtitle'), t(']') }),
+                    static_choice('none'),
+                }),
+                i(5, 'Author'),
+                i(6, 'Audience'),
+                i(7, 'false'),
+                i(8, 'Introduction'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 8 }),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
+
     -- Book
     s(
         { trig = 'lbt', dscr = '[L]aTeX-style [b]ook [t]emplate' },

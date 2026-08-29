@@ -178,7 +178,7 @@
       column-gutter: 12pt,
       align: (left + horizon, left + horizon),
       text(
-        font: "DejaVu Sans Mono",
+        font: "DM Mono",
         size: _scaled-size(23pt, font-size),
         fill: if cover { mutt-navy.lighten(45%) } else { mutt-blue },
         label,
@@ -274,7 +274,7 @@
           )[#title]
           #v(22pt)
           #text(
-            font: "DejaVu Sans Mono",
+            font: "DM Mono",
             size: _scaled-size(18pt, font-size),
             fill: mutt-blue,
           )[#subtitle]
@@ -495,14 +495,18 @@
   )
 
   // Content styling
-  set text(font: "Arial", fill: mutt-navy, size: font-size, lang: language)
+  set text(
+    font: "DM Sans 9pt",
+    fill: mutt-navy,
+    size: font-size,
+    lang: language,
+  )
   set smartquote(quotes: curly-double-quotes)
   show: apply-mybibstyle
   show: backrefs.with(
     format: format-bibliography-backrefs,
     read: retrofit-reader(bibliography-read),
   )
-  show bibliography: set text(font: "New Computer Modern")
   show bibliography: set block(spacing: bibliography-entry-spacing)
   show: code-style.with(size: _scaled-size(13pt, font-size))
   show strong: set text(fill: mutt-blue)
