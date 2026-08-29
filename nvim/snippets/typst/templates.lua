@@ -238,7 +238,6 @@ return {
 #show: standalone.with(
   width: <>,
   margin: <>,
-  fill: <>,
 )
 
 #cetz.canvas({
@@ -252,8 +251,7 @@ return {
             {
                 i(1, 'auto'),
                 i(2, '3pt'),
-                i(3, 'none'),
-                i(4, 'line((0, 0), (4, 0), stroke: rgb("#000080") + 1.5pt)'),
+                i(3, 'line((0, 0), (4, 0), stroke: rgb("#000080") + 1.5pt)'),
                 i(0),
             }
         ),
@@ -271,7 +269,6 @@ return {
 #show: standalone.with(
   width: <>,
   margin: <>,
-  fill: <>,
 )
 
 #latex-table(
@@ -279,22 +276,22 @@ return {
   align: <>,
   header: ([<>], [<>], [<>]),
   rows: (
-    ([<>], [<>], [<>]),
+    ([<>], [<>], [<>]),<>
   ),
 )
             ]],
             {
-                i(1, '14cm'),
+                i(1, 'auto'),
                 i(2, '3pt'),
-                i(3, 'none'),
-                i(4, '(2fr, 1fr, 1fr)'),
-                i(5, '(left, right, right)'),
-                i(6, 'Header 1'),
-                i(7, 'Header 2'),
-                i(8, 'Header 3'),
-                i(9, 'Value 1'),
-                i(10, 'Value 2'),
-                i(0, 'Value 3'),
+                i(3, '(auto, auto, auto)'),
+                i(4, '(left, right, right)'),
+                i(5, 'Header 1'),
+                i(6, 'Header 2'),
+                i(7, 'Header 3'),
+                i(8, 'Value 1'),
+                i(9, 'Value 2'),
+                i(10, 'Value 3'),
+                i(11),
             }
         ),
         { condition = line_begin }

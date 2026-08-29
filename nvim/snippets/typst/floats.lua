@@ -166,15 +166,23 @@ return {
 #figure(
   image("<>"),
   kind: table,
-  caption: [<>],
+<>  caption: [<>],
 ) <<tab:<>>>
 
 <>
             ]],
             {
                 i(1),
-                i(2, 'Caption'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
+                c(2, {
+                    sn(nil, {
+                        t('  placement: none,'),
+                        i(1),
+                        t({ '', '' }),
+                    }),
+                    t(''),
+                }),
+                i(3, 'Caption'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 3 }),
                 i(0),
             }
         ),
@@ -196,7 +204,7 @@ return {
 <>
             ]],
             {
-                i(1, '(2fr, 1fr, 1fr)'),
+                i(1, '(auto, auto, auto)'),
                 i(2, '(left, right, right)'),
                 i(3, 'Header 1'),
                 i(4, 'Header 2'),
