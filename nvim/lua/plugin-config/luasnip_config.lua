@@ -8,8 +8,7 @@ function _G.LuaSnipConfig.visual_selection(_, parent)
     return parent.snippet.env.LS_SELECT_DEDENT or {}
 end
 
-function _G.LuaSnipConfig.snake_case_labels(node_idx)
-    local str = node_idx[1][1]
+function _G.LuaSnipConfig.snake_case_label(text)
     local unicode_map = {
         ['á'] = 'a',
         ['Á'] = 'A',
@@ -23,12 +22,14 @@ function _G.LuaSnipConfig.snake_case_labels(node_idx)
         ['Ú'] = 'U',
         ['ñ'] = 'ni',
     }
-    for k, v in pairs(unicode_map) do
-        str = str:gsub(k, v)
+    for character, replacement in pairs(unicode_map) do
+        text = text:gsub(character, replacement)
     end
-    -- Remove punctuation marks, lowercase and replace spaces with underscores
-    str = str:gsub('[%p]', ''):lower():gsub('%s+', '_')
-    return str:sub(1, 35)
+    return text:gsub('[%p]', ''):lower():gsub('%s+', '_'):sub(1, 35)
+end
+
+function _G.LuaSnipConfig.snake_case_labels(node_idx)
+    return _G.LuaSnipConfig.snake_case_label(node_idx[1][1])
 end
 
 function _G.LuaSnipConfig.filepart(part)
