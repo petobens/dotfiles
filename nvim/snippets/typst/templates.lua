@@ -71,7 +71,7 @@ return {
 <>
             ]],
             {
-                c(1, { static_choice('es'), static_choice('en') }),
+                c(1, { t('es'), t('en') }),
                 i(2, '11pt'),
                 i(3, 'Article title'),
                 i(4, 'Author'),
@@ -137,7 +137,7 @@ return {
 <>
             ]],
             {
-                c(1, { static_choice('es'), static_choice('en') }),
+                c(1, { t('es'), t('en') }),
                 i(2, '10pt'),
                 i(3, 'Book title'),
                 c(4, {
@@ -213,7 +213,7 @@ return {
 <>
             ]],
             {
-                c(1, { static_choice('es'), static_choice('en') }),
+                c(1, { t('es'), t('en') }),
                 i(2, '14pt'),
                 i(3, 'Presentation title'),
                 i(4, 'Subtitle'),
