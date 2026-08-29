@@ -513,3 +513,10 @@
 }
 
 #let read-mybibstyle(path) = read(path)
+
+// Keep the bundled style package-local and resolve sources from the document
+#let retrofit-reader(bibliography-read) = path => if path == "mybibstyle.csl" {
+  read-mybibstyle(path)
+} else {
+  bibliography-read(path)
+}

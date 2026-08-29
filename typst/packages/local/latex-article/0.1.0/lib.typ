@@ -206,6 +206,8 @@
   keywords: none,
   jel: none,
   toc: false,
+  // Overridden at the document call site for filename-based bibliographies
+  bibliography-read: read-mybibstyle,
   body,
 ) = {
   // Document metadata and page
@@ -307,7 +309,10 @@
   // The backrefs plugin costs about a second per compile, so Neovim's forward
   // search skips it by passing `--input sync=1`
   show: if "sync" in sys.inputs { doc => doc } else {
-    backrefs.with(format: format-bibliography-backrefs, read: read-mybibstyle)
+    backrefs.with(
+      format: format-bibliography-backrefs,
+      read: retrofit-reader(bibliography-read),
+    )
   }
 
   // Front matter and content
