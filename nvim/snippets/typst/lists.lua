@@ -124,7 +124,6 @@ return {
         ),
         { condition = line_begin }
     ),
-    list_snippet('ste', 'Numbered [ste]ps', '+'),
     list_snippet('ite', '[Ite]mize: bullet list', '-'),
 }, {
     -- List item

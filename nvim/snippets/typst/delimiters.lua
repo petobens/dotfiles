@@ -19,7 +19,6 @@ end
 
 return {
     -- Fixed and scalable math delimiters
-    wrapped('bc', '[B]ra[c]es', '{ ', ' }'),
     wrapped('lr(', '[L]eft/[r]ight scalable parentheses', 'lr((', '))'),
     wrapped('lr[', '[L]eft/[r]ight scalable brackets', 'lr([', '])'),
     wrapped('lr{', '[L]eft/[r]ight scalable braces', 'lr({ ', ' })'),

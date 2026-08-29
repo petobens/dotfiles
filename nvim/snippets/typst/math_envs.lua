@@ -40,7 +40,6 @@ $) <<eq:<>>>
         { condition = line_begin }
     ),
     display_equation('ueq', '[U]nnumbered [eq]uation'),
-    display_equation('be', '[B]reakable [e]quation: multiline display'),
     s(
         { trig = 'ali', dscr = 'Numbered [ali]gned equations' },
         fmta(

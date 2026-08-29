@@ -122,7 +122,6 @@ return {
     unnumbered_statement('urem', 'remark', 'Remark', '[U]nnumbered [rem]ark'),
     unnumbered_statement('not', 'notation', 'Notation', '[Not]ation (unnumbered)'),
     solution_snippet('sol', '[Sol]ution'),
-    solution_snippet('ans', '[Ans]wer/solution'),
 
     -- Proofs
     s(

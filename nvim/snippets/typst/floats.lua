@@ -83,26 +83,6 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'flo', dscr = '[Flo]at: general figure' },
-        fmta(
-            [[
-#figure(
-  [<>],
-  caption: [<>],
-) <<fig:<>>>
-
-<>
-            ]],
-            {
-                i(1, 'Figure content'),
-                i(2, 'Caption'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 2 }),
-                i(0),
-            }
-        ),
-        { condition = line_begin }
-    ),
-    s(
         { trig = 'sflo', dscr = '[S]ub[flo]at: referenceable subfigures' },
         fmta(
             [[
@@ -176,23 +156,6 @@ return {
             }
         ),
         { condition = line_begin }
-    ),
-    s(
-        { trig = 'cg', dscr = '[C]entered [g]raphics: image' },
-        fmta('#align(center)[#image("<>", width: <>%)]<>', {
-            i(1),
-            i(2, '100'),
-            i(0),
-        })
-    ),
-    s(
-        { trig = 'mp', dscr = '[M]ini[p]age: fixed-width block' },
-        fmta('#block(width: <>%)[<><>]<>', {
-            i(1, '50'),
-            f(_G.LuaSnipConfig.visual_selection),
-            i(2),
-            i(0),
-        })
     ),
 
     -- Tables

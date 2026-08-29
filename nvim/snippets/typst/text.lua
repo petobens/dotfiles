@@ -27,7 +27,6 @@ return {
     wrapped('tss', '[T]ext [s]ans-[s]erif', '#text(font: "DejaVu Sans")[', ']'),
     wrapped('muc', '[M]ake [u]pper[c]ase text', '#upper[', ']'),
     wrapped('quo', 'Inline [quo]tation', '#quote(block: false)[', ']'),
-    wrapped('ttt', '[T]ex[tt]t/typewriter: inline code', '`', '`'),
     s(
         { trig = 'cb', dscr = '[C]ode [b]lock' },
         fmta('```<>\n<><>\n```\n<>', {

@@ -14,10 +14,6 @@ return {
     ),
     s({ trig = 'ref', dscr = '[Ref]erence' }, fmta('@<><>', { i(1, 'label'), i(0) })),
     s(
-        { trig = 'crg', dscr = '[C]leve[r]ef [g]eneral reference' },
-        fmta('@<><>', { i(1, 'label'), i(0) })
-    ),
-    s(
         { trig = 'crc', dscr = '[C]leve[r]ef [c]hapter reference' },
         fmta('@cha:<><>', { i(1), i(0) })
     ),

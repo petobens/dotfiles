@@ -67,7 +67,6 @@ end
 
 return {
     -- Includes
-    include_snippet('ip', '[I]n[p]ut/include file'),
     include_snippet('ic', '[I]n[c]lude file'),
 
     -- Numbered headings
