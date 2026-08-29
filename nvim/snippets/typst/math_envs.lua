@@ -1,10 +1,31 @@
 local ls = require('luasnip')
 
+local d = ls.dynamic_node
 local i = ls.insert_node
 local s = ls.snippet
+local sn = ls.snippet_node
 
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
+
+-- Helpers
+local function equation_body(_, parent)
+    local lines = parent.snippet.env.LS_SELECT_DEDENT or {}
+    if
+        #lines >= 2
+        and lines[1]:match('^%s*%$%s*$')
+        and lines[#lines]:match('^%s*%$%s*$')
+    then
+        lines = vim.list_slice(lines, 2, #lines - 1)
+        for index, line in ipairs(lines) do
+            lines[index] = line:gsub('^  ', '')
+        end
+    end
+    for index = 2, #lines do
+        lines[index] = lines[index] == '' and '' or '  ' .. lines[index]
+    end
+    return sn(nil, { i(1, #lines > 0 and lines or 'equation') })
+end
 
 local function display_equation(trigger, description)
     return s(
@@ -29,7 +50,7 @@ return {
 #equation($
   <>
 $) <<eq:<>>><>]],
-            { i(1, 'equation'), i(2, 'label'), i(0) }
+            { d(1, equation_body), i(2, 'label'), i(0) }
         ),
         { condition = line_begin }
     ),
