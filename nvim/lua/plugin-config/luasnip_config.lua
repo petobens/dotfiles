@@ -98,7 +98,13 @@ end, { desc = 'Cycle through snippet choices' })
 
 vim.keymap.set('n', '<Leader>es', function()
     local ft = vim.bo.filetype
-    local special_fts = { tex = true, lua = true, markdown = true, typst = true }
+    local special_fts = {
+        lua = true,
+        markdown = true,
+        tex = true,
+        typst = true,
+        yaml = true,
+    }
     if special_fts[ft] then
         require('telescope.builtin').find_files({
             cwd = vim.fs.joinpath(snippets_dir, ft),
