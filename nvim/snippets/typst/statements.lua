@@ -83,10 +83,10 @@ return {
     unnumbered_statement('ucor', 'corollary', 'Corollary', '[U]nnumbered [cor]ollary'),
     numbered_statement('def', 'definition', 'def', 'Definition', '[Def]inition'),
     unnumbered_statement('udef', 'definition', 'Definition', '[U]nnumbered [def]inition'),
-    numbered_statement('exa', 'example', 'exa', 'Example', '[Exa]mple'),
-    unnumbered_statement('uexa', 'example', 'Example', '[U]nnumbered [exa]mple'),
 
     -- Examples and exercises
+    numbered_statement('exa', 'example', 'exa', 'Example', '[Exa]mple'),
+    unnumbered_statement('uexa', 'example', 'Example', '[U]nnumbered [exa]mple'),
     s(
         { trig = 'exac', dscr = '[Exa]mple [c]ontinued' },
         fmta(
@@ -105,12 +105,12 @@ return {
     ),
     numbered_statement('exe', 'exercise', 'exe', 'Exercise', '[Exe]rcise'),
     unnumbered_statement('uexe', 'exercise', 'Exercise', '[U]nnumbered [exe]rcise'),
+    solution_snippet('sol', '[Sol]ution'),
 
     -- Remarks and solutions
     numbered_statement('rem', 'remark', 'rem', 'Remark', '[Rem]ark'),
     unnumbered_statement('urem', 'remark', 'Remark', '[U]nnumbered [rem]ark'),
     unnumbered_statement('not', 'notation', 'Notation', '[Not]ation (unnumbered)'),
-    solution_snippet('sol', '[Sol]ution'),
 
     -- Proofs
     s(

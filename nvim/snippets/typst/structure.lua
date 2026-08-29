@@ -34,40 +34,13 @@ local function unnumbered_heading_snippet(trigger, level, prefix, label, dscr)
     )
 end
 
-local function include_snippet(trigger, dscr)
-    return s(
-        { trig = trigger, dscr = dscr },
-        fmta('#include "<>"<>', { i(1, 'file.typ'), i(0) }),
-        { condition = line_begin }
-    )
-end
-
-local function appendix_snippet(trigger, dscr)
-    return s(
-        { trig = trigger, dscr = dscr },
-        fmta(
-            [[
-// @typstyle off
-#appendix[
-== <>
-<<sub:<>>>
-
-<>
-]<>]],
-            {
-                i(1, 'Appendix subsection name'),
-                f(_G.LuaSnipConfig.snake_case_labels, { 1 }),
-                i(2),
-                i(0),
-            }
-        ),
-        { condition = line_begin }
-    )
-end
-
 return {
     -- Includes
-    include_snippet('ic', '[I]n[c]lude file'),
+    s(
+        { trig = 'ic', dscr = '[I]n[c]lude file' },
+        fmta('#include "<>"<>', { i(1, 'file.typ'), i(0) }),
+        { condition = line_begin }
+    ),
 
     -- Numbered headings
     heading_snippet('cha', 1, 'cha', 'Chapter', '[Cha]pter'),
@@ -120,6 +93,25 @@ return {
         '[U]nnumbered [b]ook [sub]section'
     ),
 
-    -- Appendices
-    appendix_snippet('app', '[App]endix'),
+    -- Appendix
+    s(
+        { trig = 'app', dscr = '[App]endix' },
+        fmta(
+            [[
+// @typstyle off
+#appendix[
+== <>
+<<sub:<>>>
+
+<>
+]<>]],
+            {
+                i(1, 'Appendix subsection name'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 1 }),
+                i(2),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
+    ),
 }, {}
