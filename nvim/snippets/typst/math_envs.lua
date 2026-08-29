@@ -12,13 +12,37 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 local function equation_body(_, parent)
     local lines = parent.snippet.env.LS_SELECT_DEDENT or {}
     if
+        #lines >= 4
+        and lines[1]:match('^%s*#equation%(%s*$')
+        and lines[2]:match('^%s*%$%s*$')
+        and lines[#lines - 1]:match('^%s*%$,%s*$')
+        and lines[#lines]:match('^%s*%)%s*<eq:[^>]+>%s*$')
+    then
+        lines = vim.list_slice(lines, 3, #lines - 2)
+    elseif
+        #lines >= 2
+        and lines[1]:match('^%s*#equation%(%$%s*$')
+        and lines[#lines]:match('^%s*%$%)%s*<eq:[^>]+>%s*$')
+    then
+        lines = vim.list_slice(lines, 2, #lines - 1)
+    elseif
         #lines >= 2
         and lines[1]:match('^%s*%$%s*$')
         and lines[#lines]:match('^%s*%$%s*$')
     then
         lines = vim.list_slice(lines, 2, #lines - 1)
+    end
+
+    local indent
+    for _, line in ipairs(lines) do
+        local whitespace = line:match('^(%s*)%S')
+        if whitespace then
+            indent = math.min(indent or #whitespace, #whitespace)
+        end
+    end
+    if indent and indent > 0 then
         for index, line in ipairs(lines) do
-            lines[index] = line:gsub('^  ', '')
+            lines[index] = line:sub(indent + 1)
         end
     end
     for index = 2, #lines do
@@ -35,7 +59,7 @@ local function display_equation(trigger, description)
 $
   <>
 $<>]],
-            { i(1, 'equation'), i(0) }
+            { d(1, equation_body), i(0) }
         ),
         { condition = line_begin }
     )
