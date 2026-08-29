@@ -216,6 +216,28 @@ for mime in image/gif image/jpeg image/png image/svg+xml image/webp; do
     xdg-mime default imv-dir.desktop "$mime"
 done
 
+section 'Installing DM fonts'
+dm_fonts_commit=9c5708e735fc805514913d46d259945a3b6ba67a
+dm_fonts_url="https://raw.githubusercontent.com/google/fonts/$dm_fonts_commit/ofl"
+dm_sans_url="$dm_fonts_url/dmsans"
+dm_sans_dir="$HOME/.local/share/fonts/DM Sans"
+mkdir -p "$dm_sans_dir"
+curl -fsSL --remove-on-error -o "$dm_sans_dir/DMSans.ttf" \
+    "$dm_sans_url/DMSans%5Bopsz%2Cwght%5D.ttf"
+curl -fsSL --remove-on-error -o "$dm_sans_dir/DMSans-Italic.ttf" \
+    "$dm_sans_url/DMSans-Italic%5Bopsz%2Cwght%5D.ttf"
+dm_mono_url="$dm_fonts_url/dmmono"
+dm_mono_dir="$HOME/.local/share/fonts/DM Mono"
+mkdir -p "$dm_mono_dir"
+for dm_mono_file in \
+    DMMono-Light.ttf DMMono-LightItalic.ttf \
+    DMMono-Regular.ttf DMMono-Italic.ttf \
+    DMMono-Medium.ttf DMMono-MediumItalic.ttf; do
+    curl -fsSL --remove-on-error -o "$dm_mono_dir/$dm_mono_file" \
+        "$dm_mono_url/$dm_mono_file"
+done
+fc-cache -f "$dm_sans_dir" "$dm_mono_dir"
+
 section 'Installing browser policies'
 sudo install -Dm644 \
     "$policies_dir/brave.json" \
