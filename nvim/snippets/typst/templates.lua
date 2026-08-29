@@ -74,7 +74,7 @@ return {
                 c(1, { static_choice('es'), static_choice('en') }),
                 i(2, '11pt'),
                 i(3, 'Article title'),
-                i(4, 'Pedro Ferrari'),
+                i(4, 'Author'),
                 c(5, {
                     sn(nil, { t('['), i(1, 'Author affiliation or note'), t(']') }),
                     static_choice('none'),
@@ -144,7 +144,7 @@ return {
                     sn(nil, { t('['), i(1, 'Subtitle'), t(']') }),
                     static_choice('none'),
                 }),
-                i(5, 'Pedro Ferrari'),
+                i(5, 'Author'),
                 c(6, {
                     sn(nil, { t('['), i(1, 'Institution'), t(']') }),
                     static_choice('none'),
@@ -164,7 +164,7 @@ return {
                 c(9, {
                     sn(nil, {
                         t('['),
-                        i(1, '© Pedro Ferrari. All rights reserved.'),
+                        i(1, '© Author. All rights reserved.'),
                         t(']'),
                     }),
                     static_choice('none'),
@@ -217,8 +217,8 @@ return {
                 i(2, '14pt'),
                 i(3, 'Presentation title'),
                 i(4, 'Subtitle'),
-                i(5, 'Pedro Ferrari'),
-                i(6, 'MUTTDATA × CLIENT'),
+                i(5, 'Presenter'),
+                i(6, 'Organization'),
                 i(7, 'Section'),
                 i(8, 'Slide title'),
                 i(0),
@@ -262,7 +262,7 @@ return {
 
     -- Standalone table
     s(
-        { trig = 'stt', dscr = '[St]andalone [t]able template' },
+        { trig = 'stt', dscr = '[St]andalone [t]able (latex-table)' },
         fmta(
             [[
 #import "@local/standalone:0.1.0": *
@@ -277,7 +277,6 @@ return {
 #latex-table(
   columns: <>,
   align: <>,
-  inset: (x: 6pt, y: 3.5pt),
   header: ([<>], [<>], [<>]),
   rows: (
     ([<>], [<>], [<>]),
@@ -290,12 +289,12 @@ return {
                 i(3, 'none'),
                 i(4, '(2fr, 1fr, 1fr)'),
                 i(5, '(left, right, right)'),
-                i(6, 'Indicator'),
-                i(7, '2020'),
-                i(8, '2025'),
-                i(9, 'Productivity'),
-                i(10, '100'),
-                i(0, '114'),
+                i(6, 'Header 1'),
+                i(7, 'Header 2'),
+                i(8, 'Header 3'),
+                i(9, 'Value 1'),
+                i(10, 'Value 2'),
+                i(0, 'Value 3'),
             }
         ),
         { condition = line_begin }

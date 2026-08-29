@@ -3,6 +3,7 @@ local ls = require('luasnip')
 local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
+local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
@@ -78,4 +79,12 @@ return {
         fmta('#lorem(<>)<>', { i(1, '100'), i(0) }),
         { condition = line_begin }
     ),
-}, {}
+}, {
+    s({ trig = '``', wordTrig = false, dscr = 'Inline raw text' }, {
+        t('`'),
+        f(_G.LuaSnipConfig.visual_selection),
+        i(1),
+        t('`'),
+        i(0),
+    }),
+}

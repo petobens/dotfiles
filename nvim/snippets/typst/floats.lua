@@ -1,6 +1,7 @@
 local ls = require('luasnip')
 
 local c = ls.choice_node
+local d = ls.dynamic_node
 local f = ls.function_node
 local i = ls.insert_node
 local s = ls.snippet
@@ -9,6 +10,38 @@ local t = ls.text_node
 
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
+
+-- Helpers
+local function table_cells(rows, columns, wrap_rows)
+    local nodes = {}
+    local index = 0
+
+    for row = 1, rows do
+        if wrap_rows then
+            table.insert(nodes, t('('))
+        end
+        for column = 1, columns do
+            index = index + 1
+            table.insert(nodes, t('['))
+            table.insert(nodes, i(index))
+            if column < columns then
+                table.insert(nodes, t('], '))
+            elseif wrap_rows then
+                table.insert(nodes, t(']'))
+            else
+                table.insert(nodes, t('],'))
+            end
+        end
+        if wrap_rows then
+            table.insert(nodes, t('),'))
+        end
+        if row < rows then
+            table.insert(nodes, t({ '', '' }))
+        end
+    end
+
+    return sn(nil, nodes)
+end
 
 return {
     -- Images and figures
@@ -185,7 +218,7 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'rt', dscr = '[R]egular [t]able (native)' },
+        { trig = 'lt', dscr = '[L]aTeX [t]able helper' },
         fmta(
             [[
 #latex-table(
@@ -202,24 +235,128 @@ return {
             {
                 i(1, '(2fr, 1fr, 1fr)'),
                 i(2, '(left, right, right)'),
-                i(3, 'Indicator'),
-                i(4, '2020'),
-                i(5, '2025'),
-                i(6, 'Productivity'),
-                i(7, '100'),
-                i(8, '114'),
+                i(3, 'Header 1'),
+                i(4, 'Header 2'),
+                i(5, 'Header 3'),
+                i(6, 'Value 1'),
+                i(7, 'Value 2'),
+                i(8, 'Value 3'),
                 i(0),
             }
         ),
         { condition = line_begin }
     ),
     s(
-        { trig = 'mul', wordTrig = false, dscr = '[Mul]ticolumn: spanning table cell' },
-        fmta('table.cell(colspan: <>)[<>]<>', { i(1, '2'), i(2), i(0) })
+        { trig = 'rt', dscr = '[R]aw [t]able with custom rules' },
+        fmta(
+            [[
+#table(
+  columns: <>,
+  align: <>,
+  inset: <>,
+  stroke: none,
+  table.hline(stroke: <>),
+  table.header(
+    <>
+  ),
+  table.hline(stroke: <>),
+  <>
+  table.hline(stroke: <>),
+)
+
+<>
+            ]],
+            {
+                i(1, '(auto, auto, auto)'),
+                i(2, '(left, right, right)'),
+                i(3, '(x: 6pt, y: 3.5pt)'),
+                i(4, '0.8pt'),
+                i(5, '[Header 1], [Header 2], [Header 3],'),
+                i(6, '0.45pt'),
+                i(7, '[Value 1], [Value 2], [Value 3],'),
+                i(8, '0.8pt'),
+                i(0),
+            }
+        ),
+        { condition = line_begin }
     ),
-    s({
-        trig = 'mur',
-        wordTrig = false,
-        dscr = '[Mu]lti[r]ow: spanning table row',
-    }, fmta('table.cell(rowspan: <>)[<>]<>', { i(1, '2'), i(2), i(0) })),
+    s(
+        {
+            trig = '(%d+)c',
+            regTrig = true,
+            docTrig = '3c',
+            dscr = '[3c] Flat table cells',
+        },
+        d(1, function(_, snip)
+            return table_cells(1, tonumber(snip.captures[1]), false)
+        end),
+        { condition = line_begin }
+    ),
+    s(
+        {
+            trig = '(%d+)x(%d+)',
+            regTrig = true,
+            docTrig = '2x3',
+            dscr = '[2x3] latex-table rows x columns',
+        },
+        d(1, function(_, snip)
+            return table_cells(
+                tonumber(snip.captures[1]),
+                tonumber(snip.captures[2]),
+                true
+            )
+        end),
+        { condition = line_begin }
+    ),
+    s(
+        {
+            trig = 'r(%d+)x(%d+)',
+            regTrig = true,
+            docTrig = 'r2x3',
+            dscr = '[r2x3] Raw table rows x columns',
+        },
+        d(1, function(_, snip)
+            return table_cells(
+                tonumber(snip.captures[1]),
+                tonumber(snip.captures[2]),
+                false
+            )
+        end),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'hl', dscr = '[H]orizontal [l]ine' },
+        c(1, {
+            fmta('table.hline(stroke: <>),<>', { i(1, '0.8pt'), i(0) }),
+            fmta('table.hline(start: <>, end: <>, stroke: <>),<>', {
+                i(1, '1'),
+                i(2, '3'),
+                i(3, '0.45pt'),
+                i(0),
+            }),
+        }),
+        { condition = line_begin }
+    ),
+    s(
+        { trig = 'mul', wordTrig = false, dscr = '[Mul]ticolumn: spanning table cell' },
+        fmta('table.cell(colspan: <>)[<><>]<>', {
+            i(1, '2'),
+            f(_G.LuaSnipConfig.visual_selection),
+            i(2),
+            i(0),
+        })
+    ),
+    s(
+        {
+            trig = 'mur',
+            wordTrig = false,
+            dscr = '[Mu]lti[r]ow: spanning table row',
+        },
+        fmta('table.cell(rowspan: <>)[<><>]<>', {
+            i(1, '2'),
+            f(_G.LuaSnipConfig.visual_selection),
+            i(2),
+            i(0),
+        })
+    ),
 }, {}
