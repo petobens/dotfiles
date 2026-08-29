@@ -49,9 +49,17 @@ local function appendix_snippet(trigger, dscr)
             [[
 // @typstyle off
 #appendix[
+== <>
+<<sub:<>>>
+
 <>
 ]<>]],
-            { i(1), i(0) }
+            {
+                i(1, 'Appendix subsection name'),
+                f(_G.LuaSnipConfig.snake_case_labels, { 1 }),
+                i(2),
+                i(0),
+            }
         ),
         { condition = line_begin }
     )

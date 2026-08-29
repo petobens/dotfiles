@@ -34,7 +34,6 @@ return {
 #[
   #set enum(numbering: "<>", spacing: <>)
   + <><>
-
   + <>
 ]<>]],
             {
@@ -52,13 +51,12 @@ return {
     -- Unnumbered
     list_snippet('ite', '[Ite]mize: bullet list', '-'),
     s(
-        { trig = 'citem', dscr = '[C]ustom [item]ize: bullet list' },
+        { trig = 'cite', dscr = '[C]ustom [ite]mize: bullet list' },
         fmta(
             [[
 #[
   #set list(marker: <>, spacing: <>)
   - <><>
-
   - <>
 ]<>]],
             {
