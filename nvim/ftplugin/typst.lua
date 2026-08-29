@@ -916,17 +916,27 @@ local function edit_figure()
     u.split_open(source)
 end
 
-local function toggle_equation()
-    if not package.loaded.luasnip then
+local function luasnip_config()
+    if not _G.LuaSnipConfig then
         vim.cmd.packadd('LuaSnip')
         require('plugin-config.luasnip_config')
     end
+    return _G.LuaSnipConfig
+end
+
+local function toggle_equation()
+    luasnip_config()
     local first = math.min(vim.fn.line('v'), vim.fn.line('.')) - 1
     local last = math.max(vim.fn.line('v'), vim.fn.line('.'))
     local context =
         table.concat(api.nvim_buf_get_lines(0, math.max(0, first - 1), last, false))
     local trigger = context:find('#equation%s*%(') and 'ueq' or 'equ'
     api.nvim_feedkeys(vim.keycode('<C-s>' .. trigger .. '<C-s>'), 'm', false)
+end
+
+local function paste_label()
+    local label = luasnip_config().snake_case_label(vim.fn.getreg('"'))
+    api.nvim_put({ label }, 'c', true, true)
 end
 
 -- Lists
@@ -992,6 +1002,10 @@ vim.keymap.set('n', '<Leader>ef', edit_figure, {
 vim.keymap.set('x', '<Leader>ts', toggle_equation, {
     buf = 0,
     desc = '[T]oggle equation numbering [s]tatus (Typst)',
+})
+vim.keymap.set('n', '<Leader>pl', paste_label, {
+    buf = 0,
+    desc = '[P]aste snake-case [l]abel (Typst)',
 })
 
 ---- Text objects
