@@ -71,8 +71,7 @@ return {
     -- Placeholder text
     s(
         { trig = 'li', wordTrig = false, dscr = '[L]orem [i]psum text' },
-        fmta('#lorem(<>)<>', { i(1, '100'), i(0) }),
-        { condition = line_begin }
+        fmta('#lorem(<>)<>', { i(1, '100'), i(0) })
     ),
 }, {
     s({ trig = '``', wordTrig = false, dscr = 'Inline raw text' }, {
