@@ -75,7 +75,6 @@ return {
     ),
 
     -- Citations and bibliography
-    s({ trig = 'cite', dscr = '[Cite] source' }, fmta('@<><>', { i(1), i(0) })),
     s(
         { trig = 'tc', dscr = '[T]ext[c]ite: prose citation' },
         fmta('#cite(<<<>>>, form: "prose")<>', { i(1), i(0) })

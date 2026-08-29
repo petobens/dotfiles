@@ -28,7 +28,7 @@ local function list_snippet(trigger, description, marker)
 end
 
 return {
-    -- List blocks
+    -- Numbered
     list_snippet('enu', '[Enu]merate: numbered list', '+'),
     s(
         { trig = 'cenu', dscr = '[C]ustom [enu]merate: numbered list' },
@@ -54,6 +54,9 @@ return {
         ),
         { condition = line_begin }
     ),
+
+    -- Unnumbered
+    list_snippet('ite', '[Ite]mize: bullet list', '-'),
     s(
         { trig = 'citem', dscr = '[C]ustom [item]ize: bullet list' },
         fmta(
@@ -124,7 +127,6 @@ return {
         ),
         { condition = line_begin }
     ),
-    list_snippet('ite', '[Ite]mize: bullet list', '-'),
 }, {
     -- List item
     s({ trig = 'itm', wordTrig = false, dscr = 'List [it]e[m]' }, {
