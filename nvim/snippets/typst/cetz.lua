@@ -10,7 +10,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Canvas
     s(
-        { trig = 'tikz', dscr = '[TikZ]-style CeTZ canvas' },
+        { trig = 'cc', dscr = '[C]eTZ [c]anvas' },
         fmta(
             [[
 #import "@preview/cetz:0.5.2"
@@ -37,9 +37,10 @@ return {
         { trig = 'axis', dscr = '[Axis] (CeTZ)' },
         fmta(
             [[
-line((0, 0), (<>, 0), mark: (end: ">>"), stroke: 0.8pt + black)
+let axis-arrow = (end: ">>>>", scale: 1.5, fill: black)
+line((0, 0), (<>, 0), mark: axis-arrow, stroke: 0.8pt + black)
 content((<>, -0.25), [$<>$])
-line((0, 0), (0, <>), mark: (end: ">>"), stroke: 0.8pt + black)
+line((0, 0), (0, <>), mark: axis-arrow, stroke: 0.8pt + black)
 content((-0.25, <>), [$<>$])
 <>
             ]],
