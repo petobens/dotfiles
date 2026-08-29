@@ -238,7 +238,7 @@ return {
             trig = '(%d+)c',
             regTrig = true,
             docTrig = '3c',
-            dscr = '[3c] Flat table cells',
+            dscr = '[3c] Flat table columns',
         },
         d(1, function(_, snip)
             return table_cells(1, tonumber(snip.captures[1]), false)
@@ -292,7 +292,7 @@ return {
     ),
     s(
         { trig = 'mul', wordTrig = false, dscr = '[Mul]ticolumn: spanning table cell' },
-        fmta('table.cell(colspan: <>)[<><>]<>', {
+        fmta('table.cell(colspan: <>)[<><>],<>', {
             i(1, '2'),
             f(_G.LuaSnipConfig.visual_selection),
             i(2),
@@ -305,7 +305,7 @@ return {
             wordTrig = false,
             dscr = '[Mu]lti[r]ow: spanning table row',
         },
-        fmta('table.cell(rowspan: <>)[<><>]<>', {
+        fmta('table.cell(rowspan: <>)[<><>],<>', {
             i(1, '2'),
             f(_G.LuaSnipConfig.visual_selection),
             i(2),
