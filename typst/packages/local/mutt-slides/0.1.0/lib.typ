@@ -21,23 +21,23 @@
 #let muted = rgb("#53627A")
 
 // Slide chrome
-#let appendix-mode = state("mutt-slides-appendix", false)
+#let _appendix-mode = state("mutt-slides-appendix", false)
 
-#let slide-section-info(location) = {
+#let _slide-section-info(location) = {
   let sections = query(heading.where(level: 1).before(location))
   let current = sections.last()
-  let appendix = appendix-mode.at(current.location())
+  let appendix = _appendix-mode.at(current.location())
   let number = sections
     .filter(
-      section => appendix-mode.at(section.location()) == appendix,
+      section => _appendix-mode.at(section.location()) == appendix,
     )
     .len()
   (heading: current, appendix: appendix, number: number)
 }
 
-#let slide-numbering(n, parentheses: false, location: none) = context {
+#let _slide-numbering(n, parentheses: false, location: none) = context {
   let target = if location == none { here() } else { location }
-  let section = slide-section-info(target)
+  let section = _slide-section-info(target)
   let pattern = if section.appendix {
     if parentheses { "(A.1)" } else { "A.1" }
   } else if parentheses {
@@ -49,10 +49,10 @@
 }
 
 #let equation = equation-environment(
-  n => slide-numbering(n, parentheses: true),
+  n => _slide-numbering(n, parentheses: true),
 )
 
-#let toggle-icon = box(
+#let _toggle-icon = box(
   width: 23pt,
   height: 13pt,
   stroke: 1.5pt + mutt-blue,
@@ -62,10 +62,10 @@
   #align(right + horizon)[#circle(radius: 4.5pt, fill: mutt-blue)]
 ]
 
-#let section-chip-width = 128pt
+#let _section-chip-width = 128pt
 
-#let section-chip(self, font-size) = block(
-  width: section-chip-width,
+#let _section-chip(self, font-size) = block(
+  width: _section-chip-width,
   fill: chip-gray,
   inset: (x: 7pt, y: 5pt),
   radius: 6pt,
@@ -77,7 +77,7 @@
       weight: "bold",
       fill: mutt-navy,
       context {
-        let section = slide-section-info(here())
+        let section = _slide-section-info(here())
         if section.appendix {
           [#localized([Apéndice], [Appendix]) #numbering(
               "A.",
@@ -91,27 +91,27 @@
   ]
 ]
 
-#let slide-title(self, font-size: _default-font-size) = move(dy: 25pt, block(
+#let _slide-title(self, font-size: _default-font-size) = move(dy: 25pt, block(
   width: 100%,
   height: 26.4pt,
 )[
   #set align(top + left)
   #grid(
-    columns: (auto, 1fr, section-chip-width),
+    columns: (auto, 1fr, _section-chip-width),
     column-gutter: 8pt,
     align: (left + top, left + top, right + top),
-    move(dy: 4pt, toggle-icon),
+    move(dy: 4pt, _toggle-icon),
     text(
       size: _scaled-size(23pt, font-size),
       weight: "bold",
       fill: mutt-blue,
       utils.display-current-heading(level: 2, depth: self.slide-level),
     ),
-    move(dy: 4pt, section-chip(self, font-size)),
+    move(dy: 4pt, _section-chip(self, font-size)),
   )
 ])
 
-#let deck-footer(font-size) = context {
+#let _deck-footer(font-size) = context {
   box(width: 100%)[
     #move(dy: -4pt)[
       #grid(
@@ -141,15 +141,15 @@
   ]
 }
 
-#let vertical-center(..bodies) = align(
+#let _vertical-center(..bodies) = align(
   horizon,
   bodies.pos().sum(default: none),
 )
 
 // Agenda and title slides
-#let agenda-entry(font-size: _default-font-size, cover: false, ..args, it) = {
+#let _agenda-entry(font-size: _default-font-size, cover: false, ..args, it) = {
   let sections = query(heading.where(level: 1, outlined: true))
-  let is-appendix(section) = appendix-mode.at(section.location())
+  let is-appendix(section) = _appendix-mode.at(section.location())
   let appendices = sections.filter(is-appendix)
   let number = (
     sections.position(section => (
@@ -194,12 +194,12 @@
 }
 
 #let appendix(body) = {
-  appendix-mode.update(true)
+  _appendix-mode.update(true)
   body
-  appendix-mode.update(false)
+  _appendix-mode.update(false)
 }
 
-#let section-divider(
+#let _section-divider(
   config: (:),
   body,
   font-size: _default-font-size,
@@ -227,7 +227,7 @@
       components.progressive-outline(
         level: 1,
         alpha: 100%,
-        transform: agenda-entry.with(font-size: font-size),
+        transform: _agenda-entry.with(font-size: font-size),
         title: none,
         depth: 1,
       ),
@@ -236,7 +236,7 @@
   ],
 )
 
-#let branded-title-slide(
+#let _branded-title-slide(
   title: [],
   subtitle: [],
   eyebrow: [MUTTDATA],
@@ -326,7 +326,7 @@
 ]
 
 // Content components
-#let theorem-card(title, body) = block(
+#let _theorem-card(title, body) = block(
   width: 100%,
   fill: white,
   inset: 13pt,
@@ -347,7 +347,7 @@
   body,
   kind: "theorem",
   supplement: localized-title(title, [Teorema], [Theorem]),
-  numbering: if numbered { n => slide-numbering(n) } else { none },
+  numbering: if numbered { n => _slide-numbering(n) } else { none },
   caption: note,
   outlined: false,
 )
@@ -465,9 +465,9 @@
   // Theme
   show: simple-theme.with(
     aspect-ratio: "16-9",
-    header: slide-title.with(font-size: font-size),
+    header: _slide-title.with(font-size: font-size),
     header-right: none,
-    footer: deck-footer(font-size),
+    footer: _deck-footer(font-size),
     footer-right: none,
     subslide-preamble: none,
     config-page(
@@ -475,8 +475,8 @@
       footer-descent: 0em,
     ),
     config-common(
-      new-section-slide-fn: section-divider.with(font-size: font-size),
-      default-composer: vertical-center,
+      new-section-slide-fn: _section-divider.with(font-size: font-size),
+      default-composer: _vertical-center,
       reset-page-counter-to-slide-counter: false,
     ),
     config-colors(
@@ -527,7 +527,7 @@
         target.location(),
         text(
           fill: mutt-blue,
-          slide-numbering(
+          _slide-numbering(
             n,
             parentheses: target.func() == math.equation,
             location: target.location(),
@@ -545,14 +545,14 @@
   show footnote.entry: it => move(dy: 21pt, it)
   set table(stroke: 1pt + rgb("#CBD3E1"), inset: 7pt)
   show table: it => align(center, it)
-  set figure(numbering: n => slide-numbering(n), gap: 5pt)
+  set figure(numbering: n => _slide-numbering(n), gap: 5pt)
   show figure.caption: none
   set math.equation(
-    numbering: n => slide-numbering(n, parentheses: true),
+    numbering: n => _slide-numbering(n, parentheses: true),
     number-align: left + horizon,
     supplement: none,
   )
-  show figure.where(kind: "theorem"): it => theorem-card(
+  show figure.where(kind: "theorem"): it => _theorem-card(
     [
       #it.supplement
       #if it.numbering != none {
@@ -564,7 +564,7 @@
   )
 
   // Title and slides
-  branded-title-slide(
+  _branded-title-slide(
     title: title,
     subtitle: subtitle,
     eyebrow: eyebrow,

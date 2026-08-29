@@ -1,18 +1,18 @@
 #import "@preview/subpar:0.2.2"
 
 // Code
-#let onedark-theme = read("onedark.tmTheme", encoding: none)
-#let onedark-foreground = rgb("#24272E")
-#let onedark-code-block = block.with(
+#let _onedark-theme = read("onedark.tmTheme", encoding: none)
+#let _onedark-foreground = rgb("#24272E")
+#let _onedark-code-block = block.with(
   stroke: 0.5pt + rgb("#D9E0ED"),
   inset: 10pt,
   radius: 4pt,
 )
 #let code-style(body, size: 0.8em, width: 100%) = {
-  set raw(theme: onedark-theme)
+  set raw(theme: _onedark-theme)
   show raw: set text(font: "DejaVu Sans Mono", size: size)
-  show raw.where(block: true): set text(fill: onedark-foreground)
-  show raw.where(block: true): onedark-code-block.with(width: width)
+  show raw.where(block: true): set text(fill: _onedark-foreground)
+  show raw.where(block: true): _onedark-code-block.with(width: width)
   body
 }
 
@@ -145,8 +145,6 @@
     }
   }
 }
-
-#let show-number-only-reference = number-only-reference()
 
 // Lists
 #let wide-enum = {

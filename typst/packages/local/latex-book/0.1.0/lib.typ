@@ -7,23 +7,23 @@
 #let _footnote-size(font-size) = font-size - 2pt
 
 // Numbering
-#let book-phase = state("latex-book-phase", "title")
-#let page-style-enabled = state("latex-book-page-style", true)
-#let folio-enabled = state("latex-book-folio", true)
-#let main-page-reset = state("latex-book-main-page-reset", false)
-#let main-start-page = state("latex-book-main-start-page", none)
-#let appendix-mode = state("latex-book-appendix", false)
-#let numbering-scale = 1000
-#let appendix-offset = numbering-scale * numbering-scale * numbering-scale
+#let _book-phase = state("latex-book-phase", "title")
+#let _page-style-enabled = state("latex-book-page-style", true)
+#let _folio-enabled = state("latex-book-folio", true)
+#let _main-page-reset = state("latex-book-main-page-reset", false)
+#let _main-start-page = state("latex-book-main-start-page", none)
+#let _appendix-mode = state("latex-book-appendix", false)
+#let _numbering-scale = 1000
+#let _appendix-offset = _numbering-scale * _numbering-scale * _numbering-scale
 
-#let book-numbering(n, parentheses: false) = {
-  let appendix = n >= appendix-offset
-  let encoded = if appendix { n - appendix-offset } else { n }
-  let chapter = calc.floor(encoded / numbering-scale / numbering-scale)
+#let _book-numbering(n, parentheses: false) = {
+  let appendix = n >= _appendix-offset
+  let encoded = if appendix { n - _appendix-offset } else { n }
+  let chapter = calc.floor(encoded / _numbering-scale / _numbering-scale)
   let section = calc.floor(
-    calc.rem(encoded, numbering-scale * numbering-scale) / numbering-scale,
+    calc.rem(encoded, _numbering-scale * _numbering-scale) / _numbering-scale,
   )
-  let number = calc.rem(encoded, numbering-scale)
+  let number = calc.rem(encoded, _numbering-scale)
   let pattern = if appendix {
     if parentheses { "(1.A.1)" } else { "1.A.1" }
   } else if parentheses {
@@ -34,24 +34,24 @@
   numbering(pattern, chapter, section, number)
 }
 
-#let reset-book-numbering() = context {
+#let _reset-book-numbering() = context {
   let headings = counter(heading).get()
   let chapter = headings.at(0, default: 0)
   let section = headings.at(1, default: 0)
   let base = (
-    chapter * numbering-scale * numbering-scale + section * numbering-scale
+    chapter * _numbering-scale * _numbering-scale + section * _numbering-scale
   )
-  if appendix-mode.get() { base += appendix-offset }
+  if _appendix-mode.get() { base += _appendix-offset }
   reset-numbering(base: base)
 }
 
 // Running heads and folios
-#let latest-heading(level) = {
+#let _latest-heading(level) = {
   let headings = query(heading.where(level: level).before(here()))
   if headings.len() > 0 { headings.last() } else { none }
 }
 
-#let running-heading(level, chapter: false, page-last: false) = {
+#let _running-heading(level, chapter: false, page-last: false) = {
   let it = if page-last {
     let page = here().page()
     let headings = query(heading.where(level: level)).filter(
@@ -59,7 +59,7 @@
     )
     if headings.len() > 0 { headings.last() } else { none }
   } else {
-    latest-heading(level)
+    _latest-heading(level)
   }
   if it != none {
     if it.numbering != none {
@@ -71,30 +71,30 @@
   }
 }
 
-#let page-number() = context {
+#let _page-number() = context {
   let n = counter(page).get().first()
-  numbering(if book-phase.get() == "front" { "i" } else { "1" }, n)
+  numbering(if _book-phase.get() == "front" { "i" } else { "1" }, n)
 }
 
-#let ruled-header(body) = block(width: 100%)[
+#let _ruled-header(body) = block(width: 100%)[
   #body
   #v(-0.75em)
   #line(length: 100%, stroke: 0.4pt)
 ]
 
-#let book-header(font-size) = context {
-  let phase = book-phase.get()
+#let _book-header(font-size) = context {
+  let phase = _book-phase.get()
   let page = counter(page).get().first()
   let physical-page = here().page()
   let chapter-on-page = query(heading.where(level: 1)).any(
     it => it.location().page() == physical-page,
   )
-  if not page-style-enabled.get() {
+  if not _page-style-enabled.get() {
     none
   } else if phase == "front" {
-    let heading = latest-heading(1)
+    let heading = _latest-heading(1)
     if heading != none {
-      ruled-header(align(center, text(
+      _ruled-header(align(center, text(
         size: _small-size(font-size),
         smallcaps(heading.body),
       )))
@@ -102,31 +102,33 @@
   } else if phase == "main" and not chapter-on-page {
     set text(size: font-size)
     if calc.even(page) {
-      ruled-header(grid(
+      _ruled-header(grid(
         columns: (auto, 1fr, auto),
-        page-number(), [], smallcaps(running-heading(1, chapter: true)),
+        _page-number(), [], smallcaps(_running-heading(1, chapter: true)),
       ))
     } else {
-      ruled-header(grid(
+      _ruled-header(grid(
         columns: (auto, 1fr, auto),
-        smallcaps(running-heading(2, page-last: true)), [], page-number(),
+        smallcaps(_running-heading(2, page-last: true)), [], _page-number(),
       ))
     }
   }
 }
 
-#let book-footer(font-size) = context {
-  let phase = book-phase.get()
+#let _book-footer(font-size) = context {
+  let phase = _book-phase.get()
   let physical-page = here().page()
   let chapter-on-page = query(heading.where(level: 1)).any(
     it => it.location().page() == physical-page,
   )
-  if not folio-enabled.get() {
+  if not _folio-enabled.get() {
     none
-  } else if phase == "front" and (page-style-enabled.get() or chapter-on-page) {
-    align(center, text(size: _small-size(font-size), page-number()))
+  } else if (
+    phase == "front" and (_page-style-enabled.get() or chapter-on-page)
+  ) {
+    align(center, text(size: _small-size(font-size), _page-number()))
   } else if phase == "main" and chapter-on-page {
-    align(center, text(size: _small-size(font-size), page-number()))
+    align(center, text(size: _small-size(font-size), _page-number()))
   }
 }
 
@@ -145,7 +147,7 @@
   }
   heading(level: 1, numbering: none, outlined: true, bibliography-title)
   for (index, chapter) in chapters.enumerate() {
-    if chapter.numbering != none and not appendix-mode.at(chapter.location()) {
+    if chapter.numbering != none and not _appendix-mode.at(chapter.location()) {
       let chapter-end = if index + 1 < chapters.len() {
         chapters.at(index + 1).location()
       } else {
@@ -174,11 +176,11 @@
   }
 }
 
-#let book-outline-entry(it) = context {
+#let _book-outline-entry(it) = context {
   let location = it.element.location()
-  let phase = book-phase.at(location)
+  let phase = _book-phase.at(location)
   let page = if phase == "main" {
-    location.page() - main-start-page.final() + 1
+    location.page() - _main-start-page.final() + 1
   } else {
     counter(page).at(location).first()
   }
@@ -188,7 +190,7 @@
   )
 }
 
-#let book-reference-supplement(target) = {
+#let _book-reference-supplement(target) = {
   if (
     target.func() == heading and target.level == 1 and target.numbering != none
   ) {
@@ -196,7 +198,7 @@
   } else if (
     target.func() == heading
       and target.level == 2
-      and appendix-mode.at(target.location())
+      and _appendix-mode.at(target.location())
   ) {
     localized([Apéndice], [Appendix])
   } else {
@@ -205,7 +207,7 @@
 }
 
 // Front matter
-#let half-title-page(title) = [
+#let _half-title-page(title) = [
   #align(center, text(
     size: 20.74pt,
     weight: "bold",
@@ -214,7 +216,7 @@
   #pagebreak(to: "odd")
 ]
 
-#let title-page(
+#let _title-page(
   title,
   subtitle,
   author,
@@ -254,7 +256,7 @@
   #pagebreak()
 ]
 
-#let copyright-page(copyright, font-size) = [
+#let _copyright-page(copyright, font-size) = [
   #set text(size: _footnote-size(font-size))
   #set par(first-line-indent: 0pt, spacing: 1.2em)
   #v(1fr)
@@ -262,7 +264,7 @@
   #pagebreak()
 ]
 
-#let dedication-page(dedication) = [
+#let _dedication-page(dedication) = [
   #pagebreak(weak: true, to: "odd")
   #align(center + horizon, text(
     size: 12pt,
@@ -274,41 +276,41 @@
 
 // Equations
 #let equation = equation-environment(
-  n => book-numbering(n, parentheses: true),
+  n => _book-numbering(n, parentheses: true),
 )
 
 // Subfigures
-#let book-subfigures = subfigure-environments(
-  n => book-numbering(n),
+#let _book-subfigures = subfigure-environments(
+  n => _book-numbering(n),
   sub-ref-numbering: "(a)",
 )
-#let subfigure = book-subfigures.subfigure
-#let subfigure-grid = book-subfigures.subfigure-grid
+#let subfigure = _book-subfigures.subfigure
+#let subfigure-grid = _book-subfigures.subfigure-grid
 
 // Theorem environments
-#let book-environments = statement-environments(n => book-numbering(n))
-#let theorem = book-environments.theorem
-#let proposition = book-environments.proposition
-#let lemma = book-environments.lemma
-#let corollary = book-environments.corollary
-#let definition = book-environments.definition
-#let example = book-environments.example
-#let continued-example = book-environments.continued-example
-#let exercise = book-environments.exercise
-#let remark = book-environments.remark
-#let notation = book-environments.notation
-#let solution = book-environments.solution
+#let _book-environments = statement-environments(n => _book-numbering(n))
+#let theorem = _book-environments.theorem
+#let proposition = _book-environments.proposition
+#let lemma = _book-environments.lemma
+#let corollary = _book-environments.corollary
+#let definition = _book-environments.definition
+#let example = _book-environments.example
+#let continued-example = _book-environments.continued-example
+#let exercise = _book-environments.exercise
+#let remark = _book-environments.remark
+#let notation = _book-environments.notation
+#let solution = _book-environments.solution
 
 // Sections and appendices
 #let appendix(title: auto, body) = {
-  appendix-mode.update(true)
+  _appendix-mode.update(true)
   context {
     let chapter = counter(heading).get().first()
     counter(heading).update((chapter, 0))
   }
   set heading(numbering: (..numbers) => numbering("1.A.1", ..numbers))
   body
-  appendix-mode.update(false)
+  _appendix-mode.update(false)
 }
 
 // Document template
@@ -353,9 +355,9 @@
     binding: left,
     numbering: "i",
     margin: (top: 3.7cm, bottom: 4.7cm, inside: 3.5cm, outside: 3.5cm),
-    header: book-header(font-size),
+    header: _book-header(font-size),
     header-ascent: 25%,
-    footer: book-footer(font-size),
+    footer: _book-footer(font-size),
     footer-descent: 30%,
   )
 
@@ -371,7 +373,7 @@
   show: code-style.with(size: _small-size(font-size))
   show link: set text(fill: navy)
   show ref: number-only-reference(
-    supplement: book-reference-supplement,
+    supplement: _book-reference-supplement,
   )
   show cite: set text(fill: navy)
   set bibliography(style: mybibstyle)
@@ -392,26 +394,26 @@
     number-align: left + horizon,
     supplement: none,
   )
-  set figure(numbering: n => book-numbering(n), gap: 5pt)
+  set figure(numbering: n => _book-numbering(n), gap: 5pt)
   show figure.caption: show-figure-caption.with(_small-size(font-size))
   show figure.where(kind: image): set figure(placement: top)
   show figure.where(kind: table): set figure(placement: top)
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: "theorem"): show-statement
   show heading.where(level: 1): it => {
-    page-style-enabled.update(false)
+    _page-style-enabled.update(false)
     if it.numbering != none {
       pagebreak(to: "odd")
     } else {
       pagebreak(weak: true, to: "odd")
     }
-    page-style-enabled.update(true)
-    context if main-page-reset.get() {
+    _page-style-enabled.update(true)
+    context if _main-page-reset.get() {
       counter(page).update(1)
-      main-start-page.update(here().page())
-      main-page-reset.update(false)
+      _main-start-page.update(here().page())
+      _main-page-reset.update(false)
     }
-    reset-book-numbering()
+    _reset-book-numbering()
     if it.numbering != none { counter(footnote).update(0) }
     block(width: 100%, above: 2em, below: 3.2em, breakable: false)[
       #set text(weight: "bold")
@@ -444,7 +446,7 @@
     ]
   }
   show heading.where(level: 2): it => {
-    reset-book-numbering()
+    _reset-book-numbering()
     block(above: 1.5em, below: 1.05em)[
       #set text(size: 14.4pt, weight: "bold")
       #heading-title(it)
@@ -469,11 +471,11 @@
     it,
     size: _footnote-size(font-size),
   )
-  show outline.entry: book-outline-entry
+  show outline.entry: _book-outline-entry
 
   // Front matter
-  if half-title { half-title-page(title) }
-  title-page(
+  if half-title { _half-title-page(title) }
+  _title-page(
     title,
     subtitle,
     author,
@@ -482,15 +484,17 @@
     department,
     logo,
   )
-  if optional-value-present(copyright) { copyright-page(copyright, font-size) }
-  if dedication != none { dedication-page(dedication) }
+  if optional-value-present(copyright) {
+    _copyright-page(copyright, font-size)
+  }
+  if dedication != none { _dedication-page(dedication) }
 
-  book-phase.update("front")
+  _book-phase.update("front")
   if toc {
-    folio-enabled.update(false)
+    _folio-enabled.update(false)
     document-outline(contents-title)
     pagebreak()
-    folio-enabled.update(true)
+    _folio-enabled.update(true)
   }
   if optional-value-present(preface) {
     heading(
@@ -507,9 +511,9 @@
 
   // Main matter
   pagebreak()
-  book-phase.update("main")
+  _book-phase.update("main")
   set page(numbering: "1")
-  main-page-reset.update(true)
+  _main-page-reset.update(true)
   counter(heading).update(0)
   body
   if index {
