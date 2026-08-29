@@ -12,10 +12,7 @@ local function heading_snippet(trigger, level, prefix, label, dscr)
     return s(
         { trig = trigger, dscr = dscr },
         fmta(string.rep('=', level) .. [[ <>
-<<]] .. prefix .. [[:<>>>
-
-<>
-]], {
+<<]] .. prefix .. [[:<>>><>]], {
             i(1, label .. ' name'),
             f(_G.LuaSnipConfig.snake_case_labels, { 1 }),
             i(0),
@@ -28,10 +25,7 @@ local function unnumbered_heading_snippet(trigger, level, prefix, label, dscr)
     return s(
         { trig = trigger, dscr = dscr },
         fmta('#heading(level: ' .. level .. [[, numbering: none)[<>]
-<<]] .. prefix .. [[:<>>>
-
-<>
-]], {
+<<]] .. prefix .. [[:<>>><>]], {
             i(1, label .. ' name'),
             f(_G.LuaSnipConfig.snake_case_labels, { 1 }),
             i(0),
@@ -56,10 +50,7 @@ local function appendix_snippet(trigger, dscr)
 // @typstyle off
 #appendix[
 <>
-]
-
-<>
-            ]],
+]<>]],
             { i(1), i(0) }
         ),
         { condition = line_begin }

@@ -101,10 +101,7 @@ return {
 #bibliography(
   read("<>", encoding: none),
   title: localized([Referencias], [References]),
-)
-
-<>
-            ]],
+)<>]],
             {
                 i(1, 'references.yml'),
                 i(0),

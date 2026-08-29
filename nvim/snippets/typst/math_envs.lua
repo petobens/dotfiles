@@ -13,10 +13,7 @@ local function display_equation(trigger, description)
             [[
 $
   <>
-$
-
-<>
-            ]],
+$<>]],
             { i(1, 'equation'), i(0) }
         ),
         { condition = line_begin }
@@ -31,10 +28,7 @@ return {
             [[
 #equation($
   <>
-$) <<eq:<>>>
-
-<>
-            ]],
+$) <<eq:<>>><>]],
             { i(1, 'equation'), i(2, 'label'), i(0) }
         ),
         { condition = line_begin }
@@ -47,10 +41,7 @@ $) <<eq:<>>>
 #equation($
   <> & = <> \
   <> & = <>
-$) <<eq:<>>>
-
-<>
-            ]],
+$) <<eq:<>>><>]],
             {
                 i(1, 'left-hand side'),
                 i(2, 'right-hand side'),
@@ -69,10 +60,7 @@ $) <<eq:<>>>
 $
   <> & = <> \
   <> & = <>
-$
-
-<>
-            ]],
+$<>]],
             {
                 i(1, 'left-hand side'),
                 i(2, 'right-hand side'),
@@ -134,10 +122,7 @@ $
 #equation($
   & <>_(<> in <>) quad && <> \
   & upright("<>") && <>
-$) <<eq:<>>>
-
-<>
-            ]],
+$) <<eq:<>>><>]],
             {
                 i(1, 'max'),
                 i(2, 'x'),
@@ -160,10 +145,7 @@ $) <<eq:<>>>
 #equation($
   (<>) & : quad & <> & = <> \
   (<>) & : quad & <> & = <>
-$) <<eq:<>>>
-
-<>
-            ]],
+$) <<eq:<>>><>]],
             {
                 i(1, 'x'),
                 i(2, 'left-hand side'),

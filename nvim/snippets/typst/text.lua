@@ -25,7 +25,7 @@ return {
     wrapped('ti', '[T]ext [i]talic', '_', '_'),
     s(
         { trig = 'cb', dscr = '[C]ode [b]lock' },
-        fmta('```<>\n<><>\n```\n<>', {
+        fmta('```<>\n<><>\n```<>', {
             i(1, 'python'),
             f(_G.LuaSnipConfig.visual_selection),
             i(2),
@@ -64,7 +64,7 @@ return {
     ),
     s(
         { trig = 'rpi', dscr = '[R]estore [p]aragraph [i]ndent after block' },
-        fmta('#restore-paragraph-indent\n<>', { i(0) }),
+        fmta('#restore-paragraph-indent<>', { i(0) }),
         { condition = line_begin }
     ),
 

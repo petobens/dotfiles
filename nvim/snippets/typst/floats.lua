@@ -60,10 +60,7 @@ return {
 #figure(
   image("<>", width: <>%),
 <>  caption: [<>],
-) <<fig:<>>>
-
-<>
-            ]],
+) <<fig:<>>><>]],
             {
                 i(1),
                 i(2, '100'),
@@ -100,10 +97,7 @@ return {
   caption: [<>],
   label: <<fig:<>>>,
   panel-height: <>cm,
-)
-
-<>
-            ]],
+)<>]],
             {
                 i(1),
                 i(2, 'First panel'),
@@ -141,10 +135,7 @@ return {
       caption: [<>],
     ) <<fig:<>>>],
   )
-]
-
-<>
-            ]],
+]<>]],
             {
                 i(1),
                 i(2, 'First caption'),
@@ -167,10 +158,7 @@ return {
   image("<>"),
   kind: table,
 <>  caption: [<>],
-) <<tab:<>>>
-
-<>
-            ]],
+) <<tab:<>>><>]],
             {
                 i(1),
                 c(2, {
@@ -199,10 +187,7 @@ return {
   rows: (
     ([<>], [<>], [<>]),
   ),
-)
-
-<>
-            ]],
+)<>]],
             {
                 i(1, '(auto, auto, auto)'),
                 i(2, '(left, right, right)'),
@@ -233,10 +218,7 @@ return {
   table.hline(stroke: <>),
   <>
   table.hline(stroke: <>),
-)
-
-<>
-            ]],
+)<>]],
             {
                 i(1, '(auto, auto, auto)'),
                 i(2, '(left, right, right)'),

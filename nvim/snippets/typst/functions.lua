@@ -33,10 +33,7 @@ return {
   <>
   #body
   <>
-]
-
-<>
-            ]],
+]<>]],
             {
                 i(1, 'name'),
                 i(2, 'before'),
@@ -63,10 +60,7 @@ return {
             [[
 #<>[
   <><>
-]
-
-<>
-            ]],
+]<>]],
             {
                 i(1, 'function'),
                 f(_G.LuaSnipConfig.visual_selection),

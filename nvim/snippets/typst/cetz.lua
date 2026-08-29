@@ -10,7 +10,7 @@ local line_begin = require('luasnip.extras.expand_conditions').line_begin
 return {
     -- Canvas
     s(
-        { trig = 'tikz', dscr = '[TikZ]-style CeTZ canvas' },
+        { trig = 'cc', dscr = '[C]eTZ [c]anvas' },
         fmta(
             [[
 #import "@preview/cetz:0.5.2"
@@ -19,10 +19,7 @@ return {
   import cetz.draw: *
 
   <><>
-})
-
-<>
-            ]],
+})<>]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1, 'line((0, 0), (4, 0), stroke: 1pt + black)'),
@@ -37,12 +34,11 @@ return {
         { trig = 'axis', dscr = '[Axis] (CeTZ)' },
         fmta(
             [[
-line((0, 0), (<>, 0), mark: (end: ">>"), stroke: 0.8pt + black)
+let axis-arrow = (end: ">>>>", scale: 1.5, fill: black)
+line((0, 0), (<>, 0), mark: axis-arrow, stroke: 0.8pt + black)
 content((<>, -0.25), [$<>$])
-line((0, 0), (0, <>), mark: (end: ">>"), stroke: 0.8pt + black)
-content((-0.25, <>), [$<>$])
-<>
-            ]],
+line((0, 0), (0, <>), mark: axis-arrow, stroke: 0.8pt + black)
+content((-0.25, <>), [$<>$])<>]],
             {
                 i(1, '5'),
                 i(2, '5.25'),
@@ -104,9 +100,7 @@ content((-0.25, <>), [$<>$])
         fmta(
             [[
 line((<>), (<>), stroke: 0.6pt + black)
-content((<>), [<>], anchor: "<>")
-<>
-            ]],
+content((<>), [<>], anchor: "<>")<>]],
             {
                 i(1, '0, 0'),
                 i(2, '1, 1'),
@@ -133,9 +127,7 @@ content((<>), [<>], anchor: "<>")
         fmta(
             [[
 cetz.decorations.brace((<>), (<>), name: "brace")
-content("brace.content", [<>])
-<>
-            ]],
+content("brace.content", [<>])<>]],
             { i(1, '0, 0'), i(2, '2, 0'), i(3, 'Text'), i(0) }
         ),
         { condition = line_begin }

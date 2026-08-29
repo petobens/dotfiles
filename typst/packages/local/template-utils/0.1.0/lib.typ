@@ -89,9 +89,22 @@
 #let show-footnote-entry(it, size: 9pt) = context {
   set text(size: size)
   let location = it.note.location()
+  let marker = counter(footnote).display(at: location, it.note.numbering)
+  let custom-marker = type(it.note.numbering) == function
+  // Multiline metadata often starts with an incidental source space
+  let body = it.note.body
+  let children = body.fields().at("children", default: ())
+  if custom-marker and children.at(0, default: none) == [ ] {
+    body = children.slice(1).join()
+  }
   h(15pt)
-  counter(footnote).display(at: location, "1. ")
-  it.note.body
+  if custom-marker {
+    super(marker, size: 0.75em)
+  } else {
+    marker
+    [. ]
+  }
+  body
 }
 
 // Colors and tables

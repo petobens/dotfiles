@@ -14,10 +14,7 @@ local function list_snippet(trigger, description, marker)
     return s(
         { trig = trigger, dscr = description },
         fmta(marker .. [[ <><>
-]] .. marker .. [[ <>
-
-<>
-]], {
+]] .. marker .. [[ <><>]], {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'First item'),
             i(2, 'Second item'),
@@ -39,10 +36,7 @@ return {
   + <><>
 
   + <>
-]
-
-<>
-            ]],
+]<>]],
             {
                 i(1, '(i)'),
                 i(2, '1em'),
@@ -66,10 +60,7 @@ return {
   - <><>
 
   - <>
-]
-
-<>
-            ]],
+]<>]],
             {
                 i(1, '[–]'),
                 i(2, '1em'),
@@ -91,10 +82,7 @@ return {
 
 #labeled-item[<>][
   <>
-]
-
-<>
-            ]],
+]<>]],
             {
                 i(1, 'First label'),
                 f(_G.LuaSnipConfig.visual_selection),
@@ -113,10 +101,7 @@ return {
 #wide-enum(numbering: "<>")[
   + <><>
   + <>
-]
-
-<>
-            ]],
+]<>]],
             {
                 i(1, '(i)'),
                 f(_G.LuaSnipConfig.visual_selection),
