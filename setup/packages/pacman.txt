@@ -67,7 +67,6 @@ nmap
 openbsd-netcat
 ouch
 poppler
-python
 qpdf
 ripgrep
 rsync
@@ -178,6 +177,7 @@ npm
 ollama
 openai-codex
 perl
+python
 python-pip
 qemu-desktop
 rumdl
