@@ -60,6 +60,8 @@ return {
   keywords: <>,
   jel: <>,
   toc: <>,
+  // Required by Retrofit for filename-based bibliographies
+  bibliography-read: path =>> read(path),
 )
 
 = <>
@@ -195,6 +197,8 @@ return {
   author: [<>],
   eyebrow: [<>],
   date: datetime.today(),
+  // Required by Retrofit for filename-based bibliographies
+  bibliography-read: path =>> read(path),
 )
 
 = <>

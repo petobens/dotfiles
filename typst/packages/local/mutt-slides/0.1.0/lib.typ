@@ -456,6 +456,8 @@
   author: [Pedro Ferrari],
   eyebrow: [MUTTDATA],
   date: datetime.today(),
+  // Overridden at the document call site for filename-based bibliographies
+  bibliography-read: read-mybibstyle,
   body,
 ) = {
   let date = localized-date(date, language)
@@ -498,7 +500,7 @@
   show: apply-mybibstyle
   show: backrefs.with(
     format: format-bibliography-backrefs,
-    read: read-mybibstyle,
+    read: retrofit-reader(bibliography-read),
   )
   show bibliography: set text(font: "New Computer Modern")
   show bibliography: set block(spacing: bibliography-entry-spacing)

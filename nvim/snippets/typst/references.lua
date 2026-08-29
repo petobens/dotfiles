@@ -99,7 +99,7 @@ return {
         fmta(
             [[
 #bibliography(
-  read("<>", encoding: none),
+  "<>",
   title: localized([Referencias], [References]),
 )<>]],
             {
@@ -111,7 +111,7 @@ return {
     ),
     s(
         { trig = 'cbib', dscr = '[C]hapter [bib]liographies' },
-        fmta('#chapter-bibliographies(read("<>", encoding: none))<>', {
+        fmta('#chapter-bibliographies(path("<>"))<>', {
             i(1, 'references.yml'),
             i(0),
         }),
