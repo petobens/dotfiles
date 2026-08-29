@@ -68,6 +68,7 @@ openbsd-netcat
 ouch
 poppler
 python
+qpdf
 ripgrep
 rsync
 sqlite
