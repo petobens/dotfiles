@@ -13,10 +13,7 @@ return {
         { trig = 'ft', dscr = '[F]rame/slide [t]itle' },
         fmta(
             [[
-== <><>
-
-<>
-            ]],
+== <><><>]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1, 'Slide title'),
@@ -43,10 +40,7 @@ return {
 #card(
   [<>],
   [<><>],
-)
-
-<>
-            ]],
+)<>]],
             {
                 i(1, 'Title'),
                 f(_G.LuaSnipConfig.visual_selection),
@@ -74,10 +68,7 @@ return {
   $
     <><>
   $
-]
-
-<>
-            ]],
+]<>]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1, 'x = y'),
@@ -102,17 +93,14 @@ return {
   <>
 ][
   <>
-]
-
-<>
-            ]],
+]<>]],
             { i(1, 'Left column'), i(2, 'Right column'), i(0) }
         ),
         { condition = line_begin }
     ),
     s(
         { trig = 'pause', dscr = '[Pause]: reveal following slide content' },
-        fmta('#pause\n\n<>', { i(0) }),
+        fmta('#pause<>', { i(0) }),
         { condition = line_begin }
     ),
     s(

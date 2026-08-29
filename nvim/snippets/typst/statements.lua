@@ -16,10 +16,7 @@ local function numbered_statement(trigger, environment, prefix, label, dscr)
         { trig = trigger, dscr = dscr },
         fmta('#' .. environment .. [[<>[
   <><>
-] <<]] .. prefix .. [[:<>>>
-
-<>
-]], {
+] <<]] .. prefix .. [[:<>>><>]], {
             c(1, {
                 sn(nil, { t('(note: ['), i(1, 'Name'), t('])') }),
                 t(''),
@@ -38,10 +35,7 @@ local function unnumbered_statement(trigger, environment, label, dscr)
         { trig = trigger, dscr = dscr },
         fmta('#' .. environment .. [[(numbered: false<>)[
   <><>
-]
-
-<>
-]], {
+]<>]], {
             c(1, {
                 sn(nil, { t(', note: ['), i(1, 'Name'), t(']') }),
                 t(''),
@@ -61,10 +55,7 @@ local function solution_snippet(trigger, dscr)
             [[
 #solution[
   <><>
-]
-
-<>
-            ]],
+]<>]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1, 'Solution'),
@@ -102,10 +93,7 @@ return {
             [[
 #continued-example(<<exa:<>>>)[
   <><>
-]
-
-<>
-            ]],
+]<>]],
             {
                 i(1, 'label'),
                 f(_G.LuaSnipConfig.visual_selection),
@@ -136,10 +124,7 @@ return {
             [[
 #proof[
   <><>
-]
-
-<>
-            ]],
+]<>]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
                 i(1),
