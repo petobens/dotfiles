@@ -10,6 +10,7 @@ local t = ls.text_node
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
+-- Helpers
 local function numbered_statement(trigger, environment, prefix, label, dscr)
     return s(
         { trig = trigger, dscr = dscr },

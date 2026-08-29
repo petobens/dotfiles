@@ -23,10 +23,6 @@ return {
     -- Emphasis
     wrapped('tb', '[T]ext [b]old/strong', '*', '*'),
     wrapped('ti', '[T]ext [i]talic', '_', '_'),
-    wrapped('em', '[Em]phasized text', '#emph[', ']'),
-    wrapped('tss', '[T]ext [s]ans-[s]erif', '#text(font: "DejaVu Sans")[', ']'),
-    wrapped('muc', '[M]ake [u]pper[c]ase text', '#upper[', ']'),
-    wrapped('quo', 'Inline [quo]tation', '#quote(block: false)[', ']'),
     s(
         { trig = 'cb', dscr = '[C]ode [b]lock' },
         fmta('```<>\n<><>\n```\n<>', {
@@ -74,7 +70,7 @@ return {
 
     -- Placeholder text
     s(
-        { trig = 'lorem', wordTrig = false, dscr = '[Lorem] ipsum text' },
+        { trig = 'li', wordTrig = false, dscr = '[L]orem [i]psum text' },
         fmta('#lorem(<>)<>', { i(1, '100'), i(0) }),
         { condition = line_begin }
     ),

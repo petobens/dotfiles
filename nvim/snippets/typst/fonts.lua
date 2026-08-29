@@ -20,16 +20,8 @@ end
 return {
     -- Text inside math
     s(
-        { trig = 'tx', dscr = '[T]e[x]t in math' },
-        fmta('upright("<><>")<>', {
-            f(_G.LuaSnipConfig.visual_selection),
-            i(1, 'text'),
-            i(0),
-        })
-    ),
-    s(
         { trig = 'btx', dscr = '[B]oxed [t]e[x]t in math (unbreakable)' },
-        fmta('#box[$upright("<><>")$]<>', {
+        fmta('#box[$"<><>"$]<>', {
             f(_G.LuaSnipConfig.visual_selection),
             i(1, 'text'),
             i(0),
@@ -39,7 +31,6 @@ return {
     -- Math alphabets
     math_font('mcg', '[M]ath [c]alli[g]raphic', 'cal'),
     math_font('mbb', '[M]ath [b]lackboard [b]old', 'bb'),
-    math_font('mi', '[M]ath [i]talic', 'italic'),
     math_font('mr', '[M]ath [r]oman/upright', 'upright'),
     math_font('mf', '[M]ath [f]raktur', 'frak'),
     math_font('msc', '[M]ath [sc]ript', 'scr'),

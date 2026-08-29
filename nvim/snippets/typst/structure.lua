@@ -7,6 +7,7 @@ local s = ls.snippet
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
+-- Helpers
 local function heading_snippet(trigger, level, prefix, label, dscr)
     return s(
         { trig = trigger, dscr = dscr },
@@ -121,6 +122,5 @@ return {
     ),
 
     -- Appendices
-    appendix_snippet('aa', '[A]rticle [a]ppendix'),
-    appendix_snippet('ba', '[B]ook [a]ppendix'),
+    appendix_snippet('app', '[App]endix'),
 }, {}

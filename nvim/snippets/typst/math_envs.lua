@@ -100,10 +100,6 @@ $
         )
     ),
     s(
-        { trig = 'sit', dscr = '[S]hort [i]n[t]ertext row' },
-        fmta('#text[<>] \\<>', { i(1, 'Text'), i(0) })
-    ),
-    s(
         { trig = 'dca', dscr = '[D]isplay [ca]ses' },
         fmta(
             [[cases(
