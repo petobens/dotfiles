@@ -12,6 +12,9 @@ or environment, for example `nvim/`, `python/`, and `arch/`.
 - Prefer editing existing files over creating new ones.
 - Explain non-trivial code or configuration choices when they affect future
   maintenance.
+- When a package or plugin lookup reports a DNS or network failure, treat any
+  subsequent "not found" output as inconclusive. Retry with network access when
+  available; otherwise report that the lookup could not be verified.
 
 ### Linting and formatting
 
@@ -63,8 +66,12 @@ Run this before committing changes to Neovim Lua files.
 Preferred command:
 
 ```bash
-luacheck --config="$HOME/.config/.luacheckrc" <file>
+luacheck --config="$HOME/.config/.luacheckrc" -- <file>
 ```
+
+The configuration already declares `vim` as a global. Do not add
+`--globals vim`; without an option terminator, Luacheck can consume file paths
+as additional global names.
 
 If `luacheck` or `lauc` is broken because of the Arch Lua packaging mismatch
 (the `/usr/bin/luacheck` wrapper targets a Lua version whose rock tree no
@@ -77,10 +84,32 @@ ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
 "lua$ver" \
     -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path" \
     -e "package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath" \
-    "$entry" --config="$HOME/.config/.luacheckrc" <file>
+    "$entry" --config="$HOME/.config/.luacheckrc" -- <file>
 ```
 
 Run Luacheck on touched Lua files when making changes under `nvim/`.
+
+#### Headless validation
+
+For isolated Neovim API probes, use `nvim --clean --headless`. When loading the
+real configuration, run from a temporary directory and redirect writable state
+and cache paths:
+
+```bash
+test_dir=$(mktemp -d)
+(
+    cd "$test_dir"
+    XDG_STATE_HOME="$test_dir/state" \
+    XDG_CACHE_HOME="$test_dir/cache" \
+        timeout 120 nvim --headless -c 'set shadafile=NONE' <commands>
+)
+```
+
+Do not request broader filesystem permissions merely to let a headless check
+write logs or cache under the home directory. Do not set `XDG_DATA_HOME` for
+ordinary integration checks because the real configuration needs the installed
+plugins. Keep ShaDa disabled because this configuration stores it under
+`~/.config/nvim/cache`.
 
 ### Code conventions
 
