@@ -120,6 +120,28 @@ ordinary integration checks because the real configuration needs the installed
 plugins. Keep ShaDa disabled because this configuration stores it under
 `~/.config/nvim/cache`.
 
+#### Headless validation
+
+For isolated Neovim API probes, use `nvim --clean --headless`. When loading the
+real configuration, run from a temporary directory and redirect writable state
+and cache paths:
+
+```bash
+test_dir=$(mktemp -d)
+(
+    cd "$test_dir"
+    XDG_STATE_HOME="$test_dir/state" \
+    XDG_CACHE_HOME="$test_dir/cache" \
+        timeout 120 nvim --headless -c 'set shadafile=NONE' <commands>
+)
+```
+
+Do not request broader filesystem permissions merely to let a headless check
+write logs or cache under the home directory. Do not set `XDG_DATA_HOME` for
+ordinary integration checks because the real configuration needs the installed
+plugins. Keep ShaDa disabled because this configuration stores it under
+`~/.config/nvim/cache`.
+
 ### Code conventions
 
 - **APIs:** prefer the `vim` module, including `vim.fs`, `vim.system`,
