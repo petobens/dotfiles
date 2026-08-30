@@ -936,7 +936,7 @@ end
 
 local function paste_label()
     local label = luasnip_config().snake_case_label(vim.fn.getreg('"'))
-    api.nvim_put({ label }, 'c', true, true)
+    api.nvim_put({ label }, 'c', false, true)
 end
 
 -- Lists
