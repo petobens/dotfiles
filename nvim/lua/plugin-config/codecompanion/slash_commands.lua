@@ -132,19 +132,23 @@ local slash_commands = {
     ['gdrive_search'] = {
         description = 'Search Google Drive files',
         callback = skill_input(
-            'gdrive',
+            'google-drive',
             'Google Drive search: ',
             'search Google Drive for files matching'
         ),
     },
     ['gdoc_read'] = {
         description = 'Read a Google Doc',
-        callback = skill_input('gdocs', 'Google Doc URL or ID: ', 'read the Google Doc'),
+        callback = skill_input(
+            'google-docs',
+            'Google Doc URL or ID: ',
+            'read the Google Doc'
+        ),
     },
     ['gsheet_read'] = {
         description = 'Read a Google Sheet',
         callback = skill_input(
-            'gsheets',
+            'google-sheets',
             'Google Sheet URL or ID: ',
             'read the Google Sheet'
         ),
@@ -152,7 +156,7 @@ local slash_commands = {
     ['gslides_read'] = {
         description = 'Read a Google Slides presentation',
         callback = skill_input(
-            'gslides',
+            'google-slides',
             'Google Slides URL or ID: ',
             'read the Google Slides presentation'
         ),

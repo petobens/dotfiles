@@ -32,13 +32,13 @@ end
 function M.conventional_commit(chat, opts)
     request_repo_skill(
         chat,
-        'conventional-commit',
+        'write-commit-message',
         'generate a commit message for ' .. diff_scope(opts)
     )
 end
 
 function M.code_review(chat, opts)
-    request_repo_skill(chat, 'diff-review', 'review ' .. diff_scope(opts))
+    request_repo_skill(chat, 'review-diff', 'review ' .. diff_scope(opts))
 end
 
 function M.changelog(chat, opts)
@@ -47,7 +47,11 @@ function M.changelog(chat, opts)
             and not vim.tbl_isempty(shas)
             and ('these commits: ' .. table.concat(shas, ', '))
         or 'the commits since the last release'
-    request_repo_skill(chat, 'changelog', 'generate a changelog entry for ' .. scope)
+    request_repo_skill(
+        chat,
+        'write-changelog',
+        'generate a changelog entry for ' .. scope
+    )
 end
 
 return M
