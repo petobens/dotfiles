@@ -34,9 +34,12 @@
 }
 
 #let _reset-article-numbering() = context {
-  let section = counter(heading).get().first()
-  let base = section * _numbering-scale
-  if _appendix-mode.get() { base += _appendix-offset }
+  let headings = counter(heading).get()
+  let base = if _appendix-mode.get() {
+    _appendix-offset + headings.at(1, default: 0) * _numbering-scale
+  } else {
+    headings.first() * _numbering-scale
+  }
   reset-numbering(base: base)
 }
 
@@ -54,11 +57,11 @@
 
 #let _article-footer(footer, font-size) = context {
   grid(
-    columns: (1fr, auto, 1fr),
-    align: (left, center, right),
+    columns: (1fr, auto),
+    align: (left, right),
     text(
       font: "DM Sans 9pt",
-      size: _small-size(font-size),
+      size: font-size,
       fill: mutt-muted,
       if optional-value-present(footer) { footer },
     ),
@@ -68,7 +71,6 @@
       fill: mutt-muted,
       counter(page).display("1"),
     ),
-    [],
   )
 }
 
@@ -83,12 +85,17 @@
   #set text(hyphenate: false)
   #set par(justify: false, first-line-indent: 0pt)
   #v(10pt)
-  #text(size: 26pt, weight: "bold", fill: mutt-blue, title)
+  #block(width: 100%, above: 0pt, below: 0pt)[
+    #text(size: 26pt, weight: "bold", fill: mutt-blue, title)
+  ]
   #if optional-value-present(subtitle) {
-    v(3pt)
-    text(size: 17pt, fill: mutt-blue, subtitle)
+    v(11pt)
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #set par(leading: 0.3em)
+      #text(size: 17pt, fill: mutt-blue, subtitle)
+    ]
   }
-  #v(20pt)
+  #v(14pt)
   #block[
     #set text(font: "DM Mono", size: 11pt)
     #set par(leading: 0.1em, spacing: 0.65em)
@@ -133,7 +140,7 @@
 #let _article-reference-supplement(target) = {
   if (
     target.func() == heading
-      and target.level == 1
+      and target.level == 2
       and _appendix-mode.at(target.location())
   ) {
     localized([Apéndice], [Appendix])
@@ -167,11 +174,28 @@
   #body
 ]
 
-#let appendix(body) = {
+#let appendix(title: auto, body) = context {
+  let section = counter(heading).get().first()
+  let appendix-title = if title == auto {
+    if text.lang == "es" { [Apéndice] } else { [Appendix] }
+  } else {
+    title
+  }
   _appendix-mode.update(true)
-  counter(heading).update(0)
-  set heading(numbering: "A.1")
+  heading(level: 1, numbering: none, outlined: true, appendix-title)
+  counter(heading).update((0, 0))
+  set heading(
+    numbering: (..numbers) => {
+      let levels = numbers.pos()
+      assert(
+        levels.len() >= 2,
+        message: "Mutt appendix sections must use level-two headings (`==`).",
+      )
+      numbering("A.1", ..levels.slice(1))
+    },
+  )
   body
+  counter(heading).update((section, 0))
   _appendix-mode.update(false)
 }
 
@@ -214,7 +238,7 @@
   set text(
     font: "DM Sans 9pt",
     size: font-size,
-    weight: 350,
+    weight: "regular",
     fill: mutt-ink,
     lang: language,
     hyphenate: auto,
@@ -232,7 +256,7 @@
   show bibliography: set text(size: _footnote-size(font-size))
   show bibliography: set block(spacing: bibliography-entry-spacing)
   set par(
-    leading: 0.6em,
+    leading: 0.7em,
     spacing: 1.2em,
     first-line-indent: 0pt,
     justify: true,
@@ -252,18 +276,21 @@
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: "theorem"): show-statement
   show heading.where(level: 1): it => {
-    _reset-article-numbering()
+    if it.numbering != none { _reset-article-numbering() }
     block(above: 22pt, below: 12pt)[
       #set text(size: 16pt, weight: "regular", fill: mutt-navy)
       #_heading-title(it)
     ]
   }
-  show heading.where(level: 2): it => block(above: 18pt, below: 9pt)[
-    #set text(size: 14pt, weight: "regular", fill: mutt-navy)
-    #_heading-title(it)
-  ]
+  show heading.where(level: 2): it => {
+    context if _appendix-mode.get() { _reset-article-numbering() }
+    block(above: 18pt, below: 9pt)[
+      #set text(size: 14pt, weight: "regular", fill: mutt-navy)
+      #_heading-title(it)
+    ]
+  }
   show heading.where(level: 3): it => block(above: 14pt, below: 7pt)[
-    #set text(size: 12pt, weight: "bold", fill: mutt-navy)
+    #set text(size: 12pt, weight: "regular", fill: mutt-navy)
     #_heading-title(it)
   ]
   set footnote.entry(
