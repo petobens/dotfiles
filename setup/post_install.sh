@@ -231,12 +231,11 @@ dm_mono_dir="$HOME/.local/share/fonts/DM Mono"
 mkdir -p "$dm_mono_dir"
 for dm_mono_file in \
     DMMono-Light.ttf DMMono-LightItalic.ttf \
-    DMMono-Regular.ttf DMMono-Italic.ttf \
-    DMMono-Medium.ttf DMMono-MediumItalic.ttf; do
+    DMMono-Regular.ttf DMMono-Italic.ttf; do
     curl -fsSL --remove-on-error -o "$dm_mono_dir/$dm_mono_file" \
         "$dm_mono_url/$dm_mono_file"
 done
-fc-cache -f "$dm_sans_dir" "$dm_mono_dir"
+fc-cache "$dm_sans_dir" "$dm_mono_dir"
 
 section 'Installing browser policies'
 sudo install -Dm644 \
