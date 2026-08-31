@@ -556,7 +556,7 @@ end
 function M.chat.request_skill(chat, skill, request)
     M.chat.submit_user_message(
         chat,
-        string.format('Use your %s skill to %s.', skill, request)
+        string.format('Use your `%s` skill to %s.', skill, request)
     )
 end
 
