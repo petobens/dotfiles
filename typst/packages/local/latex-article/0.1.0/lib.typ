@@ -238,6 +238,7 @@
   )
   set smartquote(quotes: curly-double-quotes)
   show math.equation: set text(font: "New Computer Modern Math")
+  show math.equation: set block(breakable: true)
   show: code-style.with(size: _footnote-size(font-size))
   show link: set text(fill: navy)
   show ref: number-only-reference(
