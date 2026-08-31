@@ -273,16 +273,16 @@
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: "theorem"): show-statement
   show heading.where(level: 1): it => {
-    if it.numbering == none {
-      v(1.5em)
-      text(size: 14.4pt, weight: "bold", it)
-      v(1em)
-    } else {
-      _reset-article-numbering()
+    if it.numbering != none { _reset-article-numbering() }
+    if it.numbering != none or _appendix-mode.at(it.location()) {
       block(above: 1.5em, below: 1em)[
         #set text(size: 14.4pt, weight: "bold")
         #heading-title(it)
       ]
+    } else {
+      v(1.5em)
+      text(size: 14.4pt, weight: "bold", it)
+      v(1em)
     }
   }
   show heading.where(level: 2): it => {
@@ -292,8 +292,8 @@
       #heading-title(it)
     ]
   }
-  show heading.where(level: 3): it => block(above: 1.4em, below: 0.65em)[
-    #set text(size: 10pt, weight: "bold")
+  show heading.where(level: 3): it => block(above: 1.4em, below: 1em)[
+    #set text(size: 11pt, weight: "bold")
     #heading-title(it)
   ]
   set footnote.entry(
