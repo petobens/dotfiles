@@ -78,6 +78,13 @@ EOF
 section 'Creating NFS mount point'
 sudo install -d /mnt/nfs
 
+section 'Installing udev rules'
+# Reset the zoom level of the external Logitech webcam when it is plugged in
+sudo install -Dm644 \
+    "$script_dir/udev/99-webcam.rules" \
+    /etc/udev/rules.d/99-webcam.rules
+sudo udevadm control --reload
+
 section 'Configuring recovery SSH'
 sudo install -Dm644 /dev/stdin /etc/ssh/sshd_config.d/10-recovery.conf << EOF
 AllowUsers $USER
@@ -128,6 +135,25 @@ if ! grep -q '^hosts:.*mdns_minimal' /etc/nsswitch.conf; then
         /etc/nsswitch.conf
 fi
 
+section 'Configuring Docker'
+sudo usermod -aG docker "$USER"
+mkdir -p "$HOME/.cache/docker"
+if [[ $(findmnt -no FSTYPE --target "$HOME/.cache/docker") == btrfs ]]; then
+    chattr +C "$HOME/.cache/docker"
+fi
+sudo install -Dm644 /dev/stdin /etc/docker/daemon.json << EOF
+{
+    "data-root": "$HOME/.cache/docker",
+    "ip": "127.0.0.1",
+    "default-network-opts": {
+        "bridge": {
+            "com.docker.network.bridge.host_binding_ipv4": "127.0.0.1"
+        }
+    }
+}
+EOF
+sudo systemctl enable --now docker.socket
+
 section 'Enabling system services'
 sudo systemctl enable \
     bluetooth \
@@ -174,32 +200,6 @@ systemctl --user enable \
     pipewire \
     pipewire-pulse \
     wireplumber
-
-section 'Configuring Docker'
-sudo usermod -aG docker "$USER"
-mkdir -p "$HOME/.cache/docker"
-if [[ $(findmnt -no FSTYPE --target "$HOME/.cache/docker") == btrfs ]]; then
-    chattr +C "$HOME/.cache/docker"
-fi
-sudo install -Dm644 /dev/stdin /etc/docker/daemon.json << EOF
-{
-    "data-root": "$HOME/.cache/docker",
-    "ip": "127.0.0.1",
-    "default-network-opts": {
-        "bridge": {
-            "com.docker.network.bridge.host_binding_ipv4": "127.0.0.1"
-        }
-    }
-}
-EOF
-sudo systemctl enable --now docker.socket
-
-section 'Installing udev rules'
-# Reset the zoom level of the external Logitech webcam when it is plugged in
-sudo install -Dm644 \
-    "$script_dir/udev/99-webcam.rules" \
-    /etc/udev/rules.d/99-webcam.rules
-sudo udevadm control --reload
 
 section 'Setting desktop defaults'
 # The video group grants write access to the backlight brightness files
@@ -254,7 +254,7 @@ sudo install -Dm644 \
     "$policies_dir/firefox.json" \
     /etc/firefox/policies/policies.json
 
-section 'Setting application defaults'
+section 'Setting Zoom and Spotify defaults'
 if command -v zoom > /dev/null && [[ ! -e $HOME/.config/zoomus.conf ]]; then
     mkdir -p "$HOME/.config"
     printf '%s\n' \
@@ -268,6 +268,8 @@ if command -v spotify > /dev/null &&
     mkdir -p "$HOME/.config/spotify"
     printf 'app.autostart-mode="off"\n' > "$HOME/.config/spotify/prefs"
 fi
+
+section 'Installing Voxtype model'
 # This runs before config symlinks, so keep the model in sync with
 # config/voxtype/config.toml
 if command -v voxtype > /dev/null; then
