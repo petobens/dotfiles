@@ -215,6 +215,19 @@
   toc: false,
   body,
 ) = {
+  if "markdown" in sys.inputs {
+    return pandoc-article(
+      body,
+      language: language,
+      title: title,
+      author: authors,
+      date: date,
+      object-numbering: n => _article-numbering(n),
+      appendix-state: _appendix-mode,
+      reset-object-numbering: _reset-article-numbering,
+    )
+  }
+
   let displayed-date = localized-date(date, language)
   let displayed-revised-date = localized-date(revised-date, language)
 

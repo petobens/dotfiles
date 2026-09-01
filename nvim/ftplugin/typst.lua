@@ -540,24 +540,81 @@ local function convert_pandoc()
         return
     end
 
+    local root = vim.fs.dirname(main)
     local markdown = main:gsub('%.typ$', '.md')
+    local media = vim.fs.basename(main):gsub('%.typ$', '-media')
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    local result = vim.system(
-        { 'pandoc', '-s', main, '-o', markdown },
-        { cwd = vim.fs.dirname(main), text = true }
-    ):wait()
-    if result.code == 0 then
-        vim.notify('Converted .typ file into .md', vim.log.levels.INFO)
-    else
-        vim.notify(
-            string.format(
-                'Pandoc failed (exit code %d): %s',
-                result.code,
-                result.stderr or ''
-            ),
-            vim.log.levels.ERROR
-        )
+
+    -- Typst evaluates packages before Pandoc converts the semantic HTML
+    local html = vim.system({
+        'typst',
+        'compile',
+        '--features',
+        'html',
+        '--format',
+        'html',
+        '--input',
+        'sync=1',
+        '--input',
+        'markdown=1',
+        '--root',
+        root,
+        main,
+        '-',
+    }, { cwd = root, text = true }):wait()
+    if html.code ~= 0 then
+        vim.notify(html.stderr or 'Typst HTML export failed', vim.log.levels.ERROR)
+        return
     end
+
+    -- Adapt Typst's metadata and footnotes to Pandoc's HTML conventions
+    local content = html.stdout
+        :gsub('name="description"', 'name="abstract"')
+        :gsub('name="authors"', 'name="author"')
+        :gsub(
+            '<sup id="([^"]+)" role="doc%-noteref"><a href="#([^"]+)">([^<]+)</a></sup>',
+            '<a href="#%2" class="footnote-ref" id="%1"'
+                .. ' role="doc-noteref"><sup>%3</sup></a>'
+        )
+        :gsub(
+            '<section role="doc%-endnotes">',
+            '<section id="footnotes" class="footnotes footnotes-end-of-document"'
+                .. ' role="doc-endnotes">'
+        )
+        :gsub('<sup role="doc%-backlink"><a href="#[^"]+">[^<]+</a></sup>', '')
+    local result = vim.system({
+        'pandoc',
+        '--from=html',
+        '--to=markdown-raw_html-native_divs-native_spans',
+        '--standalone',
+        '--shift-heading-level-by=-1',
+        '--extract-media=' .. media,
+    }, { cwd = root, text = true, stdin = content }):wait()
+    if result.code ~= 0 then
+        vim.notify(result.stderr or 'Pandoc conversion failed', vim.log.levels.ERROR)
+        return
+    end
+
+    -- Let Pandoc center figures without adding a second caption label
+    local metadata = [[header-includes:
+- |
+  ```{=latex}
+  \usepackage{caption}
+  \captionsetup[figure]{labelformat=empty}
+  ```
+]]
+    local date = content:match('<meta name="date" content="([^"]+)">')
+    if date then
+        metadata = 'date: ' .. date .. '\n' .. metadata
+    end
+
+    -- Pandoc's HTML reader drops equation numbers
+    local converted = result.stdout:gsub('^%-%-%-\n', '---\n' .. metadata, 1):gsub(
+        '(::: {.-}\n)(%$%$.-)%$%$\n\n%(([^()\n]+)%)\n(:::)',
+        '%1%2 \\tag{%3}$$\n%4'
+    )
+    vim.fn.writefile(vim.split(converted, '\n', { plain = true }), markdown)
+    vim.notify('Converted Typst to Markdown', vim.log.levels.INFO)
 end
 
 -- PDF viewer

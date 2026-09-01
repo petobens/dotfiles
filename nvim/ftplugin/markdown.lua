@@ -83,7 +83,6 @@ local function convert_pandoc(extension)
     vim.system({
         'pandoc',
         '-s',
-        '--toc',
         '--number-sections',
         bufname,
         '-o',
