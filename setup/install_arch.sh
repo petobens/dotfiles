@@ -15,6 +15,13 @@ die() {
     exit 1
 }
 
+set_password() {
+    local account=$1
+    until arch-chroot /mnt passwd "$account"; do
+        printf 'Password setup failed; try again or press Ctrl+C to abort.\n' >&2
+    done
+}
+
 (($# == 0)) || die 'This script does not accept arguments'
 [[ $EUID == 0 ]] || die 'Run this script as root from the Arch installation ISO'
 [[ -d /sys/firmware/efi/efivars ]] || die 'Boot the installation ISO in UEFI mode'
@@ -175,10 +182,10 @@ printf '%s\n' \
 
 section 'Creating users'
 printf 'Set the root password\n'
-arch-chroot /mnt passwd
+set_password root
 arch-chroot /mnt useradd -m -G wheel -s /bin/bash "$username"
 printf 'Set the password for %s\n' "$username"
-arch-chroot /mnt passwd "$username"
+set_password "$username"
 install -Dm440 /dev/stdin /mnt/etc/sudoers.d/10-wheel << 'EOF'
 %wheel ALL=(ALL:ALL) ALL
 EOF
