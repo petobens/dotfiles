@@ -210,6 +210,21 @@
   bibliography-read: read-mybibstyle,
   body,
 ) = {
+  if "markdown" in sys.inputs {
+    return pandoc-article(
+      body,
+      language: language,
+      title: title,
+      author: author,
+      description: abstract,
+      keywords: keywords,
+      date: date,
+      object-numbering: n => _article-numbering(n),
+      appendix-state: _appendix-mode,
+      reset-object-numbering: _reset-article-numbering,
+    )
+  }
+
   // Document metadata and page
   set document(
     title: title,

@@ -79,6 +79,75 @@
   }
 }
 
+// Semantic HTML shared by article templates for the Pandoc conversion path
+#let pandoc-article(
+  body,
+  language: "en",
+  title: [],
+  author: "",
+  description: none,
+  keywords: none,
+  date: none,
+  object-numbering: none,
+  appendix-state: none,
+  reset-object-numbering: none,
+) = {
+  set document(
+    title: title,
+    author: author,
+    description: description,
+    keywords: if optional-value-present(keywords) { keywords } else { () },
+  )
+  set text(lang: language)
+  set heading(numbering: "1.1")
+  set figure(numbering: object-numbering)
+
+  // Give layout-only grids a page-sized canvas so HTML keeps their contents
+  show grid: it => html.frame(block(width: 420pt, it))
+
+  // HTML has no native equation numbering, so expose it for the converter
+  show math.equation: it => if it.block and it.numbering != none {
+    html.div[
+      #it.body
+      #html.span[#context counter(math.equation).display(it.numbering)]
+    ]
+  } else {
+    it
+  }
+
+  // Pandoc numbers regular headings; appendix labels must remain alphabetic
+  show heading: it => context {
+    let in-appendix = appendix-state.get()
+    if it.level == 1 and it.numbering != none {
+      reset-object-numbering()
+    } else if it.level == 2 and in-appendix {
+      reset-object-numbering()
+    }
+    let prefix = if in-appendix and it.numbering != none {
+      [#counter(heading).display(it.numbering) ]
+    } else {
+      []
+    }
+    let attrs = if in-appendix or it.numbering == none {
+      (class: "unnumbered")
+    } else {
+      (:)
+    }
+    html.elem("h" + str(it.level + 1), attrs: attrs)[#prefix#it.body]
+  }
+
+  // Typst's HTML metadata does not include dates
+  if type(date) == datetime {
+    html.meta(
+      name: "date",
+      content: date.display(
+        "[day padding:zero]/[month padding:zero]/[year]",
+      ),
+    )
+  }
+  body
+}
+
 // Footnotes
 #let footnote-rule-spacing = 0.3cm
 #let footnote-separator = block[
