@@ -23,7 +23,11 @@ symlink() {
         mv "$target" "$backup"
         printf 'Backed up %s to %s\n' "$target" "$backup"
     fi
-    ln -sfn "$source" "$target"
+    if ! ln -sfn "$source" "$target"; then
+        printf 'Failed to link %s -> %s\n' "$target" "$source" >&2
+        return 1
+    fi
+    printf 'Linked %s -> %s\n' "$target" "$source"
 }
 
 symlink_if_exists() {
@@ -37,9 +41,7 @@ symlink_if_exists() {
 
 printf '\033[1;32m:: Starting dotfile symlinking\033[0m\n'
 
-section 'Symlinking configuration'
-
-# Home-directory configuration
+section 'Home-directory configuration'
 symlink "$repo/bin" "$HOME/bin"
 symlink "$repo/config/home/arararc.yaml" "$HOME/.arararc.yaml"
 symlink "$repo/config/home/fdignore" "$HOME/.fdignore"
@@ -49,7 +51,7 @@ symlink "$repo/config/home/inputrc" "$HOME/.inputrc"
 symlink "$repo/config/home/lesskey" "$HOME/.lesskey"
 symlink "$repo/config/home/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 
-# Application configuration
+section 'Application configuration'
 symlink "$repo/config/bat" "$HOME/.config/bat"
 symlink "$repo/config/brave-flags.conf" "$HOME/.config/brave-flags.conf"
 symlink "$repo/config/fish" "$HOME/.config/fish"
@@ -61,7 +63,6 @@ symlink "$repo/config/mako" "$HOME/.config/mako"
 symlink "$repo/config/microsoft-edge-dev-flags.conf" "$HOME/.config/microsoft-edge-dev-flags.conf"
 symlink "$repo/config/mpv" "$HOME/.config/mpv"
 symlink "$repo/nvim" "$HOME/.config/nvim"
-symlink "$repo/typst/packages/local" "$HOME/.local/share/typst/packages/local"
 symlink "$repo/config/onedrive" "$HOME/.config/onedrive"
 symlink "$repo/config/pgcli/config" "$HOME/.config/pgcli/config"
 symlink "$repo/config/ripgrep" "$HOME/.config/ripgrep"
@@ -69,13 +70,14 @@ symlink "$repo/config/rofi" "$HOME/.config/rofi"
 symlink "$repo/config/starship.toml" "$HOME/.config/starship.toml"
 symlink "$repo/config/systemd/user/hyprland-session.target" "$HOME/.config/systemd/user/hyprland-session.target"
 symlink "$repo/config/tmux" "$HOME/.config/tmux"
+symlink "$repo/typst/packages/local" "$HOME/.local/share/typst/packages/local"
 symlink "$repo/config/voxtype" "$HOME/.config/voxtype"
 symlink "$repo/config/waybar" "$HOME/.config/waybar"
 symlink "$repo/config/xkb" "$HOME/.config/xkb"
 symlink "$repo/config/yazi" "$HOME/.config/yazi"
 symlink "$repo/config/zathura" "$HOME/.config/zathura"
 
-# Formatter and linter configuration
+section 'Formatter and linter configuration'
 symlink "$repo/config/linters/hadolint.yaml" "$HOME/.config/hadolint.yaml"
 symlink "$repo/config/linters/luacheckrc" "$HOME/.config/.luacheckrc"
 symlink "$repo/config/linters/oxfmtrc.json" "$HOME/.oxfmtrc.json"
@@ -85,7 +87,7 @@ symlink "$repo/config/linters/stylua.toml" "$HOME/.config/stylua.toml"
 symlink "$repo/config/linters/tombi.toml" "$HOME/.config/tombi/config.toml"
 symlink "$repo/config/linters/yamllint.yaml" "$HOME/.config/yamllint/config"
 
-# Python tooling
+section 'Python tooling'
 symlink "$repo/config/python/ipython_config.py" "$HOME/.ipython/profile_default/ipython_config.py"
 symlink "$repo/config/python/ipython_startup.py" "$HOME/.ipython/profile_default/startup/ipython_startup.py"
 symlink "$repo/config/python/jupyterlab/jupyterlab_code_formatter" "$HOME/.jupyter/lab/user-settings/jupyterlab_code_formatter"
@@ -97,7 +99,7 @@ symlink "$repo/config/python/pdbrc.py" "$HOME/.pdbrc.py"
 symlink "$repo/config/pip" "$HOME/.config/pip"
 symlink "$repo/config/python/ruff" "$HOME/.config/ruff"
 
-# Agent configuration
+section 'Agent configuration'
 symlink "$repo/config/claude/settings.json" "$HOME/.claude/settings.json"
 symlink "$repo/config/claude/statusline.sh" "$HOME/.claude/statusline.sh"
 symlink "$repo/config/codex/config.toml" "$HOME/.codex/config.toml"
@@ -108,7 +110,7 @@ skills_dir="$repo/../ai-harness/skills"
 symlink_if_exists "$skills_dir" "$HOME/.agents/skills"
 symlink_if_exists "$skills_dir" "$HOME/.claude/skills"
 
-# Credentials synchronized after the personal setup
+section 'Credential configuration'
 install -d -m700 "$HOME/.gnupg"
 symlink "$repo/config/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
 symlink /usr/bin/gopass "$HOME/.local/bin/pass"
