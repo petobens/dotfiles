@@ -79,6 +79,11 @@
   }
 }
 
+#let mybibstyle = read(
+  "mybibstyle.csl",
+  encoding: none,
+)
+
 // Semantic HTML shared by article templates for the Pandoc conversion path
 #let pandoc-article(
   body,
@@ -101,6 +106,7 @@
   set text(lang: language)
   set heading(numbering: "1.1")
   set figure(numbering: object-numbering)
+  set bibliography(style: mybibstyle)
 
   // Give layout-only grids a page-sized canvas so HTML keeps their contents
   show grid: it => html.frame(block(width: 420pt, it))
@@ -569,11 +575,6 @@
 }
 
 // Bibliography
-#let mybibstyle = read(
-  "mybibstyle.csl",
-  encoding: none,
-)
-
 #let apply-mybibstyle(body) = {
   set bibliography(style: "mybibstyle.csl")
   body

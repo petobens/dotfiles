@@ -571,6 +571,14 @@ local function convert_pandoc()
     local content = html.stdout
         :gsub('name="description"', 'name="abstract"')
         :gsub('name="authors"', 'name="author"')
+        :gsub('<meta name="viewport"[^>]*>', '')
+        :gsub('<figure id="([^"]+)">', '<a id="%1"></a><figure>')
+        :gsub('<code data%-lang="([^"]+)">', '<code class="language-%1">')
+        :gsub('</span><span style="font%-variant%-caps: small%-caps">', '')
+        :gsub(
+            '<section role="doc%-bibliography" class="hanging%-indent">(.-)</section>',
+            '%1'
+        )
         :gsub(
             '<sup id="([^"]+)" role="doc%-noteref"><a href="#([^"]+)">([^<]+)</a></sup>',
             '<a href="#%2" class="footnote-ref" id="%1"'
@@ -588,6 +596,7 @@ local function convert_pandoc()
         '--to=markdown-raw_html-native_divs-native_spans',
         '--standalone',
         '--shift-heading-level-by=-1',
+        '--tab-stop=1',
         '--extract-media=' .. media,
     }, { cwd = root, text = true, stdin = content }):wait()
     if result.code ~= 0 then
@@ -597,22 +606,19 @@ local function convert_pandoc()
 
     -- Let Pandoc center figures without adding a second caption label
     local metadata = [[header-includes:
-- |
-  ```{=latex}
-  \usepackage{caption}
-  \captionsetup[figure]{labelformat=empty}
-  ```
+  - \usepackage{caption}
+  - \captionsetup[figure]{labelformat=empty}
 ]]
     local date = content:match('<meta name="date" content="([^"]+)">')
     if date then
         metadata = 'date: ' .. date .. '\n' .. metadata
     end
 
-    -- Pandoc's HTML reader drops equation numbers
-    local converted = result.stdout:gsub('^%-%-%-\n', '---\n' .. metadata, 1):gsub(
-        '(::: {.-}\n)(%$%$.-)%$%$\n\n%(([^()\n]+)%)\n(:::)',
-        '%1%2 \\tag{%3}$$\n%4'
-    )
+    -- Restore equation numbers and valid spacing inside fenced divs
+    local converted = result.stdout
+        :gsub('^%-%-%-\n', '---\n' .. metadata, 1)
+        :gsub('(::: {.-}\n)(%$%$.-)%$%$\n\n%(([^()\n]+)%)\n(:::)', '%1%2 \\tag{%3}$$\n%4')
+        :gsub('(:::[^\n]*\n)(# )', '%1\n%2')
     vim.fn.writefile(vim.split(converted, '\n', { plain = true }), markdown)
     vim.notify('Converted Typst to Markdown', vim.log.levels.INFO)
 end
