@@ -345,6 +345,7 @@
   if toc {
     let contents-title = if language == "es" { [Índice] } else { [Contents] }
     document-outline(contents-title, depth: 2)
+    v(1.5em)
   }
   body
 }
