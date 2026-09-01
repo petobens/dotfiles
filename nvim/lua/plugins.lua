@@ -147,7 +147,10 @@ local packages = {
 
     -- LaTeX and Markdown
     plugin('lervag/vimtex', 'vimtex_config'),
-    plugin('Thiago4532/mdmath.nvim', 'mdmath_config'),
+    plugin('Thiago4532/mdmath.nvim', {
+        build = 'npm install --prefix mdmath-js',
+        config = 'mdmath_config',
+    }),
     plugin('MeanderingProgrammer/render-markdown.nvim', 'render_markdown_config'),
 
     -- SQL
