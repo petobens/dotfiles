@@ -81,33 +81,36 @@
   authors,
   audience,
   revised-date,
-) = block(width: 100%, breakable: false, below: 24pt)[
-  #set text(hyphenate: false)
-  #set par(justify: false, first-line-indent: 0pt)
-  #v(10pt)
-  #block(width: 100%, above: 0pt, below: 0pt)[
-    #text(size: 26pt, weight: "bold", fill: mutt-blue, title)
-  ]
-  #if optional-value-present(subtitle) {
-    v(11pt)
-    block(width: 100%, above: 0pt, below: 0pt)[
-      #set par(leading: 0.3em)
-      #text(size: 17pt, fill: mutt-blue, subtitle)
+) = {
+  let metadata = (
+    [Date: #date],
+    if optional-value-present(authors) { [Authors: #authors] },
+    if optional-value-present(audience) { [Audience: #audience] },
+    [Revised date: #revised-date],
+  ).filter(it => it != none)
+
+  block(width: 100%, breakable: false, below: 24pt)[
+    #set text(hyphenate: false)
+    #set par(justify: false, first-line-indent: 0pt)
+    #v(10pt)
+    #block(width: 100%, above: 0pt, below: 0pt)[
+      #text(size: 26pt, weight: "bold", fill: mutt-blue, title)
     ]
-  }
-  #v(14pt)
-  #block[
-    #set text(font: "DM Mono", size: 11pt)
-    #set par(leading: 0.1em, spacing: 0.65em)
-    Date: #date
-
-    Authors: #authors
-
-    Audience: #audience
-
-    Revised date: #revised-date
+    #if optional-value-present(subtitle) {
+      v(11pt)
+      block(width: 100%, above: 0pt, below: 0pt)[
+        #set par(leading: 0.3em)
+        #text(size: 17pt, fill: mutt-blue, subtitle)
+      ]
+    }
+    #v(14pt)
+    #block[
+      #set text(font: "DM Mono", size: 11pt)
+      #set par(leading: 0.1em, spacing: 0.65em)
+      #metadata.join(parbreak())
+    ]
   ]
-]
+}
 
 #let _article-outline-entry(it) = context {
   let location = it.element.location()
@@ -215,12 +218,16 @@
   toc: false,
   body,
 ) = {
+  let document-authors = if optional-value-present(authors) { authors } else {
+    ()
+  }
+
   if "markdown" in sys.inputs {
     return pandoc-article(
       body,
       language: language,
       title: title,
-      author: authors,
+      author: document-authors,
       date: date,
       object-numbering: n => _article-numbering(n),
       appendix-state: _appendix-mode,
@@ -234,7 +241,7 @@
   // Document metadata and page
   set document(
     title: title,
-    author: authors,
+    author: document-authors,
     date: metadata-date,
   )
   set page(
@@ -276,6 +283,13 @@
     justify: true,
   )
   set block(spacing: 1em)
+  set list(
+    marker: (
+      [#text(size: 0.8em)[●]],
+      [–],
+      [▪],
+    ),
+  )
   set table(stroke: 0.5pt + mutt-muted)
 
   // Numbering and components
