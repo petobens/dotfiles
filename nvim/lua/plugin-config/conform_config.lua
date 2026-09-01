@@ -16,6 +16,12 @@ conform.formatters.oxfmt = {
         '--config=' .. vim.fs.joinpath(vim.env.HOME, '.oxfmtrc.json'),
         '$FILENAME',
     },
+    -- Pandoc output contains raw TeX that oxfmt cannot preserve
+    condition = function(_, ctx)
+        local markdown = vim.api.nvim_buf_get_name(ctx.buf)
+        local source = markdown:gsub('%.md$', '.typ')
+        return source == markdown or not vim.uv.fs_stat(source)
+    end,
     stdin = false,
 }
 conform.formatters.typstyle = {
