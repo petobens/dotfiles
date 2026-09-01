@@ -52,6 +52,15 @@ return {
             i(0),
         })
     ),
+    s(
+        { trig = 'co', dscr = '[C]all[o]ut' },
+        fmta('#callout[<><>]<>', {
+            f(_G.LuaSnipConfig.visual_selection),
+            i(1, 'Callout'),
+            i(0),
+        }),
+        { condition = line_begin }
+    ),
 
     -- Formatter directives
     s(

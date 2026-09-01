@@ -52,15 +52,6 @@ return {
     ),
 
     s(
-        { trig = 'callout', dscr = '[Callout]' },
-        fmta('#callout([<><>])<>', {
-            f(_G.LuaSnipConfig.visual_selection),
-            i(1, 'Callout'),
-            i(0),
-        }),
-        { condition = line_begin }
-    ),
-    s(
         { trig = 'formula', dscr = '[Formula] card' },
         fmta(
             [[
