@@ -13,6 +13,7 @@ conform.formatters.stylua = {
 conform.formatters.shfmt = { prepend_args = { '-i', '4', '-ci', '-sr' } }
 conform.formatters.oxfmt = {
     args = {
+        '--threads=1',
         '--config=' .. vim.fs.joinpath(vim.env.HOME, '.oxfmtrc.json'),
         '$FILENAME',
     },
@@ -40,7 +41,7 @@ conform.setup({
         json = { 'jq' },
         jsonc = { 'oxfmt' },
         lua = { 'stylua' },
-        markdown = { 'oxfmt', 'injected', 'trim_whitespace' },
+        markdown = { 'trim_whitespace', 'oxfmt', 'injected' },
         python = { 'ruff_fix', 'ruff_format' },
         query = { 'format-queries' },
         sh = { 'shfmt' },
