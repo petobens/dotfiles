@@ -7,7 +7,7 @@
 
 #let mutt-blue = rgb("#0045FB")
 #let mutt-navy = rgb("#0805AC")
-#let mutt-ink = black
+#let mutt-ink = rgb("#202124")
 #let mutt-muted = rgb("#666666")
 #let mutt-pale-blue = rgb("#F1F5FF")
 
@@ -257,12 +257,13 @@
   show bibliography: set text(size: _footnote-size(font-size))
   show bibliography: set block(spacing: bibliography-entry-spacing)
   set par(
-    leading: 0.7em,
+    leading: 0.75em,
     spacing: 1.2em,
     first-line-indent: 0pt,
     justify: true,
   )
   set block(spacing: 1em)
+  set table(stroke: 0.5pt + mutt-muted)
 
   // Numbering and components
   set heading(numbering: "1.1")
@@ -285,12 +286,12 @@
   }
   show heading.where(level: 2): it => {
     context if _appendix-mode.get() { _reset-article-numbering() }
-    block(above: 18pt, below: 9pt)[
+    block(above: 18pt, below: 11pt)[
       #set text(size: 14pt, weight: "regular", fill: mutt-navy)
       #_heading-title(it)
     ]
   }
-  show heading.where(level: 3): it => block(above: 14pt, below: 7pt)[
+  show heading.where(level: 3): it => block(above: 14pt, below: 9pt)[
     #set text(size: 12pt, weight: "regular", fill: mutt-navy)
     #_heading-title(it)
   ]
