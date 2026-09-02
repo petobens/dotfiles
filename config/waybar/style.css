@@ -8,7 +8,8 @@
     border: none;
     border-radius: 0;
     font-family: 'Noto Sans', 'Symbols Nerd Font', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: bold;
     min-height: 0;
 }
 
