@@ -70,6 +70,8 @@ if type -q fzf
     source "$__fish_config_dir/fzf_workflows.fish"
 end
 if type -q starship
+    set -gx STARSHIP_CMD_STATUS 0
+    set -gx STARSHIP_JOBS 0
     function starship_transient_prompt_func
         starship prompt (string replace -r -- '^--keymap=.*$' '--keymap=default' $argv)
     end

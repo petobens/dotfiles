@@ -12,9 +12,13 @@ $git_branch\
 $git_status\
 ${custom.context_end}\
 ${custom.plain_end}\
-$directory\
-$jobs\
-$status """
+${custom.directory_parent}\
+${custom.directory_current}\
+${custom.prompt_flags}\
+${custom.error_after_flags}\
+${custom.error}\
+${custom.end_after_flags}\
+${custom.end} """
 palette = "onedark"
 add_newline = false
 
@@ -104,6 +108,48 @@ unsafe_no_escape = true
 shell = ["sh"]
 format = "[ $output ](fg:foreground bg:special_grey)"
 
+[custom.directory_parent]
+command = "starship_prompt_segment parent"
+shell = ["sh"]
+when = true
+format = "[ $output](fg:mono bg:cursor_grey)"
+
+[custom.directory_current]
+command = "starship_prompt_segment current"
+shell = ["sh"]
+when = true
+format = "[ $output ](bold fg:mono bg:cursor_grey)"
+
+[custom.prompt_flags]
+command = "starship_prompt_segment flags"
+shell = ["sh"]
+when = true
+format = "([](fg:cursor_grey bg:orange)[ $output ](bold fg:background bg:orange))"
+
+[custom.error_after_flags]
+command = "starship_prompt_segment error-after-flags"
+shell = ["sh"]
+when = true
+format = "([](fg:orange bg:red)[  $output ](bold fg:background bg:red)[](fg:red))"
+
+[custom.error]
+command = "starship_prompt_segment error"
+shell = ["sh"]
+when = true
+format = "([](fg:cursor_grey bg:red)[  $output ](bold fg:background bg:red)[](fg:red))"
+
+[custom.end_after_flags]
+command = "starship_prompt_segment end-after-flags"
+shell = ["sh"]
+when = true
+format = "[$output](fg:orange)"
+
+[custom.end]
+command = "starship_prompt_segment end"
+shell = ["sh"]
+when = true
+format = "[$output](fg:cursor_grey)"
+
 [git_branch]
 symbol = ""
 format = "[$branch ](fg:foreground bg:special_grey)"
@@ -122,25 +168,3 @@ untracked = ""
 ahead = "${count} "
 behind = "${count} "
 diverged = "${ahead_count} ${behind_count} "
-
-[directory]
-format = "([ $path]($style)[](fg:cursor_grey)([](fg:orange)[ $read_only ]($read_only_style)[](fg:orange)))"
-style = "bold fg:mono bg:cursor_grey"
-read_only = ""
-read_only_style = "bold fg:background bg:orange"
-home_symbol = ""
-truncation_length = 3
-truncate_to_repo = false
-substitutions = [
-    { from = "^.*/([^/]+/[^/]+/[^/]+)$", to = "/$1", regex = true },
-    { from = "/", to = "  " },
-]
-
-[jobs]
-format = "[](fg:orange)[  $number ](bold fg:background bg:orange)[](fg:orange)"
-number_threshold = 1
-symbol_threshold = 1
-
-[status]
-disabled = false
-format = "[](fg:red)[  $status ](bold fg:background bg:red)[](fg:red)"
