@@ -8,7 +8,11 @@ hl.config({
         layout = 'dwindle',
         gaps_in = 4,
         gaps_out = 4,
-        border_size = 0,
+        border_size = 1,
+        col = {
+            active_border = '#282c34',
+            inactive_border = '#282c34',
+        },
         resize_on_border = true,
     },
     decoration = {
@@ -21,9 +25,7 @@ hl.config({
             size = 6,
         },
         shadow = {
-            enabled = true,
-            color = '#00000055',
-            range = 12,
+            enabled = false,
         },
     },
     animations = { enabled = true },
