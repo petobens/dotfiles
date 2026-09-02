@@ -1,6 +1,7 @@
 # Font
 font-family = Source Code Pro
 font-size = 11.5
+freetype-load-flags = no-light
 
 # Colors
 background = #24272e
