@@ -308,6 +308,6 @@ function sys_update_all --description 'Update system, firmware, and language too
     end
     if type -q rustup
         printf '%s\n-> Rust toolchains...%s\n' $section_color $normal_color
-        rustup update
+        rustup update --no-self-update
     end
 end
