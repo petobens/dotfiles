@@ -127,7 +127,12 @@ local function move_to_monitor(kind, direction)
 end
 
 -- Session and windows
-exec(super_ctrl .. ' + R', 'hyprctl reload', 'Reload Hyprland')
+exec(
+    super_ctrl .. ' + R',
+    'hyprctl reload && notify-send -t 2000 '
+        .. '-h string:x-dunst-stack-tag:hyprland-reload "Hyprland reloaded"',
+    'Reload Hyprland'
+)
 bind(
     super .. ' + E',
     hl.dsp.window.fullscreen({ action = 'toggle' }),
@@ -338,7 +343,12 @@ exec(
     scripts .. 'keyboard_backlight',
     'Cycle keyboard backlight'
 )
-exec(super .. ' + B', 'pkill -SIGUSR2 waybar', 'Reload Waybar')
+exec(
+    super .. ' + B',
+    'pkill -SIGUSR2 waybar && notify-send -t 2000 '
+        .. '-h string:x-dunst-stack-tag:waybar-reload "Waybar reloaded"',
+    'Reload Waybar'
+)
 exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
 exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 launch(super_alt .. ' + B', 'trash', 'Show trash')
