@@ -1,16 +1,20 @@
 @import "confirm"
 
 inputbar {
+    background-color: @background;
     spacing: 8px;
     children: [ prompt, entry ];
 }
 
 entry {
+    background-color: @background;
+    text-color: @foreground;
     placeholder: "Type to filter";
     placeholder-color: @foreground;
 }
 
 listview {
+    background-color: @background;
     columns: 1;
     lines: 7;
     layout: vertical;
