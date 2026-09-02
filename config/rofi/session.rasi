@@ -14,7 +14,7 @@ configuration {
 window {
     location: northwest;
     anchor: northwest;
-    width: 35ch;
+    width: 38ch;
     x-offset: 0px;
     y-offset: 0px;
     padding: 4px;
