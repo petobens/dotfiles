@@ -115,7 +115,8 @@ sudo sed -i -E \
     -e 's/^#WIRELESS_REGDOM="00"$/WIRELESS_REGDOM="00"/' \
     /etc/conf.d/wireless-regdom
 
-section 'Configuring Pacman mirrors'
+section 'Configuring Pacman'
+sudo sed -i 's/^#Color$/Color/' /etc/pacman.conf
 sudo install -Dm644 /dev/stdin /etc/xdg/reflector/reflector.conf << 'EOF'
 --save /etc/pacman.d/mirrorlist
 --protocol https
