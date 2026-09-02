@@ -12,6 +12,7 @@ $git_branch\
 $git_status\
 ${custom.context_end}\
 ${custom.plain_end}\
+${custom.home}\
 $directory\
 $jobs\
 $status\
@@ -89,6 +90,12 @@ test -z "${AWS_PROFILE}${VIRTUAL_ENV}" &&
 '''
 format = "[$output](fg:white bg:cursor_grey)"
 
+[custom.home]
+command = "printf ''"
+shell = ["sh"]
+when = '''test "$PWD" = "$HOME"'''
+format = "[ $output ](bold fg:mono bg:cursor_grey)"
+
 [custom.git_remote]
 command = '''
 remote=$(git ls-remote --get-url 2>/dev/null)
@@ -125,11 +132,11 @@ behind = "${count} "
 diverged = "${ahead_count} ${behind_count} "
 
 [directory]
-format = "[ $path]($style)[$read_only]($read_only_style)"
+format = "([ $path]($style)[$read_only]($read_only_style))"
 style = "fg:mono bg:cursor_grey"
 read_only = " "
 read_only_style = "bold fg:orange bg:cursor_grey"
-home_symbol = ""
+home_symbol = ""
 truncation_length = 3
 truncate_to_repo = false
 substitutions = [
