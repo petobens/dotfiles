@@ -62,7 +62,7 @@ bind -M insert \cx backward-kill-line
 bind -M insert \ex backward-kill-word
 bind -M insert -m default jj repaint-mode
 
-function __reset_vi_mode --on-event fish_postexec
+function __reset_vi_mode --on-event fish_prompt
     if test "$fish_key_bindings" = fish_vi_key_bindings
         set fish_bind_mode default
     end
