@@ -2,23 +2,22 @@
 set -euo pipefail
 
 script_dir=$(dirname "$(realpath "$0")")
-action=$(printf '%s\n' 'about arch' lock 'quit apps' logout suspend reboot poweroff |
-    rofi -dmenu -p 'session:' \
-        -theme "$script_dir/../../config/rofi/session.rasi")
+action=${1:-}
+if [[ -z $action ]]; then
+    action=$(printf '%s\n' 'about arch' lock 'quit apps' reboot poweroff |
+        rofi -dmenu -p 'session:' \
+            -theme "$script_dir/../../config/rofi/session.rasi")
+fi
+
 case "$action" in
     'about arch') "$script_dir/app" about ;;
     lock) loginctl lock-session ;;
-    'quit apps')
+    'quit apps' | quit-apps)
         "$script_dir/confirm" 'Do you want to quit all applications?' || exit 0
         hyprctl clients -j | jq -r '.[].address' | while read -r address; do
             hyprctl dispatch "hl.dsp.window.close({ window = 'address:$address' })"
         done
         ;;
-    logout)
-        "$script_dir/confirm" 'Do you want to log out?' || exit 0
-        hyprshutdown
-        ;;
-    suspend) systemctl suspend ;;
     reboot)
         "$script_dir/confirm" 'Do you want to reboot?' || exit 0
         hyprshutdown -t 'Restarting...' --post-cmd 'systemctl reboot'

@@ -136,13 +136,9 @@ bind(
 bind(super .. ' + Q', hl.dsp.window.close({}), 'Close window')
 bind(super_shift .. ' + W', hl.dsp.window.kill({}), 'Force close window')
 bind(super_alt .. ' + W', close_workspace, 'Close workspace windows')
-for _, keys in ipairs({
-    super_shift .. ' + Q',
-    super_shift .. ' + S',
-    super_shift .. ' + R',
-}) do
-    exec(keys, scripts .. 'session_menu', 'Session menu')
-end
+exec(super_shift .. ' + Q', scripts .. 'session_menu quit-apps', 'Quit all applications')
+exec(super_shift .. ' + S', scripts .. 'session_menu poweroff', 'Shut down')
+exec(super_shift .. ' + R', scripts .. 'session_menu reboot', 'Reboot')
 exec(super_shift .. ' + L', 'loginctl lock-session', 'Lock session')
 bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = true })
 bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse = true })

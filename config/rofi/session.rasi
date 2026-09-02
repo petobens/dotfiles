@@ -53,7 +53,7 @@ entry {
 listview {
     background-color: @background;
     columns: 1;
-    lines: 7;
+    lines: 5;
     layout: vertical;
     flow: vertical;
     spacing: 2px;
