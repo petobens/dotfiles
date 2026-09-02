@@ -2,6 +2,7 @@
 {
     "layer": "top",
     "position": "top",
+    // Logical pixels; Hyprland applies each monitor's scale
     "height": 28,
     "spacing": 4,
     "modules-left": ["custom/arch", "custom/window-count", "hyprland/window"],
@@ -11,10 +12,12 @@
         "custom/onedrive",
         "hyprland/language",
         "custom/vpn",
-        "network",
+        "network#wifi",
+        "network#ethernet",
         "custom/bluetooth",
         "pulseaudio",
         "battery",
+        "custom/no-battery",
         "clock",
     ],
     "custom/arch": {
@@ -67,11 +70,18 @@
         "exec-if": "nmcli -t -f TYPE connection show --active | grep -qx vpn",
         "interval": 5,
     },
-    "network": {
+    "network#wifi": {
+        "interface": "wl*",
         "format-wifi": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{signalStrength}%</span>",
-        "format-ethernet": "<span font_family='Symbols Nerd Font' size='14pt'>󰈁</span>",
         "format-disconnected": "<span font_family='Symbols Nerd Font' size='13pt'>󰖪</span>",
         "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+        "on-click": "~/.config/hypr/scripts/app wifi",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+    },
+    "network#ethernet": {
+        "interface": "en*",
+        "format-ethernet": "<span font_family='Symbols Nerd Font' size='14pt'>󰈁</span>",
+        "format-disconnected": "",
         "on-click": "~/.config/hypr/scripts/app wifi",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
     },
@@ -98,6 +108,11 @@
             "critical": 10,
             "warning": 25,
         },
+    },
+    "custom/no-battery": {
+        "exec": "printf '󱉞\\nNo battery\\n'",
+        "exec-if": "! find /sys/class/power_supply -maxdepth 1 -name 'BAT*' | grep -q .",
+        "interval": 60,
     },
     "clock": {
         "format": "<span font_family='Symbols Nerd Font' size='13pt'>󰃰</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'> {:%a %d %H:%M}</span>",

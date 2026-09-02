@@ -8,7 +8,7 @@ case $state in
         class=active
         ;;
     *)
-        text='󰅖'
+        text='󰅟'
         class=inactive
         ;;
 esac

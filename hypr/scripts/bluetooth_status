@@ -7,7 +7,10 @@ btctl() {
 
 state=disconnected
 text='󰂲'
-if [[ $(btctl show | awk '/Powered:/ { print $2; exit }') != yes ]]; then
+if ! compgen -G '/sys/class/bluetooth/hci*' > /dev/null; then
+    state=disabled
+    text=''
+elif [[ $(btctl show | awk '/Powered:/ { print $2; exit }') != yes ]]; then
     state=disabled
     text=''
 elif btctl devices Connected |

@@ -31,6 +31,7 @@ window#waybar {
 #custom-docker.inactive,
 #custom-onedrive.inactive,
 #custom-bluetooth.disabled,
+#custom-no-battery,
 #network.disconnected {
     color: @red;
 }
@@ -45,6 +46,7 @@ window#waybar {
 #custom-bluetooth,
 #pulseaudio,
 #battery,
+#custom-no-battery,
 #clock {
     padding: 0 10px;
 }
@@ -73,7 +75,8 @@ window#waybar {
     font-size: 14pt;
 }
 
-#custom-bluetooth {
+#custom-bluetooth,
+#custom-no-battery {
     font-family: 'Symbols Nerd Font';
     font-size: 11pt;
 }
