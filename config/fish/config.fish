@@ -21,6 +21,7 @@ end
 
 set -g fish_greeting
 set -g fish_history main
+set -g fish_transient_prompt 1
 if status is-interactive
     stty -ixon
 end
@@ -68,15 +69,6 @@ if type -q fzf
     set -l FZF_CTRL_T_COMMAND
     fzf --fish | source
     source "$__fish_config_dir/fzf_workflows.fish"
-end
-if type -q starship
-    set -gx STARSHIP_CMD_STATUS 0
-    set -gx STARSHIP_JOBS 0
-    function starship_transient_prompt_func
-        starship prompt (string replace -r -- '^--keymap=.*$' '--keymap=default' $argv)
-    end
-    starship init fish | source
-    enable_transience
 end
 if type -q zoxide
     zoxide init fish | source

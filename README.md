@@ -15,7 +15,7 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 |                 | wf-recorder, wl-clipboard                         |
 | System          | Btrfs, fwupd, Intel LPMD, scx_lavd, systemd-boot, |
 |                 | thermald, TLP, UKI, zram                          |
-| Terminal        | Fish, Ghostty, Starship, tmux                     |
+| Terminal        | Fish, Ghostty, tmux                               |
 
 ## Install Arch
 

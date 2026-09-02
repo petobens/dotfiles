@@ -72,7 +72,6 @@ ripgrep
 rsync
 sqlite
 sshpass
-starship
 tesseract
 tesseract-data-eng
 tesseract-data-spa
