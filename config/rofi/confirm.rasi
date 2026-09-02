@@ -4,11 +4,11 @@ configuration {
 }
 
 * {
-    background: #302e2b;
-    foreground: #f2f2f2;
-    button-background: #292825;
-    button-selected-background: #363431;
-    border-color: #171717;
+    background: #24272e;
+    foreground: #abb2bf;
+    button-background: #282c34;
+    button-selected-background: #2c323c;
+    border-color: #4b5263;
     selected-border-color: #61afef;
 }
 

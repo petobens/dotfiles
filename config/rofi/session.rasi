@@ -1,23 +1,23 @@
 configuration {
-    font: "Noto Sans 10";
+    font: "Noto Sans Mono 10";
     show-icons: false;
 }
 
 * {
-    background: #302e2b;
-    input-background: #292825;
-    foreground: #f2f2f2;
-    muted-foreground: #c0bdb8;
-    selected-background: #3e4451;
-    border-color: #171717;
-    selected-border-color: #61afef;
+    background: #24272e;
+    foreground: #abb2bf;
+    selected-background: #61afef;
+    selected-foreground: #24272e;
+    border-color: #4b5263;
 }
 
 window {
-    location: center;
-    width: 320px;
+    location: northwest;
+    anchor: northwest;
+    width: 35ch;
+    x-offset: 0px;
     y-offset: 0px;
-    padding: 8px;
+    padding: 4px;
     background-color: @background;
     border: 1px;
     border-color: @border-color;
@@ -25,55 +25,31 @@ window {
 }
 
 mainbox {
-    spacing: 6px;
     background-color: @background;
-    children: [ inputbar, listview ];
-}
-
-inputbar {
-    padding: 5px 8px;
-    spacing: 5px;
-    background-color: @input-background;
-    border-radius: 4px;
-    children: [ prompt, entry ];
-}
-
-prompt {
-    background-color: @input-background;
-    text-color: @muted-foreground;
-}
-
-entry {
-    background-color: @input-background;
-    text-color: @foreground;
-    placeholder: "Type to filter";
-    placeholder-color: @muted-foreground;
+    children: [ listview ];
 }
 
 listview {
     background-color: @background;
     columns: 1;
-    lines: 5;
+    lines: 4;
     layout: vertical;
     flow: vertical;
-    spacing: 2px;
+    spacing: 0px;
     scrollbar: false;
 }
 
 element {
-    padding: 4px 10px;
+    padding: 5px 8px;
     background-color: transparent;
-    text-color: @muted-foreground;
-    border: 1px;
-    border-color: transparent;
-    border-radius: 4px;
+    text-color: @foreground;
+    border: 0px;
     cursor: pointer;
 }
 
 element selected {
     background-color: @selected-background;
-    text-color: @foreground;
-    border-color: @selected-border-color;
+    text-color: @selected-foreground;
 }
 
 element-text {

@@ -4,9 +4,16 @@ set -euo pipefail
 script_dir=$(dirname "$(realpath "$0")")
 action=${1:-}
 if [[ -z $action ]]; then
-    action=$(printf '%s\n' 'about arch' lock 'quit apps' reboot poweroff |
-        rofi -dmenu -p 'session:' \
-            -theme "$script_dir/../../config/rofi/session.rasi")
+    actions=('about arch' lock reboot poweroff)
+    index=$(printf '%s\n' \
+        '  About Arch' \
+        '  Lock          (Super+Shift+L)' \
+        '  Reboot        (Super+Shift+R)' \
+        '⏻  Shut Down     (Super+Shift+S)' |
+        rofi -dmenu -no-custom -format i \
+            -theme "$script_dir/../../config/rofi/session.rasi") || exit 0
+    [[ $index =~ ^[0-9]+$ ]] || exit 0
+    action=${actions[index]}
 fi
 
 case "$action" in
