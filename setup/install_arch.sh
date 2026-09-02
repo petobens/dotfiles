@@ -52,7 +52,7 @@ curl --fail --location --silent --show-error --output /dev/null https://archlinu
 timedatectl set-ntp true
 
 section 'Entering installation settings'
-read -r -p 'Use a larger console font? [y/N] ' choice
+read -r -p 'Use a larger font in the live console? [y/N] ' choice
 [[ $choice == [yY] ]] && setfont ter-132n
 
 read -r -p 'Keyboard layout [us]: ' keymap
@@ -173,7 +173,7 @@ sed -i -E \
     /mnt/etc/locale.gen
 arch-chroot /mnt locale-gen
 printf 'LANG=en_US.UTF-8\n' > /mnt/etc/locale.conf
-printf 'KEYMAP=%s\nFONT=ter-132n\n' "$keymap" > /mnt/etc/vconsole.conf
+printf 'KEYMAP=%s\n' "$keymap" > /mnt/etc/vconsole.conf
 printf '%s\n' "$hostname" > /mnt/etc/hostname
 printf '%s\n' \
     '127.0.0.1 localhost' \
