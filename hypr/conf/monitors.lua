@@ -113,7 +113,17 @@ local function restore_active_mode()
     end
 end
 
-hl.on('monitor.added', restore_active_mode)
+-- Use workspace 5 for a lone unknown output such as QEMU's Virtual-1
+local function focus_development_workspace(monitor)
+    if monitor and #hl.get_monitors() == 1 and not positions[monitor.name] then
+        hl.dispatch(hl.dsp.focus({ workspace = '5' }))
+    end
+end
+
+hl.on('monitor.added', function(monitor)
+    restore_active_mode()
+    focus_development_workspace(monitor)
+end)
 hl.on('monitor.removed', restore_active_mode)
 
 -- Handle lid close and open events by disabling and restoring the laptop panel
@@ -133,7 +143,7 @@ end, { description = 'Restore laptop display on lid open', locked = true })
 multi()
 
 -- Workspaces
-local workspaces = {
+for _, workspace in ipairs({
     { '1', external_right, true },
     { '2', laptop, true },
     { '3', laptop },
@@ -143,21 +153,14 @@ local workspaces = {
     { '7', external_left },
     { '8', laptop },
     { '9', external_right },
-}
-
-local monitors = hl.get_monitors()
-local monitor = #monitors == 1 and monitors[1]
--- Treat a lone unknown output, such as QEMU's Virtual-1, as the development display
-if monitor and not positions[monitor.name] then
-    workspaces = { { '5', monitor.name, true } }
-end
-
-for _, workspace in ipairs(workspaces) do
+}) do
     hl.workspace_rule({
         workspace = workspace[1],
         monitor = workspace[2],
         default = workspace[3],
     })
 end
+
+focus_development_workspace(hl.get_monitors()[1])
 
 return { primary = primary, multi = multi, mirror = mirror }
