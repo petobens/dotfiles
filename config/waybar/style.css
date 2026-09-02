@@ -7,9 +7,8 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: 'Noto Sans', 'Symbols Nerd Font', sans-serif;
-    font-size: 14px;
-    font-weight: bold;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 11pt;
     min-height: 0;
 }
 
@@ -19,6 +18,8 @@ window#waybar {
 }
 #workspaces button {
     color: @muted;
+    font-family: 'Symbols Nerd Font';
+    font-size: 13pt;
     padding: 0 10px;
 }
 #workspaces button.active {
@@ -49,5 +50,39 @@ window#waybar {
 }
 
 #window {
+    font-family: 'Noto Sans Mono';
+    font-size: 10pt;
+    font-weight: bold;
     padding: 0;
+}
+
+/* Preserve the former Polybar font sizes for each module */
+#custom-arch {
+    font-family: 'Symbols Nerd Font';
+    font-size: 12pt;
+    padding-right: 3px;
+}
+
+#custom-window-count {
+    padding-right: 7px;
+}
+
+#custom-docker,
+#custom-onedrive {
+    font-family: 'Symbols Nerd Font';
+    font-size: 14pt;
+}
+
+#custom-bluetooth {
+    font-family: 'Symbols Nerd Font';
+    font-size: 11pt;
+}
+
+#custom-vpn {
+    font-family: 'Symbols Nerd Font';
+    font-size: 13pt;
+}
+
+#language {
+    font-weight: bold;
 }

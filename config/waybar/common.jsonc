@@ -2,7 +2,7 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 32,
+    "height": 28,
     "spacing": 4,
     "modules-left": ["custom/arch", "custom/window-count", "hyprland/window"],
     "modules-center": ["hyprland/workspaces"],
@@ -34,7 +34,7 @@
         "separate-outputs": true,
     },
     "hyprland/workspaces": {
-        "format": "{icon} <sup>{id}</sup>",
+        "format": "{icon} <span font_family='Noto Sans' size='7pt' weight='bold' rise='5pt'>{id}</span>",
         "format-icons": {
             "1": "󰖟",
             "2": "",
@@ -68,9 +68,9 @@
         "interval": 5,
     },
     "network": {
-        "format-wifi": "{icon} {signalStrength}%",
-        "format-ethernet": "󰈁",
-        "format-disconnected": "󰖪",
+        "format-wifi": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{signalStrength}%</span>",
+        "format-ethernet": "<span font_family='Symbols Nerd Font' size='14pt'>󰈁</span>",
+        "format-disconnected": "<span font_family='Symbols Nerd Font' size='13pt'>󰖪</span>",
         "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
         "on-click": "~/.config/hypr/scripts/app wifi",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
@@ -83,16 +83,16 @@
         "return-type": "json",
     },
     "pulseaudio": {
-        "format": "{icon}",
+        "format": "<span font_family='Symbols Nerd Font' size='14pt'>{icon}</span>",
         "format-icons": ["", "󰖀", "󰕾", ""],
-        "format-muted": "",
+        "format-muted": "<span font_family='Symbols Nerd Font' size='13pt'></span>",
         "on-click": "~/.config/hypr/scripts/app audio",
         "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     },
     "battery": {
-        "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-full": "󰂄 100%",
+        "format": "<span font_family='Symbols Nerd Font' size='11pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
+        "format-charging": "<span font_family='Symbols Nerd Font' size='12pt'></span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
+        "format-full": "<span font_family='Symbols Nerd Font' size='12pt'>󰂄</span> <span font_family='Noto Sans Mono' size='10pt' weight='bold'>100%</span>",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"],
         "states": {
             "critical": 10,
@@ -100,8 +100,8 @@
         },
     },
     "clock": {
-        "format": "󰃰 {:%a %d %H:%M}",
-        "format-alt": "󰃰 {:%A %d %b %Y %H:%M:%S}",
+        "format": "<span font_family='Symbols Nerd Font' size='13pt'>󰃰</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'> {:%a %d %H:%M}</span>",
+        "format-alt": "<span font_family='Symbols Nerd Font' size='13pt'>󰃰</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'> {:%A %d %b %Y %H:%M:%S}</span>",
         "on-click": "~/.config/hypr/scripts/app calendar",
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
     },
