@@ -144,6 +144,14 @@ local workspaces = {
     { '8', laptop },
     { '9', external_right },
 }
+
+local monitors = hl.get_monitors()
+local monitor = #monitors == 1 and monitors[1]
+-- Treat a lone unknown output, such as QEMU's Virtual-1, as the development display
+if monitor and not positions[monitor.name] then
+    workspaces = { { '5', monitor.name, true } }
+end
+
 for _, workspace in ipairs(workspaces) do
     hl.workspace_rule({
         workspace = workspace[1],

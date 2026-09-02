@@ -31,6 +31,7 @@ palette = 15=#5c6370
 window-decoration = false
 window-padding-x = 0
 window-padding-y = 0
+resize-overlay = never
 
 # Behavior
 clipboard-read = allow

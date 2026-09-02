@@ -13,7 +13,7 @@ end
 
 -- Defaults
 window_rule('.*', { float = true, suppress_event = 'maximize' })
-window_rule('^terminal$', { maximize = true })
+hl.window_rule({ match = { tag = 'terminal' }, maximize = true })
 
 -- Assigned workspaces
 window_rule(
