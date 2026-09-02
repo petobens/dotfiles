@@ -6,12 +6,16 @@ font-style-italic = Medium Italic
 font-size = 11.5
 freetype-load-flags = no-light
 
+# Use clearer glyphs for LN and the thin Powerline separators
+font-codepoint-map = U+E0A1,U+E0B1,U+E0B3=Symbols Nerd Font
+
 # Colors
 background = #24272e
 foreground = #abb2bf
 cursor-color = #528bff
 cursor-text = #0b0b0b
 cursor-style-blink = false
+adjust-cursor-thickness = 1
 selection-background = #3e4452
 selection-foreground = #abb2bf
 palette = 0=#24272e
@@ -42,7 +46,7 @@ clipboard-read = allow
 clipboard-write = allow
 confirm-close-surface = false
 shell-integration = none
-bell-features = no-system,no-audio
+bell-features = no-system,no-audio,attention,no-title
 
 # Keybindings
 keybind = super+c=copy_to_clipboard
