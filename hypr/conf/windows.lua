@@ -11,6 +11,11 @@ local function window_rule(class, options)
     hl.window_rule(options)
 end
 
+local function initial_title_rule(title, options)
+    options.match = { initial_title = title }
+    hl.window_rule(options)
+end
+
 -- Defaults
 window_rule('.*', { float = true, suppress_event = 'maximize' })
 hl.window_rule({ match = { tag = 'terminal' }, maximize = true })
@@ -39,12 +44,15 @@ window_rule('^Qemu-system-x86_64$', { workspace = '1', maximize = true })
 
 -- Application layouts
 window_rule(
-    '^(about|bluetooth|hyprpwcenter|'
-        .. 'org.hyprland.hyprpwcenter|localsend|localsend_app|numbers|quickterm)$',
+    '^(hyprpwcenter|org.hyprland.hyprpwcenter|localsend|localsend_app)$',
     { size = { half_width, half_height }, center = true }
 )
-window_rule(
-    '^(docker-info|htop|nmtui|onedrive|trash|yazi)$',
+initial_title_rule(
+    '^(About Arch|bluetooth|numbers|QuickTerm)$',
+    { size = { half_width, half_height }, center = true }
+)
+initial_title_rule(
+    '^(docker-info|htop|nmtui|OneDrive|Trash Can|yazi)$',
     { size = rectangle_size, center = true }
 )
 window_rule('^(org.pwmt.zathura|imv)$', {
