@@ -228,7 +228,7 @@ arch-chroot /mnt mkinitcpio -P
 section 'Cloning the Wayland dotfiles'
 checkout="/home/$username/git-repos/private/dotfiles"
 arch-chroot /mnt install -d -o "$username" -g "$username" \
-    "$(dirname "$checkout")"
+    "/home/$username/git-repos" "$(dirname "$checkout")"
 arch-chroot /mnt runuser -u "$username" -- \
     git clone --branch dotfiles-wayland \
     https://github.com/petobens/dotfiles.git "$checkout"
