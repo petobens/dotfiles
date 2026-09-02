@@ -1,5 +1,8 @@
 # Font
 font-family = Source Code Pro
+font-family = Symbols Nerd Font
+font-style = Medium
+font-style-italic = Medium Italic
 font-size = 11.5
 freetype-load-flags = no-light
 
