@@ -184,6 +184,11 @@ fi
 section 'Configuring login and keyring'
 # Fish login sessions start Hyprland after tty1 authentication
 sudo chsh -s "$(command -v fish)" "$USER"
+# Keep screen-unlock retries independent from the system login lockout policy
+sudo install -Dm644 /dev/stdin /etc/pam.d/hyprlock << 'EOF'
+auth required pam_unix.so
+auth optional pam_gnome_keyring.so
+EOF
 ensure_pam_rule \
     /etc/pam.d/login \
     '^auth[[:space:]]+include[[:space:]]+system-local-login$' \
