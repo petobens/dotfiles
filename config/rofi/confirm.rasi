@@ -1,52 +1,56 @@
 configuration {
+    font: "Noto Sans 10";
     show-icons: false;
 }
 
 * {
-    background: #24272e;
-    foreground: #abb2bf;
-    button-background: #2c3038;
-    button-selected-background: #3e4451;
-    border-color: #4b5263;
+    background: #302e2b;
+    foreground: #f2f2f2;
+    button-background: #292825;
+    button-selected-background: #363431;
+    border-color: #171717;
     selected-border-color: #61afef;
 }
 
 window {
     location: center;
-    width: 420px;
+    width: 240px;
     y-offset: 0px;
     padding: 12px;
     background-color: @background;
     border: 1px;
     border-color: @border-color;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 mainbox {
-    spacing: 14px;
+    spacing: 12px;
+    background-color: @background;
     children: [ inputbar, listview ];
 }
 
 inputbar {
+    background-color: @background;
     children: [ prompt ];
 }
 
 prompt {
+    background-color: @background;
     text-color: @foreground;
+    horizontal-align: 0.5;
 }
 
 listview {
+    background-color: @background;
     columns: 2;
     lines: 1;
-    layout: horizontal;
     flow: horizontal;
     fixed-columns: true;
-    fixed-height: true;
     spacing: 6px;
 }
 
 element {
-    padding: 8px 18px;
+    padding: 7px 12px;
     background-color: @button-background;
     text-color: @foreground;
     border: 1px;
@@ -62,7 +66,7 @@ element selected {
 }
 
 element-text {
-    horizontal-align: 0.5;
     background-color: transparent;
     text-color: inherit;
+    horizontal-align: 0.5;
 }

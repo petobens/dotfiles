@@ -1,16 +1,53 @@
-@import "confirm"
+configuration {
+    font: "Noto Sans 10";
+    show-icons: false;
+}
+
+* {
+    background: #302e2b;
+    input-background: #292825;
+    foreground: #f2f2f2;
+    muted-foreground: #c0bdb8;
+    selected-background: #3e4451;
+    border-color: #171717;
+    selected-border-color: #61afef;
+}
+
+window {
+    location: center;
+    width: 320px;
+    y-offset: 0px;
+    padding: 8px;
+    background-color: @background;
+    border: 1px;
+    border-color: @border-color;
+    border-radius: 8px;
+}
+
+mainbox {
+    spacing: 6px;
+    background-color: @background;
+    children: [ inputbar, listview ];
+}
 
 inputbar {
-    background-color: @background;
-    spacing: 8px;
+    padding: 5px 8px;
+    spacing: 5px;
+    background-color: @input-background;
+    border-radius: 4px;
     children: [ prompt, entry ];
 }
 
+prompt {
+    background-color: @input-background;
+    text-color: @muted-foreground;
+}
+
 entry {
-    background-color: @background;
+    background-color: @input-background;
     text-color: @foreground;
     placeholder: "Type to filter";
-    placeholder-color: @foreground;
+    placeholder-color: @muted-foreground;
 }
 
 listview {
@@ -19,8 +56,28 @@ listview {
     lines: 7;
     layout: vertical;
     flow: vertical;
+    spacing: 2px;
+    scrollbar: false;
+}
+
+element {
+    padding: 4px 10px;
+    background-color: transparent;
+    text-color: @muted-foreground;
+    border: 1px;
+    border-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+element selected {
+    background-color: @selected-background;
+    text-color: @foreground;
+    border-color: @selected-border-color;
 }
 
 element-text {
+    background-color: transparent;
+    text-color: inherit;
     horizontal-align: 0.0;
 }
