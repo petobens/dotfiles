@@ -47,9 +47,9 @@ function fish_prompt
 
     set -l user_color $background
     test "$USER" = root; and set user_color $red
-    __prompt_bold " $USER" $user_color $white
+    __prompt_bold " $USER " $user_color $white
     if set -q SSH_CLIENT; or set -q SSH_TTY
-        __prompt_bold " 󰌘 @"(prompt_hostname) $background $white
+        __prompt_bold "󰌘 @"(prompt_hostname)" " $background $white
     end
 
     set -l band_color $white
@@ -92,7 +92,7 @@ function fish_prompt
         string match -qi '*gitlab*' -- $remote; and set remote_icon 
 
         __prompt_transition $band_color $special_grey
-        __prompt_text " $remote_icon $branch " $foreground $special_grey
+        __prompt_text " $remote_icon  $branch " $foreground $special_grey
         test $modified -gt 0; and __prompt_text "$modified " $red $special_grey
         test $ahead -gt 0; and __prompt_text "$ahead " $red $special_grey
         test $behind -gt 0; and __prompt_text "$behind " $red $special_grey
