@@ -7,7 +7,13 @@ $hostname\
 [ ](bg:white)\
 ${custom.context_start}\
 $aws\
+${custom.aws_to_python}\
+${custom.aws_to_context}\
+${custom.aws_to_path}\
+${custom.python_start_plain}\
 $python\
+${custom.python_to_context}\
+${custom.python_to_path}\
 ${custom.git_remote}\
 $git_branch\
 $git_status\
@@ -60,10 +66,10 @@ style = "bold fg:background bg:white"
 
 # Built-in environment and repository context
 [aws]
-format = "[  $profile ](bold fg:orange bg:special_grey)"
+format = "[](fg:white bg:orange)[  $profile ](bold fg:background bg:orange)"
 
 [python]
-format = "[  $virtualenv ](bold fg:purple bg:special_grey)"
+format = "[  $virtualenv ](bold fg:background bg:purple)"
 detect_extensions = []
 detect_files = []
 detect_folders = []
@@ -92,11 +98,55 @@ diverged = "${ahead_count} ${behind_count} "
 [custom.context_start]
 command = "printf ''"
 shell = ["sh"]
-when = '''
-test -n "${AWS_PROFILE}${VIRTUAL_ENV}" ||
-    git rev-parse --is-inside-work-tree >/dev/null 2>&1
-'''
+when = '''test -z "$AWS_PROFILE" && test -z "$VIRTUAL_ENV"'''
+require_repo = true
 format = "[$output](fg:white bg:special_grey)"
+
+# AWS uses distinct joins for each possible following segment
+[custom.aws_to_python]
+command = "printf ''"
+shell = ["sh"]
+when = '''test -n "$AWS_PROFILE" && test -n "$VIRTUAL_ENV"'''
+format = "[$output](fg:orange bg:purple)"
+
+[custom.aws_to_context]
+command = "printf ''"
+shell = ["sh"]
+when = '''test -n "$AWS_PROFILE" && test -z "$VIRTUAL_ENV"'''
+require_repo = true
+format = "[$output](fg:orange bg:special_grey)"
+
+[custom.aws_to_path]
+command = "printf ''"
+shell = ["sh"]
+when = '''
+test -n "$AWS_PROFILE" && test -z "$VIRTUAL_ENV" &&
+    ! git rev-parse --is-inside-work-tree >/dev/null 2>&1
+'''
+format = "[$output](fg:orange bg:cursor_grey)"
+
+# Python uses distinct joins for each possible neighboring segment
+[custom.python_start_plain]
+command = "printf ''"
+shell = ["sh"]
+when = '''test -n "$VIRTUAL_ENV" && test -z "$AWS_PROFILE"'''
+format = "[$output](fg:white bg:purple)"
+
+[custom.python_to_context]
+command = "printf ''"
+shell = ["sh"]
+when = '''test -n "$VIRTUAL_ENV"'''
+require_repo = true
+format = "[$output](fg:purple bg:special_grey)"
+
+[custom.python_to_path]
+command = "printf ''"
+shell = ["sh"]
+when = '''
+test -n "$VIRTUAL_ENV" &&
+    ! git rev-parse --is-inside-work-tree >/dev/null 2>&1
+'''
+format = "[$output](fg:purple bg:cursor_grey)"
 
 [custom.git_remote]
 command = '''
@@ -117,10 +167,8 @@ format = "[ $output ](fg:foreground bg:special_grey)"
 [custom.context_end]
 command = "printf ''"
 shell = ["sh"]
-when = '''
-test -n "${AWS_PROFILE}${VIRTUAL_ENV}" ||
-    git rev-parse --is-inside-work-tree >/dev/null 2>&1
-'''
+when = true
+require_repo = true
 format = "[$output](fg:special_grey bg:cursor_grey)"
 
 [custom.plain_end]
