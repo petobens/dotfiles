@@ -306,7 +306,7 @@ exec(super_alt .. ' + G', scripts .. 'screen_record video', 'Toggle video record
 exec('XF86AudioRaiseVolume', volume_up, 'Raise volume', { repeating = true })
 exec('XF86AudioLowerVolume', volume_down, 'Lower volume', { repeating = true })
 exec('XF86AudioMute', volume_mute, 'Mute audio', { locked = true })
-exec(super_shift .. ' + PLUS', volume_up, 'Raise volume')
+exec(super_shift .. ' + EQUAL', volume_up, 'Raise volume')
 exec(super_shift .. ' + MINUS', volume_down, 'Lower volume')
 exec(super_shift .. ' + M', volume_mute, 'Mute audio')
 launch(super_shift .. ' + V', 'audio', 'Audio controls')
