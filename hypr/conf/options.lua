@@ -1,6 +1,6 @@
 -- luacheck: globals hl
 
-local animation_curve = 'easeOut'
+local animation_curve = 'easeOutQuint'
 
 -- General
 hl.config({
@@ -56,13 +56,13 @@ hl.config({
 -- Animations and gestures
 hl.curve(animation_curve, {
     type = 'bezier',
-    points = { { 0.16, 1 }, { 0.3, 1 } },
+    points = { { 0.23, 1 }, { 0.32, 1 } },
 })
-hl.animation({ leaf = 'windows', enabled = true, speed = 4, bezier = animation_curve })
+hl.animation({ leaf = 'windows', enabled = true, speed = 5, bezier = animation_curve })
 hl.animation({
     leaf = 'workspaces',
     enabled = true,
-    speed = 4,
+    speed = 5,
     bezier = animation_curve,
     style = 'slide',
 })
