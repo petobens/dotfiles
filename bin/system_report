@@ -91,7 +91,7 @@ if systemd-detect-virt --vm --quiet 2> /dev/null; then
 fi
 
 mount_paths=(/ /home /var/cache/pacman/pkg /.snapshots /var/log)
-mount_roots=(/ /@home /@pkg /@snapshots /@var_log)
+mount_roots=(/@ /@home /@pkg /@snapshots /@var_log)
 invalid_mounts=()
 for i in "${!mount_paths[@]}"; do
     fs_type=
@@ -282,7 +282,7 @@ if ((use_sudo)); then
         'maxauthtries 3' \
         'passwordauthentication yes' \
         'permitrootlogin no'; do
-        if ! grep -qx "$setting" <<< "$sshd_settings"; then
+        if ! grep -qix "$setting" <<< "$sshd_settings"; then
             privileged_failures+=(SSH)
             break
         fi
@@ -454,7 +454,11 @@ collect_evidence() {
     run 'Unified kernel image presets' grep -E '^(PRESETS|default_uki|fallback_uki)=' \
         /etc/mkinitcpio.d/linux.preset /etc/mkinitcpio.d/linux-lts.preset
     run 'Filesystems' findmnt -o TARGET,SOURCE,FSTYPE,OPTIONS
-    run 'Btrfs root subvolumes' btrfs subvolume list /
+    if ((use_sudo)); then
+        run 'Btrfs root subvolumes' sudo -n btrfs subvolume list /
+    else
+        run 'Btrfs root subvolumes' btrfs subvolume list /
+    fi
     run 'Swap and zram' bash -c \
         'swapon --show; printf "\n"; zramctl'
     run 'System failures' systemctl --failed --no-pager --plain
@@ -474,7 +478,7 @@ collect_evidence() {
         run 'Snapper root configuration' sudo -n snapper -c root get-config
         run 'Firewall rules' sudo -n ufw status verbose
         run 'Recovery SSH settings' bash -o pipefail -c \
-            "sudo -n /usr/bin/sshd -T | rg '^(disableforwarding|maxauthtries|passwordauthentication|permitrootlogin) '"
+            "sudo -n /usr/bin/sshd -T | rg -i '^(disableforwarding|maxauthtries|passwordauthentication|permitrootlogin) '"
     fi
 
     run 'PCI devices and drivers' lspci -nnk
