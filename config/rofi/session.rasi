@@ -1,0 +1,22 @@
+@import "confirm"
+
+inputbar {
+    spacing: 8px;
+    children: [ prompt, entry ];
+}
+
+entry {
+    placeholder: "Type to filter";
+    placeholder-color: @foreground;
+}
+
+listview {
+    columns: 1;
+    lines: 7;
+    layout: vertical;
+    flow: vertical;
+}
+
+element-text {
+    horizontal-align: 0.0;
+}

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-script_dir=$(dirname "$0")
+script_dir=$(dirname "$(realpath "$0")")
 action=$(printf '%s\n' 'about arch' lock 'quit apps' logout suspend reboot poweroff |
-    rofi -dmenu -p 'session')
+    rofi -dmenu -p 'session:' \
+        -theme "$script_dir/../../config/rofi/session.rasi")
 case "$action" in
     'about arch') "$script_dir/app" about ;;
     lock) loginctl lock-session ;;

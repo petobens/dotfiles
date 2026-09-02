@@ -4,14 +4,44 @@ set -euo pipefail
 cycle=false
 
 if [[ ${1:-} == menu ]]; then
-    app=$(
-        printf '%s\n' \
-            about audio bluetooth brave calendar clickup docker edge files gmail \
-            htop images meet numbers onedrive onlyoffice quickterm slack spotify \
-            teams terminal transmission trash wifi zathura zoom |
-            rofi -dmenu -p 'app'
+    menu=(
+        'about|About Arch|distributor-logo-archlinux|System information'
+        'audio|Audio Controls|audio-speakers|PipeWire control center'
+        'bluetooth|Bluetooth|bluetooth|Bluetooth controls'
+        'brave|Brave|brave-desktop|Web browser'
+        'calendar|Calendar|google-agenda|Google Calendar'
+        'clickup|ClickUp|tracker|Project management'
+        'docker|Docker|docker-desktop|Docker status'
+        'edge|Microsoft Edge|microsoft-edge|Web browser'
+        'files|Yazi|yazi|File manager'
+        'gmail|Gmail|gmail|Email'
+        'htop|Htop|htop|Process viewer'
+        'images|Image Viewer|multimedia-photo-viewer|Browse images'
+        'meet|Google Meet|google-meet|Video meetings'
+        'numbers|IPython|calc|Python console'
+        'onedrive|OneDrive|ms-onedrive|Sync status'
+        'onlyoffice|OnlyOffice|onlyoffice-desktopeditors|Office suite'
+        'quickterm|Quick Terminal|com.mitchellh.ghostty|Terminal'
+        'slack|Slack|slack|Messaging'
+        'spotify|Spotify|spotify|Music player'
+        'teams|Microsoft Teams|teams|Messaging'
+        'terminal|Terminal|com.mitchellh.ghostty|Main terminal'
+        'transmission|Transmission|transmission-gtk|BitTorrent client'
+        'trash|Trash|user-trash|Show trash'
+        'wifi|Wi-Fi|network-wireless|Network settings'
+        'zathura|Zathura|org.pwmt.zathura|PDF viewer'
+        'zoom|Zoom|Zoom|Video meetings'
     )
-    [[ -n $app ]] || exit 0
+    index=$(
+        for entry in "${menu[@]}"; do
+            IFS='|' read -r _ label icon description <<< "$entry"
+            printf \
+                "%s <span color='#5f636f' size='small'><i>(%s)</i></span>\0icon\x1f%s\n" \
+                "$label" "$description" "$icon"
+        done | rofi -dmenu -i -no-custom -format i -markup-rows -p 'app'
+    ) || exit 0
+    [[ $index =~ ^[0-9]+$ ]] || exit 0
+    IFS='|' read -r app _ <<< "${menu[index]}"
     exec "$0" "$app"
 fi
 
