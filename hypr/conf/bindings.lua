@@ -53,6 +53,12 @@ local function place_window(placement)
         local reserved = monitor.reserved
         local width = monitor.width / monitor.scale - reserved.left - reserved.right
         local height = monitor.height / monitor.scale - reserved.top - reserved.bottom
+        hl.dispatch(hl.dsp.window.fullscreen_state({
+            internal = 0,
+            client = 0,
+            action = 'set',
+            window = window,
+        }))
         hl.dispatch(hl.dsp.window.float({ action = 'enable', window = window }))
         hl.dispatch(hl.dsp.window.resize({
             x = width * placement[5],
