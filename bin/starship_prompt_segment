@@ -34,7 +34,11 @@ case ${1:-} in
         if [ -z "$parent" ]; then
             printf '/'
         else
-            printf '%s' "$parent" | sed 's|/|  |g'
+            while [ "${parent#*/}" != "$parent" ]; do
+                printf '%s  ' "${parent%%/*}"
+                parent=${parent#*/}
+            done
+            printf '%s' "$parent"
         fi
         printf ' '
         ;;
