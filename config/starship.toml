@@ -1,4 +1,5 @@
-# Reproduce the Trueline segment order and Powerline styling
+# Define the left-to-right segment order and Powerline styling
+# Rendering order comes from this format; settings below are grouped by role
 format = """
 $character\
 $username\
@@ -19,8 +20,8 @@ ${custom.error_after_flags}\
 ${custom.error}\
 ${custom.end_after_flags}\
 ${custom.end} """
-palette = "onedark"
 add_newline = false
+palette = "onedark"
 
 [palettes.onedark]
 background = "#24272e"
@@ -35,6 +36,7 @@ red = "#e06c75"
 special_grey = "#3b4048"
 white = "#d0d0d0"
 
+# Input mode and session identity
 [character]
 format = "$symbol"
 success_symbol = "[ I ](bold fg:background bg:blue)[](fg:blue bg:white)"
@@ -56,6 +58,7 @@ ssh_symbol = "󰌘 "
 format = "[ $ssh_symbol@$hostname]($style)"
 style = "bold fg:background bg:white"
 
+# Built-in environment and repository context
 [aws]
 format = "[  $profile ](bold fg:orange bg:special_grey)"
 
@@ -65,6 +68,27 @@ detect_extensions = []
 detect_files = []
 detect_folders = []
 
+[git_branch]
+symbol = ""
+format = "[$branch ](fg:foreground bg:special_grey)"
+
+# Show only modified files and upstream branch differences
+[git_status]
+format = "[$all_status$ahead_behind]($style)"
+style = "red bg:special_grey"
+conflicted = ""
+deleted = ""
+modified = "${count} "
+renamed = ""
+staged = ""
+stashed = ""
+typechanged = ""
+untracked = ""
+ahead = "${count} "
+behind = "${count} "
+diverged = "${ahead_count} ${behind_count} "
+
+# Custom context band and transitions
 [custom.context_start]
 command = "printf ''"
 shell = ["sh"]
@@ -73,6 +97,22 @@ test -n "${AWS_PROFILE}${VIRTUAL_ENV}" ||
     git rev-parse --is-inside-work-tree >/dev/null 2>&1
 '''
 format = "[$output](fg:white bg:special_grey)"
+
+[custom.git_remote]
+command = '''
+remote=$(git ls-remote --get-url 2>/dev/null)
+case "$remote" in
+    *github*) printf '' ;;
+    *bitbucket*) printf '' ;;
+    *gitlab*) printf '' ;;
+    *) printf '' ;;
+esac
+'''
+shell = ["sh"]
+when = true
+require_repo = true
+unsafe_no_escape = true
+format = "[ $output ](fg:foreground bg:special_grey)"
 
 [custom.context_end]
 command = "printf ''"
@@ -92,22 +132,8 @@ test -z "${AWS_PROFILE}${VIRTUAL_ENV}" &&
 '''
 format = "[$output](fg:white bg:cursor_grey)"
 
-[custom.git_remote]
-command = '''
-remote=$(git ls-remote --get-url 2>/dev/null)
-case "$remote" in
-    *github*) printf '' ;;
-    *bitbucket*) printf '' ;;
-    *gitlab*) printf '' ;;
-    *) printf '' ;;
-esac
-'''
-when = true
-require_repo = true
-unsafe_no_escape = true
-shell = ["sh"]
-format = "[ $output ](fg:foreground bg:special_grey)"
-
+# Compose path and command state with separate modules for the correct
+# transitions across every combination of flags and exit status
 [custom.directory_parent]
 command = "starship_prompt_segment parent"
 shell = ["sh"]
@@ -149,22 +175,3 @@ command = "starship_prompt_segment end"
 shell = ["sh"]
 when = true
 format = "[$output](fg:cursor_grey)"
-
-[git_branch]
-symbol = ""
-format = "[$branch ](fg:foreground bg:special_grey)"
-
-[git_status]
-format = "[$all_status$ahead_behind]($style)"
-style = "red bg:special_grey"
-conflicted = ""
-deleted = ""
-modified = "${count} "
-renamed = ""
-staged = ""
-stashed = ""
-typechanged = ""
-untracked = ""
-ahead = "${count} "
-behind = "${count} "
-diverged = "${ahead_count} ${behind_count} "
