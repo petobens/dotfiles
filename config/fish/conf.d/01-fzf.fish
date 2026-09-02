@@ -19,6 +19,7 @@ set -gx FZF_DEFAULT_OPTS '
 '
 set -gx FZF_CTRL_R_OPTS '
 --border-label="Command History"
+--with-nth=3..
 --bind="ctrl-y:execute-silent(printf %s {3..} | wl-copy)+abort,tab:accept"
 --header="enter=insert, tab=insert, C-y=yank"
 '
