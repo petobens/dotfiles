@@ -13,7 +13,7 @@ esac
 brightness=$(brightnessctl get)
 maximum=$(brightnessctl max)
 percentage=$(((brightness * 100 + maximum / 2) / maximum))
-printf -v bar '%*s' "$((percentage / 5))" ''
+printf -v bar '%*s' "$((percentage / 10))" ''
 bar=${bar// /─}
 notify-send -i display-brightness -t 2000 \
     -h string:x-dunst-stack-tag:brightness "   $bar  $percentage%"

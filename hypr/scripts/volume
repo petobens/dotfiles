@@ -32,7 +32,7 @@ else
     icon=audio-speakers
 fi
 
-printf -v bar '%*s' "$((volume / 5))" ''
+printf -v bar '%*s' "$((volume / 10))" ''
 bar=${bar// /─}
 notify-send -i "$icon" -t 2000 -h string:x-dunst-stack-tag:volume \
     "   $bar  $volume%"
