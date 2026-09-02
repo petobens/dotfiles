@@ -219,10 +219,7 @@ end
 bind(super .. ' + Return', monitor_modes.primary, 'Use laptop display')
 bind(super_ctrl .. ' + Return', monitor_modes.multi, 'Use all displays')
 bind(super_shift .. ' + Return', monitor_modes.mirror, 'Mirror laptop display')
-bind(super_ctrl .. ' + J', function()
-    hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
-    hl.dispatch(hl.dsp.window.bring_to_top())
-end, 'Focus previous window')
+bind(super_ctrl .. ' + J', hl.dsp.focus({ last = true }), 'Focus previous window')
 
 local marks = {
     { super_alt .. ' + M', super_ctrl .. ' + K' },
