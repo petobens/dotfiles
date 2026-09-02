@@ -50,8 +50,9 @@ local function place_window(placement)
         end
 
         local monitor = window.monitor
-        local width = monitor.width / monitor.scale
-        local height = monitor.height / monitor.scale
+        local reserved = monitor.reserved
+        local width = monitor.width / monitor.scale - reserved.left - reserved.right
+        local height = monitor.height / monitor.scale - reserved.top - reserved.bottom
         hl.dispatch(hl.dsp.window.float({ action = 'enable', window = window }))
         hl.dispatch(hl.dsp.window.resize({
             x = width * placement[5],
@@ -59,8 +60,8 @@ local function place_window(placement)
             window = window,
         }))
         hl.dispatch(hl.dsp.window.move({
-            x = monitor.x + width * placement[3],
-            y = monitor.y + height * placement[4],
+            x = monitor.x + reserved.left + width * placement[3],
+            y = monitor.y + reserved.top + height * placement[4],
             window = window,
         }))
     end
