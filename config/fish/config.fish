@@ -62,12 +62,6 @@ bind -M insert \cx backward-kill-line
 bind -M insert \ex backward-kill-word
 bind -M insert -m default jj repaint-mode
 
-function __reset_vi_mode --on-event fish_prompt
-    if test "$fish_key_bindings" = fish_vi_key_bindings
-        set fish_bind_mode default
-    end
-end
-
 # Interactive tools
 if type -q fzf
     set -l FZF_ALT_C_COMMAND
@@ -76,7 +70,11 @@ if type -q fzf
     source "$__fish_config_dir/fzf_workflows.fish"
 end
 if type -q starship
+    function starship_transient_prompt_func
+        starship prompt (string replace -r -- '^--keymap=.*$' '--keymap=default' $argv)
+    end
     starship init fish | source
+    enable_transience
 end
 if type -q zoxide
     zoxide init fish | source
