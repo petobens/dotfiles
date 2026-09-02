@@ -12,11 +12,9 @@ $git_branch\
 $git_status\
 ${custom.context_end}\
 ${custom.plain_end}\
-${custom.home}\
 $directory\
 $jobs\
-$status\
-[](fg:cursor_grey) """
+$status """
 palette = "onedark"
 add_newline = false
 
@@ -90,12 +88,6 @@ test -z "${AWS_PROFILE}${VIRTUAL_ENV}" &&
 '''
 format = "[$output](fg:white bg:cursor_grey)"
 
-[custom.home]
-command = "printf ''"
-shell = ["sh"]
-when = '''test "$PWD" = "$HOME"'''
-format = "[ $output ](bold fg:mono bg:cursor_grey)"
-
 [custom.git_remote]
 command = '''
 remote=$(git ls-remote --get-url 2>/dev/null)
@@ -132,24 +124,23 @@ behind = "${count} "
 diverged = "${ahead_count} ${behind_count} "
 
 [directory]
-format = "([ $path]($style)[$read_only]($read_only_style))"
+format = "([ $path]($style)[](fg:cursor_grey)( [](fg:orange)[ $read_only ]($read_only_style)[](fg:orange)))"
 style = "fg:mono bg:cursor_grey"
-read_only = " "
-read_only_style = "bold fg:orange bg:cursor_grey"
-home_symbol = ""
+read_only = ""
+read_only_style = "bold fg:background bg:orange"
+home_symbol = ""
 truncation_length = 3
 truncate_to_repo = false
 substitutions = [
-    { from = "^.*/([^/]+/[^/]+/[^/]+)$", to = "$1", regex = true },
-    { from = "^(.*/.*)$", to = "  $1", regex = true },
+    { from = "^.*/([^/]+/[^/]+/[^/]+)$", to = "/$1", regex = true },
     { from = "/", to = "  " },
 ]
 
 [jobs]
-format = "[  $number](bold fg:orange bg:cursor_grey)"
+format = " [](fg:orange)[  $number ](bold fg:background bg:orange)[](fg:orange)"
 number_threshold = 1
 symbol_threshold = 1
 
 [status]
 disabled = false
-format = "[  $status](bold fg:red bg:cursor_grey)"
+format = " [](fg:red)[  $status ](bold fg:background bg:red)[](fg:red)"
