@@ -70,7 +70,7 @@ case ${1:-} in
         class='^yazi$'
         workspace=current
         working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
-        command="ghostty --class=yazi --title=yazi --working-directory=\"$working_directory\" -e yazi"
+        command="ghostty --class=yazi --title=yazi --working-directory=\"$working_directory\" -e fish -c yazi"
         ;;
     gmail)
         tag=gmail
