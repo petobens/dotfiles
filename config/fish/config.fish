@@ -62,6 +62,12 @@ bind -M insert \cx backward-kill-line
 bind -M insert \ex backward-kill-word
 bind -M insert -m default jj repaint-mode
 
+function __reset_vi_mode --on-event fish_postexec
+    if test "$fish_key_bindings" = fish_vi_key_bindings
+        set fish_bind_mode default
+    end
+end
+
 # Interactive tools
 if type -q fzf
     set -l FZF_ALT_C_COMMAND
