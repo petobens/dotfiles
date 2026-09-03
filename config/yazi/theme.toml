@@ -27,8 +27,8 @@ unset_alt = { fg = "#abb2bf", bg = "#3b4048" }
 
 [status]
 overall = { fg = "#abb2bf", bg = "#282c34" }
-sep_left = { open = "", close = "" }
-sep_right = { open = "", close = "" }
+sep_left = { open = "", close = "" }
+sep_right = { open = "", close = "" }
 perm_sep = { fg = "#5c6370" }
 perm_type = { fg = "#98c379" }
 perm_read = { fg = "#e5c07b" }
