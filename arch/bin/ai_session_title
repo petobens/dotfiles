@@ -68,9 +68,12 @@ def _clean_user(text: str | None) -> str | None:
     text = _SHARE_FILE.sub(" ", text)
     text = _SHARE_CTX.sub(" ", text)
     text = _XML_BLOCK.sub(" ", text)
-    # drop pasted-image placeholders left on their own line
+    # Drop pasted-image metadata and placeholders left on their own line
+    text = re.sub(r"(?m)^Image path: /\S+[ \t]*\n?", " ", text)
     text = re.sub(r"(?m)^\s*image\s*$", " ", text)
     text = _WS.sub(" ", text).strip()
+    if re.fullmatch(r"# AGENTS\.md instructions(?: for \S+)?", text):
+        return None
     return text or None
 
 
@@ -90,14 +93,16 @@ def _iter_jsonl(path: Path, cap: int) -> Iterator[dict]:
 
 
 def _text_from_content(content: str | list | None) -> str:
-    """Pull plain text out of a Claude message.content (str or content parts)."""
+    """Pull plain text out of a message content string or content parts."""
     if isinstance(content, str):
         return content
     if isinstance(content, list):
         parts = [
             p["text"]
             for p in content
-            if isinstance(p, dict) and p.get("type") == "text" and p.get("text")
+            if isinstance(p, dict)
+            and p.get("type") in ("text", "input_text", "output_text")
+            and p.get("text")
         ]
         return "\n".join(parts)
     return ""
@@ -143,21 +148,33 @@ def extract_claude(path: Path) -> list[tuple[str, str]]:
 
 def extract_codex(path: Path) -> list[tuple[str, str]]:
     """Return the user/assistant turns of a Codex session."""
-    turns = []
+    event_turns = []
+    response_turns = []
     for d in _iter_jsonl(path, 2000):
-        if d.get("type") != "event_msg":
-            continue
+        record_type = d.get("type")
         p: dict = d.get("payload") or {}
-        pt = p.get("type")
-        if pt == "user_message":
-            text = _clean_user(p.get("message") or "")
+        payload_type = p.get("type")
+        if record_type == "session_meta":
+            source = p.get("source")
+            if isinstance(source, dict) and source.get("subagent"):
+                return []
+        elif record_type == "event_msg" and payload_type == "user_message":
+            text = _clean_user(p.get("message"))
             if text:
-                turns.append(("User", text))
-        elif pt == "agent_message":
+                event_turns.append(("User", text))
+        elif record_type == "event_msg" and payload_type == "agent_message":
             text = (p.get("message") or "").strip()
             if text:
-                turns.append(("Assistant", text))
-    return turns
+                event_turns.append(("Assistant", text))
+        elif record_type == "response_item" and payload_type == "message":
+            role = p.get("role")
+            if role not in ("user", "assistant"):
+                continue
+            text = _text_from_content(p.get("content"))
+            text = _clean_user(text) if role == "user" else text.strip()
+            if text:
+                response_turns.append((role.title(), text))
+    return event_turns or response_turns
 
 
 def build_transcript(turns: list[tuple[str, str]]) -> str:
