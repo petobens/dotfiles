@@ -1,9 +1,11 @@
+/* OneDarkish palette */
 @define-color background #24272e;
 @define-color foreground #abb2bf;
 @define-color focused #2c323c;
 @define-color muted #5c6370;
 @define-color red #e06c75;
 
+/* Base */
 * {
     border: none;
     border-radius: 0;
@@ -17,33 +19,12 @@ window#waybar {
     color: @foreground;
 }
 
+/* Tray items bypass Waybar's per-module setting, so hide all tooltips */
 tooltip {
-    background: @background;
+    opacity: 0;
 }
 
-tooltip label {
-    color: @foreground;
-}
-
-#workspaces button {
-    color: @muted;
-    font-family: 'Symbols Nerd Font';
-    font-size: 15pt;
-    padding: 0 10px;
-}
-#workspaces button.active {
-    background: @focused;
-    color: @foreground;
-}
-#workspaces button.urgent,
-#battery.critical,
-#custom-docker.inactive,
-#custom-onedrive.inactive,
-#custom-bluetooth.disabled,
-#custom-no-battery,
-#network.disconnected {
-    color: @red;
-}
+/* Shared module spacing */
 #custom-arch,
 #custom-window-count,
 #custom-docker,
@@ -60,6 +41,7 @@ tooltip label {
     padding: 0 10px;
 }
 
+/* Left modules */
 #window {
     font-family: 'Noto Sans Mono';
     font-size: 10pt;
@@ -67,7 +49,6 @@ tooltip label {
     padding: 0;
 }
 
-/* Preserve the former Polybar font sizes for each module */
 #custom-arch {
     font-family: 'Symbols Nerd Font';
     font-size: 12pt;
@@ -78,10 +59,35 @@ tooltip label {
     padding-right: 7px;
 }
 
+/* Center modules */
+#workspaces button {
+    color: @muted;
+    font-family: 'Symbols Nerd Font';
+    font-size: 15pt;
+    padding: 0 10px;
+}
+
+#workspaces button.active {
+    background: @focused;
+    color: @foreground;
+}
+
+/* Right modules */
 #custom-docker,
 #custom-onedrive {
     font-family: 'Symbols Nerd Font';
     font-size: 14pt;
+}
+
+#language {
+    font-size: 12pt;
+    font-weight: bold;
+    padding-bottom: 2px;
+}
+
+#custom-vpn {
+    font-family: 'Symbols Nerd Font';
+    font-size: 13pt;
 }
 
 #custom-bluetooth,
@@ -90,13 +96,13 @@ tooltip label {
     font-size: 11pt;
 }
 
-#custom-vpn {
-    font-family: 'Symbols Nerd Font';
-    font-size: 13pt;
-}
-
-#language {
-    font-size: 12pt;
-    font-weight: bold;
-    padding-bottom: 2px;
+/* Status states */
+#workspaces button.urgent,
+#battery.critical,
+#custom-docker.inactive,
+#custom-onedrive.inactive,
+#custom-bluetooth.disabled,
+#custom-no-battery,
+#network.disconnected {
+    color: @red;
 }
