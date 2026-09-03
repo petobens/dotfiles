@@ -53,6 +53,7 @@ textbox-prompt-colon {
 entry {
     background-color: transparent;
     text-color: @foreground;
+    horizontal-align: 0.0;
     placeholder: "Type to filter";
     placeholder-color: @muted;
 }
