@@ -73,14 +73,12 @@ local groups = {
     group('b', 'Bookmarks', {
         mapping('m', 'Show bookmarks', 'plugin', {
             'bookmarks',
-            '--',
             'jump',
         }),
     }),
     group('a', 'Add bookmark', {
         mapping('b', 'Add bookmark', 'plugin', {
             'bookmarks',
-            '--',
             'save',
         }),
     }),
