@@ -1,6 +1,6 @@
 -- luacheck: globals App Header Linemode Status th ui ya
 
-require('full-border'):setup()
+require('full-border'):setup({ type = ui.Border.THICK })
 require('git'):setup()
 require('folder-rules'):setup()
 require('toggle-pane'):entry('max-current')

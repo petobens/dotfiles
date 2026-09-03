@@ -1,8 +1,8 @@
-# View
+# Ranger-style leader mappings
 [[mgr.prepend_keymap]]
-on = [",", "v", "m"]
-run = "plugin toggle-pane max-current"
-desc = "Toggle pane layout"
+on = [","]
+run = "plugin leader"
+desc = "Leader mappings"
 
 # Navigation
 [[mgr.prepend_keymap]]
@@ -47,11 +47,6 @@ run = "paste"
 desc = "Paste yanked files"
 
 [[mgr.prepend_keymap]]
-on = [",", "r", "m"]
-run = "remove --permanently"
-desc = "Permanently delete selected files"
-
-[[mgr.prepend_keymap]]
 on = ["d"]
 run = "remove"
 desc = "Trash selected files"
@@ -73,16 +68,6 @@ desc = "Open selected files"
 
 # Tabs
 [[mgr.prepend_keymap]]
-on = [",", "n", "b"]
-run = "tab_create --current"
-desc = "Create tab"
-
-[[mgr.prepend_keymap]]
-on = [",", "v", "s"]
-run = "tab_create --current"
-desc = "Create tab"
-
-[[mgr.prepend_keymap]]
 on = ["<C-p>"]
 run = "tab_switch -1 --relative"
 desc = "Previous tab"
@@ -93,124 +78,11 @@ run = "tab_switch 1 --relative"
 desc = "Next tab"
 
 [[mgr.prepend_keymap]]
-on = [",", "w", "d"]
-run = "close"
-desc = "Close tab"
-
-[[mgr.prepend_keymap]]
 on = ["<C-c>"]
 run = "close"
 desc = "Close tab"
 
-# Direct tab access
-[[mgr.prepend_keymap]]
-on = [",", "1"]
-run = "tab_switch 0"
-desc = "Tab 1"
-
-[[mgr.prepend_keymap]]
-on = [",", "2"]
-run = "tab_switch 1"
-desc = "Tab 2"
-
-[[mgr.prepend_keymap]]
-on = [",", "3"]
-run = "tab_switch 2"
-desc = "Tab 3"
-
-[[mgr.prepend_keymap]]
-on = [",", "4"]
-run = "tab_switch 3"
-desc = "Tab 4"
-
-[[mgr.prepend_keymap]]
-on = [",", "5"]
-run = "tab_switch 4"
-desc = "Tab 5"
-
-[[mgr.prepend_keymap]]
-on = [",", "6"]
-run = "tab_switch 5"
-desc = "Tab 6"
-
-[[mgr.prepend_keymap]]
-on = [",", "7"]
-run = "tab_switch 6"
-desc = "Tab 7"
-
-[[mgr.prepend_keymap]]
-on = [",", "8"]
-run = "tab_switch 7"
-desc = "Tab 8"
-
-[[mgr.prepend_keymap]]
-on = [",", "9"]
-run = "tab_switch 8"
-desc = "Tab 9"
-
-# Sorting
-[[mgr.prepend_keymap]]
-on = [",", "s", "t"]
-run = "sort extension --reverse=no"
-desc = "Sort by extension"
-
-[[mgr.prepend_keymap]]
-on = [",", "s", "T"]
-run = "sort extension --reverse=yes"
-desc = "Sort by extension in reverse"
-
-[[mgr.prepend_keymap]]
-on = [",", "s", "m"]
-run = "sort mtime --reverse=yes"
-desc = "Sort by modification time, newest first"
-
-[[mgr.prepend_keymap]]
-on = [",", "s", "M"]
-run = "sort mtime --reverse=no"
-desc = "Sort by modification time, oldest first"
-
-[[mgr.prepend_keymap]]
-on = [",", "s", "s"]
-run = "sort size --reverse=yes"
-desc = "Sort by size, largest first"
-
-[[mgr.prepend_keymap]]
-on = [",", "s", "S"]
-run = "sort size --reverse=no"
-desc = "Sort by size, smallest first"
-
-[[mgr.prepend_keymap]]
-on = [",", "s", "a"]
-run = "sort alphabetical --reverse=no"
-desc = "Sort alphabetically"
-
-[[mgr.prepend_keymap]]
-on = [",", "s", "A"]
-run = "sort alphabetical --reverse=yes"
-desc = "Sort alphabetically in reverse"
-
-# Display
-[[mgr.prepend_keymap]]
-on = [",", "l", "m"]
-run = "linemode size_and_mtime"
-desc = "Show size and modification time"
-
-[[mgr.prepend_keymap]]
-on = [",", "t", "h"]
-run = "hidden toggle"
-desc = "Toggle hidden files"
-
 # Bookmarks
-[[mgr.prepend_keymap]]
-on = [",", "b", "m"]
-run = "plugin bookmarks -- jump"
-desc = "Show bookmarks"
-
-[[mgr.prepend_keymap]]
-on = [",", "a", "b"]
-run = "plugin bookmarks -- save"
-desc = "Add bookmark"
-
 [[mgr.prepend_keymap]]
 on = ['"']
 run = "plugin bookmarks -- jump"
@@ -246,14 +118,3 @@ desc = "Jump with zoxide"
 on = ["<A-p>"]
 run = "plugin fzf-nav -- parents"
 desc = "Select parent directory"
-
-# Archives and external tools
-[[mgr.prepend_keymap]]
-on = [",", "u", "p"]
-run = "open --hovered"
-desc = "Extract archive"
-
-[[mgr.prepend_keymap]]
-on = [",", "o", "d"]
-run = "shell --orphan -- dragon-drop -a -x %s"
-desc = "Drag and drop selected files"

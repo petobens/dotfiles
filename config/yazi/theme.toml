@@ -1,5 +1,6 @@
 [mgr]
 cwd = { fg = "#c678dd", bold = true }
+border_symbol = "┃"
 border_style = { fg = "#282c34" }
 find_keyword = { fg = "#e5c07b", bold = true }
 find_position = { fg = "#c678dd" }
