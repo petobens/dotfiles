@@ -23,7 +23,7 @@ local groups = {
         }),
     }),
     group('n', 'New tab', {
-        mapping('b', 'Create tab', 'tab_create', { current = true }),
+        mapping('t', 'Create tab', 'tab_create', { current = true }),
     }),
     group('w', 'Close tab', {
         mapping('d', 'Close tab', 'close'),

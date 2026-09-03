@@ -6,21 +6,54 @@ require('git'):setup()
 require('folder-rules'):setup()
 require('toggle-pane'):entry('max-current')
 
--- Header
--- Leave one row between the current directory and the tabs
+-- Layout
+-- Show tabs above the current directory
 function Root:layout()
     local chunks = ui.Layout()
         :direction(ui.Layout.VERTICAL)
         :constraints({
-            ui.Constraint.Length(1),
-            ui.Constraint.Length(1),
             ui.Constraint.Length(Tabs.height()),
+            ui.Constraint.Length(1),
             ui.Constraint.Fill(1),
             ui.Constraint.Length(1),
         })
         :split(self._area)
 
-    self._chunks = { chunks[1], chunks[3], chunks[4], chunks[5] }
+    self._chunks = { chunks[2], chunks[1], chunks[3], chunks[4] }
+end
+
+-- Blend each tab's arrow into the following tab or the window background
+function Tabs:redraw()
+    if self.height() < 1 then
+        return {}
+    end
+
+    local styles = self:style()
+    local lines = {}
+    local offset = 0
+    local count = #cx.tabs
+    local max = math.floor(math.max(0, self._area.w - count) / count)
+
+    for i = 1, count do
+        local style = i == cx.tabs.idx and styles.active or styles.inactive
+        local next_style
+        if i < count then
+            next_style = i + 1 == cx.tabs.idx and styles.active or styles.inactive
+        end
+        local name = ui.truncate(string.format(' %d %s ', i, cx.tabs[i].name), {
+            max = max,
+        })
+        local segment = ui.Line({
+            ui.Span(name):style(style),
+            ui.Span(th.tabs.sep_inner.close)
+                :fg(style:bg())
+                :bg(next_style and next_style:bg() or App.bg()),
+        })
+        self._offsets[i], offset = offset, offset + segment:width()
+        lines[#lines + 1] = segment
+    end
+
+    return ui.Line(lines):area(self._area)
 end
 
 -- Keep the folder icon visible when long paths are truncated
@@ -75,7 +108,8 @@ Entity:children_add(function(self)
     local width = #tostring(#cx.active.current.files)
     local value = string.format('%' .. width .. 'd ', number)
 
-    return self._file.is_hovered and value or ui.Span(value):fg('#5c6370')
+    local color = self._file.is_hovered and '#abb2bf' or '#4b5263'
+    return ui.Span(value):fg(color)
 end, 1500)
 
 function Linemode:size_and_mtime()

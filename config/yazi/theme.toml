@@ -33,7 +33,7 @@ unset_main = { fg = "#24272e", bg = "#e06c75", bold = true }
 unset_alt = { fg = "#abb2bf", bg = "#3b4048" }
 
 [indicator]
-current = { fg = "#24272e", bg = "#61afef" }
+current = { bg = "#282c34", bold = true }
 preview = { underline = true }
 
 [status]
