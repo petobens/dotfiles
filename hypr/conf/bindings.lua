@@ -55,7 +55,7 @@ local function place_window(placement)
 
         local monitor = window.monitor
         local reserved = monitor.reserved
-        local border_inset = 1 -- Matches general.border_size in options.lua
+        local border_inset = 2 -- Matches general.border_size in options.lua
         local width = monitor.width / monitor.scale - reserved.left - reserved.right
         local height = monitor.height / monitor.scale - reserved.top - reserved.bottom
         hl.dispatch(hl.dsp.window.fullscreen_state({

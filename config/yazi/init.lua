@@ -1,7 +1,7 @@
 -- luacheck: globals App Entity Header Linemode Root Status Tabs cx th ui ya
 
 -- Plugins
-require('full-border'):setup({ type = ui.Border.THICK })
+require('full-border'):setup({ type = ui.Border.ROUNDED })
 require('git'):setup()
 require('folder-rules'):setup()
 require('toggle-pane'):entry('max-current')

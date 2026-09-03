@@ -13,7 +13,7 @@ marker_selected = { fg = "#e5c07b", bg = "#e5c07b" }
 
 count_copied = { fg = "#abb2bf", bg = "#3b4048" }
 
-border_symbol = "┃"
+border_symbol = "│"
 border_style = { fg = "#3e4451" }
 
 [tabs]
@@ -59,7 +59,25 @@ border = { fg = "#3e4451" }
 border = { fg = "#3e4451" }
 title = { fg = "#5c6370" }
 
+[spot]
+border = { fg = "#3e4451" }
+title = { fg = "#5c6370" }
+
+[pick]
+border = { fg = "#3e4451" }
+
 [input]
+border = { fg = "#3e4451" }
+title = { fg = "#5c6370" }
+
+[cmp]
+border = { fg = "#3e4451" }
+
+[tasks]
+border = { fg = "#3e4451" }
+title = { fg = "#5c6370" }
+
+[help]
 border = { fg = "#3e4451" }
 
 # Match eza's violet treatment of symlinks
