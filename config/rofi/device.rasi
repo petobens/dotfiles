@@ -35,7 +35,7 @@ inputbar {
     padding: 5px 8px;
     background-color: @background;
     text-color: @foreground;
-    children: [ prompt, entry ];
+    children: [ prompt, textbox-prompt-colon, entry ];
 }
 
 prompt {
@@ -43,9 +43,18 @@ prompt {
     text-color: @muted;
 }
 
+textbox-prompt-colon {
+    padding: 0 6px 0 0;
+    background-color: transparent;
+    text-color: @muted;
+    str: ":";
+}
+
 entry {
     background-color: transparent;
     text-color: @foreground;
+    placeholder: "Type to filter";
+    placeholder-color: @muted;
 }
 
 listview {

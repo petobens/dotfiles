@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+pid_file="$XDG_RUNTIME_DIR/${0##*/}.pid"
+
+# Close an existing menu instead of opening a second copy
+if [[ -r $pid_file ]]; then
+    pid=$(< "$pid_file")
+    if [[ -r /proc/$pid/comm && $(< "/proc/$pid/comm") == rofi ]]; then
+        kill "$pid"
+        exit 0
+    fi
+fi
+
+rofi() {
+    command rofi -pid "$pid_file" "$@"
+}

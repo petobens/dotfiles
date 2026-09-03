@@ -8,6 +8,9 @@ btctl() {
     bluetoothctl "$@" 2> /dev/null
 }
 
+# shellcheck source-path=SCRIPTDIR
+source "$script_dir/rofi_toggle"
+
 fail() {
     notify-send -u critical -i bluetooth-disabled 'Bluetooth' "$1"
     exit 1

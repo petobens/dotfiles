@@ -4,6 +4,9 @@ set -euo pipefail
 script_dir=$(dirname "$(realpath "$0")")
 theme="$script_dir/../../config/rofi/device.rasi"
 
+# shellcheck source-path=SCRIPTDIR
+source "$script_dir/rofi_toggle"
+
 shopt -s nullglob
 batteries=(/sys/class/power_supply/BAT*)
 shopt -u nullglob

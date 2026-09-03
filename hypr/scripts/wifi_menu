@@ -4,6 +4,9 @@ set -euo pipefail
 script_dir=$(dirname "$(realpath "$0")")
 theme="$script_dir/../../config/rofi/device.rasi"
 
+# shellcheck source-path=SCRIPTDIR
+source "$script_dir/rofi_toggle"
+
 fail() {
     notify-send -u critical -i network-wireless-offline 'Wi-Fi' "$1"
     exit 1
@@ -113,7 +116,8 @@ elif [[ -z $security || $security == -- ]]; then
     fi
 else
     password=$(rofi -dmenu -password -p "Password for $ssid" \
-        -theme "$theme") || exit 0
+        -theme "$theme" \
+        -theme-str 'entry { placeholder: "Enter password"; }') || exit 0
     [[ -n $password ]] || exit 0
     if ! output=$(nmcli --wait 30 device wifi connect "$ssid" \
         password "$password" 2>&1); then
