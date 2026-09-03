@@ -2,20 +2,21 @@
 
 pid_file="$XDG_RUNTIME_DIR/${0##*/}.pid"
 
-# Close an existing menu instead of opening a second copy
+# Close a live menu or absorb the click that just dismissed it
 if [[ -r $pid_file ]]; then
     pid=$(< "$pid_file")
-    if [[ $pid =~ ^[1-9][0-9]*$ ]] && kill "$pid" 2> /dev/null; then
-        rm -f "$pid_file"
-        exit 0
+    if [[ $pid =~ ^[1-9][0-9]*$ ]]; then
+        kill "$pid" 2> /dev/null || true
     fi
     rm -f "$pid_file"
+    exit 0
 fi
 
 rofi() {
     local status=0
-    # Keep Rofi alive until a repeated Waybar click reaches this toggle
-    command rofi -no-click-to-exit -pid "$pid_file" "$@" || status=$?
+    command rofi -pid "$pid_file" "$@" || status=$?
+    # Keep the marker until Waybar finishes forwarding the outside click
+    sleep 0.25
     rm -f "$pid_file"
     return "$status"
 }
