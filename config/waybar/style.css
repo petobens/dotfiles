@@ -16,6 +16,15 @@ window#waybar {
     background: @background;
     color: @foreground;
 }
+
+tooltip {
+    background: @background;
+}
+
+tooltip label {
+    color: @foreground;
+}
+
 #workspaces button {
     color: @muted;
     font-family: 'Symbols Nerd Font';
