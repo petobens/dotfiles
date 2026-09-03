@@ -10,6 +10,7 @@ local function group(on, desc, choices)
 end
 
 local groups = {
+    mapping('<Space>', 'Clear selection', 'escape', { select = true }),
     group('v', 'View or split', {
         mapping('m', 'Toggle pane layout', 'plugin', {
             'toggle-pane',
