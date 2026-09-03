@@ -234,7 +234,9 @@ if ((${#addresses[@]})); then
     mapfile -t other_addresses < <(
         jq -r --arg address "$address" '
             . as $clients
-            | ($clients[] | select(.address == $address) | .workspace.id) as $workspace
+            | ($clients[] | select(.address == $address)) as $target
+            | select($target.fullscreen != 0)
+            | $target.workspace.id as $workspace
             | $clients[]
             | select(.address != $address and .workspace.id == $workspace and .floating)
             | .address
