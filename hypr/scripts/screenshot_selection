@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+directory=${HYPRSHOT_DIR:-$HOME/Pictures/Screenshots}
+file="$directory/$(date +'%Y-%m-%d-%H%M%S_hyprshot.png')"
+picker_pid=
+
+cleanup() {
+    if [[ -n $picker_pid ]]; then
+        kill "$picker_pid" 2> /dev/null || true
+        wait "$picker_pid" 2> /dev/null || true
+        picker_pid=
+    fi
+}
+trap cleanup EXIT
+
+hyprpicker -r -z &
+picker_pid=$!
+sleep 0.2
+
+visible_workspaces=$(hyprctl monitors -j | jq -c '
+    [.[] | .activeWorkspace.id, .specialWorkspace.id]
+    | map(select(. != null))
+')
+windows=$(hyprctl clients -j | jq -r --argjson workspaces "$visible_workspaces" '
+    .[]
+    | select(.workspace.id as $id | $workspaces | index($id))
+    | "\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"
+')
+
+# Clicking selects the window under the pointer; dragging selects a free region
+geometry=$(slurp -d <<< "$windows") || exit 0
+mkdir -p "$directory"
+grim -g "$geometry" "$file"
+cleanup
+wl-copy --type image/png < "$file"
+
+notify-send 'Screenshot saved' \
+    "Image saved in <i>$file</i> and copied to the clipboard." \
+    -t 5000 -i "$file" -a Hyprshot
