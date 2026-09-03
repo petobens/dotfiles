@@ -19,10 +19,10 @@ distinctive query concepts independently, allowing likely spelling variants,
 then parse only those candidates. Do not require the exact phrase.
 
 For Codex, search input_text/output_text in response_item records whose
-payload.role is "user" or "assistant". Ignore sessions whose session_meta has
-thread_source="subagent". For Claude, search text content in top-level user and
-assistant records, excluding tool calls and tool results. Do not count prompts
-or answers whose only purpose is finding another session as matching evidence.
+payload.role is "user" or "assistant". Ignore sessions whose session_meta
+payload.source.subagent is present. For Claude, search text content in top-level
+user and assistant records, excluding tool calls and tool results. Do not count
+prompts or answers whose only purpose is finding another session as matching evidence.
 Resolve generated titles from %s; Claude files may also contain aiTitle.
 Exclude the current session ID %q because this request contains the search terms.
 

@@ -401,8 +401,22 @@ local function restored_session_metadata(entry)
                 if type(total) == 'number' then
                     tokens = total
                 end
-                if d.type == 'event_msg' then
-                    role = ({ user_message = 'user', agent_message = 'agent' })[payload.type]
+                if d.type == 'response_item' and payload.type == 'message' then
+                    role = ({ user = 'user', assistant = 'agent' })[payload.role]
+                    local kinds = vim.tbl_get(
+                        payload,
+                        'internal_chat_message_metadata_passthrough',
+                        'content_item_kinds'
+                    ) or {}
+                    if
+                        role == 'user'
+                        and #kinds > 0
+                        and not vim.iter(kinds):any(function(kind)
+                            return vim.startswith(kind, 'user.')
+                        end)
+                    then
+                        role = nil
+                    end
                 end
             elseif entry.adapter == 'claude_code' then
                 local usage = vim.tbl_get(d, 'message', 'usage')
