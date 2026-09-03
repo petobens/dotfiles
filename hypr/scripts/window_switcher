@@ -12,7 +12,7 @@ elif (($#)); then
     exit 2
 fi
 
-# App tags distinguish clients that share a class; class aliases cover the rest.
+# App tags distinguish shared classes; generated web apps also use their class prefix.
 selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
     '({
         "about": "distributor-logo-archlinux",
@@ -45,8 +45,9 @@ selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
     sort_by([.focusHistoryID < 0, .focusHistoryID])[] |
     select($workspace == null or .workspace.id == $workspace) |
     (.class | ascii_downcase) as $class |
+    ($class | sub("^(brave|edge)-"; "") | split(".")[0]) as $web_app |
     (([.tags[]? | rtrimstr("*") | $icons[.]] | map(select(. != null))[0])
-        // $icons[$class] // $class) as $icon |
+        // $icons[$class] // $icons[$web_app] // $class) as $icon |
     "\(.address)\t[\(.workspace.name)] \(.class): \(.title)\u0000icon\u001f\($icon)"' |
     rofi -dmenu -display-columns 2 -selected-row "$selected_row" \
         -kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' \
