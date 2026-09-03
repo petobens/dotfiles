@@ -37,7 +37,7 @@
         "separate-outputs": true,
     },
     "hyprland/workspaces": {
-        "format": "{icon} <span font_family='Noto Sans' size='7pt' weight='bold' rise='5pt'>{id}</span>",
+        "format": "<span font_family='Symbols Nerd Font' size='14pt'>{icon}</span> <span font_family='Noto Sans' size='7pt' weight='bold' rise='9pt'>{id}</span>",
         "format-icons": {
             "1": "󰖟",
             "2": "",
