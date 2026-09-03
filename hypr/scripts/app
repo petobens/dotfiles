@@ -229,6 +229,7 @@ if ((${#addresses[@]})); then
         done
     fi
     hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
+    hyprctl dispatch "hl.dsp.window.bring_to_top({ window = 'address:$address' })"
 else
     hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
 fi
