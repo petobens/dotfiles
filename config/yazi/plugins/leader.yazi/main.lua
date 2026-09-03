@@ -10,7 +10,10 @@ local function group(on, desc, choices)
 end
 
 local groups = {
+    -- Selection
     mapping('<Space>', 'Clear selection', 'escape', { select = true }),
+
+    -- Tabs and panes
     group('v', 'View or split', {
         mapping('m', 'Toggle pane layout', 'plugin', {
             'toggle-pane',
@@ -18,17 +21,30 @@ local groups = {
         }),
         mapping('s', 'Create tab', 'tab_create', { current = true }),
     }),
-    group('r', 'Remove permanently', {
-        mapping('m', 'Permanently delete selected files', 'remove', {
-            permanently = true,
-        }),
-    }),
     group('n', 'New tab', {
         mapping('t', 'Create tab', 'tab_create', { current = true }),
     }),
     group('w', 'Close tab', {
         mapping('d', 'Close tab', 'close'),
     }),
+
+    -- File operations
+    group('r', 'Remove permanently', {
+        mapping('m', 'Permanently delete selected files', 'remove', {
+            permanently = true,
+        }),
+    }),
+    group('u', 'Unpack', {
+        mapping('p', 'Extract archive', 'open', { hovered = true }),
+    }),
+    group('o', 'Open externally', {
+        mapping('d', 'Drag and drop selected files', 'shell', {
+            'dragon-drop -a -x %s',
+            orphan = true,
+        }),
+    }),
+
+    -- Display and sorting
     group('s', 'Sort', {
         mapping('t', 'Sort by extension', 'sort', {
             'extension',
@@ -71,6 +87,8 @@ local groups = {
     group('t', 'Toggle', {
         mapping('h', 'Toggle hidden files', 'hidden', { 'toggle' }),
     }),
+
+    -- Bookmarks
     group('b', 'Bookmarks', {
         mapping('m', 'Show bookmarks', 'plugin', {
             'bookmarks',
@@ -83,17 +101,9 @@ local groups = {
             'save',
         }),
     }),
-    group('u', 'Unpack', {
-        mapping('p', 'Extract archive', 'open', { hovered = true }),
-    }),
-    group('o', 'Open externally', {
-        mapping('d', 'Drag and drop selected files', 'shell', {
-            'dragon-drop -a -x %s',
-            orphan = true,
-        }),
-    }),
 }
 
+-- Direct tab switching
 for tab = 1, 9 do
     groups[#groups + 1] = mapping(tostring(tab), 'Tab ' .. tab, 'tab_switch', { tab - 1 })
 end
