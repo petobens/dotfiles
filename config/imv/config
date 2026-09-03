@@ -1,19 +1,28 @@
 [options]
+# Appearance
 background = 24272e
+
+# Overlay
 overlay = true
 overlay_font = Noto Sans Mono:10
 overlay_text_color = abb2bf
 overlay_background_color = 282c34
 overlay_background_alpha = ff
 overlay_position_bottom = true
+
+# Key bindings
 suppress_default_binds = true
 
 [binds]
-# vimiv's library and thumbnail modes (f/i/t) have no imv equivalent
+# General
 q = quit
+<Shift+E> = fullscreen
+b = overlay
+<space> = toggle_playing
+
+# Navigation
 gg = goto 1
 <Shift+G> = goto -1
-
 j = next
 l = next
 k = prev
@@ -23,12 +32,14 @@ p = prev
 <PageDown> = next
 <PageUp> = prev
 
+# Panning
 <Shift+K> = pan 0 50
 <Shift+J> = pan 0 -50
 <Shift+L> = pan -50 0
 <Shift+H> = pan 50 0
 <Shift+M> = center
 
+# Scaling and zoom
 <Shift+W> = scaling full
 w = scaling full
 <equal> = scaling full
@@ -38,13 +49,12 @@ w = scaling full
 <Meta+equal> = zoom 1
 <Meta+minus> = zoom -1
 
-<Shift+E> = fullscreen
-b = overlay
+# Rotation
 # Preview rotations until ,w writes them to the current image
 <Shift+greater> = rotate by 90; exec "$HOME/.config/imv/save_rotation" track 90
 <Shift+less> = rotate by -90; exec "$HOME/.config/imv/save_rotation" track -90
 <comma>w = exec "$HOME/.config/imv/save_rotation" save
-<space> = toggle_playing
 
+# File operations
 x = exec trash-put "$imv_current_file"; close
 dd = exec trash-put "$imv_current_file"; close
