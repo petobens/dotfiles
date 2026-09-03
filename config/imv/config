@@ -43,7 +43,7 @@ b = overlay
 # Preview rotations until ,w writes them to the current image
 <Shift+greater> = rotate by 90; exec "$HOME/.config/imv/save_rotation" track 90
 <Shift+less> = rotate by -90; exec "$HOME/.config/imv/save_rotation" track -90
-,w = exec "$HOME/.config/imv/save_rotation" save
+<comma>w = exec "$HOME/.config/imv/save_rotation" save
 <space> = toggle_playing
 
 x = exec trash-put "$imv_current_file"; close
