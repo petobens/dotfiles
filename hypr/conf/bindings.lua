@@ -149,8 +149,12 @@ bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = tru
 bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse = true })
 
 -- Window placement
+bind(
+    super .. ' + UP',
+    hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set' }),
+    'Maximize window'
+)
 local placements = {
-    { super .. ' + UP', 'full', 0, 0, 1, 1 },
     { super .. ' + LEFT', 'left', 0, 0, 0.5, 1 },
     { super .. ' + RIGHT', 'right', 0.5, 0, 0.5, 1 },
     { super_alt .. ' + UP', 'top', 0, 0, 1, 0.5 },
