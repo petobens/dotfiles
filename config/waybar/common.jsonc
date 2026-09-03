@@ -47,6 +47,8 @@
             "6": "󰗚",
             "default": "󰙀",
         },
+        // FIXME: Stable Waybar still uses Hyprland's removed text dispatcher.
+        // Workspace clicks will work once Waybar supports the Lua IPC protocol.
         "on-click": "activate",
         "sort-by": "number",
     },
