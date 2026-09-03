@@ -6,7 +6,8 @@ font-style-italic = Medium Italic
 font-size = 11.5
 freetype-load-flags = no-light
 
-# Use clearer glyphs for the thin Powerline separators
+# Use clearer glyphs for LN and the thin Powerline separators
+font-codepoint-map = U+E0A1=Adwaita Mono
 font-codepoint-map = U+E0B1,U+E0B3=Symbols Nerd Font
 
 # Colors
