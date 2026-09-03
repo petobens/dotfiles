@@ -17,7 +17,7 @@ if [[ -z $action ]]; then
 fi
 
 case "$action" in
-    'about arch') "$script_dir/app" about ;;
+    'about arch') "$script_dir/raise_or_launch" about ;;
     lock) loginctl lock-session ;;
     'quit apps' | quit-apps)
         "$script_dir/confirm" 'Do you want to quit all apps?' || exit 0

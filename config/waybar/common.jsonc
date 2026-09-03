@@ -55,13 +55,13 @@
     "custom/docker": {
         "exec": "~/.config/hypr/scripts/docker_status",
         "interval": 5,
-        "on-click": "~/.config/hypr/scripts/app docker",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch docker",
         "return-type": "json",
     },
     "custom/onedrive": {
         "exec": "~/.config/hypr/scripts/onedrive_status",
         "interval": 5,
-        "on-click": "~/.config/hypr/scripts/app onedrive",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch onedrive",
         "return-type": "json",
     },
     "hyprland/language": {
@@ -77,20 +77,20 @@
         "format-wifi": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{signalStrength}%</span>",
         "format-disconnected": "<span font_family='Symbols Nerd Font' size='13pt'>󰖪</span>",
         "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
-        "on-click": "~/.config/hypr/scripts/app wifi",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch wifi",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
     },
     "network#ethernet": {
         "interface": "en*",
         "format-ethernet": "<span font_family='Symbols Nerd Font' size='14pt'>󰈁</span>",
         "format-disconnected": "",
-        "on-click": "~/.config/hypr/scripts/app wifi",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch wifi",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
     },
     "custom/bluetooth": {
         "exec": "~/.config/hypr/scripts/bluetooth_status",
         "interval": 5,
-        "on-click": "~/.config/hypr/scripts/app bluetooth",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch bluetooth",
         "on-click-right": "bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect",
         "return-type": "json",
     },
@@ -98,7 +98,7 @@
         "format": "<span font_family='Symbols Nerd Font' size='14pt'>{icon}</span>",
         "format-icons": ["", "󰖀", "󰕾", ""],
         "format-muted": "<span font_family='Symbols Nerd Font' size='13pt'></span>",
-        "on-click": "~/.config/hypr/scripts/app audio",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch audio",
         "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     },
     "battery": {
@@ -119,7 +119,7 @@
     "clock": {
         "format": "<span font_family='Symbols Nerd Font' size='13pt'>󰃰</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'> {:%a %d %H:%M}</span>",
         "format-alt": "<span font_family='Symbols Nerd Font' size='13pt'>󰃰</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'> {:%A %d %b %Y %H:%M:%S}</span>",
-        "on-click": "~/.config/hypr/scripts/app calendar",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch calendar",
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
     },
     "tray": {

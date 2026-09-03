@@ -4,7 +4,7 @@ local monitor_modes = require('conf.monitors')
 
 -- Commands
 local scripts = os.getenv('HOME') .. '/.config/hypr/scripts/'
-local app_command = scripts .. 'app '
+local app_command = scripts .. 'raise_or_launch '
 local brightness_command = scripts .. 'brightness '
 local player_command = 'playerctl --player=spotify'
 local volume_command = scripts .. 'volume '

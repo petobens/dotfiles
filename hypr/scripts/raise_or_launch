@@ -202,7 +202,7 @@ case ${1:-} in
         command='zoom'
         ;;
     *)
-        echo 'usage: app APPLICATION' >&2
+        echo 'usage: raise_or_launch APPLICATION' >&2
         exit 2
         ;;
 esac
