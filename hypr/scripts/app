@@ -213,9 +213,11 @@ fi
 
 # Focus a matching window or launch the app on its assigned workspace
 # Tags distinguish browser apps that otherwise share the same process class
+clients=$(hyprctl clients -j)
 mapfile -t addresses < <(
-    hyprctl clients -j | jq -r --arg class "$class" --arg tag "$tag" \
-        '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address'
+    jq -r --arg class "$class" --arg tag "$tag" \
+        '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address' \
+        <<< "$clients"
 )
 if ((${#addresses[@]})); then
     address=${addresses[0]}
@@ -228,6 +230,20 @@ if ((${#addresses[@]})); then
             fi
         done
     fi
+    # Hyprland keeps maximized windows below ordinary floating windows
+    mapfile -t other_addresses < <(
+        jq -r --arg address "$address" '
+            . as $clients
+            | ($clients[] | select(.address == $address) | .workspace.id) as $workspace
+            | $clients[]
+            | select(.address != $address and .workspace.id == $workspace and .floating)
+            | .address
+        ' <<< "$clients"
+    )
+    for other_address in "${other_addresses[@]}"; do
+        hyprctl dispatch \
+            "hl.dsp.window.alter_zorder({ mode = 'bottom', window = 'address:$other_address' })"
+    done
     hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
     hyprctl dispatch "hl.dsp.window.bring_to_top({ window = 'address:$address' })"
 else
