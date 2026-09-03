@@ -1,0 +1,74 @@
+configuration {
+    font: "Noto Sans Mono 10";
+    show-icons: false;
+}
+
+* {
+    background: #24272e;
+    foreground: #abb2bf;
+    muted: #5c6370;
+    selected-background: #61afef;
+    selected-foreground: #24272e;
+    border-color: #4b5263;
+}
+
+window {
+    location: northeast;
+    anchor: northeast;
+    width: 48ch;
+    x-offset: 8px;
+    y-offset: 38px;
+    padding: 8px;
+    background-color: @background;
+    border: 1px;
+    border-color: @border-color;
+    border-radius: 8px;
+}
+
+mainbox {
+    spacing: 6px;
+    background-color: @background;
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    padding: 5px 8px;
+    background-color: @background;
+    text-color: @foreground;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    background-color: transparent;
+    text-color: @muted;
+}
+
+entry {
+    background-color: transparent;
+    text-color: @foreground;
+}
+
+listview {
+    background-color: @background;
+    lines: 10;
+    scrollbar: false;
+    spacing: 2px;
+}
+
+element {
+    padding: 6px 8px;
+    background-color: transparent;
+    text-color: @foreground;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+element selected {
+    background-color: @selected-background;
+    text-color: @selected-foreground;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+}

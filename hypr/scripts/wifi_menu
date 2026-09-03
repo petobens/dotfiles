@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+theme="$script_dir/../../config/rofi/wifi.rasi"
+
+fail() {
+    notify-send -u critical -i network-wireless-offline 'Wi-Fi' "$1"
+    exit 1
+}
+
+if [[ $(nmcli radio wifi) != enabled ]]; then
+    choice=$(printf '󰖩  Enable Wi-Fi\n' |
+        rofi -dmenu -no-custom -format i -p 'Wi-Fi' -theme "$theme") || exit 0
+    [[ $choice == 0 ]] || exit 0
+    nmcli radio wifi on || fail 'Could not enable Wi-Fi'
+fi
+
+if ! scan=$(nmcli --colors no --terse --escape no \
+    --fields IN-USE,SIGNAL,SECURITY,SSID device wifi list --rescan yes); then
+    fail 'Could not scan for networks'
+fi
+
+active_ssid=
+while IFS=: read -r active _ _ ssid; do
+    if [[ $active == '*' ]]; then
+        active_ssid=$ssid
+        break
+    fi
+done <<< "$scan"
+
+rows=()
+securities=()
+ssids=()
+selected_row=0
+while IFS=: read -r _ signal security ssid; do
+    [[ -n $ssid ]] || continue
+
+    duplicate=false
+    for known_ssid in "${ssids[@]}"; do
+        if [[ $known_ssid == "$ssid" ]]; then
+            duplicate=true
+            break
+        fi
+    done
+    $duplicate && continue
+
+    case $signal in
+        100 | 9[0-9] | 8[0-9] | 7[5-9]) icon=󰤨 ;;
+        7[0-4] | 6[0-9] | 5[0-9]) icon=󰤥 ;;
+        4[0-9] | 3[0-9] | 2[5-9]) icon=󰤢 ;;
+        *) icon=󰤟 ;;
+    esac
+
+    marker=' '
+    if [[ $ssid == "$active_ssid" ]]; then
+        marker=●
+        selected_row=${#rows[@]}
+    fi
+    lock=' '
+    [[ -z $security || $security == -- ]] || lock=
+
+    printf -v row '%s  %s  %3d%%  %s  %s' \
+        "$marker" "$icon" "$signal" "$lock" "$ssid"
+    rows+=("$row")
+    ssids+=("$ssid")
+    securities+=("$security")
+done < <(printf '%s\n' "$scan" | sort -t: -k2,2nr)
+
+((${#rows[@]})) || fail 'No networks found'
+index=$(printf '%s\n' "${rows[@]}" |
+    rofi -dmenu -no-custom -format i -selected-row "$selected_row" \
+        -p 'Wi-Fi' -theme "$theme") || exit 0
+[[ $index =~ ^[0-9]+$ ]] || exit 0
+
+ssid=${ssids[index]}
+security=${securities[index]}
+[[ $ssid != "$active_ssid" ]] || exit 0
+
+saved_uuid=
+while IFS=: read -r uuid type; do
+    [[ $type == 802-11-wireless ]] || continue
+    profile_ssid=$(nmcli --escape no --get-values 802-11-wireless.ssid \
+        connection show uuid "$uuid")
+    if [[ $profile_ssid == "$ssid" ]]; then
+        saved_uuid=$uuid
+        break
+    fi
+done < <(nmcli --terse --escape no --fields UUID,TYPE connection show)
+
+if [[ -n $saved_uuid ]]; then
+    if ! output=$(nmcli --wait 30 connection up uuid "$saved_uuid" 2>&1); then
+        fail "$output"
+    fi
+elif [[ -z $security || $security == -- ]]; then
+    if ! output=$(nmcli --wait 30 device wifi connect "$ssid" 2>&1); then
+        fail "$output"
+    fi
+else
+    password=$(rofi -dmenu -password -p "Password for $ssid" \
+        -theme "$theme") || exit 0
+    [[ -n $password ]] || exit 0
+    if ! output=$(nmcli --wait 30 device wifi connect "$ssid" \
+        password "$password" 2>&1); then
+        fail "$output"
+    fi
+fi
+
+notify-send -t 2000 -i network-wireless 'Wi-Fi connected' "$ssid"

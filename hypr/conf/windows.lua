@@ -48,7 +48,7 @@ initial_title_rule(
     { size = { half_width, half_height }, center = true }
 )
 initial_title_rule(
-    '^(docker-info|htop|nmtui|OneDrive|Trash Can|yazi)$',
+    '^(docker-info|htop|OneDrive|Trash Can|yazi)$',
     { size = rectangle_size, center = true }
 )
 window_rule('^(org.pwmt.zathura|imv)$', {

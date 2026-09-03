@@ -190,9 +190,9 @@ case ${1:-} in
         ;;
     wifi)
         tag=wifi
-        class='^nmtui$'
+        class='^wifi-menu$'
         workspace=current
-        command='ghostty --class=nmtui --title=nmtui -e nmtui'
+        command="$HOME/.config/hypr/scripts/wifi_menu"
         ;;
     zathura)
         tag=zathura
