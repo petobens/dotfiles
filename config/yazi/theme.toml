@@ -1,7 +1,7 @@
 [mgr]
 cwd = { fg = "#c678dd", bold = true }
 border_symbol = "┃"
-border_style = { fg = "#282c34" }
+border_style = { fg = "#3b4048" }
 find_keyword = { fg = "#e5c07b", bold = true }
 find_position = { fg = "#c678dd" }
 marker_copied = { fg = "#98c379", bg = "#98c379" }
