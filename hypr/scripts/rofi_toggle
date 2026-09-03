@@ -14,7 +14,8 @@ fi
 
 rofi() {
     local status=0
-    command rofi -pid "$pid_file" "$@" || status=$?
+    # Keep Rofi alive until a repeated Waybar click reaches this toggle
+    command rofi -no-click-to-exit -pid "$pid_file" "$@" || status=$?
     rm -f "$pid_file"
     return "$status"
 }

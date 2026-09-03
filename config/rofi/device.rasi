@@ -39,11 +39,13 @@ inputbar {
 }
 
 prompt {
+    expand: false;
     background-color: transparent;
     text-color: @muted;
 }
 
 textbox-prompt-colon {
+    expand: false;
     padding: 0 6px 0 0;
     background-color: transparent;
     text-color: @muted;
