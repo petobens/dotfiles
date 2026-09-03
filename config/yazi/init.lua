@@ -7,13 +7,13 @@ require('toggle-pane'):entry('max-current')
 
 -- Keep the folder icon visible when long paths are truncated
 function Header:cwd()
-    local max = self._area.w - self._right_width - 2
+    local max = self._area.w - self._right_width - 3
     if max <= 0 then
         return ''
     end
 
     local path = ya.readable_path(tostring(self._current.cwd)) .. self:flags()
-    return ui.Span(' ' .. ui.truncate(path, { max = max, rtl = true }))
+    return ui.Span('  ' .. ui.truncate(path, { max = max, rtl = true }))
         :style(th.mgr.cwd)
 end
 
