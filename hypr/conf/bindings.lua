@@ -128,8 +128,8 @@ end
 
 -- Session and windows
 exec(
-    super_ctrl .. ' + R',
-    'hyprctl reload && notify-send -t 2000 '
+    super .. ' + R',
+    'hyprctl reload && notify-send -i preferences-system-windows -t 2000 '
         .. '-h string:x-dunst-stack-tag:hyprland-reload "Hyprland reloaded"',
     'Reload Hyprland'
 )
@@ -345,7 +345,7 @@ exec(
 )
 exec(
     super .. ' + B',
-    'pkill -SIGUSR2 waybar && notify-send -t 2000 '
+    'pkill -SIGUSR2 waybar && notify-send -i view-list -t 2000 '
         .. '-h string:x-dunst-stack-tag:waybar-reload "Waybar reloaded"',
     'Reload Waybar'
 )
