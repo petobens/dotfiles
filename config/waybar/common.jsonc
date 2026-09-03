@@ -66,6 +66,7 @@
     },
     "hyprland/language": {
         "format": "{short}",
+        "on-click": "hyprctl switchxkblayout all next",
     },
     "custom/vpn": {
         "exec": "printf '󰛶'",
