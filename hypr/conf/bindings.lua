@@ -211,8 +211,32 @@ for _, resize in ipairs(edge_resizes) do
 end
 
 -- Navigation and workspaces
-bind(super .. ' + N', hl.dsp.focus({ workspace = 'm+1' }), 'Next workspace')
-bind(super .. ' + P', hl.dsp.focus({ workspace = 'm-1' }), 'Previous workspace')
+-- Hyprland focuses a workspace's maximized window on entry, so snapshot the
+-- windows that were really last focused and restore the target's afterwards
+local function switch_workspace(dispatcher)
+    return function()
+        local remembered = {}
+        for _, workspace in ipairs(hl.get_workspaces()) do
+            remembered[workspace.id] = workspace.last_window
+        end
+        hl.dispatch(dispatcher)
+        local window = remembered[hl.get_active_workspace().id]
+        if window then
+            hl.dispatch(hl.dsp.focus({ window = window }))
+        end
+    end
+end
+
+bind(
+    super .. ' + N',
+    switch_workspace(hl.dsp.focus({ workspace = 'm+1' })),
+    'Next workspace'
+)
+bind(
+    super .. ' + P',
+    switch_workspace(hl.dsp.focus({ workspace = 'm-1' })),
+    'Previous workspace'
+)
 bind(alt .. ' + grave', hl.dsp.focus({ monitor = 'r' }), 'Focus monitor right')
 bind(alt .. ' + escape', hl.dsp.focus({ monitor = 'd' }), 'Focus monitor down')
 
@@ -260,7 +284,11 @@ end
 
 for workspace = 1, 9 do
     local name = tostring(workspace)
-    bind(super .. ' + ' .. name, hl.dsp.focus({ workspace = name }), 'Workspace ' .. name)
+    bind(
+        super .. ' + ' .. name,
+        switch_workspace(hl.dsp.focus({ workspace = name })),
+        'Workspace ' .. name
+    )
     bind(
         super_shift .. ' + ' .. name,
         hl.dsp.window.move({ workspace = name, follow = true }),
