@@ -148,8 +148,7 @@ def extract_claude(path: Path) -> list[tuple[str, str]]:
 
 def extract_codex(path: Path) -> list[tuple[str, str]]:
     """Return the user/assistant turns of a Codex session."""
-    event_turns = []
-    response_turns = []
+    turns = []
     for d in _iter_jsonl(path, 2000):
         record_type = d.get("type")
         p: dict = d.get("payload") or {}
@@ -158,23 +157,15 @@ def extract_codex(path: Path) -> list[tuple[str, str]]:
             source = p.get("source")
             if isinstance(source, dict) and source.get("subagent"):
                 return []
-        elif record_type == "event_msg" and payload_type == "user_message":
-            text = _clean_user(p.get("message"))
-            if text:
-                event_turns.append(("User", text))
-        elif record_type == "event_msg" and payload_type == "agent_message":
-            text = (p.get("message") or "").strip()
-            if text:
-                event_turns.append(("Assistant", text))
         elif record_type == "response_item" and payload_type == "message":
             role = p.get("role")
             if role not in ("user", "assistant"):
                 continue
-            text = _text_from_content(p.get("content"))
-            text = _clean_user(text) if role == "user" else text.strip()
+            content = _text_from_content(p.get("content"))
+            text = _clean_user(content) if role == "user" else content.strip()
             if text:
-                response_turns.append((role.title(), text))
-    return event_turns or response_turns
+                turns.append((role.title(), text))
+    return turns
 
 
 def build_transcript(turns: list[tuple[str, str]]) -> str:

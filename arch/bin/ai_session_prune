@@ -25,7 +25,6 @@ UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]
 def session_stats(path: Path, adapter: str) -> tuple[int, int]:
     """Count human prompts and visible message bytes, excluding session metadata."""
     prompts = text_size = 0
-    codex_paginated = False
     try:
         with path.open(errors="ignore") as fh:
             for line in fh:
@@ -45,35 +44,27 @@ def session_stats(path: Path, adapter: str) -> tuple[int, int]:
                         )
                 else:
                     payload = d.get("payload", {})
-                    if d.get("type") == "session_meta":
-                        codex_paginated = payload.get("history_mode") == "paginated"
-                    if codex_paginated:
-                        role = (
-                            payload.get("role")
-                            if payload.get("type") == "message"
-                            else None
-                        )
-                        kinds = payload.get(
-                            "internal_chat_message_metadata_passthrough", {}
-                        ).get("content_item_kinds", [])
-                        if (
-                            role == "user"
-                            and kinds
-                            and not any(kind.startswith("user.") for kind in kinds)
-                        ):
-                            role = None
-                        content = "".join(
-                            part.get("text", "")
-                            for part in payload.get("content", [])
-                            if isinstance(part, dict)
-                            and part.get("type") in {"input_text", "output_text"}
-                        )
-                    else:
-                        role = {
-                            "user_message": "user",
-                            "agent_message": "assistant",
-                        }.get(payload.get("type"))
-                        content = payload.get("message", "")
+                    if (
+                        d.get("type") != "response_item"
+                        or payload.get("type") != "message"
+                    ):
+                        continue
+                    role = payload.get("role")
+                    kinds = payload.get(
+                        "internal_chat_message_metadata_passthrough", {}
+                    ).get("content_item_kinds", [])
+                    if (
+                        role == "user"
+                        and kinds
+                        and not any(kind.startswith("user.") for kind in kinds)
+                    ):
+                        role = None
+                    content = "".join(
+                        part.get("text", "")
+                        for part in payload.get("content", [])
+                        if isinstance(part, dict)
+                        and part.get("type") in {"input_text", "output_text"}
+                    )
 
                 if (
                     role not in {"user", "assistant"}
