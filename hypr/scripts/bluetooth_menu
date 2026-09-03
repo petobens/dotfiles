@@ -13,6 +13,8 @@ fail() {
     exit 1
 }
 
+compgen -G '/sys/class/bluetooth/hci*' > /dev/null ||
+    fail 'No Bluetooth controller found'
 controller=$(btctl show) || fail 'No Bluetooth controller found'
 grep -q '^Controller ' <<< "$controller" || fail 'No Bluetooth controller found'
 if [[ $(awk '/Powered:/ { print $2; exit }' <<< "$controller") != yes ]]; then
