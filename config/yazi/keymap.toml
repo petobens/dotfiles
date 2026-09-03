@@ -93,6 +93,11 @@ on = ['"']
 run = "plugin bookmarks -- jump"
 desc = "Open bookmark"
 
+# Disabled defaults
+[[mgr.prepend_keymap]]
+on = ["z"]
+run = "noop"
+
 # FZF navigation
 [[mgr.prepend_keymap]]
 on = ["<C-t>"]

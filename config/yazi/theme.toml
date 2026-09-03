@@ -34,7 +34,7 @@ unset_alt = { fg = "#abb2bf", bg = "#3b4048" }
 
 [indicator]
 current = { bg = "#282c34", bold = true }
-preview = { underline = true }
+preview = { underline = false }
 
 [status]
 overall = { fg = "#abb2bf", bg = "#282c34" }
@@ -47,13 +47,17 @@ perm_read = { fg = "#e5c07b" }
 perm_write = { fg = "#e06c75" }
 perm_exec = { fg = "#56b6c2" }
 
-progress_label = { fg = "#303030", bg = "#d0d0d0", bold = true }
-progress_normal = { fg = "#abb2bf", bg = "#3b4048" }
+progress_label = { fg = "#5c6370", bg = "#282c34" }
+progress_normal = { fg = "#3e4451", bg = "#282c34" }
 progress_error = { fg = "#24272e", bg = "#e06c75", bold = true }
 
-# Keep transient dialog borders quieter than their active content
+# Keep transient UI borders quieter than their active content
+[which]
+border = { fg = "#3e4451" }
+
 [confirm]
 border = { fg = "#3e4451" }
+title = { fg = "#5c6370" }
 
 [input]
 border = { fg = "#3e4451" }
@@ -77,4 +81,5 @@ prepend_dirs = [
 prepend_conds = [
     { if = "link", text = "", fg = "#c678dd" },
     { if = "dir", text = "", fg = "#61afef" },
+    { if = "!(dir | link | orphan | dummy | block | char | fifo | sock | exec | sticky)", text = "", fg = "#abb2bf" },
 ]
