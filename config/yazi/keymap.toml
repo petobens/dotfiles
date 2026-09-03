@@ -17,6 +17,11 @@ desc = "Parent directory"
 
 [[mgr.prepend_keymap]]
 on = ["h"]
+run = "leave"
+desc = "Parent directory"
+
+[[mgr.prepend_keymap]]
+on = ["H"]
 run = "cd ~"
 desc = "Home"
 
@@ -43,8 +48,8 @@ desc = "Cut selected files"
 
 [[mgr.prepend_keymap]]
 on = ["p"]
-run = "paste"
-desc = "Paste yanked files"
+run = ["paste", "unyank"]
+desc = "Paste and clear yanked files"
 
 [[mgr.prepend_keymap]]
 on = ["d"]

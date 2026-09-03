@@ -1,4 +1,4 @@
--- luacheck: globals App Header Linemode Status th ui ya
+-- luacheck: globals App Entity Header Linemode Root Status Tabs cx th ui ya
 
 -- Plugins
 require('full-border'):setup({ type = ui.Border.THICK })
@@ -7,6 +7,22 @@ require('folder-rules'):setup()
 require('toggle-pane'):entry('max-current')
 
 -- Header
+-- Leave one row between the current directory and the tabs
+function Root:layout()
+    local chunks = ui.Layout()
+        :direction(ui.Layout.VERTICAL)
+        :constraints({
+            ui.Constraint.Length(1),
+            ui.Constraint.Length(1),
+            ui.Constraint.Length(Tabs.height()),
+            ui.Constraint.Fill(1),
+            ui.Constraint.Length(1),
+        })
+        :split(self._area)
+
+    self._chunks = { chunks[1], chunks[3], chunks[4], chunks[5] }
+end
+
 -- Keep the folder icon visible when long paths are truncated
 function Header:cwd()
     local max = self._area.w - self._right_width - 3
@@ -20,6 +36,18 @@ function Header:cwd()
 end
 
 -- Status line
+-- Use Vim-style one-letter mode labels
+function Status:mode()
+    local mode = tostring(self._tab.mode):sub(1, 1):upper()
+    local style = self:style()
+
+    return ui.Line({
+        ui.Span(th.status.sep_left.open):fg(style.main:bg()):bg(App.bg()),
+        ui.Span(' ' .. mode .. ' '):style(style.main),
+        ui.Span(th.status.sep_left.close):fg(style.main:bg()):bg(style.alt:bg()),
+    })
+end
+
 -- Keep the position neutral instead of repeating the current mode color
 function Status:position()
     local cursor = self._current.cursor
@@ -36,6 +64,20 @@ function Status:position()
 end
 
 -- File list
+-- Keep numbers between the marker gutter and file icons
+Entity:children_add(function(self)
+    if not self._file.in_current then
+        return ''
+    end
+
+    local current = cx.active.current.cursor + 1
+    local number = self._file.is_hovered and current or math.abs(self._file.idx - current)
+    local width = #tostring(#cx.active.current.files)
+    local value = string.format('%' .. width .. 'd ', number)
+
+    return self._file.is_hovered and value or ui.Span(value):fg('#5c6370')
+end, 1500)
+
 function Linemode:size_and_mtime()
     local time = math.floor(self._file.cha.mtime or 0)
     if time == 0 then
