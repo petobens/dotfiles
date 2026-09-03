@@ -1,9 +1,21 @@
--- luacheck: globals App Linemode Status th ui ya
+-- luacheck: globals App Header Linemode Status th ui ya
 
 require('full-border'):setup()
 require('git'):setup()
 require('folder-rules'):setup()
 require('toggle-pane'):entry('max-current')
+
+-- Keep the folder icon visible when long paths are truncated
+function Header:cwd()
+    local max = self._area.w - self._right_width - 2
+    if max <= 0 then
+        return ''
+    end
+
+    local path = ya.readable_path(tostring(self._current.cwd)) .. self:flags()
+    return ui.Span(' ' .. ui.truncate(path, { max = max, rtl = true }))
+        :style(th.mgr.cwd)
+end
 
 -- Keep the position neutral instead of repeating the current mode color
 function Status:position()
