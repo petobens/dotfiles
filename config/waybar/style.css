@@ -19,7 +19,7 @@ window#waybar {
 #workspaces button {
     color: @muted;
     font-family: 'Symbols Nerd Font';
-    font-size: 14pt;
+    font-size: 15pt;
     padding: 0 10px;
 }
 #workspaces button.active {
