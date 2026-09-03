@@ -23,11 +23,11 @@ hl.window_rule({ match = { fullscreen_state_internal = 1 }, border_size = 0 })
 
 -- Assigned workspaces
 window_rule(
-    '^(brave-browser|brave-calendar|edge-clickup|microsoft-edge-dev)$',
+    '^(brave-browser|brave-calendar.*|edge-clickup.*|microsoft-edge-dev)$',
     { workspace = '1 silent', maximize = true }
 )
 window_rule(
-    '^(Slack|brave-teams|brave-meet|brave-gmail|zoom)$',
+    '^(Slack|brave-teams.*|brave-meet.*|brave-gmail.*|zoom)$',
     { workspace = '2 silent', maximize = true }
 )
 window_rule('^(Spotify|mpv)$', { workspace = '3 silent', maximize = true })
@@ -58,7 +58,7 @@ window_rule('^(org.pwmt.zathura|imv)$', {
 window_rule('^xdg-desktop-portal-gtk$', { size = rectangle_size, center = true })
 
 -- Keep the session awake while call apps are focused or mpv is fullscreen
-window_rule('^(zoom|brave-meet|brave-teams)$', { idle_inhibit = 'focus' })
+window_rule('^(zoom|brave-meet.*|brave-teams.*)$', { idle_inhibit = 'focus' })
 window_rule('^mpv$', { idle_inhibit = 'fullscreen' })
 
 -- Layers

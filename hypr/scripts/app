@@ -73,13 +73,13 @@ case ${1:-} in
         ;;
     calendar)
         tag=calendar
-        class='^brave-calendar$'
+        class='^brave-calendar'
         workspace=1
         command='brave --class=brave-calendar --new-window --app=https://calendar.google.com/calendar/b/0/r'
         ;;
     clickup)
         tag=clickup
-        class='^edge-clickup$'
+        class='^edge-clickup'
         workspace=1
         command='microsoft-edge-dev --class=edge-clickup --new-window --app=https://app.clickup.com'
         ;;
@@ -104,7 +104,7 @@ case ${1:-} in
         ;;
     gmail)
         tag=gmail
-        class='^brave-gmail$'
+        class='^brave-gmail'
         workspace=2
         command='brave --class=brave-gmail --new-window --app=https://mail.google.com'
         ;;
@@ -123,7 +123,7 @@ case ${1:-} in
         ;;
     meet)
         tag=meet
-        class='^brave-meet$'
+        class='^brave-meet'
         workspace=2
         command='brave --class=brave-meet --new-window --app=https://meet.google.com'
         ;;
@@ -166,7 +166,7 @@ case ${1:-} in
         ;;
     teams)
         tag=teams
-        class='^brave-teams$'
+        class='^brave-teams'
         workspace=2
         command='brave --class=brave-teams --new-window --app=https://teams.live.com'
         ;;
