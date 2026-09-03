@@ -10,7 +10,7 @@ hl.config({
         gaps_out = 4,
         border_size = 1,
         col = {
-            active_border = '#282c34',
+            active_border = '#4b5263',
             inactive_border = '#282c34',
         },
         resize_on_border = true,
