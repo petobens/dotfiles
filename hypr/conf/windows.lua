@@ -19,6 +19,7 @@ end
 -- Defaults
 window_rule('.*', { float = true, suppress_event = 'maximize' })
 hl.window_rule({ match = { tag = 'terminal' }, maximize = true })
+hl.window_rule({ match = { fullscreen_state_internal = 1 }, border_size = 0 })
 
 -- Assigned workspaces
 window_rule(
