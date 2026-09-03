@@ -3,6 +3,7 @@ set -euo pipefail
 
 directory=${HYPRSHOT_DIR:-$HOME/Pictures/Screenshots}
 file="$directory/$(date +'%Y-%m-%d-%H%M%S_hyprshot.png')"
+display_file=\~/"${file#"$HOME"/}"
 picker_pid=
 
 cleanup() {
@@ -36,5 +37,5 @@ cleanup
 wl-copy --type image/png < "$file"
 
 notify-send 'Screenshot saved' \
-    "Image saved in <i>$file</i> and copied to the clipboard." \
+    "Saved as <i>$display_file</i>" \
     -t 5000 -i "$file" -a Hyprshot
