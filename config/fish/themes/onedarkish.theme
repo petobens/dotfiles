@@ -1,0 +1,39 @@
+# name: OneDarkish
+# preferred_background: 24272e
+fish_color_normal abb2bf
+fish_color_autosuggestion 5c6370
+fish_color_cancel e06c75 --reverse
+fish_color_command 61afef
+fish_color_comment 5c6370
+fish_color_cwd 98c379
+fish_color_cwd_root e06c75
+fish_color_end c678dd
+fish_color_error e06c75
+fish_color_escape 56b6c2
+fish_color_history_current --bold
+fish_color_host c678dd
+fish_color_host_remote e5c07b
+fish_color_keyword c678dd
+fish_color_operator 56b6c2
+fish_color_option e5c07b
+fish_color_param abb2bf
+fish_color_quote 98c379
+fish_color_redirection 56b6c2
+fish_color_search_match --background=3e4452 --bold
+fish_color_selection --background=3e4452 --bold
+fish_color_status e06c75
+fish_color_user 56b6c2
+fish_color_valid_path --underline
+fish_pager_color_background
+fish_pager_color_completion abb2bf
+fish_pager_color_description 5c6370
+fish_pager_color_prefix 61afef
+fish_pager_color_progress 5c6370
+fish_pager_color_secondary_background
+fish_pager_color_secondary_completion abb2bf
+fish_pager_color_secondary_description 5c6370
+fish_pager_color_secondary_prefix 61afef
+fish_pager_color_selected_background --background=3e4452
+fish_pager_color_selected_completion abb2bf
+fish_pager_color_selected_description 5c6370
+fish_pager_color_selected_prefix 61afef

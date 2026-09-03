@@ -9,6 +9,10 @@ set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgrep/ripgreprc"
 set -gx SHELLCHECK_OPTS '-e SC1090'
 set -gx TERMINAL ghostty
 set -gx VISUAL nvim
+set -gx EZA_COLORS (string join : 'di=38;2;97;175;239' \
+    'ex=38;2;224;108;117' 'ln=38;2;198;120;221' 'lp=38;2;198;120;221' \
+    'or=38;2;36;39;46;48;2;198;120;221' 'pi=38;2;86;182;194' \
+    'so=38;2;229;192;123' 'st=38;2;152;195;121')
 
 # Shell behavior
 function fish_should_add_to_history --description 'Filter low-value shell history entries'
@@ -23,6 +27,7 @@ set -g fish_greeting
 set -g fish_history main
 set -g fish_transient_prompt 1
 if status is-interactive
+    fish_config theme choose onedarkish
     stty -ixon
 end
 
