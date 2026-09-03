@@ -5,7 +5,9 @@ script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 current_step=0
 total_steps=$(grep -c "^section '" "${BASH_SOURCE[0]}")
 
-declare gpg_private gpg_public netrc pass_repo ssh_config ssh_private ssh_public
+declare gpg_private gpg_public netrc onedrive pass_repo personal_config
+declare personal_directory required_directory ssh_config ssh_private ssh_public
+declare -A synchronized_directories
 declare -a repos
 
 # shellcheck disable=SC1091
@@ -29,11 +31,15 @@ run_component() {
 
 printf '\033[1;32m:: Starting personal setup\033[0m\n'
 
-# Complete Microsoft's browser authorization on the first run
+# Authenticate and fetch the personal configuration without waiting for full sync
+# Download-only mode prevents an incomplete local tree from changing OneDrive
 section 'Synchronizing OneDrive'
-onedrive --sync
-systemctl --user enable --now onedrive
+personal_directory=$(dirname "${personal_config#"$onedrive"/}")
+onedrive --sync --download-only --single-directory "$personal_directory"
 load_personal
+synchronized_directories[$personal_directory]=1
+
+# Download each directory needed to restore credentials once
 for required_file in \
     "$netrc" \
     "$gpg_private" \
@@ -41,9 +47,18 @@ for required_file in \
     "$ssh_config" \
     "$ssh_private" \
     "$ssh_public"; do
+    required_directory=$(dirname "${required_file#"$onedrive"/}")
+    if [[ ! -v synchronized_directories[$required_directory] ]]; then
+        onedrive --sync --download-only \
+            --single-directory "$required_directory"
+        synchronized_directories[$required_directory]=1
+    fi
     [[ -f $required_file ]] ||
         die "Missing personal file: $required_file"
 done
+
+# Let monitor mode synchronize everything else while setup continues
+systemctl --user enable --now onedrive
 
 section 'Linking synchronized files'
 run_component "$script_dir/symlinks.sh"
