@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+theme="$script_dir/../../config/rofi/device.rasi"
+
+shopt -s nullglob
+batteries=(/sys/class/power_supply/BAT*)
+shopt -u nullglob
+
+# Read live battery details when available, otherwise use sample VM data
+if ((${#batteries[@]})); then
+    battery=${batteries[0]}
+    percentage=$(< "$battery/capacity")
+    status=$(< "$battery/status")
+    energy_now=$(< "$battery/energy_now")
+    energy_full=$(< "$battery/energy_full")
+    energy_design=$(< "$battery/energy_full_design")
+    power_now=$(< "$battery/power_now")
+    cycles=$(< "$battery/cycle_count")
+
+    power_source=Battery
+    for supply in /sys/class/power_supply/*; do
+        [[ -r $supply/type && -r $supply/online ]] || continue
+        if [[ $(< "$supply/type") == Mains && $(< "$supply/online") == 1 ]]; then
+            power_source=AC
+            break
+        fi
+    done
+
+    health=$(((energy_full * 100 + energy_design / 2) / energy_design))
+    size=$(awk -v full="$energy_full" -v design="$energy_design" \
+        'BEGIN { printf "%.1f / %.1f Wh", full / 1000000, design / 1000000 }')
+    rate=-
+    time=-
+    time_label=Time
+    [[ $status != Discharging ]] || time_label='Time left'
+    [[ $status != Charging ]] || time_label='Time to full'
+    if ((power_now > 0)); then
+        rate=$(awk -v power="$power_now" \
+            'BEGIN { printf "%.1f W", power / 1000000 }')
+        if [[ $status == Discharging ]]; then
+            minutes=$((energy_now * 60 / power_now))
+        elif [[ $status == Charging ]]; then
+            minutes=$(((energy_full - energy_now) * 60 / power_now))
+        fi
+        if [[ -n ${minutes:-} ]]; then
+            if ((minutes >= 60)); then
+                printf -v time '%dh %dm' "$((minutes / 60))" "$((minutes % 60))"
+            else
+                time="${minutes}m"
+            fi
+        fi
+    fi
+elif systemd-detect-virt --vm --quiet; then
+    percentage=73
+    status=Discharging
+    power_source=Battery
+    time='4h 12m'
+    time_label='Time left'
+    rate='8.4 W'
+    health=94
+    size='53.6 / 57.0 Wh'
+    cycles=128
+else
+    notify-send -u critical -i battery-missing 'Battery' 'No battery found'
+    exit 1
+fi
+
+source_icon=󰁹
+[[ $power_source != AC ]] || source_icon=
+printf -v time_row '󰥔  %-15s %s' "$time_label" "$time"
+
+printf '%s\n' \
+    "󰁹  Charge          $percentage%" \
+    "󰂄  Status          $status" \
+    "$source_icon  Power source    $power_source" \
+    "$time_row" \
+    "󰓅  Power draw      $rate" \
+    "󰂑  Health          $health% ($size)" \
+    "󰑐  Charge cycles   $cycles" |
+    rofi -dmenu -no-custom -p 'Battery' -theme "$theme" > /dev/null || exit 0

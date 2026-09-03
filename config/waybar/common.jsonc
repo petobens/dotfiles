@@ -106,6 +106,7 @@
         "format-charging": "<span font_family='Symbols Nerd Font' size='12pt'></span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
         "format-full": "<span font_family='Symbols Nerd Font' size='12pt'>󰂄</span> <span font_family='Noto Sans Mono' size='10pt' weight='bold'>100%</span>",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"],
+        "on-click": "~/.config/hypr/scripts/battery_menu",
         "states": {
             "critical": 10,
             "warning": 25,
@@ -115,6 +116,7 @@
         "exec": "printf '󱉞\\nNo battery\\n'",
         "exec-if": "! find /sys/class/power_supply -maxdepth 1 -name 'BAT*' | grep -q .",
         "interval": 60,
+        "on-click": "~/.config/hypr/scripts/battery_menu",
     },
     "clock": {
         "format": "<span font_family='Symbols Nerd Font' size='13pt'>󰃰</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'> {:%a %d %H:%M}</span>",

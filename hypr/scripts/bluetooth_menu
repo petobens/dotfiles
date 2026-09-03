@@ -13,8 +13,31 @@ fail() {
     exit 1
 }
 
-compgen -G '/sys/class/bluetooth/hci*' > /dev/null ||
-    fail 'No Bluetooth controller found'
+# Substitute sample command output in VMs without a Bluetooth controller
+if ! compgen -G '/sys/class/bluetooth/hci*' > /dev/null; then
+    systemd-detect-virt --vm --quiet || fail 'No Bluetooth controller found'
+    btctl() {
+        case $* in
+            show) printf 'Controller 00:00:00:00:00:00 VM Bluetooth\nPowered: yes\n' ;;
+            'devices Connected')
+                printf 'Device 00:00:00:00:00:01 VM Headphones\n'
+                ;;
+            'devices Paired')
+                printf '%s\n' \
+                    'Device 00:00:00:00:00:01 VM Headphones' \
+                    'Device 00:00:00:00:00:02 VM Keyboard'
+                ;;
+            devices)
+                printf '%s\n' \
+                    'Device 00:00:00:00:00:01 VM Headphones' \
+                    'Device 00:00:00:00:00:02 VM Keyboard' \
+                    'Device 00:00:00:00:00:03 VM Speaker'
+                ;;
+            'info 00:00:00:00:00:01') printf 'Battery Percentage: 0x50 (80)\n' ;;
+        esac
+    }
+fi
+
 controller=$(btctl show) || fail 'No Bluetooth controller found'
 grep -q '^Controller ' <<< "$controller" || fail 'No Bluetooth controller found'
 if [[ $(awk '/Powered:/ { print $2; exit }' <<< "$controller") != yes ]]; then

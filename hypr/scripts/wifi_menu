@@ -9,6 +9,21 @@ fail() {
     exit 1
 }
 
+# Substitute sample command output in VMs without a Wi-Fi radio
+if systemd-detect-virt --vm --quiet &&
+    ! command nmcli --terse --fields TYPE device status 2> /dev/null |
+    grep -qx wifi; then
+    nmcli() {
+        case $* in
+            'radio wifi') printf 'enabled\n' ;;
+            *'device wifi list'*)
+                printf '%s\n' '*:90:WPA2:VM Network' \
+                    ':65:--:VM Guest' ':30:WPA2:VM Test'
+                ;;
+        esac
+    }
+fi
+
 if [[ $(nmcli radio wifi) != enabled ]]; then
     choice=$(printf '󰖩  Enable Wi-Fi\n' |
         rofi -dmenu -no-custom -format i -p 'Wi-Fi' -theme "$theme") || exit 0

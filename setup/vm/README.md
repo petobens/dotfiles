@@ -78,6 +78,10 @@ terminal after the VM starts:
 ./setup/vm/vm.sh --background
 ```
 
+When the VM has no Wi-Fi, Bluetooth, or battery hardware, the corresponding
+menus use sample data to exercise their interactions without changing guest
+connectivity.
+
 ## Multiple displays
 
 Launch the VM with three 1920x1080 virtual displays:
