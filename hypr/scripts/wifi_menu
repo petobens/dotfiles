@@ -4,9 +4,6 @@ set -euo pipefail
 script_dir=$(dirname "$(realpath "$0")")
 theme="$script_dir/../../config/rofi/device.rasi"
 
-# shellcheck source-path=SCRIPTDIR
-source "$script_dir/rofi_toggle"
-
 fail() {
     notify-send -u critical -i network-wireless-offline 'Wi-Fi' "$1"
     exit 1
