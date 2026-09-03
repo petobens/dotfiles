@@ -44,7 +44,7 @@ window_rule(
     { size = { half_width, half_height }, center = true }
 )
 initial_title_rule(
-    '^(About Arch|bluetooth|numbers|QuickTerm)$',
+    '^(About Arch|numbers|QuickTerm)$',
     { size = { half_width, half_height }, center = true }
 )
 initial_title_rule(

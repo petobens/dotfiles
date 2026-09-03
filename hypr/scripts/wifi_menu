@@ -2,7 +2,7 @@
 set -euo pipefail
 
 script_dir=$(dirname "$(realpath "$0")")
-theme="$script_dir/../../config/rofi/wifi.rasi"
+theme="$script_dir/../../config/rofi/device.rasi"
 
 fail() {
     notify-send -u critical -i network-wireless-offline 'Wi-Fi' "$1"

@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+theme="$script_dir/../../config/rofi/device.rasi"
+
+btctl() {
+    bluetoothctl "$@" 2> /dev/null
+}
+
+fail() {
+    notify-send -u critical -i bluetooth-disabled 'Bluetooth' "$1"
+    exit 1
+}
+
+controller=$(btctl show) || fail 'No Bluetooth controller found'
+grep -q '^Controller ' <<< "$controller" || fail 'No Bluetooth controller found'
+if [[ $(awk '/Powered:/ { print $2; exit }' <<< "$controller") != yes ]]; then
+    choice=$(printf '󰂯  Enable Bluetooth\n' |
+        rofi -dmenu -no-custom -format i -p 'Bluetooth' \
+            -theme "$theme") || exit 0
+    [[ $choice == 0 ]] || exit 0
+    btctl power on > /dev/null || fail 'Could not enable Bluetooth'
+    exec "$0"
+fi
+
+rows=()
+macs=()
+names=()
+states=()
+
+add_devices() {
+    local state=$1 filter=$2 devices _ mac name known_mac duplicate marker battery row
+    if [[ -n $filter ]]; then
+        devices=$(btctl devices "$filter")
+    else
+        devices=$(btctl devices)
+    fi
+    while read -r _ mac name; do
+        [[ -n ${mac:-} && -n ${name:-} ]] || continue
+        duplicate=false
+        for known_mac in "${macs[@]}"; do
+            if [[ $known_mac == "$mac" ]]; then
+                duplicate=true
+                break
+            fi
+        done
+        $duplicate && continue
+
+        marker=' '
+        [[ $state == Connected ]] && marker=●
+        battery=$(btctl info "$mac" |
+            awk '/Battery Percentage:/ { gsub(/[()]/, "", $4); print $4; exit }') ||
+            battery=
+        [[ -z $battery ]] || battery="$battery%"
+        printf -v row '%s  󰂯  %-9s %4s  %s' \
+            "$marker" "$state" "$battery" "$name"
+        rows+=("$row")
+        macs+=("$mac")
+        names+=("$name")
+        states+=("$state")
+    done <<< "$devices"
+}
+
+add_devices Connected Connected
+add_devices Paired Paired
+add_devices Available ''
+
+rows+=('   󰂰  Scan for devices')
+macs+=('')
+names+=('')
+states+=(Scan)
+
+index=$(printf '%s\n' "${rows[@]}" |
+    rofi -dmenu -no-custom -format i -p 'Bluetooth' \
+        -theme "$theme") || exit 0
+[[ $index =~ ^[0-9]+$ ]] || exit 0
+
+mac=${macs[index]}
+state=${states[index]}
+if [[ $state == Scan ]]; then
+    notify-send -t 1500 -i bluetooth 'Bluetooth' 'Scanning for devices...'
+    btctl --timeout 8 scan on > /dev/null || fail 'Device scan failed'
+    exec "$0"
+fi
+
+name=${names[index]}
+if [[ $state == Connected ]]; then
+    if ! output=$(btctl disconnect "$mac"); then
+        fail "${output:-Could not disconnect $name}"
+    fi
+    notify-send -t 2000 -i bluetooth-disabled 'Bluetooth disconnected' "$name"
+elif [[ $state == Paired ]]; then
+    if ! output=$(btctl connect "$mac"); then
+        fail "${output:-Could not connect $name}"
+    fi
+    notify-send -t 2000 -i bluetooth 'Bluetooth connected' "$name"
+else
+    notify-send -t 1500 -i bluetooth 'Bluetooth' "Pairing with $name..."
+    if ! output=$(btctl --agent NoInputNoOutput --timeout 30 pair "$mac"); then
+        fail "${output:-Pairing failed}"$'\n'"Use 'bt' for devices requiring a passkey."
+    fi
+    notify-send -t 2000 -i bluetooth 'Bluetooth paired' "$name"
+fi

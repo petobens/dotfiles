@@ -60,10 +60,7 @@ case ${1:-} in
         command='hyprpwcenter'
         ;;
     bluetooth)
-        tag=bluetooth
-        class='^bluetooth$'
-        workspace=current
-        command='ghostty --class=bluetooth --title=bluetooth -e fish -c bt'
+        exec "$HOME/.config/hypr/scripts/bluetooth_menu"
         ;;
     brave)
         tag=brave
@@ -189,10 +186,7 @@ case ${1:-} in
         command="ghostty --class=trash --title='Trash Can' -e sh -c 'trash-list | less'"
         ;;
     wifi)
-        tag=wifi
-        class='^wifi-menu$'
-        workspace=current
-        command="$HOME/.config/hypr/scripts/wifi_menu"
+        exec "$HOME/.config/hypr/scripts/wifi_menu"
         ;;
     zathura)
         tag=zathura
