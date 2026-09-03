@@ -1,4 +1,4 @@
-# Ranger-style leader mappings
+# Leader mappings
 [[mgr.prepend_keymap]]
 on = [","]
 run = "plugin leader"
