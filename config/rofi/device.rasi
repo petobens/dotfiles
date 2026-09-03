@@ -17,7 +17,7 @@ window {
     anchor: northeast;
     width: 48ch;
     x-offset: 8px;
-    y-offset: 38px;
+    y-offset: 4px;
     padding: 8px;
     background-color: @background;
     border: 1px;
@@ -71,4 +71,6 @@ element selected {
 element-text {
     background-color: transparent;
     text-color: inherit;
+    // Align columns when optional status icons are absent
+    tab-stops: [ 24px, 68px, 112px, 144px ];
 }

@@ -67,15 +67,15 @@ while IFS=: read -r _ signal security ssid; do
         *) icon=󰤟 ;;
     esac
 
-    marker=' '
+    marker=
     if [[ $ssid == "$active_ssid" ]]; then
         marker=●
         selected_row=${#rows[@]}
     fi
-    lock=' '
+    lock=
     [[ -z $security || $security == -- ]] || lock=
 
-    printf -v row '%s  %s  %3d%%  %s  %s' \
+    printf -v row '%s\t%s\t%3d%%\t%s\t%s' \
         "$marker" "$icon" "$signal" "$lock" "$ssid"
     rows+=("$row")
     ssids+=("$ssid")

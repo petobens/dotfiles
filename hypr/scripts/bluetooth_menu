@@ -72,13 +72,13 @@ add_devices() {
         done
         $duplicate && continue
 
-        marker=' '
+        marker=
         [[ $state == Connected ]] && marker=●
         battery=$(btctl info "$mac" |
             awk '/Battery Percentage:/ { gsub(/[()]/, "", $4); print $4; exit }') ||
             battery=
         [[ -z $battery ]] || battery="$battery%"
-        printf -v row '%s  󰂯  %-9s %4s  %s' \
+        printf -v row '%s\t󰂯  %-9s %4s  %s' \
             "$marker" "$state" "$battery" "$name"
         rows+=("$row")
         macs+=("$mac")
@@ -91,7 +91,7 @@ add_devices Connected Connected
 add_devices Paired Paired
 add_devices Available ''
 
-rows+=('   󰂰  Scan for devices')
+rows+=($'\t󰂰  Scan for devices')
 macs+=('')
 names+=('')
 states+=(Scan)
