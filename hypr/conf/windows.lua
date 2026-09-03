@@ -25,12 +25,13 @@ hl.window_rule({
 })
 
 -- Assigned workspaces
+window_rule('^(brave-browser|brave-calendar.*|microsoft-edge-dev.*)$', {
+    workspace = '1 silent',
+    maximize = true,
+    tag = '+default-maximized',
+})
 window_rule(
-    '^(brave-browser|brave-calendar.*|edge-clickup.*|microsoft-edge-dev)$',
-    { workspace = '1 silent', maximize = true, tag = '+default-maximized' }
-)
-window_rule(
-    '^(Slack|brave-teams.*|brave-meet.*|brave-gmail.*|zoom)$',
+    '^(Slack|brave-teams.*|brave-meet.*|brave-mail.*|zoom)$',
     { workspace = '2 silent', maximize = true, tag = '+default-maximized' }
 )
 window_rule('^(Spotify|mpv)$', {

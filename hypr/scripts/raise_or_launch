@@ -72,13 +72,13 @@ case ${1:-} in
         tag=calendar
         class='^brave-calendar'
         workspace=1
-        command='brave --class=brave-calendar --new-window --app=https://calendar.google.com/calendar/b/0/r'
+        command='brave --new-window --app=https://calendar.google.com/calendar/b/0/r'
         ;;
     clickup)
         tag=clickup
-        class='^edge-clickup'
+        class='^microsoft-edge-dev-app\.clickup\.com'
         workspace=1
-        command='microsoft-edge-dev --class=edge-clickup --new-window --app=https://app.clickup.com'
+        command='microsoft-edge-dev --new-window --app=https://app.clickup.com'
         ;;
     docker)
         tag=docker
@@ -101,9 +101,9 @@ case ${1:-} in
         ;;
     gmail)
         tag=gmail
-        class='^brave-gmail'
+        class='^brave-mail\.google\.com'
         workspace=2
-        command='brave --class=brave-gmail --new-window --app=https://mail.google.com'
+        command='brave --new-window --app=https://mail.google.com'
         ;;
     htop)
         tag=htop
@@ -122,7 +122,7 @@ case ${1:-} in
         tag=meet
         class='^brave-meet'
         workspace=2
-        command='brave --class=brave-meet --new-window --app=https://meet.google.com'
+        command='brave --new-window --app=https://meet.google.com'
         ;;
     numbers)
         tag=numbers
@@ -165,7 +165,7 @@ case ${1:-} in
         tag=teams
         class='^brave-teams'
         workspace=2
-        command='brave --class=brave-teams --new-window --app=https://teams.live.com'
+        command='brave --new-window --app=https://teams.live.com'
         ;;
     terminal)
         tag=terminal
@@ -211,8 +211,10 @@ if [[ $workspace == current ]]; then
     workspace=$(hyprctl activeworkspace -j | jq -r '.id')
 fi
 
-# Focus a matching window or launch the app on its assigned workspace
-# Tags distinguish browser apps that otherwise share the same process class
+# Focus a matching window or launch the app on its assigned workspace.
+# Terminal apps match by tag because Ghostty ignores --class values that are
+# not valid GTK application IDs. Browser apps match by class because their
+# windows come from the already running browser and never get the launch tag.
 clients=$(hyprctl clients -j)
 mapfile -t addresses < <(
     jq -r --arg class "$class" --arg tag "$tag" \
