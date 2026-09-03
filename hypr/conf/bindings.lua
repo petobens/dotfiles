@@ -42,6 +42,10 @@ local function close_workspace()
     end
 end
 
+local function mark_manually_placed(window)
+    hl.dispatch(hl.dsp.window.tag({ tag = '+manually-placed', window = window }))
+end
+
 local function place_window(placement)
     return function()
         local window = hl.get_active_window()
@@ -60,6 +64,7 @@ local function place_window(placement)
             action = 'set',
             window = window,
         }))
+        mark_manually_placed(window)
         hl.dispatch(hl.dsp.window.float({ action = 'enable', window = window }))
         hl.dispatch(hl.dsp.window.resize({
             x = width * placement[5] - border_inset * 2,
@@ -113,6 +118,7 @@ local function move_to_monitor(kind, direction)
         local scale_x = target.width / target.scale / (source.width / source.scale)
         local scale_y = target.height / target.scale / (source.height / source.scale)
         for _, geometry in ipairs(geometries) do
+            mark_manually_placed(geometry.window)
             hl.dispatch(hl.dsp.window.resize({
                 x = geometry.size.x * scale_x,
                 y = geometry.size.y * scale_y,
@@ -150,11 +156,10 @@ bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = tru
 bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse = true })
 
 -- Window placement
-bind(
-    super .. ' + UP',
-    hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set' }),
-    'Maximize window'
-)
+bind(super .. ' + UP', function()
+    hl.dispatch(hl.dsp.window.tag({ tag = '-manually-placed' }))
+    hl.dispatch(hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set' }))
+end, 'Maximize window')
 local placements = {
     { super .. ' + LEFT', 'left', 0, 0, 0.5, 1 },
     { super .. ' + RIGHT', 'right', 0.5, 0, 0.5, 1 },
@@ -186,6 +191,7 @@ local edge_resizes = {
 }
 local function resize_edge(resize)
     return function()
+        mark_manually_placed()
         hl.dispatch(hl.dsp.window.resize({
             x = resize[2],
             y = resize[3],

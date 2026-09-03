@@ -18,24 +18,36 @@ end
 
 -- Defaults
 window_rule('.*', { float = true, suppress_event = 'maximize' })
-hl.window_rule({ match = { tag = 'terminal' }, maximize = true })
+hl.window_rule({
+    match = { tag = 'terminal' },
+    maximize = true,
+    tag = '+default-maximized',
+})
 
 -- Assigned workspaces
 window_rule(
     '^(brave-browser|brave-calendar.*|edge-clickup.*|microsoft-edge-dev)$',
-    { workspace = '1 silent', maximize = true }
+    { workspace = '1 silent', maximize = true, tag = '+default-maximized' }
 )
 window_rule(
     '^(Slack|brave-teams.*|brave-meet.*|brave-gmail.*|zoom)$',
-    { workspace = '2 silent', maximize = true }
+    { workspace = '2 silent', maximize = true, tag = '+default-maximized' }
 )
-window_rule('^(Spotify|mpv)$', { workspace = '3 silent', maximize = true })
+window_rule('^(Spotify|mpv)$', {
+    workspace = '3 silent',
+    maximize = true,
+    tag = '+default-maximized',
+})
 window_rule(
     '^(transmission-gtk|obs|com.obsproject.Studio)$',
-    { workspace = '4 silent', maximize = true }
+    { workspace = '4 silent', maximize = true, tag = '+default-maximized' }
 )
 window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
-window_rule('^Qemu-system-x86_64$', { workspace = '1', maximize = true })
+window_rule('^Qemu-system-x86_64$', {
+    workspace = '1',
+    maximize = true,
+    tag = '+default-maximized',
+})
 
 -- Application layouts
 window_rule(

@@ -230,12 +230,25 @@ if ((${#addresses[@]})); then
             fi
         done
     fi
+
+    restore_maximized=false
+    if jq -e --arg address "$address" '
+        .[]
+        | select(.address == $address and .fullscreen == 0)
+        | any(.tags[]?; . == "default-maximized*")
+            and all(.tags[]?; . != "manually-placed")
+    ' <<< "$clients" > /dev/null; then
+        restore_maximized=true
+        hyprctl dispatch \
+            "hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set', window = 'address:$address' })"
+    fi
+
     # Hyprland keeps maximized windows below ordinary floating windows
     mapfile -t other_addresses < <(
-        jq -r --arg address "$address" '
+        jq -r --arg address "$address" --argjson restore_maximized "$restore_maximized" '
             . as $clients
             | ($clients[] | select(.address == $address)) as $target
-            | select($target.fullscreen != 0)
+            | select($target.fullscreen != 0 or $restore_maximized)
             | $target.workspace.id as $workspace
             | $clients[]
             | select(.address != $address and .workspace.id == $workspace and .floating)
