@@ -1,5 +1,5 @@
 --- @since 26.5.6
--- luacheck: globals ya cx Command Url
+-- luacheck: globals ya ui cx Command Url
 
 local context = ya.sync(function()
     local current = cx.active.current
@@ -9,7 +9,7 @@ local context = ya.sync(function()
 end)
 
 local function choose(command, cwd)
-    local permit = ya.hide()
+    local permit = ui.hide()
     local output, err = Command('sh')
         :arg({ '-c', command })
         :cwd(cwd)
