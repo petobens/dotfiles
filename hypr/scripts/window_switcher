@@ -11,10 +11,43 @@ elif (($#)); then
     echo 'usage: window_switcher [current]' >&2
     exit 2
 fi
+
+# App tags distinguish clients that share a class; class aliases cover the rest.
 selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
-    'sort_by([.focusHistoryID < 0, .focusHistoryID])[] |
+    '({
+        "about": "distributor-logo-archlinux",
+        "bluetooth": "bluetooth",
+        "brave-browser": "brave-desktop",
+        "calendar": "google-agenda",
+        "clickup": "tracker",
+        "desktopeditors": "onlyoffice-desktopeditors",
+        "docker": "docker-desktop",
+        "files": "yazi",
+        "gmail": "gmail",
+        "htop": "htop",
+        "hyprpwcenter": "audio-speakers",
+        "images": "multimedia-photo-viewer",
+        "imv": "multimedia-photo-viewer",
+        "meet": "google-meet",
+        "microsoft-edge-dev": "microsoft-edge",
+        "numbers": "calc",
+        "onedrive": "ms-onedrive",
+        "onlyoffice": "onlyoffice-desktopeditors",
+        "org.hyprland.hyprpwcenter": "audio-speakers",
+        "qemu-system-x86_64": "qemu",
+        "quickterm": "com.mitchellh.ghostty",
+        "teams": "teams",
+        "terminal": "com.mitchellh.ghostty",
+        "trash": "user-trash",
+        "wifi": "network-wireless",
+        "zoom": "Zoom"
+    }) as $icons |
+    sort_by([.focusHistoryID < 0, .focusHistoryID])[] |
     select($workspace == null or .workspace.id == $workspace) |
-    "\(.address)\t[\(.workspace.name)] \(.class): \(.title)"' |
+    (.class | ascii_downcase) as $class |
+    (([.tags[]? | rtrimstr("*") | $icons[.]] | map(select(. != null))[0])
+        // $icons[$class] // $class) as $icon |
+    "\(.address)\t[\(.workspace.name)] \(.class): \(.title)\u0000icon\u001f\($icon)"' |
     rofi -dmenu -display-columns 2 -selected-row "$selected_row" \
         -kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' \
         -kb-row-up 'Ctrl-p,Shift+ISO_Left_Tab' -p 'window')
