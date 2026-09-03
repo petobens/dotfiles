@@ -9,7 +9,7 @@ if [[ -z $action ]]; then
         '  About Arch' \
         '  Lock          (Super+Shift+L)' \
         '  Reboot        (Super+Shift+R)' \
-        '⏻  Shut Down     (Super+Shift+S)' |
+        '  Shut Down     (Super+Shift+S)' |
         rofi -dmenu -no-custom -format i \
             -theme "$script_dir/../../config/rofi/session.rasi") || exit 0
     [[ $index =~ ^[0-9]+$ ]] || exit 0
