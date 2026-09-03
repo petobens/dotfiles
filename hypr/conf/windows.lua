@@ -27,14 +27,9 @@ window_rule(
     { workspace = '1 silent', maximize = true }
 )
 window_rule(
-    '^(Slack|brave-teams|brave-meet|brave-gmail)$',
+    '^(Slack|brave-teams|brave-meet|brave-gmail|zoom)$',
     { workspace = '2 silent', maximize = true }
 )
-window_rule('^zoom$', {
-    workspace = '2 silent',
-    size = { half_width, half_height },
-    center = true,
-})
 window_rule('^(Spotify|mpv)$', { workspace = '3 silent', maximize = true })
 window_rule(
     '^(transmission-gtk|obs|com.obsproject.Studio)$',
