@@ -6,6 +6,11 @@ desc = "Toggle pane layout"
 
 # Navigation
 [[mgr.prepend_keymap]]
+on = ["<Enter>"]
+run = "plugin smart-enter"
+desc = "Enter directory or open file"
+
+[[mgr.prepend_keymap]]
 on = ["u"]
 run = "leave"
 desc = "Parent directory"
