@@ -71,6 +71,13 @@ sudo reboot
 Later invocations of `./setup/vm/vm.sh` detect the existing disk and launch
 without attaching the cached ISO.
 
+Add `--background` (or `-b`) to any launch command to detach QEMU from the
+terminal after the VM starts:
+
+```bash
+./setup/vm/vm.sh --background
+```
+
 ## Multiple displays
 
 Launch the VM with three 1920x1080 virtual displays:

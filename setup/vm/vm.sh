@@ -12,11 +12,13 @@ iso=
 
 usage() {
     cat << EOF
-usage: $0 [launch|multi|reset]
+usage: $0 [launch|multi|reset] [-b|--background]
 
   launch  Launch the VM, preparing its first installation if needed (default)
   multi   Launch the VM with three 1920x1080 virtual displays
   reset   Delete the VM, recreate it, and launch the Arch ISO
+
+  -b, --background  Detach from the terminal after the VM starts
 EOF
 }
 
@@ -131,31 +133,40 @@ launch_vm() {
     fi
 
     section 'Launching VM'
+    if $background; then
+        args+=(-daemonize)
+    fi
     exec qemu-system-x86_64 "${args[@]}"
 }
 
-(($# <= 1)) || {
-    usage >&2
-    exit 2
-}
-
-action=${1:-launch}
+action=
+background=false
 install_mode=false
-case $action in
-    launch | multi)
-        ;;
-    reset)
-        install_mode=true
-        ;;
-    -h | --help)
-        usage
-        exit
-        ;;
-    *)
-        usage >&2
-        exit 2
-        ;;
-esac
+for arg in "$@"; do
+    case $arg in
+        launch | multi | reset)
+            [[ -z $action ]] || {
+                usage >&2
+                exit 2
+            }
+            action=$arg
+            ;;
+        -b | --background)
+            background=true
+            ;;
+        -h | --help)
+            usage
+            exit
+            ;;
+        *)
+            usage >&2
+            exit 2
+            ;;
+    esac
+done
+
+action=${action:-launch}
+[[ $action == reset ]] && install_mode=true
 
 printf '\033[1;32m:: Starting Wayland VM\033[0m\n'
 
