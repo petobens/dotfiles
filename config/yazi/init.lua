@@ -1,9 +1,24 @@
--- luacheck: globals Linemode ya
+-- luacheck: globals App Linemode Status th ui ya
 
 require('full-border'):setup()
 require('git'):setup()
 require('folder-rules'):setup()
 require('toggle-pane'):entry('max-current')
+
+-- Keep the position neutral instead of repeating the current mode color
+function Status:position()
+    local cursor = self._current.cursor
+    local length = #self._current.files
+    local alt = self:style().alt
+    local style = ui.Style():fg('#303030'):bg('#d0d0d0'):bold()
+
+    return ui.Line({
+        ui.Span(th.status.sep_right.open):fg(style:bg()):bg(alt:bg()),
+        ui.Span(string.format(' %2d/%-2d ', math.min(cursor + 1, length), length))
+            :style(style),
+        ui.Span(th.status.sep_right.close):fg(style:bg()):bg(App.bg()),
+    })
+end
 
 local home = os.getenv('HOME')
 
