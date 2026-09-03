@@ -9,7 +9,8 @@ symlink_target = { fg = "#c678dd", italic = true }
 marker_copied = { fg = "#5c6370", bg = "#5c6370" }
 marker_cut = { fg = "#e06c75", bg = "#e06c75" }
 marker_marked = { fg = "#61afef", bg = "#61afef" }
-marker_selected = { fg = "#e5c07b", bg = "#e5c07b" }
+marker_selected = { fg = "#e5c07b", bg = "reset" }
+marker_symbol = "▎"
 
 count_copied = { fg = "#abb2bf", bg = "#3b4048" }
 
