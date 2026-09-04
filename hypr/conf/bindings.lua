@@ -108,13 +108,19 @@ local function move_to_monitor(kind, direction)
     end
 end
 
--- Session and windows
+-- Session
 exec(
     super .. ' + R',
     'hyprctl reload && notify-send -i preferences-system-windows -t 2000 '
         .. '-h string:x-dunst-stack-tag:hyprland-reload "Hyprland reloaded"',
     'Reload Hyprland'
 )
+exec(super_shift .. ' + Q', scripts .. 'session_menu quit-apps', 'Quit all applications')
+exec(super_shift .. ' + S', scripts .. 'session_menu poweroff', 'Shut down')
+exec(super_shift .. ' + R', scripts .. 'session_menu reboot', 'Reboot')
+exec(super_shift .. ' + L', 'loginctl lock-session', 'Lock session')
+
+-- Windows
 bind(
     super .. ' + E',
     hl.dsp.window.fullscreen({ action = 'toggle' }),
@@ -123,10 +129,6 @@ bind(
 bind(super .. ' + Q', hl.dsp.window.close({}), 'Close window')
 bind(super_shift .. ' + W', hl.dsp.window.kill({}), 'Force close window')
 bind(super_alt .. ' + W', close_workspace, 'Close workspace windows')
-exec(super_shift .. ' + Q', scripts .. 'session_menu quit-apps', 'Quit all applications')
-exec(super_shift .. ' + S', scripts .. 'session_menu poweroff', 'Shut down')
-exec(super_shift .. ' + R', scripts .. 'session_menu reboot', 'Reboot')
-exec(super_shift .. ' + L', 'loginctl lock-session', 'Lock session')
 bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = true })
 bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse = true })
 
@@ -135,10 +137,10 @@ bind(super .. ' + UP', function()
     hl.dispatch(hl.dsp.window.tag({ tag = '-manually-placed' }))
     hl.dispatch(hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set' }))
 end, 'Maximize window')
+
 local function placement(keys, name, x, y, width, height)
     return { keys = keys, name = name, x = x, y = y, width = width, height = height }
 end
-
 local placements = {
     placement(super .. ' + LEFT', 'left', 0, 0, 0.5, 1),
     placement(super .. ' + RIGHT', 'right', 0.5, 0, 0.5, 1),
@@ -151,12 +153,12 @@ local placements = {
     placement(super_ctrl .. ' + 5', 'center', 0.25, 0.25, 0.5, 0.5),
     placement(super_ctrl .. ' + 6', 'rectangle', 0.125, 0.2, 0.75, 0.6),
     placement(super_ctrl .. ' + 7', 'dialog', 0.33, 0.3, 0.35, 0.25),
-    placement(super_ctrl .. ' + 8', 'semi-full', 0.01, 0, 0.985, 0.99),
 }
 for _, item in ipairs(placements) do
     bind(item.keys, place_window(item), 'Place window ' .. item.name)
 end
 
+-- Window resizing
 local step = 60
 local edge_resizes = {
     { super .. ' + H', step, 0, -step, 0, 'Grow window left' },
