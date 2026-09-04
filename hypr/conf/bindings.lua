@@ -188,8 +188,8 @@ for _, resize in ipairs(edge_resizes) do
 end
 
 -- Navigation and workspaces
--- Hyprland focuses a workspace's maximized window on entry, so snapshot the
--- windows that were really last focused and restore the target's afterwards
+-- Preserve the last focused window because entering a workspace otherwise
+-- selects its maximized window
 local function switch_workspace(dispatcher)
     return function()
         local remembered = {}
@@ -238,7 +238,7 @@ end
 bind(super .. ' + Return', monitor_modes.primary, 'Use laptop display')
 bind(super_ctrl .. ' + Return', monitor_modes.multi, 'Use all displays')
 bind(super_shift .. ' + Return', monitor_modes.mirror, 'Mirror laptop display')
-bind(super_ctrl .. ' + J', hl.dsp.focus({ last = true }), 'Focus previous window')
+exec(super_ctrl .. ' + J', scripts .. 'focus_window last', 'Focus previous window')
 
 local marks = {
     { super_alt .. ' + M', super_ctrl .. ' + K' },

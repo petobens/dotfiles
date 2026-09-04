@@ -211,10 +211,10 @@ if [[ $workspace == current ]]; then
     workspace=$(hyprctl activeworkspace -j | jq -r '.id')
 fi
 
-# Focus a matching window or launch the app on its assigned workspace.
-# Terminal apps match by tag because Ghostty ignores --class values that are
-# not valid GTK application IDs. Browser apps match by class because their
-# windows come from the already running browser and never get the launch tag.
+# Focus a matching window or launch the app on its assigned workspace
+# Match terminal apps by tag because their requested Ghostty classes are not
+# used. Match browser apps by class because windows from existing browser
+# processes do not receive launch tags.
 clients=$(hyprctl clients -j)
 mapfile -t addresses < <(
     jq -r --arg class "$class" --arg tag "$tag" \
@@ -233,36 +233,7 @@ if ((${#addresses[@]})); then
         done
     fi
 
-    restore_maximized=false
-    if jq -e --arg address "$address" '
-        .[]
-        | select(.address == $address and .fullscreen == 0)
-        | any(.tags[]?; . == "default-maximized*")
-            and all(.tags[]?; . != "manually-placed")
-    ' <<< "$clients" > /dev/null; then
-        restore_maximized=true
-        hyprctl dispatch \
-            "hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set', window = 'address:$address' })"
-    fi
-
-    # Hyprland keeps maximized windows below ordinary floating windows
-    mapfile -t other_addresses < <(
-        jq -r --arg address "$address" --argjson restore_maximized "$restore_maximized" '
-            . as $clients
-            | ($clients[] | select(.address == $address)) as $target
-            | select($target.fullscreen != 0 or $restore_maximized)
-            | $target.workspace.id as $workspace
-            | $clients[]
-            | select(.address != $address and .workspace.id == $workspace and .floating)
-            | .address
-        ' <<< "$clients"
-    )
-    for other_address in "${other_addresses[@]}"; do
-        hyprctl dispatch \
-            "hl.dsp.window.alter_zorder({ mode = 'bottom', window = 'address:$other_address' })"
-    done
-    hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
-    hyprctl dispatch "hl.dsp.window.bring_to_top({ window = 'address:$address' })"
+    "$HOME/.config/hypr/scripts/focus_window" "$address"
 else
     hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
 fi

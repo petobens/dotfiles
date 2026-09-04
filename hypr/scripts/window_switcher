@@ -12,7 +12,7 @@ elif (($#)); then
     exit 2
 fi
 
-# App tags distinguish shared classes; generated web apps also use their class prefix.
+# Prefer app tags for shared classes and class prefixes for generated web apps
 selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
     '({
         "about": "distributor-logo-archlinux",
@@ -53,4 +53,4 @@ selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
         -kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' \
         -kb-row-up 'Ctrl-p,Shift+ISO_Left_Tab' -p 'window')
 [[ -n $selection ]] || exit 0
-hyprctl dispatch "hl.dsp.focus({ window = 'address:${selection%%$'\t'*}' })"
+"$HOME/.config/hypr/scripts/focus_window" "${selection%%$'\t'*}"
