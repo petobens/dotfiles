@@ -5,15 +5,13 @@ script_dir=$(dirname "$(realpath "$0")")
 
 "$script_dir/confirm" 'Do you want to empty the trash?' || exit 0
 
-trash_view_open() {
-    hyprctl clients -j | jq -e \
-        'any(.[]; any(.tags[]?; . == "trash" or . == "trash*"))' > /dev/null
-}
-
-if trash_view_open; then
+trash_window=$(hyprctl clients -j | jq -r \
+    'first(.[] | select(any(.tags[]?; . == "trash" or . == "trash*"))).address // empty')
+if [[ -n $trash_window ]]; then
     hyprctl dispatch \
-        "hl.dsp.send_shortcut({ mods = '', key = 'Q', window = 'tag:trash' })"
-    while trash_view_open; do
+        "hl.dsp.send_shortcut({ mods = '', key = 'Q', window = 'address:$trash_window' })"
+    while hyprctl clients -j | jq -e --arg address "$trash_window" \
+        'any(.[]; .address == $address)' > /dev/null; do
         sleep 0.05
     done
 fi
