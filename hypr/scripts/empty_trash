@@ -5,4 +5,5 @@ set -euo pipefail
 
 trash-empty -f
 hyprctl dispatch "hl.dsp.window.close({ window = 'class:^trash$' })" || true
+"$HOME/.config/hypr/scripts/raise_or_launch" trash
 notify-send -t 2500 -i user-trash 'Trash emptied'
