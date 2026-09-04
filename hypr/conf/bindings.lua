@@ -319,10 +319,6 @@ for _, application in ipairs(applications) do
     launch(application[1], application[2], application[3])
 end
 
--- Desktop utilities
-exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
-exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
-
 -- Screenshots and recordings
 exec('Print', 'hyprshot -m active -m output', 'Monitor screenshot')
 exec(
@@ -351,7 +347,7 @@ exec(super_shift .. ' + T', scripts .. 'spotify_track', 'Show current track')
 exec('F10', 'voxtype record start', 'Start dictation')
 exec('F10', 'voxtype record stop', 'Stop dictation', { release = true })
 
--- Hardware and desktop
+-- Hardware and desktop utilities
 exec(
     'XF86MonBrightnessUp',
     brightness_command .. 'up',
@@ -380,6 +376,10 @@ exec(
 exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
 launch(super_alt .. ' + B', 'trash', 'Show trash')
 exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
+exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
+exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
+
+-- Notifications
 exec(ctrl_alt .. ' + SPACE', 'makoctl dismiss', 'Dismiss notification')
 exec(ctrl_shift .. ' + SPACE', 'makoctl dismiss --all', 'Dismiss all notifications')
 exec('CTRL + grave', 'makoctl restore', 'Restore notification')
