@@ -277,7 +277,7 @@ for index, mark in ipairs(marks) do
     )
 end
 
--- Launchers and applications
+-- Launchers and menus
 exec(alt .. ' + TAB', scripts .. 'window_switcher', 'Window switcher')
 exec(super .. ' + W', scripts .. 'window_switcher current', 'Workspace window switcher')
 exec(super .. ' + S', 'rofi -show drun', 'Application launcher')
@@ -285,8 +285,9 @@ launch(super .. ' + A', 'menu', 'Curated application launcher')
 exec(super .. ' + Z', scripts .. 'password_menu', 'Password menu')
 exec(super .. ' + V', scripts .. 'clipboard_menu', 'Clipboard history')
 exec(super .. ' + slash', scripts .. 'binding_menu', 'Keybinding cheatsheet')
-exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
-exec(super .. ' + X', 'ghostty --class=terminal', 'Terminal')
+
+-- Applications
+exec(super .. ' + X', 'kitty', 'Fallback terminal')
 
 local applications = {
     -- Assigned workspaces
@@ -317,6 +318,9 @@ local applications = {
 for _, application in ipairs(applications) do
     launch(application[1], application[2], application[3])
 end
+
+-- Desktop utilities
+exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
 exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
 
 -- Screenshots and recordings
