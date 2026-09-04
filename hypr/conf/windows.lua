@@ -1,18 +1,34 @@
 -- luacheck: globals hl
 
--- Layout values
-local half_width = '(monitor_w*0.50)'
-local half_height = '(monitor_h*0.50)'
-local rectangle_size = { '(monitor_w*0.75)', '(monitor_h*0.60)' }
+local geometry = require('conf.geometry')
+
+-- Application layouts use fractions of the usable monitor area
+local half = { x = 0.25, y = 0.25, width = 0.5, height = 0.5 }
+local rectangle = { x = 0.125, y = 0.2, width = 0.75, height = 0.6 }
+local right_half = { x = 0.5, y = 0, width = 0.5, height = 1 }
+local layout_by_class = {
+    hyprpwcenter = half,
+    ['org.hyprland.hyprpwcenter'] = half,
+    localsend = half,
+    localsend_app = half,
+    ['org.pwmt.zathura'] = right_half,
+    imv = right_half,
+    ['xdg-desktop-portal-gtk'] = rectangle,
+}
+local layout_by_title = {
+    ['About Arch'] = half,
+    numbers = half,
+    QuickTerm = half,
+    ['docker-info'] = rectangle,
+    htop = rectangle,
+    OneDrive = rectangle,
+    ['Trash Can'] = rectangle,
+    yazi = rectangle,
+}
 
 -- Helpers
 local function window_rule(class, options)
     options.match = { class = class }
-    hl.window_rule(options)
-end
-
-local function initial_title_rule(title, options)
-    options.match = { initial_title = title }
     hl.window_rule(options)
 end
 
@@ -51,23 +67,29 @@ window_rule('^Qemu-system-x86_64$', {
 })
 
 -- Application layouts
-window_rule(
-    '^(hyprpwcenter|org.hyprland.hyprpwcenter|localsend|localsend_app)$',
-    { size = { half_width, half_height }, center = true }
-)
-initial_title_rule(
-    '^(About Arch|numbers|QuickTerm)$',
-    { size = { half_width, half_height }, center = true }
-)
-initial_title_rule(
-    '^(docker-info|htop|OneDrive|Trash Can|yazi)$',
-    { size = rectangle_size, center = true }
-)
-window_rule('^(org.pwmt.zathura|imv)$', {
-    size = { half_width, 'monitor_h' },
-    move = { half_width, 0 },
-})
-window_rule('^xdg-desktop-portal-gtk$', { size = rectangle_size, center = true })
+hl.on('window.open', function(window)
+    local layout = layout_by_class[window.initial_class]
+        or layout_by_class[window.class]
+        or layout_by_title[window.initial_title]
+    if layout then
+        geometry.place(window, layout)
+    else
+        geometry.constrain(window)
+    end
+end)
+
+-- Reapply work-area bounds when windows move or monitor reservations change
+hl.on('window.move_to_workspace', function(window)
+    geometry.constrain(window)
+end)
+hl.on('monitor.layout_changed', function()
+    geometry.constrain_all()
+end)
+hl.on('layer.opened', function(layer)
+    if layer.namespace == 'waybar' then
+        geometry.constrain_all()
+    end
+end)
 
 -- Keep the session awake while call apps are focused or mpv is fullscreen
 window_rule('^(zoom|brave-meet.*|brave-teams.*)$', { idle_inhibit = 'focus' })

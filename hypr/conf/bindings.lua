@@ -1,5 +1,6 @@
 -- luacheck: globals hl
 
+local geometry = require('conf.geometry')
 local monitor_modes = require('conf.monitors')
 
 -- Commands
@@ -53,11 +54,6 @@ local function place_window(placement)
             return
         end
 
-        local monitor = window.monitor
-        local reserved = monitor.reserved
-        local border_inset = 2 -- Matches general.border_size in options.lua
-        local width = monitor.width / monitor.scale - reserved.left - reserved.right
-        local height = monitor.height / monitor.scale - reserved.top - reserved.bottom
         hl.dispatch(hl.dsp.window.fullscreen_state({
             internal = 0,
             client = 0,
@@ -66,16 +62,7 @@ local function place_window(placement)
         }))
         mark_manually_placed(window)
         hl.dispatch(hl.dsp.window.float({ action = 'enable', window = window }))
-        hl.dispatch(hl.dsp.window.resize({
-            x = width * placement[5] - border_inset * 2,
-            y = height * placement[6] - border_inset * 2,
-            window = window,
-        }))
-        hl.dispatch(hl.dsp.window.move({
-            x = monitor.x + reserved.left + width * placement[3] + border_inset,
-            y = monitor.y + reserved.top + height * placement[4] + border_inset,
-            window = window,
-        }))
+        geometry.place(window, placement)
     end
 end
 
@@ -103,8 +90,7 @@ local function move_to_monitor(kind, direction)
             if window.fullscreen == 0 then
                 table.insert(geometries, {
                     window = window,
-                    position = window.at,
-                    size = window.size,
+                    placement = geometry.capture(window, source),
                 })
             end
         end
@@ -115,20 +101,9 @@ local function move_to_monitor(kind, direction)
             hl.dispatch(hl.dsp.workspace.move({ monitor = direction }))
         end
 
-        local scale_x = target.width / target.scale / (source.width / source.scale)
-        local scale_y = target.height / target.scale / (source.height / source.scale)
-        for _, geometry in ipairs(geometries) do
-            mark_manually_placed(geometry.window)
-            hl.dispatch(hl.dsp.window.resize({
-                x = geometry.size.x * scale_x,
-                y = geometry.size.y * scale_y,
-                window = geometry.window,
-            }))
-            hl.dispatch(hl.dsp.window.move({
-                x = target.x + (geometry.position.x - source.x) * scale_x,
-                y = target.y + (geometry.position.y - source.y) * scale_y,
-                window = geometry.window,
-            }))
+        for _, item in ipairs(geometries) do
+            mark_manually_placed(item.window)
+            geometry.place(item.window, item.placement, target)
         end
     end
 end
@@ -160,22 +135,26 @@ bind(super .. ' + UP', function()
     hl.dispatch(hl.dsp.window.tag({ tag = '-manually-placed' }))
     hl.dispatch(hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set' }))
 end, 'Maximize window')
+local function placement(keys, name, x, y, width, height)
+    return { keys = keys, name = name, x = x, y = y, width = width, height = height }
+end
+
 local placements = {
-    { super .. ' + LEFT', 'left', 0, 0, 0.5, 1 },
-    { super .. ' + RIGHT', 'right', 0.5, 0, 0.5, 1 },
-    { super_alt .. ' + UP', 'top', 0, 0, 1, 0.5 },
-    { super_alt .. ' + DOWN', 'bottom', 0, 0.5, 1, 0.5 },
-    { super_ctrl .. ' + 1', 'top-left', 0, 0, 0.5, 0.5 },
-    { super_ctrl .. ' + 2', 'top-right', 0.5, 0, 0.5, 0.5 },
-    { super_ctrl .. ' + 3', 'bottom-left', 0, 0.5, 0.5, 0.5 },
-    { super_ctrl .. ' + 4', 'bottom-right', 0.5, 0.5, 0.5, 0.5 },
-    { super_ctrl .. ' + 5', 'center', 0.25, 0.25, 0.5, 0.5 },
-    { super_ctrl .. ' + 6', 'rectangle', 0.125, 0.2, 0.75, 0.6 },
-    { super_ctrl .. ' + 7', 'dialog', 0.33, 0.3, 0.35, 0.25 },
-    { super_ctrl .. ' + 8', 'semi-full', 0.01, 0, 0.985, 0.99 },
+    placement(super .. ' + LEFT', 'left', 0, 0, 0.5, 1),
+    placement(super .. ' + RIGHT', 'right', 0.5, 0, 0.5, 1),
+    placement(super_alt .. ' + UP', 'top', 0, 0, 1, 0.5),
+    placement(super_alt .. ' + DOWN', 'bottom', 0, 0.5, 1, 0.5),
+    placement(super_ctrl .. ' + 1', 'top-left', 0, 0, 0.5, 0.5),
+    placement(super_ctrl .. ' + 2', 'top-right', 0.5, 0, 0.5, 0.5),
+    placement(super_ctrl .. ' + 3', 'bottom-left', 0, 0.5, 0.5, 0.5),
+    placement(super_ctrl .. ' + 4', 'bottom-right', 0.5, 0.5, 0.5, 0.5),
+    placement(super_ctrl .. ' + 5', 'center', 0.25, 0.25, 0.5, 0.5),
+    placement(super_ctrl .. ' + 6', 'rectangle', 0.125, 0.2, 0.75, 0.6),
+    placement(super_ctrl .. ' + 7', 'dialog', 0.33, 0.3, 0.35, 0.25),
+    placement(super_ctrl .. ' + 8', 'semi-full', 0.01, 0, 0.985, 0.99),
 }
-for _, placement in ipairs(placements) do
-    bind(placement[1], place_window(placement), 'Place window ' .. placement[2])
+for _, item in ipairs(placements) do
+    bind(item.keys, place_window(item), 'Place window ' .. item.name)
 end
 
 local step = 60
@@ -191,19 +170,17 @@ local edge_resizes = {
 }
 local function resize_edge(resize)
     return function()
-        mark_manually_placed()
-        hl.dispatch(hl.dsp.window.resize({
-            x = resize[2],
-            y = resize[3],
-            relative = true,
-        }))
-        if resize[4] ~= 0 or resize[5] ~= 0 then
-            hl.dispatch(hl.dsp.window.move({
-                x = resize[4],
-                y = resize[5],
-                relative = true,
-            }))
+        local window = hl.get_active_window()
+        if not window then
+            return
         end
+        mark_manually_placed(window)
+        geometry.resize(window, {
+            width = resize[2],
+            height = resize[3],
+            x = resize[4],
+            y = resize[5],
+        })
     end
 end
 for _, resize in ipairs(edge_resizes) do

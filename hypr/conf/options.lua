@@ -1,12 +1,14 @@
 -- luacheck: globals hl
 
+local geometry = require('conf.geometry')
+
 -- General
 hl.config({
     general = {
         layout = 'dwindle',
         gaps_in = 4,
         gaps_out = 4,
-        border_size = 2,
+        border_size = geometry.border_size,
         col = {
             active_border = '#3e4451',
             inactive_border = '#282c34',
