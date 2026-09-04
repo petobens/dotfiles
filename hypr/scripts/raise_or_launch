@@ -175,7 +175,7 @@ case ${1:-} in
         ;;
     transmission)
         tag=transmission
-        class='^transmission-gtk$'
+        class='^com\.transmissionbt\.transmission.*$'
         workspace=4
         command='transmission-gtk'
         ;;

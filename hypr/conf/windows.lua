@@ -56,7 +56,7 @@ window_rule('^(Spotify|mpv)$', {
     tag = '+default-maximized',
 })
 window_rule(
-    '^(transmission-gtk|obs|com.obsproject.Studio)$',
+    '^(com\\.transmissionbt\\.transmission.*|obs|com.obsproject.Studio)$',
     { workspace = '4 silent', maximize = true, tag = '+default-maximized' }
 )
 window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
