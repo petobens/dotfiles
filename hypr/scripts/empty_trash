@@ -4,6 +4,10 @@ set -euo pipefail
 "$(dirname "$0")/confirm" 'Do you want to empty the trash?' || exit 0
 
 trash-empty -f
-hyprctl dispatch "hl.dsp.window.close({ window = 'class:^trash$' })" || true
+hyprctl dispatch "hl.dsp.window.close({ window = 'tag:trash' })" || true
+while hyprctl clients -j | jq -e \
+    'any(.[]; any(.tags[]?; . == "trash" or . == "trash*"))' > /dev/null; do
+    sleep 0.05
+done
 "$HOME/.config/hypr/scripts/raise_or_launch" trash
 notify-send -t 2500 -i user-trash 'Trash emptied'

@@ -189,9 +189,7 @@ for _, resize in ipairs(edge_resizes) do
     bind(resize[1], resize_edge(resize), resize[6], { repeating = true })
 end
 
--- Navigation and workspaces
--- Preserve the last focused window because entering a workspace otherwise
--- selects its maximized window
+-- Workspaces
 local function switch_workspace(dispatcher)
     return function()
         local remembered = {}
@@ -216,6 +214,22 @@ bind(
     switch_workspace(hl.dsp.focus({ workspace = 'm-1' })),
     'Previous workspace'
 )
+
+for workspace = 1, 9 do
+    local name = tostring(workspace)
+    bind(
+        super .. ' + ' .. name,
+        switch_workspace(hl.dsp.focus({ workspace = name })),
+        'Workspace ' .. name
+    )
+    bind(
+        super_shift .. ' + ' .. name,
+        hl.dsp.window.move({ workspace = name, follow = true }),
+        'Move window to workspace ' .. name
+    )
+end
+
+-- Monitors
 bind(alt .. ' + grave', hl.dsp.focus({ monitor = 'r' }), 'Focus monitor right')
 bind(alt .. ' + escape', hl.dsp.focus({ monitor = 'd' }), 'Focus monitor down')
 
@@ -240,6 +254,8 @@ end
 bind(super .. ' + Return', monitor_modes.primary, 'Use laptop display')
 bind(super_ctrl .. ' + Return', monitor_modes.multi, 'Use all displays')
 bind(super_shift .. ' + Return', monitor_modes.mirror, 'Mirror laptop display')
+
+-- Window marks
 exec(super_ctrl .. ' + J', scripts .. 'focus_window last', 'Focus previous window')
 
 local marks = {
@@ -258,20 +274,6 @@ for index, mark in ipairs(marks) do
         mark[2],
         hl.dsp.focus({ window = 'tag:' .. tag }),
         'Focus marked window ' .. index
-    )
-end
-
-for workspace = 1, 9 do
-    local name = tostring(workspace)
-    bind(
-        super .. ' + ' .. name,
-        switch_workspace(hl.dsp.focus({ workspace = name })),
-        'Workspace ' .. name
-    )
-    bind(
-        super_shift .. ' + ' .. name,
-        hl.dsp.window.move({ workspace = name, follow = true }),
-        'Move window to workspace ' .. name
     )
 end
 
@@ -372,8 +374,8 @@ exec(
     'Reload Waybar'
 )
 exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
-exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 launch(super_alt .. ' + B', 'trash', 'Show trash')
+exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 exec(ctrl_alt .. ' + SPACE', 'makoctl dismiss', 'Dismiss notification')
 exec(ctrl_shift .. ' + SPACE', 'makoctl dismiss --all', 'Dismiss all notifications')
 exec('CTRL + grave', 'makoctl restore', 'Restore notification')
