@@ -97,7 +97,7 @@ names+=('')
 states+=(Scan)
 
 index=$(printf '%s\n' "${rows[@]}" |
-    rofi -dmenu -no-custom -format i -p 'Bluetooth' \
+    rofi -dmenu -i -no-custom -format i -p 'Bluetooth' \
         -theme "$theme") || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
 

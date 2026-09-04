@@ -79,4 +79,4 @@ printf '%s\n' \
     "󰓅  Power draw      $rate" \
     "󰂑  Health          $health% ($size)" \
     "󰑐  Charge cycles   $cycles" |
-    rofi -dmenu -no-custom -p 'Battery' -theme "$theme" > /dev/null || exit 0
+    rofi -dmenu -i -no-custom -p 'Battery' -theme "$theme" > /dev/null || exit 0

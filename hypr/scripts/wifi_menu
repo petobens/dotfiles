@@ -84,7 +84,7 @@ done < <(printf '%s\n' "$scan" | sort -t: -k2,2nr)
 
 ((${#rows[@]})) || fail 'No networks found'
 index=$(printf '%s\n' "${rows[@]}" |
-    rofi -dmenu -no-custom -format i -selected-row "$selected_row" \
+    rofi -dmenu -i -no-custom -format i -selected-row "$selected_row" \
         -p 'Wi-Fi' -theme "$theme") || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
 
