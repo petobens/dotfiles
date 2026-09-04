@@ -162,13 +162,13 @@ end
 local step = 60
 local edge_resizes = {
     { super .. ' + H', step, 0, -step, 0, 'Grow window left' },
-    { super_alt .. ' + L', -step, 0, step, 0, 'Shrink window left' },
     { super .. ' + L', step, 0, 0, 0, 'Grow window right' },
-    { super_alt .. ' + H', -step, 0, 0, 0, 'Shrink window right' },
     { super .. ' + K', 0, step, 0, -step, 'Grow window up' },
-    { super_alt .. ' + J', 0, -step, 0, step, 'Shrink window up' },
     { super .. ' + J', 0, step, 0, 0, 'Grow window down' },
-    { super_alt .. ' + K', 0, -step, 0, 0, 'Shrink window down' },
+    { super_alt .. ' + H', -step, 0, step, 0, 'Shrink window left' },
+    { super_alt .. ' + L', -step, 0, 0, 0, 'Shrink window right' },
+    { super_alt .. ' + K', 0, -step, 0, step, 'Shrink window up' },
+    { super_alt .. ' + J', 0, -step, 0, 0, 'Shrink window down' },
 }
 local function resize_edge(resize)
     return function()
