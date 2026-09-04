@@ -17,8 +17,8 @@ if systemd-detect-virt --vm --quiet &&
         case $* in
             'radio wifi') printf 'enabled\n' ;;
             *'device wifi list'*)
-                printf '%s\n' '*:90:WPA2:VM Network' \
-                    ':65:--:VM Guest' ':30:WPA2:VM Test'
+                printf '%s\n' '*:90:WPA2:wlan0:VM Network' \
+                    ':65:--:wlan0:VM Guest' ':30:WPA2:wlan0:VM Test'
                 ;;
         esac
     }
@@ -32,14 +32,16 @@ if [[ $(nmcli radio wifi) != enabled ]]; then
 fi
 
 if ! scan=$(nmcli --colors no --terse --escape no \
-    --fields IN-USE,SIGNAL,SECURITY,SSID device wifi list --rescan yes); then
+    --fields IN-USE,SIGNAL,SECURITY,DEVICE,SSID device wifi list --rescan yes); then
     fail 'Could not scan for networks'
 fi
 
 active_ssid=
-while IFS=: read -r active _ _ ssid; do
+active_device=
+while IFS=: read -r active _ _ device ssid; do
     if [[ $active == '*' ]]; then
         active_ssid=$ssid
+        active_device=$device
         break
     fi
 done <<< "$scan"
@@ -48,7 +50,7 @@ rows=()
 securities=()
 ssids=()
 selected_row=0
-while IFS=: read -r _ signal security ssid; do
+while IFS=: read -r _ signal security _ ssid; do
     [[ -n $ssid ]] || continue
 
     duplicate=false
@@ -90,7 +92,13 @@ index=$(printf '%s\n' "${rows[@]}" |
 
 ssid=${ssids[index]}
 security=${securities[index]}
-[[ $ssid != "$active_ssid" ]] || exit 0
+if [[ $ssid == "$active_ssid" ]]; then
+    if ! output=$(nmcli --wait 30 device down "$active_device" 2>&1); then
+        fail "$output"
+    fi
+    notify-send -t 2000 -i network-wireless-offline 'Wi-Fi disconnected' "$ssid"
+    exit 0
+fi
 
 saved_uuid=
 while IFS=: read -r uuid type; do
