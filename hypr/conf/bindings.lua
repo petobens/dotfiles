@@ -270,11 +270,7 @@ for index, mark in ipairs(marks) do
         hl.dispatch(hl.dsp.window.tag({ tag = '-' .. tag, window = 'tag:' .. tag }))
         hl.dispatch(hl.dsp.window.tag({ tag = '+' .. tag }))
     end, 'Mark window ' .. index)
-    bind(
-        mark[2],
-        hl.dsp.focus({ window = 'tag:' .. tag }),
-        'Focus marked window ' .. index
-    )
+    exec(mark[2], scripts .. 'focus_window tag:' .. tag, 'Focus marked window ' .. index)
 end
 
 -- Launchers and menus

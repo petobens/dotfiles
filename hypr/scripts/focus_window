@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if (($# != 1)); then
-    echo 'usage: focus_window ADDRESS|last' >&2
+    echo 'usage: focus_window ADDRESS|last|tag:TAG' >&2
     exit 2
 fi
 
@@ -11,9 +11,16 @@ if [[ $address == last ]]; then
     hyprctl dispatch "hl.dsp.focus({ last = true })"
     address=$(hyprctl activewindow -j | jq -r '.address // empty')
 fi
-[[ -n $address ]] || exit 0
 
 clients=$(hyprctl clients -j)
+if [[ $address == tag:* ]]; then
+    tag=${address#tag:}
+    address=$(jq -r --arg tag "$tag" '
+        first(.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")))).address // empty
+    ' <<< "$clients")
+fi
+[[ -n $address ]] || exit 0
+
 # Reapply default maximization unless the window was moved or resized manually
 restore_maximized=false
 if jq -e --arg address "$address" '
