@@ -31,13 +31,13 @@ tooltip {
 #custom-onedrive,
 #language,
 #custom-vpn,
-#tray,
 #network,
 #custom-bluetooth,
 #pulseaudio,
 #battery,
 #custom-no-battery,
-#clock {
+#clock,
+#custom-slack {
     padding: 0 10px;
 }
 
@@ -94,6 +94,18 @@ tooltip {
 #custom-no-battery {
     font-family: 'Symbols Nerd Font';
     font-size: 11pt;
+}
+
+#custom-slack {
+    font-family: 'Symbols Nerd Font';
+    font-size: 13pt;
+    padding-left: 0;
+    padding-right: 2px;
+}
+
+#tray {
+    opacity: 0;
+    padding: 0;
 }
 
 /* Status states */

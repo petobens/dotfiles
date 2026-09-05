@@ -1,6 +1,6 @@
 [
     {
-        "output": ["eDP-1"],
+        "output": ["eDP-1", "Virtual-1"],
         "modules-right": [
             "custom/docker",
             "custom/onedrive",
@@ -13,12 +13,13 @@
             "battery",
             "custom/no-battery",
             "clock",
+            "custom/slack",
             "tray",
         ],
         "include": "$HOME/.config/waybar/common.jsonc",
     },
     {
-        "output": ["!eDP-1", "*"],
+        "output": ["!eDP-1", "!Virtual-1", "*"],
         "include": "$HOME/.config/waybar/common.jsonc",
     },
 ]

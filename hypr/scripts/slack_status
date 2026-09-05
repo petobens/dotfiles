@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+item=
+while read -r service _; do
+    id=$(busctl --user get-property \
+        "$service" /StatusNotifierItem org.kde.StatusNotifierItem Id \
+        2> /dev/null || true)
+    if [[ $id == *Slack_status_icon* ]]; then
+        item=$service
+        break
+    fi
+done < <(
+    busctl --user --no-legend list 2> /dev/null |
+        awk '$1 ~ /^org\.freedesktop\.StatusNotifierItem-/ { print $1 }' || true
+)
+
+text=
+state=inactive
+if [[ -n $item ]]; then
+    text='󰒱'
+    pixmap=$(busctl --user --json=short get-property \
+        "$item" /StatusNotifierItem org.kde.StatusNotifierItem IconPixmap \
+        2> /dev/null || true)
+    # Slack uses cyan for unread messages and red for DMs and mentions
+    state=$(
+        jq -r '
+            .data[0][2] as $pixels
+            | if any(
+                range(0; $pixels | length; 4);
+                $pixels[. + 1] > $pixels[. + 2] + 40
+                and $pixels[. + 1] > $pixels[. + 3] + 40
+            ) then "urgent"
+            elif any(
+                range(0; $pixels | length; 4);
+                $pixels[. + 2] > $pixels[. + 1] + 40
+                and $pixels[. + 3] > $pixels[. + 1] + 40
+            ) then "unread"
+            else "active" end
+        ' <<< "$pixmap" 2> /dev/null || printf active
+    )
+elif pgrep -x slack > /dev/null; then
+    text='󰒱'
+    state=active
+fi
+
+jq -cn \
+    --arg text "$text" \
+    --arg alt "$state" \
+    '{text: $text, alt: $alt}'

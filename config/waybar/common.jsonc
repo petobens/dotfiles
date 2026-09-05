@@ -124,7 +124,22 @@
         "on-click": "~/.config/hypr/scripts/raise_or_launch calendar",
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
     },
+    // Keep a tray host running so Slack exposes its notifier state
     "tray": {
-        "spacing": 8,
+        "icon-size": 1,
+        "spacing": 0,
+    },
+    "custom/slack": {
+        "exec": "~/.config/hypr/scripts/slack_status",
+        "format": "{icon}",
+        "format-icons": {
+            "active": "󰒱",
+            "unread": "<span letter_spacing='-13312'>󰒱</span><span color='#00ffff' size='5632' rise='-1024'>●</span>",
+            "urgent": "<span letter_spacing='-13312'>󰒱</span><span color='#ff1744' size='5632' rise='-1024'>●</span>",
+        },
+        "hide-empty-text": true,
+        "interval": 1,
+        "on-click": "~/.config/hypr/scripts/raise_or_launch slack",
+        "return-type": "json",
     },
 }
