@@ -26,6 +26,12 @@ local lid_closed = false
 
 -- Monitor layouts
 local function monitor_scale(monitor)
+    if monitor.name:match('^Virtual%-%d+$') then
+        -- Keep resizable QEMU displays near 1920 logical pixels
+        local scale = math.floor(monitor.width / 1920 * 4 + 0.5) / 4
+        return math.max(scale, 1)
+    end
+
     local resolution = string.format('%dx%d', monitor.width, monitor.height)
     return scale_by_resolution[resolution] or 'auto'
 end
