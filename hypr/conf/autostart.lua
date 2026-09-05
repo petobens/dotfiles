@@ -19,7 +19,7 @@ hl.on('hyprland.start', function()
     hl.exec_cmd('hypridle')
     hl.exec_cmd('systemctl --user start hyprpolkitagent')
     hl.exec_cmd('voxtype')
-    hl.exec_cmd('udiskie') -- the tray icon needs AppIndicator under Wayland
+    hl.exec_cmd('udiskie')
     hl.exec_cmd(scripts .. 'battery_monitor')
 
     -- Clipboard history and persistence after the source window closes
