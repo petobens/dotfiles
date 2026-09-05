@@ -57,14 +57,14 @@ bindsym $mod+Control+7 $nexec $resize Dialog
 bindsym $mod+Control+8 $nexec $resize 'Semi Full'
 
 # Resize (grid-like)
-bindsym $mod+l $nexec $grid_resize -a grow -o right
-bindsym $mod+$alt+h $nexec $grid_resize -a shrink -o right
-bindsym $mod+h $nexec $grid_resize -a grow -o left
-bindsym $mod+$alt+l $nexec $grid_resize -a shrink -o left
-bindsym $mod+k $nexec $grid_resize -a grow -o up
-bindsym $mod+$alt+j $nexec $grid_resize -a shrink -o up
-bindsym $mod+j $nexec $grid_resize -a grow -o down
-bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down
+bindsym $mod+h $nexec $grid_resize -a grow -o left -s 60
+bindsym $mod+l $nexec $grid_resize -a grow -o right -s 60
+bindsym $mod+k $nexec $grid_resize -a grow -o up -s 60
+bindsym $mod+j $nexec $grid_resize -a grow -o down -s 60
+bindsym $mod+$alt+h $nexec $grid_resize -a shrink -o right -s 60
+bindsym $mod+$alt+l $nexec $grid_resize -a shrink -o left -s 60
+bindsym $mod+$alt+k $nexec $grid_resize -a shrink -o down -s 60
+bindsym $mod+$alt+j $nexec $grid_resize -a shrink -o up -s 60
 
 # Sizing and position rules (use `xprop` to get the window info)
 # Note: `for_window` applies the first time i3 encounters a window (i.e not when
