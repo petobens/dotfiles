@@ -1,6 +1,7 @@
 -- luacheck: globals hl
 
 local M = { border_size = 2 }
+local full = { x = 0, y = 0, width = 1, height = 1 }
 
 local function clamp(value, minimum, maximum)
     return math.max(minimum, math.min(value, maximum))
@@ -42,6 +43,18 @@ function M.place(window, placement, monitor)
     }))
 end
 
+-- Fill the work area without taking Hyprland's exclusive maximized slot
+function M.fill_work_area(window, monitor)
+    hl.dispatch(hl.dsp.window.fullscreen_state({
+        internal = 0,
+        client = 1,
+        action = 'set',
+        window = window,
+    }))
+    hl.dispatch(hl.dsp.window.float({ action = 'enable', window = window }))
+    M.place(window, full, monitor)
+end
+
 function M.capture(window, monitor)
     local area = work_area(monitor or window.monitor)
     local inset = M.border_size
@@ -72,12 +85,6 @@ function M.constrain(window, monitor)
     end
     if x ~= window.at.x or y ~= window.at.y then
         hl.dispatch(hl.dsp.window.move({ x = x, y = y, window = window }))
-    end
-end
-
-function M.constrain_all()
-    for _, window in ipairs(hl.get_windows()) do
-        M.constrain(window)
     end
 end
 

@@ -134,8 +134,14 @@ bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse =
 
 -- Window placement
 bind(super .. ' + UP', function()
-    hl.dispatch(hl.dsp.window.tag({ tag = '-manually-placed' }))
-    hl.dispatch(hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set' }))
+    local window = hl.get_active_window()
+    if not window then
+        return
+    end
+
+    hl.dispatch(hl.dsp.window.tag({ tag = '-manually-placed', window = window }))
+    hl.dispatch(hl.dsp.window.tag({ tag = '+work-area-maximized', window = window }))
+    geometry.fill_work_area(window)
 end, 'Maximize window')
 
 local function placement(keys, name, x, y, width, height)

@@ -32,62 +32,97 @@ local function window_rule(class, options)
     hl.window_rule(options)
 end
 
--- Defaults
-window_rule('.*', { float = true, suppress_event = 'maximize' })
-hl.window_rule({
-    match = { tag = 'terminal' },
-    maximize = true,
-    tag = '+default-maximized',
-})
+local function has_tag(window, name)
+    for _, tag in ipairs(window.tags) do
+        if tag == name or tag == name .. '*' then
+            return true
+        end
+    end
+    return false
+end
 
--- Assigned workspaces
-window_rule('^(brave-browser|brave-calendar.*|microsoft-edge-dev.*)$', {
-    workspace = '1 silent',
-    maximize = true,
-    tag = '+default-maximized',
-})
-window_rule(
-    '^(slack|brave-teams.*|brave-meet.*|brave-mail.*|zoom)$',
-    { workspace = '2 silent', maximize = true, tag = '+default-maximized' }
-)
-window_rule('^(Spotify|mpv)$', {
-    workspace = '3 silent',
-    maximize = true,
-    tag = '+default-maximized',
-})
-window_rule(
-    '^(com\\.transmissionbt\\.transmission.*|obs|com.obsproject.Studio)$',
-    { workspace = '4 silent', maximize = true, tag = '+default-maximized' }
-)
-window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
-window_rule('^Qemu-system-x86_64$', {
-    workspace = '1',
-    maximize = true,
-    tag = '+default-maximized',
-})
+local function fills_work_area(window)
+    return has_tag(window, 'work-area-maximized')
+        and not has_tag(window, 'manually-placed')
+end
 
--- Application layouts
-hl.on('window.open', function(window)
+local function fit_to_work_area(window)
+    if window.fullscreen == 0 and fills_work_area(window) then
+        geometry.fill_work_area(window)
+    else
+        geometry.constrain(window)
+    end
+end
+
+local function apply_layout(window)
     local layout = layout_by_class[window.initial_class]
         or layout_by_class[window.class]
         or layout_by_title[window.initial_title]
     if layout then
         geometry.place(window, layout)
+    elseif window.fullscreen == 0 and fills_work_area(window) then
+        geometry.fill_work_area(window)
     else
         geometry.constrain(window)
     end
+end
+
+local function fit_all_to_work_area()
+    for _, window in ipairs(hl.get_windows()) do
+        fit_to_work_area(window)
+    end
+end
+
+-- Defaults
+window_rule('.*', { float = true, suppress_event = 'maximize' })
+hl.window_rule({
+    match = { tag = 'terminal' },
+    tag = '+work-area-maximized',
+})
+
+-- Assigned workspaces
+window_rule('^(brave-browser|brave-calendar.*|microsoft-edge-dev.*)$', {
+    workspace = '1 silent',
+    tag = '+work-area-maximized',
+})
+window_rule(
+    '^(slack|brave-teams.*|brave-meet.*|brave-mail.*|zoom)$',
+    { workspace = '2 silent', tag = '+work-area-maximized' }
+)
+window_rule('^Spotify$', {
+    workspace = '3 silent',
+    tag = '+work-area-maximized',
+})
+-- Native maximization keeps MPV's fullscreen idle inhibitor active
+window_rule('^mpv$', {
+    workspace = '3 silent',
+    maximize = true,
+})
+window_rule(
+    '^(com\\.transmissionbt\\.transmission.*|obs|com.obsproject.Studio)$',
+    { workspace = '4 silent', tag = '+work-area-maximized' }
+)
+window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
+window_rule('^Qemu-system-x86_64$', {
+    workspace = '1',
+    tag = '+work-area-maximized',
+})
+
+-- Application layouts
+hl.on('window.open', function(window)
+    apply_layout(window)
 end)
 
 -- Reapply work-area bounds when windows move or monitor reservations change
 hl.on('window.move_to_workspace', function(window)
-    geometry.constrain(window)
+    fit_to_work_area(window)
 end)
 hl.on('monitor.layout_changed', function()
-    geometry.constrain_all()
+    fit_all_to_work_area()
 end)
 hl.on('layer.opened', function(layer)
     if layer.namespace == 'waybar' then
-        geometry.constrain_all()
+        fit_all_to_work_area()
     end
 end)
 

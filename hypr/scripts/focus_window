@@ -12,43 +12,14 @@ if [[ $address == last ]]; then
     address=$(hyprctl activewindow -j | jq -r '.address // empty')
 fi
 
-clients=$(hyprctl clients -j)
 if [[ $address == tag:* ]]; then
     tag=${address#tag:}
+    clients=$(hyprctl clients -j)
     address=$(jq -r --arg tag "$tag" '
         first(.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")))).address // empty
     ' <<< "$clients")
 fi
 [[ -n $address ]] || exit 0
 
-# Reapply default maximization unless the window was moved or resized manually
-restore_maximized=false
-if jq -e --arg address "$address" '
-    .[]
-    | select(.address == $address and .fullscreen == 0)
-    | any(.tags[]?; . == "default-maximized*")
-        and all(.tags[]?; . != "manually-placed")
-' <<< "$clients" > /dev/null; then
-    restore_maximized=true
-    hyprctl dispatch \
-        "hl.dsp.window.fullscreen({ mode = 'maximized', action = 'set', window = 'address:$address' })"
-fi
-
-# Lower competing floating windows before raising a maximized target
-mapfile -t other_addresses < <(
-    jq -r --arg address "$address" --argjson restore_maximized "$restore_maximized" '
-        . as $clients
-        | ($clients[] | select(.address == $address)) as $target
-        | select($target.fullscreen != 0 or $restore_maximized)
-        | $target.workspace.id as $workspace
-        | $clients[]
-        | select(.address != $address and .workspace.id == $workspace and .floating)
-        | .address
-    ' <<< "$clients"
-)
-for other_address in "${other_addresses[@]}"; do
-    hyprctl dispatch \
-        "hl.dsp.window.alter_zorder({ mode = 'bottom', window = 'address:$other_address' })"
-done
 hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
 hyprctl dispatch "hl.dsp.window.bring_to_top({ window = 'address:$address' })"
