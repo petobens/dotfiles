@@ -25,6 +25,18 @@ on = ["H"]
 run = "cd ~"
 desc = "Home"
 
+# Shell
+[[mgr.prepend_keymap]]
+on = ["S"]
+run = 'shell "$SHELL" --block'
+desc = "Open shell here"
+
+# Search
+[[mgr.prepend_keymap]]
+on = ["<A-g>"]
+run = "search --via=rg"
+desc = "Search files by content via ripgrep"
+
 # File operations
 [[mgr.prepend_keymap]]
 on = ["D"]

@@ -99,7 +99,7 @@ local groups = {
             'jump',
         }),
         mapping('u', 'Update plugins', 'shell', {
-            'ya pkg upgrade',
+            'ya pkg upgrade 2>&1 | less -R',
             block = true,
         }),
     }),
