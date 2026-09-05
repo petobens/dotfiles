@@ -334,12 +334,13 @@ exec(super_alt .. ' + G', scripts .. 'screen_record video', 'Toggle video record
 
 -- Audio and media
 exec('XF86AudioRaiseVolume', volume_up, 'Raise volume', { repeating = true })
-exec('XF86AudioLowerVolume', volume_down, 'Lower volume', { repeating = true })
-exec('XF86AudioMute', volume_mute, 'Mute audio', { locked = true })
 exec(super_shift .. ' + EQUAL', volume_up, 'Raise volume')
+exec('XF86AudioLowerVolume', volume_down, 'Lower volume', { repeating = true })
 exec(super_shift .. ' + MINUS', volume_down, 'Lower volume')
+exec('XF86AudioMute', volume_mute, 'Mute audio', { locked = true })
 exec(super_shift .. ' + M', volume_mute, 'Mute audio')
 launch(super_shift .. ' + V', 'audio', 'Audio controls')
+
 exec(super_shift .. ' + P', player_command .. ' play-pause', 'Play or pause')
 exec(super_shift .. ' + J', player_command .. ' next', 'Next track')
 exec(super_shift .. ' + K', player_command .. ' previous', 'Previous track')

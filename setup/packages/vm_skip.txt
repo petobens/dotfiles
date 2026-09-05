@@ -15,7 +15,6 @@ vpl-gpu-rt
 firefox
 microsoft-edge-dev-bin
 onlyoffice-bin
-spotify
 ttf-ms-fonts
 zoom
 
