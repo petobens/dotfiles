@@ -96,8 +96,8 @@ launch_vm() {
     local display='gtk,gl=on,grab-on-hover=on,zoom-to-fit=on'
     local gpu=virtio-vga-gl
     if [[ $action == multi ]]; then
-        display+=',show-tabs=on'
-        gpu='{"driver":"virtio-vga-gl","max_outputs":3,"outputs":['
+        display='gtk,gl=off,grab-on-hover=on,zoom-to-fit=on,show-tabs=on'
+        gpu='{"driver":"virtio-vga","max_outputs":3,"outputs":['
         gpu+='{"name":"QEMU-1","xres":1920,"yres":1080},'
         gpu+='{"name":"QEMU-2","xres":1920,"yres":1080},'
         gpu+='{"name":"QEMU-3","xres":1920,"yres":1080}]}'

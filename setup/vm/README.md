@@ -90,16 +90,14 @@ Launch the VM with three 1920x1080 virtual displays:
 ./setup/vm/vm.sh multi
 ```
 
-If the VM does not exist yet, `multi` creates it and boots the Arch installer
-like a normal launch, but with three displays. QEMU shows each display in a
-separate GTK tab, and Hyprland configures the virtual outputs through its
-fallback monitor rule. The physical display names and workspace assignments
-are not reproduced.
+If needed, `multi` creates the VM and boots the Arch installer with each display
+in a separate GTK tab. It uses software rendering and skips hyprpaper, so the
+background remains black. The displays start on workspaces 2, 5, and 1, matching
+the laptop, left, and right roles used on physical hardware.
 
-`Super+Shift+Return` mirrors onto the virtual outputs and can be tested here,
-while `Super+Return` falls back to the multi-display layout because the VM has
-no laptop panel. On hardware that binding disables every other output,
-including displays matched only by the fallback rule.
+`Super+Return` and `Super+Shift+Return` leave the layout unchanged because the VM
+has no laptop panel. On hardware, those bindings select the laptop-only and
+mirrored layouts respectively.
 
 ## Reset
 
