@@ -1,27 +1,33 @@
 # Dotfiles gitignore
 
-# Nvim
+# Claude Code
+.claude/
+**/.claude/settings.local.json
+
+# Fish
+config/fish/fish_variables
+
+# Neovim
 nvim.log
 nvim/plugin/
 nvim/cache/
 
-# Tmux
-config/tmux/plugins/
-config/tmux/resurrect/
-
-# Local tool state
-/.ruff_cache/
-config/fish/fish_variables
-config/yazi/plugins/full-border.yazi/
-config/yazi/plugins/git.yazi/
-config/yazi/plugins/toggle-pane.yazi/
-
-# OneDrive runtime state
+# OneDrive
 config/onedrive/items*
 config/onedrive/refresh_token
 config/onedrive/.config.backup
 config/onedrive/.config.hash
 
-# Claude Code
-.claude/
-**/.claude/settings.local.json
+# Python
+/.ruff_cache/
+
+# Tmux
+config/tmux/plugins/
+config/tmux/resurrect/
+
+# Yazi package state and downloaded plugins
+config/yazi/package.toml
+config/yazi/plugins/full-border.yazi/
+config/yazi/plugins/git.yazi/
+config/yazi/plugins/split-tabs.yazi/
+config/yazi/plugins/toggle-pane.yazi/

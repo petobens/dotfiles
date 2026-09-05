@@ -19,9 +19,13 @@ local groups = {
             'toggle-pane',
             'max-current',
         }),
-        mapping('s', 'Create tab', 'tab_create', { current = true }),
+        mapping('s', 'Toggle vertical split', 'plugin', {
+            'split-tabs',
+            'spl_toggle',
+        }),
     }),
-    group('n', 'New tab', {
+    group('n', 'New', {
+        mapping('b', 'Create buffer', 'tab_create', { current = true }),
         mapping('t', 'Create tab', 'tab_create', { current = true }),
     }),
     group('w', 'Close tab', {
@@ -93,6 +97,10 @@ local groups = {
         mapping('m', 'Show bookmarks', 'plugin', {
             'bookmarks',
             'jump',
+        }),
+        mapping('u', 'Update plugins', 'shell', {
+            'ya pkg upgrade',
+            block = true,
         }),
     }),
     group('a', 'Add bookmark', {

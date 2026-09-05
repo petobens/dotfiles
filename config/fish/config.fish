@@ -203,13 +203,23 @@ end
 function yazi --description 'Run Yazi and change to its final directory'
     set -l config_home "$HOME/.config"
     set -q XDG_CONFIG_HOME; and set config_home "$XDG_CONFIG_HOME"
-    for plugin in full-border git toggle-pane
+    set -l package_file "$config_home/yazi/package.toml"
+    set -l packages \
+        yazi-rs/plugins:full-border \
+        yazi-rs/plugins:git \
+        terrakok/split-tabs \
+        yazi-rs/plugins:toggle-pane
+    for package in $packages
+        set -l plugin (string replace -r '^.*[/:]' '' -- "$package")
         if not test -d "$config_home/yazi/plugins/$plugin.yazi"
             set -l state_home "$HOME/.local/state"
             set -q XDG_STATE_HOME; and set state_home "$XDG_STATE_HOME"
             command mkdir -p "$state_home/yazi"
-            command ya pkg install; or return
-            break
+            if test -f "$package_file"; and string match -q "use = \"$package\"" <"$package_file"
+                command ya pkg upgrade "$package"; or return
+            else
+                command ya pkg add "$package"; or return
+            end
         end
     end
 
