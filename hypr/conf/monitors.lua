@@ -24,9 +24,13 @@ local positions = {
 local active_mode
 local lid_closed = false
 
--- Monitor layouts
+-- Helpers
+local function is_virtual_monitor(monitor)
+    return monitor.name:match('^Virtual%-%d+$')
+end
+
 local function monitor_scale(monitor)
-    if monitor.name:match('^Virtual%-%d+$') then
+    if is_virtual_monitor(monitor) then
         -- Keep resizable QEMU displays near 1920 logical pixels
         local scale = math.floor(monitor.width / 1920 * 4 + 0.5) / 4
         return math.max(scale, 1)
@@ -36,7 +40,12 @@ local function monitor_scale(monitor)
     return scale_by_resolution[resolution] or 'auto'
 end
 
+-- Monitor configuration
 local function configure_monitor(monitor, position, mirror)
+    if is_virtual_monitor(monitor) then
+        hl.env('ROFI_DPI', '96')
+    end
+
     hl.monitor({
         output = monitor.name,
         mode = 'preferred',
@@ -71,6 +80,7 @@ local function configure_all_monitors()
     end
 end
 
+-- Monitor layouts
 local function primary()
     if not configure_laptop() then
         return
@@ -85,8 +95,8 @@ local function primary()
     hl.monitor({ output = '', disabled = true })
 end
 
--- Duplicate the laptop screen on every other display (projectors, TVs)
 local function mirror()
+    -- Duplicate the laptop screen on every other display (projectors, TVs)
     if not configure_laptop() then
         return
     end
