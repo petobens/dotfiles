@@ -108,8 +108,13 @@ tooltip {
 }
 
 /* Status states */
+#custom-docker.standby {
+    color: @muted;
+}
+
 #workspaces button.urgent,
 #battery.critical,
+#custom-docker.failed,
 #custom-docker.inactive,
 #custom-onedrive.inactive,
 #custom-bluetooth.disabled,

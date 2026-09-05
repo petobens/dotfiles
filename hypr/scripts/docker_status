@@ -3,12 +3,20 @@ set -euo pipefail
 
 if systemctl is-active --quiet docker.service; then
     state=active
+    tooltip='Docker: running'
+elif systemctl is-failed --quiet docker.service docker.socket; then
+    state=failed
+    tooltip='Docker: failed'
+elif systemctl is-active --quiet docker.socket; then
+    state=standby
+    tooltip='Docker: ready (starts on demand)'
 else
     state=inactive
+    tooltip='Docker: unavailable'
 fi
 
 jq -cn \
     --arg text '' \
-    --arg tooltip "Docker: $state" \
+    --arg tooltip "$tooltip" \
     --arg class "$state" \
     '{text: $text, tooltip: $tooltip, class: $class}'
