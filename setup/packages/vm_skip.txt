@@ -15,7 +15,6 @@ vpl-gpu-rt
 firefox
 microsoft-edge-dev-bin
 onlyoffice-bin
-ttf-ms-fonts
 zoom
 
 # Development and virtualization
@@ -23,3 +22,6 @@ edk2-ovmf
 google-cloud-cli
 ollama
 qemu-desktop
+
+# Fonts
+ttf-ms-fonts
