@@ -1,31 +1,44 @@
+# Appearance
 font=Noto Sans 11
 background-color=#24272ef2
 text-color=#abb2bf
 border-color=#282c34
 border-size=2
 border-radius=10
-padding=12,8
+
+# Geometry
 width=300
 height=300
 outer-margin=0
 margin=0
+padding=12,8
 anchor=top-right
+
+# Icons
 icon-location=right
 max-icon-size=96
 icon-path=/usr/share/icons/Papirus
+
+# Content
 format=<b>%s</b>\n%b
+
+# Behavior
 default-timeout=7000
 max-history=20
 max-visible=5
 sort=-priority
 group-by=app-name,summary,body
 
+# Notification rules
 [urgency=critical]
 border-color=#e06c75
 default-timeout=0
 
 [grouped]
 format=(%g) <b>%s</b>\n%b
+
+[summary="Calendar notification"]
+padding=8
 
 [app-name=Spotify]
 default-timeout=3000
