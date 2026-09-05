@@ -56,5 +56,6 @@ w = scaling full
 <comma>w = exec "$HOME/.config/imv/save_rotation" save
 
 # File operations
+o = exec "$HOME/.config/imv/open_image" &
 x = exec trash-put "$imv_current_file"; close
 dd = exec trash-put "$imv_current_file"; close

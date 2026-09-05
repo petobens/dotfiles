@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${imv_pid:?}" "${imv_current_file:?}"
+
+selection_file=$(mktemp "${XDG_RUNTIME_DIR:-/tmp}/imv-open.XXXXXX")
+trap 'rm -f "$selection_file"' EXIT
+
+ghostty \
+    --class=yazi \
+    --title=yazi \
+    -e yazi "$(dirname -- "$imv_current_file")" \
+    --chooser-file="$selection_file"
+
+mapfile -t images < "$selection_file"
+((${#images[@]})) || exit 0
+
+for image in "${images[@]}"; do
+    encoded=$(printf '%s' "$image" | base64 -w0)
+    # imv splits commands on spaces before expanding each argument
+    imv-msg "$imv_pid" \
+        "open \"\$(printf\${IFS}%s\${IFS}$encoded|base64\${IFS}-d)\""
+done
+imv-msg "$imv_pid" 'goto -1'
