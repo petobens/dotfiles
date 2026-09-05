@@ -211,16 +211,16 @@ if [[ $workspace == current ]]; then
     workspace=$(hyprctl activeworkspace -j | jq -r '.id')
 fi
 
-# Focus a matching window or launch the app on its assigned workspace
 # Match terminal apps by tag because their requested Ghostty classes are not
 # used. Match browser apps by class because windows from existing browser
 # processes do not receive launch tags.
-clients=$(hyprctl clients -j)
-mapfile -t addresses < <(
+matching_addresses() {
     jq -r --arg class "$class" --arg tag "$tag" \
-        '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address' \
-        <<< "$clients"
-)
+        '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address'
+}
+
+# Focus a matching window or launch the app on its assigned workspace
+mapfile -t addresses < <(hyprctl clients -j | matching_addresses)
 if ((${#addresses[@]})); then
     address=${addresses[0]}
     if $cycle && ((${#addresses[@]} > 1)); then
@@ -236,4 +236,13 @@ if ((${#addresses[@]})); then
     "$HOME/.config/hypr/scripts/focus_window" "$address"
 else
     hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
+    # Existing browser processes create windows without the launch workspace rule
+    for _ in {1..100}; do
+        sleep 0.1
+        address=$(hyprctl clients -j | matching_addresses | sed -n '1p')
+        if [[ -n $address ]]; then
+            "$HOME/.config/hypr/scripts/focus_window" "$address"
+            break
+        fi
+    done
 fi
