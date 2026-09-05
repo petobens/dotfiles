@@ -84,7 +84,9 @@ blink_cmp.setup({
                     },
                 },
             },
-            direction_priority = { 's', 'n' },
+            direction_priority = function()
+                return copilot_multiline_menu_direction or { 's', 'n' }
+            end,
         },
         list = {
             selection = {
@@ -254,12 +256,6 @@ blink_cmp.setup({
         },
     },
 })
-
--- Override direction_priority post-setup with a function form (the validator
--- only accepts a list but the runtime supports a function)
-require('blink.cmp.config').completion.menu.direction_priority = function()
-    return copilot_multiline_menu_direction or { 's', 'n' }
-end
 
 -- Autocmd settings
 local blink_cmp_augroup = vim.api.nvim_create_augroup('blink_cmp', { clear = true })
