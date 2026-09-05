@@ -99,7 +99,7 @@ local function chat_footer(chat)
     if adapter then
         local usage = usage_helpers.get(adapter.name)
         if usage then
-            local label = string.format(' %s %.0f%%', usage.window, usage.pct)
+            local label = string.format(' %s %.0f%%', usage.window, usage.pct)
             if usage.reset then
                 label = label .. ' (' .. usage.reset .. ')'
             end
