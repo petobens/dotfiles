@@ -3,6 +3,7 @@
 @define-color foreground #abb2bf;
 @define-color focused #2c323c;
 @define-color muted #5c6370;
+@define-color standby #7f8795;
 @define-color red #e06c75;
 
 /* Base */
@@ -13,7 +14,6 @@
     font-size: 11pt;
     min-height: 0;
 }
-
 window#waybar {
     background: @background;
     color: @foreground;
@@ -48,13 +48,11 @@ tooltip {
     font-weight: bold;
     padding: 0;
 }
-
 #custom-arch {
     font-family: 'Symbols Nerd Font';
     font-size: 12pt;
     padding-right: 3px;
 }
-
 #custom-window-count {
     padding-right: 7px;
 }
@@ -66,7 +64,6 @@ tooltip {
     font-size: 15pt;
     padding: 0 10px;
 }
-
 #workspaces button.active {
     background: @focused;
     color: @foreground;
@@ -78,40 +75,34 @@ tooltip {
     font-family: 'Symbols Nerd Font';
     font-size: 14pt;
 }
-
 #language {
     font-size: 12pt;
     font-weight: bold;
     padding-bottom: 2px;
 }
-
 #custom-vpn {
     font-family: 'Symbols Nerd Font';
     font-size: 13pt;
 }
-
 #custom-bluetooth,
 #custom-no-battery {
     font-family: 'Symbols Nerd Font';
     font-size: 11pt;
 }
-
 #custom-slack {
     font-family: 'Symbols Nerd Font';
     font-size: 13pt;
     padding-left: 0;
     padding-right: 2px;
 }
-
 #tray {
     padding: 0 2px;
 }
 
 /* Status states */
 #custom-docker.standby {
-    color: @muted;
+    color: @standby;
 }
-
 #workspaces button.urgent,
 #battery.critical,
 #custom-docker.failed,
