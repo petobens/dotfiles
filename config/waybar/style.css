@@ -104,8 +104,7 @@ tooltip {
 }
 
 #tray {
-    opacity: 0;
-    padding: 0;
+    padding: 0 2px;
 }
 
 /* Status states */

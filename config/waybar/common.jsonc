@@ -124,11 +124,6 @@
         "on-click": "~/.config/hypr/scripts/raise_or_launch calendar",
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
     },
-    // Keep a tray host running so Slack exposes its notifier state
-    "tray": {
-        "icon-size": 1,
-        "spacing": 0,
-    },
     "custom/slack": {
         "exec": "~/.config/hypr/scripts/slack_status",
         "format": "{icon}",
@@ -141,5 +136,10 @@
         "interval": 1,
         "on-click": "~/.config/hypr/scripts/raise_or_launch slack",
         "return-type": "json",
+    },
+    "tray": {
+        "icon-size": 14,
+        "ignore-list": ["Slack_status_icon"],
+        "spacing": 6,
     },
 }
