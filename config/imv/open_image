@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-: "${imv_pid:?}" "${imv_current_file:?}"
+: "${imv_pid:?}"
+
+start_directory=$HOME/Pictures
+if [[ -n ${imv_current_file:-} ]]; then
+    start_directory=$(dirname -- "$imv_current_file")
+fi
 
 selection_file=$(mktemp "${XDG_RUNTIME_DIR:-/tmp}/imv-open.XXXXXX")
 trap 'rm -f "$selection_file"' EXIT
@@ -9,7 +14,7 @@ trap 'rm -f "$selection_file"' EXIT
 ghostty \
     --class=yazi \
     --title=yazi \
-    -e yazi "$(dirname -- "$imv_current_file")" \
+    -e yazi "$start_directory" \
     --chooser-file="$selection_file"
 
 mapfile -t images < "$selection_file"
