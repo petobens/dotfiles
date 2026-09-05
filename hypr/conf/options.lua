@@ -29,8 +29,7 @@ hl.config({
         },
     },
     animations = { enabled = true },
-    -- Hide the pointer while it sits still, as unclutter did under X
-    cursor = { inactive_timeout = 1 },
+    cursor = { inactive_timeout = 1 }, -- Hide the pointer while it sits still
     dwindle = { preserve_split = true },
     ecosystem = { no_update_news = true },
     input = {
@@ -82,6 +81,3 @@ hl.animation({
     style = 'slide',
 })
 hl.animation({ leaf = 'fade', enabled = true, speed = 3, bezier = animation_curve })
-
--- Gestures
-hl.gesture({ fingers = 3, direction = 'horizontal', action = 'workspace' })
