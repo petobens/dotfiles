@@ -17,6 +17,7 @@ print_claude_usage() {
     local exp j now_ms pct reset reset7 sid
 
     if [ -z "$(jq -r '.claudeAiOauth.accessToken // empty' "$cred" 2> /dev/null)" ]; then
+        printf '\033[1;34mClaude\033[0m  unavailable (not logged in)\n'
         return
     fi
 
@@ -64,7 +65,7 @@ codex_usage() {
 }
 
 print_codex_usage() {
-    local j pct reset reset7
+    local j pct reset window window_seconds
 
     if [ -z "$(jq -r '.tokens.access_token // empty' "$auth" 2> /dev/null)" ]; then
         return
@@ -80,12 +81,17 @@ print_codex_usage() {
     fi
 
     if [ -n "$pct" ]; then
+        window_seconds=$(jq -r '.rate_limit.primary_window.limit_window_seconds' \
+            <<< "$j" 2> /dev/null)
+        if ((window_seconds % 86400 == 0)); then
+            window="$((window_seconds / 86400))d"
+        else
+            window="$((window_seconds / 3600))h"
+        fi
         reset=$(jq -r '.rate_limit.primary_window.reset_at // empty' <<< "$j" 2> /dev/null)
-        reset=$(date -d "@$reset" +'%H:%M' 2> /dev/null)
-        reset7=$(jq -r '.rate_limit.secondary_window.reset_at // empty' <<< "$j" 2> /dev/null)
-        reset7=$(date -d "@$reset7" +'%a %H:%M' 2> /dev/null)
-        printf '\033[1;32mCodex\033[0m   5h: %5.1f%% (resets %s)  |  7d: %5.1f%% (resets %s)\n' \
-            "$pct" "$reset" "$(jq -r '.rate_limit.secondary_window.used_percent // 0' <<< "$j" 2> /dev/null)" "$reset7"
+        reset=$(date -d "@$reset" +'%a %H:%M' 2> /dev/null)
+        printf '\033[1;32mCodex\033[0m   %s: %5.1f%% (resets %s)\n' \
+            "$window" "$pct" "$reset"
     else
         printf '\033[1;32mCodex\033[0m   unavailable\n'
     fi

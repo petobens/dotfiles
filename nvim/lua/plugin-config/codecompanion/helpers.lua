@@ -440,7 +440,7 @@ function M.usage.get(name)
     return usage_cache[name]
 end
 
--- Cache the 5h usage for claude_code/codex, parsed from the script output; cb
+-- Cache usage for claude_code/codex, parsed from the script output; cb
 -- re-renders the footer once data lands. Results are reused for USAGE_TTL
 -- seconds per adapter
 function M.usage.refresh(name, cb)
@@ -457,10 +457,13 @@ function M.usage.refresh(name, cb)
     usage_last_run[name] = os.time()
     M.usage.run(name, function(out)
         local label = usage_labels[name]
-        local pct, reset = out:match(label .. '%s+5h:%s+([%d%.]+)%%%s+%(resets ([^)]+)%)')
-        pct = pct or out:match(label .. '%s+5h:%s+([%d%.]+)')
+        local window, pct, reset =
+            out:match(label .. '%s+(%d+[hd]):%s+([%d%.]+)%%%s+%(resets ([^)]+)%)')
+        if not pct then
+            window, pct = out:match(label .. '%s+(%d+[hd]):%s+([%d%.]+)')
+        end
         if pct then
-            usage_cache[name] = { pct = tonumber(pct), reset = reset }
+            usage_cache[name] = { pct = tonumber(pct), reset = reset, window = window }
         end
         if cb then
             vim.schedule(cb)
