@@ -1,6 +1,8 @@
 -- luacheck: globals hl
 
 local geometry = require('conf.geometry')
+local window_actions = require('conf.window_actions')
+local maximized_tag = '+' .. window_actions.work_area_maximized_tag
 
 -- Application layouts use fractions of the usable monitor area
 local half = { x = 0.25, y = 0.25, width = 0.5, height = 0.5 }
@@ -32,35 +34,8 @@ local function window_rule(class, options)
     hl.window_rule(options)
 end
 
-local function has_tag(window, name)
-    for _, tag in ipairs(window.tags) do
-        if tag == name or tag == name .. '*' then
-            return true
-        end
-    end
-    return false
-end
-
-local function fills_work_area(window)
-    return has_tag(window, 'work-area-maximized')
-        and not has_tag(window, 'manually-placed')
-end
-
 local function fit_to_work_area(window)
-    if window.fullscreen == 0 and fills_work_area(window) then
-        geometry.fill_work_area(window)
-    else
-        geometry.constrain(window)
-    end
-end
-
-local function apply_layout(window)
-    local layout = layout_by_class[window.initial_class]
-        or layout_by_class[window.class]
-        or layout_by_title[window.initial_title]
-    if layout then
-        geometry.place(window, layout)
-    elseif window.fullscreen == 0 and fills_work_area(window) then
+    if window.fullscreen == 0 and window_actions.fills_work_area(window) then
         geometry.fill_work_area(window)
     else
         geometry.constrain(window)
@@ -73,50 +48,58 @@ local function fit_all_to_work_area()
     end
 end
 
+local function apply_layout(window)
+    local layout = layout_by_class[window.initial_class]
+        or layout_by_class[window.class]
+        or layout_by_title[window.initial_title]
+    if layout then
+        geometry.place(window, layout)
+    else
+        fit_to_work_area(window)
+    end
+end
+
 -- Defaults
 window_rule('.*', { float = true, suppress_event = 'maximize' })
 hl.window_rule({
+    -- Maximize the tagged main terminal because Ghostty ignores its requested class
     match = { tag = 'terminal' },
-    tag = '+work-area-maximized',
+    tag = maximized_tag,
 })
 
 -- Assigned workspaces
 window_rule('^(brave-browser|brave-calendar.*|microsoft-edge-dev.*)$', {
     workspace = '1 silent',
-    tag = '+work-area-maximized',
+    tag = maximized_tag,
+})
+window_rule('^Qemu-system-x86_64$', {
+    workspace = '1',
+    tag = maximized_tag,
 })
 window_rule(
     '^(slack|brave-teams.*|brave-meet.*|brave-mail.*|zoom)$',
-    { workspace = '2 silent', tag = '+work-area-maximized' }
+    { workspace = '2 silent', tag = maximized_tag }
 )
 window_rule('^Spotify$', {
     workspace = '3 silent',
-    tag = '+work-area-maximized',
+    tag = maximized_tag,
 })
--- Native maximization keeps MPV's fullscreen idle inhibitor active
 window_rule('^mpv$', {
+    -- Native maximization keeps MPV's fullscreen idle inhibitor active
     workspace = '3 silent',
     maximize = true,
 })
 window_rule(
     '^(com\\.transmissionbt\\.transmission.*|obs|com.obsproject.Studio)$',
-    { workspace = '4 silent', tag = '+work-area-maximized' }
+    { workspace = '4 silent', tag = maximized_tag }
 )
 window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
-window_rule('^Qemu-system-x86_64$', {
-    workspace = '1',
-    tag = '+work-area-maximized',
-})
 
 -- Application layouts
-hl.on('window.open', function(window)
-    apply_layout(window)
-end)
+hl.on('window.open', apply_layout)
 
 -- Reapply work-area bounds when windows move or monitor reservations change
-hl.on('window.move_to_workspace', function(window)
-    fit_to_work_area(window)
-end)
+hl.on('window.move_to_workspace', fit_to_work_area)
 hl.on('monitor.layout_changed', function()
     fit_all_to_work_area()
 end)

@@ -1,7 +1,7 @@
 -- luacheck: globals hl
 
-local geometry = require('conf.geometry')
 local monitor_modes = require('conf.monitors')
+local window_actions = require('conf.window_actions')
 
 -- Commands
 local scripts = os.getenv('HOME') .. '/.config/hypr/scripts/'
@@ -37,77 +37,6 @@ local function launch(keys, app, description)
     exec(keys, app_command .. app, description)
 end
 
-local function close_workspace()
-    for _, window in ipairs(hl.get_workspace_windows(hl.get_active_workspace())) do
-        hl.dispatch(hl.dsp.window.close({ window = window }))
-    end
-end
-
-local function mark_manually_placed(window)
-    hl.dispatch(hl.dsp.window.tag({ tag = '+manually-placed', window = window }))
-end
-
-local function place_window(placement)
-    return function()
-        local window = hl.get_active_window()
-        if not window then
-            return
-        end
-
-        hl.dispatch(hl.dsp.window.fullscreen_state({
-            internal = 0,
-            client = 0,
-            action = 'set',
-            window = window,
-        }))
-        mark_manually_placed(window)
-        hl.dispatch(hl.dsp.window.float({ action = 'enable', window = window }))
-        geometry.place(window, placement)
-    end
-end
-
-local function move_to_monitor(kind, direction)
-    return function()
-        local source = hl.get_active_monitor()
-        local target = hl.get_monitor(direction)
-        if not source or not target or source == target then
-            return
-        end
-
-        local windows
-        if kind == 'window' then
-            local window = hl.get_active_window()
-            if not window then
-                return
-            end
-            windows = { window }
-        else
-            windows = hl.get_workspace_windows(hl.get_active_workspace())
-        end
-
-        local geometries = {}
-        for _, window in ipairs(windows) do
-            if window.fullscreen == 0 then
-                table.insert(geometries, {
-                    window = window,
-                    placement = geometry.capture(window, source),
-                })
-            end
-        end
-
-        if kind == 'window' then
-            hl.dispatch(hl.dsp.window.move({ monitor = direction, follow = true }))
-        else
-            hl.dispatch(hl.dsp.workspace.move({ monitor = direction }))
-        end
-
-        for _, item in ipairs(geometries) do
-            mark_manually_placed(item.window)
-            geometry.place(item.window, item.placement, target)
-        end
-    end
-end
-
 -- Session
 exec(
     super .. ' + R',
@@ -128,24 +57,19 @@ bind(
 )
 bind(super .. ' + Q', hl.dsp.window.close({}), 'Close window')
 bind(super_shift .. ' + W', hl.dsp.window.kill({}), 'Force close window')
-bind(super_alt .. ' + W', close_workspace, 'Close workspace windows')
+bind(super_alt .. ' + W', window_actions.close_workspace, 'Close workspace windows')
 bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = true })
 bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse = true })
 
 -- Window placement
-bind(super .. ' + UP', function()
-    local window = hl.get_active_window()
-    if not window then
-        return
-    end
-
-    hl.dispatch(hl.dsp.window.tag({ tag = '-manually-placed', window = window }))
-    hl.dispatch(hl.dsp.window.tag({ tag = '+work-area-maximized', window = window }))
-    geometry.fill_work_area(window)
-end, 'Maximize window')
+bind(super .. ' + UP', window_actions.maximize, 'Maximize window')
 
 local function placement(keys, name, x, y, width, height)
-    return { keys = keys, name = name, x = x, y = y, width = width, height = height }
+    return {
+        keys = keys,
+        name = name,
+        geometry = { x = x, y = y, width = width, height = height },
+    }
 end
 local placements = {
     placement(super .. ' + LEFT', 'left', 0, 0, 0.5, 1),
@@ -161,63 +85,46 @@ local placements = {
     placement(super_ctrl .. ' + 7', 'dialog', 0.33, 0.3, 0.35, 0.25),
 }
 for _, item in ipairs(placements) do
-    bind(item.keys, place_window(item), 'Place window ' .. item.name)
+    bind(item.keys, window_actions.place(item.geometry), 'Place window ' .. item.name)
 end
 
 -- Window resizing
 local step = 60
-local edge_resizes = {
-    { super .. ' + H', step, 0, -step, 0, 'Grow window left' },
-    { super .. ' + L', step, 0, 0, 0, 'Grow window right' },
-    { super .. ' + K', 0, step, 0, -step, 'Grow window up' },
-    { super .. ' + J', 0, step, 0, 0, 'Grow window down' },
-    { super_alt .. ' + H', -step, 0, step, 0, 'Shrink window left' },
-    { super_alt .. ' + L', -step, 0, 0, 0, 'Shrink window right' },
-    { super_alt .. ' + K', 0, -step, 0, step, 'Shrink window up' },
-    { super_alt .. ' + J', 0, -step, 0, 0, 'Shrink window down' },
-}
-local function resize_edge(resize)
-    return function()
-        local window = hl.get_active_window()
-        if not window then
-            return
-        end
-        mark_manually_placed(window)
-        geometry.resize(window, {
-            width = resize[2],
-            height = resize[3],
-            x = resize[4],
-            y = resize[5],
-        })
-    end
+local function edge_resize(keys, description, x, y, width, height)
+    return {
+        keys = keys,
+        description = description,
+        delta = { width = width, height = height, x = x, y = y },
+    }
 end
+local edge_resizes = {
+    edge_resize(super .. ' + H', 'Grow window left', -step, 0, step, 0),
+    edge_resize(super .. ' + L', 'Grow window right', 0, 0, step, 0),
+    edge_resize(super .. ' + K', 'Grow window up', 0, -step, 0, step),
+    edge_resize(super .. ' + J', 'Grow window down', 0, 0, 0, step),
+    edge_resize(super_alt .. ' + H', 'Shrink window left', step, 0, -step, 0),
+    edge_resize(super_alt .. ' + L', 'Shrink window right', 0, 0, -step, 0),
+    edge_resize(super_alt .. ' + K', 'Shrink window up', 0, step, 0, -step),
+    edge_resize(super_alt .. ' + J', 'Shrink window down', 0, 0, 0, -step),
+}
 for _, resize in ipairs(edge_resizes) do
-    bind(resize[1], resize_edge(resize), resize[6], { repeating = true })
+    bind(
+        resize.keys,
+        window_actions.resize(resize.delta),
+        resize.description,
+        { repeating = true }
+    )
 end
 
 -- Workspaces
-local function switch_workspace(dispatcher)
-    return function()
-        local remembered = {}
-        for _, workspace in ipairs(hl.get_workspaces()) do
-            remembered[workspace.id] = workspace.last_window
-        end
-        hl.dispatch(dispatcher)
-        local window = remembered[hl.get_active_workspace().id]
-        if window then
-            hl.dispatch(hl.dsp.focus({ window = window }))
-        end
-    end
-end
-
 bind(
     super .. ' + N',
-    switch_workspace(hl.dsp.focus({ workspace = 'm+1' })),
+    window_actions.switch_workspace(hl.dsp.focus({ workspace = 'm+1' })),
     'Next workspace'
 )
 bind(
     super .. ' + P',
-    switch_workspace(hl.dsp.focus({ workspace = 'm-1' })),
+    window_actions.switch_workspace(hl.dsp.focus({ workspace = 'm-1' })),
     'Previous workspace'
 )
 
@@ -225,7 +132,7 @@ for workspace = 1, 9 do
     local name = tostring(workspace)
     bind(
         super .. ' + ' .. name,
-        switch_workspace(hl.dsp.focus({ workspace = name })),
+        window_actions.switch_workspace(hl.dsp.focus({ workspace = name })),
         'Workspace ' .. name
     )
     bind(
@@ -248,12 +155,12 @@ local monitor_directions = {
 for _, direction in ipairs(monitor_directions) do
     bind(
         super_ctrl .. ' + ' .. direction[1],
-        move_to_monitor('window', direction[2]),
+        window_actions.move_to_monitor('window', direction[2]),
         'Move window to monitor ' .. direction[3]
     )
     bind(
         super_shift .. ' + ' .. direction[1],
-        move_to_monitor('workspace', direction[2]),
+        window_actions.move_to_monitor('workspace', direction[2]),
         'Move workspace to monitor ' .. direction[3]
     )
 end
