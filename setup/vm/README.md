@@ -78,6 +78,8 @@ terminal after the VM starts:
 ./setup/vm/vm.sh --background
 ```
 
+Press `Ctrl+Alt+G` in the QEMU window to toggle mouse and keyboard capture.
+
 When the VM has no Wi-Fi, Bluetooth, or battery hardware, the corresponding
 menus use sample data to exercise their interactions without changing guest
 connectivity.
