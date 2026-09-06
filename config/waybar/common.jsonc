@@ -66,6 +66,7 @@
     },
     "hyprland/language": {
         "format": "{short}",
+        "keyboard-name": "at-translated-set-2-keyboard",
         "on-click": "hyprctl switchxkblayout all next",
     },
     "custom/vpn": {

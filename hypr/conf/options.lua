@@ -35,7 +35,7 @@ hl.config({
     input = {
         follow_mouse = 1,
         kb_layout = 'personal,personal',
-        kb_options = 'grp:win_space_toggle,ctrl:nocaps',
+        kb_options = 'ctrl:nocaps',
         kb_variant = 'us,es',
         sensitivity = 0,
         touchpad = {

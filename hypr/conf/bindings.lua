@@ -269,6 +269,7 @@ exec(super_shift .. ' + K', player_command .. ' previous', 'Previous track')
 exec(super_shift .. ' + T', scripts .. 'spotify_track', 'Show current track')
 
 -- Hardware controls
+exec(super .. ' + SPACE', 'hyprctl switchxkblayout all next', 'Switch keyboard layout')
 exec(
     'XF86MonBrightnessUp',
     brightness_command .. 'up',
