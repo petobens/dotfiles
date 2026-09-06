@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+widgets=${XDG_RUNTIME_DIR:?}/hyprlock-widgets.conf
+temporary=$(mktemp "$widgets.XXXXXX")
+trap 'rm -f -- "$temporary"' EXIT
+
+# Hyprlock widget dimensions ignore output scale, so scale each monitor's copy
+write_widgets() {
+    local monitor=$1 scale=$2
+    local ring outline clock clock_y date date_y dots_y status_height status_y status_font
+
+    read -r ring outline clock clock_y date date_y dots_y status_height status_y status_font < <(
+        jq -nr --argjson scale "$scale" '
+            [200, 3, 28, 45, 12, 9, -16, 72, -45, 16]
+            | map(. * $scale | round)
+            | @tsv
+        '
+    )
+
+    cat << EOF
+# $monitor
+
+# Authentication ring
+input-field {
+    monitor = $monitor
+    size = $ring, $ring
+    outline_thickness = $outline
+    rounding = -1
+    inner_color = rgb(24272e)
+    outer_color = rgb(24272e)
+    check_color = rgb(528bff)
+    check_text =
+    fail_color = rgb(e06c75)
+    fail_text =
+    placeholder_text =
+    hide_input = true
+    hide_input_base_color = rgba(24272e00)
+    fade_on_empty = false
+    position = 0, 0
+    halign = center
+    valign = center
+}
+
+# Clock
+label {
+    monitor = $monitor
+    text = cmd[update:1000] date +"%H:%M:%S"
+    color = rgb(abb2bf)
+    font_size = $clock
+    position = 0, $clock_y
+    halign = center
+    valign = center
+}
+
+# Date
+label {
+    monitor = $monitor
+    text = cmd[update:60000] date +"%a %b %d"
+    color = rgb(abb2bf)
+    font_size = $date
+    position = 0, $date_y
+    halign = center
+    valign = center
+}
+
+# Password dots
+input-field {
+    monitor = $monitor
+    size = $ring, $ring
+    outline_thickness = 0
+    inner_color = rgba(24272e00)
+    outer_color = rgba(24272e00)
+    font_color = rgb(abb2bf)
+    check_color = rgba(24272e00)
+    check_text =
+    fail_color = rgba(24272e00)
+    fail_text =
+    placeholder_text =
+    dots_size = 0.07
+    dots_spacing = 0.15
+    dots_center = true
+    position = 0, $dots_y
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# Authentication status
+input-field {
+    monitor = $monitor
+    size = 1, $status_height
+    outline_thickness = 0
+    inner_color = rgba(24272e00)
+    check_color = rgba(24272e00)
+    check_text = <span foreground="##528bff" size="${status_font}pt">Validating</span>
+    fail_color = rgba(24272e00)
+    fail_text = <span foreground="##e06c75" size="${status_font}pt">Wrong!</span>
+    placeholder_text =
+    hide_input = true
+    hide_input_base_color = rgba(24272e00)
+    fade_on_empty = false
+    position = 0, $status_y
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+EOF
+}
+
+monitors=$(hyprctl monitors -j | jq -er '
+    if length == 0 then error("no active monitors")
+    else .[] | [.name, .scale] | @tsv
+    end
+')
+
+while IFS=$'\t' read -r monitor scale; do
+    write_widgets "$monitor" "$scale"
+done <<< "$monitors" > "$temporary"
+
+mv "$temporary" "$widgets"
+trap - EXIT
+exec hyprlock
