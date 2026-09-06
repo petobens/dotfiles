@@ -249,7 +249,11 @@ APPS = {
     'vscode': {'type': 'electron', 'args': {'class_name': 'Code', 'event_delay': 30}},
     'zathura': {
         'type': 'gtk',
-        'args': {'class_name': 'org.pwmt.zathura', 'cycle': True},
+        'args': {
+            'class_name': 'org.pwmt.zathura',
+            'cmd': 'zathura',
+            'cycle': True,
+        },
     },
     'zoom': {
         'type': 'rol_custom',
@@ -412,12 +416,13 @@ class GTKApp(ROLApp):
     def _build_cmd(self):
         if not self.is_dialog:
             cmd = self._raiseorlauch_cmd()
-            # Note: if change sccale for transmission-gtk everything looks huge
-            env_var = (
-                self.screen.gdk_env.replace('_SCALE=2', '_SCALE=1')
-                if self.cmd == 'transmission-gtk'
-                else self.screen.gdk_env
-            )
+            env_var = self.screen.gdk_env
+            if self.cmd == 'zathura':
+                # GTK 4 no longer supports the font-only HiDPI counter-scale
+                env_var = 'GDK_SCALE=1 ' if self.screen.is_hidpi else ''
+            elif self.cmd == 'transmission-gtk':
+                # Scaling transmission-gtk makes everything look huge
+                env_var = env_var.replace('_SCALE=2', '_SCALE=1')
             cmd += ['-e', f'"{env_var}{self.cmd}"']
         else:
             gtk_env = dict([i.split('=') for i in self.screen.gdk_env.split()])  # type: ignore
