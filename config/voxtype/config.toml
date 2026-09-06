@@ -7,7 +7,7 @@ enabled = false
 
 [whisper]
 # Multilingual model: the .en variants cannot transcribe Spanish
-model = "small"
+model = "base"
 # Constrained auto-detection avoids misdetecting short phrases
 language = ["en", "es"]
 translate = false

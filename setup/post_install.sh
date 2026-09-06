@@ -281,7 +281,7 @@ section 'Installing Voxtype model'
 # This runs before config symlinks, so keep the model in sync with
 # config/voxtype/config.toml
 if command -v voxtype > /dev/null; then
-    voxtype setup --download --model small
+    voxtype setup --download --model base
 fi
 
 section 'Configuring gopass'
