@@ -23,6 +23,27 @@ local function has_tag(window, name)
     return false
 end
 
+local function shares_edge(window, candidate, axis, side)
+    if
+        candidate.address == window.address
+        or not candidate.floating
+        or candidate.fullscreen ~= 0
+        or candidate.monitor.id ~= window.monitor.id
+    then
+        return false
+    end
+
+    local cross_axis = axis == 'x' and 'y' or 'x'
+    local edge = window.at[axis] + (side == 'end' and window.size[axis] or 0)
+    local candidate_edge = candidate.at[axis]
+        + (side == 'start' and candidate.size[axis] or 0)
+    local overlaps = math.min(
+        window.at[cross_axis] + window.size[cross_axis],
+        candidate.at[cross_axis] + candidate.size[cross_axis]
+    ) > math.max(window.at[cross_axis], candidate.at[cross_axis])
+    return overlaps and math.abs(edge - candidate_edge) <= geometry.border_size * 2 + 1
+end
+
 -- Window state
 function M.fills_work_area(window)
     return has_tag(window, work_area_maximized_tag)
@@ -56,8 +77,58 @@ function M.resize(delta)
             return
         end
 
+        local axis = (delta.x ~= 0 or delta.width ~= 0) and 'x' or 'y'
+        local side = (delta.x ~= 0 or delta.y ~= 0) and 'start' or 'end'
+        local size = axis == 'x' and 'width' or 'height'
+
+        -- Find every window attached to the edge being moved
+        local neighbors = {}
+        for _, candidate in ipairs(hl.get_workspace_windows(hl.get_active_workspace())) do
+            if shares_edge(window, candidate, axis, side) then
+                table.insert(neighbors, candidate)
+            end
+        end
+
+        -- Stop before the smallest neighbor would collapse
+        local shift = side == 'start' and delta[axis] or delta[size]
+        for _, neighbor in ipairs(neighbors) do
+            if side == 'start' then
+                shift = math.max(shift, 1 - neighbor.size[axis])
+            else
+                shift = math.min(shift, neighbor.size[axis] - 1)
+            end
+        end
+
+        local resize_delta = { x = 0, y = 0, width = 0, height = 0 }
+        if side == 'start' then
+            resize_delta[axis] = shift
+            resize_delta[size] = -shift
+        else
+            resize_delta[size] = shift
+        end
+
         mark_manually_placed(window)
-        geometry.resize(window, delta)
+        local old_edge = window.at[axis] + (side == 'end' and window.size[axis] or 0)
+        local resized = geometry.resize(window, resize_delta)
+        local new_edge = resized[axis] + (side == 'end' and resized[size] or 0)
+        shift = new_edge - old_edge
+        if shift == 0 then
+            return
+        end
+
+        -- Apply the opposite movement to keep the shared edges aligned
+        local adjustment = { x = 0, y = 0, width = 0, height = 0 }
+        if side == 'start' then
+            adjustment[size] = shift
+        else
+            adjustment[axis] = shift
+            adjustment[size] = -shift
+        end
+
+        for _, neighbor in ipairs(neighbors) do
+            mark_manually_placed(neighbor)
+            geometry.resize(neighbor, adjustment)
+        end
     end
 end
 

@@ -99,12 +99,14 @@ function M.resize(window, delta)
     local right = clamp(desired_right, x + 1, max_x)
     local bottom = clamp(desired_bottom, y + 1, max_y)
 
+    local resized = { x = x, y = y, width = right - x, height = bottom - y }
     hl.dispatch(hl.dsp.window.resize({
-        x = right - x,
-        y = bottom - y,
+        x = resized.width,
+        y = resized.height,
         window = window,
     }))
     hl.dispatch(hl.dsp.window.move({ x = x, y = y, window = window }))
+    return resized
 end
 
 return M
