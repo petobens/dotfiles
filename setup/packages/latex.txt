@@ -39,7 +39,6 @@ imakeidx
 import
 infwarerr
 jknapltx
-l3backend
 l3kernel
 l3packages
 letltxmacro
