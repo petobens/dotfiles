@@ -20,3 +20,4 @@ fallback_to_clipboard = true
 on_recording_start = true
 on_recording_stop = true
 on_transcription = false
+show_engine_icon = true
