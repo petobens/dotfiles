@@ -291,8 +291,7 @@ exec(
 exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 
 -- Desktop utilities
-exec('F10', 'voxtype record start', 'Start dictation')
-exec('F10', 'voxtype record stop', 'Stop dictation', { release = true })
+exec('F10', 'voxtype record toggle', 'Toggle dictation')
 
 exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
 launch(super_alt .. ' + B', 'trash', 'Show trash')
