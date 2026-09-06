@@ -98,6 +98,14 @@ window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
 -- Application layouts
 hl.on('window.open', apply_layout)
 
+-- Capture QEMU input even when focus changes during a held keybinding
+hl.on('window.active', function(window)
+    if window and window.class == 'Qemu-system-x86_64' then
+        hl.dispatch(hl.dsp.send_key_state({ mods = 'CTRL + ALT', key = 'G', state = 1 }))
+        hl.dispatch(hl.dsp.send_key_state({ mods = 'CTRL + ALT', key = 'G', state = 0 }))
+    end
+end)
+
 -- Reapply work-area bounds when windows move or monitor reservations change
 hl.on('window.move_to_workspace', fit_to_work_area)
 hl.on('monitor.layout_changed', function()
