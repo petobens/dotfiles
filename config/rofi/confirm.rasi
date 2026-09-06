@@ -1,5 +1,5 @@
 configuration {
-    font: "Noto Sans 10";
+    font: "Noto Sans 11";
     show-icons: false;
 }
 
@@ -14,7 +14,7 @@ configuration {
 
 window {
     location: center;
-    width: 240px;
+    width: 264px;
     y-offset: 0px;
     padding: 12px;
     background-color: @background;

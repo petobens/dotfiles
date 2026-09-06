@@ -4,12 +4,13 @@ set -euo pipefail
 script_dir=$(dirname "$(realpath "$0")")
 action=${1:-}
 if [[ -z $action ]]; then
-    actions=('about arch' lock reboot poweroff)
+    actions=('about arch' applications lock reboot poweroff)
     index=$(printf '%s\n' \
         '  About Arch' \
-        '  Lock          (Super+Shift+L)' \
-        '  Reboot        (Super+Shift+R)' \
-        '  Shut Down     (Super+Shift+S)' |
+        '󰀻  Applications  (Super+a)' \
+        '  Lock          (Super+Shift+l)' \
+        '  Reboot        (Super+Shift+r)' \
+        '  Shut Down     (Super+Shift+s)' |
         rofi -dmenu -no-custom -format i \
             -theme "$script_dir/../../config/rofi/session.rasi") || exit 0
     [[ $index =~ ^[0-9]+$ ]] || exit 0
@@ -18,6 +19,7 @@ fi
 
 case "$action" in
     'about arch') "$script_dir/raise_or_launch" about ;;
+    applications) "$script_dir/raise_or_launch" menu ;;
     lock) loginctl lock-session ;;
     'quit apps' | quit-apps)
         "$script_dir/confirm" 'Do you want to quit all apps?' || exit 0
