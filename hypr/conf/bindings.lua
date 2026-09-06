@@ -44,6 +44,12 @@ exec(
         .. '-h string:x-dunst-stack-tag:hyprland-reload "Hyprland reloaded"',
     'Reload Hyprland'
 )
+exec(
+    super .. ' + B',
+    'pkill -SIGUSR2 waybar && notify-send -i view-list -t 2000 '
+        .. '-h string:x-dunst-stack-tag:waybar-reload "Waybar reloaded"',
+    'Reload Waybar'
+)
 exec(super_shift .. ' + Q', scripts .. 'session_menu quit-apps', 'Quit all applications')
 exec(super_shift .. ' + S', scripts .. 'session_menu poweroff', 'Shut down')
 exec(super_shift .. ' + R', scripts .. 'session_menu reboot', 'Reboot')
@@ -200,6 +206,7 @@ launch(super .. ' + A', 'menu', 'Curated application launcher')
 exec(super .. ' + Z', scripts .. 'password_menu', 'Password menu')
 exec(super .. ' + V', scripts .. 'clipboard_menu', 'Clipboard history')
 exec(super .. ' + slash', scripts .. 'binding_menu', 'Keybinding cheatsheet')
+exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
 
 -- Applications
 exec(super .. ' + X', 'kitty', 'Fallback terminal')
@@ -283,17 +290,10 @@ exec(
     scripts .. 'keyboard_backlight',
     'Cycle keyboard backlight'
 )
-exec(
-    super .. ' + B',
-    'pkill -SIGUSR2 waybar && notify-send -i view-list -t 2000 '
-        .. '-h string:x-dunst-stack-tag:waybar-reload "Waybar reloaded"',
-    'Reload Waybar'
-)
 exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
 launch(super_alt .. ' + B', 'trash', 'Show trash')
 exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
-exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
 
 -- Notifications
 exec(ctrl_alt .. ' + SPACE', 'makoctl dismiss', 'Dismiss notification')
