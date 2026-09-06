@@ -97,23 +97,6 @@ window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
 -- Application layouts
 hl.on('window.open', apply_layout)
 
--- Move the pointer inside QEMU when keyboard focus cannot trigger grab-on-hover
-hl.on('window.active', function(window)
-    if window and window.class == 'Qemu-system-x86_64' then
-        local cursor = hl.get_cursor_pos()
-        local outside = cursor.x < window.at.x
-            or cursor.x >= window.at.x + window.size.x
-            or cursor.y < window.at.y
-            or cursor.y >= window.at.y + window.size.y
-        if outside then
-            hl.dispatch(hl.dsp.cursor.move({
-                x = window.at.x + window.size.x / 2,
-                y = window.at.y + window.size.y / 2,
-            }))
-        end
-    end
-end)
-
 -- Reapply work-area bounds when windows move or monitor reservations change
 hl.on('window.move_to_workspace', fit_to_work_area)
 hl.on('monitor.layout_changed', function()
