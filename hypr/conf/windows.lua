@@ -86,7 +86,6 @@ window_rule('^Spotify$', {
 })
 window_rule('^mpv$', {
     -- Native maximization keeps MPV's fullscreen idle inhibitor active
-    workspace = '3 silent',
     maximize = true,
 })
 window_rule(

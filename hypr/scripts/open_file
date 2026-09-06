@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+
+# Snapshot clients and focus so we can identify what the opener changes
+known_addresses=$(hyprctl clients -j | jq '[.[].address]')
+active_address=$(hyprctl activewindow -j | jq -r '.address // empty')
+"$@" &
+
+# Focus a new window, or stop once the opener focuses an existing one
+for _ in {1..100}; do
+    address=$(hyprctl clients -j | jq -r --argjson known "$known_addresses" '
+        first(.[] | select(.address as $address | $known | index($address) | not)).address // empty
+    ')
+    if [[ -n $address ]]; then
+        "$script_dir/focus_window" "$address"
+        exit 0
+    fi
+    current_address=$(hyprctl activewindow -j | jq -r '.address // empty')
+    if [[ -n $current_address && $current_address != "$active_address" ]]; then
+        exit 0
+    fi
+    sleep 0.1
+done
