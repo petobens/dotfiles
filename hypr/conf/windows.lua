@@ -97,11 +97,20 @@ window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
 -- Application layouts
 hl.on('window.open', apply_layout)
 
--- Capture QEMU input even when focus changes during a held keybinding
+-- Move the pointer inside QEMU when keyboard focus cannot trigger grab-on-hover
 hl.on('window.active', function(window)
     if window and window.class == 'Qemu-system-x86_64' then
-        hl.dispatch(hl.dsp.send_key_state({ mods = 'CTRL + ALT', key = 'G', state = 1 }))
-        hl.dispatch(hl.dsp.send_key_state({ mods = 'CTRL + ALT', key = 'G', state = 0 }))
+        local cursor = hl.get_cursor_pos()
+        local outside = cursor.x < window.at.x
+            or cursor.x >= window.at.x + window.size.x
+            or cursor.y < window.at.y
+            or cursor.y >= window.at.y + window.size.y
+        if outside then
+            hl.dispatch(hl.dsp.cursor.move({
+                x = window.at.x + window.size.x / 2,
+                y = window.at.y + window.size.y / 2,
+            }))
+        end
     end
 end)
 
