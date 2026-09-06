@@ -1,5 +1,8 @@
+# Theme metadata
 # name: OneDarkish
 # preferred_background: 24272e
+
+# Syntax highlighting
 fish_color_normal abb2bf
 fish_color_autosuggestion 5c6370
 fish_color_cancel e06c75 --reverse
@@ -24,6 +27,8 @@ fish_color_selection --background=3e4452 --bold
 fish_color_status e06c75
 fish_color_user 56b6c2
 fish_color_valid_path --underline
+
+# Pager
 fish_pager_color_background
 fish_pager_color_completion abb2bf
 fish_pager_color_description 5c6370
