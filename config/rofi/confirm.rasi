@@ -43,6 +43,7 @@ prompt {
 
 dummy-left, dummy-right {
     expand: true;
+    background-color: transparent;
 }
 
 listview {
