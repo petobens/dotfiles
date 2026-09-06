@@ -6,6 +6,7 @@ if (($# != 1)); then
     exit 2
 fi
 
+# Resolve last and tag targets to a concrete client address
 address=$1
 if [[ $address == last ]]; then
     hyprctl dispatch "hl.dsp.focus({ last = true })"
@@ -22,4 +23,5 @@ fi
 [[ -n $address ]] || exit 0
 
 hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
+# Raising keeps focused floating windows above overlapping peers
 hyprctl dispatch "hl.dsp.window.bring_to_top({ window = 'address:$address' })"

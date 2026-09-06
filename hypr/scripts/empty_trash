@@ -5,6 +5,7 @@ script_dir=$(dirname "$(realpath "$0")")
 
 "$script_dir/confirm" 'Do you want to empty the trash?' || exit 0
 
+# Close the trash viewer so reopening it shows the cleared state
 trash_window=$(hyprctl clients -j | jq -r \
     'first(.[] | select(any(.tags[]?; . == "trash" or . == "trash*"))).address // empty')
 if [[ -n $trash_window ]]; then

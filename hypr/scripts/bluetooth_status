@@ -13,6 +13,7 @@ if ! compgen -G '/sys/class/bluetooth/hci*' > /dev/null; then
 elif [[ $(btctl show | awk '/Powered:/ { print $2; exit }') != yes ]]; then
     state=disabled
     text=''
+# Keep the indicator inactive when only the MX Master mouse is connected
 elif btctl devices Connected |
     awk 'BEGIN { IGNORECASE = 1 } !/MX Master (3S|4)/ { found = 1 } END { exit !found }'; then
     state=connected

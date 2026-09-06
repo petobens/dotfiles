@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Remember whether locking paused Spotify so unlock does not start idle playback
 state=${XDG_RUNTIME_DIR:?}/hypr-spotify-playing
 case ${1:-} in
     lock)

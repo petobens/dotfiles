@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Suppress the password copy marked by password_menu without dropping later data
 marker="${XDG_RUNTIME_DIR:?}/cliphist-ignore"
 if [[ ! -e $marker ]]; then
     cliphist store
