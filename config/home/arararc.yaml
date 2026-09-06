@@ -1,4 +1,5 @@
---- !config
+---
+!config
 
 # Define key to minimize number of runs
 # Note that we always use batchmode since arara sees pdftex exit code and stops

@@ -42,10 +42,10 @@ local LATEX_EFM = ''
     -- Ignore unmatched lines
     .. [[%-G%.%#,]]
 
-local function _parse_logfile(filename, cwd, active_window_id)
+local function _parse_logfile(filename, active_window_id)
     local stat = vim.uv.fs_stat(filename)
     if not (stat and stat.type == 'file') then
-        return
+        return false
     end
     local content = require('overseer.files').read_file(filename)
     local lines = vim.split(content, '\n')
@@ -54,38 +54,69 @@ local function _parse_logfile(filename, cwd, active_window_id)
         efm = LATEX_EFM,
     }).items
 
+    local has_errors = false
     local new_qf = {}
     for _, v in ipairs(items) do
         -- TODO: Find a better way of ignoring warnings (i.e with efm)
         if not string.find(v.text, 'lipsum') then
             table.insert(new_qf, v)
+            has_errors = has_errors or v.type == 'E'
         end
     end
     vim.fn.setqflist({}, ' ', {
         title = filename,
         items = new_qf,
     })
-    vim.cmd.lcd({ args = { cwd } })
     if #new_qf > 0 then
         vim.cmd.copen()
         vim.api.nvim_set_current_win(active_window_id)
     end
+    return has_errors
 end
 
 local function compile_latex()
     local cwd = vim.uv.cwd()
     local current_win_id = vim.api.nvim_get_current_win()
+    local log_file = (vim.fs.normalize(vim.b.vimtex.tex)):match('(.+)%.[^/]+$') .. '.log'
+    local previous_log_stat = vim.uv.fs_stat(log_file)
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     -- We seem to need the following for proper qf parsing
     vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
-    overseer.run_task({ name = 'run_arara' }, function(task)
+    overseer.run_task({ name = 'run_arara', autostart = false }, function(task)
         vim.cmd.cclose()
-        task:subscribe('on_complete', function()
-            local log_file = (vim.fs.normalize(task.metadata.filename)):match(
-                '(.+)%.[^/]+$'
-            ) .. '.log'
-            _parse_logfile(log_file, cwd, current_win_id)
+        task:subscribe('on_complete', function(_, status)
+            -- Overseer flushes its terminal buffer on the next event-loop turn
+            vim.schedule(function()
+                local log_stat = vim.uv.fs_stat(log_file)
+                local log_changed = log_stat
+                    and (
+                        not previous_log_stat
+                        or log_stat.size ~= previous_log_stat.size
+                        or not vim.deep_equal(log_stat.mtime, previous_log_stat.mtime)
+                    )
+                local has_latex_errors = log_changed
+                    and _parse_logfile(log_file, current_win_id)
+                vim.cmd.lcd({ args = { cwd } })
+                if status ~= overseer.STATUS.FAILURE or has_latex_errors then
+                    return
+                end
+                local output_buf = task:get_bufnr()
+                if not output_buf then
+                    return
+                end
+                local items = {}
+                local output = vim.api.nvim_buf_get_lines(output_buf, 0, -1, false)
+                for _, text in ipairs(output) do
+                    if text ~= '' then
+                        table.insert(items, { text = text })
+                    end
+                end
+                vim.fn.setqflist({}, ' ', { title = 'Arara', items = items })
+                vim.cmd.copen()
+                vim.api.nvim_set_current_win(current_win_id)
+            end)
         end)
+        task:start()
     end)
 end
 

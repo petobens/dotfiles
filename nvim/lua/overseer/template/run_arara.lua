@@ -8,7 +8,7 @@ return {
             args = { file },
             cwd = vim.b.vimtex.root,
             components = {
-                { 'on_complete_notify', statuses = { 'SUCCESS' } },
+                { 'on_complete_notify', statuses = { 'FAILURE', 'SUCCESS' } },
                 'default',
             },
         }
