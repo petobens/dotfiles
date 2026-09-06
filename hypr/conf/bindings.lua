@@ -58,10 +58,9 @@ bind(
 bind(super .. ' + Q', hl.dsp.window.close({}), 'Close window')
 bind(super_shift .. ' + W', hl.dsp.window.kill({}), 'Force close window')
 bind(super_alt .. ' + W', window_actions.close_workspace, 'Close workspace windows')
-bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = true })
-bind(super .. ' + mouse:273', hl.dsp.window.resize(), 'Resize window', { mouse = true })
 
 -- Window placement
+bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = true })
 bind(super .. ' + UP', window_actions.maximize, 'Maximize window')
 
 local function placement(keys, name, x, y, width, height)
@@ -89,6 +88,13 @@ for _, item in ipairs(placements) do
 end
 
 -- Window resizing
+bind(
+    super_ctrl .. ' + mouse:272',
+    hl.dsp.window.resize(),
+    'Resize window',
+    { mouse = true }
+)
+
 local step = 60
 local function edge_resize(keys, description, x, y, width, height)
     return {
