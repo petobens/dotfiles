@@ -1,3 +1,4 @@
+# Helpers
 function __fzf_path
     string replace -r '^[^[:space:]]+[[:space:]]+' '' -- "$argv[1]"
 end
@@ -25,6 +26,7 @@ function __fzf_fd
     fd $fd_args
 end
 
+# File selection
 function __fzf_files
     set -l out (__fzf_fd f "$argv[1]" "$argv[2]" | __fzf_icons | fzf \
         --multi --scheme=path --border-label='Find Files' \
@@ -62,6 +64,7 @@ function __fzf_files
     end
 end
 
+# Directory selection
 function __fzf_dirs
     set -l out (__fzf_fd d "$argv[1]" "$argv[2]" | __fzf_icons | fzf \
         --scheme=path --border-label='Find Dirs' \
@@ -116,6 +119,7 @@ function __fzf_parents
     __fzf_dir_action $out
 end
 
+# Zoxide history
 function zoi --description 'Select a directory from zoxide history'
     set -l out (zoxide query --list --score | while read -l score dir
         printf '%6s  %s\n' "$score" "$dir"
@@ -131,6 +135,7 @@ function zoi --description 'Select a directory from zoxide history'
     __fzf_dir_action $out
 end
 
+# Live grep
 function ig --description 'Search files with ripgrep and FZF'
     set -l paths $argv
     test (count $paths) -gt 0; or set paths .
@@ -159,6 +164,7 @@ function ig --description 'Search files with ripgrep and FZF'
     "$EDITOR" $edit_commands
 end
 
+# Directory browser
 function ll --description 'Browse the current directory with FZF'
     set -l root .
     test (count $argv) -gt 0; and set root "$argv[1]"
@@ -177,6 +183,7 @@ function ll --description 'Browse the current directory with FZF'
     end
 end
 
+# Tmux sessions
 function tms --description 'Create or select a tmux session'
     set -l action attach-session
     test -n "$TMUX"; and set action switch-client
@@ -218,6 +225,7 @@ function tms --description 'Create or select a tmux session'
     end
 end
 
+# Bluetooth devices
 function bt --description 'Manage Bluetooth devices with FZF'
     set -l out (bluetoothctl devices 2>/dev/null | fzf \
         --multi --tac --with-nth=3.. --border-label='Bluetooth Control' \
@@ -250,6 +258,7 @@ function bt --description 'Manage Bluetooth devices with FZF'
     end
 end
 
+# Docker images
 function di --description 'Manage Docker images with FZF'
     set -l out (docker image ls | tail -n +2 | fzf \
         --multi --exit-0 --border-label='Docker Images' \
@@ -272,6 +281,7 @@ function di --description 'Manage Docker images with FZF'
     end
 end
 
+# Docker containers
 function dc --description 'Manage Docker containers with FZF'
     set -l out (docker container ls -a | tail -n +2 | fzf \
         --multi --exit-0 --border-label='Docker Containers' \
@@ -304,6 +314,7 @@ function dc --description 'Manage Docker containers with FZF'
     end
 end
 
+# Man pages
 function m --description 'Search and open man pages with FZF'
     if test -n "$argv[1]"; and man "$argv[1]"
         return
@@ -317,6 +328,7 @@ end
 
 complete -c m -w man
 
+# Key bindings
 # Files
 bind -M insert \ct '__fzf_files; commandline -f repaint'
 bind -M default \ct '__fzf_files; commandline -f repaint'
