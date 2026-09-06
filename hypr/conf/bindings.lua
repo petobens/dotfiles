@@ -250,7 +250,6 @@ exec(
     scripts .. 'screenshot_selection',
     'Window or region screenshot'
 )
-exec(super_shift .. ' + 0', 'hyprshot -m active -m window', 'Window screenshot')
 exec(super_shift .. ' + G', scripts .. 'screen_record gif', 'Toggle GIF recording')
 exec(super_alt .. ' + G', scripts .. 'screen_record video', 'Toggle video recording')
 
