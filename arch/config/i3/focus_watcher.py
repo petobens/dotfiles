@@ -38,9 +38,19 @@ class FocusWatcher:
 
     def _on_window_focus(self, i3conn, event):  # pylint:disable=unused-argument
         if event.container.window_class == "Qemu-system-x86_64":
-            subprocess.run(
-                ["xdotool", "key", "--clearmodifiers", "ctrl+alt+g"], check=False
+            # Trigger grab-on-hover without moving the pointer after mouse focus
+            window = str(event.container.window)
+            pointer = subprocess.run(
+                ["xdotool", "getmouselocation", "--shell"],
+                capture_output=True,
+                check=False,
+                text=True,
             )
+            if f"WINDOW={window}" not in pointer.stdout.splitlines():
+                subprocess.run(
+                    ["xdotool", "mousemove", "--window", window, "100", "100"],
+                    check=False,
+                )
 
         with self.window_list_lock:
             window_id = event.container.id
@@ -55,9 +65,6 @@ class FocusWatcher:
             window_id = event.container.id
             if window_id in self.window_list:
                 self.window_list.remove(window_id)
-
-    def _launch_i3(self):
-        self.i3.main()
 
     def _launch_server(self):
         selector = selectors.DefaultSelector()
@@ -92,10 +99,9 @@ class FocusWatcher:
 
     def run(self):
         """Run socket."""
-        t_i3 = threading.Thread(target=self._launch_i3)
-        t_server = threading.Thread(target=self._launch_server)
-        for t in (t_i3, t_server):
-            t.start()
+        t_server = threading.Thread(target=self._launch_server, daemon=True)
+        t_server.start()
+        self.i3.main()
 
 
 if __name__ == '__main__':
