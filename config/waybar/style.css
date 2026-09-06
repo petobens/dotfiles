@@ -43,9 +43,6 @@ tooltip {
 
 /* Left modules */
 #window {
-    font-family: 'Noto Sans Mono';
-    font-size: 9pt;
-    font-weight: bold;
     padding: 0;
 }
 #custom-arch {

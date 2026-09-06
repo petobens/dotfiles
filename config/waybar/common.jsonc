@@ -32,7 +32,7 @@
         "return-type": "json",
     },
     "hyprland/window": {
-        "format": "{title}",
+        "format": "<span font_family='Noto Sans Mono' size='10pt' weight='bold'>{title}</span>",
         "max-length": 30,
         "separate-outputs": true,
     },
