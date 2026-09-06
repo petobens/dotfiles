@@ -31,14 +31,18 @@ mainbox {
 
 inputbar {
     background-color: @background;
-    children: [ prompt ];
+    children: [ dummy-left, prompt, dummy-right ];
 }
 
 prompt {
-    expand: true;
+    expand: false;
     background-color: @background;
     text-color: @foreground;
     horizontal-align: 0.5;
+}
+
+dummy-left, dummy-right {
+    expand: true;
 }
 
 listview {
