@@ -24,6 +24,7 @@ function fish_prompt
     set -l special_grey '59;64;72'
     set -l white '208;208;208'
 
+    # Input mode
     set -l mode $fish_bind_mode
     if contains -- --final-rendering $argv
         set mode default
@@ -45,6 +46,7 @@ function fish_prompt
     __prompt_bold " $mode_text " $background $mode_color
     __prompt_transition $mode_color $white
 
+    # User and host
     set -l user_color $background
     test "$USER" = root; and set user_color $red
     __prompt_bold " $USER " $user_color $white
@@ -53,17 +55,22 @@ function fish_prompt
     end
 
     set -l band_color $white
+
+    # AWS profile
     if set -q AWS_PROFILE; and test -n "$AWS_PROFILE"
         __prompt_transition $band_color $orange
         __prompt_bold "  $AWS_PROFILE " $background $orange
         set band_color $orange
     end
+
+    # Python virtual environment
     if set -q VIRTUAL_ENV; and test -n "$VIRTUAL_ENV"
         __prompt_transition $band_color $purple
         __prompt_bold "  "(path basename "$VIRTUAL_ENV")" " $background $purple
         set band_color $purple
     end
 
+    # Git repository
     set -l git_lines (command git status --porcelain=v2 --branch --ahead-behind \
         --untracked-files=no 2>/dev/null)
     if test $status -eq 0
@@ -99,6 +106,7 @@ function fish_prompt
         set band_color $special_grey
     end
 
+    # Working directory
     __prompt_transition $band_color $cursor_grey
 
     set -l path_parts
@@ -123,6 +131,7 @@ function fish_prompt
     end
     __prompt_bold " $final_part " $mono $cursor_grey
 
+    # Read-only directory and background jobs
     set -l flags
     test -w "$PWD"; or set -a flags 
     set -l job_count (count (jobs -p))
@@ -135,6 +144,7 @@ function fish_prompt
         set band_color $cursor_grey
     end
 
+    # Exit status
     if test $command_status -ne 0
         __prompt_transition $band_color $red
         __prompt_bold "  $command_status " $background $red
