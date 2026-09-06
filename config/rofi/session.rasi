@@ -1,5 +1,5 @@
 configuration {
-    font: "Noto Sans Mono 10";
+    font: "Noto Sans Mono 11";
     show-icons: false;
 }
 
@@ -32,7 +32,7 @@ mainbox {
 listview {
     background-color: @background;
     columns: 1;
-    lines: 4;
+    lines: 5;
     layout: vertical;
     flow: vertical;
     spacing: 0px;

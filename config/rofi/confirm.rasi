@@ -35,6 +35,7 @@ inputbar {
 }
 
 prompt {
+    expand: true;
     background-color: @background;
     text-color: @foreground;
     horizontal-align: 0.5;
