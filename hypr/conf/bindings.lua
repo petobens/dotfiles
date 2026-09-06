@@ -46,9 +46,9 @@ exec(
 )
 exec(
     super .. ' + B',
-    'pkill -x waybar; notify-send -i view-list -t 2000 '
-        .. '-h string:x-dunst-stack-tag:waybar-reload "Waybar restarted"; exec waybar',
-    'Restart Waybar'
+    'pkill -SIGUSR2 waybar && notify-send -i view-list -t 2000 '
+        .. '-h string:x-dunst-stack-tag:waybar-reload "Waybar reloaded"',
+    'Reload Waybar'
 )
 
 -- Session
