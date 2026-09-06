@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Keep history of focused windows."""
+"""Track focused windows and grab QEMU input."""
 
 import json
 import os
 import selectors
 import socket
+import subprocess
 import tempfile
 import threading
 
@@ -36,6 +37,11 @@ class FocusWatcher:
         self.window_list_lock = threading.RLock()
 
     def _on_window_focus(self, i3conn, event):  # pylint:disable=unused-argument
+        if event.container.window_class == "Qemu-system-x86_64":
+            subprocess.run(
+                ["xdotool", "key", "--clearmodifiers", "ctrl+alt+g"], check=False
+            )
+
         with self.window_list_lock:
             window_id = event.container.id
             if window_id in self.window_list:
