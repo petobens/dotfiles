@@ -68,7 +68,7 @@ hl.window_rule({
 })
 
 -- Assigned workspaces
-window_rule('^(brave-browser|brave-calendar.*|microsoft-edge-dev.*)$', {
+window_rule('^(brave-browser|brave-calendar.*|firefox|microsoft-edge-dev.*)$', {
     workspace = '1 silent',
     tag = maximized_tag,
 })

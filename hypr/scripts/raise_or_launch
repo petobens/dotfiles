@@ -14,11 +14,14 @@ if [[ ${1:-} == menu ]]; then
         'docker|Docker|docker-desktop|Docker status'
         'edge|Microsoft Edge|microsoft-edge|Web browser'
         'files|Yazi|yazi|File manager'
+        'firefox|Firefox|firefox|Web browser'
         'gmail|Gmail|gmail|Email'
         'htop|Htop|htop|Process viewer'
         'images|Image Viewer|multimedia-photo-viewer|Browse images'
+        'localsend|LocalSend|localsend|File sharing'
         'meet|Google Meet|google-meet|Video meetings'
         'numbers|IPython|calc|Python console'
+        'obs|OBS Studio|com.obsproject.Studio|Streaming and recording'
         'onedrive|OneDrive|ms-onedrive|Sync status'
         'onlyoffice|OnlyOffice|onlyoffice-desktopeditors|Office suite'
         'quickterm|Quick Terminal|com.mitchellh.ghostty|Terminal'
@@ -99,6 +102,12 @@ case ${1:-} in
         working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
         command="ghostty --class=yazi --title=yazi --working-directory=\"$working_directory\" -e fish -c yazi"
         ;;
+    firefox)
+        tag=firefox
+        class='^firefox$'
+        workspace=1
+        command='firefox'
+        ;;
     gmail)
         tag=gmail
         class='^brave-mail\.google\.com'
@@ -118,6 +127,12 @@ case ${1:-} in
         command='imv ~/Pictures'
         cycle=true
         ;;
+    localsend)
+        tag=localsend
+        class='^(localsend|localsend_app)$'
+        workspace=current
+        command='localsend'
+        ;;
     meet)
         tag=meet
         class='^brave-meet'
@@ -129,6 +144,12 @@ case ${1:-} in
         class='^numbers$'
         workspace=current
         command='ghostty --class=numbers --title=numbers -e ipython'
+        ;;
+    obs)
+        tag=obs
+        class='^(obs|com\.obsproject\.Studio)$'
+        workspace=4
+        command='obs'
         ;;
     onedrive)
         tag=onedrive
