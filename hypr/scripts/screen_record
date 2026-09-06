@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Record a screen region, converting it to a GIF when asked; the same
-# invocation stops an ongoing recording
+# Toggle region recording and convert completed captures to GIF when requested
+
+# Configuration
 state="${XDG_RUNTIME_DIR:?}/hypr-screen-record"
 directory="$HOME/Videos/Recordings"
 
+# Stop and finalize an active recording
 if [[ -f $state ]]; then
     read -r pid video format < "$state"
     rm -f "$state"
@@ -30,6 +32,7 @@ if [[ -f $state ]]; then
     fi
 fi
 
+# Start a new recording
 format=${1:-video}
 case $format in
     gif | video) ;;
@@ -42,9 +45,12 @@ esac
 geometry=$(slurp) || exit 0
 mkdir -p "$directory"
 video="$directory/$(date +'%Y-%m-%d_%H-%M-%S').mp4"
-# Encode on the Intel GPU when its render node is accessible
+# QEMU exposes a writable render node but cannot use Intel's VAAPI encoder
 encoder=()
-[[ -w /dev/dri/renderD128 ]] && encoder=(-c h264_vaapi -d /dev/dri/renderD128)
+driver_path=$(readlink -f /sys/class/drm/renderD128/device/driver 2> /dev/null || true)
+if [[ -w /dev/dri/renderD128 && $driver_path =~ /(i915|xe)$ ]]; then
+    encoder=(-c h264_vaapi -d /dev/dri/renderD128)
+fi
 wf-recorder -g "$geometry" "${encoder[@]}" -f "$video" > /dev/null 2>&1 &
 pid=$!
 sleep 0.1
