@@ -261,6 +261,7 @@ vim.filetype.add({
     pattern = {
         ['.*doc/.*'] = 'help',
         ['.*github/workflows/.*'] = 'ghaction',
+        ['.*fish/themes/.*%.theme'] = 'fish',
         ['.*imv/config'] = 'confini',
         ['.*mako/config'] = 'confini',
         ['.*onedrive/config'] = 'confini',
