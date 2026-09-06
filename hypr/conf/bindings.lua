@@ -37,7 +37,7 @@ local function launch(keys, app, description)
     exec(keys, app_command .. app, description)
 end
 
--- Session
+-- Reloads
 exec(
     super .. ' + R',
     'hyprctl reload && notify-send -i preferences-system-windows -t 2000 '
@@ -50,6 +50,8 @@ exec(
         .. '-h string:x-dunst-stack-tag:waybar-reload "Waybar reloaded"',
     'Reload Waybar'
 )
+
+-- Session
 exec(super_shift .. ' + Q', scripts .. 'session_menu quit-apps', 'Quit all applications')
 exec(super_shift .. ' + S', scripts .. 'session_menu poweroff', 'Shut down')
 exec(super_shift .. ' + R', scripts .. 'session_menu reboot', 'Reboot')
@@ -128,6 +130,24 @@ for _, resize in ipairs(edge_resizes) do
     )
 end
 
+-- Window marks
+exec(super_ctrl .. ' + J', scripts .. 'focus_window last', 'Focus previous window')
+
+local marks = {
+    { super_alt .. ' + M', super_ctrl .. ' + K' },
+    { super_alt .. ' + bracketleft', super_ctrl .. ' + bracketleft' },
+    { super_alt .. ' + bracketright', super_ctrl .. ' + bracketright' },
+    { super_alt .. ' + period', super_ctrl .. ' + period' },
+}
+for index, mark in ipairs(marks) do
+    local tag = 'markedwin' .. index
+    bind(mark[1], function()
+        hl.dispatch(hl.dsp.window.tag({ tag = '-' .. tag, window = 'tag:' .. tag }))
+        hl.dispatch(hl.dsp.window.tag({ tag = '+' .. tag }))
+    end, 'Mark window ' .. index)
+    exec(mark[2], scripts .. 'focus_window tag:' .. tag, 'Focus marked window ' .. index)
+end
+
 -- Workspaces
 bind(
     super .. ' + N',
@@ -180,24 +200,6 @@ bind(super .. ' + Return', monitor_modes.primary, 'Use laptop display')
 bind(super_ctrl .. ' + Return', monitor_modes.multi, 'Use all displays')
 bind(super_shift .. ' + Return', monitor_modes.mirror, 'Mirror laptop display')
 
--- Window marks
-exec(super_ctrl .. ' + J', scripts .. 'focus_window last', 'Focus previous window')
-
-local marks = {
-    { super_alt .. ' + M', super_ctrl .. ' + K' },
-    { super_alt .. ' + bracketleft', super_ctrl .. ' + bracketleft' },
-    { super_alt .. ' + bracketright', super_ctrl .. ' + bracketright' },
-    { super_alt .. ' + period', super_ctrl .. ' + period' },
-}
-for index, mark in ipairs(marks) do
-    local tag = 'markedwin' .. index
-    bind(mark[1], function()
-        hl.dispatch(hl.dsp.window.tag({ tag = '-' .. tag, window = 'tag:' .. tag }))
-        hl.dispatch(hl.dsp.window.tag({ tag = '+' .. tag }))
-    end, 'Mark window ' .. index)
-    exec(mark[2], scripts .. 'focus_window tag:' .. tag, 'Focus marked window ' .. index)
-end
-
 -- Launchers and menus
 exec(alt .. ' + TAB', scripts .. 'window_switcher', 'Window switcher')
 exec(super .. ' + W', scripts .. 'window_switcher current', 'Workspace window switcher')
@@ -230,12 +232,12 @@ local applications = {
     -- Current workspace
     { super_ctrl .. ' + B', 'bluetooth', 'Bluetooth' },
     { super_ctrl .. ' + F', 'files', 'File manager' },
+    { super_ctrl .. ' + H', 'htop', 'Process monitor' },
     { super_ctrl .. ' + V', 'images', 'Image viewer' },
     { super_ctrl .. ' + N', 'numbers', 'IPython' },
-    { super_ctrl .. ' + P', 'zathura', 'PDF viewer' },
-    { super_ctrl .. ' + H', 'htop', 'Process monitor' },
     { super_ctrl .. ' + Q', 'quickterm', 'Quick terminal' },
     { super_ctrl .. ' + W', 'wifi', 'Wi-Fi' },
+    { super_ctrl .. ' + P', 'zathura', 'PDF viewer' },
 }
 for _, application in ipairs(applications) do
     launch(application[1], application[2], application[3])
@@ -266,11 +268,7 @@ exec(super_shift .. ' + J', player_command .. ' next', 'Next track')
 exec(super_shift .. ' + K', player_command .. ' previous', 'Previous track')
 exec(super_shift .. ' + T', scripts .. 'spotify_track', 'Show current track')
 
--- Dictation (hold to talk; the text is typed into the focused window)
-exec('F10', 'voxtype record start', 'Start dictation')
-exec('F10', 'voxtype record stop', 'Stop dictation', { release = true })
-
--- Hardware and desktop utilities
+-- Hardware controls
 exec(
     'XF86MonBrightnessUp',
     brightness_command .. 'up',
@@ -290,9 +288,14 @@ exec(
     scripts .. 'keyboard_backlight',
     'Cycle keyboard backlight'
 )
+exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
+
+-- Desktop utilities
+exec('F10', 'voxtype record start', 'Start dictation')
+exec('F10', 'voxtype record stop', 'Stop dictation', { release = true })
+
 exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
 launch(super_alt .. ' + B', 'trash', 'Show trash')
-exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 exec(super_ctrl .. ' + Y', 'hyprpicker -a', 'Copy picked color')
 
 -- Notifications
