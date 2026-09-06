@@ -291,7 +291,8 @@ exec(
 exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 
 -- Desktop utilities
-exec('F10', 'voxtype record toggle', 'Toggle dictation')
+-- Pass F10 through so Neovim enters Insert mode before transcription
+exec('F10', 'voxtype record toggle', 'Toggle dictation', { non_consuming = true })
 
 exec(super_shift .. ' + B', scripts .. 'empty_trash', 'Empty trash')
 launch(super_alt .. ' + B', 'trash', 'Show trash')
