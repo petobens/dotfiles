@@ -61,6 +61,7 @@ end
 
 -- Defaults
 window_rule('.*', { float = true, suppress_event = 'maximize' })
+window_rule('^gcr-prompter$', { stay_focused = true })
 hl.window_rule({
     -- Maximize the tagged main terminal because Ghostty ignores its requested class
     match = { tag = 'terminal' },
