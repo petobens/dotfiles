@@ -1,56 +1,51 @@
 # OneDarkish overrides for Yazi
 
 [mgr]
-cwd = { fg = "#c678dd", bold = true }
-find_keyword = { fg = "#e5c07b", bold = true }
+border_style = { fg = "#3e4451" }
+border_symbol = "│"
+count_copied = { bg = "#3b4048", fg = "#abb2bf" }
+cwd = { bold = true, fg = "#c678dd" }
+find_keyword = { bold = true, fg = "#e5c07b" }
 find_position = { fg = "#c678dd" }
+marker_copied = { bg = "#5c6370", fg = "#5c6370" }
+marker_cut = { bg = "#e06c75", fg = "#e06c75" }
+marker_marked = { bg = "#61afef", fg = "#61afef" }
+marker_selected = { bg = "reset", fg = "#e5c07b" }
+marker_symbol = "▎"
 symlink_target = { fg = "#c678dd", italic = true }
 
-marker_copied = { fg = "#5c6370", bg = "#5c6370" }
-marker_cut = { fg = "#e06c75", bg = "#e06c75" }
-marker_marked = { fg = "#61afef", bg = "#61afef" }
-marker_selected = { fg = "#e5c07b", bg = "reset" }
-marker_symbol = "▎"
-
-count_copied = { fg = "#abb2bf", bg = "#3b4048" }
-
-border_symbol = "│"
-border_style = { fg = "#3e4451" }
-
 [tabs]
-active = { fg = "#24272e", bg = "#61afef", bold = true }
-inactive = { fg = "#abb2bf", bg = "#3b4048" }
+active = { bg = "#61afef", bold = true, fg = "#24272e" }
+inactive = { bg = "#3b4048", fg = "#abb2bf" }
 
 # Match the right-pointing separators used by Neovim and tmux
-sep_inner = { open = "", close = "" }
-sep_outer = { open = "", close = "" }
+sep_inner = { close = "", open = "" }
+sep_outer = { close = "", open = "" }
 
 [mode]
-normal_main = { fg = "#24272e", bg = "#98c379", bold = true }
-normal_alt = { fg = "#abb2bf", bg = "#3b4048" }
-select_main = { fg = "#24272e", bg = "#d19a66", bold = true }
-select_alt = { fg = "#abb2bf", bg = "#3b4048" }
-unset_main = { fg = "#24272e", bg = "#e06c75", bold = true }
-unset_alt = { fg = "#abb2bf", bg = "#3b4048" }
+normal_alt = { bg = "#3b4048", fg = "#abb2bf" }
+normal_main = { bg = "#98c379", bold = true, fg = "#24272e" }
+select_alt = { bg = "#3b4048", fg = "#abb2bf" }
+select_main = { bg = "#d19a66", bold = true, fg = "#24272e" }
+unset_alt = { bg = "#3b4048", fg = "#abb2bf" }
+unset_main = { bg = "#e06c75", bold = true, fg = "#24272e" }
 
 [indicator]
 current = { bg = "#282c34", bold = true }
 preview = { underline = false }
 
 [status]
-overall = { fg = "#abb2bf", bg = "#282c34" }
-sep_left = { open = "", close = "" }
-sep_right = { open = "", close = "" }
-
+overall = { bg = "#282c34", fg = "#abb2bf" }
+perm_exec = { fg = "#56b6c2" }
+perm_read = { fg = "#e5c07b" }
 perm_sep = { fg = "#5c6370" }
 perm_type = { fg = "#98c379" }
-perm_read = { fg = "#e5c07b" }
 perm_write = { fg = "#e06c75" }
-perm_exec = { fg = "#56b6c2" }
-
-progress_label = { fg = "#5c6370", bg = "#282c34" }
-progress_normal = { fg = "#3e4451", bg = "#282c34" }
-progress_error = { fg = "#24272e", bg = "#e06c75", bold = true }
+progress_error = { bg = "#e06c75", bold = true, fg = "#24272e" }
+progress_label = { bg = "#282c34", fg = "#5c6370" }
+progress_normal = { bg = "#282c34", fg = "#3e4451" }
+sep_left = { close = "", open = "" }
+sep_right = { close = "", open = "" }
 
 # Keep transient UI borders quieter than their active content
 [which]
@@ -83,22 +78,22 @@ border = { fg = "#3e4451" }
 
 # Match eza's violet treatment of symlinks
 [filetype]
-prepend_rules = [{ url = "*", is = "link", fg = "#c678dd" }]
+prepend_rules = [{ fg = "#c678dd", is = "link", url = "*" }]
 
 [icon]
-# Built-in named directories bypass the generic directory icon rule
-prepend_dirs = [
-    { name = "Desktop", text = "", fg = "#61afef" },
-    { name = "Documents", text = "", fg = "#61afef" },
-    { name = "Downloads", text = "", fg = "#61afef" },
-    { name = "Music", text = "", fg = "#61afef" },
-    { name = "Pictures", text = "", fg = "#61afef" },
-    { name = "Public", text = "", fg = "#61afef" },
-    { name = "Videos", text = "", fg = "#61afef" },
+prepend_conds = [
+    { fg = "#c678dd", if = "link", text = "" },
+    { fg = "#61afef", if = "dir", text = "" },
+    { fg = "#abb2bf", if = "!(dir | link | orphan | dummy | block | char | fifo | sock | exec | sticky)", text = "" },
 ]
 
-prepend_conds = [
-    { if = "link", text = "", fg = "#c678dd" },
-    { if = "dir", text = "", fg = "#61afef" },
-    { if = "!(dir | link | orphan | dummy | block | char | fifo | sock | exec | sticky)", text = "", fg = "#abb2bf" },
+# Built-in named directories bypass the generic directory icon rule
+prepend_dirs = [
+    { fg = "#61afef", name = "Desktop", text = "" },
+    { fg = "#61afef", name = "Documents", text = "" },
+    { fg = "#61afef", name = "Downloads", text = "" },
+    { fg = "#61afef", name = "Music", text = "" },
+    { fg = "#61afef", name = "Pictures", text = "" },
+    { fg = "#61afef", name = "Public", text = "" },
+    { fg = "#61afef", name = "Videos", text = "" },
 ]

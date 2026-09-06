@@ -1,43 +1,45 @@
 [mgr]
-ratio = [1, 3, 4]
-sort_by = "natural"
-sort_sensitive = false
-sort_dir_first = true
 linemode = "none"
+ratio = [1, 3, 4]
+scrolloff = 5
 show_hidden = false
 show_symlink = true
-scrolloff = 5
+sort_by = "natural"
+sort_dir_first = true
+sort_sensitive = false
 
 [preview]
-wrap = "no"
-tab_size = 4
-max_width = 1200
 max_height = 1800
+max_width = 1200
+tab_size = 4
+wrap = "no"
 
 [tasks]
 suppress_preload = true
 
 [opener]
-edit = [{ run = '${EDITOR:-nvim} %s', block = true, for = "unix" }]
-open = [{ run = '~/.config/hypr/scripts/open_file xdg-open %s1', orphan = true, for = "unix" }]
-play = [{ run = '~/.config/hypr/scripts/open_file mpv --force-window %s', orphan = true, for = "unix" }]
+edit = [{ block = true, for = "unix", run = '${EDITOR:-nvim} %s' }]
+# Route GUI openers through Hyprland so newly opened windows receive focus
+open = [{ for = "unix", orphan = true, run = '~/.config/hypr/scripts/open_file xdg-open %s1' }]
+play = [{ for = "unix", orphan = true, run = '~/.config/hypr/scripts/open_file mpv --force-window %s' }]
 
 [open]
 prepend_rules = [
-    { mime = "text/html", use = "open" },
-    { mime = "text/*", use = "edit" },
     { mime = "application/json", use = "edit" },
     { mime = "application/pdf", use = "open" },
     { mime = "image/*", use = "open" },
+    # The exact HTML rule must precede the text wildcard because the first match wins
+    { mime = "text/html", use = "open" },
+    { mime = "text/*", use = "edit" },
     { mime = "video/*", use = "play" },
 ]
 
 [[plugin.prepend_fetchers]]
-url = "*"
-run = "git"
 group = "git"
+run = "git"
+url = "*"
 
 [[plugin.prepend_fetchers]]
-url = "*/"
-run = "git"
 group = "git"
+run = "git"
+url = "*/"

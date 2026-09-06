@@ -1,109 +1,109 @@
 # Leader mappings
 [[mgr.prepend_keymap]]
+desc = "Leader mappings"
 on = [","]
 run = "plugin leader"
-desc = "Leader mappings"
 
 # Navigation
 [[mgr.prepend_keymap]]
+desc = "Enter directory or open file"
 on = ["<Enter>"]
 run = "plugin smart-enter"
-desc = "Enter directory or open file"
 
 [[mgr.prepend_keymap]]
+desc = "Parent directory"
 on = ["u"]
 run = "leave"
-desc = "Parent directory"
 
 [[mgr.prepend_keymap]]
+desc = "Parent directory"
 on = ["h"]
 run = "leave"
-desc = "Parent directory"
 
 [[mgr.prepend_keymap]]
+desc = "Home"
 on = ["H"]
 run = "cd ~"
-desc = "Home"
 
 # Shell
 [[mgr.prepend_keymap]]
+desc = "Open shell here"
 on = ["S"]
 run = 'shell "$SHELL" --block'
-desc = "Open shell here"
 
 # Search
 [[mgr.prepend_keymap]]
+desc = "Search files by content via ripgrep"
 on = ["<A-g>"]
 run = "search --via=rg"
-desc = "Search files by content via ripgrep"
 
 # File operations
 [[mgr.prepend_keymap]]
+desc = "Create directory"
 on = ["D"]
 run = "create --dir"
-desc = "Create directory"
 
 [[mgr.prepend_keymap]]
+desc = "Create file"
 on = ["F"]
 run = "create"
-desc = "Create file"
 
 [[mgr.prepend_keymap]]
+desc = "Copy selected files"
 on = ["c"]
 run = "yank"
-desc = "Copy selected files"
 
 [[mgr.prepend_keymap]]
+desc = "Cut selected files"
 on = ["m"]
 run = "yank --cut"
-desc = "Cut selected files"
 
 [[mgr.prepend_keymap]]
+desc = "Paste and clear yanked files"
 on = ["p"]
 run = ["paste", "unyank"]
-desc = "Paste and clear yanked files"
 
 [[mgr.prepend_keymap]]
+desc = "Trash selected files"
 on = ["d"]
 run = "remove"
-desc = "Trash selected files"
 
 [[mgr.prepend_keymap]]
+desc = "Copy filename without extension"
 on = ["y"]
 run = "copy name_without_ext"
-desc = "Copy filename without extension"
 
 [[mgr.prepend_keymap]]
+desc = "Rename selected files"
 on = ["r"]
 run = "rename --cursor=before_ext"
-desc = "Rename selected files"
 
 [[mgr.prepend_keymap]]
+desc = "Open selected files"
 on = ["o"]
 run = "open"
-desc = "Open selected files"
 
 # Tabs
 [[mgr.prepend_keymap]]
+desc = "Previous tab"
 on = ["<C-p>"]
 run = "tab_switch -1 --relative"
-desc = "Previous tab"
 
 [[mgr.prepend_keymap]]
+desc = "Next tab"
 on = ["<C-n>"]
 run = "tab_switch 1 --relative"
-desc = "Next tab"
 
 [[mgr.prepend_keymap]]
+desc = "Close tab"
 on = ["<C-c>"]
 run = "close"
-desc = "Close tab"
 
 # Bookmarks
 [[mgr.prepend_keymap]]
+desc = "Open bookmark"
 on = ['"']
 run = "plugin bookmarks -- jump"
-desc = "Open bookmark"
 
 # Disabled defaults
 [[mgr.prepend_keymap]]
@@ -112,31 +112,31 @@ run = "noop"
 
 # FZF navigation
 [[mgr.prepend_keymap]]
+desc = "Find file"
 on = ["<C-t>"]
 run = "plugin fzf-nav -- files"
-desc = "Find file"
 
 [[mgr.prepend_keymap]]
+desc = "Find file, including ignored files"
 on = ["<A-t>"]
 run = "plugin fzf-nav -- files --no-ignore"
-desc = "Find file, including ignored files"
 
 [[mgr.prepend_keymap]]
+desc = "Find directory"
 on = ["<A-c>"]
 run = "plugin fzf-nav -- dirs"
-desc = "Find directory"
 
 [[mgr.prepend_keymap]]
+desc = "Find directory, including ignored directories"
 on = ["<A-d>"]
 run = "plugin fzf-nav -- dirs --no-ignore"
-desc = "Find directory, including ignored directories"
 
 [[mgr.prepend_keymap]]
+desc = "Jump with zoxide"
 on = ["<A-z>"]
 run = "plugin zoxide"
-desc = "Jump with zoxide"
 
 [[mgr.prepend_keymap]]
+desc = "Select parent directory"
 on = ["<A-p>"]
 run = "plugin fzf-nav -- parents"
-desc = "Select parent directory"
