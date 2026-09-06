@@ -27,7 +27,7 @@ sudo pacman -S --needed --noconfirm jre21-openjdk-headless
 texlive_root=/usr/local/texlive
 tlmgr=
 if [[ -d $texlive_root ]]; then
-    tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' -type f |
+    tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' |
         sort -V | tail -1)
 fi
 
@@ -43,7 +43,7 @@ if [[ -z $tlmgr ]]; then
     [[ -f ${installer[0]} ]] ||
         die 'TeX Live archive did not contain the installer.'
     sudo perl "${installer[0]}" --no-interaction --scheme=basic
-    tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' -type f |
+    tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' |
         sort -V | tail -1)
 fi
 
