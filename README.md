@@ -97,12 +97,13 @@ After rebooting into Hyprland, finish the personal setup:
 
 ```bash
 cd ~/git-repos/private/dotfiles
-./setup/finish_setup.sh
+./setup/finish_setup.sh --full-sync
 ```
 
 The helper restores personal credentials and repositories from a
 `personal.json` file stored in cloud storage. Its supported keys are documented
-in `setup/load_personal.sh`.
+in `setup/load_personal.sh`. Omit `--full-sync` to download only the personal
+files required by the setup process without enabling the OneDrive service.
 
 Verify the finished installation after rebooting with:
 

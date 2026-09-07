@@ -3,7 +3,7 @@ set -euo pipefail
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 current_step=0
-total_steps=$(grep -c "^section '" "${BASH_SOURCE[0]}")
+full_sync=false
 
 declare gpg_private gpg_public netrc onedrive pass_repo personal_config
 declare personal_directory required_directory ssh_config ssh_private ssh_public
@@ -29,17 +29,46 @@ run_component() {
     "$@"
 }
 
+usage() {
+    cat << EOF
+usage: $0 [--full-sync]
+
+  --full-sync  Enable and start full OneDrive synchronization
+EOF
+}
+
+for arg in "$@"; do
+    case $arg in
+        --full-sync) full_sync=true ;;
+        -h | --help)
+            usage
+            exit
+            ;;
+        *)
+            printf 'unknown option: %s\n' "$arg" >&2
+            usage >&2
+            exit 2
+            ;;
+    esac
+done
+
+total_steps=$(grep -Ec "^[[:space:]]*section '" "${BASH_SOURCE[0]}")
+if ! $full_sync; then
+    ((total_steps -= 1))
+fi
+
 printf '\033[1;32m:: Starting personal setup\033[0m\n'
 
-# Authenticate and fetch the personal configuration without waiting for full sync
+# Authenticate and fetch the personal configuration without a full sync
 # Download-only mode prevents an incomplete local tree from changing OneDrive
-section 'Synchronizing OneDrive'
+section 'Loading personal configuration'
 personal_directory=$(dirname "${personal_config#"$onedrive"/}")
 onedrive --sync --download-only --single-directory "$personal_directory"
 load_personal
 synchronized_directories[$personal_directory]=1
 
 # Download each directory needed to restore credentials once
+section 'Downloading required personal files'
 for required_file in \
     "$netrc" \
     "$gpg_private" \
@@ -57,8 +86,10 @@ for required_file in \
         die "Missing personal file: $required_file"
 done
 
-# Let monitor mode synchronize everything else while setup continues
-systemctl --user enable --now onedrive
+if $full_sync; then
+    section 'Starting full OneDrive synchronization'
+    systemctl --user enable --now onedrive
+fi
 
 section 'Linking synchronized files'
 run_component "$script_dir/symlinks.sh"
