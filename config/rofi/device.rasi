@@ -16,7 +16,7 @@ window {
     location: northeast;
     anchor: northeast;
     width: 48ch;
-    x-offset: 8px;
+    x-offset: -8px;
     y-offset: 4px;
     padding: 8px;
     background-color: @background;
