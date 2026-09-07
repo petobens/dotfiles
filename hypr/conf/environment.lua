@@ -17,6 +17,7 @@ local environment = {
     GDK_BACKEND = 'wayland,x11,*',
     MOZ_ENABLE_WAYLAND = '1',
     QT_QPA_PLATFORM = 'wayland;xcb',
+    QT_QPA_PLATFORMTHEME = 'gtk3',
     QT_WAYLAND_DISABLE_WINDOWDECORATION = '1',
     SDL_VIDEODRIVER = 'wayland',
 }
