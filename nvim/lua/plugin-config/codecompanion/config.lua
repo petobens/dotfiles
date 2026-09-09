@@ -61,6 +61,9 @@ function M.setup()
             -- Chat
             chat = {
                 adapter = 'codex',
+                sessions = {
+                    enabled = false,
+                },
                 roles = {
                     user = 'Me',
                     llm = ui.llm_role,
