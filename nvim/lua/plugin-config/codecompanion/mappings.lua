@@ -161,10 +161,14 @@ end
 local function show_adapter_info(chat_obj)
     local adapter = chat_obj.adapter
     local model = state_helpers.get_adapter_model(adapter)
+    local model_params = vim.deepcopy(adapter.defaults)
+    if model_params.session_config_options then
+        model_params.session_config_options.model = model
+    end
     local adapter_info = {
         { 'name', adapter.name },
         { 'model', model },
-        { 'model_params', adapter.defaults },
+        { 'model_params', model_params },
     }
     local lines = vim.iter(adapter_info)
         :map(function(item)
