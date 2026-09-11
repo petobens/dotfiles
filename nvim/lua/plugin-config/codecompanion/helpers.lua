@@ -181,7 +181,19 @@ function M.state.get_cycle_count(chat)
 end
 
 function M.state.get_adapter_model(adapter)
-    return vim.tbl_get(adapter, 'defaults', 'session_config_options', 'model')
+    -- ACP model changes live on the connection, not the adapter defaults
+    local model
+    M.state.for_each_open_chat(function(chat)
+        if model or chat.adapter ~= adapter or not chat.acp_connection then
+            return
+        end
+
+        local models = chat.acp_connection:get_models()
+        model = models and models.currentModelId
+    end)
+
+    return model
+        or vim.tbl_get(adapter, 'defaults', 'session_config_options', 'model')
         or vim.tbl_get(adapter, 'defaults', 'model')
 end
 
