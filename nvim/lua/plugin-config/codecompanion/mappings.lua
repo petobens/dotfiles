@@ -114,6 +114,7 @@ function M.chat_keymaps()
         yank_code = { modes = { n = '<C-y>', i = '<C-y>' } },
         -- Navigation
         next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
+        previous_chat = { modes = { n = '<A-p>', i = '<A-p>' } },
         previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
         next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
         fold_code = { modes = { n = 'zc' } },
@@ -232,9 +233,9 @@ local function setup_codecompanion_filetype_mappings(e)
         desc = 'Toggle CodeCompanion zoom',
     })
 
-    vim.keymap.set({ 'n', 'i' }, '<A-p>', function()
+    vim.keymap.set('n', '<Leader>pm', function()
         acp_helpers.toggle_plan_mode(codecompanion.buf_get_chat(bufnr))
-    end, { buf = bufnr, desc = 'Toggle ACP plan mode' })
+    end, { buf = bufnr, desc = '[P]lan [m]ode: toggle' })
 
     vim.keymap.set({ 'n', 'i' }, '<A-s>', function()
         acp_sessions.browse(codecompanion.buf_get_chat(bufnr))
