@@ -39,6 +39,9 @@ if [[ -n $item ]]; then
             else "active" end
         ' <<< "$pixmap" 2> /dev/null || printf active
     )
+# FIXME: Slack 4.52.155 cannot register its notifier on Wayland
+# https://github.com/electron/electron/pull/53214
+# Unread state falls back to active until Slack ships the upstream fix
 elif pgrep -x slack > /dev/null; then
     text='󰒱'
     state=active
