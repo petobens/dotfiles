@@ -319,3 +319,8 @@ function sys_update_all --description 'Update system, firmware, and language too
         rustup update --no-self-update
     end
 end
+
+# Start Hyprland after exporting the environment for graphical apps
+if status is-login; and test (tty) = /dev/tty1; and not set -q WAYLAND_DISPLAY
+    exec start-hyprland
+end

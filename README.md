@@ -134,7 +134,8 @@ from its clean checkout with:
 ```
 
 The command fetches `origin/master` and merges it into `dotfiles-wayland`.
-Non-conflicting changes are applied normally. Conflicts are resolved in favor
-of the existing Wayland version after their paths and diffs are printed. If the
-merge introduces new files, their paths are printed and the merge continues
-only after explicit confirmation.
+Non-conflicting changes are applied normally. Overlapping content changes
+automatically favor the existing Wayland version without printing their diffs.
+Remaining file-level conflicts have their paths and diffs printed before being
+resolved in favor of Wayland. If the merge introduces new files, their paths are
+printed and the merge continues only after explicit confirmation.

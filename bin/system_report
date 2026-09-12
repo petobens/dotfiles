@@ -395,6 +395,15 @@ hyprland_active=0
 if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && hyprctl version > /dev/null 2>&1; then
     hyprland_active=1
     add_result PASS 'Hyprland session' 'active'
+    if config_errors=$(hyprctl configerrors 2>&1); then
+        if [[ -z ${config_errors//[[:space:]]/} ]]; then
+            add_result PASS 'Hyprland configuration' 'no configuration errors'
+        else
+            add_result FAIL 'Hyprland configuration' 'configuration errors reported'
+        fi
+    else
+        add_result FAIL 'Hyprland configuration' 'could not query configuration errors'
+    fi
     # Hyprland autostarts these without systemd units
     missing_daemons=()
     for daemon in hypridle mako waybar; do
@@ -519,6 +528,7 @@ collect_evidence() {
     run 'Vulkan devices' vulkaninfo --summary
     run 'VA-API devices' vainfo
     run 'Hyprland version' hyprctl version
+    run 'Hyprland configuration errors' hyprctl configerrors
     run 'Hyprland monitors' hyprctl monitors all
     run 'PipeWire graph' wpctl status
     run 'Camera discovery (libcamera)' cam -l

@@ -206,7 +206,7 @@ exec(super .. ' + W', scripts .. 'window_switcher current', 'Workspace window sw
 exec(super .. ' + S', 'rofi -show drun', 'Application launcher')
 launch(super .. ' + A', 'menu', 'Curated application launcher')
 exec(super .. ' + Z', scripts .. 'password_menu', 'Password menu')
-exec(super .. ' + V', scripts .. 'clipboard_menu', 'Clipboard history')
+exec(super_alt .. ' + V', scripts .. 'clipboard_menu', 'Clipboard history')
 exec(super .. ' + slash', scripts .. 'binding_menu', 'Keybinding cheatsheet')
 exec(ctrl_alt .. ' + Delete', scripts .. 'process_killer', 'Kill process')
 

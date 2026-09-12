@@ -11,10 +11,12 @@ fi
 selection_file=$(mktemp "${XDG_RUNTIME_DIR:-/tmp}/imv-open.XXXXXX")
 trap 'rm -f "$selection_file"' EXIT
 
+# Forward the directory and chooser file through Fish's Yazi bootstrap wrapper
+# shellcheck disable=SC2016
 ghostty \
     --class=yazi \
     --title=yazi \
-    -e yazi "$start_directory" \
+    -e fish -c 'yazi $argv' -- "$start_directory" \
     --chooser-file="$selection_file"
 
 mapfile -t images < "$selection_file"

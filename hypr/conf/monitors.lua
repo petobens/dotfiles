@@ -27,7 +27,7 @@ local known_monitors = {}
 
 -- Helpers
 local function connected_monitors()
-    -- Queries omit disabled and mirrored outputs; retain objects until they expire
+    -- Queries omit disabled and mirrored outputs, so retain their weak references
     for _, monitor in ipairs(hl.get_monitors()) do
         known_monitors[monitor.name] = monitor
         for _, mirrored in ipairs(monitor.mirrors) do
@@ -35,22 +35,21 @@ local function connected_monitors()
         end
     end
     local monitors = {}
-    for name, monitor in pairs(known_monitors) do
+    -- Keep expired entries so layout changes also update unplugged output rules
+    for _, monitor in pairs(known_monitors) do
         if monitor.name then
             monitors[#monitors + 1] = monitor
-        else
-            known_monitors[name] = nil
         end
     end
     return monitors
 end
 
-local function is_virtual_monitor(monitor)
-    return monitor.name:match('^Virtual%-%d+$')
+local function is_virtual_monitor(name)
+    return name:match('^Virtual%-%d+$')
 end
 
 local function monitor_scale(monitor)
-    if is_virtual_monitor(monitor) then
+    if is_virtual_monitor(monitor.name) then
         -- Keep resizable QEMU displays near 1920 logical pixels
         local scale = math.floor(monitor.width / 1920 * 4 + 0.5) / 4
         return math.max(scale, 1)
@@ -61,16 +60,17 @@ local function monitor_scale(monitor)
 end
 
 -- Monitor configuration
-local function configure_monitor(monitor, position, mirror)
-    if is_virtual_monitor(monitor) then
+local function configure_monitor(name, position, mirror)
+    local monitor = known_monitors[name]
+    if is_virtual_monitor(name) then
         hl.env('ROFI_DPI', '96')
     end
 
     hl.monitor({
-        output = monitor.name,
+        output = name,
         mode = 'preferred',
         position = position,
-        scale = monitor_scale(monitor),
+        scale = monitor.name and monitor_scale(monitor) or 'auto',
         mirror = mirror or '',
         disabled = false,
     })
@@ -79,7 +79,7 @@ end
 local function configure_laptop()
     for _, monitor in ipairs(connected_monitors()) do
         if monitor.name == physical_outputs.laptop then
-            configure_monitor(monitor, positions[physical_outputs.laptop])
+            configure_monitor(monitor.name, positions[physical_outputs.laptop])
             return true
         end
     end
@@ -87,6 +87,7 @@ local function configure_laptop()
 end
 
 local function configure_all_monitors()
+    connected_monitors()
     hl.monitor({
         output = '',
         mode = 'preferred',
@@ -95,8 +96,8 @@ local function configure_all_monitors()
         mirror = '',
         disabled = false,
     })
-    for _, monitor in ipairs(connected_monitors()) do
-        configure_monitor(monitor, positions[monitor.name] or 'auto')
+    for name in pairs(known_monitors) do
+        configure_monitor(name, positions[name] or 'auto')
     end
 end
 
@@ -107,9 +108,9 @@ local function primary()
     end
 
     active_mode = 'primary'
-    for _, monitor in ipairs(connected_monitors()) do
-        if monitor.name ~= physical_outputs.laptop then
-            hl.monitor({ output = monitor.name, disabled = true })
+    for name in pairs(known_monitors) do
+        if name ~= physical_outputs.laptop then
+            hl.monitor({ output = name, disabled = true })
         end
     end
     hl.monitor({ output = '', disabled = true })
@@ -130,9 +131,9 @@ local function mirror()
         mirror = physical_outputs.laptop,
         disabled = false,
     })
-    for _, monitor in ipairs(connected_monitors()) do
-        if monitor.name ~= physical_outputs.laptop then
-            configure_monitor(monitor, 'auto', physical_outputs.laptop)
+    for name in pairs(known_monitors) do
+        if name ~= physical_outputs.laptop then
+            configure_monitor(name, 'auto', physical_outputs.laptop)
         end
     end
 end
@@ -220,7 +221,10 @@ hl.on('monitor.added', function(monitor)
     configure_virtual_workspaces()
     focus_development_workspace(monitor)
 end)
-hl.on('monitor.removed', restore_active_mode)
+hl.on('monitor.removed', function()
+    -- Wait for unplug cleanup before checking which cached monitors still exist
+    hl.timer(restore_active_mode, { timeout = 1, type = 'oneshot' })
+end)
 
 -- Lid switch events
 hl.bind('switch:on:Lid Switch', function()
