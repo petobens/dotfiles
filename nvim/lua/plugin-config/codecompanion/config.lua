@@ -100,6 +100,14 @@ function M.setup()
                 show_presets = false,
             },
         },
+        -- Skills
+        skills = {
+            opts = {
+                chat = {
+                    enabled = false,
+                },
+            },
+        },
     })
 
     -- ACP agents provide their own tools and MCP servers
