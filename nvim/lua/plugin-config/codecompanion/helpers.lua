@@ -205,9 +205,8 @@ function M.state.format_model_label(adapter, model)
     end
 
     if adapter_name == 'claude_code' then
-        model = model:match('^claude%-([^-]+)') or model
-    elseif adapter_name == 'codex' then
-        model = model:gsub('^gpt%-', '')
+        model = model:gsub('^claude%-', ''):gsub('%-%d%d%d%d%d%d%d%d$', '')
+        model = model:gsub('(%d+)%-(%d+)$', '%1.%2')
     end
 
     return model

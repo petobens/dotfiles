@@ -38,7 +38,7 @@ local function cwd_footer(chat)
         cwd = chat.opts.cwd
     end
 
-    return cwd and cwd:match('([^/]+/[^/]+/[^/]+)$') or ''
+    return cwd and cwd:match('([^/]+/[^/]+)$') or ''
 end
 
 local function chat_title(chat)
