@@ -3,6 +3,7 @@ local u = require('utils')
 
 local codecompanion = require('codecompanion')
 
+local ACP = require('codecompanion.acp')
 local helpers = require('plugin-config.codecompanion.helpers')
 local utils = require('codecompanion.utils')
 local state_helpers = helpers.state
@@ -449,7 +450,7 @@ end
 
 -- Read metadata omitted by ACP replay from the agent's native session file
 local function restored_session_metadata(entry)
-    local tokens
+    local tokens, context_window
     local model, effort
     local headers = {}
     local awaiting_agent = false
@@ -472,6 +473,10 @@ local function restored_session_metadata(entry)
                     vim.tbl_get(payload, 'info', 'last_token_usage', 'total_tokens')
                 if type(total) == 'number' then
                     tokens = total
+                end
+                local size = vim.tbl_get(payload, 'info', 'model_context_window')
+                if type(size) == 'number' then
+                    context_window = size
                 end
                 if d.type == 'response_item' and payload.type == 'message' then
                     role = ({ user = 'user', assistant = 'agent' })[payload.role]
@@ -521,7 +526,44 @@ local function restored_session_metadata(entry)
         end
     end
 
-    return tokens, headers, model, effort
+    return tokens, headers, model, effort, context_window
+end
+
+local function model_options(connection)
+    for _, option in ipairs(connection:get_config_options()) do
+        if option.category == 'model' then
+            return ACP.flatten_config_options(option.options or {})
+        end
+    end
+    return {}
+end
+
+-- Mirror Claude Agent ACP's initial estimate until its first usage update
+local function claude_context_window(connection)
+    local models = connection:get_models()
+    local model = models and models.currentModelId or ''
+    for _, value in ipairs(model_options(connection)) do
+        if value.value == model then
+            model =
+                table.concat({ model, value.name or '', value.description or '' }, ' ')
+            break
+        end
+    end
+    return model:lower():match('%f[%w]1m%f[%W]') and 1000000 or 200000
+end
+
+-- Claude transcripts omit the context suffix included in some live model options
+local function claude_restored_model(connection, model)
+    local normalized = model:lower():gsub('%[1m%]', '')
+    for _, value in ipairs(model_options(connection)) do
+        if
+            type(value.value) == 'string'
+            and value.value:lower():gsub('%[1m%]', '') == normalized
+        then
+            return value.value
+        end
+    end
+    return model
 end
 
 -- Add restored context once per path
@@ -562,6 +604,8 @@ local function collect_session_update(update, updates, context, paths)
             return ''
         end)
         text = text:gsub('(<comment [^\n]+>\n)````[^\n]*\n[ \t\n]-````\n', '%1')
+        -- End the HTML block so fenced review code gets language highlighting
+        text = text:gsub('(<comment [^\n]+>)\n(```+)', '%1\n\n%2')
         text = text:gsub('</comment>(%S)', '</comment>\n\n%1')
         update.content.text = text
         if text == '' then
@@ -579,7 +623,7 @@ end
 
 local function load_entry(chat, entry)
     -- Capture these before session/load replaces them with the agent's current defaults
-    local restored_tokens, restored_headers, restored_model, restored_effort =
+    local restored_tokens, restored_headers, restored_model, restored_effort, restored_context_window =
         restored_session_metadata(entry)
 
     if not ensure_connection(chat) then
@@ -616,7 +660,10 @@ local function load_entry(chat, entry)
     end
 
     if restored_model then
-        local settings_ok = chat.acp_connection:set_model(restored_model)
+        local model = entry.adapter == 'claude_code'
+                and claude_restored_model(chat.acp_connection, restored_model)
+            or restored_model
+        local settings_ok = chat.acp_connection:set_model(model)
         if settings_ok and restored_effort then
             local effort_config_id = entry.adapter == 'claude_code' and 'effort'
                 or 'reasoning_effort'
@@ -629,6 +676,14 @@ local function load_entry(chat, entry)
                 vim.log.levels.WARN
             )
         end
+    end
+    if entry.adapter == 'claude_code' then
+        restored_context_window = claude_context_window(chat.acp_connection)
+    end
+    local models = chat.acp_connection:get_models()
+    local restored_context_model = models and models.currentModelId
+    if entry.adapter == 'codex' and restored_context_model ~= restored_model then
+        restored_context_window = nil
     end
 
     restore_agent_message_boundaries(updates)
@@ -655,6 +710,12 @@ local function load_entry(chat, entry)
     chat.cycle = math.max(chat.cycle or 1, restored_turns + 1)
     -- Restore saved context usage so the footer does not show 0% until next turn
     chat.tokens = restored_tokens or chat.tokens
+    if restored_context_model and restored_context_window then
+        chat.context_windows = chat.context_windows or {}
+        if type(chat.context_windows[restored_context_model]) ~= 'number' then
+            chat.context_windows[restored_context_model] = restored_context_window
+        end
+    end
     -- Mark the chat as claimed so target_chat won't reuse it for another session
     chat._acp_session_loaded = true
 

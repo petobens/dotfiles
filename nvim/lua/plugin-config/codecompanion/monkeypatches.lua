@@ -110,6 +110,33 @@ local function patch_acp_context_separator()
     end
 end
 
+local function patch_acp_context_window()
+    -- Preserve the context size reported with ACP token usage because
+    -- CodeCompanion otherwise discards it
+    local Connection = require('codecompanion.acp')
+    local handle_message = Connection.handle_incoming_request_or_notification
+
+    Connection.handle_incoming_request_or_notification = function(self, message)
+        local update = type(message) == 'table'
+            and vim.tbl_get(message, 'params', 'update')
+        if
+            update
+            and update.sessionUpdate == 'usage_update'
+            and type(update.size) == 'number'
+        then
+            local chat = self:get_chat(message.params.sessionId)
+            local models = self:get_models()
+            local model = models and models.currentModelId
+            if chat and model then
+                chat.context_windows = chat.context_windows or {}
+                chat.context_windows[model] = update.size
+            end
+        end
+
+        return handle_message(self, message)
+    end
+end
+
 function M.apply()
     if applied then
         return
@@ -120,6 +147,7 @@ function M.apply()
     patch_acp_cwd()
     patch_image_paths()
     patch_acp_context_separator()
+    patch_acp_context_window()
 
     applied = true
 end
