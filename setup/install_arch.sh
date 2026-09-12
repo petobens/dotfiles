@@ -214,6 +214,7 @@ for kernel in linux linux-lts; do
         -e "s|^#default_uki=.*|default_uki=\"/boot/EFI/Linux/arch-$kernel.efi\"|" \
         -e 's|^fallback_image=|#fallback_image=|' \
         -e "s|^#fallback_uki=.*|fallback_uki=\"/boot/EFI/Linux/arch-$kernel-fallback.efi\"|" \
+        -e 's|^#?fallback_options=.*|fallback_options="-S autodetect"|' \
         "/mnt/etc/mkinitcpio.d/$kernel.preset"
 done
 install -Dm644 /dev/stdin /mnt/boot/loader/loader.conf << 'EOF'

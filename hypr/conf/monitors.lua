@@ -210,6 +210,7 @@ hl.bind('switch:off:Lid Switch', function()
     local previous_mode = active_mode
     multi()
     active_mode = previous_mode
+    restore_active_mode()
 end, { description = 'Restore laptop display on lid open', locked = true })
 
 -- Initial state

@@ -110,18 +110,38 @@ else
 fi
 
 uki_presets_ok=1
+grep -qx "PRESETS=('default' 'fallback')" \
+    /etc/mkinitcpio.d/linux.preset 2> /dev/null || uki_presets_ok=0
 grep -qx 'default_uki="/boot/EFI/Linux/arch-linux.efi"' \
     /etc/mkinitcpio.d/linux.preset 2> /dev/null || uki_presets_ok=0
 grep -qx 'fallback_uki="/boot/EFI/Linux/arch-linux-fallback.efi"' \
     /etc/mkinitcpio.d/linux.preset 2> /dev/null || uki_presets_ok=0
+grep -qx 'fallback_options="-S autodetect"' \
+    /etc/mkinitcpio.d/linux.preset 2> /dev/null || uki_presets_ok=0
+grep -qx "PRESETS=('default' 'fallback')" \
+    /etc/mkinitcpio.d/linux-lts.preset 2> /dev/null || uki_presets_ok=0
 grep -qx 'default_uki="/boot/EFI/Linux/arch-linux-lts.efi"' \
     /etc/mkinitcpio.d/linux-lts.preset 2> /dev/null || uki_presets_ok=0
 grep -qx 'fallback_uki="/boot/EFI/Linux/arch-linux-lts-fallback.efi"' \
     /etc/mkinitcpio.d/linux-lts.preset 2> /dev/null || uki_presets_ok=0
+grep -qx 'fallback_options="-S autodetect"' \
+    /etc/mkinitcpio.d/linux-lts.preset 2> /dev/null || uki_presets_ok=0
 if [[ -d /sys/firmware/efi ]] && ((uki_presets_ok)); then
     add_result PASS 'Boot' 'UEFI with all expected UKI presets'
 else
-    add_result FAIL 'Boot' 'not booted with UEFI or UKI presets are incomplete'
+    add_result FAIL 'Boot' 'UEFI or UKI fallback configuration is incomplete'
+fi
+
+if awk '
+    BEGIN { RS = "}" }
+    /listener[[:space:]]*{/ &&
+        /(^|\n)[[:space:]]*timeout[[:space:]]*=[[:space:]]*600[[:space:]]*(\n|$)/ &&
+        /(^|\n)[[:space:]]*on-timeout[[:space:]]*=[[:space:]]*loginctl lock-session[[:space:]]*(\n|$)/ { found = 1 }
+    END { exit !found }
+' "$HOME/.config/hypr/hypridle.conf" 2> /dev/null; then
+    add_result PASS 'Idle locking' 'session locks after 10 minutes'
+else
+    add_result FAIL 'Idle locking' '10-minute lock listener missing'
 fi
 
 if grep -qE '^SNAPPER_CONFIGS=.*\broot\b' /etc/conf.d/snapper 2> /dev/null; then
@@ -155,7 +175,7 @@ expected_services=(
     tlp.service
     ufw.service
 )
-if ((!is_vm)); then
+if ((! is_vm)); then
     expected_services+=(fwupd-refresh.timer intel_lpmd.service)
     if [[ ! -e /sys/devices/platform/thinkpad_acpi/dytc_lapmode ]]; then
         expected_services+=(thermald.service)
