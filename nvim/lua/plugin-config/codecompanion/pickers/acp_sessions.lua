@@ -355,27 +355,50 @@ local function has_text_content(message)
     end)
 end
 
-local function restore_header_timestamps(chat, timestamps)
+local function restored_model_label(adapter, model, effort)
+    if adapter.name == 'claude_code' then
+        for _, family in ipairs({ 'opus', 'sonnet', 'haiku' }) do
+            if model:find(family, 1, true) then
+                model = family
+                break
+            end
+        end
+    end
+    effort = effort or state_helpers.get_adapter_effort(adapter)
+    return effort and string.format('%s %s', model, effort) or model
+end
+
+local function restore_header_metadata(chat, headers)
     local lines = vim.api.nvim_buf_get_lines(chat.bufnr, 0, -1, false)
     local marker = ' |  '
-    local timestamp_index = 1
+    local header_index = 1
 
     for i, line in ipairs(lines) do
-        local marker_start = line:match('^## ') and line:find(marker, 1, true)
-        local iso = timestamps[timestamp_index]
-        if marker_start then
-            local timestamp = type(iso) == 'string' and utils.timestamp_from_iso(iso)
-            if timestamp then
+        local prefix, label, timestamp =
+            line:match('^(## .-)%((.-)%)' .. marker .. '(.*)$')
+        if prefix then
+            local header = headers[header_index] or {}
+            if header.model then
+                label = restored_model_label(chat.adapter, header.model, header.effort)
+            end
+            local restored_timestamp = type(header.timestamp) == 'string'
+                    and utils.timestamp_from_iso(header.timestamp)
+                or nil
+            if restored_timestamp then
+                timestamp = os.date('%Y-%m-%d %H:%M:%S', restored_timestamp)
+            end
+            local restored_line = prefix .. '(' .. label .. ')' .. marker .. timestamp
+            if restored_line ~= line then
                 vim.api.nvim_buf_set_text(
                     chat.bufnr,
                     i - 1,
-                    marker_start + #marker - 1,
+                    0,
                     i - 1,
                     #line,
-                    { os.date('%Y-%m-%d %H:%M:%S', timestamp) }
+                    { restored_line }
                 )
             end
-            timestamp_index = timestamp_index + 1
+            header_index = header_index + 1
         end
     end
 end
@@ -383,11 +406,12 @@ end
 -- Read metadata omitted by ACP replay from the agent's native session file
 local function restored_session_metadata(entry)
     local tokens
-    local timestamps = {}
+    local model, effort
+    local headers = {}
     local awaiting_agent = false
     local ok, iter = pcall(io.lines, entry.path)
     if not ok then
-        return nil, timestamps
+        return nil, headers
     end
 
     for line in iter do
@@ -396,6 +420,10 @@ local function restored_session_metadata(entry)
             local role
             if entry.adapter == 'codex' then
                 local payload = d.payload or {}
+                if d.type == 'turn_context' and type(payload.model) == 'string' then
+                    model = payload.model
+                    effort = type(payload.effort) == 'string' and payload.effort or nil
+                end
                 local total =
                     vim.tbl_get(payload, 'info', 'last_token_usage', 'total_tokens')
                 if type(total) == 'number' then
@@ -419,14 +447,19 @@ local function restored_session_metadata(entry)
                     end
                 end
             elseif entry.adapter == 'claude_code' then
-                local usage = vim.tbl_get(d, 'message', 'usage')
+                local message = d.message or {}
+                if d.type == 'assistant' and type(message.model) == 'string' then
+                    model = message.model
+                    effort = type(d.effort) == 'string' and d.effort or nil
+                end
+                local usage = message.usage
                 if usage then
                     tokens = (tonumber(usage.input_tokens) or 0)
                         + (tonumber(usage.output_tokens) or 0)
                         + (tonumber(usage.cache_read_input_tokens) or 0)
                         + (tonumber(usage.cache_creation_input_tokens) or 0)
                 end
-                if has_text_content(d.message) then
+                if has_text_content(message) then
                     role = ({ user = 'user', assistant = 'agent' })[d.type]
                 end
             end
@@ -434,13 +467,17 @@ local function restored_session_metadata(entry)
             if role == 'user' then
                 awaiting_agent = true
             elseif role == 'agent' and awaiting_agent then
-                table.insert(timestamps, d.timestamp)
+                table.insert(headers, {
+                    timestamp = d.timestamp,
+                    model = model,
+                    effort = effort,
+                })
                 awaiting_agent = false
             end
         end
     end
 
-    return tokens, timestamps
+    return tokens, headers, model, effort
 end
 
 -- Add restored context once per path
@@ -497,6 +534,10 @@ local function collect_session_update(update, updates, context, paths)
 end
 
 local function load_entry(chat, entry)
+    -- Capture these before session/load replaces them with the agent's current defaults
+    local restored_tokens, restored_headers, restored_model, restored_effort =
+        restored_session_metadata(entry)
+
     if not ensure_connection(chat) then
         return
     end
@@ -530,8 +571,23 @@ local function load_entry(chat, entry)
         return utils.notify('Failed to load ACP session', vim.log.levels.ERROR)
     end
 
+    if restored_model then
+        local settings_ok = chat.acp_connection:set_model(restored_model)
+        if settings_ok and restored_effort then
+            local effort_config_id = entry.adapter == 'claude_code' and 'effort'
+                or 'reasoning_effort'
+            settings_ok =
+                chat.acp_connection:set_config_option(effort_config_id, restored_effort)
+        end
+        if not settings_ok then
+            utils.notify(
+                'Failed to restore ACP session model settings',
+                vim.log.levels.WARN
+            )
+        end
+    end
+
     restore_agent_message_boundaries(updates)
-    local restored_tokens, restored_timestamps = restored_session_metadata(entry)
     local restored_turns = restored_user_turn_count(updates)
     require('codecompanion.interactions.chat.acp.commands').link_buffer_to_session(
         chat.bufnr,
@@ -541,7 +597,7 @@ local function load_entry(chat, entry)
     chat.opts.cwd = entry.cwd
     -- Actually restore the session
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
-    restore_header_timestamps(chat, restored_timestamps)
+    restore_header_metadata(chat, restored_headers)
     -- ACP restore renders only to the buffer, so retain structured messages for /clone
     chat._acp_restored_messages = restored_messages(updates)
     -- Render context metadata only; ACP already retains the content server-side
