@@ -1,11 +1,9 @@
 -- luacheck: globals hl
 
-local session_environment = 'WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME'
 local scripts = os.getenv('HOME') .. '/.config/hypr/scripts/'
 
 hl.on('hyprland.start', function()
-    hl.exec_cmd('dbus-update-activation-environment --systemd ' .. session_environment)
-    hl.exec_cmd('systemctl --user import-environment ' .. session_environment)
+    -- TODO: Drop the custom target lifecycle once Hyprland ships it in a stable release
     hl.exec_cmd('systemctl --user start hyprland-session.target')
 
     hl.exec_cmd('brightnessctl set 30%')

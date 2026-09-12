@@ -292,6 +292,7 @@ if ((use_sudo)); then
     if ! grep -q '^Status: active' <<< "$ufw_status" ||
         ! grep -q '^Default: deny (incoming), allow (outgoing)' <<< "$ufw_status" ||
         ! grep -Eq '^22/tcp.*LIMIT IN' <<< "$ufw_status" ||
+        ! grep -Eq '^5353/udp.*ALLOW IN' <<< "$ufw_status" ||
         ! grep -Eq '^53317/tcp.*ALLOW IN' <<< "$ufw_status" ||
         ! grep -Eq '^53317/udp.*ALLOW IN' <<< "$ufw_status"; then
         privileged_failures+=(UFW)

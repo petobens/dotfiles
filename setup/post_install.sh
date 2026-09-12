@@ -104,6 +104,7 @@ section 'Configuring firewall'
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw limit 22/tcp comment 'recovery SSH'
+sudo ufw allow 5353/udp comment 'mDNS'
 sudo ufw allow 53317/tcp comment 'LocalSend'
 sudo ufw allow 53317/udp comment 'LocalSend'
 sudo ufw --force enable
