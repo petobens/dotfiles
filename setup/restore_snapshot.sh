@@ -70,6 +70,11 @@ mount --mkdir -o noatime,nodiscard,subvol=@snapshots \
 mount --mkdir -o noatime,nodiscard,subvol=@var_log \
     "$root_partition" "$target/var/log"
 mount --mkdir -o umask=0077 "$efi_partition" "$target/boot"
+# The EFI partition still contains the kernels from before the root rollback
+for kernel in "$target"/usr/lib/modules/*/vmlinuz; do
+    read -r pkgbase < "${kernel%/vmlinuz}/pkgbase"
+    install -m644 "$kernel" "$target/boot/vmlinuz-$pkgbase"
+done
 arch-chroot "$target" mkinitcpio -P
 umount -R "$target"
 trap - EXIT

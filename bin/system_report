@@ -197,7 +197,17 @@ expected_user_services=(
     pipewire-pulse.service
     wireplumber.service
 )
-((is_vm)) || expected_user_services+=(onedrive.service)
+if ((! is_vm)); then
+    if systemctl --user is-enabled --quiet onedrive.service 2> /dev/null; then
+        if systemctl --user is-active --quiet onedrive.service 2> /dev/null; then
+            add_result PASS 'OneDrive' 'automatic sync enabled and active'
+        else
+            add_result FAIL 'OneDrive' 'automatic sync enabled but inactive'
+        fi
+    else
+        add_result PASS 'OneDrive' 'automatic sync not enabled (optional)'
+    fi
+fi
 disabled_user_services=()
 for unit in "${expected_user_services[@]}"; do
     systemctl --user is-enabled --quiet "$unit" 2> /dev/null ||

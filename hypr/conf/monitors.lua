@@ -23,8 +23,28 @@ local positions = {
 }
 local active_mode
 local lid_closed = false
+local known_monitors = {}
 
 -- Helpers
+local function connected_monitors()
+    -- Queries omit disabled and mirrored outputs; retain objects until they expire
+    for _, monitor in ipairs(hl.get_monitors()) do
+        known_monitors[monitor.name] = monitor
+        for _, mirrored in ipairs(monitor.mirrors) do
+            known_monitors[mirrored.name] = mirrored
+        end
+    end
+    local monitors = {}
+    for name, monitor in pairs(known_monitors) do
+        if monitor.name then
+            monitors[#monitors + 1] = monitor
+        else
+            known_monitors[name] = nil
+        end
+    end
+    return monitors
+end
+
 local function is_virtual_monitor(monitor)
     return monitor.name:match('^Virtual%-%d+$')
 end
@@ -57,13 +77,13 @@ local function configure_monitor(monitor, position, mirror)
 end
 
 local function configure_laptop()
-    local monitor = hl.get_monitor(physical_outputs.laptop)
-    if not monitor then
-        return false
+    for _, monitor in ipairs(connected_monitors()) do
+        if monitor.name == physical_outputs.laptop then
+            configure_monitor(monitor, positions[physical_outputs.laptop])
+            return true
+        end
     end
-
-    configure_monitor(monitor, positions[physical_outputs.laptop])
-    return true
+    return false
 end
 
 local function configure_all_monitors()
@@ -75,7 +95,7 @@ local function configure_all_monitors()
         mirror = '',
         disabled = false,
     })
-    for _, monitor in ipairs(hl.get_monitors()) do
+    for _, monitor in ipairs(connected_monitors()) do
         configure_monitor(monitor, positions[monitor.name] or 'auto')
     end
 end
@@ -87,7 +107,7 @@ local function primary()
     end
 
     active_mode = 'primary'
-    for _, monitor in ipairs(hl.get_monitors()) do
+    for _, monitor in ipairs(connected_monitors()) do
         if monitor.name ~= physical_outputs.laptop then
             hl.monitor({ output = monitor.name, disabled = true })
         end
@@ -110,7 +130,7 @@ local function mirror()
         mirror = physical_outputs.laptop,
         disabled = false,
     })
-    for _, monitor in ipairs(hl.get_monitors()) do
+    for _, monitor in ipairs(connected_monitors()) do
         if monitor.name ~= physical_outputs.laptop then
             configure_monitor(monitor, 'auto', physical_outputs.laptop)
         end
@@ -124,10 +144,13 @@ end
 
 -- Preserve and restore the selected layout across lid and monitor events
 local function external_only()
-    local previous_mode = active_mode
-    multi()
-    active_mode = previous_mode
-    hl.monitor({ output = physical_outputs.laptop, disabled = true })
+    configure_all_monitors()
+    for _, monitor in ipairs(connected_monitors()) do
+        if monitor.name ~= physical_outputs.laptop then
+            hl.monitor({ output = physical_outputs.laptop, disabled = true })
+            break
+        end
+    end
 end
 
 local function restore_active_mode()
@@ -207,9 +230,6 @@ end, { description = 'Disable laptop display on lid close', locked = true })
 
 hl.bind('switch:off:Lid Switch', function()
     lid_closed = false
-    local previous_mode = active_mode
-    multi()
-    active_mode = previous_mode
     restore_active_mode()
 end, { description = 'Restore laptop display on lid open', locked = true })
 
