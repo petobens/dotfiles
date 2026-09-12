@@ -22,10 +22,26 @@ ghostty \
 mapfile -t images < "$selection_file"
 ((${#images[@]})) || exit 0
 
+# Load the selected image's directory and keep that image selected for browsing
+index=-1
+if ((${#images[@]} == 1)); then
+    directory=$(dirname -- "${images[0]}")
+    LC_ALL=C
+    shopt -s dotglob nullglob
+    index=0
+    for path in "$directory"/*; do
+        [[ -d $path || ! -e $path ]] && continue
+        [[ ${path##*/} < ${images[0]##*/} ]] && continue
+        ((index -= 1))
+    done
+    images=("$directory")
+    imv-msg "$imv_pid" 'close all'
+fi
+
 for image in "${images[@]}"; do
     encoded=$(printf '%s' "$image" | base64 -w0)
     # imv splits commands on spaces before expanding each argument
     imv-msg "$imv_pid" \
         "open \"\$(printf\${IFS}%s\${IFS}$encoded|base64\${IFS}-d)\""
 done
-imv-msg "$imv_pid" 'goto -1'
+imv-msg "$imv_pid" "goto $index"
