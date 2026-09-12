@@ -289,17 +289,25 @@ function M.state.provider_icon(name)
     return '󰚩' -- md-robot
 end
 
-local function get_adapter_context_window(adapter)
-    if type(adapter) ~= 'table' then
+local function get_chat_context_window(chat)
+    if type(chat) ~= 'table' then
         return nil
     end
 
-    local model = M.state.get_adapter_model(adapter)
+    local adapter = chat.adapter
+    local connection = chat.acp_connection
+    local models = connection and connection:get_models()
+    local model = models and models.currentModelId or M.state.get_adapter_model(adapter)
     if not model then
         return nil
     end
 
-    local context_window = vim.tbl_get(
+    local context_window = chat.context_windows and chat.context_windows[model]
+    if type(context_window) == 'number' then
+        return context_window
+    end
+
+    context_window = vim.tbl_get(
         adapter,
         'schema',
         'model',
@@ -322,7 +330,7 @@ end
 function M.state.format_context_usage(chat)
     local tokens = (chat and chat.tokens) or 0
 
-    local max_ctx = get_adapter_context_window(chat and chat.adapter)
+    local max_ctx = get_chat_context_window(chat)
     if not max_ctx then
         return format_token_count(tokens) .. ' unknown ctx'
     end
