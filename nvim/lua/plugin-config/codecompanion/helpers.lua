@@ -197,14 +197,32 @@ function M.state.get_adapter_model(adapter)
         or vim.tbl_get(adapter, 'defaults', 'model')
 end
 
+function M.state.format_model_label(adapter, model)
+    local adapter_name = type(adapter) == 'table' and adapter.name or adapter
+    local labels = { claude_code = 'Claude', codex = 'Codex' }
+    if not model then
+        return labels[adapter_name] or adapter_name or 'unknown'
+    end
+
+    if adapter_name == 'claude_code' then
+        model = model:match('^claude%-([^-]+)') or model
+    elseif adapter_name == 'codex' then
+        model = model:gsub('^gpt%-', '')
+    end
+
+    return model
+end
+
 function M.state.get_chat_model_label(chat)
     local adapter = chat and chat.adapter
     if not adapter then
         return 'unknown'
     end
 
-    local labels = { claude_code = 'Claude', codex = 'Codex' }
-    return labels[adapter.name] or M.state.get_adapter_model(adapter) or adapter.name
+    local connection = chat.acp_connection
+    local models = connection and connection:get_models()
+    local model = models and models.currentModelId or M.state.get_adapter_model(adapter)
+    return M.state.format_model_label(adapter, model)
 end
 
 function M.state.get_chat_title(chat, entry)

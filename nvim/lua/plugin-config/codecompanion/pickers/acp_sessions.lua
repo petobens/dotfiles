@@ -89,6 +89,50 @@ local function read_jsonl(path, max_lines)
     return out
 end
 
+-- Read backward in chunks so finding the latest model does not scan entire sessions
+local function find_last_jsonl(path, extract)
+    local file = io.open(path, 'rb')
+    if not file then
+        return
+    end
+
+    local offset = file:seek('end') or 0
+    local suffix = ''
+    while offset > 0 do
+        local size = math.min(offset, 64 * 1024)
+        offset = offset - size
+        file:seek('set', offset)
+        local lines = vim.split((file:read(size) or '') .. suffix, '\n', {
+            plain = true,
+        })
+        suffix = table.remove(lines, 1) or ''
+        if offset == 0 then
+            table.insert(lines, 1, suffix)
+        end
+
+        for i = #lines, 1, -1 do
+            local ok, decoded = pcall(vim.json.decode, lines[i])
+            local value = ok and extract(decoded)
+            if value then
+                file:close()
+                return value
+            end
+        end
+    end
+
+    file:close()
+end
+
+local function saved_session_model(adapter, path)
+    return find_last_jsonl(path, function(d)
+        if adapter == 'codex' and d.type == 'turn_context' then
+            return vim.tbl_get(d, 'payload', 'model')
+        elseif adapter == 'claude_code' and d.type == 'assistant' then
+            return vim.tbl_get(d, 'message', 'model')
+        end
+    end)
+end
+
 local function mtime(path)
     local stat = vim.uv.fs_stat(path)
     return stat and stat.mtime.sec or 0
@@ -150,6 +194,7 @@ scanners.claude_code = function()
                 updated_at = mtime(file),
                 size = (vim.uv.fs_stat(file) or {}).size or 0,
                 path = file,
+                model = saved_session_model('claude_code', file),
             }
         end
     end
@@ -185,6 +230,7 @@ scanners.codex = function()
                 updated_at = mtime(file),
                 size = (vim.uv.fs_stat(file) or {}).size or 0,
                 path = file,
+                model = saved_session_model('codex', file),
             }
         end
     end
@@ -212,20 +258,22 @@ local function ensure_connection(chat)
     return true
 end
 
--- Build the telescope `display` function (<icon> <title> <provider> <short-id>
+-- Build the telescope `display` function (<icon> <title> <model> <short-id>
 -- (~weight) <clock> <age> (<timestamp>) <cwd>), capturing shared column widths
 local function make_display(entries)
-    local title_w, provider_w, id_w, weight_w, time_w = 0, 0, 0, 0, 0
+    local title_w, model_w, id_w, weight_w, time_w = 0, 0, 0, 0, 0
     for _, e in ipairs(entries) do
         e.display_title = trim_chars(e.title or e.session_id, TITLE_WIDTH)
-        e.display_provider = '[' .. adapter_label(e.adapter) .. ']'
+        e.display_model = '['
+            .. state_helpers.format_model_label(e.adapter, e.model)
+            .. ']'
         e.display_id = e.session_id and e.session_id:sub(-7) or '?'
         e.display_weight = fmt_weight(e.size)
         e.display_time = e.updated_at and utils.make_relative(e.updated_at) or '?'
         e.display_timestamp = e.updated_at and os.date('%Y-%m-%d %H:%M', e.updated_at)
             or '?'
         title_w = math.max(title_w, vim.fn.strdisplaywidth(e.display_title))
-        provider_w = math.max(provider_w, vim.fn.strdisplaywidth(e.display_provider))
+        model_w = math.max(model_w, vim.fn.strdisplaywidth(e.display_model))
         id_w = math.max(id_w, vim.fn.strdisplaywidth(e.display_id))
         weight_w = math.max(weight_w, vim.fn.strdisplaywidth(e.display_weight))
         time_w = math.max(time_w, vim.fn.strdisplaywidth(e.display_time))
@@ -237,7 +285,7 @@ local function make_display(entries)
         local marker = e.current and ICONS.current or (e.loaded and ICONS.loaded or ' ')
         local icon = state_helpers.provider_icon(e.adapter)
         local title = pad_right(e.display_title, title_w)
-        local provider = pad_right(e.display_provider, provider_w)
+        local model = pad_right(e.display_model, model_w)
         local id = pad_right(e.display_id, id_w)
         local weight_pad = string.rep(
             ' ',
@@ -258,15 +306,15 @@ local function make_display(entries)
             marker,
             icon,
             title,
-            provider,
+            model,
             id,
             meta,
             cwd
         )
 
-        local provider_end = #marker + 1 + #icon + 1 + #title + 2 + #provider
+        local model_end = #marker + 1 + #icon + 1 + #title + 2 + #model
         return line, {
-            { { provider_end + 1, #line }, 'Comment' },
+            { { model_end + 1, #line }, 'Comment' },
         }
     end
 end
@@ -355,19 +403,6 @@ local function has_text_content(message)
     end)
 end
 
-local function restored_model_label(adapter, model, effort)
-    if adapter.name == 'claude_code' then
-        for _, family in ipairs({ 'opus', 'sonnet', 'haiku' }) do
-            if model:find(family, 1, true) then
-                model = family
-                break
-            end
-        end
-    end
-    effort = effort or state_helpers.get_adapter_effort(adapter)
-    return effort and string.format('%s %s', model, effort) or model
-end
-
 local function restore_header_metadata(chat, headers)
     local lines = vim.api.nvim_buf_get_lines(chat.bufnr, 0, -1, false)
     local marker = ' |  '
@@ -379,7 +414,10 @@ local function restore_header_metadata(chat, headers)
         if prefix then
             local header = headers[header_index] or {}
             if header.model then
-                label = restored_model_label(chat.adapter, header.model, header.effort)
+                label = state_helpers.format_model_label(chat.adapter, header.model)
+                local effort = header.effort
+                    or state_helpers.get_adapter_effort(chat.adapter)
+                label = effort and string.format('%s %s', label, effort) or label
             end
             local restored_timestamp = type(header.timestamp) == 'string'
                     and utils.timestamp_from_iso(header.timestamp)
