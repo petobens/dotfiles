@@ -81,10 +81,10 @@ local function chat_footer(chat)
     local adapter = chat.adapter
     local parts = {
         string.format(
-            '%s %s: %s',
+            '%s %s:%s',
             state_helpers.provider_icon(adapter and adapter.name),
             chat_number,
-            state_helpers.get_chat_model_label(chat)
+            state_helpers.get_chat_model_effort_label(chat)
         ),
     }
     if adapter and acp_helpers.mode_label(chat) then

@@ -99,7 +99,7 @@ local function collect_entries(current_chat)
             open = entry.open,
             active = entry.bufnr == current_bufnr,
             adapter_name = adapter and adapter.name,
-            model = state_helpers.get_chat_model_label(chat),
+            model = state_helpers.get_chat_model_effort_label(chat),
             chat_number = state_helpers.get_chat_number(entry),
             title = state_helpers.get_chat_title(chat, entry),
             cwd = chat and chat.opts and chat.opts.cwd,

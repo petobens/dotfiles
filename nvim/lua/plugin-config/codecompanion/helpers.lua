@@ -258,6 +258,27 @@ function M.state.get_adapter_effort(adapter)
     end
 end
 
+function M.state.format_model_effort_label(model, effort)
+    local code = ({ low = 'L', medium = 'M', high = 'H', xhigh = 'X' })[effort]
+    return code and string.format('%s (%s)', model, code) or model
+end
+
+function M.state.get_chat_model_effort_label(chat)
+    local adapter = chat and chat.adapter
+    local effort = adapter and M.state.get_adapter_effort(adapter)
+    local option_id = adapter
+        and ({ claude_code = 'effort', codex = 'reasoning_effort' })[adapter.name]
+    local connection = chat and chat.acp_connection
+    if connection and option_id then
+        local option = vim.iter(connection:get_config_options()):find(function(item)
+            return item.id == option_id
+        end)
+        effort = option and option.currentValue or effort
+    end
+
+    return M.state.format_model_effort_label(M.state.get_chat_model_label(chat), effort)
+end
+
 function M.state.provider_icon(name)
     name = (name or ''):lower()
     if name:find('claude') then

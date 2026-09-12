@@ -123,12 +123,17 @@ local function find_last_jsonl(path, extract)
     file:close()
 end
 
-local function saved_session_model(adapter, path)
+local function saved_session_value(adapter, path, key)
     return find_last_jsonl(path, function(d)
         if adapter == 'codex' and d.type == 'turn_context' then
-            return vim.tbl_get(d, 'payload', 'model')
+            return vim.tbl_get(d, 'payload', key)
         elseif adapter == 'claude_code' and d.type == 'assistant' then
-            return vim.tbl_get(d, 'message', 'model')
+            if key == 'model' then
+                return vim.tbl_get(d, 'message', 'model')
+            end
+            local effort = type(d.perTurnEffort) == 'string' and d.perTurnEffort
+                or d.effort
+            return type(effort) == 'string' and effort or nil
         end
     end)
 end
@@ -194,7 +199,8 @@ scanners.claude_code = function()
                 updated_at = mtime(file),
                 size = (vim.uv.fs_stat(file) or {}).size or 0,
                 path = file,
-                model = saved_session_model('claude_code', file),
+                model = saved_session_value('claude_code', file, 'model'),
+                effort = saved_session_value('claude_code', file, 'effort'),
             }
         end
     end
@@ -230,7 +236,8 @@ scanners.codex = function()
                 updated_at = mtime(file),
                 size = (vim.uv.fs_stat(file) or {}).size or 0,
                 path = file,
-                model = saved_session_model('codex', file),
+                model = saved_session_value('codex', file, 'model'),
+                effort = saved_session_value('codex', file, 'effort'),
             }
         end
     end
@@ -264,9 +271,8 @@ local function make_display(entries)
     local title_w, model_w, id_w, weight_w, time_w = 0, 0, 0, 0, 0
     for _, e in ipairs(entries) do
         e.display_title = trim_chars(e.title or e.session_id, TITLE_WIDTH)
-        e.display_model = '['
-            .. state_helpers.format_model_label(e.adapter, e.model)
-            .. ']'
+        local model = state_helpers.format_model_label(e.adapter, e.model)
+        e.display_model = state_helpers.format_model_effort_label(model, e.effort)
         e.display_id = e.session_id and e.session_id:sub(-7) or '?'
         e.display_weight = fmt_weight(e.size)
         e.display_time = e.updated_at and utils.make_relative(e.updated_at) or '?'

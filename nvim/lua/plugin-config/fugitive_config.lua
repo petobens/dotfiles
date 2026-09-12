@@ -2,6 +2,8 @@ local u = require('utils')
 
 _G.fugitiveConfig = {}
 
+local status_stats_namespace = vim.api.nvim_create_namespace('fugitive_status_stats')
+
 -- Helpers
 local function open_file_at_commit_split()
     local bufname = vim.api.nvim_buf_get_name(0)
@@ -58,10 +60,95 @@ local function open_status_file_diff()
     vim.cmd.normal({ args = { 'zz' }, bang = true })
 end
 
+local function show_status_line_stats(e)
+    local buf = e.buf
+    vim.api.nvim_buf_clear_namespace(buf, status_stats_namespace, 0, -1)
+
+    local work_tree = vim.fn.FugitiveWorkTree(buf)
+    if work_tree == '' then
+        return
+    end
+
+    local diff = { 'git', '-C', work_tree, 'diff', '--unified=0', '--no-prefix' }
+    local commands = {
+        Staged = vim.list_extend(vim.deepcopy(diff), { '--cached' }),
+        Unstaged = diff,
+    }
+    local stats = {}
+
+    for name, command in pairs(commands) do
+        stats[name] = {}
+        local file, old_file, reading_header
+        local output = vim.system(command):wait().stdout
+
+        for line in vim.gsplit(output, '\n', { plain = true }) do
+            if line:match('^diff %-%-git ') then
+                old_file, reading_header = nil, true
+            elseif reading_header then
+                old_file = line:match('^%-%-%- (.+)$') or old_file
+                local new_file = line:match('^%+%+%+ (.+)$')
+                if new_file then
+                    file = new_file ~= '/dev/null' and new_file or old_file
+                    stats[name][file] = { 0, 0, 0 }
+                    reading_header = false
+                end
+            else
+                local removed, added = line:match('^@@ %-%d+,?(%d*) %+%d+,?(%d*)')
+                if removed then
+                    removed, added = tonumber(removed) or 1, tonumber(added) or 1
+                    local changed = math.min(added, removed)
+                    local counts = stats[name][file]
+                    counts[1] = counts[1] + added - changed
+                    counts[2] = counts[2] + changed
+                    counts[3] = counts[3] + removed - changed
+                end
+            end
+        end
+    end
+    local section
+    local labels = {
+        { '+', 'GitSignsAdd' },
+        { '~', 'GitSignsChange' },
+        { '-', 'GitSignsDelete' },
+    }
+
+    for row, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+        section = line:match('^(Staged) %(') or line:match('^(Unstaged) %(') or section
+
+        local filename = line:match('^[%u?] (.+)$')
+        if filename and stats[section] then
+            local counts = stats[section][filename:match('.* %-> (.*)$') or filename]
+            if counts then
+                local text = { { ' (', 'Comment' } }
+                for i, count in ipairs(counts) do
+                    if count > 0 then
+                        text[#text + 1] = { #text > 1 and ', ' or '', 'Comment' }
+                        text[#text + 1] = { labels[i][1] .. count, labels[i][2] }
+                    end
+                end
+                text[#text + 1] = { ')', 'Comment' }
+
+                vim.api.nvim_buf_set_extmark(buf, status_stats_namespace, row - 1, 0, {
+                    virt_text = text,
+                })
+            end
+        end
+    end
+end
+
 -- Autocmds
+local fugitive_group = vim.api.nvim_create_augroup('ps_fugitive', { clear = true })
+
+vim.api.nvim_create_autocmd('User', {
+    desc = 'Show line-change counts in Fugitive status',
+    group = fugitive_group,
+    pattern = 'FugitiveIndex',
+    callback = show_status_line_stats,
+})
+
 vim.api.nvim_create_autocmd('FileType', {
     desc = 'Set up Fugitive git status options and mappings',
-    group = vim.api.nvim_create_augroup('ps_fugitive', { clear = true }),
+    group = fugitive_group,
     pattern = { 'fugitive' },
     callback = function(e)
         -- Options
