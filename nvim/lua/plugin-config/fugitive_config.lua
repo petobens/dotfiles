@@ -122,7 +122,7 @@ local function show_status_line_stats(e)
                 local text = { { ' (', 'Comment' } }
                 for i, count in ipairs(counts) do
                     if count > 0 then
-                        text[#text + 1] = { #text > 1 and ', ' or '', 'Comment' }
+                        text[#text + 1] = { #text > 1 and ' ' or '', 'Comment' }
                         text[#text + 1] = { labels[i][1] .. count, labels[i][2] }
                     end
                 end
