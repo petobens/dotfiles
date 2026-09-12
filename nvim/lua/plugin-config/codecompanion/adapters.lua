@@ -64,6 +64,7 @@ function M.codex()
                 choices = {
                     -- Codex exposes 95% of its current 272k-token product limit
                     [codex_config.model] = { meta = { context_window = 258400 } },
+                    ['gpt-6-astra'] = { meta = { context_window = 258400 } },
                 },
             },
         },
