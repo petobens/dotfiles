@@ -22,7 +22,6 @@ voxtype-bin
 
 # Development
 claude-code
-google-cloud-cli
 hadolint-bin
 neovim-git
 
