@@ -36,6 +36,7 @@ usage: $0 [--full-sync] [--dry-run]
 
   --full-sync  Enable and start full OneDrive synchronization
   --dry-run    Preview the personal directory download and exit; overrides --full-sync
+               Authorizes OneDrive first if needed, saving login data locally
 EOF
 }
 
@@ -57,6 +58,11 @@ done
 
 personal_directory=$(dirname "${personal_config#"$onedrive"/}")
 if $dry_run; then
+    # OneDrive cannot save first-time authorization during a dry-run
+    if [[ ! -s ${XDG_CONFIG_HOME:-$HOME/.config}/onedrive/refresh_token ]]; then
+        printf 'Authorizing OneDrive before the download preview...\n'
+        onedrive
+    fi
     exec onedrive --sync --download-only \
         --single-directory "$personal_directory" --dry-run
 fi
