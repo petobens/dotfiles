@@ -332,7 +332,7 @@ function M.state.format_context_usage(chat)
 
     local max_ctx = get_chat_context_window(chat)
     if not max_ctx then
-        return format_token_count(tokens) .. ' unknown ctx'
+        return format_token_count(tokens) .. ' (ctx?)'
     end
 
     return string.format(
