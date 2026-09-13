@@ -100,10 +100,12 @@ cd ~/git-repos/private/dotfiles
 ./setup/finish_setup.sh --full-sync
 ```
 
-The helper restores personal credentials and repositories from a
-`personal.json` file stored in cloud storage. Its supported keys are documented
-in `setup/load_personal.sh`. Omit `--full-sync` to download only the personal
-files required by the setup process without enabling the OneDrive service.
+This helper is specific to my setup and is usually unnecessary when cloning these
+dotfiles. It restores personal credentials and repositories from a
+`personal.json` file stored in cloud storage. Its supported keys are
+documented in `setup/load_personal.sh`. Omit `--full-sync` to download only the
+personal files required by the setup process without enabling full cloud
+synchronization.
 
 Verify the finished installation after rebooting with:
 
