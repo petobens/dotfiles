@@ -216,7 +216,7 @@ sudo usermod -aG video "$USER"
 gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 gsettings set org.gnome.desktop.interface cursor-size 24
 gsettings set org.gnome.desktop.interface cursor-theme macOS
-gsettings set org.gnome.desktop.interface font-name 'Noto Sans 10'
+gsettings set org.gnome.desktop.interface font-name 'Noto Sans 11'
 gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
 gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark
 xdg-user-dirs-update
