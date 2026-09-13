@@ -8,6 +8,16 @@ local PRUNE_INTERVAL = 2 * 60 * 60
 local TITLE_CACHE =
     vim.fs.joinpath(vim.fn.stdpath('data'), 'codecompanion', 'acp-session-titles.json')
 
+-- Helpers
+local function mtime(path)
+    local stat = vim.uv.fs_stat(path)
+    return stat and stat.mtime.sec or 0
+end
+
+local function clean_title(title)
+    return title and vim.trim(title:gsub('%s+', ' ')) or nil
+end
+
 -- Session file helpers
 local function load_title_cache()
     local ok, data = pcall(vim.json.decode, u.read_file(TITLE_CACHE) or '')
@@ -79,15 +89,6 @@ local function saved_session_value(adapter, path, key)
             return type(effort) == 'string' and effort or nil
         end
     end)
-end
-
-local function mtime(path)
-    local stat = vim.uv.fs_stat(path)
-    return stat and stat.mtime.sec or 0
-end
-
-local function clean_title(title)
-    return title and vim.trim(title:gsub('%s+', ' ')) or nil
 end
 
 -- Adapter scanners
