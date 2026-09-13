@@ -2,13 +2,14 @@
 
 # Claude Code
 .claude/
-**/.claude/settings.local.json
 
 # Fish
 config/fish/fish_variables
 
 # Neovim
 nvim.log
+nvim/minimal.lua
+nvim/nvim-pack-lock.json
 nvim/plugin/
 nvim/cache/
 

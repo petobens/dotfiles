@@ -5,6 +5,15 @@
 tmp/
 scratch/
 
+# Credentials
+.env*
+.netrc*
+client_secret*.json
+id_*
+personal.json
+*.key
+*.pem
+
 # Python
 __pycache__/
 .mypy_cache/
@@ -31,10 +40,6 @@ pip-wheel-metadata/
 *.nav
 *.snm
 *.vrb
-
-# Nvim
-minimal.lua
-nvim-pack-lock.json
 
 # Claude Code
 .claude/
