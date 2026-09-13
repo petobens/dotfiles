@@ -2,6 +2,8 @@
 
 # Nvim
 /nvim.log
+nvim/minimal.lua
+nvim/nvim-pack-lock.json
 nvim/plugin/
 nvim/cache/
 
@@ -24,4 +26,3 @@ arch/config/onedrive/.config.hash
 
 # Claude Code
 .claude/
-**/.claude/settings.local.json

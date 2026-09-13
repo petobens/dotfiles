@@ -5,6 +5,15 @@
 tmp/
 scratch/
 
+# Credentials
+.env*
+.netrc*
+client_secret*.json
+id_*
+personal.json
+*.key
+*.pem
+
 # Windows
 *.dll
 *.exe
@@ -41,10 +50,6 @@ Icon?
 *.nav
 *.snm
 *.vrb
-
-# Nvim
-minimal.lua
-nvim-pack-lock.json
 
 # Claude Code
 .claude/
