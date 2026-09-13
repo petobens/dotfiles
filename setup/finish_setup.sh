@@ -189,5 +189,3 @@ timeout 30 gh auth status --active --hostname github.com > /dev/null 2>&1 ||
     printf 'GitHub check failed: run gh auth status or gh auth login.\n'
 timeout 30 gws drive files list --params '{"pageSize":1,"fields":"files(id)"}' > /dev/null 2>&1 ||
     printf 'Workspace check failed: run gws auth status or gws auth login.\n'
-timeout 30 gcloud auth print-access-token --quiet > /dev/null 2>&1 ||
-    printf 'GCP check failed: run gcloud auth login if needed.\n'
