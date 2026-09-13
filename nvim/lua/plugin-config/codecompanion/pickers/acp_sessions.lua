@@ -1,8 +1,8 @@
 local codecompanion = require('codecompanion')
 local registry = require('codecompanion.interactions.shared.registry')
-local state_helpers = require('plugin-config.codecompanion.helpers').state
 local utils = require('codecompanion.utils')
 
+local state_helpers = require('plugin-config.codecompanion.helpers').state
 local picker_helpers = require('plugin-config.codecompanion.pickers.helpers')
 local restore = require('plugin-config.codecompanion.pickers.acp_sessions.restore')
 local store = require('plugin-config.codecompanion.pickers.acp_sessions.store')
@@ -16,16 +16,7 @@ local ICONS = {
     clock = '\239\128\151', -- nf-fa-clock_o (U+F017)
 }
 
--- Picker entry presentation
-local function adapter_label(name)
-    return ({ claude_code = 'Claude', codex = 'Codex' })[name] or name
-end
-
-local function fmt_weight(size)
-    local k = (size or 0) / 4 / 1000
-    return k >= 1 and string.format('~%.1fk', k) or string.format('~%d', (size or 0) / 4)
-end
-
+-- Helpers
 local function open_session_map()
     local map = {}
     for _, entry in ipairs(registry.list()) do
@@ -36,6 +27,16 @@ local function open_session_map()
         end
     end
     return map
+end
+
+-- Picker entry presentation
+local function adapter_label(name)
+    return ({ claude_code = 'Claude', codex = 'Codex' })[name] or name
+end
+
+local function fmt_weight(size)
+    local k = (size or 0) / 4 / 1000
+    return k >= 1 and string.format('~%.1fk', k) or string.format('~%d', (size or 0) / 4)
 end
 
 local function make_display(entries)
@@ -94,6 +95,123 @@ local function make_display(entries)
     end
 end
 
+local function make_finder(entries)
+    local display = make_display(entries)
+    return require('telescope.finders').new_table({
+        results = entries,
+        entry_maker = function(e)
+            return {
+                value = e,
+                display = display,
+                ordinal = adapter_label(e.adapter)
+                    .. ' '
+                    .. (e.title or '')
+                    .. ' '
+                    .. (e.session_id or '')
+                    .. ' '
+                    .. (e.display_time or '')
+                    .. ' '
+                    .. (e.display_timestamp or '')
+                    .. ' '
+                    .. (e.cwd or ''),
+            }
+        end,
+    })
+end
+
+-- Picker actions
+local function picker_mappings(chat, entries)
+    local actions = require('telescope.actions')
+    local action_state = require('telescope.actions.state')
+
+    return function(prompt_bufnr, map)
+        local current = action_state.get_current_picker(prompt_bufnr)
+        local function selected_entries()
+            local selections = current:get_multi_selection()
+            return #selections > 0 and selections or { action_state.get_selected_entry() }
+        end
+
+        local selection_hl =
+            vim.api.nvim_get_hl(0, { name = 'TelescopeSelection', link = false })
+        selection_hl.bold = true
+        vim.api.nvim_set_hl(0, 'CodeCompanionSessionSelection', selection_hl)
+        vim.wo[current.results_win].winhighlight = table.concat(
+            vim.tbl_filter(function(part)
+                return part ~= ''
+            end, {
+                vim.wo[current.results_win].winhighlight,
+                'TelescopeSelection:CodeCompanionSessionSelection',
+            }),
+            ','
+        )
+
+        actions.select_default:replace(function()
+            local selections = selected_entries()
+            actions.close(prompt_bufnr)
+            for _, selection in ipairs(selections) do
+                if selection then
+                    restore.load(chat, selection.value)
+                end
+            end
+        end)
+
+        local function delete()
+            local deleted = {}
+            for _, selection in ipairs(selected_entries()) do
+                if selection and store.delete(selection.value.path) then
+                    deleted[selection.value] = true
+                end
+            end
+            for i = #entries, 1, -1 do
+                if deleted[entries[i]] then
+                    table.remove(entries, i)
+                end
+            end
+            current:refresh(make_finder(entries), { reset_prompt = false })
+            local n = vim.tbl_count(deleted)
+            utils.notify(
+                string.format('Deleted %d session%s', n, n == 1 and '' or 's'),
+                n > 0 and vim.log.levels.INFO or vim.log.levels.WARN
+            )
+        end
+
+        local function yank_session_id()
+            local selection = action_state.get_selected_entry()
+            if selection then
+                actions.close(prompt_bufnr)
+                vim.fn.setreg('+', selection.value.session_id)
+            end
+        end
+
+        map('n', 'd', delete)
+        map('n', '<C-y>', yank_session_id)
+        map('i', '<A-d>', delete)
+        map('i', '<C-y>', yank_session_id)
+        return true
+    end
+end
+
+-- Background title refresh
+local function refresh_titles(picker, entries)
+    vim.system({ 'ai_session_title' }, { text = true }, function(obj)
+        if tonumber((obj.stdout or ''):match('generated (%d+)')) == 0 then
+            return
+        end
+        vim.schedule(function()
+            if
+                not picker.prompt_bufnr
+                or not vim.api.nvim_buf_is_valid(picker.prompt_bufnr)
+            then
+                return
+            end
+            store.refresh_titles(entries)
+            pcall(function()
+                picker:refresh(make_finder(entries), { reset_prompt = false })
+            end)
+        end)
+    end)
+end
+
 -- Picker orchestration
 function M.browse(chat)
     store.ensure_periodic_prune()
@@ -111,134 +229,23 @@ function M.browse(chat)
     end
 
     local pickers = require('telescope.pickers')
-    local finders = require('telescope.finders')
     local conf = require('telescope.config').values
-    local actions = require('telescope.actions')
-    local action_state = require('telescope.actions.state')
 
-    local function make_finder()
-        local display = make_display(entries)
-        return finders.new_table({
-            results = entries,
-            entry_maker = function(e)
-                return {
-                    value = e,
-                    display = display,
-                    ordinal = adapter_label(e.adapter)
-                        .. ' '
-                        .. (e.title or '')
-                        .. ' '
-                        .. (e.session_id or '')
-                        .. ' '
-                        .. (e.display_time or '')
-                        .. ' '
-                        .. (e.display_timestamp or '')
-                        .. ' '
-                        .. (e.cwd or ''),
-                }
-            end,
-        })
-    end
-
-    local picker
-    picker = pickers.new({}, {
+    local picker = pickers.new({}, {
         prompt_title = string.format(
             'ACP Sessions (%s current %s loaded | <C-y>:yank ID,<A-d>:delete)',
             ICONS.current,
             ICONS.loaded
         ),
-        finder = make_finder(),
+        finder = make_finder(entries),
         sorter = conf.generic_sorter({}),
         tiebreak = function()
             return false
         end,
-        attach_mappings = function(prompt_bufnr, map)
-            local current = action_state.get_current_picker(prompt_bufnr)
-            local selection_hl =
-                vim.api.nvim_get_hl(0, { name = 'TelescopeSelection', link = false })
-            selection_hl.bold = true
-            vim.api.nvim_set_hl(0, 'CodeCompanionSessionSelection', selection_hl)
-            vim.wo[current.results_win].winhighlight = table.concat(
-                vim.tbl_filter(function(part)
-                    return part ~= ''
-                end, {
-                    vim.wo[current.results_win].winhighlight,
-                    'TelescopeSelection:CodeCompanionSessionSelection',
-                }),
-                ','
-            )
-
-            actions.select_default:replace(function()
-                local targets = current:get_multi_selection()
-                if #targets == 0 then
-                    targets = { action_state.get_selected_entry() }
-                end
-                actions.close(prompt_bufnr)
-                for _, sel in ipairs(targets) do
-                    if sel then
-                        restore.load(chat, sel.value)
-                    end
-                end
-            end)
-
-            local function delete()
-                local targets = current:get_multi_selection()
-                if #targets == 0 then
-                    targets = { action_state.get_selected_entry() }
-                end
-                local deleted = {}
-                for _, sel in ipairs(targets) do
-                    if sel and store.delete(sel.value.path) then
-                        deleted[sel.value] = true
-                    end
-                end
-                for i = #entries, 1, -1 do
-                    if deleted[entries[i]] then
-                        table.remove(entries, i)
-                    end
-                end
-                current:refresh(make_finder(), { reset_prompt = false })
-                local n = vim.tbl_count(deleted)
-                utils.notify(
-                    string.format('Deleted %d session%s', n, n == 1 and '' or 's'),
-                    n > 0 and vim.log.levels.INFO or vim.log.levels.WARN
-                )
-            end
-
-            local function yank_session_id()
-                local sel = action_state.get_selected_entry()
-                if sel then
-                    actions.close(prompt_bufnr)
-                    vim.fn.setreg('+', sel.value.session_id)
-                end
-            end
-
-            map('n', 'd', delete)
-            map('n', '<C-y>', yank_session_id)
-            map('i', '<A-d>', delete)
-            map('i', '<C-y>', yank_session_id)
-            return true
-        end,
+        attach_mappings = picker_mappings(chat, entries),
     })
     picker:find()
-
-    vim.system({ 'ai_session_title' }, { text = true }, function(obj)
-        if tonumber((obj.stdout or ''):match('generated (%d+)')) == 0 then
-            return
-        end
-        vim.schedule(function()
-            if
-                not picker.prompt_bufnr
-                or not vim.api.nvim_buf_is_valid(picker.prompt_bufnr)
-            then
-                return
-            end
-            store.refresh_titles(entries)
-            pcall(function()
-                picker:refresh(make_finder(), { reset_prompt = false })
-            end)
-        end)
-    end)
+    refresh_titles(picker, entries)
 end
 
 return M

@@ -7,6 +7,28 @@ local utils = require('codecompanion.utils')
 
 local M = {}
 
+-- Helpers
+local function has_text_content(message)
+    local content = message and message.content
+    if type(content) == 'string' then
+        return content ~= ''
+    elseif type(content) ~= 'table' then
+        return false
+    end
+    return vim.iter(content):any(function(part)
+        return part.type == 'text' and part.text and part.text ~= ''
+    end)
+end
+
+local function model_options(connection)
+    for _, option in ipairs(connection:get_config_options()) do
+        if option.category == 'model' then
+            return ACP.flatten_config_options(option.options or {})
+        end
+    end
+    return {}
+end
+
 -- ACP connection
 local function ensure_connection(chat)
     local handler = require('codecompanion.interactions.chat.acp.handler').new(chat)
@@ -22,6 +44,32 @@ local function ensure_connection(chat)
         return false
     end
     return true
+end
+
+local function claude_context_window(connection)
+    local models = connection:get_models()
+    local model = models and models.currentModelId or ''
+    for _, value in ipairs(model_options(connection)) do
+        if value.value == model then
+            model =
+                table.concat({ model, value.name or '', value.description or '' }, ' ')
+            break
+        end
+    end
+    return model:lower():match('%f[%w]1m%f[%W]') and 1000000 or 200000
+end
+
+local function claude_restored_model(connection, model)
+    local normalized = model:lower():gsub('%[1m%]', '')
+    for _, value in ipairs(model_options(connection)) do
+        if
+            type(value.value) == 'string'
+            and value.value:lower():gsub('%[1m%]', '') == normalized
+        then
+            return value.value
+        end
+    end
+    return model
 end
 
 -- Replay reconstruction
@@ -41,8 +89,8 @@ local function restored_user_turn_count(updates)
     return count
 end
 
--- ACP joins consecutive complete agent messages without spacing during restore
 local function restore_agent_message_boundaries(updates)
+    -- ACP joins consecutive complete agent messages without spacing during restore
     local previous_id
     local previous_text
     for _, update in ipairs(updates) do
@@ -87,18 +135,6 @@ local function restored_messages(updates)
         end
     end
     return messages
-end
-
-local function has_text_content(message)
-    local content = message and message.content
-    if type(content) == 'string' then
-        return content ~= ''
-    elseif type(content) ~= 'table' then
-        return false
-    end
-    return vim.iter(content):any(function(part)
-        return part.type == 'text' and part.text and part.text ~= ''
-    end)
 end
 
 local function restore_header_metadata(chat, headers)
@@ -217,41 +253,6 @@ local function restored_session_metadata(entry)
     return tokens, headers, model, effort, context_window
 end
 
-local function model_options(connection)
-    for _, option in ipairs(connection:get_config_options()) do
-        if option.category == 'model' then
-            return ACP.flatten_config_options(option.options or {})
-        end
-    end
-    return {}
-end
-
-local function claude_context_window(connection)
-    local models = connection:get_models()
-    local model = models and models.currentModelId or ''
-    for _, value in ipairs(model_options(connection)) do
-        if value.value == model then
-            model =
-                table.concat({ model, value.name or '', value.description or '' }, ' ')
-            break
-        end
-    end
-    return model:lower():match('%f[%w]1m%f[%W]') and 1000000 or 200000
-end
-
-local function claude_restored_model(connection, model)
-    local normalized = model:lower():gsub('%[1m%]', '')
-    for _, value in ipairs(model_options(connection)) do
-        if
-            type(value.value) == 'string'
-            and value.value:lower():gsub('%[1m%]', '') == normalized
-        then
-            return value.value
-        end
-    end
-    return model
-end
-
 -- Restored context
 local function restore_context(context, paths, icon, path)
     if not paths[path] then
@@ -307,6 +308,46 @@ local function collect_session_update(update, updates, context, paths)
 end
 
 -- Session loading
+-- Reuse a compatible empty chat for the selected session, otherwise create one
+local function target_chat(chat, entry)
+    local reusable = chat
+        and chat.adapter
+        and chat.adapter.name == entry.adapter
+        and not chat._acp_session_loaded
+        and (
+            (chat.cycle or 1) <= 1
+            or not chat_helpers.has_user_messages(chat.messages or {})
+        )
+
+    if reusable then
+        return chat
+    end
+
+    local previous_cwd = vim.fn.getcwd()
+    if entry.cwd and vim.fn.isdirectory(entry.cwd) == 1 then
+        vim.api.nvim_set_current_dir(entry.cwd)
+    end
+
+    local new_chat = require('codecompanion').chat({
+        params = { adapter = entry.adapter },
+        auto_submit = false,
+    })
+
+    if vim.fn.getcwd() ~= previous_cwd and vim.fn.isdirectory(previous_cwd) == 1 then
+        vim.api.nvim_set_current_dir(previous_cwd)
+    end
+
+    if not new_chat then
+        local labels = { claude_code = 'Claude', codex = 'Codex' }
+        utils.notify(
+            'Failed to create ' .. (labels[entry.adapter] or entry.adapter) .. ' chat',
+            vim.log.levels.ERROR
+        )
+    end
+
+    return new_chat
+end
+
 local function load_entry(chat, entry)
     local restored_tokens, restored_headers, restored_model, restored_effort, restored_context_window =
         restored_session_metadata(entry)
@@ -402,46 +443,6 @@ local function load_entry(chat, entry)
         restored_event.title = entry.title
     end
     utils.fire('ACPChatRestored', restored_event)
-end
-
--- Reuse a compatible empty chat for the selected session, otherwise create one
-local function target_chat(chat, entry)
-    local reusable = chat
-        and chat.adapter
-        and chat.adapter.name == entry.adapter
-        and not chat._acp_session_loaded
-        and (
-            (chat.cycle or 1) <= 1
-            or not chat_helpers.has_user_messages(chat.messages or {})
-        )
-
-    if reusable then
-        return chat
-    end
-
-    local previous_cwd = vim.fn.getcwd()
-    if entry.cwd and vim.fn.isdirectory(entry.cwd) == 1 then
-        vim.api.nvim_set_current_dir(entry.cwd)
-    end
-
-    local new_chat = require('codecompanion').chat({
-        params = { adapter = entry.adapter },
-        auto_submit = false,
-    })
-
-    if vim.fn.getcwd() ~= previous_cwd and vim.fn.isdirectory(previous_cwd) == 1 then
-        vim.api.nvim_set_current_dir(previous_cwd)
-    end
-
-    if not new_chat then
-        local labels = { claude_code = 'Claude', codex = 'Codex' }
-        utils.notify(
-            'Failed to create ' .. (labels[entry.adapter] or entry.adapter) .. ' chat',
-            vim.log.levels.ERROR
-        )
-    end
-
-    return new_chat
 end
 
 function M.load(chat, entry)
