@@ -91,7 +91,16 @@ for required_file in \
     "$ssh_private" \
     "$ssh_public"; do
     required_directory=$(dirname "${required_file#"$onedrive"/}")
-    if [[ ! -v synchronized_directories[$required_directory] ]]; then
+    covered=false
+    for synchronized_directory in "${!synchronized_directories[@]}"; do
+        if [[ $synchronized_directory == . ||
+            $required_directory == "$synchronized_directory" ||
+            $required_directory == "$synchronized_directory/"* ]]; then
+            covered=true
+            break
+        fi
+    done
+    if ! $covered; then
         onedrive --sync --download-only \
             --single-directory "$required_directory"
         synchronized_directories[$required_directory]=1
