@@ -149,6 +149,21 @@ if [[ ! -d $password_store_dir/.git ]]; then
     gopass clone --path "$password_store_dir" "$pass_repo"
 fi
 
+section 'Restoring Google Workspace client configuration'
+gws_config_dir=${XDG_CONFIG_HOME:-$HOME/.config}/gws
+if [[ ! -e $gws_config_dir/client_secret.json ]]; then
+    install -d -m700 "$gws_config_dir"
+    (
+        umask 077
+        temporary_client=$(mktemp "$gws_config_dir/client_secret.XXXXXX")
+        trap 'rm -f -- "$temporary_client"' EXIT
+        gopass --nosync show --noparsing gcloud/gws-cli/client-secret-json > "$temporary_client"
+        jq -e '.installed | .client_id and .client_secret' "$temporary_client" > /dev/null
+        mv -- "$temporary_client" "$gws_config_dir/client_secret.json"
+        trap - EXIT
+    )
+fi
+
 section 'Cloning private repositories'
 repos_dir="$HOME/git-repos/private"
 mkdir -p "$repos_dir"
