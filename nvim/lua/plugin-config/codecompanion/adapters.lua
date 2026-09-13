@@ -1,3 +1,5 @@
+local u = require('utils')
+
 local adapters = require('codecompanion.adapters')
 local extend = adapters.extend
 
@@ -5,10 +7,20 @@ local acp_helpers = require('plugin-config.codecompanion.helpers').acp
 
 local M = {}
 
+-- Helpers
+local function credential(env_var, pass_entry)
+    return function()
+        local value = vim.env[env_var]
+        if value and value ~= '' then
+            return value
+        end
+        return u.resolve_pass(pass_entry)
+    end
+end
+
 -- Credentials
-local CLAUDE_OAUTH_TOKEN = 'cmd:pass show mutt/claude/oauth-token'
-local GITHUB_TOKEN = 'cmd:pass show git/github/petobens/api-key'
-local OPENAI_API_KEY = 'cmd:pass show openai/yahoomail/apikey'
+local GITHUB_TOKEN = credential('GITHUB_TOKEN', 'git/github/petobens/api-key')
+local OPENAI_API_KEY = credential('OPENAI_API_KEY', 'openai/yahoomail/apikey')
 
 -- Background title generation
 function M.openai_gpt_56_luna()
@@ -68,7 +80,10 @@ function M.claude_code()
     return extend('claude_code', {
         env = {
             CLAUDE_CODE_EXECUTABLE = '/usr/bin/claude',
-            CLAUDE_CODE_OAUTH_TOKEN = CLAUDE_OAUTH_TOKEN,
+            -- An unset string env reference becomes literal instead of using native auth
+            CLAUDE_CODE_OAUTH_TOKEN = function()
+                return vim.env.CLAUDE_CODE_OAUTH_TOKEN
+            end,
             GITHUB_TOKEN = GITHUB_TOKEN,
         },
         defaults = {
