@@ -18,7 +18,6 @@ zoom
 
 # Development and virtualization
 edk2-ovmf
-google-cloud-cli
 ollama
 qemu-desktop
 
