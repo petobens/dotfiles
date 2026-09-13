@@ -12,7 +12,6 @@ python -m pip install --user --break-system-packages --upgrade pdbpp
 
 section 'Installing Python language tools'
 for tool in \
-    aws-mfa \
     mypy \
     nbdime \
     pgcli \
