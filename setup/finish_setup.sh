@@ -137,7 +137,7 @@ if [[ ! -d $password_store_dir/.git ]]; then
         rmdir -- "$password_store_dir" ||
             die "$password_store_dir exists but is not an empty directory or Git repository"
     fi
-    gopass clone "$pass_repo"
+    gopass clone --path "$password_store_dir" "$pass_repo"
 fi
 
 section 'Cloning private repositories'
