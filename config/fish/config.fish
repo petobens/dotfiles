@@ -286,6 +286,8 @@ function sys_update_all --description 'Update system, firmware, and language too
     if type -q yay
         command yay -Syu --devel --diffmenu=false --answerclean N \
             --removemake --cleanafter; or return
+        sudo find /var/cache/pacman/pkg -maxdepth 1 -type d \
+            -name 'download-*' -empty -delete; or return
         command yay -Sc --noconfirm; or return
     else
         sudo pacman -Syu; or return
