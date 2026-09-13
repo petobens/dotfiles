@@ -184,8 +184,7 @@ section 'Refreshing configuration symlinks'
 run_component "$script_dir/symlinks.sh"
 
 section 'Checking application logins'
-printf 'Failed checks may indicate login, network, or permission issues.\n'
 timeout 30 gh auth status --active --hostname github.com > /dev/null 2>&1 ||
-    printf 'GitHub check failed: run gh auth status or gh auth login.\n'
+    printf '\033[38;5;208mWarning: GitHub check failed. Run gh auth status or gh auth login.\033[0m\n'
 timeout 30 gws drive files list --params '{"pageSize":1,"fields":"files(id)"}' > /dev/null 2>&1 ||
-    printf 'Workspace check failed: run gws auth status or gws auth login.\n'
+    printf '\033[38;5;208mWarning: Workspace check failed. Run gws auth status or gws auth login.\033[0m\n'
