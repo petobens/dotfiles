@@ -97,13 +97,15 @@ tooltip {
 }
 
 /* Status states */
-#custom-docker.standby {
+#custom-docker.standby,
+#custom-onedrive.syncing {
     color: @standby;
 }
 #workspaces button.urgent,
 #battery.critical,
 #custom-docker.failed,
 #custom-docker.inactive,
+#custom-onedrive.failed,
 #custom-onedrive.inactive,
 #custom-bluetooth.disabled,
 #custom-no-battery,
