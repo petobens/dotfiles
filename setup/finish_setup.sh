@@ -124,7 +124,7 @@ if [[ ! -e $HOME/.ssh/id_rsa ]]; then
         umask 077
         temporary_key=$(mktemp "$HOME/.ssh/id_rsa.XXXXXX")
         trap 'rm -f -- "$temporary_key"' EXIT
-        gpg --output "$temporary_key" --decrypt "$ssh_private"
+        gpg --yes --output "$temporary_key" --decrypt "$ssh_private"
         mv -- "$temporary_key" "$HOME/.ssh/id_rsa"
         trap - EXIT
     )
@@ -133,8 +133,10 @@ fi
 section 'Restoring password store'
 password_store_dir="$HOME/.password-store"
 if [[ ! -d $password_store_dir/.git ]]; then
-    [[ ! -e $password_store_dir ]] ||
-        die "$password_store_dir exists but is not a Git repository"
+    if [[ -e $password_store_dir ]]; then
+        rmdir -- "$password_store_dir" ||
+            die "$password_store_dir exists but is not an empty directory or Git repository"
+    fi
     gopass clone "$pass_repo"
 fi
 
