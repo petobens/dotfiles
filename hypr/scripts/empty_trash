@@ -11,8 +11,17 @@ trash_window=$(hyprctl clients -j | jq -r \
 if [[ -n $trash_window ]]; then
     hyprctl dispatch \
         "hl.dsp.send_shortcut({ mods = '', key = 'Q', window = 'address:$trash_window' })"
-    while hyprctl clients -j | jq -e --arg address "$trash_window" \
-        'any(.[]; .address == $address)' > /dev/null; do
+    for attempt in {1..40}; do
+        clients=$(hyprctl clients -j)
+        if [[ $(jq --arg address "$trash_window" \
+            'any(.[]; .address == $address)' <<< "$clients") == false ]]; then
+            break
+        fi
+        if ((attempt == 40)); then
+            notify-send -u critical -i user-trash 'Could not empty trash' \
+                'Close the trash viewer and try again'
+            exit 1
+        fi
         sleep 0.05
     done
 fi

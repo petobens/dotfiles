@@ -100,6 +100,7 @@ case ${1:-} in
         class='^yazi$'
         workspace=current
         working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
+        # Base64 protects the path through Lua and shell command parsing
         encoded_directory=$(printf '%s' "$working_directory" | base64 -w0)
         command="ghostty --class=yazi --title=yazi --working-directory=\"\$(printf %s $encoded_directory | base64 -d)\" -e fish -c yazi"
         ;;

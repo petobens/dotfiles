@@ -12,7 +12,7 @@ batteries=(/sys/class/power_supply/BAT*)
 ((${#batteries[@]})) || exit 0
 battery=${batteries[0]}
 
-# Highest threshold already announced during the current discharge
+# Lowest threshold already announced during the current discharge
 announced=100
 
 while sleep "$poll_interval"; do

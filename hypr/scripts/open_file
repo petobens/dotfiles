@@ -4,18 +4,16 @@ set -euo pipefail
 script_dir=$(dirname "$(realpath "$0")")
 
 # Snapshot clients and focus so we can identify what the opener changes
-known_windows=$(hyprctl clients -j | jq 'map({ key: .address, value: .title }) | from_entries')
+known_windows=$(hyprctl clients -j | jq 'map(.address)')
 active_address=$(hyprctl activewindow -j | jq -r '.address // empty')
 "$@" &
 
-# Focus a new window or one whose title changes, such as a reused browser window
+# Focus new windows; let applications focus their own reused windows
 for _ in {1..100}; do
     address=$(hyprctl clients -j | jq -r \
-        --arg active "$active_address" --argjson known "$known_windows" '
-        (
-            first(.[] | .address as $address | select($known | has($address) | not))
-            // first(.[] | select(.address != $active and $known[.address] != .title))
-        ).address // empty
+        --argjson known "$known_windows" '
+        first(.[] | .address as $address | select($known | index($address) | not))
+        .address // empty
     ')
     if [[ -n $address ]]; then
         "$script_dir/focus_window" "$address"

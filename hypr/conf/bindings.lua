@@ -23,10 +23,21 @@ local ctrl_alt = 'CTRL + ALT'
 local ctrl_shift = 'CTRL + SHIFT'
 
 -- Helpers
+local actions = {}
 local function bind(keys, dispatcher, description, options)
     options = options or {}
     options.description = description
     hl.bind(keys, dispatcher, options)
+    if not options.mouse then
+        -- Share callbacks with the binding menu without using Lua registry IDs
+        actions[description] = function()
+            if type(dispatcher) == 'function' then
+                dispatcher()
+            else
+                hl.dispatch(dispatcher)
+            end
+        end
+    end
 end
 
 local function exec(keys, command, description, options)
@@ -307,3 +318,5 @@ exec(
     'makoctl menu -- rofi -dmenu -p notification',
     'Notification actions'
 )
+
+return actions
