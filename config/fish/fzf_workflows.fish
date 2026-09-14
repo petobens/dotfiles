@@ -50,7 +50,7 @@ function __fzf_files
         case ctrl-t
             __fzf_files no-ignore (path dirname "$files[1]")
         case ctrl-o
-            xdg-open "$files[1]" >/dev/null 2>&1 &
+            "$HOME/.config/hypr/scripts/system_open" "$files[1]"
         case alt-c
             builtin cd (path dirname "$files[1]")
         case alt-p

@@ -47,7 +47,8 @@ hl.config({
     misc = {
         disable_hyprland_logo = true,
         disable_splash_rendering = true,
-        focus_on_activate = true,
+        -- Keep background activation requests urgent
+        focus_on_activate = false,
         force_default_wallpaper = 0,
     },
 })

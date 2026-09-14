@@ -12,7 +12,9 @@
     excludesfile = ~/.gitignore
 	pager = delta --width ${FZF_PREVIEW_COLUMNS-$COLUMNS}
 [web]
-    browser = xdg-open
+    browser = system-open
+[browser "system-open"]
+    cmd = ~/.config/hypr/scripts/system_open
 [credential]
     helper = /usr/share/git/credential/netrc/git-credential-netrc.perl -f ~/.netrc.gpg
 [alias]

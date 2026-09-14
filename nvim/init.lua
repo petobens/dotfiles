@@ -12,6 +12,17 @@ vim.g.do_filetype_lua = true
 vim.env.DOTVIM = vim.fs.joinpath(vim.env.HOME, '.config', 'nvim')
 vim.env.CACHE = vim.fs.joinpath(vim.env.DOTVIM, 'cache', 'Arch')
 
+-- Focus applications opened through the system handler
+local default_open = vim.ui.open
+vim.ui.open = function(path, opts)
+    opts = vim.tbl_extend('keep', opts or {}, {
+        cmd = {
+            vim.fs.joinpath(vim.env.HOME, '.config', 'hypr', 'scripts', 'system_open'),
+        },
+    })
+    return default_open(path, opts)
+end
+
 -- Use silent and nowait by default in mappings
 local keymap_set = vim.keymap.set
 vim.keymap.set = function(mode, lhs, rhs, opts)

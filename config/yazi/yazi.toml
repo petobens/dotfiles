@@ -20,7 +20,7 @@ suppress_preload = true
 [opener]
 edit = [{ block = true, for = "unix", run = '${EDITOR:-nvim} %s' }]
 # Route GUI openers through Hyprland so newly opened windows receive focus
-open = [{ for = "unix", orphan = true, run = '~/.config/hypr/scripts/open_file xdg-open %s1' }]
+open = [{ for = "unix", orphan = true, run = '~/.config/hypr/scripts/system_open %s1' }]
 play = [{ for = "unix", orphan = true, run = '~/.config/hypr/scripts/open_file mpv --force-window %s' }]
 
 [open]

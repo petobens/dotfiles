@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+"$script_dir/open_file" env -u BROWSER xdg-open "$@" > /dev/null 2>&1 &

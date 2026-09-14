@@ -1,5 +1,5 @@
 # Environment
-set -gx BROWSER xdg-open
+set -gx BROWSER "$HOME/.config/hypr/scripts/system_open"
 set -gx COLUMNS $COLUMNS # Used by git-delta
 set -gx EDITOR nvim
 set -gx MANPAGER 'nvim +Man!'
@@ -104,7 +104,7 @@ end
 alias md 'mkdir -p'
 alias mv 'mv -i'
 alias o open
-alias open xdg-open
+alias open "$HOME/.config/hypr/scripts/system_open"
 alias ping gping
 alias py python
 alias q exit
