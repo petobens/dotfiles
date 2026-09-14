@@ -102,6 +102,7 @@ if type -q eza
     alias ls 'eza -F --color=auto --icons=auto'
 end
 alias md 'mkdir -p'
+alias mm multimon
 alias mv 'mv -i'
 alias o open
 alias open "$HOME/.config/hypr/scripts/system_open"

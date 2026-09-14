@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if (($# > 1)); then
+    echo 'usage: multimon [--primary|--multi|--mirror]' >&2
+    exit 2
+fi
+
+mode=${1:---multi}
+case $mode in
+    --primary | --multi | --mirror) ;;
+    -h | --help)
+        cat << EOF
+usage: multimon [--primary|--multi|--mirror]
+
+  --primary  Use only the laptop display
+  --multi    Use all displays (default)
+  --mirror   Mirror the laptop display
+EOF
+        exit 0
+        ;;
+    *)
+        echo 'usage: multimon [--primary|--multi|--mirror]' >&2
+        exit 2
+        ;;
+esac
+
+exec hyprctl eval "require('conf.monitors').${mode#--}()"
