@@ -34,7 +34,7 @@ usage() {
     cat << EOF
 usage: $0 [--full-sync] [--dry-run]
 
-  --full-sync  Enable and start full OneDrive synchronization
+  --full-sync  Complete a full sync in this terminal, then enable continuous monitoring
   --dry-run    Preview the personal directory download and exit; overrides --full-sync
                Authorizes OneDrive first if needed, saving login data locally
 EOF
@@ -67,10 +67,15 @@ if $dry_run; then
         --single-directory "$personal_directory" --dry-run
 fi
 
-total_steps=$(grep -Ec "^[[:space:]]*section '" "${BASH_SOURCE[0]}")
-if ! $full_sync; then
-    ((total_steps -= 1))
+if $full_sync; then
+    printf '\033[1;32m:: Starting full OneDrive synchronization\033[0m\n'
+    systemctl --user stop onedrive
+    onedrive --sync
+    printf '\033[1;32m:: Sync complete; enabling continuous OneDrive monitoring\033[0m\n'
+    exec systemctl --user enable --now onedrive
 fi
+
+total_steps=$(grep -Ec "^[[:space:]]*section '" "${BASH_SOURCE[0]}")
 
 printf '\033[1;32m:: Starting personal setup\033[0m\n'
 
@@ -108,11 +113,6 @@ for required_file in \
     [[ -f $required_file ]] ||
         die "Missing personal file: $required_file"
 done
-
-if $full_sync; then
-    section 'Starting full OneDrive synchronization'
-    systemctl --user enable --now onedrive
-fi
 
 section 'Linking synchronized files'
 run_component "$script_dir/symlinks.sh"
