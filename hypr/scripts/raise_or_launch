@@ -130,7 +130,7 @@ case ${1:-} in
         ;;
     localsend)
         tag=localsend
-        class='^(localsend|localsend_app)$'
+        class='^org\.localsend\.localsend_app$'
         workspace=current
         command='localsend'
         ;;

@@ -11,8 +11,7 @@ local right_half = { x = 0.5, y = 0, width = 0.5, height = 1 }
 local layout_by_class = {
     hyprpwcenter = rectangle,
     ['org.hyprland.hyprpwcenter'] = rectangle,
-    localsend = right_half,
-    localsend_app = right_half,
+    ['org.localsend.localsend_app'] = right_half,
     ['org.pwmt.zathura'] = right_half,
     imv = right_half,
     ['xdg-desktop-portal-gtk'] = rectangle,
