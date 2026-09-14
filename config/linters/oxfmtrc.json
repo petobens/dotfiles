@@ -5,6 +5,14 @@
     "overrides": [
         {
             "files": [
+                "**/browser-policies/*.json"
+            ],
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
+            "files": [
                 "*.md"
             ],
             "options": {

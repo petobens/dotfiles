@@ -20,6 +20,3 @@ zoom
 edk2-ovmf
 ollama
 qemu-desktop
-
-# Fonts
-ttf-ms-fonts
