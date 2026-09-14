@@ -2,6 +2,7 @@
 avahi
 btrfs-progs
 btrfsmaintenance
+dosfstools
 exfatprogs
 linux
 linux-firmware-intel
