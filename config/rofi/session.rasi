@@ -1,5 +1,5 @@
 configuration {
-    font: "Noto Sans Mono 11";
+    font: "Noto Sans Mono,Symbols Nerd Font 11";
     show-icons: false;
 }
 
