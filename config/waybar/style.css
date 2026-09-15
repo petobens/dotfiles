@@ -38,7 +38,7 @@ tooltip {
 #custom-no-battery,
 #clock,
 #custom-slack {
-    padding: 0 10px;
+    padding: 0 7px;
 }
 
 /* Left modules */
@@ -84,7 +84,7 @@ tooltip {
 #custom-bluetooth,
 #custom-no-battery {
     font-family: 'Symbols Nerd Font';
-    font-size: 11pt;
+    font-size: 13pt;
 }
 #custom-slack {
     font-family: 'Symbols Nerd Font';

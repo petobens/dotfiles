@@ -105,9 +105,9 @@
         "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     },
     "battery": {
-        "format": "<span font_family='Symbols Nerd Font' size='11pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
-        "format-charging": "<span font_family='Symbols Nerd Font' size='12pt'></span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
-        "format-full": "<span font_family='Symbols Nerd Font' size='12pt'>󰂄</span> <span font_family='Noto Sans Mono' size='10pt' weight='bold'>100%</span>",
+        "format": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
+        "format-charging": "<span font_family='Symbols Nerd Font' size='13pt'></span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
+        "format-full": "<span font_family='Symbols Nerd Font' size='13pt'>󰂄</span> <span font_family='Noto Sans Mono' size='10pt' weight='bold'>100%</span>",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"],
         "on-click": "~/.config/hypr/scripts/battery_menu",
         "states": {
