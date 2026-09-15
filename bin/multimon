@@ -2,25 +2,30 @@
 set -euo pipefail
 
 if (($# > 1)); then
-    echo 'usage: multimon [--primary|--multi|--mirror]' >&2
+    echo 'usage: multimon [--primary|--multi|--mirror|--scale]' >&2
     exit 2
 fi
 
 mode=${1:---multi}
 case $mode in
     --primary | --multi | --mirror) ;;
+    --scale)
+        hyprctl -j monitors all | jq '.[] | {name, width, height, scale}'
+        exit 0
+        ;;
     -h | --help)
         cat << EOF
-usage: multimon [--primary|--multi|--mirror]
+usage: multimon [--primary|--multi|--mirror|--scale]
 
   --primary  Use only the laptop display
   --multi    Use all displays (default)
   --mirror   Mirror the laptop display
+  --scale    Show connected displays' resolutions and scales
 EOF
         exit 0
         ;;
     *)
-        echo 'usage: multimon [--primary|--multi|--mirror]' >&2
+        echo 'usage: multimon [--primary|--multi|--mirror|--scale]' >&2
         exit 2
         ;;
 esac
