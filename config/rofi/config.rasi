@@ -7,7 +7,8 @@ configuration {
 	show-icons: true;
 	terminal: "ghostty";
 	matching: "fuzzy";
-	dpi: env(ROFI_DPI, 0);
+	// Use a stable font DPI; Wayland handles the output scale
+	dpi: env(ROFI_DPI, 96);
 	kb-remove-to-eol: "";
 	kb-accept-entry: "Return";
 	kb-row-up: "Shift_L+Tab,Ctrl-p,Up,Ctrl-k";
