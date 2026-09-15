@@ -5,13 +5,13 @@ script_dir=$(dirname "$(realpath "$0")")
 action=${1:-}
 if [[ -z $action ]]; then
     actions=('about arch' applications bindings lock reboot poweroff)
-    index=$(printf '%s\n' \
-        '  About Arch' \
-        '󰀻  Applications  (Super+a)' \
-        '  Keybindings   (Super+/)' \
-        '  Lock          (Super+Shift+l)' \
-        '  Reboot        (Super+Shift+r)' \
-        '  Shut Down     (Super+Shift+s)' |
+    index=$(printf '%b\n' \
+        '\tAbout Arch' \
+        '󰀻\tApplications\t(Super+a)' \
+        '\tKeybindings\t(Super+/)' \
+        '\tLock\t(Super+Shift+l)' \
+        '\tReboot\t(Super+Shift+r)' \
+        '\tShut Down\t(Super+Shift+s)' |
         rofi -dmenu -no-custom -format i \
             -theme "$script_dir/../../config/rofi/session.rasi") || exit 0
     [[ $index =~ ^[0-9]+$ ]] || exit 0

@@ -1,5 +1,5 @@
 configuration {
-    font: "Noto Sans Mono 11";
+    font: "Noto Sans Mono,Symbols Nerd Font 11";
     show-icons: false;
 }
 
@@ -53,6 +53,7 @@ element selected {
 }
 
 element-text {
+    tab-stops: [ 3ch, 17ch ];
     background-color: transparent;
     text-color: inherit;
     horizontal-align: 0.0;
