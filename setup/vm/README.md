@@ -38,7 +38,7 @@ ISO, creates the VM state, and boots with the ISO attached. In the Arch live
 environment, run:
 
 ```bash
-pacman -Syu --needed git tmux
+pacman -Sy --needed git tmux
 tmux
 git clone \
     --depth 1 \

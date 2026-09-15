@@ -23,7 +23,7 @@ Boot the official Arch installation USB in UEFI mode, connect to the internet,
 and run:
 
 ```bash
-pacman -Syu --needed git tmux
+pacman -Sy --needed git tmux
 tmux
 git clone \
     --depth 1 \
@@ -34,6 +34,7 @@ cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
 
+Use `-Sy` only in the live ISO to keep the running kernel's modules intact.
 If Pacman reports `Partition / too full`, run the following command, then
 retry Pacman. It raises the live environment's RAM-backed storage limit to
 2 GiB without resizing the USB or internal disk:
