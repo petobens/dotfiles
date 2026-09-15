@@ -34,6 +34,14 @@ cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
 
+If Pacman reports `Partition / too full`, run the following command, then
+retry Pacman. It raises the live environment's RAM-backed storage limit to
+2 GiB without resizing the USB or internal disk:
+
+```bash
+mount -o remount,size=2G /run/archiso/cowspace
+```
+
 Setup scripts resolve repository paths from their own location, so they can be
 run from the repository root as above or directly from inside `setup/`, for
 example as `./install_arch.sh`, `./vm/vm.sh`, or `./symlinks.sh`.
