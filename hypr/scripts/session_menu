@@ -4,10 +4,11 @@ set -euo pipefail
 script_dir=$(dirname "$(realpath "$0")")
 action=${1:-}
 if [[ -z $action ]]; then
-    actions=('about arch' applications lock reboot poweroff)
+    actions=('about arch' applications bindings lock reboot poweroff)
     index=$(printf '%s\n' \
         '  About Arch' \
         '󰀻  Applications  (Super+a)' \
+        '  Keybindings   (Super+/)' \
         '  Lock          (Super+Shift+l)' \
         '  Reboot        (Super+Shift+r)' \
         '  Shut Down     (Super+Shift+s)' |
@@ -20,6 +21,7 @@ fi
 case "$action" in
     'about arch') "$script_dir/raise_or_launch" about ;;
     applications) "$script_dir/raise_or_launch" menu ;;
+    bindings) "$script_dir/binding_menu" ;;
     lock) loginctl lock-session ;;
     'quit apps' | quit-apps)
         "$script_dir/confirm" 'Do you want to quit all apps?' || exit 0
