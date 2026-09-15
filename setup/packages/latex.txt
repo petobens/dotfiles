@@ -71,7 +71,6 @@ spreadtab
 standalone
 tcolorbox
 texcount
-texdoc
 titlesec
 todonotes
 translations

@@ -42,7 +42,8 @@ if [[ -z $tlmgr ]]; then
     installer=("$tmp"/install-tl-*/install-tl)
     [[ -f ${installer[0]} ]] ||
         die 'TeX Live archive did not contain the installer.'
-    sudo perl "${installer[0]}" --no-interaction --scheme=basic
+    sudo perl "${installer[0]}" --no-interaction --scheme=basic \
+        --no-doc-install --no-src-install
     tlmgr=$(find "$texlive_root" -path '*/bin/x86_64-linux/tlmgr' |
         sort -V | tail -1)
 fi
@@ -54,8 +55,9 @@ mapfile -t packages < "$script_dir/packages/latex.txt"
 
 section 'Installing TeX Live packages'
 sudo "$tlmgr" option repository ctan
+sudo "$tlmgr" option docfiles 0
+sudo "$tlmgr" option srcfiles 0
 sudo "$tlmgr" update --self
-sudo "$tlmgr" option docfiles 1
 sudo "$tlmgr" install "${packages[@]}"
 sudo "$tlmgr" update --all
 sudo "$tlmgr" path add
