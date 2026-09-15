@@ -92,7 +92,10 @@ window_rule(
     '^(com\\.transmissionbt\\.transmission.*|obs|com.obsproject.Studio)$',
     { workspace = '4 silent', tag = maximized_tag }
 )
-window_rule('^(DesktopEditors|ONLYOFFICE)$', { workspace = '4 silent' })
+window_rule('^(DesktopEditors|ONLYOFFICE)$', {
+    workspace = '4 silent',
+    tag = maximized_tag,
+})
 
 -- Application layouts
 hl.on('window.open', apply_layout)
