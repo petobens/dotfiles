@@ -6,7 +6,7 @@
             "custom/onedrive",
             "hyprland/language",
             "custom/vpn",
-            "network#wifi",
+            "custom/wifi",
             "network#ethernet",
             "custom/bluetooth",
             "pulseaudio",

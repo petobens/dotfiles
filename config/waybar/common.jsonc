@@ -12,7 +12,7 @@
         "custom/onedrive",
         "hyprland/language",
         "custom/vpn",
-        "network#wifi",
+        "custom/wifi",
         "network#ethernet",
         "custom/bluetooth",
         "pulseaudio",
@@ -75,13 +75,17 @@
         "exec-if": "nmcli -t -f TYPE connection show --active | grep -qx vpn",
         "interval": 5,
     },
-    "network#wifi": {
-        "interface": "wl*",
-        "format-wifi": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{signalStrength}%</span>",
-        "format-disconnected": "<span font_family='Symbols Nerd Font' size='13pt'>󰖪</span>",
-        "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+    "custom/wifi": {
+        "exec": "~/.config/hypr/scripts/wifi_menu --status",
+        "interval": 5,
+        "return-type": "json",
+        "format": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{text}</span>",
+        "format-icons": {
+            "connected": ["󰤟", "󰤢", "󰤥", "󰤨"],
+            "disconnected": "󰖪",
+        },
         "on-click": "~/.config/hypr/scripts/raise_or_launch wifi",
-        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+        "tooltip": false,
     },
     "network#ethernet": {
         "interface": "en*",

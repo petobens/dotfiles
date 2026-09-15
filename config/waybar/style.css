@@ -32,6 +32,7 @@ tooltip {
 #language,
 #custom-vpn,
 #network,
+#custom-wifi,
 #custom-bluetooth,
 #pulseaudio,
 #battery,
@@ -109,6 +110,7 @@ tooltip {
 #custom-onedrive.inactive,
 #custom-bluetooth.disabled,
 #custom-no-battery,
-#network.disconnected {
+#network.disconnected,
+#custom-wifi.disconnected {
     color: @red;
 }
