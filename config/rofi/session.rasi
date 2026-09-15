@@ -53,6 +53,7 @@ element selected {
 }
 
 element-text {
+    tab-stops: [ 3ch, 17ch ];
     background-color: transparent;
     text-color: inherit;
     horizontal-align: 0.0;
