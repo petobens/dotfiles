@@ -87,7 +87,7 @@ case ${1:-} in
         tag=docker
         class='^docker-info$'
         workspace=current
-        command="ghostty --class=docker-info --title=docker-info -e sh -c 'docker info | less +F'"
+        command="ghostty --class=docker-info --title=docker-info -e sh -c '\"\$HOME/.config/hypr/scripts/docker_status\" --details 2>&1 | less -R --mouse --tilde'"
         ;;
     edge)
         tag=edge
@@ -157,7 +157,7 @@ case ${1:-} in
         tag=onedrive
         class='^onedrive$'
         workspace=current
-        command='ghostty --class=onedrive --title=OneDrive -e journalctl --user-unit onedrive -f'
+        command="ghostty --class=onedrive --title=OneDrive -e sh -c 'journalctl --user-unit onedrive -n 100 --no-pager 2>&1 | less -R --mouse +G'"
         ;;
     onlyoffice)
         tag=onlyoffice
