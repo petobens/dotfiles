@@ -6,6 +6,11 @@ local physical_outputs = {
     right = 'DP-3',
     laptop = 'eDP-1',
 }
+-- Alternate port names for the left and right monitors
+local output_aliases = {
+    ['DP-5'] = physical_outputs.left,
+    ['DP-6'] = physical_outputs.right,
+}
 local virtual_outputs = {
     left = 'Virtual-2',
     right = 'Virtual-3',
@@ -14,6 +19,7 @@ local virtual_outputs = {
 local scale_by_resolution = {
     ['1920x1080'] = 1,
     ['2880x1800'] = 1.5,
+    ['3000x2000'] = 2,
     ['3840x2160'] = 2,
 }
 local positions = {
@@ -46,6 +52,10 @@ end
 
 local function is_virtual_monitor(name)
     return name:match('^Virtual%-%d+$')
+end
+
+local function monitor_position(name)
+    return positions[output_aliases[name] or name]
 end
 
 local function monitor_scale(monitor)
@@ -87,7 +97,8 @@ local function configure_laptop()
 end
 
 local function configure_all_monitors()
-    connected_monitors()
+    local monitors = connected_monitors()
+    local laptop = known_monitors[physical_outputs.laptop]
     hl.monitor({
         output = '',
         mode = 'preferred',
@@ -96,8 +107,23 @@ local function configure_all_monitors()
         mirror = '',
         disabled = false,
     })
-    for name in pairs(known_monitors) do
-        configure_monitor(name, positions[name] or 'auto')
+    for name, monitor in pairs(known_monitors) do
+        local position = monitor_position(name) or 'auto'
+        if
+            #monitors == 2
+            and name:match('^HDMI%-')
+            and monitor.name
+            and laptop
+            and laptop.name
+        then
+            -- Center a single HDMI display above the laptop in logical pixels
+            local scale = tonumber(monitor_scale(monitor)) or monitor.scale
+            local laptop_scale = tonumber(monitor_scale(laptop)) or laptop.scale
+            local x = (laptop.width / laptop_scale - monitor.width / scale) / 2
+            local y = -monitor.height / scale
+            position = string.format('%dx%d', math.floor(x), math.ceil(y))
+        end
+        configure_monitor(name, position)
     end
 end
 
@@ -169,14 +195,40 @@ end
 -- Workspace rules
 local function focus_development_workspace(monitor)
     -- A lone output outside the physical layout uses the development workspace
-    if monitor and #hl.get_monitors() == 1 and not positions[monitor.name] then
+    if monitor and #hl.get_monitors() == 1 and not monitor_position(monitor.name) then
         hl.dispatch(hl.dsp.focus({ workspace = '5' }))
     end
 end
 
+local physical_workspace_outputs = physical_outputs
+
 local function configure_workspace_rules(outputs)
+    if outputs == physical_outputs then
+        local hdmi
+        for _, monitor in ipairs(connected_monitors()) do
+            if monitor.name:match('^HDMI%-') then
+                hdmi = monitor.name
+                break
+            end
+        end
+        outputs = {}
+        for role, name in pairs(physical_outputs) do
+            local monitor = known_monitors[name]
+            local output = monitor and monitor.name
+            for alias, canonical in pairs(output_aliases) do
+                monitor = known_monitors[alias]
+                if not output and canonical == name and monitor and monitor.name then
+                    output = alias
+                end
+            end
+            -- HDMI takes the workspace groups of disconnected dock displays
+            outputs[role] = output or (role ~= 'laptop' and hdmi) or name
+        end
+        physical_workspace_outputs = outputs
+    end
+    -- When both external groups share HDMI, only workspace 5 is the default
     for _, workspace in ipairs({
-        { '1', outputs.right, true },
+        { '1', outputs.right, outputs.right ~= outputs.left },
         { '2', outputs.laptop, true },
         { '3', outputs.laptop },
         { '4', outputs.right },
@@ -189,12 +241,38 @@ local function configure_workspace_rules(outputs)
         hl.workspace_rule({
             workspace = workspace[1],
             monitor = workspace[2],
-            default = workspace[3],
+            default = workspace[3] or false,
         })
     end
 end
 
 local workspace_outputs
+
+local function activate_default_workspace(monitor)
+    if active_mode ~= 'multi' or lid_closed then
+        return
+    end
+
+    local outputs = physical_workspace_outputs
+    local workspace
+    if monitor.name == outputs.left then
+        workspace = '5'
+    elseif monitor.name == outputs.right then
+        workspace = '1'
+    elseif monitor.name == outputs.laptop then
+        workspace = '2'
+    end
+    if not workspace then
+        return
+    end
+
+    -- Added monitors already have a workspace before alias rules are applied
+    local focused = hl.get_active_monitor()
+    hl.dispatch(hl.dsp.focus({ workspace = workspace }))
+    if focused and focused.name ~= monitor.name then
+        hl.dispatch(hl.dsp.focus({ monitor = focused.name }))
+    end
+end
 
 local function virtual_outputs_connected()
     return hl.get_monitor(virtual_outputs.laptop)
@@ -219,11 +297,23 @@ end
 hl.on('monitor.added', function(monitor)
     restore_active_mode()
     configure_virtual_workspaces()
+    if workspace_outputs ~= virtual_outputs then
+        configure_workspace_rules(physical_outputs)
+        activate_default_workspace(monitor)
+    end
     focus_development_workspace(monitor)
+end)
+hl.on('hyprland.start', function()
+    for _, monitor in ipairs(hl.get_monitors()) do
+        activate_default_workspace(monitor)
+    end
 end)
 hl.on('monitor.removed', function()
     -- Wait for unplug cleanup before checking which cached monitors still exist
-    hl.timer(restore_active_mode, { timeout = 1, type = 'oneshot' })
+    hl.timer(function()
+        restore_active_mode()
+        configure_workspace_rules(workspace_outputs)
+    end, { timeout = 1, type = 'oneshot' })
 end)
 
 -- Lid switch events
