@@ -68,6 +68,13 @@ tooltip {
 }
 
 /* Right modules */
+#custom-wifi,
+#custom-bluetooth,
+#pulseaudio,
+#battery,
+#custom-no-battery {
+    padding: 0 6px;
+}
 #custom-docker,
 #custom-onedrive {
     font-family: 'Symbols Nerd Font';
