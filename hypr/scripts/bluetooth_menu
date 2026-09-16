@@ -140,7 +140,9 @@ states+=(Scan)
 index=$(
     printf '%s\n' "${rows[@]}" | rofi -dmenu -i -no-custom -format i -p 'Bluetooth' \
         -theme "$theme" \
-        -theme-str 'window { width: 48ch; } element-text { tab-stops: [ 176px, 244px ]; } entry { placeholder: "Enter: select | Esc: close"; }'
+        -theme-str 'window { width: 48ch; }
+            inputbar { children: [ prompt, textbox-prompt-colon, entry, num-filtered-rows, textbox-num-sep, num-rows ]; }
+            element-text { tab-stops: [ 176px, 244px ]; }'
 ) || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
 ((index < ${#rows[@]})) || exit 0

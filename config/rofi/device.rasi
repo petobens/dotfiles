@@ -60,6 +60,20 @@ entry {
     placeholder-color: @muted;
 }
 
+num-filtered-rows, textbox-num-sep, num-rows {
+    expand: false;
+    background-color: transparent;
+    text-color: @muted;
+}
+
+num-filtered-rows {
+    margin: 0 0 0 8px;
+}
+
+textbox-num-sep {
+    str: "/";
+}
+
 listview {
     background-color: @background;
     lines: 10;
