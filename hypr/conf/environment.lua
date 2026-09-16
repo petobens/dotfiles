@@ -3,6 +3,11 @@
 local cursor_size = '24'
 
 local environment = {
+    -- Disable tiled scanout buffers so multi-screen setups can use full resolution
+    -- when display-buffer limits would otherwise force lower resolutions
+    -- May cost performance or battery life; retest without it on newer hardware
+    AQ_NO_MODIFIERS = '1',
+
     -- Cursors
     HYPRCURSOR_SIZE = cursor_size,
     HYPRCURSOR_THEME = 'macOS-hypr',
