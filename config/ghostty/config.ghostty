@@ -16,7 +16,8 @@ foreground = #abb2bf
 cursor-color = #528bff
 cursor-text = #0b0b0b
 cursor-style-blink = false
-adjust-cursor-thickness = 100%
+# Add 2px to the default 1px bar; Ghostty does not scale this with DPI
+adjust-cursor-thickness = 2
 selection-background = #3e4452
 selection-foreground = #abb2bf
 palette = 0=#24272e
