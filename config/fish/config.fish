@@ -56,7 +56,17 @@ function __toggle_key_bindings
     end
 end
 
+function __complete_or_accept_suggestion
+    if not commandline --paging-mode; and commandline --showing-suggestion
+        commandline -f accept-autosuggestion
+    else
+        commandline -f complete
+    end
+end
+
 __set_vi_key_bindings
+bind -M default tab __complete_or_accept_suggestion
+bind -M insert tab __complete_or_accept_suggestion
 bind -M default \cw __toggle_key_bindings
 bind -M insert \ca beginning-of-line
 bind -M insert \ce end-of-line
