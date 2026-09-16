@@ -186,8 +186,7 @@ for workspace = 1, 9 do
 end
 
 -- Monitors
-bind(alt .. ' + grave', hl.dsp.focus({ monitor = 'r' }), 'Focus monitor right')
-bind(alt .. ' + escape', hl.dsp.focus({ monitor = 'd' }), 'Focus monitor down')
+bind(alt .. ' + grave', monitor_modes.cycle_focus, 'Cycle monitor focus')
 
 local monitor_directions = {
     { 'RIGHT', 'r', 'right' },

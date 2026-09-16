@@ -69,6 +69,23 @@ local function monitor_scale(monitor)
     return scale_by_resolution[resolution] or 'auto'
 end
 
+local function cycle_focus()
+    local monitors = hl.get_monitors()
+    -- Cycle across the top row before the laptop below it
+    table.sort(monitors, function(a, b)
+        if a.y == b.y then
+            return a.x < b.x
+        end
+        return a.y < b.y
+    end)
+    for index, monitor in ipairs(monitors) do
+        if monitor.focused then
+            hl.dispatch(hl.dsp.focus({ monitor = monitors[index % #monitors + 1].name }))
+            return
+        end
+    end
+end
+
 -- Monitor configuration
 local function configure_monitor(name, position, mirror)
     local monitor = known_monitors[name]
@@ -332,4 +349,4 @@ multi()
 workspace_outputs = virtual_outputs_connected() and virtual_outputs or physical_outputs
 configure_workspace_rules(workspace_outputs)
 focus_development_workspace(hl.get_monitors()[1])
-return { primary = primary, multi = multi, mirror = mirror }
+return { primary = primary, multi = multi, mirror = mirror, cycle_focus = cycle_focus }
