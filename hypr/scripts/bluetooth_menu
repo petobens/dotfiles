@@ -77,6 +77,7 @@ if ! compgen -G '/sys/class/bluetooth/hci*' > /dev/null; then
     pair_device() { :; }
 fi
 
+# Enable the controller if needed
 controller=$(btctl show) || fail 'No Bluetooth controller found'
 grep -q '^Controller ' <<< "$controller" || fail 'No Bluetooth controller found'
 if [[ $(awk '/Powered:/ { print $2; exit }' <<< "$controller") != yes ]]; then
@@ -88,13 +89,19 @@ if [[ $(awk '/Powered:/ { print $2; exit }' <<< "$controller") != yes ]]; then
     exec "$0"
 fi
 
-rows=()
-macs=()
-names=()
-states=()
+# Build the list with scan first, followed by connected, paired, and other devices
+rows=('󰂰  Scan for devices')
+macs=('')
+names=('')
+states=(Scan)
 
 add_devices() {
-    local state=$1 filter=$2 devices _ mac name known_mac duplicate marker battery label row
+    local state=$1 filter=$2 devices _ mac name known_mac duplicate marker battery label row status_icon
+    case $state in
+        Connected) status_icon=󰂱 ;;
+        Paired) status_icon=󰌷 ;;
+        Available) status_icon=󰂯 ;;
+    esac
     if [[ -n $filter ]]; then
         devices=$(btctl devices "$filter")
     else
@@ -112,15 +119,18 @@ add_devices() {
         $duplicate && continue
 
         marker=
-        [[ $state == Connected ]] && marker=' ●'
+        [[ $state == Connected ]] && marker=' <span foreground="#98c379" size="75%" rise="2048"></span>'
         battery=$(btctl info "$mac" |
             awk '/Battery Percentage:/ { gsub(/[()]/, "", $4); print $4; exit }') ||
             battery=
         # Keep long device names from pushing the battery and status off the menu
         label=$name
         ((${#label} <= 18)) || label="${label:0:17}…"
-        printf -v row '%s%s\t%s\t%s' \
-            "$label" "$marker" "${battery:+󰁹 $battery%}" "$state"
+        label=${label//&/\&amp;}
+        label=${label//</\&lt;}
+        label=${label//>/\&gt;}
+        printf -v row '%s%s\t%s %s\t%s' \
+            "$label" "$marker" "$status_icon" "$state" "${battery:+󰁹 $battery%}"
         rows+=("$row")
         macs+=("$mac")
         names+=("$name")
@@ -132,29 +142,47 @@ add_devices Connected Connected
 add_devices Paired Paired
 add_devices Available ''
 
-rows+=('󰂰  Scan for devices')
-macs+=('')
-names+=('')
-states+=(Scan)
-
+# Enter selects an action; Ctrl+i requests device details
+menu_status=0
 index=$(
-    printf '%s\n' "${rows[@]}" | rofi -dmenu -i -no-custom -format i -p 'Bluetooth' \
+    printf '%s\n' "${rows[@]}" | rofi -dmenu -i -no-custom -markup-rows -format i -p 'Bluetooth' \
+        -kb-custom-1 'Control+i' \
         -theme "$theme" \
-        -theme-str 'window { width: 48ch; }
+        -theme-str 'window { width: 52ch; }
             inputbar { children: [ prompt, textbox-prompt-colon, entry, num-filtered-rows, textbox-num-sep, num-rows ]; }
-            element-text { tab-stops: [ 176px, 244px ]; }'
-) || exit 0
+            element-text { tab-stops: [ 176px, 308px ]; }'
+) || menu_status=$?
+[[ $menu_status == 0 || $menu_status == 10 ]] || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
 ((index < ${#rows[@]})) || exit 0
 
 mac=${macs[index]}
 state=${states[index]}
+# Show device details, then return to the list
+if [[ $menu_status == 10 ]]; then
+    [[ $state != Scan ]] || exec "$0"
+    info=$(btctl info "$mac") || fail 'Could not read device details'
+    details=$(printf 'Device\t%s\nAddress\t%s\n' "${names[index]}" "$mac")
+    details+=$'\n'$(printf '%s\n' "$info" | awk '
+        /^[[:space:]]*(Connected|Paired|Bonded|Trusted|Blocked|Icon|RSSI|Battery Percentage):/ {
+            sub(/^[[:space:]]*/, "")
+            sub(/:[[:space:]]*/, "\t")
+            print
+        }
+    ')
+    printf '%s\n' "$details" | rofi -dmenu -i -no-custom -p 'Bluetooth info' \
+        -theme "$theme" -theme-str 'window { width: 48ch; }
+            element-text { tab-stops: [ 160px ]; }' > /dev/null || true
+    exec "$0"
+fi
+
 if [[ $state == Scan ]]; then
     notify-send -t 1500 -i bluetooth 'Bluetooth' 'Scanning for devices...'
     btctl --timeout 8 scan on > /dev/null || fail 'Device scan failed'
     exec "$0"
 fi
 
+# Disconnect connected devices, or pair and connect the selection
 name=${names[index]}
 if [[ $state == Connected ]]; then
     if ! output=$(btctl disconnect "$mac"); then
