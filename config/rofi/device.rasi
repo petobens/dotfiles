@@ -63,8 +63,17 @@ entry {
 listview {
     background-color: @background;
     lines: 10;
-    scrollbar: false;
+    scrollbar: true;
     spacing: 2px;
+}
+
+scrollbar {
+    background-color: transparent;
+    handle-color: #4b5263;
+    handle-width: 4px;
+    handle-rounded-corners: true;
+    padding: 0 0 0 6px;
+    border: 0;
 }
 
 element {
