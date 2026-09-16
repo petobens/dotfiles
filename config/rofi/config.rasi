@@ -1,5 +1,5 @@
 configuration {
-	font: "Source Code Pro 11";
+	font: "Noto Sans Mono,Symbols Nerd Font 11";
 	icon-theme: "Papirus-Dark";
 	location: 0;
 	yoffset: -50;
