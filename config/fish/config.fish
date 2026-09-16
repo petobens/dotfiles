@@ -216,7 +216,8 @@ function sfm --description 'Run Yazi as root with my configuration'
     set -l yazi_config "$config_home/yazi"
     set -q YAZI_CONFIG_HOME; and set yazi_config "$YAZI_CONFIG_HOME"
     test (count $argv) -gt 0; or set argv "$HOME"
-    sudo -H env YAZI_CONFIG_HOME="$yazi_config" yazi $argv
+    sudo -H --preserve-env=WAYLAND_DISPLAY,XDG_RUNTIME_DIR \
+        env YAZI_CONFIG_HOME="$yazi_config" yazi $argv
 end
 
 function yazi --description 'Run Yazi and change to its final directory'

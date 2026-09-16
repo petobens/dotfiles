@@ -74,6 +74,11 @@ on = ["y"]
 run = "copy name_without_ext"
 
 [[mgr.prepend_keymap]]
+desc = "Copy full path"
+on = ["<C-y>"]
+run = "copy path --hovered"
+
+[[mgr.prepend_keymap]]
 desc = "Rename selected files"
 on = ["r"]
 run = "rename --cursor=before_ext"
