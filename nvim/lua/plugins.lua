@@ -70,11 +70,7 @@ local packages = {
     -- Completion and snippets
     plugin('saghen/blink.lib'),
     plugin('onsails/lspkind.nvim'),
-    plugin('L3MON4D3/LuaSnip', {
-        event = 'InsertEnter',
-        keys = { '<Leader>es', '<Leader>se' },
-        config = 'luasnip_config',
-    }),
+    plugin('L3MON4D3/LuaSnip', 'luasnip_config'),
     plugin('Saghen/blink.cmp', {
         build = function()
             require('blink.cmp').build():pwait()
