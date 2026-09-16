@@ -13,6 +13,41 @@ fail() {
     exit 1
 }
 
+pair_device() (
+    # BlueZ skips agent registration when a command is passed on the command line
+    coproc PAIR { exec bluetoothctl --agent NoInputNoOutput 2>&1; }
+    pid=$PAIR_PID
+    input=${PAIR[1]}
+    output=${PAIR[0]}
+    trap 'kill "$pid" 2>/dev/null || :; wait "$pid" 2>/dev/null || :' EXIT
+
+    deadline=$((SECONDS + 30))
+    while ((SECONDS < deadline)) &&
+        IFS= read -r -t "$((deadline - SECONDS))" -u "$output" line; do
+        case $line in
+            *'Agent registered'*) printf 'pair %s\n' "$1" >&"$input" ;;
+            *'Pairing successful'*) return 0 ;;
+            *'Request confirmation'* | *'Request authorization'*)
+                answer=$(printf 'Accept pairing\nCancel\n' |
+                    rofi -dmenu -no-custom -format i -p "$name" \
+                        -theme "$theme") || return 1
+                [[ $answer == 0 ]] || return 1
+                printf 'yes\n' >&"$input"
+                ;;
+            *'Request PIN code'* | *'Request passkey'*)
+                printf 'Pairing requires a passkey. Use interactive bluetoothctl.\n'
+                return 1
+                ;;
+            *'Failed'* | *'not available'*)
+                printf '%s\n' "$line"
+                return 1
+                ;;
+        esac
+    done
+    printf 'Pairing did not complete. Put the device in pairing mode and retry.\n'
+    return 1
+)
+
 # Substitute sample command output in VMs without a Bluetooth controller
 if ! compgen -G '/sys/class/bluetooth/hci*' > /dev/null; then
     systemd-detect-virt --vm --quiet || fail 'No Bluetooth controller found'
@@ -33,9 +68,13 @@ if ! compgen -G '/sys/class/bluetooth/hci*' > /dev/null; then
                     'Device 00:00:00:00:00:02 VM Keyboard' \
                     'Device 00:00:00:00:00:03 VM Speaker'
                 ;;
-            'info 00:00:00:00:00:01') printf 'Battery Percentage: 0x50 (80)\n' ;;
+            'info 00:00:00:00:00:01')
+                printf 'Connected: yes\nBattery Percentage: 0x50 (80)\n'
+                ;;
+            info\ *) printf 'Connected: yes\n' ;;
         esac
     }
+    pair_device() { :; }
 fi
 
 controller=$(btctl show) || fail 'No Bluetooth controller found'
@@ -55,7 +94,7 @@ names=()
 states=()
 
 add_devices() {
-    local state=$1 filter=$2 devices _ mac name known_mac duplicate marker battery row
+    local state=$1 filter=$2 devices _ mac name known_mac duplicate marker battery label row
     if [[ -n $filter ]]; then
         devices=$(btctl devices "$filter")
     else
@@ -73,13 +112,15 @@ add_devices() {
         $duplicate && continue
 
         marker=
-        [[ $state == Connected ]] && marker=●
+        [[ $state == Connected ]] && marker=' ●'
         battery=$(btctl info "$mac" |
             awk '/Battery Percentage:/ { gsub(/[()]/, "", $4); print $4; exit }') ||
             battery=
-        [[ -z $battery ]] || battery="$battery%"
-        printf -v row '%s\t󰂯  %-9s %4s  %s' \
-            "$marker" "$state" "$battery" "$name"
+        # Keep long device names from pushing the battery and status off the menu
+        label=$name
+        ((${#label} <= 18)) || label="${label:0:17}…"
+        printf -v row '%s%s\t%s\t%s' \
+            "$label" "$marker" "${battery:+󰁹 $battery%}" "$state"
         rows+=("$row")
         macs+=("$mac")
         names+=("$name")
@@ -91,15 +132,18 @@ add_devices Connected Connected
 add_devices Paired Paired
 add_devices Available ''
 
-rows+=($'\t󰂰  Scan for devices')
+rows+=('󰂰  Scan for devices')
 macs+=('')
 names+=('')
 states+=(Scan)
 
-index=$(printf '%s\n' "${rows[@]}" |
-    rofi -dmenu -i -no-custom -format i -p 'Bluetooth' \
-        -theme "$theme") || exit 0
+index=$(
+    printf '%s\n' "${rows[@]}" | rofi -dmenu -i -no-custom -format i -p 'Bluetooth' \
+        -theme "$theme" \
+        -theme-str 'window { width: 48ch; } element-text { tab-stops: [ 176px, 244px ]; } entry { placeholder: "Enter: select | Esc: close"; }'
+) || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
+((index < ${#rows[@]})) || exit 0
 
 mac=${macs[index]}
 state=${states[index]}
@@ -115,15 +159,22 @@ if [[ $state == Connected ]]; then
         fail "${output:-Could not disconnect $name}"
     fi
     notify-send -t 2000 -i bluetooth-disabled 'Bluetooth disconnected' "$name"
-elif [[ $state == Paired ]]; then
+else
+    if [[ $state == Available ]]; then
+        notify-send -t 1500 -i bluetooth 'Bluetooth' "Pairing with $name..."
+        if ! output=$(pair_device "$mac"); then
+            fail "${output:-Pairing canceled}"
+        fi
+    fi
+    if ! output=$(btctl trust "$mac"); then
+        fail "${output:-Could not trust $name}"
+    fi
+    notify-send -t 1500 -i bluetooth 'Bluetooth' "Connecting to $name..."
     if ! output=$(btctl connect "$mac"); then
         fail "${output:-Could not connect $name}"
     fi
-    notify-send -t 2000 -i bluetooth 'Bluetooth connected' "$name"
-else
-    notify-send -t 1500 -i bluetooth 'Bluetooth' "Pairing with $name..."
-    if ! output=$(btctl --agent NoInputNoOutput --timeout 30 pair "$mac"); then
-        fail "${output:-Pairing failed}"$'\n'"Use 'bt' for devices requiring a passkey."
+    if ! btctl info "$mac" | grep -q 'Connected: yes'; then
+        fail "Connection to $name did not complete. Wake the device and retry."
     fi
-    notify-send -t 2000 -i bluetooth 'Bluetooth paired' "$name"
+    notify-send -t 2000 -i bluetooth 'Bluetooth connected' "$name"
 fi
