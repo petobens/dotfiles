@@ -82,7 +82,7 @@
         "format": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{text}</span>",
         "format-icons": {
             "connected": ["󰤟", "󰤢", "󰤥", "󰤨"],
-            "disconnected": "󰖪",
+            "disconnected": "󰤮",
         },
         "on-click": "~/.config/hypr/scripts/raise_or_launch wifi",
         "tooltip": false,
