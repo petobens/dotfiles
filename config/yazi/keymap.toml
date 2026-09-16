@@ -140,3 +140,14 @@ run = "plugin zoxide"
 desc = "Select parent directory"
 on = ["<A-p>"]
 run = "plugin fzf-nav -- parents"
+
+# Input cursor movement
+[[input.prepend_keymap]]
+desc = "Move cursor left"
+on = ["<C-h>"]
+run = "move -1"
+
+[[input.prepend_keymap]]
+desc = "Move cursor right"
+on = ["<C-l>"]
+run = "move 1"
