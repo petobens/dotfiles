@@ -141,10 +141,10 @@ ask_password=false
 if [[ -z $saved_uuid && -n $security && $security != -- ]]; then
     ask_password=true
 fi
-password_hint='Enter password'
+password_hint=''
 while true; do
     if $ask_password; then
-        password=$(rofi -dmenu -password -p "Password for $ssid" \
+        password=$(rofi -dmenu -password -p "󰌾 Password for $ssid" \
             -theme "$theme" \
             -theme-str "entry { placeholder: \"$password_hint\"; }") || exit 0
         [[ -n $password ]] || exit 0
