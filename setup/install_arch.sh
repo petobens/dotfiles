@@ -220,7 +220,7 @@ done
 install -Dm644 /dev/stdin /mnt/boot/loader/loader.conf << 'EOF'
 default arch-linux.efi
 timeout 3
-console-mode keep
+console-mode 4
 editor yes
 EOF
 rm -f /mnt/boot/initramfs-linux*.img
