@@ -10,7 +10,13 @@ mode=${1:---multi}
 case $mode in
     --primary | --multi | --mirror) ;;
     --info)
-        hyprctl -j monitors all | jq '.[] | {name, width, height, scale}'
+        if monitors=$(hyprctl -j monitors all); then
+            jq '.[] | {name, width, height, scale}' <<< "$monitors"
+        else
+            status=$?
+            printf '%s\n' "$monitors" >&2
+            exit "$status"
+        fi
         exit 0
         ;;
     -h | --help)
