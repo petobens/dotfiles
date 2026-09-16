@@ -79,7 +79,7 @@
         "exec": "~/.config/hypr/scripts/wifi_menu --status",
         "interval": 5,
         "return-type": "json",
-        "format": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{text}</span>",
+        "format": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'>{text}</span>",
         "format-icons": {
             "connected": ["󰤟", "󰤢", "󰤥", "󰤨"],
             "disconnected": "󰤮",

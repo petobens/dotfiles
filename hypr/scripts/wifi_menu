@@ -29,13 +29,17 @@ if [[ ${1:-} == --status ]]; then
     signal=$(nmcli --colors no --terse --fields IN-USE,SIGNAL \
         device wifi list --rescan no | awk -F: '$1 == "*" { print $2; exit }')
     if [[ -n $signal ]]; then
-        jq -cn --arg text "$signal%" --argjson percentage "$signal" \
+        jq -cn --arg text " $signal%" --argjson percentage "$signal" \
             '{text: $text, percentage: $percentage, alt: "connected", class: "connected"}'
     else
         printf '%s\n' '{"text":"","alt":"disconnected","class":"disconnected"}'
     fi
     exit 0
 fi
+
+# Keep repeated clicks from interrupting an in-progress connection
+exec 9> "${XDG_RUNTIME_DIR:?}/wifi-menu.lock"
+flock -n 9 || exit 0
 
 # Enable the radio if needed
 if [[ $(nmcli radio wifi) != enabled ]]; then
@@ -102,7 +106,7 @@ trap 'rm -f "$choices_file"' EXIT
 index=$(list_networks |
     rofi -dmenu -i -no-auto-select -format i \
         -p 'Wi-Fi' -theme "$theme" \
-        -theme-str 'window { width: 54ch; } element-text { tab-stops: [ 216px, 296px ]; }') || exit 0
+        -theme-str 'window { width: 54ch; } element-text { tab-stops: [ 216px, 296px ]; } entry { placeholder: "Enter: connect/disconnect | Esc: close"; }') || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
 mapfile -d '' -t choice < "$choices_file"
 ((index < ${#choice[@]} / 4)) || exit 0
@@ -131,23 +135,54 @@ while IFS=: read -r uuid type; do
     fi
 done < <(nmcli --terse --escape no --fields UUID,TYPE connection show)
 
-if [[ -n $saved_uuid ]]; then
-    if ! output=$(nmcli --wait 30 connection up uuid "$saved_uuid" 2>&1); then
-        fail "$output"
-    fi
-elif [[ -z $security || $security == -- ]]; then
-    if ! output=$(nmcli --wait 30 device wifi connect "$ssid" 2>&1); then
-        fail "$output"
-    fi
-else
-    password=$(rofi -dmenu -password -p "Password for $ssid" \
-        -theme "$theme" \
-        -theme-str 'entry { placeholder: "Enter password"; }') || exit 0
-    [[ -n $password ]] || exit 0
-    if ! output=$(nmcli --wait 30 device wifi connect "$ssid" \
-        password "$password" 2>&1); then
-        fail "$output"
-    fi
+ask_password=false
+if [[ -z $saved_uuid && -n $security && $security != -- ]]; then
+    ask_password=true
 fi
+password_hint='Enter password'
+while true; do
+    if $ask_password; then
+        password=$(rofi -dmenu -password -p "Password for $ssid" \
+            -theme "$theme" \
+            -theme-str "entry { placeholder: \"$password_hint\"; }") || exit 0
+        [[ -n $password ]] || exit 0
+        connect=(device wifi connect "$ssid" ifname "$device" password "$password")
+    elif [[ -n $saved_uuid ]]; then
+        connect=(connection up uuid "$saved_uuid" ifname "$device")
+    else
+        connect=(device wifi connect "$ssid" ifname "$device")
+    fi
+
+    if output=$(LC_ALL=C nmcli --wait 60 "${connect[@]}" 2>&1); then
+        break
+    else
+        status=$?
+    fi
+    [[ -n $security && $security != -- && $security != *802.1X* ]] || fail "$output"
+
+    if [[ $status == 3 ]]; then
+        state=$(LC_ALL=C nmcli --get-values GENERAL.STATE device show "$device")
+        # Retry passwords only during preparation, configuration, or authentication
+        case $state in
+            40* | 50* | 60*) ;;
+            *) fail "$output" ;;
+        esac
+        # nmcli timeouts leave activation running; stop it before retrying
+        nmcli --wait 10 device down "$device" > /dev/null 2>&1 || fail "$output"
+        password_hint='Timed out. Check password and retry'
+    else
+        case $output in
+            *'Secrets were required'* | *'No secrets'* | *'802-11-wireless-security.psk'* | *'wep-key'*)
+                password_hint='Wrong password. Try again'
+                ;;
+            *'The Wi-Fi network could not be found'*)
+                password_hint='Check hotspot and re-enter password'
+                ;;
+            *) fail "$output" ;;
+        esac
+    fi
+    notify-send -t 4000 -i network-wireless-offline 'Wi-Fi' "$password_hint"
+    ask_password=true
+done
 
 notify-send -t 2000 -i network-wireless 'Wi-Fi connected' "$ssid"
