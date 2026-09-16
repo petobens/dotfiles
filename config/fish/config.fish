@@ -210,6 +210,15 @@ function tm --description 'Attach to the main tmux session'
     command tmux -f "$HOME/.config/tmux/tmux.conf" new -A -s "$session" $argv
 end
 
+function sfm --description 'Run Yazi as root with my configuration'
+    set -l config_home "$HOME/.config"
+    set -q XDG_CONFIG_HOME; and set config_home "$XDG_CONFIG_HOME"
+    set -l yazi_config "$config_home/yazi"
+    set -q YAZI_CONFIG_HOME; and set yazi_config "$YAZI_CONFIG_HOME"
+    test (count $argv) -gt 0; or set argv "$HOME"
+    sudo -H env YAZI_CONFIG_HOME="$yazi_config" yazi $argv
+end
+
 function yazi --description 'Run Yazi and change to its final directory'
     set -l config_home "$HOME/.config"
     set -q XDG_CONFIG_HOME; and set config_home "$XDG_CONFIG_HOME"
