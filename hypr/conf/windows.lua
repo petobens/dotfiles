@@ -117,5 +117,4 @@ window_rule('^mpv$', { idle_inhibit = 'fullscreen' })
 
 -- Layers
 hl.layer_rule({ match = { namespace = 'waybar' }, blur = true, ignore_alpha = 0.2 })
--- Rofi lists passwords and clipboard history, so hide it from screen shares
-hl.layer_rule({ match = { namespace = 'rofi' }, blur = true, no_screen_share = true })
+hl.layer_rule({ match = { namespace = 'rofi' }, blur = true })
