@@ -192,13 +192,31 @@ function M.move_to_monitor(kind, direction)
     end
 end
 
--- Workspaces
+-- Closing windows
+function M.close()
+    local window = hl.get_active_window()
+    if window and window.class:lower() == 'slack' then
+        -- Send both events now so key release cannot act on the next focused window
+        for _, state in ipairs({ 'down', 'up' }) do
+            hl.dispatch(hl.dsp.send_key_state({
+                mods = 'CTRL',
+                key = 'q',
+                state = state,
+                window = window,
+            }))
+        end
+    else
+        hl.dispatch(hl.dsp.window.close({}))
+    end
+end
+
 function M.close_workspace()
     for _, window in ipairs(hl.get_workspace_windows(hl.get_active_workspace())) do
         hl.dispatch(hl.dsp.window.close({ window = window }))
     end
 end
 
+-- Workspaces
 -- Restore the workspace's last focused window after switching to it
 function M.switch_workspace(dispatcher)
     return function()

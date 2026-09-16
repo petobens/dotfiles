@@ -28,6 +28,8 @@ case "$action" in
         hyprctl clients -j | jq -r '.[].address' | while read -r address; do
             hyprctl dispatch "hl.dsp.window.close({ window = 'address:$address' })"
         done
+        # Slack can keep running after its last window closes
+        pkill -TERM -x slack || true
         ;;
     reboot)
         "$script_dir/confirm" 'Do you want to reboot?' || exit 0

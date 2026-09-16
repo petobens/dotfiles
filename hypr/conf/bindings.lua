@@ -74,7 +74,7 @@ bind(
     hl.dsp.window.fullscreen({ action = 'toggle' }),
     'Toggle fullscreen'
 )
-bind(super .. ' + Q', hl.dsp.window.close({}), 'Close window')
+bind(super .. ' + Q', window_actions.close, 'Close window')
 bind(super_shift .. ' + W', hl.dsp.window.kill({}), 'Force close window')
 bind(super_alt .. ' + W', window_actions.close_workspace, 'Close workspace windows')
 
