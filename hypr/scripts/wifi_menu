@@ -84,7 +84,7 @@ list_networks() {
         esac
 
         security_label="󰌾 $security"
-        [[ -n $security && $security != -- ]] || security_label='󰌿 Open'
+        [[ -n $security && $security != -- ]] || security_label='󰿆 Open'
         name=$ssid
         [[ $active != '*' ]] || name="$ssid ●"
 
@@ -102,7 +102,7 @@ trap 'rm -f "$choices_file"' EXIT
 index=$(list_networks |
     rofi -dmenu -i -no-auto-select -format i \
         -p 'Wi-Fi' -theme "$theme" \
-        -theme-str 'window { width: 46ch; } element-text { tab-stops: [ 240px, 336px ]; }') || exit 0
+        -theme-str 'window { width: 60ch; } element-text { tab-stops: [ 240px, 336px ]; }') || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
 mapfile -d '' -t choice < "$choices_file"
 ((index < ${#choice[@]} / 4)) || exit 0
