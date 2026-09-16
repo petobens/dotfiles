@@ -6,6 +6,7 @@ dosfstools
 exfatprogs
 linux
 linux-firmware-intel
+linux-firmware-realtek
 linux-lts
 man-db
 man-pages
