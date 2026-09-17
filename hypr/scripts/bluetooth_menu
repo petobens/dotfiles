@@ -96,9 +96,9 @@ names=('')
 states=(Scan)
 
 add_devices() {
-    local state=$1 filter=$2 devices _ mac name known_mac duplicate marker battery label row status_icon
+    local state=$1 filter=$2 devices _ mac name known_mac duplicate battery label row status_icon
     case $state in
-        Connected) status_icon=󰂱 ;;
+        Connected) status_icon='<span foreground="#98c379" size="75%" rise="2048"></span>' ;;
         Paired) status_icon=󰌷 ;;
         Available) status_icon=󰂯 ;;
     esac
@@ -118,8 +118,6 @@ add_devices() {
         done
         $duplicate && continue
 
-        marker=
-        [[ $state == Connected ]] && marker=' <span foreground="#98c379" size="75%" rise="2048"></span>'
         battery=$(btctl info "$mac" |
             awk '/Battery Percentage:/ { gsub(/[()]/, "", $4); print $4; exit }') ||
             battery=
@@ -129,8 +127,8 @@ add_devices() {
         label=${label//&/\&amp;}
         label=${label//</\&lt;}
         label=${label//>/\&gt;}
-        printf -v row '%s%s\t%s %s\t%s' \
-            "$label" "$marker" "$status_icon" "$state" "${battery:+󰁹 $battery%}"
+        printf -v row '%s\t%s %s\t%s' \
+            "$label" "$status_icon" "$state" "${battery:+󰁹 $battery%}"
         rows+=("$row")
         macs+=("$mac")
         names+=("$name")
@@ -150,7 +148,7 @@ index=$(
         -theme "$theme" \
         -theme-str 'window { width: 52ch; }
             inputbar { children: [ prompt, textbox-prompt-colon, entry, num-filtered-rows, textbox-num-sep, num-rows ]; }
-            element-text { tab-stops: [ 176px, 308px ]; }'
+            element-text { tab-stops: [ 192px, 324px ]; }'
 ) || menu_status=$?
 [[ $menu_status == 0 || $menu_status == 10 ]] || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
