@@ -391,6 +391,16 @@ else
     fi
 fi
 
+# The audio popup runs on demand, so it need not appear in the daemon checks
+audio_config="$HOME/.config/quickshell/audio"
+if ! timeout 5 qs --version > /dev/null 2>&1; then
+    add_result FAIL 'Quickshell audio menu' 'qs is missing or cannot run'
+elif [[ ! -r $audio_config/shell.qml || ! -x $HOME/.config/hypr/scripts/audio_menu ]]; then
+    add_result FAIL 'Quickshell audio menu' 'menu configuration or launcher missing'
+else
+    add_result PASS 'Quickshell audio menu' 'qs, menu configuration, and launcher available'
+fi
+
 hyprland_active=0
 if [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && hyprctl version > /dev/null 2>&1; then
     hyprland_active=1
@@ -496,8 +506,6 @@ collect_evidence() {
     run 'Filesystems' findmnt -o TARGET,SOURCE,FSTYPE,OPTIONS
     if ((use_sudo)); then
         run 'Btrfs root subvolumes' sudo -n btrfs subvolume list /
-    else
-        run 'Btrfs root subvolumes' btrfs subvolume list /
     fi
     run 'Swap and zram' bash -c \
         'swapon --show; printf "\n"; zramctl'
@@ -530,6 +538,7 @@ collect_evidence() {
     run 'Hyprland version' hyprctl version
     run 'Hyprland configuration errors' hyprctl configerrors
     run 'Hyprland monitors' hyprctl monitors all
+    run 'Quickshell version' qs --version
     run 'PipeWire graph' wpctl status
     run 'Camera discovery (libcamera)' cam -l
     run 'Camera discovery (V4L2)' v4l2-ctl --list-devices
