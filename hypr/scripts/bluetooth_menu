@@ -169,6 +169,8 @@ index=$(
         -kb-custom-1 'Control+i' -kb-custom-2 'Control+r' \
         -theme "$theme" \
         -theme-str 'window { width: 55ch; }
+            mainbox { children: [ inputbar, textbox-shortcuts, listview ]; }
+            textbox-shortcuts { str: "  Enter: select · Esc: close · C-i: info · C-r: retry"; }
             inputbar { children: [ prompt, textbox-prompt-colon, entry, num-filtered-rows, textbox-num-sep, num-rows ]; }
             element-text { tab-stops: [ 192px, 324px ]; }'
 ) || menu_status=$?

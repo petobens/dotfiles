@@ -121,6 +121,8 @@ index=$(list_networks |
         -kb-custom-1 'Control+i' \
         -p 'Wi-Fi' -theme "$theme" \
         -theme-str 'window { width: 54ch; }
+            mainbox { children: [ inputbar, textbox-shortcuts, listview ]; }
+            textbox-shortcuts { str: "  Enter: select · Esc: close · C-i: info"; }
             inputbar { children: [ prompt, textbox-prompt-colon, entry, num-filtered-rows, textbox-num-sep, num-rows ]; }
             element-text { tab-stops: [ 216px, 296px ]; }') || menu_status=$?
 [[ $menu_status == 0 || $menu_status == 10 ]] || exit 0

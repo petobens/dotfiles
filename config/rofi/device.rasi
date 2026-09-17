@@ -38,6 +38,14 @@ inputbar {
     children: [ prompt, textbox-prompt-colon, entry ];
 }
 
+textbox-shortcuts {
+    expand: false;
+    font: "Noto Sans Mono,Symbols Nerd Font 9";
+    background-color: transparent;
+    text-color: @muted;
+    padding: 0 8px 2px;
+}
+
 prompt {
     expand: false;
     background-color: transparent;
