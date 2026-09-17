@@ -40,7 +40,7 @@ ColumnLayout {
 
       Layout.fillWidth: true
       onClicked: {
-        // Request a default; the checkmark follows PipeWire's actual default
+        // Request a default; the marker follows PipeWire's actual default
         if (section.input)
           Pipewire.preferredDefaultAudioSource = modelData;
         else
@@ -50,9 +50,11 @@ ColumnLayout {
         spacing: 8
 
         Text {
-          text: device.isDefault ? "✓" : ""
+          text: device.isDefault ? "" : ""
           color: device.highlightedRow ? "#24272e" : "#98c379"
-          font: device.font
+          font.family: "Symbols Nerd Font"
+          font.pointSize: 8
+          horizontalAlignment: Text.AlignHCenter
           Layout.preferredWidth: 16
         }
         Text {
@@ -66,11 +68,6 @@ ColumnLayout {
           font: device.font
           elide: Text.ElideRight
           Layout.fillWidth: true
-        }
-        Text {
-          text: device.isDefault ? "Default" : ""
-          color: device.highlightedRow ? "#24272e" : "#98c379"
-          font: device.font
         }
       }
     }

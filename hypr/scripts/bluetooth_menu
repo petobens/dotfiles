@@ -13,6 +13,17 @@ fail() {
     exit 1
 }
 
+recent_audio_errors() {
+    # A running output confirms that its audio transport has recovered
+    if grep -Fqx "$1" <<< "$playing_devices"; then
+        return 0
+    fi
+    awk -v mac="$1" -v node="${1//:/_}" '
+        (index(toupper($0), mac) || index(toupper($0), node)) &&
+            tolower($0) ~ /error|fail|timeout|timed out/
+    ' <<< "$audio_log" | tail -n 6
+}
+
 pair_device() (
     # BlueZ skips agent registration when a command is passed on the command line
     coproc PAIR { exec bluetoothctl --agent NoInputNoOutput 2>&1; }
@@ -94,9 +105,16 @@ rows=('󰂰  Scan for devices')
 macs=('')
 names=('')
 states=(Scan)
+audio_log=$(journalctl --user -b -u wireplumber --since '2 minutes ago' \
+    --no-pager -o short-iso 2>&1) || audio_log="Could not read audio log: $audio_log"
+playing_devices=$(timeout 2 pw-dump 2> /dev/null | jq -r '
+    .[] | select(.type == "PipeWire:Interface:Node") |
+    select(.info.state == "running" and .info.props["media.class"] == "Audio/Sink") |
+    .info.props["api.bluez5.address"] // empty
+') || playing_devices=
 
 add_devices() {
-    local state=$1 filter=$2 devices _ mac name known_mac duplicate battery label row status_icon
+    local state=$1 filter=$2 devices _ mac name known_mac duplicate battery label row status_icon status_text
     case $state in
         Connected) status_icon='<span foreground="#98c379" size="75%" rise="2048"></span>' ;;
         Paired) status_icon=󰌷 ;;
@@ -127,8 +145,12 @@ add_devices() {
         label=${label//&/\&amp;}
         label=${label//</\&lt;}
         label=${label//>/\&gt;}
+        status_text=$state
+        if [[ $state == Connected && -n $(recent_audio_errors "$mac") ]]; then
+            status_text='<span foreground="#e06c75">Error</span>'
+        fi
         printf -v row '%s\t%s %s\t%s' \
-            "$label" "$status_icon" "$state" "${battery:+󰁹 $battery%}"
+            "$label" "$status_icon" "$status_text" "${battery:+󰁹 $battery%}"
         rows+=("$row")
         macs+=("$mac")
         names+=("$name")
@@ -140,17 +162,17 @@ add_devices Connected Connected
 add_devices Paired Paired
 add_devices Available ''
 
-# Enter selects an action; Ctrl+i requests device details
+# Enter selects an action; Ctrl+i shows details; Ctrl+r reconnects
 menu_status=0
 index=$(
     printf '%s\n' "${rows[@]}" | rofi -dmenu -i -no-custom -markup-rows -format i -p 'Bluetooth' \
-        -kb-custom-1 'Control+i' \
+        -kb-custom-1 'Control+i' -kb-custom-2 'Control+r' \
         -theme "$theme" \
-        -theme-str 'window { width: 52ch; }
+        -theme-str 'window { width: 55ch; }
             inputbar { children: [ prompt, textbox-prompt-colon, entry, num-filtered-rows, textbox-num-sep, num-rows ]; }
             element-text { tab-stops: [ 192px, 324px ]; }'
 ) || menu_status=$?
-[[ $menu_status == 0 || $menu_status == 10 ]] || exit 0
+[[ $menu_status == 0 || $menu_status == 10 || $menu_status == 11 ]] || exit 0
 [[ $index =~ ^[0-9]+$ ]] || exit 0
 ((index < ${#rows[@]})) || exit 0
 
@@ -168,41 +190,51 @@ if [[ $menu_status == 10 ]]; then
             print
         }
     ')
+    errors=$(recent_audio_errors "$mac")
+    if [[ -n $errors ]]; then
+        details+=$'\n\nAudio errors in the last 2 minutes:\n'
+        details+=$(fold -s -w 78 <<< "$errors")
+    elif [[ $audio_log == 'Could not read audio log:'* ]]; then
+        details+=$'\n\n'"$audio_log"
+    fi
     printf '%s\n' "$details" | rofi -dmenu -i -no-custom -p 'Bluetooth info' \
-        -theme "$theme" -theme-str 'window { width: 48ch; }
+        -theme "$theme" -theme-str 'window { width: 90ch; }
             element-text { tab-stops: [ 160px ]; }' > /dev/null || true
     exec "$0"
 fi
 
 if [[ $state == Scan ]]; then
+    [[ $menu_status != 11 ]] || exec "$0"
     notify-send -t 1500 -i bluetooth 'Bluetooth' 'Scanning for devices...'
     btctl --timeout 8 scan on > /dev/null || fail 'Device scan failed'
     exec "$0"
 fi
 
-# Disconnect connected devices, or pair and connect the selection
+# Ctrl+r continues to connect after disconnecting the selected device
 name=${names[index]}
 if [[ $state == Connected ]]; then
     if ! output=$(btctl disconnect "$mac"); then
         fail "${output:-Could not disconnect $name}"
     fi
-    notify-send -t 2000 -i bluetooth-disabled 'Bluetooth disconnected' "$name"
-else
-    if [[ $state == Available ]]; then
-        notify-send -t 1500 -i bluetooth 'Bluetooth' "Pairing with $name..."
-        if ! output=$(pair_device "$mac"); then
-            fail "${output:-Pairing canceled}"
-        fi
+    if [[ $menu_status != 11 ]]; then
+        notify-send -t 2000 -i bluetooth-disabled 'Bluetooth disconnected' "$name"
+        exit 0
     fi
-    if ! output=$(btctl trust "$mac"); then
-        fail "${output:-Could not trust $name}"
-    fi
-    notify-send -t 1500 -i bluetooth 'Bluetooth' "Connecting to $name..."
-    if ! output=$(btctl connect "$mac"); then
-        fail "${output:-Could not connect $name}"
-    fi
-    if ! btctl info "$mac" | grep -q 'Connected: yes'; then
-        fail "Connection to $name did not complete. Wake the device and retry."
-    fi
-    notify-send -t 2000 -i bluetooth 'Bluetooth connected' "$name"
 fi
+if [[ $state == Available ]]; then
+    notify-send -t 1500 -i bluetooth 'Bluetooth' "Pairing with $name..."
+    if ! output=$(pair_device "$mac"); then
+        fail "${output:-Pairing canceled}"
+    fi
+fi
+if ! output=$(btctl trust "$mac"); then
+    fail "${output:-Could not trust $name}"
+fi
+notify-send -t 1500 -i bluetooth 'Bluetooth' "Connecting to $name..."
+if ! output=$(btctl --timeout 20 connect "$mac"); then
+    fail "${output:-Could not connect $name}"
+fi
+if ! btctl info "$mac" | grep -q 'Connected: yes'; then
+    fail "Connection to $name did not complete. Wake the device and retry."
+fi
+notify-send -t 2000 -i bluetooth 'Bluetooth connected' "$name"

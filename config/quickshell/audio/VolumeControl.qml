@@ -78,8 +78,26 @@ RowLayout {
   }
 
   MenuButton {
-    text: control.available && control.node.audio.muted ? "Unmute" : "Mute"
-    Layout.preferredWidth: 76
+    id: mute
+
+    readonly property bool muted: control.available && control.node.audio.muted
+
+    text: muted ? "" : ""
+    font.family: "Symbols Nerd Font"
+    font.pointSize: 14
+    Layout.preferredWidth: 36
+    Accessible.name: muted ? "Unmute" : "Mute"
+    contentItem: Text {
+      text: mute.text
+      font: mute.font
+      color: {
+        if (mute.highlightedRow)
+          return "#24272e";
+        return mute.muted ? "#e06c75" : "#abb2bf";
+      }
+      verticalAlignment: Text.AlignVCenter
+      horizontalAlignment: Text.AlignHCenter
+    }
     onClicked: {
       if (control.available)
         control.node.audio.muted = !control.node.audio.muted;
