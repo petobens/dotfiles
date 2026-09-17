@@ -2,6 +2,10 @@
 
 Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 
+![Hyprland desktop with Neovim, tmux, Yazi, and audio controls][desktop]
+
+[desktop]: docs/screenshots/desktop.png
+
 ## Stack
 
 | Area            | Tools                                             |
