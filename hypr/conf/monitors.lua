@@ -114,6 +114,7 @@ local function configure_laptop()
 end
 
 local function configure_all_monitors()
+    hl.config({ debug = { damage_tracking = 2 } })
     local monitors = connected_monitors()
     local laptop = known_monitors[physical_outputs.laptop]
     hl.monitor({
@@ -151,6 +152,7 @@ local function primary()
     end
 
     active_mode = 'primary'
+    hl.config({ debug = { damage_tracking = 2 } })
     for name in pairs(known_monitors) do
         if name ~= physical_outputs.laptop then
             hl.monitor({ output = name, disabled = true })
@@ -166,6 +168,8 @@ local function mirror()
     end
 
     active_mode = 'mirror'
+    -- Redraw whole frames so mirror side bars do not retain old screen content
+    hl.config({ debug = { damage_tracking = 1 } })
     hl.monitor({
         output = '',
         mode = 'preferred',
