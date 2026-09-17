@@ -17,6 +17,7 @@ require('nvim-treesitter').install({
     'markdown',
     'markdown_inline',
     'python',
+    'qmljs',
     'query',
     'regex',
     'rst',
@@ -30,6 +31,7 @@ require('nvim-treesitter').install({
 
 -- Ft/Langugage register
 vim.treesitter.language.register('ini', 'ghostty')
+vim.treesitter.language.register('qmljs', 'qml')
 vim.treesitter.language.register('markdown', 'md')
 vim.treesitter.language.register('markdown', 'blink-cmp-documentation')
 vim.treesitter.language.register('markdown', 'codecompanion')

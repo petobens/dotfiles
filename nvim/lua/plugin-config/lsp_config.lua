@@ -88,6 +88,8 @@ vim.lsp.config('basedpyright', {
         },
     },
 })
+---- QML
+vim.lsp.config('qmlls', { cmd = { 'qmlls6' } })
 ---- Latex
 vim.lsp.config('texlab', {
     handlers = { ['textDocument/publishDiagnostics'] = function() end },
@@ -133,6 +135,7 @@ vim.lsp.enable({
     'lua_ls',
     'marksman',
     'basedpyright',
+    'qmlls',
     'texlab',
     'tinymist',
 })

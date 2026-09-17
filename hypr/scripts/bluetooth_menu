@@ -5,7 +5,7 @@ script_dir=$(dirname "$(realpath "$0")")
 theme="$script_dir/../../config/rofi/device.rasi"
 
 btctl() {
-    bluetoothctl "$@" 2> /dev/null
+    bluetoothctl "$@" 2>&1
 }
 
 fail() {

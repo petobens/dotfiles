@@ -11,6 +11,7 @@ conform.formatters.stylua = {
     },
 }
 conform.formatters.shfmt = { prepend_args = { '-i', '4', '-ci', '-sr' } }
+conform.formatters.qmlformat = { command = '/usr/lib/qt6/bin/qmlformat' }
 conform.formatters.oxfmt = {
     args = {
         '--threads=1',
@@ -43,6 +44,7 @@ conform.setup({
         lua = { 'stylua' },
         markdown = { 'trim_whitespace', 'oxfmt', 'injected' },
         python = { 'ruff_fix', 'ruff_format' },
+        qml = { 'qmlformat' },
         query = { 'format-queries' },
         sh = { 'shfmt' },
         sql = { 'sqlfluff' },

@@ -57,10 +57,7 @@ case ${1:-} in
         command="ghostty --class=about --title='About Arch' -e sh -c 'fastfetch; read -r _'"
         ;;
     audio)
-        tag=audio
-        class='^(hyprpwcenter|org.hyprland.hyprpwcenter)$'
-        workspace=current
-        command='hyprpwcenter'
+        exec "$HOME/.config/hypr/scripts/audio_menu"
         ;;
     bluetooth)
         exec "$HOME/.config/hypr/scripts/bluetooth_menu"

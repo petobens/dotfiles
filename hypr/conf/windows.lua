@@ -9,8 +9,6 @@ local half = { x = 0.25, y = 0.25, width = 0.5, height = 0.5 }
 local rectangle = { x = 0.125, y = 0.2, width = 0.75, height = 0.6 }
 local right_half = { x = 0.5, y = 0, width = 0.5, height = 1 }
 local layout_by_class = {
-    hyprpwcenter = rectangle,
-    ['org.hyprland.hyprpwcenter'] = rectangle,
     ['org.localsend.localsend_app'] = right_half,
     ['org.pwmt.zathura'] = right_half,
     imv = right_half,

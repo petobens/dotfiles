@@ -105,7 +105,7 @@
         "format": "<span font_family='Symbols Nerd Font' size='14pt'>{icon}</span>",
         "format-icons": ["", "󰖀", "󰕾", ""],
         "format-muted": "<span font_family='Symbols Nerd Font' size='13pt'></span>",
-        "on-click": "~/.config/hypr/scripts/raise_or_launch audio",
+        "on-click": "~/.config/hypr/scripts/audio_menu --pointer",
         "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     },
     "battery": {

@@ -97,7 +97,6 @@ hyprlock
 hyprpaper
 hyprpicker
 hyprpolkitagent
-hyprpwcenter
 hyprshot
 hyprshutdown
 kitty
@@ -108,7 +107,9 @@ noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
 papirus-icon-theme
+qt6-declarative
 qt6-wayland
+quickshell
 rofi
 slurp
 ttf-nerd-fonts-symbols
