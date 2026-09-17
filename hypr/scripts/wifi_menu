@@ -200,7 +200,7 @@ if [[ $menu_status == 10 ]]; then
         ')
     fi
     printf '%s\n' "$details" | rofi -dmenu -i -no-custom -p 'Wi-Fi info' \
-        -theme "$theme" -theme-str 'window { width: 58ch; }
+        -theme "$theme" -theme-str 'window { width: 54ch; }
             element-text { tab-stops: [ 160px ]; }' > /dev/null || true
     rm -f "$choices_file"
     exec 9>&-

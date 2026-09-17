@@ -195,12 +195,12 @@ if [[ $menu_status == 10 ]]; then
     errors=$(recent_audio_errors "$mac")
     if [[ -n $errors ]]; then
         details+=$'\n\nAudio errors in the last 2 minutes:\n'
-        details+=$(fold -s -w 78 <<< "$errors")
+        details+=$(fold -s -w 40 <<< "$errors")
     elif [[ $audio_log == 'Could not read audio log:'* ]]; then
         details+=$'\n\n'"$audio_log"
     fi
     printf '%s\n' "$details" | rofi -dmenu -i -no-custom -p 'Bluetooth info' \
-        -theme "$theme" -theme-str 'window { width: 90ch; }
+        -theme "$theme" -theme-str 'window { width: 48ch; }
             element-text { tab-stops: [ 160px ]; }' > /dev/null || true
     exec "$0"
 fi
