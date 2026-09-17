@@ -96,7 +96,13 @@ window_rule('^(DesktopEditors|ONLYOFFICE)$', {
 })
 
 -- Application layouts
-hl.on('window.open', apply_layout)
+hl.on('window.open', function(window)
+    apply_layout(window)
+    -- Follow new windows and dialogs even when workspace rules place them silently
+    if window.accepts_input and not window.hidden and not window.active then
+        hl.dispatch(hl.dsp.focus({ window = window }))
+    end
+end)
 
 -- Reapply work-area bounds when windows move or monitor reservations change
 hl.on('window.move_to_workspace', fit_to_work_area)
