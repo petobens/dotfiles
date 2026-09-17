@@ -128,12 +128,12 @@ local function configure_all_monitors()
         local position = monitor_position(name) or 'auto'
         if
             #monitors == 2
-            and name:match('^HDMI%-')
+            and name ~= physical_outputs.laptop
             and monitor.name
             and laptop
             and laptop.name
         then
-            -- Center a single HDMI display above the laptop in logical pixels
+            -- Center a single external display above the laptop in logical pixels
             local scale = tonumber(monitor_scale(monitor)) or monitor.scale
             local laptop_scale = tonumber(monitor_scale(laptop)) or laptop.scale
             local x = (laptop.width / laptop_scale - monitor.width / scale) / 2
@@ -221,13 +221,17 @@ local physical_workspace_outputs = physical_outputs
 
 local function configure_workspace_rules(outputs)
     if outputs == physical_outputs then
+        local external = {}
         local hdmi
         for _, monitor in ipairs(connected_monitors()) do
+            if monitor.name ~= physical_outputs.laptop then
+                external[#external + 1] = monitor.name
+            end
             if monitor.name:match('^HDMI%-') then
-                hdmi = monitor.name
-                break
+                hdmi = hdmi or monitor.name
             end
         end
+        local fallback = #external == 1 and external[1] or hdmi
         outputs = {}
         for role, name in pairs(physical_outputs) do
             local monitor = known_monitors[name]
@@ -238,12 +242,12 @@ local function configure_workspace_rules(outputs)
                     output = alias
                 end
             end
-            -- HDMI takes the workspace groups of disconnected dock displays
-            outputs[role] = output or (role ~= 'laptop' and hdmi) or name
+            -- A lone external display takes both external workspace groups
+            outputs[role] = output or (role ~= 'laptop' and fallback) or name
         end
         physical_workspace_outputs = outputs
     end
-    -- When both external groups share HDMI, only workspace 5 is the default
+    -- When both external groups share a display, only workspace 5 is the default
     for _, workspace in ipairs({
         { '1', outputs.right, outputs.right ~= outputs.left },
         { '2', outputs.laptop, true },
