@@ -41,6 +41,15 @@ INTEL_GPU_POWER_PROFILE_ON_BAT=base
 WIFI_PWR_ON_BAT=off
 EOF
 
+section 'Configuring emergency battery shutdown'
+# Use shutdown because zram cannot preserve a hibernation image
+sudo sed -i \
+    -e 's/^UsePercentageForPolicy=.*/UsePercentageForPolicy=true/' \
+    -e 's/^PercentageAction=.*/PercentageAction=2.0/' \
+    -e 's/^CriticalPowerAction=.*/CriticalPowerAction=PowerOff/' \
+    /etc/UPower/UPower.conf
+sudo systemctl restart upower.service
+
 section 'Configuring compressed swap'
 sudo install -Dm644 /dev/stdin /etc/systemd/zram-generator.conf << 'EOF'
 [zram0]
