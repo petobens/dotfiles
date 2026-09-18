@@ -706,6 +706,8 @@ packages and language tools, installs LaTeX when selected, runs
 its pinned plugins on its first launch instead. AUR packages build with all
 available CPU cores under `/tmp/makepkg`.
 
+### Post-install configuration
+
 The post-install step applies the system configuration:
 
 - **Performance and power:** Configures zstd-compressed zram, limits persistent
@@ -833,179 +835,119 @@ separate session manager.
 
 ## Verification and testing
 
-### Verify the first graphical session
-
-Confirm that the desktop contains Waybar and accepts the configured mappings.
-Open Ghostty and test:
-
-```bash
-echo "$XDG_SESSION_TYPE"
-echo "$XDG_CURRENT_DESKTOP"
-systemctl --user is-active \
-    graphical-session.target \
-    hyprland-session.target
-systemctl --user --failed
-tmux new -A -s desktop
-v
-```
-
-The expected session type is `wayland`. The Fish abbreviation `v` expands to
-`nvim`. On its first launch, Neovim uses `vim.pack` to install the configured
-plugins; let that process finish before closing it.
-
-QML support is configured in Neovim; `qt6-declarative` supplies its language
-server, formatter, and linter. No Mason installation is needed.
-
-Tmux installs any missing plugins automatically on its first launch. Run `fm`
-and confirm that Yazi opens without plugin errors. Test the volume and
-brightness keys and confirm that Mako displays their indicators. Take a
-selection screenshot with `Super+Shift+C`. Confirm that the screen freezes
-while selecting, the screenshot is copied to the clipboard and saved under
-`~/Pictures/Screenshots`, then open it from Yazi and confirm that it uses imv.
-
-Record a region with `Super+Shift+G`, press the same keys to stop, and confirm
-that the GIF appears in `~/Videos/Recordings`. `Super+Alt+G` records the same
-selection as MP4; both encode on the Intel GPU when `/dev/dri/renderD128`
-exists. Open the session menu from the Waybar Arch icon and check that
-`about arch` shows Fastfetch in a centered window. Finally, leave the pointer
-still for a second and confirm that it hides until the next movement.
-
-Press `Super+/` and confirm that the Rofi cheatsheet lists the configured
-keybindings with readable modifier combinations. Run `hyprprop`, click a
-window, and confirm that it prints the selected window's properties.
-
-Copy some text, close the window it came from, and confirm that pasting still
-works: `wl-clip-persist` keeps the selection alive and `cliphist` records the
-history that `Super+V` lists through Rofi. Clicking the Waybar Bluetooth icon
-opens the Rofi device menu. Use the `bt` FZF chooser in a terminal for devices
-that require a pairing passkey. Blueman and its tray applet are not installed.
-`Super+Shift+E` unmounts removable media through `udiskie`.
-
-The supplied monitor configuration places two 1920x1080 displays above the
-centered laptop screen. It expects the external connectors to be `DP-1` and
-`DP-3` and the laptop screen to be `eDP-1`. Verify the connector names and
-available modes with:
-
-```bash
-hyprctl monitors all
-```
-
-Adapt connector names, positions, workspace assignments, and scale in
-`hypr/conf/monitors.lua` to your displays. For example, the
-2880x1800 rule uses `1.5`, while 3000x2000 uses `2`. The generic fallback
-handles additional displays.
-
-The workspace mapping assigns workspaces 1, 4, and 9 to `DP-3`; 2, 3, and 8 to
-`eDP-1`; and 5, 6, and 7 to `DP-1`. Waybar shows only active or occupied
-workspaces, so nonconsecutive numbers are expected.
-
-Test `Super+Return` for laptop-only mode, `Super+Ctrl+Return` to restore the
-connected displays, and `Super+Shift+Return` to mirror the laptop screen onto every
-other connected display, including one without its own rule such as a projector
-on `HDMI-1`. Laptop-only mode now also turns off those unnamed displays, but
-only when `eDP-1` is connected; without it, as in the VM, the binding falls
-back to the multi-display layout instead of leaving no output enabled. Also
-verify that `Super+Ctrl+Arrow` moves the focused window and `Super+Shift+Arrow`
-moves the current workspace in all four directions.
-
-Closing the lid disables `eDP-1` and temporarily uses the external displays
-without changing the selected monitor mode. Opening it restores the previous
-laptop-only, multi-display, or mirrored layout. Systemd suspends the laptop
-when no external display is connected and keeps it running while docked.
-
-Hypridle locks the session after 10 minutes, turns the displays off after 15,
-and suspends after 30. The suspend listener runs only while the machine is on
-battery, so a docked or plugged-in session keeps running when left idle.
-
 ### Verify services and hardware
 
-Run the automated report after rebooting into Hyprland:
+After rebooting, open a terminal inside Hyprland and run:
 
 ```bash
-system_report
+system_report --sudo
 ```
 
-This covers the boot and Btrfs layout, snapshots, zram, expected services,
-failed units, the CPU scheduler, TLP, wireless regulatory domain, firewall,
-Intel GPU and NPU discovery, Thunderbolt authorization, PipeWire, camera,
-fingerprint reader, Quickshell, and Hyprland with its autostarted daemons. The
-detailed commands below remain useful for investigating a
-warning or failure and for the interactive checks that cannot be automated.
-Add `--sudo` for protected boot, Btrfs, Snapper, firewall, and SSH checks.
-Reports redact common personal and machine identifiers, but should still be
-reviewed before sharing. Run the report from a terminal inside Hyprland when
-checking the graphical session. An SSH shell does not inherit Hyprland's
-environment and therefore reports the expected `Hyprland session` warning even
-while the graphical session is healthy.
+The report checks boot, Btrfs, snapshots, zram, services, power settings,
+networking, hardware discovery, and the graphical session. It also collects
+OpenCL, OpenGL, Vulkan, VA-API, PipeWire, and camera diagnostics. Review its
+warnings and failures before using the troubleshooting commands below; most
+of those checks already run automatically and need no manual repetition.
 
-Check that the expected services are enabled and that no units failed.
-`fwupd-refresh.timer` and `intel_lpmd` apply to physical installations; omit
-those entries in the VM. See [vm_skip.txt](../setup/packages/vm_skip.txt)
-for packages excluded from VM installations:
+The `--sudo` option adds protected boot, Btrfs, Snapper, firewall, and SSH
+checks. Omit it to skip authentication and those checks. Reports redact common
+personal and machine identifiers, but review them before sharing. Run locally:
+an SSH shell lacks Hyprland's environment and produces a `Hyprland session`
+warning even when the desktop is healthy.
+
+#### Service and hardware diagnostics
+
+Use these commands to investigate a report finding:
 
 ```bash
 systemctl --failed
-systemctl is-enabled \
-    NetworkManager \
-    avahi-daemon.socket \
-    bluetooth \
-    btrfs-scrub.timer \
-    cups.socket \
-    docker.socket \
-    fstrim.timer \
-    fwupd-refresh.timer \
-    intel_lpmd \
-    paccache.timer \
-    reflector.timer \
-    scx_loader \
-    sshd \
-    systemd-boot-update.service \
-    systemd-timesyncd \
-    tlp \
-    ufw
 systemctl --user --failed
-systemctl --user is-enabled \
-    gnome-keyring-daemon.socket \
-    pipewire \
-    pipewire-pulse \
-    wireplumber
 scxctl get
 tlp-stat -s
 swapon --show
 grep '^hosts:' /etc/nsswitch.conf
 grep '^WIRELESS_REGDOM' /etc/conf.d/wireless-regdom
 sudo ufw status verbose
-```
-
-On physical hardware without Lenovo DYTC, `thermald` should also be enabled.
-On a ThinkPad where `/sys/devices/platform/thinkpad_acpi/dytc_lapmode` exists,
-Lenovo's platform policy is used and `thermald` remains disabled.
-
-Check the effective recovery settings, then test password-based SSH from
-another device on the same network. Replace `youruser` and `yourhost` with
-the username and hostname selected during installation:
-
-```bash
 sudo sshd -T | grep -E \
     '^(passwordauthentication|permitrootlogin|maxauthtries|disableforwarding) '
+```
+
+The report checks expected system and user services. `fwupd-refresh.timer`
+and `intel_lpmd` apply only to physical installations; see
+[vm_skip.txt](../setup/packages/vm_skip.txt) for VM exclusions. `thermald`
+should be enabled on physical hardware unless Lenovo DYTC is available at
+`/sys/devices/platform/thinkpad_acpi/dytc_lapmode`.
+
+For an Intel NPU discovery problem, inspect its driver, firmware, and device:
+
+```bash
+lspci -knnd ::1200
+journalctl -kg intel_vpu
+ls -l /dev/accel/accel0
+```
+
+Skip NPU checks if the machine has none. Install a user-space runtime only when
+an application needs one, using its supported OpenVINO, compiler, and Level
+Zero versions.
+
+Physical installations include `intel-compute-runtime`, `level-zero-loader`,
+and `clinfo` for optional Intel GPU compute; these are omitted in the VM and
+are not required for Hyprland or VA-API. The installer also provides
+`intel-gpu-tools`, `libva-utils`, `mesa-utils`, and `vulkan-tools`. For
+graphics, audio, or camera problems, use the relevant diagnostics:
+
+```bash
+clinfo -l
+glxinfo -B
+vulkaninfo --summary
+vainfo
+wpctl status
+cam -l
+```
+
+Missing optional hardware is not an installation failure.
+
+#### Manual connection and media tests
+
+The report cannot verify these interactions. Test password-based SSH from
+another device on the same network, using the installed username and hostname:
+
+```bash
 ssh youruser@yourhost.local
 ```
 
-Open LocalSend on the laptop and another device on the same network. Confirm
-that they discover each other and transfer a file in both directions.
+Open LocalSend on both devices and transfer a file in each direction.
 
-Udiskie automatically mounts removable drives under `/run/media/$USER` and
-runs without a tray icon, because its default GTK status icon does nothing on
-Wayland. In Yazi, press `"` and then `u` to open the mounted drives. Before
-unplugging one, press `Super+Shift+E` to unmount and power off all removable
-drives. The kernel `ntfs3` driver handles read/write NTFS access; `ntfs-3g` is
-not installed, so add it if a particular drive does not work with `ntfs3`.
+Connect a removable drive and confirm that Udiskie mounts it under
+`/run/media/$USER`. In Yazi, press `"` then `u` to browse mounted drives.
+Before unplugging, press `Super+Shift+E` to unmount and power off all removable
+drives. Udiskie runs without a tray icon. NTFS uses the kernel's `ntfs3`
+driver; install `ntfs-3g` only if a drive does not work with it.
 
-An Arch installation image replaces the USB drive's partition table. To return
-it to portable file storage, first identify the whole-drive path without a
-`-partN` suffix. Replace `usb-MODEL-SERIAL` below with that exact entry, verify
-it again with `lsblk`, and unmount removable filesystems before erasing
-anything:
+Check that `wpctl status` lists the expected speakers, microphones, and camera.
+Open the Quickshell audio menu from Waybar or `Super+Shift+V` to test volume
+and default devices; expand `Applications` for per-app controls. The menu
+needs no autostart service. Do not copy another machine's WirePlumber state.
+If Bluetooth headphones are silent, check output selection and app mute,
+then pause playback and reconnect them if needed.
+
+Test the camera in Firefox, Brave, and Edge. During a Meet call, run
+`sudo intel_gpu_top` and check for Video engine activity to confirm hardware
+encoding. Check `brave://gpu` for hardware-accelerated video encoding and
+`brave://version` for the configured feature flags. While sharing the screen,
+open `Super+V` or `Super+/`: Rofi should remain visible locally but be hidden
+from the shared output.
+
+If Brave or Edge cannot detect the PipeWire camera, enable the WebRTC PipeWire
+camera option in its flags page and restart. Only if that fixes detection,
+add `WebRtcPipeWireCamera` to its `--enable-features` configuration.
+
+#### Optional: reclaim the installation USB
+
+Writing the Arch image replaces the USB's partition table. To reuse it for
+files, identify its whole-drive path without a `-partN` suffix. Replace
+`usb-MODEL-SERIAL` below, verify it with `lsblk`, and unmount its filesystems.
+The following commands erase the selected drive:
 
 ```bash
 ls -l /dev/disk/by-id/usb-*
@@ -1018,65 +960,76 @@ sudo udevadm settle
 sudo mkfs.exfat -L USB /dev/disk/by-id/usb-MODEL-SERIAL-part1
 ```
 
-This creates one exFAT partition that can store files larger than 4 GiB and is
-widely readable by Linux, Windows, and macOS. Reconnect the drive afterward or
-mount the new partition with Udiskie.
+This creates an exFAT partition supporting files larger than 4 GiB and readable
+by Linux, Windows, and macOS. Reconnect the drive or mount it with Udiskie.
 
-If the laptop has a supported Intel NPU, check that its driver and firmware
-are available and the device is detected. Skip these checks on machines
-without an NPU:
+### Verify the first graphical session
 
-```bash
-lspci -knnd ::1200
-journalctl -kg intel_vpu
-ls -l /dev/accel/accel0
-```
-
-Do not install a user-space NPU runtime until an application requires one. Use
-the application's supported stack so its OpenVINO, compiler, and Level Zero
-versions stay compatible.
-
-On physical hardware, the installer includes `intel-compute-runtime`,
-`level-zero-loader`, and `clinfo` for optional OpenCL and Level Zero workloads
-on the Intel GPU. These packages are not installed in the VM and are not
-required for Hyprland, normal rendering, or VA-API video acceleration.
-
-The installer also includes `intel-gpu-tools`, `libva-utils`, `mesa-utils`, and
-`vulkan-tools`. Run the checks relevant to the installed hardware and
-packages: Intel compute, graphics, Vulkan, video acceleration, PipeWire,
-and camera discovery. Missing optional hardware is not an installation
-failure:
+Confirm that Waybar appears, then open Ghostty and run:
 
 ```bash
-clinfo -l
-glxinfo -B
-vulkaninfo --summary
-vainfo
-sudo intel_gpu_top
-wpctl status
-cam -l
+echo "$XDG_SESSION_TYPE"
+echo "$XDG_CURRENT_DESKTOP"
+tmux new -A -s desktop
+v
 ```
 
-Confirm that PipeWire lists the expected speakers, microphones, and camera.
-Open the Quickshell audio menu from Waybar or `Super+Shift+V` to select default
-devices and control volume; expand `Applications` for per-app controls. It
-replaces `hyprpwcenter` and needs no autostart service. Do not copy another
-machine's WirePlumber state. Test the camera in Firefox, Brave, and Edge.
+The session type should be `wayland`; `system_report` checks the graphical
+session targets and failed user units. Fish expands `v` to `nvim`. Let Neovim
+finish installing its `vim.pack` plugins before closing it. QML tooling comes
+from `qt6-declarative` and needs no Mason installation. Tmux also installs
+missing plugins on first launch. Run `fm` and check that Yazi opens cleanly.
 
-If Bluetooth headphones are connected but silent, check the output and app mute
-state. If those are correct, pause playback, reconnect the headphones, and
-retry.
+Test the desktop controls:
 
-During a Meet call, activity in the Video engine confirms hardware encoding.
-While sharing the screen, open `Super+V` or `Super+/` and confirm that Rofi
-remains visible locally but is hidden from the shared output. Also check that
-`brave://gpu` reports hardware-accelerated video encoding and that
-`brave://version` lists the configured feature flags. If Brave or Edge cannot
-see the PipeWire camera, try the WebRTC PipeWire camera option in the browser's
-flags page and restart it. If that fixes detection, add `WebRtcPipeWireCamera`
-to the browser's `--enable-features` configuration permanently; do not enable
-it without first confirming that it is still necessary in the installed
-browser version.
+- Use the volume and brightness keys and check Mako's indicators.
+- Take a selection screenshot with `Super+Shift+C`. The screen should freeze
+  during selection, and the result should reach both the clipboard and
+  `~/Pictures/Screenshots`. Open it from Yazi to check that it uses imv.
+- Record a region with `Super+Shift+G`, then press it again to stop. Check for
+  the GIF in `~/Videos/Recordings`. `Super+Alt+G` records MP4 instead; both use
+  Intel GPU encoding when `/dev/dri/renderD128` exists.
+- Open the Waybar Arch menu and select `about arch`: Fastfetch should appear
+  in a centered window. Leave the pointer still for a second and check that
+  it hides until moved.
+- Open the Rofi cheatsheet with `Super+/` and check its keybinding labels.
+  Run `hyprprop` and click a window to inspect its properties.
+- Copy text, close its source window, and paste it. `wl-clip-persist` keeps
+  the selection alive; `Super+V` opens the `cliphist` history in Rofi.
+- Open the Bluetooth menu from Waybar. Use the terminal's `bt` chooser for
+  devices requiring a pairing passkey.
+
+#### Displays and idle behavior
+
+The default layout places two 1920x1080 displays (`DP-1` and `DP-3`) above the
+centered laptop screen (`eDP-1`). Inspect connector names and modes with:
+
+```bash
+hyprctl monitors all
+```
+
+Adjust connectors, positions, workspaces, and scale in `hypr/conf/monitors.lua`.
+The 2880x1800 rule uses scale `1.5`; 3000x2000 uses `2`. A generic fallback
+handles other displays. Workspaces 1, 4, and 9 belong to `DP-3`; 2, 3, and 8
+to `eDP-1`; and 5, 6, and 7 to `DP-1`. Waybar shows only active or occupied
+workspaces, so gaps are expected.
+
+Test these mappings:
+
+- `Super+Return`: laptop-only mode, disabling all other displays. Without
+  `eDP-1`, as in the VM, it falls back to the multi-display layout.
+- `Super+Ctrl+Return`: restore connected displays.
+- `Super+Shift+Return`: mirror the laptop onto every other display, including
+  unconfigured connectors such as an `HDMI-1` projector.
+- `Super+Ctrl+Arrow`: move the focused window in each direction.
+- `Super+Shift+Arrow`: move the current workspace in each direction.
+
+Closing the lid disables `eDP-1` and uses external displays; opening it
+restores the previous monitor mode. With the lid closed, the laptop suspends
+without an external display and stays running with one connected.
+
+Hypridle locks after 10 minutes, blanks displays after 15, and suspends after
+30 on battery. While plugged in, it locks and blanks but does not suspend.
 
 ### Test on physical hardware
 
