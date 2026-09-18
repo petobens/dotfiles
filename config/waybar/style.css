@@ -62,9 +62,12 @@ tooltip {
     font-size: 15pt;
     padding: 0 10px;
 }
+#workspaces button.visible,
+#workspaces button.active {
+    color: @foreground;
+}
 #workspaces button.active {
     background: @focused;
-    color: @foreground;
 }
 
 /* Right modules */
