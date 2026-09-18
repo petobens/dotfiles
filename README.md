@@ -104,19 +104,3 @@ SSH checks. Run `system_report --help` for all options.
 - `setup/`: package lists, installation, sync and symlink scripts, udev rules,
   and the disposable QEMU test machine
 - `typst/`: reusable local document packages and templates
-
-## Sync from master
-
-After committing and pushing changes to `master`, update the Wayland branch
-from its clean checkout with:
-
-```bash
-./setup/sync_dotfiles
-```
-
-The command fetches `origin/master` and merges it into `dotfiles-wayland`.
-Non-conflicting changes are applied normally. Overlapping content changes
-automatically favor the existing Wayland version without printing their diffs.
-Remaining file-level conflicts have their paths and diffs printed before being
-resolved in favor of Wayland. If the merge introduces new files, their paths are
-printed and the merge continues only after explicit confirmation.
