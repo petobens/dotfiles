@@ -12,7 +12,7 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | --------------- | ------------------------------------------------- |
 | Audio           | PipeWire, WirePlumber                             |
 | Development     | Neovim                                            |
-| Desktop         | Hyprland, Mako, Rofi, Voxtype, Waybar             |
+| Desktop         | Hyprland, Mako, Quickshell, Rofi, Voxtype, Waybar |
 | Files and media | imv, Yazi                                         |
 | Network         | NetworkManager, nmtui                             |
 | Session         | cliphist, Hypridle, Hyprlock, Hyprshot, Slurp,    |
@@ -22,6 +22,11 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 | Terminal        | Fish, Ghostty, tmux                               |
 
 ## Install Arch
+
+Read the [installation guide](docs/installation.md) for hardware assumptions,
+USB preparation, installer details, verification, and recovery. The installer
+erases the selected disk after confirmation and uses Btrfs with systemd-boot;
+disk encryption and Secure Boot are not configured.
 
 Boot the official Arch installation USB in UEFI mode, connect to the internet,
 and run:
@@ -39,34 +44,8 @@ cd /tmp/dotfiles
 ```
 
 Use `-Sy` only in the live ISO to keep the running kernel's modules intact.
-If Pacman reports `Partition / too full`, run the following command, then
-retry Pacman. It raises the live environment's RAM-backed storage limit to
-2 GiB without resizing the USB or internal disk:
-
-```bash
-mount -o remount,size=2G /run/archiso/cowspace
-```
-
-Setup scripts resolve repository paths from their own location, so they can be
-run from the repository root as above or directly from inside `setup/`, for
-example as `./install_arch.sh`, `./vm/vm.sh`, or `./symlinks.sh`.
-
-The installer asks for the username, defaulting to `pedro`, and erases the
-selected disk only after an exact confirmation. It creates a 1 GiB EFI
-partition and a zstd-compressed Btrfs filesystem with `@`, `@home`, `@pkg`,
-`@snapshots`, and `@var_log` subvolumes. This layout keeps home files, cached
-packages, and logs out of root snapshots. Snapper retains the latest ten
-numbered recovery points, including the pre/post snapshots that `snap-pac`
-creates for package transactions. Disk encryption is not included.
-
-Root and EFI use discoverable partitions, while `fstab` mounts the remaining
-subvolumes. The installer creates default and fallback unified kernel images
-for the standard and LTS kernels without enabling Secure Boot. It then clones
-this branch into `~/git-repos/private/dotfiles`.
-
-The installation uses Intel firmware for the target system and configures,
-among other things, monthly Btrfs scrubs, weekly package-cache cleanup, zram,
-and the `scx_lavd` CPU scheduler.
+The installer prompts for the target disk and user settings, then installs
+Arch and clones this branch into `~/git-repos/private/dotfiles`.
 
 After installation, unmount before rebooting:
 
@@ -119,6 +98,7 @@ SSH checks. Run `system_report --help` for all options.
 
 - `bin/`: command-line scripts
 - `config/`: application, home, and development-tool configuration
+- `docs/`: installation, verification, recovery, and desktop screenshots
 - `hypr/`: Hyprland configuration and desktop helpers
 - `nvim/`: Neovim configuration
 - `setup/`: package lists, installation, sync and symlink scripts, udev rules,
