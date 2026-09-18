@@ -2,14 +2,14 @@
 set -euo pipefail
 
 if (($# > 1)); then
-    echo 'usage: multimon [--primary|--multi|--mirror|--info]' >&2
+    echo 'usage: multimon [primary|multi|mirror|info]' >&2
     exit 2
 fi
 
-mode=${1:---multi}
+mode=${1:---help}
 case $mode in
-    --primary | --multi | --mirror) ;;
-    --info)
+    primary | multi | mirror) ;;
+    info)
         if monitors=$(hyprctl -j monitors all); then
             jq '.[] | {name, width, height, scale}' <<< "$monitors"
         else
@@ -21,19 +21,19 @@ case $mode in
         ;;
     -h | --help)
         cat << EOF
-usage: multimon [--primary|--multi|--mirror|--info]
+usage: multimon [primary|multi|mirror|info]
 
-  --primary  Use only the laptop display
-  --multi    Use all displays (default)
-  --mirror   Mirror the laptop display
-  --info     Show connected displays' resolutions and scales
+  primary  Use only the laptop display
+  multi    Use all displays
+  mirror   Mirror the laptop display
+  info     Show connected displays' resolutions and scales
 EOF
         exit 0
         ;;
     *)
-        echo 'usage: multimon [--primary|--multi|--mirror|--info]' >&2
+        echo 'usage: multimon [primary|multi|mirror|info]' >&2
         exit 2
         ;;
 esac
 
-exec hyprctl eval "require('conf.monitors').${mode#--}()"
+exec hyprctl eval "require('conf.monitors').${mode}()"
