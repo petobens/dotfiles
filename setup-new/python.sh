@@ -31,7 +31,7 @@ $uv_install_cmd litecli
 $uv_install_cmd mycli
 $uv_install_cmd mypy
 $uv_install_cmd nbdime
-$uv_install_cmd pgcli
+$uv_install_cmd --with 'psycopg[binary]' pgcli
 $uv_install_cmd --with poetry-plugin-up poetry
 $uv_install_cmd pylint
 if type "i3" > /dev/null 2>&1; then
@@ -92,7 +92,7 @@ if [[ "$OSTYPE" == 'darwin'* ]]; then
     fi
 fi
 
-for cli in litecli mycli pgcli; do
+for cli in litecli mycli; do
     if [ -d "$uv_venvs/$cli" ]; then
         styles_dir="$uv_venvs/$cli/lib/python$python_version/site-packages/pygments/styles"
         if [ -d "$styles_dir" ]; then

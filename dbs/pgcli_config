@@ -95,13 +95,13 @@ table_format = psql
 # Syntax Style. Possible values: manni, igor, xcode, vim, autumn, vs, rrt,
 # native, perldoc, borland, tango, emacs, friendly, monokai, paraiso-dark,
 # colorful, murphy, bw, pastie, paraiso-light, trac, default, fruity
-syntax_style = onedarkish
+syntax_style = one-dark
 
 # Keybindings:
 # When Vi mode is enabled you can use modal editing features offered by Vi in the REPL.
 # When Vi mode is disabled emacs keybindings such as Ctrl-A for home and Ctrl-E
 # for end are available in the REPL.
-vi = False
+vi = True
 
 # Error handling
 # When one of multiple SQL statements causes an error, choose to either
@@ -152,9 +152,9 @@ completion-menu.meta.completion = 'bg:#333841 #abb2bf'
 completion-menu.multi-column-meta = 'bg:#333841 #abb2bf'
 scrollbar.arrow = 'bg:#333841 #abb2bf'
 scrollbar = 'bg:#333841 #abb2bf'
-selected = '#ffffff bg:#6666aa'
-search = '#ffffff bg:#4444aa'
-search.current = '#ffffff bg:#44aa44'
+selected = 'bg:#3e4452 #abb2bf'
+search = 'bg:#3e4452 #e5c07b'
+search.current = 'bg:#e5c07b #24272e'
 bottom-toolbar = 'bg:#282c34 #abb2bf'
 bottom-toolbar.off = 'bg:#282c34 #5c6370'
 bottom-toolbar.on = 'bg:#282c34 #abb2bf'
@@ -163,11 +163,12 @@ search-toolbar.text = 'nobold'
 system-toolbar = 'noinherit bold'
 arg-toolbar = 'noinherit bold'
 arg-toolbar.text = 'nobold'
-bottom-toolbar.transaction.valid = 'bg:#222222 #00ff5f bold'
-bottom-toolbar.transaction.failed = 'bg:#222222 #ff005f bold'
+bottom-toolbar.transaction.valid = 'bg:#282c34 #98c379 bold'
+bottom-toolbar.transaction.failed = 'bg:#282c34 #e06c75 bold'
 
 # style classes for colored table output
-output.header = "bold"
+output.header = '#98c379 bold'
+output.null = '#5c6370'
 output.odd-row = ""
 output.even-row = ""
 

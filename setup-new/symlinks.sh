@@ -267,6 +267,9 @@ if type "pgcli" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/pgcli"
     sudo $ln_cmd -fTs "$dotfiles_dir/dbs/pgcli_config" "$HOME/.config/pgcli/config"
     echo Created ".config/pgcli/config" symlink
+    mkdir -p "$HOME/local/bin"
+    $ln_cmd -fTs "$dotfiles_dir/dbs/pgcli" "$HOME/local/bin/pgcli"
+    echo Created "local/bin/pgcli" symlink
 fi
 if type "litecli" > /dev/null 2>&1; then
     sudo mkdir -p "$HOME/.config/litecli"
