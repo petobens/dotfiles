@@ -404,6 +404,9 @@ alias unfs='sudo umount /mnt/nfs'
 alias npssh='sshpass -p "$(pass show synology/synology-ds/petobens)" ssh synology -t "cd /volume1/Shared-DS220; bash --login"'
 alias nfssh='sshpass -p "$(pass show synology/synology-flor/flor)" ssh synology-flor -t "cd /volume1/Shared-DS220; bash --login"'
 
+# Work Postgres
+alias pgm='PGPASSWORD="$(pass show mutt-pg/pass)" pgcli -h "$(pass show mutt-pg/host)" -U "$(pass show mutt-pg/user)" -d "$(pass show mutt-pg/db)"'
+
 # VPN
 alias kvpn='sudo pkill -INT -f "openconnect|openvpn|vpnc|snx"'
 
