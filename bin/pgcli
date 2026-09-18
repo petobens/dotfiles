@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo=$(dirname "$(dirname "$(readlink -f "$0")")")
+exec "$(uv tool dir)/pgcli/bin/python" "$repo/config/pgcli/launcher.py" "$@"

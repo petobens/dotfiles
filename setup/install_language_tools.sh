@@ -14,7 +14,6 @@ section 'Installing Python language tools'
 for tool in \
     mypy \
     nbdime \
-    pgcli \
     pre-commit \
     ruff \
     'sqlfluff[rs]' \
@@ -24,6 +23,7 @@ for tool in \
     zuban; do
     uv tool install --force "$tool"
 done
+uv tool install --force --with 'psycopg[binary]' pgcli
 uv tool install --force --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib,jupyter-ruff jupyterlab
 uv tool install --force --with numpy,pandas,matplotlib,kitcat --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
 
