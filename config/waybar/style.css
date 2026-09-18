@@ -110,7 +110,7 @@ tooltip {
     color: @standby;
 }
 #workspaces button.urgent,
-#battery.critical,
+#battery.critical.discharging,
 #custom-docker.failed,
 #custom-docker.inactive,
 #custom-onedrive.failed,
