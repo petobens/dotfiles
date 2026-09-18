@@ -314,7 +314,6 @@ function M.chat_display()
             relative = 'editor',
             col = vim.o.columns,
             row = 1,
-            opts = { winfixbuf = true },
         },
         debug_window = {
             width = math.floor(vim.o.columns * 0.535),
