@@ -56,6 +56,30 @@ local function apply_layout(window)
     end
 end
 
+-- Browser sign-in windows
+local function center_google_sign_in(window)
+    local browser = window.class == 'brave-browser'
+        or window.class == 'firefox'
+        or window.class:match('^microsoft%-edge%-dev')
+    if
+        not browser
+        or not window.title:match('^Sign [iI]n %- Google Accounts%f[%z%s]')
+        or not window_actions.fills_work_area(window)
+    then
+        return
+    end
+
+    -- Preserve this placement as the sign-in flow changes the window title
+    hl.dispatch(hl.dsp.window.tag({ tag = '+manually-placed', window = window }))
+    hl.dispatch(hl.dsp.window.fullscreen_state({
+        internal = 0,
+        client = 0,
+        action = 'set',
+        window = window,
+    }))
+    geometry.place(window, half)
+end
+
 -- Defaults
 window_rule('.*', { float = true, suppress_event = 'maximize' })
 window_rule('^gcr-prompter$', { stay_focused = true })
@@ -94,15 +118,27 @@ window_rule('^(DesktopEditors|ONLYOFFICE)$', {
     workspace = '4 silent',
     tag = maximized_tag,
 })
+hl.window_rule({
+    -- Keep modal dialogs at the size requested by ONLYOFFICE
+    match = { class = '^(DesktopEditors|ONLYOFFICE)$', modal = true },
+    tag = '-' .. window_actions.work_area_maximized_tag,
+})
 
 -- Application layouts
 hl.on('window.open', function(window)
     apply_layout(window)
+    center_google_sign_in(window)
     -- Follow new windows and dialogs even when workspace rules place them silently
     if window.accepts_input and not window.hidden and not window.active then
         hl.dispatch(hl.dsp.focus({ window = window }))
     end
 end)
+
+-- Match the loaded page title, which may arrive after the window opens
+hl.on('window.title', center_google_sign_in)
+for _, window in ipairs(hl.get_windows()) do
+    center_google_sign_in(window)
+end
 
 -- Reapply work-area bounds when windows move or monitor reservations change
 hl.on('window.move_to_workspace', fit_to_work_area)
