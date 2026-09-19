@@ -282,9 +282,9 @@ end
 function M.state.provider_icon(name)
     name = (name or ''):lower()
     if name:find('claude') then
-        return '' -- cod-sparkle
+        return '' -- cod-claude
     elseif name:find('codex') then
-        return '󰙴' -- md-creation
+        return '' -- cod-openai
     end
     return '󰚩' -- md-robot
 end

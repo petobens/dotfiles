@@ -79,7 +79,7 @@ local function make_display(entries)
             e.display_timestamp
         )
         local line = string.format(
-            '%s %s %s  %s  %s  %s  %s',
+            '%s %s  %s  %s  %s  %s  %s',
             marker,
             icon,
             title,
@@ -88,7 +88,7 @@ local function make_display(entries)
             meta,
             cwd
         )
-        local model_end = #marker + 1 + #icon + 1 + #title + 2 + #model
+        local model_end = #marker + 1 + #icon + 2 + #title + 2 + #model
         return line, {
             { { model_end + 1, #line }, 'Comment' },
         }

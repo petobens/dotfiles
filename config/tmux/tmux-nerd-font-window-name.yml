@@ -6,6 +6,8 @@ config:
   show-name: true
 
 icons:
+  claude: ''
+  codex: ''
   ctop: '󰡨'
   nvim: ''
   python3: ''
