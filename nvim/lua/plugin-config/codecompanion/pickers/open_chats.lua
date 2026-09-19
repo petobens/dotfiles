@@ -32,7 +32,7 @@ local function make_display(entries)
         local number = pad_right(e.chat_number, number_w)
         local cwd = e.cwd and vim.fn.fnamemodify(e.cwd, ':~') or ''
         local line = string.format(
-            '%s%s %s %s  %s  %s  %s',
+            '%s%s %s  %s  %s  %s  %s',
             active,
             status,
             icon,
@@ -44,7 +44,7 @@ local function make_display(entries)
 
         local status_start = #active
         local status_end = status_start + #status
-        local title_start = status_end + 1 + #icon + 1 + #model + 2
+        local title_start = status_end + 1 + #icon + 2 + #model + 2
         local title_end = title_start + #title
 
         return line,
