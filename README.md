@@ -8,18 +8,16 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 
 ## Stack
 
-| Area            | Tools                                             |
-| --------------- | ------------------------------------------------- |
-| Audio           | PipeWire, WirePlumber                             |
-| Development     | Neovim                                            |
-| Desktop         | Hyprland, Mako, Quickshell, Rofi, Voxtype, Waybar |
-| Files and media | imv, Yazi                                         |
-| Network         | NetworkManager, nmtui                             |
-| Session         | cliphist, Hypridle, Hyprlock, Hyprshot, Slurp,    |
-|                 | wf-recorder, wl-clipboard                         |
-| System          | Btrfs, fwupd, Intel LPMD, scx_lavd, systemd-boot, |
-|                 | thermald, TLP, UKI, zram                          |
-| Terminal        | Fish, Ghostty, tmux                               |
+| Area | Tools |
+| --- | --- |
+| Audio | PipeWire, WirePlumber |
+| Development | Neovim |
+| Desktop | Hyprland, Mako, Quickshell, Rofi, Voxtype, Waybar |
+| Files and media | imv, Yazi |
+| Network | NetworkManager, nmtui |
+| Session | cliphist, Hypridle, Hyprlock, Hyprshot, Slurp, wf-recorder, wl-clipboard |
+| System | Btrfs, fwupd, Intel LPMD, scx_lavd, systemd-boot, thermald, TLP, UKI, zram |
+| Terminal | Fish, Ghostty, tmux |
 
 ## Install Arch
 
@@ -43,7 +41,6 @@ cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
 
-Use `-Sy` only in the live ISO to keep the running kernel's modules intact.
 The installer prompts for the target disk and user settings, then installs
 Arch and clones this branch into `~/git-repos/private/dotfiles`.
 
