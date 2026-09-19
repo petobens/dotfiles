@@ -55,18 +55,10 @@ hl.config({
 
 -- Animation curves
 -- Control points of a cubic bezier, as in CSS cubic-bezier(x1, y1, x2, y2)
--- easeOutQuint starts at full speed, so the workspace slide jolts on its first
--- frame. Ease into the same peak speed instead, over a shorter duration
 local animation_curve = 'easeOutQuint'
 hl.curve(animation_curve, {
     type = 'bezier',
     points = { { 0.23, 1 }, { 0.32, 1 } },
-})
-
-local workspace_curve = 'easeInOutStandard'
-hl.curve(workspace_curve, {
-    type = 'bezier',
-    points = { { 0.4, 0 }, { 0.2, 1 } },
 })
 
 -- Animations
@@ -77,8 +69,9 @@ hl.animation({ leaf = 'windows', enabled = true, speed = 5, bezier = animation_c
 hl.animation({
     leaf = 'workspaces',
     enabled = true,
-    speed = 3,
-    bezier = workspace_curve,
-    style = 'slide',
+    speed = 4,
+    bezier = 'default',
+    -- Use fade because slides draw floating windows across neighboring monitors
+    style = 'fade',
 })
 hl.animation({ leaf = 'fade', enabled = true, speed = 3, bezier = animation_curve })
