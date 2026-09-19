@@ -100,6 +100,8 @@ symlink "$repo/config/pip" "$HOME/.config/pip"
 symlink "$repo/config/python/ruff" "$HOME/.config/ruff"
 
 section 'Agent configuration'
+# Ignore Claude's JSON key reordering while preserving setting changes in Git
+git -C "$repo" config --local filter.claude-settings.clean 'jq --sort-keys --indent 2 .'
 symlink "$repo/config/claude/settings.json" "$HOME/.claude/settings.json"
 symlink "$repo/config/claude/statusline.sh" "$HOME/.claude/statusline.sh"
 symlink "$repo/config/codex/config.toml" "$HOME/.codex/config.toml"
