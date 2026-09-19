@@ -117,7 +117,10 @@ local function refresh_chat_footer(bufnr)
     if not ok or not chat or not chat.ui or not chat.ui.winnr then
         return
     end
-    if not vim.api.nvim_win_is_valid(chat.ui.winnr) then
+    if
+        not vim.api.nvim_win_is_valid(chat.ui.winnr)
+        or vim.api.nvim_win_get_buf(chat.ui.winnr) ~= chat.bufnr
+    then
         return
     end
     vim.api.nvim_win_set_config(chat.ui.winnr, {
@@ -133,6 +136,8 @@ local function refresh_all_chat_titles()
             and chat.ui
             and chat.ui.winnr
             and vim.api.nvim_win_is_valid(chat.ui.winnr)
+            -- Hidden chats retain the window ID when another chat reuses it
+            and vim.api.nvim_win_get_buf(chat.ui.winnr) == chat.bufnr
         then
             vim.api.nvim_win_set_config(chat.ui.winnr, {
                 title = chat_title(chat),
