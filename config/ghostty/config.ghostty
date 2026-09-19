@@ -47,6 +47,7 @@ resize-overlay = never
 # Behavior
 clipboard-read = allow
 clipboard-write = allow
+app-notifications = no-clipboard-copy
 confirm-close-surface = false
 shell-integration = none
 bell-features = no-system,no-audio,attention,no-title
