@@ -278,7 +278,8 @@ if command -v zoom > /dev/null && [[ ! -e $HOME/.config/zoomus.conf ]]; then
     printf '%s\n' \
         '[General]' \
         'autoScale=false' \
-        'scaleFactor=2' \
+        'captureHDCamera=true' \
+        'scaleFactor=1' \
         > "$HOME/.config/zoomus.conf"
 fi
 if command -v spotify > /dev/null &&

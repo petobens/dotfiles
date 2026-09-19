@@ -103,6 +103,11 @@ window_rule(
     '^(slack|brave-teams.*|brave-meet.*|brave-mail.*|zoom)$',
     { workspace = '2 silent', tag = maximized_tag }
 )
+hl.window_rule({
+    -- Zoom restores its own size after the initial work-area placement
+    match = { class = '^zoom$', title = '^Zoom Workplace.*$' },
+    maximize = true,
+})
 window_rule('^Spotify$', {
     workspace = '3 silent',
     tag = maximized_tag,

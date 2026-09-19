@@ -205,6 +205,13 @@ function M.close()
                 window = window,
             }))
         end
+    elseif
+        window
+        and window.class:lower() == 'zoom'
+        and window.initial_title == 'Zoom Workplace'
+    then
+        -- Closing a Zoom window can leave the app running in the tray
+        hl.exec_cmd('pkill -TERM -x zoom')
     else
         hl.dispatch(hl.dsp.window.close({}))
     end
