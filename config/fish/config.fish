@@ -260,6 +260,7 @@ function uvsh --description 'Activate the nearest uv virtual environment'
     while test "$dir" != /
         if test -f "$dir/pyproject.toml"
             if test -f "$dir/.venv/bin/activate.fish"
+                set -lx VIRTUAL_ENV_DISABLE_PROMPT 1
                 source "$dir/.venv/bin/activate.fish"
                 return
             end
