@@ -94,6 +94,10 @@ window_rule('^(brave-browser|brave-calendar.*|firefox|microsoft-edge-dev.*)$', {
     workspace = '1 silent',
     tag = maximized_tag,
 })
+window_rule('^msedge-app\\.clickup\\.com.*$', {
+    workspace = '1 silent',
+    tag = maximized_tag,
+})
 window_rule('^Qemu-system-x86_64$', {
     workspace = '1',
     tag = maximized_tag,

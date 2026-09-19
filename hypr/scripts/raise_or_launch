@@ -76,7 +76,7 @@ case ${1:-} in
         ;;
     clickup)
         tag=clickup
-        class='^microsoft-edge-dev-app\.clickup\.com'
+        class='^msedge-app\.clickup\.com'
         workspace=1
         command='microsoft-edge-dev --new-window --app=https://app.clickup.com'
         ;;
