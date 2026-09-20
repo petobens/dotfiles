@@ -40,6 +40,12 @@ CPU_HWP_DYN_BOOST_ON_SAV=0
 INTEL_GPU_POWER_PROFILE_ON_BAT=base
 WIFI_PWR_ON_BAT=off
 EOF
+# TLP does not need /boot; avoid triggering its automount during shutdown
+sudo install -Dm644 /dev/stdin /etc/systemd/system/tlp.service.d/boot.conf << 'EOF'
+[Service]
+InaccessiblePaths=-/boot
+EOF
+sudo systemctl daemon-reload
 
 section 'Configuring emergency battery shutdown'
 # Use shutdown because zram cannot preserve a hibernation image
@@ -178,7 +184,7 @@ sudo systemctl enable \
     snapper-cleanup.timer \
     tlp
 sudo systemctl enable --now \
-    avahi-daemon.socket \
+    avahi-daemon.service \
     cups.socket \
     sshd.service \
     systemd-timesyncd

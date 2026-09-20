@@ -159,7 +159,7 @@ fi
 # Expected system and user services
 expected_services=(
     NetworkManager.service
-    avahi-daemon.socket
+    avahi-daemon.service
     bluetooth.service
     btrfs-scrub.timer
     cups.socket
@@ -333,14 +333,18 @@ else
     display_info=$(lspci -nnk -d ::0300 2> /dev/null || true)
     if grep -q 'Kernel driver in use: xe' <<< "$display_info"; then
         add_result PASS 'Intel GPU' 'xe kernel driver active'
+    elif grep -q 'Kernel driver in use: i915' <<< "$display_info"; then
+        add_result PASS 'Intel GPU' 'i915 kernel driver active'
     elif grep -qi 'Intel' <<< "$display_info"; then
-        add_result WARN 'Intel GPU' 'detected, but xe is not the active driver'
+        add_result WARN 'Intel GPU' 'detected, but neither i915 nor xe is active'
     else
         add_result FAIL 'Intel GPU' 'Intel display controller not detected'
     fi
 
     if [[ -e /dev/accel/accel0 ]]; then
         add_result PASS 'Intel NPU' '/dev/accel/accel0 present'
+    elif npu_info=$(lspci -d 8086::1200 2> /dev/null) && [[ -z $npu_info ]]; then
+        add_result PASS 'Intel NPU' 'no Intel processing accelerator detected; not applicable'
     else
         add_result WARN 'Intel NPU' '/dev/accel/accel0 not present'
     fi
