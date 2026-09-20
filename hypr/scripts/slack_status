@@ -41,7 +41,9 @@ if [[ -n $item ]]; then
     )
 # FIXME: Slack 4.52.155 cannot register its notifier on Wayland
 # https://github.com/electron/electron/pull/53214
-# Unread state falls back to active until Slack ships the upstream fix
+# TODO: Remove slack-desktop from /etc/pacman.conf IgnorePkg once a newer
+# Slack restores tray registration and unread/mention colors on Wayland
+# Pinned locally to 4.51.191-1; its notifier works with this script
 elif pgrep -x slack > /dev/null; then
     text='󰒱'
     state=active

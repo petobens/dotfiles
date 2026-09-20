@@ -135,8 +135,9 @@
         "format": "{icon}",
         "format-icons": {
             "active": "󰒱",
-            "unread": "<span letter_spacing='-13312'>󰒱</span><span color='#00ffff' size='5632' rise='-1024'>●</span>",
-            "urgent": "<span letter_spacing='-13312'>󰒱</span><span color='#ff1744' size='5632' rise='-1024'>●</span>",
+            // A larger background-colored circle outlines the notification dot
+            "unread": "<span letter_spacing='-2048'>󰒱</span><span color='#24272e' size='8704' rise='-1536' letter_spacing='-17408'>●</span><span color='#00e5ed' size='7168' rise='-512'>●</span>",
+            "urgent": "<span letter_spacing='-2048'>󰒱</span><span color='#24272e' size='8704' rise='-1536' letter_spacing='-17408'>●</span><span color='#ff2687' size='7168' rise='-512'>●</span>",
         },
         "hide-empty-text": true,
         "interval": 1,
