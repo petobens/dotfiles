@@ -2,8 +2,8 @@
 
 -- Outputs
 local physical_outputs = {
-    left = 'DP-1',
-    right = 'DP-3',
+    left = 'DP-7',
+    right = 'DP-8',
     laptop = 'eDP-1',
 }
 -- Alternate port names for the left and right monitors
