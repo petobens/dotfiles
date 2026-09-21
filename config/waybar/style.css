@@ -100,7 +100,7 @@ tooltip {
 #custom-slack {
     font-family: 'Symbols Nerd Font';
     font-size: 13.5pt;
-    color: @foreground;
+    color: #bdc3ce;
     padding: 0;
 }
 /* Keep spacing on icons so an empty tray leaves no padding */
