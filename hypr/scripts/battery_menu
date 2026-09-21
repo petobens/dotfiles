@@ -102,15 +102,14 @@ else
     exit 1
 fi
 
-printf -v time_row '󰥔  %-15s %s' "$time_label" "$time"
-
-printf '%s\n' \
-    "󰁹  Charge          $percentage%" \
-    "󰂄  Status          $status" \
-    "  Power source    $power_source" \
-    "$time_row" \
-    "󰔟  Full runtime    $full_runtime" \
-    "󰓅  Power draw      $rate" \
-    "󰂑  Health          $health% ($size)" \
-    "󰑐  Charge cycles   $cycles" |
-    rofi -dmenu -i -no-custom -p 'Battery' -theme "$theme" > /dev/null || exit 0
+printf '%s\t%s\t%s\n' \
+    '󰁹' 'Charge' "$percentage%" \
+    '󰂄' 'Status' "$status" \
+    '' 'Power source' "$power_source" \
+    '󰥔' "$time_label" "$time" \
+    '󰔟' 'Full runtime' "$full_runtime" \
+    '󰓅' 'Power draw' "$rate" \
+    '󰂑' 'Health' "$health% ($size)" \
+    '󰑐' 'Charge cycles' "$cycles" |
+    rofi -dmenu -i -no-custom -p 'Battery' -theme "$theme" \
+        -theme-str 'element-text { tab-stops: [ 24px, 160px ]; }' > /dev/null || exit 0
