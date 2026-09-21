@@ -101,7 +101,7 @@ tooltip {
     font-family: 'Symbols Nerd Font';
     font-size: 13.5pt;
     color: #bdc3ce;
-    padding: 0;
+    padding: 0 0 0 2px;
 }
 /* Keep spacing on icons so an empty tray leaves no padding */
 #tray image {
