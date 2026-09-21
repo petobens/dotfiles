@@ -269,6 +269,9 @@ sudo install -Dm644 \
     "$policies_dir/chromium-recommended.json" \
     /etc/brave/policies/recommended/dotfiles.json
 sudo install -Dm644 \
+    "$policies_dir/brave-recommended.json" \
+    /etc/brave/policies/recommended/brave.json
+sudo install -Dm644 \
     "$policies_dir/edge.json" \
     /etc/opt/edge/policies/managed/dotfiles.json
 sudo install -Dm644 \

@@ -3,6 +3,10 @@
 `setup/post_install.sh` installs these files as browser policies. Keep them as
 standard JSON without comments; extension IDs are documented below instead.
 
+`brave-recommended.json` sets Google as Brave's default search engine. This is
+a recommended policy, so users can override it in Brave's settings. Existing
+user choices take precedence.
+
 ## Extensions
 
 | Browser | Extension | ID |
