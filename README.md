@@ -21,7 +21,7 @@ Dotfiles and installation scripts for an Arch Linux desktop using Hyprland.
 
 ## Install Arch
 
-Read the [installation guide](docs/installation.md) for hardware assumptions,
+Read our [installation guide](docs/installation.md) for hardware assumptions,
 USB preparation, installer details, verification, and recovery. The installer
 erases the selected disk after confirmation and uses Btrfs with systemd-boot;
 disk encryption and Secure Boot are not configured.
