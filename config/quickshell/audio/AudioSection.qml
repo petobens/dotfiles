@@ -62,7 +62,9 @@ ColumnLayout {
             // A disconnected node can disappear before its row is removed
             const node = device.modelData;
             const name = node?.description || node?.name || "";
-            return String(name).replace(/ Analog Stereo$/, "");
+            return String(name).replace(/^.* High Definition Audio Controller /,
+                                        "Built-in ").replace(/ Analog Stereo$/,
+                                                             "");
           }
           color: device.highlightedRow ? "#24272e" : "#abb2bf"
           font: device.font
