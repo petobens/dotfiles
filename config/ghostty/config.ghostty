@@ -11,6 +11,10 @@ font-codepoint-map = U+E0A1=Adwaita Mono
 font-codepoint-map = U+E0B1,U+E0B3=Symbols Nerd Font
 
 # Colors
+# FIXME: Remove the theme-reporting workaround once the upstream bug is fixed
+# https://github.com/ghostty-org/ghostty/issues/13604
+# The explicit colors below override both themes
+theme = dark:Atom One Dark,light:Atom One Light
 background = #24272e
 foreground = #abb2bf
 cursor-color = #528bff
@@ -39,6 +43,7 @@ palette = 14=#56b6c2
 palette = 15=#5c6370
 
 # Window
+window-theme = dark
 window-decoration = false
 window-padding-x = 0
 window-padding-y = 0
