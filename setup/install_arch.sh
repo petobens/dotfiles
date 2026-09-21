@@ -231,7 +231,7 @@ checkout="/home/$username/git-repos/private/dotfiles"
 arch-chroot /mnt install -d -o "$username" -g "$username" \
     "/home/$username/git-repos" "$(dirname "$checkout")"
 arch-chroot /mnt runuser -u "$username" -- \
-    git clone --branch dotfiles-wayland \
+    git clone \
     https://github.com/petobens/dotfiles.git "$checkout"
 
 section 'Installation complete'

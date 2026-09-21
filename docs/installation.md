@@ -58,7 +58,7 @@ The commands below use that path to match the scripts.
 
 ### Prepare the installation media
 
-Commit and push the `dotfiles-wayland` branch from the existing computer. The
+Commit and push the `master` branch from the existing computer. The
 new machine cannot clone uncommitted local changes.
 
 Download the current Arch ISO from <https://archlinux.org/download/>. On an
@@ -170,11 +170,7 @@ Once connected, run:
 ```bash
 pacman -Sy --needed git tmux
 tmux
-git clone \
-    --depth 1 \
-    --branch dotfiles-wayland \
-    https://github.com/petobens/dotfiles.git \
-    /tmp/dotfiles
+git clone --depth 1 https://github.com/petobens/dotfiles.git /tmp/dotfiles
 cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```
@@ -637,7 +633,7 @@ ls -lh /boot/EFI/Linux
 ##### Step 12/13: Cloning the Wayland dotfiles
 
 Set the username again after reentering the chroot, then clone the pushed
-Wayland branch as that user. Replace `youruser` with the username created
+`master` branch as that user. Replace `youruser` with the username created
 above:
 
 ```bash
@@ -646,7 +642,7 @@ checkout="/home/$username/git-repos/private/dotfiles"
 install -d -o "$username" -g "$username" \
     "/home/$username/git-repos" "$(dirname "$checkout")"
 runuser -u "$username" -- \
-    git clone --branch dotfiles-wayland \
+    git clone \
     https://github.com/petobens/dotfiles.git "$checkout"
 ```
 
@@ -681,7 +677,7 @@ sudo true
 git --version
 ```
 
-The Arch installer already cloned the `dotfiles-wayland` branch into
+The Arch installer already cloned the `master` branch into
 `~/git-repos/private/dotfiles`. Run the dotfiles installer as the normal user,
 without putting `sudo` in front of the script:
 
@@ -692,8 +688,7 @@ tmux
 ```
 
 Setup scripts resolve repository paths from their own location. They can also
-be run from inside `setup/` as `./install.sh`, `./symlinks.sh`, or
-`./sync_dotfiles`.
+be run from inside `setup/` as `./install.sh` or `./symlinks.sh`.
 
 For scrollback, press `Ctrl+B`, release both keys, and then press `[`. Press
 `q` to return to the live command.

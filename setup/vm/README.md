@@ -27,7 +27,7 @@ The VM script checks these requirements before creating or launching a VM.
 
 ## First installation
 
-Commit and push the Wayland branch, then start the VM:
+Commit and push the `master` branch, then start the VM:
 
 ```bash
 ./setup/vm/vm.sh
@@ -40,11 +40,7 @@ environment, run:
 ```bash
 pacman -Sy --needed git tmux
 tmux
-git clone \
-    --depth 1 \
-    --branch dotfiles-wayland \
-    https://github.com/petobens/dotfiles.git \
-    /tmp/dotfiles
+git clone --depth 1 https://github.com/petobens/dotfiles.git /tmp/dotfiles
 cd /tmp/dotfiles
 ./setup/install_arch.sh
 ```

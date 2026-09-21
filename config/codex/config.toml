@@ -52,6 +52,3 @@ trust_level = "trusted"
 
 [projects."/home/pedro/git-repos/private/ai-harness"]
 trust_level = "trusted"
-
-[projects."/home/pedro/git-repos/private/dotfiles-wayland"]
-trust_level = "trusted"

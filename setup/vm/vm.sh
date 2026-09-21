@@ -128,7 +128,7 @@ launch_vm() {
         printf '%s\n' \
             'Run inside the Arch ISO:' \
             'pacman -Sy --needed git tmux && tmux' \
-            'git clone --depth 1 --branch dotfiles-wayland https://github.com/petobens/dotfiles.git /tmp/dotfiles' \
+            'git clone --depth 1 https://github.com/petobens/dotfiles.git /tmp/dotfiles' \
             'cd /tmp/dotfiles && ./setup/install_arch.sh'
     fi
 
