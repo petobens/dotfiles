@@ -392,6 +392,7 @@ local groups = {
     BlinkCmpLabelDeprecated = { fg = p.comment_grey, strikethrough = true },
     BlinkCmpLabelDescription = { fg = p.gray, italic = true },
     BlinkCmpLabelMatch = { fg = p.blue },
+    BlinkCmpMenuSelection = { fg = p.black, bg = '#5ba1da' },
     BlinkCmpSource = { fg = p.gray },
 
     -- CodeCompanion

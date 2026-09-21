@@ -51,7 +51,7 @@ blink_cmp.setup({
     },
     completion = {
         menu = {
-            winhighlight = 'Normal:NormalFloat,CursorLine:PmenuSel,Search:None',
+            winhighlight = 'Normal:NormalFloat,CursorLine:BlinkCmpMenuSelection,Search:None',
             draw = {
                 padding = { 1, 2 },
                 columns = {
