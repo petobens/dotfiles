@@ -109,8 +109,7 @@ tooltip {
 }
 
 /* Status states */
-#custom-docker.standby,
-#custom-onedrive.syncing {
+#custom-docker.standby {
     color: @standby;
 }
 #workspaces button.urgent,
