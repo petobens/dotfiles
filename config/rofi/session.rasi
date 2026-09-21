@@ -1,0 +1,69 @@
+configuration {
+    font: "Noto Sans Mono,Symbols Nerd Font 11";
+    show-icons: false;
+}
+
+* {
+    background: #24272e;
+    foreground: #abb2bf;
+    selected-background: #61afef;
+    selected-foreground: #24272e;
+    border-color: #4b5263;
+}
+
+window {
+    location: northwest;
+    anchor: northwest;
+    width: 38ch;
+    x-offset: 0px;
+    y-offset: 0px;
+    padding: 4px;
+    background-color: @background;
+    border: 1px;
+    border-color: @border-color;
+    border-radius: 8px;
+}
+
+mainbox {
+    background-color: @background;
+    children: [ listview ];
+}
+
+listview {
+    background-color: @background;
+    columns: 1;
+    lines: 6;
+    layout: vertical;
+    flow: vertical;
+    spacing: 0px;
+    scrollbar: true;
+}
+
+scrollbar {
+    background-color: transparent;
+    handle-color: #4b5263;
+    handle-width: 4px;
+    handle-rounded-corners: true;
+    padding: 0 0 0 6px;
+    border: 0;
+}
+
+element {
+    padding: 5px 8px;
+    background-color: transparent;
+    text-color: @foreground;
+    border: 0px;
+    cursor: pointer;
+}
+
+element selected {
+    background-color: @selected-background;
+    text-color: @selected-foreground;
+}
+
+element-text {
+    tab-stops: [ 3ch, 17ch ];
+    background-color: transparent;
+    text-color: inherit;
+    horizontal-align: 0.0;
+}

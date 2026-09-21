@@ -1,0 +1,31 @@
+{
+    "printWidth": 80,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "overrides": [
+        {
+            "files": [
+                "**/browser-policies/*.json"
+            ],
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
+            "files": [
+                "*.md"
+            ],
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
+            "files": [
+                "**/.github/workflows/*.y*ml"
+            ],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}

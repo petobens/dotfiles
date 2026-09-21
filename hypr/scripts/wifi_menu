@@ -1,0 +1,261 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+theme="$script_dir/../../config/rofi/device.rasi"
+
+fail() {
+    notify-send -u critical -i network-wireless-offline 'Wi-Fi' "$1"
+    exit 1
+}
+
+# Substitute sample command output in VMs without a Wi-Fi radio
+if systemd-detect-virt --vm --quiet &&
+    ! command nmcli --terse --fields TYPE device status 2> /dev/null |
+    grep -qx wifi; then
+    nmcli() {
+        case $* in
+            'radio wifi') printf 'enabled\n' ;;
+            *'device wifi list'*)
+                printf '%s\n' '*:90:WPA2:wlan0:VM Network' \
+                    ':65:--:wlan0:VM Guest' ':30:WPA2:wlan0:VM Test'
+                ;;
+        esac
+    }
+fi
+
+# Waybar status
+if [[ ${1:-} == --status ]]; then
+    signal=$(nmcli --colors no --terse --fields IN-USE,SIGNAL \
+        device wifi list --rescan no | awk -F: '$1 == "*" { print $2; exit }')
+    if [[ -n $signal ]]; then
+        jq -cn --arg text " $signal%" --argjson percentage "$signal" \
+            '{text: $text, percentage: $percentage, alt: "connected", class: "connected"}'
+    else
+        printf '%s\n' '{"text":"","alt":"disconnected","class":"disconnected"}'
+    fi
+    exit 0
+fi
+
+# Keep repeated clicks from interrupting an in-progress connection
+exec 9> "${XDG_RUNTIME_DIR:?}/wifi-menu.lock"
+flock -n 9 || exit 0
+scan_stamp=$XDG_RUNTIME_DIR/wifi-menu.last-scan
+
+# Enable the radio if needed
+if [[ $(nmcli radio wifi) != enabled ]]; then
+    choice=$(printf '󰖩  Enable Wi-Fi\n' |
+        rofi -dmenu -no-custom -format i -p 'Wi-Fi' -theme "$theme") || exit 0
+    [[ $choice == 0 ]] || exit 0
+    nmcli radio wifi on || fail 'Could not enable Wi-Fi'
+    rm -f "$scan_stamp"
+fi
+
+# Stream scan results into the open menu
+list_networks() {
+    printf '%s\0' '' '' '' Scan >> "$choices_file"
+    printf '󱛇  Scan for networks\n'
+
+    # Keep the connected reading from before the scan, which briefly changes it
+    connected=$(nmcli --colors no --terse --escape no \
+        --fields IN-USE,SIGNAL,SECURITY,DEVICE,SSID device wifi list --rescan no |
+        awk '/^\*/ { print; exit }')
+    IFS=: read -r _ connected_signal _ connected_device connected_ssid <<< "$connected"
+
+    # Reuse NetworkManager's results for a minute while keeping connection state live
+    rescan=yes
+    last_scan=$(stat -c %Y "$scan_stamp" 2> /dev/null || printf 0)
+    (($(date +%s) - last_scan >= 60)) || rescan=no
+    if ! scan=$(nmcli --colors no --terse --escape no \
+        --fields IN-USE,SIGNAL,SECURITY,DEVICE,SSID device wifi list --rescan "$rescan"); then
+        fail 'Could not list networks'
+    fi
+    [[ $rescan != yes ]] || touch "$scan_stamp"
+
+    ssids=()
+    while IFS=: read -r active signal security device ssid; do
+        [[ -n $ssid ]] || continue
+
+        # Connected entries sort first, so duplicate names keep the active access point
+        duplicate=false
+        for known_ssid in "${ssids[@]}"; do
+            if [[ $known_ssid == "$ssid" ]]; then
+                duplicate=true
+                break
+            fi
+        done
+        $duplicate && continue
+
+        if [[ $active == '*' && $device == "$connected_device" && $ssid == "$connected_ssid" ]]; then
+            signal=$connected_signal
+        fi
+
+        case $signal in
+            100 | 9[0-9] | 8[0-9] | 7[5-9]) icon=󰤨 ;;
+            7[0-4] | 6[0-9] | 5[0-9]) icon=󰤥 ;;
+            4[0-9] | 3[0-9] | 2[5-9]) icon=󰤢 ;;
+            *) icon=󰤟 ;;
+        esac
+
+        security_label="󰌾 $security"
+        [[ -n $security && $security != -- ]] || security_label='󰿆 Open'
+        name=$ssid
+        name=${name//&/\&amp;}
+        name=${name//</\&lt;}
+        name=${name//>/\&gt;}
+        [[ $active != '*' ]] || name+=' <span foreground="#98c379" size="75%" rise="2048"></span>'
+
+        # NUL-separated fields preserve network names independently of the columns
+        printf '%s\0' "$ssid" "$security" "$device" "$active" >> "$choices_file"
+        printf '%s\t%s %d%%\t%s\n' "$name" "$icon" "$signal" "$security_label" 2> /dev/null || return 0
+        ssids+=("$ssid")
+    done < <(printf '%s\n' "$scan" | sort -t: -k1,1r -k2,2nr)
+}
+
+choices_file=$(mktemp)
+trap 'rm -f "$choices_file"' EXIT
+# Rofi's -no-custom forces synchronous input; validate the selected index below
+menu_status=0
+index=$(list_networks |
+    rofi -dmenu -i -no-auto-select -markup-rows -format i \
+        -kb-custom-1 'Control+i' \
+        -p 'Wi-Fi' -theme "$theme" \
+        -theme-str 'window { width: 54ch; }
+            mainbox { children: [ inputbar, textbox-shortcuts, listview ]; }
+            textbox-shortcuts { str: "  Enter: select · Esc: close · C-i: info"; }
+            inputbar { children: [ prompt, textbox-prompt-colon, entry, num-filtered-rows, textbox-num-sep, num-rows ]; }
+            element-text { tab-stops: [ 216px, 296px ]; }') || menu_status=$?
+[[ $menu_status == 0 || $menu_status == 10 ]] || exit 0
+[[ $index =~ ^[0-9]+$ ]] || exit 0
+mapfile -d '' -t choice < "$choices_file"
+((index < ${#choice[@]} / 4)) || exit 0
+ssid=${choice[index * 4]}
+security=${choice[index * 4 + 1]}
+device=${choice[index * 4 + 2]}
+active=${choice[index * 4 + 3]}
+
+if [[ $active == Scan ]]; then
+    [[ $menu_status != 0 ]] || rm -f "$scan_stamp"
+    rm -f "$choices_file"
+    exec 9>&-
+    exec "$0"
+fi
+
+# Enter disconnects immediately; Ctrl+i only reads connection details
+if [[ $active == '*' && $menu_status == 0 ]]; then
+    if ! output=$(nmcli --wait 30 device down "$device" 2>&1); then
+        fail "$output"
+    fi
+    notify-send -t 2000 -i network-wireless-offline 'Wi-Fi disconnected' "$ssid"
+    exit 0
+fi
+
+# Find saved settings for the selected network
+saved_uuid=
+while IFS=: read -r uuid type; do
+    [[ $type == 802-11-wireless ]] || continue
+    profile_ssid=$(nmcli --escape no --get-values 802-11-wireless.ssid \
+        connection show uuid "$uuid")
+    if [[ $profile_ssid == "$ssid" ]]; then
+        saved_uuid=$uuid
+        break
+    fi
+done < <(nmcli --terse --escape no --fields UUID,TYPE connection show)
+
+# Ctrl+i shows details, then returns to the network list
+if [[ $menu_status == 10 ]]; then
+    state='Not connected'
+    if [[ $active == '*' ]]; then
+        state=Connected
+        saved_uuid=$(nmcli --get-values GENERAL.CON-UUID device show "$device")
+    fi
+    details=$(printf 'Network\t%s\nStatus\t%s\nSecurity\t%s\n' \
+        "$ssid" "$state" "${security:---}")
+    if [[ -n $saved_uuid ]]; then
+        profile=$(nmcli --colors no --escape no --terse \
+            --fields connection.autoconnect,ipv4.method,ipv6.method \
+            connection show uuid "$saved_uuid") || fail 'Could not read connection settings'
+        details+=$'\n'$(printf '%s\n' "$profile" | awk -F: '
+            $1 == "connection.autoconnect" { print "Autoconnect\t" $2 }
+            $1 == "ipv4.method" { print "IPv4 method\t" $2 }
+            $1 == "ipv6.method" { print "IPv6 method\t" $2 }
+        ')
+    else
+        details+=$'\nSaved profile\tNone'
+    fi
+    if [[ $active == '*' ]]; then
+        live=$(nmcli --colors no --escape no --terse \
+            --fields IP4.ADDRESS,IP4.GATEWAY,IP4.DNS,IP6.ADDRESS,IP6.GATEWAY,IP6.DNS \
+            device show "$device") || fail 'Could not read connection details'
+        details+=$'\n'$(printf '%s\n' "$live" | awk '
+            {
+                split($0, fields, ":")
+                label = fields[1]
+                sub(/^[^:]*:/, "")
+                sub(/\[[0-9]+\]$/, "", label)
+                sub(/^IP4\./, "IPv4 ", label)
+                sub(/^IP6\./, "IPv6 ", label)
+                print label "\t" $0
+            }
+        ')
+    fi
+    printf '%s\n' "$details" | rofi -dmenu -i -no-custom -p 'Wi-Fi info' \
+        -theme "$theme" -theme-str 'window { width: 54ch; }
+            element-text { tab-stops: [ 160px ]; }' > /dev/null || true
+    rm -f "$choices_file"
+    exec 9>&-
+    exec "$0"
+fi
+
+# Connect using saved settings or prompt for a password, retrying when needed
+ask_password=false
+if [[ -z $saved_uuid && -n $security && $security != -- ]]; then
+    ask_password=true
+fi
+password_hint=''
+while true; do
+    if $ask_password; then
+        password=$(rofi -dmenu -password -p "󰌾 Password for $ssid" \
+            -theme "$theme" \
+            -theme-str "entry { placeholder: \"$password_hint\"; }") || exit 0
+        [[ -n $password ]] || exit 0
+        connect=(device wifi connect "$ssid" ifname "$device" password "$password")
+    elif [[ -n $saved_uuid ]]; then
+        connect=(connection up uuid "$saved_uuid" ifname "$device")
+    else
+        connect=(device wifi connect "$ssid" ifname "$device")
+    fi
+
+    if output=$(LC_ALL=C nmcli --wait 60 "${connect[@]}" 2>&1); then
+        break
+    else
+        status=$?
+    fi
+    [[ -n $security && $security != -- && $security != *802.1X* ]] || fail "$output"
+
+    if [[ $status == 3 ]]; then
+        state=$(LC_ALL=C nmcli --get-values GENERAL.STATE device show "$device")
+        # Retry passwords only during preparation, configuration, or authentication
+        case $state in
+            40* | 50* | 60*) ;;
+            *) fail "$output" ;;
+        esac
+        # nmcli timeouts leave activation running; stop it before retrying
+        nmcli --wait 10 device down "$device" > /dev/null 2>&1 || fail "$output"
+        password_hint='Timed out. Check password and retry'
+    else
+        case $output in
+            *'Secrets were required'* | *'No secrets'* | *'802-11-wireless-security.psk'* | *'wep-key'*)
+                password_hint='Wrong password. Try again'
+                ;;
+            *'The Wi-Fi network could not be found'*)
+                password_hint='Check hotspot and re-enter password'
+                ;;
+            *) fail "$output" ;;
+        esac
+    fi
+    notify-send -t 4000 -i network-wireless-offline 'Wi-Fi' "$password_hint"
+    ask_password=true
+done
+
+notify-send -t 2000 -i network-wireless 'Wi-Fi connected' "$ssid"

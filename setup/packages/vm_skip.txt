@@ -1,0 +1,22 @@
+# Hardware and host services
+bolt
+caligula
+clinfo
+exfatprogs
+fwupd
+intel-compute-runtime
+intel-lpmd
+level-zero-loader
+thermald
+vpl-gpu-rt
+
+# Desktop applications
+firefox
+microsoft-edge-dev-bin
+onlyoffice-bin
+zoom
+
+# Development and virtualization
+edk2-ovmf
+ollama
+qemu-desktop

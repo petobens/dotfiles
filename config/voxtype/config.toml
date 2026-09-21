@@ -1,0 +1,23 @@
+# Recording is driven by the Hyprland F10 binding rather than the built-in
+# evdev hotkey, which would require membership in the input group
+state_file = "auto"
+
+[hotkey]
+enabled = false
+
+[whisper]
+# Multilingual model: the .en variants cannot transcribe Spanish
+model = "base"
+# Constrained auto-detection avoids misdetecting short phrases
+language = ["en", "es"]
+translate = false
+
+[output]
+mode = "type"
+fallback_to_clipboard = true
+
+[output.notification]
+on_recording_start = true
+on_recording_stop = true
+on_transcription = false
+show_engine_icon = true

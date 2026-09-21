@@ -407,21 +407,13 @@ vim.keymap.set('n', '<Leader>ets', function()
     vim.cmd.edit(vim.fs.joinpath(private_notes, 'programming', 'todos_coding_setup.md'))
 end, { desc = '[E]dit [t]odos: [s]etup' })
 vim.keymap.set('n', '<Leader>eb', function()
-    vim.cmd.edit(vim.fs.joinpath(vim.env.HOME, '.bashrc'))
-end, { desc = '[E]dit [b]ashrc' })
+    vim.cmd.edit(vim.fs.joinpath(vim.env.HOME, '.config', 'fish', 'config.fish'))
+end, { desc = '[E]dit [b]ashrc replacement (Fish)' })
 vim.keymap.set('n', '<Leader>eh', function()
     vim.cmd.edit(
-        vim.fs.joinpath(
-            git_repos,
-            'private',
-            'dotfiles',
-            'arch',
-            'config',
-            'i3',
-            'config'
-        )
+        vim.fs.joinpath(git_repos, 'private', 'dotfiles', 'hypr', 'hyprland.lua')
     )
-end, { desc = '[E]dit [h]ost window-manager config (i3)' })
+end, { desc = '[E]dit [h]yprland config' })
 
 -- Quick edit
 vim.keymap.set('n', '<Leader>dd', function()
@@ -445,8 +437,8 @@ vim.keymap.set('n', 'gf', function()
     vim.cmd.wincmd({ args = { 'f' }, mods = mods })
 end, { desc = 'Go to file under cursor (vertical if wide)' })
 vim.keymap.set('n', '<Leader>fm', function()
-    vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.uv.cwd(), 'ranger' })
-end, { desc = '[F]ile [m]anager: open Ranger in tmux split' })
+    vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.uv.cwd(), 'yazi' })
+end, { desc = '[F]ile [m]anager: open Yazi in tmux split' })
 
 -- Quickfix and Location
 vim.keymap.set('n', '<Leader>qf', vim.cmd.copen, { desc = '[Q]uick[f]ix list: open' })

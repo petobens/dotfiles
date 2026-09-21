@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Warn while the battery drains and shut down before power runs out
+poll_interval=30
+low=20
+critical=10
+urgent=5
+shutdown_at=3
+
+shopt -s nullglob
+batteries=(/sys/class/power_supply/BAT*)
+((${#batteries[@]})) || exit 0
+battery=${batteries[0]}
+
+# Lowest threshold already announced during the current discharge
+announced=100
+
+while sleep "$poll_interval"; do
+    capacity=$(< "$battery/capacity")
+    if [[ $(< "$battery/status") != Discharging ]]; then
+        announced=100
+        continue
+    fi
+
+    if ((capacity <= shutdown_at)); then
+        notify-send -u critical -i battery-caution 'Battery critically low' \
+            "Shutting down at $capacity%. Connect charger now." || true
+        sleep 5
+        # Cancel if the charger was connected during the warning
+        if [[ $(< "$battery/status") == Discharging ]] &&
+            (($(< "$battery/capacity") <= shutdown_at)); then
+            systemctl poweroff || true
+        fi
+    elif ((capacity <= urgent && announced > urgent)); then
+        announced=$urgent
+        notify-send -u critical -t 0 -i battery-caution 'Connect charger' \
+            "$capacity% remaining. Shutting down at $shutdown_at%." || true
+    elif ((capacity <= critical && announced > critical)); then
+        announced=$critical
+        notify-send -u critical -t 0 -i battery-caution 'Battery critically low' \
+            "$capacity% remaining" || true
+    elif ((capacity <= low && announced > low)); then
+        announced=$low
+        notify-send -i battery-low 'Battery low' "$capacity% remaining" || true
+    fi
+done

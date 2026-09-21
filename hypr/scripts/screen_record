@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Toggle region recording and convert completed captures to GIF when requested
+
+# Configuration
+state="${XDG_RUNTIME_DIR:?}/hypr-screen-record"
+directory="$HOME/Videos/Recordings"
+
+# Stop and finalize an active recording
+if [[ -f $state ]]; then
+    read -r pid video format < "$state"
+    rm -f "$state"
+    # Match the output path so stale state cannot signal a reused PID
+    if kill -0 "$pid" 2> /dev/null &&
+        tr '\0' '\n' < "/proc/$pid/cmdline" | grep -Fxq -- "$video"; then
+        # wf-recorder only finalizes the file on SIGINT
+        kill -INT "$pid"
+        while kill -0 "$pid" 2> /dev/null; do
+            sleep 0.1
+        done
+
+        file=$video
+        if [[ $format == gif ]]; then
+            file="${video%.mp4}.gif"
+            ffmpeg -loglevel error -y -i "$video" \
+                -vf 'fps=15,split[a][b];[a]palettegen[p];[b][p]paletteuse' "$file"
+            rm -f "$video"
+        fi
+        notify-send -i media-record 'Recording saved' "$file"
+        exit
+    fi
+fi
+
+# Start a new recording
+format=${1:-video}
+case $format in
+    gif | video) ;;
+    *)
+        echo 'usage: screen_record [video|gif]' >&2
+        exit 2
+        ;;
+esac
+
+geometry=$(slurp) || exit 0
+mkdir -p "$directory"
+video="$directory/$(date +'%Y-%m-%d_%H-%M-%S').mp4"
+# QEMU exposes a writable render node but cannot use Intel's VAAPI encoder
+encoder=()
+driver_path=$(readlink -f /sys/class/drm/renderD128/device/driver 2> /dev/null || true)
+if [[ -w /dev/dri/renderD128 && $driver_path =~ /(i915|xe)$ ]]; then
+    encoder=(-c h264_vaapi -d /dev/dri/renderD128)
+fi
+wf-recorder -g "$geometry" "${encoder[@]}" -f "$video" > /dev/null 2>&1 &
+pid=$!
+sleep 0.1
+if ! kill -0 "$pid" 2> /dev/null && ((${#encoder[@]})); then
+    wait "$pid" || true
+    wf-recorder -g "$geometry" -f "$video" > /dev/null 2>&1 &
+    pid=$!
+    sleep 0.1
+fi
+if ! kill -0 "$pid" 2> /dev/null; then
+    notify-send -u critical -i media-record 'Recording failed to start'
+    exit 1
+fi
+printf '%s %s %s\n' "$pid" "$video" "$format" > "$state"
+notify-send -t 2000 -i media-record "Recording started ($format)" \
+    'Press the same shortcut to stop'

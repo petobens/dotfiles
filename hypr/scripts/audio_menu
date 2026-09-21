@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config="$HOME/.config/quickshell/audio"
+if [[ ${1:-} == --pointer ]]; then
+    # Waybar clicks need the pointer's monitor, not the focused window's monitor
+    cursor=$(hyprctl cursorpos -j)
+    # Cursor positions use logical pixels; account for monitor scaling and rotation
+    AUDIO_MENU_SCREEN=$(hyprctl monitors -j | jq -er --argjson cursor "$cursor" '
+        .[] |
+        (if .transform % 2 == 1 then [.height, .width] else [.width, .height] end) as $size |
+        select($cursor.x >= .x and $cursor.x < .x + $size[0] / .scale and
+               $cursor.y >= .y and $cursor.y < .y + $size[1] / .scale) |
+        .name
+    ')
+else
+    # Keyboard launches use the focused monitor's top-right corner
+    AUDIO_MENU_SCREEN=$(hyprctl monitors -j | jq -er '.[] | select(.focused) | .name')
+fi
+export AUDIO_MENU_SCREEN
+
+if qs ipc -p "$config" call audio toggle "$AUDIO_MENU_SCREEN" > /dev/null 2>&1; then
+    exit 0
+fi
+exec qs -p "$config" --no-duplicate --daemonize

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Mouse drags and hardware switches cannot be activated from a menu
+bindings=$(hyprctl binds -j | jq '
+    map(select(.has_description and (.mouse | not) and (.key | startswith("switch:") | not)))
+    | sort_by(.description, .modmask, .key)
+')
+
+# modmask is a bitfield of held modifiers
+index=$(printf '%s' "$bindings" |
+    jq -r '
+        .[] as $bind
+        | [[64, "Super"], [4, "Ctrl"], [8, "Alt"], [1, "Shift"]]
+        | map(select(($bind.modmask / .[0] | floor) % 2 == 1) | .[1])
+        | (. + [$bind.key] | join(" + ")) as $keys
+        | "\($bind.description)\t\($keys)"
+    ' |
+    column -t -s $'\t' -o '  ' |
+    rofi -dmenu -i -no-custom -format i -p bindings) || exit 0
+[[ $index =~ ^[0-9]+$ ]] || exit 0
+
+description=$(jq -c --argjson index "$index" '.[$index].description' <<< "$bindings")
+hyprctl eval "require('conf.bindings')[$description]()"

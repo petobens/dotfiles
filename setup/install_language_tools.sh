@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+section() {
+    printf '\033[1;34m==> %s...\033[0m\n' "$1"
+}
+
+printf '\033[1;32m:: Starting language tool installation\033[0m\n'
+
+section 'Installing Python user packages'
+python -m pip install --user --break-system-packages --upgrade pdbpp
+
+section 'Installing Python language tools'
+for tool in \
+    mypy \
+    nbdime \
+    pre-commit \
+    ruff \
+    'sqlfluff[rs]' \
+    git+https://github.com/will8211/unimatrix \
+    uv-upx \
+    yamllint \
+    zuban; do
+    uv tool install --force "$tool"
+done
+uv tool install --force --with 'psycopg[binary]' pgcli
+uv tool install --force --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib,jupyter-ruff jupyterlab
+uv tool install --force --with numpy,pandas,matplotlib,kitcat --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
+
+section 'Installing Node language tools'
+npm config set prefix "$HOME/.npm-global"
+npm_packages=(
+    @agentclientprotocol/claude-agent-acp
+    @agentclientprotocol/codex-acp
+    oxfmt
+    oxlint
+)
+npm install --global "${npm_packages[@]}"
+npm list --global --depth=0 "${npm_packages[@]}"
+
+section 'Configuring Rust toolchain'
+rustup default stable

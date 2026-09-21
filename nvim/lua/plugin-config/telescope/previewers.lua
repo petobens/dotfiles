@@ -7,6 +7,8 @@ local image = require('image')
 local M = {
     supported_images = {
         gif = true,
+        heic = true,
+        heif = true,
         jpeg = true,
         jpg = true,
         png = true,
@@ -41,11 +43,12 @@ end
 M.tree = telescope_previewers.new_termopen_previewer({
     get_command = function(entry)
         return {
-            'lsd',
+            'eza',
             '-F',
             '--tree',
-            '--depth=2',
-            '--icon=always',
+            '--level=2',
+            '--icons=always',
+            '--color=always',
             from_entry.path(entry),
         }
     end,

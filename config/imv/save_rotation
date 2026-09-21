@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${imv_pid:?}" "${imv_current_file:?}"
+state_file="$XDG_RUNTIME_DIR/imv-$imv_pid.rotation"
+
+if [[ $1 == track ]]; then
+    angle=0
+    file=
+    if [[ -r $state_file ]]; then
+        IFS=$'\t' read -r angle file < "$state_file"
+    fi
+    if [[ $file != "$imv_current_file" || ! $angle =~ ^[0-9]+$ ]]; then
+        angle=0
+    fi
+    angle=$(((angle + $2 + 360) % 360))
+    printf '%s\t%s\n' "$angle" "$imv_current_file" > "$state_file"
+    exit
+fi
+
+if [[ ! -r $state_file ]]; then
+    notify-send -t 2000 -i image-x-generic 'Image rotation' \
+        'No rotation to save'
+    exit
+fi
+
+IFS=$'\t' read -r angle file < "$state_file"
+if [[ $file != "$imv_current_file" || ! $angle =~ ^(90|180|270)$ ]]; then
+    rm -f "$state_file"
+    notify-send -t 2000 -i image-x-generic 'Image rotation' \
+        'No rotation to save'
+    exit
+fi
+
+if ! magick mogrify -auto-orient -rotate "$angle" -- "$file"; then
+    notify-send -u critical -i dialog-error 'Image rotation' \
+        "Could not save $file"
+    exit 1
+fi
+
+rm -f "$state_file"
+imv-msg "$imv_pid" 'rotate to 0' || true
+notify-send -t 2000 -i image-x-generic 'Image rotation saved' "$file"

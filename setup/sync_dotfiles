@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_path=$(readlink -f "${BASH_SOURCE[0]}")
+repo=$(git -C "$(dirname "$script_path")/.." rev-parse --show-toplevel)
+cd "$repo"
+
+die() {
+    printf '\033[1;31mError: %s\033[0m\n' "$1" >&2
+    exit 1
+}
+
+review_new_files() {
+    local answer files
+    files=$(git diff --cached --name-only --diff-filter=A)
+    [[ -z $files ]] && return 0
+
+    printf '\nNew files from master:\n%s\n' "$files"
+    read -r -p 'Keep these files and complete the merge? [y/N] ' answer ||
+        answer=
+    [[ $answer == [Yy] ]] && return 0
+    git merge --abort
+    die 'Merge aborted because new files were not approved.'
+}
+
+printf '\033[1;32m:: Starting dotfiles synchronization\033[0m\n'
+
+branch=$(git branch --show-current)
+[[ $branch == dotfiles-wayland ]] ||
+    die "Run this from the dotfiles-wayland branch, not $branch."
+[[ -z $(git status --porcelain) ]] ||
+    die 'Commit or stash Wayland changes before syncing.'
+
+git fetch origin master
+if git merge-base --is-ancestor origin/master HEAD; then
+    echo 'dotfiles-wayland already contains origin/master.'
+    exit
+fi
+
+if git merge --no-commit --no-ff -X ours origin/master; then
+    review_new_files
+    git commit --no-edit
+    git --no-pager log --graph --oneline HEAD^1..HEAD
+    echo 'Merged origin/master into dotfiles-wayland.'
+    exit
+fi
+
+# The merge strategy handles content conflicts. Resolve remaining cases, such
+# as modify/delete conflicts, from the Wayland side too.
+mapfile -d '' -t conflicts < <(
+    git diff --name-only --diff-filter=U -z
+)
+((${#conflicts[@]})) ||
+    die 'Merge failed without resolvable file conflicts.'
+
+printf '\nConflicts:\n'
+for path in "${conflicts[@]}"; do
+    printf '\n--- %s ---\n' "$path"
+    if git cat-file -e ":2:$path" 2> /dev/null; then
+        if git cat-file -e ":3:$path" 2> /dev/null; then
+            echo 'Wayland (kept) -> master:'
+            git --no-pager diff --no-ext-diff --color=auto ":2:$path" ":3:$path"
+        else
+            echo 'master deleted this file; showing the Wayland changes:'
+            git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":2:$path"
+        fi
+    elif git cat-file -e ":1:$path" 2> /dev/null; then
+        echo 'Wayland deleted this file; showing the master changes:'
+        git --no-pager diff --no-ext-diff --color=auto ":1:$path" ":3:$path"
+    else
+        echo 'master added this file at its Wayland location:'
+        git --no-pager show ":3:$path"
+    fi
+done
+
+for path in "${conflicts[@]}"; do
+    if git cat-file -e ":2:$path" 2> /dev/null; then
+        git checkout --ours -- "$path"
+        git add -- "$path"
+    elif git cat-file -e ":1:$path" 2> /dev/null; then
+        git rm -- "$path"
+    else
+        git add -- "$path"
+    fi
+done
+
+git diff --quiet --diff-filter=U ||
+    die 'Some conflicts could not be resolved automatically.'
+
+review_new_files
+git commit --no-edit
+git --no-pager log --graph --oneline HEAD^1..HEAD
+echo 'Merged origin/master into dotfiles-wayland with Wayland conflicts kept.'

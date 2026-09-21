@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+action=${1:-}
+if [[ -z $action ]]; then
+    actions=('about arch' applications bindings lock reboot poweroff)
+    index=$(printf '%b\n' \
+        '\tAbout Arch' \
+        '󰀻\tApplications\t(Super+a)' \
+        '\tKeybindings\t(Super+/)' \
+        '\tLock\t(Super+Shift+l)' \
+        '\tReboot\t(Super+Shift+r)' \
+        '\tShut Down\t(Super+Shift+s)' |
+        rofi -dmenu -no-custom -format i \
+            -theme "$script_dir/../../config/rofi/session.rasi") || exit 0
+    [[ $index =~ ^[0-9]+$ ]] || exit 0
+    action=${actions[index]}
+fi
+
+case "$action" in
+    'about arch') "$script_dir/raise_or_launch" about ;;
+    applications) "$script_dir/raise_or_launch" menu ;;
+    bindings) "$script_dir/binding_menu" ;;
+    lock) loginctl lock-session ;;
+    'quit apps' | quit-apps)
+        "$script_dir/confirm" 'Do you want to quit all apps?' || exit 0
+        hyprctl clients -j | jq -r '.[].address' | while read -r address; do
+            hyprctl dispatch "hl.dsp.window.close({ window = 'address:$address' })"
+        done
+        # Slack can keep running after its last window closes
+        pkill -TERM -x slack || true
+        ;;
+    reboot)
+        "$script_dir/confirm" 'Do you want to reboot?' || exit 0
+        hyprshutdown -t 'Restarting...' --post-cmd 'systemctl reboot'
+        ;;
+    poweroff)
+        "$script_dir/confirm" 'Do you want to shut down?' || exit 0
+        hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff'
+        ;;
+esac

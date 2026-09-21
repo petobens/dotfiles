@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export GDK_DPI_SCALE=0.93
+if hyprctl monitors -j 2> /dev/null |
+    jq -e 'any(.[]; .focused and .scale > 1)' > /dev/null 2>&1; then
+    export GDK_DPI_SCALE=0.88
+fi
+
+# A private bus gives each invocation a prompter with the current monitor's scale
+exec dbus-run-session -- /usr/bin/pinentry-gnome3 "$@"

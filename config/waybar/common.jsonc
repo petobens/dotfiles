@@ -1,0 +1,152 @@
+// Shared bar configuration for laptop and external outputs
+{
+    "layer": "top",
+    "position": "top",
+    // Logical pixels; Hyprland applies each monitor's scale
+    "height": 28,
+    "spacing": 4,
+    "modules-left": ["custom/arch", "custom/window-count", "hyprland/window"],
+    "modules-center": ["hyprland/workspaces"],
+    "modules-right": [
+        "custom/docker",
+        "custom/onedrive",
+        "hyprland/language",
+        "custom/vpn",
+        "custom/wifi",
+        "network#ethernet",
+        "custom/bluetooth",
+        "pulseaudio",
+        "battery",
+        "custom/no-battery",
+        "clock",
+    ],
+    "custom/arch": {
+        "format": "",
+        "on-click": "~/.config/hypr/scripts/session_menu",
+        "tooltip": false,
+    },
+    "custom/window-count": {
+        "exec": "~/.config/hypr/scripts/window_count",
+        "interval": 1,
+        "on-click": "~/.config/hypr/scripts/window_switcher current",
+        "return-type": "json",
+    },
+    "hyprland/window": {
+        "format": "<span font_family='Noto Sans Mono' size='10pt' weight='bold'>{title}</span>",
+        "max-length": 30,
+        "separate-outputs": true,
+    },
+    "hyprland/workspaces": {
+        "format": "<span font_family='Symbols Nerd Font' size='14pt'>{icon}</span> <span font_family='Noto Sans' size='7pt' weight='bold' rise='9pt'>{id}</span>",
+        "format-icons": {
+            "1": "󰖟",
+            "2": "",
+            "3": "󰝚",
+            "4": "󰙀",
+            "5": "󰞷",
+            "6": "󰗚",
+            "default": "󰙀",
+        },
+        // FIXME: Stable Waybar still uses Hyprland's removed text dispatcher.
+        // https://github.com/Alexays/Waybar/issues/5008
+        // Workspace clicks will work once Waybar supports the Lua IPC protocol.
+        "on-click": "activate",
+        "sort-by": "number",
+    },
+    "custom/docker": {
+        "exec": "~/.config/hypr/scripts/docker_status",
+        "interval": 5,
+        "on-click": "~/.config/hypr/scripts/raise_or_launch docker",
+        "return-type": "json",
+    },
+    "custom/onedrive": {
+        "exec": "~/.config/hypr/scripts/onedrive_status",
+        "interval": 5,
+        "on-click": "~/.config/hypr/scripts/raise_or_launch onedrive",
+        "return-type": "json",
+    },
+    "hyprland/language": {
+        "format": "{short}",
+        "keyboard-name": "at-translated-set-2-keyboard",
+        "on-click": "hyprctl switchxkblayout all next",
+    },
+    "custom/vpn": {
+        "exec": "printf '󰛶'",
+        "exec-if": "nmcli -t -f TYPE connection show --active | grep -qx vpn",
+        "interval": 5,
+    },
+    "custom/wifi": {
+        "exec": "~/.config/hypr/scripts/wifi_menu --status",
+        "interval": 5,
+        "return-type": "json",
+        "format": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'>{text}</span>",
+        "format-icons": {
+            "connected": ["󰤟", "󰤢", "󰤥", "󰤨"],
+            "disconnected": "󰤮",
+        },
+        "on-click": "~/.config/hypr/scripts/raise_or_launch wifi",
+        "tooltip": false,
+    },
+    "network#ethernet": {
+        "interface": "en*",
+        "format-ethernet": "<span font_family='Symbols Nerd Font' size='14pt'>󰈁</span>",
+        "format-disconnected": "",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch wifi",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+    },
+    "custom/bluetooth": {
+        "exec": "~/.config/hypr/scripts/bluetooth_status",
+        "interval": 5,
+        "on-click": "~/.config/hypr/scripts/raise_or_launch bluetooth",
+        "on-click-right": "bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect",
+        "return-type": "json",
+    },
+    "pulseaudio": {
+        "format": "<span font_family='Symbols Nerd Font' size='14pt'>{icon}</span>",
+        "format-icons": ["", "󰖀", "󰕾", ""],
+        "format-muted": "<span font_family='Symbols Nerd Font' size='13pt'></span>",
+        "on-click": "~/.config/hypr/scripts/audio_menu --pointer",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    },
+    "battery": {
+        "format": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
+        "format-charging": "<span font_family='Symbols Nerd Font' size='13pt'></span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
+        "format-full": "<span font_family='Symbols Nerd Font' size='13pt'>󰂄</span> <span font_family='Noto Sans Mono' size='10pt' weight='bold'>100%</span>",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂"],
+        "on-click": "~/.config/hypr/scripts/battery_menu",
+        "states": {
+            "critical": 10,
+            "warning": 25,
+        },
+    },
+    "custom/no-battery": {
+        "exec": "printf '󱉞\\nNo battery\\n'",
+        "exec-if": "! find /sys/class/power_supply -maxdepth 1 -name 'BAT*' | grep -q .",
+        "interval": 60,
+        "on-click": "~/.config/hypr/scripts/battery_menu",
+    },
+    "clock": {
+        "format": "<span font_family='Symbols Nerd Font' size='13pt'>󰃰</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'> {:%a %d %H:%M}</span>",
+        "on-click": "~/.config/hypr/scripts/raise_or_launch calendar",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
+    },
+    "custom/slack": {
+        "exec": "~/.config/hypr/scripts/slack_status",
+        "format": "{icon}",
+        "format-icons": {
+            "active": "󰒱",
+            // A larger background-colored circle outlines the notification dot
+            "unread": "<span letter_spacing='-2048'>󰒱</span><span color='#24272e' size='8704' rise='-1536' letter_spacing='-17408'>●</span><span color='#00e5ed' size='7168' rise='-512'>●</span>",
+            "urgent": "<span letter_spacing='-2048'>󰒱</span><span color='#24272e' size='8704' rise='-1536' letter_spacing='-17408'>●</span><span color='#ff2687' size='7168' rise='-512'>●</span>",
+        },
+        "hide-empty-text": true,
+        "interval": 1,
+        "on-click": "~/.config/hypr/scripts/raise_or_launch slack",
+        "return-type": "json",
+    },
+    "tray": {
+        "icon-size": 14,
+        "ignore-list": ["Slack_status_icon"],
+        "spacing": 6,
+    },
+}

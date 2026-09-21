@@ -1,0 +1,13 @@
+{
+  "ExtensionSettings": {
+    "kgnghhfkloifoabeaobjkgagcecbnppg": {
+      "file_url_navigation_allowed": true,
+      "installation_mode": "force_installed",
+      "update_url": "https://edge.microsoft.com/extensionwebstorebase/v1/crx"
+    },
+    "odfafepnkmbhccpbejgmiehpchacaeak": {
+      "installation_mode": "force_installed",
+      "update_url": "https://edge.microsoft.com/extensionwebstorebase/v1/crx"
+    }
+  }
+}

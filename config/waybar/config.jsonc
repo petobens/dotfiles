@@ -1,0 +1,25 @@
+[
+    {
+        "output": ["eDP-1", "Virtual-1"],
+        "modules-right": [
+            "custom/docker",
+            "custom/onedrive",
+            "hyprland/language",
+            "custom/vpn",
+            "custom/wifi",
+            "network#ethernet",
+            "custom/bluetooth",
+            "pulseaudio",
+            "battery",
+            "custom/no-battery",
+            "clock",
+            "custom/slack",
+            "tray",
+        ],
+        "include": "$HOME/.config/waybar/common.jsonc",
+    },
+    {
+        "output": ["!eDP-1", "!Virtual-1", "*"],
+        "include": "$HOME/.config/waybar/common.jsonc",
+    },
+]

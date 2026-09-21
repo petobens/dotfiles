@@ -1,28 +1,34 @@
 # Dotfiles gitignore
 
-# Nvim
-/nvim.log
+# Claude Code
+.claude/
+
+# Fish
+config/fish/fish_variables
+
+# Neovim
+nvim.log
 nvim/minimal.lua
 nvim/nvim-pack-lock.json
 nvim/plugin/
 nvim/cache/
 
+# OneDrive
+config/onedrive/items*
+config/onedrive/refresh_token
+config/onedrive/.config.backup
+config/onedrive/.config.hash
+
+# Python
+/.ruff_cache/
+
 # Tmux
 config/tmux/plugins/
 config/tmux/resurrect/
 
-# Arch
-arch/config/onedrive/items*
-arch/config/onedrive/refresh_token
-arch/bin/tmux_tree
-
-# Ranger
-config/ranger/plugins/
-config/ranger/devicons.py
-
-# Onedrive
-arch/config/onedrive/.config.backup
-arch/config/onedrive/.config.hash
-
-# Claude Code
-.claude/
+# Yazi package state and downloaded plugins
+config/yazi/package.toml
+config/yazi/plugins/full-border.yazi/
+config/yazi/plugins/git.yazi/
+config/yazi/plugins/split-tabs.yazi/
+config/yazi/plugins/toggle-pane.yazi/

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if systemctl is-active --quiet docker.service; then
+    state=active
+    tooltip='Docker: running'
+elif systemctl is-failed --quiet docker.service docker.socket; then
+    state=failed
+    tooltip='Docker: failed'
+elif systemctl is-active --quiet docker.socket; then
+    state=standby
+    tooltip='Docker: ready (starts on demand)'
+else
+    state=inactive
+    tooltip='Docker: unavailable'
+fi
+
+if [[ ${1:-} == --details ]]; then
+    if [[ $state == active ]]; then
+        printf 'Docker service: active (running)\n\n'
+    else
+        printf '%s\n\n' "$tooltip"
+    fi
+    # Querying the Docker socket would start the daemon while it is on standby
+    [[ $state == active ]] || exit 0
+
+    docker info --format 'Storage directory: {{.DockerRootDir}}
+Images: {{.Images}} stored locally
+Containers: {{.ContainersRunning}} running, {{.ContainersPaused}} paused, {{.ContainersStopped}} stopped'
+    printf '\nIMAGES\n'
+    images=$(docker image ls --format 'table {{.Repository}}\t{{.Tag}}\t{{.Size}}')
+    if [[ $images == *$'\n'* ]]; then
+        printf '%s\n' "$images"
+    else
+        printf 'No images\n'
+    fi
+    printf '\nCONTAINERS\n'
+    containers=$(docker ps --all --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}')
+    if [[ $containers == *$'\n'* ]]; then
+        printf '%s\n' "$containers"
+    else
+        printf 'No containers\n'
+    fi
+    exit 0
+fi
+
+jq -cn \
+    --arg text '' \
+    --arg tooltip "$tooltip" \
+    --arg class "$state" \
+    '{text: $text, tooltip: $tooltip, class: $class}'

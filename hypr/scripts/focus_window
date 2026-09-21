@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if (($# != 1)); then
+    echo 'usage: focus_window ADDRESS|last|tag:TAG' >&2
+    exit 2
+fi
+
+# Resolve last and tag targets to a concrete client address
+address=$1
+if [[ $address == last ]]; then
+    hyprctl dispatch "hl.dsp.focus({ last = true })"
+    address=$(hyprctl activewindow -j | jq -r '.address // empty')
+fi
+
+if [[ $address == tag:* ]]; then
+    tag=${address#tag:}
+    clients=$(hyprctl clients -j)
+    address=$(jq -r --arg tag "$tag" '
+        first(.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")))).address // empty
+    ' <<< "$clients")
+fi
+[[ -n $address ]] || exit 0
+
+hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
+# Raising keeps focused floating windows above overlapping peers
+hyprctl dispatch "hl.dsp.window.bring_to_top({ window = 'address:$address' })"

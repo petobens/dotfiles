@@ -1,0 +1,29 @@
+# Desktop
+apple_cursor
+apple_hyprcursor
+hyprprop-git
+
+# Applications
+brave-bin
+localsend-bin
+microsoft-edge-dev-bin
+onlyoffice-bin
+slack-desktop
+spotify
+zoom
+
+# System and command-line tools
+downgrade
+dragon-drop
+forgit
+onedrive-abraunegg
+pandoc-bin
+voxtype-bin
+
+# Development
+claude-code
+hadolint-bin
+neovim-git
+
+# Fonts
+ttf-ms-fonts

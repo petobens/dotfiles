@@ -1,0 +1,65 @@
+# Font
+font-family = Source Code Pro
+font-family = Symbols Nerd Font
+font-style = Medium
+font-style-italic = Medium Italic
+font-size = 11.5
+freetype-load-flags = no-light
+
+# Use clearer glyphs for LN and the thin Powerline separators
+font-codepoint-map = U+E0A1=Adwaita Mono
+font-codepoint-map = U+E0B1,U+E0B3=Symbols Nerd Font
+
+# Colors
+background = #24272e
+foreground = #abb2bf
+cursor-color = #528bff
+cursor-text = #0b0b0b
+cursor-style-blink = false
+# Add 1px for a 2px bar; Ghostty does not scale this with display DPI
+# Keep it narrow on Full HD, accepting a thinner appearance on HiDPI
+adjust-cursor-thickness = 1
+selection-background = #3e4452
+selection-foreground = #abb2bf
+palette = 0=#24272e
+palette = 1=#e06c75
+palette = 2=#98c379
+palette = 3=#e5c07b
+palette = 4=#61afef
+palette = 5=#c678dd
+palette = 6=#56b6c2
+palette = 7=#abb2bf
+palette = 8=#3e4452
+palette = 9=#be5046
+palette = 10=#98c379
+palette = 11=#d19a66
+palette = 12=#61afef
+palette = 13=#c678dd
+palette = 14=#56b6c2
+palette = 15=#5c6370
+
+# Window
+window-decoration = false
+window-padding-x = 0
+window-padding-y = 0
+resize-overlay = never
+
+# Behavior
+clipboard-read = allow
+clipboard-write = allow
+app-notifications = no-clipboard-copy
+confirm-close-surface = false
+shell-integration = none
+bell-features = no-system,no-audio,attention,no-title
+
+# Keybindings
+keybind = super+c=copy_to_clipboard
+keybind = super+v=paste_from_clipboard
+keybind = super+w=close_window
+keybind = all:super+equal=increase_font_size:1
+keybind = all:super+minus=decrease_font_size:1
+keybind = all:super+0=reset_font_size
+keybind = all:super+u=increase_font_size:12
+keybind = all:super+d=decrease_font_size:12
+keybind = super+home=scroll_to_top
+keybind = super+end=scroll_to_bottom

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+selection=$(ps --user "$USER" -o pid=,args= | rofi -dmenu -p 'kill process')
+[[ -n $selection ]] || exit 0
+read -r pid _ <<< "$selection"
+kill -- "$pid"
+notify-send -t 2000 'Process termination requested' "$selection"

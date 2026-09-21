@@ -1,0 +1,15 @@
+{
+  "policies": {
+    "Extensions": {
+      "Install": [
+        "https://addons.mozilla.org/firefox/downloads/latest/surfingkeys_ff/latest.xpi"
+      ]
+    },
+    "Preferences": {
+      "media.webrtc.camera.allow-pipewire": {
+        "Status": "default",
+        "Value": true
+      }
+    }
+  }
+}

@@ -573,12 +573,46 @@ function M.chat.add_documents(files)
     M.window.focus_or_toggle_chat({ startinsert = false })
 end
 
+-- Keep JPEG copies of HEIC attachments so saved chats can still load them
+local function image_attachment_path(path)
+    path = vim.fs.normalize(path)
+    local ext = vim.fs.ext(path):lower()
+    if ext ~= 'heic' and ext ~= 'heif' then
+        return path
+    end
+
+    local dir = vim.fs.joinpath(vim.env.HOME, 'Pictures', 'nvim-images')
+    u.mk_non_dir(dir)
+    local name = vim.fs.basename(path):gsub('%.[^.]+$', '.jpg')
+    local output = vim.fs.joinpath(dir, name)
+    local temporary = output .. '.tmp.jpg'
+    local result = vim.system({
+        'magick',
+        path .. '[0]',
+        '-auto-orient',
+        '-quality',
+        '92',
+        temporary,
+    }, { text = true }):wait()
+    if result.code ~= 0 then
+        vim.uv.fs_unlink(temporary)
+        return nil, vim.trim(result.stderr)
+    end
+    local ok, err = vim.uv.fs_rename(temporary, output)
+    if not ok then
+        vim.uv.fs_unlink(temporary)
+        return nil, err
+    end
+    return output
+end
+
 function M.chat.add_images(files)
     local image_utils = require('codecompanion.utils.images')
     local chat = get_or_create_chat()
 
     for _, file in ipairs(files) do
-        local image = image_utils.from_path(file)
+        local path, err = image_attachment_path(file)
+        local image = path and image_utils.from_path(path) or err
         if type(image) == 'string' then
             vim.notify(
                 string.format('Could not encode %s: %s', file, image),

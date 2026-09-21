@@ -1,0 +1,119 @@
+configuration {
+    font: "Noto Sans Mono,Symbols Nerd Font 10.5";
+    show-icons: false;
+}
+
+* {
+    background: #24272e;
+    foreground: #abb2bf;
+    muted: #5c6370;
+    selected-background: #61afef;
+    selected-foreground: #24272e;
+    border-color: #4b5263;
+}
+
+window {
+    location: northeast;
+    anchor: northeast;
+    width: 48ch;
+    x-offset: 0px;
+    y-offset: 4px;
+    padding: 8px;
+    background-color: @background;
+    border: 1px;
+    border-color: @border-color;
+    border-radius: 8px;
+}
+
+mainbox {
+    spacing: 6px;
+    background-color: @background;
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    padding: 5px 8px;
+    background-color: @background;
+    text-color: @foreground;
+    children: [ prompt, textbox-prompt-colon, entry ];
+}
+
+textbox-shortcuts {
+    expand: false;
+    font: "Noto Sans Mono,Symbols Nerd Font 9";
+    background-color: transparent;
+    text-color: @muted;
+    padding: 0 8px 2px;
+}
+
+prompt {
+    expand: false;
+    background-color: transparent;
+    text-color: @muted;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    padding: 0 6px 0 0;
+    background-color: transparent;
+    text-color: @muted;
+    str: ":";
+}
+
+entry {
+    background-color: transparent;
+    text-color: @foreground;
+    horizontal-align: 0.0;
+    placeholder: "Type to filter";
+    placeholder-color: @muted;
+}
+
+num-filtered-rows, textbox-num-sep, num-rows {
+    expand: false;
+    background-color: transparent;
+    text-color: @muted;
+}
+
+num-filtered-rows {
+    margin: 0 0 0 8px;
+}
+
+textbox-num-sep {
+    str: "/";
+}
+
+listview {
+    background-color: @background;
+    lines: 10;
+    scrollbar: true;
+    spacing: 2px;
+}
+
+scrollbar {
+    background-color: transparent;
+    handle-color: #4b5263;
+    handle-width: 4px;
+    handle-rounded-corners: true;
+    padding: 0 0 0 6px;
+    border: 0;
+}
+
+element {
+    padding: 6px 8px;
+    background-color: transparent;
+    text-color: @foreground;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+element selected {
+    background-color: @selected-background;
+    text-color: @selected-foreground;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    // Align columns when optional status icons are absent
+    tab-stops: [ 24px, 68px, 112px, 144px ];
+}

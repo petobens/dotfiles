@@ -2,9 +2,22 @@
 
 This file provides guidance to coding agents when working in this repository.
 
-This is a personal dotfiles repository containing configuration for multiple
-tools and environments. Each top-level directory corresponds to a specific tool
-or environment, for example `nvim/`, `python/`, and `arch/`.
+This repository contains the Arch Linux Wayland configuration for a Hyprland
+desktop.
+
+## Repository layout
+
+- `bin/` contains personal command-line scripts.
+- `config/` contains application configuration. Home-directory
+  dotfiles live in `config/home/`, Python tooling in `config/python/`, and
+  formatter and linter configuration in `config/linters/`.
+- `hypr/` contains the Hyprland configuration and desktop helper scripts.
+- `nvim/` contains the Neovim configuration.
+- `setup/` contains package lists, installation scripts, the udev rules that
+  `post_install.sh` installs, and the disposable QEMU test environment under
+  `setup/vm/`. `setup/symlinks.sh` owns the mapping from repository files to
+  home-directory destinations and must be updated when configuration files
+  move.
 
 ## General rules
 
@@ -23,8 +36,8 @@ or environment, for example `nvim/`, `python/`, and `arch/`.
   temporary scratch files or scripts created during agent work.
 - For Markdown files, run `rumdl check <file>` and keep lines at 80 characters
   or fewer. Wrap at natural boundaries while preserving valid Markdown syntax.
-- For Python scripts, use Ruff (`ruff format <file>` and `ruff check --fix
-<file>`) and type-check with `zmypy`, falling back to `mypy` if `zmypy` is
+- For Python scripts, use `ruff format <file>` and `ruff check --fix <file>`,
+  and type-check with `zmypy`, falling back to `mypy` if `zmypy` is
   not installed. Add short module or function docstrings when they clarify
   purpose or usage, but do not add boilerplate docstrings for obvious one-off
   code.
@@ -33,10 +46,46 @@ or environment, for example `nvim/`, `python/`, and `arch/`.
 - For Fish scripts, run `fish_indent -w <file>` and
   `fish --no-execute <file>`.
 
+#### Lua
+
+Run StyLua and Luacheck on every touched persisted Lua file, regardless of its
+directory:
+
+```bash
+stylua \
+  --config-path config/linters/stylua.toml \
+  <file>
+luacheck --config config/linters/luacheckrc -- <file>
+```
+
+The configuration already declares `vim` as a global. Do not add
+`--globals vim`; without an option terminator, Luacheck can consume file paths
+as additional global names.
+
+If `luacheck` or `luac` is broken because of the Arch Lua packaging mismatch
+(the `/usr/bin/luacheck` wrapper targets a Lua version whose rock tree no
+longer exists), use this fallback, which derives the installed version from the
+rock path so it survives package bumps:
+
+```bash
+entry=$(
+    printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck |
+        head -1
+)
+ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
+lua_path="/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;"
+lua_cpath="/usr/lib/lua/$ver/?.so;"
+"lua$ver" \
+    -e "package.path='$lua_path'..package.path" \
+    -e "package.cpath='$lua_cpath'..package.cpath" \
+    -e "dofile('$entry')" \
+    -- --config config/linters/luacheckrc -- <file>
+```
+
 ## Neovim (`nvim/`)
 
 All Neovim configuration lives in the `nvim/` directory. The following rules
-apply only when working inside that directory.
+apply only when working inside that directory unless stated otherwise.
 
 Ignore `nvim/cache/` for all purposes. Do not parse it, search it, or inspect
 files inside it unless explicitly asked to do so.
@@ -49,47 +98,7 @@ files inside it unless explicitly asked to do so.
 
 Consult these before answering questions about Neovim APIs or plugin internals.
 
-### Commands
-
-#### Formatting
-
-```bash
-stylua \
-  --config-path ~/git-repos/private/dotfiles/linters/stylua.toml \
-  <file>
-```
-
-Run this before committing changes to Neovim Lua files.
-
-#### Linting
-
-Preferred command:
-
-```bash
-luacheck --config="$HOME/.config/.luacheckrc" -- <file>
-```
-
-The configuration already declares `vim` as a global. Do not add
-`--globals vim`; without an option terminator, Luacheck can consume file paths
-as additional global names.
-
-If `luacheck` or `lauc` is broken because of the Arch Lua packaging mismatch
-(the `/usr/bin/luacheck` wrapper targets a Lua version whose rock tree no
-longer exists), use this fallback, which derives the installed version from the
-rock path so it survives package bumps:
-
-```bash
-entry=$(printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck | head -1)
-ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
-"lua$ver" \
-    -e "package.path='/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;'..package.path" \
-    -e "package.cpath='/usr/lib/lua/$ver/?.so;'..package.cpath" \
-    "$entry" --config="$HOME/.config/.luacheckrc" -- <file>
-```
-
-Run Luacheck on touched Lua files when making changes under `nvim/`.
-
-#### Headless validation
+### Headless validation
 
 For isolated Neovim API probes, use `nvim --clean --headless`. When loading the
 real configuration, run from a temporary directory and redirect writable state
@@ -128,7 +137,9 @@ plugins. Keep ShaDa disabled because this configuration stores it under
 - **Single-command mappings:** pass the command function directly:
 
   ```lua
-  vim.keymap.set('n', '<Leader>sp', vim.cmd.split, { desc = '[Sp]lit horizontally' })
+  vim.keymap.set('n', '<Leader>sp', vim.cmd.split, {
+      desc = '[Sp]lit horizontally',
+  })
   ```
 
 ### Formatting rules

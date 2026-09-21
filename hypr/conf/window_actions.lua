@@ -1,0 +1,242 @@
+-- luacheck: globals hl
+
+local geometry = require('conf.geometry')
+
+local manually_placed_tag = 'manually-placed'
+local work_area_maximized_tag = 'work-area-maximized'
+local M = { work_area_maximized_tag = work_area_maximized_tag }
+
+-- Helpers
+local function mark_manually_placed(window)
+    hl.dispatch(hl.dsp.window.tag({
+        tag = '+' .. manually_placed_tag,
+        window = window,
+    }))
+end
+
+local function has_tag(window, name)
+    for _, tag in ipairs(window.tags) do
+        if tag == name or tag == name .. '*' then
+            return true
+        end
+    end
+    return false
+end
+
+local function shares_edge(window, candidate, axis, side)
+    if
+        candidate.address == window.address
+        or not candidate.floating
+        or candidate.fullscreen ~= 0
+        or candidate.monitor.id ~= window.monitor.id
+    then
+        return false
+    end
+
+    local cross_axis = axis == 'x' and 'y' or 'x'
+    local edge = window.at[axis] + (side == 'end' and window.size[axis] or 0)
+    local candidate_edge = candidate.at[axis]
+        + (side == 'start' and candidate.size[axis] or 0)
+    local overlaps = math.min(
+        window.at[cross_axis] + window.size[cross_axis],
+        candidate.at[cross_axis] + candidate.size[cross_axis]
+    ) > math.max(window.at[cross_axis], candidate.at[cross_axis])
+    return overlaps and math.abs(edge - candidate_edge) <= geometry.border_size * 2 + 1
+end
+
+-- Window state
+function M.fills_work_area(window)
+    return has_tag(window, work_area_maximized_tag)
+        and not has_tag(window, manually_placed_tag)
+end
+
+-- Window geometry
+function M.place(placement)
+    return function()
+        local window = hl.get_active_window()
+        if not window then
+            return
+        end
+
+        hl.dispatch(hl.dsp.window.fullscreen_state({
+            internal = 0,
+            client = 0,
+            action = 'set',
+            window = window,
+        }))
+        mark_manually_placed(window)
+        hl.dispatch(hl.dsp.window.float({ action = 'enable', window = window }))
+        geometry.place(window, placement)
+    end
+end
+
+function M.resize(delta)
+    return function()
+        local window = hl.get_active_window()
+        if not window then
+            return
+        end
+
+        local axis = (delta.x ~= 0 or delta.width ~= 0) and 'x' or 'y'
+        local side = (delta.x ~= 0 or delta.y ~= 0) and 'start' or 'end'
+        local size = axis == 'x' and 'width' or 'height'
+
+        -- Find every window attached to the edge being moved
+        local neighbors = {}
+        for _, candidate in ipairs(hl.get_workspace_windows(hl.get_active_workspace())) do
+            if shares_edge(window, candidate, axis, side) then
+                table.insert(neighbors, candidate)
+            end
+        end
+
+        -- Stop before the smallest neighbor would collapse
+        local shift = side == 'start' and delta[axis] or delta[size]
+        for _, neighbor in ipairs(neighbors) do
+            if side == 'start' then
+                shift = math.max(shift, 1 - neighbor.size[axis])
+            else
+                shift = math.min(shift, neighbor.size[axis] - 1)
+            end
+        end
+
+        local resize_delta = { x = 0, y = 0, width = 0, height = 0 }
+        if side == 'start' then
+            resize_delta[axis] = shift
+            resize_delta[size] = -shift
+        else
+            resize_delta[size] = shift
+        end
+
+        mark_manually_placed(window)
+        local old_edge = window.at[axis] + (side == 'end' and window.size[axis] or 0)
+        local resized = geometry.resize(window, resize_delta)
+        local new_edge = resized[axis] + (side == 'end' and resized[size] or 0)
+        shift = new_edge - old_edge
+        if shift == 0 then
+            return
+        end
+
+        -- Apply the opposite movement to keep the shared edges aligned
+        local adjustment = { x = 0, y = 0, width = 0, height = 0 }
+        if side == 'start' then
+            adjustment[size] = shift
+        else
+            adjustment[axis] = shift
+            adjustment[size] = -shift
+        end
+
+        for _, neighbor in ipairs(neighbors) do
+            mark_manually_placed(neighbor)
+            geometry.resize(neighbor, adjustment)
+        end
+    end
+end
+
+function M.maximize()
+    local window = hl.get_active_window()
+    if not window then
+        return
+    end
+
+    hl.dispatch(hl.dsp.window.tag({
+        tag = '-' .. manually_placed_tag,
+        window = window,
+    }))
+    hl.dispatch(hl.dsp.window.tag({
+        tag = '+' .. work_area_maximized_tag,
+        window = window,
+    }))
+    geometry.fill_work_area(window)
+end
+
+-- Preserve floating window geometry across monitors with different work areas
+function M.move_to_monitor(kind, direction)
+    return function()
+        local source = hl.get_active_monitor()
+        local target = hl.get_monitor(direction)
+        if not source or not target or source == target then
+            return
+        end
+
+        local windows
+        if kind == 'window' then
+            local window = hl.get_active_window()
+            if not window then
+                return
+            end
+            windows = { window }
+        else
+            windows = hl.get_workspace_windows(hl.get_active_workspace())
+        end
+
+        local geometries = {}
+        for _, window in ipairs(windows) do
+            if window.fullscreen == 0 then
+                table.insert(geometries, {
+                    window = window,
+                    placement = geometry.capture(window, source),
+                })
+            end
+        end
+
+        if kind == 'window' then
+            hl.dispatch(hl.dsp.window.move({ monitor = direction, follow = true }))
+        else
+            hl.dispatch(hl.dsp.workspace.move({ monitor = direction }))
+        end
+
+        for _, item in ipairs(geometries) do
+            mark_manually_placed(item.window)
+            geometry.place(item.window, item.placement, target)
+        end
+    end
+end
+
+-- Closing windows
+function M.close()
+    local window = hl.get_active_window()
+    if window and window.class:lower() == 'slack' then
+        -- Send both events now so key release cannot act on the next focused window
+        for _, state in ipairs({ 'down', 'up' }) do
+            hl.dispatch(hl.dsp.send_key_state({
+                mods = 'CTRL',
+                key = 'q',
+                state = state,
+                window = window,
+            }))
+        end
+    elseif
+        window
+        and window.class:lower() == 'zoom'
+        and window.initial_title == 'Zoom Workplace'
+    then
+        -- Closing a Zoom window can leave the app running in the tray
+        hl.exec_cmd('pkill -TERM -x zoom')
+    else
+        hl.dispatch(hl.dsp.window.close({}))
+    end
+end
+
+function M.close_workspace()
+    for _, window in ipairs(hl.get_workspace_windows(hl.get_active_workspace())) do
+        hl.dispatch(hl.dsp.window.close({ window = window }))
+    end
+end
+
+-- Workspaces
+-- Restore the workspace's last focused window after switching to it
+function M.switch_workspace(dispatcher)
+    return function()
+        local remembered = {}
+        for _, workspace in ipairs(hl.get_workspaces()) do
+            remembered[workspace.id] = workspace.last_window
+        end
+        hl.dispatch(dispatcher)
+        local window = remembered[hl.get_active_workspace().id]
+        if window then
+            hl.dispatch(hl.dsp.focus({ window = window }))
+        end
+    end
+end
+
+return M

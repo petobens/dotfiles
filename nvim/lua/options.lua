@@ -149,7 +149,7 @@ vim.api.nvim_create_autocmd('VimLeavePre', {
         end
     end,
 })
-local session_patterns = { '*.*', 'bashrc', 'bash_profile', 'config' }
+local session_patterns = { '*.*', 'config' }
 vim.api.nvim_create_autocmd('BufWinLeave', {
     desc = 'Save view when leaving buffer window',
     group = session_acg,
@@ -221,9 +221,6 @@ vim.opt.wrap = true
 -- Wildmenu
 vim.opt.wildignore = {
     '*.dat',
-    '*.dll',
-    '*.DS_Store',
-    '*.exe',
     '*.o',
     '*.obj',
     '*.out',
@@ -243,20 +240,14 @@ vim.opt.spelllang = { 'en', 'es' }
 -- Filetype detection
 vim.filetype.add({
     filename = {
-        ['bash_profile'] = 'sh',
-        ['dunstrc'] = 'cfg',
         ['fdignore'] = 'gitignore',
-        ['flake8'] = 'config',
         ['gitconfig'] = 'gitconfig',
         ['gitignore'] = 'gitignore',
         ['luacheckrc'] = 'lua',
         ['matplotlibrc'] = 'confini',
         ['pdbrc'] = 'python',
-        ['poetry.lock'] = 'toml',
-        ['pylintrc'] = 'config',
         ['ripgreprc'] = 'confini',
         ['sqlfluff'] = 'toml',
-        ['vimiv.conf'] = 'dosini',
     },
     pattern = {
         ['.*doc/.*'] = 'help',
@@ -282,7 +273,7 @@ local function set_ft_option(ft, vim_cmd)
 end
 set_ft_option({ 'crontab' }, 'setlocal nobackup nowritebackup')
 set_ft_option({ 'html' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2')
-set_ft_option({ 'i3config', 'sh' }, 'setlocal foldmethod=marker')
+set_ft_option({ 'sh' }, 'setlocal foldmethod=marker')
 set_ft_option({ 'text' }, 'setlocal shiftwidth=2 tabstop=2 softtabstop=2 spell')
 set_ft_option({ 'vim' }, 'setlocal foldmethod=marker formatoptions-=ro')
 ---- Python

@@ -181,16 +181,7 @@ return {
         { trig = 'nl', dscr = '[N]o [l]int' },
         fmta(
             [[
-            # type: ignore # noqa # pylint:disable=
-        ]],
-            {}
-        )
-    ),
-    s(
-        { trig = 'pld', dscr = '[P]y[l]int [d]isable' },
-        fmta(
-            [[
-            # pylint:disable=
+            # type: ignore # noqa
         ]],
             {}
         )
@@ -209,15 +200,6 @@ return {
         fmta(
             [[
             # noqa
-        ]],
-            {}
-        )
-    ),
-    s(
-        { trig = 'iss', dscr = '[is]ort [s]kip' },
-        fmta(
-            [[
-            # isort: skip
         ]],
             {}
         )
@@ -330,12 +312,12 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'imk', dscr = '[Im]port [k]itty backend' },
+        { trig = 'imk', dscr = '[I]mport [m]atplotlib [k]itcat backend' },
         fmta(
             [[
             import matplotlib
 
-            matplotlib.use('module://matplotlib-backend-kitty')
+            matplotlib.use('kitcat')
         ]],
             {}
         ),

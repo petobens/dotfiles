@@ -1,0 +1,15 @@
+partial alphanumeric_keys
+xkb_symbols "us" {
+    include "us(basic)"
+    name[Group1] = "English (US)";
+    key <AD11> { [ bracketleft, braceleft ] };
+    key <LSGT> { [ grave, asciitilde ] };
+};
+
+partial alphanumeric_keys
+xkb_symbols "es" {
+    include "es(basic)"
+    name[Group1] = "Spanish";
+    key <AD11> { [ dead_acute, dead_circumflex ] };
+    key <LSGT> { [ grave, asciitilde ] };
+};

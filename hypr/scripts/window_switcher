@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Hide the address after the tab while keeping it available for selection
+workspace=null
+selected_row=1
+if [[ ${1:-} == current ]]; then
+    workspace=$(hyprctl activeworkspace -j | jq '.id')
+    selected_row=0
+elif (($#)); then
+    echo 'usage: window_switcher [current]' >&2
+    exit 2
+fi
+
+# Prefer app tags for shared classes and class prefixes for generated web apps
+selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
+    '({
+        "about": "distributor-logo-archlinux",
+        "bluetooth": "bluetooth",
+        "brave-browser": "brave-desktop",
+        "calendar": "google-agenda",
+        "clickup": "tracker",
+        "desktopeditors": "onlyoffice-desktopeditors",
+        "docker": "docker-desktop",
+        "files": "yazi",
+        "gmail": "gmail",
+        "htop": "htop",
+        "images": "multimedia-photo-viewer",
+        "imv": "multimedia-photo-viewer",
+        "meet": "google-meet",
+        "microsoft-edge-dev": "microsoft-edge",
+        "numbers": "calc",
+        "onedrive": "ms-onedrive",
+        "onlyoffice": "onlyoffice-desktopeditors",
+        "qemu-system-x86_64": "qemu",
+        "quickterm": "com.mitchellh.ghostty",
+        "teams": "teams",
+        "terminal": "com.mitchellh.ghostty",
+        "trash": "user-trash",
+        "wifi": "network-wireless",
+        "zoom": "Zoom"
+    }) as $icons |
+    sort_by([.focusHistoryID < 0, .focusHistoryID])[] |
+    select($workspace == null or .workspace.id == $workspace) |
+    (.class | ascii_downcase) as $class |
+    ($class | sub("^(brave|edge)-"; "") | split(".")[0]) as $web_app |
+    (([.tags[]? | rtrimstr("*") | $icons[.]] | map(select(. != null))[0])
+        // $icons[$class] // $icons[$web_app] // $class) as $icon |
+    "\(.address)\t[\(.workspace.name)] \(.class): \(.title)\u0000icon\u001f\($icon)"' |
+    rofi -dmenu -display-columns 2 -selected-row "$selected_row" \
+        -kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' \
+        -kb-row-up 'Ctrl-p,Shift+ISO_Left_Tab' -p 'window')
+[[ -n $selection ]] || exit 0
+"$HOME/.config/hypr/scripts/focus_window" "${selection%%$'\t'*}"

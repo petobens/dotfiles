@@ -1,0 +1,77 @@
+-- luacheck: globals hl
+
+local geometry = require('conf.geometry')
+
+-- General
+hl.config({
+    general = {
+        layout = 'dwindle',
+        gaps_in = 4,
+        gaps_out = 4,
+        border_size = geometry.border_size,
+        col = {
+            active_border = '#3e4451',
+            inactive_border = '#282c34',
+        },
+        resize_on_border = true,
+    },
+    decoration = {
+        active_opacity = 1,
+        inactive_opacity = 1,
+        rounding = 4,
+        blur = {
+            enabled = true,
+            passes = 2,
+            size = 6,
+        },
+        shadow = {
+            enabled = false,
+        },
+    },
+    animations = { enabled = true },
+    cursor = { inactive_timeout = 1 }, -- Hide the pointer while it sits still
+    dwindle = { preserve_split = true },
+    ecosystem = { no_update_news = true },
+    input = {
+        follow_mouse = 1,
+        kb_layout = 'personal,personal',
+        kb_options = 'ctrl:nocaps',
+        kb_variant = 'us,es',
+        sensitivity = 0,
+        touchpad = {
+            disable_while_typing = true,
+            natural_scroll = true,
+            tap_to_click = true,
+        },
+    },
+    misc = {
+        disable_hyprland_logo = true,
+        disable_splash_rendering = true,
+        -- Keep background activation requests urgent
+        focus_on_activate = false,
+        force_default_wallpaper = 0,
+    },
+})
+
+-- Animation curves
+-- Control points of a cubic bezier, as in CSS cubic-bezier(x1, y1, x2, y2)
+local animation_curve = 'easeOutQuint'
+hl.curve(animation_curve, {
+    type = 'bezier',
+    points = { { 0.23, 1 }, { 0.32, 1 } },
+})
+
+-- Animations
+-- A leaf names a node of Hyprland's animation tree, and its settings apply to
+-- every child node. Speed is the duration in tenths of a second, so 5 is half a
+-- second. See the full tree with `hyprctl animations`.
+hl.animation({ leaf = 'windows', enabled = true, speed = 5, bezier = animation_curve })
+hl.animation({
+    leaf = 'workspaces',
+    enabled = true,
+    speed = 4,
+    bezier = 'default',
+    -- Use fade because slides draw floating windows across neighboring monitors
+    style = 'fade',
+})
+hl.animation({ leaf = 'fade', enabled = true, speed = 3, bezier = animation_curve })

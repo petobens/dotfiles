@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+install_packages=false
+install_latex=false
+install_post=false
+install_symlinks=false
+prompt_latex=false
+
+run_component() {
+    printf '\n'
+    "$@"
+}
+
+usage() {
+    cat << EOF
+usage: $0 [--all] [--packages] [--latex] [--post] [--symlinks]
+
+  --all       Install packages and symlinks, and optionally LaTeX (default)
+  --packages  Install packages and run post-install configuration
+  --latex     Install LaTeX
+  --post      Run post-install only (included by --all and --packages)
+  --symlinks  Create configuration symlinks
+EOF
+}
+
+(($#)) || set -- --all
+
+for arg in "$@"; do
+    case $arg in
+        --all)
+            install_packages=true
+            install_symlinks=true
+            prompt_latex=true
+            ;;
+        --packages) install_packages=true ;;
+        --latex) install_latex=true ;;
+        --post) install_post=true ;;
+        --symlinks) install_symlinks=true ;;
+        -h | --help)
+            usage
+            exit
+            ;;
+        *)
+            printf 'unknown option: %s\n' "$arg" >&2
+            usage >&2
+            exit 2
+            ;;
+    esac
+done
+
+printf '\033[1;32m:: Starting dotfiles installation\033[0m\n'
+
+if $prompt_latex && ! $install_latex; then
+    read -r -p 'Install LaTeX with tlmgr? [y/n] ' choice
+    [[ $choice == [yY] ]] && install_latex=true
+fi
+
+# Run selected components in dependency order
+if $install_packages; then
+    run_component "$script_dir/install_pacman.sh"
+    run_component "$script_dir/install_aur.sh"
+    run_component "$script_dir/install_language_tools.sh"
+fi
+if $install_latex; then
+    run_component "$script_dir/install_latex.sh"
+fi
+if $install_packages || $install_post; then
+    run_component "$script_dir/post_install.sh"
+fi
+if $install_symlinks; then
+    run_component "$script_dir/symlinks.sh"
+fi

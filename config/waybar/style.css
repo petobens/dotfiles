@@ -1,0 +1,127 @@
+/* OneDarkish palette */
+@define-color background #24272e;
+@define-color foreground #abb2bf;
+@define-color focused #2c323c;
+@define-color muted #5c6370;
+@define-color standby #7f8795;
+@define-color red #e06c75;
+
+/* Base */
+* {
+    border: none;
+    border-radius: 0;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 11pt;
+    min-height: 0;
+}
+window#waybar {
+    background: @background;
+    color: @foreground;
+}
+
+/* Tray items bypass Waybar's per-module setting, so hide all tooltips */
+tooltip {
+    opacity: 0;
+}
+
+/* Shared module spacing */
+#custom-arch,
+#custom-window-count,
+#custom-docker,
+#custom-onedrive,
+#language,
+#custom-vpn,
+#network,
+#custom-wifi,
+#custom-bluetooth,
+#pulseaudio,
+#battery,
+#custom-no-battery,
+#clock,
+#custom-slack {
+    padding: 0 7px;
+}
+
+/* Left modules */
+#window {
+    padding: 0;
+}
+#custom-arch {
+    font-family: 'Symbols Nerd Font';
+    font-size: 12pt;
+    padding-right: 3px;
+}
+#custom-window-count {
+    padding-right: 7px;
+}
+
+/* Center modules */
+#workspaces button {
+    color: @muted;
+    font-family: 'Symbols Nerd Font';
+    font-size: 15pt;
+    padding: 0 10px;
+}
+#workspaces button.visible,
+#workspaces button.active {
+    color: @foreground;
+}
+#workspaces button.active {
+    background: @focused;
+}
+
+/* Right modules */
+#custom-wifi,
+#custom-bluetooth,
+#pulseaudio,
+#battery,
+#custom-no-battery {
+    padding: 0 6px;
+}
+#custom-docker,
+#custom-onedrive {
+    font-family: 'Symbols Nerd Font';
+    font-size: 14pt;
+}
+#language {
+    font-size: 12pt;
+    font-weight: bold;
+    padding-bottom: 2px;
+}
+#custom-vpn {
+    font-family: 'Symbols Nerd Font';
+    font-size: 13pt;
+}
+#custom-bluetooth,
+#custom-no-battery {
+    font-family: 'Symbols Nerd Font';
+    font-size: 13pt;
+}
+#custom-slack {
+    font-family: 'Symbols Nerd Font';
+    font-size: 13.5pt;
+    color: @foreground;
+    padding: 0;
+}
+/* Keep spacing on icons so an empty tray leaves no padding */
+#tray image {
+    padding: 0 7px 0 8px;
+}
+
+/* Status states */
+#custom-docker.standby,
+#custom-onedrive.syncing {
+    color: @standby;
+}
+#workspaces button.urgent,
+#battery.critical.discharging,
+#custom-docker.failed,
+#custom-docker.inactive,
+#custom-onedrive.failed,
+#custom-onedrive.inactive,
+#custom-bluetooth.disabled,
+#custom-no-battery,
+#network.disconnected,
+#custom-wifi.disconnected {
+    color: @red;
+}

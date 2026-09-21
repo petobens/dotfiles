@@ -1,0 +1,4 @@
+{
+  "RestoreOnStartup": 4,
+  "RestoreOnStartupURLs": ["https://www.google.com/"]
+}

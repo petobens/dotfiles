@@ -1,0 +1,269 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cycle=false
+
+if [[ ${1:-} == menu ]]; then
+    menu=(
+        'about|About Arch|distributor-logo-archlinux|System information'
+        'audio|Audio Controls|audio-speakers|PipeWire control center'
+        'bluetooth|Bluetooth|bluetooth|Bluetooth controls'
+        'brave|Brave|brave-desktop|Web browser'
+        'calendar|Calendar|google-agenda|Google Calendar'
+        'clickup|ClickUp|tracker|Project management'
+        'docker|Docker|docker-desktop|Docker status'
+        'edge|Microsoft Edge|microsoft-edge|Web browser'
+        'files|Yazi|yazi|File manager'
+        'firefox|Firefox|firefox|Web browser'
+        'gmail|Gmail|gmail|Email'
+        'htop|Htop|htop|Process viewer'
+        'images|Image Viewer|multimedia-photo-viewer|Browse images'
+        'localsend|LocalSend|localsend|File sharing'
+        'meet|Google Meet|google-meet|Video meetings'
+        'numbers|IPython|calc|Python console'
+        'obs|OBS Studio|com.obsproject.Studio|Streaming and recording'
+        'onedrive|OneDrive|ms-onedrive|Sync status'
+        'onlyoffice|OnlyOffice|onlyoffice-desktopeditors|Office suite'
+        'quickterm|Quick Terminal|com.mitchellh.ghostty|Terminal'
+        'slack|Slack|slack|Messaging'
+        'spotify|Spotify|spotify|Music player'
+        'teams|Microsoft Teams|teams|Messaging'
+        'terminal|Terminal|com.mitchellh.ghostty|Main terminal'
+        'transmission|Transmission|transmission-gtk|BitTorrent client'
+        'trash|Trash|user-trash|Show trash'
+        'wifi|Wi-Fi|network-wireless|Network settings'
+        'zathura|Zathura|org.pwmt.zathura|PDF viewer'
+        'zoom|Zoom|Zoom|Video meetings'
+    )
+    index=$(
+        for entry in "${menu[@]}"; do
+            IFS='|' read -r _ label icon description <<< "$entry"
+            printf \
+                "%s <span color='#5f636f' size='small'><i>(%s)</i></span>\0icon\x1f%s\n" \
+                "$label" "$description" "$icon"
+        done | rofi -dmenu -i -no-custom -format i -markup-rows -p 'app'
+    ) || exit 0
+    [[ $index =~ ^[0-9]+$ ]] || exit 0
+    IFS='|' read -r app _ <<< "${menu[index]}"
+    exec "$0" "$app"
+fi
+
+# Resolve the requested app's launch and matching rules
+case ${1:-} in
+    about)
+        tag=about
+        class='^about$'
+        workspace=current
+        command="ghostty --class=about --title='About Arch' -e sh -c 'fastfetch; read -r _'"
+        ;;
+    audio)
+        exec "$HOME/.config/hypr/scripts/audio_menu"
+        ;;
+    bluetooth)
+        exec "$HOME/.config/hypr/scripts/bluetooth_menu"
+        ;;
+    brave)
+        tag=brave
+        class='^brave-browser$'
+        workspace=1
+        command='brave'
+        ;;
+    calendar)
+        tag=calendar
+        class='^brave-calendar'
+        workspace=1
+        command='brave --new-window --app=https://calendar.google.com/calendar/b/0/r'
+        ;;
+    clickup)
+        tag=clickup
+        class='^msedge-app\.clickup\.com'
+        workspace=1
+        command='microsoft-edge-dev --new-window --app=https://app.clickup.com'
+        ;;
+    docker)
+        tag=docker
+        class='^docker-info$'
+        workspace=current
+        command="ghostty --class=docker-info --title=docker-info -e sh -c '\"\$HOME/.config/hypr/scripts/docker_status\" --details 2>&1 | less -R --mouse --tilde'"
+        ;;
+    edge)
+        tag=edge
+        class='^microsoft-edge-dev$'
+        workspace=1
+        command='microsoft-edge-dev'
+        ;;
+    files)
+        tag=files
+        class='^yazi$'
+        workspace=current
+        working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
+        # Base64 protects the path through Lua and shell command parsing
+        encoded_directory=$(printf '%s' "$working_directory" | base64 -w0)
+        command="ghostty --class=yazi --title=yazi --working-directory=\"\$(printf %s $encoded_directory | base64 -d)\" -e fish -c yazi"
+        ;;
+    firefox)
+        tag=firefox
+        class='^firefox$'
+        workspace=1
+        command='firefox'
+        ;;
+    gmail)
+        tag=gmail
+        class='^brave-mail\.google\.com'
+        workspace=2
+        command='brave --new-window --app=https://mail.google.com'
+        ;;
+    htop)
+        tag=htop
+        class='^htop$'
+        workspace=current
+        command='ghostty --class=htop --title=htop -e htop'
+        ;;
+    images)
+        tag=images
+        class='^imv$'
+        workspace=current
+        command='imv ~/Pictures'
+        cycle=true
+        ;;
+    localsend)
+        tag=localsend
+        class='^org\.localsend\.localsend_app$'
+        workspace=current
+        command='localsend'
+        ;;
+    meet)
+        tag=meet
+        class='^brave-meet'
+        workspace=2
+        command='brave --new-window --app=https://meet.google.com'
+        ;;
+    numbers)
+        tag=numbers
+        class='^numbers$'
+        workspace=current
+        command='ghostty --class=numbers --title=numbers -e ipython'
+        ;;
+    obs)
+        tag=obs
+        class='^(obs|com\.obsproject\.Studio)$'
+        workspace=4
+        command='obs'
+        ;;
+    onedrive)
+        tag=onedrive
+        class='^onedrive$'
+        workspace=current
+        command="ghostty --class=onedrive --title=OneDrive -e sh -c 'journalctl --user-unit onedrive -n 100 --no-pager 2>&1 | less -R --mouse +G'"
+        ;;
+    onlyoffice)
+        tag=onlyoffice
+        class='^(DesktopEditors|ONLYOFFICE)$'
+        workspace=4
+        command='onlyoffice-desktopeditors'
+        ;;
+    quickterm)
+        tag=quickterm
+        class='^quickterm$'
+        workspace=current
+        working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
+        encoded_directory=$(printf '%s' "$working_directory" | base64 -w0)
+        command="ghostty --class=quickterm --title=QuickTerm --working-directory=\"\$(printf %s $encoded_directory | base64 -d)\""
+        ;;
+    slack)
+        tag=slack
+        class='^Slack$'
+        workspace=2
+        command='slack --enable-features=UseOzonePlatform --ozone-platform=wayland'
+        ;;
+    spotify)
+        tag=spotify
+        class='^Spotify$'
+        workspace=3
+        command='spotify --enable-features=UseOzonePlatform --ozone-platform=wayland'
+        ;;
+    teams)
+        tag=teams
+        class='^brave-teams'
+        workspace=2
+        command='brave --new-window --app=https://teams.live.com'
+        ;;
+    terminal)
+        tag=terminal
+        class='^terminal$'
+        workspace=5
+        command='ghostty --class=terminal -e fish -l -c tm'
+        ;;
+    transmission)
+        tag=transmission
+        class='^com\.transmissionbt\.transmission.*$'
+        workspace=4
+        command='transmission-gtk'
+        ;;
+    trash)
+        tag=trash
+        class='^trash$'
+        workspace=current
+        command="ghostty --class=trash --title='Trash Can' -e sh -c 'trash-list | less'"
+        ;;
+    wifi)
+        exec "$HOME/.config/hypr/scripts/wifi_menu"
+        ;;
+    zathura)
+        tag=zathura
+        class='^org.pwmt.zathura$'
+        workspace=current
+        command='zathura'
+        cycle=true
+        ;;
+    zoom)
+        tag=zoom
+        class='^zoom$'
+        workspace=2
+        command='zoom'
+        ;;
+    *)
+        echo 'usage: raise_or_launch APPLICATION' >&2
+        exit 2
+        ;;
+esac
+
+if [[ $workspace == current ]]; then
+    workspace=$(hyprctl activeworkspace -j | jq -r '.id')
+fi
+
+# Match terminal apps by tag because their requested Ghostty classes are not
+# used. Match browser apps by class because windows from existing browser
+# processes do not receive launch tags.
+matching_addresses() {
+    jq -r --arg class "$class" --arg tag "$tag" \
+        '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address'
+}
+
+# Focus a matching window or launch the app on its assigned workspace
+mapfile -t addresses < <(hyprctl clients -j | matching_addresses)
+if ((${#addresses[@]})); then
+    address=${addresses[0]}
+    if $cycle && ((${#addresses[@]} > 1)); then
+        active=$(hyprctl activewindow -j | jq -r '.address')
+        for i in "${!addresses[@]}"; do
+            if [[ ${addresses[$i]} == "$active" ]]; then
+                address=${addresses[$(((i + 1) % ${#addresses[@]}))]}
+                break
+            fi
+        done
+    fi
+
+    "$HOME/.config/hypr/scripts/focus_window" "$address"
+else
+    hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
+    # Existing browser processes create windows without the launch workspace rule
+    for _ in {1..100}; do
+        sleep 0.1
+        address=$(hyprctl clients -j | matching_addresses | sed -n '1p')
+        if [[ -n $address ]]; then
+            "$HOME/.config/hypr/scripts/focus_window" "$address"
+            break
+        fi
+    done
+fi

@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-script_dir=$(dirname "$(readlink -f "$0")")
-exec "$(uv tool dir)/pgcli/bin/python" "$script_dir/pgcli_launcher.py" "$@"

@@ -170,59 +170,6 @@ function M.bookmark_dirs(opts)
         :find()
 end
 
-function M.py_venvs(opts)
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
-    opts = opts or {}
-    opts.entry_maker = function(entry)
-        return {
-            value = entry:gsub(' %(Activated%)$', ''),
-            display = '󰆍 ' .. entry,
-            ordinal = entry,
-        }
-    end
-
-    local venvs, manager
-    local uv_venv = opts.project_root .. '/.venv'
-    local stat = vim.uv.fs_stat(uv_venv)
-    if stat and stat.type == 'directory' then
-        manager = 'uv'
-        venvs = { uv_venv }
-    else
-        local result = vim.system({ 'poetry', 'env', 'info', '--path' }, { text = true })
-            :wait()
-        local poetry_venv = vim.trim(result.stdout or '')
-        if poetry_venv ~= '' and result.code == 0 then
-            manager = 'poetry'
-            venvs = { poetry_venv }
-        end
-    end
-    if not venvs then
-        vim.notify('No venvs found!', vim.log.levels.WARN)
-        return
-    end
-
-    pickers
-        .new(opts, {
-            prompt_title = manager .. ' venvs (<CR>:activate)',
-            finder = finders.new_table({
-                results = venvs,
-                entry_maker = opts.entry_maker,
-            }),
-            sorter = conf.file_sorter(opts),
-            previewer = custom_previewers.tree,
-            attach_mappings = function(bufnr)
-                actions.select_default:replace(function()
-                    local venv = action_state.get_selected_entry().value
-                    actions.close(bufnr)
-                    _G.PyVenv.deactivate()
-                    _G.PyVenv.activate(venv)
-                end)
-                return true
-            end,
-        })
-        :find()
-end
-
 function M.igrep(dir, start_text, extra_args)
     local buffer_dir = dir or utils.buffer_dir()
     builtin.live_grep({

@@ -21,7 +21,6 @@ function M.setup()
         find_dirs = pickers.find_dirs,
         parent_dirs = pickers.parent_dirs,
         bookmark_dirs = pickers.bookmark_dirs,
-        py_venvs = pickers.py_venvs,
         find_files_cwd = pickers.find_files_cwd,
         z_with_tree_preview = pickers.z_with_tree_preview,
     }

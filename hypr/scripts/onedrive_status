@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+detail=$(journalctl --user-unit onedrive -n 1 --no-pager -o cat 2> /dev/null || true)
+state=$(systemctl --user is-active onedrive 2> /dev/null || true)
+text='󰅟'
+case $state in
+    active)
+        operation=${detail%% *}
+        case $operation in
+            Downloading)
+                text='󰅢'
+                class=downloading
+                ;;
+            Uploading)
+                text='󰅧'
+                class=uploading
+                ;;
+            ERROR:)
+                class=failed
+                ;;
+            Attempting | Configuring | Creating | Deleted | Deleting | Fetching | Initialising | Initializing | Moving | Performing | Processing | Reading | Scanning | Starting | Successfully | Syncing | The)
+                text='󰔪'
+                class=syncing
+                ;;
+            *)
+                class=active
+                ;;
+        esac
+        ;;
+    failed)
+        class=failed
+        ;;
+    *)
+        class=inactive
+        ;;
+esac
+tooltip="OneDrive: $state"
+[[ -z $detail ]] || tooltip+=$'\n'"$detail"
+jq -cn --arg text "$text" --arg tooltip "$tooltip" --arg class "$class" '{text: $text, tooltip: $tooltip, class: $class}'
