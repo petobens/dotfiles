@@ -3,7 +3,6 @@ set -euo pipefail
 
 # Warn while the battery drains and shut down before power runs out
 poll_interval=30
-low=20
 critical=10
 urgent=5
 shutdown_at=3
@@ -40,8 +39,5 @@ while sleep "$poll_interval"; do
         announced=$critical
         notify-send -u critical -t 0 -i battery-caution 'Battery critically low' \
             "$capacity% remaining" || true
-    elif ((capacity <= low && announced > low)); then
-        announced=$low
-        notify-send -i battery-low 'Battery low' "$capacity% remaining" || true
     fi
 done
