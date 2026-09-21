@@ -118,7 +118,7 @@ case ${1:-} in
         class='^htop$'
         workspace=current
         # Clear inherited dimensions so htop uses its actual terminal size
-        command='ghostty --class=htop --title=htop -e env -u COLUMNS -u LINES htop'
+        command='ghostty --class=htop --title=htop -e env -u COLUMNS -u LINES htop --sort-key=PERCENT_CPU'
         ;;
     images)
         tag=images
