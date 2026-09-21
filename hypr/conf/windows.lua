@@ -45,10 +45,21 @@ local function fit_all_to_work_area()
     end
 end
 
-local function apply_layout(window)
-    local layout = layout_by_class[window.initial_class]
+local function app_layout(window)
+    if
+        window.class == 'org.localsend.localsend_app'
+        and window.initial_title == 'Open File'
+    then
+        return half
+    end
+
+    return layout_by_class[window.initial_class]
         or layout_by_class[window.class]
         or layout_by_title[window.initial_title]
+end
+
+local function apply_layout(window)
+    local layout = app_layout(window)
     if layout then
         geometry.place(window, layout)
     else
