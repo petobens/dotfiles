@@ -99,7 +99,7 @@ tooltip {
 }
 #custom-slack {
     font-family: 'Symbols Nerd Font';
-    font-size: 12pt;
+    font-size: 13.5pt;
     color: @foreground;
     padding: 0;
 }
