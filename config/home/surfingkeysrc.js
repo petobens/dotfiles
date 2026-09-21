@@ -142,7 +142,7 @@ const qmarksMapKey = function (prefix, urls) {
 };
 
 const qmarksUrls = {
-    a: 'https://aws.amazon.com/console',
+    a: 'http://appsmith.muttdata.ai/',
     b: 'www.bing.com/chat',
     c: 'www.utdt.edu/campusvirtual',
     d: 'https://drive.google.com/drive/u/0/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
