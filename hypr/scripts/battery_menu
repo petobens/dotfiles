@@ -52,12 +52,47 @@ if ((${#batteries[@]})); then
             fi
         fi
     fi
+
+    if history=$(busctl --system --timeout=2 call org.freedesktop.UPower \
+        "/org/freedesktop/UPower/devices/battery_${battery##*/}" \
+        org.freedesktop.UPower.Device GetHistory suu rate 604800 100000 2> /dev/null); then
+        # Use up to seven days of history, skipping charging and gaps over two minutes
+        full_runtime=$(awk -v full="$energy_full" '
+            {
+                # busctl returns a signature and count, then timestamp/power/state triples
+                for (i = 3; i + 2 <= NF; i += 3) {
+                    timestamp = $i
+                    power = $(i + 1)
+                    state = $(i + 2)
+                    elapsed = timestamp - previous_time
+                    if (elapsed < 0) elapsed = -elapsed
+                    if (state == 2 && previous_state == 2 && power > 0 &&
+                        previous_power > 0 && elapsed > 0 && elapsed <= 120) {
+                        energy += (power + previous_power) / 2 * elapsed
+                        duration += elapsed
+                    }
+                    previous_time = timestamp
+                    previous_power = power
+                    previous_state = state
+                }
+                # Require at least 30 minutes of usable discharge history
+                if (duration < 1800) {
+                    print "Collecting history"
+                    exit
+                }
+                minutes = int(full / 1000000 * duration / energy * 60)
+                printf "~%dh %dm (7d avg)", int(minutes / 60), minutes % 60
+            }' <<< "$history")
+    else
+        full_runtime=Unavailable
+    fi
 elif systemd-detect-virt --vm --quiet; then
     percentage=73
     status=Discharging
     power_source=Battery
     time='4h 12m'
     time_label='Time left'
+    full_runtime='~5h 45m (7d avg)'
     rate='8.4 W'
     health=94
     size='53.6 / 57.0 Wh'
@@ -67,15 +102,14 @@ else
     exit 1
 fi
 
-source_icon=󰁹
-[[ $power_source != AC ]] || source_icon=
 printf -v time_row '󰥔  %-15s %s' "$time_label" "$time"
 
 printf '%s\n' \
     "󰁹  Charge          $percentage%" \
     "󰂄  Status          $status" \
-    "$source_icon  Power source    $power_source" \
+    "  Power source    $power_source" \
     "$time_row" \
+    "󰔟  Full runtime    $full_runtime" \
     "󰓅  Power draw      $rate" \
     "󰂑  Health          $health% ($size)" \
     "󰑐  Charge cycles   $cycles" |
