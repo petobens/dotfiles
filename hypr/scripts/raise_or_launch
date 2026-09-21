@@ -257,6 +257,13 @@ if ((${#addresses[@]})); then
 
     "$HOME/.config/hypr/scripts/focus_window" "$address"
 else
+    # Scale Ghostty's 2px bar only when the laptop is the sole connected display
+    if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors all -j | jq -er '
+        select(length == 1 and .[0].name == "eDP-1")
+        | (.[0].scale * 2 | round) - 1
+    '); then
+        command="ghostty --adjust-cursor-thickness=$cursor_adjustment ${command#ghostty }"
+    fi
     hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
     # Existing browser processes create windows without the launch workspace rule
     for _ in {1..100}; do
