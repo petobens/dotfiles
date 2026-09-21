@@ -117,7 +117,8 @@ case ${1:-} in
         tag=htop
         class='^htop$'
         workspace=current
-        command='ghostty --class=htop --title=htop -e htop'
+        # Clear inherited dimensions so htop uses its actual terminal size
+        command='ghostty --class=htop --title=htop -e env -u COLUMNS -u LINES htop'
         ;;
     images)
         tag=images
