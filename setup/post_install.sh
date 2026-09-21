@@ -185,7 +185,7 @@ sudo systemctl enable \
     tlp
 sudo systemctl enable --now \
     avahi-daemon.service \
-    cups.socket \
+    cups.service \
     sshd.service \
     systemd-timesyncd
 if ! systemd-detect-virt --vm --quiet; then

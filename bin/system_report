@@ -162,7 +162,7 @@ expected_services=(
     avahi-daemon.service
     bluetooth.service
     btrfs-scrub.timer
-    cups.socket
+    cups.service
     docker.socket
     fstrim.timer
     paccache.timer
