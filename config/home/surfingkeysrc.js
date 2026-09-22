@@ -533,7 +533,7 @@ imapkey('<Ctrl-i>', 'Open Vim editor for current input', function () {
 
 // AceVim
 aceVimMap('jj', '<Esc>', 'insert');
-aceVimMap('<C-o>', ':wq', 'insert');
+aceVimMap('<C-o>', '<Esc>:wq<CR>', 'insert');
 aceVimMap('i', '$a', 'normal');
 aceVimMap('<C-c>', ':wq', 'normal');
 aceVimMap('H', '0', 'normal');
