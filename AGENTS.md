@@ -11,13 +11,17 @@ desktop.
 - `config/` contains application configuration. Home-directory
   dotfiles live in `config/home/`, Python tooling in `config/python/`, and
   formatter and linter configuration in `config/linters/`.
+- `docs/` contains the installation, verification, and recovery guide, plus
+  desktop screenshots.
 - `hypr/` contains the Hyprland configuration and desktop helper scripts.
 - `nvim/` contains the Neovim configuration.
-- `setup/` contains package lists, installation scripts, the udev rules that
-  `post_install.sh` installs, and the disposable QEMU test environment under
-  `setup/vm/`. `setup/symlinks.sh` owns the mapping from repository files to
-  home-directory destinations and must be updated when configuration files
-  move.
+- `setup/` contains package lists, installation and recovery scripts, the udev
+  rules that `post_install.sh` installs, and the disposable QEMU test
+  environment in `setup/vm/`. `setup/symlinks.sh` owns the mapping from repository
+  files to home-directory destinations and must be updated when configuration
+  files move.
+- `typst/packages/local/` contains reusable local Typst packages and document
+  templates.
 
 ## General rules
 
