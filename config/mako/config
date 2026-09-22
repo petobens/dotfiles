@@ -45,3 +45,12 @@ default-timeout=3000
 
 [mode=do-not-disturb]
 invisible=1
+
+# Larger notifications on the laptop HiDPI screen
+[output=eDP-1]
+font=Noto Sans 14
+width=380
+height=380
+padding=16,10
+border-radius=12
+max-icon-size=120
