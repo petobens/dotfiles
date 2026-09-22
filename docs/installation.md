@@ -1078,6 +1078,18 @@ the VM. Skip checks for devices your machine does not have:
 
 ## Recovery
 
+### Open a shell if Hyprland fails
+
+Press `Ctrl+Alt+F2` (plus `Fn` if needed) and log in to the text console on
+tty2 to edit configuration or inspect logs. Fish starts Hyprland only on
+tty1, so this shell remains available if Hyprland cannot start.
+
+Run `exit` when finished, then press `Ctrl+Alt+F1` to return to tty1. You can
+test this while Hyprland is running; switching consoles keeps it running.
+
+`Super+X` opens Kitty and requires working Hyprland. The text console is
+independent, though a hard GPU or kernel freeze can prevent switching.
+
 ### Roll back a root snapshot
 
 If the installed system still boots, list the snapshots there. A Pacman
