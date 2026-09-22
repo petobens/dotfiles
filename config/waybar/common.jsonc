@@ -34,7 +34,7 @@
     "hyprland/window": {
         "format": "<span font_family='Noto Sans Mono' size='10pt' weight='bold'>{title}</span>",
         "max-length": 30,
-        "separate-outputs": true,
+        "separate-outputs": false,
     },
     "hyprland/workspaces": {
         "format": "<span font_family='Symbols Nerd Font' size='14pt'>{icon}</span> <span font_family='Noto Sans' size='7pt' weight='bold' rise='9pt'>{id}</span>",
