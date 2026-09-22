@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir=$(dirname "$(realpath "$0")")
+
+# After using a Brave app window, external URLs can open a new window
+# Focus the last-used regular browser so Brave reuses it for the new tab
+address=$(hyprctl clients -j | jq -r '
+    map(select(.class == "brave-browser")) |
+    min_by([(.tags | index("last-main-brave") == null),
+        .focusHistoryID < 0, .focusHistoryID]).address // empty
+')
+if [[ -n $address ]]; then
+    "$script_dir/focus_window" "$address"
+fi
+
+exec brave "$@"

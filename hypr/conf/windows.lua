@@ -67,7 +67,7 @@ local function apply_layout(window)
     end
 end
 
--- Browser sign-in windows
+-- Application helpers
 local function focus_google_sign_in(window)
     local browser = window.class == 'brave-browser'
         or window.class == 'firefox'
@@ -86,6 +86,26 @@ local function focus_google_sign_in(window)
         hl.dispatch(hl.dsp.focus({ window = window }))
     end
     hl.dispatch(hl.dsp.window.bring_to_top({ window = window }))
+end
+
+-- Tag the last main browser for scripts/brave_open to reuse for links
+-- Ignore brief browser focus while switching to another app on its workspace
+local function remember_main_brave(window)
+    if not window or window.class ~= 'brave-browser' then
+        return
+    end
+    local address = window.address
+    hl.timer(function()
+        local active = hl.get_active_window()
+        if not active or active.address ~= address then
+            return
+        end
+        hl.dispatch(hl.dsp.window.tag({
+            tag = '-last-main-brave',
+            window = 'tag:last-main-brave',
+        }))
+        hl.dispatch(hl.dsp.window.tag({ tag = '+last-main-brave', window = active }))
+    end, { timeout = 50, type = 'oneshot' })
 end
 
 -- Defaults
@@ -151,8 +171,10 @@ hl.on('window.open', function(window)
     end
 end)
 
+-- Browser events
 -- Match the loaded page title, which may arrive after the window opens
 hl.on('window.title', focus_google_sign_in)
+hl.on('window.active', remember_main_brave)
 
 -- Reapply work-area bounds when windows move or monitor reservations change
 hl.on('window.move_to_workspace', fit_to_work_area)

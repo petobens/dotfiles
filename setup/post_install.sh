@@ -240,6 +240,19 @@ for mime in image/gif image/heic image/heif image/jpeg image/png image/svg+xml i
     xdg-mime default imv-dir.desktop "$mime"
 done
 
+section 'Setting Brave HTTP/HTTPS handler'
+mkdir -p "$HOME/.local/share/applications"
+cat > "$HOME/.local/share/applications/brave-links.desktop" << EOF
+[Desktop Entry]
+Type=Application
+Name=Brave Links
+Exec=$HOME/.config/hypr/scripts/brave_open %U
+Icon=brave-desktop
+NoDisplay=true
+MimeType=x-scheme-handler/http;x-scheme-handler/https;
+EOF
+xdg-mime default brave-links.desktop x-scheme-handler/http x-scheme-handler/https
+
 section 'Installing DM fonts'
 dm_fonts_commit=9c5708e735fc805514913d46d259945a3b6ba67a
 dm_fonts_url="https://raw.githubusercontent.com/google/fonts/$dm_fonts_commit/ofl"

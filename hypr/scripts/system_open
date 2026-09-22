@@ -3,17 +3,4 @@ set -euo pipefail
 
 script_dir=$(dirname "$(realpath "$0")")
 
-if [[ ${1:-} == http://* || ${1:-} == https://* ]] &&
-    [[ $(xdg-mime query default "x-scheme-handler/${1%%:*}") == brave-browser.desktop ]]; then
-    # After using a Brave app window, external URLs can open a new window
-    # Focus the last-used regular browser so Brave reuses it for the new tab
-    address=$(hyprctl clients -j | jq -r '
-        map(select(.class == "brave-browser")) |
-        min_by([.focusHistoryID < 0, .focusHistoryID]).address // empty
-    ')
-    if [[ -n $address ]]; then
-        "$script_dir/focus_window" "$address"
-    fi
-fi
-
 "$script_dir/open_file" env -u BROWSER xdg-open "$@" > /dev/null 2>&1 &
