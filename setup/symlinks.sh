@@ -93,7 +93,7 @@ section 'Python tooling'
 symlink "$repo/config/python/ipython_config.py" "$HOME/.ipython/profile_default/ipython_config.py"
 symlink "$repo/config/python/ipython_startup.py" "$HOME/.ipython/profile_default/startup/ipython_startup.py"
 symlink "$repo/config/python/jupyterlab/jupyterlab_code_formatter" "$HOME/.jupyter/lab/user-settings/jupyterlab_code_formatter"
-symlink "$repo/config/python/jupyterlab/overrides.json" "$HOME/.jupyter/lab/user-settings/overrides.json"
+symlink "$repo/config/python/jupyterlab/@jupyterlab/apputils-extension/themes.jupyterlab-settings" "$HOME/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings"
 symlink "$repo/config/python/matplotlib" "$HOME/.config/matplotlib"
 symlink "$repo/config/python/mypy.ini" "$HOME/.mypy.ini"
 symlink "$repo/config/python/pdbrc" "$HOME/.pdbrc"
@@ -106,6 +106,7 @@ section 'Agent configuration'
 git -C "$repo" config --local filter.claude-settings.clean 'jq --sort-keys --indent 2 .'
 symlink "$repo/config/claude/settings.json" "$HOME/.claude/settings.json"
 symlink "$repo/config/claude/statusline.sh" "$HOME/.claude/statusline.sh"
+symlink "$repo/config/claude/themes" "$HOME/.claude/themes"
 symlink "$repo/config/codex/config.toml" "$HOME/.codex/config.toml"
 symlink "$repo/config/themes" "$HOME/.codex/themes"
 user_rules="$repo/../ai-harness/rules/USER.md"

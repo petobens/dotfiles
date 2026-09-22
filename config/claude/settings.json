@@ -33,6 +33,6 @@
     "command": "~/.claude/statusline.sh",
     "type": "command"
   },
-  "theme": "dark",
+  "theme": "custom:onedarkish",
   "tui": "default"
 }
