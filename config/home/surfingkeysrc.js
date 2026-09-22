@@ -63,7 +63,7 @@ settings.noPdfViewer = true;
 // Define hint characters
 Hints.setCharacters('asdfghjkl');
 
-// Theme (uses Onedark colors)
+// Theme (uses OneDarkish colors)
 settings.theme = `
 .sk_theme {
     font-family: Input Sans Condensed, Charcoal, sans-serif;
@@ -72,10 +72,10 @@ settings.theme = `
     color: #abb2bf;
 }
 .sk_theme tbody {
-    color: #fff;
+    color: #abb2bf;
 }
 .sk_theme input {
-    color: #d0d0d0;
+    color: #abb2bf;
 }
 .sk_theme .url {
     color: #61afef;
@@ -93,7 +93,7 @@ settings.theme = `
     color: #98c379;
 }
 .sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
-    background: #303030;
+    background: #282c34;
 }
 .sk_theme #sk_omnibarSearchResult ul li.focused {
     background: #3e4452;
@@ -499,10 +499,9 @@ imapkey('<Ctrl-i>', 'Open Vim editor for current input', function () {
         element.localName === 'select'
             ? Array.from(
                   element.options,
-                  (option) =>
-                      option.textContent.trim() + ' >< ' + option.value,
+                  (option) => option.textContent.trim() + ' >< ' + option.value,
               ).join('\n')
-            : element.value ?? element.textContent;
+            : (element.value ?? element.textContent);
     element.blur();
     Front.showEditor(
         content,

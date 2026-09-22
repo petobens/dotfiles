@@ -10,6 +10,7 @@ keyword_casing = upper
 case_column_headers = True
 timing = True
 table_format = psql
+# One Dark supplies the base; [syntax_colors] applies OneDarkish overrides
 syntax_style = one-dark
 vi = True
 on_error = STOP
@@ -20,6 +21,16 @@ multiline_continuation_char = ''
 null_string = '<null>'
 enable_pager = True
 keyring = True
+
+[syntax_colors]
+pygments = '#abb2bf bg:#24272e'
+pygments.comment = '#5c6370 italic'
+pygments.name.function = '#61afef nobold'
+pygments.name.function.magic = '#61afef nobold'
+pygments.name.decorator = '#528bff'
+pygments.keyword.type = '#61afef'
+pygments.punctuation = '#528bff'
+pygments.error = '#e06c75'
 
 [colors]
 completion-menu.completion.current = 'bg:#61afef #24272e'

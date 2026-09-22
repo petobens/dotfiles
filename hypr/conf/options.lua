@@ -10,7 +10,7 @@ hl.config({
         gaps_out = 4,
         border_size = geometry.border_size,
         col = {
-            active_border = '#3e4451',
+            active_border = '#3e4452',
             inactive_border = '#282c34',
         },
         resize_on_border = true,

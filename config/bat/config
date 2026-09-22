@@ -3,5 +3,5 @@
 # run `bat --help` to get a list of all possible configuration options.
 --color=always
 --style=numbers
---theme="TwoDark"
+--theme="onedarkish"
 --italic-text=always

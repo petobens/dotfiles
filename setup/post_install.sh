@@ -321,3 +321,9 @@ section 'Configuring gopass'
 gopass config generate.autoclip false
 gopass config core.notifications false
 gopass config mounts.path "$HOME/.password-store"
+
+section 'Building bat syntax theme cache'
+# Read from the repository because configuration symlinks are created afterward
+if command -v bat > /dev/null; then
+    BAT_CONFIG_DIR="$script_dir/../config/bat" bat cache --build
+fi

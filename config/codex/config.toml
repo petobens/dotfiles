@@ -20,7 +20,7 @@ enabled = true
 
 # TUI
 [tui]
-theme = "two-dark"
+theme = "onedarkish"
 status_line = [
     "model-with-reasoning",
     "current-dir",

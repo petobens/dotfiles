@@ -23,7 +23,7 @@
 	algorithm = histogram
 
 [delta]
-    syntax-theme = TwoDark
+    syntax-theme = onedarkish
     features = colorscheme
     side-by-side = true
     line-numbers = true

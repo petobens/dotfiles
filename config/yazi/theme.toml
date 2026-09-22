@@ -1,7 +1,8 @@
 # OneDarkish overrides for Yazi
 
 [mgr]
-border_style = { fg = "#3e4451" }
+syntect_theme = "~/.config/themes/onedarkish.tmTheme"
+border_style = { fg = "#3e4452" }
 border_symbol = "│"
 count_copied = { bg = "#3b4048", fg = "#abb2bf" }
 cwd = { bold = true, fg = "#c678dd" }
@@ -43,38 +44,38 @@ perm_type = { fg = "#98c379" }
 perm_write = { fg = "#e06c75" }
 progress_error = { bg = "#e06c75", bold = true, fg = "#24272e" }
 progress_label = { bg = "#282c34", fg = "#5c6370" }
-progress_normal = { bg = "#282c34", fg = "#3e4451" }
+progress_normal = { bg = "#282c34", fg = "#3e4452" }
 sep_left = { close = "", open = "" }
 sep_right = { close = "", open = "" }
 
 # Keep transient UI borders quieter than their active content
 [which]
-border = { fg = "#3e4451" }
+border = { fg = "#3e4452" }
 
 [confirm]
-border = { fg = "#3e4451" }
+border = { fg = "#3e4452" }
 title = { fg = "#5c6370" }
 
 [spot]
-border = { fg = "#3e4451" }
+border = { fg = "#3e4452" }
 title = { fg = "#5c6370" }
 
 [pick]
-border = { fg = "#3e4451" }
+border = { fg = "#3e4452" }
 
 [input]
-border = { fg = "#3e4451" }
+border = { fg = "#3e4452" }
 title = { fg = "#5c6370" }
 
 [cmp]
-border = { fg = "#3e4451" }
+border = { fg = "#3e4452" }
 
 [tasks]
-border = { fg = "#3e4451" }
+border = { fg = "#3e4452" }
 title = { fg = "#5c6370" }
 
 [help]
-border = { fg = "#3e4451" }
+border = { fg = "#3e4452" }
 
 # Match eza's violet treatment of symlinks
 [filetype]
