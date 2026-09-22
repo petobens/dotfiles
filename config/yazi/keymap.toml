@@ -25,6 +25,17 @@ desc = "Home"
 on = ["H"]
 run = "cd ~"
 
+# Preview
+[[mgr.prepend_keymap]]
+desc = "Scroll preview down"
+on = ["<A-j>"]
+run = "seek 5"
+
+[[mgr.prepend_keymap]]
+desc = "Scroll preview up"
+on = ["<A-k>"]
+run = "seek -5"
+
 # Shell
 [[mgr.prepend_keymap]]
 desc = "Open shell here"
