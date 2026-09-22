@@ -260,6 +260,11 @@ exec(
     scripts .. 'screenshot_selection',
     'Window or region screenshot'
 )
+exec(
+    super_shift .. ' + O',
+    scripts .. 'screen_text',
+    'Copy text from selected screen region'
+)
 exec(super_shift .. ' + G', scripts .. 'screen_record gif', 'Toggle GIF recording')
 exec(super_alt .. ' + G', scripts .. 'screen_record video', 'Toggle video recording')
 
@@ -301,6 +306,20 @@ exec(
 exec(super_shift .. ' + E', scripts .. 'eject_media', 'Eject media drives')
 
 -- Desktop utilities
+bind(
+    super_alt .. ' + EQUAL',
+    window_actions.zoom(0.25),
+    'Magnify screen (zoom in)',
+    { repeating = true }
+)
+bind(
+    super_alt .. ' + MINUS',
+    window_actions.zoom(-0.25),
+    'Reduce screen magnification (zoom out)',
+    { repeating = true }
+)
+bind(super_alt .. ' + 0', window_actions.reset_zoom, 'Reset screen magnification (zoom)')
+
 -- Pass F10 through so Neovim enters Insert mode before transcription
 exec('F10', 'voxtype record toggle', 'Toggle dictation', { non_consuming = true })
 

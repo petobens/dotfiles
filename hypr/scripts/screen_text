@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+geometry=$(slurp) || exit 0
+directory=$(mktemp -d)
+trap 'rm -rf "$directory"' EXIT
+
+grim -g "$geometry" "$directory/screen.png"
+if ! tesseract "$directory/screen.png" "$directory/text" -l eng+spa 2> "$directory/error"; then
+    notify-send -u critical 'Text extraction failed' "$(cat "$directory/error")"
+    exit 1
+fi
+if ! grep -q '[^[:space:]]' "$directory/text.txt"; then
+    notify-send 'No text found' 'Try selecting a larger or clearer region.'
+    exit 0
+fi
+
+wl-copy --type text/plain < "$directory/text.txt"
+notify-send 'Text copied' 'Recognized English/Spanish text is on the clipboard.'

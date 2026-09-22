@@ -239,4 +239,16 @@ function M.switch_workspace(dispatcher)
     end
 end
 
+-- Screen magnification
+function M.zoom(delta)
+    return function()
+        local zoom = hl.get_config('cursor.zoom_factor')
+        hl.config({ cursor = { zoom_factor = math.max(1, math.min(4, zoom + delta)) } })
+    end
+end
+
+function M.reset_zoom()
+    hl.config({ cursor = { zoom_factor = 1 } })
+end
+
 return M

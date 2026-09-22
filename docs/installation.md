@@ -978,6 +978,10 @@ missing plugins on first launch. Run `fm` and check that Yazi opens cleanly.
 Test the desktop controls:
 
 - Use the volume and brightness keys and check Mako's indicators.
+- Copy English/Spanish text from a selected region with `Super+Shift+O`.
+  Escape cancels selection; failed or empty OCR leaves the clipboard intact.
+- Magnify the screen with `Super+Alt+=`, reduce it with `Super+Alt+-`, and
+  reset with `Super+Alt+0`. Magnification is limited to 1x through 4x.
 - Take a selection screenshot with `Super+Shift+C`. The screen should freeze
   during selection, and the result should reach both the clipboard and
   `~/Pictures/Screenshots`. Open it from Yazi to check that it uses imv.
