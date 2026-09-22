@@ -237,12 +237,16 @@ fi
 # used. Match browser apps by class because windows from existing browser
 # processes do not receive launch tags.
 matching_addresses() {
-    jq -r --arg class "$class" --arg tag "$tag" \
-        '.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i"))) | .address'
+    jq -r --arg class "$class" --arg tag "$tag" --argjson include_marked "${1:-false}" \
+        '.[]
+        | select($include_marked or (any(.tags[]?; test("^markedwin[0-9]+\\*?$")) | not))
+        | select(any(.tags[]?; . == $tag or . == ($tag + "*")) or ((.class // "") | test($class; "i")))
+        | .address'
 }
 
 # Focus a matching window or launch the app on its assigned workspace
-mapfile -t addresses < <(hyprctl clients -j | matching_addresses)
+clients=$(hyprctl clients -j)
+mapfile -t addresses < <(matching_addresses <<< "$clients")
 if ((${#addresses[@]})); then
     address=${addresses[0]}
     if $cycle && ((${#addresses[@]} > 1)); then
@@ -257,6 +261,15 @@ if ((${#addresses[@]})); then
 
     "$HOME/.config/hypr/scripts/focus_window" "$address"
 else
+    # These commands open separate windows; other launches could reactivate a
+    # marked window, so skip them when only marked matches remain
+    case ${command%% *} in
+        brave | firefox | microsoft-edge-dev | ghostty | imv | zathura) ;;
+        *)
+            [[ -z $(matching_addresses true <<< "$clients") ]] || exit 0
+            ;;
+    esac
+
     # Scale Ghostty's 2px bar only when the laptop is the sole connected display
     if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors all -j | jq -er '
         select(length == 1 and .[0].name == "eDP-1")
@@ -264,8 +277,10 @@ else
     '); then
         command="ghostty --adjust-cursor-thickness=$cursor_adjustment ${command#ghostty }"
     fi
+
     hyprctl dispatch "hl.dsp.exec_cmd([[$command]], { workspace = '$workspace', tag = '+$tag' })"
-    # Existing browser processes create windows without the launch workspace rule
+
+    # Apps can take time to open a window, so wait for it before trying to focus it
     for _ in {1..100}; do
         sleep 0.1
         address=$(hyprctl clients -j | matching_addresses | sed -n '1p')
