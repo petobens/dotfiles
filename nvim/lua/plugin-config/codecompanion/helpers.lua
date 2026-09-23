@@ -221,6 +221,21 @@ function M.state.get_chat_model_label(chat)
     local connection = chat.acp_connection
     local models = connection and connection:get_models()
     local model = models and models.currentModelId or M.state.get_adapter_model(adapter)
+    if adapter.name == 'claude_code' and models then
+        -- IDs such as opus[1m] omit the version supplied in the display name
+        for _, option in ipairs(models.availableModels or {}) do
+            if option.modelId == model then
+                local family, version = (option.name or '')
+                    :lower()
+                    :gsub('^claude%s+', '')
+                    :match('^(%a+)%s+(%d+%.?%d*)')
+                if family and version then
+                    model = family .. '-' .. version
+                end
+                break
+            end
+        end
+    end
     return M.state.format_model_label(adapter, model)
 end
 
