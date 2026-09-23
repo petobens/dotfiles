@@ -43,18 +43,22 @@ function fish_prompt
             set mode_text V
     end
 
-    __prompt_bold " $mode_text " $background $mode_color
-    __prompt_transition $mode_color $white
-
-    # User and host
-    set -l user_color $background
-    test "$USER" = root; and set user_color $red
-    __prompt_bold " $USER " $user_color $white
-    if set -q SSH_CLIENT; or set -q SSH_TTY
-        __prompt_bold "󰌘 @"(prompt_hostname)" " $background $white
+    set -l band_color $white
+    set -l user_label $USER
+    if test "$USER" = root
+        set band_color $red
+        set user_label "󰒃 $USER"
+    else
+        __prompt_bold " $mode_text " $background $mode_color
+        __prompt_transition $mode_color $band_color
     end
 
-    set -l band_color $white
+    # User and host
+    if set -q SSH_CLIENT; or set -q SSH_TTY
+        __prompt_bold " 󰌘 $user_label@"(prompt_hostname)' ' $background $band_color
+    else
+        __prompt_bold " $user_label " $background $band_color
+    end
 
     # AWS profile
     if set -q AWS_PROFILE; and test -n "$AWS_PROFILE"

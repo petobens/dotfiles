@@ -192,6 +192,11 @@ abbr -a unfs 'sudo umount /mnt/nfs'
 # System abbreviations
 abbr -a ua sys_update_all
 
+function suf --description 'Open a root Fish shell with my prompt'
+    set -l prompt_file (string escape "$HOME/.config/fish/functions/fish_prompt.fish")
+    sudo -H fish --init-command "set -g fish_greeting; source $prompt_file"
+end
+
 # Network helpers
 function kvpn --description 'Disconnect active VPN connections'
     for uuid in (nmcli -t -f UUID,TYPE connection show --active |
