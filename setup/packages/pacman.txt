@@ -71,6 +71,7 @@ ouch
 poppler
 qpdf
 ripgrep
+ripgrep-all
 rsync
 sqlite
 sshpass

@@ -164,6 +164,23 @@ function ig --description 'Search files with ripgrep and FZF'
     "$EDITOR" $edit_commands
 end
 
+# Document search
+function iga --description 'Search document contents with ripgrep-all and FZF'
+    set -l paths $argv
+    test (count $paths) -gt 0; or set paths .
+    set -l escaped_paths (string join ' ' (string escape -- $paths))
+    set -l reload "test -n {q}; and rga --smart-case --files-with-matches --null -- {q} $escaped_paths; or true"
+    set -lx FZF_DEFAULT_COMMAND ''
+    set -l file (fzf --read0 --print0 --disabled --with-shell='fish -c' \
+        --border-label='Search Documents' --header='type to search contents, enter=open' \
+        --bind="start:reload:$reload" \
+        --bind="change:reload:sleep 0.2; $reload" \
+        --preview='test -n {}; and rga --smart-case --pretty --context 3 -- {q} {}' \
+        --preview-window='right:60%:wrap' | string split0)
+    test -n "$file"; or return
+    "$HOME/.config/hypr/scripts/system_open" "$file"
+end
+
 # Directory browser
 function ll --description 'Browse the current directory with FZF'
     set -l root .
