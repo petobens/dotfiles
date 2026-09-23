@@ -19,6 +19,7 @@ forgit
 onedrive-abraunegg
 pandoc-bin
 voxtype-bin
+wdotool-bin
 
 # Development
 claude-code
