@@ -31,6 +31,7 @@ status_line = [
 ]
 show_tooltips = false
 status_line_use_colors = true
+screen_reader_detection_done = true
 
 # MCP
 [mcp_servers.github]
