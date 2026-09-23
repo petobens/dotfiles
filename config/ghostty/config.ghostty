@@ -20,7 +20,8 @@ foreground = #abb2bf
 cursor-color = #528bff
 cursor-text = #0b0b0b
 cursor-style-blink = false
-# Default to a 2px bar; raise_or_launch scales it for laptop-only use
+# Default to a 2px bar; raise_or_launch scales quickterm/numbers per monitor
+# and other terminals for laptop-only use
 adjust-cursor-thickness = 1
 selection-background = #3e4452
 selection-foreground = #abb2bf

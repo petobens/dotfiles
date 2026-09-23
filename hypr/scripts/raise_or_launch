@@ -270,10 +270,15 @@ else
             ;;
     esac
 
-    # Scale Ghostty's 2px bar only when the laptop is the sole connected display
-    if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors all -j | jq -er '
-        select(length == 1 and .[0].name == "eDP-1")
-        | (.[0].scale * 2 | round) - 1
+    # Quickterm and numbers open on the focused monitor; scale their 2px bar there
+    # Other terminals keep the laptop-only adjustment
+    if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors all -j | jq -er --arg tag "$tag" '
+        if $tag == "quickterm" or $tag == "numbers" then
+            .[] | select(.focused)
+        else
+            select(length == 1 and .[0].name == "eDP-1") | .[0]
+        end
+        | (.scale * 2 | round) - 1
     '); then
         command="ghostty --adjust-cursor-thickness=$cursor_adjustment ${command#ghostty }"
     fi
