@@ -167,6 +167,7 @@ zathura-pdf-poppler
 # Development
 act
 actionlint
+ast-grep
 base-devel
 docker
 docker-buildx
