@@ -261,6 +261,11 @@ exec(
     'Window or region screenshot'
 )
 exec(
+    super_alt .. ' + C',
+    scripts .. 'screenshot_selection --annotate',
+    'Screenshot and annotate'
+)
+exec(
     super_shift .. ' + O',
     scripts .. 'screen_text',
     'Copy text from selected screen region'

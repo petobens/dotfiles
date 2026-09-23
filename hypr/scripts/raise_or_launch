@@ -25,6 +25,7 @@ if [[ ${1:-} == menu ]]; then
         'onedrive|OneDrive|ms-onedrive|Sync status'
         'onlyoffice|OnlyOffice|onlyoffice-desktopeditors|Office suite'
         'quickterm|Quick Terminal|com.mitchellh.ghostty|Terminal'
+        'satty|Satty|satty|Annotate a screenshot or image'
         'slack|Slack|slack|Messaging'
         'spotify|Spotify|spotify|Music player'
         'teams|Microsoft Teams|teams|Messaging'
@@ -170,6 +171,9 @@ case ${1:-} in
         working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
         encoded_directory=$(printf '%s' "$working_directory" | base64 -w0)
         command="ghostty --class=quickterm --title=QuickTerm --working-directory=\"\$(printf %s $encoded_directory | base64 -d)\""
+        ;;
+    satty)
+        exec "$HOME/.config/hypr/scripts/annotate_image"
         ;;
     slack)
         tag=slack

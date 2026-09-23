@@ -4,7 +4,9 @@
 require('full-border'):setup({ type = ui.Border.ROUNDED })
 require('git'):setup()
 require('folder-rules'):setup()
-require('toggle-pane'):entry('max-current')
+if os.getenv('YAZI_SHOW_PREVIEW') ~= '1' then
+    require('toggle-pane'):entry('max-current')
+end
 
 -- Layout
 -- Show tabs above the current directory

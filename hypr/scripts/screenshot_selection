@@ -34,6 +34,9 @@ geometry=$(slurp -d <<< "$windows") || exit 0
 mkdir -p "$directory"
 grim -g "$geometry" "$file"
 cleanup
+if [[ ${1:-} == --annotate ]]; then
+    exec "$(dirname "${BASH_SOURCE[0]}")/annotate_image" "$file" "$file"
+fi
 wl-copy --type image/png < "$file"
 
 notify-send 'Screenshot saved' \

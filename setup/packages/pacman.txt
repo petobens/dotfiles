@@ -157,6 +157,7 @@ ghostscript
 imv
 mpv
 obs-studio
+satty
 system-config-printer
 transmission-gtk
 zathura

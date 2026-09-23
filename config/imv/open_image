@@ -16,7 +16,7 @@ trap 'rm -f "$selection_file"' EXIT
 ghostty \
     --class=yazi \
     --title=yazi \
-    -e fish -c 'yazi $argv' -- "$start_directory" \
+    -e fish -c 'set -lx YAZI_SHOW_PREVIEW 1; yazi $argv' -- "$start_directory" \
     --chooser-file="$selection_file"
 
 mapfile -t images < "$selection_file"

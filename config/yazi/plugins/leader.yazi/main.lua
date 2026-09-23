@@ -42,6 +42,10 @@ local groups = {
         mapping('p', 'Extract archive', 'open', { hovered = true }),
     }),
     group('o', 'Open externally', {
+        mapping('a', 'Open in Satty for annotation', 'shell', {
+            '~/.config/hypr/scripts/annotate_image %h',
+            orphan = true,
+        }),
         mapping('d', 'Drag and drop selected files', 'shell', {
             'dragon-drop -a -x %s',
             orphan = true,

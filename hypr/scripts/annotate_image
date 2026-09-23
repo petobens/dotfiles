@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+file=${1:-}
+if [[ -z $file ]]; then
+    directory=${HYPRSHOT_DIR:-$HOME/Pictures/Screenshots}
+    [[ -d $directory ]] || directory=$HOME/Pictures
+    selection_file=$(mktemp "${XDG_RUNTIME_DIR:-/tmp}/satty-open.XXXXXX")
+    trap 'rm -f "$selection_file"' EXIT
+
+    # Use the same Fish Yazi wrapper as the image viewer
+    # shellcheck disable=SC2016
+    ghostty --class=yazi --title=yazi \
+        -e fish -c 'set -lx YAZI_SHOW_PREVIEW 1; yazi $argv' -- "$directory" \
+        --chooser-file="$selection_file"
+
+    mapfile -t images < "$selection_file"
+    ((${#images[@]})) || exit 0
+    file=${images[0]}
+    rm -f "$selection_file"
+    trap - EXIT
+fi
+
+stem=${file%.*}
+while [[ $stem == *-annotated ]]; do
+    stem=${stem%-annotated}
+done
+output=${2:-$stem-annotated.png}
+exec satty --fullscreen --filename "$file" --output-filename "$output" \
+    --initial-tool brush --copy-command 'wl-copy --type image/png' \
+    --actions-on-enter save-to-clipboard,save-to-file,exit \
+    --actions-on-escape exit
