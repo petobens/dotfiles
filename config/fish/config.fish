@@ -185,8 +185,8 @@ abbr -a uvs 'uv sync'
 abbr -a uvt 'uv run pytest -n auto --cov'
 
 # Network storage abbreviations
-abbr -a mfnfs 'sudo mount synology-flor:/volume1/Shared-DS220 /mnt/nfs'
-abbr -a mpnfs 'sudo mount synology-ds:/volume1/Shared-DS220 /mnt/nfs'
+abbr -a mfnfs 'sudo mount synology-flor.local:/volume1/Shared-DS220 /mnt/nfs'
+abbr -a mpnfs 'sudo mount synology-ds.local:/volume1/Shared-DS220 /mnt/nfs'
 abbr -a unfs 'sudo umount /mnt/nfs'
 
 # System abbreviations
