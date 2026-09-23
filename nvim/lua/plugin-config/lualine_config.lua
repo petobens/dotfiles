@@ -344,6 +344,7 @@ require('lualine').setup({
         lualine_a = {
             {
                 'buffertab',
+                filetype_names = { fugitive = 'gitstatus' },
                 component_separators = { left = ' ' },
                 max_length = function()
                     return vim.o.columns - vim.api.nvim_strwidth('buffers')

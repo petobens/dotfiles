@@ -77,14 +77,27 @@ title = { fg = "#5c6370" }
 [help]
 border = { fg = "#3e4452" }
 
-# Match eza's violet treatment of symlinks
+# Match eza's symlink and executable colors
 [filetype]
-prepend_rules = [{ fg = "#c678dd", is = "link", url = "*" }]
+rules = [
+    { bg = "red", is = "orphan", url = "*" },
+    { fg = "#c678dd", is = "link", url = "*" },
+    { fg = "#e06c75", is = "exec", url = "*" },
+    { fg = "yellow", mime = "**/image/*" },
+    { fg = "magenta", mime = "**/{audio,video}/*" },
+    { fg = "red", mime = "**/application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}" },
+    { fg = "cyan", mime = "**/application/{pdf,doc,rtf}" },
+    { fg = "gray", mime = "vfs/{absent,stale}" },
+    { bg = "red", is = "dummy", url = "*" },
+    { bg = "red", is = "dummy", url = "*/" },
+    { fg = "blue", url = "*/" },
+]
 
 [icon]
 prepend_conds = [
     { fg = "#c678dd", if = "link", text = "" },
     { fg = "#61afef", if = "dir", text = "" },
+    { fg = "#e06c75", if = "exec", text = "" },
     { fg = "#abb2bf", if = "!(dir | link | orphan | dummy | block | char | fifo | sock | exec | sticky)", text = "" },
 ]
 

@@ -18,24 +18,22 @@ function Buffer:get_props()
     self.icon = ''
     if self.options.icons_enabled then
         local dev
-        local _
-        local get_icon = require('nvim-web-devicons').get_icon
+        local devicons = require('nvim-web-devicons')
 
         if self.filetype == 'TelescopePrompt' then
-            dev, _ = get_icon('telescope')
+            dev = devicons.get_icon('telescope')
         elseif self.filetype == 'fugitive' then
-            dev, _ = get_icon('git')
+            dev = devicons.get_icon('git')
         elseif self.buftype == 'terminal' then
-            dev, _ = get_icon('zsh')
+            dev = devicons.get_icon('zsh')
         elseif
             vim.uv.fs_stat(self.file)
             and vim.uv.fs_stat(self.file).type == 'directory'
         then
             dev = ''
         else
-            local bufname = vim.api.nvim_buf_get_name(self.bufnr)
-            local ext = vim.fs.ext(bufname)
-            dev, _ = get_icon(self.file, ext)
+            dev = devicons.get_icon(vim.fs.basename(self.file), vim.fs.ext(self.file))
+                or devicons.get_icon_by_filetype(self.filetype)
         end
         if dev then
             self.icon = dev .. ' '

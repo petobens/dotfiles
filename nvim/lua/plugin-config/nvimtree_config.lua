@@ -322,6 +322,26 @@ local function on_attach(bufnr)
     )
 end
 
+-- Give executables a terminal icon when their filename has no known icon
+local ExecutableIcon = nvimtree_api.Decorator:extend()
+
+function ExecutableIcon:new()
+    self.enabled = true
+    self.highlight_range = 'none'
+    self.icon_placement = 'none'
+    self.icon = { str = '', hl = { 'NvimTreeExecFile' } }
+end
+
+function ExecutableIcon:icon_node(node)
+    if node.type == 'file' and node.executable then
+        local icon = require('nvim-web-devicons').get_icon(node.name)
+        if not icon then
+            return self.icon
+        end
+    end
+end
+
+-- Setup
 require('nvim-tree').setup({
     disable_netrw = false, -- conflicts with Fugitive's Gbrowse
     on_attach = on_attach,
@@ -332,6 +352,11 @@ require('nvim-tree').setup({
         relativenumber = true,
     },
     renderer = {
+        -- This option replaces the list, so keep the built-in decorators
+        decorators = vim.list_extend(
+            { ExecutableIcon },
+            nvimtree_api.config.default().renderer.decorators
+        ),
         root_folder_label = function(path)
             return ' '
                 .. vim.fs.joinpath(
