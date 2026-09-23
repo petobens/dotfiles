@@ -29,12 +29,6 @@ desktop.
 - Prefer editing existing files over creating new ones.
 - Explain non-trivial code or configuration choices when they affect future
   maintenance.
-- When a package or plugin lookup reports a DNS or network failure, treat any
-  subsequent "not found" output as inconclusive. Retry with network access when
-  available; otherwise report that the lookup could not be verified.
-- Sandboxing can block access to Hyprland's local control socket. If a read-only
-  `hyprctl` query fails with a socket error, retry with expanded permissions
-  before concluding that the running session is unavailable.
 
 ### Linting and formatting
 
