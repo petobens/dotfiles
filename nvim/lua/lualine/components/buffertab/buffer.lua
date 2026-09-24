@@ -77,7 +77,8 @@ function Buffer:render()
         name = ' KQ' .. string.format('%s:%s %s', self.bufnr, name, self.icon)
     end
     name = Buffer.apply_padding(name, self.options.padding)
-    self.len = vim.str_utfindex(name)
+    self.len = vim.api.nvim_strwidth(name)
+    name = name:gsub('%%', '%%%%')
 
     -- Setup for mouse clicks
     local line = string.format('%%%s@LualineSwitchBuffer@%s%%T', self.bufnr, name)
@@ -88,9 +89,9 @@ function Buffer:render()
 
     -- Apply separators
     if self.options.self.section < 'lualine_x' and not self.first then
-        local sep_before = self:separator_before()
+        local sep_before, sep_width = self:separator_before()
         line = sep_before .. line
-        self.len = self.len + vim.str_utfindex(sep_before, 'utf-8')
+        self.len = self.len + sep_width
     end
     return line
 end
@@ -102,9 +103,11 @@ function Buffer:separator_before()
         or (self.visible and (self.prev_modified or self.modified))
         or (self.modified and not self.prev_visible)
     then
-        return string.format('%%Z{%s}', self.options.section_separators.left)
+        local separator = self.options.section_separators.left
+        return string.format('%%Z{%s}', separator), vim.api.nvim_strwidth(separator)
     else
-        return self.options.component_separators.left
+        local separator = self.options.component_separators.left
+        return separator, vim.api.nvim_strwidth(separator)
     end
 end
 

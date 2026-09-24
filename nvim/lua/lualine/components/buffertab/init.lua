@@ -157,6 +157,10 @@ function M:update_status()
         end
     end
     local current_buffer = buffers[current]
+    if not current_buffer then
+        _G.LualineBuffertab.idx2bufnr = {}
+        return ''
+    end
     data[#data + 1] = current_buffer:render()
     total_length = current_buffer.len
     local i = 0
