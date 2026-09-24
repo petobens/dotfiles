@@ -780,8 +780,8 @@ Python, Node.js, Rust, and TeX Live tooling. On physical hardware, it checks for
 available firmware without installing it; review the result and run
 `fwupdmgr update` explicitly when ready.
 
-Reboot after it finishes. This activates zram, `scx_lavd`, and Docker group
-membership:
+Reboot after the dotfiles installer finishes. This activates zram, `scx_lavd`,
+and Docker group membership:
 
 ```bash
 sudo reboot
@@ -970,10 +970,11 @@ v
 ```
 
 The session type should be `wayland`; `system_report` checks the graphical
-session targets and failed user units. Fish expands `v` to `nvim`. Let Neovim
-finish installing its `vim.pack` plugins before closing it. QML tooling comes
-from `qt6-declarative` and needs no Mason installation. Tmux also installs
-missing plugins on first launch. Run `fm` and check that Yazi opens cleanly.
+session targets and failed user units. The Fish alias `v` runs `nvim`. Let
+Neovim finish installing its `vim.pack` plugins before closing it. QML tooling
+comes from `qt6-declarative` and needs no Mason installation. Tmux also
+installs missing plugins on first launch. Run `fm` and check that Yazi opens
+cleanly.
 
 Test the desktop controls:
 

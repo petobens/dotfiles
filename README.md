@@ -85,8 +85,8 @@ Verify the finished installation after rebooting with:
 system_report
 ```
 
-Use `system_report --sudo` to include protected boot, Snapper, firewall, and
-SSH checks. Run `system_report --help` for all options.
+Use `system_report --sudo` to include protected boot, Btrfs, Snapper, firewall,
+and SSH checks. Run `system_report --help` for all options.
 
 ## Repository
 
