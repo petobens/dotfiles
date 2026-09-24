@@ -92,6 +92,7 @@ cliphist
 ghostty
 gnome-keyring
 gnome-themes-extra
+grim
 hypridle
 hyprland
 hyprlock
