@@ -50,4 +50,4 @@
     whitespace-error-style        = "#be5046"
     grep-file-style               = "#528bff"
 [interactive]
-    diffFilter = delta --color-only features=interactive
+    diffFilter = delta --color-only
