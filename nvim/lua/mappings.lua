@@ -427,7 +427,17 @@ vim.keymap.set('n', 'gf', function()
     vim.cmd.wincmd({ args = { 'f' }, mods = mods })
 end, { desc = 'Go to file under cursor (vertical if wide)' })
 vim.keymap.set('n', '<Leader>fm', function()
-    vim.system({ 'tmux', 'split-window', '-l', '20', '-c', vim.uv.cwd(), 'yazi' })
+    vim.system({
+        'tmux',
+        'split-window',
+        '-l',
+        '20',
+        '-c',
+        vim.uv.cwd(),
+        'fish',
+        '-ic',
+        'yazi',
+    })
 end, { desc = '[F]ile [m]anager: open Yazi in tmux split' })
 
 -- Quickfix and Location
