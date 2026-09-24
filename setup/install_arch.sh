@@ -71,7 +71,11 @@ hostname=${hostname:-$default_hostname}
 
 read -r -p 'Username [pedro]: ' username
 username=${username:-pedro}
-[[ $username =~ ^[a-z_][a-z0-9_-]*$ ]] || die "Invalid username: $username"
+[[ $username =~ ^[a-z_][a-z0-9_-]{0,31}$ ]] ||
+    die 'Username must be 1-32 lowercase letters, digits, underscores, or hyphens, starting with a letter or underscore'
+if getent passwd "$username" > /dev/null; then
+    die "Username is already reserved: $username"
+fi
 
 section 'Selecting the installation disk'
 lsblk -dp -o NAME,SIZE,MODEL,TRAN,RM,TYPE
@@ -93,6 +97,7 @@ default_disk=$(
 [[ -n $default_disk ]] || die 'No unmounted, non-removable whole disks found'
 read -r -p "Target disk [$default_disk]: " disk
 disk=${disk:-$default_disk}
+disk=$(realpath -e -- "$disk") || die 'Cannot resolve the selected disk'
 [[ -b $disk && $(lsblk -dnro TYPE "$disk") == disk ]] || die "Not a whole disk: $disk"
 if lsblk -nrpo MOUNTPOINTS "$disk" | grep '[^[:space:]]' > /dev/null; then
     die "$disk or one of its partitions is mounted"
