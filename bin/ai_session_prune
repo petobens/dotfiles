@@ -34,6 +34,8 @@ def session_stats(path: Path, adapter: str) -> tuple[int, int]:
                     continue
 
                 if adapter == "claude":
+                    if d.get("isMeta"):
+                        continue
                     role = d.get("type")
                     content = d.get("message", {}).get("content", "")
                     if isinstance(content, list):
@@ -70,6 +72,18 @@ def session_stats(path: Path, adapter: str) -> tuple[int, int]:
                     role not in {"user", "assistant"}
                     or not isinstance(content, str)
                     or not content
+                ):
+                    continue
+                if (
+                    adapter == "claude"
+                    and role == "user"
+                    and content.lstrip().startswith(
+                        (
+                            "<command-name>",
+                            "<local-command-stdout>",
+                            "<local-command-stderr>",
+                        )
+                    )
                 ):
                     continue
                 if role == "user":
@@ -146,6 +160,9 @@ def prune(
                 small += 1
             if not dry_run:
                 f.unlink()
+                session_dir = f.with_suffix("")
+                if name == "claude" and session_dir.is_dir():
+                    shutil.rmtree(session_dir)
         else:
             kept += 1
     verb = "would delete" if dry_run else "deleted"
@@ -178,7 +195,7 @@ def main() -> None:
     single_exchange_cutoff = now - MIN_SINGLE_EXCHANGE_AGE
     total = prune(
         "claude",
-        list(CLAUDE_ROOT.glob("**/*.jsonl")),
+        list(CLAUDE_ROOT.glob("*/*.jsonl")),
         cutoff,
         single_exchange_cutoff,
         args.dry_run,
