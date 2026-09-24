@@ -115,6 +115,10 @@ end
 
 local function clean_sphinx_build()
     local project_root = vim.fs.root(0, 'pyproject.toml')
+    if not project_root then
+        vim.notify('No pyproject.toml found for Sphinx cleanup', vim.log.levels.WARN)
+        return
+    end
     local docs_dir = vim.fs.joinpath(project_root, 'docs')
     local package_manager = 'uv'
     if _G.PyVenv and _G.PyVenv.active_venv and _G.PyVenv.active_venv.package_manager then
@@ -125,13 +129,13 @@ local function clean_sphinx_build()
     vim.system(
         { package_manager, 'run', 'make', 'clean' },
         { cwd = docs_dir, text = true },
-        function(obj)
+        vim.schedule_wrap(function(obj)
             if obj.code == 0 then
                 vim.print('Cleaning sphinx html build... done!')
             else
-                vim.print(obj.stderr or 'Sphinx clean failed!')
+                vim.notify(obj.stderr or 'Sphinx clean failed!', vim.log.levels.ERROR)
             end
-        end
+        end)
     )
 end
 
