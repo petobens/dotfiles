@@ -113,11 +113,16 @@ monitors=$(hyprctl monitors -j | jq -er '
     if length == 0 then error("no active monitors")
     else .[] | [.name, .scale] | @tsv
     end
-')
+') || monitors=''
 
-while IFS=$'\t' read -r monitor scale; do
-    write_widgets "$monitor" "$scale"
-done <<< "$monitors" > "$temporary"
+# A failed monitor query must still produce a lock screen, even on the first run
+if [[ -n $monitors ]]; then
+    while IFS=$'\t' read -r monitor scale; do
+        write_widgets "$monitor" "$scale"
+    done <<< "$monitors"
+else
+    write_widgets '' 1
+fi > "$temporary"
 
 mv "$temporary" "$widgets"
 trap - EXIT
