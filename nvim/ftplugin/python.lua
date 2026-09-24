@@ -33,7 +33,7 @@ local function _project_root()
 end
 
 -- Running
-local function _parse_qf(task_metadata, cwd, active_window_id)
+local function _parse_qf(task_metadata, active_window_id)
     local pdb = false
 
     local current_qf = vim.fn.getqflist()
@@ -47,21 +47,6 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
         end
     end
 
-    if task_metadata and task_metadata.name == 'run_precommit' then
-        -- Fix file paths
-        for _, v in ipairs(new_qf) do
-            local fn = vim.fs.normalize(vim.api.nvim_buf_get_name(v.bufnr))
-            for _, i in ipairs(task_metadata.project_files) do
-                if string.match(i, fn) then
-                    vim.cmd.badd(i)
-                    v.bufnr = vim.fn.bufnr(i)
-                    break
-                end
-            end
-        end
-        vim.cmd.lcd(cwd)
-    end
-
     if next(new_qf) ~= nil then
         vim.fn.setqflist({}, ' ', { items = new_qf, title = task_metadata.run_cmd })
         if not pdb then
@@ -72,19 +57,13 @@ local function _parse_qf(task_metadata, cwd, active_window_id)
 end
 
 local function run_overseer(task_name)
-    local cwd = vim.uv.cwd()
     local current_win_id = vim.api.nvim_get_current_win()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-
-    if task_name == 'run_precommit' then
-        vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
-    end
 
     overseer.run_task({ name = string.format('%s', task_name) }, function(task)
         vim.cmd.cclose()
         task:subscribe('on_complete', function()
-            task.metadata.name = task_name
-            _parse_qf(task.metadata, cwd, current_win_id)
+            _parse_qf(task.metadata, current_win_id)
         end)
     end)
 
@@ -193,7 +172,6 @@ local function tmux2qf(cmd_opt)
     })
     _parse_qf(
         { run_cmd = 'Tmux Window: ' .. tmux_win_nr },
-        vim.uv.cwd(),
         vim.api.nvim_get_current_win()
     )
 end
