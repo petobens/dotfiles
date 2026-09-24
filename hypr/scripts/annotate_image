@@ -11,7 +11,7 @@ if [[ -z $file ]]; then
     # Use the same Fish Yazi wrapper as the image viewer
     # shellcheck disable=SC2016
     ghostty --class=yazi --title=yazi \
-        -e fish -c 'set -lx YAZI_SHOW_PREVIEW 1; yazi $argv' -- "$directory" \
+        -e fish -ic 'set -lx YAZI_SHOW_PREVIEW 1; yazi $argv' -- "$directory" \
         --chooser-file="$selection_file"
 
     mapfile -t images < "$selection_file"

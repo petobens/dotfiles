@@ -100,7 +100,7 @@ case ${1:-} in
         working_directory=$(tmux display -p '#{pane_current_path}' 2> /dev/null || printf '%s' "$HOME")
         # Base64 protects the path through Lua and shell command parsing
         encoded_directory=$(printf '%s' "$working_directory" | base64 -w0)
-        command="ghostty --class=yazi --title=yazi --working-directory=\"\$(printf %s $encoded_directory | base64 -d)\" -e fish -c yazi"
+        command="ghostty --class=yazi --title=yazi --working-directory=\"\$(printf %s $encoded_directory | base64 -d)\" -e fish -ic yazi"
         ;;
     firefox)
         tag=firefox
@@ -197,7 +197,7 @@ case ${1:-} in
         tag=terminal
         class='^terminal$'
         workspace=5
-        command='ghostty --class=terminal -e fish -l -c tm'
+        command='ghostty --class=terminal -e fish -il -c tm'
         ;;
     transmission)
         tag=transmission

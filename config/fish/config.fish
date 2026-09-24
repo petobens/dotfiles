@@ -13,6 +13,9 @@ set -gx EZA_COLORS (string join : 'di=38;2;97;175;239' \
     'or=38;2;36;39;46;48;2;198;120;221' 'pi=38;2;86;182;194' \
     'so=38;2;229;192;123' 'st=38;2;152;195;121')
 
+# Keep aliases and interactive setup out of scripts and editor commands
+status is-interactive; or return
+
 # Shell behavior
 function fish_should_add_to_history --description 'Filter low-value shell history entries'
     string match -qr '^\s' -- "$argv[1]"; and return 1
@@ -25,10 +28,8 @@ end
 set -g fish_greeting
 set -g fish_history main
 set -g fish_transient_prompt 1
-if status is-interactive
-    fish_config theme choose onedarkish
-    stty -ixon
-end
+fish_config theme choose onedarkish
+stty -ixon
 
 # Key bindings
 set -g fish_vi_force_cursor 1
