@@ -95,7 +95,7 @@ vim.keymap.set('n', '<Leader>ri', function()
 end, { buf = 0, desc = '[R]un current file in [i]nterpreter (save and source)' })
 
 vim.keymap.set(
-    'v',
+    'x',
     '<Leader>ri',
     vim.cmd.RunVisualLua,
     { buf = 0, desc = '[R]un selection in [i]nterpreter' }

@@ -84,7 +84,7 @@ vim.keymap.set(
 )
 
 vim.keymap.set(
-    'v',
+    'x',
     '<Leader>ri',
     vim.cmd.ToggleTermSendVisualSelection,
     { desc = '[R]un selection in [i]nterpreter terminal' }

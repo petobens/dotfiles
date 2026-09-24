@@ -236,7 +236,7 @@ end
 -- Mappings
 function M.setup_mappings(group)
     -- Global
-    vim.keymap.set('v', '<Leader>ec', explain_selection, {
+    vim.keymap.set('x', '<Leader>ec', explain_selection, {
         desc = '[E]xplain [c]ode selection with CodeCompanion',
     })
 

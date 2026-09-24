@@ -1,7 +1,7 @@
 require('sniprun').setup({})
 
 vim.keymap.set(
-    { 'n', 'v' },
+    { 'n', 'x' },
     '<Leader>br',
     '<Plug>SnipRun',
     { desc = '[B]lock [r]un with SnipRun' }

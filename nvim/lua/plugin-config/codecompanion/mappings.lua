@@ -373,13 +373,13 @@ local function setup_global_mappings()
         desc = '[C]hat[G]PT: go to or toggle CodeCompanion',
     })
 
-    vim.keymap.set({ 'n', 'v' }, '<Leader>cr', function()
+    vim.keymap.set({ 'n', 'x' }, '<Leader>cr', function()
         vim.api.nvim_input(':CodeCompanion ')
     end, {
         desc = '[C]odeCompanion [r]un command-line',
     })
 
-    vim.keymap.set({ 'n', 'v' }, '<Leader>ca', vim.cmd.CodeCompanionActions, {
+    vim.keymap.set({ 'n', 'x' }, '<Leader>ca', vim.cmd.CodeCompanionActions, {
         desc = '[C]odeCompanion [a]ctions: open',
     })
 
@@ -410,7 +410,7 @@ local function setup_global_mappings()
         desc = '[A]dd [c]urrent file to CodeCompanion',
     })
 
-    vim.keymap.set('v', '<Leader>cp', paste_selection_to_chat, {
+    vim.keymap.set('x', '<Leader>cp', paste_selection_to_chat, {
         desc = '[C]hat [p]aste: add selection to CodeCompanion',
     })
 
@@ -419,7 +419,7 @@ local function setup_global_mappings()
         desc = '[R]eview [c]omment: add with CodeCompanion',
     })
 
-    vim.keymap.set('v', '<Leader>rc', function()
+    vim.keymap.set('x', '<Leader>rc', function()
         local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
         local anchor_line = vim.fn.line('v')
         vim.cmd.normal({ vim.keycode('<Esc>'), bang = true })

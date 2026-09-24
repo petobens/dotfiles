@@ -74,7 +74,7 @@ function M.setup_mappings(group)
         desc = '[C]odeCompanion: as[k] in CLI',
     })
 
-    vim.keymap.set('v', '<Leader>et', explain_selection_with_cli, {
+    vim.keymap.set('x', '<Leader>et', explain_selection_with_cli, {
         desc = '[E]xplain selection in [t]erminal CLI',
     })
 

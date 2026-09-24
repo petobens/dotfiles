@@ -445,7 +445,7 @@ vim.keymap.set('n', '<Leader>rl', function()
     run_ipython('line')
 end, { buf = 0, desc = '[R]un current [l]ine in IPython' })
 
-vim.keymap.set('v', '<Leader>ri', function()
+vim.keymap.set('x', '<Leader>ri', function()
     run_ipython('selection')
 end, { buf = 0, desc = '[R]un selection in [i]nterpreter (IPython)' })
 

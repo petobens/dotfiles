@@ -140,7 +140,7 @@ function M.setup()
         pickers.rgrep({ '--no-ignore-vcs' })
     end, { desc = '[R]ecursive [G]rep: prompt for directory (no VCS ignore)' })
 
-    vim.keymap.set({ 'n', 'v' }, '<Leader>dg', function()
+    vim.keymap.set({ 'n', 'x' }, '<Leader>dg', function()
         pickers.igrep(nil, u.get_selection())
     end, { desc = '[D]enite [g]rep: selection in buffer directory' })
 
@@ -151,7 +151,7 @@ function M.setup()
         { desc = '[D]enite [l]ines: fuzzy find in buffer' }
     )
 
-    vim.keymap.set({ 'n', 'v' }, '<Leader>dw', function()
+    vim.keymap.set({ 'n', 'x' }, '<Leader>dw', function()
         pickers.search_buffer(u.get_selection())
     end, { desc = '[D]enite [w]ord: fuzzy find selection in buffer' })
 
@@ -191,7 +191,7 @@ function M.setup()
     )
 
     vim.keymap.set(
-        'v',
+        'x',
         '<Leader>gl',
         builtin.git_bcommits_range,
         { desc = '[G]it [l]og commits (visual range)' }

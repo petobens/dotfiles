@@ -324,12 +324,12 @@ vim.keymap.set('n', '<Leader>gP', function()
     vim.cmd.Git('pull')
 end, { desc = '[G]it [P]ull' })
 
-vim.keymap.set({ 'n', 'v' }, '<Leader>gb', ':GBrowse<CR>', {
+vim.keymap.set({ 'n', 'x' }, '<Leader>gb', ':GBrowse<CR>', {
     desc = '[G]it [b]rowse object',
 })
 
 vim.keymap.set(
-    { 'n', 'v' },
+    { 'n', 'x' },
     '<Leader>gB',
     ':GBrowse!<CR>',
     { desc = '[G]it [B]rowse permalink: copy' }
