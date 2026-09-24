@@ -17,7 +17,7 @@ done
 
 probes=(
     "bufexists('$escaped_file')"
-    "!empty(filter(getbufinfo(), 'stridx(v:val.name, \"${file%/*}/\") == 0'))"
+    "!empty(filter(getbufinfo(), 'stridx(v:val.name, \"${escaped_file%/*}/\") == 0'))"
 )
 [[ ${#sockets[@]} == 1 ]] && probes+=(1)
 
