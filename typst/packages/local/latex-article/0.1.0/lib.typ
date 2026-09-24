@@ -290,10 +290,11 @@
   show heading.where(level: 1): it => {
     if it.numbering != none { _reset-article-numbering() }
     if it.numbering != none or _appendix-mode.at(it.location()) {
-      block(above: 1.5em, below: 1em)[
+      // Retrofit skips labeled blocks when counting bibliography entries
+      [#block(above: 1.5em, below: 1em)[
         #set text(size: 14.4pt, weight: "bold")
         #heading-title(it)
-      ]
+      ]<article-heading>]
     } else {
       v(1.5em)
       text(size: 14.4pt, weight: "bold", it)
