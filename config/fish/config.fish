@@ -29,7 +29,7 @@ set -g fish_greeting
 set -g fish_history main
 set -g fish_transient_prompt 1
 fish_config theme choose onedarkish
-stty -ixon
+isatty stdin; and stty -ixon
 
 # Key bindings
 set -g fish_vi_force_cursor 1
