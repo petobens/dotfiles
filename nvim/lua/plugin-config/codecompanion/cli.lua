@@ -1,18 +1,9 @@
 local codecompanion = require('codecompanion')
+local u = require('utils')
 
 local M = {}
 
--- Constants
-local GITHUB_TOKEN = 'GITHUB_TOKEN="$(pass show git/github/petobens/api-key)"'
-
 -- Helpers
-local function with_env(cmd, env)
-    return {
-        cmd = 'sh',
-        args = { '-lc', table.concat(env, ' ') .. ' exec "$@"', 'sh', cmd },
-    }
-end
-
 local function explain_selection_with_cli()
     codecompanion.cli('Can you explain this code?', {
         focus = false,
@@ -24,6 +15,16 @@ local function explain_selection_with_cli()
 end
 
 local function setup_codecompanion_cli_mappings(args)
+    -- FileType runs before the CLI starts, so the process inherits the token
+    if not vim.env.GITHUB_TOKEN or vim.env.GITHUB_TOKEN == '' then
+        local token, err = u.resolve_pass('git/github/petobens/api-key')
+        if token then
+            vim.env.GITHUB_TOKEN = token
+        else
+            vim.notify(err, vim.log.levels.WARN)
+        end
+    end
+
     vim.keymap.set('t', '<C-c>', function()
         vim.api.nvim_feedkeys(vim.keycode('<C-\\><C-n>'), 'n', false)
         vim.schedule(function()
@@ -52,8 +53,8 @@ function M.build()
     return {
         agent = 'codex',
         agents = {
-            codex = with_env('codex', { GITHUB_TOKEN }),
-            claude_code = with_env('claude', { GITHUB_TOKEN }),
+            codex = { cmd = 'codex' },
+            claude_code = { cmd = 'claude' },
         },
     }
 end

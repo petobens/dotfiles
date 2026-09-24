@@ -322,6 +322,16 @@ gopass config generate.autoclip false
 gopass config core.notifications false
 gopass config mounts.path "$HOME/.password-store"
 
+section 'Configuring Claude GitHub MCP'
+if command -v claude > /dev/null &&
+    ! jq -e '.mcpServers.github != null' "$HOME/.claude.json" > /dev/null 2>&1; then
+    # Store the variable reference; launchers supply the token at runtime
+    # shellcheck disable=SC2016
+    claude mcp add --scope user --transport http github \
+        https://api.githubcopilot.com/mcp/ \
+        --header 'Authorization: Bearer ${GITHUB_TOKEN}'
+fi
+
 section 'Building bat syntax theme cache'
 # Read from the repository because configuration symlinks are created afterward
 if command -v bat > /dev/null; then

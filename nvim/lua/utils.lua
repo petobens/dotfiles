@@ -145,7 +145,8 @@ function M.resolve_pass(path)
         return pass_cache[normalized_path]
     end
 
-    local result = vim.system({ 'pass', 'show', normalized_path }, { text = true }):wait()
+    local result = vim.system({ 'pass', 'show', '-o', normalized_path }, { text = true })
+        :wait()
     if result.code ~= 0 then
         return nil,
             vim.trim(result.stderr or '') ~= '' and vim.trim(result.stderr)

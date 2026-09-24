@@ -292,14 +292,14 @@ end
 
 # AI helpers
 function claude --description 'Run Claude with the GitHub MCP token'
-    set -l github_token (pass show git/github/petobens/api-key)
+    set -l github_token (pass show -o git/github/petobens/api-key)
     or return
     set -lx GITHUB_TOKEN "$github_token"
     command claude $argv
 end
 
 function codex --description 'Run Codex with the GitHub MCP token'
-    set -l github_token (pass show git/github/petobens/api-key)
+    set -l github_token (pass show -o git/github/petobens/api-key)
     or return
     set -lx GITHUB_TOKEN "$github_token"
     command codex $argv
