@@ -100,10 +100,9 @@ local quickfix_ext = {
         },
         lualine_b = {
             function()
-                if is_loclist() then
-                    return vim.fn.getloclist(0, { title = 0 }).title
-                end
-                return vim.fn.getqflist({ title = 0 }).title
+                local title = is_loclist() and vim.fn.getloclist(0, { title = 0 }).title
+                    or vim.fn.getqflist({ title = 0 }).title
+                return (title:gsub('%%', '%%%%'))
             end,
         },
         lualine_z = { 'location' },
