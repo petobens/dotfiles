@@ -47,27 +47,43 @@ local function patch_tool_approval_notification()
 end
 
 local function patch_acp_cwd()
-    -- ACP connects asynchronously and reads vim.fn.getcwd() when it spawns the
-    -- agent and opens the session; that returns the window-local dir, so agents
-    -- spawn in a buffer subdir and scatter empty metadata dirs. Force the git
-    -- root of the global cwd instead
-    local Connection = require('codecompanion.acp')
-    for _, name in ipairs({ 'start_agent_process', '_establish_session' }) do
-        local original = Connection[name]
-        Connection[name] = function(self, ...)
-            local getcwd = vim.fn.getcwd
-            vim.fn.getcwd = function(...)
-                return u.git_root(vim.uv.cwd()) or getcwd(...)
-            end
-            local ok, result = pcall(original, self, ...)
-            vim.fn.getcwd = getcwd
-
-            if not ok then
-                error(result)
-            end
-
-            return result
+    -- Capture the invoking buffer's Git root when creating a chat and keep it on reopen
+    -- Keep directories per connection so overlapping requests cannot affect each other
+    local Chat = require('codecompanion.interactions.chat')
+    local new_chat = Chat.new
+    Chat.new = function(args)
+        if not args.cwd then
+            local context = args.buffer_context or {}
+            local path = context.buftype == '' and context.path or ''
+            args.cwd = u.git_root(path) or vim.uv.cwd()
         end
+        return new_chat(args)
+    end
+
+    local Connection = require('codecompanion.acp')
+    local new = Connection.new
+    Connection.new = function(...)
+        local connection = new(...)
+        local cwd = connection.chat and connection.chat.opts.cwd or vim.uv.cwd()
+        cwd = u.git_root(cwd) or cwd
+        local job = connection.methods.job
+        connection.methods.job = function(cmd, opts, ...)
+            opts.cwd = cwd
+            return job(cmd, opts, ...)
+        end
+
+        local send_rpc_request = connection.send_rpc_request
+        connection.send_rpc_request = function(self, method, params, ...)
+            if
+                method == Connection.METHODS.SESSION_NEW
+                or method == Connection.METHODS.SESSION_LOAD
+            then
+                -- Session requests can yield; retain this connection's launch directory
+                params = vim.tbl_extend('force', params, { cwd = cwd })
+            end
+            return send_rpc_request(self, method, params, ...)
+        end
+        return connection
     end
 end
 

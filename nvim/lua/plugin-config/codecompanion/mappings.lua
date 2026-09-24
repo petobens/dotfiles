@@ -50,8 +50,18 @@ local function open_debug(chat_obj)
     end, 1)
 end
 
-local function create_chat()
-    vim.cmd.CodeCompanionChat()
+local function create_chat(cwd)
+    if cwd then
+        local args = {
+            cwd = cwd,
+            buffer_context = require('codecompanion.utils.context').get(),
+        }
+        args.callbacks =
+            require('codecompanion.interactions.shared.rules.helpers').add_callbacks(args)
+        require('codecompanion.interactions.chat').new(args)
+    else
+        vim.cmd.CodeCompanionChat()
+    end
     -- Hack to make completions work immediately in a new chat
     vim.cmd.stopinsert()
     vim.defer_fn(function()
@@ -60,7 +70,7 @@ local function create_chat()
 end
 
 local function create_chat_in_directory(chat_obj)
-    local cwd = vim.fn.getcwd()
+    local cwd = chat_obj.opts.cwd or vim.uv.cwd()
     local root = u.git_root(cwd)
     vim.ui.input({
         prompt = 'Chat directory: ',
@@ -72,14 +82,13 @@ local function create_chat_in_directory(chat_obj)
         end
 
         dir = vim.fs.normalize(dir)
-        if vim.fn.isdirectory(dir) == 0 then
+        local stat = vim.uv.fs_stat(dir)
+        if not stat or stat.type ~= 'directory' then
             return vim.notify('Not a directory: ' .. dir, vim.log.levels.ERROR)
         end
 
         chat_obj.ui:hide()
-        vim.cmd.cd(dir)
-        create_chat()
-        codecompanion.last_chat().opts.cwd = u.git_root(dir) or dir
+        create_chat(u.git_root(dir) or dir)
     end)
 end
 
@@ -90,7 +99,9 @@ function M.chat_keymaps()
         create_chat = {
             modes = { n = '<A-c>', i = '<A-c>' },
             description = 'Create new chat',
-            callback = create_chat,
+            callback = function()
+                create_chat()
+            end,
         },
         create_chat_in_directory = {
             modes = { n = '<A-e>', i = '<A-e>' },
