@@ -49,10 +49,13 @@ local function _parse_logfile(filename, active_window_id)
     end
     local content = require('overseer.files').read_file(filename)
     local lines = vim.split(content, '\n')
+    -- Resolve relative log paths without leaving a window-local directory behind
+    local cwd = vim.fn.chdir(vim.fs.dirname(filename))
     local items = vim.fn.getqflist({
         lines = lines,
         efm = LATEX_EFM,
     }).items
+    vim.fn.chdir(cwd)
 
     local has_errors = false
     local new_qf = {}
@@ -75,13 +78,10 @@ local function _parse_logfile(filename, active_window_id)
 end
 
 local function compile_latex()
-    local cwd = vim.uv.cwd()
     local current_win_id = vim.api.nvim_get_current_win()
     local log_file = (vim.fs.normalize(vim.b.vimtex.tex)):match('(.+)%.[^/]+$') .. '.log'
     local previous_log_stat = vim.uv.fs_stat(log_file)
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    -- We seem to need the following for proper qf parsing
-    vim.cmd.lcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
     overseer.run_task({ name = 'run_arara', autostart = false }, function(task)
         vim.cmd.cclose()
         task:subscribe('on_complete', function(_, status)
@@ -96,7 +96,6 @@ local function compile_latex()
                     )
                 local has_latex_errors = log_changed
                     and _parse_logfile(log_file, current_win_id)
-                vim.cmd.lcd({ args = { cwd } })
                 if status ~= overseer.STATUS.FAILURE or has_latex_errors then
                     return
                 end
