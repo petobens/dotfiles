@@ -62,13 +62,17 @@ local function pyvenv()
     return string.format('󰆍 %s-%s', venv.package_manager, venv.python_version)
 end
 
-_G.LualineConfig.trailing_last = ''
 local function trailing_whitespace()
-    local space = vim.fn.search([[\s\+$]], 'nwc')
     if vim.api.nvim_get_mode().mode:find('^n') then
-        _G.LualineConfig.trailing_last = space ~= 0 and ' ' .. space or ''
+        local tick = vim.api.nvim_buf_get_changedtick(0)
+        -- A clean buffer stays clean until its text changes
+        if vim.b.lualine_whitespace_clean_tick ~= tick then
+            local space = vim.fn.search([[\s\+$]], 'nwc')
+            vim.b.lualine_trailing_last = space ~= 0 and ' ' .. space or ''
+            vim.b.lualine_whitespace_clean_tick = space == 0 and tick or nil
+        end
     end
-    return _G.LualineConfig.trailing_last
+    return vim.b.lualine_trailing_last or ''
 end
 
 -- Resize conditions
