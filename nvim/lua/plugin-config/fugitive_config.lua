@@ -283,7 +283,10 @@ vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     group = git_commit_edit,
     pattern = { '*.git/COMMIT_EDITMSG' },
     callback = function()
-        vim.api.nvim_set_current_win(_G.fugitiveConfig.gstatus_winid)
+        local win = _G.fugitiveConfig.gstatus_winid
+        if win and vim.api.nvim_win_is_valid(win) then
+            vim.api.nvim_set_current_win(win)
+        end
     end,
 })
 
