@@ -24,13 +24,13 @@ end
 
 -- Mappings
 vim.keymap.set(
-    { 'n', 'v', 'o' },
+    { 'n', 'x', 'o' },
     '<tab>',
     '%',
     { remap = true, desc = 'Jump to next matching pair' }
 )
 vim.keymap.set(
-    { 'n', 'v', 'o' },
+    { 'n', 'x', 'o' },
     '<s-tab>',
     'g%',
     { remap = true, desc = 'Jump to previous matching pair' }
