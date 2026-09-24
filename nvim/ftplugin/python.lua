@@ -197,7 +197,10 @@ local function tmux2qf(cmd_opt)
         vim.api.nvim_get_current_win()
     )
 end
-vim.api.nvim_create_user_command('Tmux2Qf', tmux2qf, { nargs = 1 })
+vim.api.nvim_buf_create_user_command(0, 'Tmux2Qf', tmux2qf, {
+    nargs = 1,
+    desc = 'Load tmux pane output into quickfix',
+})
 
 -- Debugging
 local function add_breakpoint()
@@ -266,71 +269,41 @@ local function set_lsp_path(path)
 end
 
 function _G.PyVenv.activate()
-    if vim.b.pyvenv and vim.b.pyvenv == _G.PyVenv.active_venv.path then
+    local project_root = _project_root()
+    local venv_path = vim.fs.joinpath(project_root, '.venv')
+    if venv_path == _G.PyVenv.active_venv.path then
+        vim.b.pyvenv = venv_path
         return
-    else
-        if
-            next(_G.PyVenv.active_venv) ~= nil
-            and vim.tbl_contains(
-                _G.PyVenv.active_venv.project_files,
-                vim.api.nvim_buf_get_name(0)
-            )
-        then
-            -- Current file belongs to the project of the active env then simply
-            -- set the buffer cache variable since we can reuse the existing venv
-            vim.b.pyvenv = _G.PyVenv.active_venv.path
-            return
-        else
-            _G.PyVenv.deactivate()
+    end
+    if _G.PyVenv.active_venv.path then
+        _G.PyVenv.deactivate()
+    end
+
+    local stat = vim.uv.fs_stat(venv_path)
+    if not stat or stat.type ~= 'directory' then
+        vim.b.pyvenv = 'none'
+        return
+    end
+
+    -- Read the existing environment without running uv or syncing dependencies
+    local config = '\n' .. (u.read_file(vim.fs.joinpath(venv_path, 'pyvenv.cfg')) or '')
+    -- uv writes version_info; Python's venv writes version
+    local version = config:match('\nversion_info%s*=%s*(%d+%.%d+%.%d+)')
+        or config:match('\nversion%s*=%s*(%d+%.%d+%.%d+)')
+    _G.PyVenv.active_venv = {
+        package_manager = 'uv',
+        path = venv_path,
+        project_root = project_root,
+        python_version = version or '?',
+    }
+    vim.b.pyvenv = venv_path
+    vim.env.PATH = string.format('%s/bin:%s', venv_path, vim.env.PATH)
+    vim.env.VIRTUAL_ENV = venv_path
+    vim.defer_fn(function()
+        if _G.PyVenv.active_venv.path == venv_path then
+            set_lsp_path(venv_path .. '/bin/python')
         end
-    end
-
-    -- Save working dir and cd to window cwd (lcd) to ensure system call works
-    local lwd = vim.uv.cwd()
-    vim.cmd.lcd(lwd)
-
-    -- If there is no active venv look for one (but just once)
-    if vim.b.pyvenv == nil then
-        local project_root = _project_root()
-        local venv_path = vim.fs.joinpath(project_root, '.venv')
-        local stat = vim.uv.fs_stat(venv_path)
-        if stat and stat.type == 'directory' then
-            vim.b.pyvenv = venv_path
-            local py_files = vim.fs.find(function(name, path)
-                return vim.fs.ext(name) == 'py'
-                    and not vim.startswith(path, project_root .. '/.venv/')
-            end, {
-                limit = math.huge,
-                type = 'file',
-                path = project_root,
-            })
-            local result = vim.system(
-                { 'uv', 'run', 'python', '--version' },
-                { text = true, cwd = project_root }
-            ):wait()
-            local py_version = vim.trim(result.stdout or ''):match('%d+.%d+.%d+')
-            _G.PyVenv.active_venv = {
-                package_manager = 'uv',
-                path = venv_path,
-                project_files = py_files,
-                project_root = project_root,
-                python_version = py_version,
-            }
-        else
-            vim.b.pyvenv = 'none'
-        end
-    end
-
-    -- Actually activate the venv if it was found
-    if vim.b.pyvenv ~= 'none' then
-        vim.env.PATH = string.format('%s/bin:%s', vim.b.pyvenv, vim.env.PATH)
-        vim.env.VIRTUAL_ENV = vim.b.pyvenv
-        local lsp_path = vim.b.pyvenv .. '/bin/python'
-        vim.defer_fn(function()
-            set_lsp_path(lsp_path)
-        end, 100)
-    end
-    vim.cmd.lcd(lwd)
+    end, 100)
 end
 
 function _G.PyVenv.deactivate()
@@ -507,7 +480,7 @@ vim.keymap.set(
     'n',
     '<Leader>lt',
     ':Tmux2Qf ',
-    { silent = false, desc = '[L]oad [t]mux output to quickfix' }
+    { buf = 0, silent = false, desc = '[L]oad [t]mux output to quickfix' }
 )
 
 ---- Pre-commit

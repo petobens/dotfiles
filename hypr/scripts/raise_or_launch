@@ -276,7 +276,7 @@ else
 
     # Quickterm and numbers open on the focused monitor; scale their 2px bar there
     # Other terminals keep the laptop-only adjustment
-    if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors all -j | jq -er --arg tag "$tag" '
+    if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors -j | jq -er --arg tag "$tag" '
         if $tag == "quickterm" or $tag == "numbers" then
             .[] | select(.focused)
         else

@@ -6,8 +6,8 @@ local function custom_foldtext()
     local foldstart = vim.v.foldstart
     local line = vim.api.nvim_buf_get_lines(bufnr, foldstart - 1, foldstart, false)[1]
         or ''
-    local marker = vim.wo.foldmarker or ''
-    return vim.trim(line, marker)
+    local marker = vim.split(vim.wo.foldmarker, ',', { plain = true })[1]
+    return vim.trim((line:gsub(vim.pesc(marker) .. '%d*', '')))
 end
 
 -- Core options
@@ -250,7 +250,6 @@ vim.filetype.add({
         ['sqlfluff'] = 'toml',
     },
     pattern = {
-        ['.*doc/.*'] = 'help',
         ['.*github/workflows/.*'] = 'ghaction',
         ['.*fish/themes/.*%.theme'] = 'fish',
         ['.*imv/config'] = 'confini',
