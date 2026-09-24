@@ -51,23 +51,6 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
-vim.api.nvim_create_autocmd(
-    { 'BufWinEnter', 'BufWritePost', 'TextChanged', 'InsertLeave' },
-    {
-        desc = 'Refresh folds for filetypes where we use treesitter foldexpr',
-        group = vim.api.nvim_create_augroup('treesitter_folds', { clear = true }),
-        pattern = { '*.md', '*.py', '*.typ' },
-        callback = function()
-            vim.schedule(function()
-                local luasnip = package.loaded.luasnip
-                if not luasnip or not luasnip.in_snippet() then
-                    vim.cmd.normal({ args = { 'zx' }, bang = true })
-                end
-            end)
-        end,
-    }
-)
-
 -- Helpers
 local function incremental_select(direction)
     local buf = vim.api.nvim_get_current_buf()

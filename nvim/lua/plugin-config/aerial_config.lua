@@ -67,7 +67,7 @@ require('aerial').setup({
         max_width = 0.25,
         min_width = 0.25,
         keymaps = {
-            ['<q>'] = 'actions.close',
+            ['q'] = 'actions.close',
             ['v'] = 'actions.jump_vsplit',
             ['s'] = 'actions.jump_split',
         },

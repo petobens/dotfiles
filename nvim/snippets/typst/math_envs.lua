@@ -151,7 +151,7 @@ $<>]],
         )
     ),
     s(
-        { trig = 'mat', dscr = '[Mat]rix' },
+        { trig = 'matrix', dscr = '[Matrix]' },
         fmta(
             [[mat(
   <>, <>;
