@@ -277,16 +277,16 @@ end
 
 # Docker images
 function di --description 'Manage Docker images with FZF'
-    set -l out (docker image ls | tail -n +2 | fzf \
+    set -l out (docker image ls --format '{{.Repository}}:{{.Tag}} {{.ID}}' | fzf \
         --multi --exit-0 --border-label='Docker Images' \
         --expect=enter,ctrl-i,alt-d \
-        --bind='ctrl-y:execute-silent(printf %s {3} | wl-copy)+abort' \
+        --bind='ctrl-y:execute-silent(printf %s {2} | wl-copy)+abort' \
         --header='enter=run, C-i=interactive, A-d=remove, C-y=yank')
     or return
     test (count $out) -gt 1; or return 1
 
     for image in $out[2..]
-        set image (string split -n ' ' "$image")[3]
+        set image (string split -n ' ' "$image")[2]
         switch "$out[1]"
             case ctrl-i
                 docker run --rm -ti --entrypoint /bin/bash "$image"
