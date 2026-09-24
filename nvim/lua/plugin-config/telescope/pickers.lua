@@ -247,12 +247,15 @@ function M.rgrep(extra_args)
             additional_args = extra_args or {},
         }
         vim.ui.input({ prompt = 'Type Filter: ' }, function(type_filter)
+            if type_filter == nil then
+                return
+            end
             if type_filter ~= '' then
                 opts.type_filter = type_filter
                 opts.results_title = opts.results_title .. ' [' .. type_filter .. ']'
             end
+            builtin.live_grep(opts)
         end)
-        builtin.live_grep(opts)
     end)
 end
 
