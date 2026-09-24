@@ -151,17 +151,18 @@ function ig --description 'Search files with ripgrep and FZF'
     or return
     test (count $out) -gt 0; or return 1
 
+    set -l files
     set -l edit_commands
     for result in $out
         set result (string replace -ra '\x1b\[[0-9;]*m' '' -- "$result")
         set result (__fzf_path "$result")
         set -l fields (string split -m 2 : "$result")
         set -l file (path resolve "$fields[1]")
-        set -a edit_commands (
-            string join '' '+edit +' "$fields[2]" ' ' (string escape -n -- "$file")
-        )
+        set -a files "$file"
+        set -a edit_commands "argument $(count $files)" "$fields[2]"
     end
-    "$EDITOR" $edit_commands
+    # Use one command argument; Neovim accepts at most ten -c/+cmd arguments
+    "$EDITOR" -c (string join ' | ' $edit_commands) -- $files
 end
 
 # Document search
