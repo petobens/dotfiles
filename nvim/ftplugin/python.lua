@@ -306,13 +306,13 @@ local function run_sphinx_build()
 end
 
 local function clean_sphinx_build()
-    local on_exit = function(obj)
+    local on_exit = vim.schedule_wrap(function(obj)
         if obj.code == 0 then
             vim.print('Cleaning sphinx html build... done!')
         else
-            vim.print(obj.stderr, vim.log.levels.ERROR)
+            vim.notify(obj.stderr, vim.log.levels.ERROR)
         end
-    end
+    end)
 
     vim.notify('Cleaning sphinx html build...')
     vim.system(
