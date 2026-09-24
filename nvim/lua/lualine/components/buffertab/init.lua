@@ -199,7 +199,7 @@ function M:update_status()
     _G.LualineBuffertab.idx2bufnr = {}
     for pos, segment in ipairs(data) do
         local segment_bufnr = string.match(segment, 'KQ(%d+):')
-        data[pos] = segment:gsub('KQ', superscript_nrs[pos])
+        data[pos] = segment:gsub('KQ', superscript_nrs[pos] or '')
         _G.LualineBuffertab.idx2bufnr[pos] = segment_bufnr
     end
     _G.LualineBuffertab.idx2bufnr[0] = buffers[1].bufnr
