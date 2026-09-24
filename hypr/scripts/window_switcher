@@ -48,7 +48,7 @@ selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
         // $icons[$class] // $icons[$web_app] // $class) as $icon |
     "\(.address)\t[\(.workspace.name)] \(.class): \(.title)\u0000icon\u001f\($icon)"' |
     rofi -dmenu -display-columns 2 -selected-row "$selected_row" \
-        -kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n' \
-        -kb-row-up 'Ctrl-p,Shift+ISO_Left_Tab' -p 'window')
+        -kb-accept-entry '!Alt-Tab,Return' -kb-row-down 'Alt+Tab,Ctrl-n,Down,Ctrl-j' \
+        -kb-row-up 'Ctrl-p,Shift+ISO_Left_Tab,Up,Ctrl-k' -p 'window')
 [[ -n $selection ]] || exit 0
 "$HOME/.config/hypr/scripts/focus_window" "${selection%%$'\t'*}"
