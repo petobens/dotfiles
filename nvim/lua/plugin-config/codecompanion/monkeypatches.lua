@@ -76,6 +76,7 @@ local function patch_acp_cwd()
             if
                 method == Connection.METHODS.SESSION_NEW
                 or method == Connection.METHODS.SESSION_LOAD
+                or method == Connection.METHODS.SESSION_LIST
             then
                 -- Session requests can yield; retain this connection's launch directory
                 params = vim.tbl_extend('force', params, { cwd = cwd })
