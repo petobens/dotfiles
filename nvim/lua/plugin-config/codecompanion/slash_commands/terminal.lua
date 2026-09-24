@@ -60,7 +60,10 @@ end
 -- Slash commands
 function M.tmux(chat)
     vim.ui.input({ prompt = 'tmux window.pane (default 1.2): ' }, function(target)
-        target = vim.trim(target or '')
+        if target == nil then
+            return
+        end
+        target = vim.trim(target)
         if target == '' then
             target = '1.2'
         end
