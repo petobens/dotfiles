@@ -11,6 +11,9 @@ default_permissions = "workspace_network"  # Allow writes inside the workspace
 approval_policy = "on-request"  # Ask before acting outside workspace
 approvals_reviewer = "auto_review"  # Automatically review routine escalations
 
+[features]
+memories = false
+
 # Custom workspace profile with outbound network access
 [permissions.workspace_network]
 extends = ":workspace"
