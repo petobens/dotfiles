@@ -65,7 +65,6 @@ local function patch_acp_cwd()
     Connection.new = function(...)
         local connection = new(...)
         local cwd = connection.chat and connection.chat.opts.cwd or vim.uv.cwd()
-        cwd = u.git_root(cwd) or cwd
         local job = connection.methods.job
         connection.methods.job = function(cmd, opts, ...)
             opts.cwd = cwd

@@ -313,6 +313,7 @@ local function target_chat(chat, entry)
     local reusable = chat
         and chat.adapter
         and chat.adapter.name == entry.adapter
+        and (not entry.cwd or chat.opts.cwd == entry.cwd)
         and not chat._acp_session_loaded
         and (
             (chat.cycle or 1) <= 1
@@ -323,19 +324,15 @@ local function target_chat(chat, entry)
         return chat
     end
 
-    local previous_cwd = vim.fn.getcwd()
-    if entry.cwd and vim.fn.isdirectory(entry.cwd) == 1 then
-        vim.api.nvim_set_current_dir(entry.cwd)
-    end
-
-    local new_chat = require('codecompanion').chat({
-        params = { adapter = entry.adapter },
+    local args = {
+        adapter = entry.adapter,
+        cwd = entry.cwd or vim.uv.cwd(),
+        buffer_context = require('codecompanion.utils.context').get(),
         auto_submit = false,
-    })
-
-    if vim.fn.getcwd() ~= previous_cwd and vim.fn.isdirectory(previous_cwd) == 1 then
-        vim.api.nvim_set_current_dir(previous_cwd)
-    end
+    }
+    args.callbacks =
+        require('codecompanion.interactions.shared.rules.helpers').add_callbacks(args)
+    local new_chat = require('codecompanion.interactions.chat').new(args)
 
     if not new_chat then
         local labels = { claude_code = 'Claude', codex = 'Codex' }
@@ -355,10 +352,6 @@ local function load_entry(chat, entry)
         return
     end
 
-    local previous_cwd = vim.fn.getcwd()
-    if entry.cwd and vim.fn.isdirectory(entry.cwd) == 1 then
-        vim.api.nvim_set_current_dir(entry.cwd)
-    end
     local updates = {}
     local restored_context = {}
     local restored_context_paths = {}
@@ -372,9 +365,6 @@ local function load_entry(chat, entry)
             )
         end,
     })
-    if vim.fn.getcwd() ~= previous_cwd and vim.fn.isdirectory(previous_cwd) == 1 then
-        vim.api.nvim_set_current_dir(previous_cwd)
-    end
     if not ok then
         return utils.notify('Failed to load ACP session', vim.log.levels.ERROR)
     end
@@ -412,7 +402,6 @@ local function load_entry(chat, entry)
         chat.bufnr,
         chat.acp_connection.session_id
     )
-    chat.opts.cwd = entry.cwd
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
     restore_header_metadata(chat, restored_headers)
     chat._acp_restored_messages = restored_messages(updates)
@@ -446,6 +435,15 @@ local function load_entry(chat, entry)
 end
 
 function M.load(chat, entry)
+    if entry.cwd then
+        local stat = vim.uv.fs_stat(entry.cwd)
+        if not stat or stat.type ~= 'directory' then
+            return utils.notify(
+                'Session directory not found: ' .. entry.cwd,
+                vim.log.levels.ERROR
+            )
+        end
+    end
     local selected_chat = target_chat(chat, entry)
     if selected_chat then
         load_entry(selected_chat, entry)
