@@ -279,33 +279,29 @@ end, { desc = 'Open fold from start or move right' })
 
 -- Diffs
 vim.keymap.set('n', '<Leader>ds', function()
-    local save_pwd = vim.uv.cwd()
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+    local directory = vim.fs.dirname(vim.api.nvim_buf_get_name(0)) or vim.uv.cwd()
     local win_id = vim.api.nvim_get_current_win()
-    vim.ui.input(
-        { prompt = 'Input file for diffing: ', completion = 'file' },
-        function(other_file)
-            if not other_file or other_file == '' then
-                return
-            else
-                other_file = vim.fs.abspath(other_file)
-                local stat = vim.uv.fs_stat(other_file)
-                if not stat or stat.type ~= 'file' then
-                    vim.notify(
-                        ('File not found: %s'):format(other_file),
-                        vim.log.levels.ERROR
-                    )
-                    return
-                end
-
-                local mods = u.should_vsplit() and { vertical = true } or nil
-                vim.cmd.diffsplit({ args = { other_file }, mods = mods })
-            end
-            vim.api.nvim_set_current_win(win_id)
-            vim.cmd.normal('gg]h') -- move to first hunk
+    vim.ui.input({
+        prompt = 'Input file for diffing: ',
+        default = directory .. '/',
+        completion = 'file',
+    }, function(other_file)
+        if not other_file or other_file == '' then
+            return
         end
-    )
-    vim.api.nvim_set_current_dir(save_pwd)
+        other_file = vim.fs.abspath(other_file, { cwd = directory })
+        local stat = vim.uv.fs_stat(other_file)
+        if not stat or stat.type ~= 'file' then
+            vim.notify(('File not found: %s'):format(other_file), vim.log.levels.ERROR)
+            return
+        end
+
+        vim.api.nvim_set_current_win(win_id)
+        local mods = u.should_vsplit() and { vertical = true } or nil
+        vim.cmd.diffsplit({ args = { other_file }, mods = mods })
+        vim.api.nvim_set_current_win(win_id)
+        vim.cmd.normal('gg]h') -- move to first hunk
+    end)
 end, { desc = '[D]iff [s]tart with another file' })
 vim.keymap.set('n', '<Leader>du', vim.cmd.diffupdate, { desc = '[D]iff [u]pdate' })
 vim.keymap.set('n', '<Leader>de', function()
