@@ -93,9 +93,10 @@ end, { desc = 'Jump to previous snippet field' })
 
 vim.keymap.set({ 'i', 's' }, '<C-x>', function()
     if luasnip.choice_active() then
-        luasnip.change_choice(1)
+        return '<Cmd>lua require("luasnip").change_choice(1)<CR>'
     end
-end, { desc = 'Cycle through snippet choices' })
+    return '<C-x>'
+end, { expr = true, desc = 'Cycle through snippet choices or start completion' })
 
 vim.keymap.set('n', '<Leader>es', function()
     local ft = vim.bo.filetype
