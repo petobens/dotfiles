@@ -1,3 +1,7 @@
+if vim.bo.buftype ~= '' then
+    return
+end
+
 -- Options
 vim.opt_local.foldlevel = 2
 vim.opt_local.shiftwidth = 2

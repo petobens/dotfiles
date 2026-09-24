@@ -103,15 +103,18 @@ blink_cmp.setup({
             draw = function(opts)
                 opts.default_implementation()
                 _G.LspConfig.highlight_doc_patterns(opts.window.buf)
-                local win_id = opts.window:get_win()
-                if win_id then
-                    require('render-markdown.core.ui').update(
-                        opts.window.buf,
-                        win_id,
-                        'BlinkDraw',
-                        true
-                    )
-                end
+                -- Blink opens the documentation window after this draw callback
+                vim.schedule(function()
+                    local win_id = opts.window:get_win()
+                    if win_id then
+                        require('render-markdown.core.ui').update(
+                            opts.window.buf,
+                            win_id,
+                            'BlinkDraw',
+                            true
+                        )
+                    end
+                end)
             end,
         },
         ghost_text = { enabled = true },

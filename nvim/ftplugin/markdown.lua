@@ -1,3 +1,7 @@
+if vim.bo.buftype ~= '' then
+    return
+end
+
 local overseer = require('overseer')
 
 -- Options
