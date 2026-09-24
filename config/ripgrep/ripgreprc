@@ -5,7 +5,3 @@
 --colors=column:fg:92,99,112
 --colors=match:fg:229,192,123
 --colors=match:style:bold
-
-# Add my own types (python as an alias to py type)
---type-add
-python:*.{py}*
