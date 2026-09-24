@@ -34,10 +34,11 @@ fi
 PCT=$(printf '%s' "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 
 # Rate limits: only present for Pro/Max after the first API response.
-IFS=$'\t' read -r RL5 RL7 < <(
+# A non-whitespace separator preserves an empty five-hour field
+IFS='|' read -r RL5 RL7 < <(
     printf '%s' "$input" | jq -r '
         [(.rate_limits.five_hour.used_percentage // ""),
-         (.rate_limits.seven_day.used_percentage // "")] | @tsv'
+         (.rate_limits.seven_day.used_percentage // "")] | join("|")'
 )
 RL_SEG=''
 [ -n "$RL5" ] && RL_SEG="5h ${RL5%.*}%"
