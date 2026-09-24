@@ -138,6 +138,7 @@ vim.opt.shadafile = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'shada', 'main.shada')
 vim.opt.undodir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'undo') .. '//'
 vim.opt.undofile = true
 vim.opt.viewdir = vim.fs.joinpath(vim.env.CACHE, 'tmp', 'view') .. '//'
+vim.opt.viewoptions:remove('curdir')
 
 local session_acg = vim.api.nvim_create_augroup('session', { clear = true })
 vim.api.nvim_create_autocmd('VimLeavePre', {
