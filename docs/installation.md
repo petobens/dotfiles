@@ -722,7 +722,7 @@ The post-install step applies the system configuration:
   `.local` hostname lookup. The wireless regulatory database uses the world
   domain until Wi-Fi learns the access point's country. UFW denies unsolicited
   inbound traffic, allows outgoing traffic, rate-limits recovery SSH, and
-  permits LocalSend on TCP and UDP port 53317.
+  permits LocalSend on TCP and UDP port 53317 and mDNS on UDP port 5353.
 - **Desktop integration:** Configures Gopass and MIME defaults, unlocks GNOME
   Keyring at console login, and keeps the keyring password synchronized with
   the login password. It selects the dark color scheme, the `Adwaita-dark` GTK
@@ -762,8 +762,9 @@ activated and has no unit to enable.
 
 Brave and Edge run through native Wayland and receive the
 `AcceleratedVideoEncoder` and `AcceleratedVideoDecodeLinuxZeroCopyGL` feature
-flags so supported codecs can use Intel hardware video acceleration. Browser
-policies install Surfingkeys in Brave, Edge, and Firefox, Google Docs Offline
+flags so supported codecs can use Intel hardware video acceleration. Brave also
+enables `WebRtcPipeWireCamera` for PipeWire camera access. Browser policies
+install Surfingkeys in Brave, Edge, and Firefox, Google Docs Offline
 in Brave, and uBlock Origin in Edge. They also allow the Chromium Surfingkeys
 extensions to read the local configuration, set Firefox's PipeWire camera
 default, and provide Google as an overridable Brave and Edge startup default.
@@ -776,9 +777,9 @@ sudo systemctl start ollama
 
 The `ua` Fish abbreviation updates repository and AUR packages, including
 development AUR packages, cleans the package cache, and updates installed
-Python, Node.js, Rust, and TeX Live tooling. On physical hardware, it checks for
-available firmware without installing it; review the result and run
-`fwupdmgr update` explicitly when ready.
+Python, Node.js, Rust, and TeX Live tooling. On physical hardware, run
+`fwupdmgr get-updates` to check for available firmware, then review the result
+and run `fwupdmgr update` explicitly when ready.
 
 Reboot after the dotfiles installer finishes. This activates zram, `scx_lavd`,
 and Docker group membership:
@@ -933,9 +934,9 @@ encoding. Check `brave://gpu` for hardware-accelerated video encoding and
 open `Super+V` or `Super+/`: Rofi should remain visible locally but be hidden
 from the shared output.
 
-If Brave or Edge cannot detect the PipeWire camera, enable the WebRTC PipeWire
-camera option in its flags page and restart. Only if that fixes detection,
-add `WebRtcPipeWireCamera` to its `--enable-features` configuration.
+If Edge cannot detect the PipeWire camera, enable the WebRTC PipeWire camera
+option in its flags page and restart. Only if that fixes detection, add
+`WebRtcPipeWireCamera` to its `--enable-features` configuration.
 
 #### Optional: reclaim the installation USB
 

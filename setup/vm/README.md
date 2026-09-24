@@ -93,8 +93,8 @@ in a separate GTK tab. It uses software rendering and skips hyprpaper, so the
 background remains black. The displays start on workspaces 2, 5, and 1, matching
 the laptop, left, and right roles used on physical hardware.
 
-`Super+Return` and `Super+Shift+Return` leave the layout unchanged because the VM
-has no laptop panel. On hardware, those bindings select the laptop-only and
+`Super+Return` and `Super+Shift+Return` leave the layout unchanged because the
+VM has no laptop panel. On hardware, those bindings select the laptop-only and
 mirrored layouts respectively.
 
 ## Reset
