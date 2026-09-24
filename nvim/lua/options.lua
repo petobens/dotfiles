@@ -212,7 +212,6 @@ vim.opt.listchars = {
 }
 vim.opt.shiftround = true
 vim.opt.shiftwidth = 4
-vim.opt.smartcase = true
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.textwidth = 80

@@ -250,13 +250,13 @@ local function on_attach(bufnr)
     vim.keymap.set(
         'n',
         ',th',
-        tree_api.toggle_hidden_filter,
+        nvimtree_api.filter.dotfiles.toggle,
         { buf = bufnr, desc = 'Toggle hidden files' }
     )
     vim.keymap.set(
         'n',
         ',ti',
-        tree_api.toggle_gitignore_filter,
+        nvimtree_api.filter.git.ignored.toggle,
         { buf = bufnr, desc = 'Toggle gitignore filter' }
     )
 
