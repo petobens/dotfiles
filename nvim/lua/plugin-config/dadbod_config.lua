@@ -88,10 +88,10 @@ vim.api.nvim_create_autocmd('FileType', {
     callback = function(event)
         vim.keymap.set('n', 'zo', function()
             toggle_drawer_node('▸')
-        end, { buffer = event.buf, desc = 'Open database node' })
+        end, { buf = event.buf, desc = 'Open database node' })
         vim.keymap.set('n', 'zc', function()
             toggle_drawer_node('▾')
-        end, { buffer = event.buf, desc = 'Close database node' })
+        end, { buf = event.buf, desc = 'Close database node' })
     end,
 })
 
@@ -100,20 +100,20 @@ vim.api.nvim_create_autocmd('FileType', {
     desc = 'Configure Dadbod query mappings',
     callback = function(event)
         vim.keymap.set('n', '<Leader>da', vim.cmd.DBUIFindBuffer, {
-            buffer = event.buf,
+            buf = event.buf,
             desc = '[D]atabase [a]ttach: query buffer',
         })
         vim.keymap.set(
             { 'n', 'x' },
             '<F7>',
             '<Plug>(DBUI_ExecuteQuery)',
-            { buffer = event.buf, desc = 'Execute database query' }
+            { buf = event.buf, desc = 'Execute database query' }
         )
         vim.keymap.set(
             'i',
             '<F7>',
             '<Esc><Cmd>write<CR><Plug>(DBUI_ExecuteQuery)',
-            { buffer = event.buf, desc = 'Save and execute database query' }
+            { buf = event.buf, desc = 'Save and execute database query' }
         )
     end,
 })
@@ -124,7 +124,7 @@ vim.api.nvim_create_autocmd('FileType', {
     callback = function(event)
         vim.keymap.set('n', 'q', function()
             vim.api.nvim_buf_delete(event.buf, {})
-        end, { buffer = event.buf, desc = 'Close database results' })
+        end, { buf = event.buf, desc = 'Close database results' })
     end,
 })
 

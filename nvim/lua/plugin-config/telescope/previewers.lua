@@ -110,7 +110,7 @@ local function show_preview_image(path, bufnr, winid)
 
     if preview then
         state.cleanup = vim.api.nvim_create_autocmd('BufWinLeave', {
-            buffer = bufnr,
+            buf = bufnr,
             once = true,
             desc = 'Clear Telescope image preview',
             callback = clear_preview,

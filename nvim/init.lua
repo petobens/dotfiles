@@ -8,7 +8,6 @@ vim.loader.enable()
 vim.g.mapleader = ','
 vim.g.matchup_matchparen_enabled = 0
 vim.g.python3_host_prog = '/usr/bin/python'
-vim.g.do_filetype_lua = true
 vim.env.DOTVIM = vim.fs.joinpath(vim.env.HOME, '.config', 'nvim')
 vim.env.CACHE = vim.fs.joinpath(vim.env.DOTVIM, 'cache', 'Arch')
 
