@@ -230,9 +230,12 @@ local function list_breakpoints(local_buffer)
 end
 
 -- Virtual Envs
-local function set_lsp_path(path)
+local function set_lsp_path(path, bufnr)
+    if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+        return
+    end
     -- From https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/basedpyright.lua#L28
-    local client = vim.lsp.get_clients({ name = 'basedpyright' })[1]
+    local client = vim.lsp.get_clients({ name = 'basedpyright', bufnr = bufnr })[1]
     if client then
         client.settings.python = vim.tbl_deep_extend(
             'force',
@@ -244,9 +247,11 @@ local function set_lsp_path(path)
 end
 
 function _G.PyVenv.activate()
+    local bufnr = vim.api.nvim_get_current_buf()
     local project_root = _project_root()
     local venv_path = vim.fs.joinpath(project_root, '.venv')
     if venv_path == _G.PyVenv.active_venv.path then
+        _G.PyVenv.active_venv.bufnr = bufnr
         vim.b.pyvenv = venv_path
         return
     end
@@ -266,6 +271,7 @@ function _G.PyVenv.activate()
     local version = config:match('\nversion_info%s*=%s*(%d+%.%d+%.%d+)')
         or config:match('\nversion%s*=%s*(%d+%.%d+%.%d+)')
     _G.PyVenv.active_venv = {
+        bufnr = bufnr,
         package_manager = 'uv',
         path = venv_path,
         project_root = project_root,
@@ -276,7 +282,7 @@ function _G.PyVenv.activate()
     vim.env.VIRTUAL_ENV = venv_path
     vim.defer_fn(function()
         if _G.PyVenv.active_venv.path == venv_path then
-            set_lsp_path(venv_path .. '/bin/python')
+            set_lsp_path(venv_path .. '/bin/python', bufnr)
         end
     end, 100)
 end
@@ -293,8 +299,8 @@ function _G.PyVenv.deactivate()
     end
     vim.env.VIRTUAL_ENV = nil
     vim.b.pyvenv = nil
+    set_lsp_path(vim.g.python3_host_prog, _G.PyVenv.active_venv.bufnr)
     _G.PyVenv.active_venv = {}
-    set_lsp_path(vim.g.python3_host_prog)
 end
 
 -- Sphinx(docs)
