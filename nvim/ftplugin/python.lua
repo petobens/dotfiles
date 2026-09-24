@@ -120,7 +120,7 @@ local function run_ipython(mode)
     elseif mode == 'line' then
         vim.cmd.ToggleTermSendCurrentLine()
     elseif mode == 'selection' then
-        vim.cmd('normal ') -- leave visual mode to set <,> marks
+        vim.cmd.normal({ '\27', bang = true }) -- leave visual mode to set <,> marks
         vim.cmd.ToggleTermSendVisualLines()
     elseif mode == 'reset' then
         vim.cmd.TermExec('cmd="\\%reset -f"')
