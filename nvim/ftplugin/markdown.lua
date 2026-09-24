@@ -48,9 +48,9 @@ local function toggle_checklist()
     local mode = vim.api.nvim_get_mode().mode
     local start_line, end_line
 
-    if mode:sub(1, 1) == 'v' or mode:sub(1, 1) == 'V' then
-        start_line = vim.api.nvim_buf_get_mark(bufnr, '<')[1]
-        end_line = vim.api.nvim_buf_get_mark(bufnr, '>')[1]
+    if mode == 'v' or mode == 'V' or mode == '\22' then
+        start_line = vim.fn.line('v')
+        end_line = vim.api.nvim_win_get_cursor(0)[1]
         if start_line > end_line then
             start_line, end_line = end_line, start_line
         end
@@ -165,7 +165,7 @@ vim.keymap.set(
 )
 
 vim.keymap.set(
-    { 'n', 'v' },
+    { 'n', 'x' },
     '<Leader>cl',
     toggle_checklist,
     { buf = 0, desc = '[C]heck[l]ist state: toggle' }

@@ -1018,6 +1018,10 @@ end
 
 -- Autocmds
 api.nvim_create_autocmd('BufWritePost', {
+    group = api.nvim_create_augroup(
+        'typst_compile_' .. api.nvim_get_current_buf(),
+        { clear = true }
+    ),
     buf = 0,
     desc = 'Compile Typst document on save',
     callback = function(args)

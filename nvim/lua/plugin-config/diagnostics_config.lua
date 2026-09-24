@@ -62,16 +62,8 @@ local function diagnostic_suffix(diagnostic)
 end
 
 -- Toggle function
-local diagnostics_active = true
 local function toggle_buffer_diagnostics()
-    diagnostics_active = not diagnostics_active
-    local bufnr = 0
-    if diagnostics_active then
-        vim.diagnostic.show(nil, bufnr)
-    else
-        vim.diagnostic.hide(nil, bufnr)
-    end
-    return diagnostics_active
+    vim.diagnostic.enable(not vim.diagnostic.is_enabled({ bufnr = 0 }), { bufnr = 0 })
 end
 
 -- Setup

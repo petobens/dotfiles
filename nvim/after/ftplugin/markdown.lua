@@ -1,6 +1,5 @@
 -- Options
 vim.opt_local.foldlevel = 2
-vim.opt_local.foldlevelstart = 1
 vim.opt_local.shiftwidth = 2
 vim.opt_local.softtabstop = 2
 vim.opt_local.tabstop = 2
@@ -35,7 +34,11 @@ local function highlight_extensions(args)
 end
 
 vim.api.nvim_create_autocmd({ 'BufEnter', 'TextChanged', 'TextChangedI' }, {
-    buffer = 0,
+    group = vim.api.nvim_create_augroup(
+        'markdown_extensions_' .. vim.api.nvim_get_current_buf(),
+        { clear = true }
+    ),
+    buf = 0,
     desc = 'Highlight Markdown extension syntax',
     callback = highlight_extensions,
 })
