@@ -1,6 +1,5 @@
 local codecompanion = require('codecompanion')
 local devicons = require('nvim-web-devicons')
-local telescope_action_state = require('telescope.actions.state')
 local tool_labels = require('codecompanion.interactions.chat.tools.labels')
 
 local u = require('utils')
@@ -183,17 +182,6 @@ local function refresh_current_chat_window(e, attempt)
 
     if not ok or not chat or not chat.ui or not chat.ui.winnr then
         -- Picker/restore events can arrive before the chat window is registered
-        if attempt == 0 then
-            vim.defer_fn(function()
-                local picker = telescope_action_state.get_current_picker(
-                    vim.api.nvim_get_current_buf()
-                )
-                if picker then
-                    vim.api.nvim_win_close(picker.prompt_win, true)
-                end
-            end, 50)
-        end
-
         if attempt < 2 then
             -- Retry for up to 100 ms without blocking the UI
             vim.defer_fn(function()
