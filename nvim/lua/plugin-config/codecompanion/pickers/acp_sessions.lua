@@ -198,7 +198,11 @@ end
 
 -- Background title refresh
 local function refresh_titles(picker, entries)
-    vim.system({ 'ai_session_title' }, { text = true }, function(obj)
+    local cmd = { 'ai_session_title', '--paths' }
+    for i = 1, math.min(15, #entries) do
+        cmd[#cmd + 1] = entries[i].path
+    end
+    vim.system(cmd, { text = true }, function(obj)
         if tonumber((obj.stdout or ''):match('generated (%d+)')) == 0 then
             return
         end

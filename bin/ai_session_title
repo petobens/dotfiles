@@ -286,11 +286,14 @@ def main() -> None:
     ap.add_argument(
         "--all", action="store_true", help="regenerate every title, ignoring the cache"
     )
+    ap.add_argument(
+        "--paths", nargs="+", type=Path, help="refresh only these session files"
+    )
     args = ap.parse_args()
 
     cache = load_cache()
     sources = [
-        ("claude_code", CLAUDE_ROOT.glob("**/*.jsonl"), claude_id, extract_claude),
+        ("claude_code", CLAUDE_ROOT.glob("*/*.jsonl"), claude_id, extract_claude),
         ("codex", CODEX_ROOT.glob("**/rollout-*.jsonl"), codex_id, extract_codex),
     ]
 
@@ -299,6 +302,8 @@ def main() -> None:
     fresh = 0
     for adapter, paths, id_of, extract in sources:
         for path in paths:
+            if args.paths and path not in args.paths:
+                continue
             try:
                 mtime = int(path.stat().st_mtime)
             except OSError:
@@ -320,7 +325,8 @@ def main() -> None:
             if transcript:
                 stale.append((cache_key, transcript, mtime))
 
-    removed = [k for k in cache if k not in live_keys]
+    # A targeted refresh cannot determine whether other sessions still exist
+    removed = [] if args.paths else [k for k in cache if k not in live_keys]
     for k in removed:
         del cache[k]
 
