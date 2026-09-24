@@ -237,17 +237,15 @@ local function convert_pandoc(extension)
         return
     end
 
-    local pandoc_cmd = 'pandoc -s'
+    local args = { 'pandoc', '-s', tex_file, '-o', output_file }
     if extension == 'docx' then
-        pandoc_cmd = pandoc_cmd .. ' --toc --number-sections'
+        vim.list_extend(args, { '--toc', '--number-sections' })
         if vim.uv.fs_stat(bib_file) then
-            pandoc_cmd = pandoc_cmd .. ' --bibliography=' .. bib_file
+            vim.list_extend(args, { '--bibliography', bib_file })
         end
     end
-    pandoc_cmd = string.format('%s %s -o %s', pandoc_cmd, tex_file, output_file)
 
     local cwd = vim.fs.dirname(tex_file)
-    local args = vim.split(pandoc_cmd, ' ', { trimempty = true })
     local result = vim.system(args, { text = true, cwd = cwd }):wait()
     if result.code == 0 then
         vim.notify(

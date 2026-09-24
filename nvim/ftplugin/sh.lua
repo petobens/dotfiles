@@ -1,4 +1,5 @@
 local overseer = require('overseer')
+local toggleterm = require('toggleterm')
 
 -- Options
 vim.opt_local.textwidth = 90
@@ -35,9 +36,7 @@ end
 
 local function run_toggleterm()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    vim.cmd.TermExec({
-        args = { string.format('cmd="bash %s"', vim.api.nvim_buf_get_name(0)) },
-    })
+    toggleterm.exec('bash ' .. vim.fn.shellescape(vim.api.nvim_buf_get_name(0)))
 end
 
 local function run_tmux_pane()
@@ -47,12 +46,8 @@ local function run_tmux_pane()
     local bufname = vim.api.nvim_buf_get_name(0)
     local cwd = vim.fs.dirname(bufname)
     local fname = vim.fs.basename(bufname)
-    local sh_cmd = string.format('sh -c "bash %s; read -n 1 -s"', fname)
-    vim.cmd({
-        cmd = '!',
-        args = { 'tmux', 'new-window', '-c', cwd, '-n', fname, sh_cmd },
-        mods = { silent = true },
-    })
+    local sh_cmd = 'bash ' .. vim.fn.shellescape(fname) .. '; read -n 1 -s'
+    vim.system({ 'tmux', 'new-window', '-c', cwd, '-n', fname, 'bash', '-c', sh_cmd })
 end
 
 -- Mappings

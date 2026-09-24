@@ -1,5 +1,6 @@
 local builtin = require('telescope.builtin')
 local overseer = require('overseer')
+local toggleterm = require('toggleterm')
 local u = require('utils')
 
 -- Options and variable
@@ -85,11 +86,11 @@ local function run_toggleterm(post_mortem_mode)
     local term_info = ttt.get(1)
     if term_info ~= nil and term_info.cmd ~= nil then
         if term_info.cmd == 'ipython' then
-            cmd = '\\%run'
+            cmd = '%run'
         end
     end
 
-    vim.cmd.TermExec(string.format('cmd="%s %s"', cmd, vim.api.nvim_buf_get_name(0)))
+    toggleterm.exec(cmd .. ' ' .. vim.fn.shellescape(vim.api.nvim_buf_get_name(0)))
 end
 
 local function run_ipython(mode)
@@ -115,7 +116,7 @@ local function run_ipython(mode)
     if mode == 'open' then
         return
     elseif mode == 'module' then
-        vim.cmd.TermExec(string.format('cmd="\\%%run %s"', fname))
+        toggleterm.exec('%run ' .. vim.fn.shellescape(fname))
     elseif mode == 'line' then
         vim.cmd.ToggleTermSendCurrentLine()
     elseif mode == 'selection' then
@@ -147,12 +148,8 @@ local function run_tmux_pane(debug_mode)
     local bufname = vim.api.nvim_buf_get_name(0)
     local cwd = vim.fs.dirname(bufname)
     local fname = vim.fs.basename(bufname)
-    local sh_cmd = string.format('"%s %s; read -p \'\'"', python_cmd, fname)
-    vim.cmd({
-        cmd = '!',
-        args = { 'tmux', 'new-window', '-c', cwd, '-n', fname, sh_cmd },
-        mods = { silent = true },
-    })
+    local sh_cmd = python_cmd .. ' ' .. vim.fn.shellescape(fname) .. '; read -r'
+    vim.system({ 'tmux', 'new-window', '-c', cwd, '-n', fname, 'bash', '-c', sh_cmd })
 
     if vim.api.nvim_get_mode().mode == 'i' then
         vim.cmd.stopinsert()

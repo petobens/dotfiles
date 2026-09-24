@@ -202,10 +202,10 @@ function M.delete_frecency(prompt_bufnr)
     actions.close(prompt_bufnr)
     if not vim.tbl_isempty(multi) then
         for _, entry in pairs(multi) do
-            vim.cmd(string.format('FrecencyDelete %s', entry.filename))
+            vim.cmd.FrecencyDelete({ args = { entry.filename } })
         end
     else
-        vim.cmd('FrecencyDelete ' .. action_state.get_selected_entry().filename)
+        vim.cmd.FrecencyDelete({ args = { action_state.get_selected_entry().filename } })
     end
 end
 
