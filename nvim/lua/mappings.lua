@@ -4,7 +4,7 @@ local u = require('utils')
 -- Save and quit
 vim.keymap.set('n', '<Leader>w', function()
     vim.cmd.write({ bang = true })
-end, { desc = '[W]rite (save) current buffer' })
+end, { nowait = false, desc = '[W]rite (save) current buffer' })
 vim.keymap.set('n', '<Leader>nw', function()
     vim.cmd.write({ bang = true, mods = { noautocmd = true } })
 end, { desc = '[N]o autocommands: [w]rite current buffer' })
