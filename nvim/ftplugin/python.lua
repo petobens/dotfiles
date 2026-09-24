@@ -368,7 +368,7 @@ local function edit_test_file()
     if next(test_file) then
         u.split_open(test_file[1])
     else
-        vim.cmd(':Telescope find_files cwd=' .. tests_dir)
+        builtin.find_files({ cwd = tests_dir })
     end
 end
 
@@ -381,7 +381,7 @@ local function edit_project_todo()
     if next(todo_file) then
         u.split_open(todo_file[1])
     else
-        vim.cmd(':Telescope find_files cwd=' .. notes_dir)
+        builtin.find_files({ cwd = notes_dir })
     end
 end
 
