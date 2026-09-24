@@ -150,7 +150,12 @@ local function picker_mappings(chat, entries)
             actions.close(prompt_bufnr)
             for _, selection in ipairs(selections) do
                 if selection then
-                    restore.load(chat, selection.value)
+                    local bufnr = open_session_map()[selection.value.session_id]
+                    if bufnr then
+                        codecompanion.restore(bufnr)
+                    else
+                        restore.load(chat, selection.value)
+                    end
                 end
             end
         end)
