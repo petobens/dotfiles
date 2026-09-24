@@ -14,8 +14,6 @@ case ${1:-} in
         ;;
     mute)
         wpctl set-mute "$sink" toggle
-        makoctl dismiss
-        exit
         ;;
     *)
         echo 'usage: volume {up|down|mute}' >&2
@@ -23,7 +21,12 @@ case ${1:-} in
         ;;
 esac
 
-volume=$(wpctl get-volume "$sink" | awk '{ printf "%d", $2 * 100 + 0.5 }')
+volume=$(wpctl get-volume "$sink")
+if [[ $volume == *'[MUTED]'* ]]; then
+    notify-send -i audio-volume-muted -t 2000 -h string:x-dunst-stack-tag:volume 'Muted'
+    exit
+fi
+volume=$(awk '{ printf "%d", $2 * 100 + 0.5 }' <<< "$volume")
 device=$(wpctl inspect "$sink")
 device=${device,,}
 if [[ $device == *bluez* || $device == *headphone* || $device == *headset* ]]; then

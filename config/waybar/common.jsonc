@@ -98,7 +98,6 @@
         "exec": "~/.config/hypr/scripts/bluetooth_status",
         "interval": 5,
         "on-click": "~/.config/hypr/scripts/raise_or_launch bluetooth",
-        "on-click-right": "bluetoothctl info | grep -q '^Device' && bluetoothctl disconnect",
         "return-type": "json",
     },
     "pulseaudio": {

@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Mouse drags and hardware switches cannot be activated from a menu
 bindings=$(hyprctl binds -j | jq '
-    map(select(.has_description and (.mouse | not) and (.key | startswith("switch:") | not)))
+    map(select(.has_description and (.key | test("^(mouse:|switch:)") | not)))
     | sort_by(.description, .modmask, .key)
 ')
 
