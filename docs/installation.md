@@ -632,8 +632,8 @@ ls -lh /boot/EFI/Linux
 
 ##### Step 12/13: Cloning the Wayland dotfiles
 
-Set the username again after reentering the chroot, then clone the pushed
-`master` branch as that user. Replace `youruser` with the username created
+Set the username again after reentering the chroot, then clone the repository's
+default branch as that user. Replace `youruser` with the username created
 above:
 
 ```bash
@@ -677,7 +677,7 @@ sudo true
 git --version
 ```
 
-The Arch installer already cloned the `master` branch into
+The Arch installer already cloned the repository's default branch into
 `~/git-repos/private/dotfiles`. Run the dotfiles installer as the normal user,
 without putting `sudo` in front of the script:
 
@@ -1137,6 +1137,17 @@ is not part of root snapshots, it copies the restored kernels from
 `/usr/lib/modules` to `/boot` before regenerating the unified kernel images.
 Remove the USB and reboot when it finishes. After confirming that the restored
 system works, delete the preserved subvolume from a top-level Btrfs mount.
+Replace the root partition and `@failed-YYYYMMDD-HHMMSS` below with the values
+used by the restore script:
+
+```bash
+sudo mount --mkdir -o subvolid=5 /dev/nvme0n1p2 /mnt/btrfs
+sudo btrfs subvolume delete --recursive /mnt/btrfs/@failed-YYYYMMDD-HHMMSS
+sudo umount /mnt/btrfs
+```
+
+The recursive option also removes nested subvolumes, such as `var/lib/machines`
+and `var/lib/portables`, inside that failed root.
 
 This rollback restores only the root subvolume. It does not revert home files,
 logs, the package cache, or other excluded subvolumes.

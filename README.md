@@ -38,7 +38,8 @@ cd /tmp/dotfiles
 ```
 
 The installer prompts for the target disk and user settings, then installs
-Arch and clones this branch into `~/git-repos/private/dotfiles`.
+Arch and clones the repository's default branch into
+`~/git-repos/private/dotfiles`.
 
 After installation, unmount before rebooting:
 
