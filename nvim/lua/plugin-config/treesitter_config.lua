@@ -109,17 +109,22 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- Global Mappings
 vim.keymap.set('n', '<Leader>it', function()
+    local source_buf = vim.api.nvim_get_current_buf()
     vim.treesitter.inspect_tree({
         command = 'vnew | wincmd H | vertical resize 60',
         title = function()
             return 'InspectTree'
         end,
     })
+    -- Without a parser, InspectTree leaves the source buffer active
+    if vim.api.nvim_get_current_buf() == source_buf then
+        return
+    end
     vim.keymap.set(
         'n',
         'q',
         require('utils').quit_return,
-        { desc = 'Quit InspectTree window' }
+        { buf = 0, desc = 'Quit InspectTree window' }
     )
 end, { desc = '[I]nspect [t]ree: open Tree-sitter view' })
 

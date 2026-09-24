@@ -116,7 +116,7 @@ vim.keymap.set({ 'n', 'i', 'v' }, '<up>', '<nop>', { desc = 'Disable <up>' })
 vim.keymap.set('n', '<A-0>', 'H', { desc = 'Go to first line on screen' })
 vim.keymap.set('n', '<A-b>', 'L', { desc = 'Go to last line on screen' })
 vim.keymap.set('n', '<A-m>', 'M', { desc = 'Go to middle line on screen' })
-vim.keymap.set({ 'n', 'v' }, 'H', '^', { desc = 'Go to first non-blank' })
+vim.keymap.set({ 'n', 'x' }, 'H', '^', { desc = 'Go to first non-blank' })
 vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
 vim.keymap.set('n', 'M', function()
     local row = vim.api.nvim_win_get_cursor(0)[1]
@@ -162,8 +162,8 @@ vim.keymap.set(
 vim.keymap.set('n', 'J', 'mzJ`z', { desc = 'Join lines (keep cursor)' })
 vim.keymap.set('n', 'Q', 'gwap', { desc = 'Format paragraph' })
 vim.keymap.set('n', '<A-u>', 'mzg~iw`z', { desc = 'Toggle case of word' })
-vim.keymap.set({ 'n', 'v' }, '+', '<C-a>', { desc = 'Increment number' })
-vim.keymap.set({ 'n', 'v' }, '-', '<C-x>', { desc = 'Decrement number' })
+vim.keymap.set({ 'n', 'x' }, '+', '<C-a>', { desc = 'Increment number' })
+vim.keymap.set({ 'n', 'x' }, '-', '<C-x>', { desc = 'Decrement number' })
 
 -- Yank and paste
 vim.keymap.set('n', 'Y', 'y$', { desc = 'Yank to end of line' })
@@ -193,13 +193,13 @@ vim.keymap.set('n', 'gp', '`[v`]', { desc = 'Visually select just-pasted text' }
 
 -- Search, jumps and marks
 vim.keymap.set(
-    { 'n', 'v' },
+    { 'n', 'x' },
     '/',
     '/\\v',
     { silent = false, remap = true, desc = 'Search (very magic)' }
 )
 vim.keymap.set(
-    { 'n', 'v' },
+    { 'n', 'x' },
     '?',
     '?\\v',
     { silent = false, remap = true, desc = 'Backward search (very magic)' }
@@ -376,13 +376,13 @@ vim.keymap.set(
     { remap = true, desc = '[C]omment: [u]ncomment line' }
 )
 vim.keymap.set(
-    'v',
+    'x',
     '<Leader>cc',
     'gc',
     { remap = true, desc = '[C]omment [c]urrent selection' }
 )
 vim.keymap.set(
-    'v',
+    'x',
     '<Leader>cu',
     'gc',
     { remap = true, desc = '[C]omment: [u]ncomment selection' }
@@ -427,7 +427,7 @@ end, { desc = '[B]uffer [s]cratch directory: edit file' })
 
 -- Links & files
 vim.keymap.set(
-    { 'n', 'v' },
+    { 'n', 'x' },
     '<Leader>ol',
     'gx',
     { remap = true, desc = '[O]pen [l]ink under cursor' }
@@ -493,34 +493,34 @@ vim.keymap.set('i', '<A-p>', '<C-R>+', { desc = 'Paste from system clipboard (+)
 -- Visual mode
 -- Note: we avoid lua function mappings in visual mode since they lose the selection
 vim.keymap.set('n', 'vv', '^vg_', { desc = 'Visually select line (no indent)' })
-vim.keymap.set('v', '<', '<gv', { desc = 'Indent left and reselect' })
-vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and reselect' })
-vim.keymap.set('v', '<A-j>', ":m '>+1<CR>gv", { desc = 'Move selection down' })
-vim.keymap.set('v', '<A-k>', ":m '<-2<CR>gv", { desc = 'Move selection up' })
+vim.keymap.set('x', '<', '<gv', { desc = 'Indent left and reselect' })
+vim.keymap.set('x', '>', '>gv', { desc = 'Indent right and reselect' })
+vim.keymap.set('x', '<A-j>', ":m '>+1<CR>gv", { desc = 'Move selection down' })
+vim.keymap.set('x', '<A-k>', ":m '<-2<CR>gv", { desc = 'Move selection up' })
 vim.keymap.set(
-    'v',
+    'x',
     '<ESC>',
     '"+ygv<C-c>',
     { desc = 'Yank selection upon exiting visual mode' }
 )
 vim.keymap.set(
-    'v',
+    'x',
     '<Leader>sa',
     ':sort i<CR>',
     { desc = '[S]ort [a]lphabetically (case-insensitive)' }
 )
 vim.keymap.set(
-    'v',
+    'x',
     '<Leader>sr',
     ':s/',
     { silent = false, desc = '[S]earch and [r]eplace in selection' }
 )
-vim.keymap.set('v', 'G', 'G$', { desc = 'Go to end of selection' })
-vim.keymap.set('v', 'L', 'g_', { desc = 'Go to last non-blank in selection' })
-vim.keymap.set('v', 'Q', 'gq', { desc = 'Format selection' })
-vim.keymap.set('v', '.', ':normal .<CR>', { desc = 'Repeat last change in selection' })
-vim.keymap.set('v', '*', '*<C-o>', { desc = 'Search for selection forward' })
-vim.keymap.set('v', '#', '#<C-o>', { desc = 'Search for selection backward' })
+vim.keymap.set('x', 'G', 'G$', { desc = 'Go to end of selection' })
+vim.keymap.set('x', 'L', 'g_', { desc = 'Go to last non-blank in selection' })
+vim.keymap.set('x', 'Q', 'gq', { desc = 'Format selection' })
+vim.keymap.set('x', '.', ':normal .<CR>', { desc = 'Repeat last change in selection' })
+vim.keymap.set('x', '*', '*<C-o>', { desc = 'Search for selection forward' })
+vim.keymap.set('x', '#', '#<C-o>', { desc = 'Search for selection backward' })
 
 -- Command mode
 vim.keymap.set('n', ';', ':', { silent = false, desc = 'Enter command-line mode' })

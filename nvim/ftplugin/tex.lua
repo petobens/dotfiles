@@ -176,31 +176,33 @@ end
 
 -- Miscellaneous
 local function delete_aux_files()
-    local aux_extensions = {
+    local aux_suffixes = {
         aux = true,
         bbl = true,
         bcf = true,
         blg = true,
         idx = true,
         log = true,
-        xml = true,
+        ['run.xml'] = true,
         toc = true,
         nav = true,
         out = true,
         snm = true,
-        gz = true,
+        ['synctex.gz'] = true,
         ilg = true,
         ind = true,
         vrb = true,
     }
     local dir = vim.fs.dirname(vim.b.vimtex.tex)
+    local prefix = vim.fs.basename(vim.b.vimtex.tex):gsub('%.tex$', '') .. '.'
     local rm_files = {}
     for name, type in vim.fs.dir(dir) do
-        if type == 'file' then
-            local f = vim.fs.joinpath(dir, name)
-            if aux_extensions[vim.fs.ext(f)] then
-                table.insert(rm_files, f)
-            end
+        if
+            type == 'file'
+            and vim.startswith(name, prefix)
+            and aux_suffixes[name:sub(#prefix + 1)]
+        then
+            table.insert(rm_files, vim.fs.joinpath(dir, name))
         end
     end
     if #rm_files == 0 then

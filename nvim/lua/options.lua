@@ -263,11 +263,12 @@ vim.filetype.add({
 })
 
 -- Filetype-specific options
+local ft_options = vim.api.nvim_create_augroup('FtOptions', { clear = true })
 local function set_ft_option(ft, vim_cmd)
     vim.api.nvim_create_autocmd('FileType', {
         desc = ('Set filetype-specific options: %s'):format(vim.inspect(ft)),
         pattern = ft,
-        group = vim.api.nvim_create_augroup('FtOptions'),
+        group = ft_options,
         command = vim_cmd,
     })
 end

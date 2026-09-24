@@ -60,7 +60,7 @@ vim.api.nvim_create_user_command('RunVisualLua', function()
     local start_line = vim.api.nvim_buf_get_mark(0, '<')[1]
     local end_line = vim.api.nvim_buf_get_mark(0, '>')[1]
     local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-    vim.cmd.lua(table.concat(lines, ' '))
+    vim.cmd.lua(table.concat(lines, '\n'))
 end, { range = true })
 
 -- Mappings
