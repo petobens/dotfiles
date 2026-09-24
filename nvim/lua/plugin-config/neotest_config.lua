@@ -73,7 +73,6 @@ local function _parse_neotest_output(task, last_winid)
             vim.cmd.stopinsert()
         end, 5)
         set_output_window_layout()
-        vim.opt_local.winfixbuf = true
         vim.opt_local.modifiable = true
         vim.cmd.normal({ args = { 'kdGggG' }, bang = true, mods = { silent = true } })
         vim.opt_local.modifiable = false
@@ -94,11 +93,6 @@ local function _parse_neotest_output(task, last_winid)
         if not pdb then
             vim.cmd.copen()
             vim.api.nvim_set_current_win(last_winid)
-            if has_output then
-                -- overseer run_action creates a new empty buffer so we delete it
-                local buffers = vim.api.nvim_list_bufs()
-                vim.api.nvim_buf_delete(buffers[#buffers])
-            end
         else
             -- Reset qf and diagnostics
             vim.fn.setqflist({})
@@ -112,61 +106,89 @@ local function _parse_neotest_output(task, last_winid)
     end
 end
 
-local function _neotest_overseer_subscribe(ft, bufnr)
+local function _neotest_overseer_subscribe(func, opts, ft, bufnr)
     local overseer = require('overseer')
+    local previous = {}
     local neotest_task
-    local ok = vim.wait(math.huge, function()
-        local tasks = overseer.list_tasks({
-            include_ephemeral = true,
-            status = { 'PENDING', 'RUNNING' },
-            sort = function(a, b)
-                return (a.time_start or 0) > (b.time_start or 0)
-            end,
-        }) or {}
-        neotest_task = tasks[1]
-        return neotest_task ~= nil
-    end, 50)
-    if not ok then
-        vim.notify('Timed out waiting for overseer task', vim.log.levels.WARN)
-        return
+    local function on_start(task)
+        neotest_task = task
+    end
+    for _, task in ipairs(overseer.list_tasks({ include_ephemeral = true })) do
+        if task.metadata.neotest_group_id then
+            previous[task.id] = task
+            task:subscribe('on_start', on_start)
+        end
     end
 
-    -- We record filetype and buffer number since we might call neotest.run from a
-    -- terminal buffer when attaching to it
-    neotest_task.ft = ft
-    neotest_task.bufnr = bufnr
+    local function unsubscribe()
+        for _, task in pairs(previous) do
+            task:unsubscribe('on_start', on_start)
+        end
+    end
 
-    neotest_task:subscribe('on_complete', function()
-        _parse_neotest_output(neotest_task, vim.api.nvim_get_current_win())
-    end)
+    local ok, err = pcall(func, opts)
+    if not ok then
+        unsubscribe()
+        error(err)
+    end
+
+    local attempts = 0
+    local function poll()
+        if not neotest_task then
+            for _, task in ipairs(overseer.list_tasks({ include_ephemeral = true })) do
+                if task.metadata.neotest_group_id and not previous[task.id] then
+                    neotest_task = task
+                    break
+                end
+            end
+        end
+        if not neotest_task then
+            attempts = attempts + 1
+            if attempts < 100 then
+                vim.defer_fn(poll, 50)
+            else
+                unsubscribe()
+                vim.notify(
+                    'No Neotest task appeared within 5 seconds',
+                    vim.log.levels.WARN
+                )
+            end
+            return
+        end
+        unsubscribe()
+        neotest_task.ft = ft
+        neotest_task.bufnr = bufnr
+        local function on_complete()
+            vim.schedule(function()
+                _parse_neotest_output(neotest_task, vim.api.nvim_get_current_win())
+            end)
+            return true
+        end
+        if neotest_task:is_complete() then
+            on_complete()
+        else
+            neotest_task:subscribe('on_complete', on_complete)
+        end
+    end
+    poll()
 end
 
 local function neotest_run(func, opts, subscribe)
     local ft = vim.bo.filetype
     local bufnr = vim.api.nvim_get_current_buf()
-    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    vim.cmd.cclose()
-    vim.api.nvim_set_current_dir(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
-
-    -- Delete terminal (overseer output) buffers unless otherwise specified (i.e. when
-    -- attaching)
-    opts = opts or {}
-    local delete = opts.delete ~= false
-    opts.delete = nil
-    if delete then
-        for _, bufnum in ipairs(vim.api.nvim_list_bufs()) do
-            local name = vim.api.nvim_buf_get_name(bufnum)
-            if vim.startswith(name, 'term://') then
-                vim.api.nvim_buf_delete(bufnum, { force = true })
-            end
+    if vim.bo.buftype == '' then
+        local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+        if dir and vim.fn.isdirectory(dir) == 1 then
+            vim.cmd.update({ mods = { silent = true, noautocmd = true } })
+            vim.api.nvim_set_current_dir(dir)
         end
     end
+    vim.cmd.cclose()
 
-    func(opts)
-
-    local post = (subscribe == nil and true) or subscribe
-    if post then
-        _neotest_overseer_subscribe(ft, bufnr)
+    if subscribe == false then
+        func(opts or {})
+    else
+        _neotest_overseer_subscribe(func, opts or {}, ft, bufnr)
     end
 end
 
@@ -282,7 +304,7 @@ vim.keymap.set('n', '<Leader>nd', function()
 end, { desc = '[N]eotest: run with [d]ebugger' })
 
 vim.keymap.set('n', '<Leader>na', function()
-    neotest_run(neotest.run.attach, { delete = false })
+    neotest_run(neotest.run.attach, {}, false)
     vim.keymap.set('n', 'q', function()
         vim.cmd.close()
     end, { buf = 0, desc = 'Close neotest attach window and return' })
