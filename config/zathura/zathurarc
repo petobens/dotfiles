@@ -5,8 +5,6 @@ set window-title-basename true
 set incremental-search true
 set n-completion-items 12
 set selection-clipboard clipboard
-set sandbox none
-set highlight-transparency 0.35
 
 # Synctex (activates with ctrl+click)
 set synctex true
