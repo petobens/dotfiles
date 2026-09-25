@@ -114,9 +114,9 @@ return {
         { trig = 'pc', dscr = '[pc]all' },
         fmta(
             [[
-               local ok, <> = pcall(<>, '<>')
-               if ok then
-                   <><>
+                local ok, <> = pcall(<>, '<>')
+                if ok then
+                    <><>
                 end
             ]],
             {

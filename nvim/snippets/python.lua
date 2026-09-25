@@ -65,7 +65,7 @@ return {
         { trig = 'im', dscr = '[I]f [m]ain' },
         fmta(
             [[
-               if __name__ == '__main__':
+                if __name__ == '__main__':
                     <>
             ]],
             { i(0) }
