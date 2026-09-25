@@ -373,13 +373,13 @@ function M.setup()
         end,
     })
 
-    -- Agents can edit files outside Neovim; refresh Git status when the turn ends
+    -- The chat may belong to another repository; refresh all visible Git statuses
     vim.api.nvim_create_autocmd('User', {
         desc = 'Refresh Fugitive after CodeCompanion agent changes',
         group = group,
         pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
         callback = function()
-            vim.fn['fugitive#DidChange']()
+            vim.fn['fugitive#DidChange'](0, 1)
         end,
     })
 
