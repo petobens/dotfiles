@@ -8,7 +8,7 @@ set -gx RIPGREP_CONFIG_PATH "$HOME/.config/ripgrep/ripgreprc"
 set -gx SHELLCHECK_OPTS '-e SC1090'
 set -gx TERMINAL ghostty
 set -gx VISUAL nvim
-set -gx EZA_COLORS (string join : 'di=38;2;97;175;239' \
+set -gx EZA_COLORS (string join : reset 'di=38;2;97;175;239' \
     'ex=38;2;224;108;117' 'ln=38;2;198;120;221' 'lp=38;2;198;120;221' \
     'or=38;2;36;39;46;48;2;198;120;221' 'pi=38;2;86;182;194' \
     'so=38;2;229;192;123' 'st=38;2;152;195;121')
