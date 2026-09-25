@@ -30,12 +30,13 @@ local function read_prompt_file(fname)
     local fd = io.open(path, 'r')
     if not fd then
         vim.notify(('Prompt file not found: %s'):format(path), vim.log.levels.WARN)
-        return ''
+        return nil
     end
 
     local content = fd:read('*a')
     fd:close()
-    return vim.trim(content or '')
+    content = vim.trim(content or '')
+    return content ~= '' and content or nil
 end
 
 local function load_prompt_library()
@@ -61,11 +62,21 @@ end
 local PROMPT_LIBRARY = load_prompt_library()
 
 function M.prompt(name)
-    return PROMPT_LIBRARY[name]
+    local content = PROMPT_LIBRARY[name]
+    if not content then
+        vim.notify(
+            'Prompt template unavailable: ' .. prompt_path(name),
+            vim.log.levels.ERROR
+        )
+    end
+    return content
 end
 
 -- Shared prompt constructor
 local function build_prompt(interaction, description, alias, content, extra)
+    if not content then
+        return nil
+    end
     -- These entries feed the action palette. Slash-command invocation (invisible
     -- injection + auto-submit) is handled separately in the slash_commands module.
     local prompt_opts = {
@@ -118,6 +129,9 @@ end
 
 local function meeting_copilot_prompt()
     local template = M.prompt('meeting_copilot')
+    if not template then
+        return nil
+    end
     return build_prompt(
         'chat',
         'Act as a real-time stakeholder meeting copilot.',

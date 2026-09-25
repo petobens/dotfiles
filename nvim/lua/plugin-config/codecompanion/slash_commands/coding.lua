@@ -50,10 +50,11 @@ function M.qfix(chat)
         return
     end
 
-    chat_helpers.submit_user_message(
-        chat,
-        string.format(prompt_library.prompt('quickfix'), entries)
-    )
+    local template = prompt_library.prompt('quickfix')
+    if not template then
+        return
+    end
+    chat_helpers.submit_user_message(chat, string.format(template, entries))
 end
 
 function M.explain_code(chat, opts)
@@ -64,6 +65,10 @@ function M.explain_code(chat, opts)
         return
     end
 
+    local template = prompt_library.prompt('explain_code')
+    if not template then
+        return
+    end
     local file = vim.api.nvim_buf_get_name(bufnr)
     local filename = file ~= '' and file or '[unnamed buffer]'
     local filetype = vim.bo[bufnr].filetype
@@ -73,7 +78,7 @@ function M.explain_code(chat, opts)
         string.format(
             'Code from `%s`.\n\n%s',
             filename,
-            string.format(prompt_library.prompt('explain_code'), language, code)
+            string.format(template, language, code)
         )
     )
 end
