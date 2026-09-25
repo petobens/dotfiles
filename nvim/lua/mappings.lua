@@ -622,13 +622,12 @@ vim.keymap.set(
     ('%s<C-W>l'):format(terminal_escape),
     { desc = 'Move to right window from terminal' }
 )
-vim.keymap.set('t', '<C-[>', function()
-    vim.api.nvim_feedkeys(vim.keycode(terminal_escape), 'n', false)
-    vim.schedule(function()
-        vim.cmd.normal({ args = { '0' }, bang = true })
-        vim.fn.search(' ', 'b')
-    end)
-end, { desc = 'Move to previous terminal prompt' })
+vim.keymap.set(
+    't',
+    '<C-[>',
+    terminal_escape .. '[[f l',
+    { remap = true, desc = 'Move to previous terminal prompt' }
+)
 
 -- Key disabling
 -- We use f10 for recording dictation with voice control software, so we disable it in

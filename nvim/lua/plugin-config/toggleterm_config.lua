@@ -43,6 +43,12 @@ vim.api.nvim_create_autocmd('TermOpen', {
     callback = function(e)
         vim.opt_local.statuscolumn = ''
 
+        vim.keymap.set('n', '<C-[>', '[[f l', {
+            buf = e.buf,
+            remap = true,
+            desc = 'Move to previous terminal prompt',
+        })
+
         vim.keymap.set('t', '<C-A-h>', function()
             vim.api.nvim_feedkeys(vim.keycode('<C-\\><C-n>'), 'n', false)
             vim.schedule(function()

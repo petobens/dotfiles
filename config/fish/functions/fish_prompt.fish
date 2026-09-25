@@ -156,5 +156,6 @@ function fish_prompt
     else
         printf '\e[38;2;%sm\e[49m' $band_color
     end
-    printf '\e[0m '
+    # Mark the command boundary for tmux and Neovim prompt navigation
+    printf '\e[0m\u00a0'
 end
