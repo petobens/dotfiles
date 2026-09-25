@@ -2,14 +2,10 @@
 
 -- Outputs
 local physical_outputs = {
-    left = 'DP-7',
-    right = 'DP-8',
+    -- Add other familiar monitors to these lists, in preference order
+    left = { 'desc:Samsung Electric Company LF24T35 H9VT203938' },
+    right = { 'desc:Samsung Electric Company LF24T35 H9VT203922' },
     laptop = 'eDP-1',
-}
--- Alternate port names for the left and right monitors
-local output_aliases = {
-    ['DP-5'] = physical_outputs.left,
-    ['DP-6'] = physical_outputs.right,
 }
 local virtual_outputs = {
     left = 'Virtual-2',
@@ -23,13 +19,17 @@ local scale_by_resolution = {
     ['3840x2160'] = 2,
 }
 local positions = {
-    [physical_outputs.left] = '-960x-1080',
-    [physical_outputs.right] = '960x-1080',
-    [physical_outputs.laptop] = '0x0',
+    left = '-960x-1080',
+    right = '960x-1080',
+    laptop = '0x0',
 }
 local active_mode
 local lid_closed = false
 local known_monitors = {}
+local physical_workspace_outputs = { laptop = physical_outputs.laptop }
+local workspace_outputs = physical_outputs
+local configure_workspace_rules
+local activate_default_workspace
 
 -- Helpers
 local function connected_monitors()
@@ -54,8 +54,61 @@ local function is_virtual_monitor(name)
     return name:match('^Virtual%-%d+$')
 end
 
+local function resolve_physical_outputs(monitors)
+    local external = {}
+    for _, monitor in ipairs(monitors) do
+        if
+            monitor.name ~= physical_outputs.laptop
+            and not is_virtual_monitor(monitor.name)
+        then
+            external[#external + 1] = monitor
+        end
+    end
+    -- Distinct descriptions keep unfamiliar pairs ordered when DP names change
+    table.sort(external, function(a, b)
+        if a.description == b.description then
+            return a.name < b.name
+        end
+        return a.description < b.description
+    end)
+
+    local outputs = { laptop = physical_outputs.laptop }
+    local fallback = external[1] and external[1].name
+    for _, role in ipairs({ 'left', 'right' }) do
+        for _, selector in ipairs(physical_outputs[role]) do
+            for index, monitor in ipairs(external) do
+                if
+                    monitor.name == selector
+                    or 'desc:' .. monitor.description == selector
+                then
+                    outputs[role] = monitor.name
+                    table.remove(external, index)
+                    break
+                end
+            end
+            if outputs[role] then
+                break
+            end
+        end
+    end
+    for _, role in ipairs({ 'left', 'right' }) do
+        if not outputs[role] then
+            local monitor = table.remove(external, 1)
+            -- A single external display takes both workspace groups
+            outputs[role] = (monitor and monitor.name)
+                or fallback
+                or physical_outputs[role][1]
+        end
+    end
+    return outputs
+end
+
 local function monitor_position(name)
-    return positions[output_aliases[name] or name]
+    for _, role in ipairs({ 'laptop', 'left', 'right' }) do
+        if name == physical_workspace_outputs[role] then
+            return positions[role]
+        end
+    end
 end
 
 local function monitor_scale(monitor)
@@ -106,7 +159,7 @@ end
 local function configure_laptop()
     for _, monitor in ipairs(connected_monitors()) do
         if monitor.name == physical_outputs.laptop then
-            configure_monitor(monitor.name, positions[physical_outputs.laptop])
+            configure_monitor(monitor.name, positions.laptop)
             return true
         end
     end
@@ -116,6 +169,7 @@ end
 local function configure_all_monitors()
     hl.config({ debug = { damage_tracking = 2 } })
     local monitors = connected_monitors()
+    physical_workspace_outputs = resolve_physical_outputs(monitors)
     local laptop = known_monitors[physical_outputs.laptop]
     hl.monitor({
         output = '',
@@ -188,6 +242,15 @@ end
 local function multi()
     active_mode = 'multi'
     configure_all_monitors()
+    -- Restore workspace placement after the monitor rules have been applied
+    hl.timer(function()
+        if active_mode == 'multi' and not lid_closed then
+            configure_workspace_rules(workspace_outputs)
+            for _, monitor in ipairs(hl.get_monitors()) do
+                activate_default_workspace(monitor)
+            end
+        end
+    end, { timeout = 1, type = 'oneshot' })
 end
 
 -- Preserve and restore the selected layout across lid and monitor events
@@ -215,40 +278,19 @@ end
 
 -- Workspace rules
 local function focus_development_workspace(monitor)
-    -- A lone output outside the physical layout uses the development workspace
-    if monitor and #hl.get_monitors() == 1 and not monitor_position(monitor.name) then
+    -- A lone external output uses the development workspace
+    if
+        monitor
+        and #hl.get_monitors() == 1
+        and monitor.name ~= physical_outputs.laptop
+    then
         hl.dispatch(hl.dsp.focus({ workspace = '5' }))
     end
 end
 
-local physical_workspace_outputs = physical_outputs
-
-local function configure_workspace_rules(outputs)
+configure_workspace_rules = function(outputs)
     if outputs == physical_outputs then
-        local external = {}
-        local hdmi
-        for _, monitor in ipairs(connected_monitors()) do
-            if monitor.name ~= physical_outputs.laptop then
-                external[#external + 1] = monitor.name
-            end
-            if monitor.name:match('^HDMI%-') then
-                hdmi = hdmi or monitor.name
-            end
-        end
-        local fallback = #external == 1 and external[1] or hdmi
-        outputs = {}
-        for role, name in pairs(physical_outputs) do
-            local monitor = known_monitors[name]
-            local output = monitor and monitor.name
-            for alias, canonical in pairs(output_aliases) do
-                monitor = known_monitors[alias]
-                if not output and canonical == name and monitor and monitor.name then
-                    output = alias
-                end
-            end
-            -- A lone external display takes both external workspace groups
-            outputs[role] = output or (role ~= 'laptop' and fallback) or name
-        end
+        outputs = resolve_physical_outputs(connected_monitors())
         physical_workspace_outputs = outputs
     end
     -- When both external groups share a display, only workspace 5 is the default
@@ -268,12 +310,21 @@ local function configure_workspace_rules(outputs)
             monitor = workspace[2],
             default = workspace[3] or false,
         })
+        local current = hl.get_workspace(workspace[1])
+        local monitor = hl.get_monitor(workspace[2])
+        if
+            active_mode == 'multi'
+            and not lid_closed
+            and current
+            and monitor
+            and current.monitor.name ~= monitor.name
+        then
+            hl.dispatch(hl.dsp.workspace.move({ workspace = current, monitor = monitor }))
+        end
     end
 end
 
-local workspace_outputs
-
-local function activate_default_workspace(monitor)
+activate_default_workspace = function(monitor)
     if active_mode ~= 'multi' or lid_closed then
         return
     end
@@ -291,7 +342,7 @@ local function activate_default_workspace(monitor)
         return
     end
 
-    -- Added monitors already have a workspace before alias rules are applied
+    -- Added monitors already have a workspace before these rules are applied
     local focused = hl.get_active_monitor()
     hl.dispatch(hl.dsp.focus({ workspace = workspace }))
     if focused and focused.name ~= monitor.name then
