@@ -22,7 +22,7 @@ end
 
 local function open_git_status()
     vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
-    vim.cmd('botright Git')
+    vim.cmd.Git({ mods = { split = 'botright' } })
     vim.cmd.wincmd('J')
     vim.cmd.resize('15')
     vim.cmd.normal({ args = { '4j' }, bang = true })
@@ -272,9 +272,9 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
         if vim.api.nvim_get_current_line() == '' then
             vim.cmd.startinsert()
         end
-        vim.cmd(
+        vim.cmd.syntax(
             -- Extend gitcommitSummary highlight to 72 columns
-            [[syntax region gitcommitSummary start='\%^\%1l' end='.\{72}\|$' keepend]]
+            [[region gitcommitSummary start='\%^\%1l' end='.\{72}\|$' keepend]]
         )
     end,
 })
