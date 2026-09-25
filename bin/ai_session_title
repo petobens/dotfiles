@@ -10,6 +10,7 @@ Run with -n/--dry-run to preview, --all to force-regenerate every title.
 """
 
 import argparse
+import http.client
 import json
 import re
 import subprocess
@@ -17,7 +18,7 @@ import time
 from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from urllib import error, request
+from urllib import request
 
 CLAUDE_ROOT = Path.home() / ".claude" / "projects"
 CODEX_ROOT = Path.home() / ".codex" / "sessions"
@@ -240,7 +241,7 @@ def generate_title(key: str, transcript: str) -> str | None:
             content = _output_text(data)
             title = _clean_title(content) if content else None
             return title or None
-        except (error.URLError, KeyError, IndexError, ValueError, TimeoutError):
+        except (OSError, http.client.HTTPException, KeyError, IndexError, ValueError):
             if attempt == 2:
                 return None
             time.sleep(1 + attempt)
