@@ -131,7 +131,7 @@ launch_vm() {
     )
 
     if $install_mode; then
-        args+=(-drive "if=virtio,media=cdrom,readonly=on,file=$iso")
+        args+=(-drive "if=virtio,media=cdrom,format=raw,readonly=on,file=$iso")
         printf '%s\n' \
             'Run inside the Arch ISO:' \
             'pacman -Sy --needed git tmux && tmux' \
