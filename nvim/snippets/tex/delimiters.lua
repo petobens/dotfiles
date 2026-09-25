@@ -60,7 +60,7 @@ return {
         { trig = 'lr{', wordTrig = false, dscr = '[L]eft/[r]ight braces' },
         fmta(
             [[
-        \left{<><>\right}
+        \left\{<><>\right\}
     ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
