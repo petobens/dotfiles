@@ -15,6 +15,12 @@ die() {
     exit 1
 }
 
+read_setting() {
+    complete -o nospace -W "$2" -I
+    read -Er -p "$1" REPLY
+    complete -r -I
+}
+
 set_password() {
     local account=$1
     until arch-chroot /mnt passwd "$account"; do
@@ -55,22 +61,23 @@ section 'Entering installation settings'
 read -r -p 'Use a larger font in the live console? [y/N] ' choice
 [[ $choice == [yY] ]] && setfont ter-132n
 
-read -r -p 'Keyboard layout [us]: ' keymap
-keymap=${keymap:-us}
+read_setting 'Keyboard layout [us]: ' "$(localectl list-keymaps)"
+keymap=${REPLY:-us}
 localectl list-keymaps | grep -Fx "$keymap" > /dev/null || die "Unknown keyboard layout: $keymap"
 loadkeys "$keymap"
 
-read -r -p 'Timezone [America/Argentina/Buenos_Aires]: ' timezone
-timezone=${timezone:-America/Argentina/Buenos_Aires}
-[[ -e /usr/share/zoneinfo/$timezone ]] || die "Unknown timezone: $timezone"
+read_setting 'Timezone [America/Argentina/Buenos_Aires]: ' \
+    "$(timedatectl list-timezones)"
+timezone=${REPLY:-America/Argentina/Buenos_Aires}
+[[ -f /usr/share/zoneinfo/$timezone ]] || die "Unknown timezone: $timezone"
 
-read -r -p "Hostname [$default_hostname]: " hostname
-hostname=${hostname:-$default_hostname}
+read_setting "Hostname [$default_hostname]: " "$default_hostname"
+hostname=${REPLY:-$default_hostname}
 [[ $hostname =~ ^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$ ]] ||
     die 'Use a lowercase hostname containing only letters, numbers, and hyphens'
 
-read -r -p 'Username [pedro]: ' username
-username=${username:-pedro}
+read_setting 'Username [pedro]: ' 'pedro'
+username=${REPLY:-pedro}
 [[ $username =~ ^[a-z_][a-z0-9_-]{0,31}$ ]] ||
     die 'Username must be 1-32 lowercase letters, digits, underscores, or hyphens, starting with a letter or underscore'
 if getent passwd "$username" > /dev/null; then
@@ -95,8 +102,9 @@ default_disk=$(
     printf '%s\n' "${disk:-}"
 )
 [[ -n $default_disk ]] || die 'No unmounted, non-removable whole disks found'
-read -r -p "Target disk [$default_disk]: " disk
-disk=${disk:-$default_disk}
+read_setting "Target disk [$default_disk]: " \
+    "$(lsblk -dpno NAME,TYPE | awk '$2 == "disk" { print $1 }')"
+disk=${REPLY:-$default_disk}
 disk=$(realpath -e -- "$disk") || die 'Cannot resolve the selected disk'
 [[ -b $disk && $(lsblk -dnro TYPE "$disk") == disk ]] || die "Not a whole disk: $disk"
 if lsblk -nrpo MOUNTPOINTS "$disk" | grep '[^[:space:]]' > /dev/null; then
