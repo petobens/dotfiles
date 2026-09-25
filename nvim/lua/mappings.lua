@@ -169,7 +169,9 @@ vim.keymap.set({ 'n', 'x' }, '-', '<C-x>', { desc = 'Decrement number' })
 
 -- Yank and paste
 vim.keymap.set('n', 'Y', 'y$', { desc = 'Yank to end of line' })
-vim.keymap.set('n', 'yy', 'mz0y$`z', { desc = 'Yank whole line (keep cursor)' })
+vim.keymap.set('n', 'yy', function()
+    return 'mz0"' .. vim.v.register .. vim.v.count1 .. 'y$`z'
+end, { expr = true, desc = 'Yank whole lines characterwise (keep cursor)' })
 vim.keymap.set('n', '<Leader>yf', function()
     local path = vim.api.nvim_buf_get_name(0)
     vim.fn.setreg('+', path)
