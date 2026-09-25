@@ -1,6 +1,6 @@
 local M = {}
 
-local tmux_data = {}
+local tmux_data = setmetatable({}, { __mode = 'k' })
 
 -- Helpers
 local function add_tmux_pane_context_incremental(chat, target)
@@ -27,26 +27,42 @@ local function add_tmux_pane_context_incremental(chat, target)
         target,
     }, { text = true }):wait()
 
-    local out = vim.trim(result.stdout or '')
-    if result.code ~= 0 or out == '' then
+    local out = (result.stdout or ''):gsub('\n+$', '')
+    if result.code ~= 0 or vim.trim(out) == '' then
         vim.notify('No tmux output captured for target: ' .. target, vim.log.levels.WARN)
         return
     end
 
     local lines = vim.split(out, '\n', { plain = true })
-    local start_line = 1
-    local prev = tmux_data[target]
-
-    if prev and prev.lines then
-        start_line = math.max(1, prev.lines - 3)
+    local captures = tmux_data[chat] or {}
+    local prev = captures[target] or {}
+    local overlap = 0
+    -- Scrollback is bounded, so find shared lines instead of comparing counts
+    for count = math.min(#prev, #lines), 1, -1 do
+        local matches = true
+        for i = 1, count do
+            if prev[#prev - count + i] ~= lines[i] then
+                matches = false
+                break
+            end
+        end
+        if matches then
+            overlap = count
+            break
+        end
     end
-
+    if overlap == #lines then
+        vim.notify('No new tmux output for target: ' .. target)
+        return
+    end
+    -- Include a little context; send the full snapshot if the pane was cleared
     local new_lines = {}
-    for i = start_line, #lines do
+    for i = math.max(1, overlap - 2), #lines do
         table.insert(new_lines, lines[i])
     end
 
-    tmux_data[target] = { lines = #lines }
+    captures[target] = lines
+    tmux_data[chat] = captures
 
     chat:add_context({
         role = 'user',
