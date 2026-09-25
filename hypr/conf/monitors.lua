@@ -383,6 +383,7 @@ hl.on('hyprland.start', function()
     for _, monitor in ipairs(hl.get_monitors()) do
         activate_default_workspace(monitor)
     end
+    focus_development_workspace(hl.get_monitors()[1])
 end)
 hl.on('monitor.removed', function()
     -- Wait for unplug cleanup before checking which cached monitors still exist
@@ -404,8 +405,8 @@ hl.bind('switch:off:Lid Switch', function()
 end, { description = 'Restore laptop display on lid open', locked = true })
 
 -- Initial state
-multi()
+active_mode = 'multi'
+configure_all_monitors()
 workspace_outputs = virtual_outputs_connected() and virtual_outputs or physical_outputs
 configure_workspace_rules(workspace_outputs)
-focus_development_workspace(hl.get_monitors()[1])
 return { primary = primary, multi = multi, mirror = mirror, cycle_focus = cycle_focus }
