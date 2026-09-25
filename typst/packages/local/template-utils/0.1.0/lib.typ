@@ -234,8 +234,9 @@
     spacing: 0pt,
   ) => {
     show enum: it => {
-      let start = if it.start == auto { 1 } else { it.start }
+      let number = if it.start == auto { 1 } else { it.start }
       for (index, item) in it.children.enumerate() {
+        if item.number != auto { number = item.number }
         block(
           width: 100%,
           breakable: true,
@@ -243,9 +244,10 @@
         )[
           #box(
             width: label-width,
-            align(right, format-number(numbering, index + start)),
+            align(right, format-number(numbering, number)),
           )#h(body-indent)#item.body
         ]
+        number += 1
       }
     }
     parbreak()
