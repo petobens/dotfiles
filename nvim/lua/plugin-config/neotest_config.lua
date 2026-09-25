@@ -305,12 +305,6 @@ end, { desc = '[N]eotest: run with [d]ebugger' })
 
 vim.keymap.set('n', '<Leader>na', function()
     neotest_run(neotest.run.attach, {}, false)
-    vim.keymap.set('n', 'q', function()
-        vim.cmd.close()
-    end, { buf = 0, desc = 'Close neotest attach window and return' })
-    vim.cmd.stopinsert()
-    set_output_window_layout()
-    vim.cmd.startinsert()
 end, { desc = '[N]eotest: [a]ttach to running test' })
 
 vim.keymap.set('n', '<Leader>nc', neotest.run.stop, {
@@ -348,6 +342,17 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
                 buf = e.buf,
                 desc = 'Close neotest window and return to previous window',
             })
+            -- The attachment window opens asynchronously and gains focus after FileType
+            if ft == 'attach' then
+                vim.schedule(function()
+                    for _, win in ipairs(vim.fn.win_findbuf(e.buf)) do
+                        vim.api.nvim_win_call(win, set_output_window_layout)
+                        if vim.api.nvim_get_current_win() == win then
+                            vim.cmd.startinsert()
+                        end
+                    end
+                end)
+            end
             -- Options
             if ft == 'summary' then
                 vim.opt_local.number = true

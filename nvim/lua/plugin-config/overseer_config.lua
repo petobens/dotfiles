@@ -48,6 +48,11 @@ local function overseer_last_task(attach)
         vim.cmd.close()
         vim.cmd.wincmd('p')
     end, { buf = 0, desc = 'Close Overseer output window and return' })
+    vim.keymap.set('t', '<C-c>', '<C-\\><C-n>q', {
+        buf = 0,
+        remap = true,
+        desc = 'Leave Terminal mode and close Overseer output window',
+    })
 
     if attach then
         vim.cmd.startinsert()
