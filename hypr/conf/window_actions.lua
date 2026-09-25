@@ -186,8 +186,12 @@ function M.move_to_monitor(kind, direction)
         end
 
         for _, item in ipairs(geometries) do
-            mark_manually_placed(item.window)
-            geometry.place(item.window, item.placement, target)
+            if M.fills_work_area(item.window) then
+                geometry.fill_work_area(item.window, target)
+            else
+                mark_manually_placed(item.window)
+                geometry.place(item.window, item.placement, target)
+            end
         end
     end
 end
