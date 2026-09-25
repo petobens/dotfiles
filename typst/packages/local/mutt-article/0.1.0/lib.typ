@@ -83,10 +83,14 @@
   revised-date,
 ) = {
   let metadata = (
-    [Date: #date],
-    if optional-value-present(authors) { [Authors: #authors] },
-    if optional-value-present(audience) { [Audience: #audience] },
-    [Revised date: #revised-date],
+    [#localized([Fecha], [Date]): #date],
+    if optional-value-present(authors) {
+      [#localized([Autores], [Authors]): #authors]
+    },
+    if optional-value-present(audience) {
+      [#localized([Audiencia], [Audience]): #audience]
+    },
+    [#localized([Fecha de revisión], [Revised date]): #revised-date],
   ).filter(it => it != none)
 
   block(width: 100%, breakable: false, below: 24pt)[
