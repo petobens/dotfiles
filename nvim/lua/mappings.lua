@@ -120,8 +120,12 @@ vim.keymap.set('n', '<A-m>', 'M', { desc = 'Go to middle line on screen' })
 vim.keymap.set({ 'n', 'x' }, 'H', '^', { desc = 'Go to first non-blank' })
 vim.keymap.set('n', 'L', '$', { desc = 'Go to end of line' })
 vim.keymap.set('n', 'M', 'gM', { desc = 'Go to middle of line' })
-vim.keymap.set('n', 'j', 'gj', { desc = 'Down (display line)' })
-vim.keymap.set('n', 'k', 'gk', { desc = 'Up (display line)' })
+vim.keymap.set('n', 'j', function()
+    return vim.v.count == 0 and 'gj' or 'j'
+end, { expr = true, desc = 'Down (display line unless counted)' })
+vim.keymap.set('n', 'k', function()
+    return vim.v.count == 0 and 'gk' or 'k'
+end, { expr = true, desc = 'Up (display line unless counted)' })
 vim.keymap.set(
     'n',
     '<Leader>oj',
