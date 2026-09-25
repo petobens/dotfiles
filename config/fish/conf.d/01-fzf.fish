@@ -8,7 +8,7 @@ set -gx FZF_DEFAULT_OPTS '
 --marker=" "
 --no-separator
 --preview-window=border-left
---walker-skip=.git
+--walker-skip=.git,node_modules
 --bind=ctrl-space:toggle+up,ctrl-d:half-page-down,ctrl-u:half-page-up
 --bind=alt-0:first,alt-]:last
 --bind=alt-v:toggle-preview,alt-j:preview-down,alt-k:preview-up
