@@ -222,9 +222,9 @@ Press `Ctrl+Alt+G` in the QEMU window to toggle mouse and keyboard capture.
 The first launch prepares the Arch ISO and boots the installer. Later launches
 reuse the installed disk; `./setup/vm/vm.sh reset` discards it and starts a
 clean installation. Use `./setup/vm/vm.sh multi` to test three 1920x1080
-virtual displays without reproducing the physical connector names or workspace
-assignments. See the [VM guide](../setup/vm/README.md) for the complete
-workflow, SSH access, and VM-specific defaults.
+virtual displays without reproducing the physical connector names. See the
+[VM guide](../setup/vm/README.md) for the complete workflow, SSH access, and
+VM-specific defaults.
 
 ### Installer steps in detail
 
