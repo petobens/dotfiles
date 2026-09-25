@@ -212,10 +212,10 @@ function tms --description 'Create or select a tmux session'
             read -P 'New tmux session name: ' session
         end
         test -n "$session"; or return 1
-        tmux "$action" -t "$session" 2>/dev/null
+        tmux "$action" -t "=$session" 2>/dev/null
         or begin
             tmux -f "$HOME/.config/tmux/tmux.conf" new-session -d -s "$session"
-            and tmux "$action" -t "$session"
+            and tmux "$action" -t "=$session"
         end
         return
     end
@@ -231,15 +231,15 @@ function tms --description 'Create or select a tmux session'
     switch "$out[1]"
         case alt-k
             for session in $out[2..]
-                tmux kill-session -t "$session"
+                tmux kill-session -t "=$session"
             end
         case alt-r
             for session in $out[2..]
                 read -P "Rename tmux session '$session' to: " new_session
-                test -n "$new_session"; and tmux rename-session -t "$session" "$new_session"
+                test -n "$new_session"; and tmux rename-session -t "=$session" "$new_session"
             end
         case '*'
-            tmux "$action" -t "$out[2]"
+            tmux "$action" -t "=$out[2]"
     end
 end
 
