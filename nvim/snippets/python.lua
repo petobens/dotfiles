@@ -404,5 +404,9 @@ return {
     s({ trig = '--', wordTrig = false, dscr = 'Return' }, {
         t('->'),
         i(1),
+    }, {
+        condition = function(line)
+            return line:match('%)%s*%-%-$') ~= nil
+        end,
     }),
 }
