@@ -23,10 +23,16 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     desc = 'Enter insert mode on terminal buffer',
     group = term_acg,
     pattern = { '*' },
-    callback = function()
-        if vim.startswith(vim.api.nvim_buf_get_name(0), 'term://') then
+    callback = function(args)
+        if vim.bo[args.buf].buftype == 'terminal' then
+            local winid = vim.api.nvim_get_current_win()
             vim.defer_fn(function()
-                vim.cmd.startinsert()
+                if
+                    vim.api.nvim_get_current_win() == winid
+                    and vim.api.nvim_get_current_buf() == args.buf
+                then
+                    vim.cmd.startinsert()
+                end
             end, 1)
         end
     end,
