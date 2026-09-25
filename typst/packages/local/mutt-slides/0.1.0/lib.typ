@@ -507,10 +507,13 @@
   )
   set smartquote(quotes: curly-double-quotes)
   show: apply-mybibstyle
-  show: backrefs.with(
-    format: format-bibliography-backrefs,
-    read: retrofit-reader(bibliography-read),
-  )
+  // Forward search skips bibliography backreferences to keep compilation fast
+  show: if "sync" in sys.inputs { doc => doc } else {
+    backrefs.with(
+      format: format-bibliography-backrefs,
+      read: retrofit-reader(bibliography-read),
+    )
+  }
   show bibliography: set block(spacing: bibliography-entry-spacing)
   show: code-style.with(size: _scaled-size(13pt, font-size))
   show strong: set text(fill: mutt-blue)
