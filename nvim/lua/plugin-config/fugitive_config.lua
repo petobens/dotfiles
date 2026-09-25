@@ -264,7 +264,7 @@ local git_commit_edit = vim.api.nvim_create_augroup('git_commit_edit', { clear =
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
     desc = 'Startinsert and highlight commit message summary',
     group = git_commit_edit,
-    pattern = { '*.git/COMMIT_EDITMSG' },
+    pattern = 'COMMIT_EDITMSG',
     callback = function()
         vim.cmd.wincmd('15_')
         vim.cmd.normal({ args = { 'gg0' }, bang = true })
@@ -280,7 +280,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
 vim.api.nvim_create_autocmd({ 'BufLeave' }, {
     desc = 'Go back to git status window after leaving commit message buffer',
     group = git_commit_edit,
-    pattern = { '*.git/COMMIT_EDITMSG' },
+    pattern = 'COMMIT_EDITMSG',
     callback = function()
         local win = _G.fugitiveConfig.gstatus_winid
         if win and vim.api.nvim_win_is_valid(win) then
