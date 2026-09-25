@@ -19,10 +19,14 @@ image.setup({
 -- Helpers
 local function get_image_path()
     local line = vim.api.nvim_get_current_line()
+    local link = line:match('!%[[^%]]*%]%s*(%b())') or line:match('%[[^%]]*%]%s*(%b())')
     local img_path = line:match('image%s*%(%s*"([^"]+)"') -- Typst image("path")
-        or line:match('!%[.*%]%((.+)%)') -- md image ![](path)
-    if not img_path then
-        img_path = line:match('%[.*%]%((.+)%)') -- md-like without !: [](path)
+    if not img_path and link then
+        local destination = vim.trim(link:sub(2, -2))
+        img_path = destination:match('^<([^>]+)>')
+            or destination:match('^(.-)%s+".*"$')
+            or destination:match("^(.-)%s+'.*'$")
+            or destination
     end
     if not img_path then
         img_path = line:match('<image>(.-)</image>') -- html-like: <image>path</image>
@@ -34,6 +38,12 @@ local function get_image_path()
             or line:match('([%w/%._%-:]+%.jpeg)')
             or line:match('([%w/%._%-:]+%.svg)')
             or line:match('([%w/%._%-:]+%.bmp)')
+    end
+    if img_path and img_path ~= '' and not img_path:match('^[%w+.-]+://') then
+        local name = vim.api.nvim_buf_get_name(0)
+        return vim.fs.abspath(img_path, {
+            cwd = name ~= '' and vim.fs.dirname(name) or vim.uv.cwd(),
+        })
     end
     return img_path
 end
