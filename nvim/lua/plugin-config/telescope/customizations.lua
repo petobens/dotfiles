@@ -28,8 +28,18 @@ function M.setup()
             local prompt_bufnr = e.buf
 
             vim.opt_local.cursorline = false
-            vim.keymap.set('n', 'H', '^lll', { buf = prompt_bufnr })
-            vim.keymap.set('n', 'L', '$', { buf = prompt_bufnr })
+            vim.keymap.set(
+                'n',
+                'H',
+                '^lll',
+                { buf = prompt_bufnr, desc = 'Go to start of prompt text' }
+            )
+            vim.keymap.set(
+                'n',
+                'L',
+                '$',
+                { buf = prompt_bufnr, desc = 'Go to end of prompt text' }
+            )
 
             vim.schedule(function()
                 local picker = action_state.get_current_picker(prompt_bufnr)
@@ -39,7 +49,10 @@ function M.setup()
                 if picker.prompt_title == 'Images' then
                     vim.keymap.set('i', '<CR>', function()
                         actions.select_default(prompt_bufnr)
-                    end, { buf = prompt_bufnr })
+                    end, {
+                        buf = prompt_bufnr,
+                        desc = 'Open selected image',
+                    })
                 end
             end)
         end,

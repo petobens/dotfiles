@@ -52,7 +52,7 @@ M.custom = transform_mod({
             .. 'delta.side-by-side=true diff '
             .. commit_sha
             .. '^! --'
-        vim.cmd(string.format('TermExec size=25 cmd="%s"', delta_cmd))
+        require('toggleterm').exec(delta_cmd, nil, 25)
         vim.cmd.wincmd('p')
     end,
     -- Search history
@@ -168,13 +168,13 @@ M.custom = transform_mod({
         local bufnr = picker.previewer.state.bufnr
         vim.keymap.set('n', '<C-h>', function()
             vim.api.nvim_set_current_win(picker.prompt_win)
-        end, { buf = bufnr })
-        vim.cmd(
-            string.format(
-                'noautocmd lua vim.api.nvim_set_current_win(%s)',
-                picker.previewer.state.winid
-            )
-        )
+        end, { buf = bufnr, desc = 'Return to Telescope prompt' })
+        vim.cmd.lua({
+            args = {
+                ('vim.api.nvim_set_current_win(%s)'):format(picker.previewer.state.winid),
+            },
+            mods = { noautocmd = true },
+        })
     end,
     -- Add files as a reference/context to codecompanion
     add_codecompanion_references = function(prompt_bufnr)

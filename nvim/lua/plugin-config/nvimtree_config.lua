@@ -309,9 +309,9 @@ local function on_attach(bufnr)
     )
 
     -- System
-    vim.keymap.set('n', ',od', function()
+    vim.keymap.set('n', '<Leader>od', function()
         execute({ 'dragon-drop', '-a', '-x' })
-    end, { buf = bufnr, desc = 'Open drag and drop' })
+    end, { buf = bufnr, desc = '[O]pen [d]rag and drop' })
 
     --- CodeCompanion
     vim.keymap.set(

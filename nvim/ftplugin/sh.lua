@@ -65,7 +65,7 @@ vim.keymap.set(
     { 'n', 'i' },
     '<F5>',
     run_tmux_pane,
-    { buf = 0, desc = 'Run shell script in new tmux pane' }
+    { buf = 0, desc = 'Run shell script in new tmux window' }
 )
 
 vim.keymap.set(

@@ -67,6 +67,7 @@ vim.g.vimtex_doc_confirm_single = 0
 -- Mappings
 vim.g.vimtex_imaps_enabled = 0
 vim.api.nvim_create_autocmd({ 'User' }, {
+    desc = 'Set buffer mappings after VimTeX initialization',
     group = vim.api.nvim_create_augroup('vimtex_maps', { clear = true }),
     pattern = { 'VimtexEventInitPost' },
     callback = function(e)
