@@ -165,13 +165,17 @@ M.custom = transform_mod({
     -- Focus preview window
     focus_preview = function(prompt_bufnr)
         local picker = action_state.get_current_picker(prompt_bufnr)
-        local bufnr = picker.previewer.state.bufnr
+        local winid = picker.preview_win
+        if not winid then
+            return
+        end
+        local bufnr = vim.api.nvim_win_get_buf(winid)
         vim.keymap.set('n', '<C-h>', function()
             vim.api.nvim_set_current_win(picker.prompt_win)
         end, { buf = bufnr, desc = 'Return to Telescope prompt' })
         vim.cmd.lua({
             args = {
-                ('vim.api.nvim_set_current_win(%s)'):format(picker.previewer.state.winid),
+                ('vim.api.nvim_set_current_win(%s)'):format(winid),
             },
             mods = { noautocmd = true },
         })
