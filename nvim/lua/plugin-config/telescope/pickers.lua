@@ -281,12 +281,11 @@ function M.gitcommits(opts)
         return
     end
 
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0))) -- to fix delta previewing
     builtin.git_commits({
         cwd = opts.cwd,
         results_title = git_root,
         previewer = {
-            custom_previewers.delta,
+            custom_previewers.delta(opts.cwd),
             previewers.git_commit_diff_as_was.new(opts),
             previewers.git_commit_message.new(opts),
         },
@@ -297,12 +296,11 @@ end
 function M.gitcommits_buffer(opts)
     opts = opts or {}
     opts.cwd = utils.buffer_dir()
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0))) -- to fix delta previewing
     builtin.git_bcommits({
         cwd = opts.cwd,
         results_title = vim.api.nvim_buf_get_name(0),
         previewer = {
-            custom_previewers.delta,
+            custom_previewers.delta(opts.cwd),
             previewers.git_commit_diff_as_was.new(opts),
             previewers.git_commit_message.new(opts),
         },

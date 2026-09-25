@@ -56,25 +56,28 @@ M.tree = telescope_previewers.new_termopen_previewer({
     scroll_fn = scroll_less,
 })
 
-M.delta = telescope_previewers.new_termopen_previewer({
-    get_command = function(entry)
-        return {
-            'git',
-            '-c',
-            'core.pager=delta',
-            '-c',
-            'delta.paging=never',
-            '-c',
-            'delta.side-by-side=false',
-            'show',
-            entry.value .. '^!',
-            '--',
-            entry.current_file,
-        }
-    end,
-    title = 'Delta Diff',
-    scroll_fn = scroll_less,
-})
+function M.delta(cwd)
+    return telescope_previewers.new_termopen_previewer({
+        cwd = cwd,
+        get_command = function(entry)
+            return {
+                'git',
+                '-c',
+                'core.pager=delta',
+                '-c',
+                'delta.paging=never',
+                '-c',
+                'delta.side-by-side=false',
+                'show',
+                entry.value .. '^!',
+                '--',
+                entry.current_file,
+            }
+        end,
+        title = 'Delta Diff',
+        scroll_fn = scroll_less,
+    })
+end
 
 -- Image and PDF previewer
 -- From https://github.com/3rd/image.nvim/issues/183#issuecomment-2284979815
