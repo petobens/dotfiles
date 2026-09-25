@@ -511,7 +511,7 @@
   }
 
   // Main matter
-  pagebreak()
+  pagebreak(weak: true)
   _book-phase.update("main")
   set page(numbering: "1")
   _main-page-reset.update(true)
