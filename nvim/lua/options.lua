@@ -284,7 +284,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
     pattern = { '*.py' },
     callback = function()
         local fname = vim.api.nvim_buf_get_name(0)
-        if not string.match(fname, '.git/') and not vim.startswith(fname, 'copilot') then
+        if not fname:find('/.git/', 1, true) and not vim.startswith(fname, 'copilot') then
             _G.PyVenv.activate()
         end
     end,
