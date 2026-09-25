@@ -83,6 +83,9 @@ local function compile_latex()
     local previous_log_stat = vim.uv.fs_stat(log_file)
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     overseer.run_task({ name = 'run_arara', autostart = false }, function(task)
+        if not task then
+            return
+        end
         vim.cmd.cclose()
         task:subscribe('on_complete', function(_, status)
             -- Overseer flushes its terminal buffer on the next event-loop turn

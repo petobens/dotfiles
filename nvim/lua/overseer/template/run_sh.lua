@@ -22,6 +22,6 @@ return {
         }
     end,
     condition = {
-        filetype = { 'sh' },
+        filetype = { 'sh', 'bash' },
     },
 }

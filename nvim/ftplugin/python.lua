@@ -62,6 +62,9 @@ local function run_overseer(task_name)
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
 
     overseer.run_task({ name = string.format('%s', task_name) }, function(task)
+        if not task then
+            return
+        end
         vim.cmd.cclose()
         task:subscribe('on_complete', function()
             _parse_qf(task.metadata, current_win_id)
