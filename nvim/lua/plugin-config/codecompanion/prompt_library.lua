@@ -117,15 +117,14 @@ local function writer_at_work_prompt()
 end
 
 local function meeting_copilot_prompt()
+    local template = M.prompt('meeting_copilot')
     return build_prompt(
         'chat',
         'Act as a real-time stakeholder meeting copilot.',
         'meeting_role',
-        string.format(
-            '%s\n\nToday is: %s',
-            M.prompt('meeting_copilot'),
-            os.date('%d/%m/%Y')
-        )
+        function()
+            return string.format('%s\n\nToday is: %s', template, os.date('%d/%m/%Y'))
+        end
     )
 end
 
