@@ -161,7 +161,9 @@ vim.keymap.set(
     'i<CR><ESC>^mwgk:silent! s/\\v +$//<CR>:noh<CR>`w',
     { desc = 'Split line' }
 )
-vim.keymap.set('n', 'J', 'mzJ`z', { desc = 'Join lines (keep cursor)' })
+vim.keymap.set('n', 'J', function()
+    return 'mz' .. vim.v.count1 .. 'J`z'
+end, { expr = true, desc = 'Join lines (keep cursor)' })
 vim.keymap.set('n', 'Q', 'gwap', { desc = 'Format paragraph' })
 vim.keymap.set('n', '<A-u>', 'mzg~iw`z', { desc = 'Toggle case of word' })
 vim.keymap.set({ 'n', 'x' }, '+', '<C-a>', { desc = 'Increment number' })
@@ -280,10 +282,10 @@ vim.keymap.set('n', 'l', function()
     -- Open fold from start
     local foldstart_linenr = vim.fn.foldclosed('.')
     if foldstart_linenr == -1 then
-        vim.cmd.normal({ args = { 'l' }, bang = true })
+        vim.cmd.normal({ args = { vim.v.count1 .. 'l' }, bang = true })
         return
     end
-    vim.cmd.normal({ args = { 'zo' }, bang = true })
+    vim.cmd.normal({ args = { vim.v.count1 .. 'zo' }, bang = true })
     vim.api.nvim_win_set_cursor(0, { foldstart_linenr, 0 })
 end, { desc = 'Open fold from start or move right' })
 
