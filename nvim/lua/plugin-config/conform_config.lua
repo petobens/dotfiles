@@ -1,7 +1,14 @@
 local conform = require('conform')
 
 -- Global options
-vim.o.formatexpr = conform.formatexpr
+vim.o.formatexpr = function()
+    for _, formatter in ipairs(conform.list_formatters(0)) do
+        if formatter.name ~= 'trim_whitespace' then
+            return conform.formatexpr()
+        end
+    end
+    return 1
+end
 
 -- Formatters args
 conform.formatters.jq = { args = { '--indent', '4' } }
