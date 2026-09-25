@@ -3,9 +3,9 @@ local u = require('utils')
 local diagnostic_namespace = vim.api.nvim_create_namespace('neotest')
 
 -- Helpers
-local function set_output_window_layout(height)
+local function set_output_window_layout()
     vim.cmd.wincmd('J')
-    vim.cmd.resize(tostring(height or 15))
+    vim.cmd.resize('15')
     vim.cmd.set('winfixheight')
 end
 
