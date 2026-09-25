@@ -87,59 +87,81 @@ vim.diagnostic.config({
     },
 })
 
--- Autocmd options
-vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
-    desc = 'Update location list with formatted diagnostics on save',
-    group = vim.api.nvim_create_augroup('diagnostics_format', { clear = true }),
-    callback = function()
-        local bufnr = 0
-        local diagnostics = vim.diagnostic.get(bufnr)
+-- Keep save-triggered lists in sync with asynchronous linter results
+local saved_buffers = {}
+local function update_saved_diagnostics(bufnr)
+    local saved = saved_buffers[bufnr]
+    if
+        not saved
+        or not vim.api.nvim_buf_is_valid(bufnr)
+        or vim.api.nvim_buf_get_changedtick(bufnr) ~= saved.tick
+        or not vim.api.nvim_win_is_valid(saved.win)
+        or vim.api.nvim_win_get_buf(saved.win) ~= bufnr
+        or (saved.list and vim.fn.getloclist(saved.win, { id = 0 }).id ~= saved.list)
+    then
+        return
+    end
+
+    local diagnostics = vim.diagnostic.get(bufnr)
+    local neotest = false
+    for _, diagnostic in ipairs(diagnostics) do
+        local source = diagnostic.source and tostring(diagnostic.source) or ''
+        local code = not vim.isnil(diagnostic.code) and tostring(diagnostic.code) or nil
+        if source ~= '' and not diagnostic.message:find(source, 1, true) then
+            diagnostic.message = source .. ': ' .. diagnostic.message
+        end
+        if code and not diagnostic.message:find(code, 1, true) then
+            diagnostic.message = diagnostic.message .. ' [' .. code .. ']'
+        end
+        neotest = neotest or source == 'neotest'
+    end
+
+    local current_win = vim.api.nvim_get_current_win()
+    local list_win = vim.fn.getloclist(saved.win, { winid = 0 }).winid
+    local show = current_win == saved.win or current_win == list_win
+    local bufname = vim.api.nvim_buf_get_name(bufnr)
+    local rel = vim.fs.relpath(vim.uv.cwd(), bufname)
+    vim.api.nvim_win_call(saved.win, function()
+        vim.fn.setloclist(0, {}, saved.list and 'r' or ' ', {
+            title = 'Diagnostics: ' .. (rel or bufname),
+            items = vim.diagnostic.toqflist(diagnostics),
+        })
+        saved.list = vim.fn.getloclist(0, { id = 0 }).id
         if #diagnostics == 0 then
             vim.cmd.lclose()
-            vim.fn.setloclist(bufnr, {})
-            return
-        end
-
-        -- Reformat diagnostic messages to include source and code if not present
-        local neotest = false
-        local new_msg = {}
-        for _, v in vim.iter(pairs(diagnostics)) do
-            local old_msg = v.message
-            local source = v.source and tostring(v.source) or ''
-            local code = not vim.isnil(v.code) and tostring(v.code) or nil
-
-            if source ~= '' and not string.find(old_msg, source, 1, true) then
-                v.message = string.format('%s: %s', source, old_msg)
-                if code and not string.find(v.message, code, 1, true) then
-                    v.message = string.format('%s [%s]', v.message, code)
-                end
-            end
-            new_msg[old_msg] = v.message
-
-            if source == 'neotest' then
-                neotest = true
-            end
-        end
-
-        -- Update the location list with the new messages
-        vim.diagnostic.setloclist({ open = false })
-        local current_ll = vim.fn.getloclist(bufnr)
-        local new_ll = {}
-        for _, v in vim.iter(pairs(current_ll)) do
-            v.text = new_msg[v.text] or v.text
-            table.insert(new_ll, v)
-        end
-
-        local bufname = vim.api.nvim_buf_get_name(bufnr)
-        local rel = bufname and vim.fs.relpath(vim.uv.cwd(), bufname)
-        vim.fn.setloclist(bufnr, {}, ' ', {
-            title = 'Diagnostics: ' .. (rel or bufname or '[No Name]'),
-            items = new_ll,
-        })
-
-        if not neotest then
+        elseif show and not neotest then
             vim.cmd.lopen()
         end
+    end)
+end
+
+local diagnostics_group =
+    vim.api.nvim_create_augroup('diagnostics_format', { clear = true })
+vim.api.nvim_create_autocmd('BufWritePost', {
+    desc = 'Update location list with formatted diagnostics on save',
+    group = diagnostics_group,
+    callback = function(e)
+        saved_buffers[e.buf] = {
+            tick = vim.api.nvim_buf_get_changedtick(e.buf),
+            win = vim.api.nvim_get_current_win(),
+        }
+        update_saved_diagnostics(e.buf)
+    end,
+})
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+    desc = 'Refresh saved-buffer location lists after diagnostics change',
+    group = diagnostics_group,
+    callback = function(e)
+        vim.schedule(function()
+            update_saved_diagnostics(e.buf)
+        end)
+    end,
+})
+vim.api.nvim_create_autocmd('BufWipeout', {
+    desc = 'Forget saved diagnostic list state for deleted buffers',
+    group = diagnostics_group,
+    callback = function(e)
+        saved_buffers[e.buf] = nil
     end,
 })
 
