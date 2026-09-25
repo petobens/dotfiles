@@ -507,7 +507,10 @@ local function count_words()
     local main = main_source(bufnr)
     local client = vim.lsp.get_clients({ bufnr = bufnr, name = 'tinymist' })[1]
     if not main or not client then
-        vim.notify('Save the Typst file and start Tinymist before counting words')
+        vim.notify(
+            'Save the Typst file and start Tinymist before counting words',
+            vim.log.levels.WARN
+        )
         return
     end
 
@@ -523,6 +526,7 @@ local function count_words()
         arguments = { main, {}, { write = false } },
     }, { bufnr = bufnr }, function(err, result)
         counting = false
+        api.nvim_echo({}, false, {})
         if err then
             vim.notify(err.message, vim.log.levels.ERROR)
             return
@@ -656,7 +660,10 @@ local function zathura_instance(pdf)
     for pid in (pids.stdout or ''):gmatch('%d+') do
         local bus_name = 'org.pwmt.zathura.PID-' .. pid
         local filename = zathura_call(bus_name, get, 'org.pwmt.zathura', 'filename')
-        if filename:find(pdf, 1, true) then
+        local escaped = pdf:gsub('\\', '\\\\')
+        local single = "'" .. escaped:gsub("'", "\\'") .. "'"
+        local double = '"' .. escaped:gsub('"', '\\"') .. '"'
+        if filename:find(single, 1, true) or filename:find(double, 1, true) then
             return bus_name
         end
     end
@@ -721,6 +728,10 @@ local function accepts_marker(line, row)
 end
 
 local function forward_search()
+    if vim.fn.executable('typst') == 0 then
+        vim.notify('Typst executable not found', vim.log.levels.ERROR)
+        return
+    end
     local main, pdf, path_error = document_paths()
     if not main then
         vim.notify(path_error, vim.log.levels.ERROR)
