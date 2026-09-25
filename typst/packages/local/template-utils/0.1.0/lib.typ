@@ -398,6 +398,7 @@
   counter(math.equation).update(base)
   counter(figure.where(kind: image)).update(base)
   counter(figure.where(kind: table)).update(base)
+  counter(figure.where(kind: raw)).update(base)
   counter(figure.where(kind: "theorem")).update(base)
 }
 
