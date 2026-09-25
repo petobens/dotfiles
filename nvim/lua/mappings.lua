@@ -136,14 +136,21 @@ vim.keymap.set(
 )
 vim.keymap.set('n', '<A-j>', function()
     local line = vim.api.nvim_win_get_cursor(0)[1]
-    vim.cmd.move(tostring(line + vim.v.count1))
+    local target = math.min(vim.api.nvim_buf_line_count(0), line + vim.v.count1)
+    if target == line then
+        return
+    end
+    vim.cmd.move(tostring(target))
     pcall(function()
         vim.cmd.normal({ args = { 'zO' }, bang = true, mods = { silent = true } })
     end)
 end, { desc = 'Move line down' })
 vim.keymap.set('n', '<A-k>', function()
     local line = vim.api.nvim_win_get_cursor(0)[1]
-    vim.cmd.move(tostring(line - vim.v.count1 - 1))
+    if line == 1 then
+        return
+    end
+    vim.cmd.move(tostring(math.max(0, line - vim.v.count1 - 1)))
     pcall(function()
         vim.cmd.normal({ args = { 'zO' }, bang = true, mods = { silent = true } })
     end)
