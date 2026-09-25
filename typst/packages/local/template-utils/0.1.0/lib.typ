@@ -105,6 +105,18 @@
   )
   set text(lang: language)
   set heading(numbering: "1.1")
+  set math.equation(supplement: none)
+  set ref(supplement: target => {
+    if (
+      target.func() == heading
+        and target.level == 2
+        and appendix-state.at(target.location())
+    ) {
+      localized([Apéndice], [Appendix])
+    } else {
+      target.supplement
+    }
+  })
   set figure(numbering: object-numbering)
   set bibliography(style: mybibstyle)
 
