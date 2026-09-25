@@ -50,16 +50,23 @@ prepare_install_media() {
 
     section 'Preparing Arch ISO'
     checksum=$(curl --fail --location "$checksum_url" |
-        awk '$2 == "archlinux-x86_64.iso" {print $1}')
+        awk '$2 == "archlinux-x86_64.iso" {print $1}') ||
+        die 'Could not download the Arch ISO checksum.'
     [[ -n $checksum ]] || die 'Could not find the Arch ISO checksum.'
 
     iso="$state_dir/archlinux-$checksum.iso"
     if [[ ! -f $iso ]] ||
         ! printf '%s  %s\n' "$checksum" "$iso" |
         sha256sum --check --status; then
-        curl --fail --location --output "$iso.part" "$iso_url"
+        curl --fail --location --output "$iso.part" "$iso_url" || {
+            rm -f -- "$iso.part"
+            die 'Could not download the Arch ISO.'
+        }
         printf '%s  %s\n' "$checksum" "$iso.part" |
-            sha256sum --check --status
+            sha256sum --check --status || {
+            rm -f -- "$iso.part"
+            die 'Downloaded ISO failed checksum verification.'
+        }
         mv "$iso.part" "$iso"
     fi
     printf 'Verified %s\n' "$iso"
