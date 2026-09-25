@@ -253,8 +253,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
         -- Mappings
         vim.keymap.set('n', '<Leader>ac', function()
-            vim.cmd.normal({ args = { 'gg0' }, bang = true })
-            vim.cmd.normal({ args = { 'dd' }, bang = true })
+            vim.api.nvim_buf_set_lines(e.buf, 0, -1, false, {})
             vim.cmd.update({ mods = { silent = true, noautocmd = true } })
             vim.cmd.bd()
         end, { buf = e.buf, desc = '[A]bort [c]ommit' })
