@@ -141,7 +141,7 @@ hl.window_rule({
     match = { class = '^zoom$', title = '^Zoom Workplace.*$' },
     maximize = true,
 })
-window_rule('^Spotify$', {
+window_rule('^spotify$', {
     workspace = '3 silent',
     tag = maximized_tag,
 })
