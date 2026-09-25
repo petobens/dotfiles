@@ -219,10 +219,8 @@ for _, entry in pairs(prompt_library.build()) do
                 if #files > 0 then
                     chat_helpers.add_context(files)
                 end
-                chat:add_message(
-                    { role = 'user', content = content },
-                    { visible = false }
-                )
+                local text = type(content) == 'function' and content() or content
+                chat:add_message({ role = 'user', content = text }, { visible = false })
                 chat:submit({ auto_submit = true })
             end,
         }
