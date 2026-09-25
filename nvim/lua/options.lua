@@ -43,8 +43,10 @@ require('vim._core.ui2').enable({}) -- experimental new TUI message grid
 vim.api.nvim_create_autocmd('BufWritePre', {
     desc = 'Create parent directory before writing file',
     group = vim.api.nvim_create_augroup('create_dir_before_write', { clear = true }),
-    callback = function()
-        u.mk_non_dir()
+    callback = function(args)
+        if not args.file:match('^[%w+.-]+://') then
+            u.mk_non_dir(vim.fs.dirname(vim.fs.abspath(args.file)))
+        end
     end,
 })
 vim.api.nvim_create_autocmd('FocusLost', {
