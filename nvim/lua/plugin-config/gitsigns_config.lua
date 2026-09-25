@@ -3,9 +3,6 @@ local gitsigns = require('gitsigns')
 -- Setup
 gitsigns.setup({
     signcolumn = false, -- disable by default
-    watch_gitdir = {
-        interval = 600,
-    },
     current_line_blame_opts = {
         delay = 0,
     },

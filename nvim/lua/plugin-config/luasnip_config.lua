@@ -47,7 +47,10 @@ end
 -- Setup
 luasnip.setup({
     ft_func = require('luasnip.extras.filetype_functions').from_pos_or_filetype,
-    history = true, -- allow to jump back into exited (last) snippet
+    keep_roots = true,
+    link_roots = true,
+    link_children = true,
+    exit_roots = false, -- allow jumping back into exited snippets
     enable_autosnippets = true,
     update_events = 'TextChanged,TextChangedI',
     delete_check_events = 'TextChanged', -- remove snippet when text is deleted
