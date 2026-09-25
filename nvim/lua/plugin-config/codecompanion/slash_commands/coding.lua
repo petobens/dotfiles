@@ -21,7 +21,7 @@ local function collect_diagnostics()
     local seen, entries = {}, {}
 
     for _, item in ipairs(diagnostics) do
-        local filename = vim.api.nvim_buf_get_name(item.bufnr)
+        local filename = item.bufnr > 0 and vim.api.nvim_buf_get_name(item.bufnr) or ''
         local lnum = item.lnum or 0
         local col = item.col or 0
         local text = item.text or ''
