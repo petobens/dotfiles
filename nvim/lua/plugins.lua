@@ -46,7 +46,6 @@ local packages = {
         event = 'BufReadPost',
         config = 'matchup_config',
     }),
-    plugin('echasnovski/mini.align', 'mini_align_config'),
 
     -- Linting and formatting
     plugin('mfussenegger/nvim-lint', {
