@@ -191,9 +191,9 @@ vim.keymap.set(
 )
 
 vim.keymap.set('n', '[d', function()
-    vim.diagnostic.jump({ count = -1 })
+    vim.diagnostic.jump({ count = -vim.v.count1 })
 end, { desc = 'Go to previous diagnostic' })
 
 vim.keymap.set('n', ']d', function()
-    vim.diagnostic.jump({ count = 1 })
+    vim.diagnostic.jump({ count = vim.v.count1 })
 end, { desc = 'Go to next diagnostic' })
