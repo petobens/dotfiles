@@ -54,9 +54,13 @@
 #let _running-heading(level, chapter: false, page-last: false) = {
   let it = if page-last {
     let page = here().page()
-    let headings = query(heading.where(level: level)).filter(
-      it => it.location().page() <= page,
-    )
+    let chapter = _latest-heading(1)
+    let candidates = if level > 1 and chapter != none {
+      query(heading.where(level: level).after(chapter.location()))
+    } else {
+      query(heading.where(level: level))
+    }
+    let headings = candidates.filter(it => it.location().page() <= page)
     if headings.len() > 0 { headings.last() } else { none }
   } else {
     _latest-heading(level)
