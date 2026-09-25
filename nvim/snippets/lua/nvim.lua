@@ -77,7 +77,7 @@ return {
         { trig = 'cc', dscr = '[C]reate user [c]ommand' },
         fmta(
             [[
-                vim.api.nvim_create_user_command({'<>'}, function()
+                vim.api.nvim_create_user_command('<>', function()
                     <>
                 end, { <> })
             ]],
