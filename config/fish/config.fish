@@ -357,5 +357,5 @@ end
 
 # Start Hyprland after exporting the environment for graphical apps
 if status is-login; and test (tty) = /dev/tty1; and not set -q WAYLAND_DISPLAY
-    exec start-hyprland
+    exec env -u COLUMNS start-hyprland
 end
