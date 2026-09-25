@@ -25,6 +25,9 @@
 
 #let _slide-section-info(location) = {
   let sections = query(heading.where(level: 1).before(location))
+  if sections.len() == 0 {
+    return (heading: none, appendix: false, number: 0)
+  }
   let current = sections.last()
   let appendix = _appendix-mode.at(current.location())
   let number = sections
@@ -64,20 +67,21 @@
 
 #let _section-chip-width = 128pt
 
-#let _section-chip(self, font-size) = block(
-  width: _section-chip-width,
-  fill: chip-gray,
-  inset: (x: 7pt, y: 5pt),
-  radius: 6pt,
-  stroke: 0.9pt + border-gray.darken(8%),
-)[
-  #align(center)[
-    #text(
-      size: _scaled-size(9pt, font-size),
-      weight: "bold",
-      fill: mutt-navy,
-      context {
-        let section = _slide-section-info(here())
+#let _section-chip(self, font-size) = context {
+  let section = _slide-section-info(here())
+  if section.heading == none { return none }
+  block(
+    width: _section-chip-width,
+    fill: chip-gray,
+    inset: (x: 7pt, y: 5pt),
+    radius: 6pt,
+    stroke: 0.9pt + border-gray.darken(8%),
+  )[
+    #align(center)[
+      #text(
+        size: _scaled-size(9pt, font-size),
+        weight: "bold",
+        fill: mutt-navy,
         if section.appendix {
           [#localized([Apéndice], [Appendix]) #numbering(
               "A.",
@@ -85,11 +89,11 @@
             ) #section.heading.body]
         } else {
           section.heading.body
-        }
-      },
-    )
+        },
+      )
+    ]
   ]
-]
+}
 
 #let _slide-title(self, font-size: _default-font-size) = move(dy: 25pt, block(
   width: 100%,
