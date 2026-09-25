@@ -590,7 +590,7 @@ vim.keymap.set(
     ('%s<C-W>l'):format(terminal_escape),
     { desc = 'Move to right window from terminal' }
 )
-vim.keymap.set('t', '<A-[>', function()
+vim.keymap.set('t', '<C-[>', function()
     vim.api.nvim_feedkeys(vim.keycode(terminal_escape), 'n', false)
     vim.schedule(function()
         vim.cmd.normal({ args = { '0' }, bang = true })
