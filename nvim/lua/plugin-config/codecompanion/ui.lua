@@ -373,6 +373,16 @@ function M.setup()
         end,
     })
 
+    -- Agents can edit files outside Neovim; refresh Git status when the turn ends
+    vim.api.nvim_create_autocmd('User', {
+        desc = 'Refresh Fugitive after CodeCompanion agent changes',
+        group = group,
+        pattern = { 'CodeCompanionChatDone', 'CodeCompanionChatStopped' },
+        callback = function()
+            vim.fn['fugitive#DidChange']()
+        end,
+    })
+
     -- Footer values that change when a turn ends or a session is restored
     vim.api.nvim_create_autocmd('User', {
         group = group,
