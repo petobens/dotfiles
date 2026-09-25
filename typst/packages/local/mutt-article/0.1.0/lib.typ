@@ -87,7 +87,10 @@
       [#localized([Fecha], [Date]): #date]
     },
     if optional-value-present(authors) {
-      [#localized([Autores], [Authors]): #authors]
+      let names = if type(authors) == array { authors.join(", ") } else {
+        authors
+      }
+      [#localized([Autores], [Authors]): #names]
     },
     if optional-value-present(audience) {
       [#localized([Audiencia], [Audience]): #audience]
