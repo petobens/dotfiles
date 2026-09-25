@@ -207,8 +207,12 @@ function kvpn --description 'Disconnect active VPN connections'
 end
 
 # Terminal and file helpers
+if not functions --query __fish_stock_cd
+    status get-file functions/cd.fish | source
+    functions --copy cd __fish_stock_cd
+end
 function cd --description 'Change directory and list its contents'
-    builtin cd $argv; or return
+    __fish_stock_cd $argv; or return
     ls
 end
 
