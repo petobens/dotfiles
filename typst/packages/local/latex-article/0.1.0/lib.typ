@@ -45,7 +45,8 @@
 #let _article-header(short-title, author, font-size) = context {
   let page-number = counter(page).get().first()
   let running-title = if calc.even(page-number) { author } else { short-title }
-  if page-number > 1 and running-title != none and running-title != [] {
+  if page-number > 1 {
+    if running-title == none { running-title = [] }
     if calc.even(page-number) {
       grid(
         columns: (1fr, auto, 1fr),
