@@ -28,8 +28,7 @@ local lid_closed = false
 local known_monitors = {}
 local physical_workspace_outputs = { laptop = physical_outputs.laptop }
 local workspace_outputs = physical_outputs
-local configure_workspace_rules
-local activate_default_workspace
+local workspace_to_restore
 
 -- Helpers
 local function connected_monitors()
@@ -122,23 +121,6 @@ local function monitor_scale(monitor)
     return scale_by_resolution[resolution] or 'auto'
 end
 
-local function cycle_focus()
-    local monitors = hl.get_monitors()
-    -- Cycle across the top row before the laptop below it
-    table.sort(monitors, function(a, b)
-        if a.y == b.y then
-            return a.x < b.x
-        end
-        return a.y < b.y
-    end)
-    for index, monitor in ipairs(monitors) do
-        if monitor.focused then
-            hl.dispatch(hl.dsp.focus({ monitor = monitors[index % #monitors + 1].name }))
-            return
-        end
-    end
-end
-
 -- Monitor configuration
 local function configure_monitor(name, position, mirror)
     local monitor = known_monitors[name]
@@ -196,6 +178,117 @@ local function configure_all_monitors()
             position = string.format('%dx%d', math.floor(x), math.ceil(y))
         end
         configure_monitor(name, position)
+    end
+end
+
+-- Workspace rules
+local function configure_workspace_rules(outputs)
+    if outputs == physical_outputs then
+        outputs = resolve_physical_outputs(connected_monitors())
+        physical_workspace_outputs = outputs
+    end
+    -- When both external groups share a display, only workspace 5 is the default
+    for _, workspace in ipairs({
+        { '1', outputs.right, outputs.right ~= outputs.left },
+        { '2', outputs.laptop, true },
+        { '3', outputs.laptop },
+        { '4', outputs.right },
+        { '5', outputs.left, true },
+        { '6', outputs.left },
+        { '7', outputs.left },
+        { '8', outputs.laptop },
+        { '9', outputs.right },
+    }) do
+        hl.workspace_rule({
+            workspace = workspace[1],
+            monitor = workspace[2],
+            default = workspace[3] or false,
+        })
+        local current = hl.get_workspace(workspace[1])
+        local monitor = hl.get_monitor(workspace[2])
+        if
+            active_mode == 'multi'
+            and not lid_closed
+            and current
+            and monitor
+            and current.monitor.name ~= monitor.name
+        then
+            hl.dispatch(hl.dsp.workspace.move({ workspace = current, monitor = monitor }))
+        end
+    end
+end
+
+-- Workspace focus
+local function cycle_focus()
+    local monitors = hl.get_monitors()
+    -- Cycle across the top row before the laptop below it
+    table.sort(monitors, function(a, b)
+        if a.y == b.y then
+            return a.x < b.x
+        end
+        return a.y < b.y
+    end)
+    for index, monitor in ipairs(monitors) do
+        if monitor.focused then
+            hl.dispatch(hl.dsp.focus({ monitor = monitors[index % #monitors + 1].name }))
+            return
+        end
+    end
+end
+
+local function focus_development_workspace(monitor)
+    -- A lone external output uses the development workspace
+    if
+        monitor
+        and #hl.get_monitors() == 1
+        and monitor.name ~= physical_outputs.laptop
+    then
+        hl.dispatch(hl.dsp.focus({ workspace = '5' }))
+    end
+end
+
+local function activate_default_workspace(monitor)
+    if active_mode ~= 'multi' or lid_closed then
+        return
+    end
+
+    local outputs = physical_workspace_outputs
+    local workspace
+    if monitor.name == outputs.left then
+        workspace = '5'
+    elseif monitor.name == outputs.right then
+        workspace = '1'
+    elseif monitor.name == outputs.laptop then
+        workspace = '2'
+    end
+    if not workspace then
+        return
+    end
+
+    -- Added monitors already have a workspace before these rules are applied
+    local focused = hl.get_active_monitor()
+    hl.dispatch(hl.dsp.focus({ workspace = workspace }))
+    if focused and focused.name ~= monitor.name then
+        hl.dispatch(hl.dsp.focus({ monitor = focused.name }))
+    end
+end
+
+local function virtual_outputs_connected()
+    return hl.get_monitor(virtual_outputs.laptop)
+        and hl.get_monitor(virtual_outputs.left)
+        and hl.get_monitor(virtual_outputs.right)
+end
+
+local function configure_virtual_workspaces()
+    if workspace_outputs == virtual_outputs or not virtual_outputs_connected() then
+        return
+    end
+
+    -- QEMU outputs arrive after startup, so replace the physical rules once
+    workspace_outputs = virtual_outputs
+    configure_workspace_rules(workspace_outputs)
+    for _, workspace in ipairs({ '2', '5', '1' }) do
+        hl.dispatch(hl.dsp.focus({ workspace = workspace }))
     end
 end
 
@@ -276,100 +369,32 @@ local function restore_active_mode()
     end
 end
 
--- Workspace rules
-local function focus_development_workspace(monitor)
-    -- A lone external output uses the development workspace
-    if
-        monitor
-        and #hl.get_monitors() == 1
-        and monitor.name ~= physical_outputs.laptop
-    then
-        hl.dispatch(hl.dsp.focus({ workspace = '5' }))
-    end
+-- Keep the selected workspace when a layout shortcut is used
+local function restore_workspace()
+    -- Let monitor callbacks finish selecting their default workspaces first
+    hl.timer(function()
+        if workspace_to_restore then
+            hl.dispatch(hl.dsp.focus({ workspace = workspace_to_restore }))
+            workspace_to_restore = nil
+        end
+    end, { timeout = 1, type = 'oneshot' })
 end
 
-configure_workspace_rules = function(outputs)
-    if outputs == physical_outputs then
-        outputs = resolve_physical_outputs(connected_monitors())
-        physical_workspace_outputs = outputs
-    end
-    -- When both external groups share a display, only workspace 5 is the default
-    for _, workspace in ipairs({
-        { '1', outputs.right, outputs.right ~= outputs.left },
-        { '2', outputs.laptop, true },
-        { '3', outputs.laptop },
-        { '4', outputs.right },
-        { '5', outputs.left, true },
-        { '6', outputs.left },
-        { '7', outputs.left },
-        { '8', outputs.laptop },
-        { '9', outputs.right },
-    }) do
-        hl.workspace_rule({
-            workspace = workspace[1],
-            monitor = workspace[2],
-            default = workspace[3] or false,
-        })
-        local current = hl.get_workspace(workspace[1])
-        local monitor = hl.get_monitor(workspace[2])
-        if
-            active_mode == 'multi'
-            and not lid_closed
-            and current
-            and monitor
-            and current.monitor.name ~= monitor.name
-        then
-            hl.dispatch(hl.dsp.workspace.move({ workspace = current, monitor = monitor }))
+local function keep_workspace(apply_layout)
+    return function()
+        local workspace = hl.get_active_workspace()
+        workspace_to_restore = workspace and workspace.name
+        local previous_mode = active_mode
+        apply_layout()
+        -- An unchanged layout or a lone output may not emit a layout-change event
+        if active_mode == previous_mode or #connected_monitors() == 1 then
+            restore_workspace()
         end
     end
 end
 
-activate_default_workspace = function(monitor)
-    if active_mode ~= 'multi' or lid_closed then
-        return
-    end
-
-    local outputs = physical_workspace_outputs
-    local workspace
-    if monitor.name == outputs.left then
-        workspace = '5'
-    elseif monitor.name == outputs.right then
-        workspace = '1'
-    elseif monitor.name == outputs.laptop then
-        workspace = '2'
-    end
-    if not workspace then
-        return
-    end
-
-    -- Added monitors already have a workspace before these rules are applied
-    local focused = hl.get_active_monitor()
-    hl.dispatch(hl.dsp.focus({ workspace = workspace }))
-    if focused and focused.name ~= monitor.name then
-        hl.dispatch(hl.dsp.focus({ monitor = focused.name }))
-    end
-end
-
-local function virtual_outputs_connected()
-    return hl.get_monitor(virtual_outputs.laptop)
-        and hl.get_monitor(virtual_outputs.left)
-        and hl.get_monitor(virtual_outputs.right)
-end
-
-local function configure_virtual_workspaces()
-    if workspace_outputs == virtual_outputs or not virtual_outputs_connected() then
-        return
-    end
-
-    -- QEMU outputs arrive after startup, so replace the physical rules once
-    workspace_outputs = virtual_outputs
-    configure_workspace_rules(workspace_outputs)
-    for _, workspace in ipairs({ '2', '5', '1' }) do
-        hl.dispatch(hl.dsp.focus({ workspace = workspace }))
-    end
-end
-
 -- Monitor events
+hl.on('monitor.layout_changed', restore_workspace)
 hl.on('monitor.added', function(monitor)
     restore_active_mode()
     configure_virtual_workspaces()
@@ -409,4 +434,10 @@ active_mode = 'multi'
 configure_all_monitors()
 workspace_outputs = virtual_outputs_connected() and virtual_outputs or physical_outputs
 configure_workspace_rules(workspace_outputs)
-return { primary = primary, multi = multi, mirror = mirror, cycle_focus = cycle_focus }
+
+return {
+    primary = keep_workspace(primary),
+    multi = keep_workspace(multi),
+    mirror = keep_workspace(mirror),
+    cycle_focus = cycle_focus,
+}
