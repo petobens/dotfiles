@@ -126,8 +126,8 @@ function M.chat_keymaps()
         -- Navigation
         next_chat = { modes = { n = '<A-n>', i = '<A-n>' } },
         previous_chat = { modes = { n = '<A-p>', i = '<A-p>' } },
-        previous_header = { modes = { n = '<C-[>', i = '<C-[>' } },
-        next_header = { modes = { n = '<C-]>', i = '<C-]>' } },
+        previous_header = { modes = { n = '<A-[>', i = '<A-[>' } },
+        next_header = { modes = { n = '<A-]>', i = '<A-]>' } },
         fold_code = { modes = { n = 'zc' } },
         goto_file_under_cursor = { modes = { n = 'gf' } },
         -- Chat tools
