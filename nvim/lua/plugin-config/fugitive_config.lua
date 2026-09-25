@@ -85,9 +85,13 @@ local function show_status_line_stats(e)
             if line:match('^diff %-%-git ') then
                 old_file, reading_header = nil, true
             elseif reading_header then
-                old_file = line:match('^%-%-%- (.+)$') or old_file
-                local new_file = line:match('^%+%+%+ (.+)$')
+                local old_path = line:match('^%-%-%- ([^\t]+)')
+                if old_path then
+                    old_file = vim.fn['fugitive#Unquote'](old_path)
+                end
+                local new_file = line:match('^%+%+%+ ([^\t]+)')
                 if new_file then
+                    new_file = vim.fn['fugitive#Unquote'](new_file)
                     file = new_file ~= '/dev/null' and new_file or old_file
                     stats[name][file] = { 0, 0, 0 }
                     reading_header = false
