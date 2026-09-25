@@ -162,7 +162,7 @@ return {
         { trig = 'ul', wordTrig = false, dscr = '[U]nder[l]ine' },
         fmta(
             [[
-        \overline{<><>}
+        \underline{<><>}
     ]],
             {
                 f(_G.LuaSnipConfig.visual_selection),
