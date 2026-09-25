@@ -125,7 +125,9 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter', 'FileType' }, {
     desc = 'Set status column for the current window',
     group = vim.api.nvim_create_augroup('statuscolumn', { clear = true }),
     callback = function()
-        local hide_column = vim.bo.buftype == 'terminal' or vim.bo.filetype == 'NvimTree'
+        local hide_column = vim.bo.buftype == 'terminal'
+            or vim.bo.filetype == 'NvimTree'
+            or vim.api.nvim_win_get_config(0).relative ~= ''
         vim.opt_local.statuscolumn = hide_column and '' or statuscolumn
     end,
 })
