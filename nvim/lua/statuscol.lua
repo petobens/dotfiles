@@ -90,7 +90,7 @@ local function render_fold(cursorline)
         local previous = line > 1 and vim.fn.foldlevel(line - 1) or 0
         local starts = math.min(math.max(0, level - previous), range)
         if starts == 0 and vim.wo.foldmethod == 'expr' then
-            if tostring(vim.wo.foldexpr):find('treesitter.foldexpr', 1, true) then
+            if vim.wo.foldexpr == vim.treesitter.foldexpr then
                 starts = tostring(vim.treesitter.foldexpr(line)):sub(1, 1) == '>' and 1
                     or 0
             end
