@@ -519,8 +519,17 @@ vim.keymap.set('x', 'G', 'G$', { desc = 'Go to end of selection' })
 vim.keymap.set('x', 'L', 'g_', { desc = 'Go to last non-blank in selection' })
 vim.keymap.set('x', 'Q', 'gq', { desc = 'Format selection' })
 vim.keymap.set('x', '.', ':normal .<CR>', { desc = 'Repeat last change in selection' })
-vim.keymap.set('x', '*', '*<C-o>', { desc = 'Search for selection forward' })
-vim.keymap.set('x', '#', '#<C-o>', { desc = 'Search for selection backward' })
+for _, key in ipairs({ '*', '#' }) do
+    local search_selection = vim.fn.maparg(key, 'x', false, true).callback
+    vim.keymap.set('x', key, function()
+        search_selection()
+        vim.o.hlsearch = true
+        return '<Esc>'
+    end, {
+        expr = true,
+        desc = 'Search selection ' .. (key == '*' and 'forward' or 'backward'),
+    })
+end
 
 -- Command mode
 vim.keymap.set('n', ';', ':', { silent = false, desc = 'Enter command-line mode' })
