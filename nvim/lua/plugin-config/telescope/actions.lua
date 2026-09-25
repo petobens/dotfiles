@@ -138,13 +138,14 @@ M.custom = transform_mod({
     delete_buffer = function(prompt_bufnr)
         local picker = action_state.get_current_picker(prompt_bufnr)
         local multi = picker:get_multi_selection()
+        local selected = action_state.get_selected_entry()
         actions.close(prompt_bufnr)
         if not vim.tbl_isempty(multi) then
             for _, v in pairs(multi) do
-                vim.cmd.bwipeout(v.filename)
+                vim.api.nvim_buf_delete(v.bufnr, {})
             end
-        else
-            vim.cmd.bwipeout(action_state.get_selected_entry().value)
+        elseif selected then
+            vim.api.nvim_buf_delete(selected.bufnr, {})
         end
     end,
     -- Send selection to quickfix and open
