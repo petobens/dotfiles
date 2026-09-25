@@ -403,11 +403,7 @@
   show figure.where(kind: "theorem"): show-statement
   show heading.where(level: 1): it => {
     _page-style-enabled.update(false)
-    if it.numbering != none {
-      pagebreak(to: "odd")
-    } else {
-      pagebreak(weak: true, to: "odd")
-    }
+    pagebreak(weak: true, to: "odd")
     _page-style-enabled.update(true)
     context if _main-page-reset.get() {
       counter(page).update(1)
