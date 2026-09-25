@@ -430,9 +430,12 @@
 #let show-statement(it) = {
   block(width: 100%, breakable: true)[
     #set align(left)
-    #it.supplement
-    #if it.numbering != none { [ #context it.counter.display(it.numbering)] }
-    #if it.caption != none and it.caption.body != [] { [ #it.caption.body] }
+    #{
+      it.supplement
+      if it.numbering != none { [ #context it.counter.display(it.numbering)] }
+      if it.caption != none and it.caption.body != [] { [ #it.caption.body] }
+      if it.numbering == none { [.] }
+    }
     #h(0.25em)
     #it.body
   ]
@@ -512,15 +515,14 @@
     numbered: numbered,
   )
   let continued-example(reference, body) = statement(
-    [
-      #localized(
-        [Continuación del Ejemplo],
-        [Continuation of Example],
-      ) #context {
+    {
+      localized([Continuación del Ejemplo], [Continuation of Example])
+      [ ]
+      context {
         let target = query(reference).first()
         (target.numbering)(..target.counter.at(target.location()))
       }
-    ],
+    },
     body,
     numbered: false,
   )
@@ -538,7 +540,7 @@
     emphasized-heading: true,
   )
   let notation(body, note: none, title: auto, numbered: true) = statement(
-    localized-title(title, [Notación.], [Notation.]),
+    localized-title(title, [Notación], [Notation]),
     body,
     note: note,
     numbered: numbered,
