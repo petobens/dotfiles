@@ -466,7 +466,7 @@
     } else {
       n => strong(numbering-fn(n))
     },
-    caption: if note == none {
+    caption: if not optional-value-present(note) {
       []
     } else if emphasized-heading {
       emph([(#note)])
