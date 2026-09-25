@@ -38,6 +38,7 @@ vim.treesitter.language.register('markdown', 'codecompanion')
 vim.treesitter.language.register('yaml', 'ghaction')
 
 vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('ts_highlight', { clear = true }),
     desc = 'Start treesitter highlighting',
     callback = function(args)
         local filetype = args.match
@@ -46,7 +47,7 @@ vim.api.nvim_create_autocmd('FileType', {
         end
         local lang = vim.treesitter.language.get_lang(filetype)
         if vim.treesitter.language.add(lang) then
-            vim.treesitter.start()
+            vim.treesitter.start(args.buf, lang)
         end
     end,
 })

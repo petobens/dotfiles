@@ -413,6 +413,7 @@ require('nvim-tree').setup({
 
 -- Autocmds
 vim.api.nvim_create_autocmd('BufEnter', {
+    group = vim.api.nvim_create_augroup('nvimtree_winfix', { clear = true }),
     desc = 'Winfix NvimTree buffer window',
     callback = function()
         if vim.list_contains({ 'NvimTree' }, vim.bo.filetype) then

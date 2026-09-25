@@ -38,6 +38,7 @@ vim.keymap.set(
 
 -- Autocmds
 vim.api.nvim_create_autocmd('BufEnter', {
+    group = vim.api.nvim_create_augroup('matchup_markdown', { clear = true }),
     desc = 'Matchup: configure Markdown delimiters',
     callback = configure_markdown,
 })

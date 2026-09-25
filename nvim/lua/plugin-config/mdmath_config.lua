@@ -35,6 +35,7 @@ mdmath.setup({
 
 -- Autocmd mappings
 vim.api.nvim_create_autocmd('FileType', {
+    group = vim.api.nvim_create_augroup('mdmath_maps', { clear = true }),
     desc = 'Setup MdMath toggle mapping for certain filetypes',
     pattern = { 'codecompanion', 'markdown', 'tex' },
     callback = function(args)
