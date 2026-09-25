@@ -1,5 +1,6 @@
 local neotest = require('neotest')
 local u = require('utils')
+local diagnostic_namespace = vim.api.nvim_create_namespace('neotest')
 
 -- Helpers
 local function set_output_window_layout(height)
@@ -19,7 +20,8 @@ end
 
 local function _parse_neotest_output(task, last_winid)
     -- Set the diagnostic qf
-    local diagnostics = vim.diagnostic.get(task.bufnr)
+    local diagnostics =
+        vim.diagnostic.get(task.bufnr, { namespace = diagnostic_namespace })
     local qf_diagnostic = vim.diagnostic.toqflist(diagnostics)
     local diagnostic_entries = {}
     for _, v in ipairs(qf_diagnostic) do
@@ -99,7 +101,7 @@ local function _parse_neotest_output(task, last_winid)
             vim.cmd.cclose()
             if diagnostics and diagnostics[1] then
                 vim.defer_fn(function()
-                    vim.diagnostic.reset(diagnostics[1].namespace, diagnostics[1].bufnr)
+                    vim.diagnostic.reset(diagnostic_namespace, task.bufnr)
                 end, 100)
             end
         end
