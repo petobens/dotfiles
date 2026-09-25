@@ -251,13 +251,12 @@ vim.filetype.add({
         ['sqlfluff'] = 'toml',
     },
     pattern = {
-        ['.*github/workflows/.*'] = 'ghaction',
+        ['.*/%.github/workflows/.*%.ya?ml'] = 'ghaction',
         ['.*fish/themes/.*%.theme'] = 'fish',
         ['.*imv/config'] = 'confini',
         ['.*mako/config'] = 'confini',
         ['.*onedrive/config'] = 'confini',
         ['.*pgcli/config'] = 'dosini',
-        ['.*sql'] = 'sql',
         ['.*ssh/config'] = 'sshconfig',
     },
 })
