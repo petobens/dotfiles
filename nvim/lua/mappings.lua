@@ -503,12 +503,19 @@ vim.keymap.set('i', '<C-l>', '<C-o>l', { desc = 'Move right' })
 vim.keymap.set('i', '<A-p>', '<C-R>+', { desc = 'Paste from system clipboard (+)' })
 
 -- Visual mode
--- Note: we avoid lua function mappings in visual mode since they lose the selection
 vim.keymap.set('n', 'vv', '^vg_', { desc = 'Visually select line (no indent)' })
 vim.keymap.set('x', '<', '<gv', { desc = 'Indent left and reselect' })
 vim.keymap.set('x', '>', '>gv', { desc = 'Indent right and reselect' })
-vim.keymap.set('x', '<A-j>', ":m '>+1<CR>gv", { desc = 'Move selection down' })
-vim.keymap.set('x', '<A-k>', ":m '<-2<CR>gv", { desc = 'Move selection up' })
+vim.keymap.set('x', '<A-j>', function()
+    local last = math.max(vim.fn.line('v'), vim.fn.line('.'))
+    local target = math.min(vim.api.nvim_buf_line_count(0), last + vim.v.count1)
+    return target == last and '<Ignore>' or ":<C-u>'<,'>move " .. target .. '<CR>gv'
+end, { expr = true, desc = 'Move selection down' })
+vim.keymap.set('x', '<A-k>', function()
+    local first = math.min(vim.fn.line('v'), vim.fn.line('.'))
+    local target = math.max(0, first - vim.v.count1 - 1)
+    return first == 1 and '<Ignore>' or ":<C-u>'<,'>move " .. target .. '<CR>gv'
+end, { expr = true, desc = 'Move selection up' })
 vim.keymap.set(
     'x',
     '<ESC>',
