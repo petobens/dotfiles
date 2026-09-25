@@ -72,6 +72,7 @@ From the repository on the installed system, run:
 
 ```bash
 cd ~/git-repos/private/dotfiles
+tmux
 ./setup/install.sh
 sudo reboot
 ```
