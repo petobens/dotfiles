@@ -207,9 +207,9 @@ vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search match and center' })
 vim.keymap.set('n', '*', function()
     -- Don't jump to first match with *
     local word = vim.fn.expand('<cword>')
-    vim.fn.setreg('/', '\\v' .. word)
+    vim.fn.setreg('/', '\\V\\<' .. vim.fn.escape(word, '\\') .. '\\>')
     vim.o.hlsearch = true
-end, { remap = true, desc = 'Search word under cursor (keep position)' })
+end, { desc = 'Search word under cursor (keep position)' })
 vim.keymap.set(
     'n',
     '#',
