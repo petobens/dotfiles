@@ -306,7 +306,23 @@ vim.keymap.set('n', '<Leader>nd', function()
 end, { desc = '[N]eotest: run with [d]ebugger' })
 
 vim.keymap.set('n', '<Leader>na', function()
-    neotest_run(neotest.run.attach, {}, false)
+    neotest_run(function(opts)
+        local source_win = vim.api.nvim_get_current_win()
+        neotest.run.attach(opts, function(ok, err)
+            if not ok then
+                vim.notify(err, vim.log.levels.ERROR)
+                return
+            end
+            -- Overseer's attachment keeps its terminal filetype and opens asynchronously
+            if
+                vim.bo.filetype == 'OverseerOutput'
+                and vim.api.nvim_get_current_win() ~= source_win
+            then
+                set_output_window_layout()
+                vim.cmd.startinsert()
+            end
+        end)
+    end, {}, false)
 end, { desc = '[N]eotest: [a]ttach to running test' })
 
 vim.keymap.set('n', '<Leader>nc', neotest.run.stop, {
@@ -330,7 +346,7 @@ end, { desc = '[N]eotest: toggle [t]est summary' })
 
 -- Filetype-mappings
 local neotest_ft_augroup = vim.api.nvim_create_augroup('NeotestFtAu')
-for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
+for _, ft in ipairs({ 'output', 'output-panel', 'summary' }) do
     vim.api.nvim_create_autocmd('FileType', {
         desc = 'Configure neotest ' .. ft .. ' window',
         pattern = 'neotest-' .. ft,
@@ -344,17 +360,6 @@ for _, ft in ipairs({ 'output', 'output-panel', 'attach', 'summary' }) do
                 buf = e.buf,
                 desc = 'Close neotest window and return to previous window',
             })
-            -- The attachment window opens asynchronously and gains focus after FileType
-            if ft == 'attach' then
-                vim.schedule(function()
-                    for _, win in ipairs(vim.fn.win_findbuf(e.buf)) do
-                        vim.api.nvim_win_call(win, set_output_window_layout)
-                        if vim.api.nvim_get_current_win() == win then
-                            vim.cmd.startinsert()
-                        end
-                    end
-                end)
-            end
             -- Options
             if ft == 'summary' then
                 vim.opt_local.number = true
