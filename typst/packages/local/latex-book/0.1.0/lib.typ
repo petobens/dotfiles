@@ -354,6 +354,7 @@
   }
   // Document metadata and page
   set document(title: title, author: author, date: metadata-date)
+  let author = if type(author) == array { author.join(", ") } else { author }
   set page(
     paper: "a4",
     binding: left,

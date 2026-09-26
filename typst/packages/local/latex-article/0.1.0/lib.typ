@@ -234,6 +234,7 @@
     keywords: if optional-value-present(keywords) { keywords } else { () },
     date: metadata-date,
   )
+  let author = if type(author) == array { author.join(", ") } else { author }
   set page(
     paper: "a4",
     binding: left,
