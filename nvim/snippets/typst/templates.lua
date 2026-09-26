@@ -187,12 +187,12 @@ return {
                     static_choice('none'),
                 }),
                 c(8, {
+                    static_choice('none'),
                     sn(nil, {
                         t('read("'),
                         i(1),
                         t('", encoding: none)'),
                     }),
-                    static_choice('none'),
                 }),
                 c(9, {
                     sn(nil, {
