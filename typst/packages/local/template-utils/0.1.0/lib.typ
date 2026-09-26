@@ -154,6 +154,13 @@
     html.elem("h" + str(it.level + 1), attrs: attrs)[#prefix#it.body]
   }
 
+  show figure.caption.where(
+    kind: "theorem",
+    numbering: none,
+  ): it => html.figcaption[
+    #it.supplement#if it.body != [] [ #it.body].
+  ]
+
   // Typst's HTML metadata does not include dates
   if type(date) == datetime {
     html.meta(
