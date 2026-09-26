@@ -903,6 +903,31 @@ cam -l
 
 Missing optional hardware is not an installation failure.
 
+#### Temporary NvPCR workaround on the ThinkPad
+
+On 2026-09-26, the ThinkPad X1 Carbon received a workaround for systemd 262-1
+NvPCR failures ([upstream issue][nvpcr-issue]): four `/etc/nvpcr/*.nvpcr`
+overrides point to `/dev/null`, and the product/login measurement services
+are masked. Normal TPM setup and boot measurements remain enabled; reboot
+verification passed. The installer does not apply this workaround.
+
+Wait for an upstream fix, then remove the overrides below. Package upgrades
+do not remove them automatically:
+
+```bash
+for name in cryptsetup hardware login verity; do
+    path="/etc/nvpcr/$name.nvpcr"
+    if [[ $(readlink "$path") == /dev/null ]]; then
+        sudo rm "$path"
+    fi
+done
+sudo systemctl unmask systemd-pcrproduct.service systemd-pcrlogin@.service
+```
+
+Reboot and check `systemctl --failed` and `journalctl -b -p err`.
+
+[nvpcr-issue]: https://github.com/systemd/systemd/issues/43848
+
 #### Manual connection and media tests
 
 The report cannot verify these interactions. Test password-based SSH from
