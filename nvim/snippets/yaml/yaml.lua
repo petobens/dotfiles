@@ -6,7 +6,14 @@ local i = ls.insert_node
 local f = ls.function_node
 
 return {}, {
-    s({ trig = '--', wordTrig = false, dscr = '---' }, {
+    s({
+        trig = '--',
+        wordTrig = false,
+        dscr = '---',
+        condition = function(line)
+            return line == '--'
+        end,
+    }, {
         t('---'),
         f(_G.LuaSnipConfig.visual_selection),
         i(0),
