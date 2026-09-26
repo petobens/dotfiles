@@ -17,7 +17,8 @@ local function diff_scope(opts)
 end
 
 local function request_repo_skill(chat, skill, request)
-    local git_root = repo_helpers.git_root_or_notify(vim.uv.cwd())
+    local cwd = vim.bo.filetype == 'codecompanion' and chat.opts.cwd or vim.uv.cwd()
+    local git_root = repo_helpers.git_root_or_notify(cwd)
     if not git_root then
         return
     end
