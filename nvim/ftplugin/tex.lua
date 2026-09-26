@@ -72,7 +72,9 @@ local function _parse_logfile(filename, active_window_id)
     })
     if #new_qf > 0 then
         vim.cmd.copen()
-        vim.api.nvim_set_current_win(active_window_id)
+        if vim.api.nvim_win_is_valid(active_window_id) then
+            vim.api.nvim_set_current_win(active_window_id)
+        end
     end
     return has_errors
 end
@@ -115,7 +117,9 @@ local function compile_latex()
                 end
                 vim.fn.setqflist({}, ' ', { title = 'Arara', items = items })
                 vim.cmd.copen()
-                vim.api.nvim_set_current_win(current_win_id)
+                if vim.api.nvim_win_is_valid(current_win_id) then
+                    vim.api.nvim_set_current_win(current_win_id)
+                end
             end)
         end)
         task:start()

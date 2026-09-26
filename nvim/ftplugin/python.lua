@@ -53,7 +53,9 @@ local function _parse_qf(task_metadata, active_window_id)
         if not pdb then
             vim.cmd.copen()
         end
-        vim.api.nvim_set_current_win(active_window_id)
+        if vim.api.nvim_win_is_valid(active_window_id) then
+            vim.api.nvim_set_current_win(active_window_id)
+        end
     end
 end
 
