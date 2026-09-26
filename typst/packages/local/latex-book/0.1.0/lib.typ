@@ -167,7 +167,10 @@
       } else {
         [References for Chapter #chapter-number]
       }
-      heading(level: 2, numbering: none, outlined: true, chapter-title)
+      if query(target).len() > 0 {
+        heading(level: 2, numbering: none, outlined: true, chapter-title)
+      }
+      // Keep the bibliography element so @ references can resolve as citations
       show bibliography: set text(size: _small-size(text.size))
       bibliography(
         sources,
