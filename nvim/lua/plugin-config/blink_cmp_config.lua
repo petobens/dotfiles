@@ -254,7 +254,15 @@ blink_cmp.setup({
         },
         keymap = {
             preset = 'cmdline',
-            ['<CR>'] = { 'select_and_accept', 'fallback' },
+            ['<CR>'] = {
+                function(cmp)
+                    return vim.tbl_contains(
+                        { 'file', 'dir', 'file_in_path', 'dir_in_path', 'runtime' },
+                        vim.fn.getcmdcompltype()
+                    ) and cmp.select_and_accept()
+                end,
+                'fallback',
+            },
             ['<C-y>'] = { 'select_accept_and_enter' },
         },
     },
