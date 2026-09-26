@@ -118,7 +118,7 @@
     parbreak()
     v(0.45em)
     strong(localized([Palabras Clave: ], [Keywords: ]))
-    emph(keywords)
+    emph(if type(keywords) == array { keywords.join(", ") } else { keywords })
   }
   #if optional-value-present(jel) {
     parbreak()
@@ -231,7 +231,7 @@
     title: title,
     author: author,
     description: abstract,
-    keywords: if optional-value-present(keywords) { keywords } else { () },
+    keywords: if type(keywords) in (str, array) { keywords } else { () },
     date: metadata-date,
   )
   let author = if type(author) == array { author.join(", ") } else { author }

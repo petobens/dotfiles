@@ -101,7 +101,7 @@
     title: title,
     author: author,
     description: description,
-    keywords: if optional-value-present(keywords) { keywords } else { () },
+    keywords: if type(keywords) in (str, array) { keywords } else { () },
   )
   set text(lang: language)
   set heading(numbering: "1.1")
