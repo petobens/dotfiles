@@ -20,8 +20,12 @@ vim.keymap.set('n', ']h', function()
     if vim.wo.diff then
         return ']c'
     end
+    local count = vim.v.count1
     vim.schedule(function()
-        gitsigns.nav_hunk('next', { navigation_message = false, foldopen = true })
+        gitsigns.nav_hunk(
+            'next',
+            { count = count, navigation_message = false, foldopen = true }
+        )
     end)
     return '<Ignore>'
 end, { expr = true, desc = 'Next git hunk' })
@@ -30,8 +34,12 @@ vim.keymap.set('n', '[h', function()
     if vim.wo.diff then
         return '[c'
     end
+    local count = vim.v.count1
     vim.schedule(function()
-        gitsigns.nav_hunk('prev', { navigation_message = false, foldopen = true })
+        gitsigns.nav_hunk(
+            'prev',
+            { count = count, navigation_message = false, foldopen = true }
+        )
     end)
     return '<Ignore>'
 end, { expr = true, desc = 'Previous git hunk' })
