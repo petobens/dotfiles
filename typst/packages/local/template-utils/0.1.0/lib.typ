@@ -413,12 +413,11 @@
 }
 
 // Numbering and captions
-#let reset-numbering(base: 0) = {
+#let reset-numbering(base: 0) = context {
   counter(math.equation).update(base)
-  counter(figure.where(kind: image)).update(base)
-  counter(figure.where(kind: table)).update(base)
-  counter(figure.where(kind: raw)).update(base)
-  counter(figure.where(kind: "theorem")).update(base)
+  for kind in query(figure).map(it => it.kind).dedup() {
+    counter(figure.where(kind: kind)).update(base)
+  }
 }
 
 #let heading-title(it) = context {
