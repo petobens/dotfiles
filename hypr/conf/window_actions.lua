@@ -193,6 +193,9 @@ function M.move_to_monitor(kind, direction)
                 geometry.place(item.window, item.placement, target)
             end
         end
+        if kind == 'window' then
+            hl.dispatch(hl.dsp.window.bring_to_top({ window = windows[1] }))
+        end
     end
 end
 
