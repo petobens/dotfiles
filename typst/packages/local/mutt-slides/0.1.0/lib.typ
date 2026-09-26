@@ -352,7 +352,7 @@
   kind: "theorem",
   supplement: localized-title(title, [Teorema], [Theorem]),
   numbering: if numbered { n => _slide-numbering(n) } else { none },
-  caption: note,
+  caption: if optional-value-present(note) { note } else { none },
   outlined: false,
 )
 
