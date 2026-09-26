@@ -167,7 +167,7 @@ decorations.markings}
 %---------------------+
 % Beamer loads graphicx package by default and centers floats in figure and
 % table environments
-\graphicspath{{/home/pedro/OneDrive/programming/Latex/logos/}{figures/}{tables/}}
+\graphicspath{{/home/pedro/OneDrive/programming/latex/logos/}{figures/}{tables/}}
 
 % We use load compatibility false to allow caption setup to work with beamer and
 % set caption skip since we do not use floatrow which resets it

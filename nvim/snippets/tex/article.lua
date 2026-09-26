@@ -84,7 +84,7 @@ height=21cm,top=3.7cm,headsep=1cm, headheight=1.6cm,footskip=1.2cm]{geometry}
 %---------------------+
 % Floats and captions |
 %---------------------+
-\graphicspath{{/home/pedro/OneDrive/programming/Latex/logos/}{figures/}{tables/}}
+\graphicspath{{/home/pedro/OneDrive/programming/latex/logos/}{figures/}{tables/}}
 
 \usepackage[font=small,labelfont=bf]{caption}
 \captionsetup*[figure]{format=plain,justification=centerlast,labelsep=quad}
