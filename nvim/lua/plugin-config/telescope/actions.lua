@@ -170,6 +170,9 @@ M.custom = transform_mod({
             return
         end
         local bufnr = vim.api.nvim_win_get_buf(winid)
+        vim.keymap.set('n', { 'q', '<C-c>' }, function()
+            actions.close(prompt_bufnr)
+        end, { buf = bufnr, desc = 'Close Telescope picker' })
         vim.keymap.set('n', '<C-h>', function()
             vim.api.nvim_set_current_win(picker.prompt_win)
         end, { buf = bufnr, desc = 'Return to Telescope prompt' })
