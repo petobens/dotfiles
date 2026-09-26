@@ -10,7 +10,7 @@
 [core]
     editor = nvim
     excludesfile = ~/.gitignore
-	pager = delta --width ${FZF_PREVIEW_COLUMNS-$COLUMNS}
+	pager = delta ${FZF_PREVIEW_COLUMNS:+--width=$FZF_PREVIEW_COLUMNS}
 [web]
     browser = system-open
 [browser "system-open"]
