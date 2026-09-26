@@ -142,7 +142,7 @@ decorations.markings}
 
 \theoremstyle{definition}
 \newtheorem*{definition*}{\translate{Definition}}
-\undef{\example}
+\undef{\example}\csundef{c@example}
 \newtheorem{example}[theorem]{\translate{Example}}
 \newtheorem*{example*}{\translate{Example}}
 \newtheorem{exercise}[theorem]{\translate{Exercise}}
