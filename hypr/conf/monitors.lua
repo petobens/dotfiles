@@ -371,12 +371,14 @@ end
 
 -- Keep the selected workspace when a layout shortcut is used
 local function restore_workspace()
-    -- Let monitor callbacks finish selecting their default workspaces first
+    -- Use a second timer turn so every monitor's default-workspace timer runs first
     hl.timer(function()
-        if workspace_to_restore then
-            hl.dispatch(hl.dsp.focus({ workspace = workspace_to_restore }))
-            workspace_to_restore = nil
-        end
+        hl.timer(function()
+            if workspace_to_restore then
+                hl.dispatch(hl.dsp.focus({ workspace = workspace_to_restore }))
+                workspace_to_restore = nil
+            end
+        end, { timeout = 1, type = 'oneshot' })
     end, { timeout = 1, type = 'oneshot' })
 end
 
