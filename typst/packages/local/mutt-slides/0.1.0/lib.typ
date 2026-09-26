@@ -510,7 +510,15 @@
   // Forward search skips bibliography backreferences to keep compilation fast
   show: if "sync" in sys.inputs { doc => doc } else {
     backrefs.with(
-      format: format-bibliography-backrefs,
+      // Use slide numbers and merge repeated citations across overlays
+      format: links => format-bibliography-backrefs(
+        links
+          .map(it => link(
+            it.dest,
+            str(utils.slide-counter.at(it.dest).first()),
+          ))
+          .dedup(key: it => it.body),
+      ),
       read: retrofit-reader(bibliography-read),
     )
   }
