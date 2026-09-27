@@ -177,7 +177,6 @@ return {
     ),
     postfix({
         trig = 'kk',
-        snippetType = 'autosnippet',
         dscr = '[kk] Postfix command',
     }, {
         d(1, function(_, parent)
