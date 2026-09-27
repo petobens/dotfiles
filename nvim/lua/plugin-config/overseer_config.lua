@@ -38,6 +38,10 @@ local function overseer_last_task(attach)
         vim.notify('No Overseer tasks found', vim.log.levels.WARN)
         return
     end
+    if not task:get_bufnr() then
+        vim.notify('Task has no output', vim.log.levels.WARN)
+        return
+    end
     overseer.run_action(task, 'open hsplit')
 
     vim.cmd.stopinsert()
