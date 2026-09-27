@@ -3,8 +3,14 @@
 -- Outputs
 local physical_outputs = {
     -- Add other familiar monitors to these lists, in preference order
-    left = { 'desc:Samsung Electric Company LF24T35 H9VT203938' },
-    right = { 'desc:Samsung Electric Company LF24T35 H9VT203922' },
+    left = {
+        'desc:Samsung Electric Company LF24T35 H9VT203938',
+        'desc:Lenovo Group Limited LEN S24e-10 0x37353833',
+    },
+    right = {
+        'desc:Samsung Electric Company LF24T35 H9VT203922',
+        'desc:Lenovo Group Limited LEN S24e-10 0x37353832',
+    },
     laptop = 'eDP-1',
 }
 local virtual_outputs = {
