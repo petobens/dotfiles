@@ -112,7 +112,7 @@ return {
     ),
 }, {
     -- List item
-    s({ trig = 'itm', wordTrig = false, dscr = 'List [it]e[m]' }, {
+    s({ trig = 'itm', dscr = 'List [it]e[m]' }, {
         c(1, {
             sn(nil, { t('- '), i(1) }),
             sn(nil, { t('+ '), i(1) }),

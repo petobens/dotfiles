@@ -339,7 +339,7 @@ return {
         )
     ),
 }, {
-    s({ trig = 'itm', wordTrig = false, dscr = '[It]e[m]' }, {
+    s({ trig = 'itm', dscr = '[It]e[m]' }, {
         t('\\item '),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
