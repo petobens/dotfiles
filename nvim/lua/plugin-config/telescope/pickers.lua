@@ -314,14 +314,19 @@ end
 
 function M.thesaurus_synonyms()
     local provider = require('telescope._extensions.thesaurus.config').get().provider
-    if not vim.g.dictionary_api_key and provider == 'dictionaryapi' then
-        vim.g.dictionary_api_key = vim.trim(
-            vim.system(
-                { 'pass', 'show', [[dictionary-api/yahoomail/api-key]] },
-                { text = true }
-            )
-                :wait().stdout
-        )
+    if
+        not vim.g.dictionary_api_key
+        and not vim.env.DICTIONARY_API_KEY
+        and provider == 'dictionaryapi'
+    then
+        local result = vim.system(
+            { 'pass', 'show', [[dictionary-api/yahoomail/api-key]] },
+            { text = true }
+        ):wait()
+        local key = vim.trim(result.stdout)
+        if result.code == 0 and key ~= '' then
+            vim.g.dictionary_api_key = key
+        end
     end
     telescope.extensions.thesaurus.lookup({
         layout_strategy = 'bpane',
