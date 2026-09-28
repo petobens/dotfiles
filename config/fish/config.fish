@@ -79,8 +79,6 @@ bind -M insert -m default jj repaint-mode
 
 # Interactive tools
 if type -q fzf
-    set -l FZF_ALT_C_COMMAND
-    set -l FZF_CTRL_T_COMMAND
     fzf --fish | source
     source "$__fish_config_dir/fzf_workflows.fish"
 end
