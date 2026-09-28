@@ -63,6 +63,12 @@ end
 
 local function incremental_select(direction)
     local buf = vim.api.nvim_get_current_buf()
+    if
+        vim.api.nvim_buf_line_count(buf) == 1
+        and vim.api.nvim_get_current_line() == ''
+    then
+        return
+    end
     if vim.treesitter.get_parser(buf) then
         vim.treesitter.select(direction > 0 and 'parent' or 'child', vim.v.count1)
     else
