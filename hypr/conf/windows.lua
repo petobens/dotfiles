@@ -128,7 +128,7 @@ window_rule('^msedge-app\\.clickup\\.com.*$', {
     workspace = '1 silent',
     tag = maximized_tag,
 })
-window_rule('^Qemu-system-x86_64$', {
+window_rule('^qemu$', {
     workspace = '1',
     tag = maximized_tag,
 })

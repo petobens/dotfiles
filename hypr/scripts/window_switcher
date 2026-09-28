@@ -32,7 +32,6 @@ selection=$(hyprctl clients -j | jq -r --argjson workspace "$workspace" \
         "numbers": "calc",
         "onedrive": "ms-onedrive",
         "onlyoffice": "onlyoffice-desktopeditors",
-        "qemu-system-x86_64": "qemu",
         "quickterm": "com.mitchellh.ghostty",
         "teams": "teams",
         "terminal": "com.mitchellh.ghostty",
