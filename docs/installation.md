@@ -45,7 +45,7 @@ The scripts and dotfiles use the maintainer's defaults. Before installing:
 - Review `setup/packages/` and `setup/post_install.sh` for the applications
   and system policies you want. This guide covers the Intel hardware path;
   other CPU or GPU vendors require adapting the package and power settings.
-- Review `hypr/conf/monitors.lua` for connector names, display positions,
+- Review `hypr/conf/monitors.lua` for monitor descriptions, display positions,
   scaling, and workspace assignments. The supplied multi-monitor layout is
   a default, not a hardware requirement.
 - Review application bindings and browser policies. Installing applications
@@ -1027,18 +1027,20 @@ Test the desktop controls:
 
 #### Displays and idle behavior
 
-The default layout places two 1920x1080 displays (`DP-1` and `DP-3`) above the
-centered laptop screen (`eDP-1`). Inspect connector names and modes with:
+The default layout places the left and right external displays above the
+centered laptop screen (`eDP-1`). External displays are matched by the
+ordered `desc:` lists in `physical_outputs`, so docking can change connector
+names without changing their roles. Inspect descriptions and modes with:
 
 ```bash
 hyprctl monitors all
 ```
 
-Adjust connectors, positions, workspaces, and scale in `hypr/conf/monitors.lua`.
-The 2880x1800 rule uses scale `1.5`; 3000x2000 uses `2`. A generic fallback
-handles other displays. Workspaces 1, 4, and 9 belong to `DP-3`; 2, 3, and 8
-to `eDP-1`; and 5, 6, and 7 to `DP-1`. Waybar shows only active or occupied
-workspaces, so gaps are expected.
+Adjust description lists, positions, workspaces, and scale in
+`hypr/conf/monitors.lua`. The 2880x1800 rule uses scale `1.5`; 3000x2000 uses
+`2`. A generic fallback handles other displays. Workspaces 1, 4, and 9 belong to
+the right display; 2, 3, and 8 to the laptop; and 5, 6, and 7 to the left
+display. Waybar shows only active or occupied workspaces, so gaps are expected.
 
 Test these mappings:
 
