@@ -414,7 +414,7 @@ es-noshorthands,es-lcroman,es-tabla]]
                     1,
                     '^spanish$',
                     'Continuación del Ejemplo \\continuedexref',
-                    'Example \\continuedexref\\space Continued.'
+                    'Example \\continuedexref\\space Continued'
                 ),
                 exercise = m(1, '^spanish$', 'Ejercicio', 'Exercise'),
                 solution = m(1, '^spanish$', 'Solución', 'Solution'),
