@@ -698,7 +698,7 @@ symlinks and asks whether to install LaTeX. It requests sudo when needed,
 installs the Pacman packages, bootstraps `yay-bin` if needed, installs the AUR
 packages and language tools, installs LaTeX when selected, runs
 `setup/post_install.sh`, and creates the configuration symlinks. Yazi installs
-its pinned plugins on its first launch instead. AUR packages build with all
+its plugins on its first launch instead. AUR packages build with all
 available CPU cores under `/tmp/makepkg`.
 
 ### Post-install configuration
