@@ -53,6 +53,14 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Helpers
+local function move_textobject(move, capture)
+    if not vim.treesitter.get_parser() then
+        return
+    end
+    move(capture, 'textobjects')
+    vim.cmd.normal({ args = { 'zz' }, bang = true })
+end
+
 local function incremental_select(direction)
     local buf = vim.api.nvim_get_current_buf()
     if vim.treesitter.get_parser(buf) then
@@ -159,53 +167,43 @@ end, { desc = '[A]round [f]unction: select (works in injections)' })
 
 -- Move
 vim.keymap.set({ 'n', 'x', 'o' }, ']c', function()
-    ts_move.goto_next_start('@class.outer', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_next_start, '@class.outer')
 end, { desc = 'Go to next class start' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, ']C', function()
-    ts_move.goto_next_end('@class.outer', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_next_end, '@class.outer')
 end, { desc = 'Go to next class end' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, '[c', function()
-    ts_move.goto_previous_start('@class.outer', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_previous_start, '@class.outer')
 end, { desc = 'Go to previous class start' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, '[C', function()
-    ts_move.goto_previous_end('@class.outer', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_previous_end, '@class.outer')
 end, { desc = 'Go to previous class end' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, ']f', function()
-    ts_move.goto_next_start('@function.outer', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_next_start, '@function.outer')
 end, { desc = 'Go to next function start' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, ']F', function()
-    ts_move.goto_next_end('@function.outer', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_next_end, '@function.outer')
 end, { desc = 'Go to next function end' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, '[f', function()
-    ts_move.goto_previous_start('@function.outer', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_previous_start, '@function.outer')
 end, { desc = 'Go to previous function start' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, '[F', function()
-    ts_move.goto_previous_end('@function.outer', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_previous_end, '@function.outer')
 end, { desc = 'Go to previous function end' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, ']p', function()
-    ts_move.goto_next_start('@parameter.inner', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_next_start, '@parameter.inner')
 end, { desc = 'Go to next parameter' })
 
 vim.keymap.set({ 'n', 'x', 'o' }, '[p', function()
-    ts_move.goto_previous_start('@parameter.inner', 'textobjects')
-    vim.cmd.normal({ args = { 'zz' }, bang = true })
+    move_textobject(ts_move.goto_previous_start, '@parameter.inner')
 end, { desc = 'Go to previous parameter' })
 
 -- Swap
