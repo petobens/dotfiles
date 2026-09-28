@@ -9,7 +9,8 @@ vim.g.mapleader = ','
 vim.g.matchup_matchparen_enabled = 0
 vim.g.python3_host_prog = '/usr/bin/python'
 vim.env.DOTVIM = vim.fs.joinpath(vim.env.HOME, '.config', 'nvim')
-vim.env.CACHE = vim.fs.joinpath(vim.env.DOTVIM, 'cache', 'Arch')
+vim.env.CACHE = vim.env.XDG_CACHE_HOME and vim.fn.stdpath('cache')
+    or vim.fs.joinpath(vim.env.DOTVIM, 'cache', 'Arch')
 
 -- Focus applications opened through the system handler
 local default_open = vim.ui.open
