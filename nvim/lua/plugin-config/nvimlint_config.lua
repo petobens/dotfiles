@@ -16,7 +16,7 @@ local function should_lint(bufnr)
         is_float
         and type(title) == 'table'
         and type(title[1]) == 'table'
-        and title[1][1] == 'Debug Chat'
+        and vim.trim(title[1][1]) == 'Debug Chat'
     then
         return false
     end

@@ -43,8 +43,10 @@ local function open_debug(chat_obj)
         local win_id = vim.api.nvim_get_current_win()
         local win_config = vim.api.nvim_win_get_config(win_id)
         if win_config.relative == 'editor' then
-            local width = tonumber(win_config.width) or vim.api.nvim_win_get_width(win_id)
-            win_config.col = math.max(0, math.floor((vim.o.columns - width) / 2))
+            win_config.width = math.floor(vim.o.columns * 0.535)
+            win_config.height = vim.o.lines - 4
+            win_config.row = 1
+            win_config.col = math.floor((vim.o.columns - win_config.width) / 2)
             vim.api.nvim_win_set_config(win_id, win_config)
         end
     end, 1)

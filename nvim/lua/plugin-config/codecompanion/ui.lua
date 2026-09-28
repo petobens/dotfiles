@@ -308,10 +308,6 @@ function M.chat_display()
             col = vim.o.columns,
             row = 1,
         },
-        debug_window = {
-            width = math.floor(vim.o.columns * 0.535),
-            height = vim.o.lines - 4,
-        },
     }
 end
 

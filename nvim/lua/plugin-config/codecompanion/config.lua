@@ -50,7 +50,6 @@ function M.setup()
                 },
             },
             diff = {
-                layout = 'vertical',
                 threshold_for_chat = 15,
             },
         },
