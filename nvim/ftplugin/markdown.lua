@@ -18,9 +18,10 @@ vim.opt_local.concealcursor = 'nc'
 -- Functions
 ---- Lists
 local function continue_list()
-    local row = vim.api.nvim_win_get_cursor(0)[1]
+    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
     local line = vim.api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ''
-    line = line:match('^%s*(.*)$') or ''
+    local indent = line:match('^%s*')
+    line = line:sub(#indent + 1)
 
     local unordered = line:match('^([*-]%s)')
     local task = line:match('^([*-]%s%[%s?%]%s)')
@@ -38,10 +39,11 @@ local function continue_list()
         marker = tostring(tonumber(number) + 1) .. '. '
     end
 
-    if not marker or line == '' then
+    local original = task or unordered or blockquote or ordered
+    if not marker or col < #indent + #original then
         return '<CR>'
     end
-    if line == (ordered or marker) then
+    if line == original then
         return '<C-U>'
     end
     return '<CR>' .. marker

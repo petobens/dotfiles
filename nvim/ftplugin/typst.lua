@@ -1015,10 +1015,10 @@ end
 
 -- Lists
 local function continue_list()
-    local row = api.nvim_win_get_cursor(0)[1]
+    local row, col = unpack(api.nvim_win_get_cursor(0))
     local line = api.nvim_buf_get_lines(0, row - 1, row, false)[1] or ''
     local indent, marker = line:match('^(%s*)([-+]%s+)')
-    if not marker then
+    if not marker or col < #indent + #marker then
         return '<CR>'
     end
     if line == indent .. marker then
