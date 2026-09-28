@@ -315,8 +315,8 @@ Zram alone does not support hibernation. Keep zram and add disk-backed swap
 with kernel resume configured separately if hibernation is required.
 
 During a Hyprland session, the battery monitor checks charge every 30 seconds
-and warns at 20% and 10%. Waybar turns red at 10% or below only while
-discharging. At 5%, a persistent "Connect charger" notification warns that
+and shows a persistent warning at 10%. Waybar turns red at 10% or below only
+while discharging. At 5%, a persistent "Connect charger" notification warns that
 shutdown will occur at 3%. At 3% or below, the monitor gives a five-second
 warning, then requests an orderly shutdown if the battery is still
 discharging at that level. Connecting the charger during the warning cancels
@@ -1079,11 +1079,11 @@ the VM. Skip checks for devices your machine does not have:
 
 - Verify the battery warnings. `hypr/scripts/battery_monitor` starts with the
   session and exits immediately when no battery is present, so confirm it runs
-  with `pgrep -f battery_monitor`. While discharging, Mako shows a warning at
-  20% and a sticky one at 10%, followed by a persistent "Connect charger"
-  warning at 5%. At 3%, it requests an orderly shutdown after five seconds
-  unless charging has started. UPower provides a shutdown fallback at 2%.
-  Save all work before testing the shutdown threshold.
+  with `pgrep -f battery_monitor`. While discharging, Mako shows a sticky
+  warning at 10%, followed by a persistent "Connect charger" warning at 5%. At
+  3%, it requests an orderly shutdown after five seconds unless charging has
+  started. UPower provides a shutdown fallback at 2%. Save all work before
+  testing the shutdown threshold.
 - Test closing and opening the lid while undocked and while connected to the
   dock. The undocked laptop should suspend; while docked, the external displays
   should remain active and reopening the lid should restore the selected layout.
