@@ -288,7 +288,10 @@ def main() -> None:
         "--all", action="store_true", help="regenerate every title, ignoring the cache"
     )
     ap.add_argument(
-        "--paths", nargs="+", type=Path, help="refresh only these session files"
+        "--paths",
+        nargs="+",
+        type=lambda value: Path(value).expanduser().resolve(),
+        help="refresh only these session files",
     )
     args = ap.parse_args()
 
@@ -303,7 +306,7 @@ def main() -> None:
     fresh = 0
     for adapter, paths, id_of, extract in sources:
         for path in paths:
-            if args.paths and path not in args.paths:
+            if args.paths and path.resolve() not in args.paths:
                 continue
             try:
                 mtime = int(path.stat().st_mtime)
