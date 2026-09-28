@@ -217,7 +217,7 @@ require('lualine').setup({
                 'aerial',
                 depth = -1,
                 colored = false,
-                component_separator = { left = '', right = '' },
+                component_separators = { left = '', right = '' },
                 fmt = function(str)
                     return str:sub(1, 40)
                 end,
@@ -225,7 +225,7 @@ require('lualine').setup({
             },
             {
                 'lsp_status',
-                component_separator = { left = '', right = '' },
+                component_separators = { left = '', right = '' },
                 icon = '󰒋',
                 symbols = {
                     done = '',
@@ -236,7 +236,7 @@ require('lualine').setup({
             },
             {
                 pyvenv,
-                component_separator = { left = '', right = '' },
+                component_separators = { left = '', right = '' },
                 cond = conds.hide_winwidth_leq_80,
             },
         },
@@ -288,7 +288,7 @@ require('lualine').setup({
             {
                 trailing_whitespace,
                 separator = { left = '', right = '' },
-                component_separator = { left = '', right = '' },
+                component_separators = { left = '', right = '' },
                 color = { fg = onedark_colors.black, bg = onedark_colors.orange },
                 cond = conds.hide_winwidth_leq_60,
             },
