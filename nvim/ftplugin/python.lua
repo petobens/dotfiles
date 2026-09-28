@@ -12,17 +12,23 @@ vim.opt_local.foldtext = ''
 _G.OverseerConfig.python_errorformat = ''
     -- luacheck:ignore 631
     -- See https://github.com/python-mode/python-mode/blob/149ccf7c5be0753f5e9872c023ab2eeec3442105/autoload/pymode/run.vim#L4
-    .. [[%E\ \ File\ \"%f\"\\\,\ line\ %l\\\,%m%\\C,]]
-    .. [[%E\ \ File\ \"%f\"\\\,\ line\ %l%\\C,]]
+    .. [[%E%*[ |]File "%f"\, line %l\,%m%\C,]]
+    .. [[%E%*[ |]File "%f"\, line %l%\C,]]
+    -- Exception groups prefix frames and messages with an indented vertical bar
+    .. [[%+G%*[ ]| Traceback%.%#,]]
+    .. [[%+G%*[ |+]Exception Group Traceback%.%#,]]
+    .. [[%-G%*[ ]+%.%#,]]
+    .. [[%-C%*[ ]|     %.%#,]]
+    .. [[%Z%*[ ]| %m,]]
     .. [[%C%p^,]]
-    .. [[%-C\ \ %.%#,]]
-    .. [[%-C\ \ \ \ %.%#,]]
-    .. [[%Z%\\@=%m,]]
+    .. [[%-C  %.%#,]]
+    .. [[%-C    %.%#,]]
+    .. [[%Z%\@=%m,]]
     .. [[%+GTraceback%.%#,]]
-    .. [[%+GDuring\ handling%.%#,]]
-    .. [[%+GThe\ above\ exception%.%#,]]
+    .. [[%+GDuring handling%.%#,]]
+    .. [[%+GThe above exception%.%#,]]
     .. [[%-G[Process exited%.%#,]]
-    .. [[%f:%l:\ %.%#%tarning:%m,]]
+    .. [[%f:%l: %.%#%tarning:%m,]]
 
 -- Helpers
 local function _project_root()
