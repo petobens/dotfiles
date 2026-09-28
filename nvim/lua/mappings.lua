@@ -162,7 +162,7 @@ end, { desc = 'Move line up' })
 vim.keymap.set(
     'n',
     '<A-s>',
-    'i<CR><ESC>^mwgk:silent! s/\\v +$//<CR>:noh<CR>`w',
+    'i<CR><ESC>^mwgk:silent! keeppatterns s/\\v +$//<CR>:noh<CR>`w',
     { desc = 'Split line' }
 )
 vim.keymap.set('n', 'J', function()
