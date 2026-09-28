@@ -301,7 +301,8 @@ local function explore_review_comments()
     local items = vim.iter(comments)
         :map(function(comment)
             return {
-                filename = vim.fs.joinpath(root, comment.path),
+                filename = vim.startswith(comment.path, '/') and comment.path
+                    or vim.fs.joinpath(root, comment.path),
                 lnum = comment.start_line,
                 end_lnum = comment.end_line,
                 text = comment.comment:gsub('%s+', ' '),
