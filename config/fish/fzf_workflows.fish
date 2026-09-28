@@ -1,6 +1,6 @@
 # Helpers
 function __fzf_path
-    string replace -r '^[^[:space:]]+[[:space:]]+' '' -- "$argv[1]"
+    string replace -r '^[^[:space:]]+[[:space:]]' '' -- "$argv[1]"
 end
 
 function __fzf_icons
