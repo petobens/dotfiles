@@ -1,5 +1,4 @@
 local ACP = require('codecompanion.acp')
-local chat_helpers = require('codecompanion.interactions.chat.helpers')
 local codecompanion = require('codecompanion')
 local config = require('codecompanion.config')
 local u = require('utils')
@@ -550,39 +549,19 @@ function M.chat.add_context(files)
 
     for _, file in ipairs(files) do
         local normalized_file = vim.fs.normalize(file)
-        local ok, formatted = pcall(chat_helpers.format_file_for_llm, normalized_file)
+        local id = string.format('<file>%s</file>', normalized_file)
 
-        if not ok then
-            vim.notify('Could not read file: ' .. file, vim.log.levels.ERROR)
-        else
-            local id = string.format('<file>%s</file>', normalized_file)
-
-            -- Add context manually (rather than via chat:add_context) because that helper
-            -- drops msg.context.path which ACP adapters need to see the file
-            chat:add_message({
-                role = 'user',
-                content = formatted.content,
-            }, {
-                visible = false,
-                context = { id = id, path = normalized_file },
-                _meta = { tag = 'file' },
-            })
-            chat.context:add({ id = id, path = normalized_file })
-        end
-    end
-
-    M.window.focus_or_toggle_chat({ startinsert = false })
-end
-
-function M.chat.add_documents(files)
-    local chat = get_or_create_chat()
-    local command = require('codecompanion.interactions.shared.slash_commands.file').new({
-        Chat = chat,
-        config = config.interactions.chat.slash_commands.file,
-    })
-
-    for _, file in ipairs(files) do
-        command:output({ path = file })
+        -- ACP agents read files themselves; keep binary data out of chat history
+        -- Add context manually because chat:add_context drops the path ACP needs
+        chat:add_message({
+            role = 'user',
+            content = 'File path: ' .. normalized_file,
+        }, {
+            visible = false,
+            context = { id = id, path = normalized_file },
+            _meta = { tag = 'file' },
+        })
+        chat.context:add({ id = id, path = normalized_file })
     end
 
     M.window.focus_or_toggle_chat({ startinsert = false })

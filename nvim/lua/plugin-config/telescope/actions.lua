@@ -187,7 +187,7 @@ M.custom = transform_mod({
     add_codecompanion_references = function(prompt_bufnr)
         _G.CodeCompanionConfig.add_context(helpers.selected_files(prompt_bufnr))
     end,
-    -- Add PDFs as documents to CodeCompanion
+    -- Add PDF paths as context for the ACP agent to read
     add_codecompanion_documents = function(prompt_bufnr)
         local files = vim.iter(helpers.selected_files(prompt_bufnr))
             :filter(function(file)
@@ -199,7 +199,7 @@ M.custom = transform_mod({
             vim.notify('Select at least one PDF', vim.log.levels.WARN)
             return
         end
-        _G.CodeCompanionConfig.add_documents(files)
+        _G.CodeCompanionConfig.add_context(files)
     end,
     -- Add images to CodeCompanion
     add_codecompanion_images = function(prompt_bufnr)
