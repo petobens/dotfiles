@@ -218,7 +218,6 @@ function M.frecent_files()
             map('i', '<C-d>', M.delete_frecency)
             return true
         end,
-        ignore_patterns = { '/tmp/', '.log' },
     })
 end
 

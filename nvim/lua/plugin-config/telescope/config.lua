@@ -247,6 +247,7 @@ function M.setup()
         },
         extensions = {
             frecency = {
+                ignore_patterns = { '*.git/*', '*/tmp/*', 'term://*', '*.log' },
                 auto_validate = true,
                 db_validate_threshold = 2,
                 db_safe_mode = false,
