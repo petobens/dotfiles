@@ -141,7 +141,7 @@ function M.setup()
     end, { desc = '[R]ecursive [G]rep: prompt for directory (no VCS ignore)' })
 
     vim.keymap.set({ 'n', 'x' }, '<Leader>dg', function()
-        pickers.igrep(nil, u.get_selection())
+        pickers.igrep(nil, u.get_selection():match('[^\n]*'))
     end, { desc = '[D]enite [g]rep: selection in buffer directory' })
 
     vim.keymap.set(
@@ -152,7 +152,7 @@ function M.setup()
     )
 
     vim.keymap.set({ 'n', 'x' }, '<Leader>dw', function()
-        pickers.search_buffer(u.get_selection())
+        pickers.search_buffer(u.get_selection():match('[^\n]*'))
     end, { desc = '[D]enite [w]ord: fuzzy find selection in buffer' })
 
     vim.keymap.set('n', '<Leader>tl', function()
