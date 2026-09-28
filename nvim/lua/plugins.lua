@@ -153,10 +153,7 @@ local packages = {
     plugin('kristijanhusak/vim-dadbod-ui', {
         cmd = { 'DBUIToggle', 'DBUIFindBuffer' },
     }),
-    plugin('kristijanhusak/vim-dadbod-completion', {
-        event = 'FileType',
-        pattern = 'sql',
-    }),
+    plugin('kristijanhusak/vim-dadbod-completion'),
 }
 
 -- Disable built-ins
