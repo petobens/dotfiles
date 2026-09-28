@@ -189,12 +189,14 @@ function M.setup()
         { desc = '[G]it [L]og (buffer)' }
     )
 
-    vim.keymap.set(
-        'x',
-        '<Leader>gl',
-        builtin.git_bcommits_range,
-        { desc = '[G]it [l]og commits (visual range)' }
-    )
+    vim.keymap.set('x', '<Leader>gl', function()
+        local root = u.git_root(u.buffer_dir())
+        if not root then
+            vim.notify('Not in a Git repository', vim.log.levels.WARN)
+            return
+        end
+        builtin.git_bcommits_range({ cwd = root })
+    end, { desc = '[G]it [l]og commits (visual range)' })
 
     vim.keymap.set('n', '<Leader>gc', function()
         builtin.git_branches({ prompt_title = 'Git Branches (<C-d>:delete)' })
