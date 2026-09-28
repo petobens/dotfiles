@@ -60,6 +60,7 @@ function M.clone_chat(chat)
 
             require('codecompanion.interactions.chat').new({
                 adapter = adapter,
+                cwd = chat.opts.cwd,
                 messages = cloned_messages,
                 stop_context_insertion = true,
                 title = 'Clone of: ' .. (chat.title or 'Chat'),
