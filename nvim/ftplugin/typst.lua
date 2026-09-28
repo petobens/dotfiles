@@ -131,7 +131,10 @@ end
 
 local function toc_special_entries(main)
     local content = read_file(main) or ''
-    local spanish = (content:match('language%s*:%s*"([^"]+)"') or 'es') == 'es'
+    local default_language = content:find('@local/mutt-article:', 1, true) and 'en'
+        or 'es'
+    local spanish = (content:match('language%s*:%s*"([^"]+)"') or default_language)
+        == 'es'
     local preface = content:match('preface%s*:%s*include%s+"([^"]+%.typ)"')
     local offset = content:find('#chapter%-bibliographies%s*%(')
         or content:find('#bibliography%s*%(')
