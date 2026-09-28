@@ -181,11 +181,17 @@ if ((! is_vm)); then
         expected_services+=(thermald.service)
     fi
 fi
+failed_system=$(systemctl --failed --no-legend --plain 2>&1)
+failed_system_status=$?
+failed_user=$(systemctl --user --failed --no-legend --plain 2>&1)
+failed_user_status=$?
 disabled_services=()
 for unit in "${expected_services[@]}"; do
     systemctl is-enabled --quiet "$unit" 2> /dev/null || disabled_services+=("$unit")
 done
-if ((${#disabled_services[@]} == 0)); then
+if ((failed_system_status != 0)); then
+    add_result WARN 'System services' 'systemd manager query unavailable'
+elif ((${#disabled_services[@]} == 0)); then
     add_result PASS 'System services' 'all expected units enabled'
 else
     add_result FAIL 'System services' "not enabled: ${disabled_services[*]}"
@@ -198,7 +204,9 @@ expected_user_services=(
     wireplumber.service
 )
 if ((! is_vm)); then
-    if systemctl --user is-enabled --quiet onedrive.service 2> /dev/null; then
+    if ((failed_user_status != 0)); then
+        add_result WARN 'OneDrive' 'user systemd manager query unavailable'
+    elif systemctl --user is-enabled --quiet onedrive.service 2> /dev/null; then
         if systemctl --user is-active --quiet onedrive.service 2> /dev/null; then
             add_result PASS 'OneDrive' 'automatic sync enabled and active'
         else
@@ -213,16 +221,14 @@ for unit in "${expected_user_services[@]}"; do
     systemctl --user is-enabled --quiet "$unit" 2> /dev/null ||
         disabled_user_services+=("$unit")
 done
-if ((${#disabled_user_services[@]} == 0)); then
+if ((failed_user_status != 0)); then
+    add_result WARN 'User services' 'user systemd manager query unavailable'
+elif ((${#disabled_user_services[@]} == 0)); then
     add_result PASS 'User services' 'all expected units enabled'
 else
     add_result FAIL 'User services' "not enabled: ${disabled_user_services[*]}"
 fi
 
-failed_system=$(systemctl --failed --no-legend --plain 2>&1)
-failed_system_status=$?
-failed_user=$(systemctl --user --failed --no-legend --plain 2>&1)
-failed_user_status=$?
 if ((failed_system_status != 0 || failed_user_status != 0)); then
     add_result WARN 'Failed units' 'could not query both systemd managers'
 elif [[ -z $failed_system && -z $failed_user ]]; then
@@ -438,7 +444,9 @@ for unit in "${graphical_targets[@]}"; do
     systemctl --user is-active --quiet "$unit" 2> /dev/null ||
         inactive_graphical_targets+=("$unit")
 done
-if ((${#inactive_graphical_targets[@]} == 0)); then
+if ((failed_user_status != 0)); then
+    add_result WARN 'Graphical targets' 'user systemd manager query unavailable'
+elif ((${#inactive_graphical_targets[@]} == 0)); then
     add_result PASS 'Graphical targets' 'Hyprland and graphical session active'
 elif ((hyprland_active)); then
     add_result FAIL 'Graphical targets' "not active: ${inactive_graphical_targets[*]}"

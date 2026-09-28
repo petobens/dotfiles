@@ -845,6 +845,10 @@ OpenCL, OpenGL, Vulkan, VA-API, PipeWire, and camera diagnostics. Review its
 warnings and failures before using the troubleshooting commands below; most
 of those checks already run automatically and need no manual repetition.
 
+A systemd `query unavailable` warning means the report could not query the
+system or user service manager. It does not mean the services are disabled;
+rerun the report from your local Hyprland session to verify their state.
+
 The `--sudo` option adds protected boot, Btrfs, Snapper, firewall, and SSH
 checks. Omit it to skip authentication and those checks. Reports redact common
 personal and machine identifiers, but review them before sharing. Run locally:
