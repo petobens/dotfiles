@@ -13,7 +13,6 @@
             "battery",
             "custom/no-battery",
             "clock",
-            "custom/slack",
             "tray",
         ],
         "include": "$HOME/.config/waybar/common.jsonc",

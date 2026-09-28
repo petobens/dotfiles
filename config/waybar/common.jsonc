@@ -129,23 +129,8 @@
         "on-click": "~/.config/hypr/scripts/raise_or_launch calendar",
         "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
     },
-    "custom/slack": {
-        "exec": "~/.config/hypr/scripts/slack_status",
-        "format": "{icon}",
-        "format-icons": {
-            "active": "󰒱",
-            // A larger background-colored circle outlines the notification dot
-            "unread": "<span letter_spacing='-2048'>󰒱</span><span color='#24272e' size='8704' rise='-1536' letter_spacing='-17408'>●</span><span color='#00e5ed' size='7168' rise='-512'>●</span>",
-            "urgent": "<span letter_spacing='-2048'>󰒱</span><span color='#24272e' size='8704' rise='-1536' letter_spacing='-17408'>●</span><span color='#ff2687' size='7168' rise='-512'>●</span>",
-        },
-        "hide-empty-text": true,
-        "interval": 1,
-        "on-click": "~/.config/hypr/scripts/raise_or_launch slack",
-        "return-type": "json",
-    },
     "tray": {
-        "icon-size": 14,
-        "ignore-list": ["Slack_status_icon"],
+        "icon-size": 16,
         "spacing": 6,
     },
 }

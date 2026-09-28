@@ -37,8 +37,7 @@ tooltip {
 #pulseaudio,
 #battery,
 #custom-no-battery,
-#clock,
-#custom-slack {
+#clock {
     padding: 0 7px;
 }
 
@@ -97,15 +96,9 @@ tooltip {
     font-family: 'Symbols Nerd Font';
     font-size: 13pt;
 }
-#custom-slack {
-    font-family: 'Symbols Nerd Font';
-    font-size: 13.5pt;
-    color: #bdc3ce;
-    padding: 0 0 0 2px;
-}
 /* Keep spacing on icons so an empty tray leaves no padding */
 #tray image {
-    padding: 0 7px 0 8px;
+    padding: 0 7px 0 1px;
 }
 
 /* Status states */
