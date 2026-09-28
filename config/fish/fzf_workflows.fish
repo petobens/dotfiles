@@ -202,6 +202,17 @@ function ll --description 'Browse the current directory with FZF'
 end
 
 # Tmux sessions
+function __tmux_session_id
+    for entry in (tmux list-sessions -F '#{session_id} #{session_name}' 2>/dev/null)
+        set -l fields (string split -m 1 ' ' -- "$entry")
+        if test "$fields[2]" = "$argv[1]"
+            printf '%s\n' "$fields[1]"
+            return
+        end
+    end
+    return 1
+end
+
 function tms --description 'Create or select a tmux session'
     set -l action attach-session
     test -n "$TMUX"; and set action switch-client
@@ -212,11 +223,12 @@ function tms --description 'Create or select a tmux session'
             read -P 'New tmux session name: ' session
         end
         test -n "$session"; or return 1
-        tmux "$action" -t "=$session" 2>/dev/null
-        or begin
-            tmux -f "$HOME/.config/tmux/tmux.conf" new-session -d -s "$session"
-            and tmux "$action" -t "=$session"
+        set -l session_id (__tmux_session_id "$session")
+        if test -z "$session_id"
+            set session_id (tmux -f "$HOME/.config/tmux/tmux.conf" new-session -d -P -F '#{session_id}' -s "$session")
+            or return
         end
+        tmux "$action" -t "$session_id"
         return
     end
 
@@ -231,15 +243,19 @@ function tms --description 'Create or select a tmux session'
     switch "$out[1]"
         case alt-k
             for session in $out[2..]
-                tmux kill-session -t "=$session"
+                set -l session_id (__tmux_session_id "$session")
+                test -n "$session_id"; and tmux kill-session -t "$session_id"
             end
         case alt-r
             for session in $out[2..]
+                set -l session_id (__tmux_session_id "$session")
+                test -n "$session_id"; or continue
                 read -P "Rename tmux session '$session' to: " new_session
-                test -n "$new_session"; and tmux rename-session -t "=$session" "$new_session"
+                test -n "$new_session"; and tmux rename-session -t "$session_id" "$new_session"
             end
         case '*'
-            tmux "$action" -t "=$out[2]"
+            set -l session_id (__tmux_session_id "$out[2]")
+            test -n "$session_id"; and tmux "$action" -t "$session_id"
     end
 end
 
