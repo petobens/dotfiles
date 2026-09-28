@@ -501,7 +501,7 @@ collect_evidence() {
     # The variables below belong to the diagnostic's nested shell
     # shellcheck disable=SC2016
     run 'Machine and firmware' bash -c \
-        'for f in product_name product_version bios_version bios_date; do printf "%s: " "$f"; cat "/sys/class/dmi/id/$f" 2>/dev/null || printf "unavailable\n"; done; systemd-detect-virt'
+        'for f in product_name product_version bios_version bios_date; do printf "%s: " "$f"; cat "/sys/class/dmi/id/$f" 2>/dev/null || printf "unavailable\n"; done; systemd-detect-virt || [[ $? == 1 ]]'
     run 'CPU and memory' bash -c \
         'lscpu; printf "\n"; free -h'
     run 'Kernel command line' cat /proc/cmdline
@@ -534,7 +534,9 @@ collect_evidence() {
     fi
 
     run 'PCI devices and drivers' lspci -nnk
-    run 'DRM and accelerator devices' ls -la /dev/dri /dev/accel
+    # shellcheck disable=SC2016
+    run 'DRM and accelerator devices' bash -c \
+        'devices=(/dev/dri); if [[ -e /dev/accel ]]; then devices+=(/dev/accel); fi; ls -la "${devices[@]}"'
     run 'OpenCL devices' clinfo -l
     run 'OpenGL renderer' glxinfo -B
     run 'Vulkan devices' vulkaninfo --summary
