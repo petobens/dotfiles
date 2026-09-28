@@ -2,8 +2,6 @@ local action_state = require('telescope.actions.state')
 local actions = require('telescope.actions')
 local layout_strategies = require('telescope.pickers.layout_strategies')
 
-local default_quickfix = require('telescope.make_entry').gen_from_quickfix({})
-
 local M = {}
 
 -- Layout
@@ -70,7 +68,7 @@ end
 
 -- Entry makers
 function M.quickfix_entry_maker(item)
-    local entry = default_quickfix(item)
+    local entry = require('telescope.make_entry').gen_from_quickfix({})(item)
     local default_display = entry.display
     entry.display = function(display_entry)
         local line, highlights = default_display(display_entry)
