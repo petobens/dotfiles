@@ -24,13 +24,13 @@ local function continue_list()
     line = line:sub(#indent + 1)
 
     local unordered = line:match('^([*-]%s)')
-    local task = line:match('^([*-]%s%[%s?%]%s)')
+    local task = line:match('^([*-]%s%[[ _x~]%]%s)')
     local blockquote = line:match('^(>%s)')
     local ordered, number = line:match('^((%d+)%.%s)')
 
     local marker
     if task then
-        marker = task
+        marker = task:gsub('%[[ _x~]%]', '[ ]')
     elseif unordered then
         marker = unordered
     elseif blockquote then
