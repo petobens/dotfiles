@@ -242,7 +242,6 @@ function M.rgrep(extra_args)
         end
         local opts = {
             cwd = dir,
-            search_dirs = { dir },
             results_title = dir,
             additional_args = extra_args or {},
         }
