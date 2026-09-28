@@ -75,6 +75,9 @@ end
 
 function M.selected_entry_dir()
     local path = from_entry.path(action_state.get_selected_entry(), false, false)
+    if not path or path:match('^%w+://') then
+        return vim.uv.cwd()
+    end
     local stat = vim.uv.fs_stat(path)
     return stat and stat.type == 'file' and vim.fs.dirname(path) or path
 end

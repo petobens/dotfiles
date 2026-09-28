@@ -69,7 +69,7 @@ vim.keymap.set('n', '<Leader>bd', function()
     vim.cmd.bdelete(bufnr)
 end, { desc = '[B]uffer [d]elete and go to previous' })
 vim.keymap.set('n', '<Leader>cd', function()
-    vim.cmd.bcd({ args = { vim.fs.dirname(vim.api.nvim_buf_get_name(0)) } })
+    vim.cmd.bcd({ args = { u.buffer_dir() } })
 end, { desc = '[C]urrent buffer [d]irectory: set as CWD' })
 
 -- Window manipulation
@@ -187,7 +187,7 @@ vim.keymap.set('n', '<Leader>yf', function()
     vim.notify(('Yanked file: %s'):format(path), vim.log.levels.INFO)
 end, { desc = '[Y]ank [f]ile path to clipboard' })
 vim.keymap.set('n', '<Leader>yd', function()
-    local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+    local dir = u.buffer_dir()
     vim.fn.setreg('+', dir)
     vim.fn.setreg('*', dir)
     vim.notify(('Yanked directory: %s'):format(dir), vim.log.levels.INFO)
@@ -297,7 +297,7 @@ end, { desc = 'Open fold from start or move right' })
 
 -- Diffs
 vim.keymap.set('n', '<Leader>ds', function()
-    local directory = vim.fs.dirname(vim.api.nvim_buf_get_name(0)) or vim.uv.cwd()
+    local directory = u.buffer_dir()
     local win_id = vim.api.nvim_get_current_win()
     vim.ui.input({
         prompt = 'Input file for diffing: ',
@@ -438,7 +438,7 @@ vim.keymap.set('n', '<Leader>dd', function()
     vim.api.nvim_input((':e %s/'):format(dir))
 end, { desc = '[D]esktop [d]irectory: edit file' })
 vim.keymap.set('n', '<Leader>bs', function()
-    local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+    local dir = u.buffer_dir()
     vim.api.nvim_input((':e %s/scratch/'):format(dir))
 end, { desc = '[B]uffer [s]cratch directory: edit file' })
 
@@ -590,7 +590,7 @@ vim.keymap.set(
 )
 vim.keymap.set('c', '%%', function()
     if vim.fn.getcmdtype() == ':' then
-        return vim.fs.dirname(vim.api.nvim_buf_get_name(0)) .. '/'
+        return u.buffer_dir() .. '/'
     else
         return '%%'
     end

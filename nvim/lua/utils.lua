@@ -13,6 +13,14 @@ M.icons = {
 }
 
 -- Files
+function M.buffer_dir()
+    local name = vim.api.nvim_buf_get_name(0)
+    if name == '' or name:match('^%w+://') then
+        return vim.uv.cwd()
+    end
+    return vim.fs.dirname(name)
+end
+
 function M.should_vsplit(win)
     win = win or 0
 

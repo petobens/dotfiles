@@ -1,6 +1,5 @@
 local builtin = require('telescope.builtin')
 local telescope = require('telescope')
-local utils = require('telescope.utils')
 
 local pickers = require('plugin-config.telescope.pickers')
 local u = require('utils')
@@ -47,7 +46,7 @@ function M.setup()
     end, { desc = '[L]ist all files one level [U]p' })
 
     vim.keymap.set('n', '<Leader>sd', function()
-        vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+        vim.cmd.lcd(u.buffer_dir())
         vim.api.nvim_input(':Telescope find_files cwd=')
     end, { desc = '[S]can [d]irectory for files' })
 
@@ -117,7 +116,7 @@ function M.setup()
     )
 
     vim.keymap.set('n', '<Leader>ir', function()
-        local git_root = u.git_root(utils.buffer_dir())
+        local git_root = u.git_root(u.buffer_dir())
         if not git_root then
             vim.notify('Current buffer is not in a git repository', vim.log.levels.WARN)
             return
@@ -166,7 +165,7 @@ function M.setup()
     end, { desc = '[T]ODOs [l]ocal to current file' })
 
     vim.keymap.set('n', '<Leader>tL', function()
-        local buffer_dir = utils.buffer_dir()
+        local buffer_dir = u.buffer_dir()
         builtin.grep_string({
             cwd = buffer_dir,
             results_title = buffer_dir,

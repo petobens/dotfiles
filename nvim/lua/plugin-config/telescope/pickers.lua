@@ -8,7 +8,6 @@ local pickers = require('telescope.pickers')
 local previewers = require('telescope.previewers')
 local sorters = require('telescope.sorters')
 local telescope = require('telescope')
-local utils = require('telescope.utils')
 
 local custom_previewers = require('plugin-config.telescope.previewers')
 local helpers = require('plugin-config.telescope.helpers')
@@ -53,7 +52,7 @@ end
 function M.find_dirs(opts)
     opts = opts or {}
     if opts.cwd == nil then
-        opts.cwd = utils.buffer_dir()
+        opts.cwd = u.buffer_dir()
     end
     opts.entry_maker = function(entry)
         return {
@@ -96,7 +95,7 @@ function M.parent_dirs(opts)
 
     local cwd = opts.starting_dir
     if opts.starting_dir == nil then
-        cwd = utils.buffer_dir()
+        cwd = u.buffer_dir()
     end
     local parent_dirs = {}
     for dir in vim.fs.parents(cwd) do
@@ -171,7 +170,7 @@ function M.bookmark_dirs(opts)
 end
 
 function M.igrep(dir, start_text, extra_args)
-    local buffer_dir = dir or utils.buffer_dir()
+    local buffer_dir = dir or u.buffer_dir()
     builtin.live_grep({
         cwd = buffer_dir,
         results_title = buffer_dir,
@@ -181,7 +180,7 @@ function M.igrep(dir, start_text, extra_args)
 end
 
 function M.find_files_cwd(opts)
-    local buffer_dir = utils.buffer_dir()
+    local buffer_dir = u.buffer_dir()
     opts = opts or {}
     opts.cwd = buffer_dir
     opts.results_title = buffer_dir
@@ -189,7 +188,7 @@ function M.find_files_cwd(opts)
 end
 
 function M.find_files_upper_cwd(opts)
-    local buffer_upperdir = vim.fs.dirname(utils.buffer_dir())
+    local buffer_upperdir = vim.fs.dirname(u.buffer_dir())
     opts = opts or {}
     opts.cwd = buffer_upperdir
     opts.results_title = buffer_upperdir
@@ -271,7 +270,7 @@ end
 
 function M.gitcommits(opts)
     opts = opts or {}
-    opts.cwd = utils.buffer_dir()
+    opts.cwd = u.buffer_dir()
 
     local git_root = u.git_root(opts.cwd)
     if not git_root then
@@ -293,7 +292,7 @@ end
 
 function M.gitcommits_buffer(opts)
     opts = opts or {}
-    opts.cwd = u.git_root(utils.buffer_dir())
+    opts.cwd = u.git_root(u.buffer_dir())
     if not opts.cwd then
         vim.notify('Current buffer is not in a git repository', vim.log.levels.WARN)
         return
