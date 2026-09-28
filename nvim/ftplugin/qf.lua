@@ -28,12 +28,11 @@ vim.api.nvim_create_autocmd({ 'QuitPre', 'BufDelete' }, {
 
 -- Mappings
 vim.keymap.set('n', 'q', function()
-    local close_cmd = vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0 and 'lclose'
-        or 'cclose'
-    if _G.LastWinId and vim.api.nvim_win_is_valid(_G.LastWinId) then
-        vim.api.nvim_set_current_win(_G.LastWinId)
+    local last_win = _G.LastWinId
+    vim.api.nvim_win_close(0, false)
+    if last_win and vim.api.nvim_win_is_valid(last_win) then
+        vim.api.nvim_set_current_win(last_win)
     end
-    vim.cmd[close_cmd]()
 end, { buf = 0, desc = 'Close quickfix/loclist and return to last window' })
 
 vim.keymap.set(
