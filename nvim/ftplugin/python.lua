@@ -195,9 +195,7 @@ local function add_breakpoint()
     local breakpoint_line = current_line - 1
     local line = vim.api.nvim_buf_get_lines(0, breakpoint_line, current_line, false)[1]
         or ''
-    local indent_start = string.find(line, '%w') or 1
-    local indent_length = indent_start - 1
-    local bp_statement = string.rep(' ', indent_length) .. 'breakpoint()'
+    local bp_statement = line:match('^%s*') .. 'breakpoint()'
     vim.api.nvim_buf_set_lines(
         0,
         breakpoint_line,
