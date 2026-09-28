@@ -211,8 +211,9 @@ end
 
 local function remove_breakpoints()
     local save_cursor = vim.api.nvim_win_get_cursor(0)
-    vim.cmd.global('/breakpoint()/d')
+    vim.cmd.global([[/\C^\s*breakpoint()\s*\(#.*\)\?$/d]])
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
+    save_cursor[1] = math.min(save_cursor[1], vim.api.nvim_buf_line_count(0))
     vim.api.nvim_win_set_cursor(0, save_cursor)
 end
 
@@ -535,7 +536,7 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
     pattern = { 'qf' },
     callback = function(e)
         vim.keymap.set('n', '<Leader>rB', function()
-            vim.cmd.cdo([[g/breakpoint()/d|silent noautocmd update]])
+            vim.cmd.cdo([[g/\C^\s*breakpoint()\s*\(#.*\)\?$/d|silent noautocmd update]])
             vim.cmd.cclose()
         end, { buf = e.buf, desc = '[R]emove all [B]reakpoints from quickfix' })
     end,
