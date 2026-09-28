@@ -74,7 +74,7 @@ function M.selected_files(prompt_bufnr)
 end
 
 function M.selected_entry_dir()
-    local path = from_entry.path(action_state.get_selected_entry())
+    local path = from_entry.path(action_state.get_selected_entry(), false, false)
     local stat = vim.uv.fs_stat(path)
     return stat and stat.type == 'file' and vim.fs.dirname(path) or path
 end

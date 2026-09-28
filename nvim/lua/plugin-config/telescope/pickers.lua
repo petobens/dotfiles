@@ -20,7 +20,7 @@ local M = {}
 local function select_dir()
     actions.select_default:replace(function()
         local entry = action_state.get_selected_entry()
-        local dir = from_entry.path(entry)
+        local dir = from_entry.path(entry, false, false)
         builtin.find_files({
             cwd = dir,
             results_title = dir,

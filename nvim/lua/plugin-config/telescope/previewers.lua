@@ -49,7 +49,7 @@ M.tree = telescope_previewers.new_termopen_previewer({
             '--level=2',
             '--icons=always',
             '--color=always',
-            from_entry.path(entry),
+            from_entry.path(entry, false, false),
         }
     end,
     title = 'Tree Previewer',

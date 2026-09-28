@@ -117,7 +117,7 @@ M.custom = transform_mod({
         actions.close(prompt_bufnr)
         local entry = action_state.get_selected_entry()
 
-        local path = from_entry.path(entry)
+        local path = from_entry.path(entry, false, false)
         local stat = vim.uv.fs_stat(path)
         if stat and stat.type == 'file' then
             is_dir = false
