@@ -295,10 +295,15 @@ end
 
 function M.gitcommits_buffer(opts)
     opts = opts or {}
-    opts.cwd = utils.buffer_dir()
+    opts.cwd = u.git_root(utils.buffer_dir())
+    if not opts.cwd then
+        vim.notify('Current buffer is not in a git repository', vim.log.levels.WARN)
+        return
+    end
+    opts.current_file = vim.api.nvim_buf_get_name(0)
     builtin.git_bcommits({
         cwd = opts.cwd,
-        results_title = vim.api.nvim_buf_get_name(0),
+        results_title = opts.current_file,
         previewer = {
             custom_previewers.delta(opts.cwd),
             previewers.git_commit_diff_as_was.new(opts),
