@@ -485,7 +485,9 @@ vim.keymap.set('n', '<Leader>lC', function()
             end)
         end
     end
-    vim.api.nvim_set_current_win(current_win)
+    if vim.api.nvim_win_is_valid(current_win) then
+        vim.api.nvim_set_current_win(current_win)
+    end
 end, { desc = '[L]ocation lists: [C]lose all' })
 vim.keymap.set('n', ']l', function()
     pcall(vim.cmd.lnext)
