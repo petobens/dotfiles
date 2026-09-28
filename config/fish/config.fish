@@ -1,6 +1,5 @@
 # Environment
 set -gx BROWSER "$HOME/.config/hypr/scripts/system_open"
-set -gx COLUMNS $COLUMNS # Used by git-delta
 set -gx EDITOR nvim
 set -gx MANPAGER 'nvim +Man!'
 set -gx PAGER less
@@ -357,5 +356,5 @@ end
 
 # Start Hyprland after exporting the environment for graphical apps
 if status is-login; and test (tty) = /dev/tty1; and not set -q WAYLAND_DISPLAY
-    exec env -u COLUMNS start-hyprland
+    exec start-hyprland
 end
