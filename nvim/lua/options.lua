@@ -212,7 +212,7 @@ vim.opt.listchars = {
     extends = '»',
     nbsp = '␣',
     precedes = '«',
-    tab = '▸\\ ',
+    tab = '▸ ',
     trail = '•',
 }
 vim.opt.shiftround = true
