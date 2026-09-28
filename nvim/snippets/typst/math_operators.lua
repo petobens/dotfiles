@@ -11,6 +11,28 @@ local t = ls.text_node
 local rep = extras.rep
 local fmta = require('luasnip.extras.fmt').fmta
 
+-- Helpers
+local function in_math()
+    local parser = vim.treesitter.get_parser()
+    if not parser then
+        return false
+    end
+    parser:parse()
+    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local node = vim.treesitter.get_node({ pos = { row - 1, math.max(col - 1, 0) } })
+    while node do
+        local kind = node:type()
+        if kind == 'string' or kind == 'comment' or kind == 'code' then
+            return false
+        end
+        if kind == 'math' then
+            return true
+        end
+        node = node:parent()
+    end
+    return false
+end
+
 return {
     -- Operators and functions
     s(
@@ -257,12 +279,12 @@ return {
         i(1),
         t(')'),
         i(0),
-    }),
+    }, { condition = in_math }),
     s({ trig = '^&', wordTrig = false, dscr = 'Superscript' }, {
         t('^('),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t(')'),
         i(0),
-    }),
+    }, { condition = in_math }),
 }

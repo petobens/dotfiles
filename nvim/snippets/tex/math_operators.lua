@@ -12,6 +12,10 @@ local rep = extras.rep
 local fmta = require('luasnip.extras.fmt').fmta
 local line_begin = require('luasnip.extras.expand_conditions').line_begin
 
+local function in_math()
+    return vim.fn['vimtex#syntax#in_mathzone']() == 1
+end
+
 return {
     -- Math Operators & Notation
     s(
@@ -376,12 +380,12 @@ return {
         i(1),
         t('}'),
         i(0),
-    }),
+    }, { condition = in_math }),
     s({ trig = '^&', wordTrig = false, dscr = 'Superindex' }, {
         t('^{'),
         f(_G.LuaSnipConfig.visual_selection),
         i(1),
         t('}'),
         i(0),
-    }),
+    }, { condition = in_math }),
 }
