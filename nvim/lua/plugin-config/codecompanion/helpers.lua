@@ -167,7 +167,11 @@ function M.state.get_last_user_prompt(chat)
 
     for i = #chat.messages, 1, -1 do
         local msg = chat.messages[i]
-        if msg.role == 'user' and not msg.context then
+        if
+            msg.role == 'user'
+            and not msg.context
+            and not (msg.opts and msg.opts.visible == false)
+        then
             return msg.content
         end
     end
