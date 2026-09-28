@@ -138,7 +138,7 @@
     let in-appendix = appendix-state.get()
     if it.level == 1 and it.numbering != none {
       reset-object-numbering()
-    } else if it.level == 2 and in-appendix {
+    } else if it.level == 2 and in-appendix and it.numbering != none {
       reset-object-numbering()
     }
     let prefix = if in-appendix and it.numbering != none {

@@ -304,7 +304,9 @@
     }
   }
   show heading.where(level: 2): it => {
-    context if _appendix-mode.get() { _reset-article-numbering() }
+    context if it.numbering != none and _appendix-mode.get() {
+      _reset-article-numbering()
+    }
     block(above: 1.4em, below: 0.9em)[
       #set text(size: 12pt, weight: "bold")
       #heading-title(it)

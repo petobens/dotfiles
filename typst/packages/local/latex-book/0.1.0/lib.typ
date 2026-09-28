@@ -418,8 +418,10 @@
       _main-start-page.update(here().page())
       _main-page-reset.update(false)
     }
-    _reset-book-numbering()
-    if it.numbering != none { counter(footnote).update(0) }
+    if it.numbering != none {
+      _reset-book-numbering()
+      counter(footnote).update(0)
+    }
     block(width: 100%, above: 2em, below: 3.2em, breakable: false)[
       #set text(weight: "bold")
       #align(center)[
@@ -451,7 +453,7 @@
     ]
   }
   show heading.where(level: 2): it => {
-    _reset-book-numbering()
+    if it.numbering != none { _reset-book-numbering() }
     block(above: 1.5em, below: 1.05em)[
       #set text(size: 14.4pt, weight: "bold")
       #heading-title(it)
