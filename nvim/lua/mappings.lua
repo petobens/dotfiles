@@ -327,6 +327,15 @@ vim.keymap.set('n', '<Leader>de', function()
     vim.cmd.normal('zz')
 end, { desc = '[D]iff [e]nd and recenter' })
 
+-- Multicursor
+vim.keymap.set({ 'n', 'x' }, '<Leader>ma', 'Q', {
+    desc = '[M]ulticursor: [a]dd/remove cursor',
+})
+vim.keymap.set('n', '<Leader>mx', function()
+    local ns = vim.api.nvim_create_namespace('nvim.multicursor')
+    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+end, { desc = '[M]ulticursor: clear/e[x]it' })
+
 -- Misc
 vim.keymap.set('n', '<Leader>mr', 'q', { desc = '[M]acro [r]ecording: start/stop' })
 vim.keymap.set('n', '<Leader>mg', vim.cmd.messages, { desc = '[M]essa[g]e history' })
