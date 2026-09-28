@@ -16,12 +16,18 @@ vim.api.nvim_win_resize(
 )
 
 -- Autocmd options
-vim.api.nvim_create_autocmd({ 'QuitPre', 'BufDelete' }, {
-    group = vim.api.nvim_create_augroup('ft_qf', { clear = true }),
-    desc = 'Auto-close loclist when quitting a window',
-    callback = function()
-        if vim.bo.filetype ~= 'qf' then
-            vim.cmd.lclose({ mods = { silent = true } })
+local group = vim.api.nvim_create_augroup('ft_qf', { clear = true })
+vim.api.nvim_create_autocmd('WinClosed', {
+    group = group,
+    desc = 'Close loclist when its owner window closes',
+    callback = function(args)
+        local loclist = vim.fn.getloclist(tonumber(args.match), { winid = 0 }).winid
+        if loclist and loclist ~= 0 then
+            vim.schedule(function()
+                if vim.api.nvim_win_is_valid(loclist) then
+                    vim.api.nvim_win_close(loclist, false)
+                end
+            end)
         end
     end,
 })
