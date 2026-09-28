@@ -25,7 +25,7 @@ local function continue_list()
     local unordered = line:match('^([*-]%s)')
     local task = line:match('^([*-]%s%[%s?%]%s)')
     local blockquote = line:match('^(>%s)')
-    local ordered = line:match('^(%d+)%.%s')
+    local ordered, number = line:match('^((%d+)%.%s)')
 
     local marker
     if task then
@@ -35,13 +35,13 @@ local function continue_list()
     elseif blockquote then
         marker = blockquote
     elseif ordered then
-        marker = tostring(tonumber(ordered) + 1) .. '. '
+        marker = tostring(tonumber(number) + 1) .. '. '
     end
 
     if not marker or line == '' then
         return '<CR>'
     end
-    if line == marker then
+    if line == (ordered or marker) then
         return '<C-U>'
     end
     return '<CR>' .. marker
