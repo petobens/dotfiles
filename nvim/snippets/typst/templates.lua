@@ -26,6 +26,8 @@ return {
   font-size: <>,
   title: [<>],
   abstract: none,
+  // Required by Retrofit for filename-based bibliographies
+  bibliography-read: path =>> read(path),
 )
 
 = <>
