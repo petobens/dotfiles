@@ -956,7 +956,7 @@ Test the camera in Firefox, Brave, and Edge. During a Meet call, run
 `sudo intel_gpu_top` and check for Video engine activity to confirm hardware
 encoding. Check `brave://gpu` for hardware-accelerated video encoding and
 `brave://version` for the configured feature flags. While sharing the screen,
-open `Super+V` or `Super+/`: Rofi should remain visible locally but be hidden
+open `Super+Alt+V` or `Super+/`: Rofi should remain visible locally but be hidden
 from the shared output.
 
 If Edge cannot detect the PipeWire camera, enable the WebRTC PipeWire camera
@@ -1021,7 +1021,7 @@ Test the desktop controls:
 - Open the Rofi cheatsheet with `Super+/` and check its keybinding labels.
   Run `hyprprop` and click a window to inspect its properties.
 - Copy text, close its source window, and paste it. `wl-clip-persist` keeps
-  the selection alive; `Super+V` opens the `cliphist` history in Rofi.
+  the selection alive; `Super+Alt+V` opens the `cliphist` history in Rofi.
 - Open the Bluetooth menu from Waybar. Use the terminal's `bt` chooser for
   devices requiring a pairing passkey.
 
