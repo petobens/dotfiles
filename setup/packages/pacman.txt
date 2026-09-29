@@ -73,6 +73,7 @@ qpdf
 ripgrep
 ripgrep-all
 rsync
+socat
 sqlite
 sshpass
 tesseract

@@ -1,11 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-workspace=$(hyprctl activeworkspace -j | jq '.id')
-count=$(hyprctl clients -j | jq --argjson workspace "$workspace" \
-    '[.[] | select(.workspace.id == $workspace)] | length')
+print_count() {
+    local workspace count
+    workspace=$(hyprctl activeworkspace -j | jq '.id')
+    count=$(hyprctl clients -j | jq --argjson workspace "$workspace" \
+        '[.[] | select(.workspace.id == $workspace)] | length')
 
-jq -cn \
-    --arg text "<span font_family='Symbols Nerd Font' size='12pt'></span> <span font_family='Noto Sans' size='7pt' weight='bold' rise='5pt'>$count</span>" \
-    --arg tooltip "$count windows on workspace $workspace" \
-    '{text: $text, tooltip: $tooltip}'
+    jq -cn \
+        --arg text "<span font_family='Symbols Nerd Font' size='12pt'></span> <span font_family='Noto Sans' size='7pt' weight='bold' rise='5pt'>$count</span>" \
+        --arg tooltip "$count windows on workspace $workspace" \
+        '{text: $text, tooltip: $tooltip}'
+}
+
+# Waybar keeps this script running and shows each printed line, so reprint
+# only when Hyprland reports a workspace or window change instead of polling
+print_count
+socat -U - "UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" |
+    while read -r event; do
+        case ${event%%>>*} in
+            workspacev2 | focusedmonv2 | openwindow | closewindow | movewindowv2)
+                print_count
+                ;;
+        esac
+    done
