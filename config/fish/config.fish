@@ -322,10 +322,10 @@ function sys_update_all --description 'Update system and language tooling'
     else
         sudo pacman -Syu; or return
     end
-    # if type -q fwupdmgr
-    #     printf '%s\n-> Firmware (check only)...%s\n' $section_color $normal_color
-    #     fwupdmgr get-updates; or true
-    # end
+    if type -q fwupdmgr
+        printf '%s\n-> Firmware (check only)...%s\n' $section_color $normal_color
+        fwupdmgr get-updates; or true
+    end
     if type -q python
         printf '%s\n-> Python user packages...%s\n' $section_color $normal_color
         set -l outdated (python -m pip list --user --outdated --format=json | jq -r '.[].name')
