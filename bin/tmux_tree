@@ -23,5 +23,8 @@ tmux list-sessions \
         else
             printf '\033[1m%s\033[0m\n' "$session_info"
         fi
-        tmux list-windows -t "$session_id" -F '   #{T:tree_mode_format}'
-    done
+        # Render the activity flag once; window_flags escapes it for tmux's UI
+        tmux list-windows -t "$session_id" \
+            -F '   #{window_name}#{s/####//:window_flags}#{?window_activity_flag,##,}#{?#{&&:#{==:#{window_panes},1},#{&&:#{pane_title},#{!=:#{pane_title},#{host_short}}}},: "#{pane_title}",}'
+    done |
+    sed 's/\\\\/\\/g'
