@@ -2,7 +2,7 @@ local require = require('lualine_require').require
 local Buffer = require('lualine.components.buffertab.buffer')
 local M = require('lualine.component'):extend()
 
-_G.LualineBuffertab = {}
+_G.LualineBuffertab = { idx2bufnr = {} }
 
 local default_options = {
     filetype_names = {},
@@ -25,7 +25,6 @@ local default_options = {
     },
 }
 
--- Helpers
 local superscript_nrs = {
     [1] = '¹',
     [2] = '²',
@@ -44,39 +43,15 @@ local superscript_nrs = {
     [15] = '¹⁵',
 }
 
-local function unique_tail_format(buffers)
-    local seen = {}
-    local duplicated = {}
-    for _, buffer in ipairs(buffers) do
-        if seen[buffer.name] then
-            duplicated[seen[buffer.name]] = true
-            duplicated[buffer.bufnr] = true
-        else
-            seen[buffer.name] = buffer.bufnr
-        end
-    end
-    for _, buffer in ipairs(buffers) do
-        if duplicated[buffer.bufnr] then
-            local new_name = string.format(
-                '…/%s/%s',
-                vim.fs.basename(vim.fs.dirname(buffer.file)),
-                vim.fs.basename(buffer.file)
-            )
-            buffer.name = new_name
-        end
-    end
-    return buffers
-end
-
--- Buffertab update
 function M:init(options)
     M.super.init(self, options)
     self.options = vim.tbl_deep_extend('keep', self.options or {}, default_options)
 end
 
 function M:update_status()
-    local data = {}
     local buffers = {}
+    local current_bufnr = vim.api.nvim_get_current_buf()
+    local current
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
         if
             vim.bo[bufnr].buflisted
@@ -84,155 +59,130 @@ function M:update_status()
             and vim.bo[bufnr].filetype ~= 'fugitive'
             and not self.options.filetype_ignore[vim.bo[bufnr].filetype]
         then
-            buffers[#buffers + 1] = Buffer({
-                bufnr = bufnr,
-                options = self.options,
-            })
+            buffers[#buffers + 1] = Buffer({ bufnr = bufnr, options = self.options })
+            if bufnr == current_bufnr then
+                current = #buffers
+            end
         end
     end
 
-    -- Mark the first, last, current, visible, prev_visible, prev_modified and
-    -- aftercurrent buffers for rendering
-    local current_bufnr = vim.api.nvim_get_current_buf()
-    local current = -2
-    if buffers[1] then
-        buffers[1].first = true
+    -- Include the current unlisted buffer unless it belongs to a utility window
+    if not current then
+        local buffer = Buffer({ bufnr = current_bufnr, options = self.options })
+        if
+            not self.options.filetype_ignore[buffer.filetype]
+            and buffer.buftype ~= 'nofile'
+            and not vim.startswith(buffer.name, 'TelescopePreview')
+        then
+            buffers[#buffers + 1] = buffer
+            current = #buffers
+        end
     end
-    if buffers[#buffers] then
-        buffers[#buffers].last = true
+
+    local mapping = {}
+    _G.LualineBuffertab.idx2bufnr = mapping
+    if #buffers == 0 then
+        return ''
     end
-    local visible_buffers = vim.fn.tabpagebuflist()
+    mapping[0] = buffers[1].bufnr
+    mapping[-1] = buffers[#buffers].bufnr
+
+    local name_counts = {}
+    for _, buffer in ipairs(buffers) do
+        name_counts[buffer.name] = (name_counts[buffer.name] or 0) + 1
+    end
+    local visible = {}
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        visible[vim.api.nvim_win_get_buf(win)] = true
+    end
+    -- Cumulative widths let us measure each candidate range without rendering it again
+    local widths, position_widths = { [0] = 0 }, { [0] = 0 }
     for i, buffer in ipairs(buffers) do
-        if buffer.bufnr == current_bufnr then
-            buffer.current = true
-            current = i
+        if buffer.file ~= '' and name_counts[buffer.name] > 1 then
+            buffer.name = string.format(
+                '…/%s/%s',
+                vim.fs.basename(vim.fs.dirname(buffer.file)),
+                vim.fs.basename(buffer.file)
+            )
         end
-        buffer.visible = vim.list_contains(visible_buffers, buffer.bufnr)
-        if buffer.first ~= true then
-            local prev_buffer = buffers[i - 1]
-            buffer.prev_visible = vim.list_contains(visible_buffers, prev_buffer.bufnr)
-            buffer.prev_modified = vim.bo[prev_buffer.bufnr].modified
+        buffer.first = i == 1
+        buffer.current = i == current
+        buffer.visible = visible[buffer.bufnr] == true
+        local previous = buffers[i - 1]
+        if previous then
+            buffer.prev_visible = previous.visible
+            buffer.prev_modified = previous.modified
+            buffer.aftercurrent = previous.current
         end
-    end
-    if buffers[current + 1] then
-        buffers[current + 1].aftercurrent = true
+        local _, width = buffer:render('')
+        widths[i] = widths[i - 1] + width
+        position_widths[i] = position_widths[i - 1]
+            + vim.api.nvim_strwidth(superscript_nrs[i] or '')
     end
 
-    -- Compute max tabline length
-    local max_length = self.options.max_length
+    local max_length = self.options.max_length or 0
     if type(max_length) == 'function' then
         max_length = max_length(self)
     end
     if max_length == 0 then
         max_length = math.floor(2 * vim.o.columns / 3)
     end
-    local total_length
 
-    -- Filter/format duplicate buffer names
-    buffers = unique_tail_format(buffers)
+    local function fits(first, last)
+        local width = widths[last] - widths[first - 1] + position_widths[last - first + 1]
+        if first > 1 then
+            local _, ellipsis_width = buffers[first - 1]:render(nil, true)
+            width = width + ellipsis_width
+        end
+        if last < #buffers then
+            local _, ellipsis_width = buffers[last + 1]:render()
+            width = width + ellipsis_width
+        end
+        return width <= max_length
+    end
 
-    -- Start drawing from current buffer and draw left and right of it until
-    -- all buffers are drawn or max_length has been reached.
-    if current == -2 then
-        local b = Buffer({
-            bufnr = vim.api.nvim_get_current_buf(),
-            options = self.options,
-        })
-        if
-            -- If current buffer was not listed and it's not blacklisted then
-            -- add it to the the list
-            not self.options.filetype_ignore[b.filetype]
-            and b.buftype ~= 'nofile'
-            and (b.name and not vim.startswith(b.name, 'TelescopePreview'))
-        then
-            b.current = true
-            b.last = true
-            if #buffers > 0 then
-                buffers[#buffers].last = nil
-            end
-            buffers[#buffers + 1] = b
-            current = #buffers
-        else
-            current = 1 -- arbitrary existent buffer
-        end
-    end
-    local current_buffer = buffers[current]
-    if not current_buffer then
-        _G.LualineBuffertab.idx2bufnr = {}
-        return ''
-    end
-    data[#data + 1] = current_buffer:render()
-    total_length = current_buffer.len
-    local i = 0
-    local before, after
-    while true do
-        i = i + 1
-        before = buffers[current - i]
-        after = buffers[current + i]
-        local rendered_before, rendered_after
-        if before == nil and after == nil then
-            break
-        end
-        -- Draw left most undrawn buffer if fits in max_length
-        if before then
-            rendered_before = before:render()
-            -- Substract 1 due to KQ placeholder
-            total_length = total_length + before.len - 1
-            if total_length > max_length then
+    -- Grow around the current buffer, alternating left and right
+    local first, last = current or 1, current or 1
+    while first > 1 or last < #buffers do
+        if first > 1 then
+            if not fits(first - 1, last) then
                 break
             end
-            table.insert(data, 1, rendered_before)
+            first = first - 1
         end
-        -- Draw right most undrawn buffer if fits in max_length
-        if after then
-            rendered_after = after:render()
-            total_length = total_length + after.len - 1 -- same as above
-            if total_length > max_length then
+        if last < #buffers then
+            if not fits(first, last + 1) then
                 break
             end
-            data[#data + 1] = rendered_after
+            last = last + 1
         end
     end
 
-    -- Construct mapping from idx/position to buffer number for easy navigation
-    -- (and also tag first and last buffers)
-    _G.LualineBuffertab.idx2bufnr = {}
-    for pos, segment in ipairs(data) do
-        local segment_bufnr = string.match(segment, 'KQ(%d+):')
-        data[pos] = segment:gsub('KQ', superscript_nrs[pos] or '')
-        _G.LualineBuffertab.idx2bufnr[pos] = segment_bufnr
+    local data = {}
+    if first > 1 then
+        data[#data + 1] = buffers[first - 1]:render(nil, true)
     end
-    _G.LualineBuffertab.idx2bufnr[0] = buffers[1].bufnr
-    _G.LualineBuffertab.idx2bufnr[-1] = buffers[#buffers].bufnr
-
-    -- Draw elipsis (...) on relevent sides if all buffers don't fit in max_length
-    if total_length > max_length then
-        if before ~= nil then
-            before.ellipse = true
-            before.first = true
-            table.insert(data, 1, before:render())
-        end
-        if after ~= nil then
-            after.ellipse = true
-            after.last = true
-            data[#data + 1] = after:render()
-        end
+    for i = first, last do
+        local position = i - first + 1
+        data[#data + 1] = buffers[i]:render(superscript_nrs[position] or '')
+        mapping[position] = buffers[i].bufnr
+    end
+    if last < #buffers then
+        data[#data + 1] = buffers[last + 1]:render()
     end
 
-    return table.concat(data)
+    -- Truncate buffer names before lualine's right-hand label
+    return '%<' .. table.concat(data)
 end
 
--- (Global) Functions
-vim.cmd([[
-  function! LualineSwitchBuffer(bufnr, mouseclicks, mousebutton, modifiers)
-    execute ":buffer " . a:bufnr
-  endfunction
-]])
+function _G.LualineBuffertab.switch_buf(bufnr)
+    vim.api.nvim_set_current_buf(bufnr)
+end
 
-function _G.LualineBuffertab.select_buf(buf_idx)
-    local bufnr = _G.LualineBuffertab.idx2bufnr[buf_idx]
-    if bufnr ~= nil then
-        vim.api.nvim_set_current_buf(tonumber(bufnr))
+function _G.LualineBuffertab.select_buf(position)
+    local bufnr = _G.LualineBuffertab.idx2bufnr[position]
+    if bufnr then
+        vim.api.nvim_set_current_buf(bufnr)
     end
 end
 

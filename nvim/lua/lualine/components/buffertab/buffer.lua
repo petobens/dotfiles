@@ -14,6 +14,8 @@ function Buffer:get_props()
     self.buftype = vim.bo[self.bufnr].buftype
     self.filetype = vim.bo[self.bufnr].filetype
     self.modified = vim.bo[self.bufnr].modified
+    local stat = vim.uv.fs_stat(self.file)
+    self.is_directory = stat and stat.type == 'directory'
 
     self.icon = ''
     if self.options.icons_enabled then
@@ -26,10 +28,7 @@ function Buffer:get_props()
             dev = devicons.get_icon('git')
         elseif self.buftype == 'terminal' then
             dev = devicons.get_icon('zsh')
-        elseif
-            vim.uv.fs_stat(self.file)
-            and vim.uv.fs_stat(self.file).type == 'directory'
-        then
+        elseif self.is_directory then
             dev = ''
         else
             dev = devicons.get_icon(vim.fs.basename(self.file), vim.fs.ext(self.file))
@@ -49,51 +48,38 @@ function Buffer:hl_buffer_state()
         else
             hl_group = 'selected'
         end
+    elseif self.modified then
+        hl_group = 'modified_unselected'
+    elseif self.visible then
+        hl_group = 'visible'
     else
-        if self.modified then
-            hl_group = 'modified_unselected'
-        elseif self.visible then
-            hl_group = 'visible'
-        else
-            hl_group = 'hidden'
-        end
+        hl_group = 'hidden'
     end
     hl_group = string.format('lualine_%s_tabline', hl_group)
     return string.format('%%#%s#', hl_group)
 end
 
-function Buffer:render()
-    local name = self.name
-    if self.options.fmt then
-        name = self.options.fmt(name or '')
-    end
-
-    if self.ellipse then -- show elipsis
-        name = '...'
-    else
-        -- Add arbitrary string to replace by superscript position, we leave a
-        -- space at the beginning and set padding to 0 for tighter fit
-        -- FIXME: find a way of actually adding %s placeholder
-        name = ' KQ' .. string.format('%s:%s %s', self.bufnr, name, self.icon)
+-- A nil position renders a clickable ellipsis for a hidden buffer
+function Buffer:render(position, omit_separator)
+    local name = '...'
+    if position then
+        name = self.options.fmt and self.options.fmt(self.name) or self.name
+        name = string.format(' %s%d:%s %s', position, self.bufnr, name, self.icon)
     end
     name = Buffer.apply_padding(name, self.options.padding)
-    self.len = vim.api.nvim_strwidth(name)
-    name = name:gsub('%%', '%%%%')
-
-    -- Setup for mouse clicks
-    local line = string.format('%%%s@LualineSwitchBuffer@%s%%T', self.bufnr, name)
-
-    -- Apply highlight
-    local buf_hl_group = self:hl_buffer_state()
-    line = buf_hl_group .. line
-
-    -- Apply separators
-    if self.options.self.section < 'lualine_x' and not self.first then
-        local sep_before, sep_width = self:separator_before()
-        line = sep_before .. line
-        self.len = self.len + sep_width
+    local width = vim.api.nvim_strwidth(name)
+    local line = self:hl_buffer_state()
+        .. string.format(
+            '%%%d@v:lua.LualineBuffertab.switch_buf@%s%%T',
+            self.bufnr,
+            name:gsub('%%', '%%%%')
+        )
+    if self.options.self.section < 'x' and not (omit_separator or self.first) then
+        local separator, separator_width = self:separator_before()
+        line = separator .. line
+        width = width + separator_width
     end
-    return line
+    return line, width
 end
 
 function Buffer:separator_before()
@@ -118,9 +104,7 @@ function Buffer:get_name()
     elseif self.buftype == 'terminal' then
         local match = string.match(vim.split(self.file, ' ')[1], 'term:.*:(%a+)')
         name = match ~= nil and match or vim.fs.basename(vim.env.SHELL)
-    elseif
-        vim.uv.fs_stat(self.file) and vim.uv.fs_stat(self.file).type == 'directory'
-    then
+    elseif self.is_directory then
         name = vim.fs.relpath(vim.uv.cwd(), self.file) or self.file
     elseif self.file == '' then
         name = '[No Name]'

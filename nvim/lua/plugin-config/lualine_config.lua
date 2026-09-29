@@ -350,7 +350,8 @@ require('lualine').setup({
                 filetype_names = { fugitive = 'gitstatus' },
                 component_separators = { left = ' ' },
                 max_length = function()
-                    return vim.o.columns - vim.api.nvim_strwidth('buffers')
+                    -- Reserve the label, its padding and both section separators
+                    return vim.o.columns - vim.api.nvim_strwidth(' buffers ') - 2
                 end,
                 padding = { left = 0, right = 0 },
             },
