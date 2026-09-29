@@ -5,6 +5,9 @@ workflow used on physical hardware. It uses a virtual NVMe disk, provides SSH
 access through host port 2222, and installs the normal package set except for
 packages listed in [`vm_skip.txt`](../packages/vm_skip.txt).
 
+Run the command examples in Bash. If you use Fish, start `bash` first and
+run `exit` when finished to return to Fish.
+
 ## Host requirements
 
 On an Arch host, install QEMU and the OVMF firmware:

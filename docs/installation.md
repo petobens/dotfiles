@@ -9,6 +9,9 @@ the assumptions and defaults before using them on another machine. Commands
 that use repository paths assume the dotfiles checkout is the working
 directory unless stated otherwise.
 
+Run the command examples in Bash. If you use Fish, start `bash` first and
+run `exit` when finished to return to Fish.
+
 It assumes:
 
 - UEFI firmware
