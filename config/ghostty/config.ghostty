@@ -51,6 +51,8 @@ window-padding-balance = true
 resize-overlay = never
 
 # Behavior
+# Avoid counting idle io_uring event waits as I/O pressure
+async-backend = epoll
 clipboard-read = allow
 clipboard-write = allow
 app-notifications = no-clipboard-copy
