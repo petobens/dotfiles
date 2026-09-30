@@ -784,6 +784,12 @@ Python, Node.js, Rust, and TeX Live tooling. On physical hardware, run
 `fwupdmgr get-updates` to check for available firmware, then review the result
 and run `fwupdmgr update` explicitly when ready.
 
+If TeX Live reports an older local release, follow the
+[yearly upgrade instructions][texlive-upgrade], preserving `~/texmf`, then
+rerun `./setup/install.sh --latex` to apply the package list and executable links.
+
+[texlive-upgrade]: https://tug.org/texlive/upgrade.html
+
 Reboot after the dotfiles installer finishes. This activates zram, `scx_lavd`,
 and Docker group membership:
 
