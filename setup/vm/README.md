@@ -124,14 +124,21 @@ remove the previous host key, and authorize the host's existing SSH key:
 ```bash
 username=pedro
 ssh-keygen -R '[127.0.0.1]:2222'
-ssh-copy-id -F none \
-    -i ~/.ssh/id_rsa.pub \
-    -p 2222 "$username@127.0.0.1"
+ssh-copy-id -F none -i ~/.ssh/id_rsa.pub -p 2222 "$username@127.0.0.1"
 ssh -F none -p 2222 "$username@127.0.0.1"
 ```
 
-The forwarded port listens only on the host's loopback interface. Unattended
-SSH requires a key without a passphrase or one loaded in `ssh-agent`.
+To unlock your host's private key once per session, run on the host:
+
+```bash
+ssh-agent "$SHELL"
+ssh-add ~/.ssh/id_rsa
+ssh -F none -p 2222 pedro@127.0.0.1
+```
+
+Replace `pedro` with your VM username. This works in Bash and Fish: the first
+command opens an agent-backed shell; `ssh-add` asks for the key passphrase,
+not the VM password. Use that shell for SSH; exiting it also stops the agent.
 
 The VM has an independent Git checkout. Push host changes, then update it with:
 

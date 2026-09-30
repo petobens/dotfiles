@@ -143,7 +143,8 @@ launch_vm() {
     if $background; then
         args+=(-daemonize)
     fi
-    exec qemu-system-x86_64 "${args[@]}"
+    # Disable the QEMU window's accessibility bridge to avoid host bus warnings
+    exec env NO_AT_BRIDGE=1 qemu-system-x86_64 "${args[@]}"
 }
 
 action=
