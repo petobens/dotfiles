@@ -786,7 +786,8 @@ and run `fwupdmgr update` explicitly when ready.
 
 If TeX Live reports an older local release, follow the
 [yearly upgrade instructions][texlive-upgrade], preserving `~/texmf`, then
-rerun `./setup/install.sh --latex` to apply the package list and executable links.
+rerun `./setup/install.sh --latex` to apply the package list and
+executable links.
 
 [texlive-upgrade]: https://tug.org/texlive/upgrade.html
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Passwords are excluded from history, so clearing them must not delete an entry
+# Ignore all clear events: cliphist deletes the newest entry on clear,
+# but passwords copied through password_menu were never stored
 [[ ${CLIPBOARD_STATE:-} == clear ]] && exit 0
 
 # Suppress the password copy marked by password_menu without dropping later data
