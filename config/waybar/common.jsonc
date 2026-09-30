@@ -27,6 +27,7 @@
     },
     "custom/window-count": {
         "exec": "~/.config/hypr/scripts/window_count",
+        "restart-interval": 1,
         "on-click": "~/.config/hypr/scripts/window_switcher current",
         "return-type": "json",
     },
