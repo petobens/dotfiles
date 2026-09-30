@@ -309,10 +309,9 @@ end
 # System maintenance
 function sys_update_all --description 'Update system and language tooling'
     sudo true; or return
-    set -l section_color (set_color --bold blue)
-    set -l normal_color (set_color normal)
+    set -l section (set_color --bold blue)'\n-> %s...'(set_color normal)'\n'
 
-    printf '%s\n-> System packages...%s\n' $section_color $normal_color
+    printf $section 'System packages'
     if type -q yay
         command yay -Syu --devel --diffmenu=false --answerclean N \
             --removemake --cleanafter; or return
@@ -323,14 +322,14 @@ function sys_update_all --description 'Update system and language tooling'
         sudo pacman -Syu; or return
     end
     if type -q fwupdmgr
-        printf '%s\n-> Firmware (check only)...%s\n' $section_color $normal_color
+        printf $section 'Firmware (check only)'
         fwupdmgr get-updates --json |
             jq -r 'if .Devices == [] then "No updates available" else
                 .Devices[] | "\(.Name): \(.Version) -> \(.Releases[0].Version)" end'
         or true
     end
     if type -q python
-        printf '%s\n-> Python user packages...%s\n' $section_color $normal_color
+        printf $section 'Python user packages'
         set -l outdated (python -m pip list --user --outdated --format=json | jq -r '.[].name')
         if test (count $outdated) -gt 0
             printf '%s\n' $outdated
@@ -338,19 +337,19 @@ function sys_update_all --description 'Update system and language tooling'
         end
     end
     if type -q uv
-        printf '%s\n-> Python tools...%s\n' $section_color $normal_color
+        printf $section 'Python tools'
         uv tool upgrade --all
     end
     if type -q tlmgr
-        printf '%s\n-> LaTeX packages...%s\n' $section_color $normal_color
+        printf $section 'LaTeX packages'
         sudo -E env "PATH=$PATH" tlmgr update --all
     end
     if type -q npm
-        printf '%s\n-> Node packages...%s\n' $section_color $normal_color
+        printf $section 'Node packages'
         npm update --global --no-fund
     end
     if type -q rustup
-        printf '%s\n-> Rust toolchains...%s\n' $section_color $normal_color
+        printf $section 'Rust toolchains'
         rustup update --no-self-update
     end
 end
