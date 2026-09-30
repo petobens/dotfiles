@@ -242,9 +242,20 @@ function tms --description 'Create or select a tmux session'
 
     switch "$out[1]"
         case alt-k
+            set -l current_session
+            test -n "$TMUX"; and set current_session (tmux display-message -p '#{session_id}')
+            set -l kill_last
             for session in $out[2..]
                 set -l session_id (__tmux_session_id "$session")
-                test -n "$session_id"; and tmux kill-session -t "$session_id"
+                test -n "$session_id"; or continue
+                if test "$session_id" = "$current_session"
+                    set kill_last "$session_id"
+                else
+                    tmux kill-session -t "$session_id"
+                end
+            end
+            if test -n "$kill_last"
+                tmux kill-session -t "$kill_last"
             end
         case alt-r
             for session in $out[2..]
