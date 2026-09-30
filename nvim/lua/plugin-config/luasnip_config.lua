@@ -1,6 +1,9 @@
 local luasnip = require('luasnip')
 local types = require('luasnip.util.types')
 
+local snippets_dir = vim.fs.joinpath(vim.fn.stdpath('config'), 'snippets')
+local snippets_loaded = false
+
 _G.LuaSnipConfig = {}
 
 -- Helpers
@@ -44,6 +47,18 @@ function _G.LuaSnipConfig.filepart(part)
     end
 end
 
+local function load_snippets()
+    -- Loading every snippet file slows startup, so wait until snippets are needed
+    if snippets_loaded then
+        return
+    end
+    snippets_loaded = true
+    -- Note: we use load instead of lazy_load to allow loading of injected languages
+    require('luasnip.loaders.from_lua').load({
+        paths = { snippets_dir },
+    })
+end
+
 -- Setup
 luasnip.setup({
     ft_func = require('luasnip.extras.filetype_functions').from_pos_or_filetype,
@@ -62,11 +77,8 @@ luasnip.setup({
         },
     },
 })
--- Note: we use load instead of lazy_load to allow loading of injected languages
-local snippets_dir = vim.fs.joinpath(vim.fn.stdpath('config'), 'snippets')
-require('luasnip.loaders.from_lua').load({
-    paths = { snippets_dir },
-})
+vim.api.nvim_create_autocmd('InsertEnter', { once = true, callback = load_snippets })
+
 -- Fix for autosnippets expansion (map treesitter parser to ft)
 -- https://github.com/L3MON4D3/LuaSnip/issues/823
 luasnip.filetype_extend('bash', { 'sh' })
@@ -122,6 +134,7 @@ vim.keymap.set('n', '<Leader>es', function()
 end, { desc = '[E]dit [s]nippet file for current filetype' })
 
 vim.keymap.set('n', '<Leader>se', function()
+    load_snippets()
     require('telescope').extensions.luasnip.luasnip({
         prompt_title = 'Snippets',
         preview_title = 'Snippet Preview',
