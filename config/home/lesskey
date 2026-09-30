@@ -1,3 +1,7 @@
 # Commands
 l right-scroll
 h left-scroll
+
+#env
+# Print Nerd Font icons instead of showing them as <U+...> codes
+LESSUTFCHARDEF = E000-F8FF:p,F0000-10FFFF:p
