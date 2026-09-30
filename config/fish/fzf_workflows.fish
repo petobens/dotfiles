@@ -353,11 +353,11 @@ function m --description 'Search and open man pages with FZF'
     if test -n "$argv[1]"; and man "$argv[1]"
         return
     end
-    set -l manual (apropos . | string match -rv '^.+ \(0\)' | awk '{print $1 " " $2}' |
+    set -l manual (apropos . | string match -rv '^.+ \(0\)' | awk '{print $1 $2}' |
         fzf --border-label=Man --header='enter=open' --query="$argv[1]" \
         --preview='man -Pcat {1} 2>/dev/null | bat -l man --color always --style numbers')
     or return
-    man (string split ' ' "$manual")[1]
+    man "$manual"
 end
 
 complete -c m -w man
