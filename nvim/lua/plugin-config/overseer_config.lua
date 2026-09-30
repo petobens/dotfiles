@@ -44,7 +44,6 @@ local function overseer_last_task(attach)
     end
     overseer.run_action(task, 'open hsplit')
 
-    vim.cmd.stopinsert()
     vim.cmd.wincmd('J')
     vim.cmd.resize('15')
     vim.opt_local.winfixheight = true
@@ -63,6 +62,10 @@ local function overseer_last_task(attach)
         return
     end
 
+    -- Run after the toggleterm BufEnter timer that starts Terminal mode
+    vim.defer_fn(function()
+        vim.cmd.stopinsert()
+    end, 5)
     vim.opt_local.winfixbuf = true
     vim.opt_local.modifiable = true
     vim.cmd.normal({ args = { 'kdGggG' }, bang = true, mods = { silent = true } })
