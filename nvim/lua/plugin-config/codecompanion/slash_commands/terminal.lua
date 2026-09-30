@@ -36,12 +36,18 @@ local function add_tmux_pane_context_incremental(chat, target)
     local lines = vim.split(out, '\n', { plain = true })
     local captures = tmux_data[chat] or {}
     local prev = captures[target] or {}
+    if vim.deep_equal(prev, lines) then
+        vim.notify('No new tmux output for target: ' .. target)
+        return
+    end
+    -- Skip the previous last line: a shell prompt there changes once a command is typed
+    local base = #prev - 1
     local overlap = 0
     -- Scrollback is bounded, so find shared lines instead of comparing counts
-    for count = math.min(#prev, #lines), 1, -1 do
+    for count = math.min(base, #lines), 1, -1 do
         local matches = true
         for i = 1, count do
-            if prev[#prev - count + i] ~= lines[i] then
+            if prev[base - count + i] ~= lines[i] then
                 matches = false
                 break
             end
@@ -50,10 +56,6 @@ local function add_tmux_pane_context_incremental(chat, target)
             overlap = count
             break
         end
-    end
-    if overlap == #lines then
-        vim.notify('No new tmux output for target: ' .. target)
-        return
     end
     -- Include a little context; send the full snapshot if the pane was cleared
     local new_lines = {}
