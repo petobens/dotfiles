@@ -422,7 +422,9 @@
       _reset-book-numbering()
       counter(footnote).update(0)
     }
-    block(width: 100%, above: 2em, below: 3.2em, breakable: false)[
+    // Float the chapter heading so early top-placed figures stack below it.
+    // Floats drop the block's bottom spacing, so clearance restores it
+    place(top, float: true, clearance: 3.2em, block(width: 100%)[
       #set text(weight: "bold")
       #align(center)[
         #v(
@@ -450,7 +452,7 @@
         #v(1.2em)
         #line(length: 100%, stroke: 1.5pt)
       ]
-    ]
+    ])
   }
   show heading.where(level: 2): it => {
     if it.numbering != none { _reset-book-numbering() }
