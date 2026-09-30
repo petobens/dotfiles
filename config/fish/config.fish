@@ -324,7 +324,10 @@ function sys_update_all --description 'Update system and language tooling'
     end
     if type -q fwupdmgr
         printf '%s\n-> Firmware (check only)...%s\n' $section_color $normal_color
-        fwupdmgr get-updates; or true
+        fwupdmgr get-updates --json |
+            jq -r 'if .Devices == [] then "No updates available" else
+                .Devices[] | "\(.Name): \(.Version) -> \(.Releases[0].Version)" end'
+        or true
     end
     if type -q python
         printf '%s\n-> Python user packages...%s\n' $section_color $normal_color
