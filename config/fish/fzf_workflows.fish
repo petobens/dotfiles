@@ -140,7 +140,7 @@ function ig --description 'Search files with ripgrep and FZF'
     set -l paths $argv
     test (count $paths) -gt 0; or set paths .
     set -l escaped_paths (string join ' ' (string escape -- $paths))
-    set -l reload "rg --smart-case --vimgrep --no-heading --color=always --colors=path:none --colors=line:none --colors=column:none --trim -- {q} $escaped_paths | sed 's/^/󰈔 /'"
+    set -l reload "test -n {q} && rg --smart-case --vimgrep --no-heading --color=always --colors=path:none --colors=line:none --colors=column:none --trim -- {q} $escaped_paths | sed 's/^/󰈔 /'"
     set -l out (fzf --ansi --disabled --multi --delimiter=: \
         --border-label='Live Grep' --header='enter=open, A-r=refine search' \
         --bind="start:reload:$reload || true" \
