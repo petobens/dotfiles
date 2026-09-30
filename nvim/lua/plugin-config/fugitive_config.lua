@@ -21,7 +21,7 @@ local function open_file_at_commit_split()
 end
 
 local function open_git_status()
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+    vim.cmd.lcd(u.buffer_dir())
     vim.cmd.Git({ mods = { split = 'botright' } })
     vim.cmd.wincmd('J')
     vim.cmd.resize('15')
@@ -313,17 +313,17 @@ vim.keymap.set('n', '<Leader>gr', function()
 end, { desc = '[G]it interactive [r]ebase' })
 
 vim.keymap.set('n', '<Leader>gp', function()
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+    vim.cmd.lcd(u.buffer_dir())
     vim.cmd.Git('push')
 end, { desc = '[G]it [p]ush' })
 
 vim.keymap.set('n', '<Leader>gF', function()
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+    vim.cmd.lcd(u.buffer_dir())
     vim.cmd.Git('push --force-with-lease')
 end, { desc = '[G]it [F]orce push with lease' })
 
 vim.keymap.set('n', '<Leader>gP', function()
-    vim.cmd.lcd(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+    vim.cmd.lcd(u.buffer_dir())
     vim.cmd.Git('pull')
 end, { desc = '[G]it [P]ull' })
 
