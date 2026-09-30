@@ -154,11 +154,13 @@ fi
 
 section 'Configuring Docker'
 sudo usermod -aG docker "$USER"
-mkdir -p "$HOME/.cache/docker"
-if [[ $(findmnt -no FSTYPE --target "$HOME/.cache/docker") == btrfs ]]; then
-    # No_COW cannot be combined with inherited Btrfs compression
-    chattr -c "$HOME/.cache/docker"
-    chattr +C "$HOME/.cache/docker"
+if [[ ! -e $HOME/.cache/docker ]]; then
+    mkdir -p "$HOME/.cache/docker"
+    if [[ $(findmnt -no FSTYPE --target "$HOME/.cache/docker") == btrfs ]]; then
+        # No_COW cannot be combined with inherited Btrfs compression
+        chattr -c "$HOME/.cache/docker"
+        chattr +C "$HOME/.cache/docker"
+    fi
 fi
 sudo install -Dm644 /dev/stdin /etc/docker/daemon.json << EOF
 {
