@@ -505,41 +505,71 @@ local function compile_typst(notify_success)
     )
 end
 
+-- Word counting
+local block_tag_names = 'address article aside blockquote br caption dd div dl dt '
+    .. 'figcaption figure footer h1 h2 h3 h4 h5 h6 header hr li main nav ol p pre '
+    .. 'section table td th tr ul'
+local block_tags = {}
+for tag in block_tag_names:gmatch('%S+') do
+    block_tags[tag] = true
+end
+
 local function count_words()
-    local bufnr = api.nvim_get_current_buf()
-    local main = main_source(bufnr)
-    local client = vim.lsp.get_clients({ bufnr = bufnr, name = 'tinymist' })[1]
-    if not main or not client then
-        vim.notify(
-            'Save the Typst file and start Tinymist before counting words',
-            vim.log.levels.WARN
-        )
+    local main = main_source(0)
+    if not main then
+        vim.notify('Save the Typst file before counting words', vim.log.levels.WARN)
         return
     end
 
+    local root = vim.fs.dirname(main)
+    vim.cmd.update({ mods = { silent = true, noautocmd = true } })
     local counting = true
     vim.defer_fn(function()
         if counting then
             api.nvim_echo({ { 'Counting words...' } }, false, {})
         end
     end, 500)
-    client:exec_cmd({
-        title = 'Count words',
-        command = 'tinymist.exportText',
-        arguments = { main, {}, { write = false } },
-    }, { bufnr = bufnr }, function(err, result)
-        counting = false
-        api.nvim_echo({}, false, {})
-        if err then
-            vim.notify(err.message, vim.log.levels.ERROR)
-            return
-        end
-        local text = vim.base64.decode(result.data)
-        local _, words = text:gsub('%S+', '')
-        vim.notify(('Words: %d'):format(words))
-    end)
+    -- HTML keeps headings, paragraphs and cells apart; plain-text export glues them
+    vim.system(
+        {
+            'typst',
+            'compile',
+            '--features',
+            'html',
+            '--format',
+            'html',
+            '--input',
+            'sync=1',
+            '--input',
+            'markdown=1',
+            '--root',
+            root,
+            main,
+            '-',
+        },
+        { cwd = root, text = true },
+        vim.schedule_wrap(function(result)
+            counting = false
+            api.nvim_echo({}, false, {})
+            if result.code ~= 0 then
+                vim.notify(
+                    result.stderr or 'Typst HTML export failed',
+                    vim.log.levels.ERROR
+                )
+                return
+            end
+            local body = result.stdout:match('<body>(.*)</body>') or ''
+            -- Inline tags must not separate words from their punctuation
+            local text = body:gsub('</?([%w-]+)[^>]*>', function(tag)
+                return block_tags[tag] and ' ' or ''
+            end)
+            local _, words = text:gsub('%S+', '')
+            vim.notify(('Words: %d'):format(words))
+        end)
+    )
 end
 
+-- Conversion
 local function convert_pandoc()
     local main = main_source(0)
     if not main then
