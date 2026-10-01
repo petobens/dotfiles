@@ -11,7 +11,7 @@ case $mode in
     primary | multi | mirror) ;;
     info)
         if monitors=$(hyprctl -j monitors all); then
-            jq '.[] | {name, width, height, refreshRate: "\(.refreshRate * 100 | round / 100) Hz", scale}' <<< "$monitors"
+            jq '.[] | {name, enabled: (.disabled | not), width, height, refreshRate: "\(.refreshRate * 100 | round / 100) Hz", scale}' <<< "$monitors"
         else
             status=$?
             printf '%s\n' "$monitors" >&2
@@ -26,7 +26,7 @@ usage: multimon [primary|multi|mirror|info]
   primary  Use only the laptop display
   multi    Use all displays
   mirror   Mirror the laptop display
-  info     Show connected displays' resolutions, refresh rates (Hz), and scales
+  info     Show connected displays' enabled status, resolutions, refresh rates (Hz), and scales
 EOF
         exit 0
         ;;
