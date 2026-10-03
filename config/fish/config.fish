@@ -325,7 +325,8 @@ function sys_update_all --description 'Update system and language tooling'
         printf $section 'Firmware (check only)'
         fwupdmgr get-updates --json |
             jq -r 'if .Devices == [] then "No updates available" else
-                .Devices[] | "\(.Name): \(.Version) -> \(.Releases[0].Version)" end'
+                (.Devices[] | "\(.Name): \(.Version) -> \(.Releases[0].Version)"),
+                "Run `fwupdmgr update` to install available firmware updates." end'
         or true
     end
     if type -q python
