@@ -785,11 +785,9 @@ Python, Node.js, Rust, and TeX Live tooling. On physical hardware, run
 and run `fwupdmgr update` explicitly when ready.
 
 If TeX Live reports an older local release, follow the
-[yearly upgrade instructions][texlive-upgrade], preserving `~/texmf`, then
-rerun `./setup/install.sh --latex` to apply the package list and
-executable links.
-
-[texlive-upgrade]: https://tug.org/texlive/upgrade.html
+[yearly upgrade instructions](https://tug.org/texlive/upgrade.html),
+preserving `~/texmf`, then rerun `./setup/install.sh --latex` to apply the
+package list and executable links.
 
 Reboot after the dotfiles installer finishes. This activates zram, `scx_lavd`,
 and Docker group membership:
@@ -920,10 +918,19 @@ Missing optional hardware is not an installation failure.
 #### Temporary NvPCR workaround on the ThinkPad
 
 On 2026-09-26, the ThinkPad X1 Carbon received a workaround for systemd 262-1
-NvPCR failures ([upstream issue][nvpcr-issue]): four `/etc/nvpcr/*.nvpcr`
+NvPCR failures
+([upstream issue](https://github.com/systemd/systemd/issues/43848)):
+four `/etc/nvpcr/*.nvpcr`
 overrides point to `/dev/null`, and the product/login measurement services
 are masked. Normal TPM setup and boot measurements remain enabled; reboot
 verification passed. The installer does not apply this workaround.
+
+On 2026-10-03, a boot-image rebuild with mkinitcpio 42.2 brought back the
+early TPM setup failure: its systemd hook includes the vendor NvPCR files
+without the local masks. `/etc/initcpio/install/nvpcr-overrides` now copies
+the existing `/dev/null` masks into the initramfs, enabled by
+`/etc/mkinitcpio.conf.d/90-nvpcr-overrides.conf`. The boot images were rebuilt;
+confirmation that the warning is gone requires a reboot.
 
 Wait for an upstream fix, then remove the overrides below. Package upgrades
 do not remove them automatically:
@@ -936,11 +943,12 @@ for name in cryptsetup hardware login verity; do
     fi
 done
 sudo systemctl unmask systemd-pcrproduct.service systemd-pcrlogin@.service
+sudo rm /etc/mkinitcpio.conf.d/90-nvpcr-overrides.conf \
+    /etc/initcpio/install/nvpcr-overrides
+sudo mkinitcpio -P
 ```
 
 Reboot and check `systemctl --failed` and `journalctl -b -p err`.
-
-[nvpcr-issue]: https://github.com/systemd/systemd/issues/43848
 
 #### Manual connection and media tests
 
