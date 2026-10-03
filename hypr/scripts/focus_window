@@ -13,14 +13,24 @@ if [[ $address == last ]]; then
     address=$(hyprctl activewindow -j | jq -r '.address // empty')
 fi
 
+clients=$(hyprctl clients -j)
 if [[ $address == tag:* ]]; then
     tag=${address#tag:}
-    clients=$(hyprctl clients -j)
     address=$(jq -r --arg tag "$tag" '
         first(.[] | select(any(.tags[]?; . == $tag or . == ($tag + "*")))).address // empty
     ' <<< "$clients")
 fi
 [[ -n $address ]] || exit 0
+
+# Floating windows can cover fullscreen peers without clearing their fullscreen state
+while IFS= read -r fullscreen_address; do
+    hyprctl dispatch "hl.dsp.window.fullscreen_state({ internal = 0, client = 0, action = 'set', window = 'address:$fullscreen_address' })"
+done < <(jq -r --arg address "$address" '
+    first(.[] | select(.address == $address)).workspace.id as $workspace
+    | .[]
+    | select(.workspace.id == $workspace and .address != $address and .fullscreen == 2)
+    | .address
+' <<< "$clients")
 
 hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
 # Raising keeps focused floating windows above overlapping peers
