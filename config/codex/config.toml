@@ -44,6 +44,10 @@ bearer_token_env_var = "GITHUB_TOKEN"
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
 
+[mcp_servers.postgres]
+command = "/home/pedro/bin/mutt_pg_mcp"
+startup_timeout_sec = 60  # A pass unlock prompt can take a while
+
 # Trusted projects (skip the per-directory trust prompt)
 [projects."/home/pedro/git-repos/private/dotfiles"]
 trust_level = "trusted"

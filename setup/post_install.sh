@@ -324,14 +324,19 @@ gopass config generate.autoclip false
 gopass config core.notifications false
 gopass config mounts.path "$HOME/.password-store"
 
-section 'Configuring Claude GitHub MCP'
-if command -v claude > /dev/null &&
-    ! jq -e '.mcpServers.github != null' "$HOME/.claude.json" > /dev/null 2>&1; then
-    # Store the variable reference; launchers supply the token at runtime
-    # shellcheck disable=SC2016
-    claude mcp add --scope user --transport http github \
-        https://api.githubcopilot.com/mcp/ \
-        --header 'Authorization: Bearer ${GITHUB_TOKEN}'
+section 'Configuring Claude MCP servers'
+if command -v claude > /dev/null; then
+    if ! jq -e '.mcpServers.github != null' "$HOME/.claude.json" > /dev/null 2>&1; then
+        # Store the variable reference; launchers supply the token at runtime
+        # shellcheck disable=SC2016
+        claude mcp add --scope user --transport http github \
+            https://api.githubcopilot.com/mcp/ \
+            --header 'Authorization: Bearer ${GITHUB_TOKEN}'
+    fi
+    if ! jq -e '.mcpServers.postgres != null' "$HOME/.claude.json" > /dev/null 2>&1; then
+        # The launcher path resolves once symlinks.sh links ~/bin
+        claude mcp add --scope user postgres -- "$HOME/bin/mutt_pg_mcp"
+    fi
 fi
 
 section 'Building bat syntax theme cache'

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Start a read-only Postgres MCP server for the Mutt database. Credentials are
+# read from pass at launch, so no agent configuration stores them
+
+PGPASSWORD=$(pass show mutt-pg/pass)
+host=$(pass show mutt-pg/host)
+user=$(pass show mutt-pg/user)
+db=$(pass show mutt-pg/db)
+export PGPASSWORD
+# Postgres falls back to PGPASSWORD when the URI has no password, so special
+# characters in the password need no URL escaping
+export DATABASE_URI="postgresql://$user@$host/$db"
+exec postgres-mcp --access-mode=restricted

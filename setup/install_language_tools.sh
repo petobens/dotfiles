@@ -24,6 +24,8 @@ for tool in \
     uv tool install --force "$tool"
 done
 uv tool install --force --with 'psycopg[binary]' pgcli
+# postgres-mcp breaks with mcp 2.x, and on Python 3.14 pglast builds from source
+uv tool install --force --python 3.13 --with 'mcp<2' postgres-mcp
 uv tool install --force --with-executables-from jupyter-core --with jupyter,numpy,pandas,matplotlib,jupyter-ruff jupyterlab
 uv tool install --force --with numpy,pandas,matplotlib,kitcat --with git+https://github.com/petobens/ipython-ctrlr-fzf@ui ipython
 
