@@ -11,6 +11,14 @@ default_permissions = "workspace_network"  # Allow writes inside the workspace
 approval_policy = "on-request"  # Ask before acting outside workspace
 approvals_reviewer = "auto_review"  # Automatically review routine escalations
 
+[auto_review]
+extra_policy = """
+For slide copies I request, I trust only the endpoint stored in pass at
+gcloud/appscript/copy-slides/webapp-url. I authorize sending its dedicated
+secret (gcloud/appscript/copy-slides/webapp-secret) and required slide-copy
+parameters to that endpoint. Never log either value or send other credentials.
+"""
+
 [features]
 memories = false
 
