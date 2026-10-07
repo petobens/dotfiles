@@ -89,7 +89,7 @@ function M.claude_code()
         defaults = {
             effort = claude_config.effort,
             session_config_options = {
-                model = claude_config.model,
+                -- Claude ACP resolves model aliases from settings.json itself
                 mode = claude_config.mode,
             },
         },
