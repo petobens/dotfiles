@@ -47,7 +47,18 @@ function M.setup()
 
     vim.keymap.set('n', '<Leader>sd', function()
         vim.cmd.lcd(u.buffer_dir())
-        vim.api.nvim_input(':Telescope find_files cwd=')
+        vim.ui.input({ prompt = 'Find files in dir: ', completion = 'dir' }, function(dir)
+            if not dir or dir == '' then
+                return
+            end
+            dir = vim.fs.normalize(dir)
+            local stat = vim.uv.fs_stat(dir)
+            if not stat or stat.type ~= 'directory' then
+                vim.notify('Not a directory: ' .. dir, vim.log.levels.WARN)
+                return
+            end
+            builtin.find_files({ cwd = dir })
+        end)
     end, { desc = '[S]can [d]irectory for files' })
 
     vim.keymap.set(
