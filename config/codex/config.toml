@@ -45,6 +45,9 @@ status_line_use_colors = true
 screen_reader_detection_done = true
 
 # MCP
+[mcp_servers.clickup]
+url = "https://mcp.clickup.com/mcp"
+
 [mcp_servers.github]
 url = "https://api.githubcopilot.com/mcp/"
 bearer_token_env_var = "GITHUB_TOKEN"

@@ -326,6 +326,10 @@ gopass config mounts.path "$HOME/.password-store"
 
 section 'Configuring Claude MCP servers'
 if command -v claude > /dev/null; then
+    if ! jq -e '.mcpServers.clickup != null' "$HOME/.claude.json" > /dev/null 2>&1; then
+        # Authenticate on each new computer through /mcp in Claude Code
+        claude mcp add --scope user --transport http clickup https://mcp.clickup.com/mcp
+    fi
     if ! jq -e '.mcpServers.github != null' "$HOME/.claude.json" > /dev/null 2>&1; then
         # Store the variable reference; launchers supply the token at runtime
         # shellcheck disable=SC2016
