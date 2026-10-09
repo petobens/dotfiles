@@ -331,6 +331,9 @@ end, { desc = '[D]iff [e]nd and recenter' })
 vim.keymap.set({ 'n', 'x' }, '<Leader>ma', 'Q', {
     desc = '[M]ulticursor: [a]dd/remove cursor',
 })
+vim.keymap.set('n', '<Leader>mw', 'zq*', {
+    desc = '[M]ulticursor: add at each [w]ord match',
+})
 vim.keymap.set('n', '<Leader>mt', 'q=', {
     desc = '[M]ulticursor: [t]oggle follow mode',
 })
