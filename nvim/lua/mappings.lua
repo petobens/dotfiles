@@ -331,6 +331,9 @@ end, { desc = '[D]iff [e]nd and recenter' })
 vim.keymap.set({ 'n', 'x' }, '<Leader>ma', 'Q', {
     desc = '[M]ulticursor: [a]dd/remove cursor',
 })
+vim.keymap.set('n', '<Leader>mt', 'q=', {
+    desc = '[M]ulticursor: [t]oggle follow mode',
+})
 vim.keymap.set('n', '<Leader>mx', function()
     local ns = vim.api.nvim_create_namespace('nvim.multicursor')
     vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
