@@ -60,9 +60,9 @@
 // Chips, slide titles, and footers
 #let chip(body, accent: mutt-blue) = box(
   fill: accent.lighten(92%),
-  inset: (x: 10pt, y: 5pt),
+  inset: (x: 8pt, y: 4pt),
   radius: 20pt,
-)[#text(size: 10pt, weight: "bold", fill: accent, body)]
+)[#text(size: 8pt, weight: "bold", fill: accent, body)]
 
 // Metadata keeps the chip in the header without taking body space
 #let slide-chip(body) = [#metadata(body) <mutt-slide-chip>]
@@ -87,10 +87,12 @@
       ),
       ..if has-chip { (chip(chips.first().value),) } else { () },
     )
+    #metadata(none) <mutt-title-bottom>
   ]
 }
 
 #let _deck-footer(font-size, slide-numbers: false) = context {
+  [#metadata(none) <mutt-footer-top>]
   grid(
     columns: if slide-numbers { (1fr, auto, auto) } else { (1fr, auto) },
     column-gutter: 12pt,
@@ -114,10 +116,28 @@
   )
 }
 
-#let _vertical-center(..bodies) = align(
-  horizon,
-  bodies.pos().sum(default: none),
-)
+#let _vertical-center(..bodies) = context {
+  let body = bodies.pos().sum(default: none)
+  let on-page(it) = it.location().page() == here().page()
+  let titles = query(<mutt-title-bottom>).filter(on-page)
+  let footers = query(<mutt-footer-top>).filter(on-page)
+  if titles.len() == 0 or footers.len() == 0 {
+    align(horizon, body)
+  } else {
+    layout(size => {
+      let top = titles.first().location().position().y
+      let bottom = footers.first().location().position().y
+      // Center between the visible title and footer, not the fixed page margins
+      let offset = (top + bottom) / 2 - page.margin.top - size.height / 2
+      block(
+        width: 100%,
+        height: size.height,
+        inset: (top: offset, bottom: -offset),
+        align(horizon, body),
+      )
+    })
+  }
+}
 
 // Agenda and section dividers
 #let _agenda-entry(font-size: _default-font-size, cover: false, ..args, it) = {
