@@ -211,6 +211,7 @@ bind(super_ctrl .. ' + Return', monitor_modes.multi, 'Use all displays')
 bind(super_shift .. ' + Return', monitor_modes.mirror, 'Mirror laptop display')
 
 -- Launchers and menus
+exec(super .. ' + TAB', scripts .. 'expose', 'Window overview')
 exec(alt .. ' + TAB', scripts .. 'window_switcher', 'Window switcher')
 exec(super .. ' + W', scripts .. 'window_switcher current', 'Workspace window switcher')
 exec(super .. ' + S', 'rofi -show drun', 'Application launcher')

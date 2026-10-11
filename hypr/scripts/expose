@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config="$HOME/.config/quickshell/expose"
+if qs ipc -p "$config" call expose toggle > /dev/null 2>&1; then
+    exit 0
+fi
+exec qs -p "$config" --no-duplicate --daemonize
