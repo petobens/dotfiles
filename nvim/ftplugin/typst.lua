@@ -671,7 +671,7 @@ local function view_pdf()
         vim.notify('PDF file not found: ' .. tostring(pdf), vim.log.levels.ERROR)
         return
     end
-    vim.system({ 'zathura', '--fork', pdf })
+    vim.system({ vim.env.HOME .. '/.config/hypr/scripts/view_pdf', pdf })
 end
 
 -- Synchronization
