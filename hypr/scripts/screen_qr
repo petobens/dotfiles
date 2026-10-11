@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+geometry=$(slurp) || exit 0
+directory=$(mktemp -d)
+trap 'rm -rf "$directory"' EXIT
+
+if ! grim -g "$geometry" "$directory/screen.png"; then
+    notify-send -u critical 'QR capture failed' 'Could not capture the selected region.'
+    exit 1
+fi
+
+status=0
+zbarimg --quiet --raw --nodbus -Sdisable -Sqrcode.enable \
+    "$directory/screen.png" > "$directory/text" 2> "$directory/error" || status=$?
+case $status in
+    0) ;;
+    4)
+        notify-send 'No QR code found' 'Try selecting the whole code, including its border.'
+        exit 0
+        ;;
+    *)
+        notify-send -u critical 'QR decoding failed' "$(cat "$directory/error")"
+        exit 1
+        ;;
+esac
+
+wl-copy --type text/plain --trim-newline < "$directory/text"
+notify-send 'QR code copied' 'Decoded content is on the clipboard.'

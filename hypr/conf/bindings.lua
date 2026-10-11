@@ -271,6 +271,11 @@ exec(
     scripts .. 'screen_text',
     'Copy text from selected screen region'
 )
+exec(
+    super_alt .. ' + O',
+    scripts .. 'screen_qr',
+    'Copy QR code from selected screen region'
+)
 exec(super_shift .. ' + G', scripts .. 'screen_record gif', 'Toggle GIF recording')
 exec(super_alt .. ' + G', scripts .. 'screen_record video', 'Toggle video recording')
 
