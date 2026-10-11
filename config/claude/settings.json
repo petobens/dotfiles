@@ -5,6 +5,9 @@
   "disableClaudeAiConnectors": true,
   "disableWorkflows": true,
   "effortLevel": "medium",
+  "enabledPlugins": {
+    "slack@claude-plugins-official": true
+  },
   "includeGitInstructions": false,
   "model": "opus[1m]",
   "permissions": {

@@ -324,8 +324,19 @@ gopass config generate.autoclip false
 gopass config core.notifications false
 gopass config mounts.path "$HOME/.password-store"
 
-section 'Configuring Claude MCP servers'
+section 'Installing Codex Slack plugin'
+if command -v codex > /dev/null; then
+    if codex login status > /dev/null 2>&1; then
+        codex plugin add slack@openai-curated-remote
+    else
+        printf 'After codex login, run: codex plugin add slack@openai-curated-remote\n'
+    fi
+fi
+
+section 'Configuring Claude plugins and MCP servers'
 if command -v claude > /dev/null; then
+    claude plugin install --scope user slack \
+        --marketplace anthropics/claude-plugins-official
     if ! jq -e '.mcpServers.clickup != null' "$HOME/.claude.json" > /dev/null 2>&1; then
         # Authenticate on each new computer through /mcp in Claude Code
         claude mcp add --scope user --transport http clickup https://mcp.clickup.com/mcp

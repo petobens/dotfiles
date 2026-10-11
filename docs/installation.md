@@ -839,6 +839,16 @@ separate session manager.
 
 ## Verification and testing
 
+### Connect Slack
+
+`post_install.sh` installs the Slack plugins. Complete account authorization
+through
+[Slack in ChatGPT](https://chatgpt.com/apps/slack/asdk_app_69a1d78e929881919bba0dbda1f6436d)
+for Codex and `/mcp` in Claude Code, then start new sessions.
+If Codex was not signed in during setup, run the
+plugin-install command printed by the script after `codex login`.
+Verify access by asking each agent to find a Slack message and return its link.
+
 ### Verify services and hardware
 
 After rebooting, open a terminal inside Hyprland and run:
