@@ -13,7 +13,7 @@ python -m pip install --user --break-system-packages --upgrade pdbpp
 section 'Installing Python language tools'
 for tool in \
     nbdime \
-    pre-commit \
+    prek \
     ruff \
     'sqlfluff[rs]' \
     ty \

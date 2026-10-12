@@ -311,7 +311,7 @@ local function clean_sphinx_build()
 
     vim.notify('Cleaning sphinx html build...')
     vim.system(
-        { 'uv', 'run', 'make', 'clean' },
+        { 'uv', 'run', '--no-sync', 'sphinx-build', '-M', 'clean', 'source', 'build' },
         { cwd = vim.fs.joinpath(_project_root(), 'docs'), text = true },
         on_exit
     )
@@ -453,10 +453,10 @@ vim.keymap.set(
     { buf = 0, silent = false, desc = '[L]oad [t]mux output to quickfix' }
 )
 
----- Pre-commit
+---- prek
 vim.keymap.set('n', '<Leader>rh', function()
-    run_overseer('run_precommit')
-end, { buf = 0, desc = '[R]un pre-commit [h]ooks with Overseer' })
+    run_overseer('run_prek')
+end, { buf = 0, desc = '[R]un prek [h]ooks with Overseer' })
 
 ---- Virtual Envs
 vim.keymap.set('n', '<Leader>va', function()

@@ -1,14 +1,17 @@
 return {
-    name = 'run_precommit',
+    name = 'run_prek',
     builder = function()
-        local cmd = { 'pre-commit', 'run' }
+        local cmd = { 'prek', 'run' }
         -- TODO: We probably want this for other filetypes too
-        local precommit_root = vim.fs.root(0, '.pre-commit-config.yaml') or vim.uv.cwd()
+        local hook_root = vim.fs.root(
+            0,
+            { { 'prek.toml', '.pre-commit-config.yaml', '.pre-commit-config.yml' } }
+        ) or vim.uv.cwd()
         return {
             cmd = cmd,
-            -- Pre-commit reports paths relative to the repository root
-            cwd = precommit_root,
-            metadata = { run_cmd = 'pre-commit run' },
+            -- prek reports paths relative to the repository root
+            cwd = hook_root,
+            metadata = { run_cmd = 'prek run' },
             components = {
                 { 'on_complete_notify', statuses = {} }, -- don't notify on completion
                 { 'on_output_quickfix', tail = false, open = false },

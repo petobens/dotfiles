@@ -122,14 +122,10 @@ local function clean_sphinx_build()
         return
     end
     local docs_dir = vim.fs.joinpath(project_root, 'docs')
-    local package_manager = 'uv'
-    if _G.PyVenv and _G.PyVenv.active_venv and _G.PyVenv.active_venv.package_manager then
-        package_manager = _G.PyVenv.active_venv.package_manager
-    end
 
     vim.notify('Cleaning sphinx html build...', vim.log.levels.INFO)
     vim.system(
-        { package_manager, 'run', 'make', 'clean' },
+        { 'uv', 'run', '--no-sync', 'sphinx-build', '-M', 'clean', 'source', 'build' },
         { cwd = docs_dir, text = true },
         vim.schedule_wrap(function(obj)
             if obj.code == 0 then
