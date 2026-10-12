@@ -311,11 +311,11 @@ function M.gitcommits_buffer(opts)
 end
 
 function M.thesaurus_synonyms()
-    local provider = require('telescope._extensions.thesaurus.config').get().provider
+    local config = require('thesaurus.config').get()
     if
-        not vim.g.dictionary_api_key
+        not config.api_key
         and not vim.env.DICTIONARY_API_KEY
-        and provider == 'dictionaryapi'
+        and config.provider == 'dictionaryapi'
     then
         local result = vim.system(
             { 'pass', 'show', [[dictionary-api/yahoomail/api-key]] },
@@ -323,7 +323,10 @@ function M.thesaurus_synonyms()
         ):wait()
         local key = vim.trim(result.stdout)
         if result.code == 0 and key ~= '' then
-            vim.g.dictionary_api_key = key
+            vim.g.thesaurus =
+                vim.tbl_extend('force', vim.g.thesaurus or {}, { api_key = key })
+            -- Update the cached config so this lookup sees the key too
+            config.api_key = key
         end
     end
     telescope.extensions.thesaurus.lookup({
