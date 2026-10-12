@@ -179,6 +179,7 @@ git-delta
 github-cli
 googleworkspace-cli
 imagemagick
+just
 lua
 luacheck
 luarocks
