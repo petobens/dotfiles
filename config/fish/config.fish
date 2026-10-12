@@ -343,7 +343,7 @@ function sys_update_all --description 'Update system and language tooling'
     end
     if type -q tlmgr
         printf $section 'LaTeX packages'
-        sudo -E env "PATH=$PATH" tlmgr update --all
+        sudo -E env "PATH=$PATH" tlmgr update --self --all
     end
     if type -q npm
         printf $section 'Node packages'
