@@ -17,10 +17,10 @@ for tool in \
     pre-commit \
     ruff \
     'sqlfluff[rs]' \
+    ty \
     git+https://github.com/will8211/unimatrix \
     uv-upx \
-    yamllint \
-    zuban; do
+    yamllint; do
     uv tool install --force "$tool"
 done
 uv tool install --force --with 'psycopg[binary]' pgcli

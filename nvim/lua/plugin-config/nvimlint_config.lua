@@ -160,44 +160,6 @@ linters.ruff.parser = function(output, bufnr)
     end
     return diagnostics
 end
--- Zuban
-linters.zmypy = {
-    cmd = 'zmypy',
-    stdin = false,
-    stream = 'both',
-    ignore_exitcode = true,
-    args = {
-        '--no-pretty',
-        '--show-error-end',
-    },
-    parser = function(output, bufnr)
-        local text = type(output) == 'table' and table.concat(output, '\n')
-            or (output or '')
-        text = text:gsub('\r\n', '\n')
-        local sev = vim.diagnostic.severity
-        local map = { error = sev.ERROR, warning = sev.WARN, note = sev.HINT }
-        local diags = {}
-        for line in vim.gsplit(text, '\n', { trimempty = true }) do
-            local file, l1, c1, l2, c2, s, msg, code = line:match(
-                '^(.+):(%d+):(%d+):(%d+):(%d+):%s*(%a+):%s*(.-)%s*%[([^%]]+)%]%s*$'
-            )
-            if file then
-                diags[#diags + 1] = {
-                    bufnr = bufnr,
-                    lnum = tonumber(l1) - 1,
-                    col = math.max(tonumber(c1) - 1, 0),
-                    end_lnum = tonumber(l2) - 1,
-                    end_col = math.max(tonumber(c2) - 1, 0),
-                    severity = map[s] or sev.ERROR,
-                    message = msg,
-                    code = code,
-                    source = 'zmypy',
-                }
-            end
-        end
-        return diags
-    end,
-}
 ---- Sqlfluff
 linters.sqlfluff.args = { 'lint', '--format=json', '-' }
 linters.sqlfluff.stdin = true
@@ -225,7 +187,7 @@ lint.linters_by_ft = {
     json = { 'jq' },
     lua = { 'luacheck' },
     markdown = { 'rumdl' },
-    python = { 'zmypy', 'ruff' },
+    python = { 'ruff' },
     sh = { 'shellcheck' },
     sql = { 'sqlfluff' },
     tex = { 'chktex' },

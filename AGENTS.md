@@ -38,10 +38,9 @@ desktop.
 - For Markdown files, run `rumdl check <file>` and keep lines at 80 characters
   or fewer. Wrap at natural boundaries while preserving valid Markdown syntax.
 - For Python scripts, use `ruff format <file>` and `ruff check --fix <file>`,
-  and type-check with `zmypy`, falling back to `mypy` if `zmypy` is
-  not installed. Add short module or function docstrings when they clarify
-  purpose or usage, but do not add boilerplate docstrings for obvious one-off
-  code.
+  and type-check with `ty check`. Add short module or function docstrings when
+  they clarify purpose or usage, but do not add boilerplate docstrings for
+  obvious one-off code.
 - For Bash scripts, run `shfmt -w -i 4 -ci -sr <file>` and
   `shellcheck <file>`.
 - For Fish scripts, run `fish_indent -w <file>` and

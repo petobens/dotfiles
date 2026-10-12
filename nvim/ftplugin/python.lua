@@ -240,22 +240,7 @@ local function list_breakpoints(local_buffer)
 end
 
 -- Virtual Envs
-local function set_lsp_path(path, bufnr)
-    if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
-        return
-    end
-    -- From https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/basedpyright.lua#L28
-    local client = vim.lsp.get_clients({ name = 'basedpyright', bufnr = bufnr })[1]
-    if client then
-        client.settings.python = vim.tbl_deep_extend(
-            'force',
-            client.settings.python or {},
-            { pythonPath = path }
-        )
-        client:notify('workspace/didChangeConfiguration', { settings = nil })
-    end
-end
-
+-- These control commands run from Neovim; ty selects its environment per project
 function _G.PyVenv.activate()
     local bufnr = vim.api.nvim_get_current_buf()
     local project_root = _project_root()
@@ -290,11 +275,6 @@ function _G.PyVenv.activate()
     vim.b.pyvenv = venv_path
     vim.env.PATH = string.format('%s/bin:%s', venv_path, vim.env.PATH)
     vim.env.VIRTUAL_ENV = venv_path
-    vim.defer_fn(function()
-        if _G.PyVenv.active_venv.path == venv_path then
-            set_lsp_path(venv_path .. '/bin/python', bufnr)
-        end
-    end, 100)
 end
 
 function _G.PyVenv.deactivate()
@@ -309,7 +289,6 @@ function _G.PyVenv.deactivate()
     end
     vim.env.VIRTUAL_ENV = nil
     vim.b.pyvenv = nil
-    set_lsp_path(vim.g.python3_host_prog, _G.PyVenv.active_venv.bufnr)
     _G.PyVenv.active_venv = {}
 end
 

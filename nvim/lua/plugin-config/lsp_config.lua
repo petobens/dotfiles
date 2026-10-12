@@ -71,22 +71,14 @@ vim.lsp.config('lua_ls', {
 ---- Markdown
 vim.lsp.config('marksman', {})
 ---- Python
-vim.lsp.config('basedpyright', {
-    -- Don't publish basedpyright diagnostics (we use ruff and mypy/zuban instead)
-    handlers = {
-        ['textDocument/diagnostic'] = function() end,
-        ['textDocument/publishDiagnostics'] = function() end,
-    },
-    settings = {
-        basedpyright = {
-            disableOrganizeImports = true,
-            analysis = {
-                autoSearchPaths = true,
-                diagnosticMode = 'openFilesOnly',
-                typeCheckingMode = 'off',
-            },
-        },
-    },
+vim.lsp.config('ty', {
+    settings = { ty = {} },
+    before_init = function(_, config)
+        -- Don't inherit another project's active environment from Neovim
+        local venv = vim.fs.joinpath(config.root_dir or vim.uv.cwd(), '.venv')
+        local python = vim.uv.fs_stat(venv) and venv or vim.g.python3_host_prog
+        config.settings.ty.configuration = { environment = { python = python } }
+    end,
 })
 ---- QML
 vim.lsp.config('qmlls', { cmd = { 'qmlls6' } })
@@ -134,7 +126,7 @@ vim.lsp.enable({
     'bashls',
     'lua_ls',
     'marksman',
-    'basedpyright',
+    'ty',
     'qmlls',
     'texlab',
     'tinymist',
