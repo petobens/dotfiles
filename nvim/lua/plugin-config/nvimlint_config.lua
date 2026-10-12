@@ -77,35 +77,10 @@ vim.api.nvim_create_autocmd({ 'TextChanged', 'InsertLeave' }, {
 -- Linter config/args
 local linters = lint.linters
 ---- Lua
--- Workaround for Arch packaging mismatch: the `/usr/bin/luacheck` wrapper
--- targets a Lua version whose rock tree no longer exists. Derive the installed
--- version from the rock path so this survives package bumps.
-local luacheck_entry =
-    vim.fn.glob('/usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck', true, true)[1]
-local lua_ver = luacheck_entry and luacheck_entry:match('rocks%-(%d+%.%d+)')
-if lua_ver then
-    local luacheck_path = string.format(
-        '/usr/share/lua/%s/?.lua;/usr/share/lua/%s/?/init.lua;',
-        lua_ver,
-        lua_ver
-    )
-    local luacheck_cpath = string.format('/usr/lib/lua/%s/?.so;', lua_ver)
-    linters.luacheck.cmd = 'lua' .. lua_ver
-    linters.luacheck.args = vim.list_extend(
-        {
-            '-e',
-            table.concat({
-                ('package.path=%q..package.path'):format(luacheck_path),
-                ('package.cpath=%q..package.cpath'):format(luacheck_cpath),
-            }, ';'),
-            -- Run it as the script, or Lua takes the next argument as one
-            luacheck_entry,
-        },
-        vim.list_extend(vim.deepcopy(linters.luacheck.args), {
-            '--config=' .. vim.fs.joinpath(vim.env.HOME, '.config', '.luacheckrc'),
-        })
-    )
-end
+table.insert(
+    linters.luacheck.args,
+    '--config=' .. vim.fs.joinpath(vim.env.HOME, '.config', '.luacheckrc')
+)
 
 ---- Markdown
 linters.rumdl.stream = 'stdout'

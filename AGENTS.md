@@ -63,26 +63,6 @@ The configuration already declares `vim` as a global. Do not add
 `--globals vim`; without an option terminator, Luacheck can consume file paths
 as additional global names.
 
-If `luacheck` or `luac` is broken because of the Arch Lua packaging mismatch
-(the `/usr/bin/luacheck` wrapper targets a Lua version whose rock tree no
-longer exists), use this fallback, which derives the installed version from the
-rock path so it survives package bumps:
-
-```bash
-entry=$(
-    printf '%s\n' /usr/lib/luarocks/rocks-*/luacheck/*/bin/luacheck |
-        head -1
-)
-ver=$(echo "$entry" | grep -oP 'rocks-\K[0-9]+\.[0-9]+')
-lua_path="/usr/share/lua/$ver/?.lua;/usr/share/lua/$ver/?/init.lua;"
-lua_cpath="/usr/lib/lua/$ver/?.so;"
-"lua$ver" \
-    -e "package.path='$lua_path'..package.path" \
-    -e "package.cpath='$lua_cpath'..package.cpath" \
-    -e "dofile('$entry')" \
-    -- --config config/linters/luacheckrc -- <file>
-```
-
 ## Neovim (`nvim/`)
 
 All Neovim configuration lives in the `nvim/` directory. The following rules

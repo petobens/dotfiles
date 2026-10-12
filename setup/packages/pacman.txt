@@ -122,7 +122,7 @@ wl-clip-persist
 wl-clipboard
 wtype
 xdg-desktop-portal-gtk
-# FIXME: Retest sharing after the 1.4.1 DMA-BUF/screencopy fixes ship
+# FIXME: Retest sharing when a release includes #424 (merged after 1.4.1)
 # Merged: https://github.com/hyprwm/xdg-desktop-portal-hyprland/pull/424
 xdg-desktop-portal-hyprland
 xdg-user-dirs
