@@ -2,8 +2,6 @@
 local markdown_match_words = table.concat({
     -- Colon containers
     [=[^\s*\zs\:\{3}\:*\ze\%(\s\+\S\|{\):^\s*\zs\:\{3}\:*\ze\s*$]=],
-    -- MyST display math with a closing equation label
-    [=[^\s*\zs\$\$\ze\s*$:\$\$\ze\s\+(eq\:[^)]\+)\s*$]=],
     -- Display math with content on the opening line
     [=[^\s*\zs\$\$\ze\S:\$\$\ze\s*$]=],
     -- Labeled code fences

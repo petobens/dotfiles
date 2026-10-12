@@ -107,39 +107,38 @@ local function convert_pandoc(extension)
     end)
 end
 
----- Sphinx
-local function run_sphinx_build()
+---- Zensical
+local function run_docs_build()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    overseer.run_task({ name = 'run_sphinx_build' }, function()
+    overseer.run_task({ name = 'run_docs_build' }, function()
         vim.cmd.cclose()
     end)
 end
 
-local function clean_sphinx_build()
-    local project_root = vim.fs.root(0, 'pyproject.toml')
+local function clean_docs_build()
+    local project_root = vim.fs.root(0, 'zensical.toml')
     if not project_root then
-        vim.notify('No pyproject.toml found for Sphinx cleanup', vim.log.levels.WARN)
+        vim.notify('No zensical.toml found for Zensical cleanup', vim.log.levels.WARN)
         return
     end
-    local docs_dir = vim.fs.joinpath(project_root, 'docs')
 
-    vim.notify('Cleaning sphinx html build...', vim.log.levels.INFO)
+    vim.notify('Cleaning documentation build...', vim.log.levels.INFO)
     vim.system(
-        { 'uv', 'run', '--no-sync', 'sphinx-build', '-M', 'clean', 'source', 'build' },
-        { cwd = docs_dir, text = true },
+        { 'just', 'docs-clean' },
+        { cwd = project_root, text = true },
         vim.schedule_wrap(function(obj)
             if obj.code == 0 then
-                vim.print('Cleaning sphinx html build... done!')
+                vim.print('Cleaning documentation build... done!')
             else
-                vim.notify(obj.stderr or 'Sphinx clean failed!', vim.log.levels.ERROR)
+                vim.notify(obj.stderr or 'Zensical clean failed!', vim.log.levels.ERROR)
             end
         end)
     )
 end
 
-local function view_sphinx_docs()
-    local project_root = vim.fs.root(0, 'pyproject.toml') or vim.uv.cwd()
-    local docs_dir = vim.fs.joinpath(project_root, 'docs', 'build', 'html')
+local function view_docs()
+    local project_root = vim.fs.root(0, 'zensical.toml') or vim.uv.cwd()
+    local docs_dir = vim.fs.joinpath(project_root, 'site')
     local html_file = vim.fs.joinpath(docs_dir, 'index.html')
     vim.ui.open(html_file)
 end
@@ -177,21 +176,21 @@ vim.keymap.set(
     { buf = 0, desc = '[C]heck[l]ist state: toggle' }
 )
 
---- Sphinx (html)
-vim.keymap.set('n', '<F7>', run_sphinx_build, { buf = 0, desc = 'Build Sphinx docs' })
+--- Zensical (html)
+vim.keymap.set('n', '<F7>', run_docs_build, { buf = 0, desc = 'Build Zensical docs' })
 
 vim.keymap.set(
     'n',
     '<Leader>da',
-    clean_sphinx_build,
-    { buf = 0, desc = '[D]elete Sphinx [a]uxiliary files' }
+    clean_docs_build,
+    { buf = 0, desc = '[D]elete Zensical [a]uxiliary files' }
 )
 
 vim.keymap.set(
     'n',
     '<Leader>vd',
-    view_sphinx_docs,
-    { buf = 0, desc = '[V]iew Sphinx [d]ocs (HTML)' }
+    view_docs,
+    { buf = 0, desc = '[V]iew Zensical [d]ocs (HTML)' }
 )
 
 --- Misc

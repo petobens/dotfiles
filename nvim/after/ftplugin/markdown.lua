@@ -4,13 +4,14 @@ end
 
 -- Options
 vim.opt_local.foldlevel = 2
-vim.opt_local.shiftwidth = 2
-vim.opt_local.softtabstop = 2
-vim.opt_local.tabstop = 2
+local indent_width = vim.fs.root(0, 'zensical.toml') and 4 or 2
+vim.opt_local.shiftwidth = indent_width
+vim.opt_local.softtabstop = indent_width
+vim.opt_local.tabstop = indent_width
 vim.opt_local.formatoptions = 'trjw'
 vim.opt_local.comments = {}
 
--- Highlight containers, options, and equation roles missing from the parser
+-- Highlight container, admonition, and tab markers missing from the parser
 local namespace = vim.api.nvim_create_namespace('markdown_extensions')
 
 local function highlight_range(bufnr, row, group, start_col, end_col)
@@ -21,18 +22,19 @@ local function highlight_extensions(args)
     local bufnr = args.buf
     vim.api.nvim_buf_clear_namespace(bufnr, namespace, 0, -1)
     for row, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
+        -- Pandoc containers, Zensical admonitions (`!!! note`), and tabs (`=== "Title"`)
         local indent, token = line:match('^(%s*)(:::+.*)$')
-        local group = 'PreProc'
         if not token then
-            indent, token = line:match('^(%s*)(:[%w_-]+:)')
-            group = '@property'
+            indent, token = line:match('^(%s*)(!!!%s+[%w_-]+)')
+        end
+        if not token then
+            indent, token = line:match('^(%s*)(%?%?%?%+?%s+[%w_-]+)')
+        end
+        if not token then
+            indent, token = line:match('^(%s*)(===%+?%s+"[^"]*")')
         end
         if token then
-            highlight_range(bufnr, row - 1, group, #indent, #indent + #token)
-        end
-
-        for first, last in line:gmatch('(){eq}`[^`]+`()') do
-            highlight_range(bufnr, row - 1, 'Number', first - 1, last - 1)
+            highlight_range(bufnr, row - 1, 'PreProc', #indent, #indent + #token)
         end
     end
 end

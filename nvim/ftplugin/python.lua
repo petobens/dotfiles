@@ -292,47 +292,36 @@ function _G.PyVenv.deactivate()
     _G.PyVenv.active_venv = {}
 end
 
--- Sphinx(docs)
-local function run_sphinx_build()
+-- Zensical(docs)
+local function run_docs_build()
     vim.cmd.update({ mods = { silent = true, noautocmd = true } })
-    overseer.run_task({ name = 'run_sphinx_build' }, function()
+    overseer.run_task({ name = 'run_docs_build' }, function()
         vim.cmd.cclose()
     end)
 end
 
-local function clean_sphinx_build()
+local function clean_docs_build()
     local on_exit = vim.schedule_wrap(function(obj)
         if obj.code == 0 then
-            vim.print('Cleaning sphinx html build... done!')
+            vim.print('Cleaning documentation build... done!')
         else
             vim.notify(obj.stderr, vim.log.levels.ERROR)
         end
     end)
 
-    vim.notify('Cleaning sphinx html build...')
-    vim.system(
-        { 'uv', 'run', '--no-sync', 'sphinx-build', '-M', 'clean', 'source', 'build' },
-        { cwd = vim.fs.joinpath(_project_root(), 'docs'), text = true },
-        on_exit
-    )
+    vim.notify('Cleaning documentation build...')
+    vim.system({ 'just', 'docs-clean' }, { cwd = _project_root(), text = true }, on_exit)
 end
 
-local function view_sphinx_docs(opts)
+local function view_docs(opts)
     local project_root = _project_root()
     local html_file
 
     opts = opts or {}
     if opts.index then
-        html_file = vim.fs.joinpath(project_root, 'docs', 'build', 'html', 'index.html')
+        html_file = vim.fs.joinpath(project_root, 'site', 'index.html')
     else
-        local docs_dir = vim.fs.joinpath(
-            project_root,
-            'docs',
-            'build',
-            'html',
-            'api-reference',
-            '_autosummary'
-        )
+        local docs_dir = vim.fs.joinpath(project_root, 'site', 'api-reference')
         local root_escaped = string.gsub(project_root, '([^%w])', '%%%1')
         local current_file =
             vim.fs.normalize(vim.api.nvim_buf_get_name(0)):match('(.+)%.[^/]+$')
@@ -340,10 +329,10 @@ local function view_sphinx_docs(opts)
             :gsub(root_escaped, '', 1)
             :gsub('^/', '')
             :gsub('^src/', '') -- remove leading src/
-            :gsub('/', '.')
+            :gsub('/__init__$', '/index')
         html_file = vim.fs.joinpath(docs_dir, rel_path .. '.html')
     end
-    vim.notify('Opening Sphinx docs: ' .. html_file, vim.log.levels.INFO)
+    vim.notify('Opening Zensical docs: ' .. html_file, vim.log.levels.INFO)
     vim.ui.open(html_file)
 end
 
@@ -471,28 +460,28 @@ vim.keymap.set('n', '<Leader>ve', function()
     vim.print(_G.PyVenv.active_venv)
 end, { buf = 0, desc = '[V]irtualenv [e]cho active info' })
 
----- Sphinx (docs)
+---- Zensical (docs)
 vim.keymap.set(
     'n',
     '<Leader>bh',
-    run_sphinx_build,
-    { buf = 0, desc = '[B]uild Sphinx [h]tml docs' }
+    run_docs_build,
+    { buf = 0, desc = '[B]uild Zensical [h]tml docs' }
 )
 vim.keymap.set(
     'n',
     '<Leader>da',
-    clean_sphinx_build,
-    { buf = 0, desc = '[D]elete Sphinx [a]uxiliary files' }
+    clean_docs_build,
+    { buf = 0, desc = '[D]elete Zensical [a]uxiliary files' }
 )
 vim.keymap.set(
     'n',
     '<Leader>od',
-    view_sphinx_docs,
-    { buf = 0, desc = '[O]pen [d]ocs (Sphinx)' }
+    view_docs,
+    { buf = 0, desc = '[O]pen [d]ocs (Zensical)' }
 )
 vim.keymap.set('n', '<Leader>vi', function()
-    view_sphinx_docs({ index = true })
-end, { buf = 0, desc = '[V]iew Sphinx [i]ndex.html' })
+    view_docs({ index = true })
+end, { buf = 0, desc = '[V]iew Zensical [i]ndex.html' })
 
 ---- Editing
 vim.keymap.set('n', '<Leader>etf', edit_test_file, {

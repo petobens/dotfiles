@@ -112,21 +112,17 @@ return {
         )
     ),
     s(
-        { trig = 'npd', dscr = '[N]um[P]y [d]ocstring' },
+        { trig = 'gd', dscr = '[G]oogle-style [d]ocstring' },
         fmta(
             [[
             """<>
 
             <>
 
-            Parameters
-            ----------
-            <>
-                <>
+            Args:
+                <>: <>
 
-            Returns
-            -------
-            <>
+            Returns:
                 <>
             """
         ]],
@@ -135,20 +131,17 @@ return {
                 i(2, 'summary'),
                 i(3, 'arg'),
                 i(4, 'description'),
-                i(5, 'type'),
-                i(6, 'description'),
+                i(5, 'description'),
             }
         ),
         { condition = line_begin }
     ),
     s(
-        { trig = 'npp', dscr = '[N]um[P]y [p]arameters' },
+        { trig = 'ga', dscr = '[G]oogle-style [a]rguments' },
         fmta(
             [[
-            Parameters
-            ----------
-            <>
-                <>
+            Args:
+                <>: <>
 
         ]],
             {
@@ -159,18 +152,15 @@ return {
         { condition = line_begin }
     ),
     s(
-        { trig = 'npr', dscr = '[N]um[P]y [r]eturns' },
+        { trig = 'gr', dscr = '[G]oogle-style [r]eturns' },
         fmta(
             [[
-            Returns
-            -------
-            <>
+            Returns:
                 <>
 
         ]],
             {
-                i(1, 'arg'),
-                i(2, 'description'),
+                i(1, 'description'),
             }
         ),
         { condition = line_begin }

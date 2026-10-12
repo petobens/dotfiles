@@ -185,6 +185,22 @@ return {
         { condition = line_begin }
     ),
 
+    s(
+        { trig = 'fn', wordTrig = false, dscr = '[F]oot[n]ote' },
+        fmta(
+            [[
+        [^<>]
+
+        [^<>]: <>
+    ]],
+            {
+                i(1),
+                rep(1),
+                i(2),
+            }
+        )
+    ),
+
     -- Pandoc
     s(
         { trig = 'fm', dscr = '[F]ront [m]atter' },
