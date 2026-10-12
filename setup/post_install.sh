@@ -162,6 +162,11 @@ if [[ ! -e $HOME/.cache/docker ]]; then
         chattr +C "$HOME/.cache/docker"
     fi
 fi
+if [[ $(findmnt -no FSTYPE --target "$HOME/.cache/docker") == btrfs ]]; then
+    # Volumes must accept compression attributes copied from containerd images
+    sudo mkdir -p "$HOME/.cache/docker/volumes"
+    sudo chattr -C "$HOME/.cache/docker/volumes"
+fi
 sudo install -Dm644 /dev/stdin /etc/docker/daemon.json << EOF
 {
     "data-root": "$HOME/.cache/docker",

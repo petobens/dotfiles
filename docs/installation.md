@@ -737,12 +737,16 @@ The post-install step applies the system configuration:
   Logitech webcam zoom. It also installs browser policies and seeds Zoom
   scaling and disabled Spotify autostart before those applications create
   their settings.
-- **Docker:** Stores Docker data under `~/.cache` and disables Btrfs
-  copy-on-write before Docker uses the directory. The data is disposable and
-  does not need Btrfs checksums or compression. Published ports bind to
-  `127.0.0.1` by default for both the standard bridge and newly created bridge
-  networks because Docker-published ports bypass UFW. Bind a port explicitly
-  to `0.0.0.0` only when another device needs to reach that container.
+- **Docker:** Stores Docker data under `~/.cache/docker` with Btrfs
+  copy-on-write disabled, except for `volumes/`. New volumes keep copy-on-write
+  so they can accept compression attributes copied from containerd images;
+  otherwise tools such as `act` can fail while creating a container.
+  The `act` configuration uses Cloudflare DNS inside runner containers to avoid
+  Node download timeouts with the local network's DNS servers. Published ports
+  bind to `127.0.0.1` by default for both the standard bridge and newly created
+  bridge networks because Docker-published ports bypass UFW. Bind a port
+  explicitly to `0.0.0.0` only when another device needs to reach that
+  container.
 
 Password-based recovery SSH is enabled on every installation so an unprepared
 device, such as a phone, can still reach the machine. Public-key login and SFTP

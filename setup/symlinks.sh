@@ -52,6 +52,7 @@ symlink "$repo/config/home/lesskey" "$HOME/.lesskey"
 symlink "$repo/config/home/surfingkeysrc.js" "$HOME/.surfingkeysrc"
 
 section 'Application configuration'
+symlink "$repo/config/act/actrc" "$HOME/.config/act/actrc"
 symlink "$repo/config/bat" "$HOME/.config/bat"
 symlink "$repo/config/brave-flags.conf" "$HOME/.config/brave-flags.conf"
 symlink "$repo/config/fish" "$HOME/.config/fish"
@@ -95,7 +96,6 @@ symlink "$repo/config/python/ipython_startup.py" "$HOME/.ipython/profile_default
 symlink "$repo/config/python/jupyterlab/jupyterlab_code_formatter" "$HOME/.jupyter/lab/user-settings/jupyterlab_code_formatter"
 symlink "$repo/config/python/jupyterlab/@jupyterlab/apputils-extension/themes.jupyterlab-settings" "$HOME/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings"
 symlink "$repo/config/python/matplotlib" "$HOME/.config/matplotlib"
-symlink "$repo/config/python/mypy.ini" "$HOME/.mypy.ini"
 symlink "$repo/config/python/pdbrc" "$HOME/.pdbrc"
 symlink "$repo/config/python/pdbrc.py" "$HOME/.pdbrc.py"
 symlink "$repo/config/pip" "$HOME/.config/pip"

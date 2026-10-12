@@ -187,12 +187,12 @@ return {
         )
     ),
     s(
-        { trig = 'mpi', dscr = '[M]y[p]y [i]gnore' },
+        { trig = 'tyi', dscr = '[Ty] [i]gnore' },
         fmta(
             [[
-            # type: ignore
+            # ty: ignore[<>]
         ]],
-            {}
+            { i(1, 'rule') }
         )
     ),
     s(
@@ -200,15 +200,6 @@ return {
         fmta(
             [[
             # noqa
-        ]],
-            {}
-        )
-    ),
-    s(
-        { trig = 'prd', dscr = '[P]y[r]ight [d]isable' },
-        fmta(
-            [[
-            # pyright: ignore
         ]],
             {}
         )
