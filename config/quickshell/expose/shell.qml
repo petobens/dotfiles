@@ -11,7 +11,8 @@ ShellRoot {
   id: root
 
   // Assign letters in grid order, starting with the home row
-  readonly property string shortcuts: "asdfghjkl;qwertyuiopzxcvbnm"
+  readonly property string shortcuts: "asdfghjkl;wertyuiopzxcvbnm"
+  property var markedWindows: []
 
   // Hide the overlay before focusing the window through the existing helper
   function activate(index: int): void {
@@ -50,6 +51,9 @@ ShellRoot {
 
   PanelWindow { // qmllint disable uncreatable-type
     id: panel
+
+    onVisibleChanged: if (!visible)
+                        root.markedWindows = []
 
     screen: Quickshell.screens.find(screen => screen.name
                                               === Hyprland.focusedMonitor
@@ -94,15 +98,17 @@ ShellRoot {
         // Qt hides its centered placeholder on focus, so draw our own hint
         Text {
           anchors.fill: parent
-          anchors.margins: 12
+          anchors.leftMargin: 12
+          anchors.rightMargin: 12
           visible: !search.length && !search.preeditText
           text: search.searching ? "Search windows…" :
-                                   "/  Search windows   ·   ?  Keyboard shortcuts"
+                                   "<font face='Symbols Nerd Font'></font>&nbsp;&nbsp;&nbsp; Search (/) &nbsp;·&nbsp; Help (?)"
+          textFormat: Text.RichText
           font: search.font
           color: "#5c6370"
           horizontalAlignment: Text.AlignHCenter
           verticalAlignment: Text.AlignVCenter
-          elide: Text.ElideRight
+          clip: true
         }
         background: Rectangle {
           radius: 8
@@ -125,14 +131,35 @@ ShellRoot {
           grid.positionViewAtBeginning();
         }
 
-        // Outside search, letters select windows; in search, they enter text
+        // Outside search, letters select windows and q exits; search accepts text
         Keys.onPressed: event => {
           grid.initialSelectionPending = false;
           const key = event.key;
           const ctrl = event.modifiers & Qt.ControlModifier;
           let step = 0;
-          if (ctrl && key === Qt.Key_C) {
+          if ((ctrl && key === Qt.Key_C) || (!searching && key === Qt.Key_Q
+                                             && event.modifiers
+                                             === Qt.NoModifier)) {
             panel.visible = false;
+          } else if (ctrl && key === Qt.Key_Space) {
+            const window = grid.model[grid.currentIndex];
+            if (window && !event.isAutoRepeat) {
+              root.markedWindows = root.markedWindows.includes(window)
+                  ? root.markedWindows.filter(marked => marked !== window) :
+                    [...root.markedWindows, window];
+            }
+          } else if (ctrl && key === Qt.Key_X) {
+            if (!event.isAutoRepeat) {
+              // Snapshot live targets before close requests change the model
+              const targets = root.markedWindows.length
+                    ? ToplevelManager.toplevels.values.filter(window
+                                                              => root.markedWindows.includes(
+                                                                   window)) :
+                      [grid.model[grid.currentIndex]].filter(window => window);
+              root.markedWindows = [];
+              for (const window of targets)
+                window.close();
+            }
           } else if (!searching && key === Qt.Key_Question) {
             help.visible = !help.visible;
           } else if (key === Qt.Key_Escape) {
@@ -190,191 +217,225 @@ ShellRoot {
         font.pixelSize: 17
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.WordWrap
-        text: "Letter / click: open window   ·   Enter: open selection   ·   Tab / Shift+Tab or Ctrl+N/P: next / previous   ·   Arrows or Ctrl+H/J/K/L: navigate\n"
-              + "/: search   ·   ?: toggle help outside search   ·   Esc: dismiss help → clear search → close   ·   Ctrl+C: close"
+        textFormat: Text.PlainText
+        text: "</>: search   ·   <Arrows / Ctrl+H/J/K/L>: navigate   ·   <Tab / Shift+Tab / Ctrl+N/P>: next / previous   ·   <Letter / click>: open   ·   <Enter>: open selection\n"
+              + "<Ctrl+Space>: mark/unmark   ·   <Ctrl+X>: close marked or selected   ·   <?>: help   ·   <Esc>: dismiss help/search/overview   ·   <q>: exit outside search   ·   <Ctrl+C>: exit"
       }
 
-      GridView {
-        id: grid
-
-        property bool initialSelectionPending: true
-
-        // Favor large previews: at most three columns, fewer on narrow screens
-        readonly property int columns: Math.max(1, Math.min(3, count, Math.floor(
-                                                              width / 360)))
-        readonly property int rows: Math.max(1, Math.ceil(count / columns))
-
+      Item {
         width: parent.width
-        height: Math.min(content.availableHeight, rows * cellHeight)
-        clip: true
-        ScrollBar.vertical: ScrollBar {
-          policy: ScrollBar.AsNeeded
-          visible: grid.contentHeight > grid.height
-          minimumSize: 0.08
-          width: 10
-          padding: 3
-          background: Item {}
-          contentItem: Rectangle {
-            radius: 2
-            color: "#4b5263"
-          }
-        }
-        cellWidth: width / columns
-        // Fit up to three rows on screen; additional rows remain scrollable
-        cellHeight: Math.min(cellWidth * 0.85, content.availableHeight
-                             / Math.min(rows, 3))
-        model: ToplevelManager.toplevels.values.filter(window => {
-          const query = search.text.toLowerCase();
-          return (window.title + " " + window.appId).toLowerCase().includes(
-                query);
-        }).sort((a, b) => {
-          const workspaceA = a.HyprlandToplevel.handle?.workspace?.id
-                ?? Infinity;
-          const workspaceB = b.HyprlandToplevel.handle?.workspace?.id
-                ?? Infinity;
-          if (workspaceA !== workspaceB)
-            return workspaceA - workspaceB;
-          // Window addresses keep the order stable within each workspace
-          return a.HyprlandToplevel.address.localeCompare(
-                b.HyprlandToplevel.address);
-        })
-        readonly property int focusedIndex: model.indexOf(
-                                              ToplevelManager.activeToplevel)
-        function selectInitialWindow(): void {
-          if (!initialSelectionPending || focusedIndex < 0)
-            return;
-          initialSelectionPending = false;
-          currentIndex = focusedIndex;
-          positionViewAtIndex(currentIndex, GridView.Contain);
-        }
-        onFocusedIndexChanged: Qt.callLater(selectInitialWindow)
-        onCountChanged: currentIndex = Math.min(Math.max(0, currentIndex),
-                                                count - 1)
+        height: content.availableHeight
 
-        delegate: Rectangle {
-          id: card
+        GridView {
+          id: grid
 
-          required property Toplevel modelData
-          required property int index
+          property bool initialSelectionPending: true
 
-          width: grid.cellWidth - 16
-          height: grid.cellHeight - 16
-          radius: 8
-          color: "#282c34"
-          border.width: 2
-          border.color: index === grid.currentIndex ? "#61afef" : "#4b5263"
+          // Favor large previews: at most three columns, fewer on narrow screens
+          readonly property int columns: Math.max(1, Math.min(count === 3 ? 2 : 3, count,
+                                                              Math.floor(width
+                                                                         / 360)))
+          readonly property int rows: Math.max(1, Math.ceil(count / columns))
 
-          ScreencopyView {
-            anchors.centerIn: preview
-            captureSource: card.modelData
-            // Pause capture when hidden or outside the visible grid
-            live: panel.visible && card.y < grid.contentY + grid.height
-                  && card.y + card.height > grid.contentY
-            constraintSize: Qt.size(preview.width, preview.height)
-          }
-
-          Item {
-            id: preview
-            anchors {
-              top: parent.top
-              left: parent.left
-              right: parent.right
-              margins: 10
+          width: parent.width
+          anchors.centerIn: parent
+          height: Math.min(content.availableHeight, rows * cellHeight)
+          clip: true
+          ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+            visible: grid.contentHeight > grid.height
+            minimumSize: 0.08
+            width: 10
+            padding: 3
+            background: Item {}
+            contentItem: Rectangle {
+              radius: 2
+              color: "#4b5263"
             }
-            // Reserve space below the preview for the title and shortcut badge
-            height: parent.height - 54
           }
+          cellWidth: width / columns
+          // Fit up to three rows on screen; additional rows remain scrollable
+          cellHeight: Math.min(cellWidth * (rows === 1 ? 1 : 0.85), content.availableHeight
+                               / Math.min(rows, 3))
+          model: ToplevelManager.toplevels.values.filter(window => {
+            const query = search.text.toLowerCase();
+            return (window.title + " " + window.appId).toLowerCase().includes(
+                  query);
+          }).sort((a, b) => {
+            const workspaceA = a.HyprlandToplevel.handle?.workspace?.id
+                  ?? Infinity;
+            const workspaceB = b.HyprlandToplevel.handle?.workspace?.id
+                  ?? Infinity;
+            if (workspaceA !== workspaceB)
+              return workspaceA - workspaceB;
+            // Window addresses keep the order stable within each workspace
+            return a.HyprlandToplevel.address.localeCompare(
+                  b.HyprlandToplevel.address);
+          })
+          readonly property int focusedIndex: model.indexOf(
+                                                ToplevelManager.activeToplevel)
+          function selectInitialWindow(): void {
+            if (!initialSelectionPending || focusedIndex < 0)
+              return;
+            initialSelectionPending = false;
+            currentIndex = focusedIndex;
+            positionViewAtIndex(currentIndex, GridView.Contain);
+          }
+          onFocusedIndexChanged: Qt.callLater(selectInitialWindow)
+          onCountChanged: currentIndex = Math.min(Math.max(0, currentIndex),
+                                                  count - 1)
 
-          Text {
-            id: workspaceLabel
+          delegate: Rectangle {
+            id: card
 
-            anchors {
-              bottom: parent.bottom
-              left: parent.left
-              margins: 12
+            required property Toplevel modelData
+            required property int index
+            readonly property bool marked: root.markedWindows.includes(
+                                             modelData)
+
+            width: grid.cellWidth - 16
+            height: grid.cellHeight - 16
+            radius: 8
+            color: "#282c34"
+            border.width: index === grid.currentIndex ? 3 : 2
+            border.color: marked ? "#e5c07b" : index === grid.currentIndex
+                                   ? "#61afef" : "#4b5263"
+
+            ScreencopyView {
+              anchors.centerIn: preview
+              captureSource: card.modelData
+              // Pause capture when hidden or outside the visible grid
+              live: panel.visible && card.y < grid.contentY + grid.height
+                    && card.y + card.height > grid.contentY
+              constraintSize: Qt.size(preview.width, preview.height)
             }
-            text: "[" + (card.modelData.HyprlandToplevel.handle?.workspace
-                         ?.name ?? "?") + "]"
-            textFormat: Text.PlainText
-            color: "#abb2bf"
-            font.family: "Noto Sans"
-            font.pixelSize: 17
-            font.bold: true
-          }
 
-          Text {
-            anchors {
-              bottom: parent.bottom
-              left: workspaceLabel.right
-              right: parent.right
-              margins: 12
-              leftMargin: 6
+            Item {
+              id: preview
+              anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                margins: 10
+              }
+              // Reserve space below the preview for the title and shortcut badge
+              height: parent.height - 54
             }
-            text: card.modelData.title
-            anchors.rightMargin: shortcut.visible ? 68 : 12
-            textFormat: Text.PlainText
-            color: "#abb2bf"
-            font.family: "Noto Sans"
-            font.pixelSize: 17
-            elide: Text.ElideRight
-          }
-
-          MouseArea {
-            anchors.fill: parent
-            onClicked: root.activate(card.index)
-          }
-
-          Image {
-            anchors {
-              top: parent.top
-              right: parent.right
-              margins: 12
-              topMargin: 6
-            }
-            width: 48
-            height: 48
-            sourceSize: Qt.size(width * panel.screen.devicePixelRatio, height
-                                * panel.screen.devicePixelRatio)
-            fillMode: Image.PreserveAspectFit
-            source: Quickshell.iconPath(DesktopEntries.heuristicLookup(
-                                          card.modelData.appId)?.icon
-                                        || card.modelData.appId,
-                                        "application-x-executable")
-          }
-
-          Rectangle {
-            id: shortcut
-
-            anchors {
-              bottom: parent.bottom
-              right: parent.right
-              margins: 12
-            }
-            width: 44
-            height: 44
-            radius: 6
-            color: "#61afef"
-            visible: !search.searching && card.index < root.shortcuts.length
 
             Text {
-              anchors.centerIn: parent
-              text: root.shortcuts.charAt(card.index).toUpperCase()
-              color: "#24272e"
-              font {
-                family: "Noto Sans Mono"
-                pixelSize: 28
-                bold: true
+              id: workspaceLabel
+
+              anchors {
+                bottom: parent.bottom
+                left: parent.left
+                margins: 12
+              }
+              text: "[" + (card.modelData.HyprlandToplevel.handle?.workspace
+                           ?.name ?? "?") + "]"
+              textFormat: Text.PlainText
+              color: "#abb2bf"
+              font.family: "Noto Sans"
+              font.pixelSize: 17
+              font.bold: true
+            }
+
+            Text {
+              anchors {
+                bottom: parent.bottom
+                left: workspaceLabel.right
+                right: parent.right
+                margins: 12
+                leftMargin: 6
+              }
+              text: card.modelData.title
+              anchors.rightMargin: shortcut.visible ? 68 : 12
+              textFormat: Text.PlainText
+              color: "#abb2bf"
+              font.family: "Noto Sans"
+              font.pixelSize: 17
+              elide: Text.ElideRight
+            }
+
+            MouseArea {
+              anchors.fill: parent
+              onClicked: root.activate(card.index)
+            }
+
+            Image {
+              anchors {
+                top: parent.top
+                right: parent.right
+                margins: 12
+                topMargin: 6
+              }
+              width: 48
+              height: 48
+              sourceSize: Qt.size(width * panel.screen.devicePixelRatio, height
+                                  * panel.screen.devicePixelRatio)
+              fillMode: Image.PreserveAspectFit
+              source: Quickshell.iconPath(DesktopEntries.heuristicLookup(
+                                            card.modelData.appId)?.icon
+                                          || card.modelData.appId,
+                                          "application-x-executable")
+            }
+
+            Rectangle {
+              anchors {
+                top: parent.top
+                left: parent.left
+                margins: 12
+              }
+              visible: card.marked
+              width: 32
+              height: 32
+              radius: 6
+              color: "#e5c07b"
+              Text {
+                anchors.centerIn: parent
+                text: "✓"
+                color: "#24272e"
+                font {
+                  family: "Noto Sans"
+                  pixelSize: 16
+                  bold: true
+                }
+              }
+            }
+
+            Rectangle {
+              id: shortcut
+
+              anchors {
+                bottom: parent.bottom
+                right: parent.right
+                margins: 12
+              }
+              width: 44
+              height: 44
+              radius: 6
+              color: "#61afef"
+              visible: !search.searching && card.index < root.shortcuts.length
+
+              Text {
+                anchors.centerIn: parent
+                text: root.shortcuts.charAt(card.index).toUpperCase()
+                color: "#24272e"
+                font {
+                  family: "Noto Sans Mono"
+                  pixelSize: 28
+                  bold: true
+                }
               }
             }
           }
-        }
 
-        Text {
-          anchors.centerIn: parent
-          visible: grid.count === 0
-          text: "No matching windows"
-          color: "#abb2bf"
-          font.pixelSize: 22
+          Text {
+            anchors.centerIn: parent
+            visible: grid.count === 0
+            text: "No matching windows"
+            color: "#abb2bf"
+            font.pixelSize: 22
+          }
         }
       }
     }
