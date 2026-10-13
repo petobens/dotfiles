@@ -72,6 +72,15 @@ vim.lsp.config('lua_ls', {
 vim.lsp.config('marksman', {})
 ---- Python
 vim.lsp.config('ty', {
+    cmd = function(dispatchers, config)
+        return vim.lsp.rpc.start(
+            { require('python').tool('ty', config.root_dir), 'server' },
+            dispatchers,
+            {
+                cwd = config.root_dir,
+            }
+        )
+    end,
     settings = { ty = {} },
     before_init = function(_, config)
         -- Don't inherit another project's active environment from Neovim

@@ -1,14 +1,13 @@
 return {
     name = 'run_prek',
     builder = function()
-        local cmd = { 'prek', 'run' }
         -- TODO: We probably want this for other filetypes too
         local hook_root = vim.fs.root(
             0,
             { { 'prek.toml', '.pre-commit-config.yaml', '.pre-commit-config.yml' } }
         ) or vim.uv.cwd()
         return {
-            cmd = cmd,
+            cmd = { require('python').tool('prek', hook_root), 'run' },
             -- prek reports paths relative to the repository root
             cwd = hook_root,
             metadata = { run_cmd = 'prek run' },

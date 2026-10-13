@@ -128,6 +128,9 @@ linters.tombi.parser = function(output, bufnr)
 end
 ---- Python
 -- Ruff:
+linters.ruff.cmd = function()
+    return require('python').tool('ruff')
+end
 local severity = vim.diagnostic.severity
 local ruff_severities = {
     ['E'] = severity.ERROR,

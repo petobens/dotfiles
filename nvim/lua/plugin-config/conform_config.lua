@@ -11,6 +11,13 @@ vim.o.formatexpr = function()
 end
 
 -- Formatters args
+for _, name in ipairs({ 'ruff_fix', 'ruff_format' }) do
+    conform.formatters[name] = {
+        command = function(_, ctx)
+            return require('python').tool('ruff', ctx.dirname)
+        end,
+    }
+end
 conform.formatters.jq = { args = { '--indent', '4' } }
 conform.formatters.stylua = {
     prepend_args = {
