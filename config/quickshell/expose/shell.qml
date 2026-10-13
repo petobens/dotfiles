@@ -90,20 +90,30 @@ ShellRoot {
         property bool searching: false
 
         anchors.horizontalCenter: parent.horizontalCenter
-        width: Math.min(parent.width, 640)
+        width: Math.min(parent.width, 400)
         height: 44
-        horizontalAlignment: TextInput.AlignHCenter
-        leftPadding: 12
+        horizontalAlignment: TextInput.AlignLeft
+        leftPadding: searching ? searchIcon.width + 24 : 12
         rightPadding: 12
+        Text {
+          id: searchIcon
+
+          anchors.left: parent.left
+          anchors.leftMargin: 12
+          anchors.verticalCenter: parent.verticalCenter
+          visible: search.searching
+          text: ""
+          font.family: "Symbols Nerd Font"
+          font.pixelSize: search.font.pixelSize
+          color: "#5c6370"
+        }
         // Qt hides its centered placeholder on focus, so draw our own hint
         Text {
           anchors.fill: parent
           anchors.leftMargin: 12
           anchors.rightMargin: 12
-          visible: !search.length && !search.preeditText
-          text: search.searching ? "Search windows…" :
-                                   "<font face='Symbols Nerd Font'></font>&nbsp;&nbsp;&nbsp; Search (/) &nbsp;·&nbsp; Help (?)"
-          textFormat: Text.RichText
+          visible: !search.searching && !search.length && !search.preeditText
+          text: "Search (/)  ·  Help (?)"
           font: search.font
           color: "#5c6370"
           horizontalAlignment: Text.AlignHCenter
