@@ -1,77 +1,48 @@
 [tool.ruff]
 line-length = 88
+# Keep Ruff's default exclusions and also skip build output
+extend-exclude = ["build"]
 
 [tool.ruff.format]
 quote-style = "preserve"
 
 [tool.ruff.lint]
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "B",  # Bugbear plugin
-    "D",  # pydocstyle plugin
-    "I",  # import sorting
-    "ARG",  # Unused arguments
-    "DTZ",  # Timezone-aware datetimes
-    "FURB",  # Refurb suggestions
-    "PLC",  # Pylint conventions
-    "PLE",  # Pylint errors
-    "PLW",  # Pylint warnings
-    "UP",  # Python upgrades
-    "SIM",  # Simplifications
-    "RUF",  # Ruff-specific rules
-    "PT",  # pytest conventions
-    "C4",  # Comprehensions
-    "PERF",  # Performance
-    "PTH",  # pathlib
-    "RET",  # Return statements
-    "TC",  # Type-checking imports
-]
-
+# Enable every stable rule, as in pytemplate. This config uses the system Ruff,
+# so upgrades can add new diagnostics without a lockfile change
+select = ["ALL"]
 ignore = [
-    "E203",  # Whitespace before ':'
-    "E501",  # Line too long
-    "D107",  # Missing docstring in init
-    "D203",  # Same as D211 about class docstring
-    "D213",  # Same as D212 about summary docstring
-    "D413",  # Missing blank line after last section
-    "D416",  # Section name should end with a colon
+    # Shared with pytemplate
+    "C90",  # Complexity score
+    "COM812",  # Missing trailing comma; conflicts with the formatter
+    "CPY",  # Copyright headers
+    "E501",  # Line too long; the formatter handles length
+    "EM",  # Exception messages assigned to variables first
+    "FBT",  # Boolean positional arguments
+    "PLR09",  # Too many arguments, branches, statements, and similar counts
+    "PLR2004",  # Magic values in comparisons
+    "Q",  # Quote style; the formatter preserves existing quotes
+    "TRY003",  # Long messages passed to exception classes
+    "TRY300",  # Return statements moved to an else block
+    # Standalone scripts and configuration files
+    "ERA001",  # Commented-out code, such as disabled config options
+    "FIX002",  # TODO comments
+    "INP001",  # Scripts outside a package
+    "S310",  # URL schemes passed to urlopen
+    "S603",  # subprocess calls without a shell
+    "S607",  # Commands found on PATH, such as git
+    "SLF001",  # Private members, often patched by config files
+    "T20",  # print and pprint
+    "TD",  # TODO comment format
 ]
 
 # Automatically fix import order; leave other lint fixes for review
 fixable = ["I"]
 
-# Exclude a variety of commonly ignored directories
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
-]
-
 [tool.ruff.lint.per-file-ignores]
 # Notebooks may import modules after setup cells
 "*.ipynb" = ["E402"]
-# Tests describe behavior through their names and assertions
-"test_*.py" = ["D100", "D101", "D102", "D103"]
+# Tests describe behavior through their names and use asserts
+"test_*.py" = ["D100", "D101", "D102", "D103", "S101"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"

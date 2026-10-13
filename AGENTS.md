@@ -41,6 +41,10 @@ desktop.
   and type-check with `ty check`. Add short module or function docstrings when
   they clarify purpose or usage, but do not add boilerplate docstrings for
   obvious one-off code.
+  The local `ty.toml` tolerates missing application imports in configuration
+  files; no dotfiles virtual environment is needed. For full dependency checks,
+  use the installed application environment, for example
+  `ty check --python ~/.local/share/uv/tools/ipython config/python/ipython*.py`.
 - For Bash scripts, run `shfmt -w -i 4 -ci -sr <file>` and
   `shellcheck <file>`.
 - For Fish scripts, run `fish_indent -w <file>` and

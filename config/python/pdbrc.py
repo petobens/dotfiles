@@ -1,6 +1,7 @@
 """pdbpp config."""
 
-import pdb
+import pdb  # noqa: T100
+from typing import TYPE_CHECKING, ClassVar
 
 from pygments.style import Style
 from pygments.token import (
@@ -14,6 +15,9 @@ from pygments.token import (
     String,
     Text,
 )
+
+if TYPE_CHECKING:
+    from pdbpp import Pdb
 
 # Palette (onedarkish)
 white = '#abb2bf'
@@ -31,7 +35,7 @@ syntax_fg = white
 class OneDarkish(Style):
     """OneDarkish pygments style."""
 
-    styles = {
+    styles = {  # noqa: RUF012
         Text: syntax_fg,
         Error: red,
         Comment: comment_grey,
@@ -56,7 +60,7 @@ class OneDarkish(Style):
     }
 
 
-class Config(pdb.DefaultConfig):  # type: ignore
+class Config(pdb.DefaultConfig):  # ty: ignore[unresolved-attribute]
     """Actual pdbpp config."""
 
     prompt = '(Pdb++)> '
@@ -68,9 +72,9 @@ class Config(pdb.DefaultConfig):  # type: ignore
     line_number_color = '38;2;99;109;131'
     current_line_color = '48;2;40;44;52'
     pygments_formatter_class = "pygments.formatters.TerminalTrueColorFormatter"
-    pygments_formatter_kwargs = {"style": OneDarkish}
+    pygments_formatter_kwargs: ClassVar[dict[str, type[Style]]] = {"style": OneDarkish}
 
-    def setup(self, pdb):
+    def setup(self, pdb: 'Pdb') -> None:
         """Override PDB++ mappings."""
         pdb_class = pdb.__class__
         pdb_class.do_l = pdb_class.do_longlist

@@ -26,7 +26,7 @@ CACHE_PATH = Path.home() / ".local/share/nvim/codecompanion/acp-session-titles.j
 
 API_URL = "https://api.openai.com/v1/responses"
 MODEL = "gpt-5.6-luna"
-PASS_ENTRY = "openai/yahoomail/apikey"
+PASS_ENTRY = "openai/yahoomail/apikey"  # noqa: S105
 
 MAX_MSG_CHARS = 600  # per-message truncation before assembling the transcript
 MAX_TOTAL_CHARS = 8000  # overall transcript budget sent to the model
@@ -53,12 +53,12 @@ Title:"""
 
 # Context that agents inject ahead of the real prompt (shared rule files, pasted
 # file dumps, system reminders) drowns out the actual instruction, so strip it
-_SHARE_FILE = re.compile(r"Sharing `[^`]+`:(?:\s*\n-{3}\n.*?\n-{3})?", re.S)
+_SHARE_FILE = re.compile(r"Sharing `[^`]+`:(?:\s*\n-{3}\n.*?\n-{3})?", re.DOTALL)
 _SHARE_CTX = re.compile(
     r"Sharing the following file as context:\s*\S+(?:\s*\n-{3}\n.*?\n-{3})?",
-    re.S,
+    re.DOTALL,
 )
-_XML_BLOCK = re.compile(r"<([A-Za-z][\w-]*)[^>]*>.*?</\1>", re.S)
+_XML_BLOCK = re.compile(r"<([A-Za-z][\w-]*)[^>]*>.*?</\1>", re.DOTALL)
 _WS = re.compile(r"\s+")
 
 
@@ -172,11 +172,11 @@ def extract_codex(path: Path) -> list[tuple[str, str]]:
 def build_transcript(turns: list[tuple[str, str]]) -> str:
     """Condense turns to the opening + closing exchanges within the char budget."""
     if len(turns) > HEAD_TURNS + TAIL_TURNS:
-        turns = (
-            turns[:HEAD_TURNS]
-            + [("System", "[middle of session omitted; final exchanges follow]")]
-            + turns[-TAIL_TURNS:]
-        )
+        turns = [
+            *turns[:HEAD_TURNS],
+            ("System", "[middle of session omitted; final exchanges follow]"),
+            *turns[-TAIL_TURNS:],
+        ]
     lines, total = [], 0
     for role, text in turns:
         line = f"{role}: {text[:MAX_MSG_CHARS]}"
@@ -252,7 +252,11 @@ def get_api_key() -> str | None:
     """Read the OpenAI key from pass."""
     try:
         out = subprocess.run(
-            ["pass", "show", PASS_ENTRY], capture_output=True, text=True, timeout=15
+            ["pass", "show", PASS_ENTRY],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
         )
     except (OSError, subprocess.SubprocessError):
         return None

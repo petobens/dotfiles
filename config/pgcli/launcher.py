@@ -35,5 +35,6 @@ def configure_prompt(pgcli: main.PGCli) -> KeyBindings:
 
 
 if __name__ == '__main__':
-    main.pgcli_bindings = configure_prompt
+    # pgcli imports this function directly; replace it before starting the CLI
+    main.pgcli_bindings = configure_prompt  # ty: ignore[invalid-assignment]
     main.cli()

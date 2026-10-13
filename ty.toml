@@ -1,0 +1,16 @@
+# Applications run in separate environments; do not require them in dotfiles.
+[[overrides]]
+include = ["config/python/*.py", "config/pgcli/launcher.py"]
+
+[overrides.analysis]
+allowed-unresolved-imports = [
+    "IPython.**",
+    "prompt_toolkit.**",
+    "pygments.**",
+    "pdbpp",
+    "pgcli.**",
+]
+
+[overrides.rules]
+# Narrow code suppressions are needed when checking with the application's env
+unused-ignore-comment = "ignore"

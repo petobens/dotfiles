@@ -5,8 +5,8 @@ import sys
 from pathlib import Path
 
 import IPython
-import IPython.terminal.prompts as prompts
 import prompt_toolkit
+from IPython.terminal import prompts
 from prompt_toolkit.application import get_app
 from prompt_toolkit.application.current import get_app as get_current_app
 from prompt_toolkit.key_binding.vi_state import InputMode, ViState
@@ -23,9 +23,10 @@ from pygments.token import (
     String,
     Text,
     Token,
+    _TokenType,
 )
 
-c = get_config()  # type: ignore # noqa
+c = get_config()  # noqa: F821  # ty: ignore[unresolved-reference]
 
 # Options
 c.TerminalInteractiveShell.true_color = True
@@ -34,46 +35,47 @@ c.TerminalInteractiveShell.confirm_exit = False
 c.TerminalIPythonApp.display_banner = False
 
 
-def get_input_mode(self):
+def get_input_mode(self: ViState) -> InputMode:
     """Get input mode and reduce input flush timeout."""
     # https://github.com/prompt-toolkit/python-prompt-toolkit/issues/192#issuecomment-557800620
     app = get_current_app()
     app.ttimeoutlen = 0.01
     app.timeoutlen = 0.2
-    return self._input_mode
+    return self._input_mode  # ty: ignore[unresolved-attribute]
 
 
-def set_input_mode(self, mode):
+def set_input_mode(self: ViState, mode: InputMode) -> None:
     """Change cursor shape relative to vi mode.
 
     See: https://github.com/jonathanslenders/python-prompt-toolkit/issues/192
     """
     shape = {InputMode.NAVIGATION: 2, InputMode.REPLACE: 4}.get(mode, 6)
-    raw = '\x1b[{} q'.format(shape)
+    raw = f'\x1b[{shape} q'
     if hasattr(sys.stdout, '_cli'):
-        out = sys.stdout._cli.output.write_raw  # type: ignore
+        out = sys.stdout._cli.output.write_raw  # ty: ignore[unresolved-attribute]
     else:
         out = sys.stdout.write
     out(raw)
     sys.stdout.flush()
-    self._input_mode = mode
+    self._input_mode = mode  # ty: ignore[unresolved-attribute]
 
 
-ViState._input_mode = InputMode.INSERT
-ViState.input_mode = property(get_input_mode, set_input_mode)
+# Patch prompt_toolkit's ViState, which has no _input_mode attribute
+ViState._input_mode = InputMode.INSERT  # ty: ignore[unresolved-attribute]
+ViState.input_mode = property(get_input_mode, set_input_mode)  # ty: ignore[invalid-assignment]
 
 
-def _get_branch():
+def _get_branch() -> str:
     try:
         branch = '  ' + (
             subprocess.check_output(
-                "git branch --show-current", shell=True, stderr=subprocess.DEVNULL
+                ["git", "branch", "--show-current"], stderr=subprocess.DEVNULL
             )
             .decode("utf-8")
             .replace("\n", "")
         )
 
-    except BaseException:
+    except (OSError, subprocess.CalledProcessError):
         branch = ''
     return branch
 
@@ -81,7 +83,7 @@ def _get_branch():
 class MyPrompt(prompts.Prompts):
     """Custom prompt with vi mode indicator."""
 
-    def in_prompt_tokens(self):
+    def in_prompt_tokens(self) -> list[tuple[_TokenType, str]]:
         """Return in prompt."""
         mode = 'I' if get_app().vi_state.input_mode == InputMode.INSERT else 'N'
         branch = _get_branch()
@@ -93,9 +95,7 @@ class MyPrompt(prompts.Prompts):
         inprompt.append(
             (Token.Generic.Emph if mode == 'I' else Token.Generic.Strong, " ")
         )
-        inprompt.append(
-            (Token.Generic.Deleted, f" [{str(self.shell.execution_count)}] ")
-        )
+        inprompt.append((Token.Generic.Deleted, f" [{self.shell.execution_count}] "))
         inprompt.append((Token.OutPromptNum if branch else Token.Generic.Inserted, ""))
         if branch:
             inprompt.append((Token.Prompt, f"{branch} "))
@@ -116,15 +116,21 @@ class MyPrompt(prompts.Prompts):
             inprompt.append((Token.Generic.Traceback, " "))
         return inprompt
 
-    def continuation_prompt_tokens(self, width=None):
-        """Return continuation prompt."""
+    def continuation_prompt_tokens(
+        self,
+        width: int | None = None,
+        *,
+        lineno: int | None = None,  # noqa: ARG002
+        wrap_count: int | None = None,  # noqa: ARG002
+    ) -> list[tuple[_TokenType, str]]:
+        """Return a fixed marker regardless of IPython line and wrap counts."""
         if width is None:
             width = self._width()
         return [
             (Token.Generic.EmphStrong, (' ' * (width - 2)) + '| '),
         ]
 
-    def out_prompt_tokens(self):
+    def out_prompt_tokens(self) -> list[tuple[_TokenType, str]]:
         """Return out prompt."""
         return []
 
@@ -133,7 +139,7 @@ c.TerminalInteractiveShell.prompts_class = MyPrompt
 
 
 # Fix completion highlighting as per https://github.com/ipython/ipython/issues/11526
-def my_style_from_pygments_dict(pygments_dict):
+def my_style_from_pygments_dict(pygments_dict: dict[_TokenType | str, str]) -> Style:
     """Monkey patch prompt toolkit style function to fix completion colors."""
     pygments_style = []
     for token, style in pygments_dict.items():
@@ -174,7 +180,7 @@ count_bg = '#d0d0d0'
 count_fg = '#303030'
 
 # See:
-# https://github.com/prompt-toolkit/python-prompt-toolkit/blob/master/src/prompt_toolkit/styles/defaults.py # noqa
+# https://github.com/prompt-toolkit/python-prompt-toolkit/blob/master/src/prompt_toolkit/styles/defaults.py
 c.TerminalInteractiveShell.highlighting_style_overrides = {
     Text: syntax_fg,
     Error: f'{red} bold',
