@@ -291,7 +291,9 @@ end, { desc = '[N]eotest: run [f]ile' })
 vim.keymap.set('n', '<Leader>ns', function()
     local extra_args = {}
     if vim.bo.filetype == 'python' then
-        table.insert(extra_args, '--cov')
+        -- Neotest appends the suite path after these arguments. A path right
+        -- after a bare --cov would replace the configured coverage source
+        vim.list_extend(extra_args, { '--cov', '--cov-report=term' })
     end
     neotest_run(neotest.run.run, { suite = true, extra_args = extra_args })
 end, { desc = '[N]eotest: run test [s]uite' })
