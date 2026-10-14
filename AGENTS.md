@@ -25,6 +25,9 @@ desktop.
 
 ## General rules
 
+- Work directly on `master` in this repository. Do not create a task branch
+  unless I explicitly ask for one. Branch requirements from other repositories
+  do not apply here. Leave changes uncommitted; never commit or push.
 - Do exactly what was asked; avoid unrelated changes.
 - Prefer editing existing files over creating new ones.
 - Explain non-trivial code or configuration choices when they affect future

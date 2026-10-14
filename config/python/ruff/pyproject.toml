@@ -4,7 +4,7 @@ line-length = 88
 extend-exclude = ["build"]
 
 [tool.ruff.format]
-quote-style = "preserve"
+quote-style = "double"
 
 [tool.ruff.lint]
 # Enable every stable rule, as in pytemplate. This config uses the system Ruff,
@@ -20,7 +20,7 @@ ignore = [
     "FBT",  # Boolean positional arguments
     "PLR09",  # Too many arguments, branches, statements, and similar counts
     "PLR2004",  # Magic values in comparisons
-    "Q",  # Quote style; the formatter preserves existing quotes
+    "Q",  # The formatter handles quotes
     "TRY003",  # Long messages passed to exception classes
     "TRY300",  # Return statements moved to an else block
     # Standalone scripts and configuration files

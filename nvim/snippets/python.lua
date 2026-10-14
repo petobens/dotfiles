@@ -65,7 +65,7 @@ return {
         { trig = 'im', dscr = '[I]f [m]ain' },
         fmta(
             [[
-                if __name__ == '__main__':
+                if __name__ == "__main__":
                     <>
             ]],
             { i(0) }
@@ -80,8 +80,8 @@ return {
             [[
             logging.basicConfig(
                 level=logging.<>,
-                format='%(asctime)s-%(name)s-%(levelname)s: %(message)s',
-                handlers=[logging.FileHandler('<>.log'), logging.StreamHandler()]
+                format="%(asctime)s-%(name)s-%(levelname)s: %(message)s",
+                handlers=[logging.FileHandler("<>.log"), logging.StreamHandler()]
             )
         ]],
             { i(1, 'DEBUG'), i(2, 'logger_name') }
@@ -211,7 +211,7 @@ return {
         { trig = 'pmr', dscr = '[P]andas [m]ax [r]ows' },
         fmta(
             [[
-            pd.set_option('display.max_rows', <>)
+            pd.set_option("display.max_rows", <>)
         ]],
             { i(1, '500') }
         ),
@@ -221,7 +221,7 @@ return {
         { trig = 'pmc', dscr = '[P]andas [m]ax [c]olumns' },
         fmta(
             [[
-            pd.set_option('display.width', <>)
+            pd.set_option("display.width", <>)
         ]],
             { i(1, '1000') }
         ),
@@ -241,7 +241,7 @@ return {
         fmta(
             [=[
             pd.DataFrame(
-                [['a', 1, 'i'], ['b', 2, 'ii'], ['c', 3, 'iii']], columns=['l', 'n', 'r']
+                [["a", 1, "i"], ["b", 2, "ii"], ["c", 3, "iii"]], columns=["l", "n", "r"]
             )
         ]=],
             {}
@@ -264,7 +264,7 @@ return {
                         nr_cols = 0
                     end
                     local col_names =
-                        { "'A'", "'B'", "'C'", "'D'", "'E'", "'F'", "'G'", "'H'" }
+                        { '"A"', '"B"', '"C"', '"D"', '"E"', '"F"', '"G"', '"H"' }
                     return table.concat(col_names, ',', 1, nr_cols)
                 end, { 2 }),
             }
@@ -298,7 +298,7 @@ return {
             [[
             import matplotlib
 
-            matplotlib.use('kitcat')
+            matplotlib.use("kitcat")
         ]],
             {}
         ),
@@ -343,7 +343,7 @@ return {
         { trig = 'fs', dscr = '[f]-[s]tring' },
         fmta(
             [[
-            f'<><>'
+            f"<><>"
         ]],
             { f(_G.LuaSnipConfig.visual_selection), i(1) }
         )
@@ -352,7 +352,7 @@ return {
         { trig = 'wo', dscr = '[W]ith [o]pen' },
         fmta(
             [[
-            with open(<>, '<>') as <>:
+            with open(<>, "<>") as <>:
                 <>
         ]],
             { i(1, 'filepath'), i(2, 'r'), i(3, 'f'), i(4) }

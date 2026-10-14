@@ -20,15 +20,15 @@ if TYPE_CHECKING:
     from pdbpp import Pdb
 
 # Palette (onedarkish)
-white = '#abb2bf'
-comment_grey = '#5c6370'
-light_blue = '#61afef'
-blue = '#528bff'
-purple = '#c678dd'
-green = '#98c379'
-red = '#e06c75'
-dark_yellow = '#d19a66'
-yellow = '#e5c07b'
+white = "#abb2bf"
+comment_grey = "#5c6370"
+light_blue = "#61afef"
+blue = "#528bff"
+purple = "#c678dd"
+green = "#98c379"
+red = "#e06c75"
+dark_yellow = "#d19a66"
+yellow = "#e5c07b"
 syntax_fg = white
 
 
@@ -39,23 +39,23 @@ class OneDarkish(Style):
         Text: syntax_fg,
         Error: red,
         Comment: comment_grey,
-        Keyword: f'{purple} nobold',
+        Keyword: f"{purple} nobold",
         Keyword.Constant: green,
         Keyword.Namespace: purple,
-        Name.Namespace: f'{red} nobold',
+        Name.Namespace: f"{red} nobold",
         Name.Builtin: yellow,
         Name.Function: light_blue,
-        Name.Class: f'{yellow} nobold',
+        Name.Class: f"{yellow} nobold",
         Name.Decorator: blue,
         Name.Exception: yellow,
         Name.Variable.Magic: red,
         Number: dark_yellow,
         Operator: purple,
-        Operator.Word: f'{purple} nobold',
+        Operator.Word: f"{purple} nobold",
         Literal: green,
-        Literal.String.Doc: f'{green} noitalic',
-        Literal.String.Interpol: f'{light_blue} nobold',
-        Literal.String.Escape: f'{light_blue} nobold',
+        Literal.String.Doc: f"{green} noitalic",
+        Literal.String.Interpol: f"{light_blue} nobold",
+        Literal.String.Escape: f"{light_blue} nobold",
         String: green,
     }
 
@@ -63,18 +63,18 @@ class OneDarkish(Style):
 class Config(pdb.DefaultConfig):  # ty: ignore[unresolved-attribute]
     """Actual pdbpp config."""
 
-    prompt = '(Pdb++)> '
+    prompt = "(Pdb++)> "
     sticky_by_default = True
 
     highlight = True
     use_pygments = True
-    filename_color = '38;2;229;192;123'
-    line_number_color = '38;2;99;109;131'
-    current_line_color = '48;2;40;44;52'
+    filename_color = "38;2;229;192;123"
+    line_number_color = "38;2;99;109;131"
+    current_line_color = "48;2;40;44;52"
     pygments_formatter_class = "pygments.formatters.TerminalTrueColorFormatter"
     pygments_formatter_kwargs: ClassVar[dict[str, type[Style]]] = {"style": OneDarkish}
 
-    def setup(self, pdb: 'Pdb') -> None:
+    def setup(self, pdb: "Pdb") -> None:
         """Override PDB++ mappings."""
         pdb_class = pdb.__class__
         pdb_class.do_l = pdb_class.do_longlist

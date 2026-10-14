@@ -30,7 +30,7 @@ c = get_config()  # noqa: F821  # ty: ignore[unresolved-reference]
 
 # Options
 c.TerminalInteractiveShell.true_color = True
-c.TerminalInteractiveShell.editing_mode = 'vi'
+c.TerminalInteractiveShell.editing_mode = "vi"
 c.TerminalInteractiveShell.confirm_exit = False
 c.TerminalIPythonApp.display_banner = False
 
@@ -50,8 +50,8 @@ def set_input_mode(self: ViState, mode: InputMode) -> None:
     See: https://github.com/jonathanslenders/python-prompt-toolkit/issues/192
     """
     shape = {InputMode.NAVIGATION: 2, InputMode.REPLACE: 4}.get(mode, 6)
-    raw = f'\x1b[{shape} q'
-    if hasattr(sys.stdout, '_cli'):
+    raw = f"\x1b[{shape} q"
+    if hasattr(sys.stdout, "_cli"):
         out = sys.stdout._cli.output.write_raw  # ty: ignore[unresolved-attribute]
     else:
         out = sys.stdout.write
@@ -67,7 +67,7 @@ ViState.input_mode = property(get_input_mode, set_input_mode)  # ty: ignore[inva
 
 def _get_branch() -> str:
     try:
-        branch = '  ' + (
+        branch = "  " + (
             subprocess.check_output(
                 ["git", "branch", "--show-current"], stderr=subprocess.DEVNULL
             )
@@ -76,7 +76,7 @@ def _get_branch() -> str:
         )
 
     except (OSError, subprocess.CalledProcessError):
-        branch = ''
+        branch = ""
     return branch
 
 
@@ -85,22 +85,22 @@ class MyPrompt(prompts.Prompts):
 
     def in_prompt_tokens(self) -> list[tuple[_TokenType, str]]:
         """Return in prompt."""
-        mode = 'I' if get_app().vi_state.input_mode == InputMode.INSERT else 'N'
+        mode = "I" if get_app().vi_state.input_mode == InputMode.INSERT else "N"
         branch = _get_branch()
 
         inprompt = []
         inprompt.append(
-            (Token.OutPrompt if mode == 'I' else Token.Generic.Prompt, f' {mode} ')
+            (Token.OutPrompt if mode == "I" else Token.Generic.Prompt, f" {mode} ")
         )
         inprompt.append(
-            (Token.Generic.Emph if mode == 'I' else Token.Generic.Strong, " ")
+            (Token.Generic.Emph if mode == "I" else Token.Generic.Strong, " ")
         )
         inprompt.append((Token.Generic.Deleted, f" [{self.shell.execution_count}] "))
         inprompt.append((Token.OutPromptNum if branch else Token.Generic.Inserted, ""))
         if branch:
             inprompt.append((Token.Prompt, f"{branch} "))
             inprompt.append((Token.PromptNum, ""))
-        inprompt.append((Token.Generic.Heading, f'  {Path().absolute().stem} '))
+        inprompt.append((Token.Generic.Heading, f"  {Path().absolute().stem} "))
         inprompt.append(
             (
                 (
@@ -127,7 +127,7 @@ class MyPrompt(prompts.Prompts):
         if width is None:
             width = self._width()
         return [
-            (Token.Generic.EmphStrong, (' ' * (width - 2)) + '| '),
+            (Token.Generic.EmphStrong, (" " * (width - 2)) + "| "),
         ]
 
     def out_prompt_tokens(self) -> list[tuple[_TokenType, str]]:
@@ -155,78 +155,78 @@ IPython.terminal.interactiveshell.style_from_pygments_dict = my_style_from_pygme
 
 
 # Palette (onedarkish)
-white = '#abb2bf'
-mono_2 = '#828997'
-comment_grey = '#5c6370'
-mono_4 = '#4b5263'
-cyan = '#56b6c2'
-light_blue = '#61afef'
-blue = '#528bff'
-purple = '#c678dd'
-green = '#98c379'
-red = '#e06c75'
-dark_red = '#be5046'
-dark_yellow = '#d19a66'
-yellow = '#e5c07b'
-black = '#24272e'
-cursor_grey = '#282c34'
-gutter_fg_grey = '#636d83'
-special_grey = '#3b4048'
-visual_grey = '#3e4452'
-pmenu = '#333841'
+white = "#abb2bf"
+mono_2 = "#828997"
+comment_grey = "#5c6370"
+mono_4 = "#4b5263"
+cyan = "#56b6c2"
+light_blue = "#61afef"
+blue = "#528bff"
+purple = "#c678dd"
+green = "#98c379"
+red = "#e06c75"
+dark_red = "#be5046"
+dark_yellow = "#d19a66"
+yellow = "#e5c07b"
+black = "#24272e"
+cursor_grey = "#282c34"
+gutter_fg_grey = "#636d83"
+special_grey = "#3b4048"
+visual_grey = "#3e4452"
+pmenu = "#333841"
 syntax_fg = white
 syntax_fold_bg = comment_grey
-count_bg = '#d0d0d0'
-count_fg = '#303030'
+count_bg = "#d0d0d0"
+count_fg = "#303030"
 
 # See:
 # https://github.com/prompt-toolkit/python-prompt-toolkit/blob/master/src/prompt_toolkit/styles/defaults.py
 c.TerminalInteractiveShell.highlighting_style_overrides = {
     Text: syntax_fg,
-    Error: f'{red} bold',
+    Error: f"{red} bold",
     Comment: comment_grey,
-    Keyword: f'{purple} nobold',
+    Keyword: f"{purple} nobold",
     Keyword.Constant: green,
     Keyword.Namespace: purple,
-    Name.Namespace: f'{red} nobold',
+    Name.Namespace: f"{red} nobold",
     Name.Builtin: yellow,
     Name.Function: light_blue,
-    Name.Class: f'{yellow} nobold',
+    Name.Class: f"{yellow} nobold",
     Name.Decorator: blue,
     Name.Exception: yellow,
     Name.Variable.Magic: red,  # dunder methods
     Number: dark_yellow,
     Operator: purple,
-    Operator.Word: f'{purple} nobold',
+    Operator.Word: f"{purple} nobold",
     Literal: green,
-    Literal.String.Doc: f'{green} noitalic',
-    Literal.String.Interpol: f'{light_blue} nobold',
-    Literal.String.Escape: f'{light_blue} nobold',
+    Literal.String.Doc: f"{green} noitalic",
+    Literal.String.Interpol: f"{light_blue} nobold",
+    Literal.String.Escape: f"{light_blue} nobold",
     String: green,
     Token.MatchingBracket.Other: blue,
     # Prompt stuff (we abuse the token class for this)
-    Token.OutPrompt: f'bg:{light_blue} {black} bold',  # insert mode
-    Token.Generic.Prompt: f'bg:{green} {black} bold',  # normal mode
-    Token.Generic.Emph: f'bg:{count_bg} {light_blue}',  # insert righ separator
-    Token.Generic.Strong: f'bg:{count_bg} {green}',  # normal right separator
-    Token.Generic.Deleted: f'bg:{count_bg} {count_fg} bold',  # execution count
-    Token.OutPromptNum: f'bg:{special_grey} {count_bg}',  # execution right separator w/branch
-    Token.Generic.Inserted: f'bg:{cursor_grey} {count_bg}',  # execution right separator no branch
-    Token.Prompt: f'bg:{special_grey} {white}',  # branch
-    Token.PromptNum: f'bg:{cursor_grey} {special_grey}',  # branch right separator
-    Token.Generic.Heading: f'bg:{cursor_grey} {mono_2}',  # filepath
-    Token.Generic.Subheading: f'bg:{black} {cursor_grey}',  # file (non-error) separator
-    Token.Generic.Output: f'bg:{red} {cursor_grey}',  # error separator
-    Token.Generic.Error: f'bg:{red} {black}',  # error
-    Token.Generic.Traceback: f'bg:{black} {red}',  # error final
-    Token.Generic.EmphStrong: f'bg:{black} {special_grey}',  # continuation prompt
+    Token.OutPrompt: f"bg:{light_blue} {black} bold",  # insert mode
+    Token.Generic.Prompt: f"bg:{green} {black} bold",  # normal mode
+    Token.Generic.Emph: f"bg:{count_bg} {light_blue}",  # insert righ separator
+    Token.Generic.Strong: f"bg:{count_bg} {green}",  # normal right separator
+    Token.Generic.Deleted: f"bg:{count_bg} {count_fg} bold",  # execution count
+    Token.OutPromptNum: f"bg:{special_grey} {count_bg}",  # execution right separator w/branch
+    Token.Generic.Inserted: f"bg:{cursor_grey} {count_bg}",  # execution right separator no branch
+    Token.Prompt: f"bg:{special_grey} {white}",  # branch
+    Token.PromptNum: f"bg:{cursor_grey} {special_grey}",  # branch right separator
+    Token.Generic.Heading: f"bg:{cursor_grey} {mono_2}",  # filepath
+    Token.Generic.Subheading: f"bg:{black} {cursor_grey}",  # file (non-error) separator
+    Token.Generic.Output: f"bg:{red} {cursor_grey}",  # error separator
+    Token.Generic.Error: f"bg:{red} {black}",  # error
+    Token.Generic.Traceback: f"bg:{black} {red}",  # error final
+    Token.Generic.EmphStrong: f"bg:{black} {special_grey}",  # continuation prompt
     # Completion
-    'completion-menu': f'bg:{pmenu} {white}',
-    'completion-menu.completion.current': f'bg:{light_blue} {black}',
-    'completion-menu.completion': f'bg:{pmenu} {white}',
-    'completion-menu.meta.completion.current': f'bg:{light_blue} {black}',
-    'completion-menu.meta.completion': f'bg:{pmenu} {white}',
-    'completion-menu.multi-column-meta': f'bg:{pmenu} {white}',
+    "completion-menu": f"bg:{pmenu} {white}",
+    "completion-menu.completion.current": f"bg:{light_blue} {black}",
+    "completion-menu.completion": f"bg:{pmenu} {white}",
+    "completion-menu.meta.completion.current": f"bg:{light_blue} {black}",
+    "completion-menu.meta.completion": f"bg:{pmenu} {white}",
+    "completion-menu.multi-column-meta": f"bg:{pmenu} {white}",
 }
 
 
@@ -250,6 +250,6 @@ load_extension_silently('ipython_ctrlr_fzf')
 # Define some shortcuts
 custom_keybinds = [
     # Note that c-f accepts the (f)ull/(f)orward suggestion
-    {'command': 'IPython:auto_suggest.accept_token', 'new_keys': ['c-t']},
+    {"command": "IPython:auto_suggest.accept_token", "new_keys": ["c-t"]},
 ]
 c.TerminalInteractiveShell.shortcuts = custom_keybinds
