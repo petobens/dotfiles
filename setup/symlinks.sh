@@ -95,6 +95,7 @@ symlink "$repo/config/python/ipython_config.py" "$HOME/.ipython/profile_default/
 symlink "$repo/config/python/ipython_startup.py" "$HOME/.ipython/profile_default/startup/ipython_startup.py"
 symlink "$repo/config/python/jupyterlab/jupyterlab_code_formatter" "$HOME/.jupyter/lab/user-settings/jupyterlab_code_formatter"
 symlink "$repo/config/python/jupyterlab/@jupyterlab/apputils-extension/themes.jupyterlab-settings" "$HOME/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings"
+symlink "$repo/config/python/marimo" "$HOME/.config/marimo"
 symlink "$repo/config/python/matplotlib" "$HOME/.config/matplotlib"
 symlink "$repo/config/python/pdbrc" "$HOME/.pdbrc"
 symlink "$repo/config/python/pdbrc.py" "$HOME/.pdbrc.py"

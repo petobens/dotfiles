@@ -853,6 +853,14 @@ If Codex was not signed in during setup, run the
 plugin-install command printed by the script after `codex login`.
 Verify access by asking each agent to find a Slack message and return its link.
 
+### Marimo configuration
+
+The symlink setup installs `~/.config/marimo/marimo.toml` with Vim bindings,
+88-column formatting, live Ruff warnings, and ty diagnostics. The language
+tool installer installs `marimo[lsp]`, Ruff, and ty together with uv on Python
+3.14. Project environments need their own `marimo[lsp]` and ty; see the
+[marimo documentation](https://docs.marimo.io/guides/editor_features/language_server/).
+
 ### Verify services and hardware
 
 After rebooting, open a terminal inside Hyprland and run:

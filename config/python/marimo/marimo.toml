@@ -1,0 +1,17 @@
+[keymap]
+preset = "vim"
+
+[formatting]
+line_length = 88
+
+[save]
+# Keep formatting explicit, as in the JupyterLab settings
+format_on_save = false
+
+[language_servers.pylsp]
+enabled = true
+enable_ruff = true
+enable_mypy = false
+
+[language_servers.ty]
+enabled = true

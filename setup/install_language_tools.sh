@@ -22,6 +22,8 @@ for tool in \
     yamllint; do
     uv tool install --force "$tool"
 done
+# Use Python 3.14 while marimo's native dependencies lack Python 3.15 wheels
+uv tool install --force --python 3.14 --with ruff --with ty 'marimo[lsp]'
 uv tool install --force --with 'psycopg[binary]' pgcli
 # postgres-mcp breaks with mcp 2.x, and on Python 3.14 pglast builds from source
 uv tool install --force --python 3.13 --with 'mcp<2' postgres-mcp
