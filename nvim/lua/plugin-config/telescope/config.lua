@@ -139,14 +139,17 @@ function M.setup()
                         'f',
                         '--follow',
                         '--hidden',
-                        '--strip-cwd-prefix',
                         '--exclude',
                         '.git',
                     }
+                    -- fd rejects prefix stripping with explicit search directories
+                    if not opts.search_dirs then
+                        table.insert(command, '--strip-cwd-prefix')
+                    end
                     local cwd = vim.fs.normalize(opts.cwd or vim.uv.cwd())
                     local screenshots =
                         vim.fs.joinpath(vim.env.HOME, 'Pictures', 'Screenshots')
-                    if cwd == screenshots then
+                    if cwd == screenshots and not opts.search_dirs then
                         return { 'sh', '-c', table.concat(command, ' ') .. ' | sort -r' }
                     end
                     return command

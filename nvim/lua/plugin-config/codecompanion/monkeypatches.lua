@@ -7,6 +7,19 @@ local M = {}
 
 local applied = false
 
+local function patch_attachment_notifications()
+    local file = require('codecompanion.interactions.shared.slash_commands.file')
+    local output = file.output
+    -- Silence attachment confirmations while keeping upstream warnings and errors
+    file.output = function(self, selected, opts)
+        return output(
+            self,
+            selected,
+            vim.tbl_extend('force', opts or {}, { silent = true })
+        )
+    end
+end
+
 local function patch_acp_model_choices()
     local adapter_ui = require('codecompanion.adapters.ui')
     local config = require('codecompanion.config')
@@ -143,6 +156,7 @@ function M.apply()
         return
     end
 
+    patch_attachment_notifications()
     patch_acp_model_choices()
     patch_tool_approval_notification()
     patch_acp_cwd()
