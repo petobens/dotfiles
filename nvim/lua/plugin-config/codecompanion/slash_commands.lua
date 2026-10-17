@@ -111,6 +111,8 @@ local slash_commands = {
         },
     },
     ['help'] = { opts = { max_lines = 10000 } },
+    -- Keep URL fetching on Jina; the new default needs the MarkItDown CLI
+    ['fetch'] = { opts = { adapter = 'jina' } },
     ['clone'] = {
         description = 'Clone this chat into a new session',
         callback = clone.clone_chat,

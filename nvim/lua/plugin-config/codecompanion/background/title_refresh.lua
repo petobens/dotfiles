@@ -1,5 +1,4 @@
 local native = require('codecompanion.interactions.background.builtin.chat_make_title')
-local tags = require('codecompanion.interactions.shared.tags')
 local utils = require('codecompanion.utils')
 
 local M = {}
@@ -26,25 +25,6 @@ local TITLE_SCHEMA = {
     strict = true,
 }
 
-local function format_messages(messages)
-    messages = vim.iter(messages or {})
-        :map(function(message)
-            -- Upstream strips images but not documents, whose base64
-            -- payload overflows the title model's context
-            if message._meta and message._meta.tag == tags.DOCUMENT then
-                return vim.tbl_extend(
-                    'force',
-                    message,
-                    { content = '[Document content omitted]' }
-                )
-            end
-            return message
-        end)
-        :totable()
-
-    return native.format_messages(messages)
-end
-
 function M.request(background, chat)
     local cycle = chat.cycle or 1
     local completed_turns = cycle - 1
@@ -60,7 +40,7 @@ function M.request(background, chat)
     -- A freshly loaded ACP session dispatches on_ready before
     -- _acp_session_loaded is set, with an empty chat.messages; skip without
     -- establishing the refresh baseline
-    local transcript = format_messages(chat.messages)
+    local transcript = native.format_messages(chat.messages)
     if vim.trim(transcript) == '' then
         return
     end

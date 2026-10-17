@@ -25,9 +25,12 @@ function M.setup()
         -- Adapters
         adapters = {
             http = {
+                openai_gpt_6_luna = adapters.openai_gpt_6_luna,
                 opts = {
                     show_presets = false,
                     show_model_choices = false,
+                    -- Chat controls expect ACP; Luna is for inline edits and titles
+                    hidden = { openai_gpt_6_luna = true },
                 },
             },
             acp = {
@@ -55,8 +58,9 @@ function M.setup()
         },
         -- Interactions
         interactions = {
+            inline = { adapter = 'openai_gpt_6_luna' },
             -- Background
-            background = background.build(adapters.openai_gpt_56_luna()),
+            background = background.build(adapters.openai_gpt_6_luna()),
             -- Chat
             chat = {
                 adapter = 'codex',

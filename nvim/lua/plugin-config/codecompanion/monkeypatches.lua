@@ -8,11 +8,18 @@ local M = {}
 local applied = false
 
 local function patch_acp_model_choices()
-    local change_adapter =
-        require('codecompanion.interactions.chat.keymaps.change_adapter')
-    -- Upstream PR: https://github.com/olimorris/codecompanion.nvim/pull/3020
-    change_adapter.list_acp_models = function()
-        return nil
+    local adapter_ui = require('codecompanion.adapters.ui')
+    local config = require('codecompanion.config')
+    local select_model = adapter_ui.select_model
+    -- Upstream's ACP picker ignores adapters.acp.opts.show_model_choices
+    adapter_ui.select_model = function(opts)
+        if
+            opts.adapter.type == 'acp'
+            and not config.adapters.acp.opts.show_model_choices
+        then
+            return opts.on_choice(nil)
+        end
+        return select_model(opts)
     end
 end
 
@@ -104,28 +111,6 @@ local function patch_image_paths()
     end
 end
 
-local function patch_acp_context_separator()
-    -- ACP shares each file as a bare "Sharing the following file as context:
-    -- <path>" block with no trailing newline, so consecutive markers and the
-    -- following user prompt render glued together. Terminate each marker with
-    -- a newline to keep them on their own lines
-    local helpers = require('codecompanion.adapters.acp.helpers')
-    local form_messages = helpers.form_messages
-
-    helpers.form_messages = function(...)
-        local parts = form_messages(...)
-        for _, part in ipairs(parts) do
-            if
-                type(part.text) == 'string'
-                and part.text:match('^Sharing the following file as context:')
-            then
-                part.text = part.text .. '\n'
-            end
-        end
-        return parts
-    end
-end
-
 local function patch_acp_context_window()
     -- Preserve the context size reported with ACP token usage because
     -- CodeCompanion otherwise discards it
@@ -162,7 +147,6 @@ function M.apply()
     patch_tool_approval_notification()
     patch_acp_cwd()
     patch_image_paths()
-    patch_acp_context_separator()
     patch_acp_context_window()
 
     applied = true

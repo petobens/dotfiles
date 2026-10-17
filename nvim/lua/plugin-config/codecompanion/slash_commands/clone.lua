@@ -29,9 +29,8 @@ function M.clone_chat(chat)
         messages =
             vim.list_slice(messages, math.max(1, #messages - (count or #messages) + 1))
 
-        local change_adapter =
-            require('codecompanion.interactions.chat.keymaps.change_adapter')
-        vim.ui.select(change_adapter.get_adapters_list(chat.adapter.name), {
+        local adapter_ui = require('codecompanion.adapters.ui')
+        vim.ui.select(adapter_ui.get_adapters_list(chat.adapter.name), {
             prompt = 'Clone adapter: ',
         }, function(adapter)
             if not adapter then

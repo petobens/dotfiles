@@ -533,6 +533,33 @@ function M.setup()
             end, 50)
         end,
     })
+
+    -- Running inline requests, shown by the lualine codecompanion_inline component
+    vim.api.nvim_create_autocmd('User', {
+        group = group,
+        pattern = { 'CodeCompanionInlineStarted', 'CodeCompanionInlineFinished' },
+        desc = 'Track running CodeCompanion inline requests',
+        callback = function(e)
+            local data = e.data
+            if not vim.api.nvim_buf_is_valid(data.bufnr) then
+                return
+            end
+
+            local buf_vars = vim.b[data.bufnr]
+            if e.match == 'CodeCompanionInlineStarted' then
+                buf_vars.codecompanion_inline = {
+                    id = data.id,
+                    status = state_helpers.provider_icon(data.adapter.name)
+                        .. ' '
+                        .. u.icons.running,
+                }
+            elseif vim.tbl_get(buf_vars, 'codecompanion_inline', 'id') == data.id then
+                -- An older request finishing must not clear a newer one's status
+                buf_vars.codecompanion_inline = nil
+            end
+            require('lualine').refresh({ place = { 'statusline' } })
+        end,
+    })
 end
 
 return M

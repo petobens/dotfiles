@@ -301,7 +301,7 @@ function M.state.provider_icon(name)
     name = (name or ''):lower()
     if name:find('claude') then
         return '' -- cod-claude
-    elseif name:find('codex') then
+    elseif name:find('codex') or name:find('openai') then
         return '' -- cod-openai
     end
     return '󰚩' -- md-robot
@@ -610,7 +610,7 @@ function M.chat.add_images(files)
 
     for _, file in ipairs(files) do
         local path, err = image_attachment_path(file)
-        local image = path and image_utils.from_path(path) or err
+        local image = path and image_utils.encode_image({ path = path, id = path }) or err
         if type(image) == 'string' then
             vim.notify(
                 string.format('Could not encode %s: %s', file, image),

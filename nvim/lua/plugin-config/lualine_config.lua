@@ -10,6 +10,14 @@ local function is_loclist()
 end
 
 -- Custom segments/components
+local codecompanion_inline = {
+    function()
+        return vim.tbl_get(vim.b, 'codecompanion_inline', 'status') or ''
+    end,
+    separator = { left = '', right = '' },
+    color = { fg = onedark_colors.black, bg = onedark_colors.orange },
+}
+
 local function gitsigns_diff_source()
     local gitsigns = vim.b.gitsigns_status_dict
     if gitsigns then
@@ -201,6 +209,7 @@ require('lualine').setup({
             },
         },
         lualine_c = {
+            codecompanion_inline,
             {
                 'filename',
                 file_status = true,
@@ -311,6 +320,7 @@ require('lualine').setup({
     },
     inactive_sections = {
         lualine_c = {
+            codecompanion_inline,
             {
                 'filename',
                 file_status = true,

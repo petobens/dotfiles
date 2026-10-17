@@ -72,7 +72,7 @@ local function add_tmux_pane_context_incremental(chat, target)
             target,
             table.concat(new_lines, '\n')
         ),
-    }, 'terminal', ('<tmux>%s</tmux>'):format(target))
+    }, { source = 'terminal', id = ('<tmux>%s</tmux>'):format(target) })
 end
 
 -- Slash commands
