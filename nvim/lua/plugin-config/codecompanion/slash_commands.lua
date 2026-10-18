@@ -189,6 +189,7 @@ local slash_commands = {
     ['skills'] = {
         description = 'Pick a skill name from the skills directory',
         callback = skills.skills,
+        enabled = true,
     },
     -- Terminal
     ['tmux'] = {
