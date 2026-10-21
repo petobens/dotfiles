@@ -209,6 +209,18 @@ local function toggle_chat_zoom()
     window_helpers.toggle_cc_zoom()
 end
 
+local function yank_session_id()
+    local chat = codecompanion.buf_get_chat(vim.api.nvim_get_current_buf())
+    local session_id = chat.acp_connection and chat.acp_connection.session_id
+    if not session_id then
+        vim.notify('No ACP session ID available', vim.log.levels.WARN)
+        return
+    end
+    vim.fn.setreg('+', session_id)
+    vim.fn.setreg('*', session_id)
+    vim.notify('Yanked session ID: ' .. session_id, vim.log.levels.INFO)
+end
+
 local function open_file_link()
     local target = vim.api.nvim_get_current_line():match('%b[]%((.-)%)')
     if not target then
@@ -249,6 +261,11 @@ local function setup_codecompanion_filetype_mappings(e)
     vim.keymap.set('n', '<Leader>pm', function()
         acp_helpers.toggle_plan_mode(codecompanion.buf_get_chat(bufnr))
     end, { buf = bufnr, desc = '[P]lan [m]ode: toggle' })
+
+    vim.keymap.set('n', '<Leader>ys', yank_session_id, {
+        buf = bufnr,
+        desc = '[Y]ank [s]ession ID to clipboard',
+    })
 
     vim.keymap.set({ 'n', 'i' }, '<A-s>', function()
         acp_sessions.browse(codecompanion.buf_get_chat(bufnr))
