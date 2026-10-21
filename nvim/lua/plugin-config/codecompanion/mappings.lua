@@ -12,6 +12,7 @@ local skills_picker = require('plugin-config.codecompanion.pickers.skills')
 local state_helpers = require('plugin-config.codecompanion.helpers').state
 local usage_helpers = require('plugin-config.codecompanion.helpers').usage
 local window_helpers = require('plugin-config.codecompanion.helpers').window
+local worktrees = require('plugin-config.codecompanion.pickers.worktrees')
 
 local M = {}
 
@@ -407,6 +408,12 @@ local function setup_global_mappings()
         open_chats.browse(codecompanion.buf_get_chat(vim.api.nvim_get_current_buf()))
     end, {
         desc = '[C]hat [b]uffers: browse open CodeCompanion chats',
+    })
+
+    vim.keymap.set('n', '<Leader>gt', function()
+        worktrees.browse(create_chat)
+    end, {
+        desc = '[G]it work[t]rees: chat, create, merge, or remove',
     })
 
     vim.keymap.set('n', '<Leader>cs', function()

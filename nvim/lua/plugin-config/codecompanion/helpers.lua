@@ -43,6 +43,40 @@ function M.repo.git_root_file(filename, path)
     return filepath
 end
 
+function M.repo.git(args, cwd)
+    local result =
+        vim.system(vim.list_extend({ 'git' }, args), { cwd = cwd, text = true }):wait()
+    if result.code ~= 0 then
+        -- Some failures, such as merge conflicts, are reported on stdout
+        vim.notify(vim.trim(result.stdout .. result.stderr), vim.log.levels.ERROR)
+        return nil
+    end
+    return result.stdout
+end
+
+-- List the repository's worktrees as { path, branch } with the main checkout first
+function M.repo.worktrees(path)
+    local root = u.git_root(path)
+    if not root then
+        return vim.notify('No worktrees: not a Git repository: ' .. path)
+    end
+    local listing = M.repo.git({ 'worktree', 'list', '--porcelain' }, root)
+    if not listing then
+        return nil
+    end
+    local trees = {}
+    for line in listing:gmatch('[^\n]+') do
+        local tree_path = line:match('^worktree (.+)')
+        local branch = line:match('^branch refs/heads/(.+)')
+        if tree_path then
+            trees[#trees + 1] = { path = tree_path }
+        elseif branch then
+            trees[#trees].branch = branch
+        end
+    end
+    return trees
+end
+
 -- State
 -- Shared status vocabulary for window titles and picker rows
 M.state.turn_states = {
