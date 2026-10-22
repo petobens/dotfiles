@@ -62,10 +62,12 @@
   fill: accent.lighten(92%),
   inset: (x: 8pt, y: 4pt),
   radius: 20pt,
-)[#text(size: 8pt, weight: "bold", fill: accent, body)]
+)[#align(center + horizon, text(size: 8pt, weight: "bold", fill: accent, body))]
 
 // Metadata keeps the chip in the header without taking body space
 #let slide-chip(body) = [#metadata(body) <mutt-slide-chip>]
+
+#let slide-note(body) = [#metadata(body) <mutt-slide-note>]
 
 #let _slide-title(self, font-size: _default-font-size) = context {
   let chips = query(<mutt-slide-chip>).filter(
@@ -75,12 +77,23 @@
   block(width: 100%, height: 60pt)[
     #set align(top + left)
     #grid(
-      columns: if has-chip { (28pt, 1fr, auto) } else { (28pt, 1fr) },
+      columns: if has-chip { (21pt, 1fr, auto) } else { (21pt, 1fr) },
       column-gutter: 9pt,
-      align: left + top,
-      move(dy: 3pt, image("assets/toggle.png", width: 28pt)),
+      align: left + horizon,
+      // Match the light Slides library's outlined toggle and inset dot
+      rect(
+        width: 20.625pt,
+        height: 12.742pt,
+        radius: 6pt,
+        stroke: 0.75pt + mutt-blue,
+        inset: 0pt,
+      )[
+        #place(right + horizon, dx: -1.875pt)[
+          #circle(radius: 4.496pt, fill: mutt-blue, stroke: none)
+        ]
+      ],
       text(
-        size: _scaled-size(24pt, font-size),
+        size: _scaled-size(21pt, font-size),
         weight: "bold",
         fill: mutt-blue,
         utils.display-current-heading(level: 2, depth: self.slide-level),
@@ -92,16 +105,30 @@
 }
 
 #let _deck-footer(font-size, slide-numbers: false) = context {
+  let notes = query(<mutt-slide-note>).filter(
+    it => it.location().page() == here().page(),
+  )
   [#metadata(none) <mutt-footer-top>]
+  if notes.len() > 0 {
+    place(top + left, dy: 11pt, block(width: 80%)[
+      #set align(left)
+      #set par(leading: 2pt, spacing: 0pt)
+      #text(
+        size: _scaled-size(8pt, font-size),
+        fill: muted,
+        notes.first().value,
+      )
+    ])
+  }
   grid(
     columns: if slide-numbers { (1fr, auto, auto) } else { (1fr, auto) },
-    column-gutter: 12pt,
+    column-gutter: 7.5pt,
     align: left + horizon,
-    line(length: 100%, stroke: 0.6pt + mutt-blue),
+    line(length: 100%, stroke: 0.75pt + mutt-blue),
     // The source image includes transparent padding around the wordmark
-    block(width: 64pt, height: 11pt, clip: true)[
-      #place(top + left, dx: -36.7pt, dy: -33.3pt)[
-        #box(width: 137.4pt, height: 77.3pt)[
+    block(width: 53.8pt, height: 9.25pt, clip: true)[
+      #place(top + left, dx: -30.85pt, dy: -28pt)[
+        #box(width: 115.5pt, height: 65pt)[
           #image("assets/wordmark.png", width: 100%)
         ]
       ]
@@ -609,6 +636,7 @@
   grid(
     columns: (1fr,) * definitions.len(),
     gutter: 22pt,
+    align: top + left,
     ..definitions.map(item => [
       #block(
         width: 100%,
@@ -652,9 +680,9 @@
     config-page(
       width: 720pt,
       height: 405pt,
-      margin: (top: 84pt, bottom: 44pt, left: 26pt, right: 26pt),
+      margin: (top: 84pt, bottom: 44pt, left: 42pt, right: 42pt),
       header-ascent: -4pt,
-      footer-descent: 12pt,
+      footer-descent: 7pt,
     ),
     config-common(
       new-section-slide-fn: _section-divider.with(
