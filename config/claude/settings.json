@@ -8,6 +8,9 @@
   "enabledPlugins": {
     "slack@claude-plugins-official": true
   },
+  "env": {
+    "MCP_TIMEOUT": "60000"
+  },
   "includeGitInstructions": false,
   "model": "opus[1m]",
   "permissions": {

@@ -853,6 +853,18 @@ If Codex was not signed in during setup, run the
 plugin-install command printed by the script after `codex login`.
 Verify access by asking each agent to find a Slack message and return its link.
 
+### Connect Claude MCP servers
+
+`post_install.sh` registers `postgres`, `github`, and `clickup` through Claude's
+CLI. It checks the active configuration through `claude mcp get` rather than
+assuming a config file location. The linked Claude settings allow 60 seconds
+for MCP startup.
+
+Credentials and account authorization must be configured separately on each
+computer. From a new terminal, run `claude mcp list` to check connectivity,
+then use `/mcp` in Claude to complete any required authorization. Restart
+existing Claude sessions after registering servers.
+
 ### Marimo configuration
 
 The symlink setup installs `~/.config/marimo/marimo.toml` with Vim bindings,

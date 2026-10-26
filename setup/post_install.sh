@@ -342,18 +342,19 @@ section 'Configuring Claude plugins and MCP servers'
 if command -v claude > /dev/null; then
     claude plugin install --scope user slack \
         --marketplace anthropics/claude-plugins-official
-    if ! jq -e '.mcpServers.clickup != null' "$HOME/.claude.json" > /dev/null 2>&1; then
+    # Ask Claude so config location changes do not hide missing registrations
+    if ! claude mcp get clickup > /dev/null 2>&1; then
         # Authenticate on each new computer through /mcp in Claude Code
         claude mcp add --scope user --transport http clickup https://mcp.clickup.com/mcp
     fi
-    if ! jq -e '.mcpServers.github != null' "$HOME/.claude.json" > /dev/null 2>&1; then
+    if ! claude mcp get github > /dev/null 2>&1; then
         # Store the variable reference; launchers supply the token at runtime
         # shellcheck disable=SC2016
         claude mcp add --scope user --transport http github \
             https://api.githubcopilot.com/mcp/ \
             --header 'Authorization: Bearer ${GITHUB_TOKEN}'
     fi
-    if ! jq -e '.mcpServers.postgres != null' "$HOME/.claude.json" > /dev/null 2>&1; then
+    if ! claude mcp get postgres > /dev/null 2>&1; then
         # The launcher path resolves once symlinks.sh links ~/bin
         claude mcp add --scope user postgres -- "$HOME/bin/mutt_pg_mcp"
     fi
