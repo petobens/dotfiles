@@ -170,6 +170,7 @@ zathura-pdf-poppler
 act
 actionlint
 ast-grep
+aws-cli-v2
 base-devel
 docker
 docker-buildx

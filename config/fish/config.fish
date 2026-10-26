@@ -114,7 +114,7 @@ alias mm multimon
 alias mv 'mv -i'
 alias o open
 alias open "$HOME/.config/hypr/scripts/system_open"
-alias pgm 'PGPASSWORD="$(pass show mutt-pg/pass)" pgcli -h "$(pass show mutt-pg/host)" -U "$(pass show mutt-pg/user)" -d "$(pass show mutt-pg/db)"'
+alias pgm 'mutt_pg_tunnel pgcli'
 alias ping gping
 alias py python
 alias q exit

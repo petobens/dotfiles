@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run a command with PG* variables pointing at an SSM tunnel to the Mutt
+# database. Connection details live in pass so this public repository does not
+# publish them
+
+export AWS_CONFIG_FILE AWS_PAGER=''
+AWS_CONFIG_FILE=$(mktemp)
+log=$(mktemp)
+tunnel_pid=''
+cleanup() {
+    if [[ -n $tunnel_pid ]]; then
+        # Kill the separate process group, including the Session Manager plugin
+        kill -- "-$tunnel_pid" 2> /dev/null || true
+        wait "$tunnel_pid" 2> /dev/null || true
+    fi
+    rm -f "$AWS_CONFIG_FILE" "$log"
+}
+trap cleanup EXIT
+
+pass show mutt-pg/aws-config > "$AWS_CONFIG_FILE"
+host=$(pass show mutt-pg/host)
+bastion=$(pass show mutt-pg/bastion)
+PGPASSWORD=$(pass show mutt-pg/pass)
+PGUSER=$(pass show mutt-pg/user)
+PGDATABASE=$(pass show mutt-pg/db)
+# Use a free port so pgm and agent MCP servers can each open a tunnel
+PGPORT=$(python -c 'import socket; s = socket.socket(); s.bind(("127.0.0.1", 0)); print(s.getsockname()[1])')
+export PGPASSWORD PGUSER PGDATABASE PGPORT PGHOST=127.0.0.1 PGSSLMODE=require \
+    PGCONNECT_TIMEOUT=15
+
+# Keep stdout clean because MCP servers use it for their protocol
+if ! aws --profile internaldata-db sts get-caller-identity > /dev/null 2>&1; then
+    aws --profile internaldata-db sso login >&2
+fi
+
+printf 'Opening the Internal Data tunnel...\n' >&2
+# The tunnel closes after 20 idle minutes, so reopen it on the same port while
+# this script runs. Stop when AWS fails, for example once SSO expires
+# shellcheck disable=SC2016
+setsid bash -c 'parent=$1; shift; while kill -0 "$parent" && aws "$@"; do :; done' \
+    _ $$ --profile internaldata-db --region us-east-1 ssm start-session \
+    --target "$bastion" \
+    --document-name AWS-StartPortForwardingSessionToRemoteHost \
+    --parameters "host=$host,portNumber=5432,localPortNumber=$PGPORT" \
+    < /dev/null > "$log" 2>&1 &
+tunnel_pid=$!
+for ((attempt = 0; attempt < 120; attempt++)); do
+    if ! kill -0 "$tunnel_pid" 2> /dev/null; then
+        cat "$log" >&2
+        exit 1
+    fi
+    if grep -q 'Waiting for connections' "$log"; then
+        break
+    fi
+    sleep 0.5
+done
+if ((attempt == 120)); then
+    printf 'Timed out waiting for the tunnel.\n' >&2
+    cat "$log" >&2
+    exit 1
+fi
+
+"$@"
