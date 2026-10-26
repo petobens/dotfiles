@@ -403,6 +403,9 @@ local function load_entry(chat, entry)
         chat.acp_connection.session_id
     )
     require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
+    -- Flush the final replay response before restoring headers and the user prompt
+    chat.builder:flush()
+    chat:ready_for_input()
     restore_header_metadata(chat, restored_headers)
     chat._acp_restored_messages = restored_messages(updates)
     for _, context in ipairs(restored_context) do
