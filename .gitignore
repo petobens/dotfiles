@@ -15,6 +15,7 @@ nvim/cache/
 
 # OneDrive
 config/onedrive/items*
+config/onedrive/monitor-status.json
 config/onedrive/refresh_token
 config/onedrive/.config.backup
 config/onedrive/.config.hash
