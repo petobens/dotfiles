@@ -3,63 +3,87 @@ set -euo pipefail
 
 # Run a command with PG* variables pointing at an SSM tunnel to the Mutt
 # database. Connection details live in pass so this public repository does not
-# publish them
+# publish them. With --lazy, the tunnel and any AWS SSO login wait until the
+# command runs "mutt_pg_tunnel --open", so agents that start the MCP server
+# without querying the database never open a browser login
 
-export AWS_CONFIG_FILE AWS_PAGER=''
-AWS_CONFIG_FILE=$(mktemp)
-log=$(mktemp)
-tunnel_pid=''
-cleanup() {
-    if [[ -n $tunnel_pid ]]; then
-        # Kill the separate process group, including the Session Manager plugin
-        kill -- "-$tunnel_pid" 2> /dev/null || true
-        wait "$tunnel_pid" 2> /dev/null || true
+# Log in if needed and start the tunnel unless it is already running. Keep
+# stdout clean because MCP servers use it for their protocol
+open_tunnel() {
+    exec 9> "$MUTT_PG_DIR/lock"
+    # Parallel queries wait here so only one of them opens the tunnel
+    flock 9
+    if [[ -s $MUTT_PG_DIR/pid ]] && kill -0 "$(< "$MUTT_PG_DIR/pid")" 2> /dev/null; then
+        return
     fi
-    rm -f "$AWS_CONFIG_FILE" "$log"
+    if ! aws --profile internaldata-db sts get-caller-identity > /dev/null 2>&1; then
+        aws --profile internaldata-db sso login >&2
+    fi
+
+    printf 'Opening the Internal Data tunnel...\n' >&2
+    local log=$MUTT_PG_DIR/log pid attempt
+    # The tunnel closes after 20 idle minutes, so reopen it on the same port
+    # while the main script runs. Stop when AWS fails, for example once SSO
+    # expires, so the next query logs in again. Closing fd 9 keeps the tunnel
+    # from holding the lock
+    # shellcheck disable=SC2016
+    setsid bash -c 'parent=$1; shift; while kill -0 "$parent" && aws "$@"; do :; done' \
+        _ "$MUTT_PG_PARENT" --profile internaldata-db --region us-east-1 \
+        ssm start-session --target "$MUTT_PG_BASTION" \
+        --document-name AWS-StartPortForwardingSessionToRemoteHost \
+        --parameters "host=$MUTT_PG_HOST,portNumber=5432,localPortNumber=$PGPORT" \
+        < /dev/null > "$log" 2>&1 9>&- &
+    pid=$!
+    printf '%s\n' "$pid" > "$MUTT_PG_DIR/pid"
+    for ((attempt = 0; attempt < 120; attempt++)); do
+        if grep -q 'Waiting for connections' "$log"; then
+            return
+        fi
+        if ! kill -0 "$pid" 2> /dev/null; then
+            break
+        fi
+        sleep 0.5
+    done
+    printf 'Could not open the tunnel.\n' >&2
+    cat "$log" >&2
+    # Kill the separate process group, including the Session Manager plugin
+    kill -- "-$pid" 2> /dev/null || true
+    return 1
+}
+
+if [[ ${1-} == --open ]]; then
+    open_tunnel
+    exit
+fi
+lazy=false
+if [[ ${1-} == --lazy ]]; then
+    lazy=true
+    shift
+fi
+
+export AWS_CONFIG_FILE AWS_PAGER='' MUTT_PG_DIR MUTT_PG_PARENT=$$
+MUTT_PG_DIR=$(mktemp -d)
+AWS_CONFIG_FILE=$MUTT_PG_DIR/aws-config
+cleanup() {
+    if [[ -s $MUTT_PG_DIR/pid ]]; then
+        kill -- "-$(< "$MUTT_PG_DIR/pid")" 2> /dev/null || true
+    fi
+    rm -rf "$MUTT_PG_DIR"
 }
 trap cleanup EXIT
 
 pass show mutt-pg/aws-config > "$AWS_CONFIG_FILE"
-host=$(pass show mutt-pg/host)
-bastion=$(pass show mutt-pg/bastion)
+MUTT_PG_HOST=$(pass show mutt-pg/host)
+MUTT_PG_BASTION=$(pass show mutt-pg/bastion)
 PGPASSWORD=$(pass show mutt-pg/pass)
 PGUSER=$(pass show mutt-pg/user)
 PGDATABASE=$(pass show mutt-pg/db)
 # Use a free port so pgm and agent MCP servers can each open a tunnel
 PGPORT=$(python -c 'import socket; s = socket.socket(); s.bind(("127.0.0.1", 0)); print(s.getsockname()[1])')
-export PGPASSWORD PGUSER PGDATABASE PGPORT PGHOST=127.0.0.1 PGSSLMODE=require \
-    PGCONNECT_TIMEOUT=15
+export MUTT_PG_HOST MUTT_PG_BASTION PGPASSWORD PGUSER PGDATABASE PGPORT \
+    PGHOST=127.0.0.1 PGSSLMODE=require PGCONNECT_TIMEOUT=15
 
-# Keep stdout clean because MCP servers use it for their protocol
-if ! aws --profile internaldata-db sts get-caller-identity > /dev/null 2>&1; then
-    aws --profile internaldata-db sso login >&2
+if ! $lazy; then
+    open_tunnel
 fi
-
-printf 'Opening the Internal Data tunnel...\n' >&2
-# The tunnel closes after 20 idle minutes, so reopen it on the same port while
-# this script runs. Stop when AWS fails, for example once SSO expires
-# shellcheck disable=SC2016
-setsid bash -c 'parent=$1; shift; while kill -0 "$parent" && aws "$@"; do :; done' \
-    _ $$ --profile internaldata-db --region us-east-1 ssm start-session \
-    --target "$bastion" \
-    --document-name AWS-StartPortForwardingSessionToRemoteHost \
-    --parameters "host=$host,portNumber=5432,localPortNumber=$PGPORT" \
-    < /dev/null > "$log" 2>&1 &
-tunnel_pid=$!
-for ((attempt = 0; attempt < 120; attempt++)); do
-    if ! kill -0 "$tunnel_pid" 2> /dev/null; then
-        cat "$log" >&2
-        exit 1
-    fi
-    if grep -q 'Waiting for connections' "$log"; then
-        break
-    fi
-    sleep 0.5
-done
-if ((attempt == 120)); then
-    printf 'Timed out waiting for the tunnel.\n' >&2
-    cat "$log" >&2
-    exit 1
-fi
-
 "$@"

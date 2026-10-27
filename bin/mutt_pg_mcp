@@ -5,5 +5,7 @@ set -euo pipefail
 # tunnel. Credentials are read from pass at launch, so no agent configuration
 # stores them. The bare URI makes Postgres take every connection setting from
 # the PG* variables, so special characters in the password need no URL escaping
-DATABASE_URI=postgresql:// exec "$(dirname "$(readlink -f "$0")")/mutt_pg_tunnel" \
-    postgres-mcp --access-mode=restricted
+repo=$(dirname "$(dirname "$(readlink -f "$0")")")
+DATABASE_URI=postgresql:// exec "$repo/bin/mutt_pg_tunnel" --lazy \
+    "$(uv tool dir)/postgres-mcp/bin/python" "$repo/config/postgres-mcp/launcher.py" \
+    "$repo/bin/mutt_pg_tunnel" --access-mode=restricted

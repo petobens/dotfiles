@@ -1,6 +1,10 @@
 # Applications run in separate environments; do not require them in dotfiles.
 [[overrides]]
-include = ["config/python/*.py", "config/pgcli/launcher.py"]
+include = [
+    "config/python/*.py",
+    "config/pgcli/launcher.py",
+    "config/postgres-mcp/launcher.py",
+]
 
 [overrides.analysis]
 allowed-unresolved-imports = [
@@ -9,6 +13,7 @@ allowed-unresolved-imports = [
     "pygments.**",
     "pdbpp",
     "pgcli.**",
+    "postgres_mcp.**",
 ]
 
 [overrides.rules]
