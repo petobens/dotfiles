@@ -1,7 +1,7 @@
 -- Core configuration
 require('conf.environment')
-require('conf.monitors')
 require('conf.options')
+require('conf.monitors')
 
 -- Desktop behavior
 require('conf.windows')

@@ -30,6 +30,8 @@ hl.config({
     },
     animations = { enabled = true },
     cursor = { inactive_timeout = 1 }, -- Hide the pointer while it sits still
+    -- Allow PBP scaling that produces fractional logical dimensions
+    debug = { disable_scale_checks = true },
     dwindle = { preserve_split = true },
     ecosystem = { no_update_news = true },
     input = {

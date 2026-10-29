@@ -20,6 +20,7 @@ local virtual_outputs = {
 }
 local scale_by_resolution = {
     ['1920x1080'] = 1,
+    ['2560x2160'] = 1.55,
     ['2880x1800'] = 1.5,
     ['3000x2000'] = 2,
     ['3840x2160'] = 2,
@@ -79,8 +80,22 @@ local function resolve_physical_outputs(monitors)
 
     local outputs = { laptop = physical_outputs.laptop }
     local fallback = external[1] and external[1].name
+    for index, monitor in ipairs(external) do
+        -- Both PBP halves have the same description; the laptop HDMI feeds the left
+        if
+            monitor.name == 'HDMI-A-1'
+            and monitor.description:match('^Samsung Electric Company Odyssey G75F ')
+        then
+            outputs.left = monitor.name
+            table.remove(external, index)
+            break
+        end
+    end
     for _, role in ipairs({ 'left', 'right' }) do
         for _, selector in ipairs(physical_outputs[role]) do
+            if outputs[role] then
+                break
+            end
             for index, monitor in ipairs(external) do
                 if
                     monitor.name == selector
@@ -170,18 +185,27 @@ local function configure_all_monitors()
     for name, monitor in pairs(known_monitors) do
         local position = monitor_position(name) or 'auto'
         if
-            #monitors == 2
-            and name ~= physical_outputs.laptop
+            (
+                name == physical_workspace_outputs.left
+                or name == physical_workspace_outputs.right
+            )
             and monitor.name
             and laptop
             and laptop.name
         then
-            -- Center a single external display above the laptop in logical pixels
+            -- Place the external pair's seam above the laptop's center
             local scale = tonumber(monitor_scale(monitor)) or monitor.scale
             local laptop_scale = tonumber(monitor_scale(laptop)) or laptop.scale
-            local x = (laptop.width / laptop_scale - monitor.width / scale) / 2
-            local y = -monitor.height / scale
-            position = string.format('%dx%d', math.floor(x), math.ceil(y))
+            -- Match Hyprland's rounded logical dimensions to avoid gaps or overlaps
+            local width = math.floor(monitor.width / scale + 0.5)
+            local height = math.floor(monitor.height / scale + 0.5)
+            local x = math.floor(laptop.width / laptop_scale + 0.5) / 2
+            if physical_workspace_outputs.left == physical_workspace_outputs.right then
+                x = x - width / 2
+            elseif name == physical_workspace_outputs.left then
+                x = x - width
+            end
+            position = string.format('%dx%d', math.floor(x), -height)
         end
         configure_monitor(name, position)
     end
