@@ -102,6 +102,7 @@ hyprpicker
 hyprpolkitagent
 hyprshot
 hyprshutdown
+hyprsunset
 kitty
 libnotify
 libsecret

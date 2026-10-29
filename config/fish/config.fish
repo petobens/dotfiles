@@ -190,6 +190,12 @@ abbr -a unfs 'sudo umount /mnt/nfs'
 # System abbreviations
 abbr -a ua sys_update_all
 
+function nightlight --description 'Toggle warm display colors at 4000 K'
+    pkill -x hyprsunset; and return
+    hyprsunset --temperature 4000 >/dev/null 2>&1 &
+    disown
+end
+
 function suf --description 'Open a root Fish shell with my prompt'
     set -l prompt_file (string escape "$HOME/.config/fish/functions/fish_prompt.fish")
     sudo -H fish --init-command "set -g fish_greeting; source $prompt_file"
