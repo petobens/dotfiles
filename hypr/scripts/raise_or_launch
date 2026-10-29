@@ -274,14 +274,13 @@ else
             ;;
     esac
 
-    # Quickterm and numbers open on the focused monitor; scale their 2px bar there
-    # Other terminals keep the laptop-only adjustment
-    if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors -j | jq -er --arg tag "$tag" '
-        if $tag == "quickterm" or $tag == "numbers" then
-            .[] | select(.focused)
-        else
-            select(length == 1 and .[0].name == "eDP-1") | .[0]
-        end
+    # Scale the 2px bar for the destination workspace, including unopened workspaces
+    if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors -j | jq -er \
+        --arg workspace "$workspace" --argjson workspaces "$(hyprctl workspaces -j)" \
+        --argjson rules "$(hyprctl workspacerules -j)" '
+        ([$workspaces[] | select(.name == $workspace) | .monitor][0]
+            // [$rules[] | select(.enabled and .workspaceString == $workspace) | .monitor][0]) as $monitor
+        | ((.[] | select(.name == $monitor)) // (.[] | select(.focused)))
         | (.scale * 2 | round) - 1
     '); then
         command="ghostty --adjust-cursor-thickness=$cursor_adjustment ${command#ghostty }"
