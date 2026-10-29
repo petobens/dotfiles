@@ -7,5 +7,12 @@ if hyprctl monitors -j 2> /dev/null |
     export GDK_DPI_SCALE=0.88
 fi
 
+# Reuse desktop accessibility instead of starting a second bus in the private session
+if accessibility_bus=$(busctl --user --timeout=2 --json=short call \
+    org.a11y.Bus /org/a11y/bus org.a11y.Bus GetAddress 2> /dev/null |
+    jq -er '.data[0]'); then
+    export AT_SPI_BUS_ADDRESS=$accessibility_bus
+fi
+
 # A private bus gives each invocation a prompter with the current monitor's scale
 exec dbus-run-session -- /usr/bin/pinentry-gnome3 "$@"
