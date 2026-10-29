@@ -31,14 +31,21 @@ end
 function M.place(window, placement, monitor)
     local area = work_area(monitor or window.monitor)
     local inset = M.border_size
+    local y, height = placement.y, placement.height
+    if placement.aspect then
+        -- Derive the height from the width so the shape matches on every monitor
+        height =
+            math.min(placement.width * area.width / placement.aspect / area.height, 1)
+        y = clamp(placement.y + (placement.height - height) / 2, 0, 1 - height)
+    end
     hl.dispatch(hl.dsp.window.resize({
         x = area.width * placement.width - inset * 2,
-        y = area.height * placement.height - inset * 2,
+        y = area.height * height - inset * 2,
         window = window,
     }))
     hl.dispatch(hl.dsp.window.move({
         x = area.x + area.width * placement.x + inset,
-        y = area.y + area.height * placement.y + inset,
+        y = area.y + area.height * y + inset,
         window = window,
     }))
 end

@@ -82,11 +82,11 @@ bind(super_alt .. ' + W', window_actions.close_workspace, 'Close workspace windo
 bind(super .. ' + mouse:272', hl.dsp.window.drag(), 'Move window', { mouse = true })
 bind(super .. ' + UP', window_actions.maximize, 'Maximize window')
 
-local function placement(keys, name, x, y, width, height)
+local function placement(keys, name, x, y, width, height, aspect)
     return {
         keys = keys,
         name = name,
-        geometry = { x = x, y = y, width = width, height = height },
+        geometry = { x = x, y = y, width = width, height = height, aspect = aspect },
     }
 end
 local placements = {
@@ -98,8 +98,8 @@ local placements = {
     placement(super_ctrl .. ' + 2', 'top-right', 0.5, 0, 0.5, 0.5),
     placement(super_ctrl .. ' + 3', 'bottom-left', 0, 0.5, 0.5, 0.5),
     placement(super_ctrl .. ' + 4', 'bottom-right', 0.5, 0.5, 0.5, 0.5),
-    placement(super_ctrl .. ' + 5', 'center', 0.25, 0.25, 0.5, 0.5),
-    placement(super_ctrl .. ' + 6', 'rectangle', 0.125, 0.2, 0.75, 0.6),
+    placement(super_ctrl .. ' + 5', 'center', 0.25, 0.25, 0.5, 0.5, 1.6),
+    placement(super_ctrl .. ' + 6', 'rectangle', 0.125, 0.2, 0.75, 0.6, 2),
     placement(super_ctrl .. ' + 7', 'dialog', 0.33, 0.3, 0.35, 0.25),
 }
 for _, item in ipairs(placements) do

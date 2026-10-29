@@ -5,8 +5,9 @@ local window_actions = require('conf.window_actions')
 local maximized_tag = '+' .. window_actions.work_area_maximized_tag
 
 -- Application layouts use fractions of the usable monitor area
-local half = { x = 0.25, y = 0.25, width = 0.5, height = 0.5 }
-local rectangle = { x = 0.125, y = 0.2, width = 0.75, height = 0.6 }
+-- An aspect ratio replaces the height fraction to keep the shape across monitors
+local half = { x = 0.25, y = 0.25, width = 0.5, height = 0.5, aspect = 1.6 }
+local rectangle = { x = 0.125, y = 0.2, width = 0.75, height = 0.6, aspect = 2 }
 local right_half = { x = 0.5, y = 0, width = 0.5, height = 1 }
 local layout_by_class = {
     kitty = half,
