@@ -46,7 +46,8 @@ end
 
 -- Window state
 function M.fills_work_area(window)
-    return has_tag(window, work_area_maximized_tag)
+    -- Ghostty ignores --class, so the main terminal is only known by its launch tag
+    return (has_tag(window, work_area_maximized_tag) or has_tag(window, 'terminal'))
         and not has_tag(window, manually_placed_tag)
 end
 
@@ -194,7 +195,7 @@ function M.move_to_monitor(kind, direction)
             end
         end
         if kind == 'window' then
-            hl.dispatch(hl.dsp.window.bring_to_top({ window = windows[1] }))
+            hl.dispatch(hl.dsp.window.alter_zorder({ mode = 'top', window = windows[1] }))
         end
     end
 end
@@ -227,22 +228,6 @@ end
 function M.close_workspace()
     for _, window in ipairs(hl.get_workspace_windows(hl.get_active_workspace())) do
         hl.dispatch(hl.dsp.window.close({ window = window }))
-    end
-end
-
--- Workspaces
--- Restore the workspace's last focused window after switching to it
-function M.switch_workspace(dispatcher)
-    return function()
-        local remembered = {}
-        for _, workspace in ipairs(hl.get_workspaces()) do
-            remembered[workspace.id] = workspace.last_window
-        end
-        hl.dispatch(dispatcher)
-        local window = remembered[hl.get_active_workspace().id]
-        if window then
-            hl.dispatch(hl.dsp.focus({ window = window }))
-        end
     end
 end
 

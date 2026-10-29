@@ -34,4 +34,4 @@ done < <(jq -r --arg address "$address" '
 
 hyprctl dispatch "hl.dsp.focus({ window = 'address:$address' })"
 # Raising keeps focused floating windows above overlapping peers
-hyprctl dispatch "hl.dsp.window.bring_to_top({ window = 'address:$address' })"
+hyprctl dispatch "hl.dsp.window.alter_zorder({ mode = 'top', window = 'address:$address' })"

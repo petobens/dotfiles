@@ -39,19 +39,10 @@ local workspace_to_restore
 
 -- Helpers
 local function connected_monitors()
-    -- Queries omit disabled and mirrored outputs, so retain their weak references
-    for _, monitor in ipairs(hl.get_monitors()) do
+    local monitors = hl.get_monitors({ all = true })
+    -- Retain unplugged outputs so layout changes also update their rules
+    for _, monitor in ipairs(monitors) do
         known_monitors[monitor.name] = monitor
-        for _, mirrored in ipairs(monitor.mirrors) do
-            known_monitors[mirrored.name] = mirrored
-        end
-    end
-    local monitors = {}
-    -- Keep expired entries so layout changes also update unplugged output rules
-    for _, monitor in pairs(known_monitors) do
-        if monitor.name then
-            monitors[#monitors + 1] = monitor
-        end
     end
     return monitors
 end

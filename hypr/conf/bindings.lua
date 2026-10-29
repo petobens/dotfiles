@@ -160,24 +160,12 @@ for index, mark in ipairs(marks) do
 end
 
 -- Workspaces
-bind(
-    super .. ' + N',
-    window_actions.switch_workspace(hl.dsp.focus({ workspace = 'm+1' })),
-    'Next workspace'
-)
-bind(
-    super .. ' + P',
-    window_actions.switch_workspace(hl.dsp.focus({ workspace = 'm-1' })),
-    'Previous workspace'
-)
+bind(super .. ' + N', hl.dsp.focus({ workspace = 'm+1' }), 'Next workspace')
+bind(super .. ' + P', hl.dsp.focus({ workspace = 'm-1' }), 'Previous workspace')
 
 for workspace = 1, 9 do
     local name = tostring(workspace)
-    bind(
-        super .. ' + ' .. name,
-        window_actions.switch_workspace(hl.dsp.focus({ workspace = name })),
-        'Workspace ' .. name
-    )
+    bind(super .. ' + ' .. name, hl.dsp.focus({ workspace = name }), 'Workspace ' .. name)
     bind(
         super_shift .. ' + ' .. name,
         hl.dsp.window.move({ workspace = name, follow = true }),

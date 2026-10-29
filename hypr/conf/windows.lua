@@ -86,7 +86,7 @@ local function focus_google_sign_in(window)
     if not window.active then
         hl.dispatch(hl.dsp.focus({ window = window }))
     end
-    hl.dispatch(hl.dsp.window.bring_to_top({ window = window }))
+    hl.dispatch(hl.dsp.window.alter_zorder({ mode = 'top', window = window }))
 end
 
 -- Tag the last main browser for scripts/brave_open to reuse for links
@@ -113,11 +113,6 @@ end
 window_rule('.*', { float = true, suppress_event = 'maximize' })
 window_rule('^gcr-prompter$', { stay_focused = true })
 window_rule('^com\\.gabm\\.satty$', { fullscreen = true })
-hl.window_rule({
-    -- Maximize the tagged main terminal because Ghostty ignores its requested class
-    match = { tag = 'terminal' },
-    tag = maximized_tag,
-})
 
 -- Assigned workspaces
 window_rule('^(brave-browser|brave-calendar.*|firefox|microsoft-edge-dev.*)$', {
