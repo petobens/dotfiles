@@ -25,11 +25,6 @@ local scale_by_resolution = {
     ['3000x2000'] = 2,
     ['3840x2160'] = 2,
 }
-local positions = {
-    left = '-960x-1080',
-    right = '960x-1080',
-    laptop = '0x0',
-}
 local active_mode
 local lid_closed = false
 local known_monitors = {}
@@ -114,14 +109,6 @@ local function resolve_physical_outputs(monitors)
     return outputs
 end
 
-local function monitor_position(name)
-    for _, role in ipairs({ 'laptop', 'left', 'right' }) do
-        if name == physical_workspace_outputs[role] then
-            return positions[role]
-        end
-    end
-end
-
 local function monitor_scale(monitor)
     if is_virtual_monitor(monitor.name) then
         -- Keep resizable QEMU displays near 1920 logical pixels
@@ -153,7 +140,7 @@ end
 local function configure_laptop()
     for _, monitor in ipairs(connected_monitors()) do
         if monitor.name == physical_outputs.laptop then
-            configure_monitor(monitor.name, positions.laptop)
+            configure_monitor(monitor.name, '0x0')
             return true
         end
     end
@@ -174,7 +161,7 @@ local function configure_all_monitors()
         disabled = false,
     })
     for name, monitor in pairs(known_monitors) do
-        local position = monitor_position(name) or 'auto'
+        local position = name == physical_outputs.laptop and '0x0' or 'auto'
         if
             (
                 name == physical_workspace_outputs.left
