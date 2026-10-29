@@ -275,13 +275,14 @@ else
     esac
 
     # Scale the 2px bar for the destination workspace, including unopened workspaces
+    # Round up so fractional scales such as 1.55 get the thicker bar
     if [[ $command == ghostty\ * ]] && cursor_adjustment=$(hyprctl monitors -j | jq -er \
         --arg workspace "$workspace" --argjson workspaces "$(hyprctl workspaces -j)" \
         --argjson rules "$(hyprctl workspacerules -j)" '
         ([$workspaces[] | select(.name == $workspace) | .monitor][0]
             // [$rules[] | select(.enabled and .workspaceString == $workspace) | .monitor][0]) as $monitor
         | ((.[] | select(.name == $monitor)) // (.[] | select(.focused)))
-        | (.scale * 2 | round) - 1
+        | (.scale * 2 | ceil) - 1
     '); then
         command="ghostty --adjust-cursor-thickness=$cursor_adjustment ${command#ghostty }"
     fi
