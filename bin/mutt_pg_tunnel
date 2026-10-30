@@ -17,7 +17,18 @@ open_tunnel() {
         return
     fi
     if ! aws --profile internaldata-db sts get-caller-identity > /dev/null 2>&1; then
-        aws --profile internaldata-db sso login >&2
+        # MCP hosts may omit the desktop environment needed to open a browser
+        export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/$UID}
+        local desktop_var desktop_value
+        while IFS='=' read -r desktop_var desktop_value; do
+            case $desktop_var in
+                DISPLAY | WAYLAND_DISPLAY | DBUS_SESSION_BUS_ADDRESS | XDG_CURRENT_DESKTOP | HYPRLAND_INSTANCE_SIGNATURE)
+                    export "$desktop_var=$desktop_value"
+                    ;;
+            esac
+        done < <(systemctl --user show-environment)
+        BROWSER="$HOME/.config/hypr/scripts/system_open" \
+            aws --profile internaldata-db sso login >&2
     fi
 
     printf 'Opening the Internal Data tunnel...\n' >&2
