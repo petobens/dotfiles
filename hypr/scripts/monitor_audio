@@ -7,10 +7,15 @@ set -euo pipefail
 # Hyprland can detect the display before PipeWire adds its audio output, so
 # retry for up to 10 seconds
 for ((attempt = 0; attempt < 20; attempt++)); do
-    if sink=$(pactl -f json list sinks | jq -r '
-        .[] | select(.properties["alsa.name"] == "ARZOPA") | .name
-    ') && [[ -n $sink ]] && pactl set-default-sink "$sink"; then
-        exit 0
+    if sinks=$(pactl -f json list sinks); then
+        # Keep connected Bluetooth headphones as the default
+        if jq -e 'any(.[].name; startswith("bluez_output."))' <<< "$sinks" > /dev/null; then
+            exit 0
+        fi
+        sink=$(jq -r '.[] | select(.properties["alsa.name"] == "ARZOPA") | .name' <<< "$sinks")
+        if [[ -n $sink ]] && pactl set-default-sink "$sink"; then
+            exit 0
+        fi
     fi
     sleep 0.5
 done
