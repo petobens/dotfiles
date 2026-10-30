@@ -67,9 +67,10 @@ local function resolve_physical_outputs(monitors)
     local outputs = { laptop = physical_outputs.laptop }
     local fallback = external[1] and external[1].name
     for index, monitor in ipairs(external) do
-        -- Both PBP halves have the same description; the laptop HDMI feeds the left
+        -- PBP inputs share a description but report different physical widths
+        -- The current left input reports 930 mm, independent of dock port numbering
         if
-            monitor.name == 'HDMI-A-1'
+            monitor.physical_width == 930
             and monitor.description:match('^Samsung Electric Company Odyssey G75F ')
         then
             outputs.left = monitor.name
