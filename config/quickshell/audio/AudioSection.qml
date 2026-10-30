@@ -64,7 +64,8 @@ ColumnLayout {
             const name = node?.description || node?.name || "";
             return String(name).replace(/^.* High Definition Audio Controller /,
                                         "Built-in ").replace(/ Analog Stereo$/,
-                                                             "");
+                                                             "").replace(
+                  /DisplayPort/g, "DP").replace(/ \(Stereo\)$/, "");
           }
           color: device.highlightedRow ? "#24272e" : "#abb2bf"
           font: device.font

@@ -28,6 +28,7 @@ local scale_by_resolution = {
 }
 local active_mode
 local lid_closed = false
+local monitor_audio_active = false
 local known_monitors = {}
 local physical_workspace_outputs = { laptop = physical_outputs.laptop }
 local workspace_outputs = physical_outputs
@@ -455,6 +456,7 @@ hl.on('monitor.added', function(monitor)
     focus_development_workspace(monitor)
 end)
 hl.on('hyprland.start', function()
+    monitor_audio_active = false
     for _, monitor in ipairs(hl.get_monitors()) do
         activate_default_workspace(monitor)
     end
@@ -487,11 +489,38 @@ hl.bind('switch:off:Lid Switch', update_lid_state, {
     description = 'Restore laptop display on lid open',
     locked = true,
 })
+
+-- Make the ARZOPA speakers the default when the lid is closed next to the G7
+local function monitor_audio_setup()
+    local portable, samsung = false, false
+    for _, monitor in ipairs(hl.get_monitors()) do
+        portable = portable or monitor.description == physical_outputs.portable
+        samsung = samsung
+            or monitor.description:match('^Samsung Electric Company Odyssey G75F ')
+                ~= nil
+    end
+    return lid_closed and portable and samsung
+end
+
+local function update_monitor_audio()
+    local active = monitor_audio_setup()
+    if active and not monitor_audio_active then
+        hl.exec_cmd(os.getenv('HOME') .. '/.config/hypr/scripts/monitor_audio')
+    end
+    -- Apply once per setup change so manual audio selections remain possible
+    monitor_audio_active = active
+end
+
 -- Recover missed switch events without reapplying the layout on every check
-hl.timer(update_lid_state, { timeout = 1000, type = 'repeat' })
+hl.timer(function()
+    update_lid_state()
+    update_monitor_audio()
+end, { timeout = 1000, type = 'repeat' })
 
 -- Initial state
 lid_closed = read_lid_state()
+-- Config reloads keep the current audio output; Hyprland start clears this flag
+monitor_audio_active = monitor_audio_setup()
 active_mode = 'multi'
 workspace_outputs = virtual_outputs_connected() and virtual_outputs or physical_outputs
 restore_active_mode()
