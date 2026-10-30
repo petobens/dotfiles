@@ -33,7 +33,9 @@ default_mode = "Auto"
 EOF
 
 section 'Configuring CPU power management'
+# TLP otherwise selects the performance profile on AC, which keeps the fans loud
 sudo install -Dm644 /dev/stdin /etc/tlp.d/10-performance.conf << 'EOF'
+PLATFORM_PROFILE_ON_AC=balanced
 CPU_HWP_DYN_BOOST_ON_AC=1
 CPU_HWP_DYN_BOOST_ON_BAT=0
 CPU_HWP_DYN_BOOST_ON_SAV=0

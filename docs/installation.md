@@ -709,13 +709,13 @@ available CPU cores under `/tmp/makepkg`.
 The post-install step applies the system configuration:
 
 - **Performance and power:** Configures zstd-compressed zram, limits persistent
-  journals to 250 MiB, loads `scx_lavd` in automatic mode, enables HWP dynamic
-  boost on AC, and uses the base Intel Xe GPU profile with Wi-Fi power saving
-  disabled on battery. Sets UPower to shut down at 2% as a fallback for the
-  desktop battery monitor's 3% shutdown. These battery settings favor call and
-  desktop responsiveness over maximum runtime. Physical hardware also receives
-  firmware metadata refreshes and Intel LPMD; thermald is enabled only when
-  Lenovo DYTC is unavailable.
+  journals to 250 MiB, loads `scx_lavd` in automatic mode, uses the balanced
+  platform profile and HWP dynamic boost on AC, and uses the base Intel Xe GPU
+  profile with Wi-Fi power saving disabled on battery. Sets UPower to shut down
+  at 2% as a fallback for the desktop battery monitor's 3% shutdown. These
+  battery settings favor call and desktop responsiveness over maximum runtime.
+  Physical hardware also receives firmware metadata refreshes and Intel LPMD;
+  thermald is enabled only when Lenovo DYTC is unavailable.
 - **Services and networking:** Enables NetworkManager, Bluetooth, TLP, CUPS,
   Avahi, monthly Btrfs scrubbing, weekly package-cache cleanup, and the user
   audio services, and creates `/mnt/nfs`. It retains root snapshots taken
