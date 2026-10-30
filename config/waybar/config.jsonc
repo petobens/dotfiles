@@ -1,6 +1,6 @@
 [
     {
-        "output": ["eDP-1", "Virtual-1"],
+        "output": ["eDP-1", "Virtual-1", "GWD ARZOPA 0x0965020C"],
         "modules-right": [
             "custom/docker",
             "custom/onedrive",
@@ -18,7 +18,7 @@
         "include": "$HOME/.config/waybar/common.jsonc",
     },
     {
-        "output": ["!eDP-1", "!Virtual-1", "*"],
+        "output": ["!eDP-1", "!Virtual-1", "!GWD ARZOPA 0x0965020C", "*"],
         "include": "$HOME/.config/waybar/common.jsonc",
     },
 ]

@@ -12,6 +12,7 @@ local physical_outputs = {
         'desc:Lenovo Group Limited LEN S24e-10 0x37353832',
     },
     laptop = 'eDP-1',
+    portable = 'GWD ARZOPA 0x0965020C',
 }
 local virtual_outputs = {
     left = 'Virtual-2',
@@ -33,6 +34,16 @@ local workspace_outputs = physical_outputs
 local workspace_to_restore
 
 -- Helpers
+local function read_lid_state()
+    local state = io.open('/proc/acpi/button/lid/LID/state')
+    if not state then
+        return lid_closed
+    end
+    local closed = state:read('*a'):match('closed') ~= nil
+    state:close()
+    return closed
+end
+
 local function connected_monitors()
     local monitors = hl.get_monitors({ all = true })
     -- Retain unplugged outputs so layout changes also update their rules
@@ -48,8 +59,14 @@ end
 
 local function resolve_physical_outputs(monitors)
     local external = {}
+    local outputs = { laptop = physical_outputs.laptop }
     for _, monitor in ipairs(monitors) do
-        if
+        if monitor.description == physical_outputs.portable then
+            outputs.portable = monitor.name
+            if lid_closed then
+                outputs.laptop = monitor.name
+            end
+        elseif
             monitor.name ~= physical_outputs.laptop
             and not is_virtual_monitor(monitor.name)
         then
@@ -64,8 +81,7 @@ local function resolve_physical_outputs(monitors)
         return a.description < b.description
     end)
 
-    local outputs = { laptop = physical_outputs.laptop }
-    local fallback = external[1] and external[1].name
+    local fallback = (external[1] and external[1].name) or outputs.portable
     for index, monitor in ipairs(external) do
         -- PBP inputs share a description but report different physical widths
         -- The current left input reports 930 mm, independent of dock port numbering
@@ -152,7 +168,7 @@ local function configure_all_monitors()
     hl.config({ debug = { damage_tracking = 2 } })
     local monitors = connected_monitors()
     physical_workspace_outputs = resolve_physical_outputs(monitors)
-    local laptop = known_monitors[physical_outputs.laptop]
+    local laptop = known_monitors[physical_workspace_outputs.laptop]
     hl.monitor({
         output = '',
         mode = 'preferred',
@@ -162,12 +178,13 @@ local function configure_all_monitors()
         disabled = false,
     })
     for name, monitor in pairs(known_monitors) do
-        local position = name == physical_outputs.laptop and '0x0' or 'auto'
+        local position = name == physical_workspace_outputs.laptop and '0x0' or 'auto'
         if
             (
                 name == physical_workspace_outputs.left
                 or name == physical_workspace_outputs.right
             )
+            and name ~= physical_workspace_outputs.laptop
             and monitor.name
             and laptop
             and laptop.name
@@ -186,7 +203,11 @@ local function configure_all_monitors()
             end
             position = string.format('%dx%d', math.floor(x), -height)
         end
-        configure_monitor(name, position)
+        if lid_closed and name == physical_outputs.laptop and #monitors > 1 then
+            hl.monitor({ output = name, disabled = true })
+        else
+            configure_monitor(name, position)
+        end
     end
 end
 
@@ -196,18 +217,32 @@ local function configure_workspace_rules(outputs)
         outputs = resolve_physical_outputs(connected_monitors())
         physical_workspace_outputs = outputs
     end
-    -- When both external groups share a display, only workspace 5 is the default
-    for _, workspace in ipairs({
-        { '1', outputs.right, outputs.right ~= outputs.left },
+    -- Shared outputs get one default workspace, with the laptop role taking priority
+    local workspaces = {
+        {
+            '1',
+            outputs.right,
+            outputs.right ~= outputs.left
+                and outputs.right ~= outputs.laptop
+                and outputs.right ~= outputs.portable,
+        },
         { '2', outputs.laptop, true },
         { '3', outputs.laptop },
         { '4', outputs.right },
-        { '5', outputs.left, true },
+        {
+            '5',
+            outputs.left,
+            outputs.left ~= outputs.laptop and outputs.left ~= outputs.portable,
+        },
         { '6', outputs.left },
         { '7', outputs.left },
         { '8', outputs.laptop },
         { '9', outputs.right },
-    }) do
+    }
+    if outputs.portable then
+        workspaces[#workspaces + 1] = { '10', outputs.portable, not lid_closed }
+    end
+    for _, workspace in ipairs(workspaces) do
         hl.workspace_rule({
             workspace = workspace[1],
             monitor = workspace[2],
@@ -216,10 +251,10 @@ local function configure_workspace_rules(outputs)
         local current = hl.get_workspace(workspace[1])
         local monitor = hl.get_monitor(workspace[2])
         if
-            active_mode == 'multi'
-            and not lid_closed
+            (active_mode == 'multi' or lid_closed)
             and current
             and monitor
+            and monitor.enabled
             and current.monitor.name ~= monitor.name
         then
             hl.dispatch(hl.dsp.workspace.move({ workspace = current, monitor = monitor }))
@@ -251,24 +286,27 @@ local function focus_development_workspace(monitor)
         monitor
         and #hl.get_monitors() == 1
         and monitor.name ~= physical_outputs.laptop
+        and monitor.name ~= physical_workspace_outputs.laptop
     then
         hl.dispatch(hl.dsp.focus({ workspace = '5' }))
     end
 end
 
 local function activate_default_workspace(monitor)
-    if active_mode ~= 'multi' or lid_closed then
+    if active_mode ~= 'multi' and not lid_closed then
         return
     end
 
     local outputs = physical_workspace_outputs
     local workspace
-    if monitor.name == outputs.left then
+    if monitor.name == outputs.laptop then
+        workspace = '2'
+    elseif monitor.name == outputs.portable and not lid_closed then
+        workspace = '10'
+    elseif monitor.name == outputs.left then
         workspace = '5'
     elseif monitor.name == outputs.right then
         workspace = '1'
-    elseif monitor.name == outputs.laptop then
-        workspace = '2'
     end
     if not workspace then
         return
@@ -341,12 +379,10 @@ local function mirror()
     end
 end
 
-local function multi()
-    active_mode = 'multi'
-    configure_all_monitors()
+local function schedule_workspace_layout()
     -- Restore workspace placement after the monitor rules have been applied
     hl.timer(function()
-        if active_mode == 'multi' and not lid_closed then
+        if active_mode == 'multi' or lid_closed then
             configure_workspace_rules(workspace_outputs)
             for _, monitor in ipairs(hl.get_monitors()) do
                 activate_default_workspace(monitor)
@@ -355,20 +391,17 @@ local function multi()
     end, { timeout = 1, type = 'oneshot' })
 end
 
--- Preserve and restore the selected layout across lid and monitor events
-local function external_only()
+local function multi()
+    active_mode = 'multi'
     configure_all_monitors()
-    for _, monitor in ipairs(connected_monitors()) do
-        if monitor.name ~= physical_outputs.laptop then
-            hl.monitor({ output = physical_outputs.laptop, disabled = true })
-            break
-        end
-    end
+    schedule_workspace_layout()
 end
 
+-- Preserve and restore the selected layout across lid and monitor events
 local function restore_active_mode()
     if lid_closed then
-        external_only()
+        configure_all_monitors()
+        schedule_workspace_layout()
     elseif active_mode == 'primary' then
         primary()
     elseif active_mode == 'mirror' then
@@ -391,14 +424,20 @@ local function restore_workspace()
     end, { timeout = 1, type = 'oneshot' })
 end
 
-local function keep_workspace(apply_layout)
+local function keep_workspace(mode, apply_layout)
     return function()
         local workspace = hl.get_active_workspace()
         workspace_to_restore = workspace and workspace.name
         local previous_mode = active_mode
-        apply_layout()
+        if lid_closed then
+            -- Remember the layout for when the lid opens; keep the laptop off until then
+            active_mode = mode
+            restore_active_mode()
+        else
+            apply_layout()
+        end
         -- An unchanged layout or a lone output may not emit a layout-change event
-        if active_mode == previous_mode or #connected_monitors() == 1 then
+        if lid_closed or active_mode == previous_mode or #connected_monitors() == 1 then
             restore_workspace()
         end
     end
@@ -430,25 +469,37 @@ hl.on('monitor.removed', function()
 end)
 
 -- Lid switch events
-hl.bind('switch:on:Lid Switch', function()
-    lid_closed = true
+local function update_lid_state()
+    local closed = read_lid_state()
+    if closed == lid_closed then
+        return
+    end
+    lid_closed = closed
     restore_active_mode()
-end, { description = 'Disable laptop display on lid close', locked = true })
+    configure_workspace_rules(workspace_outputs)
+end
 
-hl.bind('switch:off:Lid Switch', function()
-    lid_closed = false
-    restore_active_mode()
-end, { description = 'Restore laptop display on lid open', locked = true })
+hl.bind('switch:on:Lid Switch', update_lid_state, {
+    description = 'Disable laptop display on lid close',
+    locked = true,
+})
+hl.bind('switch:off:Lid Switch', update_lid_state, {
+    description = 'Restore laptop display on lid open',
+    locked = true,
+})
+-- Recover missed switch events without reapplying the layout on every check
+hl.timer(update_lid_state, { timeout = 1000, type = 'repeat' })
 
 -- Initial state
+lid_closed = read_lid_state()
 active_mode = 'multi'
-configure_all_monitors()
 workspace_outputs = virtual_outputs_connected() and virtual_outputs or physical_outputs
+restore_active_mode()
 configure_workspace_rules(workspace_outputs)
 
 return {
-    primary = keep_workspace(primary),
-    multi = keep_workspace(multi),
-    mirror = keep_workspace(mirror),
+    primary = keep_workspace('primary', primary),
+    multi = keep_workspace('multi', multi),
+    mirror = keep_workspace('mirror', mirror),
     cycle_focus = cycle_focus,
 }
