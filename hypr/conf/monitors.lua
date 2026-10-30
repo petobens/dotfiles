@@ -145,9 +145,17 @@ local function configure_monitor(name, position, mirror)
         hl.env('ROFI_DPI', '96')
     end
 
+    local mode = 'preferred'
+    -- The G7 DP input often stays black at 120 Hz through the dock
+    if
+        monitor.name
+        and monitor.description:match('^Samsung Electric Company Odyssey G75F ')
+    then
+        mode = string.format('%dx%d@60', monitor.width, monitor.height)
+    end
     hl.monitor({
         output = name,
-        mode = 'preferred',
+        mode = mode,
         position = position,
         scale = monitor.name and monitor_scale(monitor) or 'auto',
         mirror = mirror or '',
