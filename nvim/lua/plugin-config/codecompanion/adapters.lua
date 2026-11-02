@@ -80,6 +80,7 @@ function M.codex()
             },
         },
         defaults = {
+            system_prompt = false,
             auth_method = 'chat-gpt',
             effort = codex_config.effort,
             session_config_options = {
@@ -99,6 +100,7 @@ function M.claude_code()
             GITHUB_TOKEN = GITHUB_TOKEN,
         },
         defaults = {
+            system_prompt = false,
             effort = claude_config.effort,
             session_config_options = {
                 -- Claude ACP resolves model aliases from settings.json itself
