@@ -295,6 +295,7 @@ end
 function M.chat_display()
     return {
         intro_message = '',
+        input = { layout = 'buffer' },
         icons = {
             sync_all = ' ',
             sync_diff = ' ',
