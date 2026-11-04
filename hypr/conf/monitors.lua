@@ -163,14 +163,17 @@ local function configure_monitor(name, position, mirror)
     })
 end
 
-local function configure_laptop()
+-- Enable the laptop screen, or the ARZOPA when the lid is closed, and return its name
+local function configure_main_output()
     for _, monitor in ipairs(connected_monitors()) do
-        if monitor.name == physical_outputs.laptop then
+        if
+            lid_closed and monitor.description == physical_outputs.portable
+            or not lid_closed and monitor.name == physical_outputs.laptop
+        then
             configure_monitor(monitor.name, '0x0')
-            return true
+            return monitor.name
         end
     end
-    return false
 end
 
 local function configure_all_monitors()
@@ -350,23 +353,26 @@ end
 
 -- Monitor layouts
 local function primary()
-    if not configure_laptop() then
+    local output = configure_main_output()
+    if not output then
         return
     end
 
     active_mode = 'primary'
     hl.config({ debug = { damage_tracking = 2 } })
     for name in pairs(known_monitors) do
-        if name ~= physical_outputs.laptop then
+        if name ~= output then
             hl.monitor({ output = name, disabled = true })
         end
     end
     hl.monitor({ output = '', disabled = true })
+    return true
 end
 
 local function mirror()
-    -- Duplicate the laptop screen on every other display (projectors, TVs)
-    if not configure_laptop() then
+    -- Duplicate the main screen on every other display (projectors, TVs)
+    local output = configure_main_output()
+    if not output then
         return
     end
 
@@ -378,14 +384,17 @@ local function mirror()
         mode = 'preferred',
         position = 'auto',
         scale = 'auto',
-        mirror = physical_outputs.laptop,
+        mirror = output,
         disabled = false,
     })
     for name in pairs(known_monitors) do
-        if name ~= physical_outputs.laptop then
-            configure_monitor(name, 'auto', physical_outputs.laptop)
+        if lid_closed and name == physical_outputs.laptop then
+            hl.monitor({ output = name, disabled = true })
+        elseif name ~= output then
+            configure_monitor(name, 'auto', output)
         end
     end
+    return true
 end
 
 local function schedule_workspace_layout()
@@ -408,14 +417,12 @@ end
 
 -- Preserve and restore the selected layout across lid and monitor events
 local function restore_active_mode()
-    if lid_closed then
+    if active_mode == 'primary' and primary() or active_mode == 'mirror' and mirror() then
+        schedule_workspace_layout()
+    elseif lid_closed then
         configure_all_monitors()
         schedule_workspace_layout()
-    elseif active_mode == 'primary' then
-        primary()
-    elseif active_mode == 'mirror' then
-        mirror()
-    else
+    elseif active_mode == 'multi' then
         multi()
     end
 end
@@ -439,7 +446,7 @@ local function keep_workspace(mode, apply_layout)
         workspace_to_restore = workspace and workspace.name
         local previous_mode = active_mode
         if lid_closed then
-            -- Remember the layout for when the lid opens; keep the laptop off until then
+            -- Apply the closed-lid layout and remember it for when the lid opens
             active_mode = mode
             restore_active_mode()
         else

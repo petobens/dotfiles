@@ -194,9 +194,9 @@ for _, direction in ipairs(monitor_directions) do
         'Move workspace to monitor ' .. direction[3]
     )
 end
-bind(super .. ' + Return', monitor_modes.primary, 'Use laptop display')
+bind(super .. ' + Return', monitor_modes.primary, 'Use laptop or ARZOPA display')
 bind(super_ctrl .. ' + Return', monitor_modes.multi, 'Use all displays')
-bind(super_shift .. ' + Return', monitor_modes.mirror, 'Mirror laptop display')
+bind(super_shift .. ' + Return', monitor_modes.mirror, 'Mirror laptop or ARZOPA display')
 
 -- Launchers and menus
 exec(super .. ' + TAB', scripts .. 'expose', 'Window overview')

@@ -23,9 +23,9 @@ case $mode in
         cat << EOF
 usage: multimon [primary|multi|mirror|info]
 
-  primary  Use only the laptop display
+  primary  Use only the laptop display, or the ARZOPA with the lid closed
   multi    Use all displays
-  mirror   Mirror the laptop display
+  mirror   Mirror the laptop display, or the ARZOPA with the lid closed
   info     Show connected displays' enabled status, resolutions, refresh rates (Hz), and scales
 EOF
         exit 0
