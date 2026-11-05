@@ -49,6 +49,14 @@ InaccessiblePaths=-/boot
 EOF
 sudo systemctl daemon-reload
 
+section 'Configuring lid behavior on AC'
+# Keep running if sleeping external displays stop being detected as a dock
+sudo install -Dm644 /dev/stdin /etc/systemd/logind.conf.d/60-lid-on-ac.conf << 'EOF'
+[Login]
+HandleLidSwitchExternalPower=ignore
+EOF
+sudo systemctl kill --kill-whom=main --signal=HUP systemd-logind.service
+
 section 'Configuring emergency battery shutdown'
 # Use shutdown because zram cannot preserve a hibernation image
 sudo sed -i \
