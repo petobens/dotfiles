@@ -145,7 +145,7 @@ const qmarksUrls = {
     a: 'http://appsmith.muttdata.ai/',
     b: 'www.bing.com/chat',
     c: 'www.utdt.edu/campusvirtual',
-    d: 'https://drive.google.com/drive/u/0/folders/0B9ulz1YH9ei7dGJValg1Tm9tMVE',
+    d: 'https://drive.google.com/drive/u/0',
     g: 'www.github.com',
     h: 'www.google.com.ar',
     i: 'www.infobae.com',
