@@ -328,7 +328,7 @@ local function toc_populate(main, client, source_path, source_lnum)
         vim.fn.bufload(bufnr)
         vim.lsp.buf_attach_client(bufnr, client.id)
         local response, err = client:request_sync('textDocument/documentSymbol', {
-            textDocument = { uri = vim.uri_from_fname(path) },
+            textDocument = { uri = vim.uri.from_fname(path) },
         }, 2000, bufnr)
         if not response or response.err then
             err = err or (response and response.err.message) or 'request failed'
