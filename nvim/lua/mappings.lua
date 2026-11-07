@@ -381,6 +381,9 @@ vim.keymap.set(
     vim.cmd.Inspect,
     { desc = '[C]olor [i]nspect: syntax and extmarks at cursor' }
 )
+vim.keymap.set('x', '<Leader>ci', ':Inspect<CR>', {
+    desc = '[C]olor [i]nspect: syntax and extmarks in selected lines',
+})
 vim.keymap.set('n', '<Leader>cw', function()
     vim.print(('Words: %d'):format(vim.fn.wordcount().words))
 end, { desc = '[C]ount [w]ords' })
