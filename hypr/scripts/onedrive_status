@@ -35,6 +35,4 @@ case $state in
         class=inactive
         ;;
 esac
-tooltip="OneDrive: $state"
-[[ -z $detail ]] || tooltip+=$'\n'"$detail"
-jq -cn --arg text "$text" --arg tooltip "$tooltip" --arg class "$class" '{text: $text, tooltip: $tooltip, class: $class}'
+jq -cn --arg text "$text" --arg class "$class" '{text: $text, class: $class}'

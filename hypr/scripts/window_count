@@ -9,8 +9,7 @@ print_count() {
 
     jq -cn \
         --arg text "<span font_family='Symbols Nerd Font' size='12pt'></span> <span font_family='Noto Sans' size='7pt' weight='bold' rise='5pt'>$count</span>" \
-        --arg tooltip "$count windows on workspace $workspace" \
-        '{text: $text, tooltip: $tooltip}'
+        '{text: $text}'
 }
 
 # Waybar keeps this script running and shows each printed line, so reprint

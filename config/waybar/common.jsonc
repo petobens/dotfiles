@@ -23,7 +23,6 @@
     "custom/arch": {
         "format": "",
         "on-click": "~/.config/hypr/scripts/session_menu",
-        "tooltip": false,
     },
     "custom/window-count": {
         "exec": "~/.config/hypr/scripts/window_count",
@@ -47,10 +46,6 @@
             "6": "󰗚",
             "default": "󰙀",
         },
-        // FIXME: Stable Waybar still uses Hyprland's removed text dispatcher.
-        // https://github.com/Alexays/Waybar/issues/5008
-        // Workspace clicks will work once Waybar supports the Lua IPC protocol.
-        "on-click": "activate",
         "sort-by": "number",
     },
     "custom/docker": {
@@ -85,14 +80,12 @@
             "disconnected": "󰤮",
         },
         "on-click": "~/.config/hypr/scripts/raise_or_launch wifi",
-        "tooltip": false,
     },
     "network#ethernet": {
         "interface": "en*",
         "format-ethernet": "<span font_family='Symbols Nerd Font' size='14pt'>󰈁</span>",
         "format-disconnected": "",
         "on-click": "~/.config/hypr/scripts/raise_or_launch wifi",
-        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
     },
     "custom/bluetooth": {
         "exec": "~/.config/hypr/scripts/bluetooth_status",
@@ -108,7 +101,7 @@
         "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     },
     "battery": {
-        // Skip peripheral batteries; Waybar crashes when one disconnects mid-scan
+        // Show only the laptop battery, excluding peripherals
         "bat": "BAT0",
         "format": "<span font_family='Symbols Nerd Font' size='13pt'>{icon}</span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold' foreground='#abb2bf'>{capacity}%</span>",
         "format-charging": "<span font_family='Symbols Nerd Font' size='13pt'></span>  <span font_family='Noto Sans Mono' size='10pt' weight='bold'>{capacity}%</span>",
@@ -121,7 +114,7 @@
         },
     },
     "custom/no-battery": {
-        "exec": "printf '󱉞\\nNo battery\\n'",
+        "exec": "printf '󱉞'",
         "exec-if": "! find /sys/class/power_supply -maxdepth 1 -name 'BAT*' | grep -q .",
         "interval": 60,
         "on-click": "~/.config/hypr/scripts/battery_menu",
@@ -129,7 +122,6 @@
     "clock": {
         "format": "<span font_family='Symbols Nerd Font' size='13pt'>󰃰</span><span font_family='Noto Sans Mono' size='10pt' weight='bold'> {:%a %d %H:%M}</span>",
         "on-click": "~/.config/hypr/scripts/raise_or_launch calendar",
-        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
     },
     "tray": {
         "icon-size": 16,

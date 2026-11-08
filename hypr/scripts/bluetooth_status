@@ -22,6 +22,5 @@ fi
 
 jq -cn \
     --arg text "$text" \
-    --arg tooltip "Bluetooth: $state" \
     --arg class "$state" \
-    '{text: $text, tooltip: $tooltip, class: $class}'
+    '{text: $text, class: $class}'

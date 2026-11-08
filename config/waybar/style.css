@@ -19,7 +19,7 @@ window#waybar {
     color: @foreground;
 }
 
-/* Tray items bypass Waybar's per-module setting, so hide all tooltips */
+/* Hide tooltips across all modules, including tray icons */
 tooltip {
     opacity: 0;
 }

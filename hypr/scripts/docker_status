@@ -3,24 +3,20 @@ set -euo pipefail
 
 if systemctl is-active --quiet docker.service; then
     state=active
-    tooltip='Docker: running'
+    status_text='Docker service: active (running)'
 elif systemctl is-failed --quiet docker.service docker.socket; then
     state=failed
-    tooltip='Docker: failed'
+    status_text='Docker: failed'
 elif systemctl is-active --quiet docker.socket; then
     state=standby
-    tooltip='Docker: ready (starts on demand)'
+    status_text='Docker: ready (starts on demand)'
 else
     state=inactive
-    tooltip='Docker: unavailable'
+    status_text='Docker: unavailable'
 fi
 
 if [[ ${1:-} == --details ]]; then
-    if [[ $state == active ]]; then
-        printf 'Docker service: active (running)\n\n'
-    else
-        printf '%s\n\n' "$tooltip"
-    fi
+    printf '%s\n\n' "$status_text"
     # Querying the Docker socket would start the daemon while it is on standby
     [[ $state == active ]] || exit 0
 
@@ -46,6 +42,5 @@ fi
 
 jq -cn \
     --arg text '' \
-    --arg tooltip "$tooltip" \
     --arg class "$state" \
-    '{text: $text, tooltip: $tooltip, class: $class}'
+    '{text: $text, class: $class}'
