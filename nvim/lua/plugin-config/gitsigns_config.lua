@@ -16,6 +16,8 @@ vim.keymap.set(
     { desc = '[G]it [g]utter: toggle signs (Gitsigns)' }
 )
 
+vim.keymap.set('n', '<Leader>ge', gitsigns.diff, { desc = '[G]it [e]xplore changes' })
+
 vim.keymap.set('n', ']h', function()
     if vim.wo.diff then
         return ']c'
