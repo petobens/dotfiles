@@ -388,6 +388,7 @@ local groups = {
 
     -- BlinkCmp
     BlinkCmpDocSeparator = { fg = p.linenr_grey },
+    BlinkCmpGhostText = { link = 'Comment' },
     BlinkCmpKind = { fg = p.gray },
     BlinkCmpLabelDeprecated = { fg = p.comment_grey, strikethrough = true },
     BlinkCmpLabelDescription = { fg = p.gray, italic = true },

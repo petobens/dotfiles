@@ -30,16 +30,32 @@ local function is_online()
     return online_status
 end
 
-local copilot_multiline_menu_direction = nil
-local function is_multiline_copilot_selected()
+local upwards_context_id
+local function menu_direction_priority()
+    local context = blink_cmp.get_context()
+    if not context then
+        return { 's', 'n' }
+    end
+
     local item = blink_cmp.get_selected_item()
     if item and (item.source_id == 'copilot' or item.source_name == 'copilot') then
-        local text = item.insertText or item.label or item.display
-        if text and text:find('\n') then
-            return true
+        local text = item.textEdit and item.textEdit.newText
+            or item.insertText
+            or item.label
+        if text:find('\n') then
+            upwards_context_id = context.id
         end
     end
-    return false
+
+    if upwards_context_id == context.id then
+        local win = require('blink.cmp.completion.windows.menu').win
+        local space_above = win.get_cursor_screen_position().distance_from_top
+        -- Blink favors the roomier side even when north is listed first
+        if space_above > win:get_border_size().vertical then
+            return { 'n' }
+        end
+    end
+    return { 's', 'n' }
 end
 
 -- Setup
@@ -84,14 +100,12 @@ blink_cmp.setup({
                     },
                 },
             },
-            direction_priority = function()
-                return copilot_multiline_menu_direction or { 's', 'n' }
-            end,
+            direction_priority = menu_direction_priority,
         },
         list = {
             selection = {
                 preselect = true,
-                auto_insert = true,
+                auto_insert = false,
             },
             max_items = 50,
         },
@@ -287,36 +301,5 @@ vim.api.nvim_create_autocmd('User', {
                 blink_cmp.show()
             end
         end)
-    end,
-})
-vim.api.nvim_create_autocmd('User', {
-    desc = 'Handle Copilot multiline direction on Blink menu open',
-    group = blink_cmp_augroup,
-    pattern = 'BlinkCmpMenuOpen',
-    callback = function()
-        copilot_multiline_menu_direction = nil
-        local timer = vim.uv.new_timer()
-        timer:start(
-            0,
-            80,
-            vim.schedule_wrap(function()
-                -- Self-terminate instead of relying on BlinkCmpMenuClose, which
-                -- Blink skips when the menu window is invalidated externally
-                if not blink_cmp.is_menu_visible() then
-                    if not timer:is_closing() then
-                        timer:stop()
-                        timer:close()
-                    end
-                    copilot_multiline_menu_direction = nil
-                    return
-                end
-                if
-                    not copilot_multiline_menu_direction
-                    and is_multiline_copilot_selected()
-                then
-                    copilot_multiline_menu_direction = { 'n', 's' }
-                end
-            end)
-        )
     end,
 })
