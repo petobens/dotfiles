@@ -11,8 +11,17 @@ gitsigns.setup({
 -- Autocmds
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'gitsigns-diff',
-    desc = 'Preview files while moving in the Gitsigns diff panel',
+    desc = 'Set up previews, highlight, and staging toggle in the Gitsigns diff panel',
     callback = function(args)
+        -- Match the Aerial outline. Gitsigns marks the opened file with QuickFixLine,
+        -- which would otherwise cover part of the cursor line.
+        vim.opt_local.winhighlight = 'CursorLine:AerialLine,QuickFixLine:AerialLine'
+        vim.keymap.set('n', '-', '<Space>', {
+            buffer = args.buf,
+            remap = true,
+            desc = 'Toggle file or directory staging',
+        })
+
         vim.api.nvim_create_autocmd('CursorMoved', {
             buffer = args.buf,
             desc = 'Open the Gitsigns panel entry under the cursor',
