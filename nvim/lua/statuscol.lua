@@ -72,7 +72,7 @@ local function render_fold(cursorline)
     local line = vim.v.lnum
     local width = api.nvim_eval_statusline('%C', {
         winid = api.nvim_get_current_win(),
-        use_statuscol_lnum = line,
+        use_statuscol_lnum = math.max(line, 1), -- diff filler lines above line 1 report 0
     }).width
     if width == 0 then
         return ''
