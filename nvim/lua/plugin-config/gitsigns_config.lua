@@ -8,6 +8,31 @@ gitsigns.setup({
     },
 })
 
+-- Autocmds
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'gitsigns-diff',
+    desc = 'Preview files while moving in the Gitsigns diff panel',
+    callback = function(args)
+        vim.api.nvim_create_autocmd('CursorMoved', {
+            buffer = args.buf,
+            desc = 'Open the Gitsigns panel entry under the cursor',
+            callback = function()
+                local line = vim.api.nvim_win_get_cursor(0)[1]
+                -- Wait until the cursor rests so holding j does not open every file
+                vim.defer_fn(function()
+                    if
+                        vim.api.nvim_get_current_buf() == args.buf
+                        and vim.api.nvim_win_get_cursor(0)[1] == line
+                    then
+                        -- Same as <S-CR>: open the file and keep focus in the panel
+                        vim.fn.maparg('<S-CR>', 'n', false, true).callback()
+                    end
+                end, 150)
+            end,
+        })
+    end,
+})
+
 -- Mappings
 vim.keymap.set(
     'n',
@@ -16,7 +41,15 @@ vim.keymap.set(
     { desc = '[G]it [g]utter: toggle signs (Gitsigns)' }
 )
 
-vim.keymap.set('n', '<Leader>ge', gitsigns.diff, { desc = '[G]it [e]xplore changes' })
+vim.keymap.set('n', '<Leader>ge', function()
+    -- Focus this tab's panel; Gitsigns would otherwise stack a second diff tab
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == 'gitsigns-diff' then
+            return vim.api.nvim_set_current_win(win)
+        end
+    end
+    gitsigns.diff()
+end, { desc = '[G]it [e]xplore changes' })
 
 vim.keymap.set('n', ']h', function()
     if vim.wo.diff then
