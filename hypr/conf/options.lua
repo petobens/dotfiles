@@ -34,6 +34,7 @@ hl.config({
     debug = { disable_scale_checks = true },
     dwindle = { preserve_split = true },
     ecosystem = { no_update_news = true },
+    xwayland = { force_zero_scaling = true },
     input = {
         follow_mouse = 1,
         kb_layout = 'personal,personal',
