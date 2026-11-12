@@ -2,6 +2,9 @@
 # evdev hotkey, which would require membership in the input group
 state_file = "auto"
 
+[tray]
+enabled = false
+
 [hotkey]
 enabled = false
 
