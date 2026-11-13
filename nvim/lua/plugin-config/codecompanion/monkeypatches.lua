@@ -92,16 +92,16 @@ local function patch_acp_cwd()
         end
 
         local send_rpc_request = connection.send_rpc_request
-        connection.send_rpc_request = function(self, method, params, ...)
+        connection.send_rpc_request = function(self, opts)
             if
-                method == Connection.METHODS.SESSION_NEW
-                or method == Connection.METHODS.SESSION_LOAD
-                or method == Connection.METHODS.SESSION_LIST
+                opts.method == Connection.METHODS.SESSION_NEW
+                or opts.method == Connection.METHODS.SESSION_LOAD
+                or opts.method == Connection.METHODS.SESSION_LIST
             then
                 -- Session requests can yield; retain this connection's launch directory
-                params = vim.tbl_extend('force', params, { cwd = cwd })
+                opts.params = vim.tbl_extend('force', opts.params, { cwd = cwd })
             end
-            return send_rpc_request(self, method, params, ...)
+            return send_rpc_request(self, opts)
         end
         return connection
     end
