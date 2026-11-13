@@ -191,4 +191,3 @@ window_rule('^mpv$', { idle_inhibit = 'fullscreen' })
 
 -- Layers
 hl.layer_rule({ match = { namespace = 'waybar' }, blur = true, ignore_alpha = 0.2 })
-hl.layer_rule({ match = { namespace = 'rofi' }, blur = true })
