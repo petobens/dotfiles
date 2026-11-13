@@ -295,6 +295,7 @@ end
 function M.chat_display()
     return {
         intro_message = '',
+        title = { position = false },
         input = { layout = 'buffer' },
         icons = {
             sync_all = ' ',
@@ -329,6 +330,7 @@ function M.setup()
         pattern = {
             'CodeCompanionChatCreated',
             'CodeCompanionChatOpened',
+            'CodeCompanionChatTitle',
             'CodeCompanionACPChatRestored',
             'CodeCompanionBackgroundTitleSet',
             'CodeCompanionChatClosed',
