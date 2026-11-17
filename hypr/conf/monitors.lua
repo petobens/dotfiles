@@ -198,8 +198,13 @@ local function configure_all_monitors()
             )
             and name ~= physical_workspace_outputs.laptop
             and monitor.name
+            -- Newly connected, disabled outputs have no mode dimensions yet
+            and monitor.width > 0
+            and monitor.height > 0
             and laptop
             and laptop.name
+            and laptop.width > 0
+            and laptop.height > 0
         then
             -- Place the external pair's seam above the laptop's center
             local scale = tonumber(monitor_scale(monitor)) or monitor.scale
