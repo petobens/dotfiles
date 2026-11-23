@@ -95,26 +95,30 @@ local function make_display(entries)
     end
 end
 
-local function make_finder(entries)
+local function make_finder(entries, previous)
     local display = make_display(entries)
+    local existing = {}
+    for _, entry in ipairs(previous and previous.results or {}) do
+        existing[entry.value] = entry
+    end
     return require('telescope.finders').new_table({
         results = entries,
         entry_maker = function(e)
-            return {
-                value = e,
-                display = display,
-                ordinal = adapter_label(e.adapter)
-                    .. ' '
-                    .. (e.title or '')
-                    .. ' '
-                    .. (e.session_id or '')
-                    .. ' '
-                    .. (e.display_time or '')
-                    .. ' '
-                    .. (e.display_timestamp or '')
-                    .. ' '
-                    .. (e.cwd or ''),
-            }
+            -- Telescope follows selections by entry identity across refreshes
+            local entry = existing[e] or { value = e }
+            entry.display = display
+            entry.ordinal = adapter_label(e.adapter)
+                .. ' '
+                .. (e.title or '')
+                .. ' '
+                .. (e.session_id or '')
+                .. ' '
+                .. (e.display_time or '')
+                .. ' '
+                .. (e.display_timestamp or '')
+                .. ' '
+                .. (e.cwd or '')
+            return entry
         end,
     })
 end
@@ -126,6 +130,17 @@ local function picker_mappings(chat, entries)
 
     return function(prompt_bufnr, map)
         local current = action_state.get_current_picker(prompt_bufnr)
+        local session_selected = false
+        vim.api.nvim_create_autocmd('BufWipeout', {
+            buffer = prompt_bufnr,
+            once = true,
+            desc = 'Prune ACP sessions after dismissing the picker',
+            callback = function()
+                if not session_selected then
+                    store.ensure_periodic_prune()
+                end
+            end,
+        })
         local function selected_entries()
             local selections = current:get_multi_selection()
             return #selections > 0 and selections or { action_state.get_selected_entry() }
@@ -147,6 +162,7 @@ local function picker_mappings(chat, entries)
 
         actions.select_default:replace(function()
             local selections = selected_entries()
+            session_selected = true
             actions.close(prompt_bufnr)
             for _, selection in ipairs(selections) do
                 if selection then
@@ -183,6 +199,7 @@ local function picker_mappings(chat, entries)
         local function yank_session_id()
             local selection = action_state.get_selected_entry()
             if selection then
+                session_selected = true
                 actions.close(prompt_bufnr)
                 vim.fn.setreg('+', selection.value.session_id)
             end
@@ -203,7 +220,10 @@ local function refresh_titles(picker, entries)
         cmd[#cmd + 1] = entries[i].path
     end
     vim.system(cmd, { text = true }, function(obj)
-        if tonumber((obj.stdout or ''):match('generated (%d+)')) == 0 then
+        if
+            obj.code ~= 0
+            or tonumber((obj.stdout or ''):match('generated (%d+)')) == 0
+        then
             return
         end
         vim.schedule(function()
@@ -213,18 +233,18 @@ local function refresh_titles(picker, entries)
             then
                 return
             end
-            store.refresh_titles(entries)
-            pcall(function()
-                picker:refresh(make_finder(entries), { reset_prompt = false })
-            end)
+            if store.refresh_titles(entries) then
+                picker:refresh(make_finder(entries, picker.finder), {
+                    reset_prompt = false,
+                    multi = picker._multi,
+                })
+            end
         end)
     end)
 end
 
 -- Picker orchestration
-function M.browse(chat)
-    store.ensure_periodic_prune()
-
+local function browse(chat)
     local entries = store.list()
     if #entries == 0 then
         return utils.notify('No ACP sessions found', vim.log.levels.INFO)
@@ -248,6 +268,7 @@ function M.browse(chat)
         ),
         finder = make_finder(entries),
         sorter = conf.generic_sorter({}),
+        selection_strategy = 'follow',
         tiebreak = function()
             return false
         end,
@@ -255,6 +276,12 @@ function M.browse(chat)
     })
     picker:find()
     refresh_titles(picker, entries)
+end
+
+function M.browse(chat)
+    store.after_prune(function()
+        browse(chat)
+    end)
 end
 
 return M
