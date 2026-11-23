@@ -144,6 +144,18 @@ local function view_docs()
 end
 
 -- Mappings
+---- Links
+vim.keymap.set('n', '<Leader>gf', function()
+    -- Capture the first link target, without a <...> wrapper or #heading anchor
+    local path = vim.api.nvim_get_current_line():match('%b[]%(<?([^)>#]*)')
+    if not path or path == '' or path:match('^[%w+.-]+:') then
+        return
+    end
+    local u = require('utils')
+    path = path:sub(1, 1) == '/' and path or vim.fs.joinpath(u.buffer_dir(), path)
+    u.split_open(vim.fn.fnameescape(path))
+end, { buf = 0, desc = '[G]o to first [f]ile link on current line' })
+
 ---- Compiling
 vim.keymap.set('n', '<F8>', function()
     convert_pandoc('pdf')
