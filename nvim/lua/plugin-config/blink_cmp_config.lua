@@ -15,9 +15,9 @@ local function is_online()
     local job
     job = vim.net.request('https://clients3.google.com/generate_204', {
         retry = 0,
-    }, function(err)
+    }, function(err, response)
         done = true
-        online_status = err == nil
+        online_status = err == nil and response.status == 204
     end)
 
     vim.defer_fn(function()
