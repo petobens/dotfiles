@@ -66,3 +66,6 @@ trust_level = "trusted"
 
 [projects."/home/pedro/git-repos/private/pytemplate"]
 trust_level = "trusted"
+
+[projects."/home/pedro/git-repos/private/firmnomics"]
+trust_level = "trusted"
