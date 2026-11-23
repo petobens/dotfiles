@@ -17,13 +17,13 @@ vim.api.nvim_create_autocmd('FileType', {
         -- which would otherwise cover part of the cursor line.
         vim.opt_local.winhighlight = 'CursorLine:AerialLine,QuickFixLine:AerialLine'
         vim.keymap.set('n', '-', '<Space>', {
-            buffer = args.buf,
+            buf = args.buf,
             remap = true,
             desc = 'Toggle file or directory staging',
         })
 
         vim.api.nvim_create_autocmd('CursorMoved', {
-            buffer = args.buf,
+            buf = args.buf,
             desc = 'Open the Gitsigns panel entry under the cursor',
             callback = function()
                 local line = vim.api.nvim_win_get_cursor(0)[1]

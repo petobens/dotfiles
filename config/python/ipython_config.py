@@ -41,7 +41,7 @@ def get_input_mode(self: ViState) -> InputMode:
     app = get_current_app()
     app.ttimeoutlen = 0.01
     app.timeoutlen = 0.2
-    return self._input_mode  # ty: ignore[unresolved-attribute]
+    return self._input_mode  # ty: ignore[missing-attribute]
 
 
 def set_input_mode(self: ViState, mode: InputMode) -> None:
@@ -52,16 +52,16 @@ def set_input_mode(self: ViState, mode: InputMode) -> None:
     shape = {InputMode.NAVIGATION: 2, InputMode.REPLACE: 4}.get(mode, 6)
     raw = f"\x1b[{shape} q"
     if hasattr(sys.stdout, "_cli"):
-        out = sys.stdout._cli.output.write_raw  # ty: ignore[unresolved-attribute]
+        out = sys.stdout._cli.output.write_raw  # ty: ignore[missing-attribute]
     else:
         out = sys.stdout.write
     out(raw)
     sys.stdout.flush()
-    self._input_mode = mode  # ty: ignore[unresolved-attribute]
+    self._input_mode = mode  # ty: ignore[missing-attribute]
 
 
 # Patch prompt_toolkit's ViState, which has no _input_mode attribute
-ViState._input_mode = InputMode.INSERT  # ty: ignore[unresolved-attribute]
+ViState._input_mode = InputMode.INSERT  # ty: ignore[missing-attribute]
 ViState.input_mode = property(get_input_mode, set_input_mode)  # ty: ignore[invalid-assignment]
 
 

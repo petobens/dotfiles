@@ -132,7 +132,7 @@ local function picker_mappings(chat, entries)
         local current = action_state.get_current_picker(prompt_bufnr)
         local session_selected = false
         vim.api.nvim_create_autocmd('BufWipeout', {
-            buffer = prompt_bufnr,
+            buf = prompt_bufnr,
             once = true,
             desc = 'Prune ACP sessions after dismissing the picker',
             callback = function()

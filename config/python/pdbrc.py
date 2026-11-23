@@ -60,7 +60,7 @@ class OneDarkish(Style):
     }
 
 
-class Config(pdb.DefaultConfig):  # ty: ignore[unresolved-attribute]
+class Config(pdb.DefaultConfig):  # ty: ignore[missing-attribute]
     """Actual pdbpp config."""
 
     prompt = "(Pdb++)> "
