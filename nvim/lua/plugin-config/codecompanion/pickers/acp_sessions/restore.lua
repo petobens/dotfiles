@@ -89,8 +89,9 @@ local function restored_user_turn_count(updates)
     return count
 end
 
+-- ACP joins replay chunks; separate messages when their IDs change
+-- Codex notices omit IDs, so transitions to or from nil count too
 local function restore_agent_message_boundaries(updates)
-    -- ACP joins consecutive complete agent messages without spacing during restore
     local previous_id
     local previous_text
     for _, update in ipairs(updates) do
@@ -101,8 +102,7 @@ local function restore_agent_message_boundaries(updates)
             local text = extract_text(update.content)
             if text and text ~= '' then
                 if
-                    previous_id
-                    and update.messageId
+                    previous_text
                     and update.messageId ~= previous_id
                     and not previous_text:match('\n$')
                     and not text:match('^\n')
@@ -110,7 +110,7 @@ local function restore_agent_message_boundaries(updates)
                     update.content.text = '\n\n' .. text
                     text = update.content.text
                 end
-                previous_id = update.messageId or previous_id
+                previous_id = update.messageId
                 previous_text = text
             end
         end
@@ -262,7 +262,7 @@ local function restore_context(context, paths, icon, path)
 end
 
 -- Extract context markers and discard encoded media from ACP replay updates
-local function collect_session_update(update, updates, context, paths)
+local function prepare_session_update(update, context, paths)
     local text = vim.tbl_get(update, 'content', 'text')
     if type(text) == 'string' then
         for _, extension in ipairs({ 'png', 'jpg', 'jpeg', 'svg', 'bmp' }) do
@@ -304,7 +304,7 @@ local function collect_session_update(update, updates, context, paths)
     then
         return
     end
-    table.insert(updates, update)
+    return update
 end
 
 -- Session loading
@@ -352,17 +352,26 @@ local function load_entry(chat, entry)
         return
     end
 
-    local updates = {}
+    local parent_updates = {}
+    local replayed_updates = {}
     local restored_context = {}
     local restored_context_paths = {}
     local ok = chat.acp_connection:load_session(entry.session_id, {
-        on_session_update = function(update)
-            collect_session_update(
-                update,
-                updates,
-                restored_context,
-                restored_context_paths
-            )
+        on_session_update = function(update, opts)
+            local session_id = opts and opts.session_id
+            -- Subagent replay belongs in its own transcript, not the parent's context
+            if not session_id then
+                update = prepare_session_update(
+                    update,
+                    restored_context,
+                    restored_context_paths
+                )
+                if not update then
+                    return
+                end
+                table.insert(parent_updates, update)
+            end
+            table.insert(replayed_updates, { update = update, session_id = session_id })
         end,
     })
     if not ok then
@@ -396,15 +405,18 @@ local function load_entry(chat, entry)
         restored_context_window = nil
     end
 
-    restore_agent_message_boundaries(updates)
-    local restored_turns = restored_user_turn_count(updates)
+    restore_agent_message_boundaries(parent_updates)
+    local restored_turns = restored_user_turn_count(parent_updates)
     require('codecompanion.interactions.chat.acp.commands').link_buffer_to_session(
         chat.bufnr,
         chat.acp_connection.session_id
     )
-    require('codecompanion.interactions.chat.acp.render').restore_session(chat, updates)
+    require('codecompanion.interactions.chat.acp.render').restore_session(
+        chat,
+        replayed_updates
+    )
     restore_header_metadata(chat, restored_headers)
-    chat._acp_restored_messages = restored_messages(updates)
+    chat._acp_restored_messages = restored_messages(parent_updates)
     for _, context in ipairs(restored_context) do
         chat.context:add({
             id = ('%s %s'):format(context.icon, context.path),
